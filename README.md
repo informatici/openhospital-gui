@@ -40,6 +40,10 @@ Use scripts startup.sh (Linux) or startup.cmd (Windows)
 
 Please read Admin and User manuals in doc/ folder
 
+**Getting Started FAQ**
+
+Having issues getting started. Read our [FAQ](https://openhospital.atlassian.net/wiki/spaces/OH/pages/568951013/Getting+Started+FAQ)
+
 # How to contribute
 
 Please read the OpenHospital [Wiki](https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines)
