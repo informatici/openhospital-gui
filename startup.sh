@@ -16,16 +16,15 @@ fi
 # EXEDIR is the directory where this executable is.
 EXEDIR=${0%/*}
 
-DIRLIBS=${EXEDIR}/bin/*.jar
-for i in ${DIRLIBS}
-do
-  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
-    OPENHOSPITAL_CLASSPATH=$i
-  else
-    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
-  fi
-done
-
+#DIRLIBS=${EXEDIR}/bin/*.jar
+#for i in ${DIRLIBS}
+#do
+#  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
+#    OPENHOSPITAL_CLASSPATH=$i
+#  else
+#    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
+#  fi
+#done
 
 DIRLIBS=${EXEDIR}/lib/*.jar
 for i in ${DIRLIBS}
@@ -37,7 +36,57 @@ do
   fi
 done
 
-DIRLIBS=${EXEDIR}/lib/h8/*.jar
+#DIRLIBS=${EXEDIR}/lib/h8/*.jar
+#for i in ${DIRLIBS}
+#do
+#  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
+#    OPENHOSPITAL_CLASSPATH=$i
+#  else
+#    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
+#  fi
+#done
+#
+#DIRLIBS=${EXEDIR}/lib/dicom/*.jar
+#for i in ${DIRLIBS}
+#do
+#  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
+#    OPENHOSPITAL_CLASSPATH=$i
+#  else
+#    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
+#  fi
+#done
+#
+#DIRLIBS=${EXEDIR}/lib/dicom/dcm4che/*.jar
+#for i in ${DIRLIBS}
+#do
+#  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
+#    OPENHOSPITAL_CLASSPATH=$i
+#  else
+#    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
+#  fi
+#done
+#
+#DIRLIBS=${EXEDIR}/lib/dicom/jai/*.jar
+#for i in ${DIRLIBS}
+#do
+#  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
+#    OPENHOSPITAL_CLASSPATH=$i
+#  else
+#    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
+#  fi
+#done
+#
+#DIRLIBS=${EXEDIR}/lib/*.zip
+#for i in ${DIRLIBS}
+#do
+#  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
+#    OPENHOSPITAL_CLASSPATH=$i
+#  else
+#    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
+#  fi
+#done
+
+DIRLIBS=${EXEDIR}/target/OpenHospital20/lib/*.jar
 for i in ${DIRLIBS}
 do
   if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
@@ -47,37 +96,7 @@ do
   fi
 done
 
-DIRLIBS=${EXEDIR}/lib/dicom/*.jar
-for i in ${DIRLIBS}
-do
-  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
-    OPENHOSPITAL_CLASSPATH=$i
-  else
-    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
-  fi
-done
-
-DIRLIBS=${EXEDIR}/lib/dicom/dcm4che/*.jar
-for i in ${DIRLIBS}
-do
-  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
-    OPENHOSPITAL_CLASSPATH=$i
-  else
-    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
-  fi
-done
-
-DIRLIBS=${EXEDIR}/lib/dicom/jai/*.jar
-for i in ${DIRLIBS}
-do
-  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
-    OPENHOSPITAL_CLASSPATH=$i
-  else
-    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
-  fi
-done
-
-DIRLIBS=${EXEDIR}/lib/*.zip
+DIRLIBS=${EXEDIR}/target/OpenHospital20/bin/*.jar
 for i in ${DIRLIBS}
 do
   if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
@@ -105,4 +124,6 @@ case $ARCH in
 		;;
 esac
 
+# XXX DEBUG: echo the startup command
+echo $JAVA_EXE -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OPENHOSPITAL_CLASSPATH:$CLASSPATH" org.isf.menu.gui.Menu "$@"
 $JAVA_EXE -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OPENHOSPITAL_CLASSPATH:$CLASSPATH" org.isf.menu.gui.Menu "$@"
