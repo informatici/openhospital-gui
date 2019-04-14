@@ -6,3 +6,13 @@ services:
      dockerfile: Dockerfile-ohdb
     ports: 
     - "3306:3306"
+  openhospital:
+    depends_on:
+     - database
+    image: "pviotti/openhospital:latest"
+    environment:
+     - DISPLAY
+    network_mode: host
+    volumes:
+     - /tmp/.X11-unix:/tmp/.X11-unix
+     - ~/.Xauthority:/home/ohuser/.Xauthority
