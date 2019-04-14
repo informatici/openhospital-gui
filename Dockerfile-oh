@@ -1,0 +1,35 @@
+FROM maven:3.6.0-jdk-11
+
+ENV OH_CORE_REPO https://github.com/informatici/openhospital-core.git
+ENV OH_CORE_BRANCH master
+
+ENV OH_GUI_REPO https://github.com/pviotti/openhospital-gui.git
+ENV OH_GUI_BRANCH startup-script
+
+# Running GUI application as root (Docker's default) is problematic
+# see https://unix.stackexchange.com/questions/118811/why-cant-i-run-gui-apps-from-root-no-protocol-specified#answer-118826
+RUN /usr/sbin/useradd --comment ohuser --home-dir /home/ohuser \
+    --non-unique --uid 1000 --user-group --system \
+    --shell /bin/bash ohuser \
+    && mkdir -p /home/ohuser \
+    && chown -R ohuser:ohuser /home/ohuser \
+    && chown -R ohuser:ohuser /opt
+USER ohuser
+ENV HOME /home/ohuser
+
+RUN cd /opt \
+    && git clone $OH_CORE_REPO open-hospital-core \
+    && cd  open-hospital-core \
+    && git checkout $OH_CORE_BRANCH \
+    && mvn install -DskipTests
+
+RUN cd /opt \
+    && git clone $OH_GUI_REPO open-hospital \
+    && cd  open-hospital \
+    && git checkout $OH_GUI_BRANCH \
+    && mvn install -DskipTests
+
+RUN rm -rf /opt/open-hospital-core /home/ohuser/.m2
+
+WORKDIR /opt/open-hospital
+CMD XAUTHORITY=/home/ohuser/.Xauthority  /opt/open-hospital/startup.sh
