@@ -1,11 +1,5 @@
 package org.isf.accounting.gui;
 
-/**
- * Browsing of table BILLS
- * 
- * @author Mwithi
- * 
- */
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -67,6 +61,12 @@ import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
+/**
+ * Browsing of table BILLS
+ * 
+ * @author Mwithi
+ * 
+ */
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	public void billInserted(AWTEvent event) {
