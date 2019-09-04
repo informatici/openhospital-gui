@@ -36,7 +36,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -51,7 +50,6 @@ import javax.swing.table.DefaultTableModel;
 import org.isf.accounting.gui.PatientBillEdit.PatientBillListener;
 import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
-import org.isf.accounting.model.BillItems;
 import org.isf.accounting.model.BillPayments;
 import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.generaldata.GeneralData;
@@ -76,7 +74,6 @@ import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
-
 
 	public void billInserted(AWTEvent event){
 		if(patientParent!=null){
@@ -116,8 +113,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTable jTableUser;
 	private JPanel jPanelRange;
 	private JPanel jPanelButtons;
-	private BillItems chooseItem;
-	private JTextField medicalJTextField  = null;
 	private JPanel jPanelSouth;
 	private JPanel jPanelTotals;
 	private JButton jButtonNew;
@@ -129,10 +124,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JButton jAffiliatePersonJButtonAdd  = null;
 	private JButton jAffiliatePersonJButtonSupp  = null;
 	private JTextField jAffiliatePersonJTextField  = null;
-	private JButton jButtonCloseBill;
-	private JPanel panelChooseMedical;
 	private JButton jButtonReport;
 	private JComboBox jComboUsers;
+	private JTextField medicalJTextField  = null;
 	private JMonthChooser jComboBoxMonths;
 	private JYearChooser jComboBoxYears;
 	private JPanel panelSupRange;
@@ -437,12 +431,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						new GenericReportFromDateToDate(from, to, GeneralData.BILLSREPORT, MessageBundle.getMessage("angal.billbrowser.fullreportallbills"), false);
 					}
 					if (options.indexOf(option) == 2) {
-						try {
-							BusyState.setBusyState(BillBrowser.this, true);
-							new GenericReportFromDateToDate(from, to, GeneralData.OPENEDBILLSREPORT, MessageBundle.getMessage("angal.stat.openedbillslist"), false);
-						} finally {
-							BusyState.setBusyState(BillBrowser.this, false);
-						}
+						new GenericReportFromDateToDate(from, to, GeneralData.OPENEDBILLSREPORT, MessageBundle.getMessage("angal.stat.openedbillslist"), false);
 					}
 				}
 			});
@@ -770,6 +759,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}
 		return panelSupRange;
 	}
+
 	private JPanel getPanelChoosePatient(){
 		JPanel priceListLabelPanel = new JPanel();
 		//panelSupRange.add(priceListLabelPanel);
@@ -822,17 +812,16 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		
 		return priceListLabelPanel;
 	}
+	
 	public void patientSelected(Patient patient) throws OHServiceException {
 		patientParent = patient;
-		jAffiliatePersonJTextField.setText(patientParent!=null?patientParent.getFirstName()+" "+patientParent.getFirstName():"");
-		//System.out.println("patient choisi**************: "+patientParent.getFirstName());
-		if(patientParent!=null){
-			/*** remove selected item ***/
-			chooseItem = null;
-			/*** remove selected garante ***/
-			//garantUserChoose = null;
-			if(medicalJTextField!=null)medicalJTextField.setText("");
-			/*****************************/
+		jAffiliatePersonJTextField.setText(patientParent != null 
+				? patientParent.getFirstName() + " " + patientParent.getFirstName() 
+				: "");
+		
+		if (patientParent != null) {
+			if (medicalJTextField != null)
+				medicalJTextField.setText("");
 			updateDataSet(dateFrom, dateTo, patientParent);
 			updateTables();
 			updateTotals();
@@ -1109,13 +1098,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					return types[columnIndex];
 				}
 
-				public boolean isCellEditable(int row, int column) {
+				public boolean isCellEditable(int row, int column){
 					return false;
 				}
 			});
 			jTableUser.setRowSelectionAllowed(false);
 			jTableUser.setGridColor(Color.WHITE);
-
 		}
 		return jTableUser;
 	}
@@ -1133,7 +1121,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		
 	}
 	
-	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo) {
+	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo){
 		try {
 			/*
 			 * Bills in the period
@@ -1299,24 +1287,34 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			}
 			
 			if (status.equals("O")) {
-				if(patientParent!=null){
+				if (patientParent != null) {
 					tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
-				}
-				else {
+				} else {
 					try {
-				
-					tableArray = billManager.getPendingBills(0);
-				}catch(OHServiceException e){
-					tableArray = new ArrayList<Bill>();
-					if(e.getMessages() != null){
-						for(OHExceptionMessage msg : e.getMessages()){
-							JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+
+						tableArray = billManager.getPendingBills(0);
+					} catch (OHServiceException e) {
+						tableArray = new ArrayList<Bill>();
+						if (e.getMessages() != null) {
+							for (OHExceptionMessage msg : e.getMessages()) {
+								JOptionPane.showMessageDialog(null, msg.getMessage(),
+										msg.getTitle() == null ? "" : msg.getTitle(),
+										msg.getLevel().getSwingSeverity());
+							}
 						}
 					}
 				}
+
 			}
-				
-			} else if (status.equals("ALL")) {
+			
+			if (status.equals("O")) {
+					for (Bill bill : billPeriod) {
+					
+					if (bill.getStatus().equals(status)) 
+						tableArray.add(bill);
+				}
+			}
+			else if (status.equals("ALL")) {
 				
 				Collections.sort(billAll);
 				tableArray = billAll;
