@@ -91,6 +91,9 @@ public class ReportLauncher extends ModalJFrame{
 		{"angal.stat.labsummaryforopd", 				"OH008_lab_summary_for_opd", 										"monthyear"},
 		{"angal.stat.inpatientreport", 					"OH009_InPatientReport", 											"twodates"},
 		{"angal.stat.outpatientreport", 				"OH010_OutPatientReport", 											"twodates"},
+		{"angal.stat.allIncomes",						"BillsReport",														"twodates"},
+		{"angal.stat.allIncomespending",				"BillsReportPending",												"twodates"},
+		{"angal.stat.allIncomesmonth",					"BillsReportMonthly",												"twodates"},
 		{"angal.stat.pageonecensusinfo", 				"hmis108_cover", 													"twodatesfrommonthyear"},
 		{"angal.stat.pageonereferrals", 				"hmis108_referrals", 												"monthyear"},
 		{"angal.stat.pageoneoperations", 				"hmis108_operations", 												"monthyear"},
@@ -107,8 +110,6 @@ public class ReportLauncher extends ModalJFrame{
 		{"angal.stat.monthlyworkloadreportpage2", 		"MOH717_Monthly_Workload_Report_for_Hospitals_page2", 				"monthyear"},
 		{"angal.stat.dailyopdmorbiditysummaryunder5", 	"MOH705A_Under_5_Years_Daily_Outpatient_Morbidity_Summary_Sheet", 	"monthyear"},
 		{"angal.stat.dailyopdmorbiditysummaryover5", 	"MOH705B_Over_5_Years_Daily_Outpatient_Morbidity_Summary_Sheet", 	"monthyear"},
-		{"angal.stat.openedbillslist",					"OH023_BillsReportMonth",											"twodates"},
-		{"angal.stat.allIncomes",						"BillsReport",														"twodates"},
 		
 	};
 	
@@ -394,41 +395,16 @@ public class ReportLauncher extends ModalJFrame{
 	}
 	
 	protected void generateReport(boolean toExcel) {
-		  
-		Date d1 = null;
-		Date d2 = null;
+		   
 		int rptIndex=jRptComboBox.getSelectedIndex();
 		Integer month = jMonthComboBox.getSelectedIndex()+1;
 		Integer year = (Integer.parseInt((String)jYearComboBox.getSelectedItem()));
 		String fromDate=jFromDateField.getText().trim();
 		String toDate=jToDateField.getText().trim();
-		//String from = TimeTools.formatDateTimeReport(dateFrom);
-		//String to = TimeTools.formatDateTimeReport(dateTo);
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		
-		try {
-			d1 = df.parse(fromDate);
-			d2 = df.parse(toDate);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		dateFrom.setTime(d1);
-		dateTo.setTime(d2);		 
-		String from = TimeTools.formatDateTimeReport(dateFrom);
-		String to = TimeTools.formatDateTimeReport(dateTo);
 		
 		if (rptIndex>=0) {
 			String sParType = reportMatrix[rptIndex][TYPE];
 			if (sParType.equalsIgnoreCase("twodates")) {
-				if(reportMatrix[rptIndex][FILENAME].equals("OH023_BillsReportMonth") || reportMatrix[rptIndex][FILENAME].equals("BillsReport")) {
-					System.out.println("dates*************************************************"+from+" "+to+"");
-					System.out.println("File name*************************************************"+reportMatrix[rptIndex][FILENAME]);
-					System.out.println("*************************************************");
-					
-					new GenericReportFromDateToDate(from, to, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage("angal.billbrowser.shortreportonlybaddebts"), false);
-					return;
-				}
 				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user= (String)shareWith.getSelectedItem();
@@ -455,18 +431,6 @@ public class ReportLauncher extends ModalJFrame{
 				}
 			}
 			if (sParType.equalsIgnoreCase("monthyear")) {
-				 GregorianCalendar thisMonthFrom = dateFrom; 
-				 GregorianCalendar thisMonthTo = dateTo; 
-				 thisMonthFrom.set(GregorianCalendar.MONTH, month - 1);
-				 thisMonthFrom.set(GregorianCalendar.DAY_OF_MONTH, 1);
-				 thisMonthTo.set(GregorianCalendar.MONTH, month - 1);
-				 thisMonthTo.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-				 	from = TimeTools.formatDateTimeReport(dateFrom);
-					 to = TimeTools.formatDateTimeReport(dateTo);
-				if(reportMatrix[rptIndex][FILENAME].equals("OH023_BillsReportMonth") || reportMatrix[rptIndex][FILENAME].equals("BillsReport")) {
-					new GenericReportFromDateToDate(from, to, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage("angal.billbrowser.fullreportallbills"), false);
-					return;
-				}
 				new GenericReportMY(month, year, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user= (String)shareWith.getSelectedItem();

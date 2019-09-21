@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="OH023_BillsReport"
+		 name="BillsReportPending"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -36,9 +36,9 @@
 	BLL_UPDATE, 
 	CONCAT(BLL_ID_PAT, " - ", BLL_PAT_NAME) AS PAT_NAME, 
 	BLL_AMOUNT, 
-    IF(DATE(BLL_DATE) BETWEEN STR_TO_DATE($P{fromdate},'%d/%m/%Y') AND STR_TO_DATE($P{todate},'%d/%m/%Y'), BLL_AMOUNT, 0) BILLED,
+    	IF(DATE(BLL_DATE) BETWEEN STR_TO_DATE($P{fromdate},'%d/%m/%Y') AND STR_TO_DATE($P{todate},'%d/%m/%Y'), BLL_AMOUNT, 0) BILLED,
 	SUM(IF(DATE(BLP_DATE) BETWEEN STR_TO_DATE($P{fromdate},'%d/%m/%Y') AND STR_TO_DATE($P{todate},'%d/%m/%Y'), BLP_AMOUNT, 0)) INCOME,
-	IF(DATE(BLL_DATE) BETWEEN STR_TO_DATE($P{fromdate},'%d/%m/%Y') AND STR_TO_DATE($P{todate},'%d/%m/%Y'), BLL_BALANCE, 0) RECEIVABLES,
+	IF(DATE(BLL_DATE) BETWEEN STR_TO_DATE($P{fromdate},'%d/%m/%Y') AND STR_TO_DATE($P{todate},'%d/%m/%Y'), BLL_BALANCE, 0) RECEIVABLE,
 	BLL_BALANCE, 
 	BLL_STATUS
 	FROM (
@@ -58,7 +58,7 @@ ORDER BY BLL_DATE]]></queryString>
 	<field name="BLL_AMOUNT" class="java.lang.Double"/>
 	<field name="BILLED" class="java.lang.Double"/>
 	<field name="INCOME" class="java.lang.Double"/>
-	<field name="RECEIVABLES" class="java.lang.Double"/>
+	<field name="RECEIVABLE" class="java.lang.Double"/>
 	<field name="BLL_BALANCE" class="java.lang.Double"/>
 	<field name="BLL_STATUS" class="java.lang.String"/>
 
@@ -68,17 +68,17 @@ ORDER BY BLL_DATE]]></queryString>
 	<variable name="TOTAL_INCOME" class="java.lang.Double" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{INCOME}]]></variableExpression>
 	</variable>
-	<variable name="TOTAL_AMOUNT" class="java.lang.Double" resetType="Group" resetGroup="BLL_DATE" calculation="Sum">
+	<variable name="TOTAL_OPEN_AMOUNT" class="java.lang.Double" resetType="Group" resetGroup="BLL_DATE" calculation="Sum">
 		<variableExpression><![CDATA[$F{BLL_AMOUNT}]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_OPEN_INCOME" class="java.lang.Double" resetType="Group" resetGroup="BLL_DATE" calculation="Sum">
 		<variableExpression><![CDATA[$F{INCOME}]]></variableExpression>
 	</variable>
-	<variable name="TOTAL_BALANCE" class="java.lang.Double" resetType="Group" resetGroup="BLL_DATE" calculation="Sum">
+	<variable name="TOTAL_OPEN_BALANCE" class="java.lang.Double" resetType="Group" resetGroup="BLL_DATE" calculation="Sum">
 		<variableExpression><![CDATA[$F{BLL_BALANCE}]]></variableExpression>
 	</variable>
-	<variable name="TOTAL_RECEIVABLES" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{RECEIVABLES}]]></variableExpression>
+	<variable name="TOTAL_RECEIVABLE" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{RECEIVABLE}]]></variableExpression>
 	</variable>
 
 		<group  name="BLL_DATE" >
@@ -105,7 +105,7 @@ ORDER BY BLL_DATE]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_AMOUNT}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_OPEN_AMOUNT}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -141,7 +141,7 @@ ORDER BY BLL_DATE]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_BALANCE}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_OPEN_BALANCE}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>
@@ -235,7 +235,7 @@ ORDER BY BLL_DATE]]></queryString>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Periodical Incomes/Billed and Receivables Report (all invoices)]]></text>
+				<text><![CDATA[Periodical Incomes/Billed and Receivables Report (with pending invoices)]]></text>
 				</staticText>
 			</band>
 		</title>
@@ -453,6 +453,7 @@ ORDER BY BLL_DATE]]></queryString>
 		</columnHeader>
 		<detail>
 			<band height="18"  isSplitAllowed="true" >
+				<printWhenExpression><![CDATA[new Boolean($F{BLL_STATUS}.equals( "O" ) || $F{BLL_STATUS}.equals( "L" ))]]></printWhenExpression>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="0"
@@ -610,7 +611,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="418"
-						y="94"
+						y="80"
 						width="117"
 						height="25"
 						key="textField-11"/>
@@ -618,12 +619,12 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_RECEIVABLES}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_RECEIVABLE}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						x="0"
-						y="50"
+						y="36"
 						width="117"
 						height="25"
 						key="staticText-7"/>
@@ -640,7 +641,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="0"
-						y="94"
+						y="80"
 						width="117"
 						height="25"
 						key="textField-28"/>
@@ -653,7 +654,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="209"
-						y="94"
+						y="80"
 						width="117"
 						height="25"
 						key="textField-30"/>
@@ -666,7 +667,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 				<staticText>
 					<reportElement
 						x="209"
-						y="50"
+						y="36"
 						width="117"
 						height="25"
 						key="staticText-18"/>
@@ -683,7 +684,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 				<staticText>
 					<reportElement
 						x="418"
-						y="50"
+						y="36"
 						width="117"
 						height="25"
 						key="staticText-19"/>
@@ -700,7 +701,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 				<staticText>
 					<reportElement
 						x="0"
-						y="75"
+						y="61"
 						width="117"
 						height="19"
 						key="staticText-23"/>
@@ -713,7 +714,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 				<staticText>
 					<reportElement
 						x="209"
-						y="75"
+						y="61"
 						width="117"
 						height="19"
 						key="staticText-24"/>
@@ -726,7 +727,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 				<staticText>
 					<reportElement
 						x="418"
-						y="75"
+						y="61"
 						width="117"
 						height="19"
 						key="staticText-25"/>
