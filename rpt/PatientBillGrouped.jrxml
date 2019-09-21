@@ -37,7 +37,8 @@
 	<parameter name="fromDate" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="toDate" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT P.PAT_FNAME, P.PAT_SNAME, P.PAT_NAME, BLL_ID, BLL_ID_PAT, BLL_PAT_NAME, BLL_UPDATE, BLL_USR_ID_A, BLI_ID_PRICE, BLI_ITEM_DESC, 
- BLI_ITEM_AMOUNT, IF(IFNULL(BLI_ITEM_AMOUNT,0) > IFNULL(BLI_ITEM_AMOUNT_BRUT,0), IFNULL(BLI_ITEM_AMOUNT,0), IFNULL(BLI_ITEM_AMOUNT_BRUT,0)) as AMOUNT_REAL, BLI_ITEM_AMOUNT_BRUT,
+ BLI_ITEM_AMOUNT, 
+ -- IF(IFNULL(BLI_ITEM_AMOUNT,0) > IFNULL(BLI_ITEM_AMOUNT_BRUT,0), IFNULL(BLI_ITEM_AMOUNT,0), IFNULL(BLI_ITEM_AMOUNT_BRUT,0)) as AMOUNT_REAL, BLI_ITEM_AMOUNT_BRUT,
  BLI_QTY, BLP_USR_ID_A, BLL_STATUS
 FROM BILLS B
 JOIN PATIENT P ON B.BLL_ID_PAT=P.PAT_ID 
@@ -57,8 +58,6 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]></queryString>
 	<field name="BLI_ID_PRICE" class="java.lang.String"/>
 	<field name="BLI_ITEM_DESC" class="java.lang.String"/>
 	<field name="BLI_ITEM_AMOUNT" class="java.lang.Double"/>
-	<field name="AMOUNT_REAL" class="java.lang.Double"/>
-	<field name="BLI_ITEM_AMOUNT_BRUT" class="java.lang.Double"/>
 	<field name="BLI_QTY" class="java.lang.Integer"/>
 	<field name="BLP_USR_ID_A" class="java.lang.String"/>
 	<field name="BLL_STATUS" class="java.lang.String"/>
@@ -69,9 +68,6 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]></queryString>
 	</variable>
 	<variable name="TOTAL_BILL" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$V{TOTAL_ITEM}]]></variableExpression>
-	</variable>
-	<variable name="PERCENTAGE_REDUCTION" class="java.lang.Double" resetType="Report" calculation="Nothing">
-		<variableExpression><![CDATA[(new Double( 100 -  (($F{BLI_ITEM_AMOUNT}.doubleValue()) * 100 / (($F{AMOUNT_REAL}.doubleValue() <= 0 ? 1 : $F{AMOUNT_REAL}.doubleValue() ) ))))]]></variableExpression>
 	</variable>
 	<variable name="currentPage" class="java.lang.Integer" resetType="Page" calculation="Nothing">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
@@ -342,7 +338,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="246"
+						x="305"
 						y="4"
 						width="71"
 						height="18"
@@ -355,22 +351,9 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="322"
-						y="4"
-						width="56"
-						height="18"
-						key="textField-34"/>
-					<box></box>
-					<textElement textAlignment="Right" verticalAlignment="Top">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true" isItalic="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbillextended.discount" )]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
 						x="54"
 						y="4"
-						width="188"
+						width="245"
 						height="18"
 						key="textField-35"/>
 					<box></box>
@@ -404,7 +387,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]></queryString>
 					<reportElement
 						x="54"
 						y="2"
-						width="188"
+						width="245"
 						height="15"
 						key="textField-8"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -419,7 +402,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="246"
+						x="305"
 						y="2"
 						width="71"
 						height="15"
@@ -432,7 +415,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]></queryString>
 					<textElement textAlignment="Right">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{AMOUNT_REAL}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{BLI_ITEM_AMOUNT}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -468,32 +451,6 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_ITEM}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="322"
-						y="3"
-						width="42"
-						height="15"
-						key="textField-25"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{PERCENTAGE_REDUCTION}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						x="366"
-						y="0"
-						width="12"
-						height="18"
-						key="staticText-12"/>
-					<box></box>
-					<textElement verticalAlignment="Middle">
-						<font/>
-					</textElement>
-				<text><![CDATA[%]]></text>
-				</staticText>
 			</band>
 		</detail>
 		<columnFooter>

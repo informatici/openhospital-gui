@@ -22,7 +22,6 @@ import org.isf.patient.model.Patient;
 import org.isf.serviceprinting.manager.PrintReceipt;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
-import org.isf.utils.db.DbSingleConn;
 import org.isf.utils.db.DbSingleJpaConn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
