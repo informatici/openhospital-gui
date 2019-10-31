@@ -702,7 +702,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					
 					try {
 						itemsList = billManager.getDistinctItems();
-					} catch (OHException e1) {
+					} catch (OHServiceException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
