@@ -580,6 +580,9 @@ public class PatientExaminationEdit extends JDialog {
 				}
 			});
 		}
+		pack();
+		jTextAreaNote.setSize(jTextAreaNote.getPreferredSize());
+		pack();
 		return jTextAreaNote;
 	}
 
