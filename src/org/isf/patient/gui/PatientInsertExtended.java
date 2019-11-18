@@ -272,6 +272,10 @@ public class PatientInsertExtended extends JDialog {
 	private JRadioButton jInsurance_No = null;
 	private JRadioButton jInsurance_Unknown = null;
 
+	// MaritalStatus Components:
+	private JPanel jMaritalPanel = null;
+	private JComboBox jMaritalStatusComboBox = null;
+
 	// COMPONENTS: Note
 	private JPanel jRightPanel = null;
 	private JScrollPane jNoteScrollPane = null;
@@ -1080,6 +1084,26 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	/**
+	 * This method initializes jMaritalPanel
+	 * 
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJMaritalPanel() {
+		if (jMaritalPanel == null) {
+			jMaritalPanel = new JPanel();
+			jMaritalPanel = setMyBorder(jMaritalPanel, "Marital Status");
+			String[] maritalStatusTypes = { MessageBundle.getMessage("angal.patient.bloodtype.unknown"), "Single", "Married", "Divorced", "Widowed"};
+			jMaritalStatusComboBox = new JComboBox(maritalStatusTypes);
+			jMaritalPanel.add(jMaritalStatusComboBox);
+
+			if (!insert) {
+				jMaritalStatusComboBox.setSelectedItem("nah");
+			} 
+		}
+		return jMaritalPanel;
+	}
+
+	/**
 	 * This method initializes jFirstNameLabel
 	 * 
 	 * @return javax.swing.JLabel
@@ -1131,6 +1155,7 @@ public class PatientInsertExtended extends JDialog {
 			jAnagraphPanel.add(getJFirstName(), null);
 			jAnagraphPanel.add(getJSecondName(), null);
 			jAnagraphPanel.add(getJTaxCodePanel(), null);
+			jAnagraphPanel.add(getJMaritalPanel(), null);
 			// jAnagraphPanel.add(getJBirthDate(), null);
 			jAnagraphPanel.add(getJAgeType(), null);
 			jAnagraphPanel.add(getSexPanel(), null);
