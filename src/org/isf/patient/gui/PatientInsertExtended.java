@@ -21,7 +21,6 @@ import java.util.EventListener;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -115,7 +114,7 @@ public class PatientInsertExtended extends JDialog {
 		for (int i = 0; i < listeners.length; i++)
 			((PatientListener) listeners[i]).patientUpdated(event);
 	}
-
+	
 	// COMPONENTS: Main
 	private JPanel jMainPanel = null;
 	private boolean insert;
