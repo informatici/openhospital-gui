@@ -25,7 +25,7 @@ For remote MySQL server you need to change IP (localost) and PORT (3306) in rsc/
 
 **With docker compose**
 
-Simply run (it will run on localhost:3306):
+Simply run (it will run on localhost:3306 or check the 'default machine with IP' configured by your Docker-Machine):
 
     docker-compose up 
 
