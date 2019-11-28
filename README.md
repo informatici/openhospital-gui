@@ -31,7 +31,7 @@ Simply run (it will run on localhost:3306 or check the 'default machine with IP'
 
 **How to launch the software**:
 
-Use scripts startup.sh (Linux) or (Windows)
+Use scripts startup.sh (Linux) or (Windows) from target/OpenHospital20 folder
 
     startup.cmd
 
