@@ -19,7 +19,7 @@ You need a local (or remote) MySQL server where to run the script in mysql/db/ f
 
     create_all_en.sql
 	
-For remote MySQL server you need to change IP (localost) and PORT (3306) in rsc/applicationContext.properties:
+For remote MySQL server you need to change IP (localhost) and PORT (3306) in rsc/applicationContext.properties:
 
     <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/oh" />
 
@@ -31,7 +31,8 @@ Simply run (it will run on localhost:3306 or check the 'default machine with IP'
 
 **How to launch the software**:
 
-Use scripts startup.sh (Linux) or (Windows) from target/OpenHospital20 folder
+Use scripts startup.sh (Linux) or startup.cmd (Windows) from target/OpenHospital20 folder
+Set rsc/database.properties according with MySQL Server or docker container's IP and PORT
 
     startup.cmd
 
