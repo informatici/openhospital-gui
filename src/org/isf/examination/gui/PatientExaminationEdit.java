@@ -50,7 +50,9 @@ import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.ExaminationParameters;
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.stat.gui.report.GenericReportPatient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoIntegerTextField;
@@ -94,6 +96,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JCheckBox jCheckBoxToggleSaturation;
 	private JButton jButtonOK;
 	private JButton jButtonCancel;
+	private JButton jButtonPrint;
 	private Action actionSavePatientExamination;
 	private Action actionToggleAP;
 	private Action actionToggleHR;
@@ -180,6 +183,9 @@ public class PatientExaminationEdit extends JDialog {
 			jPanelButtons = new JPanel();
 			jPanelButtons.add(getJButtonOK());
 			jPanelButtons.add(getJButtonCancel());
+			jPanelButtons.add(getJButtonPrint());
+			
+			
 		}
 		return jPanelButtons;
 	}
@@ -826,6 +832,21 @@ public class PatientExaminationEdit extends JDialog {
 			});
 		}
 		return jButtonCancel;
+	}
+	
+	private JButton getJButtonPrint() {
+		if (jButtonPrint == null) {
+			jButtonPrint = new JButton(MessageBundle.getMessage("angal.common.print")); //$NON-NLS-1$
+			jButtonPrint.setMnemonic(KeyEvent.VK_C);
+			jButtonPrint.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					new GenericReportPatient(patex.getPatient().getCode(), GeneralData.EXAMINATION);
+				}
+			});
+		}
+		return jButtonPrint;
 	}
 	
 	private JPanel getJPanelGender() {

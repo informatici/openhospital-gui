@@ -1,10 +1,7 @@
-/*
- * Created on 15/giu/08
- *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 package org.isf.stat.gui.report;
+
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.swing.JOptionPane;
 
@@ -17,15 +14,18 @@ import org.slf4j.LoggerFactory;
 
 import net.sf.jasperreports.view.JasperViewer;
 
-public class GenericReportPatient {
+public class GenericReportPatientVersion2 {
+
 
     private final Logger logger = LoggerFactory.getLogger(GenericReportPatient.class);
 
-	public GenericReportPatient(Integer patientID, String jasperFileName) {
+	public GenericReportPatientVersion2(Integer patientID, String type, Date date, Date date2, String jasperFileName) {
 		try{
 			Integer id = patientID;
+			Date date_To = date2;
+			Date date_From = date;
             JasperReportsManager jasperReportsManager = new JasperReportsManager();
-            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPatientPdf(patientID, jasperFileName);
+            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPatientVersion2Pdf(patientID, type, date_From, date_To, jasperFileName);
 			if (GeneralData.INTERNALVIEWER)
 				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false);
 			else { 
@@ -38,4 +38,5 @@ public class GenericReportPatient {
 		}
 	}
 	
+
 }

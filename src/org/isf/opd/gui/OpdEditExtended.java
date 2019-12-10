@@ -75,6 +75,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -82,6 +83,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.EventListenerList;
 
+import org.isf.admission.gui.AdmissionBrowser.AdmissionListener;
 import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
 import org.isf.distype.manager.DiseaseTypeBrowserManager;
@@ -96,6 +98,8 @@ import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
+import org.isf.operation.gui.OperationRowAdm;
+import org.isf.operation.gui.OperationRowOpd;
 import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.manager.PatientBrowserManager;
@@ -270,6 +274,12 @@ public class OpdEditExtended extends JDialog implements
     private JButton searchDiseaseButton;
     private JButton searchDiseaseButton2;
     private JButton searchDiseaseButton3;
+
+	private OperationRowOpd operationop;
+
+	private JTabbedPane jTabbedPaneOpd;
+
+	private JPanel jPanelOperation;
         
 	/**
 	 * This method initializes 
@@ -298,6 +308,8 @@ public class OpdEditExtended extends JDialog implements
 					opdPatient.setCode(0);
 				}
 			}
+			 operationop = new OperationRowOpd(opd);
+			addSurgeryListener((SurgeryListener) operationop);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -327,6 +339,8 @@ public class OpdEditExtended extends JDialog implements
 					opdPatient.setCode(0);
 				}
 			}
+			 operationop = new OperationRowOpd(opd);
+				addSurgeryListener((SurgeryListener) operationop);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -504,11 +518,17 @@ public class OpdEditExtended extends JDialog implements
 			jPanelCentral.setLayout(new BoxLayout(jPanelCentral, BoxLayout.Y_AXIS));
 			jPanelCentral.add(getDataPanel());
 			jPanelCentral.add(Box.createVerticalStrut(10));
-			jPanelCentral.add(getJPanelPatient());
+			if (GeneralData.OPDOPERATION) {
+				jPanelCentral.add(getJTabbedPaneAdmission());
+			}else {
+				jPanelCentral.add(getJPanelPatient());
+			}
+			
 		}
 		return jPanelCentral;
 	}
 
+	
 	/**
 	 * This method initializes this
 	 * 
@@ -1280,6 +1300,26 @@ public class OpdEditExtended extends JDialog implements
 		return diseaseBox3;
 	}
 	
+	private JTabbedPane getJTabbedPaneAdmission() {
+		if (jTabbedPaneOpd == null) {
+			jTabbedPaneOpd = new JTabbedPane();
+			jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.opd.patient"), getJPanelPatient());
+			jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.admission.operation"), getMultiOperationTab());
+			jTabbedPaneOpd.setPreferredSize(new Dimension(200,400));
+		}
+		return jTabbedPaneOpd;
+	}
+	
+    private JPanel getMultiOperationTab() {
+	if (jPanelOperation == null) {
+		jPanelOperation = new JPanel();
+		jPanelOperation.setLayout(new BorderLayout(0, 0));
+		//jPanelOperation.add(formOperation, BorderLayout.NORTH);
+		//jPanelOperation.add(listOperation);
+		jPanelOperation.add(operationop);
+	}
+	return jPanelOperation; 
+}
 	private JPanel getJPanelPatient() {
 		if (jPanelPatient == null){
 			
