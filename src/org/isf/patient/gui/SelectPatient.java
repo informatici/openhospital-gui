@@ -38,6 +38,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.accounting.gui.BillBrowser;
+import org.isf.visits.gui.InsertVisit;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
@@ -48,6 +49,7 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.visits.gui.InsertVisit;
 
 public class SelectPatient extends JDialog {
 	
@@ -234,7 +236,34 @@ public class SelectPatient extends JDialog {
 		setLocationRelativeTo(null);
 		buttonNew.setVisible(abbleAddPatient);
 	}
+	public SelectPatient(JDialog owner, boolean abbleAddPatient, boolean full) {
+		super(owner, true);
+		if (!GeneralData.ENHANCEDSEARCH) {
+			if(!full)
+				patArray = patManager.getPatientHeadWithHeightAndWeight();
+			else
+				try {
+					patArray = patManager.getPatient();
+				} catch (OHServiceException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			patSearch = patArray;
+		}
+		ps = new PatientSummary(patient);
+		initComponents();
+		addWindowListener(new WindowAdapter() {
 
+			public void windowClosing(WindowEvent e) {
+				// to free memory
+				patArray.clear();
+				patSearch.clear();
+				dispose();
+			}
+		});
+		setLocationRelativeTo(null);
+		buttonNew.setVisible(abbleAddPatient);
+	}
 	private void initComponents() {
 		add(getJPanelTop(), BorderLayout.NORTH);
 		add(getJPanelCenter(), BorderLayout.CENTER);
@@ -615,5 +644,9 @@ public class SelectPatient extends JDialog {
 	List<BillBrowser> billBrowserListeners = new ArrayList<BillBrowser>();
 	public void addSelectionListener(BillBrowser l) {
 		billBrowserListeners.add(l);
+	}
+	List<InsertVisit> visitListeners = new ArrayList<InsertVisit>();
+	public void addSelectionListener(InsertVisit l) {
+		visitListeners.add(l);
 	}
 }
