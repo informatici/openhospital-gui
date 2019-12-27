@@ -93,6 +93,7 @@ import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
+import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
@@ -220,7 +221,10 @@ public class OpdEditExtended extends JDialog implements
 
 	private Opd opd;
 	private boolean insert;
-	private DiseaseType allType= new DiseaseType(MessageBundle.getMessage("angal.opd.alltype"),MessageBundle.getMessage("angal.opd.alltype"));
+	private DiseaseType allType= Context.getApplicationContext().getBean(
+			DiseaseType.class,
+			MessageBundle.getMessage("angal.opd.alltype"),
+			MessageBundle.getMessage("angal.opd.alltype"));
 
 	private VoLimitedTextField jTextPatientSrc;
 	private JComboBox jComboPatResult;
@@ -248,14 +252,14 @@ public class OpdEditExtended extends JDialog implements
 	/*
 	 * Managers and Arrays
 	 */
-	private DiseaseTypeBrowserManager typeManager = new DiseaseTypeBrowserManager();
-	private DiseaseBrowserManager manager = new DiseaseBrowserManager();
+	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 	private ArrayList<DiseaseType> types;
 	private ArrayList<Disease> diseasesOPD;
 	private ArrayList<Disease> diseasesAll;
-	private OpdBrowserManager opdManager = new OpdBrowserManager();
+	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 	private ArrayList<Opd> opdArray = new ArrayList<Opd>();
-	private PatientBrowserManager patBrowser = new PatientBrowserManager();
+	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private ArrayList<Patient> pat = new ArrayList<Patient>();
 
 	private Disease lastOPDDisease1;
@@ -291,10 +295,10 @@ public class OpdEditExtended extends JDialog implements
 			if(!insert) {
 				opdPatient = opd.getPatient();
 				if (opdPatient != null && opd.getPatient().getCode() != 0) { 
-					PatientBrowserManager patBrowser = new PatientBrowserManager();
+					PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 					opdPatient = patBrowser.getPatientAll(opd.getPatient().getCode());
 				} else { //old OPD has no PAT_ID => Create Patient from OPD
-					opdPatient = new Patient(opd);
+					opdPatient = Context.getApplicationContext().getBean(Patient.class,opd);
 					opdPatient.setCode(0);
 				}
 			}
@@ -320,10 +324,12 @@ public class OpdEditExtended extends JDialog implements
 			if(!insert) {
 				opdPatient = opd.getPatient();
 				if (opdPatient != null && opd.getPatient().getCode() != 0) { 
-					PatientBrowserManager patBrowser = new PatientBrowserManager();
+					PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 					opdPatient = patBrowser.getPatientAll(opd.getPatient().getCode());
 				} else { //old OPD has no PAT_ID => Create Patient from OPD
-					opdPatient = new Patient(opd);
+					opdPatient = Context.getApplicationContext().getBean(
+							Patient.class,
+							opd);
 					opdPatient.setCode(0);
 				}
 			}
@@ -1072,7 +1078,7 @@ public class OpdEditExtended extends JDialog implements
 	 */
 	private VoLimitedTextField getJTextPatientSrc() {
 		if (jTextPatientSrc == null) {
-			jTextPatientSrc = new VoLimitedTextField(16,20);
+			jTextPatientSrc = Context.getApplicationContext().getBean(VoLimitedTextField.class,16,20);
 			jTextPatientSrc.addKeyListener(new KeyListener() {
 	
 				public void keyPressed(KeyEvent e) {
@@ -1197,11 +1203,19 @@ public class OpdEditExtended extends JDialog implements
 					if (jComboPatResult.getSelectedItem() != null) {
 						if (jComboPatResult.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.opd.newpatient")) == 0) {
 							if (GeneralData.PATIENTEXTENDED) {
-								PatientInsertExtended newrecord = new PatientInsertExtended(OpdEditExtended.this, new Patient(), true);
+								PatientInsertExtended newrecord = Context.getApplicationContext().getBean(
+										PatientInsertExtended.class,
+										OpdEditExtended.this, 
+										Context.getApplicationContext().getBean(Patient.class),
+										true);
 								newrecord.addPatientListener(OpdEditExtended.this);
 								newrecord.setVisible(true);
 							} else {
-								PatientInsert newrecord = new PatientInsert(OpdEditExtended.this, new Patient(), true);
+								PatientInsert newrecord = Context.getApplicationContext().getBean(
+										PatientInsert.class,
+										OpdEditExtended.this, 
+										Context.getApplicationContext().getBean(Patient.class),
+										true);
 								newrecord.addPatientListener(OpdEditExtended.this);
 								newrecord.setVisible(true);
 							}
@@ -1232,11 +1246,19 @@ public class OpdEditExtended extends JDialog implements
 				public void actionPerformed(ActionEvent e) {
 					if (opdPatient != null) {
 						if (GeneralData.PATIENTEXTENDED) {
-							PatientInsertExtended editrecord = new PatientInsertExtended(OpdEditExtended.this, opdPatient, false);
+							PatientInsertExtended editrecord = Context.getApplicationContext().getBean(
+									PatientInsertExtended.class,
+									OpdEditExtended.this, 
+									opdPatient, 
+									false);
 							editrecord.addPatientListener(OpdEditExtended.this);
 							editrecord.setVisible(true);
 						} else {
-							PatientInsert editrecord = new PatientInsert(OpdEditExtended.this, opdPatient, false);
+							PatientInsert editrecord = Context.getApplicationContext().getBean(
+									PatientInsert.class,
+									OpdEditExtended.this, 
+									opdPatient, 
+									false);
 							editrecord.addPatientListener(OpdEditExtended.this);
 							editrecord.setVisible(true);
 						}
@@ -1299,7 +1321,7 @@ public class OpdEditExtended extends JDialog implements
 			gbc_jLabelfirstName.gridx = 0;
 			gbc_jLabelfirstName.gridy = 0;
 			jPanelPatient.add(jLabelfirstName, gbc_jLabelfirstName);
-			jFieldFirstName= new VoLimitedTextField(50,20);
+			jFieldFirstName= Context.getApplicationContext().getBean(VoLimitedTextField.class,50,20);
 			jFieldFirstName.setEditable(false);
 			jFieldFirstName.setFocusable(false);
 			GridBagConstraints gbc_jFieldFirstName = new GridBagConstraints();
@@ -1316,7 +1338,7 @@ public class OpdEditExtended extends JDialog implements
 			gbc_jLabelsecondName.gridx = 0;
 			gbc_jLabelsecondName.gridy = 1;
 			jPanelPatient.add(jLabelsecondName, gbc_jLabelsecondName);
-			jFieldSecondName= new VoLimitedTextField(50,20);
+			jFieldSecondName= Context.getApplicationContext().getBean(VoLimitedTextField.class,50,20);
 			jFieldSecondName.setEditable(false);
 			jFieldSecondName.setFocusable(false);
 			GridBagConstraints gbc_jFieldSecondName = new GridBagConstraints();
@@ -1333,7 +1355,7 @@ public class OpdEditExtended extends JDialog implements
 			gbc_jLabeladdress.gridx = 0;
 			gbc_jLabeladdress.gridy = 2;
 			jPanelPatient.add(jLabeladdress, gbc_jLabeladdress);
-			jFieldAddress= new VoLimitedTextField(50,20);
+			jFieldAddress= Context.getApplicationContext().getBean(VoLimitedTextField.class,50,20);
 			jFieldAddress.setEditable(false);
 			jFieldAddress.setFocusable(false);
 			GridBagConstraints gbc_jFieldAddress = new GridBagConstraints();
@@ -1350,7 +1372,7 @@ public class OpdEditExtended extends JDialog implements
 			gbc_jLabelcity.gridx = 0;
 			gbc_jLabelcity.gridy = 3;
 			jPanelPatient.add(jLabelcity, gbc_jLabelcity );
-			jFieldCity= new VoLimitedTextField(50,20);
+			jFieldCity= Context.getApplicationContext().getBean(VoLimitedTextField.class,50,20);
 			jFieldCity.setEditable(false);
 			jFieldCity.setFocusable(false);
 			GridBagConstraints gbc_jFieldCity = new GridBagConstraints();
@@ -1367,7 +1389,7 @@ public class OpdEditExtended extends JDialog implements
 			gbc_jLabelnextKin.gridx = 0;
 			gbc_jLabelnextKin.gridy = 4;
 			jPanelPatient.add(jLabelnextKin, gbc_jLabelnextKin);
-			jFieldNextKin= new VoLimitedTextField(50,20);
+			jFieldNextKin= Context.getApplicationContext().getBean(VoLimitedTextField.class,50,20);
 			jFieldNextKin.setEditable(false);
 			jFieldNextKin.setFocusable(false);
 			GridBagConstraints gbc_jFieldNextKin = new GridBagConstraints();
@@ -1384,7 +1406,7 @@ public class OpdEditExtended extends JDialog implements
 			gbc_jLabelAge.gridx = 0;
 			gbc_jLabelAge.gridy = 5;
 			jPanelPatient.add(jLabelAge, gbc_jLabelAge);
-			jFieldAge = new VoLimitedTextField(50,20);
+			jFieldAge = Context.getApplicationContext().getBean(VoLimitedTextField.class,50,20);
 			jFieldAge.setEditable(false);
 			jFieldAge.setFocusable(false);
 			GridBagConstraints gbc_jFieldAge = new GridBagConstraints();
@@ -1491,7 +1513,7 @@ public class OpdEditExtended extends JDialog implements
 						return;
 					}
 					
-					ExaminationBrowserManager examManager = new ExaminationBrowserManager();
+					ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 					PatientExamination patex = null;
 					PatientExamination lastPatex = null;
 					try {
@@ -1505,9 +1527,15 @@ public class OpdEditExtended extends JDialog implements
 						patex = examManager.getDefaultPatientExamination(opdPatient);
 					}
 					
-					GenderPatientExamination gpatex = new GenderPatientExamination(patex, opdPatient.getSex() == 'M');
+					GenderPatientExamination gpatex = Context.getApplicationContext().getBean(
+							GenderPatientExamination.class,
+							patex, 
+							opdPatient.getSex() == 'M');
 					
-					PatientExaminationEdit dialog = new PatientExaminationEdit(OpdEditExtended.this, gpatex);
+					PatientExaminationEdit dialog = Context.getApplicationContext().getBean(
+							PatientExaminationEdit.class,
+							OpdEditExtended.this, 
+							gpatex);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.pack();
 					dialog.setLocationRelativeTo(null);
@@ -1533,7 +1561,7 @@ public class OpdEditExtended extends JDialog implements
 				public void actionPerformed(ActionEvent e) {
 					boolean opdNumExist = false;
 					if(!jOpdNumField.getText().equals("")||!jOpdNumField.getText().contains(" ")) {
-						OpdBrowserManager opm = new OpdBrowserManager();
+						OpdBrowserManager opm = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 						GregorianCalendar gregDate = new GregorianCalendar();
 						gregDate.setTime(OpdDateFieldCal.getDate());
 						int opdNum;

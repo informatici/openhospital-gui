@@ -65,6 +65,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
+import org.isf.menu.manager.Context;
 
 
 public class OpdEdit extends JDialog {
@@ -150,7 +151,8 @@ public class OpdEdit extends JDialog {
 	private boolean insert;
 	private char sex;
 	private int oldAge;
-	private DiseaseType allType = new DiseaseType(
+	private DiseaseType allType = Context.getApplicationContext().getBean(
+			DiseaseType.class,
 			MessageBundle.getMessage("angal.opd.alltype"),
 			MessageBundle.getMessage("angal.opd.alltype")
 	);
@@ -158,9 +160,9 @@ public class OpdEdit extends JDialog {
 	/*
 	 * Managers and Arrays
 	 */
-	private DiseaseTypeBrowserManager typeManager = new DiseaseTypeBrowserManager();
-	private DiseaseBrowserManager diseaseManager = new DiseaseBrowserManager();
-	private OpdBrowserManager opdManager = new OpdBrowserManager();
+	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 	private ArrayList<DiseaseType> types;
 	private ArrayList<Disease> diseasesAll;
 	
@@ -348,7 +350,7 @@ public class OpdEdit extends JDialog {
 		}
 		Disease elem2=null;
 		ArrayList<Disease> diseases = null;
-		DiseaseBrowserManager manager = new DiseaseBrowserManager();
+		DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 		try {
 			diseases = manager.getDiseaseOpd();
 		}catch(OHServiceException e){
@@ -389,7 +391,7 @@ public class OpdEdit extends JDialog {
 		}
 		Disease elem2=null;
 		ArrayList<Disease> diseases = null;
-		DiseaseBrowserManager manager = new DiseaseBrowserManager();
+		DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 		try {
 			diseases = manager.getDiseaseOpd();
 		}catch(OHServiceException e){
@@ -586,7 +588,7 @@ public class OpdEdit extends JDialog {
 	 */
 	private JTextField getAgeField() {
 		if (ageField == null) {
-			ageField = new VoLimitedTextField(3,2);
+			ageField = Context.getApplicationContext().getBean(VoLimitedTextField.class,3,2);
 			ageField.setText("0");
 			ageField.setMaximumSize(new Dimension(50, 50));
 			if (insert) {
@@ -893,7 +895,11 @@ public class OpdEdit extends JDialog {
 			myDate = dateIn.getTime();
 			d = currentDateFormat.format(myDate);
 			
-			OpdDateField = new VoDateTextField("dd/mm/yy", d, 15);
+			OpdDateField = Context.getApplicationContext().getBean(
+					VoDateTextField.class,
+					"dd/mm/yy",
+					d,
+					15);
 
 			jDatePanel.add(OpdDateField);
 			jDatePanel = setMyBorder(jDatePanel, MessageBundle.getMessage("angal.opd.attendancedate"));

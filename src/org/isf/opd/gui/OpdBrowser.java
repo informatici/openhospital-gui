@@ -73,6 +73,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.menu.manager.Context;
 
 public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, OpdEditExtended.SurgeryListener {
 
@@ -118,7 +119,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private ButtonGroup groupNewPatient=null;
 	private Integer ageTo = 0;
 	private Integer ageFrom = 0;
-	private DiseaseType allType= new DiseaseType(
+	private DiseaseType allType = Context.getApplicationContext().getBean(
+			DiseaseType.class,
 			MessageBundle.getMessage("angal.opd.alltype"),
 			MessageBundle.getMessage("angal.opd.alltype"));
 	private String[] pColums = { 
@@ -140,7 +142,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
 	private boolean[] columnsBold = { false, true, false, false, false, false, false, false };
 	private int selectedrow;
-	private OpdBrowserManager manager = new OpdBrowserManager();
+	private OpdBrowserManager manager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 	private JButton filterButton = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.opd.count") + ": ";
 	private JLabel rowCounter = null;
@@ -210,7 +212,12 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		initialize();
         setVisible(true);
         //if(bOpenEdit)
-        Opd newOpd = new Opd(0,' ',-1,new Disease());
+        Opd newOpd = Context.getApplicationContext().getBean(
+        		Opd.class,
+        		0,
+        		' ',
+        		-1,
+        		Context.getApplicationContext().getBean(Disease.class));
         OpdEditExtended editrecord = new OpdEditExtended(myFrame, newOpd, patient, true);
         editrecord.addSurgeryListener(OpdBrowser.this);
 		editrecord.setVisible(true);
@@ -286,7 +293,12 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jNewButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
-					Opd newOpd = new Opd(0,' ',-1,new Disease());
+					Opd newOpd = Context.getApplicationContext().getBean(
+							Opd.class,
+							0,
+							' ',
+							-1,
+							Context.getApplicationContext().getBean(Disease.class));
 					if (GeneralData.OPDEXTENDED) {
 						OpdEditExtended newrecord = new OpdEditExtended(myFrame, newOpd, true);
 						newrecord.addSurgeryListener(OpdBrowser.this);
@@ -704,7 +716,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDiseaseTypeBox = new JComboBox();
 			jDiseaseTypeBox.setMaximumSize(new Dimension(300,50));
 			
-			DiseaseTypeBrowserManager manager = new DiseaseTypeBrowserManager();
+			DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 			ArrayList<DiseaseType> types = null;
 			try {
 				types = manager.getDiseaseType();
@@ -747,7 +759,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDiseaseBox.setMaximumSize(new Dimension(300, 50));
 			
 		};
-		DiseaseBrowserManager manager = new DiseaseBrowserManager();
+		DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 		ArrayList<Disease> diseases = null;
 		try{
 			if (((DiseaseType)jDiseaseTypeBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.opd.alltype"))){
@@ -762,7 +774,11 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				}
 			}
 		}
-		Disease allDisease = new Disease(MessageBundle.getMessage("angal.opd.alldisease"), MessageBundle.getMessage("angal.opd.alldisease"), allType);
+		Disease allDisease = Context.getApplicationContext().getBean(
+				Disease.class,
+				MessageBundle.getMessage("angal.opd.alldisease"),
+				MessageBundle.getMessage("angal.opd.alldisease"),
+				allType);
 		jDiseaseBox.addItem(allDisease);
 		if(diseases != null){
 			for (Disease elem : diseases) {
@@ -856,7 +872,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	private VoLimitedTextField getJAgeFromTextField() {
 		if (jAgeFromTextField == null) {
-			jAgeFromTextField = new VoLimitedTextField(3,2);
+			jAgeFromTextField = Context.getApplicationContext().getBean(
+					VoLimitedTextField.class,
+					3,
+					2);
 			jAgeFromTextField.setText("0");
 			jAgeFromTextField.setMinimumSize(new Dimension(100, 50));
 			ageFrom=0;
@@ -906,7 +925,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	private VoLimitedTextField getJAgeToTextField() {
 		if (jAgeToTextField == null) {
-			jAgeToTextField = new VoLimitedTextField(3,2);
+			jAgeToTextField = Context.getApplicationContext().getBean(
+					VoLimitedTextField.class,
+					3,
+					2);
 			jAgeToTextField.setText("0");
 			jAgeToTextField.setMaximumSize(new Dimension(100, 50));
 			ageTo=0;
