@@ -35,6 +35,7 @@ import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.menu.manager.Context;
 
 /**
  * This class allows operations edits and inserts
@@ -253,7 +254,7 @@ public class OperationEdit extends JDialog {
 
 								return;
 							}
-							OperationBrowserManager manager = new OperationBrowserManager();
+							OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 
 							if (manager.codeControl(key)) {
 								JOptionPane.showMessageDialog(null,
@@ -278,7 +279,7 @@ public class OperationEdit extends JDialog {
 									MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 							return;
 						}
-						OperationBrowserManager manager = new OperationBrowserManager();
+						OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 						if (descriptionTextField.getText().equals(lastdescription)) {
 						} else {
 
@@ -334,7 +335,7 @@ public class OperationEdit extends JDialog {
 	 */
 	private JTextField getDescriptionTextField() {
 		if (descriptionTextField == null) {
-			descriptionTextField = new VoLimitedTextField(50, 50);
+			descriptionTextField = Context.getApplicationContext().getBean(VoLimitedTextField.class,50, 50);
 			if (!insert) {
 				lastdescription = operation.getDescription();
 				descriptionTextField.setText(lastdescription);
@@ -395,7 +396,7 @@ public class OperationEdit extends JDialog {
 	 */
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
-			codeTextField = new VoLimitedTextField(10, 50);
+			codeTextField = Context.getApplicationContext().getBean(VoLimitedTextField.class,10, 50);
 			if (!insert) {
 				codeTextField.setText(operation.getCode());
 				codeTextField.setEnabled(false);
@@ -413,7 +414,7 @@ public class OperationEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox();
 			if (insert) {
-				OperationTypeBrowserManager manager = new OperationTypeBrowserManager();
+				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 				ArrayList<OperationType> types;
 				try {
 					types = manager.getOperationType();

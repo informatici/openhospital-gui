@@ -50,6 +50,7 @@ import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
 import org.joda.time.DateTime;
+import org.isf.menu.manager.Context;
 
 /**
  *
@@ -63,17 +64,17 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private JLabel labelDate;
 	private JTextField textFieldUnit;
 	private JDateChooser textDate;
-	private JComboBox comboOperation;
-	private JComboBox comboResult;
+	private JComboBox<Operation> comboOperation;
+	private JComboBox<Resultat> comboResult;
 	private JTextArea textAreaRemark;
 
-	OperationBrowserManager opeManager = new OperationBrowserManager();
-	OperationRowBrowserManager opeRowManager = new OperationRowBrowserManager();
+	OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
 	OhTableOperationModel<OperationRow> modelOhOpeRow;
 	private List<OperationRow> oprowData = new ArrayList<OperationRow>();
 	private Admission myAdmission;
 
-	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
+	OhDefaultCellRenderer cellRenderer = Context.getApplicationContext().getBean(OhDefaultCellRenderer.class);
 
 	private JDateChooser jCalendarDate;
 	private JTable tableData;
@@ -137,7 +138,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		gbc_labelResultat.gridy = 1;
 		panelForm.add(labelResultat, gbc_labelResultat);
 
-		comboResult = new JComboBox();
+		comboResult = new JComboBox<Resultat>();
 		GridBagConstraints gbc_comboResult = new GridBagConstraints();
 		gbc_comboResult.insets = new Insets(0, 0, 5, 5);
 		gbc_comboResult.fill = GridBagConstraints.HORIZONTAL;
@@ -158,7 +159,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		panelForm.add(lblUniteTrans, gbc_lblUniteTrans);
 
 		// textFieldUnit = new JTextField();
-		textFieldUnit = new VoFloatTextField(0, 100);
+		textFieldUnit = Context.getApplicationContext().getBean(VoFloatTextField.class,0, 100);
 		GridBagConstraints gbc_textFieldUnit = new GridBagConstraints();
 		gbc_textFieldUnit.insets = new Insets(0, 0, 5, 0);
 		gbc_textFieldUnit.fill = GridBagConstraints.HORIZONTAL;
@@ -274,7 +275,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 				//
 			}
 		}
-		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+		//modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+		modelOhOpeRow = Context.getApplicationContext().getBean(OhTableOperationModel.class,oprowData);
 		tableData.setModel(modelOhOpeRow);
 
 	}
@@ -289,8 +291,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		return jCalendarDate;
 	}
 
-	private JComboBox getOperationsBox() {
-		JComboBox comboOpe = new JComboBox();
+	private JComboBox<Operation> getOperationsBox() {
+		JComboBox<Operation> comboOpe = new JComboBox<Operation>();
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
 			opeList.addAll(opeManager.getOperation());
@@ -319,7 +321,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			return;
 		}
 
-		OperationRow operationRow = new OperationRow();
+		OperationRow operationRow = Context.getApplicationContext().getBean(OperationRow.class);
 		GregorianCalendar dateop = new GregorianCalendar();
 		dateop.setTime(this.textDate.getDate());
 		operationRow.setOpDate(dateop);
@@ -341,7 +343,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		int index = tableData.getSelectedRow();
 		if (index < 0) {
 			oprowData.add(operationRow);
-			modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+			//modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+			modelOhOpeRow = Context.getApplicationContext().getBean(OhTableOperationModel.class,oprowData);
 			tableData.setModel(modelOhOpeRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
@@ -354,14 +357,15 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			opeInter.setPrescriber(MainMenu.getUser().getUserName());
 			opeInter.setRemarks(textAreaRemark.getText());
 			oprowData.set(index, opeInter);
-			modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+			//modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+			modelOhOpeRow = Context.getApplicationContext().getBean(OhTableOperationModel.class,oprowData);
 			tableData.setModel(modelOhOpeRow);
 		}
 		clearForm();
 	}
 
 	public void addToForm() {
-		OperationRow opeRow = (OperationRow) oprowData.get(tableData.getSelectedRow());
+		OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
 		/*** for combo operation *****/
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
@@ -424,7 +428,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 						oprowData.remove(idRow);
-						modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+						//modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+						modelOhOpeRow = Context.getApplicationContext().getBean(OhTableOperationModel.class,oprowData);
 						tableData.setModel(modelOhOpeRow);
 						tableData.repaint();
 						clearForm();
@@ -439,7 +444,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 							MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 					oprowData.remove(idOpe);
-					modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+					//modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+					modelOhOpeRow = Context.getApplicationContext().getBean(OhTableOperationModel.class,oprowData);
 					tableData.setModel(modelOhOpeRow);
 					tableData.repaint();
 					clearForm();

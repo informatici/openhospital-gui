@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.menu.manager.Context;
 
 public class OperationList extends JPanel implements OperationRowListener, OperationRowEditListener {
 
@@ -194,7 +195,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 			}
 		}
 		if (myPatient != null) {
-			AdmissionBrowserManager admManager = new AdmissionBrowserManager();
+			AdmissionBrowserManager admManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 			try {
 				ArrayList<Admission> admissions = admManager.getAdmissions(myPatient);
 				oprowData = new ArrayList<OperationRow>();
