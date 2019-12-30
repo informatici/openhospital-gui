@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.pregtreattype.manager.PregnantTreatmentTypeBrowserManager;
 import org.isf.pregtreattype.model.PregnantTreatmentType;
 import org.isf.utils.exception.OHServiceException;
@@ -190,7 +191,7 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String key = codeTextField.getText();
-					PregnantTreatmentTypeBrowserManager manager = new PregnantTreatmentTypeBrowserManager();
+					PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 
 					try{
 							if (descriptionTextField.getText().equals(lastdescription)){
@@ -252,7 +253,7 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 	 */
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
-			codeTextField = new VoLimitedTextField(10);
+			codeTextField = Context.getApplicationContext().getBean(VoLimitedTextField.class,10);
 			if (!insert) {
 				codeTextField.setText(pregnantTreatmentType.getCode());
 				codeTextField.setEnabled(false);
