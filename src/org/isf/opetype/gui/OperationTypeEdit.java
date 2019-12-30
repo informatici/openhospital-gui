@@ -21,6 +21,7 @@ import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.menu.manager.Context;
 
 public class OperationTypeEdit extends JDialog{
 
@@ -191,7 +192,7 @@ public class OperationTypeEdit extends JDialog{
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String key = codeTextField.getText();
-					OperationTypeBrowserManager manager = new OperationTypeBrowserManager();
+					OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 
 					if (descriptionTextField.getText().equals(lastdescription)){
 						dispose();	
@@ -260,7 +261,7 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
-			codeTextField = new VoLimitedTextField(2);
+			codeTextField = Context.getApplicationContext().getBean(VoLimitedTextField.class,2);
 			if (!insert) {
 				codeTextField.setText(operationType.getCode());
 				codeTextField.setEnabled(false);

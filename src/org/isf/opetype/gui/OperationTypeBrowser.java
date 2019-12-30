@@ -24,6 +24,7 @@ import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.menu.manager.Context;
 
 /**
  * Browsing of table OperationType
@@ -53,7 +54,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 	private JTable jTable = null;
 	private OperationTypeBrowserModel model;
 	private int selectedrow;
-	private OperationTypeBrowserManager manager = new OperationTypeBrowserManager();
+	private OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 	private OperationType operationType = null;
 	private final JFrame myFrame;
 	
@@ -118,7 +119,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 			jNewButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
-					operationType = new OperationType("","");
+					operationType = Context.getApplicationContext().getBean(OperationType.class,"","");
 					OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, true);
 					newrecord.addOperationTypeListener(OperationTypeBrowser.this);
 					newrecord.setVisible(true);
@@ -247,7 +248,7 @@ class OperationTypeBrowserModel extends DefaultTableModel {
 	private static final long serialVersionUID = 1L;
 
 		public OperationTypeBrowserModel() {
-			OperationTypeBrowserManager manager = new OperationTypeBrowserManager();
+			OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 			try {
 				pOperationType = manager.getOperationType();
 			} catch (OHServiceException e) {
