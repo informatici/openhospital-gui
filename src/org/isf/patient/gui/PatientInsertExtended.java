@@ -50,6 +50,7 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.video.gui.PatientPhotoPanel;
+import org.isf.menu.manager.Context;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -121,7 +122,7 @@ public class PatientInsertExtended extends JDialog {
 	private boolean insert;
 	private boolean justSave;
 	final private Patient patient;
-	private PatientBrowserManager manager = new PatientBrowserManager();
+	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	// COMPONENTS: Data
 	private JPanel jDataPanel = null;
@@ -635,7 +636,7 @@ public class PatientInsertExtended extends JDialog {
 				calcAge(bdate);
 			}
 		} else if (jAgeType_Description.isSelected()) {
-			AgeTypeBrowserManager at = new AgeTypeBrowserManager();
+			AgeTypeBrowserManager at = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 			int index = jAgeDescComboBox.getSelectedIndex();
 			AgeType ageType = null;
 			
@@ -1440,7 +1441,7 @@ public class PatientInsertExtended extends JDialog {
 
 			jAgeDescComboBox = new JComboBox();
 
-			AgeTypeBrowserManager at = new AgeTypeBrowserManager();
+			AgeTypeBrowserManager at = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 			ArrayList<AgeType> ageList;
 			try {
 				ageList = at.getAgeType();
@@ -2187,13 +2188,14 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel getJRightPanel() {
 		if (jRightPanel == null) {
 			jRightPanel = new JPanel(new BorderLayout());
-			try {
+			//try {
 				//jRightPanel.add(getJPhoto(), BorderLayout.NORTH);
-				photoPanel = new PatientPhotoPanel(this, patient.getCode(), patient.getPhoto());
+				//photoPanel = new PatientPhotoPanel(this, patient.getCode(), patient.getPhoto());
+				photoPanel = Context.getApplicationContext().getBean(PatientPhotoPanel.class,this,patient.getCode(),patient.getPhoto());
 				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			//} catch (IOException e) {
+			//	e.printStackTrace();
+			//}
 			if (photoPanel != null) jRightPanel.add(photoPanel, BorderLayout.NORTH);
 			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);
 

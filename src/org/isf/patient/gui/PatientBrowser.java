@@ -23,6 +23,7 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.menu.manager.Context;
 
 
 
@@ -54,7 +55,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 	private int[] pColumwidth = { 200, 30, 25 ,100, 100, 50 };
 	private int selectedrow;
 	private Patient patient;
-	private PatientBrowserManager manager = new PatientBrowserManager();
+	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private ArrayList<Patient> pPat;
 	
 	
@@ -149,7 +150,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 			jNewButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
-					patient = new Patient();
+					patient = Context.getApplicationContext().getBean(Patient.class);
 					PatientInsert newrecord = new PatientInsert(PatientBrowser.this, patient, true);
 					newrecord.addPatientListener(PatientBrowser.this);
 					newrecord.setVisible(true);
@@ -268,7 +269,7 @@ class PatientBrowserModel extends DefaultTableModel {
 	private static final long serialVersionUID = 1L;
 
 		public PatientBrowserModel() {
-			PatientBrowserManager manager = new PatientBrowserManager();
+			PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 			try {
 				pPat = manager.getPatient();
 			} catch (OHServiceException e) {

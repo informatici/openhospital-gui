@@ -48,6 +48,7 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.menu.manager.Context;
 
 public class SelectPatient extends JDialog {
 	
@@ -103,7 +104,7 @@ public class SelectPatient extends JDialog {
 	private int[] patColumsWidth = { 100, 250 };
 	private boolean[] patColumsResizable = { false, true };
 
-	PatientBrowserManager patManager = new PatientBrowserManager();
+	PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	ArrayList<Patient> patArray = new ArrayList<Patient>();
 	ArrayList<Patient> patSearch = new ArrayList<Patient>();
 	private String lastKey = "";
@@ -253,7 +254,7 @@ public class SelectPatient extends JDialog {
 
 	private JTextField getJTextFieldSearchPatient() {
 		if (jTextFieldSearchPatient == null) {
-			jTextFieldSearchPatient = new VoLimitedTextField(100,20);
+			jTextFieldSearchPatient = Context.getApplicationContext().getBean(VoLimitedTextField.class,100,20);
 			jTextFieldSearchPatient.setText("");
 			jTextFieldSearchPatient.selectAll();
 			if (GeneralData.ENHANCEDSEARCH) {

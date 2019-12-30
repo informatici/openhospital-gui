@@ -32,6 +32,7 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.menu.manager.Context;
 
 public class PatientInsert extends JDialog implements ActionListener{
 	
@@ -122,7 +123,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JLabel jNextKinLabel = null;
 	private JTextField jNextKinTextField = null;
 //	private int oldAge;
-	private PatientBrowserManager manager = new PatientBrowserManager();
+	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private JLabel jLabel1 = null;
 	private JLabel jLabel = null;
 	private JLabel jAgeLabel = null;

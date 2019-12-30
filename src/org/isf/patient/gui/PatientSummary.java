@@ -21,6 +21,8 @@ import javax.swing.JTextArea;
 import org.isf.generaldata.MessageBundle;
 import org.isf.patient.model.Patient;
 import org.isf.utils.time.TimeTools;
+import org.isf.menu.manager.Context;
+
 
 /**
  * A class to compose a summary of the data of a given patient
@@ -159,7 +161,7 @@ public class PatientSummary {
 		patientData.setBackground(Color.WHITE);
 		patientData.setBorder(BorderFactory.createEmptyBorder(insetSize, insetSize, insetSize, insetSize));
 		
-		if (patient == null) patient = new Patient();
+		if (patient == null) patient = Context.getApplicationContext().getBean(Patient.class);
 		Integer code = patient.getCode();
 		JLabel patientCode = null;
 		if (code != null) 
