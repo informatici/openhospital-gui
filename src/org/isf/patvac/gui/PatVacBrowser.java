@@ -42,6 +42,7 @@ import javax.swing.table.TableColumnModel;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
+import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
 import org.isf.patvac.manager.PatVacManager;
 import org.isf.patvac.model.PatientVaccine;
@@ -112,7 +113,7 @@ public class PatVacBrowser extends ModalJFrame {
 	public PatVacBrowser() {
 		super();
 		myFrame = this;
-		manager = new PatVacManager();
+		manager = Context.getApplicationContext().getBean(PatVacManager.class);
 		initialize();
 		setVisible(true);
 		
@@ -187,11 +188,11 @@ public class PatVacBrowser extends ModalJFrame {
 		   buttonNew.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
-					patientVaccine = new PatientVaccine(0,0,new GregorianCalendar(),new Patient(),
-							                new Vaccine ("","",new VaccineType("","")),0);
+					patientVaccine = Context.getApplicationContext().getBean(PatientVaccine.class,0,0,new GregorianCalendar(),Context.getApplicationContext().getBean(Patient.class),
+							                Context.getApplicationContext().getBean(Vaccine.class,"","",Context.getApplicationContext().getBean(VaccineType.class,"","")),0);
 							
-					PatientVaccine  last = new PatientVaccine(0,0,new GregorianCalendar(),new Patient(),
-							                     new Vaccine ("","",new VaccineType("","")),0);
+					PatientVaccine  last = Context.getApplicationContext().getBean(PatientVaccine.class,0,0,new GregorianCalendar(),Context.getApplicationContext().getBean(Patient.class),
+							                     Context.getApplicationContext().getBean(Vaccine.class,"","",Context.getApplicationContext().getBean(VaccineType.class,"","")),0);
                     new PatVacEdit (myFrame, patientVaccine, true);
                     
                     if (!last.equals(patientVaccine)) {
@@ -229,7 +230,7 @@ public class PatVacBrowser extends ModalJFrame {
 					selectedrow = jTable.getSelectedRow();
 					patientVaccine = (PatientVaccine) (((PatVacBrowsingModel) model).getValueAt(selectedrow, -1));
 
-					PatientVaccine last = new PatientVaccine(patientVaccine.getCode(),
+					PatientVaccine last = Context.getApplicationContext().getBean(PatientVaccine.class,patientVaccine.getCode(),
 								                  patientVaccine.getProgr(),
 								                  patientVaccine.getVaccineDate(),
 								                  patientVaccine.getPatient(),
@@ -515,7 +516,7 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private VoLimitedTextField getJAgeFromTextField() {
 		if (jAgeFromTextField == null) {
-			jAgeFromTextField = new VoLimitedTextField(3,2);
+			jAgeFromTextField = Context.getApplicationContext().getBean(VoLimitedTextField.class,3,2);
 			jAgeFromTextField.setText("0");
 			jAgeFromTextField.setMinimumSize(new Dimension(100, 50));
 			ageFrom=0;
@@ -549,7 +550,7 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private VoLimitedTextField getJAgeToTextField() {
 		if (jAgeToTextField == null) {
-			jAgeToTextField = new VoLimitedTextField(3,2);
+			jAgeToTextField = Context.getApplicationContext().getBean(VoLimitedTextField.class,3,2);
 			jAgeToTextField.setText("0");
 			jAgeToTextField.setMaximumSize(new Dimension(100, 50));
 			ageTo=0;
@@ -594,9 +595,9 @@ public class PatVacBrowser extends ModalJFrame {
 			
 			vaccineTypeComboBox = new JComboBox();
 			vaccineTypeComboBox.setPreferredSize(new Dimension(200, 30));
-			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));			
+			vaccineTypeComboBox.addItem(Context.getApplicationContext().getBean(VaccineType.class,"", MessageBundle.getMessage("angal.patvac.allvaccinetype")));			
 			
-			VaccineTypeBrowserManager manager = new VaccineTypeBrowserManager();
+			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			ArrayList<VaccineType> types = null;
 			try {
 				types = manager.getVaccineType();
@@ -634,10 +635,10 @@ public class PatVacBrowser extends ModalJFrame {
 			vaccineComboBox = new JComboBox();
 			vaccineComboBox.setPreferredSize(new Dimension(200, 30));
 		}
-		VaccineBrowserManager manager = new VaccineBrowserManager();
+		VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 			
 		ArrayList<Vaccine> allVac = null ;
-		vaccineComboBox.addItem( new Vaccine ( "", MessageBundle.getMessage("angal.patvac.allvaccine"),new VaccineType ("","")));
+		vaccineComboBox.addItem( Context.getApplicationContext().getBean(Vaccine.class, "", MessageBundle.getMessage("angal.patvac.allvaccine"),Context.getApplicationContext().getBean(VaccineType.class,"","")));
         try {
             if (((VaccineType)vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))){
                 allVac = manager.getVaccine();
@@ -795,11 +796,11 @@ public class PatVacBrowser extends ModalJFrame {
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		private PatVacManager manager = new PatVacManager();
+		private PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 
 
 		public PatVacBrowsingModel() {
-			PatVacManager manager = new PatVacManager();
+			PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 			try {
 				lPatVac = manager.getPatientVaccine(!GeneralData.ENHANCEDSEARCH);
 			} catch (OHServiceException e) {
