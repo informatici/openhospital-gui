@@ -18,6 +18,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.priceslist.gui.ListEdit.ListListener;
 import org.isf.priceslist.manager.PriceListManager;
 import org.isf.priceslist.model.PriceList;
@@ -60,7 +61,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 	private boolean[] columResizable = {false, false, true, false};
 	
 	private PriceList list;
-	PriceListManager listManager = new PriceListManager();
+	PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 	private ArrayList<PriceList> listArray;
 	private JFrame myFrame;
 			
@@ -229,7 +230,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 							
 							// Save new list
 							if(newName.equals("")) newName = MessageBundle.getMessage("angal.priceslist.copyof").concat(" ").concat(list.getName()); 
-							PriceList copiedList = new PriceList(list.getId(),MessageBundle.getMessage("angal.priceslist.acode"),newName,MessageBundle.getMessage("angal.priceslist.adescription"),list.getCurrency());
+							PriceList copiedList = Context.getApplicationContext().getBean(PriceList.class,list.getId(),MessageBundle.getMessage("angal.priceslist.acode"),newName,MessageBundle.getMessage("angal.priceslist.adescription"),list.getCurrency());
 							
 							boolean result = false;
 							try {
@@ -293,7 +294,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 				
 				public void actionPerformed(ActionEvent event) {
 					
-					PriceList newList = new PriceList(0, "", "", "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					PriceList newList = Context.getApplicationContext().getBean(PriceList.class,0, "", "", "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					ListEdit editList = new ListEdit(myFrame, newList, true);	
 					editList.addListListener(ListBrowser.this);
 					editList.setVisible(true);
@@ -348,7 +349,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 		private static final long serialVersionUID = 1L;
 
 		public ListBrowserModel() {
-			listManager = new PriceListManager();
+			listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 			try {
 				listArray = listManager.getLists();
 			}catch(OHServiceException e){

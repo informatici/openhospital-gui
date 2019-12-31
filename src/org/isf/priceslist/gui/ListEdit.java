@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.priceslist.manager.PriceListManager;
 import org.isf.priceslist.model.PriceList;
 import org.isf.utils.exception.OHServiceException;
@@ -117,7 +118,7 @@ public class ListEdit extends JDialog {
 					list.setDescription(jTextFieldDescription.getText());
 					list.setCurrency(jTextFieldCurrency.getText());
 					
-					PriceListManager listManager = new PriceListManager();
+					PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 					boolean result = false;
 					try{
 						if (insert) {      // inserting
@@ -163,10 +164,10 @@ public class ListEdit extends JDialog {
 
 	private JTextField getJTextFieldDescription() {
 		if (jTextFieldDescription == null) {
-			jTextFieldDescription = new VoLimitedTextField(100, 20);
+			jTextFieldDescription = Context.getApplicationContext().getBean(VoLimitedTextField.class,100, 20);
 			if (!insert) {
 				jTextFieldDescription.setText(list.getDescription());
-			} else jTextFieldDescription = new VoLimitedTextField(100);
+			} else jTextFieldDescription = Context.getApplicationContext().getBean(VoLimitedTextField.class,100);
 		}
 		return jTextFieldDescription;
 	}
@@ -191,7 +192,7 @@ public class ListEdit extends JDialog {
 
 	private JTextField getJTextFieldName() {
 		if (jTextFieldName == null) {
-			jTextFieldName = new VoLimitedTextField(50, 20);
+			jTextFieldName = Context.getApplicationContext().getBean(VoLimitedTextField.class,50, 20);
 			if (!insert) {
 				jTextFieldName.setText(list.getName());
 			} else jTextFieldName.setText(""); //$NON-NLS-1$
@@ -209,7 +210,7 @@ public class ListEdit extends JDialog {
 
 	private JTextField getJTextFieldCode() {
 		if (jTextFieldCode == null) {
-			jTextFieldCode = new VoLimitedTextField(7, 20);
+			jTextFieldCode = Context.getApplicationContext().getBean(VoLimitedTextField.class,7, 20);
 			if (!insert) {
 				jTextFieldCode.setText(list.getCode());
 			} else jTextFieldCode.setText(MessageBundle.getMessage("angal.priceslist.listm")); //$NON-NLS-1$
@@ -227,7 +228,7 @@ public class ListEdit extends JDialog {
 	
 	private JTextField getJTextFieldCurrency() {
 		if (jTextFieldCurrency == null) {
-			jTextFieldCurrency = new VoLimitedTextField(10, 20);
+			jTextFieldCurrency = Context.getApplicationContext().getBean(VoLimitedTextField.class,10, 20);
 			if (!insert) {
 				jTextFieldCurrency.setText(list.getCurrency());
 			} else jTextFieldCurrency.setText(""); //$NON-NLS-1$

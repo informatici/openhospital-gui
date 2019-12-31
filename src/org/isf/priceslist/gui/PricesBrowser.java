@@ -25,6 +25,7 @@ import org.isf.exa.model.Exam;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
+import org.isf.menu.manager.Context;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.priceslist.manager.PriceListManager;
@@ -66,25 +67,25 @@ public class PricesBrowser extends ModalJFrame {
     private boolean[] columsResizable = {true, false};
 	private int[] columWidth = {400,150};
     
-	private PriceListManager listManager = new PriceListManager();
+	private PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 	private ArrayList<PriceList> listArray;
 	private ArrayList<Price> priceArray;
 	private PriceList listSelected;
 	
 	private PriceNode examNodes;
-	private ExamBrowsingManager examManager = new ExamBrowsingManager();
+	private ExamBrowsingManager examManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
     private ArrayList<Exam> examArray;
     
     private PriceNode opeNodes;
-    private OperationBrowserManager operManager = new OperationBrowserManager();
+    private OperationBrowserManager operManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
     private ArrayList<Operation> operArray;
        
     private PriceNode medNodes;
-    private MedicalBrowsingManager mediManager = new MedicalBrowsingManager();
+    private MedicalBrowsingManager mediManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
     private ArrayList<Medical> mediArray;
     
     private PriceNode othNodes;
-    private PricesOthersManager othManager = new PricesOthersManager();
+    private PricesOthersManager othManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
     private ArrayList<PricesOthers> othArray;
 	
 	public PricesBrowser() {
@@ -352,35 +353,35 @@ public class PricesBrowser extends ModalJFrame {
 	    					  price.getItem(), price);
 	    }
 	    
-	    examNodes = new PriceNode(new Price(null,"","",cCategoriesNames[0],null)); //$NON-NLS-1$ //$NON-NLS-2$
+	    examNodes = new PriceNode(Context.getApplicationContext().getBean(Price.class,null,"","",cCategoriesNames[0],null)); //$NON-NLS-1$ //$NON-NLS-2$
 	    for(Exam exa: examArray){
 	    	Price p = priceHashTable.get(listSelected.getId()+cCategories[0]+exa.getCode());
 	    	double priceValue = p != null ? p.getPrice() : 0.;
-		    examNodes.addItem(new PriceNode(new Price(null, cCategories[0], exa.getCode(), exa.getDescription(), priceValue)));
+		    examNodes.addItem(new PriceNode(Context.getApplicationContext().getBean(Price.class,null, cCategories[0], exa.getCode(), exa.getDescription(), priceValue)));
 	    }
 	    
-	    opeNodes = new PriceNode(new Price(null,"","",cCategoriesNames[1],null)); //$NON-NLS-1$ //$NON-NLS-2$
+	    opeNodes = new PriceNode(Context.getApplicationContext().getBean(Price.class,null,"","",cCategoriesNames[1],null)); //$NON-NLS-1$ //$NON-NLS-2$
 	    for(Operation ope: operArray){
 	    	Price p = priceHashTable.get(listSelected.getId()+cCategories[1]+ope.getCode());
 	    	double priceValue = p != null ? p.getPrice() : 0.;
-		    opeNodes.addItem(new PriceNode(new Price(null, cCategories[1], ope.getCode(), ope.getDescription(), priceValue)));
+		    opeNodes.addItem(new PriceNode(Context.getApplicationContext().getBean(Price.class,null, cCategories[1], ope.getCode(), ope.getDescription(), priceValue)));
 	    }
 	    
-	    medNodes = new PriceNode(new Price(null,"","",cCategoriesNames[2],null)); //$NON-NLS-1$ //$NON-NLS-2$
+	    medNodes = new PriceNode(Context.getApplicationContext().getBean(Price.class,null,"","",cCategoriesNames[2],null)); //$NON-NLS-1$ //$NON-NLS-2$
 	    for(Medical med: mediArray){
 	    	Price p = priceHashTable.get(listSelected.getId()+cCategories[2]+med.getCode().toString());
 	    	double priceValue = p != null ? p.getPrice() : 0.;
-		    medNodes.addItem(new PriceNode(new Price(null, cCategories[2], med.getCode().toString(), med.getDescription(), priceValue)));
+		    medNodes.addItem(new PriceNode(Context.getApplicationContext().getBean(Price.class,null, cCategories[2], med.getCode().toString(), med.getDescription(), priceValue)));
 	    }
 	    
-	    othNodes = new PriceNode(new Price(null,"","",cCategoriesNames[3],null)); //$NON-NLS-1$ //$NON-NLS-2$
+	    othNodes = new PriceNode(Context.getApplicationContext().getBean(Price.class,null,"","",cCategoriesNames[3],null)); //$NON-NLS-1$ //$NON-NLS-2$
 	    for(PricesOthers oth: othArray){
 	    	Price p = priceHashTable.get(listSelected.getId()+cCategories[3]+oth.getId());
 	    	double priceValue = p != null ? p.getPrice() : 0.;
-	    	othNodes.addItem(new PriceNode(new Price(null, cCategories[3], Integer.toString(oth.getId()), oth.getDescription(), priceValue, !oth.isUndefined())));
+	    	othNodes.addItem(new PriceNode(Context.getApplicationContext().getBean(Price.class,null, cCategories[3], Integer.toString(oth.getId()), oth.getDescription(), priceValue, !oth.isUndefined())));
 	    }
 	    
-	    PriceNode root = new PriceNode(new Price(null,"","",listSelected.getName(),null)); //$NON-NLS-1$ //$NON-NLS-2$
+	    PriceNode root = new PriceNode(Context.getApplicationContext().getBean(Price.class,null,"","",listSelected.getName(),null)); //$NON-NLS-1$ //$NON-NLS-2$
 	    root.addItem(examNodes);
 	    root.addItem(opeNodes);
 	    root.addItem(medNodes);
