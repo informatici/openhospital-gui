@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.pricesothers.manager.PricesOthersManager;
 import org.isf.pricesothers.model.PricesOthers;
 import org.isf.utils.exception.OHServiceException;
@@ -140,7 +141,7 @@ public class PricesOthersEdit extends JDialog {
 					pOther.setDischarge(jCheckBoxDischarge.isSelected());
 					pOther.setUndefined(jCheckBoxUndefined.isSelected());
 					
-					PricesOthersManager pOtherManager = new PricesOthersManager();
+					PricesOthersManager pOtherManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 					boolean result = false;
 					try{
 						if (insert) {      // inserting
@@ -240,7 +241,7 @@ public class PricesOthersEdit extends JDialog {
 
 	private JTextField getJTextFieldDescription() {
 		if (jTextFieldDescription == null) {
-			jTextFieldDescription = new VoLimitedTextField(100);
+			jTextFieldDescription = Context.getApplicationContext().getBean(VoLimitedTextField.class,100);
 			jTextFieldDescription.setText(insert? "" : pOther.getDescription()); //$NON-NLS-1$
 		}
 		return jTextFieldDescription;
@@ -267,7 +268,7 @@ public class PricesOthersEdit extends JDialog {
 
 	private JTextField getJTextFieldCode() {
 		if (jTextFieldCode == null) {
-			jTextFieldCode = new VoLimitedTextField(10);
+			jTextFieldCode = Context.getApplicationContext().getBean(VoLimitedTextField.class,10);
 			jTextFieldCode.setText(insert? MessageBundle.getMessage("angal.pricesothers.othm") : pOther.getCode()); //$NON-NLS-1$
 		}
 		return jTextFieldCode;
