@@ -47,6 +47,7 @@ public class PatientSummary {
 	 * @return
 	 */
 	public JPanel getPatientDataPanel() {
+		System.out.println(patient.getMaritalStatus());
 		JPanel p = new JPanel(new BorderLayout(borderTickness, borderTickness));
 
 		p.add(getPatientTitlePanel(), BorderLayout.NORTH);
