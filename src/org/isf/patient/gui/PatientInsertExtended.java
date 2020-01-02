@@ -1106,9 +1106,9 @@ public class PatientInsertExtended extends JDialog {
 			jMaritalStatusComboBox = new JComboBox(maritalStatusTypes);
 			jMaritalPanel.add(jMaritalStatusComboBox);
 
-			// if (!insert) {
-			// 	jMaritalStatusComboBox.setSelectedItem("nah");
-			// } patient.addMaritalStatus
+			if (!insert) {
+				jMaritalStatusComboBox.setSelectedItem(patient.getMaritalStatus());
+			} 
 		}
 		return jMaritalPanel;
 	}
@@ -2305,7 +2305,7 @@ public class PatientInsertExtended extends JDialog {
 		if (jProfessionTextField == null) {
 			jProfessionTextField = new JTextField(15);
 			if (!insert)
-				jProfessionTextField.setText(patient.getFather_name());
+				jProfessionTextField.setText(patient.getProfession());
 		}
 		return jProfessionTextField;
 	}
