@@ -67,7 +67,7 @@ public class PricesBrowser extends ModalJFrame {
     private boolean[] columsResizable = {true, false};
 	private int[] columWidth = {400,150};
     
-	private PriceListManager listManager = new PriceListManager();
+	private PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 	private ArrayList<PriceList> listArray;
 	private ArrayList<Price> priceArray;
 	private PriceList listSelected;
