@@ -398,7 +398,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 							}
 						} else {
 							Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
-							OpdBrowserManager delOpd = new OpdBrowserManager();
+							OpdBrowserManager delOpd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 
 							int n = JOptionPane.showConfirmDialog(
 									null,
@@ -476,7 +476,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 
 		public AdmissionBrowserModel() {
 			WardBrowserManager wbm = new WardBrowserManager();
-			OpdBrowserManager opd = new OpdBrowserManager();
+			OpdBrowserManager opd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
 				opdList = opd.getOpdList(patient.getCode());
 			}catch(OHServiceException e){
