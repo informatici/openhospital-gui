@@ -42,6 +42,7 @@ import javax.swing.table.TableColumnModel;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
+import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
 import org.isf.patvac.manager.PatVacManager;
 import org.isf.patvac.model.PatientVaccine;
@@ -112,7 +113,7 @@ public class PatVacBrowser extends ModalJFrame {
 	public PatVacBrowser() {
 		super();
 		myFrame = this;
-		manager = new PatVacManager();
+		manager = Context.getApplicationContext().getBean(PatVacManager.class);
 		initialize();
 		setVisible(true);
 		
@@ -795,11 +796,11 @@ public class PatVacBrowser extends ModalJFrame {
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		private PatVacManager manager = new PatVacManager();
+		private PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 
 
 		public PatVacBrowsingModel() {
-			PatVacManager manager = new PatVacManager();
+			PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 			try {
 				lPatVac = manager.getPatientVaccine(!GeneralData.ENHANCEDSEARCH);
 			} catch (OHServiceException e) {

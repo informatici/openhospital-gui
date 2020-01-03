@@ -111,7 +111,7 @@ public class PatVacEdit extends JDialog {
 	}
 
 	private int getPatientVaccineYMaxProg() {
-		PatVacManager manager = new PatVacManager();
+		PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 		try {
 			return manager.getProgYear(0);
 		} catch (OHServiceException e) {
@@ -697,7 +697,7 @@ public class PatVacEdit extends JDialog {
 					patVac.setPatSex(selectedPatient.getSex());
 
 					boolean result;
-					PatVacManager manager = new PatVacManager();
+					PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 					// handling db insert/update
 					if (insert) {
 						patVac.setPatAge(selectedPatient.getAge());
