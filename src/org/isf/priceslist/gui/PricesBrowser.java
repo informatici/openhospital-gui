@@ -77,7 +77,7 @@ public class PricesBrowser extends ModalJFrame {
     private ArrayList<Exam> examArray;
     
     private PriceNode opeNodes;
-    private OperationBrowserManager operManager = new OperationBrowserManager();
+    private OperationBrowserManager operManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
     private ArrayList<Operation> operArray;
        
     private PriceNode medNodes;

@@ -14,12 +14,14 @@ import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class OhTableOperationModel<T> implements TableModel{
 
 	List<T> dataList;	
 	List<T> filteredList;
-	OperationBrowserManager manageop = new OperationBrowserManager();
+	@Autowired
+	OperationBrowserManager manageop;
 	
 	public  OhTableOperationModel(List<T> dataList) {
 		this.dataList = dataList;

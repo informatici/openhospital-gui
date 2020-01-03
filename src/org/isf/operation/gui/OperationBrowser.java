@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.opetype.manager.OperationTypeBrowserManager;
@@ -174,7 +175,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 					return;
 				} else {
-					OperationBrowserManager manager = new OperationBrowserManager();
+					OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 					Operation m = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 					int n = JOptionPane.showConfirmDialog(
 							null, MessageBundle.getMessage("angal.operation.deleteoperation") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
@@ -215,7 +216,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		private static final long serialVersionUID = 1L;
 
 		public OperationBrowserModel(String s) {
-			OperationBrowserManager manager = new OperationBrowserManager();
+			OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 			try {
 				pOperation = manager.getOperation(s);
 			} catch (OHServiceException e) {
@@ -224,7 +225,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		}
 
 		public OperationBrowserModel() {
-			OperationBrowserManager manager = new OperationBrowserManager();
+			OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 			try {
 				pOperation = manager.getOperation();
 			} catch (OHServiceException e) {
