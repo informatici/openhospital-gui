@@ -754,7 +754,7 @@ public class AdmissionBrowser extends JDialog {
 		if (treatmentPanel == null) {
 			treatmentPanel = new JPanel();
 			
-			PregnantTreatmentTypeBrowserManager abm = new PregnantTreatmentTypeBrowserManager();
+			PregnantTreatmentTypeBrowserManager abm = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 			treatmTypeBox = new JComboBox();
 			treatmTypeBox.addItem("");
 			try {
