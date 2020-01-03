@@ -10,18 +10,17 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class OhTableOperationModel<T> implements TableModel{
 
 	List<T> dataList;	
 	List<T> filteredList;
-	@Autowired
-	OperationBrowserManager manageop;
+	OperationBrowserManager manageop = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	
 	public  OhTableOperationModel(List<T> dataList) {
 		this.dataList = dataList;

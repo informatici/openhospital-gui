@@ -85,7 +85,7 @@ public class PricesBrowser extends ModalJFrame {
     private ArrayList<Medical> mediArray;
     
     private PriceNode othNodes;
-    private PricesOthersManager othManager = new PricesOthersManager();
+    private PricesOthersManager othManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
     private ArrayList<PricesOthers> othArray;
     
     private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);

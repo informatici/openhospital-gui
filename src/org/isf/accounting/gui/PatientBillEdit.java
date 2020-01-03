@@ -316,7 +316,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private ArrayList<PriceList> lstArray;
 	
 	//PricesOthers (ALL)
-	private PricesOthersManager othManager = new PricesOthersManager();
+	private PricesOthersManager othManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 	private ArrayList<PricesOthers> othPrices;
 
 	//Items and Payments (ALL)
