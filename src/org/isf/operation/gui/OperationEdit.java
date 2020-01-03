@@ -414,7 +414,7 @@ public class OperationEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox();
 			if (insert) {
-				OperationTypeBrowserManager manager = new OperationTypeBrowserManager();
+				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 				ArrayList<OperationType> types;
 				try {
 					types = manager.getOperationType();

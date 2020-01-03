@@ -105,7 +105,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		selectlabel = new JLabel(MessageBundle.getMessage("angal.operation.selecttype")); //$NON-NLS-1$
 		buttonPanel.add(selectlabel);
 
-		OperationTypeBrowserManager manager = new OperationTypeBrowserManager();
+		OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 		pbox = new JComboBox();
 		pbox.addItem(MessageBundle.getMessage("angal.operation.allm")); //$NON-NLS-1$
 		ArrayList<OperationType> type;
