@@ -580,7 +580,6 @@ public class PatientExaminationEdit extends JDialog {
 				}
 			});
 		}
-		jTextAreaNote.setSize(jTextAreaNote.getPreferredSize());
 		return jTextAreaNote;
 	}
 
@@ -588,9 +587,7 @@ public class PatientExaminationEdit extends JDialog {
 		if (jScrollPaneNote == null) {
 			jScrollPaneNote = new JScrollPane();
 			jScrollPaneNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			VoLimitedTextArea text = getJTextAreaNote();
-			jScrollPaneNote.setViewportView(text);
-			jScrollPaneNote.setPreferredSize(text.getPreferredSize());
+			jScrollPaneNote.setViewportView(getJTextAreaNote());
 		}
 		return jScrollPaneNote;
 	}

@@ -329,7 +329,7 @@ public class PatientSummary {
 
 	private JPanel getPatientProfessionPanel() {
 		JLabel l = null;
-		if (patient.getProfession() == null || patient.getProfession().equalsIgnoreCase("")) {
+		if (patient.getProfession().equalsIgnoreCase("unknown") || patient.getProfession().equalsIgnoreCase("")) {
 			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
 			l = new JLabel(" ");
 		} else {
