@@ -255,11 +255,8 @@ public class PatientInsertExtended extends JDialog {
 	private JRadioButton jMother_Unknown = null;
 
 	// Profession Components:
-	private JPanel jProfessionOptions;
-	private JPanel jProfessionPanel = null; // added
-	private JPanel jProfessionNamePanel = null; // added
-	private JTextField jProfessionTextField = null; // added
-	private ButtonGroup professionGroup = null;
+	private JPanel jProfessionPanel = null;
+	private JComboBox jProfessionComboBox = null;
 
 	// ParentTogether Components:
 	private JPanel jParentPanel = null;
@@ -473,7 +470,7 @@ public class PatientInsertExtended extends JDialog {
 							}
 							patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
 							patient.setMaritalStatus(jMaritalStatusComboBox.getSelectedItem().toString());
-							patient.setProfession(jProfessionTextField.getText().trim());
+							patient.setProfession(jProfessionComboBox.getSelectedItem().toString());
 							if (jInsurance_Yes.isSelected()) {
 								patient.setHasInsurance('Y');
 							} else {
@@ -1776,12 +1773,20 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel getJProfessionPanel() {
 		if (jProfessionPanel == null) {
 			jProfessionPanel = new JPanel();
-			jProfessionPanel = setMyBorder(jProfessionPanel, MessageBundle.getMessage("angal.patient.profession"));
+			jProfessionPanel = setMyBorder(jProfessionPanel,  MessageBundle.getMessage("angal.patient.profession"));
+			String[] professionTypes = { MessageBundle.getMessage("angal.patient.profession.unknown"), MessageBundle.getMessage("angal.patient.profession.other"), 
+											MessageBundle.getMessage("angal.patient.profession.farming"), MessageBundle.getMessage("angal.patient.profession.construction"),
+											MessageBundle.getMessage("angal.patient.profession.medicine"), MessageBundle.getMessage("angal.patient.profession.foodhospitality"),
+											MessageBundle.getMessage("angal.patient.profession.homemaker"), MessageBundle.getMessage("angal.patient.profession.mechanic"),
+											MessageBundle.getMessage("angal.patient.profession.business"), MessageBundle.getMessage("angal.patient.profession.janitorial"),
+											MessageBundle.getMessage("angal.patient.profession.mining"),MessageBundle.getMessage("angal.patient.profession.engineering")
+										};
+			jProfessionComboBox= new JComboBox(professionTypes);
+			jProfessionPanel.add(jProfessionComboBox);
 
-			jProfessionPanel.setLayout(new BorderLayout());
-			jProfessionNamePanel = new JPanel();
-			jProfessionNamePanel.add(getJProfessionTextField());
-			jProfessionPanel.add(jProfessionNamePanel, BorderLayout.NORTH);	
+			if (!insert) {
+				jProfessionComboBox.setSelectedItem(patient.getProfession());
+			} 
 		}
 		return jProfessionPanel;
 	}
@@ -2294,20 +2299,6 @@ public class PatientInsertExtended extends JDialog {
 				jMotherNameTextField.setText(patient.getMother_name());
 		}
 		return jMotherNameTextField;
-	}
-
-	/**
-	 * This method initializes jProfessionTextField
-	 * 
-	 * @return javax.swing.JTextField
-	 */
-	private JTextField getJProfessionTextField() {
-		if (jProfessionTextField == null) {
-			jProfessionTextField = new JTextField(15);
-			if (!insert)
-				jProfessionTextField.setText(patient.getProfession());
-		}
-		return jProfessionTextField;
 	}
 	
 	public void setPatientPhoto(Image photo) {
