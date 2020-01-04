@@ -475,7 +475,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 		private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 		public AdmissionBrowserModel() {
-			WardBrowserManager wbm = new WardBrowserManager();
+			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			OpdBrowserManager opd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
 				opdList = opd.getOpdList(patient.getCode());

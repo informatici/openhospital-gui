@@ -989,7 +989,7 @@ public class AdmissionBrowser extends JDialog {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
 			
-			WardBrowserManager wbm = new WardBrowserManager();
+			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			wardBox = new JComboBox();
 			wardBox.addItem("");
 			try {

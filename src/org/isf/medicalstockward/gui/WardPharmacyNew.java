@@ -39,12 +39,14 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
+import org.isf.menu.manager.Context;
 import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.ward.model.Ward;
+import org.isf.ward.manager.WardBrowserManager;
 
 public class WardPharmacyNew extends JDialog implements SelectionListener {
 
@@ -748,7 +750,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (wardBox == null) {
 			wardBox = new JComboBox();
 			wardBox.setPreferredSize(new Dimension(300, 30));
-			org.isf.ward.manager.WardBrowserManager wbm = new org.isf.ward.manager.WardBrowserManager();
+			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			ArrayList<Ward> wardList = null;
                         try {
                             wardList = wbm.getWards();

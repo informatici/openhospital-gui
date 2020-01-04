@@ -579,7 +579,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 		public AdmissionBrowserModel() {
 			
-			WardBrowserManager wbm = new WardBrowserManager();
+			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			OpdBrowserManager opd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
 				admList = manager.getAdmissions(patient);
