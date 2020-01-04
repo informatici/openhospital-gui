@@ -342,7 +342,7 @@ public class LabEdit extends JDialog {
 			patientComboBox.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if (patientComboBox.getSelectedIndex()>0) {
-						AdmissionBrowserManager admMan = new AdmissionBrowserManager();
+						AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 						patSelected = (Patient)patientComboBox.getSelectedItem();
 						patTextField.setText(patSelected.getName());
 						ageTextField.setText(patSelected.getAge()+"");
