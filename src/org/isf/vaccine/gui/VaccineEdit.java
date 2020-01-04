@@ -308,7 +308,7 @@ public class VaccineEdit extends JDialog {
 	private JComboBox getvaccineTypeComboBox() {
 		if (vaccineTypeComboBox == null) {
 			vaccineTypeComboBox = new JComboBox();
-			VaccineTypeBrowserManager manager = new VaccineTypeBrowserManager();
+			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			ArrayList<VaccineType> types = null;
 			try {
 				types = manager.getVaccineType();

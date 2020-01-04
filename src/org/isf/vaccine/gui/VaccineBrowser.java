@@ -153,7 +153,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		if (jSelectionCombo == null) {
 			jSelectionCombo = new JComboBox();
 			jSelectionCombo.setPreferredSize(new Dimension(200, 30));
-			VaccineTypeBrowserManager manager = new VaccineTypeBrowserManager();
+			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			ArrayList<VaccineType> allVacType = null;
 			try {
 				allVacType = manager.getVaccineType();
