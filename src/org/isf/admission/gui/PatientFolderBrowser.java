@@ -741,7 +741,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					return MessageBundle.getMessage("angal.admission.nodisease"); //$NON-NLS-1$
 				} else {
 					int f = r - (opdList.size()+admList.size());
-					String ret = "<html>Height: "+(String.valueOf(examinationList.get(f).getPex_height())) + "<br> Weight: "+(String.valueOf(examinationList.get(f).getPex_weight()))+"</html>";
+					String ret = "<html>"+MessageBundle.getMessage("angal.examination.weight")+": "+(String.valueOf(examinationList.get(f).getPex_height())) + "<br>"+MessageBundle.getMessage("angal.examination.height")+": "+(String.valueOf(examinationList.get(f).getPex_weight()))+"</html>";
 					
 					return ret; //$NON-NLS-1$
 				}
@@ -779,7 +779,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					return MessageBundle.getMessage("angal.admission.nodisease"); //$NON-NLS-1$
 				} else {
 					int f = r - (opdList.size()+admList.size());
-					String ret = "<html>AP: "+(String.valueOf(examinationList.get(f).getPex_pa_min())) + "/"+(String.valueOf(examinationList.get(f).getPex_pa_max())) + "<br> T: "+(String.valueOf(examinationList.get(f).getPex_temp()))+"</html>"; 
+					String ret = "<html>"+MessageBundle.getMessage("angal.examination.arterialpressureabbr")+": "+(String.valueOf(examinationList.get(f).getPex_pa_min())) + "/"+(String.valueOf(examinationList.get(f).getPex_pa_max())) + "<br>"+MessageBundle.getMessage("angal.examination.temperatureabbr")+": "+(String.valueOf(examinationList.get(f).getPex_temp()))+"</html>"; 
 					return ret; //$NON-NLS-1$
 				}
 
