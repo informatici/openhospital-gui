@@ -140,7 +140,7 @@ public class PatientFolderReportModal extends JDialog{
 			launchReportButton.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					// GenericReportMY rpt3 = new GenericReportMY(new Integer(6), new Integer(2008), "hmis108_adm_by_diagnosis_in");
-					new GenericReportPatientVersion2(patId, getTypeField(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEETV2);
+					new GenericReportPatientVersion2(patId, getTypeField(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEET);
 				}
 			});
 		}
