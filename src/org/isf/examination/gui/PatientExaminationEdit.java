@@ -842,7 +842,7 @@ public class PatientExaminationEdit extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					new GenericReportPatient(patex.getPatient().getCode(), GeneralData.EXAMINATION);
+					new GenericReportPatient(patex.getPatient().getCode(), GeneralData.EXAMINATIONCHART);
 				}
 			});
 		}
