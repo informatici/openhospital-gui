@@ -741,7 +741,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					return MessageBundle.getMessage("angal.admission.nodisease"); //$NON-NLS-1$
 				} else {
 					int f = r - (opdList.size()+admList.size());
-					String ret = "<html>Height: "+(String.valueOf(examinationList.get(f).getPex_height())) + "<br> Wheight: "+(String.valueOf(examinationList.get(f).getPex_weight()))+"</html>";
+					String ret = "<html>Height: "+(String.valueOf(examinationList.get(f).getPex_height())) + "<br> Weight: "+(String.valueOf(examinationList.get(f).getPex_weight()))+"</html>";
 					
 					return ret; //$NON-NLS-1$
 				}
