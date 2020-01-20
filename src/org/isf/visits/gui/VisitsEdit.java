@@ -9,25 +9,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
-import org.isf.admission.gui.AdmittedPatientBrowser;
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.therapy.gui.TherapyEdit;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -84,6 +78,7 @@ public class VisitsEdit extends ModalJFrame{
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
 		
 		setLocationRelativeTo(null);
+		pack();
 
 	}
 	private JPanel getpVisitInf() {
@@ -92,7 +87,6 @@ public class VisitsEdit extends ModalJFrame{
 
 		GridBagLayout gbl_jPanelData = new GridBagLayout();
 		gbl_jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 00 };
-		gbl_jPanelData.rowHeights = new int[] { 20, 20, 20, 0, 0, 0, 0, 0 };
 		gbl_jPanelData.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		gbl_jPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		patientParamsPanel.setLayout(gbl_jPanelData);
@@ -203,8 +197,8 @@ public class VisitsEdit extends ModalJFrame{
 		return buttonOK;
 	}
 
-public Ward getWard() {
-	return (Ward) wardBox.getSelectedItem();
-}
+	public Ward getWard() {
+		return (Ward) wardBox.getSelectedItem();
+	}
 
 }
