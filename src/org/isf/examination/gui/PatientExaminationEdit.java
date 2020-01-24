@@ -51,6 +51,7 @@ import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.ExaminationParameters;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoIntegerTextField;
@@ -224,7 +225,7 @@ public class PatientExaminationEdit extends JDialog {
 	private void updateSummary() {
 		StringBuilder summary = new StringBuilder();
 		summary.append(SUMMARY_HEADER);
-		ExaminationBrowserManager examManager = new ExaminationBrowserManager();
+		ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 		ArrayList<PatientExamination> patexList = null;
 		try {
 			patexList = examManager.getLastNByPatID(patex.getPatient().getCode(), ExaminationParameters.LIST_SIZE);
@@ -580,6 +581,7 @@ public class PatientExaminationEdit extends JDialog {
 				}
 			});
 		}
+		jTextAreaNote.setSize(jTextAreaNote.getPreferredSize());
 		return jTextAreaNote;
 	}
 
@@ -587,7 +589,9 @@ public class PatientExaminationEdit extends JDialog {
 		if (jScrollPaneNote == null) {
 			jScrollPaneNote = new JScrollPane();
 			jScrollPaneNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			jScrollPaneNote.setViewportView(getJTextAreaNote());
+			VoLimitedTextArea text = getJTextAreaNote();
+			jScrollPaneNote.setViewportView(text);
+			jScrollPaneNote.setPreferredSize(text.getPreferredSize());
 		}
 		return jScrollPaneNote;
 	}
@@ -879,7 +883,7 @@ public class PatientExaminationEdit extends JDialog {
 		}
 		public void actionPerformed(ActionEvent e) {
 			
-			ExaminationBrowserManager examManager = new ExaminationBrowserManager();
+			ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 			try {
 				examManager.saveOrUpdate(patex);
 			}catch(OHServiceException ex){
