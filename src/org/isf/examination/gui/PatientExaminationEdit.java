@@ -259,7 +259,8 @@ public class PatientExaminationEdit extends JDialog {
 		jTextFieldHeight.setText(String.valueOf(patex.getPex_height()));
 		jSliderHeight.setValue(patex.getPex_height());
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
-		jSliderWeight.setValue(convertFromDoubleToInt(patex.getPex_weight(), ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
+		//jSliderWeight.setValue(convertFromDoubleToInt(patex.getPex_weight(), ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
+		jSliderWeight.setValue(patex.getPex_weight());
 		jSpinnerAPmin.setValue(patex.getPex_pa_min());
 		jSpinnerAPmax.setValue(patex.getPex_pa_max());
 		jSliderHR.setValue(patex.getPex_fc());
@@ -660,8 +661,10 @@ public class PatientExaminationEdit extends JDialog {
 			jTextFieldWeight.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					double weight = Double.parseDouble(jTextFieldWeight.getText());
-					jSliderWeight.setValue(convertFromDoubleToInt(weight, ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
+					//double weight = Double.parseDouble(jTextFieldWeight.getText());
+					int weight = Integer.parseInt(jTextFieldWeight.getText());
+					//jSliderWeight.setValue(convertFromDoubleToInt(weight, ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
+					jSliderWeight.setValue(weight);
 					patex.setPex_weight(weight);
 				}
 			});
@@ -733,15 +736,15 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private JSlider getJSliderWeight() {
 		if (jSliderWeight == null) {
-			jSliderWeight = new JSlider(0, 4000, 0);
+			jSliderWeight = new JSlider(0, 200, 0);
 			jSliderWeight.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					int value = jSliderWeight.getValue();
-					double weight = (double) value / 10;
-					jTextFieldWeight.setText(String.valueOf(weight));
-					patex.setPex_weight(weight);
+					//double weight = (double) value / 10;
+					jTextFieldWeight.setText(String.valueOf(value));
+					patex.setPex_weight(value);
 					updateBMI();
 				}
 			});
