@@ -17,6 +17,8 @@ package org.isf.opd.gui;
  * 09/01/2009 - fabrizio - Column full name appears only in OPD extended. Better formatting of OPD date.
  *                         Age column justified to the right. Cosmetic changed to code style.
  * 13/02/2009 - alex - fixed variable visibility in filtering mechanism
+ * 06/02/2020 - alex - added search field for dieses
+ *                   - version is now 1.2.2
  *------------------------------------------*/
 
 
@@ -83,7 +85,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private static final long serialVersionUID = 2372745781159245861L;
 
-	private static final String VERSION="1.2.1"; 
+	private static final String VERSION="1.2.2"; 
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 
