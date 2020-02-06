@@ -31,15 +31,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -153,6 +156,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JRadioButton radiom;
 	private JRadioButton radiof;
 	private JRadioButton radioa;
+	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private ArrayList<Disease> diseases = null;
+	protected AbstractButton searchButton;
+	private JTextField searchDiseasetextField;
 	
 	public JTable getJTable() {
 		if (jTable == null) {
@@ -728,7 +735,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDiseaseTypeBox.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
-					//System.out.println("passato");
 					jDiseaseBox.removeAllItems();
 					getDiseaseBox();
 				}
@@ -749,13 +755,11 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDiseaseBox.setMaximumSize(new Dimension(300, 50));
 			
 		};
-		DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-		ArrayList<Disease> diseases = null;
 		try{
 			if (((DiseaseType)jDiseaseTypeBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.opd.alltype"))){
-				diseases = manager.getDiseaseOpd();
+				diseases = diseaseManager.getDiseaseOpd();
 			}else{
-				diseases = manager.getDiseaseOpd(((DiseaseType)jDiseaseTypeBox.getSelectedItem()).getCode());
+				diseases = diseaseManager.getDiseaseOpd(((DiseaseType)jDiseaseTypeBox.getSelectedItem()).getCode());
 			}
 		}catch(OHServiceException e){
 			if(e.getMessages() != null){
@@ -830,11 +834,78 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jSelectionDiseasePanel.setLayout(new BoxLayout(jSelectionDiseasePanel,BoxLayout.Y_AXIS));
 			jSelectionDiseasePanel.add(getDiseaseTypeBox(), null);
 			jSelectionDiseasePanel.add(jLabel2, null);
+			jSelectionDiseasePanel.add(getJSearchDiseaseTextFieldPanel(), null);
 			jSelectionDiseasePanel.add(getDiseaseBox(), null);
 		}
 		return jSelectionDiseasePanel;
 	}
 	
+	private JPanel getJSearchDiseaseTextFieldPanel() {
+		JPanel searchFieldPanel = new JPanel();
+		searchDiseasetextField = new JTextField(10);
+		searchFieldPanel.add(searchDiseasetextField);
+        searchDiseasetextField.addKeyListener(new KeyListener() {
+            
+			public void keyPressed(KeyEvent e) {
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_ENTER) {
+                    searchButton.doClick();
+                }
+            }
+            public void keyReleased(KeyEvent e) {}
+            public void keyTyped(KeyEvent e) {}
+        });
+
+        searchButton = new JButton("");
+        searchFieldPanel.add(searchButton);
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+            	jDiseaseBox.removeAllItems();
+            	jDiseaseBox.addItem("");
+                for(Disease disease: 
+                    getSearchDiagnosisResults(searchDiseasetextField.getText(), diseases)) {
+                	jDiseaseBox.addItem(disease);
+                }
+                
+                if(jDiseaseBox.getItemCount() >= 2){
+                	jDiseaseBox.setSelectedIndex(1);
+                }
+                jDiseaseBox.requestFocus();
+                if(jDiseaseBox.getItemCount() > 2){
+                	jDiseaseBox.showPopup();
+                }
+            }
+        });
+        searchButton.setPreferredSize(new Dimension(20, 20));
+        searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+		return searchFieldPanel;
+	}
+	
+	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
+		String query = s.trim();
+		ArrayList<Disease> results = new ArrayList<Disease>();
+		for (Disease disease : diseaseList) {
+			if (!query.equals("")) {
+				String[] patterns = query.split(" ");
+				String name = disease.getDescription().toLowerCase();
+				boolean patternFound = false;
+				for (String pattern : patterns) {
+					if (name.contains(pattern.toLowerCase())) {
+						patternFound = true;
+						// It is sufficient that only one pattern matches the query
+						break;
+					}
+				}
+				if (patternFound) {
+					results.add(disease);
+				}
+			} else {
+				results.add(disease);
+			}
+		}
+		return results;
+	}
+
 	/**
 	 * This method initializes jAgePanel	
 	 * 	
