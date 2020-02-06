@@ -488,11 +488,18 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_jSliderSaturation.gridx = 2;
 			gbc_jSliderSaturation.gridy = 6;
 			jPanelExamination.add(getJSliderSaturation(), gbc_jSliderSaturation);
+			
+			JLabel jLabelSaturationUnit = new JLabel(ExaminationParameters.SAT_UNIT);
+			GridBagConstraints gbc_jLabelSaturationUnit = new GridBagConstraints();
+			gbc_jLabelSaturationUnit.insets = new Insets(5, 5, 5, 5);
+			gbc_jLabelSaturationUnit.gridx = 3;
+			gbc_jLabelSaturationUnit.gridy = 6;
+			jPanelExamination.add(jLabelSaturationUnit, gbc_jLabelSaturationUnit);
 
 			GridBagConstraints gbc_jTextFieldSaturation = new GridBagConstraints();
 			gbc_jTextFieldSaturation.anchor = GridBagConstraints.WEST;
 			gbc_jTextFieldSaturation.insets = new Insets(5, 0, 5, 0);
-			gbc_jTextFieldSaturation.gridx = 3;
+			gbc_jTextFieldSaturation.gridx = 4;
 			gbc_jTextFieldSaturation.gridy = 6;
 			jPanelExamination.add(getJTextFieldSaturation(), gbc_jTextFieldSaturation);
 
