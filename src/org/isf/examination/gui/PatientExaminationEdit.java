@@ -46,6 +46,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.isf.exa.model.Exam;
 import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
@@ -228,7 +229,7 @@ public class PatientExaminationEdit extends JDialog {
 		ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 		ArrayList<PatientExamination> patexList = null;
 		try {
-			patexList = examManager.getLastNByPatID(patex.getPatient().getCode(), ExaminationParameters.LIST_SIZE);
+			patexList = examManager.getLastNByPatID(patex.getPatient().getCode().intValue(), ExaminationParameters.LIST_SIZE);
 		}catch(OHServiceException e){
 			if(e.getMessages() != null){
 				for(OHExceptionMessage msg : e.getMessages()){
@@ -241,12 +242,13 @@ public class PatientExaminationEdit extends JDialog {
 			for (PatientExamination patex : patexList) {
 				summary.append(SUMMARY_START_ROW);
 				summary.append(STD).append(new SimpleDateFormat(DATE_FORMAT).format(new Date(patex.getPex_date().getTime()))).append(ETD);
-				summary.append(STD).append(patex.getPex_height()).append(ETD);
-				summary.append(STD).append(patex.getPex_weight()).append(ETD);
-				summary.append(STD).append(patex.getPex_pa_min()).append(" / ").append(patex.getPex_pa_max()).append(ETD);
-				summary.append(STD).append(patex.getPex_fc()).append(ETD);
-				summary.append(STD).append(patex.getPex_temp()).append(ETD);
-				summary.append(STD).append(patex.getPex_sat()).append(ETD);
+				summary.append(STD).append(patex.getPex_height() == null ? "-" : patex.getPex_height()).append(ETD);
+				summary.append(STD).append(patex.getPex_weight() == null ? "-" : patex.getPex_weight()).append(ETD);
+				summary.append(STD).append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
+					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max()).append(ETD);
+				summary.append(STD).append(patex.getPex_hr() == null ? "-" : patex.getPex_hr()).append(ETD);
+				summary.append(STD).append(patex.getPex_temp() == null ? "-" : patex.getPex_temp()).append(ETD);
+				summary.append(STD).append(patex.getPex_sat() == null ? "-" : patex.getPex_sat()).append(ETD);
 				summary.append(SUMMARY_END_ROW);
 			}
 		}
@@ -260,15 +262,15 @@ public class PatientExaminationEdit extends JDialog {
 		jSliderHeight.setValue(convertFromDoubleToInt(patex.getPex_height(), ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_STEP, ExaminationParameters.HEIGHT_MAX));
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
 		//jSliderWeight.setValue(convertFromDoubleToInt(patex.getPex_weight(), ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
-		jSliderWeight.setValue(patex.getPex_weight());
-		jSpinnerAPmin.setValue(patex.getPex_pa_min());
-		jSpinnerAPmax.setValue(patex.getPex_pa_max());
-		jSliderHR.setValue(patex.getPex_fc());
-		jTextFieldHR.setText(String.valueOf(patex.getPex_fc()));
+		jSliderWeight.setValue(patex.getPex_weight() != null ? patex.getPex_weight() : 0);
+		jSpinnerAPmin.setValue(patex.getPex_ap_min() != null ? patex.getPex_ap_min() : 0);
+		jSpinnerAPmax.setValue(patex.getPex_ap_max() != null ? patex.getPex_ap_max() : 0);
+		jSliderHR.setValue(patex.getPex_hr() != null ? patex.getPex_hr() : 0);
+		jTextFieldHR.setText(patex.getPex_hr() != null ? String.valueOf(patex.getPex_hr()) : ""+ExaminationParameters.HR_INIT);
 		jSliderTemp.setValue(convertFromDoubleToInt(patex.getPex_temp(), ExaminationParameters.TEMP_MIN, ExaminationParameters.TEMP_STEP, ExaminationParameters.TEMP_MAX));
-		jTextFieldTemp.setText(String.valueOf(patex.getPex_temp()));
+		jTextFieldTemp.setText(patex.getPex_temp() != null ? String.valueOf(patex.getPex_temp()) : ""+ExaminationParameters.TEMP_INIT);
 		jSliderSaturation.setValue(convertFromDoubleToInt(patex.getPex_sat(), ExaminationParameters.SAT_MIN, ExaminationParameters.SAT_STEP, ExaminationParameters.SAT_MAX));
-		jTextFieldSaturation.setText(String.valueOf(patex.getPex_sat()));
+		jTextFieldSaturation.setText(patex.getPex_sat() != null ? String.valueOf(patex.getPex_sat()) : ""+ExaminationParameters.SAT_INIT);
 		jTextAreaNote.setText(patex.getPex_note());
 		disableAP();
 		disableHR();
@@ -626,7 +628,7 @@ public class PatientExaminationEdit extends JDialog {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					patex.setPex_pa_min((Integer) jSpinnerAPmin.getValue());
+					patex.setPex_ap_min((Integer) jSpinnerAPmin.getValue());
 				}
 			});
 		}
@@ -640,7 +642,7 @@ public class PatientExaminationEdit extends JDialog {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					patex.setPex_pa_max((Integer) jSpinnerAPmax.getValue());
+					patex.setPex_ap_max((Integer) jSpinnerAPmax.getValue());
 				}
 			});
 		}
@@ -719,7 +721,7 @@ public class PatientExaminationEdit extends JDialog {
 				public void focusLost(FocusEvent e) {
 					int hr = Integer.parseInt(jTextFieldHR.getText());
 					jSliderHR.setValue(hr);
-					patex.setPex_fc(hr);
+					patex.setPex_hr(hr);
 				}
 			});
 		}
@@ -762,7 +764,16 @@ public class PatientExaminationEdit extends JDialog {
 		return jSliderWeight;
 	}
 	
-	private int convertFromDoubleToInt(double value, double min, double step, double max) {
+	/**
+	 * convert from Double to int with specified range and step
+	 * @param value - the value to be converted
+	 * @param min - the minimum value (implicit casting from int to double)
+	 * @param step - the step to round up the result (implicit casting from int to double)
+	 * @param max - the maximum value (implicit casting from int to double)
+	 * @return the nearest integer to the provided Double value 
+	 */
+	private int convertFromDoubleToInt(Double value, double min, double step, double max) {
+		if (value == null) return (int) Math.round(min * (1. / step));;
 		if (value > max) {
 			return (int) (max * (1. / step));
 		} else if (value < step) {
@@ -815,7 +826,7 @@ public class PatientExaminationEdit extends JDialog {
 				public void stateChanged(ChangeEvent e) {
 					int hr = jSliderHR.getValue();
 					jTextFieldHR.setText(String.valueOf(hr));
-					patex.setPex_fc(hr);
+					patex.setPex_hr(hr);
 				}
 			});
 		}
@@ -919,16 +930,16 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private void enableAP() {
 		jSpinnerAPmin.setEnabled(true);
-		patex.setPex_pa_min((Integer)jSpinnerAPmin.getValue());
+		patex.setPex_ap_min((Integer)jSpinnerAPmin.getValue());
 		jSpinnerAPmax.setEnabled(true);
-		patex.setPex_pa_max((Integer)jSpinnerAPmax.getValue());
+		patex.setPex_ap_max((Integer)jSpinnerAPmax.getValue());
 	}
 
 	private void disableAP() {
 		jSpinnerAPmin.setEnabled(false);
-		patex.setPex_pa_min(0);
+		patex.setPex_ap_min(null);
 		jSpinnerAPmax.setEnabled(false);
-		patex.setPex_pa_max(0);
+		patex.setPex_ap_max(null);
 	}
 	
 	private class SwingActionToggleAP extends AbstractAction {
@@ -963,14 +974,14 @@ public class PatientExaminationEdit extends JDialog {
 		if (!text.equals("")) {
 			patex.setPex_temp(Double.parseDouble(text));
 		} else {
-			patex.setPex_temp(0);
+			patex.setPex_temp(null);
 		}
 	}
 
 	private void disableTemp() {
 		jSliderTemp.setEnabled(false);
 		jTextFieldTemp.setEnabled(false);
-		patex.setPex_temp(0);
+		patex.setPex_temp(null);
 	}
 	
 	private void enableSaturation() throws NumberFormatException {
@@ -980,26 +991,26 @@ public class PatientExaminationEdit extends JDialog {
 		if (!text.equals("")) {
 			patex.setPex_sat(Double.parseDouble(text));
 		} else {
-			patex.setPex_sat(0);
+			patex.setPex_sat(null);
 		}
 	}
 
 	private void disableSaturation() {
 		jSliderSaturation.setEnabled(false);
 		jTextFieldSaturation.setEnabled(false);
-		patex.setPex_sat(0);
+		patex.setPex_sat(null);
 	}
 	
 	private void enableHR() throws NumberFormatException {
 		jSliderHR.setEnabled(true);
 		jTextFieldHR.setEnabled(true);
-		patex.setPex_fc(Integer.parseInt(jTextFieldHR.getText()));
+		patex.setPex_hr(Integer.parseInt(jTextFieldHR.getText()));
 	}
 
 	private void disableHR() {
 		jSliderHR.setEnabled(false);
 		jTextFieldHR.setEnabled(false);
-		patex.setPex_fc(0);
+		patex.setPex_hr(null);
 	}
 	
 	private class SwingActionToggleSaturation extends AbstractAction {
@@ -1122,8 +1133,8 @@ public class PatientExaminationEdit extends JDialog {
 //			patex.setPex_date(new Timestamp(new Date().getTime()));
 //			patex.setPex_height(INITIAL_HEIGHT);
 //			patex.setPex_weight(INITIAL_WEIGHT);
-//			patex.setPex_pa_min(INITIAL_AP_MIN);
-//			patex.setPex_pa_max(INITIAL_AP_MAX);
+//			patex.setPex_ap_min(INITIAL_AP_MIN);
+//			patex.setPex_ap_max(INITIAL_AP_MAX);
 //			patex.setPex_fc(INITIAL_HR);
 //			
 //			GenderPatientExamination gpatex = new GenderPatientExamination(patex, false);
