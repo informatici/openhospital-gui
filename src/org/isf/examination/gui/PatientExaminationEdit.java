@@ -46,7 +46,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.isf.exa.model.Exam;
 import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
@@ -55,6 +54,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.ScaledJSlider;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
 
@@ -69,7 +69,7 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private JPanel jPanelExamination;
 	private JPanel jPanelButtons;
-	private JSlider jSliderHeight;
+	private ScaledJSlider jSliderHeight;
 	private JSlider jSliderWeight;
 	private VoIntegerTextField jTextFieldHR;
 	private JTextField jTextFieldTemp;
@@ -82,8 +82,8 @@ public class PatientExaminationEdit extends JDialog {
 	private JLabel jLabelAPSlash;
 	private JLabel jLabelAPMax;
 	private JSlider jSliderHR;
-	private JSlider jSliderTemp;
-	private JSlider jSliderSaturation;
+	private ScaledJSlider jSliderTemp;
+	private ScaledJSlider jSliderSaturation;
 	private JScrollPane jScrollPaneNote;
 	private JDateChooser jDateChooserDate;
 	private JSpinner jSpinnerAPmin;
@@ -259,7 +259,7 @@ public class PatientExaminationEdit extends JDialog {
 	private void updateGUI() {
 		jDateChooserDate.setDate(new Date(patex.getPex_date().getTime()));
 		jTextFieldHeight.setText(String.valueOf(patex.getPex_height()));
-		jSliderHeight.setValue(convertFromDoubleToInt(patex.getPex_height(), ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_STEP, ExaminationParameters.HEIGHT_MAX));
+		jSliderHeight.setValue(patex.getPex_height());
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
 		//jSliderWeight.setValue(convertFromDoubleToInt(patex.getPex_weight(), ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
 		jSliderWeight.setValue(patex.getPex_weight() != null ? patex.getPex_weight() : 0);
@@ -267,9 +267,9 @@ public class PatientExaminationEdit extends JDialog {
 		jSpinnerAPmax.setValue(patex.getPex_ap_max() != null ? patex.getPex_ap_max() : 0);
 		jSliderHR.setValue(patex.getPex_hr() != null ? patex.getPex_hr() : 0);
 		jTextFieldHR.setText(patex.getPex_hr() != null ? String.valueOf(patex.getPex_hr()) : ""+ExaminationParameters.HR_INIT);
-		jSliderTemp.setValue(convertFromDoubleToInt(patex.getPex_temp(), ExaminationParameters.TEMP_MIN, ExaminationParameters.TEMP_STEP, ExaminationParameters.TEMP_MAX));
+		jSliderTemp.setValue(patex.getPex_temp());
 		jTextFieldTemp.setText(patex.getPex_temp() != null ? String.valueOf(patex.getPex_temp()) : ""+ExaminationParameters.TEMP_INIT);
-		jSliderSaturation.setValue(convertFromDoubleToInt(patex.getPex_sat(), ExaminationParameters.SAT_MIN, ExaminationParameters.SAT_STEP, ExaminationParameters.SAT_MAX));
+		jSliderSaturation.setValue(patex.getPex_sat());
 		jTextFieldSaturation.setText(patex.getPex_sat() != null ? String.valueOf(patex.getPex_sat()) : ""+ExaminationParameters.SAT_INIT);
 		jTextAreaNote.setText(patex.getPex_note());
 		disableAP();
@@ -658,7 +658,7 @@ public class PatientExaminationEdit extends JDialog {
 					//int height = Integer.parseInt(jTextFieldHeight.getText());
 					double height = Double.parseDouble(jTextFieldHeight.getText());
 					//jSliderHeight.setValue(height);
-					jSliderHeight.setValue(convertFromDoubleToInt(height, ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_STEP, ExaminationParameters.HEIGHT_MAX));
+					jSliderHeight.setValue(height);
 					patex.setPex_height(height);
 				}
 			});
@@ -690,7 +690,7 @@ public class PatientExaminationEdit extends JDialog {
 				@Override
 				public void focusLost(FocusEvent e) {
 					double temp = Double.parseDouble(jTextFieldTemp.getText());
-					jSliderTemp.setValue(convertFromDoubleToInt(temp, ExaminationParameters.TEMP_MIN, ExaminationParameters.TEMP_STEP, ExaminationParameters.TEMP_MAX));
+					jSliderTemp.setValue(temp);
 					patex.setPex_temp(temp);
 				}
 			});
@@ -705,7 +705,7 @@ public class PatientExaminationEdit extends JDialog {
 				@Override
 				public void focusLost(FocusEvent e) {
 					double sat = Double.parseDouble(jTextFieldSaturation.getText());
-					jSliderSaturation.setValue(convertFromDoubleToInt(sat, ExaminationParameters.SAT_MIN, ExaminationParameters.SAT_STEP, ExaminationParameters.SAT_MAX));
+					jSliderSaturation.setValue(sat);
 					patex.setPex_sat(sat);
 				}
 			});
@@ -728,17 +728,16 @@ public class PatientExaminationEdit extends JDialog {
 		return jTextFieldHR;
 	}
 
-	private JSlider getJSliderHeight() {
+	private ScaledJSlider getJSliderHeight() {
 		if (jSliderHeight == null) {
-			jSliderHeight = new JSlider(0, 500, 0);
+			jSliderHeight = new ScaledJSlider(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX, ExaminationParameters.HEIGHT_STEP, ExaminationParameters.HEIGHT_INIT);
 			jSliderHeight.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					int value = jSliderHeight.getValue();
-					double height = (double) value / 10;
-					jTextFieldHeight.setText(String.valueOf(height));
-					patex.setPex_height(height);
+					double value = jSliderHeight.getScaledValue();
+					jTextFieldHeight.setText(String.valueOf(value));
+					patex.setPex_height(value);
 					updateBMI();
 				}
 			});
@@ -764,53 +763,32 @@ public class PatientExaminationEdit extends JDialog {
 		return jSliderWeight;
 	}
 	
-	/**
-	 * convert from Double to int with specified range and step
-	 * @param value - the value to be converted
-	 * @param min - the minimum value (implicit casting from int to double)
-	 * @param step - the step to round up the result (implicit casting from int to double)
-	 * @param max - the maximum value (implicit casting from int to double)
-	 * @return the nearest integer to the provided Double value 
-	 */
-	private int convertFromDoubleToInt(Double value, double min, double step, double max) {
-		if (value == null) return (int) Math.round(min * (1. / step));;
-		if (value > max) {
-			return (int) (max * (1. / step));
-		} else if (value < step) {
-			return 0;
-		} else {
-			return (int) Math.round(value * (1. / step));
-		}
-	}
-	
-	private JSlider getJSliderTemp() {
+	private ScaledJSlider getJSliderTemp() {
 		if (jSliderTemp == null) {
-			jSliderTemp = new JSlider(0, 500, 0);
+			jSliderTemp = new ScaledJSlider(ExaminationParameters.TEMP_MIN, ExaminationParameters.TEMP_MAX, ExaminationParameters.TEMP_STEP, ExaminationParameters.TEMP_INIT);
 			jSliderTemp.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					int value = jSliderTemp.getValue();
-					double temp = (double) value / 10;
-					jTextFieldTemp.setText(String.valueOf(temp));
-					patex.setPex_temp(temp);
+					double value = jSliderTemp.getScaledValue();
+					jTextFieldTemp.setText(String.valueOf(value));
+					patex.setPex_temp(value);
 				}
 			});
 		}
 		return jSliderTemp;
 	}
 	
-	private JSlider getJSliderSaturation() {
+	private ScaledJSlider getJSliderSaturation() {
 		if (jSliderSaturation == null) {
-			jSliderSaturation = new JSlider(0, 1000, 0); //MAX / STEP
+			jSliderSaturation = new ScaledJSlider(ExaminationParameters.SAT_MIN, 100, ExaminationParameters.SAT_STEP, ExaminationParameters.SAT_INIT); //MAX / STEP
 			jSliderSaturation.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					int value = jSliderSaturation.getValue();
-					double sat = (double) value / 10;
-					jTextFieldSaturation.setText(String.valueOf(sat));
-					patex.setPex_sat(sat);
+					double value = jSliderSaturation.getScaledValue();
+					jTextFieldSaturation.setText(String.valueOf(value));
+					patex.setPex_sat(value);
 				}
 			});
 		}
