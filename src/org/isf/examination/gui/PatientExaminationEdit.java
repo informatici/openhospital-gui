@@ -2,10 +2,12 @@ package org.isf.examination.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -42,6 +44,7 @@ import javax.swing.JTextField;
 import javax.swing.OverlayLayout;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -168,14 +171,24 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private void initComponents() {
 		ExaminationParameters.getExaminationParameters();
-		getContentPane().add(getJPanelExamination(), BorderLayout.CENTER);
+		getContentPane().add(getJPanelCenter(), BorderLayout.CENTER);
 		getContentPane().add(getJPanelButtons(), BorderLayout.SOUTH);
-		getContentPane().add(getJPanelGender(), BorderLayout.WEST);
-		getContentPane().add(getJPanelSummary(), BorderLayout.EAST);
 		updateSummary();
 		updateBMI();
 		pack();
 		setResizable(false);
+	}
+	
+	private JPanel getJPanelCenter() {
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		
+		JPanel dataPanel = new JPanel(new BorderLayout());
+		dataPanel.add(getJPanelGender(), BorderLayout.WEST);
+		dataPanel.add(getJPanelExamination(), BorderLayout.CENTER);
+		
+		centerPanel.add(dataPanel, BorderLayout.CENTER);
+		centerPanel.add(getJPanelSummary(), BorderLayout.SOUTH);
+		return centerPanel;
 	}
 	
 	private JPanel getJPanelButtons() {
@@ -336,7 +349,7 @@ public class PatientExaminationEdit extends JDialog {
 			
 			GridBagConstraints gbc_jTextFieldHeight = new GridBagConstraints();
 			gbc_jTextFieldHeight.anchor = GridBagConstraints.WEST;
-			gbc_jTextFieldHeight.insets = new Insets(0, 0, 5, 0);
+			gbc_jTextFieldHeight.insets = new Insets(0, 0, 5, 5);
 			gbc_jTextFieldHeight.gridx = 4;
 			gbc_jTextFieldHeight.gridy = 1;
 			jPanelExamination.add(getJTextFieldHeight(), gbc_jTextFieldHeight);
@@ -372,7 +385,7 @@ public class PatientExaminationEdit extends JDialog {
 			
 			GridBagConstraints gbc_jTextFieldWeight = new GridBagConstraints();
 			gbc_jTextFieldWeight.anchor = GridBagConstraints.WEST;
-			gbc_jTextFieldWeight.insets = new Insets(0, 0, 5, 0);
+			gbc_jTextFieldWeight.insets = new Insets(0, 0, 5, 5);
 			gbc_jTextFieldWeight.gridx = 4;
 			gbc_jTextFieldWeight.gridy = 2;
 			jPanelExamination.add(getJTextFieldWeight(), gbc_jTextFieldWeight);
@@ -433,7 +446,7 @@ public class PatientExaminationEdit extends JDialog {
 			
 			GridBagConstraints gbc_jTextFieldHR = new GridBagConstraints();
 			gbc_jTextFieldHR.anchor = GridBagConstraints.WEST;
-			gbc_jTextFieldHR.insets = new Insets(5, 0, 5, 0);
+			gbc_jTextFieldHR.insets = new Insets(5, 0, 5, 5);
 			gbc_jTextFieldHR.gridx = 4;
 			gbc_jTextFieldHR.gridy = 4;
 			jPanelExamination.add(getJTextFieldHR(), gbc_jTextFieldHR);
@@ -467,7 +480,7 @@ public class PatientExaminationEdit extends JDialog {
 			
 			GridBagConstraints gbc_jTextFieldTemp = new GridBagConstraints();
 			gbc_jTextFieldTemp.anchor = GridBagConstraints.WEST;
-			gbc_jTextFieldTemp.insets = new Insets(5, 0, 5, 0);
+			gbc_jTextFieldTemp.insets = new Insets(5, 0, 5, 5);
 			gbc_jTextFieldTemp.gridx = 4;
 			gbc_jTextFieldTemp.gridy = 5;
 			jPanelExamination.add(getJTextFieldTemp(), gbc_jTextFieldTemp);
@@ -501,7 +514,7 @@ public class PatientExaminationEdit extends JDialog {
 
 			GridBagConstraints gbc_jTextFieldSaturation = new GridBagConstraints();
 			gbc_jTextFieldSaturation.anchor = GridBagConstraints.WEST;
-			gbc_jTextFieldSaturation.insets = new Insets(5, 0, 5, 0);
+			gbc_jTextFieldSaturation.insets = new Insets(5, 0, 5, 5);
 			gbc_jTextFieldSaturation.gridx = 4;
 			gbc_jTextFieldSaturation.gridy = 6;
 			jPanelExamination.add(getJTextFieldSaturation(), gbc_jTextFieldSaturation);
@@ -838,7 +851,7 @@ public class PatientExaminationEdit extends JDialog {
 			jPanelGender.setLayout(overlay);
 			jPanelGender.add(getJEditorPaneBMI());
 			jPanelGender.add(getJLabelImageGender());
-			
+			jPanelGender.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 		}
 		return jPanelGender;
 	}
