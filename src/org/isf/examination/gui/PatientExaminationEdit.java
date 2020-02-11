@@ -106,6 +106,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JCheckBox jCheckBoxToggleTemp;
 	private JCheckBox jCheckBoxToggleSaturation;
 	private JButton jButtonOK;
+	private JButton jButtonDelete;
 	private JButton jButtonCancel;
 	private Action actionSavePatientExamination;
 	private Action actionToggleAP;
@@ -156,6 +157,9 @@ public class PatientExaminationEdit extends JDialog {
 	private boolean[] columnBold = { false, false, false, false, false, true, false, false, false, true };
 	
 	private final String DATE_FORMAT = "dd/MM/yy HH:mm";
+
+	private JTable jTableSummary;
+	private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 
 	/**
 	 * Create the dialog.
@@ -216,6 +220,7 @@ public class PatientExaminationEdit extends JDialog {
 		if (jPanelButtons == null) {
 			jPanelButtons = new JPanel();
 			jPanelButtons.add(getJButtonOK());
+			jPanelButtons.add(getJButtonDelete());
 			jPanelButtons.add(getJButtonCancel());
 		}
 		return jPanelButtons;
@@ -892,14 +897,54 @@ public class PatientExaminationEdit extends JDialog {
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton();
+			jButtonOK.setMnemonic(KeyEvent.VK_O);
 			jButtonOK.setAction(getActionSavePatientExamination());
 		}
 		return jButtonOK;
 	}
 	
+	private JButton getJButtonDelete() {
+		if (jButtonDelete == null) {
+			jButtonDelete = new JButton();
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
+			jButtonDelete.setMnemonic(KeyEvent.VK_D);
+			jButtonDelete.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int[] row = jTableSummary.getSelectedRows();
+					if (row.length == 0) {
+						JOptionPane.showMessageDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.pleaseselectarow"));
+						return;
+					}
+					int ok = JOptionPane.showConfirmDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.doyouwanttoproceed"));
+					if (ok == JOptionPane.OK_OPTION) {
+						ArrayList<PatientExamination> patexList = new ArrayList<PatientExamination>();
+						for (int i = 0; i < row.length; i++) {
+							patexList.add((PatientExamination) jTableSummary.getModel().getValueAt(row[i], -1));
+						}
+						try {
+							examManager.remove(patexList);
+						}catch(OHServiceException ex){
+							if(ex.getMessages() != null){
+								for(OHExceptionMessage msg : ex.getMessages()){
+									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+								}
+							}
+						} finally {
+							JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
+							model.reloadData();
+						}
+					} else return;
+				}
+			});
+		}
+		return jButtonDelete;
+	}
+	
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
 			jButtonCancel.setMnemonic(KeyEvent.VK_C);
 			jButtonCancel.addActionListener(new ActionListener() {
 				
@@ -963,7 +1008,6 @@ public class PatientExaminationEdit extends JDialog {
 		}
 		public void actionPerformed(ActionEvent e) {
 			
-			ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 			try {
 				examManager.saveOrUpdate(patex);
 			}catch(OHServiceException ex){
@@ -973,7 +1017,8 @@ public class PatientExaminationEdit extends JDialog {
 					}
 				}
 			}
-			dispose();
+			JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
+			model.reloadData();
 		}
 	}
 	
@@ -1157,8 +1202,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JScrollPane getJTableSummary() {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setPreferredSize(new Dimension(400, 150));
-		JTable jTableSummary = new JTable(new JTableModelSummary());
-		
+		jTableSummary = new JTable(new JTableModelSummary());
 		for (int i = 0; i < columnNames.length; i++) {
 			jTableSummary.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
 			jTableSummary.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
@@ -1192,10 +1236,14 @@ public class PatientExaminationEdit extends JDialog {
 		 */
 		private static final long serialVersionUID = 1L;
 
-		ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-		ArrayList<PatientExamination> patexList = null;
+		private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+		private ArrayList<PatientExamination> patexList = null;
 
 		public JTableModelSummary() {
+			reloadData();
+		}
+		
+		public void reloadData() {
 			try {
 				patexList = examManager.getLastNByPatID(patex.getPatient().getCode().intValue(), ExaminationParameters.LIST_SIZE);
 			}catch(OHServiceException e){
@@ -1205,6 +1253,7 @@ public class PatientExaminationEdit extends JDialog {
 					}
 				}
 			}
+			fireTableDataChanged();
 		}
 		
 		public ArrayList<PatientExamination> getList() {
@@ -1213,11 +1262,6 @@ public class PatientExaminationEdit extends JDialog {
 
 		public void removeItem(int row) {
 			patexList.remove(row);
-			fireTableDataChanged();
-		}
-
-		public void addItem(PatientExamination patex) {
-			patexList.add(patex);
 			fireTableDataChanged();
 		}
 
@@ -1277,7 +1321,7 @@ public class PatientExaminationEdit extends JDialog {
 			}
 			return null;
 		}
-
+		
 	}
 	
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
