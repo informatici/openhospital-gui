@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -40,12 +41,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.OverlayLayout;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -84,10 +87,10 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider jSliderHeight;
 	private ScaledJSlider jSliderWeight;
 	private VoIntegerTextField jTextFieldHR;
-	private JTextField jTextFieldTemp;
-	private JTextField jTextFieldSaturation;
+	private VoDoubleTextField jTextFieldTemp;
+	private VoDoubleTextField jTextFieldSaturation;
 	private VoLimitedTextArea jTextAreaNote;
-	private JTextField jTextFieldHeight;
+	private VoIntegerTextField jTextFieldHeight;
 	private VoDoubleTextField jTextFieldWeight;
 	private JPanel jPanelAPPanel;
 	private JLabel jLabelAPMin;
@@ -98,8 +101,8 @@ public class PatientExaminationEdit extends JDialog {
 	private ScaledJSlider jSliderSaturation;
 	private JScrollPane jScrollPaneNote;
 	private JDateChooser jDateChooserDate;
-	private JSpinner jSpinnerAPmin;
-	private JSpinner jSpinnerAPmax;
+	private VoIntegerTextField jSpinnerAPmin;
+	private VoIntegerTextField jSpinnerAPmax;
 	private JLabel jLabelHeightAbb;
 	private JLabel jLabelWeightAbb;
 	private JCheckBox jCheckBoxToggleAP;
@@ -297,10 +300,9 @@ public class PatientExaminationEdit extends JDialog {
 		jTextFieldHeight.setText(String.valueOf(patex.getPex_height()));
 		jSliderHeight.setValue(patex.getPex_height());
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
-		//jSliderWeight.setValue(convertFromDoubleToInt(patex.getPex_weight(), ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
 		jSliderWeight.setValue(patex.getPex_weight() != null ? patex.getPex_weight() : 0);
-		jSpinnerAPmin.setValue(patex.getPex_ap_min() != null ? patex.getPex_ap_min() : ExaminationParameters.AP_MIN_INIT);
-		jSpinnerAPmax.setValue(patex.getPex_ap_max() != null ? patex.getPex_ap_max() : ExaminationParameters.AP_MAX_INIT);
+		jSpinnerAPmin.setText(patex.getPex_ap_min() != null ? String.valueOf(patex.getPex_ap_min()) : ""+ExaminationParameters.AP_MIN_INIT);
+		jSpinnerAPmax.setText(patex.getPex_ap_max() != null ? String.valueOf(patex.getPex_ap_max()) : ""+ExaminationParameters.AP_MAX_INIT);
 		jSliderHR.setValue(patex.getPex_hr() != null ? patex.getPex_hr() : ExaminationParameters.HR_INIT);
 		jTextFieldHR.setText(patex.getPex_hr() != null ? String.valueOf(patex.getPex_hr()) : ""+ExaminationParameters.HR_INIT);
 		jSliderTemp.setValue(patex.getPex_temp());
@@ -657,43 +659,62 @@ public class PatientExaminationEdit extends JDialog {
 		return jPanelAPPanel;
 	}
 
-	private JSpinner getJSpinnerAPmin() {
+	private VoIntegerTextField getJSpinnerAPmin() {
 		if (jSpinnerAPmin == null) {
-			jSpinnerAPmin = new JSpinner(new SpinnerNumberModel(ExaminationParameters.AP_MIN_INIT,0,999,1));
-			jSpinnerAPmin.addChangeListener(new ChangeListener() {
+			jSpinnerAPmin = new VoIntegerTextField(0, 3);
+			jSpinnerAPmin.addFocusListener(new FocusListener() {
 				
 				@Override
-				public void stateChanged(ChangeEvent e) {
+				public void focusLost(FocusEvent e) {
 					patex.setPex_ap_min((Integer) jSpinnerAPmin.getValue());
+					
+				}
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+					((JTextField) e.getSource()).selectAll();
 				}
 			});
 		}
 		return jSpinnerAPmin;
 	}
 	
-	private JSpinner getJSpinnerAPmax() {
+	private VoIntegerTextField getJSpinnerAPmax() {
 		if (jSpinnerAPmax == null) {
-			jSpinnerAPmax = new JSpinner(new SpinnerNumberModel(ExaminationParameters.AP_MAX_INIT,0,999,1));
-			jSpinnerAPmax.addChangeListener(new ChangeListener() {
+			jSpinnerAPmax = new VoIntegerTextField(0,3);
+			jSpinnerAPmax.addFocusListener(new FocusListener() {
 				
 				@Override
-				public void stateChanged(ChangeEvent e) {
+				public void focusLost(FocusEvent e) {
 					patex.setPex_ap_max((Integer) jSpinnerAPmax.getValue());
+					
+				}
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+					((JTextField) e.getSource()).selectAll();
 				}
 			});
 		}
 		return jSpinnerAPmax;
 	}
 
-	private JTextField getJTextFieldHeight() {
+	private VoIntegerTextField getJTextFieldHeight() {
 		if (jTextFieldHeight == null) {
-			jTextFieldHeight = new JTextField(5);
-			jTextFieldHeight.addFocusListener(new FocusAdapter() {
+			jTextFieldHeight = new VoIntegerTextField(0,5);
+			jTextFieldHeight.addFocusListener(new FocusListener() {
+				
 				@Override
 				public void focusLost(FocusEvent e) {
 					int height = Integer.parseInt(jTextFieldHeight.getText());
 					jSliderHeight.setValue(height);
 					patex.setPex_height(height);
+					
+				}
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+					((JTextField) e.getSource()).selectAll();
 				}
 			});
 		}
@@ -703,42 +724,60 @@ public class PatientExaminationEdit extends JDialog {
 	private VoDoubleTextField getJTextFieldWeight() {
 		if (jTextFieldWeight == null) {
 			jTextFieldWeight = new VoDoubleTextField(0,5);
-			jTextFieldWeight.addFocusListener(new FocusAdapter() {
+			jTextFieldWeight.addFocusListener(new FocusListener() {
+				
 				@Override
 				public void focusLost(FocusEvent e) {
 					double weight = Double.parseDouble(jTextFieldWeight.getText());
 					jSliderWeight.setValue(weight);
 					patex.setPex_weight(weight);
 				}
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+					((JTextField) e.getSource()).selectAll();
+				}
 			});
 		}
 		return jTextFieldWeight;
 	}
 	
-	private JTextField getJTextFieldTemp() {
+	private VoDoubleTextField getJTextFieldTemp() {
 		if (jTextFieldTemp == null) {
-			jTextFieldTemp = new JTextField(5);
-			jTextFieldTemp.addFocusListener(new FocusAdapter() {
+			jTextFieldTemp = new VoDoubleTextField(0, 5);
+			jTextFieldTemp.addFocusListener(new FocusListener() {
+				
 				@Override
 				public void focusLost(FocusEvent e) {
 					double temp = Double.parseDouble(jTextFieldTemp.getText());
 					jSliderTemp.setValue(temp);
 					patex.setPex_temp(temp);
 				}
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+					((JTextField) e.getSource()).selectAll();
+				}
 			});
 		}
 		return jTextFieldTemp;
 	}
 	
-	private JTextField getJTextFieldSaturation() {
+	private VoDoubleTextField getJTextFieldSaturation() {
 		if (jTextFieldSaturation == null) {
-			jTextFieldSaturation = new JTextField(5);
-			jTextFieldSaturation.addFocusListener(new FocusAdapter() {
+			jTextFieldSaturation = new VoDoubleTextField(0, 5);
+			jTextFieldSaturation.addFocusListener(new FocusListener() {
+				
 				@Override
 				public void focusLost(FocusEvent e) {
 					double sat = Double.parseDouble(jTextFieldSaturation.getText());
 					jSliderSaturation.setValue(sat);
 					patex.setPex_sat(sat);
+				}
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+					((JTextField) e.getSource()).selectAll();
 				}
 			});
 		}
@@ -748,14 +787,20 @@ public class PatientExaminationEdit extends JDialog {
 	private VoIntegerTextField getJTextFieldHR() {
 		if (jTextFieldHR == null) {
 			jTextFieldHR = new VoIntegerTextField(0,5);
-			jTextFieldHR.addFocusListener(new FocusAdapter() {
+			jTextFieldHR.addFocusListener(new FocusListener() {
+				
 				@Override
 				public void focusLost(FocusEvent e) {
 					int hr = Integer.parseInt(jTextFieldHR.getText());
 					jSliderHR.setValue(hr);
 					patex.setPex_hr(hr);
 				}
-			});
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+					((JTextField) e.getSource()).selectAll();
+				}
+			});	
 		}
 		return jTextFieldHR;
 	}
@@ -773,6 +818,7 @@ public class PatientExaminationEdit extends JDialog {
 					updateBMI();
 				}
 			});
+			jSliderHeight.setFocusable(false);
 		}
 		return jSliderHeight;
 	}
@@ -791,6 +837,7 @@ public class PatientExaminationEdit extends JDialog {
 					updateBMI();
 				}
 			});
+			jSliderWeight.setFocusable(false);
 		}
 		return jSliderWeight;
 	}
@@ -807,6 +854,7 @@ public class PatientExaminationEdit extends JDialog {
 					patex.setPex_temp(value);
 				}
 			});
+			jSliderTemp.setFocusable(false);
 		}
 		return jSliderTemp;
 	}
@@ -823,6 +871,7 @@ public class PatientExaminationEdit extends JDialog {
 					patex.setPex_sat(value);
 				}
 			});
+			jSliderSaturation.setFocusable(false);
 		}
 		return jSliderSaturation;
 	}
@@ -839,6 +888,7 @@ public class PatientExaminationEdit extends JDialog {
 					patex.setPex_hr(hr);
 				}
 			});
+			jSliderHR.setFocusable(false);
 		}
 		return jSliderHR;
 	}
