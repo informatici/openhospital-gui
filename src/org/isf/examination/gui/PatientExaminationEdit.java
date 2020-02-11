@@ -238,31 +238,13 @@ public class PatientExaminationEdit extends JDialog {
 		bmi.append("" + this.bmi);
 		bmi.append("<br /><br />");
 		bmi.append("<font color=\"red\">");
-		bmi.append(getBMIdescription(this.bmi));
+		bmi.append(examManager.getBMIdescription(this.bmi));
 		bmi.append("</font>");
 		bmi.append("</strong>");
 		bmi.append("</body></html>");
 		jEditorPaneBMI.setText(bmi.toString());
 	}
 	
-	private Object getBMIdescription(double bmi) {
-		if (bmi < 16.5)
-			return MessageBundle.getMessage("angal.examination.bmi.severeunderweight");
-		if (bmi >= 16.5 && bmi < 18.5)
-			return MessageBundle.getMessage("angal.examination.bmi.underweight");
-		if (bmi >= 18.5 && bmi < 24.5)
-			return MessageBundle.getMessage("angal.examination.bmi.normalweight");
-		if (bmi >= 24.5 && bmi < 30)
-			return MessageBundle.getMessage("angal.examination.bmi.overweight");
-		if (bmi >= 30 && bmi < 35)
-			return MessageBundle.getMessage("angal.examination.bmi.obesityclassilight");
-		if (bmi >= 35 && bmi < 40)
-			return MessageBundle.getMessage("angal.examination.bmi.obesityclassiimedium");
-		if (bmi >= 40)
-			return MessageBundle.getMessage("angal.examination.bmi.obesityclassiiisevere");
-		return "";
-	}
-
 	//TODO: try to use JDOM...
 	private void updateSummary() {
 		StringBuilder summary = new StringBuilder();
