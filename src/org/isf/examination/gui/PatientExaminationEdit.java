@@ -55,6 +55,7 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.ScaledJSlider;
+import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
 
@@ -69,14 +70,14 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private JPanel jPanelExamination;
 	private JPanel jPanelButtons;
-	private ScaledJSlider jSliderHeight;
-	private JSlider jSliderWeight;
+	private JSlider jSliderHeight;
+	private ScaledJSlider jSliderWeight;
 	private VoIntegerTextField jTextFieldHR;
 	private JTextField jTextFieldTemp;
 	private JTextField jTextFieldSaturation;
 	private VoLimitedTextArea jTextAreaNote;
 	private JTextField jTextFieldHeight;
-	private VoIntegerTextField jTextFieldWeight;
+	private VoDoubleTextField jTextFieldWeight;
 	private JPanel jPanelAPPanel;
 	private JLabel jLabelAPMin;
 	private JLabel jLabelAPSlash;
@@ -263,9 +264,9 @@ public class PatientExaminationEdit extends JDialog {
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
 		//jSliderWeight.setValue(convertFromDoubleToInt(patex.getPex_weight(), ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
 		jSliderWeight.setValue(patex.getPex_weight() != null ? patex.getPex_weight() : 0);
-		jSpinnerAPmin.setValue(patex.getPex_ap_min() != null ? patex.getPex_ap_min() : 0);
-		jSpinnerAPmax.setValue(patex.getPex_ap_max() != null ? patex.getPex_ap_max() : 0);
-		jSliderHR.setValue(patex.getPex_hr() != null ? patex.getPex_hr() : 0);
+		jSpinnerAPmin.setValue(patex.getPex_ap_min() != null ? patex.getPex_ap_min() : ExaminationParameters.AP_MIN_INIT);
+		jSpinnerAPmax.setValue(patex.getPex_ap_max() != null ? patex.getPex_ap_max() : ExaminationParameters.AP_MAX_INIT);
+		jSliderHR.setValue(patex.getPex_hr() != null ? patex.getPex_hr() : ExaminationParameters.HR_INIT);
 		jTextFieldHR.setText(patex.getPex_hr() != null ? String.valueOf(patex.getPex_hr()) : ""+ExaminationParameters.HR_INIT);
 		jSliderTemp.setValue(patex.getPex_temp());
 		jTextFieldTemp.setText(patex.getPex_temp() != null ? String.valueOf(patex.getPex_temp()) : ""+ExaminationParameters.TEMP_INIT);
@@ -326,7 +327,7 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_jSliderHeight.gridy = 1;
 			jPanelExamination.add(getJSliderHeight(), gbc_jSliderHeight);
 			
-			JLabel jLabelHeightUnit = new JLabel(ExaminationParameters.HEIGHT_UNIT);
+			JLabel jLabelHeightUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.centimeter"));
 			GridBagConstraints gbc_jLabelHeightUnit = new GridBagConstraints();
 			gbc_jLabelHeightUnit.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelHeightUnit.gridx = 3;
@@ -362,7 +363,7 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_jSliderWeight.gridy = 2;
 			jPanelExamination.add(getJSliderWeight(), gbc_jSliderWeight);
 			
-			JLabel jLabelWeightUnit = new JLabel(ExaminationParameters.WEIGHT_UNIT);
+			JLabel jLabelWeightUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.kg"));
 			GridBagConstraints gbc_jLabelWeightUnit = new GridBagConstraints();
 			gbc_jLabelWeightUnit.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelWeightUnit.gridx = 3;
@@ -396,7 +397,7 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_panel.gridy = 3;
 			jPanelExamination.add(getJPanelAPPanel(), gbc_panel);
 			
-			JLabel jLabelAPUnit = new JLabel(ExaminationParameters.AP_UNIT);
+			JLabel jLabelAPUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.mmHg"));
 			GridBagConstraints gbc_jLabelAPUnit = new GridBagConstraints();
 			gbc_jLabelAPUnit.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelAPUnit.gridx = 3;
@@ -423,7 +424,7 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_jSliderHR.gridy = 4;
 			jPanelExamination.add(getJSliderHR(), gbc_jSliderHR);
 			
-			JLabel jLabelHRUnit = new JLabel(ExaminationParameters.HR_UNIT);
+			JLabel jLabelHRUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.bpm"));
 			GridBagConstraints gbc_jLabelHRUnit = new GridBagConstraints();
 			gbc_jLabelHRUnit.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelHRUnit.gridx = 3;
@@ -457,7 +458,7 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_jSliderTemp.gridy = 5;
 			jPanelExamination.add(getJSliderTemp(), gbc_jSliderTemp);
 			
-			JLabel jLabelTempUnit = new JLabel(ExaminationParameters.TEMP_UNIT);
+			JLabel jLabelTempUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.celsius"));
 			GridBagConstraints gbc_jLabelTempUnit = new GridBagConstraints();
 			gbc_jLabelTempUnit.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelTempUnit.gridx = 3;
@@ -491,7 +492,7 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_jSliderSaturation.gridy = 6;
 			jPanelExamination.add(getJSliderSaturation(), gbc_jSliderSaturation);
 			
-			JLabel jLabelSaturationUnit = new JLabel(ExaminationParameters.SAT_UNIT);
+			JLabel jLabelSaturationUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.percentage"));
 			GridBagConstraints gbc_jLabelSaturationUnit = new GridBagConstraints();
 			gbc_jLabelSaturationUnit.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelSaturationUnit.gridx = 3;
@@ -623,7 +624,7 @@ public class PatientExaminationEdit extends JDialog {
 
 	private JSpinner getJSpinnerAPmin() {
 		if (jSpinnerAPmin == null) {
-			jSpinnerAPmin = new JSpinner(new SpinnerNumberModel(ExaminationParameters.AP_MIN,0,999,1));
+			jSpinnerAPmin = new JSpinner(new SpinnerNumberModel(ExaminationParameters.AP_MIN_INIT,0,999,1));
 			jSpinnerAPmin.addChangeListener(new ChangeListener() {
 				
 				@Override
@@ -637,7 +638,7 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private JSpinner getJSpinnerAPmax() {
 		if (jSpinnerAPmax == null) {
-			jSpinnerAPmax = new JSpinner(new SpinnerNumberModel(ExaminationParameters.AP_MIN,0,999,1));
+			jSpinnerAPmax = new JSpinner(new SpinnerNumberModel(ExaminationParameters.AP_MAX_INIT,0,999,1));
 			jSpinnerAPmax.addChangeListener(new ChangeListener() {
 				
 				@Override
@@ -655,9 +656,7 @@ public class PatientExaminationEdit extends JDialog {
 			jTextFieldHeight.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					//int height = Integer.parseInt(jTextFieldHeight.getText());
-					double height = Double.parseDouble(jTextFieldHeight.getText());
-					//jSliderHeight.setValue(height);
+					int height = Integer.parseInt(jTextFieldHeight.getText());
 					jSliderHeight.setValue(height);
 					patex.setPex_height(height);
 				}
@@ -666,15 +665,13 @@ public class PatientExaminationEdit extends JDialog {
 		return jTextFieldHeight;
 	}
 	
-	private VoIntegerTextField getJTextFieldWeight() {
+	private VoDoubleTextField getJTextFieldWeight() {
 		if (jTextFieldWeight == null) {
-			jTextFieldWeight = new VoIntegerTextField(5,0);
+			jTextFieldWeight = new VoDoubleTextField(0,5);
 			jTextFieldWeight.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					//double weight = Double.parseDouble(jTextFieldWeight.getText());
-					int weight = Integer.parseInt(jTextFieldWeight.getText());
-					//jSliderWeight.setValue(convertFromDoubleToInt(weight, ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
+					double weight = Double.parseDouble(jTextFieldWeight.getText());
 					jSliderWeight.setValue(weight);
 					patex.setPex_weight(weight);
 				}
@@ -728,14 +725,14 @@ public class PatientExaminationEdit extends JDialog {
 		return jTextFieldHR;
 	}
 
-	private ScaledJSlider getJSliderHeight() {
+	private JSlider getJSliderHeight() {
 		if (jSliderHeight == null) {
-			jSliderHeight = new ScaledJSlider(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX, ExaminationParameters.HEIGHT_STEP, ExaminationParameters.HEIGHT_INIT);
+			jSliderHeight = new JSlider(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX, ExaminationParameters.HEIGHT_INIT);
 			jSliderHeight.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					double value = jSliderHeight.getScaledValue();
+					int value = jSliderHeight.getValue();
 					jTextFieldHeight.setText(String.valueOf(value));
 					patex.setPex_height(value);
 					updateBMI();
@@ -745,14 +742,14 @@ public class PatientExaminationEdit extends JDialog {
 		return jSliderHeight;
 	}
 	
-	private JSlider getJSliderWeight() {
+	private ScaledJSlider getJSliderWeight() {
 		if (jSliderWeight == null) {
-			jSliderWeight = new JSlider(0, 200, 0);
+			jSliderWeight = new ScaledJSlider(ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_MAX, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_INIT);
 			jSliderWeight.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					int value = jSliderWeight.getValue();
+					double value = jSliderWeight.getScaledValue();
 					//double weight = (double) value / 10;
 					jTextFieldWeight.setText(String.valueOf(value));
 					patex.setPex_weight(value);
@@ -797,7 +794,7 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private JSlider getJSliderHR() {
 		if (jSliderHR == null) {
-			jSliderHR = new JSlider(0, 200, 0);
+			jSliderHR = new JSlider(ExaminationParameters.HR_MIN, ExaminationParameters.HR_MAX, ExaminationParameters.HR_INIT);
 			jSliderHR.addChangeListener(new ChangeListener() {
 				
 				@Override
