@@ -7,6 +7,7 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -567,6 +568,8 @@ public class PatientExaminationEdit extends JDialog {
 		if (jCheckBoxToggleSaturation == null) {
 			jCheckBoxToggleSaturation = new JCheckBox(""); //$NON-NLS-1$
 			jCheckBoxToggleSaturation.setAction(getActionToggleSaturation());
+			jCheckBoxToggleSaturation.addFocusListener(new CheckBoxFocus());
+			jCheckBoxToggleSaturation.setFocusPainted(true);
 		}
 		return jCheckBoxToggleSaturation;
 	}
@@ -575,6 +578,8 @@ public class PatientExaminationEdit extends JDialog {
 		if (jCheckBoxToggleTemp == null) {
 			jCheckBoxToggleTemp = new JCheckBox(""); //$NON-NLS-1$
 			jCheckBoxToggleTemp.setAction(getActionToggleTemp());
+			jCheckBoxToggleTemp.addFocusListener(new CheckBoxFocus());
+			jCheckBoxToggleTemp.setFocusPainted(true);
 		}
 		return jCheckBoxToggleTemp;
 	}
@@ -583,6 +588,8 @@ public class PatientExaminationEdit extends JDialog {
 		if (jCheckBoxToggleHR == null) {
 			jCheckBoxToggleHR = new JCheckBox(""); //$NON-NLS-1$
 			jCheckBoxToggleHR.setAction(getActionToggleHR());
+			jCheckBoxToggleHR.addFocusListener(new CheckBoxFocus());
+			jCheckBoxToggleHR.setFocusPainted(true);
 		}
 		return jCheckBoxToggleHR;
 	}
@@ -591,6 +598,8 @@ public class PatientExaminationEdit extends JDialog {
 		if (jCheckBoxToggleAP == null) {
 			jCheckBoxToggleAP = new JCheckBox(""); //$NON-NLS-1$
 			jCheckBoxToggleAP.setAction(getActionToggleAP());
+			jCheckBoxToggleAP.addFocusListener(new CheckBoxFocus());
+			jCheckBoxToggleAP.setFocusPainted(true);
 		}
 		return jCheckBoxToggleAP;
 	}
@@ -1321,7 +1330,24 @@ public class PatientExaminationEdit extends JDialog {
 			}
 			return null;
 		}
+	}
+	
+	private final class CheckBoxFocus implements FocusListener {
 		
+		private Color bgColor = null;
+		
+		@Override
+		public void focusLost(FocusEvent e) {
+			JCheckBox thisCheckBox = (JCheckBox) e.getSource();
+			thisCheckBox.setBackground(this.bgColor);
+		}
+
+		@Override
+		public void focusGained(FocusEvent e) {
+			JCheckBox thisCheckBox = (JCheckBox) e.getSource();
+			this.bgColor = thisCheckBox.getBackground();
+			thisCheckBox.setBackground(Color.red);
+		}
 	}
 	
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
