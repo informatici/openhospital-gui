@@ -7,7 +7,6 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -19,6 +18,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,19 +40,25 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.OverlayLayout;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.Border;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.ExaminationParameters;
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
@@ -61,6 +67,8 @@ import org.isf.utils.jobjects.ScaledJSlider;
 import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -134,7 +142,21 @@ public class PatientExaminationEdit extends JDialog {
 			SUMMARY_END_ROW;
 	private final String SUMMARY_FOOTER = "</table></body></html>";
 	
-	private final String DATE_FORMAT = "dd/MM/yy";
+	private final String[] columnNames = { 
+			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.height"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.weight"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.arterialpressure"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.heartrate"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.temperature"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.saturation"), //$NON-NLS-1$
+	};
+	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class };
+	private int[] columnWidth = { 80, 40, 40, 100, 70, 50, 50};
+	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER};
+	private boolean[] columnBold = { false, false, false, false, false, true, false, false, false, true };
+	
+	private final String DATE_FORMAT = "dd/MM/yy HH:mm";
 
 	/**
 	 * Create the dialog.
@@ -173,7 +195,7 @@ public class PatientExaminationEdit extends JDialog {
 		ExaminationParameters.getExaminationParameters();
 		getContentPane().add(getJPanelCenter(), BorderLayout.CENTER);
 		getContentPane().add(getJPanelButtons(), BorderLayout.SOUTH);
-		updateSummary();
+		//updateSummary();
 		updateBMI();
 		pack();
 		setResizable(false);
@@ -1081,9 +1103,29 @@ public class PatientExaminationEdit extends JDialog {
 			jPanelSummary = new JPanel();
 			jPanelSummary.setBorder(new EmptyBorder(5, 5, 5, 5));
 			jPanelSummary.setLayout(new BorderLayout(0, 0));
-			jPanelSummary.add(getJEditorPaneSummary());
+			jPanelSummary.add(getJTableSummary());
 		}
 		return jPanelSummary;
+	}
+	
+	private JScrollPane getJTableSummary() {
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setPreferredSize(new Dimension(400, 150));
+		JTable jTableSummary = new JTable(new JTableModelSummary());
+		
+		for (int i = 0; i < columnNames.length; i++) {
+			jTableSummary.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
+			jTableSummary.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
+		}
+		jTableSummary.setShowGrid(false);
+		
+		JTableHeader header = jTableSummary.getTableHeader();
+		header.setBackground(Color.white);
+		
+		scrollPane.setViewportView(jTableSummary);
+		scrollPane.getViewport().setBackground(Color.white);
+		
+		return scrollPane;
 	}
 
 	private JEditorPane getJEditorPaneSummary() {
@@ -1098,22 +1140,138 @@ public class PatientExaminationEdit extends JDialog {
 		return jEditorPaneSummary;
 	}
 	
-//	/**
-//	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		
-//		/*
-//		 * Default Values
-//		 */
-//		final int INITIAL_HEIGHT = 170;
-//		final int INITIAL_WEIGHT = 80;
-//		final int INITIAL_AP_MIN = 80;
-//		final int INITIAL_AP_MAX = 120;
-//		final int INITIAL_HR = 60;
-//		
-//		try {
-//			
+	public class JTableModelSummary extends AbstractTableModel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+		ArrayList<PatientExamination> patexList = null;
+
+		public JTableModelSummary() {
+			try {
+				patexList = examManager.getLastNByPatID(patex.getPatient().getCode().intValue(), ExaminationParameters.LIST_SIZE);
+			}catch(OHServiceException e){
+				if(e.getMessages() != null){
+					for(OHExceptionMessage msg : e.getMessages()){
+						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+					}
+				}
+			}
+		}
+		
+		public ArrayList<PatientExamination> getList() {
+			return patexList;
+		}
+
+		public void removeItem(int row) {
+			patexList.remove(row);
+			fireTableDataChanged();
+		}
+
+		public void addItem(PatientExamination patex) {
+			patexList.add(patex);
+			fireTableDataChanged();
+		}
+
+		@Override
+		public int getRowCount() {
+			return patexList.size();
+		}
+
+		@Override
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		@Override
+		public String getColumnName(int columnIndex) {
+			return columnNames[columnIndex];
+		}
+
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
+			return columnClasses[columnIndex];
+		}
+
+		@Override
+		public boolean isCellEditable(int r, int c) {
+			return false;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see javax.swing.table.TableModel#getValueAt(int, int)
+		 */
+		@Override
+		public Object getValueAt(int r, int c) {
+			PatientExamination patex = patexList.get(r);
+			StringBuilder ap_string = new StringBuilder();
+			ap_string.append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
+					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max());
+			String datetime = new SimpleDateFormat(DATE_FORMAT).format(new Date(patex.getPex_date().getTime()));
+			if (c == -1) {
+				return patex;
+			} else if (c == 0) {
+				return datetime;
+			} else if (c == 1) {
+				return patex.getPex_height();
+			} else if (c == 2) {
+				return patex.getPex_weight();
+			} else if (c == 3) {
+				return ap_string.toString();
+			} else if (c == 4) {
+				return patex.getPex_hr() == null ? "-" : patex.getPex_hr();
+			} else if (c == 5) {
+				return patex.getPex_temp() == null ? "-" : patex.getPex_temp();
+			} else if (c == 6) {
+				return patex.getPex_sat() == null ? "-" : patex.getPex_sat();
+			}
+			return null;
+		}
+
+	}
+	
+	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			setHorizontalAlignment(columnAlignment[column]);
+			return cell;
+		}
+	}
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		
+		/*
+		 * Default Values
+		 */
+		final int INITIAL_HEIGHT = 170;
+		final double INITIAL_WEIGHT = 80.;
+		final int INITIAL_AP_MIN = 80;
+		final int INITIAL_AP_MAX = 120;
+		final int INITIAL_HR = 60;
+		
+		
+		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		Context.setApplicationContext(context);
+		GeneralData.getGeneralData();
+		
+		try {
+			ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+			PatientExamination patex = examManager.getLastByPatID(500);
+			
+			
 //			PatientExamination patex = new PatientExamination();
 //			Patient patient = new Patient();
 //			patient.setCode(1);
@@ -1123,17 +1281,17 @@ public class PatientExaminationEdit extends JDialog {
 //			patex.setPex_weight(INITIAL_WEIGHT);
 //			patex.setPex_ap_min(INITIAL_AP_MIN);
 //			patex.setPex_ap_max(INITIAL_AP_MAX);
-//			patex.setPex_fc(INITIAL_HR);
-//			
-//			GenderPatientExamination gpatex = new GenderPatientExamination(patex, false);
-//			
-//			PatientExaminationEdit dialog = new PatientExaminationEdit(gpatex);
-//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//			dialog.pack();
-//			dialog.setLocationRelativeTo(null);
-//			dialog.setVisible(true);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+//			patex.setPex_hr(INITIAL_HR);
+			
+			GenderPatientExamination gpatex = new GenderPatientExamination(patex, patex.getPatient().getSex() == 'M');
+			
+			PatientExaminationEdit dialog = new PatientExaminationEdit(gpatex);
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.pack();
+			dialog.setLocationRelativeTo(null);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
