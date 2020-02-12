@@ -32,8 +32,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -52,6 +54,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.text.JTextComponent;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.isf.examination.manager.ExaminationBrowserManager;
@@ -653,6 +656,7 @@ public class PatientExaminationEdit extends JDialog {
 	private VoIntegerTextField getJSpinnerAPmin() {
 		if (jSpinnerAPmin == null) {
 			jSpinnerAPmin = new VoIntegerTextField(0, 3);
+			jSpinnerAPmin.setInputVerifier(new MinMaxIntegerInputVerifier(0));
 			jSpinnerAPmin.addFocusListener(new FocusListener() {
 				
 				@Override
@@ -673,6 +677,7 @@ public class PatientExaminationEdit extends JDialog {
 	private VoIntegerTextField getJSpinnerAPmax() {
 		if (jSpinnerAPmax == null) {
 			jSpinnerAPmax = new VoIntegerTextField(0,3);
+			jSpinnerAPmax.setInputVerifier(new MinMaxIntegerInputVerifier(0));
 			jSpinnerAPmax.addFocusListener(new FocusListener() {
 				
 				@Override
@@ -693,6 +698,7 @@ public class PatientExaminationEdit extends JDialog {
 	private VoIntegerTextField getJTextFieldHeight() {
 		if (jTextFieldHeight == null) {
 			jTextFieldHeight = new VoIntegerTextField(0,5);
+			jTextFieldHeight.setInputVerifier(new MinMaxIntegerInputVerifier(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX));
 			jTextFieldHeight.addFocusListener(new FocusListener() {
 				
 				@Override
@@ -715,6 +721,7 @@ public class PatientExaminationEdit extends JDialog {
 	private VoDoubleTextField getJTextFieldWeight() {
 		if (jTextFieldWeight == null) {
 			jTextFieldWeight = new VoDoubleTextField(0,5);
+			jTextFieldWeight.setInputVerifier(new MinMaxIntegerInputVerifier(ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_MAX));
 			jTextFieldWeight.addFocusListener(new FocusListener() {
 				
 				@Override
@@ -736,6 +743,7 @@ public class PatientExaminationEdit extends JDialog {
 	private VoDoubleTextField getJTextFieldTemp() {
 		if (jTextFieldTemp == null) {
 			jTextFieldTemp = new VoDoubleTextField(0, 5);
+			jTextFieldTemp.setInputVerifier(new MinMaxIntegerInputVerifier(ExaminationParameters.TEMP_MIN, ExaminationParameters.TEMP_MAX));
 			jTextFieldTemp.addFocusListener(new FocusListener() {
 				
 				@Override
@@ -757,6 +765,7 @@ public class PatientExaminationEdit extends JDialog {
 	private VoDoubleTextField getJTextFieldSaturation() {
 		if (jTextFieldSaturation == null) {
 			jTextFieldSaturation = new VoDoubleTextField(0, 5);
+			jTextFieldSaturation.setInputVerifier(new MinMaxIntegerInputVerifier(ExaminationParameters.SAT_MIN, 100));
 			jTextFieldSaturation.addFocusListener(new FocusListener() {
 				
 				@Override
@@ -778,6 +787,7 @@ public class PatientExaminationEdit extends JDialog {
 	private VoIntegerTextField getJTextFieldHR() {
 		if (jTextFieldHR == null) {
 			jTextFieldHR = new VoIntegerTextField(0,5);
+			jTextFieldHR.setInputVerifier(new MinMaxIntegerInputVerifier(ExaminationParameters.HR_MIN, ExaminationParameters.HR_MAX));
 			jTextFieldHR.addFocusListener(new FocusListener() {
 				
 				@Override
@@ -986,6 +996,51 @@ public class PatientExaminationEdit extends JDialog {
 		return jLabelGender;
 	}
 	
+	private final class MinMaxIntegerInputVerifier extends InputVerifier {
+		
+		boolean bottom = false;
+		boolean ceiling = false;
+		int min;
+		int max;
+		
+		public MinMaxIntegerInputVerifier(int min) {
+			this.min = min;
+			this.bottom = true;
+		}
+		
+		public MinMaxIntegerInputVerifier(int min, int max) {
+			this.min = min;
+			this.max = max;
+			this.bottom = true;
+			this.ceiling = true;
+		}
+
+		@Override
+		public boolean verify(JComponent input) {
+			JTextComponent comp = (JTextComponent) input;
+			try {
+				double value = Double.parseDouble(comp.getText());
+				if (bottom && value < min) {
+					JOptionPane.showMessageDialog(PatientExaminationEdit.this, 
+							MessageBundle.getMessage("angal.common.thisvaluecannotbelesserthan") + min,
+							MessageBundle.getMessage("angal.hospital"), 
+							JOptionPane.ERROR_MESSAGE);
+					return false;
+				}
+				if (ceiling && value > max) {
+					JOptionPane.showMessageDialog(PatientExaminationEdit.this, 
+							MessageBundle.getMessage("angal.common.thisvaluecannotbegreaterthan") + max,
+							MessageBundle.getMessage("angal.hospital"), 
+							JOptionPane.ERROR_MESSAGE);
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				return false;
+			}
+			return true;
+		}
+	}
+
 	private class SwingActionSavePatientExamination extends AbstractAction {
 		/**
 		 * 
