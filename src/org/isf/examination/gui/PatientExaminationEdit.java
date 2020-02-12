@@ -155,7 +155,6 @@ public class PatientExaminationEdit extends JDialog {
 	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class };
 	private int[] columnWidth = { 80, 40, 40, 100, 70, 50, 50};
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER};
-	private boolean[] columnBold = { false, false, false, false, false, true, false, false, false, true };
 	
 	private final String DATE_FORMAT = "dd/MM/yy HH:mm";
 
