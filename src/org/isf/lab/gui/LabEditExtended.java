@@ -556,7 +556,7 @@ public class LabEditExtended extends JDialog {
 				matComboBox.addItem(elem);
 				if (!insert) {
 					try {	
-						matComboBox.setSelectedItem(lab.getMaterial());
+						matComboBox.setSelectedItem(labManager.getMaterialTranslated(lab.getMaterial()));
 						}
 					catch (Exception e) {}
 				}
@@ -566,7 +566,6 @@ public class LabEditExtended extends JDialog {
 	}
 
 	
-	//prova per gestire un campo note al posto di uno volimited
 	private JTextArea getNoteTextArea() {
 		if (noteTextArea == null) {
 			noteTextArea = new JTextArea(10,30);
@@ -650,7 +649,13 @@ public class LabEditExtended extends JDialog {
 					}
 					String matSelected=(String)matComboBox.getSelectedItem();
 					examSelected=(Exam)examComboBox.getSelectedItem();
-					labPat=(Patient)patientComboBox.getSelectedItem();
+					try {
+						labPat=(Patient)patientComboBox.getSelectedItem();
+					} catch (ClassCastException e2) {
+						JOptionPane.showMessageDialog(LabEditExtended.this,
+								MessageBundle.getMessage("angal.lab.pleaseselectapatient"));
+						return;
+					}
 					GregorianCalendar gregDate = new GregorianCalendar();
 					try {
 						gregDate.setTime(examDateFieldCal.getDate());
@@ -664,7 +669,7 @@ public class LabEditExtended extends JDialog {
 					lab.setDate(new GregorianCalendar());
 					lab.setExamDate(gregDate);
 					RememberDates.setLastLabExamDate(gregDate);
-					lab.setMaterial(matSelected);
+					lab.setMaterial(labManager.getMaterialKey(matSelected));
 					lab.setExam(examSelected);
 					lab.setNote(noteTextArea.getText());
 					lab.setInOutPatient((inPatientCheckBox.isSelected()?"I":"O"));

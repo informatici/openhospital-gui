@@ -143,7 +143,7 @@ public class LabEdit extends JDialog {
 	private static final Integer buttonPanelHeight=40; 
 	
 	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-	
+	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
 	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
 
 	
@@ -432,7 +432,7 @@ public class LabEdit extends JDialog {
 				matComboBox.addItem(elem);
 				if (!insert) {
 					try {	
-						matComboBox.setSelectedItem(lab.getMaterial());
+						matComboBox.setSelectedItem(labManager.getMaterialTranslated(lab.getMaterial()));
 						}
 					catch (Exception e) {}
 				}
@@ -528,7 +528,7 @@ public class LabEdit extends JDialog {
 					
 					lab.setDate(new GregorianCalendar());
 					lab.setExamDate(gregDate);
-					lab.setMaterial(matSelected);
+					lab.setMaterial(labManager.getMaterialKey(matSelected));
 					lab.setExam(examSelected);
 					lab.setNote(noteTextArea.getText());
 					lab.setInOutPatient((inPatientCheckBox.isSelected()?"I":"O"));
@@ -553,19 +553,18 @@ public class LabEdit extends JDialog {
 							}
 						}
 					}
-					LabManager manager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
 					boolean result = false;
 					if (insert) {
 						lab.setAge(tmpAge);
 						try {
-							result = manager.newLaboratory(lab,	labRow);
+							result = labManager.newLaboratory(lab,	labRow);
 						} catch (OHServiceException e1) {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 					} else {
 						try {
-							result = manager.updateLaboratory(lab, labRow);
+							result = labManager.updateLaboratory(lab, labRow);
 						} catch (OHServiceException e1) {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
