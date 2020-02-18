@@ -51,6 +51,7 @@ import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.ExaminationParameters;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoIntegerTextField;
@@ -73,8 +74,8 @@ public class PatientExaminationEdit extends JDialog {
 	private JTextField jTextFieldTemp;
 	private JTextField jTextFieldSaturation;
 	private VoLimitedTextArea jTextAreaNote;
-	private VoIntegerTextField jTextFieldHeight;
-	private JTextField jTextFieldWeight;
+	private JTextField jTextFieldHeight;
+	private VoIntegerTextField jTextFieldWeight;
 	private JPanel jPanelAPPanel;
 	private JLabel jLabelAPMin;
 	private JLabel jLabelAPSlash;
@@ -224,7 +225,7 @@ public class PatientExaminationEdit extends JDialog {
 	private void updateSummary() {
 		StringBuilder summary = new StringBuilder();
 		summary.append(SUMMARY_HEADER);
-		ExaminationBrowserManager examManager = new ExaminationBrowserManager();
+		ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 		ArrayList<PatientExamination> patexList = null;
 		try {
 			patexList = examManager.getLastNByPatID(patex.getPatient().getCode(), ExaminationParameters.LIST_SIZE);
@@ -256,9 +257,10 @@ public class PatientExaminationEdit extends JDialog {
 	private void updateGUI() {
 		jDateChooserDate.setDate(new Date(patex.getPex_date().getTime()));
 		jTextFieldHeight.setText(String.valueOf(patex.getPex_height()));
-		jSliderHeight.setValue(patex.getPex_height());
+		jSliderHeight.setValue(convertFromDoubleToInt(patex.getPex_height(), ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_STEP, ExaminationParameters.HEIGHT_MAX));
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
-		jSliderWeight.setValue(convertFromDoubleToInt(patex.getPex_weight(), ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
+		//jSliderWeight.setValue(convertFromDoubleToInt(patex.getPex_weight(), ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
+		jSliderWeight.setValue(patex.getPex_weight());
 		jSpinnerAPmin.setValue(patex.getPex_pa_min());
 		jSpinnerAPmax.setValue(patex.getPex_pa_max());
 		jSliderHR.setValue(patex.getPex_fc());
@@ -580,6 +582,7 @@ public class PatientExaminationEdit extends JDialog {
 				}
 			});
 		}
+		jTextAreaNote.setSize(jTextAreaNote.getPreferredSize());
 		return jTextAreaNote;
 	}
 
@@ -587,7 +590,9 @@ public class PatientExaminationEdit extends JDialog {
 		if (jScrollPaneNote == null) {
 			jScrollPaneNote = new JScrollPane();
 			jScrollPaneNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			jScrollPaneNote.setViewportView(getJTextAreaNote());
+			VoLimitedTextArea text = getJTextAreaNote();
+			jScrollPaneNote.setViewportView(text);
+			jScrollPaneNote.setPreferredSize(text.getPreferredSize());
 		}
 		return jScrollPaneNote;
 	}
@@ -635,14 +640,16 @@ public class PatientExaminationEdit extends JDialog {
 		return jSpinnerAPmax;
 	}
 
-	private VoIntegerTextField getJTextFieldHeight() {
+	private JTextField getJTextFieldHeight() {
 		if (jTextFieldHeight == null) {
-			jTextFieldHeight = new VoIntegerTextField(0,5);
+			jTextFieldHeight = new JTextField(5);
 			jTextFieldHeight.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					int height = Integer.parseInt(jTextFieldHeight.getText());
-					jSliderHeight.setValue(height);
+					//int height = Integer.parseInt(jTextFieldHeight.getText());
+					double height = Double.parseDouble(jTextFieldHeight.getText());
+					//jSliderHeight.setValue(height);
+					jSliderHeight.setValue(convertFromDoubleToInt(height, ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_STEP, ExaminationParameters.HEIGHT_MAX));
 					patex.setPex_height(height);
 				}
 			});
@@ -650,14 +657,16 @@ public class PatientExaminationEdit extends JDialog {
 		return jTextFieldHeight;
 	}
 	
-	private JTextField getJTextFieldWeight() {
+	private VoIntegerTextField getJTextFieldWeight() {
 		if (jTextFieldWeight == null) {
-			jTextFieldWeight = new JTextField(5);
+			jTextFieldWeight = new VoIntegerTextField(5,0);
 			jTextFieldWeight.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					double weight = Double.parseDouble(jTextFieldWeight.getText());
-					jSliderWeight.setValue(convertFromDoubleToInt(weight, ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
+					//double weight = Double.parseDouble(jTextFieldWeight.getText());
+					int weight = Integer.parseInt(jTextFieldWeight.getText());
+					//jSliderWeight.setValue(convertFromDoubleToInt(weight, ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_MAX));
+					jSliderWeight.setValue(weight);
 					patex.setPex_weight(weight);
 				}
 			});
@@ -712,12 +721,13 @@ public class PatientExaminationEdit extends JDialog {
 
 	private JSlider getJSliderHeight() {
 		if (jSliderHeight == null) {
-			jSliderHeight = new JSlider(0, 250, 0);
+			jSliderHeight = new JSlider(0, 500, 0);
 			jSliderHeight.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					int height = jSliderHeight.getValue();
+					int value = jSliderHeight.getValue();
+					double height = (double) value / 10;
 					jTextFieldHeight.setText(String.valueOf(height));
 					patex.setPex_height(height);
 					updateBMI();
@@ -729,15 +739,15 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private JSlider getJSliderWeight() {
 		if (jSliderWeight == null) {
-			jSliderWeight = new JSlider(0, 4000, 0);
+			jSliderWeight = new JSlider(0, 200, 0);
 			jSliderWeight.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					int value = jSliderWeight.getValue();
-					double weight = (double) value / 10;
-					jTextFieldWeight.setText(String.valueOf(weight));
-					patex.setPex_weight(weight);
+					//double weight = (double) value / 10;
+					jTextFieldWeight.setText(String.valueOf(value));
+					patex.setPex_weight(value);
 					updateBMI();
 				}
 			});
@@ -879,7 +889,7 @@ public class PatientExaminationEdit extends JDialog {
 		}
 		public void actionPerformed(ActionEvent e) {
 			
-			ExaminationBrowserManager examManager = new ExaminationBrowserManager();
+			ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 			try {
 				examManager.saveOrUpdate(patex);
 			}catch(OHServiceException ex){

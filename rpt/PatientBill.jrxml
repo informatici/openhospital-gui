@@ -289,7 +289,9 @@ WHERE BLL_ID = $P{billID}]]></queryString>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" size="18"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{BLL_STATUS}.equals( "D" ) ? "DELETED" : null]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{BLL_STATUS}.equals( "D" ) ? "DELETED"  
+	: $F{BLL_STATUS}.equals( "O" ) ? "PENDING"
+	: $F{BLL_STATUS}.equals( "C" ) ? "CLOSED" : null]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>

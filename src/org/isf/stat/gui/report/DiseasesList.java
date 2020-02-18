@@ -1,5 +1,7 @@
 package org.isf.stat.gui.report;
 
+import java.util.Locale;
+
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
@@ -15,15 +17,16 @@ import net.sf.jasperreports.view.JasperViewer;
 public class DiseasesList {
 	
 	private final Logger logger = LoggerFactory.getLogger(DiseasesList.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public DiseasesList() {
+
 		try {
-			JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getDiseasesListPdf();
 
 			// shows at video
 			if (GeneralData.INTERNALVIEWER)
-				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false);
+				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
 			else {
 				Runtime rt = Runtime.getRuntime();
 				rt.exec(GeneralData.VIEWER + " " + jasperReportResultDto.getFilename());

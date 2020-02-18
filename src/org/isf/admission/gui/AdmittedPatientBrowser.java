@@ -420,7 +420,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		wardPanel.setLayout(new BoxLayout(wardPanel, BoxLayout.Y_AXIS));
 		wardPanel.setPreferredSize(new Dimension(PANEL_WITDH, 20));
 		if (wardList == null) {
-			WardBrowserManager wbm = new WardBrowserManager();
+			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			ArrayList<Ward> wardWithBeds;
 			try {
 				wardWithBeds = wbm.getWards();
@@ -715,7 +715,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					Patient pat = patient.getPatient();
 					
 					PatientExamination patex;
-					ExaminationBrowserManager examManager = new ExaminationBrowserManager();
+					ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 					
 					PatientExamination lastPatex = null;
 					try {
@@ -806,7 +806,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 				Patient pat = patient.getPatient();
 				
-				int n = JOptionPane.showConfirmDialog(null,
+				int n = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this,
 						MessageBundle.getMessage("angal.admission.deletepatient") + " " +pat.getName() + "?",
 						MessageBundle.getMessage("angal.admission.deletepatient"), JOptionPane.YES_NO_OPTION);
 				
@@ -1117,7 +1117,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				!searchString.getText().isEmpty();	
 		if (!isFilteredList) {
 			int ok = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this, 
-					MessageBundle.getMessage("angal.admission.thiscouldretrievealargeamountofdataproceed"),
+					MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed"),
 					MessageBundle.getMessage("angal.hospital"),
 					JOptionPane.OK_CANCEL_OPTION);
 			if (ok != JOptionPane.OK_OPTION) return;

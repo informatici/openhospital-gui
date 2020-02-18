@@ -6,10 +6,13 @@
  */
 package org.isf.stat.gui.report;
 
+import java.util.Locale;
+
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
 import org.slf4j.Logger;
@@ -20,14 +23,14 @@ import net.sf.jasperreports.view.JasperViewer;
 public class GenericReportAdmission {
 
     private final Logger logger = LoggerFactory.getLogger(GenericReportAdmission.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportAdmission(int admID, int patID, String jasperFileName) {
 		try{
-            JasperReportsManager jasperReportsManager = new JasperReportsManager();
-            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportAdmissionPdf(admID, patID, jasperFileName);
+			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportAdmissionPdf(admID, patID, jasperFileName);
 
 			if (GeneralData.INTERNALVIEWER)
-				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false);
+				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
 			else { 
 					Runtime rt = Runtime.getRuntime();
 					rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());

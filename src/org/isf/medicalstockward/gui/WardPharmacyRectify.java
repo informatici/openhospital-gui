@@ -36,7 +36,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
-import org.isf.utils.exception.OHException;
+import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.ward.model.Ward;
@@ -84,7 +84,8 @@ public class WardPharmacyRectify extends JDialog {
 	private JSpinner jSpinnerNewQty;
 	
 	//Medicals (ALL)
-	private MedicalBrowsingManager medManager = new MedicalBrowsingManager();
+	private MedicalBrowsingManager medManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private ArrayList<Medical> medicals;
 	private HashMap<String, Medical> medicalMap; //map medicals by their prod_code
 	private HashMap<Integer, Double> wardMap; //map quantities by their medical_id
@@ -124,12 +125,7 @@ public class WardPharmacyRectify extends JDialog {
 		super(owner, true);
 		wardMap = new HashMap<Integer, Double>();
 		for (MedicalWard medWard : drugs) {
-			try {
-				wardMap.put(medWard.getMedical().getCode(), medWard.getQty());
-			} catch (OHException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			wardMap.put(medWard.getMedical().getCode(), medWard.getQty());
 		}
 		medicalMap = new HashMap<String, Medical>();
 		if (null != medicals) {
@@ -269,10 +265,9 @@ public class WardPharmacyRectify extends JDialog {
 						double quantity = stock.doubleValue() - newQty.doubleValue();
 						if (quantity == 0.) return;
 						
-						MovWardBrowserManager wardMan = new MovWardBrowserManager();
 						boolean result;
 						try {
-							result = wardMan.newMovementWard(new MovementWard(
+							result = movWardBrowserManager.newMovementWard(new MovementWard(
 									wardSelected, 
 									new GregorianCalendar(), 
 									false, null, 0, 0, 

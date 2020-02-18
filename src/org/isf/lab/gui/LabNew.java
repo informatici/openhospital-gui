@@ -170,11 +170,11 @@ public class LabNew extends JDialog implements SelectionListener {
 	private ArrayList<String> matList = labManager.getMaterialList();
 	
 	//Exams (ALL)
-	private ExamBrowsingManager exaManager = new ExamBrowsingManager();
+	private ExamBrowsingManager exaManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 	private ArrayList<Exam> exaArray;
 	
 	//Results (ALL)
-	private ExamRowBrowsingManager examRowManager = new ExamRowBrowsingManager();
+	private ExamRowBrowsingManager examRowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 	private ArrayList<ExamRow> exaRowArray;
 	
 	//Arrays for this Patient
@@ -302,16 +302,11 @@ public class LabNew extends JDialog implements SelectionListener {
 					
 					try {
 						result = labManager.newLaboratory2(examItems, examResults);
+						fireLabInserted();
+						dispose();
 					} catch (OHServiceException e1) {
 						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
-					}
-					if (!result)
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-					else {
-						fireLabInserted();
-						dispose();
 					}
 				}
 			});
@@ -760,11 +755,11 @@ public class LabNew extends JDialog implements SelectionListener {
 								// }
 							}
 							icon = new ImageIcon("rsc/icons/list_dialog.png"); //$NON-NLS-1$
+							lab.setResult(exa.getDefaultResult());
 
 						} else {
 							lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));
 						}
-
 						lab.setExam(exa);
 						lab.setMaterial(mat);
 						addItem(lab);
