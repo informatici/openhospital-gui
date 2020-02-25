@@ -19,13 +19,17 @@ public class GenericReportPatientVersion2 {
 
     private final Logger logger = LoggerFactory.getLogger(GenericReportPatient.class);
 
-	public GenericReportPatientVersion2(Integer patientID, String type, Date date, Date date2, String jasperFileName) {
+	public GenericReportPatientVersion2(Integer patientID, Boolean all, Boolean admission, Boolean opd, Boolean examination, Boolean drugs, Date date, Date date2, String jasperFileName) {
 		try{
 			Integer id = patientID;
+			Boolean adm =admission;
+			Boolean op =opd;
+			Boolean drug =drugs;
+			Boolean exam=examination;
 			Date date_To = date2;
 			Date date_From = date;
             JasperReportsManager jasperReportsManager = new JasperReportsManager();
-            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPatientVersion2Pdf(patientID, type, date_From, date_To, jasperFileName);
+            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPatientVersion2Pdf(patientID,all, admission,opd,drugs,examination, date_From, date_To, jasperFileName);
 			if (GeneralData.INTERNALVIEWER)
 				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false);
 			else { 

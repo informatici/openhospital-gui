@@ -1,24 +1,25 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<name>OpenHospital-gui</name>
 	<url>www.open-hospital.org</url>
 	<organization>
 		<name>Informatici Senza Frontiere</name>
 		<url>www.informaticisenzafrontiere.org</url>
 	</organization>
-	
+
 	<groupId>org.isf</groupId>
 	<artifactId>OH-gui</artifactId>
 	<packaging>jar</packaging>
 	<version>1.9</version>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.framework.version>4.3.18.RELEASE</spring.framework.version>
 	</properties>
-	
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -103,21 +104,10 @@
 							</resources>
 						</configuration>
 					</execution>
-					<!-- <execution>
-						<id>copy-doc</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/doc</outputDirectory>
-							<resources>
-								<resource>
-									<directory>doc</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution> -->
+					<!-- <execution> <id>copy-doc</id> <phase>validate</phase> <goals> <goal>copy-resources</goal> 
+						</goals> <configuration> <outputDirectory>${basedir}/target/OpenHospital20/doc</outputDirectory> 
+						<resources> <resource> <directory>doc</directory> </resource> </resources> 
+						</configuration> </execution> -->
 					<execution>
 						<id>copy-report</id>
 						<phase>validate</phase>
@@ -194,35 +184,31 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<dependencies>
 		<dependency>
-  			<groupId>org.isf</groupId>
-  			<artifactId>OH-core</artifactId>
-  			<version>1.9</version>
-  			<exclusions>
-  				<exclusion>
-  					<groupId>org.apache.poi</groupId>
-  					<artifactId>poi</artifactId>
-  				</exclusion>
-  			</exclusions>
+			<groupId>org.isf</groupId>
+			<artifactId>OH-core</artifactId>
+			<version>1.9</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.poi</groupId>
+					<artifactId>poi</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-  		<!-- dependency>
-			<groupId>jcu.sal</groupId>
-			<artifactId>sal_isf</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/sal_isf.jar</systemPath>
-		</dependency -->
+		<!-- dependency> <groupId>jcu.sal</groupId> <artifactId>sal_isf</artifactId> 
+			<version>1.0</version> <scope>system</scope> <systemPath>${project.basedir}/lib/sal_isf.jar</systemPath> 
+			</dependency -->
 		<dependency>
 			<groupId>jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<exclusions>
-	          <exclusion>
-	          	<groupId>com.lowagie</groupId>
-				<artifactId>itext</artifactId>
-	          </exclusion>
-	        </exclusions>
+				<exclusion>
+					<groupId>com.lowagie</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+			</exclusions>
 			<version>3.0.0</version>
 		</dependency>
 		<dependency>
@@ -236,14 +222,14 @@
 			<version>2.2</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.processing</groupId>
-		    <artifactId>core</artifactId>
-		    <version>1.2.1</version>
+			<groupId>org.processing</groupId>
+			<artifactId>core</artifactId>
+			<version>1.2.1</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.rxtx</groupId>
-		    <artifactId>rxtx</artifactId>
-		    <version>2.1.7</version>
+			<groupId>org.rxtx</groupId>
+			<artifactId>rxtx</artifactId>
+			<version>2.1.7</version>
 		</dependency>
 		<dependency>
 			<groupId>dcm4che</groupId>
@@ -255,17 +241,17 @@
 			<artifactId>dcm4che-imageio</artifactId>
 			<version>2.0.26</version>
 		</dependency>
-	  	<dependency>
-	  		<groupId>org.slf4j</groupId>
-	  		<artifactId>slf4j-api</artifactId>
-	  		<version>1.6.4</version>
-	  	</dependency>
-	  	<dependency>
-	  		<groupId>org.slf4j</groupId>
-	  		<artifactId>slf4j-log4j12</artifactId>
-	  		<version>1.6.4</version>
-	  	</dependency>
-	  	<dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
 			<artifactId>smack</artifactId>
 			<version>3.2.1</version>
@@ -274,59 +260,55 @@
 			<groupId>org.igniterealtime.smack</groupId>
 			<artifactId>smackx</artifactId>
 			<version>3.2.1</version>
-		</dependency >
-	  	<dependency>
-	  		<groupId>org.imgscalr</groupId>
-	  		<artifactId>imgscalr-lib</artifactId>
-	  		<version>4.2</version>
-	  	</dependency>
-	  	<dependency>
-	  		<groupId>org.springframework</groupId>
-	  		<artifactId>spring-context</artifactId>
-	  		<version>${spring.framework.version}</version>
-	  	</dependency>
-	  	<!-- <dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>poi-3.7</version>
-			<scope>provided</scope>
-		</dependency> -->
-  </dependencies>
-  <repositories>
-    	<repository>
-        	<id>spring-libs-release</id>
-        	<name>Spring Releases</name>
-        	<url>https://repo.spring.io/libs-release</url>
-        	<snapshots>
-            	<enabled>false</enabled>
-        	</snapshots>
-    	</repository>
-    	<repository>
-                <id>jaspersoft</id>
-                <name>Jasper Soft</name>
-                <url>http://jasperforge.org/maven2/</url>
-                <releases>
-                    <enabled>false</enabled>
-                </releases>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-        </repository>
-        <repository>
-                <id>dcm4che</id>
-                <name>Dcm4Che Repository</name>
-                <url>http://www.dcm4che.org/maven2/</url>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-        </repository>
-        <repository>
-                <id>cytoscape</id>
-                <name>Cytoscape Repository</name>
-                <url>http://code.cytoscape.org/nexus/content/repositories/releases/</url>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-        </repository>
+		</dependency>
+		<dependency>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.framework.version}</version>
+		</dependency>
+		<!-- <dependency> <groupId>org.apache.poi</groupId> <artifactId>poi</artifactId> 
+			<version>poi-3.7</version> <scope>provided</scope> </dependency> -->
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>spring-libs-release</id>
+			<name>Spring Releases</name>
+			<url>https://repo.spring.io/libs-release</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>jaspersoft</id>
+			<name>Jasper Soft</name>
+			<url>http://jasperforge.org/maven2/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>dcm4che</id>
+			<name>Dcm4Che Repository</name>
+			<url>http://www.dcm4che.org/maven2/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>cytoscape</id>
+			<name>Cytoscape Repository</name>
+			<url>http://code.cytoscape.org/nexus/content/repositories/releases/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
 </project>

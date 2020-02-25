@@ -30,6 +30,11 @@
 	<parameter name="Type" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="Date_from" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="Date_to" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="Opd" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="Admission" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="Drugs" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="Examination" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="All" isForPrompting="true" class="java.lang.Boolean"/>
 	<queryString><![CDATA[SELECT TYPE, DATE, IDS, NOTE, DETAILS_1, DETAILS_2, DETAILS_3, DETAILS_4
 FROM (
 SELECT CONCAT("Opd", " (", OPD_PROG_YEAR, ")") AS TYPE,
@@ -42,7 +47,7 @@ SELECT CONCAT("Opd", " (", OPD_PROG_YEAR, ")") AS TYPE,
 	FROM 
 		OPD 
 		LEFT JOIN PATIENT ON (OPD_PAT_ID = PAT_ID) 
-	WHERE OPD_PAT_ID = $P{patientID} AND (OPD_DATE >= $P{Date_from} AND OPD_DATE <= $P{Date_to})
+	WHERE OPD_PAT_ID = $P{patientID} AND (OPD_DATE BETWEEN $P{Date_from} AND $P{Date_to})
 	
 UNION
 
@@ -59,7 +64,7 @@ SELECT CONCAT("ADM", " (", ADM_YPROG, ")") AS TYPE,
 		LEFT JOIN ADMISSIONTYPE ON (ADMT_ID_A = ADM_ADMT_ID_A_ADM)
 		LEFT JOIN DISCHARGETYPE ON (DIST_ID_A = ADM_DIST_ID_A)
 	WHERE ADM_DELETED = 'N'
-		AND ADM_PAT_ID = $P{patientID} AND (ADM_DATE_ADM >= $P{Date_from} AND ADM_DATE_ADM<= $P{Date_to})
+		AND ADM_PAT_ID = $P{patientID} AND (ADM_DATE_ADM BETWEEN $P{Date_from} AND $P{Date_to})
 
 UNION
         SELECT "Examination" AS TYPE,
@@ -71,7 +76,7 @@ UNION
 	   PEX_NOTE AS NOTE
 	FROM 
 		PATIENTEXAMINATION
-WHERE PEX_PAT_ID = $P{patientID} AND (PEX_DATE >= $P{Date_from} AND PEX_DATE <= $P{Date_to})
+WHERE PEX_PAT_ID = $P{patientID} AND (PEX_DATE BETWEEN $P{Date_from} AND $P{Date_to})
 UNION
 
 SELECT "Drugs" AS TYPE,
@@ -87,7 +92,7 @@ SELECT "Drugs" AS TYPE,
 		FROM 
 			MEDICALDSRSTOCKMOVWARD  
 			LEFT JOIN MEDICALDSR ON (MMVN_MDSR_ID = MDSR_ID) 
-		WHERE MMVN_PAT_ID = $P{patientID} AND (MMVN_DATE >= $P{Date_from} AND MMVN_DATE <= $P{Date_to})
+		WHERE MMVN_PAT_ID = $P{patientID} AND (MMVN_DATE BETWEEN $P{Date_from} AND $P{Date_to})
 		GROUP BY DATE(MMVN_DATE), MMVN_MDSR_ID
 	) AS MEDICALS
 GROUP BY DATE(DATE)
@@ -105,7 +110,7 @@ SELECT "Laboratory" AS TYPE,
 		LABORATORY  
 		LEFT JOIN EXAM ON (EXA_ID_A = LAB_EXA_ID_A) 
 		LEFT JOIN LABORATORYROW ON LABR_LAB_ID = LAB_ID
-	WHERE LAB_PAT_ID = $P{patientID} AND (LAB_DATE >= $P{Date_from} AND LAB_DATE <= $P{Date_to})
+	WHERE LAB_PAT_ID = $P{patientID} AND (LAB_DATE BETWEEN $P{Date_from} AND $P{Date_to})
     AND EXA_PROC = 1
     
 UNION
@@ -121,14 +126,15 @@ SELECT "Laboratory" AS TYPE,
 		LABORATORY  
 		LEFT JOIN EXAM ON (EXA_ID_A = LAB_EXA_ID_A) 
 		LEFT JOIN LABORATORYROW ON LABR_LAB_ID = LAB_ID
-	WHERE LAB_PAT_ID = $P{patientID} AND (LAB_DATE >= $P{Date_from} AND LAB_DATE <= $P{Date_to})
+	WHERE LAB_PAT_ID = $P{patientID} AND (LAB_DATE BETWEEN $P{Date_from} AND $P{Date_to})
 GROUP BY LABR_LAB_ID
 
 
     
 ) 
 AS DETAILS
-WHERE TYPE LIKE '%$P!{Type}%'
+
+WHERE TYPE LIKE IF ($P!{Opd},'%Opd%','') OR TYPE LIKE IF ($P!{Admission},'%ADM%','') OR TYPE LIKE IF ($P!{Drugs},'%Drugs%','') OR TYPE LIKE IF ($P!{Examination},'%Examination%','') OR TYPE LIKE IF ($P!{All}, '%%','')
 ORDER BY DATE DESC]]></queryString>
 
 	<field name="TYPE" class="java.lang.String"/>

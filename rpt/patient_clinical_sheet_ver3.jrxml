@@ -30,6 +30,11 @@
 	<parameter name="Type" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="Date_from" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="Date_to" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="Opd" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="Admission" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="Drugs" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="Examination" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="All" isForPrompting="true" class="java.lang.Boolean"/>
 	<queryString><![CDATA[SELECT TYPE, DATE, IDS, NOTE, DETAILS_1, DETAILS_2, DETAILS_3, DETAILS_4
 FROM (
 SELECT CONCAT("Opd", " (", OPD_PROG_YEAR, ")") AS TYPE,
@@ -128,7 +133,8 @@ GROUP BY LABR_LAB_ID
     
 ) 
 AS DETAILS
-WHERE TYPE LIKE '%$P!{Type}%'
+
+WHERE TYPE LIKE IF ($P!{Opd},'%Opd%','') OR TYPE LIKE IF ($P!{Admission},'%ADM%','') OR TYPE LIKE IF ($P!{Drugs},'%Drugs%','') OR TYPE LIKE IF ($P!{Examination},'%Examination%','') OR TYPE LIKE IF ($P!{All}, '%%','')
 ORDER BY DATE DESC]]></queryString>
 
 	<field name="TYPE" class="java.lang.String"/>

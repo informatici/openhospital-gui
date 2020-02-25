@@ -10,11 +10,14 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -40,6 +43,16 @@ public class PatientFolderReportModal extends JDialog{
 	private JComboBox chooseField;
 	private JButton launchReportButton;
 	private JButton closeButton;
+	private JPanel admissionPanel;
+	private JCheckBox admissionCheck;
+	private JPanel opdPanel;
+	private JCheckBox opdCheck;
+	private JPanel drugsPanel;
+	private JCheckBox drugsCheck;
+	private JPanel examinationPanel;
+	private JCheckBox examinationCheck;
+	private JPanel allPanel;
+	private JCheckBox allCheck;
 	
 	public PatientFolderReportModal(Integer code) {
 		this.patId=code;
@@ -100,15 +113,15 @@ public class PatientFolderReportModal extends JDialog{
 			gbc_jSliderHeight.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jSliderHeight.gridx = 0;
 			gbc_jSliderHeight.gridy = 2;
-			
-			jPanelChos.add(getValue(), gbc_jSliderHeight);
+			gbc_jSliderHeight.gridwidth = 3;
+			jPanelChos.add(getValueReport(), gbc_jSliderHeight);
 			
 			GridBagConstraints gbc_jCancelButtont = new GridBagConstraints();
 			gbc_jCancelButtont.insets = new Insets(5, 5, 5, 5);
 			gbc_jCancelButtont.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jCancelButtont.gridx = 0;
 			gbc_jCancelButtont.gridy = 3;
-			
+		
 			jPanelChos.add(getCloseButton(), gbc_jCancelButtont);
 
 
@@ -140,7 +153,7 @@ public class PatientFolderReportModal extends JDialog{
 			launchReportButton.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					// GenericReportMY rpt3 = new GenericReportMY(new Integer(6), new Integer(2008), "hmis108_adm_by_diagnosis_in");
-					new GenericReportPatientVersion2(patId, getTypeField(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEET);
+					new GenericReportPatientVersion2(patId, getAllValue(), getAdmissionValue(), getOpdValue(), getExaminationValue(), getDrugsValue(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEET);
 				}
 			});
 		}
@@ -184,7 +197,142 @@ public class PatientFolderReportModal extends JDialog{
 
 		return choosePanel;
 	}
+	
+	private JPanel getValueReport() {
 
+		if (choosePanel == null) {
+
+			choosePanel = new JPanel();
+			chooselabel = new JLabel();
+			chooselabel.setText("Report For:");
+			choosePanel.add(chooselabel);
+			choosePanel.add(getPanelAll());
+			choosePanel.add(getPanelAdmission());
+			choosePanel.add(getPanelOpd());
+			choosePanel.add(getPanelDrugs());
+			choosePanel.add(getPanelExamination());
+			
+		}
+
+		return choosePanel;
+	}
+	
+	private JPanel getPanelAll() {
+		if (allPanel == null) {
+			allPanel = new JPanel();
+			
+			allCheck = new JCheckBox();
+
+			allCheck.setSelected(true);
+			allPanel.add(allCheck);
+			allPanel.add(new JLabel(MessageBundle.getMessage("angal.patvac.all")), BorderLayout.CENTER);
+			allCheck.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					examinationCheck.setSelected(false);
+					admissionCheck.setSelected(false);
+					drugsCheck.setSelected(false);
+					opdCheck.setSelected(false);
+				}
+			});
+			
+		}
+		return allPanel;
+	}
+	private JPanel getPanelExamination() {
+		if (examinationPanel == null) {
+			examinationPanel = new JPanel();
+			
+			examinationCheck = new JCheckBox();
+
+			
+			examinationPanel.add(examinationCheck);
+			examinationPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.examination")), BorderLayout.CENTER);
+			examinationCheck.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					allCheck.setSelected(false);
+					
+				}
+			});
+			
+		}
+		return examinationPanel;
+	}
+	
+	private JPanel getPanelDrugs() {
+		if (drugsPanel == null) {
+			drugsPanel = new JPanel();
+			
+			drugsCheck = new JCheckBox();
+
+			
+			drugsPanel.add(drugsCheck);
+			drugsPanel.add(new JLabel(MessageBundle.getMessage("angal.medicalstockward.drugs")), BorderLayout.CENTER);
+			drugsCheck.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					allCheck.setSelected(false);
+					
+				}
+			});
+		}
+		return drugsPanel;
+	}
+	
+	private JPanel getPanelOpd() {
+		if (opdPanel == null) {
+			opdPanel = new JPanel();
+			
+			opdCheck = new JCheckBox();
+			
+			
+			opdPanel.add(opdCheck);
+			opdPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.opd")), BorderLayout.CENTER);
+			opdCheck.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					allCheck.setSelected(false);
+					
+				}
+			});
+		}
+		return opdPanel;
+	}
+
+	
+	private JPanel getPanelAdmission() {
+		if (admissionPanel == null) {
+			admissionPanel = new JPanel();
+			
+			admissionCheck = new JCheckBox();
+
+			
+			admissionPanel.add(admissionCheck);
+			admissionPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.admission")), BorderLayout.CENTER);
+			admissionCheck.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					allCheck.setSelected(false);
+					
+				}
+			});
+		}
+		return admissionPanel;
+	}
+	
+	
+	public boolean getAdmissionValue() {
+		return admissionCheck.isSelected();
+	}
+	public boolean getOpdValue() {
+		return opdCheck.isSelected();
+	}
+	public boolean getAllValue() {
+		return allCheck.isSelected();
+	}
+	public boolean getDrugsValue() {
+		return drugsCheck.isSelected();
+	}
+	
+	public boolean getExaminationValue() {
+		return examinationCheck.isSelected();
+	}
 	public String getTypeField() {
 		if(chooseField.getSelectedItem().equals("All")) {
 			return "";
@@ -192,12 +340,23 @@ public class PatientFolderReportModal extends JDialog{
 		return (String) chooseField.getSelectedItem();
 		}
 	}
+	
+	
 	private JDateChooser getJDateChooserDateFrom() {
 		if (jDateChooserDateFrom == null) {
 			jDateChooserDateFrom = new JDateChooser();
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateFrom.setLocale(new Locale("en")); //$NON-NLS-1$
 			jDateChooserDateFrom.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
+			String date = "01/01/2000";
+			Date date2 = null;
+			try {
+				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			jDateChooserDateFrom.setDate(date2);
 			jDateChooserDateFrom.addPropertyChangeListener("date", new PropertyChangeListener() {
 				
 				@Override
@@ -218,6 +377,16 @@ public class PatientFolderReportModal extends JDialog{
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateTo.setLocale(new Locale("en")); //$NON-NLS-1$
 			jDateChooserDateTo.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
+			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());;
+			Date date2 = null;
+			try {
+				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			jDateChooserDateTo.setDate(date2);
+			
 			jDateChooserDateTo.addPropertyChangeListener("date", new PropertyChangeListener() {
 				
 				@Override
@@ -230,9 +399,41 @@ public class PatientFolderReportModal extends JDialog{
 		return jDateChooserDateTo;
 	}
 	public Date getDateToValue() {
-		return jDateChooserDateTo.getDate();
+		
+		Date date3 = jDateChooserDateTo.getDate();
+		if(date3!=null){
+		 return jDateChooserDateTo.getDate();
+		}else {	
+			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());;
+			Date date2 = null;
+			try {
+				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			jDateChooserDateTo.setDate(date2);
+			return jDateChooserDateTo.getDate();
+		}
 	}
+		
+	
 	public Date getDateFromValue() {
+		
+		Date date3 = jDateChooserDateFrom.getDate();
+		if(date3!=null){
 		return jDateChooserDateFrom.getDate();
+		}else {
+			String date = "01/01/2000";
+			Date date2 = null;
+			try {
+				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			jDateChooserDateFrom.setDate(date2);
+			return jDateChooserDateFrom.getDate();
+		}
 	}
 }
