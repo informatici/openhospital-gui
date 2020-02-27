@@ -50,8 +50,11 @@ class CursorManager {
       //this corrects the state when a modal dialog 
       //opened last time round
     }
-    marker = new DispatchedEvent(source);
-    dispatchedEvents.push(marker);
+    if (marker == null) {
+    	marker = new DispatchedEvent("marker");
+    	dispatchedEvents.push(marker);
+    }
+    dispatchedEvents.push(new DispatchedEvent(source));
     needsCleanup = true;
   }
   public void pop() {
