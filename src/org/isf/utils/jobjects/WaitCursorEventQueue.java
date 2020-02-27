@@ -21,7 +21,7 @@ public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallba
 	}
 
 	protected void dispatchEvent(AWTEvent event) {
-		cursorManager.push(event.getSource());
+		cursorManager.push(event);
 		waitTimer.startTimer();
 		try {
 			super.dispatchEvent(event);

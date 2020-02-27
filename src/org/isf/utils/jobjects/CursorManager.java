@@ -8,7 +8,7 @@ class CursorManager {
   private final DelayTimer waitTimer;
   private final Stack<DispatchedEvent> dispatchedEvents;
   private boolean needsCleanup;
-  private DispatchedEvent marker;
+  private AWTEvent marker;
 
   public CursorManager(DelayTimer waitTimer) {
     this.dispatchedEvents = new Stack<DispatchedEvent>();
@@ -23,10 +23,8 @@ class CursorManager {
     EventQueue q = Toolkit.getDefaultToolkit().getSystemEventQueue();
     synchronized (q) {
       ArrayList<AWTEvent> nonInputEvents = gatherNonInputEvents(q);
-      for (Iterator<AWTEvent> it = nonInputEvents.iterator(); it.hasNext();) {
-    	  if (q.getCurrentEvent().equals(marker)) break;
-    	  q.postEvent((AWTEvent)it.next());
-      }
+      for (Iterator<AWTEvent> it = nonInputEvents.iterator(); it.hasNext();)
+        q.postEvent((AWTEvent)it.next());
     }
   }
   private ArrayList<AWTEvent> gatherNonInputEvents(EventQueue systemQueue) {
@@ -34,6 +32,10 @@ class CursorManager {
     while (systemQueue.peekEvent() != null) {
       try {
         AWTEvent nextEvent = systemQueue.getNextEvent();
+        if (nextEvent.equals(marker)) {
+        	events.add(nextEvent);
+        	break;
+        }
         if (!(nextEvent instanceof InputEvent)) {
           events.add(nextEvent);
         }
@@ -43,18 +45,15 @@ class CursorManager {
     }
     return events;
   }
-  public void push(Object source) {
+  public void push(AWTEvent event) {
+	this.marker = event;
     if (needsCleanup) {
       waitTimer.stopTimer();
       cleanUp(); 
       //this corrects the state when a modal dialog 
       //opened last time round
     }
-    if (marker == null) {
-    	marker = new DispatchedEvent("marker");
-    	dispatchedEvents.push(marker);
-    }
-    dispatchedEvents.push(new DispatchedEvent(source));
+    dispatchedEvents.push(new DispatchedEvent(event.getSource()));
     needsCleanup = true;
   }
   public void pop() {
