@@ -702,7 +702,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getJButtonExamination() {
 		if (jButtonExamination == null) {
 			jButtonExamination = new JButton(MessageBundle.getMessage("angal.opd.examination"));
-			jButtonExamination.setMnemonic(KeyEvent.VK_E);
+			jButtonExamination.setMnemonic(KeyEvent.VK_X);
 			jButtonExamination.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
