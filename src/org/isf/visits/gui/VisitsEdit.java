@@ -20,6 +20,7 @@ import javax.swing.SpringLayout;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.therapy.gui.TherapyEdit;
+import org.isf.visits.gui.VisitView;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -188,9 +189,9 @@ public class VisitsEdit extends ModalJFrame{
 			buttonOK.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
-					TherapyEdit therapy = new TherapyEdit(VisitsEdit.this,getWard(), false);
-					therapy.setLocationRelativeTo(null);
-					therapy.setVisible(true);
+//					VisitView therapy = new VisitView(VisitsEdit.this,getWard(), false);
+//					therapy.setLocationRelativeTo(null);
+//					therapy.setVisible(true);
 				}
 			});
 		}

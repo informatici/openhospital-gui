@@ -9,6 +9,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -22,6 +24,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,15 +45,23 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.menu.manager.Context;
+
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.stat.gui.report.GenericReportPatient;
@@ -61,6 +72,7 @@ import org.isf.therapy.model.TherapyRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JAgenda;
+import org.isf.utils.jobjects.DayCalendar;
 import org.isf.utils.jobjects.JAgenda.AgendaDayObject;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.visits.manager.VisitManager;
@@ -84,6 +96,7 @@ import com.toedter.calendar.JYearChooser;
 public class TherapyEdit extends JDialog {
 
 	private JAgenda jAgenda;
+	
 	private JPanel northPanel;
 	private JPanel monthYearPanel;
 	private JYearChooser yearChooser;
@@ -149,6 +162,10 @@ public class TherapyEdit extends JDialog {
 	private JButton todayButton;
 	private JButton tomorrowButton;
 
+	private JTable jTableFirst;
+
+	private JScrollPane jScrollPaneFirstday;
+
 	public TherapyEdit(JFrame owner, Patient patient, boolean admitted) {
 		super(owner, true);
 		try {
@@ -205,7 +222,7 @@ public class TherapyEdit extends JDialog {
 		});
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// setResizable(false);
-		setTitle(MessageBundle.getMessage("angal.therapy.therapy"));
+		setTitle("Visits");
 		setSize(new Dimension(screenSize.width - 20, screenSize.height - 100));
 
 	}
@@ -214,7 +231,7 @@ public class TherapyEdit extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 
 		jAgenda = new JAgenda(TherapyEdit.this);
-
+		
 		/*
 		 * Rows in the therapies table
 		 */
@@ -252,9 +269,10 @@ public class TherapyEdit extends JDialog {
 		try {
 			if (ad) {
 			visits = vstManager.getVisits(patient.getCode());
-			}else {
-				visits = vstManager.getVisitsWard(ward.getCode());	
 			}
+//			else {
+//				visits = vstManager.getVisitsWard(ward.getCode());	
+//			}
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -275,8 +293,11 @@ public class TherapyEdit extends JDialog {
 			if (obj.getList() != null)
 				obj.getList().addMouseListener(new MyMouseListener());
 		}
-
+if(ad) {
 		getContentPane().add(jAgenda, BorderLayout.CENTER);
+}else {
+	getContentPane().add(dayCalendar(), BorderLayout.CENTER);
+}
 		getContentPane().add(getNorthPanel(), BorderLayout.NORTH);
 		getContentPane().add(getEastPanel(), BorderLayout.EAST);
 		getContentPane().add(getSouthPanel(), BorderLayout.SOUTH);
@@ -285,6 +306,165 @@ public class TherapyEdit extends JDialog {
 
 		setSize(540, 480);
 	}
+
+	private JPanel dayCalendar() {
+		JPanel patientParamsPanel = new JPanel(new SpringLayout());
+
+		GridBagLayout gbl_jPanelData = new GridBagLayout();
+		gbl_jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 00 };
+		gbl_jPanelData.rowHeights = new int[] { 20, 20, 20, 0, 0, 0, 0, 0 };
+		gbl_jPanelData.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		gbl_jPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		patientParamsPanel.setLayout(gbl_jPanelData);
+
+	
+
+		GridBagConstraints gbc_ward = new GridBagConstraints();
+		gbc_ward.fill = GridBagConstraints.VERTICAL;
+		gbc_ward.anchor = GridBagConstraints.WEST;
+
+		gbc_ward.gridy = 0;
+		gbc_ward.gridx = 0;
+//		patientParamsPanel.add(getWardPanel(), gbc_ward);
+//		if (!ad) {
+//			GridBagConstraints gbc_Pat = new GridBagConstraints();
+//			gbc_Pat.fill = GridBagConstraints.HORIZONTAL;
+//			gbc_Pat.anchor = GridBagConstraints.WEST;
+//
+//			gbc_Pat.gridy = 0;
+//			gbc_Pat.gridx = 0;
+//			patientParamsPanel.add(previuousButt(), gbc_Pat);	
+//		}
+//
+//		GridBagConstraints gbc_Service = new GridBagConstraints();
+//		gbc_Service.fill = GridBagConstraints.HORIZONTAL;
+//		gbc_Service.anchor = GridBagConstraints.WEST;
+//
+//		gbc_Service.gridy = 0;
+//		gbc_Service.gridx = 1;
+//		patientParamsPanel.add(nextButton(), gbc_Service);
+
+		GridBagConstraints gbc_Duration = new GridBagConstraints();
+		gbc_Duration.fill = GridBagConstraints.VERTICAL;
+		gbc_Duration.anchor = GridBagConstraints.WEST;
+		gbc_Duration.gridy = 1;
+		gbc_Duration.gridx = 0;
+		gbc_Duration.gridwidth = 2;
+		patientParamsPanel.add(getVisitFirstday(), gbc_Duration);
+
+//		GridBagConstraints gbc_date = new GridBagConstraints();
+//		gbc_date.fill = GridBagConstraints.VERTICAL;
+//		gbc_date.anchor = GridBagConstraints.WEST;
+//
+//		gbc_date.gridy = 3;
+//		gbc_date.gridx = 0;
+//		gbc_date.gridwidth = 2;
+//		patientParamsPanel.add(getVisitSecondDay(), gbc_date);
+
+
+		return patientParamsPanel;
+	
+	}
+
+	private JScrollPane getVisitFirstday() {
+		if (jScrollPaneFirstday == null) {
+			jScrollPaneFirstday = new JScrollPane();
+			jScrollPaneFirstday.setViewportView(getJTablePatient());
+			jScrollPaneFirstday.setAlignmentY(Box.TOP_ALIGNMENT);
+		}
+		return jScrollPaneFirstday;
+	}
+	private int[] visColumsWidth = { 500, 350 };
+	private boolean[] visColumsResizable = { false, true };
+	private ArrayList<Visit> visitfirst = new ArrayList<Visit>();
+	private JTable getJTablePatient() {
+		if (jTableFirst == null) {
+			jTableFirst = new JTable();
+			visitfirst= getvisit((visits));
+			jTableFirst.setModel(new VisitModel());
+			jTableFirst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			for (int i = 0 ; i < visColums.length; i++) {
+				jTableFirst.getColumnModel().getColumn(i).setMinWidth(visColumsWidth[i]);
+				if (!visColumsResizable[i]) jTableFirst.getColumnModel().getColumn(i).setMaxWidth(visColumsWidth[i]);
+			}
+			jTableFirst.setAutoCreateColumnsFromModel(false);
+			jTableFirst.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
+			
+			ListSelectionModel listSelectionModel = jTableFirst.getSelectionModel();
+		
+	
+		}
+		return jTableFirst;
+	}
+
+	private ArrayList<Visit> getvisit(ArrayList<Visit> arrayList) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
+		   
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+				boolean hasFocus, int row, int column) {  
+		   
+			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+			cell.setForeground(Color.BLACK);
+			setHorizontalAlignment(LEFT);	   
+			return cell;
+	   }
+	}
+	public String[] visColums = {
+			MessageBundle.getMessage(getDate()),
+			
+	}; 
+	
+	class VisitModel extends DefaultTableModel {
+	public VisitModel() {
+	}
+
+	public int getRowCount() {
+		if (visits == null)
+			return 0;
+		return visits.size();
+	}
+
+	public String getColumnName(int c) {
+		return visColums[c];
+	}
+
+	public int getColumnCount() {
+		return visColums.length;
+	}
+
+	public Object getValueAt(int r, int c) {
+		Visit visit = visits.get(r); 
+		GregorianCalendar d = visits.get(r).getDate();
+		SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd");   // lowercase "dd"
+		String da = formatter.format(d.getTime() );
+		String dat = getDate();
+		if (da.equals(dat)) {
+		
+			return  visit.getPatient().getName() +","+ visit.getPatient().getCode();
+			
+		
+		} /*else if (c == 2) {
+			return patient.getAge();
+		} else if (c == 3) {
+			return patient.getSex();
+		} else if (c == 4) {
+			return patient.getCity() + " "
+					+ patient.getAddress();
+		} */
+		return null;
+	}
+	}
+
+	
 
 	private void showAll() {
 		jAgenda.removeAll();
@@ -300,6 +480,13 @@ public class TherapyEdit extends JDialog {
 		
 		
 	}
+
+	private String getDate() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		return dateFormat.format(date);
+	}
+
 
 	private void showTherapies() {
 		
