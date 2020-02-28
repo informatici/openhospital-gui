@@ -48,6 +48,7 @@ import org.isf.patvac.manager.PatVacManager;
 import org.isf.patvac.model.PatientVaccine;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.vaccine.manager.VaccineBrowserManager;
@@ -55,7 +56,7 @@ import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 
 public class PatVacBrowser extends ModalJFrame {
@@ -106,8 +107,8 @@ public class PatVacBrowser extends ModalJFrame {
 	private PatVacBrowsingModel model;
 	private PatientVaccine patientVaccine;
 	private int selectedrow;
-	private JDateChooser dateFrom = null;
-	private JDateChooser dateTo = null;
+	private CustomJDateChooser dateFrom = null;
+	private CustomJDateChooser dateTo = null;
 	private final JFrame myFrame;
 
 	public PatVacBrowser() {
@@ -664,12 +665,12 @@ public class PatVacBrowser extends ModalJFrame {
 	 * @return dateFrom (JPanel)
 	 */
 	
-	private JDateChooser getDateFromPanel() {
+	private CustomJDateChooser getDateFromPanel() {
 		if (dateFrom == null) {
 			GregorianCalendar now = new GregorianCalendar();
 			if (!GeneralData.ENHANCEDSEARCH) now.add(GregorianCalendar.WEEK_OF_YEAR, -1);
 			java.util.Date myDate = now.getTime();
-			dateFrom = new JDateChooser(myDate, "dd/MM/yy");
+			dateFrom = new CustomJDateChooser(myDate, "dd/MM/yy");
 			dateFrom.setDate(myDate);
 			dateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateFrom.setDateFormatString("dd/MM/yy");
@@ -683,11 +684,11 @@ public class PatVacBrowser extends ModalJFrame {
 	 * 
 	 * @return dateFrom (JPanel)
 	 */
-	private JDateChooser getDateToPanel() {
+	private CustomJDateChooser getDateToPanel() {
 		if (dateTo == null) {
 			GregorianCalendar now = new GregorianCalendar();
 			java.util.Date myDate = now.getTime();
-			dateTo = new JDateChooser(myDate, "dd/MM/yy");
+			dateTo = new CustomJDateChooser(myDate, "dd/MM/yy");
 			dateTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateTo.setDateFormatString("dd/MM/yy");
 			dateTo.setDate(myDate);

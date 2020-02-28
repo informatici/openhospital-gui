@@ -72,7 +72,7 @@ import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * This class shows a list of all known patients and for each if (and where) they are actually admitted, 
@@ -128,7 +128,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			MessageBundle.getMessage("angal.admission.notadmitted")
 	};
 	private JComboBox patientClassBox = new JComboBox(patientClassItems);
-	private JDateChooser[] dateChoosers = new JDateChooser[4];
+	private CustomJDateChooser[] dateChoosers = new CustomJDateChooser[4];
 	private VoLimitedTextField patientAgeFromTextField = null;
 	private VoLimitedTextField patientAgeToTextField = null;
 	private String[] patientSexItems = { 
@@ -586,8 +586,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		JLabel admissionLabel = new JLabel(MessageBundle.getMessage("angal.admission.admissiondate"));
 		JLabel dischargeLabel = new JLabel(MessageBundle.getMessage("angal.admission.dischargedate"));
 		for(int i = 0; i <= dateChoosers.length - 1; i++) {
-			JDateChooser chooser = dateChoosers[i];
-			chooser = new JDateChooser();
+			CustomJDateChooser chooser = dateChoosers[i];
+			chooser = new CustomJDateChooser();
 			chooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			chooser.setDateFormatString("dd/MM/yy");
 			chooser.setMinimumSize(new Dimension(80,20));

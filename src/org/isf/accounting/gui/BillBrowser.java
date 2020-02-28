@@ -70,7 +70,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
@@ -133,8 +133,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JPanel panelSupRange;
 	private JLabel jLabelTo;
 	private JLabel jLabelFrom;
-	private JDateChooser jCalendarTo;
-	private JDateChooser jCalendarFrom;
+	private CustomJDateChooser jCalendarTo;
+	private CustomJDateChooser jCalendarFrom;
 	private GregorianCalendar dateFrom = new GregorianCalendar();
 	private GregorianCalendar dateTo = new GregorianCalendar();
 	private GregorianCalendar dateToday0 = TimeTools.getDateToday0();
@@ -258,11 +258,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		return jLabelTo;
 	}
 
-	private JDateChooser getJCalendarFrom() {
+	private CustomJDateChooser getJCalendarFrom() {
 		if (jCalendarFrom == null) {
-			jCalendarFrom = new JDateChooser(dateToday0.getTime()); // Calendar
+			jCalendarFrom = new CustomJDateChooser(dateToday0.getTime()); // Calendar
 			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarFrom.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jCalendarFrom.getCalendarButton().setMnemonic(0);
 			jCalendarFrom.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
 
 				public void propertyChange(PropertyChangeEvent evt) {
@@ -281,11 +282,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		return jCalendarFrom;
 	}
 
-	private JDateChooser getJCalendarTo() {
+	private CustomJDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
-			jCalendarTo = new JDateChooser(dateToday24.getTime()); // Calendar
+			jCalendarTo = new CustomJDateChooser(dateToday24.getTime()); // Calendar
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarTo.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jCalendarTo.getCalendarButton().setMnemonic(0);
 			jCalendarTo.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
 				
 				public void propertyChange(PropertyChangeEvent evt) {

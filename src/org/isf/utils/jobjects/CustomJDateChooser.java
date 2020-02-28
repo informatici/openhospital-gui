@@ -10,6 +10,8 @@ import com.toedter.calendar.IDateEditor;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 
+import org.isf.utils.jobjects.CustomJDateChooser;
+
 /**
  * @author Mwithi
  * 
@@ -34,6 +36,7 @@ public class CustomJDateChooser extends JDateChooser {
 	 */
 	public CustomJDateChooser(IDateEditor dateEditor) {
 		super(dateEditor);
+		this.setMnemonic(0);
 	}
 
 	/**
@@ -41,6 +44,7 @@ public class CustomJDateChooser extends JDateChooser {
 	 */
 	public CustomJDateChooser(Date date) {
 		super(date);
+		this.setMnemonic(0);
 	}
 
 	/**
@@ -49,6 +53,7 @@ public class CustomJDateChooser extends JDateChooser {
 	 */
 	public CustomJDateChooser(Date date, String dateFormatString) {
 		super(date, dateFormatString);
+		this.setMnemonic(0);
 	}
 
 	/**
@@ -59,6 +64,7 @@ public class CustomJDateChooser extends JDateChooser {
 	public CustomJDateChooser(Date date, String dateFormatString,
 			IDateEditor dateEditor) {
 		super(date, dateFormatString, dateEditor);
+		this.setMnemonic(0);
 	}
 	
 	/**
@@ -69,6 +75,7 @@ public class CustomJDateChooser extends JDateChooser {
 	public CustomJDateChooser(String datePattern, String maskPattern,
 			char placeholder) {
 		super(datePattern, maskPattern, placeholder);
+		this.setMnemonic(0);
 	}
 
 	/**
@@ -80,6 +87,7 @@ public class CustomJDateChooser extends JDateChooser {
 	public CustomJDateChooser(JCalendar jcal, Date date,
 			String dateFormatString, IDateEditor dateEditor) {
 		super(jcal, date, dateFormatString, dateEditor);
+		this.setMnemonic(0);
 	}
 	
 	/**
@@ -100,5 +108,13 @@ public class CustomJDateChooser extends JDateChooser {
 	@Override
 	public void setFont(Font font) {
 		setFont(font, true);
+	}
+	
+	public void setMnemonic(char keyChar) {
+		this.calendarButton.setMnemonic(keyChar);
+	}
+	
+	public void setMnemonic(int keyChar) {
+		this.calendarButton.setMnemonic(keyChar);
 	}
 }

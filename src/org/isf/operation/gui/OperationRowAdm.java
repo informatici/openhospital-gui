@@ -5,7 +5,7 @@
  */
 package org.isf.operation.gui;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -63,7 +63,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private static final long serialVersionUID = 1L;
 	private JLabel labelDate;
 	private JTextField textFieldUnit;
-	private JDateChooser textDate;
+	private CustomJDateChooser textDate;
 	private JComboBox comboOperation;
 	private JComboBox comboResult;
 	private JTextArea textAreaRemark;
@@ -76,7 +76,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 
-	private JDateChooser jCalendarDate;
+	private CustomJDateChooser jCalendarDate;
 	private JTable tableData;
 
 	public OperationRowAdm(Admission adm) {
@@ -280,9 +280,9 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	}
 
-	private JDateChooser getJCalendarDate() {
+	private CustomJDateChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			jCalendarDate = new JDateChooser();
+			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarDate.setDate(DateTime.now().toDate());
