@@ -360,7 +360,7 @@ WHERE PAT_ID = $P{patientID}]]></queryString>
 					<textElement>
 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Height:]]></text>
+				<text><![CDATA[Height (cm):]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -377,7 +377,7 @@ WHERE PAT_ID = $P{patientID}]]></queryString>
 					<textElement>
 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Weight:]]></text>
+				<text><![CDATA[Weight (kg):]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -428,7 +428,7 @@ WHERE PAT_ID = $P{patientID}]]></queryString>
 					<textElement>
 						<font pdfFontName="Helvetica-Bold" isBold="true"/>
 					</textElement>
-				<text><![CDATA[Brith Date:]]></text>
+				<text><![CDATA[Birth Date:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
