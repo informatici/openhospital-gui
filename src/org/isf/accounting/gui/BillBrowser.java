@@ -187,7 +187,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			this.currencyCod = null;
 			if(e1.getMessages() != null){
 				for(OHExceptionMessage msg : e1.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
 			}
 		}
@@ -197,7 +197,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}catch(OHServiceException e){
 			if(e.getMessages() != null){
 				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
 			}
 		}
@@ -500,7 +500,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
 						}
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(null,
+						JOptionPane.showMessageDialog(BillBrowser.this,
 								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
 								JOptionPane.PLAIN_MESSAGE);
@@ -546,7 +546,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							}
 							else if(rowsSelected>1){
 								if(patientParent==null){
-									JOptionPane.showMessageDialog(null,
+									JOptionPane.showMessageDialog(BillBrowser.this,
 											MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
 											MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
 											JOptionPane.PLAIN_MESSAGE);
@@ -584,7 +584,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 								}
 							}else if(rowsSelected > 1){
 								if(patientParent==null){
-									JOptionPane.showMessageDialog(null,
+									JOptionPane.showMessageDialog(BillBrowser.this,
 											MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
 											MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
 											JOptionPane.PLAIN_MESSAGE);
@@ -619,7 +619,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
 						}
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(null,
+						JOptionPane.showMessageDialog(BillBrowser.this,
 								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
 								JOptionPane.PLAIN_MESSAGE);
@@ -707,13 +707,13 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							}catch(OHServiceException ex){
 								if(ex.getMessages() != null){
 									for(OHExceptionMessage msg : ex.getMessages()){
-										JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+										JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 									}
 								}
 							}
 						}
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(null,
+						JOptionPane.showMessageDialog(BillBrowser.this,
 								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$
 								JOptionPane.PLAIN_MESSAGE);
@@ -802,8 +802,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					try {
 						patientSelected(pat);
 					} catch (OHServiceException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						if(e1.getMessages() != null){
+							for(OHExceptionMessage msg : e1.getMessages()){
+								JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+							}
+						}
 					}
 					
 	        }
@@ -1140,7 +1143,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}catch(OHServiceException e){
 			if(e.getMessages() != null){
 				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
 			}
 		}
@@ -1152,7 +1155,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}catch(OHServiceException e){
 			if(e.getMessages() != null){
 				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
 			}
 		}
@@ -1164,7 +1167,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}catch(OHServiceException e){
 			if(e.getMessages() != null){
 				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
 			}
 		}
@@ -1180,7 +1183,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			}catch(OHServiceException e){
 				if(e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
 			}
@@ -1298,7 +1301,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			
 			if (status.equals("O")) {
 				if (patientParent != null) {
-					tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
+					try {
+						tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
+					} catch (OHServiceException e) {
+						if(e.getMessages() != null){
+							for(OHExceptionMessage msg : e.getMessages()){
+								JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+							}
+						}
+					}
 				} else {
 					if (status.equals("O")) {
 						for (Bill bill : billPeriod) {
