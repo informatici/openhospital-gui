@@ -35,6 +35,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -49,6 +51,7 @@ import org.isf.exa.model.Exam;
 import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.lab.gui.LabNew.CheckBox;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryRow;
@@ -164,8 +167,15 @@ public class LabNew extends JDialog implements SelectionListener {
 	
 	//Materials
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
-	private ArrayList<String> matList = labManager.getMaterialList();
-	
+	private String[] matList = {
+			MessageBundle.getMessage("angal.lab.blood"), 
+			MessageBundle.getMessage("angal.lab.urine"),
+			MessageBundle.getMessage("angal.lab.stool"),
+			MessageBundle.getMessage("angal.lab.sputum"),
+			MessageBundle.getMessage("angal.lab.cfs"),
+			MessageBundle.getMessage("angal.lab.swabs"),
+			MessageBundle.getMessage("angal.lab.tissues")
+	};
 	//Exams (ALL)
 	private ExamBrowsingManager exaManager = new ExamBrowsingManager();
 	private ArrayList<Exam> exaArray;
@@ -178,6 +188,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	private ArrayList<ArrayList<LaboratoryRow>> examResults = new ArrayList<ArrayList<LaboratoryRow>>();
     private ArrayList<Laboratory> examItems = new ArrayList<Laboratory>();
 	private ExamTableModel jTableModel;
+	private JTextField jTextFieldExamResult;
                 
 	public LabNew(JFrame owner) {
 		super(owner, true);
@@ -261,7 +272,10 @@ public class LabNew extends JDialog implements SelectionListener {
 		}
 		return jButtonCancel;
 	}
-
+	private boolean isNumeric(String str)
+		{
+		  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+		}
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton();
@@ -293,7 +307,16 @@ public class LabNew extends JDialog implements SelectionListener {
                         lab.setNote(jTextAreaNote.getText().trim());
                         lab.setMaterial((String) jComboBoxMaterial.getSelectedItem());
                         if (lab.getExam().getProcedure() == 1) lab.setResult((String) jComboBoxExamResults.getSelectedItem());
-					}
+                        if ((lab.getExam().getProcedure() == 3) 
+    							&& (!isNumeric(lab.getResult()) && (!lab.getResult().isEmpty())) ) {
+    						JOptionPane.showMessageDialog(LabNew.this,
+    								MessageBundle.getMessage("angal.labnew.onlynumericforprocedure3"), //$NON-NLS-1$
+    								"Error", //$NON-NLS-1$
+    								JOptionPane.WARNING_MESSAGE);
+    						return;
+    					}
+                    }
+                    	
 					
 					boolean result = false;
 					
@@ -391,33 +414,55 @@ public class LabNew extends JDialog implements SelectionListener {
 				if (jComboBoxExamResults.getItemCount() > 0)
 					jPanelResults.add(jComboBoxExamResults);
 
-			} else {
+			}  else if (selectedExam.getProcedure() == 2) {
 				
-				try {
-					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
-				} catch (OHServiceException ex) {
-					exaRowArray = null;
-					Logger.getLogger(LabNew.class.getName()).log(Level.SEVERE, null, ex);
-				}
-
 				jPanelResults.removeAll();
-				jPanelResults.setLayout(new GridLayout(14, 1));
+                jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
 
-				ArrayList<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
-				boolean checked;
+                ArrayList<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
+                boolean checked;
+                JPanel resultsContainer = new JPanel();
+                resultsContainer.setLayout(new GridLayout(0,1));
+                JScrollPane resultsContainerScroll = new JScrollPane(resultsContainer);
+                resultsContainerScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                resultsContainerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                resultsContainerScroll.setBounds(0, 0, EastWidth, ResultHeight);
+                jPanelResults.add(resultsContainerScroll);
+                for (ExamRow exaRow : exaRowArray) {
+					if (selectedExam.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
 
-				if (exaRowArray != null) {
-					for (ExamRow exaRow : exaRowArray) {
-						if (selectedExam.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
-	
-							checked = false;
-							LaboratoryRow labRow = new LaboratoryRow();
-							labRow.setDescription(exaRow.getDescription());
-							if (checking.contains(labRow)) checked = true;
-							jPanelResults.add(new CheckBox(exaRow, checked));
-						}
+						checked = false;
+						if (checking.contains(exaRow.getDescription()))
+							checked = true;
+                        resultsContainer.add(new CheckBox(exaRow, checked));
 					}
 				}
+			} else if (selectedExam.getProcedure() == 3) {
+				jTextFieldExamResult = new JTextField();
+				jTextFieldExamResult.setMaximumSize(new Dimension(EastWidth, ComponentHeight));
+				jTextFieldExamResult.setMinimumSize(new Dimension(EastWidth, ComponentHeight));
+				jTextFieldExamResult.setPreferredSize(new Dimension(EastWidth, ComponentHeight));
+				
+				jTextFieldExamResult.setText(selectedLab.getResult());
+				
+				jTextFieldExamResult.getDocument().addDocumentListener(new DocumentListener() {
+					
+					public void removeUpdate(DocumentEvent e) {
+						selectedLab.setResult(jTextFieldExamResult.getText());
+						jTableExams.updateUI();
+					}
+					
+					public void insertUpdate(DocumentEvent e) {
+						selectedLab.setResult(jTextFieldExamResult.getText());
+						jTableExams.updateUI();
+					}
+					
+					public void changedUpdate(DocumentEvent e) {
+						// TODO Auto-generated method stub
+					}
+				});
+
+				jPanelResults.add(jTextFieldExamResult);
 			}
 		}
 		return jPanelResults;
@@ -702,38 +747,49 @@ public class LabNew extends JDialog implements SelectionListener {
 					Icon icon = new ImageIcon("rsc/icons/material_dialog.png");
 					String mat = "";
 
-					OhTableModelExam<Price> modelOh = new OhTableModelExam<Price>(exaArray);
+					Laboratory lab = new Laboratory();
+					
+				
+					 mat = (String)JOptionPane.showInputDialog(
+					                    LabNew.this,
+					                    MessageBundle.getMessage("angal.labnew.selectamaterial"), //$NON-NLS-1$
+					                    MessageBundle.getMessage("angal.labnew.material"), //$NON-NLS-1$
+					                    JOptionPane.PLAIN_MESSAGE,
+					                    icon,
+					                    matList,
+					                    ""); //$NON-NLS-1$
+					
+					if (mat == null) return;
+					
+					icon = new ImageIcon("rsc/icons/exam_dialog.png"); //$NON-NLS-1$
+					Exam exa = (Exam)JOptionPane.showInputDialog(
+					                    LabNew.this,
+					                    MessageBundle.getMessage("angal.labnew.selectanexam"), //$NON-NLS-1$
+					                    MessageBundle.getMessage("angal.labnew.exam"), //$NON-NLS-1$
+					                    JOptionPane.PLAIN_MESSAGE,
+					                    icon,
+					                    exaArray.toArray(),
+					                    ""); //$NON-NLS-1$
+					if (exa == null) return;
+					for (Laboratory labItem : examItems) {
+						if (labItem.getExam() == exa) {
+							JOptionPane.showMessageDialog(LabNew.this,  
+									MessageBundle.getMessage("angal.labnew.thisexamisalreadypresent"),
+									"Error", //$NON-NLS-1$
+									JOptionPane.WARNING_MESSAGE);
+							return;
+						}
+					}
 
-					ExamPicker examPicker = new ExamPicker(modelOh);
-
-					examPicker.setSize(300, 400);
-
-					JDialog dialog = new JDialog();
-					dialog.setLocationRelativeTo(null);
-					dialog.setSize(600, 350);
-					dialog.setLocationRelativeTo(null);
-					dialog.setModal(true);
-
-					examPicker.setParentFrame(dialog);
-					dialog.setContentPane(examPicker);
-					dialog.setVisible(true);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					ArrayList<Exam> exams = examPicker.getAllSelectedObject();
-
-					Exam exa = null;
-					Laboratory lab = null;
+				
+				
 					boolean alreadyIn = false;
-
+				
 					icon = new ImageIcon("rsc/icons/exam_dialog.png"); //$NON-NLS-1$
 
-					if (exams.size() < 1) {
-						return;
-					}
+				
 					
-					for (int i = 0; i < exams.size(); i++) {
-						alreadyIn = false;
-						lab = new Laboratory();
-						exa = exams.get(i);
+					
 
 						for (Laboratory labItem : examItems) {
 							if (labItem.getExam() == exa) {
@@ -743,30 +799,57 @@ public class LabNew extends JDialog implements SelectionListener {
 								alreadyIn = true;
 							}
 						}
-						if (alreadyIn) {
-							continue;
-						}
+					
 
 						if (exa.getProcedure() == 1) {
+							
 							ArrayList<ExamRow> exaRowTemp = new ArrayList<ExamRow>();
-							// if(exaRowArray != null)
 							for (ExamRow exaRow : exaRowArray) {
-								// if(exaRow != null){
 								if (exa.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
 									exaRowTemp.add(exaRow);
 								}
-								// }
 							}
+		
 							icon = new ImageIcon("rsc/icons/list_dialog.png"); //$NON-NLS-1$
-
-						} else {
+							ExamRow exaRow = (ExamRow)JOptionPane.showInputDialog(
+							                    LabNew.this,
+							                    MessageBundle.getMessage("angal.labnew.selectaresult"), //$NON-NLS-1$
+							                    MessageBundle.getMessage("angal.labnew.result"), //$NON-NLS-1$
+							                    JOptionPane.PLAIN_MESSAGE,
+							                    icon,
+							                    exaRowTemp.toArray(),
+							                    ""); //$NON-NLS-1$
+							
+							if (exaRow != null) lab.setResult(exaRow.getDescription());
+							else return;
+						} else if (exa.getProcedure() == 2) {
 							lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));
+						} else if (exa.getProcedure() == 3) {
+							icon = new ImageIcon("rsc/icons/list_dialog.png");
+							String exaRow = (String)JOptionPane.showInputDialog(
+				                    LabNew.this,
+				                    MessageBundle.getMessage("angal.labnew.insertresult"),
+				                    MessageBundle.getMessage("angal.labnew.result"),
+				                    JOptionPane.PLAIN_MESSAGE,
+				                    icon,
+				                    null,
+				                    exa.getDefaultResult()); //$NON-NLS-1$
+
+							if (exaRow != null && isNumeric(exaRow.toString())) {
+								lab.setResult(exaRow.toString());
+							}else {
+								JOptionPane.showMessageDialog(LabNew.this,  
+										MessageBundle.getMessage("angal.labnew.onlynumericforprocedure3"),
+										"Error", //$NON-NLS-1$
+										JOptionPane.WARNING_MESSAGE);
+								return;
+							}
 						}
 
 						lab.setExam(exa);
 						lab.setMaterial(mat);
 						addItem(lab);
-					}
+					
 				}
 			});
 		}

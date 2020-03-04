@@ -32,6 +32,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -40,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.EventListenerList;
 
@@ -147,6 +149,10 @@ public class LabEdit extends JDialog {
 
 	private Patient patSelected;
 
+	private JTextField examRowTextField;
+
+	private boolean examChanged;
+
 	public LabEdit(JFrame owner, Laboratory laboratory, boolean inserting) {
 		super(owner, true);
 		insert = inserting;
@@ -183,6 +189,9 @@ public class LabEdit extends JDialog {
 					resultPanel = getFirstPanel();
 				else if (examSelected.getProcedure() == 2)
 					resultPanel = getSecondPanel();
+				else if (examSelected.getProcedure() == 3)
+					resultPanel = getThirdPanel();
+			
 			}
 			resultPanel.setBorder(BorderFactory.createTitledBorder(
 					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.lab.result")));
@@ -407,6 +416,9 @@ public class LabEdit extends JDialog {
 							resultPanel = getFirstPanel();
 						else if (examSelected.getProcedure() == 2)
 							resultPanel = getSecondPanel();
+						else if (examSelected.getProcedure() == 3)
+							resultPanel = getThirdPanel();
+					
 
 						validate();
 						repaint();
@@ -503,6 +515,10 @@ public class LabEdit extends JDialog {
 		return cancelButton;
 	}
 
+	private boolean isNumeric(String str)
+		{
+		  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+		}
 	private JButton getOkButton() {
 		if (okButton == null) {
 			okButton = new JButton();
@@ -517,6 +533,20 @@ public class LabEdit extends JDialog {
 					String matSelected=(String)matComboBox.getSelectedItem();
 					examSelected=(Exam)examComboBox.getSelectedItem();
 					
+					Integer patId=-1;
+					if (patientComboBox.getSelectedIndex()>0)
+						patId=((Patient)(patientComboBox.getSelectedItem())).getCode();
+					String sex=sexTextField.getText().toUpperCase();
+					if (!(sex.equals("M") || sex.equals("F"))) {
+						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.lab.pleaseinsertmformaleorfforfemale"));
+						return;
+					}
+						
+					if ((examSelected.getProcedure() == 3) && 
+							(!isNumeric(examRowTextField.getText()) && (!examRowTextField.getText().isEmpty())) ) {
+						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.labnew.onlynumericforprocedure3"));
+							return;
+					}
 					// exam date	
 					GregorianCalendar gregDate = new GregorianCalendar();
 					ArrayList<String> labRow = new ArrayList<String>();
@@ -548,6 +578,8 @@ public class LabEdit extends JDialog {
 								labRow.add(eRows.get(i).getDescription());
 							}
 						}
+					}else if (examSelected.getProcedure() == 3) {
+						lab.setResult(examRowTextField.getText());
 					}
 					LabManager manager = new LabManager(Context.getApplicationContext().getBean(LabIoOperations.class));
 					boolean result = false;
@@ -659,7 +691,25 @@ public class LabEdit extends JDialog {
 		}
 		return resultPanel;
 	}
+	private JPanel getThirdPanel() {
+		resultPanel.removeAll();
+		String result="";
+		examRowTextField = new JTextField();
+		examRowTextField.setMaximumSize(new Dimension(200, 25));
+		examRowTextField.setMinimumSize(new Dimension(200, 25));
+		examRowTextField.setPreferredSize(new Dimension(200, 25));
+		if (insert | examChanged) {
+			result=examSelected.getDefaultResult();
+			examChanged = false;
+		} else {
+			result=lab.getResult();
+		}
+		examRowTextField.setText(result);
 
+		resultPanel.add(examRowTextField);
+
+		return resultPanel;
+	}
 	class SubPanel extends JPanel {
 
 		/**
