@@ -39,6 +39,7 @@ import org.isf.admission.model.Admission;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
+import org.isf.menu.manager.Context;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
@@ -68,7 +69,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private JTextArea textAreaRemark;
 
 	OperationBrowserManager opeManager = new OperationBrowserManager();
-	OperationRowBrowserManager opeRowManager = new OperationRowBrowserManager();
+	OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
 	OhTableOperationModel<OperationRow> modelOhOpeRow;
 	private List<OperationRow> oprowData = new ArrayList<OperationRow>();
 	private Admission myAdmission;
@@ -462,15 +463,15 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, AWTEvent e) {
 		for (org.isf.operation.model.OperationRow opRow : listOpe) {
-			if ((opRow.getId() > 0) && (opRow.getAdmission().getId() > 0)) {
+			if ((opRow.getId() > 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
 				RowManager.updateOperationRow(opRow);
 
 			}
-			if ((opRow.getId() <= 0) && (opRow.getAdmission().getId() > 0)) {
+			if ((opRow.getId() <= 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
 				RowManager.newOperationRow(opRow);
 
 			}
-			if ((opRow.getId() <= 0) && (opRow.getAdmission().getId() <= 0)) {
+			if ((opRow.getId() <= 0) && (opRow.getAdmission() == null || opRow.getAdmission().getId() <= 0)) {
 				Admission admiss = (Admission) e.getSource();
 				opRow.setAdmission(admiss);
 				RowManager.newOperationRow(opRow);
