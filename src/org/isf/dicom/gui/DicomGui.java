@@ -242,7 +242,8 @@ public class DicomGui extends JFrame implements WindowListener {
 
 				JFileChooser jfc = new JFileChooser(new File(lastDir));
 
-				jfc.setFileFilter(new FileDicomFilter());
+				jfc.addChoosableFileFilter(new FileDicomFilter());
+				jfc.addChoosableFileFilter(new FileJPEGFilter());
 				jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 				int status = jfc.showDialog(new JLabel(""), MessageBundle.getMessage("angal.dicom.open.txt"));
@@ -261,8 +262,6 @@ public class DicomGui extends JFrame implements WindowListener {
 					if (dir != null)
 						lastDir = dir.getAbsolutePath();
 
-					// System.out.println("Scelto "+scelto.getAbsolutePath());
-
 					if (selectedFile.isDirectory()) {
 						
 						int numfiles = SourceFiles.countFiles(selectedFile, patient);
@@ -270,8 +269,8 @@ public class DicomGui extends JFrame implements WindowListener {
 						new SourceFiles(selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
 
 					} else {
-						// single file
-						SourceFiles.loadDicom(selectedFile, patient);
+						// single file TODO: to specify in which already existing series to load the file
+						SourceFiles.loadDicom(selectedFile, patient, null);
 						thumbnail.initialize();
 					}
 				}
