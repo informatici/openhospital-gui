@@ -50,6 +50,7 @@ import javax.swing.table.DefaultTableModel;
 import org.isf.accounting.gui.PatientBillEdit.PatientBillListener;
 import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
+import org.isf.accounting.model.BillItems;
 import org.isf.accounting.model.BillPayments;
 import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.generaldata.GeneralData;
@@ -64,7 +65,9 @@ import org.isf.stat.gui.report.GenericReportBill;
 import org.isf.stat.gui.report.GenericReportFromDateToDate;
 import org.isf.stat.gui.report.GenericReportPatient;
 import org.isf.stat.gui.report.GenericReportUserInDate;
+import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
@@ -800,8 +803,17 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					selectPatient.addSelectionListener(BillBrowser.this);
 					selectPatient.setVisible(true);	
 					Patient pat = selectPatient.getPatient();
-					//System.out.println("Patient...........+++++++++++++.............."+pat.getFirstName());
+					
+					// get bill items
+					BillBrowserManager billmanager = new BillBrowserManager();
+					ArrayList<BillItems> itemsList = new ArrayList<BillItems>();
+					
 					try {
+						try {
+							itemsList = billManager.getDistinctItems();
+						} catch (OHException e1) {
+							
+						}
 						patientSelected(pat);
 					} catch (OHServiceException e1) {
 						// TODO Auto-generated catch block

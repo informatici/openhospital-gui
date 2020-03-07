@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -34,6 +35,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 import org.isf.admission.gui.AdmissionBrowser;
 import org.isf.admission.model.Admission;
 import org.isf.generaldata.GeneralData;
@@ -463,15 +465,15 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, AWTEvent e) {
 		for (org.isf.operation.model.OperationRow opRow : listOpe) {
-			if ((opRow.getId() > 0) && (opRow.getAdmission().getId() > 0)) {
+			if ((opRow.getId() > 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
 				RowManager.updateOperationRow(opRow);
 
 			}
-			if ((opRow.getId() <= 0) && (opRow.getAdmission().getId() > 0)) {
+			if ((opRow.getId() <= 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
 				RowManager.newOperationRow(opRow);
 
 			}
-			if ((opRow.getId() <= 0) && (opRow.getAdmission().getId() <= 0)) {
+			if ((opRow.getId() <= 0) && (opRow.getAdmission() == null || opRow.getAdmission().getId() <= 0)) {
 				Admission admiss = (Admission) e.getSource();
 				opRow.setAdmission(admiss);
 				RowManager.newOperationRow(opRow);
