@@ -39,11 +39,12 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
+import org.isf.menu.manager.Context;
 import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
 public class WardPharmacyNew extends JDialog implements SelectionListener {
@@ -155,17 +156,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
         private JButton searchButton;
         private JComboBox jComboBoxMedicals;
         //private JLabel jLabelSelectWard;
-        
+
+		private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
+
 	public WardPharmacyNew(JFrame owner, Ward ward, ArrayList<MedicalWard> drugs) {
 		super(owner, true);
 		wardDrugs = drugs;
 		for (MedicalWard elem : wardDrugs) {
-			try {
-				medArray.add(elem.getMedical());
-			} catch (OHException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			medArray.add(elem.getMedical());
 			qtyArray.add(elem.getQty());
 		}
 		wardSelected = ward;
@@ -256,11 +254,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					// remove already inserted items
 					for (MedicalWard medItem : medItems) {
 						Medical med = null;
-						try {
-							med = medItem.getMedical();
-						} catch (OHException e1) {
-							e1.printStackTrace();
-						}
+						med = medItem.getMedical();
 						currentMeds.add(med);
 					}
 					
@@ -494,7 +488,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
                                         
                     ArrayList<MovementWard> manyMovementWard = new ArrayList<MovementWard>();
                     //MovStockInsertingManager movManager = new MovStockInsertingManager();
-					MovWardBrowserManager wardManager = new MovWardBrowserManager();
                     boolean result;
 					try {
 						// MovementType typeCharge = new
@@ -507,8 +500,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 						result = wardManager.newMovementWard(manyMovementWard);
 					} catch (OHServiceException ex) {
-                        result = false;
-                    } catch (OHException ex) {
                         result = false;
                     }
 					if (result) {
@@ -680,11 +671,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				return medItems.get(r);
 			}
 			if (c == 0) {
-				try {
-					return medItems.get(r).getMedical().getDescription();
-				} catch (OHException e) {
-					return null;
-				}
+				return medItems.get(r).getMedical().getDescription();
 			}
 			if (c == 1) {
 				return medItems.get(r).getQty(); 
@@ -748,7 +735,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (wardBox == null) {
 			wardBox = new JComboBox();
 			wardBox.setPreferredSize(new Dimension(300, 30));
-			org.isf.ward.manager.WardBrowserManager wbm = new org.isf.ward.manager.WardBrowserManager();
+			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			ArrayList<Ward> wardList = null;
                         try {
                             wardList = wbm.getWards();

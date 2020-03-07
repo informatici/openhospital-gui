@@ -10,12 +10,14 @@ import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.TxtPrinter;
+import org.isf.menu.manager.Context;
 import org.isf.hospital.manager.HospitalBrowsingManager;
 import org.isf.hospital.model.Hospital;
 import org.isf.patient.model.Patient;
@@ -36,6 +38,7 @@ import net.sf.jasperreports.view.JasperViewer;
 public class GenericReportBill {
 
     private final Logger logger = LoggerFactory.getLogger(GenericReportBill.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportBill(Integer billID, String jasperFileName) {
 		new GenericReportBill(billID, jasperFileName, true, true);
@@ -46,12 +49,11 @@ public class GenericReportBill {
 		TxtPrinter.getTxtPrinter();
 		
 		try {
-            JasperReportsManager jasperReportsManager = new JasperReportsManager();
             JasperReportResultDto jasperReportPDFResultDto = jasperReportsManager.getGenericReportBillPdf(billID, jasperFileName, show, askForPrint);
 
 			if (show) {
                 if (GeneralData.INTERNALVIEWER) {
-                    JasperViewer.viewReport(jasperReportPDFResultDto.getJasperPrint(), false);
+                    JasperViewer.viewReport(jasperReportPDFResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
                 } else {
                     Runtime rt = Runtime.getRuntime();
                     rt.exec(GeneralData.VIEWER + " " + jasperReportPDFResultDto.getFilename());
@@ -113,7 +115,7 @@ public class GenericReportBill {
 
 			if (show) {
 				if (GeneralData.INTERNALVIEWER) {	
-					JasperViewer.viewReport(jasperPrint, false);
+					JasperViewer.viewReport(jasperPrint, false, new Locale(GeneralData.LANGUAGE));
 				} else {
 					try {
 						Runtime rt = Runtime.getRuntime();

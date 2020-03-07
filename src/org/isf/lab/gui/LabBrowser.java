@@ -73,7 +73,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private static final String VERSION=MessageBundle.getMessage("angal.versione");
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
@@ -407,7 +407,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	 * @return comboExams (JComboBox)
 	 */
 	private JComboBox getComboExams() {
-		ExamBrowsingManager managerExams = new ExamBrowsingManager();
+		ExamBrowsingManager managerExams = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 		if (comboExams == null) {
 			comboExams = new JComboBox();
 			comboExams.setPreferredSize(new Dimension(200, 30));
@@ -529,7 +529,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		private LabManager manager = new LabManager(Context.getApplicationContext().getBean(LabIoOperations.class));
+		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
 
 		public LabBrowsingModel(String exam, GregorianCalendar dateFrom, GregorianCalendar dateTo) {
 			try {

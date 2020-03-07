@@ -1,9 +1,12 @@
 package org.isf.stat.gui.report;
 
+import java.util.Locale;
+
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.serviceprinting.manager.PrintReceipt;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
@@ -25,6 +28,7 @@ import net.sf.jasperreports.view.JasperViewer;
 	public class GenericReportUserInDate {
 
     private final Logger logger = LoggerFactory.getLogger(GenericReportUserInDate.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 		public GenericReportUserInDate(String fromDate, String toDate, String aUser, String jasperFileName) {
 			new GenericReportUserInDate(fromDate, toDate, aUser, jasperFileName, true, true);
@@ -32,11 +36,10 @@ import net.sf.jasperreports.view.JasperViewer;
 
 		public  GenericReportUserInDate(String fromDate, String toDate, String aUser, String jasperFileName, boolean show, boolean askForPrint) {
 			try{
-                JasperReportsManager jasperReportsManager = new JasperReportsManager();
                 JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportUserInDatePdf(fromDate, toDate, aUser, jasperFileName);
 				if (show) {
                     if (GeneralData.INTERNALVIEWER) {
-                        JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false);
+                        JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
                     } else {
                         Runtime rt = Runtime.getRuntime();
                         rt.exec(GeneralData.VIEWER + " " + jasperReportResultDto.getFilename());

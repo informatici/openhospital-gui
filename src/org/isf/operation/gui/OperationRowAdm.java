@@ -5,7 +5,6 @@
  */
 package org.isf.operation.gui;
 
-import com.toedter.calendar.JDateChooser;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -34,6 +34,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 import org.isf.admission.gui.AdmissionBrowser;
 import org.isf.admission.model.Admission;
 import org.isf.generaldata.GeneralData;
@@ -45,12 +46,13 @@ import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.operation.model.Resultat;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
 import org.joda.time.DateTime;
+
+import com.toedter.calendar.JDateChooser;
 
 /**
  *
@@ -68,7 +70,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private JComboBox comboResult;
 	private JTextArea textAreaRemark;
 
-	OperationBrowserManager opeManager = new OperationBrowserManager();
+	OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
 	OhTableOperationModel<OperationRow> modelOhOpeRow;
 	private List<OperationRow> oprowData = new ArrayList<OperationRow>();

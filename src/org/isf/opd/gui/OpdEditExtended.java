@@ -93,6 +93,7 @@ import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
+import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
@@ -109,7 +110,6 @@ import org.isf.utils.time.TimeTools;
 import com.toedter.calendar.JDateChooser;
 import java.util.Date;
 import java.util.Iterator;
-import org.isf.menu.manager.Context;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 
@@ -253,17 +253,17 @@ public class OpdEditExtended extends JDialog implements
 	/*
 	 * Managers and Arrays
 	 */
-	private DiseaseTypeBrowserManager typeManager = new DiseaseTypeBrowserManager();
-	private DiseaseBrowserManager manager = new DiseaseBrowserManager();
+	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 	private ArrayList<DiseaseType> types;
 	private ArrayList<Disease> diseasesOPD;
 	private ArrayList<Disease> diseasesAll;
-	private OpdBrowserManager opdManager = new OpdBrowserManager();
+	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 	private ArrayList<Opd> opdArray = new ArrayList<Opd>();
 	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private ArrayList<Patient> pat = new ArrayList<Patient>();
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
-        private ArrayList<Patient> pat = new ArrayList<Patient>();
-
+	
 	private Disease lastOPDDisease1;
 	private JLabel JlabelOpd;
         
@@ -302,6 +302,7 @@ public class OpdEditExtended extends JDialog implements
 			if(!insert) {
 				opdPatient = opd.getPatient();
 				if (opdPatient != null && opd.getPatient().getCode() != 0) { 
+					PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 					opdPatient = patBrowser.getPatientAll(opd.getPatient().getCode());
 				} else { //old OPD has no PAT_ID => Create Patient from OPD
 					opdPatient = new Patient(opd);
@@ -330,6 +331,7 @@ public class OpdEditExtended extends JDialog implements
 			if(!insert) {
 				opdPatient = opd.getPatient();
 				if (opdPatient != null && opd.getPatient().getCode() != 0) { 
+					PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 					opdPatient = patBrowser.getPatientAll(opd.getPatient().getCode());
 				} else { //old OPD has no PAT_ID => Create Patient from OPD
 					opdPatient = new Patient(opd);
@@ -1511,7 +1513,7 @@ public class OpdEditExtended extends JDialog implements
 						return;
 					}
 					
-					ExaminationBrowserManager examManager = new ExaminationBrowserManager();
+					ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 					PatientExamination patex = null;
 					PatientExamination lastPatex = null;
 					try {
@@ -1553,7 +1555,7 @@ public class OpdEditExtended extends JDialog implements
 				public void actionPerformed(ActionEvent e) {
 					boolean opdNumExist = false;
 					if(!jOpdNumField.getText().equals("")||!jOpdNumField.getText().contains(" ")) {
-						OpdBrowserManager opm = new OpdBrowserManager();
+						OpdBrowserManager opm = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 						GregorianCalendar gregDate = new GregorianCalendar();
 						gregDate.setTime(OpdDateFieldCal.getDate());
 						int opdNum;
@@ -1670,7 +1672,6 @@ public class OpdEditExtended extends JDialog implements
 					
                                         try {
 						if (insert){    //Insert
-							GregorianCalendar date = new GregorianCalendar();
 							opd.setProgYear(Integer.parseInt(jOpdNumField.getText()));
 							//remember for later use
 							RememberDates.setLastOpdVisitDate(visitDateOpd);

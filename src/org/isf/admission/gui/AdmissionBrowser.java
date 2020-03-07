@@ -40,7 +40,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -81,7 +80,6 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.ShadowBorder;
-import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
@@ -201,8 +199,6 @@ public class AdmissionBrowser extends JDialog {
 
 	private float weight = 0.0f;
 
-	private VoDateTextField visitDateField = null;
-
 	private VoLimitedTextField weightField = null;
 
 	private JDateChooser visitDateFieldCal = null; // Calendar
@@ -215,13 +211,9 @@ public class AdmissionBrowser extends JDialog {
 	
 	private final int preferredWidthTypes = 220;
 	
-	private final int preferredWidthTransfusionSpinner = 55;
-
 	private final int preferredHeightLine = 24;
 	
 	private GregorianCalendar deliveryDate = null;
-
-	private VoDateTextField deliveryDateField = null;
 
 	private JDateChooser deliveryDateFieldCal = null;
 
@@ -268,7 +260,7 @@ public class AdmissionBrowser extends JDialog {
 	
 	private JComboBox diseaseInBox;
 	
-	private DiseaseBrowserManager dbm = new DiseaseBrowserManager();
+	private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 	private ArrayList<Disease> diseaseInList = null;
 	
@@ -289,8 +281,6 @@ public class AdmissionBrowser extends JDialog {
 	private JComboBox admTypeBox = null;
 
 	private ArrayList<AdmissionType> admTypeList = null;
-
-	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));
 
 	private JPanel admissionDatePanel;
 
@@ -409,8 +399,6 @@ public class AdmissionBrowser extends JDialog {
 		}
 		ps = new PatientSummary(patient);
 
-		//AdmissionBrowserManager abm = new AdmissionBrowserManager();
-
 		try {
 			diseaseOutList = dbm.getDiseaseIpdOut();
 			Admission admiss = admissionManager.getCurrentAdmission(patient);
@@ -475,7 +463,6 @@ public class AdmissionBrowser extends JDialog {
 		}
 		ps = new PatientSummary(patient);
                 
-        //        AdmissionBrowserManager abm = new AdmissionBrowserManager();
 		operationad = new OperationRowAdm(anAdmission);
 		addAdmissionListener((AdmissionListener) operationad);
                 
@@ -770,7 +757,7 @@ public class AdmissionBrowser extends JDialog {
 		if (treatmentPanel == null) {
 			treatmentPanel = new JPanel();
 			
-			PregnantTreatmentTypeBrowserManager abm = new PregnantTreatmentTypeBrowserManager();
+			PregnantTreatmentTypeBrowserManager abm = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 			treatmTypeBox = new JComboBox();
 			treatmTypeBox.addItem("");
 			try {
@@ -836,7 +823,7 @@ public class AdmissionBrowser extends JDialog {
 		if (deliveryResultTypePanel == null) {
 			deliveryResultTypePanel = new JPanel();
 			
-			DeliveryResultTypeBrowserManager drtbm = new DeliveryResultTypeBrowserManager();
+			DeliveryResultTypeBrowserManager drtbm = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 			deliveryResultTypeBox = new JComboBox();
 			deliveryResultTypeBox.addItem("");
 			try {
@@ -864,7 +851,7 @@ public class AdmissionBrowser extends JDialog {
 		if (deliveryTypePanel == null) {
 			deliveryTypePanel = new JPanel();
 			
-			DeliveryTypeBrowserManager dtbm = new DeliveryTypeBrowserManager();
+			DeliveryTypeBrowserManager dtbm = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 			deliveryTypeBox = new JComboBox();
 			deliveryTypeBox.addItem("");
             try{
@@ -1005,7 +992,7 @@ public class AdmissionBrowser extends JDialog {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
 			
-			WardBrowserManager wbm = new WardBrowserManager();
+			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			wardBox = new JComboBox();
 			wardBox.addItem("");
 			try {
@@ -1045,7 +1032,6 @@ public class AdmissionBrowser extends JDialog {
 						if (editing && wardId.equalsIgnoreCase(admission.getWard().getCode())) {
 							yProgTextField.setText("" + admission.getYProg());
 						} else {
-							//AdmissionBrowserManager abm = new AdmissionBrowserManager();
 							int nextProg = 1;
 							try {
 								nextProg = admissionManager.getNextYProg(wardId);
@@ -1589,13 +1575,13 @@ public class AdmissionBrowser extends JDialog {
 	/*
 	 * simply an utility
 	 */
-	private JRadioButton getRadioButton(String label, char mn, boolean active) {
-		JRadioButton rb = new JRadioButton(label);
-		rb.setMnemonic(KeyEvent.VK_A + (mn - 'A'));
-		rb.setSelected(active);
-		rb.setName(label);
-		return rb;
-	}
+//	private JRadioButton getRadioButton(String label, char mn, boolean active) {
+//		JRadioButton rb = new JRadioButton(label);
+//		rb.setMnemonic(KeyEvent.VK_A + (mn - 'A'));
+//		rb.setSelected(active);
+//		rb.setName(label);
+//		return rb;
+//	}
 
 	/*
 	 * admission sheet: 5th row: insert select operation type and result
@@ -1845,7 +1831,7 @@ public class AdmissionBrowser extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					
 					PatientExamination patex;
-					ExaminationBrowserManager examManager = new ExaminationBrowserManager();
+					ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 					
 					PatientExamination lastPatex = null;
 					try {
@@ -1906,23 +1892,6 @@ public class AdmissionBrowser extends JDialog {
 
 			public void actionPerformed(ActionEvent e) {
 				
-					/*
-					 * Initizalize AdmissionBrowserManager
-					 */
-					//AdmissionBrowserManager abm = new AdmissionBrowserManager();
-					ArrayList<Admission> admList;
-					try {
-						admList = admissionManager.getAdmissions(patient);
-					}catch(OHServiceException ex){
-                        OHServiceExceptionUtil.showMessages(ex);
-						admList = new ArrayList<Admission>();
-					}
-
-					/*
-					 * Today Gregorian Calendar
-					 */
-					GregorianCalendar today = new GregorianCalendar();
-
 					/*
 					 * is it an admission update or a discharge? if we have a
 					 * valid discharge date isDischarge will be true

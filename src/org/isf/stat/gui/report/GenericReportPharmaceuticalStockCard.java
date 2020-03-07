@@ -10,6 +10,7 @@ import java.io.File;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -18,6 +19,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
+import org.isf.menu.manager.Context;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
 import org.isf.utils.excel.ExcelExporter;
@@ -30,12 +32,12 @@ import net.sf.jasperreports.view.JasperViewer;
 public class GenericReportPharmaceuticalStockCard {
 	
 	private final static Logger logger = LoggerFactory.getLogger(GenericReportPharmaceuticalStockCard.class);
+    private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportPharmaceuticalStockCard(String jasperFileName, Date dateFrom, Date dateTo, Medical medical, Ward ward, boolean toExcel) {
 		if (dateFrom == null || dateTo == null)
 			return;
 		try{
-            JasperReportsManager jasperReportsManager = new JasperReportsManager();
             File defaultFilename = new File(compileStockCardFilename(jasperFileName, dateFrom, dateTo, medical, ward));
             
             if (toExcel) {
@@ -53,7 +55,7 @@ public class GenericReportPharmaceuticalStockCard {
             } else {
                 JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPharmaceuticalStockCardPdf(jasperFileName, defaultFilename.getName(), dateFrom, dateTo, medical, ward);
                 if (GeneralData.INTERNALVIEWER)
-                    JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false);
+                    JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
                 else {
                     Runtime rt = Runtime.getRuntime();
                     rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());

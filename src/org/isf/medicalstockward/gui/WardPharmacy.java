@@ -67,7 +67,6 @@ import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalStockCard;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalStockWard;
 import org.isf.utils.excel.ExcelExporter;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -80,9 +79,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.toedter.calendar.JDateChooser;
-import java.awt.event.KeyListener;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
 
 public class WardPharmacy extends ModalJFrame implements 
 	WardPharmacyEdit.MovementWardListeners, 
@@ -200,7 +196,9 @@ public class WardPharmacy extends ModalJFrame implements
 	private MovBrowserManager movManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
 	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
 	private ArrayList<Movement> listMovementCentral = new ArrayList<Movement>();
-	private MovWardBrowserManager wardManager = new MovWardBrowserManager();
+	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
+	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
+	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private ArrayList<MovementWard> listMovementWardFromTo = new ArrayList<MovementWard>();
 	private ArrayList<MedicalWard> wardDrugs;
 	private ArrayList<MovementWard> wardOutcomes;
@@ -292,11 +290,7 @@ public class WardPharmacy extends ModalJFrame implements
 					else if (jTabbedPaneWard.getSelectedIndex() == 2) {
 						if (jTableDrugs.getSelectedRow() >= 0) {
 							MedicalWard medicalWard = (MedicalWard) ((jTableDrugs.getModel()).getValueAt(jTableDrugs.getSelectedRow(), -1));
-							try {
-								medical = medicalWard.getMedical();
-							} catch (OHException e) {
-								JOptionPane.showMessageDialog(WardPharmacy.this, e.getMessage(), getTitle(), JOptionPane.ERROR_MESSAGE);
-							}
+							medical = medicalWard.getMedical();
 						}
 					}
 					
@@ -798,13 +792,12 @@ public class WardPharmacy extends ModalJFrame implements
 			jComboBoxTypes = new JComboBox();
 			jComboBoxTypes.setMaximumSize(new Dimension(filterWidth, 24));
 			jComboBoxTypes.setPreferredSize(new Dimension(filterWidth, 24));
-			MedicalTypeBrowserManager medicalManager = new MedicalTypeBrowserManager();
 			ArrayList<MedicalType> medicalTypes;
 			
 			jComboBoxTypes.addItem(MessageBundle.getMessage("angal.medicalstockward.alltypes")); //$NON-NLS-1$
 			
 			try {
-				medicalTypes = medicalManager.getMedicalType();
+				medicalTypes = medicalTypeBrowserManager.getMedicalType();
 				
 				for (MedicalType aMedicalType : medicalTypes) {
 					jComboBoxTypes.addItem(aMedicalType);
@@ -833,7 +826,6 @@ public class WardPharmacy extends ModalJFrame implements
                 @Override
                 public void actionPerformed(ActionEvent ae) {
                     jComboBoxMedicals.removeAllItems();
-                    MedicalBrowsingManager medicalManager = new MedicalBrowsingManager();
                     ArrayList<Medical> medicals;
                     try {
                             medicals = medicalManager.getMedicals();
@@ -895,7 +887,6 @@ public class WardPharmacy extends ModalJFrame implements
 			jComboBoxMedicals.setMaximumSize(new Dimension(filterWidth, 24));
 			jComboBoxMedicals.setPreferredSize(new Dimension(filterWidth, 24));
 		}
-		MedicalBrowsingManager medicalManager = new MedicalBrowsingManager();
 		ArrayList<Medical> medicals;
 		try {
 			medicals = medicalManager.getMedicals();
@@ -986,7 +977,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private JComboBox getJComboBoxWard() {
 		if (jComboBoxWard == null) {
 			jComboBoxWard = new JComboBox();
-			WardBrowserManager wardManager = new WardBrowserManager();
+			WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			try {
 				wardList = wardManager.getWards();
 			}catch(OHServiceException e){
@@ -1325,12 +1316,8 @@ public class WardPharmacy extends ModalJFrame implements
 				return wardDrug;
 			}
 			if (c == 0) {
-				try {
-					wardDrug.getMedical();
-					return wardDrug.getMedical().getDescription();
-				} catch (OHException e) {
-					JOptionPane.showMessageDialog(WardPharmacy.this, e.getMessage(), getTitle(), JOptionPane.ERROR_MESSAGE);
-				}
+				wardDrug.getMedical();
+				return wardDrug.getMedical().getDescription();
 			}
 			if (c == 1) {
 				return wardDrug.getQty();
