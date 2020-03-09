@@ -132,7 +132,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 	private void loadDicomFromDB() {
 		FileDicom[] fdb = null;
 		try {
-			fdb = DicomManagerFactory.getManager().loadFilesPaziente(patID);
+			fdb = DicomManagerFactory.getManager().loadPatientFiles(patID);
 		}catch(OHServiceException ex){
 			if(ex.getMessages() != null){
 				for(OHExceptionMessage msg : ex.getMessages()){

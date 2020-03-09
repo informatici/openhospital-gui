@@ -87,7 +87,8 @@ public class DicomViewGui extends JPanel {
 	/**
 	 * Construct a new detail for DICOM image
 	 * 
-	 * @param dettaglio
+	 * @param patient
+	 * @param serieNumber
 	 */
 	public DicomViewGui(Patient patient, String serieNumber) {
 
@@ -99,7 +100,6 @@ public class DicomViewGui extends JPanel {
 		addMouseListener(new DicomViewGuiMouseListener());
 		addMouseMotionListener(new DicomViewGuiMouseMotionListener());
 
-		// System.out.println("DicomViewGui "+idPaziente+" "+numeroSerie);
 
 		if (patID >= 0){
 			try {
@@ -112,8 +112,6 @@ public class DicomViewGui extends JPanel {
 				}
 			}
 		}
-
-		// System.out.println("DicomViewGui "+immagini);
 
 		if (frames == null)
 			frames = new Long[0];
@@ -133,7 +131,6 @@ public class DicomViewGui extends JPanel {
 
 //		if (serieNumber == null || serieNumber.trim().length() == 0)
 //			return;
-		// System.out.println("notificaCambiamento "+idPaziente+" "+numeroSerie);
 
 		if (patID >= 0){
 			try {
@@ -146,8 +143,6 @@ public class DicomViewGui extends JPanel {
 				}
 			}
 		}
-
-		// System.out.println("notificaCambiamento "+immagini);
 
 		if (frames == null)
 			frames = new Long[0];
@@ -279,7 +274,7 @@ public class DicomViewGui extends JPanel {
 	/**
 	 * Compose the panel of central image
 	 * 
-	 * @return, the panel
+	 * @return the panel
 	 */
 	private JPanel composeCenter(int w, int h, boolean calculate) {
 

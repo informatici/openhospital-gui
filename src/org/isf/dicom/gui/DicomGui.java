@@ -75,12 +75,12 @@ public class DicomGui extends JFrame implements WindowListener {
 	/**
 	 * Construct a GUI
 	 * 
-	 * @param, paziente the data wrapper for OH Patient
+	 * @param patient the data wrapper for OH Patient
 	 */
-	public DicomGui(Patient paziente, PatientFolderBrowser owner) {
+	public DicomGui(Patient patient, PatientFolderBrowser owner) {
 		super();
-		this.patient = paziente.getCode().intValue();
-		this.ohPatient = paziente;
+		this.patient = patient.getCode().intValue();
+		this.ohPatient = patient;
 		this.owner = owner;
 
 		initialize();
