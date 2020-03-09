@@ -289,21 +289,34 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 		buttonStock.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				
-				ArrayList<String> options = new ArrayList<String>();
-				options.add(MessageBundle.getMessage("angal.medicals.today"));
-				options.add(MessageBundle.getMessage("angal.common.date"));
+				ArrayList<String> dateOptions = new ArrayList<String>();
+				dateOptions.add(MessageBundle.getMessage("angal.medicals.today"));
+				dateOptions.add(MessageBundle.getMessage("angal.common.date"));
 				
 				Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
-				String option = (String) JOptionPane.showInputDialog(MedicalBrowser.this, 
+				String dateOption = (String) JOptionPane.showInputDialog(MedicalBrowser.this, 
 						MessageBundle.getMessage("angal.medicals.pleaseselectareport"), 
 						MessageBundle.getMessage("angal.medicals.report"), 
 						JOptionPane.INFORMATION_MESSAGE, 
 						icon, 
-						options.toArray(), 
-						options.get(0));
+						dateOptions.toArray(), 
+						dateOptions.get(0));
 				
-				if (option == null)
+				if (dateOption == null)
 					return;
+				
+				ArrayList<String> lotOptions = new ArrayList<String>();
+				lotOptions.add(MessageBundle.getMessage("angal.medicals.onlyquantity"));
+				lotOptions.add(MessageBundle.getMessage("angal.medicals.withlot"));
+				
+				String lotOption = (String) JOptionPane.showInputDialog(MedicalBrowser.this, 
+						MessageBundle.getMessage("angal.medicals.pleaseselectareport"), 
+						MessageBundle.getMessage("angal.medicals.report"), 
+						JOptionPane.INFORMATION_MESSAGE, 
+						icon, 
+						lotOptions.toArray(), 
+						lotOptions.get(0));
+				
 				
 				/* Getting Report parameters */
 				String sortBy = null;
@@ -312,7 +325,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 				if (pbox.getSelectedItem() instanceof MedicalType) groupBy = ((MedicalType) pbox.getSelectedItem()).getDescription();
 				//System.out.println("==> GROUPING : " + groupBy);
 				List<?> sortedKeys = table.getRowSorter().getSortKeys();
-				sortBy = "MDSRT_DESC, MDSR_DESC"; //default values
 				if (!sortedKeys.isEmpty()) {
 					int sortedColumn = ((SortKey) sortedKeys.get(0)).getColumn();
 					SortOrder sortedOrder = ((SortKey) sortedKeys.get(0)).getSortOrder();
@@ -322,23 +334,32 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 					if (!pColumsNormalSorting[sortedColumn])
 						columnOrder = sortedOrder.toString().equals("ASCENDING") ? "DESC" : "ASC";
 					if (groupBy == null) {
+						groupBy = "%";
 						sortBy = "MDSRT_DESC, " + columnName + " " + columnOrder;
-					} else {
+					} else
 						sortBy = columnName + " " + columnOrder;
-					}
 					
-				} 
-				if (groupBy == null) {
-					groupBy = "%";
-				} 
+				} else { //default values
+					groupBy = "%%";
+					sortBy = "MDSRT_DESC, MDSR_DESC";
+				}
+				
+				String report = "";
 				
 				int i = 0;
-				if (options.indexOf(option) == i) {
-					new GenericReportPharmaceuticalStock(null, GeneralData.PHARMACEUTICALSTOCK, filter, groupBy, sortBy, false);
-					new GenericReportPharmaceuticalStock(null, GeneralData.PHARMACEUTICALSTOCK, filter, groupBy, sortBy, true);
+				if (lotOptions.indexOf(lotOption) == i) {
+					report = GeneralData.PHARMACEUTICALSTOCK;
+				}
+				if (lotOptions.indexOf(lotOption) == ++i) {
+					report = GeneralData.PHARMACEUTICALSTOCKLOT;
+				}
+				i = 0;
+				if (dateOptions.indexOf(dateOption) == i) {
+					new GenericReportPharmaceuticalStock(null, report, filter, groupBy, sortBy, false);
+					new GenericReportPharmaceuticalStock(null, report, filter, groupBy, sortBy, true);
 					return;
 				}
-				if (options.indexOf(option) == ++i) {
+				if (dateOptions.indexOf(dateOption) == ++i) {
 					
 					icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 					
@@ -353,9 +374,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 			        		icon);
 
 			        if (r == JOptionPane.OK_OPTION) {
-						new GenericReportPharmaceuticalStock(dateChooser.getDate(), GeneralData.PHARMACEUTICALSTOCK, filter, groupBy, sortBy, false);
-						new GenericReportPharmaceuticalStock(dateChooser.getDate(), GeneralData.PHARMACEUTICALSTOCK, filter, groupBy, sortBy, true);
-						return;
+			        	new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, false);
+			        	new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, true);
+			        	return;
 						
 			        } else {
 			            return;

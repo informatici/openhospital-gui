@@ -139,8 +139,8 @@ public class MovStockBrowser extends ModalJFrame {
 	private boolean[] pColumnBold = {true,false,false,false,false,false,false,false,false,false,false,false,false};
 	private int[] columnAlignment = {SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT};
-	private boolean[] pColumnVisible = {true,true,true,true,true,true,true,!GeneralData.AUTOMATICLOT,!GeneralData.AUTOMATICLOT,true,true,GeneralData.LOTWITHCOST,GeneralData.LOTWITHCOST};
-
+	private boolean[] pColumnVisible = {true,true,true,true,true,true,true,!GeneralData.AUTOMATICLOT_IN,!GeneralData.AUTOMATICLOT_IN,true,true,GeneralData.LOTWITHCOST,GeneralData.LOTWITHCOST,true};
+ 	
 	private int[] pColumwidth = {50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70};
 	private static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
 	private static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
@@ -200,7 +200,7 @@ public class MovStockBrowser extends ModalJFrame {
 	 * @return
 	 */
 	private boolean isAutomaticLot() {
-		return GeneralData.AUTOMATICLOT;
+		return GeneralData.AUTOMATICLOT_IN;
 	}
 	private JPanel getButtonPanel() {
 		buttonPanel = new JPanel();
