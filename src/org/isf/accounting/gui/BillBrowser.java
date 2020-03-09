@@ -50,6 +50,7 @@ import javax.swing.table.DefaultTableModel;
 import org.isf.accounting.gui.PatientBillEdit.PatientBillListener;
 import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
+import org.isf.accounting.model.BillItems;
 import org.isf.accounting.model.BillPayments;
 import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.generaldata.GeneralData;
@@ -798,8 +799,13 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					selectPatient.addSelectionListener(BillBrowser.this);
 					selectPatient.setVisible(true);	
 					Patient pat = selectPatient.getPatient();
-					//System.out.println("Patient...........+++++++++++++.............."+pat.getFirstName());
+					
+					// get bill items
+					BillBrowserManager billmanager = new BillBrowserManager();
+					ArrayList<BillItems> itemsList = new ArrayList<BillItems>();
+					
 					try {
+						itemsList = billManager.getDistinctItems();
 						patientSelected(pat);
 					} catch (OHServiceException e1) {
 						if(e1.getMessages() != null){
