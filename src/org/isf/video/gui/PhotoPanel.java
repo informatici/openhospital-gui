@@ -1,13 +1,9 @@
 package org.isf.video.gui;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-
 import org.isf.video.manager.VideoDeviceStreamApplet;
+
+import javax.swing.*;
+import java.awt.*;
 
 class PhotoPanel extends JPanel {
 
@@ -17,12 +13,7 @@ class PhotoPanel extends JPanel {
 	public VideoDeviceStreamApplet applet;
 	private Dimension dimension;
 
-	public PhotoPanel(String img) {
-		setLayout(null);
-		updatePhoto(new ImageIcon(img).getImage());
-	}
-
-	public PhotoPanel(Image img) {
+	public PhotoPanel(final Image img) {
 		setLayout(null);
 		updatePhoto(img);
 	}
@@ -35,16 +26,7 @@ class PhotoPanel extends JPanel {
 
 		repaint();
 	}
-	
-	public void addApplet (VideoDeviceStreamApplet applet) {
-		this.applet = applet;
-		this.img = null;
-		
-		Dimension dimension = new Dimension(applet.appletWidth, applet.appletHeight);
-		refreshPanel(dimension);
-		add(applet);
-	}
-	
+
 	public void removeApplet () {
 		if (this.applet != null)
 		{

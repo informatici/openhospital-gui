@@ -207,13 +207,18 @@
   				</exclusion>
   			</exclusions>
 		</dependency>
-  		<!-- dependency>
-			<groupId>jcu.sal</groupId>
-			<artifactId>sal_isf</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/sal_isf.jar</systemPath>
-		</dependency -->
+		<dependency>
+          <groupId>jcu.sal</groupId>
+          <artifactId>sal_isf</artifactId>
+          <version>1.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/sal_isf.jar</systemPath>
+        </dependency>
+		<dependency>
+			<groupId>com.github.sarxos</groupId>
+			<artifactId>webcam-capture</artifactId>
+			<version>0.3.12</version>
+		</dependency>
 		<dependency>
 			<groupId>jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
@@ -285,6 +290,22 @@
 	  		<artifactId>spring-context</artifactId>
 	  		<version>${spring.framework.version}</version>
 	  	</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-common</artifactId>
+			<version>1.8.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-binding</artifactId>
+			<version>2.13.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-forms</artifactId>
+			<version>1.9.0</version>
+		</dependency>
+
 	  	<!-- <dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>

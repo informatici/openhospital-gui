@@ -1,0 +1,112 @@
+JFDML JFormDesigner: "5.2.5.0.333" Java: "1.8.0_232" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "unrelgap, labelcompgap, default:grow, labelcompgap, unrelgap"
+			"$rowSpecs": "default, linegap, fill:default:grow, linegap, default"
+		} ) {
+			name: "photoBoothPanel"
+			auxiliary() {
+				"JavaCodeGenerator.variableGetter": true
+			}
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default:grow, labelcompgap, default:grow"
+				"$rowSpecs": "fill:default:grow"
+				"$columnGroupIds": "1, 0, 1"
+			} ) {
+				name: "photoContainer"
+				auxiliary() {
+					"JavaCodeGenerator.variableGetter": true
+				}
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default:grow"
+					"$rowSpecs": "default:grow"
+				} ) {
+					name: "streamingPanel"
+					"preferredSize": new java.awt.Dimension( 640, 480 )
+					"minimumSize": new java.awt.Dimension( 640, 480 )
+					auxiliary() {
+						"JavaCodeGenerator.variableGetter": true
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default:grow"
+					"$rowSpecs": "default:grow"
+				} ) {
+					name: "snapshotPanel"
+					"minimumSize": new java.awt.Dimension( 640, 480 )
+					"preferredSize": new java.awt.Dimension( 640, 480 )
+					auxiliary() {
+						"JavaCodeGenerator.variableGetter": true
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 3
+				"gridY": 3
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, default"
+				"$rowSpecs": "default, linegap, default"
+			} ) {
+				name: "buttonContainer"
+				auxiliary() {
+					"JavaCodeGenerator.variableGetter": true
+				}
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "captureButton"
+					"text": "Capture"
+					auxiliary() {
+						"JavaCodeGenerator.variableGetter": true
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "discardButton"
+					"text": "Discard"
+					auxiliary() {
+						"JavaCodeGenerator.variableGetter": true
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "okButton"
+					"text": "OK"
+					auxiliary() {
+						"JavaCodeGenerator.variableGetter": true
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 3
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "cancelButton"
+					"text": "Cancel"
+					auxiliary() {
+						"JavaCodeGenerator.variableGetter": true
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 3
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 3
+				"gridY": 5
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 500, 380 )
+		} )
+	}
+}
