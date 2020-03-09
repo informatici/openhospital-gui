@@ -16,8 +16,10 @@ import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -280,6 +282,7 @@ public class PatientInsertExtended extends JDialog {
 	// MaritalStatus Components:
 	private JPanel jMaritalPanel = null;
 	private JComboBox jMaritalStatusComboBox = null;
+	protected HashMap<String, String> maritalHashMap;
 
 	// COMPONENTS: Note
 	private JPanel jRightPanel = null;
@@ -470,7 +473,7 @@ public class PatientInsertExtended extends JDialog {
 									patient.setFather('U');
 							}
 							patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
-							patient.setMaritalStatus(jMaritalStatusComboBox.getSelectedItem().toString());
+							patient.setMaritalStatus(getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
 							patient.setProfession(jProfessionComboBox.getSelectedItem().toString());
 							if (jInsurance_Yes.isSelected()) {
 								patient.setHasInsurance('Y');
@@ -1100,16 +1103,52 @@ public class PatientInsertExtended extends JDialog {
 			String[] maritalStatusTypes = { MessageBundle.getMessage("angal.patient.maritalstatusunknown"), MessageBundle.getMessage("angal.patient.maritalstatussingle"), 
 											MessageBundle.getMessage("angal.patient.maritalstatusmarried"), MessageBundle.getMessage("angal.patient.maritalstatusdivorced"),
 											MessageBundle.getMessage("angal.patient.maritalstatuswidowed")};
-			jMaritalStatusComboBox = new JComboBox(maritalStatusTypes);
+			jMaritalStatusComboBox = new JComboBox(getMaritalList());
 			jMaritalPanel.add(jMaritalStatusComboBox);
 
 			if (!insert) {
-				jMaritalStatusComboBox.setSelectedItem(patient.getMaritalStatus());
+				jMaritalStatusComboBox.setSelectedItem(maritalHashMap.get(patient.getMaritalStatus()));
 			} 
 		}
 		return jMaritalPanel;
 	}
 
+	private void buildMaritalHashMap() {
+		maritalHashMap = new HashMap<String, String>();
+		maritalHashMap.put("unknown", MessageBundle.getMessage("angal.patient.maritalstatusunknown"));
+		maritalHashMap.put("single", MessageBundle.getMessage("angal.patient.maritalstatussingle"));
+		maritalHashMap.put("married", MessageBundle.getMessage("angal.patient.maritalstatusmarried"));
+		maritalHashMap.put("divorced", MessageBundle.getMessage("angal.patient.maritalstatusdivorced"));
+		maritalHashMap.put("widowed", MessageBundle.getMessage("angal.patient.maritalstatuswidowed"));
+	}
+
+	public String[] getMaritalList() {
+		
+		if (maritalHashMap == null) buildMaritalHashMap();
+		String[] maritalDescriptionList = maritalHashMap.values().toArray(new String[0]);
+		//Collections.sort(maritalDescriptionList,  new DefaultSorter(MessageBundle.getMessage("angal.lab.undefined")));
+		return maritalDescriptionList;
+	}
+
+	public String getMaritalTranslated(String maritalKey) {
+		if (maritalHashMap == null) buildMaritalHashMap();
+		if (maritalKey == null || !maritalHashMap.containsKey(maritalKey)) 
+			return MessageBundle.getMessage("angal.patient.maritalstatusunknown"); 
+		else return maritalHashMap.get(maritalKey);
+	}
+
+	public String getMaritalKey(String description) {
+		if (maritalHashMap == null) buildMaritalHashMap();
+		String key = "undefined";
+		for (String value : maritalHashMap.keySet()) {
+			if (maritalHashMap.get(value).equals(description)) {
+				key = value;
+				break;
+			}
+		}
+		return key;
+	}
+	
 	/**
 	 * This method initializes jFirstNameLabel
 	 * 
