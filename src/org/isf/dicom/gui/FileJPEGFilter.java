@@ -30,4 +30,9 @@ public class FileJPEGFilter
     {
         return "JPEG Images";
     }
+    
+    public static boolean match(String filename) {
+    	 return  (filename.toLowerCase().endsWith(".jpg") ||
+    			 filename.toLowerCase().endsWith(".jpeg"));
+    }
 }

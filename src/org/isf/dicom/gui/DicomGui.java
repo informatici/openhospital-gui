@@ -12,6 +12,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -24,14 +27,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.isf.admission.gui.PatientFolderBrowser;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
 import org.isf.dicom.model.FileDicom;
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
+import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.file.FileTools;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * GUI for Dicom Viewer
@@ -41,6 +51,8 @@ import org.isf.utils.exception.model.OHExceptionMessage;
  * 
  */
 public class DicomGui extends JFrame implements WindowListener {
+
+	
 
 	/**
 	 * 
@@ -261,16 +273,45 @@ public class DicomGui extends JFrame implements WindowListener {
 
 					if (dir != null)
 						lastDir = dir.getAbsolutePath();
+					
+					
+					File file = selectedFile;
+					int numfiles = 0;
+					if (selectedFile.isDirectory()) {
+						numfiles = SourceFiles.countFiles(selectedFile, patient);
+						if (numfiles == 0) return;
+						file = selectedFile.listFiles()[0];
+					}
+					
+					//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
+					FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file);
+					
+					//shows settings to the user for validation/modification
+					List<Date> dates = FileTools.getTimestampFromName(file);
+					
+					ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
+					preLoadDialog.setVisible(true);
+					
+					if (!preLoadDialog.isSave()) 
+						return; //user pressed CANCEL
+					
+					dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
+					dummyFileDicom.setDicomSeriesDate(DateFormat.getInstance().format(preLoadDialog.getDicomDate()));
+					dummyFileDicom.setDicomStudyDate(DateFormat.getInstance().format(preLoadDialog.getDicomDate()));
+					
+					//TODO: to add the new Entity "DICOM Category" for load and visualization
+					//TODO: to replace thumbnails with a list (optional by GeneralData) order by date descending
+					//TODO: to specify in which already existing series to load the file
+					//TODO: Fix the numbers on thumbnails
+					//TODO: show the DICOM information on the overlay panel
 
 					if (selectedFile.isDirectory()) {
-						
-						int numfiles = SourceFiles.countFiles(selectedFile, patient);
+						//folder
 						thumbnail.disableLoadButton();
-						new SourceFiles(selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
-
+						new SourceFiles(dummyFileDicom, selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
 					} else {
-						// single file TODO: to specify in which already existing series to load the file
-						SourceFiles.loadDicom(selectedFile, patient, null);
+						// single file 
+						SourceFiles.loadDicom(dummyFileDicom, selectedFile, patient, null);
 						thumbnail.initialize();
 					}
 				}
@@ -420,6 +461,25 @@ public class DicomGui extends JFrame implements WindowListener {
 
 		((DicomViewGui) jPanelDetail).notifyChanges(ohPatient, serie);
 
+	}
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		Context.setApplicationContext(context);
+		GeneralData.getGeneralData();
+		PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+		Patient patient = new Patient();
+		try {
+			patient = patManager.getPatient(129266);
+		} catch (OHServiceException e) {
+			e.printStackTrace();
+		}
+		DicomGui dg = new DicomGui(patient, null);
+		
 	}
 
 }
