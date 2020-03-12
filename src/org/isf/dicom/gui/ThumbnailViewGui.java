@@ -230,12 +230,12 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			p.add(jLab, BorderLayout.CENTER);
 
 			// Footer of thumnail
-
-			JLabel frames = new JLabel("[1/" + instance.getFrameCount() + "]");
-
-			frames.setForeground(Color.YELLOW);
-
-			p.add(frames, BorderLayout.SOUTH);
+			int frameCount = instance.getFrameCount();
+			if (frameCount > 1) {
+				JLabel frames = new JLabel("[1/" + instance.getFrameCount() + "]");
+				frames.setForeground(Color.YELLOW);
+				p.add(frames, BorderLayout.SOUTH);
+			}
 
 			// Header of thumnail
 			JLabel top = new JLabel(instance.getDicomSeriesDescription());

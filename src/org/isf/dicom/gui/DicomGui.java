@@ -276,15 +276,15 @@ public class DicomGui extends JFrame implements WindowListener {
 					
 					
 					File file = selectedFile;
-					int numfiles = 0;
+					int numfiles = 1;
 					if (selectedFile.isDirectory()) {
 						numfiles = SourceFiles.countFiles(selectedFile, patient);
-						if (numfiles == 0) return;
+						if (numfiles == 1) return;
 						file = selectedFile.listFiles()[0];
 					}
 					
 					//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
-					FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file);
+					FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file, numfiles);
 					
 					//shows settings to the user for validation/modification
 					List<Date> dates = FileTools.getTimestampFromName(file);
