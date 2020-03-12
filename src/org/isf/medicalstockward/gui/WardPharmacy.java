@@ -53,6 +53,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovBrowserManager;
+import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
@@ -157,10 +158,11 @@ public class WardPharmacy extends ModalJFrame implements
 			MessageBundle.getMessage("angal.common.from"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.units"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb")//$NON-NLS-1$
 	};
-	private boolean[] columsResizableIncomes = { false, false, true, false, false };
-	private int[] columWidthIncomes = { 80, 100, 220, 150, 50 };
+	private boolean[] columsResizableIncomes = { true, true, true, true, true, true };
+	private int[] columWidthIncomes = { 80, 50, 50, 50, 50 , 50};
 	private String[] columsOutcomes = { 
 			MessageBundle.getMessage("angal.common.date"),  //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.purpose"), //$NON-NLS-1$
@@ -169,7 +171,8 @@ public class WardPharmacy extends ModalJFrame implements
 			MessageBundle.getMessage("angal.medicalstockward.weight"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.units"),
+			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb")//$NON-NLS-1$
 	};
 	private boolean[] columsResizableOutcomes = { false, true, false, false, false, true, false, false };
 	private int[] columWidthOutcomes = { 150, 150, 50, 50, 50, 220, 50, 50 };
@@ -1082,7 +1085,7 @@ public class WardPharmacy extends ModalJFrame implements
                                     wMvnt.getMedical(), 
                                     typeCharge, 
                                     wardSelected, 
-                                    null, 
+                                    wMvnt.getLot(), 
                                     wMvnt.getDate(), 
                                     wMvnt.getQuantity().intValue(), 
                                     null, 
@@ -1123,6 +1126,7 @@ public class WardPharmacy extends ModalJFrame implements
 			if (c == 3) {
 				return pieces;
 			}
+			
 			if (c == 4) {
 				int packets = 0;
 				if (pcsPerPck != 0) {
@@ -1131,6 +1135,9 @@ public class WardPharmacy extends ModalJFrame implements
 				} else {
 					return ""; //$NON-NLS-1$;
 				}
+			}
+			if (c == 5) {
+				return mov.getLot().getCode();
 			}
 			return null;
 		}
@@ -1198,6 +1205,7 @@ public class WardPharmacy extends ModalJFrame implements
 				boolean ok = true;
 				Patient patient = mov.getPatient();
 				Medical medical = mov.getMedical();
+				Lot lot = mov.getLot();
 				int age = mov.getAge();
 				float weight = mov.getWeight();
 
@@ -1270,6 +1278,9 @@ public class WardPharmacy extends ModalJFrame implements
 			}
 			if (c == 7) {
 				return mov.getUnits();
+			}
+			if (c == 8) {
+				return mov.getLot().getCode();
 			}
 			return null;
 		}

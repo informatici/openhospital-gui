@@ -198,14 +198,7 @@ public class MovStockMultipleDialog extends ModalJFrame {
 			gbc_jLabelUser.gridy = 1;
 			headerPanel.add(jLabelUser, gbc_jLabelUser);
 		}
-		{
-			GridBagConstraints gbc_jTextFieldUser = new GridBagConstraints();
-			gbc_jTextFieldUser.insets = new Insets(5, 0, 5, 0);
-			gbc_jTextFieldUser.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jTextFieldUser.gridx = 3;
-			gbc_jTextFieldUser.gridy = 1;
-			headerPanel.add(getJTextFieldUser(), gbc_jTextFieldUser);
-		}
+	
 		{
 			JLabel jLabelChargeType = new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.chargetype")+":"); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelChargeType = new GridBagConstraints();
@@ -256,13 +249,7 @@ public class MovStockMultipleDialog extends ModalJFrame {
 		return jTextFieldReference;
 	}
 	
-	private JTextField getJTextFieldUser() {
-		if (jTextFieldUser == null) {
-			jTextFieldUser = new JTextField(movements.get(0).getUser());
-			jTextFieldUser.setEnabled(false);
-		}
-		return jTextFieldUser;
-	}
+
 
 	private JPanel getJButtonPane() {
 		JPanel buttonPane = new JPanel();
