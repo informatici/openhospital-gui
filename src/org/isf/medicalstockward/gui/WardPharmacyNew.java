@@ -42,7 +42,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.gui.MovStockMultipleDischarging;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
-import org.isf.medicalstockward.gui.WardStockTo.StockMovModel;
+
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
