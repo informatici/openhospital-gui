@@ -25,8 +25,8 @@
 	<import value="net.sf.jasperreports.engine.data.*" />
 	<import value="it.businesslogic.ireport.IReportScriptlet" />
 
-	<parameter name="fromdate" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="todate" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="fromdate" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="todate" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="Hospital" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="Address" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="City" isForPrompting="false" class="java.lang.String"/>
@@ -39,7 +39,7 @@
 FROM BILLITEMS
 JOIN BILLS ON BLI_ID_BILL = BLL_ID
 WHERE BLL_STATUS = 'C'
-AND DATE(BLL_UPDATE) BETWEEN STR_TO_DATE($P{fromdate},'%d/%m/%Y') AND STR_TO_DATE($P{todate},'%d/%m/%Y')
+AND DATE(BLL_UPDATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 GROUP BY BLI_ITEM_DESC
 ORDER BY AMOUNT DESC]]></queryString>
 
@@ -154,7 +154,7 @@ ORDER BY AMOUNT DESC]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Telephone}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="65"
 						y="122"
@@ -169,7 +169,7 @@ ORDER BY AMOUNT DESC]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fromdate}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{fromdate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -205,7 +205,7 @@ ORDER BY AMOUNT DESC]]></queryString>
 					</textElement>
 				<text><![CDATA[To]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="194"
 						y="122"
@@ -220,7 +220,7 @@ ORDER BY AMOUNT DESC]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{todate}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{todate}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
