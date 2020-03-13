@@ -13,6 +13,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -44,6 +45,7 @@ import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
+import org.isf.utils.time.TimeTools;
 
 /**
  * 
@@ -367,17 +369,17 @@ public class DicomViewGui extends JPanel {
 		hi += VGAP;
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.dicom"), 10, hi);
 		hi += VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientName) : null;
+		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientName) : tmpDbFile.getDicomPatientName();
 		if (txt == null)
 			txt = "";
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.name") + " : " + txt, 10, hi);
 		hi += VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientSex) : null;
+		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientSex) : tmpDbFile.getDicomPatientSex();
 		if (txt == null)
 			txt = "";
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.sex") + " : " + txt, 10, hi);
 		hi += VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientAge) : null;
+		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientAge) :  tmpDbFile.getDicomPatientAge();
 		if (txt == null)
 			txt = "";
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.age") + " : " + txt, 10, hi);
@@ -414,23 +416,28 @@ public class DicomViewGui extends JPanel {
 		canvas.setColor(colScr);
 		int hi = 10;
 		int ws = w - 200;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.InstitutionName) : null;
+		txt = tmpDicom != null ? tmpDicom.getString(Tag.InstitutionName) :  tmpDbFile.getDicomInstitutionName();
 		if (txt == null)
 			txt = "";
 		canvas.drawString(txt, ws, hi);
 		hi += VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.StudyID) : null;
+		txt = tmpDicom != null ? tmpDicom.getString(Tag.StudyID) : tmpDbFile.getDicomStudyId();
 		if (txt == null)
 			txt = "";
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.studyid") + " : " + txt, ws, hi);
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.StudyDescription) : null;
+		txt = tmpDicom != null ? tmpDicom.getString(Tag.StudyDescription) : tmpDbFile.getDicomStudyDescription();
 		hi += VGAP;
 		if (txt == null)
 			txt = "";
 		canvas.drawString(txt, ws, hi);
 		hi += VGAP;
 		txt = "";
-		Date d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : null;
+		Date d = null;
+		try {
+			d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : TimeTools.parseDate(tmpDbFile.getDicomStudyDate(), "dd/MM/yy", true).getTime();
+		} catch (ParseException e) {
+			System.out.println("Unparsable JPEG StudyDate");
+		}
 		DateFormat df = DateFormat.getDateInstance();
 		if (d != null)
 			txt = df.format(d);
@@ -446,12 +453,12 @@ public class DicomViewGui extends JPanel {
 		int hi = h - 20;
 		canvas.setColor(colScr);
 		String txt = "";
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.SeriesDescription) : null;
+		txt = tmpDicom != null ? tmpDicom.getString(Tag.SeriesDescription) : tmpDbFile.getDicomSeriesDescription();
 		if (txt == null)
 			txt = "";
 		canvas.drawString(txt, ws, hi);
 		hi -= VGAP;
-		txt = tmpDicom != null ? tmpDicom.getString(Tag.SeriesNumber) : null;
+		txt = tmpDicom != null ? tmpDicom.getString(Tag.SeriesNumber) : tmpDbFile.getDicomSeriesNumber() + "      ";
 		if (txt == null)
 			txt = "";
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.serie.n") + " " + txt, ws, hi);
@@ -508,6 +515,7 @@ public class DicomViewGui extends JPanel {
 			}
 
 			imageInputStream.close();
+			this.tmpDicom = null;
 
 		} catch (Exception ecc) {
 			ecc.printStackTrace();
@@ -641,7 +649,7 @@ public class DicomViewGui extends JPanel {
 			int value = jSliderZoom.getValue();
 			if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
 				int totalScrollAmount = e.getUnitsToScroll();
-				jSliderZoom.setValue(value + totalScrollAmount);
+				jSliderZoom.setValue(value - totalScrollAmount);
 				refreshZoom();
 			}
 		}

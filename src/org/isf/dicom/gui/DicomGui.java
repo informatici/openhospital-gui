@@ -304,7 +304,6 @@ public class DicomGui extends JFrame implements WindowListener {
 					//TODO: to add the new Entity "DICOM Type" for load and visualization
 					//TODO: to replace thumbnails with a list (optional by GeneralData) order by date descending
 					//TODO: to specify in which already existing series to load the file
-					//TODO: show the JPEG information on the overlay panel
 
 					if (selectedFile.isDirectory()) {
 						//folder
