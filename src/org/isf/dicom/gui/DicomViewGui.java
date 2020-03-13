@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.text.DateFormat;
 import java.util.Date;
@@ -99,7 +101,7 @@ public class DicomViewGui extends JPanel {
 
 		addMouseListener(new DicomViewGuiMouseListener());
 		addMouseMotionListener(new DicomViewGuiMouseMotionListener());
-
+		addMouseWheelListener(new DicomViewGuiMouseWheelListener());
 
 		if (patID >= 0){
 			try {
@@ -171,7 +173,7 @@ public class DicomViewGui extends JPanel {
 		jPanelHeader.setBackground(Color.BLACK);
 
 		if (patID <= 0) {
-			// centro = new JScrollPane();
+			// center = new JScrollPane();
 			jPanelCenter = new JPanel();
 			jSliderFrame.setEnabled(false);
 			jSliderZoom.setEnabled(false);
@@ -189,19 +191,19 @@ public class DicomViewGui extends JPanel {
 			} else
 				jSliderFrame.setEnabled(false);
 			
-			// centro = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+			// center = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_NEVER,
 			// JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 			jPanelCenter = new JPanel();
 
 			// System.out.println(this.getWidth()+" "+this.getHeight());
-			// centro.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
+			// center.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
 
 			jPanelCenter.add(composeCenter(jPanelCenter.getWidth(), jPanelCenter.getHeight(), true));
 
 		}
 
-		// centro.getViewport().setBackground(Color.BLACK);
+		// center.getViewport().setBackground(Color.BLACK);
 
 		jPanelCenter.setBackground(Color.BLACK);
 
@@ -231,7 +233,7 @@ public class DicomViewGui extends JPanel {
 
 	private void reInitComponent() {
 		if (patID <= 0) {
-			// centro = new JScrollPane();
+			// center = new JScrollPane();
 			jPanelCenter = new JPanel();
 			jSliderFrame.setEnabled(false);
 			jSliderZoom.setEnabled(false);
@@ -322,9 +324,8 @@ public class DicomViewGui extends JPanel {
 			totY = imageCanvas.getHeight();
 
 		canvas.drawImage(immagineResized, totX, totY, this);
-
+		
 		// draws info
-
 		drawPatientUpRight(canvas, imageCanvas.getWidth(), imageCanvas.getHeight());
 		drawInfoFrameBottomLeft(canvas, imageCanvas.getWidth(), imageCanvas.getHeight());
 		drawStudyUpRight(canvas, imageCanvas.getWidth(), imageCanvas.getHeight());
@@ -570,8 +571,8 @@ public class DicomViewGui extends JPanel {
 		frameIndex = frame;
 		refreshFrame();
 
-		// centro.getViewport().removeAll();
-		// centro.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
+		// center.getViewport().removeAll();
+		// center.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
 
 		resetMouseRelativePosition();
 		jPanelCenter.removeAll();
@@ -626,6 +627,26 @@ public class DicomViewGui extends JPanel {
 	 */
 	int p1y = 0;
 	int p2y = 0;
+	
+	/**
+	 * Mouse whell listener for DicomViewGui
+	 */
+	class DicomViewGuiMouseWheelListener implements MouseWheelListener {
+
+		/**
+		 * mouse wheel rolled
+		 */
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			int value = jSliderZoom.getValue();
+			if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+				int totalScrollAmount = e.getUnitsToScroll();
+				jSliderZoom.setValue(value + totalScrollAmount);
+				refreshZoom();
+			}
+		}
+
+	}
 
 	/**
 	 * Mouse motion listener for DicomViewGui

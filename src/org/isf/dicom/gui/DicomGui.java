@@ -299,11 +299,12 @@ public class DicomGui extends JFrame implements WindowListener {
 					dummyFileDicom.setDicomSeriesDate(DateFormat.getInstance().format(preLoadDialog.getDicomDate()));
 					dummyFileDicom.setDicomStudyDate(DateFormat.getInstance().format(preLoadDialog.getDicomDate()));
 					
-					//TODO: to add the new Entity "DICOM Category" for load and visualization
+					//TODO: Double click on the empty thumbnail frame should not do anything
+					//TODO: when deleting a thumbnail empty the preview panel
+					//TODO: to add the new Entity "DICOM Type" for load and visualization
 					//TODO: to replace thumbnails with a list (optional by GeneralData) order by date descending
 					//TODO: to specify in which already existing series to load the file
-					//TODO: Fix the numbers on thumbnails
-					//TODO: show the DICOM information on the overlay panel
+					//TODO: show the JPEG information on the overlay panel
 
 					if (selectedFile.isDirectory()) {
 						//folder
