@@ -1,6 +1,5 @@
 package org.isf.dicom.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -26,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
+import javax.swing.ScrollPaneConstants;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.isf.admission.gui.PatientFolderBrowser;
@@ -51,8 +51,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * 
  */
 public class DicomGui extends JFrame implements WindowListener {
-
-	
 
 	/**
 	 * 
@@ -176,9 +174,8 @@ public class DicomGui extends JFrame implements WindowListener {
 		jButtonLoadDicom = new JButton();
 		jButtonDeleteDicom = new JButton();
 		jButtonExit = new JButton();
-		jSplitPane1 = new JSplitPane();
-		jSplitPane1.setEnabled(false);
 		jPanelDetail = new DicomViewGui(null, null);
+		jPanelDetail.setName("jPanelDetail");
 		jPanelButton = new JPanel();
 		jPanelButton.add(jButtonLoadDicom);
 		jPanelButton.add(jButtonDeleteDicom);
@@ -209,18 +206,22 @@ public class DicomGui extends JFrame implements WindowListener {
 				.addGroup(GroupLayout.Alignment.TRAILING,
 						jPanel1Layout.createSequentialGroup().addContainerGap().addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(jPanelButton))));
 
-		jSplitPane1.setDividerLocation(position);
-		jSplitPane1.setName("jSplitPane1");
+		//jSplitPane1.setDividerLocation(position);
+		
 		thumbnail = new ThumbnailViewGui(patient, this);
-		jPanelDetail.setName("jPanelDetail");
-		jSplitPane1.setRightComponent(jPanelDetail);
-		jScrollPane2 = new JScrollPane();
-		JPanel tmpPanel = new JPanel(new BorderLayout());
-		tmpPanel.add(thumbnail, BorderLayout.CENTER);
-		jScrollPane2.setViewportView(tmpPanel);
-		jScrollPane2.setName("jScrollPane2");
-		jSplitPane1.setLeftComponent(jScrollPane2);
 		thumbnail.initialize();
+
+		jScrollPane2 = new JScrollPane();
+		jScrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		jScrollPane2.setViewportView(thumbnail);
+		jScrollPane2.setName("jScrollPane2");
+		jScrollPane2.setMinimumSize(new Dimension(150,50));
+
+		jSplitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jScrollPane2, jPanelDetail);
+		jSplitPane1.setName("jSplitPane1");
+		jSplitPane1.setEnabled(false);
+		
 		GroupLayout mainPanelLayout = new GroupLayout(jPanelMain);
 		jPanelMain.setLayout(mainPanelLayout);
 
@@ -237,7 +238,7 @@ public class DicomGui extends JFrame implements WindowListener {
 		addEventListener();
 		this.setContentPane(jPanelMain);
 
-	}// Layered with Netbeans Designer
+	}
 
 	// EVENT LISTENER
 

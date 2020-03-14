@@ -27,6 +27,7 @@ import javax.swing.event.ListSelectionListener;
 import org.isf.dicom.manager.AbstractThumbnailViewGui;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.model.FileDicom;
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
@@ -48,6 +49,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 	private DicomGui dicomViewer = null;
 	private DicomThumbsModel dicomThumbsModel;
 	boolean thumbnailViewEnabled = true;
+	boolean thumbnails = false;
 
 	/**
 	 * Initialize Component
@@ -58,14 +60,20 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		super();
 		this.dicomViewer = owner;
 		this.patID = patID;
+		this.thumbnails = GeneralData.DICOMTHUMBNAILS;
 
 		dicomThumbsModel = new DicomThumbsModel();
 		setModel(dicomThumbsModel);
 
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setBackground(Color.DARK_GRAY);
-		setCellRenderer(new ImageListCellRender());
-		setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		if (thumbnails) {
+			setCellRenderer(new ImageListCellRender());
+			setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		}
+		else {
+			setCellRenderer(new CellListCellRender());
+		}
 
 		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
@@ -192,70 +200,101 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		}
 
 	}
+	
+	private class CellListCellRender implements ListCellRenderer {
+
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+
+			JPanel panel = new JPanel(new BorderLayout(), false);
+			panel.setPreferredSize(new Dimension(list.getWidth(), 50));
+			//panel.setBackground(Color.DARK_GRAY);
+
+			FileDicom instance = (FileDicom) value;
+			panel.setToolTipText(getTooltipText(instance));
+			
+			// Header of thumbnail
+			JLabel top = new JLabel(instance.getDicomStudyDate());
+			top.setForeground(Color.LIGHT_GRAY);
+			panel.add(top, BorderLayout.NORTH);
+			
+			// Center
+			JLabel center = new JLabel(instance.getDicomSeriesDescription());
+			center.setForeground(Color.LIGHT_GRAY);
+			panel.add(center, BorderLayout.CENTER);
+
+			// Footer of thumbnail
+			int frameCount = instance.getFrameCount();
+			if (frameCount > 1) {
+				JLabel frames = new JLabel("[1/" + instance.getFrameCount() + "]");
+				frames.setForeground(Color.YELLOW);
+				panel.add(frames, BorderLayout.SOUTH);
+			}
+
+			// Colors of thumnail
+			if (isSelected) {
+				panel.setBackground(Color.BLUE);
+				panel.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+				panel.setForeground(Color.WHITE);
+			} else {
+				panel.setBackground(Color.DARK_GRAY);
+				panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+				panel.setForeground(Color.LIGHT_GRAY);
+			}
+
+			return panel;
+
+		}
+	}
 
 	private class ImageListCellRender implements ListCellRenderer {
 
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
-			JPanel p = new JPanel(new BorderLayout(), true);
-
-			p.setBounds(0, 0, 120, 130);
-
-			p.setBackground(Color.DARK_GRAY);
-
 			FileDicom instance = (FileDicom) value;
+			Dimension dim = new Dimension(130, 110);
+			
+			// Image Cell Panel
+			JPanel panel = new JPanel(new BorderLayout(), true);
+			//panel.setBounds(0, 0, list.getWidth(), 130);
+			panel.setBackground(Color.DARK_GRAY);
+			panel.setToolTipText(getTooltipText(instance));
 
+			// Header of thumnail
+			JLabel top = new JLabel(instance.getDicomSeriesDescription());
+			top.setForeground(Color.LIGHT_GRAY);
+			panel.add(top, BorderLayout.NORTH);
+
+			// Image
 			BufferedImage immagine = instance.getDicomThumbnailAsImage();
-
 			JLabel jLab = new JLabel(new ImageIcon(immagine));
-
-			// System.out.println("instance.getDicomThumbnailAsImage() "+instance.getDicomThumbnailAsImage());
-
-			Dimension dim = new Dimension(100, 110);
-
 			jLab.setPreferredSize(dim);
-
 			jLab.setMaximumSize(dim);
-
 			jLab.setOpaque(true);
-
 			jLab.setVerticalTextPosition(SwingConstants.BOTTOM);
-
 			jLab.setHorizontalTextPosition(SwingConstants.CENTER);
-
 			jLab.setBackground(Color.DARK_GRAY);
-
-			p.setToolTipText(getTooltipText(instance));
-
-			p.add(jLab, BorderLayout.CENTER);
+			panel.add(jLab, BorderLayout.CENTER);
 
 			// Footer of thumnail
 			int frameCount = instance.getFrameCount();
 			if (frameCount > 1) {
 				JLabel frames = new JLabel("[1/" + instance.getFrameCount() + "]");
 				frames.setForeground(Color.YELLOW);
-				p.add(frames, BorderLayout.SOUTH);
+				panel.add(frames, BorderLayout.SOUTH);
 			}
-
-			// Header of thumnail
-			JLabel top = new JLabel(instance.getDicomSeriesDescription());
-
-			top.setForeground(Color.LIGHT_GRAY);
-
-			p.add(top, BorderLayout.NORTH);
 
 			// Colors of thumnail
 			if (isSelected) {
-				p.setBackground(Color.BLUE);
-				p.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
-				p.setForeground(Color.WHITE);
+				panel.setBackground(Color.BLUE);
+				panel.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+				panel.setForeground(Color.WHITE);
 			} else {
-				p.setBackground(Color.DARK_GRAY);
-				p.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-				p.setForeground(Color.LIGHT_GRAY);
+				panel.setBackground(Color.DARK_GRAY);
+				panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+				panel.setForeground(Color.LIGHT_GRAY);
 			}
 
-			return p;
+			return panel;
 
 		}
 	}
