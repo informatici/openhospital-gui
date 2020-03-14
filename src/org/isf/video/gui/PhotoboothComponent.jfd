@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.2.5.0.333" Java: "1.8.0_232" encoding: "UTF-8"
+JFDML JFormDesigner: "5.2.5.0.333" Java: "1.8.0_242" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -25,8 +25,8 @@ new FormModel {
 					"$rowSpecs": "default:grow"
 				} ) {
 					name: "streamingPanel"
-					"preferredSize": new java.awt.Dimension( 640, 480 )
-					"minimumSize": new java.awt.Dimension( 640, 480 )
+					"preferredSize": new java.awt.Dimension( 300, 200 )
+					"minimumSize": new java.awt.Dimension( 300, 200 )
 					auxiliary() {
 						"JavaCodeGenerator.variableGetter": true
 					}
@@ -36,8 +36,8 @@ new FormModel {
 					"$rowSpecs": "default:grow"
 				} ) {
 					name: "snapshotPanel"
-					"minimumSize": new java.awt.Dimension( 640, 480 )
-					"preferredSize": new java.awt.Dimension( 640, 480 )
+					"minimumSize": new java.awt.Dimension( 300, 200 )
+					"preferredSize": new java.awt.Dimension( 300, 200 )
 					auxiliary() {
 						"JavaCodeGenerator.variableGetter": true
 					}
@@ -52,15 +52,31 @@ new FormModel {
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "default, labelcompgap, default, labelcompgap, button"
+				"$columnSpecs": "default, labelcompgap, labelcompgap, labelcompgap, default, labelcompgap, relgap, labelcompgap, default, labelcompgap, labelcompgap, labelcompgap, default, labelcompgap, button"
 				"$rowSpecs": "default"
 			} ) {
 				name: "resolutionPanel"
 				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "webcamLabel"
+					"text": "Webcam"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "webcamComboBox"
+					auxiliary() {
+						"JavaCodeGenerator.variableModifiers": 4
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "resolutionLabel"
 					"text": "Resolution"
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 1
+					"gridX": 9
 					"gridY": 1
 				} )
 				add( new FormComponent( "javax.swing.JComboBox" ) {
@@ -69,7 +85,7 @@ new FormModel {
 						"JavaCodeGenerator.variableModifiers": 4
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
+					"gridX": 13
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "captureButton"
@@ -78,7 +94,7 @@ new FormModel {
 						"JavaCodeGenerator.variableGetter": true
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 5
+					"gridX": 15
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 3

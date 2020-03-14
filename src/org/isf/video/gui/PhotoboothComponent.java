@@ -56,6 +56,8 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 		streamingPanel = new JPanel();
 		snapshotPanel = new JPanel();
 		resolutionPanel = new JPanel();
+		webcamLabel = new JLabel();
+		webcamComboBox = new JComboBox();
 		resolutionLabel = new JLabel();
 		resolutionComboBox = new JComboBox();
 		captureButton = new JButton();
@@ -78,8 +80,8 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 
 				//======== streamingPanel ========
 				{
-					streamingPanel.setPreferredSize(new Dimension(640, 480));
-					streamingPanel.setMinimumSize(new Dimension(640, 480));
+					streamingPanel.setPreferredSize(new Dimension(300, 200));
+					streamingPanel.setMinimumSize(new Dimension(300, 200));
 					streamingPanel.setLayout(new FormLayout(
 						"default:grow",
 						"default:grow"));
@@ -88,8 +90,8 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 
 				//======== snapshotPanel ========
 				{
-					snapshotPanel.setMinimumSize(new Dimension(640, 480));
-					snapshotPanel.setPreferredSize(new Dimension(640, 480));
+					snapshotPanel.setMinimumSize(new Dimension(300, 200));
+					snapshotPanel.setPreferredSize(new Dimension(300, 200));
 					snapshotPanel.setLayout(new FormLayout(
 						"default:grow",
 						"default:grow"));
@@ -101,17 +103,22 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 			//======== resolutionPanel ========
 			{
 				resolutionPanel.setLayout(new FormLayout(
-					"2*(default, $lcgap), $button",
+					"default, 3*($lcgap), default, $lcgap, $rgap, $lcgap, default, 3*($lcgap), default, $lcgap, $button",
 					"default"));
+
+				//---- webcamLabel ----
+				webcamLabel.setText("Webcam");
+				resolutionPanel.add(webcamLabel, CC.xy(1, 1));
+				resolutionPanel.add(webcamComboBox, CC.xy(5, 1));
 
 				//---- resolutionLabel ----
 				resolutionLabel.setText("Resolution");
-				resolutionPanel.add(resolutionLabel, CC.xy(1, 1));
-				resolutionPanel.add(resolutionComboBox, CC.xy(3, 1));
+				resolutionPanel.add(resolutionLabel, CC.xy(9, 1));
+				resolutionPanel.add(resolutionComboBox, CC.xy(13, 1));
 
 				//---- captureButton ----
 				captureButton.setText("Capture");
-				resolutionPanel.add(captureButton, CC.xy(5, 1));
+				resolutionPanel.add(captureButton, CC.xy(15, 1));
 			}
 			photoBoothPanel.add(resolutionPanel, CC.xy(3, 5, CC.CENTER, CC.DEFAULT));
 
@@ -140,6 +147,8 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 	private JPanel streamingPanel;
 	private JPanel snapshotPanel;
 	private JPanel resolutionPanel;
+	private JLabel webcamLabel;
+	protected JComboBox webcamComboBox;
 	private JLabel resolutionLabel;
 	protected JComboBox resolutionComboBox;
 	private JButton captureButton;
