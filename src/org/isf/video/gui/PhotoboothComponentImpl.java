@@ -44,6 +44,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
     private final JDialog owner;
     private Cropping cropping;
     private Action okAction;
+    private PropertyChangeListener webcamResolutionChangeListener;
 
     public PhotoboothComponentImpl(final PhotoboothPanelPresentationModel model,
                                    final JDialog owner) {
@@ -65,6 +66,10 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         getSnapshotPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
         this.resolutionComboBox.setRenderer(RESOLUTION_DROPDOWN_OPTION_RENDERER);
 
+        if (webcam.isOpen()) {
+            webcam.close();
+        }
+        this.webcam.setViewSize(photoboothPanelPresentationModel.getResolution());
         this.webcamPanel = new WebcamPanel(webcam, false);
         getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
     }
@@ -72,7 +77,6 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
     @Override
     protected void initGUIState() throws Exception {
         super.initGUIState();
-        this.webcam.setViewSize(photoboothPanelPresentationModel.getResolution());
         this.okAction.setEnabled(false);
         this.webcamPanel.start();
     }
@@ -84,7 +88,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                 Arrays.stream(supportedResolutions).collect(toList()),
                 photoboothPanelPresentationModel.getModel(PhotoboothPanelModel.PROPERTY_RESOLUTION)
         ));
-        photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_RESOLUTION, new PropertyChangeListener() {
+        webcamResolutionChangeListener = new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent propertyChangeEvent) {
                 final Object newValue = propertyChangeEvent.getNewValue();
@@ -93,7 +97,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                     webcam.close();
                     getStreamingPanel().remove(webcamPanel);
 
-                    LOGGER.info("Changing webcam dimesion to {}", (Dimension) newValue);
+                    LOGGER.info("Changing webcam dimension to {}", (Dimension) newValue);
                     webcam.setViewSize((Dimension) newValue);
                     getStreamingPanel().setPreferredSize((Dimension) newValue);
                     getStreamingPanel().setMinimumSize((Dimension) newValue);
@@ -107,7 +111,8 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                     owner.revalidate();
                 }
             }
-        });
+        };
+        photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_RESOLUTION, webcamResolutionChangeListener);
     }
 
     @Override
@@ -155,6 +160,10 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
     }
 
     public void cleanup() {
+        LOGGER.info("Cleaning up webcam");
+        webcamPanel.stop();
         webcam.close();
+        // need to remove listener here, to prevent memory leak the next time we open the photo frame again.
+        photoboothPanelPresentationModel.removeBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_RESOLUTION, webcamResolutionChangeListener);
     }
 }
