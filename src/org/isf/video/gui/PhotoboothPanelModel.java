@@ -6,11 +6,10 @@ import java.awt.*;
 
 public final class PhotoboothPanelModel extends Model {
     public static final String PROPERTY_IMAGE = "image";
-    public static final String PROPERTY_WEBCAM_DIMESION = "webcamDimension";
-
+    public static final String PROPERTY_RESOLUTION = "resolution";
     private Image image;
 
-    private Dimension webcamDimension;
+    private Dimension resolution;
 
     public Image getImage() {
         return image;
@@ -22,13 +21,13 @@ public final class PhotoboothPanelModel extends Model {
         this.firePropertyChange(PROPERTY_IMAGE, oldValue, newValue);
     }
 
-    public Dimension getWebcamDimension() {
-        return webcamDimension;
+    public Dimension getResolution() {
+        return resolution;
     }
 
-    public void setWebcamDimension(final Dimension webcamDimension) {
-        Dimension oldValue = this.webcamDimension;
-        this.webcamDimension = webcamDimension;
-        this.firePropertyChange(PROPERTY_WEBCAM_DIMESION, oldValue, webcamDimension);
+    public void setResolution(final Dimension resolution) {
+        Dimension oldValue = this.resolution;
+        this.resolution = resolution;
+        this.firePropertyChange(PROPERTY_RESOLUTION, oldValue, resolution);
     }
 }

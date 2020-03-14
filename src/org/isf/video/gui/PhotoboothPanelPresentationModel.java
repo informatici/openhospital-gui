@@ -13,4 +13,12 @@ public final class PhotoboothPanelPresentationModel extends PresentationModel<Ph
     public void setImage(final Image image) {
         getBean().setImage(image);
     }
+
+    public Dimension getResolution() {
+        return getBean().getResolution();
+    }
+
+    public void setResolution(final Dimension resolution) {
+        getBean().setResolution(resolution);
+    }
 }

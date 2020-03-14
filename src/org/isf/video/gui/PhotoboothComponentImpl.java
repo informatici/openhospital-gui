@@ -4,17 +4,20 @@ import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.forms.factories.CC;
+import org.isf.utils.image.ImageUtil;
+import org.isf.utils.jobjects.Cropping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public final class PhotoboothComponentImpl extends PhotoboothComponent {
     private static final Logger LOGGER = LoggerFactory.getLogger(PhotoboothComponentImpl.class);
@@ -34,37 +37,57 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         }
     };
 
-    private Webcam webcam;
+    private final Webcam webcam;
+    private final Dimension[] supportedResolutions;
     private WebcamPanel webcamPanel;
     private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
     private final JDialog owner;
+    private Cropping cropping;
+    private Action okAction;
 
     public PhotoboothComponentImpl(final PhotoboothPanelPresentationModel model,
                                    final JDialog owner) {
         this.photoboothPanelPresentationModel = model;
         this.owner = owner;
+
+        this.webcam = Webcam.getDefault();
+        this.supportedResolutions = webcam.getDevice().getResolutions();
     }
 
     @Override
     public void initComponents() {
         super.initComponents();
-        this.webcam = Webcam.getDefault();
-        final List<Dimension> allSupportedDimesions = Arrays.stream(this.webcam.getDevice().getResolutions()).collect(Collectors.toList());
-        final ComboBoxAdapter<Dimension> comboBoxAdapter = new ComboBoxAdapter<>(allSupportedDimesions, photoboothPanelPresentationModel.getModel(PhotoboothPanelModel.PROPERTY_WEBCAM_DIMESION));
-        this.resolutionComboBox.setModel(comboBoxAdapter);
+
+        // set initial size of all photo panels to use the resolution defined on the model
+        getStreamingPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
+        getStreamingPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
+        getSnapshotPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
+        getSnapshotPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
         this.resolutionComboBox.setRenderer(RESOLUTION_DROPDOWN_OPTION_RENDERER);
-        this.webcam.setViewSize(allSupportedDimesions.get(allSupportedDimesions.size()-1));
-        this.webcamPanel = new WebcamPanel(webcam);
+
+        this.webcamPanel = new WebcamPanel(webcam, false);
         getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
+    }
+
+    @Override
+    protected void initGUIState() throws Exception {
+        super.initGUIState();
+        this.webcam.setViewSize(photoboothPanelPresentationModel.getResolution());
+        this.okAction.setEnabled(false);
+        this.webcamPanel.start();
     }
 
     @Override
     protected void bind() throws Exception {
         super.bind();
-        photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_WEBCAM_DIMESION, new PropertyChangeListener() {
+        this.resolutionComboBox.setModel(new ComboBoxAdapter<>(
+                Arrays.stream(supportedResolutions).collect(toList()),
+                photoboothPanelPresentationModel.getModel(PhotoboothPanelModel.PROPERTY_RESOLUTION)
+        ));
+        photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_RESOLUTION, new PropertyChangeListener() {
             @Override
             public void propertyChange(final PropertyChangeEvent propertyChangeEvent) {
-                Object newValue = propertyChangeEvent.getNewValue();
+                final Object newValue = propertyChangeEvent.getNewValue();
                 if (newValue != null && newValue instanceof Dimension) {
                     webcamPanel.stop();
                     webcam.close();
@@ -72,10 +95,16 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
 
                     LOGGER.info("Changing webcam dimesion to {}", (Dimension) newValue);
                     webcam.setViewSize((Dimension) newValue);
+                    getStreamingPanel().setPreferredSize((Dimension) newValue);
+                    getStreamingPanel().setMinimumSize((Dimension) newValue);
+                    getSnapshotPanel().setPreferredSize((Dimension) newValue);
+                    getSnapshotPanel().setMinimumSize((Dimension) newValue);
+
                     webcamPanel = new WebcamPanel(webcam);
                     getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
-                    getPhotoBoothPanel().repaint();
-                    getPhotoBoothPanel().revalidate();
+                    owner.pack();
+                    owner.repaint();
+                    owner.revalidate();
                 }
             }
         });
@@ -90,26 +119,35 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
     protected void initEventHandling() throws Exception {
         super.initEventHandling();
 
-        getOkButton().addActionListener(actionEvent -> {
-            getPM().triggerCommit();
-            cleanup();
-            owner.dispose();
-        });
+        this.okAction = new AbstractAction("OK") {
+            @Override
+            public void actionPerformed(final ActionEvent actionEvent) {
+                // change image on the model, based on the cropped image
+                presentationModel().setImage(cropping.clipImage());
+                cleanup();
+                owner.dispose();
+            }
+        };
+        getOkButton().setAction(okAction);
 
         getCancelButton().addActionListener(actionEvent -> {
-            getPM().triggerFlush();
+            presentationModel().triggerFlush();
             cleanup();
             owner.dispose();
         });
 
         getCaptureButton().addActionListener(actionEvent -> {
-            final BufferedImage newImage = webcam.getImage();
-            getPM().getBufferedModel(PhotoboothPanelModel.PROPERTY_IMAGE).setValue(newImage);
+            final Dimension currentResolution = photoboothPanelPresentationModel.getResolution();
+            // resize the image to match the current selected resolution. This is because under some circumstances, the
+            // webcam's viewSize seems to be different from the currently selected resolution. Weird. i know..
+            final BufferedImage resizedImage = ImageUtil.scaleImage(webcam.getImage(), (int) currentResolution.getWidth(), (int) currentResolution.getHeight());
 
-            final JLabel photoFrame = new JLabel(new ImageIcon(newImage));
+            // set image on the cropping panel.
+            cropping = new Cropping(resizedImage);
+            okAction.setEnabled(true);
             SwingUtilities.invokeLater(() -> {
                 getSnapshotPanel().removeAll();
-                getSnapshotPanel().add(photoFrame, CC.xy(1, 1));
+                getSnapshotPanel().add(cropping, CC.xy(1, 1));
                 getPhotoBoothPanel().repaint();
                 getPhotoBoothPanel().revalidate();
             });
@@ -121,7 +159,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                 getPhotoBoothPanel().repaint();
                 getPhotoBoothPanel().revalidate();
             });
-            getPM().getBufferedModel(PhotoboothPanelModel.PROPERTY_IMAGE).setValue(null);
+            presentationModel().getBufferedModel(PhotoboothPanelModel.PROPERTY_IMAGE).setValue(null);
         });
     }
 

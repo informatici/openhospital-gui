@@ -35,7 +35,7 @@ public abstract class BaseComponent<PM extends PresentationModel> {
         return null;
     }
 
-    public PM getPM() {
+    public PM presentationModel() {
         return model;
     }
 

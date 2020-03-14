@@ -1,5 +1,6 @@
 package org.isf.video.gui;
 
+import com.github.sarxos.webcam.Webcam;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.patient.gui.PatientInsertExtended;
@@ -46,7 +47,6 @@ public class PatientPhotoPanel extends JPanel {
 			jPhotoPanel = setMyBorder(jPhotoPanel, MessageBundle.getMessage("angal.patient.patientphoto")); //$NON-NLS-1$
 			jPhotoPanel.setLayout(new BorderLayout());
 			jPhotoPanel.setBackground(null);
-			// jPhotoPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 
 			final Image nophoto = ImageIO.read(new File("rsc/images/nophoto.png")); //$NON-NLS-1$
 
@@ -134,12 +134,18 @@ public class PatientPhotoPanel extends JPanel {
 				}
 			});
 
-			if (GeneralData.VIDEOMODULEENABLED) {
+			final Webcam webcam = Webcam.getDefault();
+
+			if (GeneralData.VIDEOMODULEENABLED && webcam != null) {
 				jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patient.newphoto")); //$NON-NLS-1$
 				jGetPhotoButton.setMinimumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 				jGetPhotoButton.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 
+				final Dimension[] resolutions = webcam.getDevice().getResolutions();
 				jGetPhotoButton.addActionListener(event -> {
+					// start with the highest resolution.
+					photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
+
 					final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel, owner);
 					photoBoothDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					photoBoothDialog.setVisible(true);
