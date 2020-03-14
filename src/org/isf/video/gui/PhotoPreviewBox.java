@@ -1,16 +1,10 @@
 package org.isf.video.gui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Image;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 public class PhotoPreviewBox extends Box {
 
@@ -26,14 +20,12 @@ public class PhotoPreviewBox extends Box {
 	
 	public String path;
 	public String resolution;
-	public String device;
-	
-	public PhotoPreviewBox(String path, String device, String resolution)	{
+
+	public PhotoPreviewBox(String path, String resolution)	{
 		//lstPhotoPaths.add(path);
 		super(BoxLayout.Y_AXIS) ;
 		
 		this.path = path;
-		this.device = device;
 		this.resolution = resolution;
 		
 		Box.createVerticalBox();

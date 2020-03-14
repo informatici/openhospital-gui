@@ -2,13 +2,38 @@ package org.isf.video.gui;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
-import com.github.sarxos.webcam.WebcamResolution;
+import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.forms.factories.CC;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class PhotoboothComponentImpl extends PhotoboothComponent {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PhotoboothComponentImpl.class);
+    private static final DefaultListCellRenderer RESOLUTION_DROPDOWN_OPTION_RENDERER = new DefaultListCellRenderer() {
+        @Override
+        public Component getListCellRendererComponent(final JList list,
+                                                      final Object value,
+                                                      final int index,
+                                                      final boolean isSelected,
+                                                      final boolean cellHasFocus) {
+            final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value != null && value instanceof Dimension) {
+                final Dimension valueAsDimension = (Dimension) value;
+                setText(String.format("%d x %d", (int) valueAsDimension.getWidth(), (int) valueAsDimension.getHeight()));
+            }
+            return component;
+        }
+    };
+
     private Webcam webcam;
     private WebcamPanel webcamPanel;
     private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
@@ -24,10 +49,36 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
     public void initComponents() {
         super.initComponents();
         this.webcam = Webcam.getDefault();
-        this.webcam.setViewSize(WebcamResolution.VGA.getSize());
+        final List<Dimension> allSupportedDimesions = Arrays.stream(this.webcam.getDevice().getResolutions()).collect(Collectors.toList());
+        final ComboBoxAdapter<Dimension> comboBoxAdapter = new ComboBoxAdapter<>(allSupportedDimesions, photoboothPanelPresentationModel.getModel(PhotoboothPanelModel.PROPERTY_WEBCAM_DIMESION));
+        this.resolutionComboBox.setModel(comboBoxAdapter);
+        this.resolutionComboBox.setRenderer(RESOLUTION_DROPDOWN_OPTION_RENDERER);
+        this.webcam.setViewSize(allSupportedDimesions.get(allSupportedDimesions.size()-1));
         this.webcamPanel = new WebcamPanel(webcam);
-        this.webcamPanel.setMirrored(true);
         getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
+    }
+
+    @Override
+    protected void bind() throws Exception {
+        super.bind();
+        photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_WEBCAM_DIMESION, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(final PropertyChangeEvent propertyChangeEvent) {
+                Object newValue = propertyChangeEvent.getNewValue();
+                if (newValue != null && newValue instanceof Dimension) {
+                    webcamPanel.stop();
+                    webcam.close();
+                    getStreamingPanel().remove(webcamPanel);
+
+                    LOGGER.info("Changing webcam dimesion to {}", (Dimension) newValue);
+                    webcam.setViewSize((Dimension) newValue);
+                    webcamPanel = new WebcamPanel(webcam);
+                    getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
+                    getPhotoBoothPanel().repaint();
+                    getPhotoBoothPanel().revalidate();
+                }
+            }
+        });
     }
 
     @Override
@@ -59,14 +110,15 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
             SwingUtilities.invokeLater(() -> {
                 getSnapshotPanel().removeAll();
                 getSnapshotPanel().add(photoFrame, CC.xy(1, 1));
+                getPhotoBoothPanel().repaint();
                 getPhotoBoothPanel().revalidate();
             });
         });
 
         getDiscardButton().addActionListener(actionEvent -> {
-            // TODO: not 100% sure why this doesnt clear the panel
             SwingUtilities.invokeLater(() -> {
                 getSnapshotPanel().removeAll();
+                getPhotoBoothPanel().repaint();
                 getPhotoBoothPanel().revalidate();
             });
             getPM().getBufferedModel(PhotoboothPanelModel.PROPERTY_IMAGE).setValue(null);

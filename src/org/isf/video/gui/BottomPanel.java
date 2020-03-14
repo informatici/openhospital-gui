@@ -1,27 +1,16 @@
 package org.isf.video.gui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import org.isf.video.manager.VideoDeviceStreamAppletManager;
+import org.isf.video.manager.VideoManager;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-
-import org.isf.video.manager.VideoDeviceStreamAppletManager;
-import org.isf.video.manager.VideoDevicesManager;
-import org.isf.video.manager.VideoManager;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class BottomPanel extends JPanel {
 
@@ -78,15 +67,10 @@ public class BottomPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				
 				String path = selectedPreview.path;
-				String device = selectedPreview.device;
-				
-				if (device.length() > 31)	{
-					device = device.substring(0, 30) + "...";
-				}
-				
+
 				String resolution = selectedPreview.resolution;
 				
-				PhotoFrame photoFrame = new PhotoFrame(path, device, resolution);
+				PhotoFrame photoFrame = new PhotoFrame(path, resolution);
 				photoFrame.setResizable(false);
 				photoFrame.setMaximumSize(photoFrame.getPreferredSize());
 				
@@ -137,7 +121,7 @@ public class BottomPanel extends JPanel {
 		buttonsPanel.add(importPhotoButton);
 	}
 	
-	
+
 	public void setSize (int width)	{
 		//this.setPreferredSize(new Dimension(width, 195));
 		//System.out.println(width);
@@ -152,9 +136,7 @@ public class BottomPanel extends JPanel {
 		String currentResolution = VideoDeviceStreamAppletManager.currentStreamApplet.resolutionWidth
 						+	"x"	+ VideoDeviceStreamAppletManager.currentStreamApplet.resolutionHeight;
 		
-		final PhotoPreviewBox box = new PhotoPreviewBox(path, 
-												VideoDevicesManager.currentVideoDevice.productName,
-												currentResolution);
+		final PhotoPreviewBox box = new PhotoPreviewBox(path, currentResolution);
 		
 		box.photoButton.addActionListener(new ActionListener () {
 			public void actionPerformed(ActionEvent e) {

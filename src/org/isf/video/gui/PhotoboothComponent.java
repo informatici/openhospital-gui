@@ -59,6 +59,9 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 		photoContainer = new JPanel();
 		streamingPanel = new JPanel();
 		snapshotPanel = new JPanel();
+		resolutionPanel = new JPanel();
+		resolutionLabel = new JLabel();
+		resolutionComboBox = new JComboBox();
 		buttonContainer = new JPanel();
 		captureButton = new JButton();
 		discardButton = new JButton();
@@ -69,7 +72,7 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 		{
 			photoBoothPanel.setLayout(new FormLayout(
 				"$ugap, $lcgap, default:grow, $lcgap, $ugap",
-				"default, $lgap, fill:default:grow, $lgap, default"));
+				"default, $lgap, fill:default:grow, 2*($lgap, default)"));
 
 			//======== photoContainer ========
 			{
@@ -100,6 +103,19 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 			}
 			photoBoothPanel.add(photoContainer, CC.xy(3, 3, CC.FILL, CC.FILL));
 
+			//======== resolutionPanel ========
+			{
+				resolutionPanel.setLayout(new FormLayout(
+					"default, $lcgap, default",
+					"default"));
+
+				//---- resolutionLabel ----
+				resolutionLabel.setText("Resolution");
+				resolutionPanel.add(resolutionLabel, CC.xy(1, 1));
+				resolutionPanel.add(resolutionComboBox, CC.xy(3, 1));
+			}
+			photoBoothPanel.add(resolutionPanel, CC.xy(3, 5, CC.CENTER, CC.DEFAULT));
+
 			//======== buttonContainer ========
 			{
 				buttonContainer.setLayout(new FormLayout(
@@ -122,7 +138,7 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 				cancelButton.setText("Cancel");
 				buttonContainer.add(cancelButton, CC.xy(3, 3));
 			}
-			photoBoothPanel.add(buttonContainer, CC.xy(3, 5, CC.CENTER, CC.DEFAULT));
+			photoBoothPanel.add(buttonContainer, CC.xy(3, 7, CC.CENTER, CC.DEFAULT));
 		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -132,6 +148,9 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 	private JPanel photoContainer;
 	private JPanel streamingPanel;
 	private JPanel snapshotPanel;
+	private JPanel resolutionPanel;
+	private JLabel resolutionLabel;
+	protected JComboBox resolutionComboBox;
 	private JPanel buttonContainer;
 	private JButton captureButton;
 	private JButton discardButton;

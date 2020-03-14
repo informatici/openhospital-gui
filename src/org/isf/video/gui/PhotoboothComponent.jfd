@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, labelcompgap, default:grow, labelcompgap, unrelgap"
-			"$rowSpecs": "default, linegap, fill:default:grow, linegap, default"
+			"$rowSpecs": "default, linegap, fill:default:grow, linegap, default, linegap, default"
 		} ) {
 			name: "photoBoothPanel"
 			auxiliary() {
@@ -50,6 +50,32 @@ new FormModel {
 				"gridY": 3
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "default, labelcompgap, default"
+				"$rowSpecs": "default"
+			} ) {
+				name: "resolutionPanel"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "resolutionLabel"
+					"text": "Resolution"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "resolutionComboBox"
+					auxiliary() {
+						"JavaCodeGenerator.variableModifiers": 4
+					}
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 3
+				"gridY": 5
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 				"$columnSpecs": "default, labelcompgap, default"
@@ -101,12 +127,12 @@ new FormModel {
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 3
-				"gridY": 5
+				"gridY": 7
 				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 500, 380 )
+			"size": new java.awt.Dimension( 1345, 610 )
 		} )
 	}
 }
