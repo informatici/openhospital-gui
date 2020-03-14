@@ -340,7 +340,9 @@ public class DicomGui extends JFrame implements WindowListener {
 					}
 				}
 				thumbnail.initialize();
-
+				//selectedElement = null;
+				//detail();
+				((DicomViewGui) jPanelDetail).clear();
 			}
 		});
 	}

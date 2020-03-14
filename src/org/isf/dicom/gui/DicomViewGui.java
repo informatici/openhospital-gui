@@ -163,7 +163,7 @@ public class DicomViewGui extends JPanel {
 	/**
 	 * initialize GUI
 	 */
-	private void initComponent() {
+	void initComponent() {
 
 		jPanelHeader = new JPanel();
 		jPanelFooter = new JPanel();
@@ -180,7 +180,7 @@ public class DicomViewGui extends JPanel {
 			jSliderFrame.setEnabled(false);
 			jSliderZoom.setEnabled(false);
 		} else {
-			// System.out.println("init per "+idPaziente+" immagini "+immagini.length);
+			// System.out.println("init per "+patID+" frames "+frames.length);
 			jSliderZoom.setEnabled(true);
 			jSliderZoom.setPaintTicks(true);
 			jSliderZoom.setMajorTickSpacing(10);
@@ -233,7 +233,7 @@ public class DicomViewGui extends JPanel {
 
 	}
 
-	private void reInitComponent() {
+	void reInitComponent() {
 		if (patID <= 0) {
 			// center = new JScrollPane();
 			jPanelCenter = new JPanel();
@@ -307,7 +307,6 @@ public class DicomViewGui extends JPanel {
 
 		if (calculate) {
 			x = (w - width) / 2;
-
 			y = (h - height) / 2;
 		}
 
@@ -722,6 +721,12 @@ public class DicomViewGui extends JPanel {
 		 */
 		public void mouseExited(MouseEvent e) {
 		}
+	}
+
+	public void clear() {
+		jPanelCenter.removeAll();
+		jPanelCenter.repaint();
+		
 	}
 
 }
