@@ -19,7 +19,8 @@ public class FileJPEGFilter
     {
 
         return  (f.getName().toLowerCase().endsWith(".jpg") ||
-        		f.getName().toLowerCase().endsWith(".jpeg"));
+        		f.getName().toLowerCase().endsWith(".jpeg") ||
+        		f.isDirectory());
     }
 
     /**
