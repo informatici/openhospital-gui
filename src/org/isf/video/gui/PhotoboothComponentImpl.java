@@ -152,15 +152,6 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                 getPhotoBoothPanel().revalidate();
             });
         });
-
-        getDiscardButton().addActionListener(actionEvent -> {
-            SwingUtilities.invokeLater(() -> {
-                getSnapshotPanel().removeAll();
-                getPhotoBoothPanel().repaint();
-                getPhotoBoothPanel().revalidate();
-            });
-            presentationModel().getBufferedModel(PhotoboothPanelModel.PROPERTY_IMAGE).setValue(null);
-        });
     }
 
     public void cleanup() {

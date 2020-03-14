@@ -37,10 +37,6 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 		return captureButton;
 	}
 
-	public JButton getDiscardButton() {
-		return discardButton;
-	}
-
 	public JButton getOkButton() {
 		return okButton;
 	}
@@ -62,9 +58,8 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 		resolutionPanel = new JPanel();
 		resolutionLabel = new JLabel();
 		resolutionComboBox = new JComboBox();
-		buttonContainer = new JPanel();
 		captureButton = new JButton();
-		discardButton = new JButton();
+		buttonContainer = new JPanel();
 		okButton = new JButton();
 		cancelButton = new JButton();
 
@@ -72,7 +67,7 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 		{
 			photoBoothPanel.setLayout(new FormLayout(
 				"$ugap, $lcgap, default:grow, $lcgap, $ugap",
-				"default, $lgap, fill:default:grow, 2*($lgap, default)"));
+				"$ugap, $lgap, fill:default:grow, 2*($lgap, default), $lgap, $ugap"));
 
 			//======== photoContainer ========
 			{
@@ -106,39 +101,35 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 			//======== resolutionPanel ========
 			{
 				resolutionPanel.setLayout(new FormLayout(
-					"default, $lcgap, default",
+					"2*(default, $lcgap), $button",
 					"default"));
 
 				//---- resolutionLabel ----
 				resolutionLabel.setText("Resolution");
 				resolutionPanel.add(resolutionLabel, CC.xy(1, 1));
 				resolutionPanel.add(resolutionComboBox, CC.xy(3, 1));
+
+				//---- captureButton ----
+				captureButton.setText("Capture");
+				resolutionPanel.add(captureButton, CC.xy(5, 1));
 			}
 			photoBoothPanel.add(resolutionPanel, CC.xy(3, 5, CC.CENTER, CC.DEFAULT));
 
 			//======== buttonContainer ========
 			{
 				buttonContainer.setLayout(new FormLayout(
-					"default, $lcgap, default",
-					"default, $lgap, default"));
-
-				//---- captureButton ----
-				captureButton.setText("Capture");
-				buttonContainer.add(captureButton, CC.xy(1, 1));
-
-				//---- discardButton ----
-				discardButton.setText("Discard");
-				buttonContainer.add(discardButton, CC.xy(3, 1));
+					"$button, $lcgap, $button",
+					"default"));
 
 				//---- okButton ----
 				okButton.setText("OK");
-				buttonContainer.add(okButton, CC.xy(1, 3));
+				buttonContainer.add(okButton, CC.xy(1, 1));
 
 				//---- cancelButton ----
 				cancelButton.setText("Cancel");
-				buttonContainer.add(cancelButton, CC.xy(3, 3));
+				buttonContainer.add(cancelButton, CC.xy(3, 1));
 			}
-			photoBoothPanel.add(buttonContainer, CC.xy(3, 7, CC.CENTER, CC.DEFAULT));
+			photoBoothPanel.add(buttonContainer, CC.xy(3, 7, CC.RIGHT, CC.DEFAULT));
 		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
@@ -151,9 +142,8 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 	private JPanel resolutionPanel;
 	private JLabel resolutionLabel;
 	protected JComboBox resolutionComboBox;
-	private JPanel buttonContainer;
 	private JButton captureButton;
-	private JButton discardButton;
+	private JPanel buttonContainer;
 	private JButton okButton;
 	private JButton cancelButton;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables

@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "unrelgap, labelcompgap, default:grow, labelcompgap, unrelgap"
-			"$rowSpecs": "default, linegap, fill:default:grow, linegap, default, linegap, default"
+			"$rowSpecs": "unrelgap, linegap, fill:default:grow, linegap, default, linegap, default, linegap, unrelgap"
 		} ) {
 			name: "photoBoothPanel"
 			auxiliary() {
@@ -52,7 +52,7 @@ new FormModel {
 				"vAlign": sfield com.jgoodies.forms.layout.CellConstraints FILL
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "default, labelcompgap, default"
+				"$columnSpecs": "default, labelcompgap, default, labelcompgap, button"
 				"$rowSpecs": "default"
 			} ) {
 				name: "resolutionPanel"
@@ -70,21 +70,7 @@ new FormModel {
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
-					"gridY": 1
 				} )
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 3
-				"gridY": 5
-				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
-			} )
-			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "default, labelcompgap, default"
-				"$rowSpecs": "default, linegap, default"
-			} ) {
-				name: "buttonContainer"
-				auxiliary() {
-					"JavaCodeGenerator.variableGetter": true
-				}
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "captureButton"
 					"text": "Capture"
@@ -92,19 +78,21 @@ new FormModel {
 						"JavaCodeGenerator.variableGetter": true
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 1
-					"gridY": 1
+					"gridX": 5
 				} )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "discardButton"
-					"text": "Discard"
-					auxiliary() {
-						"JavaCodeGenerator.variableGetter": true
-					}
-				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-					"gridX": 3
-					"gridY": 1
-				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 3
+				"gridY": 5
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "button, labelcompgap, button"
+				"$rowSpecs": "default"
+			} ) {
+				name: "buttonContainer"
+				auxiliary() {
+					"JavaCodeGenerator.variableGetter": true
+				}
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "okButton"
 					"text": "OK"
@@ -113,7 +101,6 @@ new FormModel {
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 1
-					"gridY": 3
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "cancelButton"
@@ -123,12 +110,11 @@ new FormModel {
 					}
 				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 					"gridX": 3
-					"gridY": 3
 				} )
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 3
 				"gridY": 7
-				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints CENTER
+				"hAlign": sfield com.jgoodies.forms.layout.CellConstraints RIGHT
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
