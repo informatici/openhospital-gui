@@ -19,6 +19,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
+import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.time.TimeTools;
 
@@ -35,6 +37,8 @@ public class PatientSummary {
 	private int maximumWidth = 350;
 	private int borderTickness = 10;
 	private int imageMaxWidth = 140;
+
+	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	public PatientSummary(Patient patient) {
 		super();
@@ -320,7 +324,7 @@ public class PatientSummary {
 			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel("" + patient.getMaritalStatus());
+			l = new JLabel("" + patientManager.getMaritalTranslated(patient.getMaritalStatus()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
@@ -333,7 +337,7 @@ public class PatientSummary {
 			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel("" + patient.getProfession());
+			l = new JLabel("" +  patientManager.getProfessionTranslated(patient.getProfession()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);

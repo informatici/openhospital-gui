@@ -282,7 +282,6 @@ public class PatientInsertExtended extends JDialog {
 	// MaritalStatus Components:
 	private JPanel jMaritalPanel = null;
 	private JComboBox jMaritalStatusComboBox = null;
-	protected HashMap<String, String> maritalHashMap;
 
 	// COMPONENTS: Note
 	private JPanel jRightPanel = null;
@@ -473,8 +472,8 @@ public class PatientInsertExtended extends JDialog {
 									patient.setFather('U');
 							}
 							patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
-							patient.setMaritalStatus(getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
-							patient.setProfession(jProfessionComboBox.getSelectedItem().toString());
+							patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
+							patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
 							if (jInsurance_Yes.isSelected()) {
 								patient.setHasInsurance('Y');
 							} else {
@@ -1100,54 +1099,17 @@ public class PatientInsertExtended extends JDialog {
 		if (jMaritalPanel == null) {
 			jMaritalPanel = new JPanel();
 			jMaritalPanel = setMyBorder(jMaritalPanel,  MessageBundle.getMessage("angal.patient.maritalstatus"));
-			String[] maritalStatusTypes = { MessageBundle.getMessage("angal.patient.maritalstatusunknown"), MessageBundle.getMessage("angal.patient.maritalstatussingle"), 
-											MessageBundle.getMessage("angal.patient.maritalstatusmarried"), MessageBundle.getMessage("angal.patient.maritalstatusdivorced"),
-											MessageBundle.getMessage("angal.patient.maritalstatuswidowed")};
-			jMaritalStatusComboBox = new JComboBox(getMaritalList());
+			jMaritalStatusComboBox = new JComboBox(patientManager.getMaritalList());
 			jMaritalPanel.add(jMaritalStatusComboBox);
 
 			if (!insert) {
-				jMaritalStatusComboBox.setSelectedItem(maritalHashMap.get(patient.getMaritalStatus()));
+				jMaritalStatusComboBox.setSelectedItem(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
 			} 
 		}
 		return jMaritalPanel;
 	}
 
-	private void buildMaritalHashMap() {
-		maritalHashMap = new HashMap<String, String>();
-		maritalHashMap.put("unknown", MessageBundle.getMessage("angal.patient.maritalstatusunknown"));
-		maritalHashMap.put("single", MessageBundle.getMessage("angal.patient.maritalstatussingle"));
-		maritalHashMap.put("married", MessageBundle.getMessage("angal.patient.maritalstatusmarried"));
-		maritalHashMap.put("divorced", MessageBundle.getMessage("angal.patient.maritalstatusdivorced"));
-		maritalHashMap.put("widowed", MessageBundle.getMessage("angal.patient.maritalstatuswidowed"));
-	}
 
-	public String[] getMaritalList() {
-		
-		if (maritalHashMap == null) buildMaritalHashMap();
-		String[] maritalDescriptionList = maritalHashMap.values().toArray(new String[0]);
-		//Collections.sort(maritalDescriptionList,  new DefaultSorter(MessageBundle.getMessage("angal.lab.undefined")));
-		return maritalDescriptionList;
-	}
-
-	public String getMaritalTranslated(String maritalKey) {
-		if (maritalHashMap == null) buildMaritalHashMap();
-		if (maritalKey == null || !maritalHashMap.containsKey(maritalKey)) 
-			return MessageBundle.getMessage("angal.patient.maritalstatusunknown"); 
-		else return maritalHashMap.get(maritalKey);
-	}
-
-	public String getMaritalKey(String description) {
-		if (maritalHashMap == null) buildMaritalHashMap();
-		String key = "undefined";
-		for (String value : maritalHashMap.keySet()) {
-			if (maritalHashMap.get(value).equals(description)) {
-				key = value;
-				break;
-			}
-		}
-		return key;
-	}
 	
 	/**
 	 * This method initializes jFirstNameLabel
@@ -1812,18 +1774,11 @@ public class PatientInsertExtended extends JDialog {
 		if (jProfessionPanel == null) {
 			jProfessionPanel = new JPanel();
 			jProfessionPanel = setMyBorder(jProfessionPanel,  MessageBundle.getMessage("angal.patient.profession"));
-			String[] professionTypes = { MessageBundle.getMessage("angal.patient.profession.unknown"), MessageBundle.getMessage("angal.patient.profession.other"), 
-											MessageBundle.getMessage("angal.patient.profession.farming"), MessageBundle.getMessage("angal.patient.profession.construction"),
-											MessageBundle.getMessage("angal.patient.profession.medicine"), MessageBundle.getMessage("angal.patient.profession.foodhospitality"),
-											MessageBundle.getMessage("angal.patient.profession.homemaker"), MessageBundle.getMessage("angal.patient.profession.mechanic"),
-											MessageBundle.getMessage("angal.patient.profession.business"), MessageBundle.getMessage("angal.patient.profession.janitorial"),
-											MessageBundle.getMessage("angal.patient.profession.mining"),MessageBundle.getMessage("angal.patient.profession.engineering")
-										};
-			jProfessionComboBox= new JComboBox(professionTypes);
+			jProfessionComboBox= new JComboBox(patientManager.getProfessionList());
 			jProfessionPanel.add(jProfessionComboBox);
 
 			if (!insert) {
-				jProfessionComboBox.setSelectedItem(patient.getProfession());
+				jProfessionComboBox.setSelectedItem(patientManager.getProfessionTranslated(patient.getProfession()));
 			} 
 		}
 		return jProfessionPanel;
