@@ -1,18 +1,15 @@
 package org.isf.dicom.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.criteria.Selection;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -27,7 +24,6 @@ import javax.swing.event.ListSelectionListener;
 import org.isf.dicom.model.FileDicom;
 import org.isf.generaldata.MessageBundle;
 import org.isf.utils.jobjects.VoLimitedTextField;
-import org.isf.utils.time.TimeTools;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -67,12 +63,7 @@ class ShowPreLoadDialog extends JDialog {
 				setTitle("Loading multiple images: " + numfiles);
 			else
 				setTitle("Load image");
-			try {
-				this.dicomDate = TimeTools.parseDate(fileDicom.getDicomSeriesDate(), "dd MMM yyyy", false).getTime();
-			} catch (ParseException e) {
-				System.out.println("Error parsing dicom date");
-				this.dicomDate = new Date();
-			}
+			this.dicomDate = fileDicom.getDicomSeriesDate();
 			this.dicomDescription = fileDicom.getDicomSeriesDescription();
 			this.dates = dates;
 			initComponents();

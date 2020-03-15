@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -297,11 +296,10 @@ public class DicomGui extends JFrame implements WindowListener {
 						return; //user pressed CANCEL
 					
 					dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
-					dummyFileDicom.setDicomSeriesDate(DateFormat.getInstance().format(preLoadDialog.getDicomDate()));
-					dummyFileDicom.setDicomStudyDate(DateFormat.getInstance().format(preLoadDialog.getDicomDate()));
+					dummyFileDicom.setDicomSeriesDate(preLoadDialog.getDicomDate());
+					dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
 					
 					//TODO: to add the new Entity "DICOM Type" for load and visualization
-					//TODO: to replace thumbnails with a list (optional by GeneralData) order by date descending
 					//TODO: to specify in which already existing series to load the file
 
 					if (selectedFile.isDirectory()) {

@@ -31,6 +31,7 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.time.TimeTools;
 
 /**
  * Component for DICOM Thumnails composizion and visualizzation
@@ -213,7 +214,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			panel.setToolTipText(getTooltipText(instance));
 			
 			// Header of thumbnail
-			JLabel top = new JLabel(instance.getDicomStudyDate());
+			JLabel top = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
 			top.setForeground(Color.LIGHT_GRAY);
 			panel.add(top, BorderLayout.NORTH);
 			
@@ -325,7 +326,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		rv.append(" <br>");
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.series")).append(separator).append(sanitize(dicomFile.getDicomSeriesDescription()));
 		rv.append(" <br>");
-		rv.append(MessageBundle.getMessage("angal.common.date")).append(separator).append(sanitize(dicomFile.getDicomSeriesDate()));
+		rv.append(MessageBundle.getMessage("angal.common.date")).append(separator).append(sanitize(TimeTools.formatDateTime(dicomFile.getDicomSeriesDate(), "dd-MM-yyyy")));
 		rv.append(" <br>");
 		rv.append("</html>");
 		return rv.toString();

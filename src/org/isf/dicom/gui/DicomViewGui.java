@@ -13,7 +13,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -45,7 +44,6 @@ import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
-import org.isf.utils.time.TimeTools;
 
 /**
  * 
@@ -432,11 +430,7 @@ public class DicomViewGui extends JPanel {
 		hi += VGAP;
 		txt = "";
 		Date d = null;
-		try {
-			d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : TimeTools.parseDate(tmpDbFile.getDicomStudyDate(), "dd/MM/yy", true).getTime();
-		} catch (ParseException e) {
-			System.out.println("Unparsable JPEG StudyDate");
-		}
+		d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : tmpDbFile.getDicomStudyDate();
 		DateFormat df = DateFormat.getDateInstance();
 		if (d != null)
 			txt = df.format(d);
