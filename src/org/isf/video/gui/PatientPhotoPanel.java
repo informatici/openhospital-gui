@@ -143,6 +143,7 @@ public class PatientPhotoPanel extends JPanel {
 
 				final Dimension[] resolutions = webcam.getDevice().getResolutions();
 				jGetPhotoButton.addActionListener(event -> {
+					photoboothPanelPresentationModel.setWebcam(webcam);
 					// start with the highest resolution.
 					photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
 

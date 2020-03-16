@@ -1,5 +1,6 @@
 package org.isf.video.gui;
 
+import com.github.sarxos.webcam.Webcam;
 import com.jgoodies.binding.PresentationModel;
 
 import java.awt.*;
@@ -20,5 +21,9 @@ public final class PhotoboothPanelPresentationModel extends PresentationModel<Ph
 
     public void setResolution(final Dimension resolution) {
         getBean().setResolution(resolution);
+    }
+
+    public void setWebcam(final Webcam webcam) {
+        getBean().setWebcam(webcam);
     }
 }
