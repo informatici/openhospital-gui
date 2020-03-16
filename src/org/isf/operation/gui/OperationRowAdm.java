@@ -5,7 +5,6 @@
  */
 package org.isf.operation.gui;
 
-import org.isf.utils.jobjects.CustomJDateChooser;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -49,10 +48,13 @@ import org.isf.operation.model.OperationRow;
 import org.isf.operation.model.Resultat;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
 import org.joda.time.DateTime;
+
+import com.toedter.calendar.JDateChooser;
 
 /**
  *
@@ -485,7 +487,6 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 				} catch (OHServiceException e1) {
 					OHServiceExceptionUtil.showMessages(e1);
 				}
-
 			}
 			if ((opRow.getId() <= 0) && (opRow.getAdmission() == null || opRow.getAdmission().getId() <= 0)) {
 				Admission admiss = (Admission) e.getSource();
