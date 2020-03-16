@@ -276,10 +276,10 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 				return MessageBundle.getMessage("angal.medicalstock.lotid"); //$NON-NLS-1$
 			}
 			
-			if (c == 2) {
+			if (c == 1) {
 				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
 			}
-			if (c == 3) {
+			if (c == 2) {
 				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
 			}
 			return ""; //$NON-NLS-1$
