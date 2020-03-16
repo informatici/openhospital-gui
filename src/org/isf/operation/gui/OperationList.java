@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
 public class OperationList extends JPanel implements OperationRowListener, OperationRowEditListener {
 
@@ -185,12 +186,16 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 
 		/**** getting data **/
 		if (myOpd != null) {
-			oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+			try {
+				oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
+			}
 		}
 		if (myAdmission != null) {
 			try {
 				oprowData = opeRowManager.getOperationRowByAdmission(myAdmission);
-			} catch (OHException ex) {
+			} catch (OHServiceException ex) {
 				ex.printStackTrace();
 			}
 		}
@@ -203,8 +208,6 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
 				}
 			} catch (OHServiceException ex) {
-				ex.printStackTrace();
-			} catch (OHException ex) {
 				ex.printStackTrace();
 			}
 			panelHeader.setVisible(false);
@@ -360,7 +363,13 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		int yesOrNo = JOptionPane.showConfirmDialog(OperationList.this,
 				MessageBundle.getMessage("angal.operationrowlist.confirmdelete"), null, JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
 		if (yesOrNo == JOptionPane.YES_OPTION) {
-			boolean result = opeRowManager.deleteOperationRow(operationRow);
+			boolean result = false;
+			try {
+				result = opeRowManager.deleteOperationRow(operationRow);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+				return;
+			}
 			if (result) {
 				JOptionPane.showMessageDialog(OperationList.this,
 						MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
@@ -389,7 +398,11 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	}
 
 	public void refreshJtable() {
-		oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+		try {
+			oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
 		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
 		JtableData.setModel(modelOhOpeRow);
 		JtableData.repaint();

@@ -650,7 +650,13 @@ public class LabEditExtended extends JDialog {
 					}
 					String matSelected=(String)matComboBox.getSelectedItem();
 					examSelected=(Exam)examComboBox.getSelectedItem();
-					labPat=(Patient)patientComboBox.getSelectedItem();
+					try {
+						labPat=(Patient)patientComboBox.getSelectedItem();
+					} catch (ClassCastException e2) {
+						JOptionPane.showMessageDialog(LabEditExtended.this, 
+								MessageBundle.getMessage("angal.lab.pleaseselectapatient"));
+						return;
+					}
 					GregorianCalendar gregDate = new GregorianCalendar();
 					try {
 						gregDate.setTime(examDateFieldCal.getDate());

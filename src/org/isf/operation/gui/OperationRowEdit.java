@@ -44,6 +44,7 @@ import javax.swing.border.EmptyBorder;
 import org.isf.generaldata.GeneralData;
 import org.isf.operation.model.Resultat;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
 public class OperationRowEdit extends JPanel {
 	
@@ -403,7 +404,13 @@ public class OperationRowEdit extends JPanel {
 	        	Operation op = (Operation)OpecomboBox.getSelectedItem();
 	        	updateOpeRow.setOperation(op);
 	        	updateOpeRow.setRemarks(remarkstextArea.getText());
-	        	boolean result = opeManageRow.updateOperationRow(updateOpeRow);
+	        	boolean result = false;
+				try {
+					result = opeManageRow.updateOperationRow(updateOpeRow);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+					return;
+				}
 	        	if(result){
 	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
 	        				MessageBundle.getMessage("angal.operationrowedit.updatesucces"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
@@ -429,7 +436,13 @@ public class OperationRowEdit extends JPanel {
 	        	operationRow.setOpd(this.getMyOpd());	       
 	        	operationRow.setPrescriber(MainMenu.getUser().getUserName());
 	        	operationRow.setRemarks(remarkstextArea.getText());
-	        	boolean result = opeManageRow.newOperationRow(operationRow);
+	        	boolean result;
+				try {
+					result = opeManageRow.newOperationRow(operationRow);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+					return;
+				}
 	        	if(result){
 	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
 	        				MessageBundle.getMessage("angal.operationrowedit.savesucces"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$

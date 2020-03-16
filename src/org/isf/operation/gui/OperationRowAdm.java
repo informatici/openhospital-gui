@@ -47,8 +47,8 @@ import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.operation.model.Resultat;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
@@ -273,8 +273,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			try {
 				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
 				oprowData.addAll(res);
-			} catch (OHException ex) {
-				//
+			} catch (OHServiceException ex) {
+				ex.printStackTrace();
 			}
 		}
 		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
@@ -421,7 +421,13 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			if (yesOrNo == JOptionPane.YES_OPTION) {
 				int idOpe = operationRow.getId();
 				if (idOpe > 0) {
-					boolean result = opeRowManager.deleteOperationRow(operationRow);
+					boolean result = false;
+					try {
+						result = opeRowManager.deleteOperationRow(operationRow);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+						return;
+					}
 					if (result) {
 						JOptionPane.showMessageDialog(OperationRowAdm.this,
 								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
@@ -466,17 +472,29 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, AWTEvent e) {
 		for (org.isf.operation.model.OperationRow opRow : listOpe) {
 			if ((opRow.getId() > 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
-				RowManager.updateOperationRow(opRow);
+				try {
+					RowManager.updateOperationRow(opRow);
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+				}
 
 			}
 			if ((opRow.getId() <= 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
-				RowManager.newOperationRow(opRow);
+				try {
+					RowManager.newOperationRow(opRow);
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+				}
 
 			}
 			if ((opRow.getId() <= 0) && (opRow.getAdmission() == null || opRow.getAdmission().getId() <= 0)) {
 				Admission admiss = (Admission) e.getSource();
 				opRow.setAdmission(admiss);
-				RowManager.newOperationRow(opRow);
+				try {
+					RowManager.newOperationRow(opRow);
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+				}
 			}
 		}
 	}

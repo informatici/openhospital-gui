@@ -468,7 +468,7 @@ public class DicomViewGui extends JPanel {
 	private void refreshFrame() {
 		Long id = frames[frameIndex];
 		try {
-			tmpDbFile = DicomManagerFactory.getManager().loadDettaglio(id, patID, serieNumber);
+			tmpDbFile = DicomManagerFactory.getManager().loadDetails(id, patID, serieNumber);
 			getImageFromDicom(tmpDbFile);
 		}catch(OHServiceException ex){
 			if(ex.getMessages() != null){

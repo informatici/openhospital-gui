@@ -116,7 +116,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			}catch(OHServiceException ex){
 				if(ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
 				patArray = new ArrayList<Patient>();
@@ -149,7 +149,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			}catch(OHServiceException ex){
 				if(ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
 				patArray = new ArrayList<Patient>();
@@ -182,7 +182,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			}catch(OHServiceException ex){
 				if(ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
 				patArray = new ArrayList<Patient>();
@@ -511,7 +511,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 					}catch(OHServiceException ex){
 						if(ex.getMessages() != null){
 							for(OHExceptionMessage msg : ex.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+								JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
 						}
 						patArray = new ArrayList<Patient>();
