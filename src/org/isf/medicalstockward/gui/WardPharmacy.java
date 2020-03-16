@@ -165,10 +165,14 @@ public class WardPharmacy extends ModalJFrame implements
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.units"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb")//$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"),
+			MessageBundle.getMessage("angal.medicalstock.lotduedate")
+			
+			
+			 //$NON-NLS-1$
 	};
-	private boolean[] columsResizableIncomes = { true, true, true, true, true, true };
-	private int[] columWidthIncomes = { 80, 50, 50, 50, 50 , 50};
+	private boolean[] columsResizableIncomes = { true, true, true, true, true, true, true };
+	private int[] columWidthIncomes = { 80, 50, 50, 50, 50 , 50, 50};
 	private String[] columsOutcomes = { 
 			MessageBundle.getMessage("angal.common.date"),  //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.purpose"), //$NON-NLS-1$
@@ -178,10 +182,11 @@ public class WardPharmacy extends ModalJFrame implements
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.units"),
-			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb")//$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"),
+			MessageBundle.getMessage("angal.medicalstock.lotduedate")//$NON-NLS-1$
 	};
-	private boolean[] columsResizableOutcomes = { false, true, false, false, false, true, false, false };
-	private int[] columWidthOutcomes = { 150, 150, 50, 50, 50, 220, 50, 50 };
+	private boolean[] columsResizableOutcomes = { false, true, false, false, false, true, false, false, true };
+	private int[] columWidthOutcomes = { 150, 150, 50, 50, 50, 170, 50, 50, 50 };
 	private String[] columsDrugs = { 
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
@@ -526,7 +531,7 @@ public class WardPharmacy extends ModalJFrame implements
 		if (jScrollPaneDrugs == null) {
 			jScrollPaneDrugs = new JScrollPane();
 			jScrollPaneDrugs.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (),
-                    "Double click to show medical's lots details",
+                    "Double click to show lot details ",
                     TitledBorder.LEFT,
                     TitledBorder.TOP));
 			jScrollPaneDrugs.setViewportView(getJTableDrugs());
@@ -1267,6 +1272,9 @@ public class WardPharmacy extends ModalJFrame implements
 			if (c == 5) {
 				return mov.getLot().getCode();
 			}
+			if (c == 6) {
+				return formatDate(mov.getLot().getDueDate());
+			}
 			return null;
 		}
 
@@ -1409,6 +1417,9 @@ public class WardPharmacy extends ModalJFrame implements
 			}
 			if (c == 8) {
 				return mov.getLot().getCode();
+			}
+			if (c == 9) {
+				return formatDate(mov.getLot().getDueDate());
 			}
 			return null;
 		}
