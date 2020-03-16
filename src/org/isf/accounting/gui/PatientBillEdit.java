@@ -66,7 +66,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.time.RememberDates;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 /**
  * Create a single Patient Bill
  * it affects tables BILLS, BILLITEMS and BILLPAYMENTS
@@ -313,7 +313,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JTable jTableBalance;
 	private JScrollPane jScrollPaneBalance;
 	private JPanel jPanelTop;
-	private JDateChooser jCalendarDate;
+	private CustomJDateChooser jCalendarDate;
 	private JLabel jLabelDate;
 	private JLabel jLabelPatient;
 	private JButton jButtonRemoveItem;
@@ -635,7 +635,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		return jComboBoxPriceList;
 	}
 	
-	private JDateChooser getJCalendarDate() {
+	private CustomJDateChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
 			
 			if (insert) {
@@ -643,10 +643,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				billDate.set(Calendar.YEAR, RememberDates.getLastBillDateGregorian().get(Calendar.YEAR));
 				billDate.set(Calendar.MONTH, RememberDates.getLastBillDateGregorian().get(Calendar.MONTH));
 				billDate.set(Calendar.DAY_OF_MONTH, RememberDates.getLastBillDateGregorian().get(Calendar.DAY_OF_MONTH));
-				jCalendarDate = new JDateChooser(billDate.getTime()); 
+				jCalendarDate = new CustomJDateChooser(billDate.getTime()); 
 			} else { 
 				//get BillDate
-				jCalendarDate = new JDateChooser(thisBill.getDate().getTime());
+				jCalendarDate = new CustomJDateChooser(thisBill.getDate().getTime());
 				billDate.setTime(jCalendarDate.getDate());
 			}
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
@@ -1204,7 +1204,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							
 							icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 	
-							JDateChooser datePayChooser = new JDateChooser(new Date());
+							CustomJDateChooser datePayChooser = new CustomJDateChooser(new Date());
 							datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 							datePayChooser.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
 							
@@ -1314,7 +1314,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						
 						icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 						
-						JDateChooser datePayChooser = new JDateChooser(new Date());
+						CustomJDateChooser datePayChooser = new CustomJDateChooser(new Date());
 						datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 						datePayChooser.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
 						
@@ -1416,7 +1416,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						
 						icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 						
-						JDateChooser datePayChooser = new JDateChooser(new Date());
+						CustomJDateChooser datePayChooser = new CustomJDateChooser(new Date());
 						datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 						datePayChooser.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
 						

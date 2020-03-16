@@ -55,7 +55,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * @author Mwithi
@@ -116,7 +116,7 @@ public class TherapyEntryForm extends JDialog {
 	private JSpinner jSpinnerQty;
 	private ArrayList<JRadioButton> radioButtonSet;
 	private JSpinner jSpinnerFreqInPeriod;
-	private JDateChooser therapyStartdate;
+	private CustomJDateChooser therapyStartdate;
 	private GregorianCalendar therapyEndDate;
 	private JSpinner jSpinnerDays;
 	private JSpinner jSpinnerWeeks;
@@ -486,9 +486,9 @@ public class TherapyEntryForm extends JDialog {
 		return jSpinnerFreqInPeriod;
 	}
 
-	private JDateChooser getStartDate() {
+	private CustomJDateChooser getStartDate() {
 		if (therapyStartdate == null) {
-			therapyStartdate = new JDateChooser(new Date());
+			therapyStartdate = new CustomJDateChooser(new Date());
 			therapyStartdate.setLocale(new Locale(GeneralData.LANGUAGE));
 			therapyStartdate.setDateFormatString(dateFormat.toPattern());
 

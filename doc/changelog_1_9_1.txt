@@ -1,3 +1,56 @@
+commit 67375c0c51dea278e192be609aabb74b438a7769
+Author: Alessandro Domanico <alessandro.domanico@yahoo.it>
+Date:   2020-02-17
+
+    Fixing issue #63
+
+commit 6a9f8da62aa5bd08e12d1faee391bf930aa86ca8
+Author: Alessandro Domanico <alessandro.domanico@yahoo.it>
+Date:   2020-02-15
+
+    Small Laboratory enhancements
+    
+    - fixing date-time format
+    - removed useless message in case of new/update not possible
+
+commit d77e9648aa3b353d4f2aa7920bcfd7e9660ea365
+Author: Alessandro Domanico <alessandro.domanico@yahoo.it>
+Date:   2020-02-15
+
+    Fixed issue #60
+
+commit b2ed3d2086d29f05ad49b9e3824c05f1d7065a8c
+Author: Alessandro Domanico <alessandro.domanico@yahoo.it>
+Date:   2020-02-15
+
+    Fixed issue #59
+
+commit da4639219ba43a7e007e2d3f00a8ace913af46c8
+Author: Alessandro Domanico <alessandro.domanico@yahoo.it>
+Date:   2020-02-14
+
+    Fixing https://github.com/informatici/openhospital/issues/53
+
+commit 4f12511952bff3cc7d2ed7ee44b7aa3a93d710e0
+Author: Alessandro Domanico <alessandro.domanico@yahoo.it>
+Date:   2020-02-13
+
+    Italian translation revision
+
+commit ea76c554c856ad4b9d3f3cd85521eddfaf9e99b4
+Author: Alessandro Domanico <alessandro.domanico@yahoo.it>
+Date:   2020-02-11
+
+    Update LICENSE
+    
+     Adopted GNU GPL, Version 3
+
+commit ade8e3aa04fec7923f03a4315d6cd0ba6605c0fc
+Author: Alessandro Domanico <alessandro.domanico@yahoo.it>
+Date:   2020-02-05
+
+    Updated changelog
+
 commit 519af207e1be7e4087c2d901d3307c4746fe8559
 Author: Alessandro Domanico <alessandro.domanico@yahoo.it>
 Date:   2020-02-05
