@@ -3,11 +3,15 @@ package org.isf.utils.jobjects;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 class CursorManager {
   private final DelayTimer waitTimer;
   private final Stack<DispatchedEvent> dispatchedEvents;
   private boolean needsCleanup;
+
+  private Lock clearLock = new ReentrantLock();
 
   public CursorManager(DelayTimer waitTimer) {
     this.dispatchedEvents = new Stack<DispatchedEvent>();
@@ -20,10 +24,13 @@ class CursorManager {
   }
   private void clearQueueOfInputEvents() {
     EventQueue q = Toolkit.getDefaultToolkit().getSystemEventQueue();
-    synchronized (q) {
+    clearLock.lock();
+    try {
       ArrayList<AWTEvent> nonInputEvents = gatherNonInputEvents(q);
       for (Iterator<AWTEvent> it = nonInputEvents.iterator(); it.hasNext();)
         q.postEvent((AWTEvent)it.next());
+    }finally {
+      clearLock.unlock();
     }
   }
   private ArrayList<AWTEvent> gatherNonInputEvents(EventQueue systemQueue) {
