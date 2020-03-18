@@ -18,6 +18,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -85,11 +87,14 @@ public class PatientPhotoPanel extends JPanel {
 			box.add(Box.createHorizontalGlue());
 
 			externalPanel.add(box, BorderLayout.NORTH);
-			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
-				final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
-				if (newImage != null) {
-					externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
-					patientFrame.setPatientPhoto(newImage);
+			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, new PropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+					final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
+					if (newImage != null) {
+						externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
+						patientFrame.setPatientPhoto(newImage);
+					}
 				}
 			});
 
@@ -142,16 +147,19 @@ public class PatientPhotoPanel extends JPanel {
 				jGetPhotoButton.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 
 				final Dimension[] resolutions = webcam.getDevice().getResolutions();
-				jGetPhotoButton.addActionListener(event -> {
-					photoboothPanelPresentationModel.setWebcam(webcam);
-					// start with the highest resolution.
-					photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
+				jGetPhotoButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent event) {
+						photoboothPanelPresentationModel.setWebcam(webcam);
+						// start with the highest resolution.
+						photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
 
-					final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel, owner);
-					photoBoothDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					photoBoothDialog.setVisible(true);
-					photoBoothDialog.toFront();
-					photoBoothDialog.requestFocus();
+						final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel, owner);
+						photoBoothDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						photoBoothDialog.setVisible(true);
+						photoBoothDialog.toFront();
+						photoBoothDialog.requestFocus();
+					}
 				});
 
 				buttonBox1.add(jGetPhotoButton);
