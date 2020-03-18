@@ -46,14 +46,17 @@ import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.manager.LabManager;
+import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.lab.manager.LabRowManager;
 import org.isf.lab.model.Laboratory;
+import org.isf.lab.model.LaboratoryForPrint;
 import org.isf.lab.model.LaboratoryRow;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
@@ -112,6 +115,7 @@ public class LabEditExtended extends JDialog {
 	private JLabel matLabel = null;
 	private JButton okButton = null;
 	private JButton cancelButton = null;
+	private JButton printButton = null;
 	private JComboBox matComboBox = null;
 	private JComboBox examComboBox = null;
 	private JComboBox examRowComboBox = null;
@@ -151,6 +155,7 @@ public class LabEditExtended extends JDialog {
 	
 	//private LabManager labManager = new LabManager(Context.getApplicationContext().getBean(LabIoOperations.class));
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
+	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
 	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
 	private AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
@@ -195,8 +200,12 @@ public class LabEditExtended extends JDialog {
 			}
 			resultPanel.setBorder(BorderFactory.createTitledBorder(
 					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.lab.result")));
+			
 			jContentPane.add(resultPanel);
 			jContentPane.add(getButtonPanel()); // Generated
+			
+
+			
 		}
 		return jContentPane;
 	}
@@ -496,6 +505,7 @@ public class LabEditExtended extends JDialog {
 			buttonPanel.setBounds(0, dataPanelHeight+dataPatientHeight+resultPanelHeight, panelWidth, buttonPanelHeight);
 			buttonPanel.add(getOkButton(), null);
 			buttonPanel.add(getCancelButton(), null);
+			buttonPanel.add(getPrintButton(),null);
 		}
 		return buttonPanel;
 	}
@@ -620,6 +630,31 @@ public class LabEditExtended extends JDialog {
 			}
 		}
 		return sexTextField;
+	}
+	
+	private JButton getPrintButton() {
+		if (printButton == null) {
+			printButton = new JButton(MessageBundle.getMessage("Print"));
+			printButton.setMnemonic(KeyEvent.VK_P);
+			printButton.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent arg0) {					
+					try {
+						ArrayList<LaboratoryForPrint> labs;
+						labs = labManager.getLaboratoryForPrint(lab.getCode());
+						if (!labs.isEmpty()) {
+							
+							printManager.print("Laboratory",labs,0);
+						}
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
+					
+				}
+
+			});
+		}
+		return printButton;
 	}
 	
 	private JButton getCancelButton() {
