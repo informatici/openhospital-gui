@@ -634,7 +634,7 @@ public class LabEditExtended extends JDialog {
 	
 	private JButton getPrintButton() {
 		if (printButton == null) {
-			printButton = new JButton(MessageBundle.getMessage("Print"));
+			printButton = new JButton(MessageBundle.getMessage("angal.lab.print"));
 			printButton.setMnemonic(KeyEvent.VK_P);
 			printButton.addActionListener(new ActionListener() {
 
