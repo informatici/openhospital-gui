@@ -1,7 +1,5 @@
 package org.isf.utils.jobjects;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
-
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
@@ -10,10 +8,13 @@ import java.util.ArrayList;
 public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallback {
 	private final CursorManager cursorManager;
 	private final DelayTimer waitTimer;
+	private final EventQueue previousEventQueue;
 
-	public WaitCursorEventQueue(int delay) {
+	public WaitCursorEventQueue(final EventQueue previousEventQueue,
+								final int delay) {
 		this.waitTimer = new DelayTimer(this, delay);
 		this.cursorManager = new CursorManager(waitTimer);
+		this.previousEventQueue = previousEventQueue;
 	}
 
 	public void close() {
@@ -32,13 +33,6 @@ public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallba
 		}
 	}
 
-	private EventQueue previousEventQueue() {
-		try {
-			return (EventQueue) FieldUtils.readField(this, "previousQueue", true);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
 
 	public AWTEvent getNextEvent() throws InterruptedException {
 		waitTimer.stopTimer();
@@ -47,7 +41,7 @@ public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallba
 
 	public java.util.List<AWTEvent> getNonInputEvents() {
 		final java.util.List<AWTEvent> nonInputEvents = new ArrayList<AWTEvent>();
-		synchronized (previousEventQueue()) {
+		synchronized (previousEventQueue) {
 			synchronized (this) {
 				while (peekEvent() != null) {
 					try {
