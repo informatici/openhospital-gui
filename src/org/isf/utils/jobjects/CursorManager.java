@@ -1,8 +1,7 @@
 package org.isf.utils.jobjects;
 
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.util.*;
+import java.util.Stack;
 
 class CursorManager {
   private final DelayTimer waitTimer;
@@ -14,32 +13,20 @@ class CursorManager {
     this.waitTimer = waitTimer;
   }
   private void cleanUp() {
-    if (((DispatchedEvent) dispatchedEvents.peek()).resetCursor()) {
+    if (dispatchedEvents.peek().resetCursor()) {
       clearQueueOfInputEvents();
     }
   }
   private void clearQueueOfInputEvents() {
-    EventQueue q = Toolkit.getDefaultToolkit().getSystemEventQueue();
-    synchronized (q) {
-      ArrayList<AWTEvent> nonInputEvents = gatherNonInputEvents(q);
-      for (Iterator<AWTEvent> it = nonInputEvents.iterator(); it.hasNext();)
-        q.postEvent((AWTEvent)it.next());
-    }
-  }
-  private ArrayList<AWTEvent> gatherNonInputEvents(EventQueue systemQueue) {
-    ArrayList<AWTEvent> events = new ArrayList<AWTEvent>();
-    while (systemQueue.peekEvent() != null) {
-      try {
-        AWTEvent nextEvent = systemQueue.getNextEvent();
-        if (!(nextEvent instanceof InputEvent)) {
-          events.add(nextEvent);
-        }
-      } catch (InterruptedException ie) {
-        Thread.currentThread().interrupt();
+    final EventQueue systemEventQueue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+    if (systemEventQueue instanceof WaitCursorEventQueue) {
+      final WaitCursorEventQueue waitCursorEventQueue = (WaitCursorEventQueue) systemEventQueue;
+      for (final AWTEvent nonInputEvent : waitCursorEventQueue.getNonInputEvents()) {
+        waitCursorEventQueue.postEvent(nonInputEvent);
       }
     }
-    return events;
   }
+
   public void push(Object source) {
     if (needsCleanup) {
       waitTimer.stopTimer();

@@ -1,6 +1,10 @@
 package org.isf.utils.jobjects;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
+
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.util.ArrayList;
 
 
 public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallback {
@@ -28,9 +32,36 @@ public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallba
 		}
 	}
 
+	private EventQueue previousEventQueue() {
+		try {
+			return (EventQueue) FieldUtils.readField(this, "previousQueue", true);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public AWTEvent getNextEvent() throws InterruptedException {
 		waitTimer.stopTimer();
 		return super.getNextEvent();
+	}
+
+	public java.util.List<AWTEvent> getNonInputEvents() {
+		final java.util.List<AWTEvent> nonInputEvents = new ArrayList<AWTEvent>();
+		synchronized (previousEventQueue()) {
+			synchronized (this) {
+				while (peekEvent() != null) {
+					try {
+						final AWTEvent nextEvent = getNextEvent();
+						if (!(nextEvent instanceof InputEvent)) {
+							nonInputEvents.add(nextEvent);
+						}
+					} catch (final InterruptedException ie) {
+						Thread.currentThread().interrupt();
+					}
+				}
+			}
+		}
+		return nonInputEvents;
 	}
 
 	public void trigger() {
