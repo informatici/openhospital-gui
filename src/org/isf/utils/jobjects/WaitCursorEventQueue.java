@@ -6,7 +6,7 @@ import java.awt.*;
 public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallback {
 	private final CursorManager cursorManager;
 	private final DelayTimer waitTimer;
-	private EventQueue parentQueue = null;
+	private final EventQueue parentQueue;
 
 	public WaitCursorEventQueue(int delay, EventQueue systemQueue) {
 		this.waitTimer = new DelayTimer(this, delay);

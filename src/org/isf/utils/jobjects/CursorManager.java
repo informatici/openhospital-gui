@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Stack;
 
 class CursorManager {
@@ -23,18 +22,14 @@ class CursorManager {
     }
   }
   private void clearQueueOfInputEvents() {
-    EventQueue q = Toolkit.getDefaultToolkit().getSystemEventQueue(); 
-    EventQueue parentQueue = ((WaitCursorEventQueue)q).getParentQueue();
-    try{
-        synchronized(parentQueue){
-          synchronized(q) {
-            ArrayList<AWTEvent> nonInputEvents = gatherNonInputEvents(q);
-            for (Iterator<AWTEvent> it = nonInputEvents.iterator(); it.hasNext();)
-              q.postEvent((AWTEvent)it.next());
-          }
-        }
-    }catch(Exception exp){}
-    finally{}
+    final WaitCursorEventQueue waitCursorEventQueue = (WaitCursorEventQueue) Toolkit.getDefaultToolkit().getSystemEventQueue();
+    final EventQueue parentQueue = waitCursorEventQueue.getParentQueue();
+    synchronized(parentQueue){
+      synchronized(waitCursorEventQueue) {
+        for (AWTEvent nonInputEvent : gatherNonInputEvents(waitCursorEventQueue))
+            waitCursorEventQueue.postEvent(nonInputEvent);
+      }
+    }
   }
   private ArrayList<AWTEvent> gatherNonInputEvents(EventQueue systemQueue) {
     ArrayList<AWTEvent> events = new ArrayList<AWTEvent>();
