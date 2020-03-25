@@ -6,7 +6,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +25,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.isf.dicom.model.FileDicom;
+import org.isf.dicomtype.manager.DicomTypeBrowserManager;
+import org.isf.dicomtype.model.DicomType;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 import com.toedter.calendar.JDateChooser;
@@ -48,14 +56,22 @@ class ShowPreLoadDialog extends JDialog {
 		private JButton buttonOK;
 		private JDateChooser dateChooser;
 		private VoLimitedTextField descriptionTextField;
+		private JComboBox dicomTypeComboBox;
 		
 		/*
 		 * Attributes
 		 */
 		private Date dicomDate;
+		private DicomType dicomType;
 		private String dicomDescription;
 		private List<Date> dates;
 		private boolean save = false;
+		
+		/*
+		 * Managers
+		 */
+		private DicomTypeBrowserManager dicomTypeMan = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
+		
 
 		public ShowPreLoadDialog(JFrame owner, int numfiles, FileDicom fileDicom, List<Date> dates) {
 			super(owner, true);
@@ -129,8 +145,7 @@ class ShowPreLoadDialog extends JDialog {
 			gbc_categoryComboBox.gridx = 1;
 			gbc_categoryComboBox.gridy = 2;
 			gbc_categoryComboBox.fill = GridBagConstraints.HORIZONTAL;
-			JComboBox categoryComboBox = new JComboBox();
-			centerPanel.add(categoryComboBox, gbc_categoryComboBox);
+			centerPanel.add(getDicomTypeComboBox(), gbc_categoryComboBox);
 			
 			GridBagConstraints gbc_descriptionLabel = new GridBagConstraints();
 			gbc_descriptionLabel.insets = new Insets(5, 5, 5, 5);
@@ -149,6 +164,36 @@ class ShowPreLoadDialog extends JDialog {
 			centerPanel.add(descriptionTextField, gbc_descriptionTextField);
 			
 			return centerPanel;
+		}
+
+		private JComboBox getDicomTypeComboBox() {
+			if (dicomTypeComboBox == null) {
+				dicomTypeComboBox = new JComboBox();
+				dicomTypeComboBox.addItem("");
+				try {
+					ArrayList<DicomType> dicomTypeList = dicomTypeMan.getDicomType();
+					for (DicomType dicomType : dicomTypeList) {
+						dicomTypeComboBox.addItem(dicomType);
+					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e, ShowPreLoadDialog.this);
+				}
+				dicomTypeComboBox.addItemListener(new ItemListener() {
+					
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						if (e.getStateChange() == ItemEvent.SELECTED) {
+							try {
+								dicomType = (DicomType) e.getItem();
+							} catch (ClassCastException e1) {
+								dicomType = null;
+							}
+						}
+					}
+				});
+				
+			}
+			return dicomTypeComboBox;
 		}
 
 		private JList getDatesList() {
@@ -216,7 +261,11 @@ class ShowPreLoadDialog extends JDialog {
 		public String getDicomDescription() {
 			return dicomDescription;
 		}
-		
+
+		public DicomType getDicomType() {
+			return dicomType;
+		}
+
 		public boolean isSave() {
 			return save;
 		}

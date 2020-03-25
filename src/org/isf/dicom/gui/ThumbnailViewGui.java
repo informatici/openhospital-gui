@@ -34,7 +34,7 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.time.TimeTools;
 
 /**
- * Component for DICOM Thumnails composizion and visualizzation
+ * Component for DICOM thumbnails composizion and visualizzation
  * 
  * @author Pietro Castellucci
  * @version 1.0.0
@@ -206,21 +206,27 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
+			FileDicom instance = (FileDicom) value;
+			
 			JPanel panel = new JPanel(new BorderLayout(), false);
 			panel.setPreferredSize(new Dimension(list.getWidth(), 50));
 			//panel.setBackground(Color.DARK_GRAY);
-
-			FileDicom instance = (FileDicom) value;
 			panel.setToolTipText(getTooltipText(instance));
 			
 			// Header of thumbnail
-			JLabel top = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
-			top.setForeground(Color.LIGHT_GRAY);
-			panel.add(top, BorderLayout.NORTH);
+			JPanel header = new JPanel(new BorderLayout(), false);
+			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
+			date.setForeground(Color.LIGHT_GRAY);
+			JLabel type = new JLabel(instance.getDicomType() == null ? MessageBundle.getMessage("angal.common.notdefined") : instance.getDicomType().toString());
+			type.setForeground(Color.LIGHT_GRAY);
+			header.add(date, BorderLayout.NORTH);
+			header.add(type, BorderLayout.CENTER);
+			header.setOpaque(false);
+			panel.add(header, BorderLayout.NORTH);
 			
 			// Center
-			JLabel center = new JLabel(instance.getDicomSeriesDescription());
-			center.setForeground(Color.LIGHT_GRAY);
+			JLabel center = new JLabel(instance.getDicomSeriesDescription().toUpperCase());
+			center.setForeground(Color.WHITE);
 			panel.add(center, BorderLayout.CENTER);
 
 			// Footer of thumbnail
@@ -231,12 +237,14 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 				panel.add(frames, BorderLayout.SOUTH);
 			}
 
-			// Colors of thumnail
+			// Colors of thumbnail
 			if (isSelected) {
+				header.setBackground(Color.BLUE);
 				panel.setBackground(Color.BLUE);
 				panel.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 				panel.setForeground(Color.WHITE);
 			} else {
+				header.setBackground(Color.DARK_GRAY);
 				panel.setBackground(Color.DARK_GRAY);
 				panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 				panel.setForeground(Color.LIGHT_GRAY);
@@ -260,23 +268,29 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			panel.setBackground(Color.DARK_GRAY);
 			panel.setToolTipText(getTooltipText(instance));
 
-			// Header of thumnail
-			JLabel top = new JLabel(instance.getDicomSeriesDescription());
+			// Header of thumbnail
+			JPanel header = new JPanel(new BorderLayout(), false);
+			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
+			date.setForeground(Color.LIGHT_GRAY);
+			JLabel type = new JLabel(instance.getDicomType() == null? MessageBundle.getMessage("angal.common.notdefined") : instance.getDicomType().toString());
+			type.setForeground(Color.LIGHT_GRAY);
+			JLabel top = new JLabel(instance.getDicomSeriesDescription().toUpperCase());
 			top.setForeground(Color.LIGHT_GRAY);
-			panel.add(top, BorderLayout.NORTH);
-
+			header.add(date, BorderLayout.NORTH);
+			header.add(type, BorderLayout.CENTER);
+			header.add(top, BorderLayout.SOUTH);
+			panel.add(header, BorderLayout.NORTH);
+			
 			// Image
 			BufferedImage immagine = instance.getDicomThumbnailAsImage();
 			JLabel jLab = new JLabel(new ImageIcon(immagine));
 			jLab.setPreferredSize(dim);
 			jLab.setMaximumSize(dim);
-			jLab.setOpaque(true);
 			jLab.setVerticalTextPosition(SwingConstants.BOTTOM);
 			jLab.setHorizontalTextPosition(SwingConstants.CENTER);
-			jLab.setBackground(Color.DARK_GRAY);
 			panel.add(jLab, BorderLayout.CENTER);
 
-			// Footer of thumnail
+			// Footer of thumbnail
 			int frameCount = instance.getFrameCount();
 			if (frameCount > 1) {
 				JLabel frames = new JLabel("[1/" + instance.getFrameCount() + "]");
@@ -284,12 +298,14 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 				panel.add(frames, BorderLayout.SOUTH);
 			}
 
-			// Colors of thumnail
+			// Colors of thumbnail
 			if (isSelected) {
+				header.setBackground(Color.BLUE);
 				panel.setBackground(Color.BLUE);
 				panel.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 				panel.setForeground(Color.WHITE);
 			} else {
+				header.setBackground(Color.DARK_GRAY);
 				panel.setBackground(Color.DARK_GRAY);
 				panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 				panel.setForeground(Color.LIGHT_GRAY);
@@ -327,6 +343,11 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.series")).append(separator).append(sanitize(dicomFile.getDicomSeriesDescription()));
 		rv.append(" <br>");
 		rv.append(MessageBundle.getMessage("angal.common.date")).append(separator).append(sanitize(TimeTools.formatDateTime(dicomFile.getDicomSeriesDate(), "dd-MM-yyyy")));
+		rv.append(" <br>");
+		if (dicomFile.getDicomType() != null)
+			rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.category")).append(separator).append(sanitize(dicomFile.getDicomType().getDicomTypeDescription()));
+		else
+			rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.category")).append(separator).append("N/D");
 		rv.append(" <br>");
 		rv.append("</html>");
 		return rv.toString();

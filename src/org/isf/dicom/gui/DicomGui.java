@@ -298,8 +298,8 @@ public class DicomGui extends JFrame implements WindowListener {
 					dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
 					dummyFileDicom.setDicomSeriesDate(preLoadDialog.getDicomDate());
 					dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
+					dummyFileDicom.setDicomType(preLoadDialog.getDicomType());
 					
-					//TODO: to add the new Entity "DICOM Type" for load and visualization
 					//TODO: to specify in which already existing series to load the file
 
 					if (selectedFile.isDirectory()) {
