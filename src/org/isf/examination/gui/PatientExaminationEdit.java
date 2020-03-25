@@ -57,7 +57,7 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class PatientExaminationEdit extends JDialog {
 
@@ -84,7 +84,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider jSliderTemp;
 	private JSlider jSliderSaturation;
 	private JScrollPane jScrollPaneNote;
-	private JDateChooser jDateChooserDate;
+	private CustomJDateChooser jDateChooserDate;
 	private JSpinner jSpinnerAPmin;
 	private JSpinner jSpinnerAPmax;
 	private JLabel jLabelHeightAbb;
@@ -547,9 +547,9 @@ public class PatientExaminationEdit extends JDialog {
 		return jCheckBoxToggleAP;
 	}
 
-	private JDateChooser getJDateChooserDate() {
+	private CustomJDateChooser getJDateChooserDate() {
 		if (jDateChooserDate == null) {
-			jDateChooserDate = new JDateChooser();
+			jDateChooserDate = new CustomJDateChooser();
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDate.setLocale(new Locale("en")); //$NON-NLS-1$
 			jDateChooserDate.setDateFormatString("dd/MM/yyyy - HH:mm"); //$NON-NLS-1$

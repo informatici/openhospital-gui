@@ -88,7 +88,7 @@ import org.isf.ward.model.Ward;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * This class shows essential patient data and allows to create an admission
@@ -201,7 +201,7 @@ public class AdmissionBrowser extends JDialog {
 
 	private VoLimitedTextField weightField = null;
 
-	private JDateChooser visitDateFieldCal = null; // Calendar
+	private CustomJDateChooser visitDateFieldCal = null; // Calendar
 
 	private JComboBox treatmTypeBox = null;
 
@@ -215,7 +215,7 @@ public class AdmissionBrowser extends JDialog {
 	
 	private GregorianCalendar deliveryDate = null;
 
-	private JDateChooser deliveryDateFieldCal = null;
+	private CustomJDateChooser deliveryDateFieldCal = null;
 
 	private JComboBox deliveryTypeBox = null;
 
@@ -233,11 +233,11 @@ public class AdmissionBrowser extends JDialog {
 
 	private GregorianCalendar abortDate = null;
 
-	private JDateChooser ctrl1DateFieldCal = null;
+	private CustomJDateChooser ctrl1DateFieldCal = null;
 
-	private JDateChooser ctrl2DateFieldCal = null;
+	private CustomJDateChooser ctrl2DateFieldCal = null;
 
-	private JDateChooser abortDateFieldCal = null;
+	private CustomJDateChooser abortDateFieldCal = null;
 	
 	private JComboBox wardBox;
 
@@ -276,7 +276,7 @@ public class AdmissionBrowser extends JDialog {
 	
 	private GregorianCalendar dateIn = null;
 
-	private JDateChooser dateInFieldCal = null;
+	private CustomJDateChooser dateInFieldCal = null;
 
 	private JComboBox admTypeBox = null;
 
@@ -312,7 +312,7 @@ public class AdmissionBrowser extends JDialog {
 	
 	//private GregorianCalendar operationDate = null;
 
-	//private JDateChooser operationDateFieldCal = null;
+	//private CustomJDateChooser operationDateFieldCal = null;
 
 	//private VoDateTextField operationDateField = null;
 
@@ -322,7 +322,7 @@ public class AdmissionBrowser extends JDialog {
 	
 	private GregorianCalendar dateOut = null;
 
-	private JDateChooser dateOutFieldCal = null;
+	private CustomJDateChooser dateOutFieldCal = null;
 
 	private JComboBox disTypeBox = null;
 
@@ -809,7 +809,7 @@ public class AdmissionBrowser extends JDialog {
 			} else {
 				visitDate = new GregorianCalendar();
 			}
-			visitDateFieldCal = new JDateChooser(myDate, "dd/MM/yy"); // Calendar
+			visitDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy"); // Calendar
 			visitDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			visitDateFieldCal.setDateFormatString("dd/MM/yy");
 	
@@ -884,7 +884,7 @@ public class AdmissionBrowser extends JDialog {
 				deliveryDate = admission.getDeliveryDate();
 				myDate = deliveryDate.getTime();
 			} 
-			deliveryDateFieldCal = new JDateChooser(myDate, "dd/MM/yy"); // Calendar
+			deliveryDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy"); // Calendar
 			deliveryDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			deliveryDateFieldCal.setDateFormatString("dd/MM/yy");
 			
@@ -902,7 +902,7 @@ public class AdmissionBrowser extends JDialog {
 				abortDate = admission.getAbortDate();
 				myDate = abortDate.getTime();
 			}
-			abortDateFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+			abortDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			abortDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			abortDateFieldCal.setDateFormatString("dd/MM/yy");
 	
@@ -921,7 +921,7 @@ public class AdmissionBrowser extends JDialog {
 				ctrl1Date = admission.getCtrlDate1();
 				myDate = ctrl1Date.getTime();
 			} 
-			ctrl1DateFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+			ctrl1DateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			ctrl1DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			ctrl1DateFieldCal.setDateFormatString("dd/MM/yy");
 
@@ -940,7 +940,7 @@ public class AdmissionBrowser extends JDialog {
 				ctrl2Date = admission.getCtrlDate2();
 				myDate = ctrl2Date.getTime();
 			} 
-			ctrl2DateFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+			ctrl2DateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			ctrl2DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			ctrl2DateFieldCal.setDateFormatString("dd/MM/yy");
 
@@ -1236,7 +1236,7 @@ public class AdmissionBrowser extends JDialog {
 			} else {
 				dateIn = RememberDates.getLastAdmInDateGregorian();
 			}
-			dateInFieldCal = new JDateChooser(dateIn.getTime(), "dd/MM/yy"); // Calendar
+			dateInFieldCal = new CustomJDateChooser(dateIn.getTime(), "dd/MM/yy"); // Calendar
 			dateInFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateInFieldCal.setDateFormatString("dd/MM/yy");
 			dateInFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
@@ -1682,7 +1682,7 @@ public class AdmissionBrowser extends JDialog {
 //				operationDate = admission.getOpDate();
 //				myDate = operationDate.getTime();
 //			}
-//			operationDateFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+//			operationDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 //			operationDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 //			operationDateFieldCal.setDateFormatString("dd/MM/yy");
 //			
@@ -1782,7 +1782,7 @@ public class AdmissionBrowser extends JDialog {
 				dateOut = admission.getDisDate();
 				myDate = dateOut.getTime();
 			}
-			dateOutFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+			dateOutFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			dateOutFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateOutFieldCal.setDateFormatString("dd/MM/yy");
 			dateOutFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {

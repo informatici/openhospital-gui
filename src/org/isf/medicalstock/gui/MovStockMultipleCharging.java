@@ -62,7 +62,7 @@ import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
 import org.isf.utils.time.TimeTools;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class MovStockMultipleCharging extends JDialog {
 	/**
@@ -77,7 +77,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
 	private JComboBox jComboBoxChargeType;
-	private JDateChooser jDateChooser;
+	private CustomJDateChooser jDateChooser;
 	private JComboBox jComboBoxSupplier;
 	private JTable jTableMovements;
 	private final String[] columnNames = { 
@@ -470,9 +470,9 @@ public class MovStockMultipleCharging extends JDialog {
 		return jTextFieldSearch;
 	}
 
-	private JDateChooser getJDateChooser() {
+	private CustomJDateChooser getJDateChooser() {
 		if (jDateChooser == null) {
-			jDateChooser = new JDateChooser(new Date());
+			jDateChooser = new CustomJDateChooser(new Date());
 			jDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
 			jDateChooser.setPreferredSize(new Dimension(150, 24));
 		}
@@ -561,11 +561,11 @@ public class MovStockMultipleCharging extends JDialog {
 			suggestion.changeAlpha(0.5f);
 			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 		}
-		JDateChooser preparationDateChooser = new JDateChooser(new Date());
+		CustomJDateChooser preparationDateChooser = new CustomJDateChooser(new Date());
 		{
 			preparationDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
 		}
-		JDateChooser expireDateChooser = new JDateChooser(new Date());
+		CustomJDateChooser expireDateChooser = new CustomJDateChooser(new Date());
 		{
 			expireDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
 		}
@@ -690,7 +690,7 @@ public class MovStockMultipleCharging extends JDialog {
 
 	protected GregorianCalendar askExpiringDate() {
 		GregorianCalendar date = new GregorianCalendar();
-		JDateChooser expireDateChooser = new JDateChooser(new Date());
+		CustomJDateChooser expireDateChooser = new CustomJDateChooser(new Date());
 		{
 			expireDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
 		}

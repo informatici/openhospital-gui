@@ -46,7 +46,7 @@ import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class PatVacEdit extends JDialog {
 	/**
@@ -90,7 +90,7 @@ public class PatVacEdit extends JDialog {
 	private String lastKey;
 	private String s;
 	private ArrayList<Patient> pat = null;
-	private JDateChooser vaccineDateFieldCal = null;
+	private CustomJDateChooser vaccineDateFieldCal = null;
 	private GregorianCalendar dateIn = null;
 	private int patNextYProg;
 
@@ -315,7 +315,7 @@ public class PatVacEdit extends JDialog {
 	 * 
 	 * @return JDateChooser
 	 */
-	private JDateChooser getVaccineDateFieldCal() {
+	private CustomJDateChooser getVaccineDateFieldCal() {
 		java.util.Date myDate = null;
 		if (insert) {
 			dateIn = RememberDates.getLastPatientVaccineDateGregorian();
@@ -326,7 +326,7 @@ public class PatVacEdit extends JDialog {
 			myDate = dateIn.getTime();
 		}
 
-		return (new JDateChooser(myDate, "dd/MM/yy"));
+		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
 	}
 
 	/**
