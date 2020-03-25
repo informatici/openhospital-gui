@@ -111,7 +111,7 @@ public class DicomTypeEdit extends JDialog{
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.dicomtype.editingdicomtyperecord"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
@@ -192,26 +192,24 @@ public class DicomTypeEdit extends JDialog{
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 
-					if (descriptionTextField.getText().equals(lastdescription)){
-						dispose();	
-					}
-				
 					dicomType.setDicomTypeDescription(descriptionTextField.getText());
 					dicomType.setDicomTypeID(codeTextField.getText());					
 					boolean result = false;
-					if (insert) {      // inserting
+					if (insert) {	// inserting
 						try {
 							result = manager.newDicomType(dicomType);
                             if (result) {
                                 fireDicomTypeInserted(dicomType);
                             }
-                            if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+                            if (!result) JOptionPane.showMessageDialog(DicomTypeEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
                             else  dispose();
 						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
+							OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
+							return;
 						}
                     }
-                    else {                          // updating
+                    else 
+                    {				// updating
                     	if (descriptionTextField.getText().equals(lastdescription)){
     						dispose();	
     					}else{
@@ -220,10 +218,11 @@ public class DicomTypeEdit extends JDialog{
                                 if (result) {
                                     fireDicomUpdated();
                                 }
-                                if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+                                if (!result) JOptionPane.showMessageDialog(DicomTypeEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
                                 else  dispose();
 							} catch (OHServiceException e1) {
-								OHServiceExceptionUtil.showMessages(e1);
+								OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
+								return;
 							}
     					}
 					}
@@ -292,7 +291,7 @@ public class DicomTypeEdit extends JDialog{
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
 			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.common.codemaxchars"));
+			jCodeLabel.setText(MessageBundle.getMessage("angal.dicomtype.codemaxchars"));
 		}
 		return jCodeLabel;
 	}

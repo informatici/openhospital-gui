@@ -192,10 +192,6 @@ public class DischargeTypeBrowserEdit extends JDialog{
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 
-					if (descriptionTextField.getText().equals(lastdescription)){
-						dispose();	
-					}
-				
 					dischargeType.setDescription(descriptionTextField.getText());
 					dischargeType.setCode(codeTextField.getText());					
 					boolean result = false;
@@ -205,10 +201,11 @@ public class DischargeTypeBrowserEdit extends JDialog{
                             if (result) {
                                 fireDischargeInserted(dischargeType);
                             }
-                            if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+                            if (!result) JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
                             else  dispose();
 						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
+							OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
+							return;
 						}
                     }
                     else {                          // updating
@@ -220,10 +217,11 @@ public class DischargeTypeBrowserEdit extends JDialog{
                                 if (result) {
                                     fireDischargeUpdated();
                                 }
-                                if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+                                if (!result) JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
                                 else  dispose();
 							} catch (OHServiceException e1) {
-								OHServiceExceptionUtil.showMessages(e1);
+								OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
+								return;
 							}
     					}
 					}
