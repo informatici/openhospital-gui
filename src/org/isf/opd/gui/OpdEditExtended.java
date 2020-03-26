@@ -107,6 +107,7 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 
+import org.isf.utils.jobjects.CustomJDateChooser;
 import com.toedter.calendar.JDateChooser;
 import java.util.Date;
 import java.util.Iterator;
@@ -197,7 +198,7 @@ public class OpdEditExtended extends JDialog implements
 	private JLabel jLabelSex = null;
 	private GregorianCalendar visitDateOpd = null;
 	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
-	private JDateChooser OpdDateFieldCal = null; 
+	private CustomJDateChooser OpdDateFieldCal = null; 
 	private JButton okButton = null;
 	private JButton cancelButton = null;
 	private JButton jButtonExamination = null;
@@ -868,7 +869,7 @@ public class OpdEditExtended extends JDialog implements
 	/**
 	 * 
 	 */
-	private JDateChooser getOpdDateFieldCal() {
+	private CustomJDateChooser getOpdDateFieldCal() {
 		if (OpdDateFieldCal == null) {
 			String d = "";
 	
@@ -892,7 +893,7 @@ public class OpdEditExtended extends JDialog implements
 				d = currentDateFormat.format(myDate);
 			}
 			try {
-				OpdDateFieldCal = new JDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
+				OpdDateFieldCal = new CustomJDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
 				OpdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 				OpdDateFieldCal.setDateFormatString("dd/MM/yy");
 				OpdDateFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {

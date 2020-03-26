@@ -29,7 +29,7 @@ import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.jobjects.VoFloatTextField;
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -103,7 +103,7 @@ public class OperationRowEdit extends JPanel {
 	private JComboBox OpecomboBox;
 	private JLabel lblOperation;
 	
-	private JDateChooser jCalendarDate;
+	private CustomJDateChooser jCalendarDate;
 	private GregorianCalendar date ;
 	
 	private OperationRow opeRow;
@@ -330,9 +330,9 @@ public class OperationRowEdit extends JPanel {
 		this.myParent = myParent;
 	}
 	
-	private JDateChooser getJCalendarDate() {
+	private CustomJDateChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			jCalendarDate = new JDateChooser();
+			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			if(opeRow !=null ){
@@ -409,6 +409,7 @@ public class OperationRowEdit extends JPanel {
 					result = opeManageRow.updateOperationRow(updateOpeRow);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
+					return;
 				}
 	        	if(result){
 	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
