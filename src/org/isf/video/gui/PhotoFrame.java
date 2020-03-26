@@ -14,7 +14,7 @@ public class PhotoFrame extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public PhotoFrame (String path, String device, String resolution)	{
+	public PhotoFrame(String path, String resolution)	{
 		super("Photo preview");
 		
 		Container contentPane = getContentPane();
@@ -27,7 +27,7 @@ public class PhotoFrame extends JFrame{
 		
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 		
-		JLabel photoInfo = new JLabel("<html><center><br>Shoot with: " + device
+		JLabel photoInfo = new JLabel("<html><center> "
 									+ "<br><br>Original picture resolution: " + resolution 
 									+ "<br><br></center></html>");		
 		

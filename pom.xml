@@ -207,13 +207,18 @@
   				</exclusion>
   			</exclusions>
 		</dependency>
-  		<!-- dependency>
-			<groupId>jcu.sal</groupId>
-			<artifactId>sal_isf</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/sal_isf.jar</systemPath>
-		</dependency -->
+		<dependency>
+          <groupId>jcu.sal</groupId>
+          <artifactId>sal_isf</artifactId>
+          <version>1.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/sal_isf.jar</systemPath>
+        </dependency>
+		<dependency>
+			<groupId>com.github.sarxos</groupId>
+			<artifactId>webcam-capture</artifactId>
+			<version>0.3.11</version>
+		</dependency>
 		<dependency>
 			<groupId>jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
@@ -234,11 +239,6 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.2</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.processing</groupId>
-		    <artifactId>core</artifactId>
-		    <version>1.2.1</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.rxtx</groupId>
@@ -285,6 +285,32 @@
 	  		<artifactId>spring-context</artifactId>
 	  		<version>${spring.framework.version}</version>
 	  	</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-common</artifactId>
+			<version>1.8.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-binding</artifactId>
+			<version>2.13.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-forms</artifactId>
+			<version>1.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-looks</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-validation</artifactId>
+			<version>2.5.1</version>
+		</dependency>
 	  	<!-- <dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -316,14 +342,6 @@
                 <id>dcm4che</id>
                 <name>Dcm4Che Repository</name>
                 <url>http://www.dcm4che.org/maven2/</url>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-        </repository>
-        <repository>
-                <id>cytoscape</id>
-                <name>Cytoscape Repository</name>
-                <url>http://code.cytoscape.org/nexus/content/repositories/releases/</url>
                 <snapshots>
                     <enabled>false</enabled>
                 </snapshots>
