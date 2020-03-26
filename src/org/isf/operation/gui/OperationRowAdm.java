@@ -47,6 +47,7 @@ import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.operation.model.Resultat;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
@@ -421,7 +422,13 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			if (yesOrNo == JOptionPane.YES_OPTION) {
 				int idOpe = operationRow.getId();
 				if (idOpe > 0) {
-					boolean result = opeRowManager.deleteOperationRow(operationRow);
+					boolean result = false;
+					try {
+						result = opeRowManager.deleteOperationRow(operationRow);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+						return;
+					}
 					if (result) {
 						JOptionPane.showMessageDialog(OperationRowAdm.this,
 								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
@@ -455,15 +462,23 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	@Override
 	public void admissionUpdated(AWTEvent e) {
-		saveAllOpeRow(oprowData, opeRowManager, e);
+		try {
+			saveAllOpeRow(oprowData, opeRowManager, e);
+		} catch (OHServiceException e1) {
+			OHServiceExceptionUtil.showMessages(e1);
+		}
 	}
 
 	@Override
 	public void admissionInserted(AWTEvent e) {
-		saveAllOpeRow(oprowData, opeRowManager, e);
+		try {
+			saveAllOpeRow(oprowData, opeRowManager, e);
+		} catch (OHServiceException e1) {
+			OHServiceExceptionUtil.showMessages(e1);
+		}
 	}
 
-	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, AWTEvent e) {
+	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, AWTEvent e) throws OHServiceException {
 		for (org.isf.operation.model.OperationRow opRow : listOpe) {
 			if ((opRow.getId() > 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
 				RowManager.updateOperationRow(opRow);
