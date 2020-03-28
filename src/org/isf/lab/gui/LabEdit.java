@@ -64,7 +64,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class LabEdit extends JDialog {
 	/**
@@ -132,7 +132,7 @@ public class LabEdit extends JDialog {
 	private VoLimitedTextField sexTextField = null;
 
 //	private VoDateTextField examDateField = null;
-	private JDateChooser examDateFieldCal = null;
+	private CustomJDateChooser examDateFieldCal = null;
 	private GregorianCalendar dateIn = null;
 
 	
@@ -143,7 +143,7 @@ public class LabEdit extends JDialog {
 	private static final Integer buttonPanelHeight=40; 
 	
 	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-	
+	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
 	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
 
 	
@@ -289,7 +289,7 @@ public class LabEdit extends JDialog {
 		return dataPanel;
 	}
 
-	private JDateChooser getExamDateFieldCal() {
+	private CustomJDateChooser getExamDateFieldCal() {
 		java.util.Date myDate = null;
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDateGregorian();
@@ -299,7 +299,7 @@ public class LabEdit extends JDialog {
 		if (dateIn != null) {
 			myDate = dateIn.getTime();
 		}
-		return (new JDateChooser(myDate, "dd/MM/yy"));
+		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
 	}
 	
 	private JCheckBox getInPatientCheckBox() {
@@ -432,7 +432,7 @@ public class LabEdit extends JDialog {
 				matComboBox.addItem(elem);
 				if (!insert) {
 					try {	
-						matComboBox.setSelectedItem(lab.getMaterial());
+						matComboBox.setSelectedItem(labManager.getMaterialTranslated(lab.getMaterial()));
 						}
 					catch (Exception e) {}
 				}
@@ -528,7 +528,7 @@ public class LabEdit extends JDialog {
 					
 					lab.setDate(new GregorianCalendar());
 					lab.setExamDate(gregDate);
-					lab.setMaterial(matSelected);
+					lab.setMaterial(labManager.getMaterialKey(matSelected));
 					lab.setExam(examSelected);
 					lab.setNote(noteTextArea.getText());
 					lab.setInOutPatient((inPatientCheckBox.isSelected()?"I":"O"));
@@ -553,19 +553,18 @@ public class LabEdit extends JDialog {
 							}
 						}
 					}
-					LabManager manager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
 					boolean result = false;
 					if (insert) {
 						lab.setAge(tmpAge);
 						try {
-							result = manager.newLaboratory(lab,	labRow);
+							result = labManager.newLaboratory(lab,	labRow);
 						} catch (OHServiceException e1) {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 					} else {
 						try {
-							result = manager.updateLaboratory(lab, labRow);
+							result = labManager.updateLaboratory(lab, labRow);
 						} catch (OHServiceException e1) {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);

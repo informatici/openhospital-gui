@@ -57,7 +57,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class LabEditExtended extends JDialog {
 	/**
@@ -135,7 +135,7 @@ public class LabEditExtended extends JDialog {
 	//private JButton jSearchTrashButton = null;
 	
 	//private VoDateTextField examDateField = null;
-	private JDateChooser examDateFieldCal = null;
+	private CustomJDateChooser examDateFieldCal = null;
 	private GregorianCalendar dateIn = null;
 
 	
@@ -356,7 +356,7 @@ public class LabEditExtended extends JDialog {
 		return dataPatient;
 	}
 
-	private JDateChooser getExamDateFieldCal() {
+	private CustomJDateChooser getExamDateFieldCal() {
 		java.util.Date myDate = null;
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDateGregorian();
@@ -366,7 +366,7 @@ public class LabEditExtended extends JDialog {
 		if (dateIn != null) {
 			myDate = dateIn.getTime();
 		}
-		return (new JDateChooser(myDate, "dd/MM/yy"));
+		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
 	}
 	
 	private JCheckBox getInPatientCheckBox() {
@@ -556,7 +556,7 @@ public class LabEditExtended extends JDialog {
 				matComboBox.addItem(elem);
 				if (!insert) {
 					try {	
-						matComboBox.setSelectedItem(lab.getMaterial());
+						matComboBox.setSelectedItem(labManager.getMaterialTranslated(lab.getMaterial()));
 						}
 					catch (Exception e) {}
 				}
@@ -566,7 +566,6 @@ public class LabEditExtended extends JDialog {
 	}
 
 	
-	//prova per gestire un campo note al posto di uno volimited
 	private JTextArea getNoteTextArea() {
 		if (noteTextArea == null) {
 			noteTextArea = new JTextArea(10,30);
@@ -653,7 +652,7 @@ public class LabEditExtended extends JDialog {
 					try {
 						labPat=(Patient)patientComboBox.getSelectedItem();
 					} catch (ClassCastException e2) {
-						JOptionPane.showMessageDialog(LabEditExtended.this, 
+						JOptionPane.showMessageDialog(LabEditExtended.this,
 								MessageBundle.getMessage("angal.lab.pleaseselectapatient"));
 						return;
 					}
@@ -670,7 +669,7 @@ public class LabEditExtended extends JDialog {
 					lab.setDate(new GregorianCalendar());
 					lab.setExamDate(gregDate);
 					RememberDates.setLastLabExamDate(gregDate);
-					lab.setMaterial(matSelected);
+					lab.setMaterial(labManager.getMaterialKey(matSelected));
 					lab.setExam(examSelected);
 					lab.setNote(noteTextArea.getText());
 					lab.setInOutPatient((inPatientCheckBox.isSelected()?"I":"O"));

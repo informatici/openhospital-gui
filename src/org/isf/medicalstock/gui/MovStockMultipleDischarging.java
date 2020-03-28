@@ -1,6 +1,6 @@
 package org.isf.medicalstock.gui;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.apache.log4j.PropertyConfigurator;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -50,7 +50,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
 	private JComboBox jComboBoxDischargeType;
-	private JDateChooser jDateChooser;
+	private CustomJDateChooser jDateChooser;
 	private JComboBox jComboBoxDestination;
 	private JTable jTableMovements;
 	private final String[] columnNames = { 
@@ -473,9 +473,9 @@ public class MovStockMultipleDischarging extends JDialog {
 		return shareWith;
 	}
 	
-	private JDateChooser getJDateChooser() {
+	private CustomJDateChooser getJDateChooser() {
 		if (jDateChooser == null) {
-			jDateChooser = new JDateChooser(new Date());
+			jDateChooser = new CustomJDateChooser(new Date());
 			jDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
 			jDateChooser.setPreferredSize(new Dimension(150, 24));
 		}

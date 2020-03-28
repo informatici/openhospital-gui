@@ -1,10 +1,15 @@
 package org.isf.utils.jobjects;
 
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+
+import org.isf.generaldata.GeneralData;
 
 /**
  * 
@@ -53,6 +58,8 @@ public class VoDoubleTextField extends JTextField {
 				Double.parseDouble(newString + "0");
 				super.insertString(offs, str, a);
 			} catch (NumberFormatException e) {
+				if (!str.matches("^[a-zA-Z0-9]*$"))
+					super.insertString(offs, String.valueOf(DecimalFormatSymbols.getInstance(new Locale(GeneralData.LANGUAGE)).getDecimalSeparator()), a);
 			}
 		}
 	}

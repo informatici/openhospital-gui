@@ -1,8 +1,11 @@
 package org.isf.utils.jobjects;
 
-import java.awt.*;
+import java.awt.AWTEvent;
+import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.awt.event.InputEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Stack;
 
 class CursorManager {
   private final DelayTimer waitTimer;
@@ -19,11 +22,13 @@ class CursorManager {
     }
   }
   private void clearQueueOfInputEvents() {
-    EventQueue q = Toolkit.getDefaultToolkit().getSystemEventQueue();
-    synchronized (q) {
-      ArrayList<AWTEvent> nonInputEvents = gatherNonInputEvents(q);
-      for (Iterator<AWTEvent> it = nonInputEvents.iterator(); it.hasNext();)
-        q.postEvent((AWTEvent)it.next());
+    final WaitCursorEventQueue waitCursorEventQueue = (WaitCursorEventQueue) Toolkit.getDefaultToolkit().getSystemEventQueue();
+    final EventQueue parentQueue = waitCursorEventQueue.getParentQueue();
+    synchronized(parentQueue){
+      synchronized(waitCursorEventQueue) {
+        for (AWTEvent nonInputEvent : gatherNonInputEvents(waitCursorEventQueue))
+            waitCursorEventQueue.postEvent(nonInputEvent);
+      }
     }
   }
   private ArrayList<AWTEvent> gatherNonInputEvents(EventQueue systemQueue) {
