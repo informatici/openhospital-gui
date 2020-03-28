@@ -64,7 +64,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class LabEdit extends JDialog {
 	/**
@@ -132,7 +132,7 @@ public class LabEdit extends JDialog {
 	private VoLimitedTextField sexTextField = null;
 
 //	private VoDateTextField examDateField = null;
-	private JDateChooser examDateFieldCal = null;
+	private CustomJDateChooser examDateFieldCal = null;
 	private GregorianCalendar dateIn = null;
 
 	
@@ -143,6 +143,8 @@ public class LabEdit extends JDialog {
 	private static final Integer buttonPanelHeight=40; 
 	
 	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+	
+	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
 
 	
 	private ArrayList<ExamRow> eRows = null;
@@ -287,7 +289,7 @@ public class LabEdit extends JDialog {
 		return dataPanel;
 	}
 
-	private JDateChooser getExamDateFieldCal() {
+	private CustomJDateChooser getExamDateFieldCal() {
 		java.util.Date myDate = null;
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDateGregorian();
@@ -297,7 +299,7 @@ public class LabEdit extends JDialog {
 		if (dateIn != null) {
 			myDate = dateIn.getTime();
 		}
-		return (new JDateChooser(myDate, "dd/MM/yy"));
+		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
 	}
 	
 	private JCheckBox getInPatientCheckBox() {
@@ -631,7 +633,6 @@ public class LabEdit extends JDialog {
 					resultPanel.add(new SubPanel(r, "N"));
 			}
 		} else {
-			LabRowManager lRowManager = new LabRowManager();
 
 			ArrayList<LaboratoryRow> lRows;
 			try {

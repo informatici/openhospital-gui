@@ -75,7 +75,7 @@ import org.isf.utils.jobjects.VoLimitedTextArea;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class PatientExaminationEdit extends JDialog {
 
@@ -106,7 +106,7 @@ public class PatientExaminationEdit extends JDialog {
 	private ScaledJSlider jSliderTemp;
 	private ScaledJSlider jSliderSaturation;
 	private JScrollPane jScrollPaneNote;
-	private JDateChooser jDateChooserDate;
+	private CustomJDateChooser jDateChooserDate;
 	private VoIntegerTextField jSpinnerAPmin;
 	private VoIntegerTextField jSpinnerAPmax;
 	private JLabel jLabelHeightAbb;
@@ -790,9 +790,9 @@ public class PatientExaminationEdit extends JDialog {
 		return jCheckBoxToggleAP;
 	}
 
-	private JDateChooser getJDateChooserDate() {
+	private CustomJDateChooser getJDateChooserDate() {
 		if (jDateChooserDate == null) {
-			jDateChooserDate = new JDateChooser();
+			jDateChooserDate = new CustomJDateChooser();
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDate.setLocale(new Locale("en")); //$NON-NLS-1$
 			jDateChooserDate.setDateFormatString("dd/MM/yyyy - HH:mm"); //$NON-NLS-1$

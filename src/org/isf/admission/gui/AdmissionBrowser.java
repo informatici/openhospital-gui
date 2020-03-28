@@ -18,6 +18,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -76,6 +77,8 @@ import org.isf.pregtreattype.manager.PregnantTreatmentTypeBrowserManager;
 import org.isf.pregtreattype.model.PregnantTreatmentType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.ShadowBorder;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
@@ -85,7 +88,7 @@ import org.isf.ward.model.Ward;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * This class shows essential patient data and allows to create an admission
@@ -198,7 +201,7 @@ public class AdmissionBrowser extends JDialog {
 
 	private VoLimitedTextField weightField = null;
 
-	private JDateChooser visitDateFieldCal = null; // Calendar
+	private CustomJDateChooser visitDateFieldCal = null; // Calendar
 
 	private JComboBox treatmTypeBox = null;
 
@@ -212,7 +215,7 @@ public class AdmissionBrowser extends JDialog {
 	
 	private GregorianCalendar deliveryDate = null;
 
-	private JDateChooser deliveryDateFieldCal = null;
+	private CustomJDateChooser deliveryDateFieldCal = null;
 
 	private JComboBox deliveryTypeBox = null;
 
@@ -230,11 +233,11 @@ public class AdmissionBrowser extends JDialog {
 
 	private GregorianCalendar abortDate = null;
 
-	private JDateChooser ctrl1DateFieldCal = null;
+	private CustomJDateChooser ctrl1DateFieldCal = null;
 
-	private JDateChooser ctrl2DateFieldCal = null;
+	private CustomJDateChooser ctrl2DateFieldCal = null;
 
-	private JDateChooser abortDateFieldCal = null;
+	private CustomJDateChooser abortDateFieldCal = null;
 	
 	private JComboBox wardBox;
 
@@ -273,7 +276,7 @@ public class AdmissionBrowser extends JDialog {
 	
 	private GregorianCalendar dateIn = null;
 
-	private JDateChooser dateInFieldCal = null;
+	private CustomJDateChooser dateInFieldCal = null;
 
 	private JComboBox admTypeBox = null;
 
@@ -309,7 +312,7 @@ public class AdmissionBrowser extends JDialog {
 	
 	//private GregorianCalendar operationDate = null;
 
-	//private JDateChooser operationDateFieldCal = null;
+	//private CustomJDateChooser operationDateFieldCal = null;
 
 	//private VoDateTextField operationDateField = null;
 
@@ -319,7 +322,7 @@ public class AdmissionBrowser extends JDialog {
 	
 	private GregorianCalendar dateOut = null;
 
-	private JDateChooser dateOutFieldCal = null;
+	private CustomJDateChooser dateOutFieldCal = null;
 
 	private JComboBox disTypeBox = null;
 
@@ -806,7 +809,7 @@ public class AdmissionBrowser extends JDialog {
 			} else {
 				visitDate = new GregorianCalendar();
 			}
-			visitDateFieldCal = new JDateChooser(myDate, "dd/MM/yy"); // Calendar
+			visitDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy"); // Calendar
 			visitDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			visitDateFieldCal.setDateFormatString("dd/MM/yy");
 	
@@ -881,7 +884,7 @@ public class AdmissionBrowser extends JDialog {
 				deliveryDate = admission.getDeliveryDate();
 				myDate = deliveryDate.getTime();
 			} 
-			deliveryDateFieldCal = new JDateChooser(myDate, "dd/MM/yy"); // Calendar
+			deliveryDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy"); // Calendar
 			deliveryDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			deliveryDateFieldCal.setDateFormatString("dd/MM/yy");
 			
@@ -899,7 +902,7 @@ public class AdmissionBrowser extends JDialog {
 				abortDate = admission.getAbortDate();
 				myDate = abortDate.getTime();
 			}
-			abortDateFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+			abortDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			abortDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			abortDateFieldCal.setDateFormatString("dd/MM/yy");
 	
@@ -918,7 +921,7 @@ public class AdmissionBrowser extends JDialog {
 				ctrl1Date = admission.getCtrlDate1();
 				myDate = ctrl1Date.getTime();
 			} 
-			ctrl1DateFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+			ctrl1DateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			ctrl1DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			ctrl1DateFieldCal.setDateFormatString("dd/MM/yy");
 
@@ -937,7 +940,7 @@ public class AdmissionBrowser extends JDialog {
 				ctrl2Date = admission.getCtrlDate2();
 				myDate = ctrl2Date.getTime();
 			} 
-			ctrl2DateFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+			ctrl2DateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			ctrl2DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			ctrl2DateFieldCal.setDateFormatString("dd/MM/yy");
 
@@ -1233,7 +1236,7 @@ public class AdmissionBrowser extends JDialog {
 			} else {
 				dateIn = RememberDates.getLastAdmInDateGregorian();
 			}
-			dateInFieldCal = new JDateChooser(dateIn.getTime(), "dd/MM/yy"); // Calendar
+			dateInFieldCal = new CustomJDateChooser(dateIn.getTime(), "dd/MM/yy"); // Calendar
 			dateInFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateInFieldCal.setDateFormatString("dd/MM/yy");
 			dateInFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
@@ -1679,7 +1682,7 @@ public class AdmissionBrowser extends JDialog {
 //				operationDate = admission.getOpDate();
 //				myDate = operationDate.getTime();
 //			}
-//			operationDateFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+//			operationDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 //			operationDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 //			operationDateFieldCal.setDateFormatString("dd/MM/yy");
 //			
@@ -1779,7 +1782,7 @@ public class AdmissionBrowser extends JDialog {
 				dateOut = admission.getDisDate();
 				myDate = dateOut.getTime();
 			}
-			dateOutFieldCal = new JDateChooser(myDate, "dd/MM/yy");
+			dateOutFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			dateOutFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateOutFieldCal.setDateFormatString("dd/MM/yy");
 			dateOutFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
@@ -1889,19 +1892,6 @@ public class AdmissionBrowser extends JDialog {
 
 			public void actionPerformed(ActionEvent e) {
 				
-//					ArrayList<Admission> admList;
-//					try {
-//						admList = admissionManager.getAdmissions(patient);
-//					}catch(OHServiceException ex){
-//                        OHServiceExceptionUtil.showMessages(ex);
-//						admList = new ArrayList<Admission>();
-//					}
-
-					/*
-					 * Today Gregorian Calendar
-					 */
-					//GregorianCalendar today = new GregorianCalendar();
-
 					/*
 					 * is it an admission update or a discharge? if we have a
 					 * valid discharge date isDischarge will be true
@@ -1920,7 +1910,6 @@ public class AdmissionBrowser extends JDialog {
 					} else {
 						admission.setWard((Ward) (wardBox.getSelectedItem()));
 					}
-
 					if (admission.getWard().getCode().equalsIgnoreCase("M")) {
 						isPregnancy = true;
 					}
@@ -2174,71 +2163,89 @@ public class AdmissionBrowser extends JDialog {
 
 					// ready to save...
 					if (!editing && !isDischarge) {
-                                                /**** date operation controle ****/
-						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
-						{
-							JOptionPane.showMessageDialog(AdmissionBrowser.this,
-                                                                            MessageBundle.getMessage("angal.admition.check.operationdate"), MessageBundle.getMessage("angal.hospital"),
-										JOptionPane.PLAIN_MESSAGE);
-				  		    return;
-						}	
+                                                /**** operation date control ****/
+//						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
+//						{
+//							JOptionPane.showMessageDialog(AdmissionBrowser.this,
+//                                                                            MessageBundle.getMessage("angal.admission.check.operationdate"), MessageBundle.getMessage("angal.hospital"),
+//										JOptionPane.PLAIN_MESSAGE);
+//				  		    return;
+//						}	
 					    /*********************************/
-						int newKey = -1;
-						try {
-							newKey = admissionManager.newAdmissionReturnKey(admission);
-						}catch(OHServiceException exc){
-                            OHServiceExceptionUtil.showMessages(exc);
-						}
-						if (newKey > 0) {
-							result = true;
-							admission.setId(newKey);
-							fireAdmissionInserted(admission);
-							if (GeneralData.XMPPMODULEENABLED) {
-								CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
-								frame.sendMessage("new patient admission: "+patient.getName()+" in "+((Ward)wardBox.getSelectedItem()).getDescription(), (String)shareWith.getSelectedItem(), false);
+						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
+						if(!errors.isEmpty()) {
+							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
+						} else {
+							int newKey = -1;
+							try {
+								newKey = admissionManager.newAdmissionReturnKey(admission);
+							}catch(OHServiceException exc){
+	                            OHServiceExceptionUtil.showMessages(exc);
 							}
-							dispose();
+							if (newKey > 0) {
+								result = true;
+								admission.setId(newKey);
+								fireAdmissionInserted(admission);
+								if (GeneralData.XMPPMODULEENABLED) {
+									CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
+									frame.sendMessage("new patient admission: "+patient.getName()+" in "+((Ward)wardBox.getSelectedItem()).getDescription(), (String)shareWith.getSelectedItem(), false);
+								}
+								dispose();
+							}
 						}
+						
 					} else if (!editing && isDischarge) {
-                                                /**** date operation controle ****/
-						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
-						{								
-					  		  JOptionPane.showMessageDialog(AdmissionBrowser.this,
-                                                                                MessageBundle.getMessage("angal.admition.check.operationdate") , MessageBundle.getMessage("angal.hospital"),
-											JOptionPane.PLAIN_MESSAGE);
-					  		  return;						    
-						}
-						try {
-							result = admissionManager.newAdmission(admission);
-						}catch(OHServiceException ex){
-                            OHServiceExceptionUtil.showMessages(ex);
-						}
-						if (result) {
-							fireAdmissionUpdated(admission);
-							dispose();
-						}
-					} else {
-                                                /**** date operation controle ****/
-						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
-						{
-							JOptionPane.showMessageDialog(AdmissionBrowser.this,
-                                                                            MessageBundle.getMessage("angal.admition.check.operationdate"), MessageBundle.getMessage("angal.hospital"),
-										JOptionPane.PLAIN_MESSAGE);
-				  		    return;
-						}
-						try {
-							result = admissionManager.updateAdmission(admission);
-						}catch(OHServiceException ex){
-                            OHServiceExceptionUtil.showMessages(ex);
-						}
-						if (result) {
-							fireAdmissionUpdated(admission);
-							if (GeneralData.XMPPMODULEENABLED) {
-								CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
-								frame.sendMessage("discharged patient: "+patient.getName()+" for "+((DischargeType)disTypeBox.getSelectedItem()).getDescription() , (String)shareWith.getSelectedItem(), false);
+                                                /**** operation date control ****/
+//						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
+//						{								
+//					  		  JOptionPane.showMessageDialog(AdmissionBrowser.this,
+//                                                                                MessageBundle.getMessage("angal.admission.check.operationdate") , MessageBundle.getMessage("angal.hospital"),
+//											JOptionPane.PLAIN_MESSAGE);
+//					  		  return;						    
+//						}
+						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
+						if(!errors.isEmpty()) {
+							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
+						} else {
+							try {
+								result = admissionManager.newAdmission(admission);
+							}catch(OHServiceException ex){
+	                            OHServiceExceptionUtil.showMessages(ex);
 							}
-							dispose();
+							if (result) {
+								fireAdmissionUpdated(admission);
+								dispose();
+							}
 						}
+						
+					} else {
+                                                /**** operation date control ****/
+//						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
+//						{
+//							JOptionPane.showMessageDialog(AdmissionBrowser.this,
+//                                                                            MessageBundle.getMessage("angal.admission.check.operationdate"), MessageBundle.getMessage("angal.hospital"),
+//										JOptionPane.PLAIN_MESSAGE);
+//				  		    return;
+//						}
+						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
+						if(!errors.isEmpty()) {
+							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
+						} else {
+							try {
+								result = admissionManager.updateAdmission(admission);
+							}catch(OHServiceException ex){
+	                            OHServiceExceptionUtil.showMessages(ex);
+							}
+							if (result) {
+								fireAdmissionUpdated(admission);
+								if (GeneralData.XMPPMODULEENABLED) {
+									CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
+									frame.sendMessage("discharged patient: "+patient.getName()+" for "+((DischargeType)disTypeBox.getSelectedItem()).getDescription() , (String)shareWith.getSelectedItem(), false);
+								}
+								dispose();
+							}
+						}
+						
 					}
 
 					if (!result) {
@@ -2277,23 +2284,40 @@ public class AdmissionBrowser extends JDialog {
 	return results;
     }    
         
-    public boolean checkAllOperationRowDate(List<OperationRow> list, Admission admission){
+    @SuppressWarnings("deprecation")
+	public List<OHExceptionMessage> checkAllOperationRowDate(List<OperationRow> list, Admission admission){
+    	DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));
+    	List<OHExceptionMessage> errors = new ArrayList<OHExceptionMessage>();
 		Date beginDate,endDate;
 		if(admission.getAdmDate()!=null)beginDate=admission.getAdmDate().getTime();else beginDate=null;
 		if(admission.getDisDate()!=null)endDate=admission.getDisDate().getTime();else endDate=null;
 		for (org.isf.operation.model.OperationRow opRow : list) {
 			Date currentRowDate = opRow.getOpDate().getTime();
+			/**
+			 * prevent for fails due to time 
+			 */
+			currentRowDate.setHours(23);
+			currentRowDate.setMinutes(59);
+			currentRowDate.setSeconds(59);
+			
 			if((beginDate!=null)&&(endDate!=null)){
 				if((currentRowDate.before(beginDate))||(currentRowDate.after(endDate))){
-					return false;
+					errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"), 
+							MessageBundle.getMessage("angal.admission.invalidoperationdate") + " " 
+							+ MessageBundle.getMessage("angal.admission.theoperationdatebetween") + " "
+                            + currentDateFormat.format(beginDate) + " " + MessageBundle.getMessage("angal.admission.and") + " " 
+							+ currentDateFormat.format(endDate), OHSeverityLevel.ERROR));
 				}
 			}
 			if((beginDate!=null)&&(endDate==null)){
 				if(currentRowDate.before(beginDate)){
-					return false;
+					errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"), 
+							MessageBundle.getMessage("angal.admission.invalidoperationdate") + " " 
+							+ MessageBundle.getMessage("angal.admission.theoperationdatenewerthan") + " "
+                            + currentDateFormat.format(beginDate), OHSeverityLevel.ERROR));
 				}
 			}
 		}
-		return true;
+		return errors;
 	}
 }// class

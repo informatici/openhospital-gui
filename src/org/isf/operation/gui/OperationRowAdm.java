@@ -5,7 +5,6 @@
  */
 package org.isf.operation.gui;
 
-import com.toedter.calendar.JDateChooser;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -34,6 +34,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 import org.isf.admission.gui.AdmissionBrowser;
 import org.isf.admission.model.Admission;
 import org.isf.generaldata.GeneralData;
@@ -45,8 +46,9 @@ import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.operation.model.Resultat;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
@@ -63,7 +65,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private static final long serialVersionUID = 1L;
 	private JLabel labelDate;
 	private JTextField textFieldUnit;
-	private JDateChooser textDate;
+	private CustomJDateChooser textDate;
 	private JComboBox comboOperation;
 	private JComboBox comboResult;
 	private JTextArea textAreaRemark;
@@ -76,7 +78,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 
-	private JDateChooser jCalendarDate;
+	private CustomJDateChooser jCalendarDate;
 	private JTable tableData;
 
 	public OperationRowAdm(Admission adm) {
@@ -271,8 +273,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			try {
 				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
 				oprowData.addAll(res);
-			} catch (OHException ex) {
-				//
+			} catch (OHServiceException ex) {
+				ex.printStackTrace();
 			}
 		}
 		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
@@ -280,9 +282,9 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	}
 
-	private JDateChooser getJCalendarDate() {
+	private CustomJDateChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			jCalendarDate = new JDateChooser();
+			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarDate.setDate(DateTime.now().toDate());
@@ -419,7 +421,13 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			if (yesOrNo == JOptionPane.YES_OPTION) {
 				int idOpe = operationRow.getId();
 				if (idOpe > 0) {
-					boolean result = opeRowManager.deleteOperationRow(operationRow);
+					boolean result = false;
+					try {
+						result = opeRowManager.deleteOperationRow(operationRow);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+						return;
+					}
 					if (result) {
 						JOptionPane.showMessageDialog(OperationRowAdm.this,
 								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
@@ -453,28 +461,47 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	@Override
 	public void admissionUpdated(AWTEvent e) {
-		saveAllOpeRow(oprowData, opeRowManager, e);
+		try {
+			saveAllOpeRow(oprowData, opeRowManager, e);
+		} catch (OHServiceException e1) {
+			OHServiceExceptionUtil.showMessages(e1);
+		}
 	}
 
 	@Override
 	public void admissionInserted(AWTEvent e) {
-		saveAllOpeRow(oprowData, opeRowManager, e);
+		try {
+			saveAllOpeRow(oprowData, opeRowManager, e);
+		} catch (OHServiceException e1) {
+			OHServiceExceptionUtil.showMessages(e1);
+		}
 	}
 
-	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, AWTEvent e) {
+	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, AWTEvent e) throws OHServiceException {
 		for (org.isf.operation.model.OperationRow opRow : listOpe) {
-			if ((opRow.getId() > 0) && (opRow.getAdmission().getId() > 0)) {
-				RowManager.updateOperationRow(opRow);
+			if ((opRow.getId() > 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
+				try {
+					RowManager.updateOperationRow(opRow);
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+				}
 
 			}
-			if ((opRow.getId() <= 0) && (opRow.getAdmission().getId() > 0)) {
-				RowManager.newOperationRow(opRow);
-
+			if ((opRow.getId() <= 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
+				try {
+					RowManager.newOperationRow(opRow);
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+				}
 			}
-			if ((opRow.getId() <= 0) && (opRow.getAdmission().getId() <= 0)) {
+			if ((opRow.getId() <= 0) && (opRow.getAdmission() == null || opRow.getAdmission().getId() <= 0)) {
 				Admission admiss = (Admission) e.getSource();
 				opRow.setAdmission(admiss);
-				RowManager.newOperationRow(opRow);
+				try {
+					RowManager.newOperationRow(opRow);
+				} catch (OHServiceException e1) {
+					OHServiceExceptionUtil.showMessages(e1);
+				}
 			}
 		}
 	}
