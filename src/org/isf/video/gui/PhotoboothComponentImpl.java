@@ -133,6 +133,8 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                     PhotoboothComponentImpl.this.getSnapshotPanel().setPreferredSize((Dimension) newValue);
                     PhotoboothComponentImpl.this.getSnapshotPanel().setMinimumSize((Dimension) newValue);
 
+                    LOGGER.info("Closing webcam before attaching to panel.");
+                    webcam.close();
                     webcamPanel = new WebcamPanel(webcam);
                     PhotoboothComponentImpl.this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
                     owner.pack();
@@ -160,12 +162,18 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
 
                     // set to highest resolution
                     photoboothPanelPresentationModel.setResolution(allResolutions[allResolutions.length - 1]);
+                    LOGGER.info("Closing webcam {} before changing resolution", webcam.getName());
+                    webcam.close();
+
+                    LOGGER.info("Changing resolution to {}", photoboothPanelPresentationModel.getResolution());
                     webcam.setViewSize(photoboothPanelPresentationModel.getResolution());
+
                     PhotoboothComponentImpl.this.getStreamingPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
                     PhotoboothComponentImpl.this.getStreamingPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
                     PhotoboothComponentImpl.this.getSnapshotPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
                     PhotoboothComponentImpl.this.getSnapshotPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
 
+                    LOGGER.info("Attaching webcam {} to panel", webcam.getName());
                     webcamPanel = new WebcamPanel(webcam);
                     PhotoboothComponentImpl.this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
                     owner.pack();
