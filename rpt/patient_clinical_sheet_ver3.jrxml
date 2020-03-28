@@ -70,7 +70,7 @@ UNION
         SELECT "Examination" AS TYPE,
 	PEX_DATE AS DATE, PEX_NOTE AS IDS, 
     CONCAT(" Height:  ", PEX_HEIGHT, " - Weight: " , PEX_WEIGHT) AS DETAILS_1,
-       CONCAT(" AP:  ", PEX_PA_MIN, "/ " , PEX_PA_MAX) AS DETAILS_2,
+       CONCAT(" AP:  ", PEX_AP_MIN, "/ " , PEX_AP_MAX) AS DETAILS_2,
 	    CONCAT(" Temperature:  ", PEX_TEMP)  AS DETAILS_3,
 	    CONCAT(" O:  ", PEX_SAT)  AS DETAILS_4,
 	   PEX_NOTE AS NOTE
