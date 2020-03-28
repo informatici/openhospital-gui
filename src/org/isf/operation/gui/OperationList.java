@@ -1,17 +1,28 @@
 package org.isf.operation.gui;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.AWTEvent;
-import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
@@ -21,24 +32,10 @@ import org.isf.operation.gui.OperationRowEdit.OperationRowListener;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.OperationRow;
 import org.isf.patient.model.Patient;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
-
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.FlowLayout;
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.util.ArrayList;
-import org.isf.admission.manager.AdmissionBrowserManager;
-import org.isf.utils.exception.OHException;
-import org.isf.utils.exception.OHServiceException;
 
 public class OperationList extends JPanel implements OperationRowListener, OperationRowEditListener {
 
@@ -185,12 +182,16 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 
 		/**** getting data **/
 		if (myOpd != null) {
-			oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+			try {
+				oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
+			}
 		}
 		if (myAdmission != null) {
 			try {
 				oprowData = opeRowManager.getOperationRowByAdmission(myAdmission);
-			} catch (OHException ex) {
+			} catch (OHServiceException ex) {
 				ex.printStackTrace();
 			}
 		}
@@ -203,8 +204,6 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
 				}
 			} catch (OHServiceException ex) {
-				ex.printStackTrace();
-			} catch (OHException ex) {
 				ex.printStackTrace();
 			}
 			panelHeader.setVisible(false);
@@ -360,7 +359,13 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		int yesOrNo = JOptionPane.showConfirmDialog(OperationList.this,
 				MessageBundle.getMessage("angal.operationrowlist.confirmdelete"), null, JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
 		if (yesOrNo == JOptionPane.YES_OPTION) {
-			boolean result = opeRowManager.deleteOperationRow(operationRow);
+			boolean result = false;
+			try {
+				result = opeRowManager.deleteOperationRow(operationRow);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+				return;
+			}
 			if (result) {
 				JOptionPane.showMessageDialog(OperationList.this,
 						MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
@@ -389,7 +394,11 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	}
 
 	public void refreshJtable() {
-		oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+		try {
+			oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
 		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
 		JtableData.setModel(modelOhOpeRow);
 		JtableData.repaint();

@@ -78,7 +78,7 @@ import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class WardPharmacy extends ModalJFrame implements 
 	WardPharmacyEdit.MovementWardListeners, 
@@ -137,10 +137,10 @@ public class WardPharmacy extends ModalJFrame implements
 	private JButton jButtonClose;
 	// private JButton jButtonDelete;
 	private JButton jButtonEdit;
-	private JDateChooser jCalendarFrom;
+	private CustomJDateChooser jCalendarFrom;
 	private GregorianCalendar dateFrom = new GregorianCalendar();
 	private GregorianCalendar dateTo = new GregorianCalendar();
-	private JDateChooser jCalendarTo;
+	private CustomJDateChooser jCalendarTo;
 	private DefaultTableModel modelIncomes;
 	private DefaultTableModel modelOutcomes;
 	private DefaultTableModel modelDrugs;
@@ -438,12 +438,12 @@ public class WardPharmacy extends ModalJFrame implements
 		return jPanelRange;
 	}
 
-	private JDateChooser getJCalendarTo() {
+	private CustomJDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
 			dateTo.set(GregorianCalendar.HOUR_OF_DAY, 23);
 			dateTo.set(GregorianCalendar.MINUTE, 59);
 			dateTo.set(GregorianCalendar.SECOND, 59);
-			jCalendarTo = new JDateChooser(dateTo.getTime()); // Calendar
+			jCalendarTo = new CustomJDateChooser(dateTo.getTime()); // Calendar
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarTo.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarTo.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
@@ -460,12 +460,12 @@ public class WardPharmacy extends ModalJFrame implements
 		return jCalendarTo;
 	}
 
-	private JDateChooser getJCalendarFrom() {
+	private CustomJDateChooser getJCalendarFrom() {
 		if (jCalendarFrom == null) {
 			dateFrom.set(GregorianCalendar.HOUR_OF_DAY, 0);
 			dateFrom.set(GregorianCalendar.MINUTE, 0);
 			dateFrom.set(GregorianCalendar.SECOND, 0);
-			jCalendarFrom = new JDateChooser(dateFrom.getTime()); // Calendar
+			jCalendarFrom = new CustomJDateChooser(dateFrom.getTime()); // Calendar
 			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarFrom.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarFrom.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
@@ -1413,7 +1413,7 @@ public class WardPharmacy extends ModalJFrame implements
 							
 							icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 							
-							JDateChooser dateChooser = new JDateChooser();
+							CustomJDateChooser dateChooser = new CustomJDateChooser();
 							dateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 							
 					        int r = JOptionPane.showConfirmDialog(WardPharmacy.this, 

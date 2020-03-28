@@ -44,7 +44,6 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
 import org.isf.menu.manager.Context;
-import org.isf.patient.gui.PatientInsertExtended.PatientListener;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
@@ -55,6 +54,7 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
 import com.toedter.calendar.JDateChooser;
+
 
 /*------------------------------------------
  * PatientInsertExtended - model for the patient entry

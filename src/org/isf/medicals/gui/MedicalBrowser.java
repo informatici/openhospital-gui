@@ -63,7 +63,7 @@ import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * This class shows a complete extended list of medical drugs,
@@ -347,7 +347,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 					
 					icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 					
-					JDateChooser dateChooser = new JDateChooser();
+					CustomJDateChooser dateChooser = new CustomJDateChooser();
 					dateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 					
 			        int r = JOptionPane.showConfirmDialog(MedicalBrowser.this, 

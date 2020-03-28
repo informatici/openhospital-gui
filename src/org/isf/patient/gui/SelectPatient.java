@@ -116,7 +116,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			}catch(OHServiceException ex){
 				if(ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
 				patArray = new ArrayList<Patient>();
@@ -149,7 +149,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			}catch(OHServiceException ex){
 				if(ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
 				patArray = new ArrayList<Patient>();
@@ -182,7 +182,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			}catch(OHServiceException ex){
 				if(ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
 				patArray = new ArrayList<Patient>();
@@ -210,12 +210,24 @@ public class SelectPatient extends JDialog implements PatientListener {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			if(!full)
-				patArray = patManager.getPatientHeadWithHeightAndWeight();
+				try {
+					patArray = patManager.getPatientWithHeightAndWeight(null);
+				} catch (OHServiceException e2) {
+					if(e2.getMessages() != null){
+						for(OHExceptionMessage msg : e2.getMessages()){
+							JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						}
+					}
+				}
 			else
 				try {
 					patArray = patManager.getPatient();
 				} catch (OHServiceException e1) {
-					e1.printStackTrace();
+					if(e1.getMessages() != null){
+						for(OHExceptionMessage msg : e1.getMessages()){
+							JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						}
+					}
 				}
 			patSearch = patArray;
 		}
@@ -499,7 +511,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 					}catch(OHServiceException ex){
 						if(ex.getMessages() != null){
 							for(OHExceptionMessage msg : ex.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+								JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
 						}
 						patArray = new ArrayList<Patient>();
