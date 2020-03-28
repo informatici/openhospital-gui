@@ -133,13 +133,6 @@ public class PatientFolderReportModal extends JDialog{
 	
 			jPanelChos.add(getPrintButton(), gbc_jPrintButtont);
 		
-		
-
-	
-			
-
-
-
 		}
 		return jPanelChos;
 	
@@ -346,12 +339,11 @@ public class PatientFolderReportModal extends JDialog{
 		if (jDateChooserDateFrom == null) {
 			jDateChooserDateFrom = new JDateChooser();
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jDateChooserDateFrom.setLocale(new Locale("en")); //$NON-NLS-1$
+			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE)); //$NON-NLS-1$
 			jDateChooserDateFrom.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
-			String date = "01/01/2000";
 			Date date2 = null;
 			try {
-				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+				date2 = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2000");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -375,17 +367,17 @@ public class PatientFolderReportModal extends JDialog{
 		if (jDateChooserDateTo == null) {
 			jDateChooserDateTo = new JDateChooser();
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jDateChooserDateTo.setLocale(new Locale("en")); //$NON-NLS-1$
+			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE)); //$NON-NLS-1$
 			jDateChooserDateTo.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
-			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());;
-			Date date2 = null;
-			try {
-				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			jDateChooserDateTo.setDate(date2);
+//			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());;
+//			Date date2 = null;
+//			try {
+//				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			jDateChooserDateTo.setDate(new Date());
 			
 			jDateChooserDateTo.addPropertyChangeListener("date", new PropertyChangeListener() {
 				
