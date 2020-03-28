@@ -190,7 +190,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		if (myAdmission != null) {
 			try {
 				oprowData = opeRowManager.getOperationRowByAdmission(myAdmission);
-			} catch (OHException ex) {
+			} catch (OHServiceException ex) {
 				ex.printStackTrace();
 			}
 		}
@@ -203,8 +203,6 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
 				}
 			} catch (OHServiceException ex) {
-				ex.printStackTrace();
-			} catch (OHException ex) {
 				ex.printStackTrace();
 			}
 			panelHeader.setVisible(false);

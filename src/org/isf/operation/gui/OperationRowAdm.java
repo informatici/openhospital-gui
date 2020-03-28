@@ -271,8 +271,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			try {
 				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
 				oprowData.addAll(res);
-			} catch (OHException ex) {
-				//
+			} catch (OHServiceException ex) {
+				ex.printStackTrace();
 			}
 		}
 		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
