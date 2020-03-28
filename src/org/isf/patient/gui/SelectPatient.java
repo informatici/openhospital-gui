@@ -46,8 +46,10 @@ import org.isf.patient.gui.PatientInsertExtended.PatientListener;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.visits.gui.InsertVisit;
 
 public class SelectPatient extends JDialog implements PatientListener {
 	
@@ -245,7 +247,38 @@ public class SelectPatient extends JDialog implements PatientListener {
 		setLocationRelativeTo(null);
 		buttonNew.setVisible(abbleAddPatient);
 	}
+	public SelectPatient(JDialog owner, boolean abbleAddPatient, boolean full) {
+		super(owner, true);
+		if (!GeneralData.ENHANCEDSEARCH) {
+			if(!full)
+				try {
+					patArray = patManager.getPatientHeadWithHeightAndWeight();
+				} catch (OHServiceException e2) {
+					OHServiceExceptionUtil.showMessages(e2);
+				}
+			else
+				try {
+					patArray = patManager.getPatient();
+				} catch (OHServiceException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			patSearch = patArray;
+		}
+		ps = new PatientSummary(patient);
+		initComponents();
+		addWindowListener(new WindowAdapter() {
 
+			public void windowClosing(WindowEvent e) {
+				// to free memory
+				patArray.clear();
+				patSearch.clear();
+				dispose();
+			}
+		});
+		setLocationRelativeTo(null);
+		buttonNew.setVisible(abbleAddPatient);
+	}
 	private void initComponents() {
 		add(getJPanelTop(), BorderLayout.NORTH);
 		add(getJPanelCenter(), BorderLayout.CENTER);
@@ -629,7 +662,6 @@ public class SelectPatient extends JDialog implements PatientListener {
 		billBrowserListeners.add(l);
 	}
 
-
 	@Override
 	public void patientUpdated(AWTEvent e) {}
 
@@ -641,6 +673,10 @@ public class SelectPatient extends JDialog implements PatientListener {
 		((SelectPatientModel) jTablePatient.getModel()).fireTableDataChanged();
 		if (jTablePatient.getRowCount() > 0)
 			jTablePatient.setRowSelectionInterval(0, 0);
+	}
 		
+	private List<InsertVisit> visitListeners = new ArrayList<InsertVisit>();
+	public void addSelectionListener(InsertVisit l) {
+		visitListeners.add(l);
 	}
 }
