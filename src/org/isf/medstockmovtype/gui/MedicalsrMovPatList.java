@@ -12,6 +12,7 @@ import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MovementWard;
+import org.isf.menu.manager.Context;
 import org.isf.opd.model.Opd;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.OperationRow;
@@ -28,7 +29,8 @@ public class MedicalsrMovPatList extends JPanel {
 	private JDialog dialogDrug;
 	private JTable JtableData;
 	private OhTableDrugsModel<MovementWard> modelOhOpeRow;
-	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
+	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
+	private MovWardBrowserManager movManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	public MedicalsrMovPatList(Object object) {
 		
 		setLayout(new BorderLayout(0, 0));
@@ -44,7 +46,6 @@ public class MedicalsrMovPatList extends JPanel {
 		}
 		
 		if (myPatient != null) {
-			MovWardBrowserManager movManager = new MovWardBrowserManager();
 			try {
 				ArrayList<MovementWard> movPat = movManager.getMovementPat(myPatient);
 				oprowData = new ArrayList<MovementWard>();

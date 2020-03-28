@@ -33,6 +33,7 @@ import javax.swing.border.EmptyBorder;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
+import org.isf.menu.manager.Context;
 import org.isf.opd.gui.OpdEditExtended;
 import org.isf.opd.model.Opd;
 import org.isf.operation.manager.OperationBrowserManager;
@@ -62,9 +63,9 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 	private JComboBox comboResult;
 	private JTextArea textAreaRemark;
 
-	OperationBrowserManager opeManager = new OperationBrowserManager();
-	OperationRowBrowserManager opeRowManager = new OperationRowBrowserManager();
-	OhTableOperationModel<OperationRow> modelOhOpeRow;
+	private OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
+	private OhTableOperationModel<OperationRow> modelOhOpeRow;
 	private List<OperationRow> oprowData = new ArrayList<OperationRow>();
 	private Opd myOpd;
 
