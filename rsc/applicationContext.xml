@@ -15,11 +15,11 @@
         http://www.springframework.org/schema/data/repository
 		http://www.springframework.org/schema/data/repository/spring-repository-1.8.xsd	
   		">
-		
+
 	<context:component-scan base-package="org.isf" />
 
 	<import resource="classpath*:applicationContext.xml" />
- 	
+
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 
 </beans>

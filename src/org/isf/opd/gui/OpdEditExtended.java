@@ -55,8 +55,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -75,6 +77,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -97,22 +100,21 @@ import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
+import org.isf.operation.gui.OperationRowOpd;
 import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
-import com.toedter.calendar.JDateChooser;
-import java.util.Date;
-import java.util.Iterator;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
+
+import com.toedter.calendar.JDateChooser;
 
 public class OpdEditExtended extends JDialog implements 
         PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener{
@@ -277,6 +279,12 @@ public class OpdEditExtended extends JDialog implements
     private JButton searchDiseaseButton;
     private JButton searchDiseaseButton2;
     private JButton searchDiseaseButton3;
+
+	private OperationRowOpd operationop;
+
+	private JTabbedPane jTabbedPaneOpd;
+
+	private JPanel jPanelOperation;
         
     /**
      * Opd next visit fields
@@ -310,6 +318,8 @@ public class OpdEditExtended extends JDialog implements
 					opdPatient.setCode(0);
 				}
 			}
+			 operationop = new OperationRowOpd(opd);
+			addSurgeryListener((SurgeryListener) operationop);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -339,6 +349,8 @@ public class OpdEditExtended extends JDialog implements
 					opdPatient.setCode(0);
 				}
 			}
+			 operationop = new OperationRowOpd(opd);
+				addSurgeryListener((SurgeryListener) operationop);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -516,11 +528,17 @@ public class OpdEditExtended extends JDialog implements
 			jPanelCentral.setLayout(new BoxLayout(jPanelCentral, BoxLayout.Y_AXIS));
 			jPanelCentral.add(getDataPanel());
 			jPanelCentral.add(Box.createVerticalStrut(10));
-			jPanelCentral.add(getJPanelPatient());
+			if (GeneralData.OPDOPERATION) {
+				jPanelCentral.add(getJTabbedPaneAdmission());
+			}else {
+				jPanelCentral.add(getJPanelPatient());
+			}
+			
 		}
 		return jPanelCentral;
 	}
 
+	
 	/**
 	 * This method initializes this
 	 * 
@@ -1303,6 +1321,26 @@ public class OpdEditExtended extends JDialog implements
 		return diseaseBox3;
 	}
 	
+	private JTabbedPane getJTabbedPaneAdmission() {
+		if (jTabbedPaneOpd == null) {
+			jTabbedPaneOpd = new JTabbedPane();
+			jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.opd.patient"), getJPanelPatient());
+			jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.admission.operation"), getMultiOperationTab());
+			jTabbedPaneOpd.setPreferredSize(new Dimension(200,400));
+		}
+		return jTabbedPaneOpd;
+	}
+	
+    private JPanel getMultiOperationTab() {
+	if (jPanelOperation == null) {
+		jPanelOperation = new JPanel();
+		jPanelOperation.setLayout(new BorderLayout(0, 0));
+		//jPanelOperation.add(formOperation, BorderLayout.NORTH);
+		//jPanelOperation.add(listOperation);
+		jPanelOperation.add(operationop);
+	}
+	return jPanelOperation; 
+}
 	private JPanel getJPanelPatient() {
 		if (jPanelPatient == null){
 			
@@ -1635,31 +1673,31 @@ public class OpdEditExtended extends JDialog implements
 					}
 					
 					if(OpdDateFieldCal.getDate() != null) {
-					    visitDateOpd = new GregorianCalendar();
-                                            visitDateOpd.setTime(OpdDateFieldCal.getDate());
-                                            opd.setVisitDate(visitDateOpd);
-                                        }else{
-                                            opd.setVisitDate(null);
-                                        }
-                                        
-                                        boolean scheduleVisit = false;
-                                        Date now = new Date();
-                                        Date nextVisit = opdNextVisitDate.getDate();
+				    visitDateOpd = new GregorianCalendar();
+                        visitDateOpd.setTime(OpdDateFieldCal.getDate());
+                        opd.setVisitDate(visitDateOpd);
+                    }else{
+                        opd.setVisitDate(null);
+                    }
+                    
+                    boolean scheduleVisit = false;
+                    Date now = new Date();
+                    Date nextVisit = opdNextVisitDate.getDate();
 					if(nextVisit!=null){
-                                            if(nextVisit.compareTo(now) < 0){
-                                                JOptionPane.showMessageDialog(OpdEditExtended.this,
-                                                                MessageBundle.getMessage("angal.opd.notpasseddate"),
-                                                                "",
-                                                                JOptionPane.INFORMATION_MESSAGE);
-                                                return;
-                                            }
-                                            GregorianCalendar gregNextVisit = new GregorianCalendar();
-                                            gregNextVisit.setTime(nextVisit);
-                                            opd.setNextVisitDate(gregNextVisit);
-                                            scheduleVisit = true;
+                        if(nextVisit.compareTo(now) < 0){
+                            JOptionPane.showMessageDialog(OpdEditExtended.this,
+                                            MessageBundle.getMessage("angal.opd.notpasseddate"),
+                                            "",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                            return;
+                        }
+                        GregorianCalendar gregNextVisit = new GregorianCalendar();
+                        gregNextVisit.setTime(nextVisit);
+                        opd.setNextVisitDate(gregNextVisit);
+                        scheduleVisit = true;
 					} else {
-                                            opd.setNextVisitDate(null);
-                                        }
+                        opd.setNextVisitDate(null);
+                    }
 					
 					opd.setNote(jNoteTextArea.getText());
 					opd.setPatient(opdPatient);
@@ -1678,15 +1716,15 @@ public class OpdEditExtended extends JDialog implements
 							RememberDates.setLastOpdVisitDate(visitDateOpd);
 							boolean result = opdManager.newOpd(opd);
 							if (result) {
-                                                            if(scheduleVisit) {
-                                                                Visit visit = new Visit();
-                                                                visit.setDate(opd.getNextVisitDate());
-                                                                visit.setPatient(opd.getPatient());
-                                                                vstManager.newVisit(visit);
-                                                            }
-                                                
-                                                            fireSurgeryInserted(opd);
-                                                            dispose();
+                                if(scheduleVisit) {
+                                    Visit visit = new Visit();
+                                    visit.setDate(opd.getNextVisitDate());
+                                    visit.setPatient(opd.getPatient());
+                                    vstManager.newVisit(visit);
+                                }
+                    
+                                fireSurgeryInserted(opd);
+                                dispose();
 							}
 							if (!result) JOptionPane.showMessageDialog(OpdEditExtended.this,
 									MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
@@ -1694,24 +1732,24 @@ public class OpdEditExtended extends JDialog implements
 						else {    //Update
 							Opd updatedOpd = opdManager.updateOpd(opd);
 							if (updatedOpd != null) {
-                                                            if(scheduleVisit) {
-                                                                Iterator<Visit> visits = vstManager.getVisits(opd.getPatient().getCode()).iterator();
-                                                                Visit visit;
-                                                                boolean found = false;
-                                                                while(!found && visits.hasNext()) {
-                                                                    visit = visits.next();
-                                                                    found = visit.getDate().getTimeInMillis() == opd.getNextVisitDate().getTimeInMillis();
-                                                                }
-                                                                if(!found) {
-                                                                    visit = new Visit();
-                                                                    visit.setDate(opd.getNextVisitDate());
-                                                                    visit.setPatient(opd.getPatient());
-                                                                    vstManager.newVisit(visit);
-                                                                }
-                                                            }
-                                                            
-                                                            fireSurgeryUpdated(updatedOpd);
-                                                            dispose();
+                                if(scheduleVisit) {
+                                    Iterator<Visit> visits = vstManager.getVisits(opd.getPatient().getCode()).iterator();
+                                    Visit visit;
+                                    boolean found = false;
+                                    while(!found && visits.hasNext()) {
+                                        visit = visits.next();
+                                        found = visit.getDate().getTimeInMillis() == opd.getNextVisitDate().getTimeInMillis();
+                                    }
+                                    if(!found) {
+                                        visit = new Visit();
+                                        visit.setDate(opd.getNextVisitDate());
+                                        visit.setPatient(opd.getPatient());
+                                        vstManager.newVisit(visit);
+                                    }
+                                }
+                                
+                                fireSurgeryUpdated(updatedOpd);
+                                dispose();
 							};
 							if (updatedOpd == null) JOptionPane.showMessageDialog(OpdEditExtended.this,
 									MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));

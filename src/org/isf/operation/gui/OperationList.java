@@ -12,6 +12,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -26,6 +29,7 @@ import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.operation.gui.OperationRowEdit.OperationRowEditListener;
 import org.isf.operation.gui.OperationRowEdit.OperationRowListener;
@@ -197,11 +201,18 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		}
 		if (myPatient != null) {
 			AdmissionBrowserManager admManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+			OpdBrowserManager opdManager= Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
 				ArrayList<Admission> admissions = admManager.getAdmissions(myPatient);
 				oprowData = new ArrayList<OperationRow>();
 				for (Admission adm : admissions) {
 					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
+				
+				}
+				ArrayList<Opd> opds =  opdManager.getOpdList(myPatient.getCode());
+				for (Opd op : opds) {
+					oprowData.addAll(opeRowManager.getOperationRowByOpd(op));
+				
 				}
 			} catch (OHServiceException ex) {
 				ex.printStackTrace();
@@ -243,10 +254,12 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		});
 
 		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
-
+		
 		JtableData.setModel(modelOhOpeRow);
+		
+		
 		// ajustWidthJTable();
-		// JtableData.repaint();
+		 //JtableData.repaint();
 
 		dialogOpe = new JDialog();
 		dialogOpe.setLocationRelativeTo(null);
@@ -254,6 +267,41 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		dialogOpe.setLocationRelativeTo(null);
 		dialogOpe.setModal(true);
 	}
+	public void selectCorrect(GregorianCalendar startDate,GregorianCalendar endDate) {
+		JtableData.clearSelection();
+		for (int i = 0; i < oprowData.size(); i++) {
+			//Laboratory laboratory = labList.get(i);
+			
+			Date date = null ;
+			GregorianCalendar end = endDate;
+			date = oprowData.get(i).getOpDate().getTime();
+			GregorianCalendar dateOth = oprowData.get(i).getOpDate();
+		
+			// Check that the operation date is included between admission date and discharge date.
+			// If the patient has not been discharged yet (and then discharge date doesn't exist)
+			// check only that the exam date is the same or after the admission date.
+			// On true condition select the corresponding table row.
+			Admission a = oprowData.get(i).getAdmission();
+			if(oprowData.get(i).getAdmission()!=null) {
+			if (!date.before(startDate.getTime()) &&
+					(null == endDate ? true : !date.after(endDate.getTime())))  {
+				
+				JtableData.addRowSelectionInterval(i, i);
+				
+			}
+		}
+		else {
+			if (dateOth.get(Calendar.YEAR) == startDate.get(Calendar.YEAR) &&
+					dateOth.get(Calendar.DAY_OF_YEAR) == startDate.get(Calendar.DAY_OF_YEAR)&&
+					dateOth.get(Calendar.MONTH) == startDate.get(Calendar.MONTH))  {
+				JtableData.addRowSelectionInterval(i, i);
+				
+			}
+		}
+		}
+		
+	}
+	
 
 	public JTable getJtableData() {
 		return JtableData;
@@ -419,5 +467,6 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	public void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
+
 
 }
