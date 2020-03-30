@@ -49,6 +49,7 @@ import org.isf.exa.model.Exam;
 import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.lab.gui.LabBrowser.LabBrowsingModel;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryRow;
@@ -57,6 +58,7 @@ import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.priceslist.model.Price;
+import org.isf.serviceprinting.manager.PrintLabels;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.OhTableModelExam;
@@ -181,6 +183,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	private ArrayList<ArrayList<LaboratoryRow>> examResults = new ArrayList<ArrayList<LaboratoryRow>>();
     private ArrayList<Laboratory> examItems = new ArrayList<Laboratory>();
 	private ExamTableModel jTableModel;
+	private JButton printLabelButton;
                 
 	public LabNew(JFrame owner) {
 		super(owner, true);
@@ -322,11 +325,37 @@ public class LabNew extends JDialog implements SelectionListener {
             if (jPanelButtons == null) {
                 jPanelButtons = new JPanel();
                 jPanelButtons.add(getJButtonOK());
+                jPanelButtons.add(getPrintLabelButton());
                 jPanelButtons.add(getJButtonCancel());
             }
             return jPanelButtons;
 	}
-
+	private JButton getPrintLabelButton(){
+		if(printLabelButton==null){
+			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel"));
+			printLabelButton.setMnemonic(KeyEvent.VK_O);
+			printLabelButton.addActionListener(new ActionListener() {
+			
+				public void actionPerformed(ActionEvent arg0) {
+					
+					if (patientSelected==null) {
+						JOptionPane.showMessageDialog(null,
+								MessageBundle.getMessage("angal.labnew.pleaseselectapatient"), MessageBundle.getMessage("angal.hospital"),
+								JOptionPane.PLAIN_MESSAGE);
+						return;
+					} 
+					
+					try {
+						new PrintLabels("labelForSamples",patientSelected.getCode());
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
+					dispose();
+				}
+			});
+		}
+		return printLabelButton;
+	}
 	private JPanel getJPanelNote() {
             if (jPanelNote == null) {
                 jPanelNote = new JPanel();
