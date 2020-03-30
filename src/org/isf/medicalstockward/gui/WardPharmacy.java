@@ -13,6 +13,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -45,6 +47,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -53,7 +56,10 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovBrowserManager;
+import org.isf.medicalstock.manager.MovStockInsertingManager;
+import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
+import org.isf.medicalstockward.gui.WardPharmacyNew.StockMovModel;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
@@ -154,10 +160,15 @@ public class WardPharmacy extends ModalJFrame implements
 			MessageBundle.getMessage("angal.common.from"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.units"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"),
+			MessageBundle.getMessage("angal.medicalstock.lotduedate")
+			
+			
+			 //$NON-NLS-1$
 	};
-	private boolean[] columsResizableIncomes = { false, false, true, false, false };
-	private int[] columWidthIncomes = { 80, 100, 220, 150, 50 };
+	private boolean[] columsResizableIncomes = { true, true, true, true, true, true, true };
+	private int[] columWidthIncomes = { 80, 50, 50, 50, 50 , 50, 50};
 	private String[] columsOutcomes = { 
 			MessageBundle.getMessage("angal.common.date"),  //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.purpose"), //$NON-NLS-1$
@@ -166,17 +177,20 @@ public class WardPharmacy extends ModalJFrame implements
 			MessageBundle.getMessage("angal.medicalstockward.weight"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.units"),
+			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"),
+			MessageBundle.getMessage("angal.medicalstock.lotduedate")//$NON-NLS-1$
 	};
-	private boolean[] columsResizableOutcomes = { false, true, false, false, false, true, false, false };
-	private int[] columWidthOutcomes = { 150, 150, 50, 50, 50, 220, 50, 50 };
+	private boolean[] columsResizableOutcomes = { false, true, false, false, false, true, false, false, true };
+	private int[] columWidthOutcomes = { 150, 150, 50, 50, 50, 170, 50, 50, 50 };
 	private String[] columsDrugs = { 
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.units"),
+			
 	};
-	private boolean[] columsResizableDrugs = { true, false, false };
-	private int[] columWidthDrugs = { 350, 50, 50 };
+	private boolean[] columsResizableDrugs = { true, true, true};
+	private int[] columWidthDrugs = { 150, 50, 50};
 	private final int filterWidth = 250;
 	private final int filterSpacing = 5;
 	private String rowCounterText = MessageBundle.getMessage("angal.medicalstockward.count") + ": "; //$NON-NLS-1$ //$NON-NLS-2$
@@ -201,6 +215,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private ArrayList<MovementWard> listMovementWardFromTo = new ArrayList<MovementWard>();
 	private ArrayList<MedicalWard> wardDrugs;
+	private ArrayList<MedicalWard> wardMed;
 	private ArrayList<MovementWard> wardOutcomes;
 	private ArrayList<Movement> wardIncomes;
 	
@@ -503,11 +518,19 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 		return jTableIncomes;
 	}
+	private JPanel JPanelDrugs;
 
+	
+    
 	private JScrollPane getJScrollPaneDrugs() {
 		if (jScrollPaneDrugs == null) {
 			jScrollPaneDrugs = new JScrollPane();
+			jScrollPaneDrugs.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (),
+                    "Double click to show lot details ",
+                    TitledBorder.LEFT,
+                    TitledBorder.TOP));
 			jScrollPaneDrugs.setViewportView(getJTableDrugs());
+			
 		}
 		return jScrollPaneDrugs;
 	}
@@ -522,14 +545,112 @@ public class WardPharmacy extends ModalJFrame implements
 					jTableDrugs.getColumnModel().getColumn(i).setMaxWidth(columWidthDrugs[i]);
 			}
 			jTableDrugs.setAutoCreateColumnsFromModel(true);
+			jTableDrugs.addMouseListener(new MouseAdapter() {
+				
+		         public void mouseClicked(MouseEvent me) {
+		             if (me.getClickCount() == 2) {     // to detect doble click events
+		                JTable target = (JTable)me.getSource();
+		                int row = target.getSelectedRow(); // select a row
+		                int column = target.getSelectedColumn(); // select a column
+		                Detail(wardDrugs, (String) jTableDrugs.getValueAt(row, 0));// get the value of a row and column.
+		             }
+		          }
+		       });
 		}
 		return jTableDrugs;
+	}
+	private MedicalWard Detail(ArrayList<MedicalWard> drug, String me) {
+		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+		MedicalWard medWard =null;
+		for (MedicalWard elem : drug) {
+			if(elem.getMedical().getDescription().equals(me)) {
+				MedicalWard e = elem;
+				dr.add(e);
+			}
+		}
+			
+		JTable lotTable = new JTable(new StockMovModel(dr));
+		lotTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
+		
+		do {
+			int ok = JOptionPane.showConfirmDialog(WardPharmacy.this, 
+					panel, 
+					MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$ 
+					JOptionPane.CLOSED_OPTION);
+		} while (dr == null);
+		 
+		return medWard;
+	}
+	private MovStockInsertingManager movManagerD = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
+	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
+	
+	class StockMovModel extends DefaultTableModel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private ArrayList<MedicalWard> druglist;
+
+		public StockMovModel(ArrayList<MedicalWard> drug) {
+			druglist = drug;
+		}
+
+		public int getRowCount() {
+			if (druglist == null)
+				return 0;
+			return druglist.size();
+		}
+
+		public String getColumnName(int c) {
+			if (c == 0) {
+				return MessageBundle.getMessage("angal.medicalstock.lotid"); //$NON-NLS-1$
+			}
+			if (c == 1) {
+				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
+			}
+			if (c == 2) {
+				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
+			}
+			return ""; //$NON-NLS-1$
+		}
+
+		public int getColumnCount() {
+			return 3;
+		}
+
+		public Object getValueAt(int r, int c) {
+			if (c == -1) {
+				return druglist.get(r);
+			} else if (c == 0) {
+				return druglist.get(r).getId().getLot().getCode();
+			} else if (c == 1) {
+				ArrayList<Lot> lot = null;
+				try {
+					lot = movManagerD.getLotByMedical(druglist.get(r).getId().getMedical());
+				} catch (OHServiceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
+			}  else if (c == 2) {
+				return druglist.get(r).getQty();
+			}
+			return null;
+		}
+
+		@Override
+		public boolean isCellEditable(int arg0, int arg1) {
+			return false;
+		}
 	}
 
 	private JPanel getJPanelCentral() {
 		if (jPanelCentral == null) {
 			jPanelCentral = new JPanel(new BorderLayout());
 			jPanelCentral.add(getJPanelFilter(), BorderLayout.WEST);
+			
 			jPanelCentral.add(getJTabbedPaneWard(), BorderLayout.CENTER);
 		}
 		return jPanelCentral;
@@ -918,7 +1039,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jTabbedPaneWard = new JTabbedPane();
 			jTabbedPaneWard.addTab(MessageBundle.getMessage("angal.medicalstockward.outcomes"), getJScrollPaneOutcomes()); //$NON-NLS-1$
 			jTabbedPaneWard.addTab(MessageBundle.getMessage("angal.medicalstockward.incomings"), getJScrollPaneIncomes()); //$NON-NLS-1$
-			jTabbedPaneWard.addTab(MessageBundle.getMessage("angal.medicalstockward.drugs"), getJScrollPaneDrugs()); //$NON-NLS-1$
+			jTabbedPaneWard.addTab("Drugs ", getJScrollPaneDrugs()); //$NON-NLS-1$
 		}
 		return jTabbedPaneWard;
 	}
@@ -1020,6 +1141,7 @@ public class WardPharmacy extends ModalJFrame implements
 								jTableIncomes.setModel(new IncomesModel());
 								jTableOutcomes.setModel(new OutcomesModel());
 								jTableDrugs.setModel(new DrugsModel());
+								
 							} else {
 								remove(jTabbedPaneWard);
 								// jButtonEdit.setVisible(false);
@@ -1034,6 +1156,7 @@ public class WardPharmacy extends ModalJFrame implements
 								added = false;
 							}
 						}
+					
 						jComboBoxWard.setEnabled(false);
 						rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
 						validate();
@@ -1075,7 +1198,7 @@ public class WardPharmacy extends ModalJFrame implements
                                     wMvnt.getMedical(), 
                                     typeCharge, 
                                     wardSelected, 
-                                    null, 
+                                    wMvnt.getLot(), 
                                     wMvnt.getDate(), 
                                     wMvnt.getQuantity().intValue(), 
                                     null, 
@@ -1116,6 +1239,7 @@ public class WardPharmacy extends ModalJFrame implements
 			if (c == 3) {
 				return pieces;
 			}
+			
 			if (c == 4) {
 				int packets = 0;
 				if (pcsPerPck != 0) {
@@ -1124,6 +1248,12 @@ public class WardPharmacy extends ModalJFrame implements
 				} else {
 					return ""; //$NON-NLS-1$;
 				}
+			}
+			if (c == 5) {
+				return mov.getLot().getCode();
+			}
+			if (c == 6) {
+				return formatDate(mov.getLot().getDueDate());
 			}
 			return null;
 		}
@@ -1191,6 +1321,7 @@ public class WardPharmacy extends ModalJFrame implements
 				boolean ok = true;
 				Patient patient = mov.getPatient();
 				Medical medical = mov.getMedical();
+				Lot lot = mov.getLot();
 				int age = mov.getAge();
 				float weight = mov.getWeight();
 
@@ -1264,6 +1395,12 @@ public class WardPharmacy extends ModalJFrame implements
 			if (c == 7) {
 				return mov.getUnits();
 			}
+			if (c == 8) {
+				return mov.getLot().getCode();
+			}
+			if (c == 9) {
+				return formatDate(mov.getLot().getDueDate());
+			}
 			return null;
 		}
 
@@ -1297,21 +1434,24 @@ public class WardPharmacy extends ModalJFrame implements
 		public DrugsModel() {
 			try {
                 //System.out.println("WardPharmacy: Looking for drugs ");
+				wardMed = wardManager.getMedicalsWardDrug(wardSelected.getCode().charAt(0));
 				wardDrugs = wardManager.getMedicalsWard(wardSelected.getCode().charAt(0));
+				
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-				wardDrugs = new ArrayList<MedicalWard>();
+				wardMed = new ArrayList<MedicalWard>();
+				wardDrugs= new ArrayList<MedicalWard>();
 			}
 		}
 
 		public int getRowCount() {
-			if (wardDrugs == null)
+			if (wardMed == null)
 				return 0;
-			return wardDrugs.size();
+			return wardMed.size();
 		}
 
 		public Object getValueAt(int r, int c) {
-			MedicalWard wardDrug = wardDrugs.get(r);
+			MedicalWard wardDrug = wardMed.get(r);
 			if (c == -1) {
 				return wardDrug;
 			}
@@ -1325,6 +1465,10 @@ public class WardPharmacy extends ModalJFrame implements
 			if (c == 2) {
 				return MessageBundle.getMessage("angal.medicalstockward.pieces"); //$NON-NLS-1$
 			}
+			if (c == 3) {
+			return	getJRectifyButton();
+			}
+
 			return null;
 		}
 
