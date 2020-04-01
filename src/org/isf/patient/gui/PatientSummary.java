@@ -19,6 +19,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
+import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.time.TimeTools;
 
@@ -36,6 +38,8 @@ public class PatientSummary {
 	private int borderTickness = 10;
 	private int imageMaxWidth = 140;
 
+	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+
 	public PatientSummary(Patient patient) {
 		super();
 		this.patient = patient;
@@ -47,6 +51,7 @@ public class PatientSummary {
 	 * @return
 	 */
 	public JPanel getPatientDataPanel() {
+		
 		JPanel p = new JPanel(new BorderLayout(borderTickness, borderTickness));
 
 		p.add(getPatientTitlePanel(), BorderLayout.NORTH);
@@ -86,6 +91,7 @@ public class PatientSummary {
 		dataPanel.add(setMyBorder(getPatientParentNewsPanel(), MessageBundle.getMessage("angal.admission.parents")));
 		dataPanel.add(getPatientKinAndTelephonePanel());
 		dataPanel.add(getPatientBloodAndEcoPanel());
+		dataPanel.add(getPatientMaritalAndProfession());
 		
 		p.add(dataPanel, BorderLayout.CENTER);
 		p.add(setMyBorder(getPatientNotePanel(), MessageBundle.getMessage("angal.admission.patientnotes")), BorderLayout.SOUTH);
@@ -109,6 +115,14 @@ public class PatientSummary {
 		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientBloodTypePanel(), MessageBundle.getMessage("angal.admission.bloodtype")));
 		dataPanel.add(setMyBorder(getPatientEcoStatusPanel(), MessageBundle.getMessage("angal.admission.insurance")));
+		return dataPanel;
+	}
+
+	private JPanel getPatientMaritalAndProfession(){
+		JPanel dataPanel = null;
+		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
+		dataPanel.add(setMyBorder(getPatientMaritalStatusPanel(), MessageBundle.getMessage("angal.admission.maritalstatus")));
+		dataPanel.add(setMyBorder(getPatientProfessionPanel(), MessageBundle.getMessage("angal.admission.profession")));
 		return dataPanel;
 	}
 
@@ -298,6 +312,32 @@ public class PatientSummary {
 		} else {
 			l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
 			l = new JLabel(" ");
+		}
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		lP.add(l);
+		return lP;
+	}
+
+	private JPanel getPatientMaritalStatusPanel() {
+		JLabel l = null;
+		if (patient.getMaritalStatus().equalsIgnoreCase("unknown") || patient.getMaritalStatus().equalsIgnoreCase("")) {
+			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
+			l = new JLabel(" ");
+		} else {
+			l = new JLabel("" + patientManager.getMaritalTranslated(patient.getMaritalStatus()));
+		}
+		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
+		lP.add(l);
+		return lP;
+	}
+
+	private JPanel getPatientProfessionPanel() {
+		JLabel l = null;
+		if (patient.getProfession().equalsIgnoreCase("unknown") || patient.getProfession().equalsIgnoreCase("")) {
+			//l = new JLabel(MessageBundle.getMessage("angal.admission.unknown"));
+			l = new JLabel(" ");
+		} else {
+			l = new JLabel("" +  patientManager.getProfessionTranslated(patient.getProfession()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
