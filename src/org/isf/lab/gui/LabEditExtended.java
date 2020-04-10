@@ -62,7 +62,7 @@ import org.isf.utils.time.RememberDates;
 
 import com.toedter.calendar.JDateChooser;
 
-public class LabEditExtended extends JDialog {
+public class LabEditExtended extends ModalJFrame {
 	/**
 	 * 
 	 */
@@ -161,7 +161,7 @@ public class LabEditExtended extends JDialog {
 	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 	
 	public LabEditExtended(JFrame owner, Laboratory laboratory, boolean inserting) {
-		super(owner, true);
+		//super(owner, true);
 		insert = inserting;
 		lab = laboratory;
 		initialize();
