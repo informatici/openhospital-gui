@@ -54,13 +54,11 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.manager.LabRowManager;
 import org.isf.lab.model.Laboratory;
-import org.isf.lab.model.LaboratoryForPrint;
 import org.isf.lab.model.LaboratoryRow;
 import org.isf.lab.service.LabIoOperations;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
-import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
@@ -119,7 +117,6 @@ public class LabEdit extends JDialog {
 	private JLabel examDateLabel = null;
 	private JLabel matLabel = null;
 	private JButton okButton = null;
-	private JButton printButton = null;
 	private JButton cancelButton = null;
 	private JComboBox matComboBox = null;
 	private JComboBox examComboBox = null;
@@ -145,8 +142,6 @@ public class LabEdit extends JDialog {
 	private static final Integer resultPanelHeight=350; 
 	private static final Integer buttonPanelHeight=40; 
 	
-	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
-	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
 	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 	
 	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
@@ -376,7 +371,6 @@ public class LabEdit extends JDialog {
 			buttonPanel.setBounds(0, dataPanelHeight+resultPanelHeight, panelWidth, buttonPanelHeight);
 			buttonPanel.add(getOkButton(), null);
 			buttonPanel.add(getCancelButton(), null);
-			buttonPanel.add(getPrintButton(),null);
 		}
 		return buttonPanel;
 	}
@@ -497,31 +491,6 @@ public class LabEdit extends JDialog {
 			}
 		}
 		return sexTextField;
-	}
-	
-	private JButton getPrintButton() {
-		if (printButton == null) {
-			printButton = new JButton(MessageBundle.getMessage("angal.lab.print"));
-			printButton.setMnemonic(KeyEvent.VK_P);
-			printButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {					
-					try {
-						ArrayList<LaboratoryForPrint> labs;
-						labs = labManager.getLaboratoryForPrint(lab.getCode());
-						if (!labs.isEmpty()) {
-							
-							printManager.print("Laboratory",labs,0);
-						}
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-					}
-					
-				}
-
-			});
-		}
-		return printButton;
 	}
 	
 	private JButton getCancelButton() {
