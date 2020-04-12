@@ -71,6 +71,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider jSliderHeight;
 	private JSlider jSliderWeight;
 	private VoIntegerTextField jTextFieldHR;
+	private VoIntegerTextField jTextFieldRR;
 	private JTextField jTextFieldTemp;
 	private JTextField jTextFieldSaturation;
 	private VoLimitedTextArea jTextAreaNote;
@@ -83,6 +84,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider jSliderHR;
 	private JSlider jSliderTemp;
 	private JSlider jSliderSaturation;
+	private JSlider jSliderRR;
 	private JScrollPane jScrollPaneNote;
 	private CustomJDateChooser jDateChooserDate;
 	private JSpinner jSpinnerAPmin;
@@ -93,11 +95,13 @@ public class PatientExaminationEdit extends JDialog {
 	private JCheckBox jCheckBoxToggleHR;
 	private JCheckBox jCheckBoxToggleTemp;
 	private JCheckBox jCheckBoxToggleSaturation;
+	private JCheckBox jCheckBoxToggleRR;
 	private JButton jButtonOK;
 	private JButton jButtonCancel;
 	private Action actionSavePatientExamination;
 	private Action actionToggleAP;
 	private Action actionToggleHR;
+	private Action actionToggleRR;
 	private Action actionToggleTemp;
 	private Action actionToggleSaturation;
 	private JPanel jPanelGender;
@@ -126,6 +130,8 @@ public class PatientExaminationEdit extends JDialog {
 			STD+MessageBundle.getMessage("angal.examination.heartrateabbr")+ETD+
 			STD+MessageBundle.getMessage("angal.examination.temperatureabbr")+ETD+
 			STD+MessageBundle.getMessage("angal.examination.saturationabbr")+ETD+
+			STD+MessageBundle.getMessage("angal.examination.respiratoryrateabbr")+ETD+
+			STD+MessageBundle.getMessage("angal.examination.auscultationabbr")+ETD+
 			SUMMARY_END_ROW;
 	private final String SUMMARY_FOOTER = "</table></body></html>";
 	
@@ -247,6 +253,8 @@ public class PatientExaminationEdit extends JDialog {
 				summary.append(STD).append(patex.getPex_fc()).append(ETD);
 				summary.append(STD).append(patex.getPex_temp()).append(ETD);
 				summary.append(STD).append(patex.getPex_sat()).append(ETD);
+				// summary.append(STD).append(patex.getPex_rr()).append(ETD);REVIEW
+				// summary.append(STD).append(patex.getPex_ausc()).append(ETD);
 				summary.append(SUMMARY_END_ROW);
 			}
 		}
@@ -269,11 +277,14 @@ public class PatientExaminationEdit extends JDialog {
 		jTextFieldTemp.setText(String.valueOf(patex.getPex_temp()));
 		jSliderSaturation.setValue(convertFromDoubleToInt(patex.getPex_sat(), ExaminationParameters.SAT_MIN, ExaminationParameters.SAT_STEP, ExaminationParameters.SAT_MAX));
 		jTextFieldSaturation.setText(String.valueOf(patex.getPex_sat()));
+		// jSliderRR.setValue(patex.getPex_rr());REVIEW
+		// jTextFieldRR.setText(String.valueOf(patex.getPex_rr()));
 		jTextAreaNote.setText(patex.getPex_note());
 		disableAP();
 		disableHR();
 		disableTemp();
 		disableSaturation();
+		disableRR();
 	}
 
 	private JPanel getJPanelExamination() {
@@ -282,9 +293,9 @@ public class PatientExaminationEdit extends JDialog {
 			
 			GridBagLayout gbl_jPanelExamination = new GridBagLayout();
 			gbl_jPanelExamination.columnWidths = new int[] { 0, 0, 0, 0 };
-			gbl_jPanelExamination.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+			gbl_jPanelExamination.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
 			gbl_jPanelExamination.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
-			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 };
 			jPanelExamination.setLayout(gbl_jPanelExamination);
 
 			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
@@ -496,6 +507,40 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_jTextFieldSaturation.gridy = 6;
 			jPanelExamination.add(getJTextFieldSaturation(), gbc_jTextFieldSaturation);
 
+			GridBagConstraints gbc_lblrr = new GridBagConstraints();
+			gbc_lblrr.insets = new Insets(5, 5, 5, 5);
+			gbc_lblrr.gridx = 0;
+			gbc_lblrr.gridy = 7;
+			jPanelExamination.add(getJCheckBoxToggleHR(), gbc_lblrr);
+			
+			JLabel jLabelRR = new JLabel(MessageBundle.getMessage("angal.examination.respirationrate")); //$NON-NLS-1$
+			GridBagConstraints gbc_jLabelRR = new GridBagConstraints();
+			gbc_jLabelRR.anchor = GridBagConstraints.WEST;
+			gbc_jLabelRR.insets = new Insets(5, 5, 5, 5);
+			gbc_jLabelRR.gridx = 1;
+			gbc_jLabelRR.gridy = 7;
+			jPanelExamination.add(jLabelHR, gbc_jLabelRR);
+			
+			GridBagConstraints gbc_jSliderRR = new GridBagConstraints();
+			gbc_jSliderRR.insets = new Insets(5, 5, 5, 5);
+			gbc_jSliderRR.gridx = 2;
+			gbc_jSliderRR.gridy = 7;
+			jPanelExamination.add(getJSliderHR(), gbc_jSliderRR);
+			
+			JLabel jLabelRRUnit = new JLabel(ExaminationParameters.HR_UNIT);
+			GridBagConstraints gbc_jLabelRRUnit = new GridBagConstraints();
+			gbc_jLabelRRUnit.insets = new Insets(5, 5, 5, 5);
+			gbc_jLabelRRUnit.gridx = 3;
+			gbc_jLabelRRUnit.gridy = 7;
+			jPanelExamination.add(jLabelRRUnit, gbc_jLabelRRUnit);
+			
+			GridBagConstraints gbc_jTextFieldRR = new GridBagConstraints();
+			gbc_jTextFieldRR.anchor = GridBagConstraints.WEST;
+			gbc_jTextFieldRR.insets = new Insets(5, 0, 5, 0);
+			gbc_jTextFieldRR.gridx = 4;
+			gbc_jTextFieldRR.gridy = 7;
+			jPanelExamination.add(getJTextFieldHR(), gbc_jTextFieldRR);
+
 			JLabel jLabelNote = new JLabel(MessageBundle.getMessage("angal.examination.note")); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelNote = new GridBagConstraints();
 			gbc_jLabelNote.anchor = GridBagConstraints.NORTHEAST;
@@ -523,6 +568,14 @@ public class PatientExaminationEdit extends JDialog {
 		return jCheckBoxToggleSaturation;
 	}
 	
+	private JCheckBox getJCheckBoxToggleRR() {
+		if (jCheckBoxToggleRR == null) {
+			jCheckBoxToggleRR = new JCheckBox(""); //$NON-NLS-1$
+			jCheckBoxToggleRR.setAction(getActionToggleHR());
+		}
+		return jCheckBoxToggleHR;
+	}
+
 	private JCheckBox getJCheckBoxToggleTemp() {
 		if (jCheckBoxToggleTemp == null) {
 			jCheckBoxToggleTemp = new JCheckBox(""); //$NON-NLS-1$
@@ -994,6 +1047,18 @@ public class PatientExaminationEdit extends JDialog {
 		jTextFieldHR.setEnabled(false);
 		patex.setPex_fc(0);
 	}
+
+	private void enableRR() throws NumberFormatException {
+		jSliderRR.setEnabled(true);
+		jTextFieldRR.setEnabled(true);
+		patex.setPex_rr(Integer.parseInt(jTextFieldRR.getText()));
+	}
+
+	private void disableRR() {
+		jSliderRR.setEnabled(false);
+		jTextFieldRR.setEnabled(false);
+		patex.setPex_rr(0);
+	}
 	
 	private class SwingActionToggleSaturation extends AbstractAction {
 		/**
@@ -1009,6 +1074,24 @@ public class PatientExaminationEdit extends JDialog {
 				disableSaturation();
 			} else {
 				enableSaturation();
+			}
+		}
+	}
+
+	private class SwingActionToggleRR extends AbstractAction {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		public SwingActionToggleRR() {
+			putValue(NAME, ""); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.togglerespiratoryrateexamination")); //$NON-NLS-1$
+		}
+		public void actionPerformed(ActionEvent e) {
+			if (!jCheckBoxToggleRR.isSelected()) {
+				disableRR();
+			} else {
+				enableRR();
 			}
 		}
 	}
@@ -1068,6 +1151,13 @@ public class PatientExaminationEdit extends JDialog {
 			actionToggleSaturation = new SwingActionToggleSaturation();
 		}
 		return actionToggleSaturation;
+	}
+
+	private Action getActionToggleRR() {
+		if (actionToggleRR == null) {
+			actionToggleRR = new SwingActionToggleRR();
+		}
+		return actionToggleRR;
 	}
 	
 	private JPanel getJPanelSummary() {
