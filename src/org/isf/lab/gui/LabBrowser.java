@@ -235,7 +235,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					dispose();
+					
 				}
 			});
 		}

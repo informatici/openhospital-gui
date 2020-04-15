@@ -350,7 +350,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					dispose();
+					
 				}
 			});
 		}
