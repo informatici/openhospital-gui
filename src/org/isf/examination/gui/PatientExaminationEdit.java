@@ -59,6 +59,10 @@ import javax.swing.table.JTableHeader;
 import javax.swing.text.JTextComponent;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.isf.admtype.gui.AdmissionTypeBrowser;
+import org.isf.admtype.gui.AdmissionTypeBrowserEdit;
+
+import org.isf.admtype.model.AdmissionType;
 import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
@@ -66,6 +70,7 @@ import org.isf.generaldata.ExaminationParameters;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.stat.gui.report.GenericReportExamination;
 import org.isf.stat.gui.report.GenericReportPatient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
@@ -77,8 +82,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.ModalJFrame;
 
-public class PatientExaminationEdit extends JDialog {
+public class PatientExaminationEdit extends ModalJFrame {
 
 	/**
 	 * 
@@ -203,7 +209,7 @@ public class PatientExaminationEdit extends JDialog {
 	}
 
 	public PatientExaminationEdit(Frame parent, GenderPatientExamination gpatex) {
-		super(parent, true);
+		super();
 		this.patex = gpatex.getPatex();
 		this.isMale = gpatex.isMale();
 		initComponents();
@@ -211,7 +217,7 @@ public class PatientExaminationEdit extends JDialog {
 	}
 
 	public PatientExaminationEdit(Dialog parent, GenderPatientExamination gpatex) {
-		super(parent, true);
+		super();
 		this.patex = gpatex.getPatex();
 		this.isMale = gpatex.isMale();
 		initComponents();
@@ -1278,7 +1284,16 @@ public class PatientExaminationEdit extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					new GenericReportPatient(patex.getPatient().getCode(), GeneralData.EXAMINATIONCHART);
+					int selectedrow;
+					if (jTableSummary.getSelectedRow() < 0) {
+						String	date= (String) jTableSummary.getValueAt(0,0);
+						new GenericReportExamination(patex.getPatient().getCode(),date, GeneralData.EXAMINATIONCHART);
+					} else {
+						selectedrow = jTableSummary.getSelectedRow();
+					String	date= (String) jTableSummary.getValueAt(selectedrow,0);
+						new GenericReportExamination(patex.getPatient().getCode(),date, GeneralData.EXAMINATIONCHART);
+					}
+					
 				}
 			});
 		}

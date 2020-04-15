@@ -395,9 +395,6 @@ WHERE PAT_ID = $P{patientID}]]></queryString>
 					<subreportParameter  name="patientID">
 						<subreportParameterExpression><![CDATA[$F{PAT_ID}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter  name="date">
-						<subreportParameterExpression><![CDATA[$P{date}]]></subreportParameterExpression>
-					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "patient_examination_subreport.jasper"]]></subreportExpression>
 				</subreport>

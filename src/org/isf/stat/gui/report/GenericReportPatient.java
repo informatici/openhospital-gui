@@ -6,6 +6,8 @@
  */
 package org.isf.stat.gui.report;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
@@ -28,7 +30,24 @@ public class GenericReportPatient {
 	public GenericReportPatient(Integer patientID, String jasperFileName) {
 		try{
 			Integer id = patientID;
-            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPatientPdf(patientID, jasperFileName);
+			
+            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPatientPdf(patientID,   jasperFileName);
+			if (GeneralData.INTERNALVIEWER)
+				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
+			else { 
+					Runtime rt = Runtime.getRuntime();
+					rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
+			}
+		} catch (Exception e) {
+            logger.error("", e);
+            JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	public GenericReportPatient(Integer patientID, String date, String jasperFileName) {
+		try{
+			Integer id = patientID;
+			
+            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPatientPdfExamin(patientID, date,  jasperFileName);
 			if (GeneralData.INTERNALVIEWER)
 				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
 			else { 

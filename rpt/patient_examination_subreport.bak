@@ -33,7 +33,7 @@ WHERE
      PEX_PAT_ID = $P{patientID}
  AND DATE(PEX_DATE) = $P{date}
 ORDER BY
-     PEX_DATE DESC LIMIT 1]]></queryString>
+     PEX_DATE DESC]]></queryString>
 
 	<field name="PEX_ID" class="java.lang.Integer"/>
 	<field name="PEX_DATE" class="java.sql.Timestamp"/>
