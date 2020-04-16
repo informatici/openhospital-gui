@@ -30,6 +30,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -85,6 +86,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider jSliderTemp;
 	private JSlider jSliderSaturation;
 	private JSlider jSliderRR;
+	private JComboBox jAuscComboBox;
 	private JScrollPane jScrollPaneNote;
 	private CustomJDateChooser jDateChooserDate;
 	private JSpinner jSpinnerAPmin;
@@ -96,6 +98,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JCheckBox jCheckBoxToggleTemp;
 	private JCheckBox jCheckBoxToggleSaturation;
 	private JCheckBox jCheckBoxToggleRR;
+	private JCheckBox jCheckBoxToggleAusc;
 	private JButton jButtonOK;
 	private JButton jButtonCancel;
 	private Action actionSavePatientExamination;
@@ -104,6 +107,7 @@ public class PatientExaminationEdit extends JDialog {
 	private Action actionToggleRR;
 	private Action actionToggleTemp;
 	private Action actionToggleSaturation;
+	private Action actionToggleAusc;
 	private JPanel jPanelGender;
 	private JLabel jLabelGender;
 	private JEditorPane jEditorPaneBMI;
@@ -136,6 +140,8 @@ public class PatientExaminationEdit extends JDialog {
 	private final String SUMMARY_FOOTER = "</table></body></html>";
 	
 	private final String DATE_FORMAT = "dd/MM/yy";
+
+	private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 
 	/**
 	 * Create the dialog.
@@ -253,8 +259,8 @@ public class PatientExaminationEdit extends JDialog {
 				summary.append(STD).append(patex.getPex_fc()).append(ETD);
 				summary.append(STD).append(patex.getPex_temp()).append(ETD);
 				summary.append(STD).append(patex.getPex_sat()).append(ETD);
-				// summary.append(STD).append(patex.getPex_rr()).append(ETD);REVIEW
-				// summary.append(STD).append(patex.getPex_ausc()).append(ETD);
+				summary.append(STD).append(patex.getPex_rr()).append(ETD);
+				summary.append(STD).append(examManager.getAuscultationTranslated(patex.getPex_ausc())).append(ETD);
 				summary.append(SUMMARY_END_ROW);
 			}
 		}
@@ -277,14 +283,16 @@ public class PatientExaminationEdit extends JDialog {
 		jTextFieldTemp.setText(String.valueOf(patex.getPex_temp()));
 		jSliderSaturation.setValue(convertFromDoubleToInt(patex.getPex_sat(), ExaminationParameters.SAT_MIN, ExaminationParameters.SAT_STEP, ExaminationParameters.SAT_MAX));
 		jTextFieldSaturation.setText(String.valueOf(patex.getPex_sat()));
-		// jSliderRR.setValue(patex.getPex_rr());REVIEW
-		// jTextFieldRR.setText(String.valueOf(patex.getPex_rr()));
+		jSliderRR.setValue(patex.getPex_rr());
+		jTextFieldRR.setText(String.valueOf(patex.getPex_rr()));
+		jAuscComboBox.setSelectedItem(patex.getPex_ausc());
 		jTextAreaNote.setText(patex.getPex_note());
 		disableAP();
 		disableHR();
 		disableTemp();
 		disableSaturation();
 		disableRR();
+		disableAusc();
 	}
 
 	private JPanel getJPanelExamination() {
@@ -511,21 +519,21 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_lblrr.insets = new Insets(5, 5, 5, 5);
 			gbc_lblrr.gridx = 0;
 			gbc_lblrr.gridy = 7;
-			jPanelExamination.add(getJCheckBoxToggleHR(), gbc_lblrr);
+			jPanelExamination.add(getJCheckBoxToggleRR(), gbc_lblrr);
 			
-			JLabel jLabelRR = new JLabel(MessageBundle.getMessage("angal.examination.respirationrate")); //$NON-NLS-1$
+			JLabel jLabelRR = new JLabel(MessageBundle.getMessage("angal.examination.respiratoryrate")); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelRR = new GridBagConstraints();
 			gbc_jLabelRR.anchor = GridBagConstraints.WEST;
 			gbc_jLabelRR.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelRR.gridx = 1;
 			gbc_jLabelRR.gridy = 7;
-			jPanelExamination.add(jLabelHR, gbc_jLabelRR);
+			jPanelExamination.add(jLabelRR, gbc_jLabelRR);
 			
 			GridBagConstraints gbc_jSliderRR = new GridBagConstraints();
 			gbc_jSliderRR.insets = new Insets(5, 5, 5, 5);
 			gbc_jSliderRR.gridx = 2;
 			gbc_jSliderRR.gridy = 7;
-			jPanelExamination.add(getJSliderHR(), gbc_jSliderRR);
+			jPanelExamination.add(getJSliderRR(), gbc_jSliderRR);
 			
 			JLabel jLabelRRUnit = new JLabel(ExaminationParameters.HR_UNIT);
 			GridBagConstraints gbc_jLabelRRUnit = new GridBagConstraints();
@@ -539,21 +547,42 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_jTextFieldRR.insets = new Insets(5, 0, 5, 0);
 			gbc_jTextFieldRR.gridx = 4;
 			gbc_jTextFieldRR.gridy = 7;
-			jPanelExamination.add(getJTextFieldHR(), gbc_jTextFieldRR);
+			jPanelExamination.add(getJTextFieldRR(), gbc_jTextFieldRR);
+
+			GridBagConstraints gbc_lblausc = new GridBagConstraints();
+			gbc_lblausc.insets = new Insets(5, 5, 5, 5);
+			gbc_lblausc.gridx = 0;
+			gbc_lblausc.gridy = 8;
+			jPanelExamination.add(getJCheckBoxToggleAusc(), gbc_lblausc);
+
+			JLabel jLabelAusc = new JLabel(MessageBundle.getMessage("angal.examination.auscultation")); //$NON-NLS-1$
+			GridBagConstraints gbc_jLabelAusc = new GridBagConstraints();
+			gbc_jLabelAusc.anchor = GridBagConstraints.WEST;
+			gbc_jLabelAusc.insets = new Insets(5, 5, 5, 5);
+			gbc_jLabelAusc.gridx = 1;
+			gbc_jLabelAusc.gridy = 8;
+			jPanelExamination.add(jLabelAusc, gbc_jLabelAusc);
+			
+			GridBagConstraints gbc_jPanelFieldAusc = new GridBagConstraints();
+			gbc_jPanelFieldAusc.anchor = GridBagConstraints.CENTER;
+			gbc_jPanelFieldAusc.insets = new Insets(5, 0, 5, 0);
+			gbc_jPanelFieldAusc.gridx = 2;
+			gbc_jPanelFieldAusc.gridy = 8;
+			jPanelExamination.add(getJComboBoxAusc(), gbc_jPanelFieldAusc);
 
 			JLabel jLabelNote = new JLabel(MessageBundle.getMessage("angal.examination.note")); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelNote = new GridBagConstraints();
 			gbc_jLabelNote.anchor = GridBagConstraints.NORTHEAST;
 			gbc_jLabelNote.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelNote.gridx = 1;
-			gbc_jLabelNote.gridy = 7;
+			gbc_jLabelNote.gridy = 9;
 			jPanelExamination.add(jLabelNote, gbc_jLabelNote);
 			
 			GridBagConstraints gbc_jScrollPaneNote = new GridBagConstraints();
 			gbc_jScrollPaneNote.fill = GridBagConstraints.BOTH;
 			gbc_jScrollPaneNote.insets = new Insets(5, 5, 5, 5);
 			gbc_jScrollPaneNote.gridx = 2;
-			gbc_jScrollPaneNote.gridy = 7;
+			gbc_jScrollPaneNote.gridy = 9;
 			jPanelExamination.add(getJScrollPaneNote(), gbc_jScrollPaneNote);
 
 		}
@@ -571,9 +600,17 @@ public class PatientExaminationEdit extends JDialog {
 	private JCheckBox getJCheckBoxToggleRR() {
 		if (jCheckBoxToggleRR == null) {
 			jCheckBoxToggleRR = new JCheckBox(""); //$NON-NLS-1$
-			jCheckBoxToggleRR.setAction(getActionToggleHR());
+			jCheckBoxToggleRR.setAction(getActionToggleRR());
 		}
-		return jCheckBoxToggleHR;
+		return jCheckBoxToggleRR;
+	}
+
+	private JCheckBox getJCheckBoxToggleAusc() {
+		if (jCheckBoxToggleAusc == null) {
+			jCheckBoxToggleAusc = new JCheckBox(""); //$NON-NLS-1$
+			jCheckBoxToggleAusc.setAction(getActionToggleAusc());
+		}
+		return jCheckBoxToggleAusc;
 	}
 
 	private JCheckBox getJCheckBoxToggleTemp() {
@@ -772,6 +809,34 @@ public class PatientExaminationEdit extends JDialog {
 		return jTextFieldHR;
 	}
 
+	private VoIntegerTextField getJTextFieldRR() {
+		if (jTextFieldRR == null) {
+			jTextFieldRR = new VoIntegerTextField(0,5);
+			jTextFieldRR.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					int rr = Integer.parseInt(jTextFieldRR.getText());
+					jSliderRR.setValue(rr);
+					patex.setPex_rr(rr);
+				}
+			});
+		}
+		return jTextFieldRR;
+	}
+
+	private JComboBox getJComboBoxAusc() {
+		if (jAuscComboBox == null) {
+			jAuscComboBox =  new JComboBox(examManager.getAuscultationList());
+			jAuscComboBox.addActionListener (new ActionListener () {
+				public void actionPerformed(ActionEvent e) {
+					patex.setPex_ausc(examManager.getAuscultationKey((String)jAuscComboBox.getSelectedItem()));
+				}
+			});
+
+		}
+		return jAuscComboBox;
+	}
+
 	private JSlider getJSliderHeight() {
 		if (jSliderHeight == null) {
 			jSliderHeight = new JSlider(0, 500, 0);
@@ -868,6 +933,22 @@ public class PatientExaminationEdit extends JDialog {
 		return jSliderHR;
 	}
 	
+	private JSlider getJSliderRR() {
+		if (jSliderRR == null) {
+			jSliderRR = new JSlider(0, 100, 0);
+			jSliderRR.addChangeListener(new ChangeListener() {
+				
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					int rr = jSliderRR.getValue();
+					jTextFieldRR.setText(String.valueOf(rr));
+					patex.setPex_rr(rr);
+				}
+			});
+		}
+		return jSliderRR;
+	}
+
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton();
@@ -1059,6 +1140,16 @@ public class PatientExaminationEdit extends JDialog {
 		jTextFieldRR.setEnabled(false);
 		patex.setPex_rr(0);
 	}
+
+	private void enableAusc(){
+		jAuscComboBox.setEnabled(true);
+		patex.setPex_ausc(examManager.getAuscultationKey((String)jAuscComboBox.getSelectedItem()));
+	}
+
+	private void disableAusc() {
+		jAuscComboBox.setEnabled(false);
+		patex.setPex_ausc("unknown"); //revist 
+	}
 	
 	private class SwingActionToggleSaturation extends AbstractAction {
 		/**
@@ -1092,6 +1183,24 @@ public class PatientExaminationEdit extends JDialog {
 				disableRR();
 			} else {
 				enableRR();
+			}
+		}
+	}
+
+	private class SwingActionToggleAusc extends AbstractAction {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		public SwingActionToggleAusc(){
+			putValue(NAME, ""); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleauscultationexamination")); //$NON-NLS-1$
+		}
+		public void actionPerformed(ActionEvent e) {
+			if (!jCheckBoxToggleAusc.isSelected()) {
+				disableAusc();
+			} else {
+				enableAusc();
 			}
 		}
 	}
@@ -1158,6 +1267,13 @@ public class PatientExaminationEdit extends JDialog {
 			actionToggleRR = new SwingActionToggleRR();
 		}
 		return actionToggleRR;
+	}
+
+	private Action getActionToggleAusc() {
+		if (actionToggleAusc == null) {
+			actionToggleAusc = new SwingActionToggleAusc();
+		}
+		return actionToggleAusc;
 	}
 	
 	private JPanel getJPanelSummary() {
