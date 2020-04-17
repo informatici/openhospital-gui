@@ -2,6 +2,8 @@ package org.isf.admission.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,7 +36,7 @@ import org.isf.utils.time.Converters;
 
 import com.toedter.calendar.JDateChooser;
 
-public class PatientFolderReportModal extends JDialog{
+public class PatientFolderReportModal extends ModalJFrame{
 	private Integer patId;
 	private JPanel jPanelChos;
 	private JDateChooser jDateChooserDateFrom;
@@ -53,9 +56,12 @@ public class PatientFolderReportModal extends JDialog{
 	private JCheckBox examinationCheck;
 	private JPanel allPanel;
 	private JCheckBox allCheck;
+	private JPanel labelPanel;
+	private String date;
 	
-	public PatientFolderReportModal(Integer code) {
+	public PatientFolderReportModal(Integer code, String dat) {
 		this.patId=code;
+		this.date=dat;
 		initialize();
 	}
 	private void initialize() {
@@ -110,10 +116,10 @@ public class PatientFolderReportModal extends JDialog{
 			
 			GridBagConstraints gbc_jSliderHeight = new GridBagConstraints();
 			gbc_jSliderHeight.insets = new Insets(5, 5, 5, 5);
-			gbc_jSliderHeight.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jSliderHeight.fill = GridBagConstraints.WEST;
 			gbc_jSliderHeight.gridx = 0;
 			gbc_jSliderHeight.gridy = 2;
-			gbc_jSliderHeight.gridwidth = 3;
+			
 			jPanelChos.add(getValueReport(), gbc_jSliderHeight);
 			
 			GridBagConstraints gbc_jCancelButtont = new GridBagConstraints();
@@ -196,9 +202,9 @@ public class PatientFolderReportModal extends JDialog{
 		if (choosePanel == null) {
 
 			choosePanel = new JPanel();
-			chooselabel = new JLabel();
-			chooselabel.setText("Report For:");
-			choosePanel.add(chooselabel);
+			choosePanel.setLayout(new javax.swing.BoxLayout(choosePanel, javax.swing.BoxLayout.Y_AXIS));
+			
+			choosePanel.add(getPanelLabel());
 			choosePanel.add(getPanelAll());
 			choosePanel.add(getPanelAdmission());
 			choosePanel.add(getPanelOpd());
@@ -209,11 +215,22 @@ public class PatientFolderReportModal extends JDialog{
 
 		return choosePanel;
 	}
-	
+	private JPanel getPanelLabel() {
+		if (labelPanel == null) {
+			labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
+			labelPanel.setAlignmentY(LEFT_ALIGNMENT);
+			
+			
+			labelPanel.add(new JLabel("Report For:"), BorderLayout.CENTER);
+			
+			
+		}
+		return labelPanel;
+	}
 	private JPanel getPanelAll() {
 		if (allPanel == null) {
-			allPanel = new JPanel();
-			
+			allPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
+			allPanel.setAlignmentY(LEFT_ALIGNMENT);
 			allCheck = new JCheckBox();
 
 			allCheck.setSelected(true);
@@ -233,7 +250,7 @@ public class PatientFolderReportModal extends JDialog{
 	}
 	private JPanel getPanelExamination() {
 		if (examinationPanel == null) {
-			examinationPanel = new JPanel();
+			examinationPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
 			
 			examinationCheck = new JCheckBox();
 
@@ -253,7 +270,7 @@ public class PatientFolderReportModal extends JDialog{
 	
 	private JPanel getPanelDrugs() {
 		if (drugsPanel == null) {
-			drugsPanel = new JPanel();
+			drugsPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
 			
 			drugsCheck = new JCheckBox();
 
@@ -272,7 +289,7 @@ public class PatientFolderReportModal extends JDialog{
 	
 	private JPanel getPanelOpd() {
 		if (opdPanel == null) {
-			opdPanel = new JPanel();
+			opdPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
 			
 			opdCheck = new JCheckBox();
 			
@@ -292,7 +309,7 @@ public class PatientFolderReportModal extends JDialog{
 	
 	private JPanel getPanelAdmission() {
 		if (admissionPanel == null) {
-			admissionPanel = new JPanel();
+			admissionPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
 			
 			admissionCheck = new JCheckBox();
 
@@ -338,12 +355,24 @@ public class PatientFolderReportModal extends JDialog{
 	private JDateChooser getJDateChooserDateFrom() {
 		if (jDateChooserDateFrom == null) {
 			jDateChooserDateFrom = new JDateChooser();
+			jDateChooserDateFrom.setPreferredSize(new Dimension(200, 40));
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE)); //$NON-NLS-1$
 			jDateChooserDateFrom.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
 			Date date2 = null;
+			DateFormat format = new SimpleDateFormat("dd/MM/yy");
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			String correctdate = null;
 			try {
-				date2 = new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2000");
+				Date dat = format.parse(date);
+				 correctdate = df.format(dat);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				
+				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(correctdate);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -366,6 +395,7 @@ public class PatientFolderReportModal extends JDialog{
 	private JDateChooser getJDateChooserDateTo() {
 		if (jDateChooserDateTo == null) {
 			jDateChooserDateTo = new JDateChooser();
+			jDateChooserDateTo.setPreferredSize(new Dimension(200, 40));
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE)); //$NON-NLS-1$
 			jDateChooserDateTo.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$

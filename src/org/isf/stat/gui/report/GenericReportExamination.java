@@ -23,9 +23,7 @@ public class GenericReportExamination {
 				Integer id = patientID;
 	            
 	           	        
-	            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy hh:mm") ;
-	           
-	       
+	            	SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy hh:mm") ;
 	                Date date1 =  df.parse(date);
 	                String dat = new SimpleDateFormat("yyyy-MM-dd").format(date1);
 	              

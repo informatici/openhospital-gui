@@ -539,7 +539,8 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			launchReportButton.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					// GenericReportMY rpt3 = new GenericReportMY(new Integer(6), new Integer(2008), "hmis108_adm_by_diagnosis_in");
-					new PatientFolderReportModal(patient.getCode());
+				String	date =(String) admTable.getValueAt(0, 0);
+					new PatientFolderReportModal(patient.getCode(),date);
 				}
 			});
 		}
