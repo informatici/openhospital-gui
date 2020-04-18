@@ -301,9 +301,9 @@ public class PatientExaminationEdit extends JDialog {
 			
 			GridBagLayout gbl_jPanelExamination = new GridBagLayout();
 			gbl_jPanelExamination.columnWidths = new int[] { 0, 0, 0, 0 };
-			gbl_jPanelExamination.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+			gbl_jPanelExamination.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
 			gbl_jPanelExamination.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
-			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 };
+			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 			jPanelExamination.setLayout(gbl_jPanelExamination);
 
 			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
@@ -535,7 +535,7 @@ public class PatientExaminationEdit extends JDialog {
 			gbc_jSliderRR.gridy = 7;
 			jPanelExamination.add(getJSliderRR(), gbc_jSliderRR);
 			
-			JLabel jLabelRRUnit = new JLabel(ExaminationParameters.HR_UNIT);
+			JLabel jLabelRRUnit = new JLabel(ExaminationParameters.RR_UNIT);
 			GridBagConstraints gbc_jLabelRRUnit = new GridBagConstraints();
 			gbc_jLabelRRUnit.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelRRUnit.gridx = 3;
