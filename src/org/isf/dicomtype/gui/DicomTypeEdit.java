@@ -1,4 +1,4 @@
-package org.isf.disctype.gui;
+package org.isf.dicomtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -15,48 +15,48 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
 
-import org.isf.disctype.manager.DischargeTypeBrowserManager;
-import org.isf.disctype.model.DischargeType;
+import org.isf.dicomtype.manager.DicomTypeBrowserManager;
+import org.isf.dicomtype.model.DicomType;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
-public class DischargeTypeBrowserEdit extends JDialog{
+public class DicomTypeEdit extends JDialog{
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private EventListenerList dischargeTypeListeners = new EventListenerList();
+	private EventListenerList dicomTypeListeners = new EventListenerList();
 
-    public interface DischargeTypeListener extends EventListener {
-        public void dischargeTypeUpdated(AWTEvent e);
-        public void dischargeTypeInserted(AWTEvent e);
+    public interface DicomTypeListener extends EventListener {
+        public void dicomTypeUpdated(AWTEvent e);
+        public void dicomTypeInserted(AWTEvent e);
     }
 
-    public void addDischargeTypeListener(DischargeTypeListener l) {
-    	dischargeTypeListeners.add(DischargeTypeListener.class, l);
+    public void addDicomTypeListener(DicomTypeListener l) {
+    	dicomTypeListeners.add(DicomTypeListener.class, l);
     }
 
-    public void removeDischargeTypeListener(DischargeTypeListener listener) {
-    	dischargeTypeListeners.remove(DischargeTypeListener.class, listener);
+    public void removeDicomTypeListener(DicomTypeListener listener) {
+    	dicomTypeListeners.remove(DicomTypeListener.class, listener);
     }
 
-    private void fireDischargeInserted(DischargeType anDischargeType) {
-        AWTEvent event = new AWTEvent(anDischargeType, AWTEvent.RESERVED_ID_MAX + 1) {
+    private void fireDicomTypeInserted(DicomType anDicomType) {
+        AWTEvent event = new AWTEvent(anDicomType, AWTEvent.RESERVED_ID_MAX + 1) {
 
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;};
 
-        EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
+        EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
         for (int i = 0; i < listeners.length; i++)
-            ((DischargeTypeListener)listeners[i]).dischargeTypeInserted(event);
+            ((DicomTypeListener)listeners[i]).dicomTypeInserted(event);
     }
-    private void fireDischargeUpdated() {
+    private void fireDicomUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
 			/**
@@ -64,9 +64,9 @@ public class DischargeTypeBrowserEdit extends JDialog{
 			 */
 			private static final long serialVersionUID = 1L;};
 
-        EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
+        EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
         for (int i = 0; i < listeners.length; i++)
-            ((DischargeTypeListener)listeners[i]).dischargeTypeUpdated(event);
+            ((DicomTypeListener)listeners[i]).dicomTypeUpdated(event);
     }
     
 	private JPanel jContentPane = null;
@@ -77,7 +77,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
 	private JTextField descriptionTextField = null;
 	private VoLimitedTextField codeTextField = null;	
 	private String lastdescription;
-	private DischargeType dischargeType = null;
+	private DicomType dicomType = null;
 	private boolean insert;
 	private JPanel jDataPanel = null;	
 	private JLabel jCodeLabel = null;
@@ -89,11 +89,11 @@ public class DischargeTypeBrowserEdit extends JDialog{
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
-	public DischargeTypeBrowserEdit(JFrame owner,DischargeType old,boolean inserting) {
+	public DicomTypeEdit(JFrame owner,DicomType old,boolean inserting) {
 		super(owner,true);
 		insert = inserting;
-		dischargeType = old;//disease will be used for every operation
-		lastdescription= dischargeType.getDescription();
+		dicomType = old;//disease will be used for every operation
+		lastdescription= dicomType.getDicomTypeDescription();
 		initialize();
 	}
 
@@ -107,11 +107,11 @@ public class DischargeTypeBrowserEdit extends JDialog{
 		
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.disctype.newdischargetyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.dicomtype.newdicomtyperecord"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.disctype.editingdischargetyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.dicomtype.editingdicomtyperecord"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
@@ -190,37 +190,38 @@ public class DischargeTypeBrowserEdit extends JDialog{
 			okButton.setMnemonic(KeyEvent.VK_O);
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
+					DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 
-					dischargeType.setDescription(descriptionTextField.getText());
-					dischargeType.setCode(codeTextField.getText());					
+					dicomType.setDicomTypeDescription(descriptionTextField.getText());
+					dicomType.setDicomTypeID(codeTextField.getText());					
 					boolean result = false;
-					if (insert) {      // inserting
+					if (insert) {	// inserting
 						try {
-							result = manager.newDischargeType(dischargeType);
+							result = manager.newDicomType(dicomType);
                             if (result) {
-                                fireDischargeInserted(dischargeType);
+                                fireDicomTypeInserted(dicomType);
                             }
-                            if (!result) JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+                            if (!result) JOptionPane.showMessageDialog(DicomTypeEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
                             else  dispose();
 						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
+							OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
 							return;
 						}
                     }
-                    else {                          // updating
+                    else 
+                    {				// updating
                     	if (descriptionTextField.getText().equals(lastdescription)){
     						dispose();	
     					}else{
     						try {
-								result = manager.updateDischargeType(dischargeType);
+								result = manager.updateDicomType(dicomType);
                                 if (result) {
-                                    fireDischargeUpdated();
+                                    fireDicomUpdated();
                                 }
-                                if (!result) JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+                                if (!result) JOptionPane.showMessageDialog(DicomTypeEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
                                 else  dispose();
 							} catch (OHServiceException e1) {
-								OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
+								OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
 								return;
 							}
     					}
@@ -240,8 +241,8 @@ public class DischargeTypeBrowserEdit extends JDialog{
 		if (descriptionTextField == null) {
 			descriptionTextField = new JTextField(20);
 			if (!insert) {
-				descriptionTextField.setText(dischargeType.getDescription());
-				lastdescription=dischargeType.getDescription();
+				descriptionTextField.setText(dicomType.getDicomTypeDescription());
+				lastdescription=dicomType.getDicomTypeDescription();
 			} 
 		}
 		return descriptionTextField;
@@ -256,7 +257,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
 		if (codeTextField == null) {
 			codeTextField = new VoLimitedTextField(10);
 			if (!insert) {
-				codeTextField.setText(dischargeType.getCode());
+				codeTextField.setText(dicomType.getDicomTypeID());
 				codeTextField.setEnabled(false);
 			}
 		}
@@ -290,7 +291,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
 			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.common.codemaxchars"));
+			jCodeLabel.setText(MessageBundle.getMessage("angal.dicomtype.codemaxchars"));
 		}
 		return jCodeLabel;
 	}
