@@ -34,6 +34,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
@@ -45,6 +46,7 @@ import org.isf.menu.manager.Context;
 import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
+import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
@@ -184,6 +186,9 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 		pack();
 		setLocationRelativeTo(null);
 	}
+	private boolean isAutomaticLot() {
+				return GeneralData.AUTOMATICLOTWARD_TOWARD;
+			}
 
 	private JPanel getJPanelNorth() {
 		if (jPanelNorth == null) {
@@ -317,13 +322,52 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 		return true;
 	}
 	
+	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int qanty) {
+				ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+				MedicalWard medWard =null;
+				int q = qanty;
+				for (MedicalWard elem : drug) {
+						if(elem.getMedical().getDescription().equals(me)) {
+							
+							if(elem.getQty() != 0.0) {
+								if (q!=0) {
+									if (elem.getQty()<=q) {
+										MedicalWard e = elem;
+										dr.add(e);
+										q =(int) (qanty -elem.getQty()) ;
+										int maxquantity =  (int) (elem.getQty()-0);
+										medWard = elem;
+										addItem(medWard, maxquantity);
+										
+									}else {
+										MedicalWard e = elem;
+										dr.add(e);
+										int qu = (int) (elem.getQty() -q ) ;
+										medWard = elem;
+										
+										addItem(medWard, q);
+										q=0;
+									}
+								}
+							
+								
+								}
+						}					
+						}
+					 
+				 
+				return medWard;
+			}
+	
 	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int qanty) {
 		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
 		MedicalWard medWard =null;
 		for (MedicalWard elem : drug) {
 			if(elem.getMedical().getDescription().equals(me)) {
-				MedicalWard e = elem;
-				dr.add(e);
+				if(elem.getQty() != 0.0) {
+					MedicalWard e = elem;
+						dr.add(e);
+					}
 				
 			}
 		}
@@ -401,9 +445,14 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 				}
 			} else return qty;
 			if (checkQuantity(totalQty, qty)) {
-				MedicalWard warSe = chooseLot(wardDrugs, med, qty);
-			}else {
-				askQuantity(med ,wardDrugs);
+
+				if (isAutomaticLot()) {
+					MedicalWard warSe = automaticChoose(wardDrugs, med, qty);
+				} else {
+					MedicalWard warSe = chooseLot(wardDrugs, med, qty);
+				}
+			} else {
+				askQuantity(med, wardDrugs);
 			}
 		} while (qty == 0);
 		
@@ -470,8 +519,8 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 
 	private void addItem(MedicalWard ward, int qanty) {
 		if (ward != null) {
-			Medical med = new Medical(ward.getMedical().getCode());
-			MedicalWard item = new MedicalWard(med, (double) qanty, ward.getId().getLot());
+		
+			MedicalWard item = new MedicalWard(ward.getMedical(), (double) qanty, ward.getId().getLot());
 			medItems.add(item);
 			
 //			medArray.add(med);
@@ -542,6 +591,10 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 							description = patientSelected.getName();
 							age = patientSelected.getAge();
 							weight = patientSelected.getWeight();
+						}else {
+							JOptionPane.showMessageDialog(null,
+									MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseselectpatient"));
+							return;
 						}
 					} 
                     else if (jRadioWard.isSelected()) {

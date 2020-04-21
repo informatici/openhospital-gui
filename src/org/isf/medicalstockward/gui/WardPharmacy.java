@@ -564,8 +564,11 @@ public class WardPharmacy extends ModalJFrame implements
 		MedicalWard medWard =null;
 		for (MedicalWard elem : drug) {
 			if(elem.getMedical().getDescription().equals(me)) {
-				MedicalWard e = elem;
-				dr.add(e);
+				if(elem.getQty() != 0.0) {
+					MedicalWard e = elem;
+				 	dr.add(e);
+									
+									}
 			}
 		}
 			
