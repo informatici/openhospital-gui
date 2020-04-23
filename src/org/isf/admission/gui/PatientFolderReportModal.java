@@ -67,6 +67,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 	private void initialize() {
 		this.setLayout(new BorderLayout());
 		this.add(getJContentPane(), BorderLayout.CENTER);
+		this.setTitle(MessageBundle.getMessage("angal.medicals.report")); 
 		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
