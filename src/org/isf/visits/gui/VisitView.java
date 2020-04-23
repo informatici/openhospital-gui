@@ -320,7 +320,7 @@ public class VisitView extends ModalJFrame {
 		
 		
 		
-		setSize(1000, 570);
+		setSize(1350, 570);
 	}
 
 	private JPanel dayCalendar() {
@@ -548,7 +548,7 @@ public class VisitView extends ModalJFrame {
 			jScrollPaneFirstday.setAlignmentY(Box.TOP_ALIGNMENT);
 			jScrollPaneFirstday.getViewport().setBackground(Color.WHITE);
 		
-			jScrollPaneFirstday.setMinimumSize(new Dimension(300,400));
+			jScrollPaneFirstday.setMinimumSize(new Dimension(500,400));
 		}
 		return jScrollPaneFirstday;
 	}
@@ -588,7 +588,7 @@ public class VisitView extends ModalJFrame {
 					getVisitFirstday());
 			jScrollPaneSecondtday.setViewportView(visitSecondDayPanel());
 			jScrollPaneSecondtday.setAlignmentY(Box.TOP_ALIGNMENT);
-			jScrollPaneSecondtday.setMinimumSize(new Dimension(300,400));
+			jScrollPaneSecondtday.setMinimumSize(new Dimension(500,400));
 		}
 		return jScrollPaneSecondtday;
 	}
@@ -760,11 +760,15 @@ public class VisitView extends ModalJFrame {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
 			String da = formatter.format(d.getTime());
 			String dat = getDate();
-			return visit.getPatient().getName() + ", " + visit.getPatient().getCode() + ", Service: " + visit.getService();
+			return "Time :" + formatDateTime(d) +  " Patient "+ visit.getPatient().getName() + ", " + visit.getPatient().getCode() + ", Service: " + visit.getService()
+			+" Duration(min) :" + visit.getDuration();
 
 		}
 	}
-
+	public String formatDateTime(GregorianCalendar time) {
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
+		return format.format(time.getTime());
+	}
 	class VisitSecondModel extends DefaultTableModel {
 		public VisitSecondModel() {
 		}
@@ -790,8 +794,9 @@ public class VisitView extends ModalJFrame {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); // lowercase "dd"
 			String da = formatter.format(d.getTime());
 			String dat = getDate();
-			
-			return visit.getPatient().getName() + ", " + visit.getPatient().getCode() + ", Service: " + visit.getService();
+			return "  " + formatDateTime(d) +  "Patient :"+ visit.getPatient().getName() + ", " + visit.getPatient().getCode() + ", Service: " + visit.getService()
+			+" Duration :" + visit.getDuration();
+
 
 		}
 	}
