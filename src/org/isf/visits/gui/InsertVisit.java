@@ -4,8 +4,10 @@
 package org.isf.visits.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -15,6 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -23,18 +26,29 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SpringLayout;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.model.Patient;
+import org.isf.therapy.gui.TherapyEntryForm;
+import org.isf.therapy.manager.TherapyManager;
+import org.isf.therapy.model.TherapyRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
+import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.visits.manager.VisitManager;
+import org.isf.visits.model.VisitRow;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
@@ -75,15 +89,21 @@ public class InsertVisit extends JDialog {
 	private JComboBox wardBox;
 	private Boolean ad;
 	private Ward ward;
-	
+	private Patient patient;
 	/*
 	 * Managers
 	 */
 	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
-	public InsertVisit(JDialog owner, Boolean ad, Ward ward) {
+	private boolean pat;
+
+
+
+	public InsertVisit(JDialog owner, Boolean ad, Ward ward, Patient patient) {
 		
 		super(owner, true);
+		this.patient=patient;
+		
 		this.ward=ward;
 		this.ad=ad;
 		initComponents();
@@ -92,6 +112,14 @@ public class InsertVisit extends JDialog {
 	public InsertVisit(JDialog owner, Date date) {
 		super(owner, true);
 		this.visitDate = date;
+		initComponents();
+	}
+	
+	public InsertVisit(ModalJFrame owner, Boolean ad, Ward ward) {
+		super(owner, true);
+		this.ad=ad;
+		this.ward=ward;
+		 pat= true;
 		initComponents();
 	}
 
@@ -125,18 +153,19 @@ public class InsertVisit extends JDialog {
 		gbc_ward.gridy = 0;
 		gbc_ward.gridx = 0;
 		patientParamsPanel.add(getWardPanel(), gbc_ward);
-		if (!ad) {
+		if (pat) {
 			GridBagConstraints gbc_Pat = new GridBagConstraints();
-			gbc_Pat.fill = GridBagConstraints.HORIZONTAL;
+			gbc_Pat.fill = GridBagConstraints.VERTICAL;
 			gbc_Pat.anchor = GridBagConstraints.WEST;
 
 			gbc_Pat.gridy = 0;
 			gbc_Pat.gridx = 1;
+			gbc_Pat.gridwidth = 3;
 			patientParamsPanel.add(getPanelChoosePatient(), gbc_Pat);	
 		}
 
 		GridBagConstraints gbc_Service = new GridBagConstraints();
-		gbc_Service.fill = GridBagConstraints.HORIZONTAL;
+		gbc_Service.fill = GridBagConstraints.VERTICAL;
 		gbc_Service.anchor = GridBagConstraints.WEST;
 
 		gbc_Service.gridy = 1;
@@ -194,6 +223,11 @@ public class InsertVisit extends JDialog {
 
 	private Patient patientParent;
 
+	private VisitRow vsRow;
+
+	
+	private JSpinner jSpinnerDur;
+
 	private JPanel getWardPanel() {
 	
 		if (wardPanel == null) {
@@ -218,10 +252,9 @@ public class InsertVisit extends JDialog {
 					}
 				} 
 				}
-			if(!ad) {
+			if(pat) {
 				wardBox.setSelectedItem(ward);
-				wardBox.setEditable(false);
-				wardBox.setEnabled(false);
+				
 			}
 			}
 
@@ -264,10 +297,39 @@ public class InsertVisit extends JDialog {
 			DurationField.setFocusable(true);
 
 			DurationPanel.add(Durationlabel);
-			DurationPanel.add(DurationField);
+			DurationPanel.add(getSpinnerQty());
 
 		}
 		return DurationPanel;
+	}
+	private final int preferredSpinnerWidth = 100;
+	private final int oneLineComponentsHeight = 30;
+	private JSpinner getSpinnerQty() {
+		Double startQty = 0.;
+		Double minQty = 0.;
+		Double stepQty = 1.;
+		Double maxQty = null;
+		jSpinnerDur = new JSpinner(new SpinnerNumberModel(startQty, minQty,
+				maxQty, stepQty));
+		jSpinnerDur.setFont(new Font("Dialog", Font.BOLD, 14)); //$NON-NLS-1$
+		jSpinnerDur.setAlignmentX(Component.LEFT_ALIGNMENT);
+		jSpinnerDur.setPreferredSize(new Dimension(preferredSpinnerWidth,
+				oneLineComponentsHeight));
+		jSpinnerDur.setMaximumSize(new Dimension(Short.MAX_VALUE,
+				oneLineComponentsHeight));
+		jSpinnerDur.addChangeListener(new ChangeListener() {
+
+			public void stateChanged(ChangeEvent e) {
+				JSpinner source = (JSpinner) e.getSource();
+				double value = (Double) source.getValue();
+				/*
+				 * sebbene sia utile crea conflitto 
+				 */
+				//int intValue = new Double(value).intValue();
+				//jSliderQty.setValue(intValue);
+			}
+		});
+		return jSpinnerDur;
 	}
 	private JPanel getButtonsPanel() {
 		if (buttonsPanel == null) {
@@ -297,9 +359,50 @@ public class InsertVisit extends JDialog {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok"));
 			buttonOK.setMnemonic(KeyEvent.VK_O);
 			buttonOK.addActionListener(new ActionListener() {
+				private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
+				
+				
 
 				public void actionPerformed(ActionEvent arg0) {
-					visitDate = visitDateChooser.getDate();
+					if(visitDateChooser.getDate()== null) {
+						JOptionPane.showMessageDialog(InsertVisit.this, MessageBundle.getMessage("angal.visit.date"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+						return;
+					}
+					GregorianCalendar date = new GregorianCalendar();
+					date.setTime(visitDateChooser.getDate());
+					int visitID = 0;
+					String note = null ;
+					Object o = jSpinnerDur.getValue();
+					Number n = (Number) o;
+					int i = n.intValue();
+					String duration = String.valueOf(i);
+					String service=ServiceField.getText();
+					Object ward = wardBox.getSelectedItem();
+					if (ward instanceof Ward) {
+						saveWard = getWard();
+						
+					}else {
+						JOptionPane.showMessageDialog(InsertVisit.this, MessageBundle.getMessage("angal.visit.ward"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+						return;	
+					}
+					
+					
+					boolean sms = false;
+					  if (patient==null) {
+						  JOptionPane.showMessageDialog(InsertVisit.this, MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectapatient"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+							return;	 
+					  }
+					try {
+				
+						vsRow = visitManager.newVisit(visitID, date, patient, note, sms, saveWard, duration, service);
+						visitID = vsRow.getVisitID();
+					} catch (OHServiceException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (visitID > 0) {
+						vsRow.setVisitID(visitID);
+					}
 					dispose();
 				}
 			});
@@ -388,10 +491,10 @@ return visitDateChooser;
 	        	SelectPatient selectPatient = new SelectPatient(InsertVisit.this, false, true );
 					selectPatient.addSelectionListener(InsertVisit.this);
 					selectPatient.setVisible(true);	
-					Patient pat = selectPatient.getPatient();
+					patient = selectPatient.getPatient();
 					//System.out.println("Patient...........+++++++++++++.............."+pat.getFirstName());
 					try {
-						patientSelected(pat);
+						patientSelected(patient);
 					} catch (OHServiceException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -399,7 +502,7 @@ return visitDateChooser;
 					
 	        }
 		});
-		
+		priceListLabelPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectapatient")));
 	
 		
 		return priceListLabelPanel;
@@ -417,15 +520,32 @@ public Date getVisitDate() {
 	return visitDate;
 }
 public Ward getWard() {
-	return (Ward) wardBox.getSelectedItem();
+	Object ward = wardBox.getSelectedItem();
+	if (ward instanceof Ward) {
+		return (Ward) wardBox.getSelectedItem();
+		
+	}else {
+		return null;
+	}
 }
 public String getServ() {
 return ServiceField.getText();
 }
 public String getdur() {
-return DurationField.getText();
+	Object o = jSpinnerDur.getValue();
+	Number n = (Number) o;
+	int i = n.intValue();
+	String qty = String.valueOf(i);
+return qty;
 }
 public Patient getPatient() {
 	return patientParent;
+}
+public VisitRow getVsRow() {
+	return vsRow;
+}
+
+public void setVsRow(VisitRow vsRow) {
+	this.vsRow = vsRow;
 }
 }

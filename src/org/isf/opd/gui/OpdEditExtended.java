@@ -113,6 +113,7 @@ import java.util.Date;
 import java.util.Iterator;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
+import org.isf.visits.model.VisitRow;
 
 public class OpdEditExtended extends JDialog implements 
         PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener{
@@ -1679,7 +1680,7 @@ public class OpdEditExtended extends JDialog implements
 							boolean result = opdManager.newOpd(opd);
 							if (result) {
                                                             if(scheduleVisit) {
-                                                                Visit visit = new Visit();
+                                                                VisitRow visit = new VisitRow();
                                                                 visit.setDate(opd.getNextVisitDate());
                                                                 visit.setPatient(opd.getPatient());
                                                                 vstManager.newVisit(visit);
@@ -1695,15 +1696,15 @@ public class OpdEditExtended extends JDialog implements
 							Opd updatedOpd = opdManager.updateOpd(opd);
 							if (updatedOpd != null) {
                                                             if(scheduleVisit) {
-                                                                Iterator<Visit> visits = vstManager.getVisits(opd.getPatient().getCode()).iterator();
-                                                                Visit visit;
+                                                                Iterator<VisitRow> visits = vstManager.getVisits(opd.getPatient().getCode()).iterator();
+                                                                VisitRow visit;
                                                                 boolean found = false;
                                                                 while(!found && visits.hasNext()) {
                                                                     visit = visits.next();
                                                                     found = visit.getDate().getTimeInMillis() == opd.getNextVisitDate().getTimeInMillis();
                                                                 }
                                                                 if(!found) {
-                                                                    visit = new Visit();
+                                                                    visit = new VisitRow();
                                                                     visit.setDate(opd.getNextVisitDate());
                                                                     visit.setPatient(opd.getPatient());
                                                                     vstManager.newVisit(visit);

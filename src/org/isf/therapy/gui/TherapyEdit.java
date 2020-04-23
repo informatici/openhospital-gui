@@ -56,6 +56,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.admission.gui.AdmittedPatientBrowser;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
@@ -72,11 +73,13 @@ import org.isf.therapy.model.TherapyRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JAgenda;
-import org.isf.utils.jobjects.DayCalendar;
+
 import org.isf.utils.jobjects.JAgenda.AgendaDayObject;
 import org.isf.visits.gui.InsertVisit;
+import org.isf.visits.gui.VisitView;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
+import org.isf.visits.model.VisitRow;
 import org.isf.ward.model.Ward;
 
 import com.toedter.calendar.JMonthChooser;
@@ -139,6 +142,7 @@ public class TherapyEdit extends JDialog {
 	private Visit selectedVisit;
 	private Hashtable<Integer, Therapy> hashTableTherapy;
 	private Hashtable<Integer, TherapyRow> hashTableThRow;
+	private Hashtable<Integer, VisitRow> hashTableVsRow;
 	private Hashtable<Integer, Visit> hashTableVisits;
 
 	private static final int TherapyButtonWidth = 200;
@@ -156,6 +160,7 @@ public class TherapyEdit extends JDialog {
 	private ArrayList<Double> qtyArray = new ArrayList<Double>();
 	private ArrayList<Therapy> therapies = new ArrayList<Therapy>();
 	private ArrayList<TherapyRow> thRows = new ArrayList<TherapyRow>();
+	private ArrayList<VisitRow> vsRows = new ArrayList<VisitRow>();
 	private ArrayList<Visit> visits = new ArrayList<Visit>();
 	private Ward ward;
 	private boolean ad;
@@ -190,6 +195,7 @@ public class TherapyEdit extends JDialog {
 				if (therapies != null) therapies.clear();
 				if (thRows != null) thRows.clear();
 				if (qtyArray != null) qtyArray.clear();
+				if (vsRows != null) vsRows.clear();
 				if (visits != null) visits.clear();
 			}
 		});
@@ -218,6 +224,7 @@ public class TherapyEdit extends JDialog {
 				if (therapies != null) therapies.clear();
 				if (thRows != null) thRows.clear();
 				if (qtyArray != null) qtyArray.clear();
+				if (vsRows != null) vsRows.clear();
 				if (visits != null) visits.clear();
 			}
 		});
@@ -255,6 +262,8 @@ public class TherapyEdit extends JDialog {
 			}
 		}
 		
+	
+		
 		/*
 		 * Therapy(s) related to the rows in the therapies table
 		 */
@@ -269,15 +278,25 @@ public class TherapyEdit extends JDialog {
 		 */
 		try {
 			if (ad) {
-			visits = vstManager.getVisits(patient.getCode());
+				vsRows = vstManager.getVisits(patient.getCode());
 			}
-//			else {
-//				visits = vstManager.getVisitsWard(ward.getCode());	
-//			}
-		} catch (OHServiceException e) {
+		}catch(OHServiceException e){
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		
+		if (ad) {
+			hashTableVsRow = new Hashtable<Integer, VisitRow>();
+			if (!vsRows.isEmpty()) {
+				for (VisitRow vsRow : vsRows) {
+					hashTableVsRow.put(vsRow.getVisitID(), vsRow);
+				}
+			}
+			try {
+				visits = vstManager.getVisits(vsRows);
+			}catch(OHServiceException e){
+				OHServiceExceptionUtil.showMessages(e);
+			}	
+		}
 		/*
 		 * HashTable of the visits
 		 */
@@ -297,7 +316,7 @@ public class TherapyEdit extends JDialog {
 if(ad) {
 		getContentPane().add(jAgenda, BorderLayout.CENTER);
 }else {
-	getContentPane().add(dayCalendar(), BorderLayout.CENTER);
+	
 }
 		getContentPane().add(getNorthPanel(), BorderLayout.NORTH);
 		getContentPane().add(getEastPanel(), BorderLayout.EAST);
@@ -508,28 +527,31 @@ if(ad) {
 			}
 		}
 	}
-
 	private void showVisits() {
-		for (Visit visit : visits) {
+		hashTableVisits = new Hashtable<Integer, Visit>();
+		for (Visit vs : visits) {
+			hashTableVisits.put(vs.getVisitID(), vs);
+			showVisit(vs);
+		}
+	}
+	private void showVisit(Visit vs) {
+
 			final String dateTimeFormat = "dd/MM/yy HH:mm:ss";
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-			Date vis= visit.getDate().getTime();
-			sdf.setCalendar(visit.getDate());
-			 String dateFormatted = sdf.format(visit.getDate().getTime());
-			if (visit.getDate().get(GregorianCalendar.YEAR) == yearChooser.getYear()) {
-				if (visit.getDate().get(GregorianCalendar.MONTH) == monthChooser.getMonth()) {
-					if (ad) {
-					jAgenda.addElement(visit.getWard().getDescription() +"-" +dateFormatted, visit.getDate().get(GregorianCalendar.DAY_OF_MONTH));
-					}else {
-						jAgenda.addElement(dateFormatted +"-" + visit.getPatient().getName(), visit.getDate().get(GregorianCalendar.DAY_OF_MONTH));
-							
-					}
+			Date vis= vs.getDate().getTime();
+			sdf.setCalendar(vs.getDate());
+			 String dateFormatted = sdf.format(vs.getDate().getTime());
+			if (vs.getDate().get(GregorianCalendar.YEAR) == yearChooser.getYear()) {
+				if (vs.getDate().get(GregorianCalendar.MONTH) == monthChooser.getMonth()) {
+				
+					jAgenda.addElement(vs, vs.getDate().get(GregorianCalendar.DAY_OF_MONTH));
+					
 					
 					
 					}
 				}
 			}
-		}
+		
 	
 
 	private JPanel getSouthPanel() {
@@ -603,6 +625,7 @@ if(ad) {
 			visitPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.therapy.visitsandreview"))); //$NON-NLS-1$
 			visitPanel.add(getAddVisitButton());
 			visitPanel.add(getRemoveVisitButton());
+			visitPanel.add(getWorkSheetButton());
 			visitPanel.add(Box.createVerticalGlue());
 
 		}
@@ -624,16 +647,46 @@ if(ad) {
 				public void actionPerformed(ActionEvent e) {
 					if (selectedVisit == null)
 						return;
+					System.out.println("==> SelectedVisit : " + selectedVisit.getVisitID());
+					System.out.println("==> hashTableThRow : " + hashTableVisits.get(selectedVisit.getVisitID()));
+					vsRows.remove(hashTableVsRow.get(selectedVisit.getVisitID()));
 					visits.remove(selectedVisit);
+					
 					visitModified = true;
+					selectedVisit = null;
 					saveButton.setEnabled(true);
-					showAll();
+					checked = false;
+					showAll();   
+					
+					
+				
+					
+					
 				}
 			});
 		}
 		return removeVisit;
 	}
+	private JButton worksheet;
+	private JButton getWorkSheetButton() {
+		if (worksheet == null) {
+			worksheet = new JButton(MessageBundle.getMessage("angal.menu.worksheet")); //$NON-NLS-1$
+		
+			worksheet.setMnemonic(KeyEvent.VK_V);
+			worksheet.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
+			worksheet.setHorizontalAlignment(SwingConstants.LEFT);
 
+			worksheet.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					
+					new VisitView(TherapyEdit.this);
+					dispose();
+		}
+			});
+		}
+		return worksheet;
+	}
 	private JButton getAddVisitButton() {
 		if (addVisit == null) {
 			addVisit = new JButton(MessageBundle.getMessage("angal.therapy.addvisit")); //$NON-NLS-1$
@@ -648,47 +701,35 @@ if(ad) {
 
 				public void actionPerformed(ActionEvent e) {
 
-					InsertVisit newVisit = new InsertVisit(TherapyEdit.this, ad, ward);
-					newVisit.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					newVisit.setVisible(true);
+					InsertVisit newVsRow = new InsertVisit(TherapyEdit.this, ad, null, patient);
+					newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					newVsRow.setVisible(true);
+
+					VisitRow vsRow = newVsRow.getVsRow();
 					
-					Date date = newVisit.getVisitDate();
-					if (ad) {
-						ward = newVisit.getWard();
-					}else {
-						patient = newVisit.getPatient();
-					}
-					
-					String service = newVisit.getServ();
-					String duration = newVisit.getdur();
-					if (date != null) {
-						
-						Visit visit = new Visit();
-						visit.setDate(date);
-						visit.setPatient(patient);
-						visit.setWard(ward);
-						visit.setDuration(duration);
-						visit.setService(service);
-						
-						int visitID = 0;
+					if (vsRow != null && vsRow.getVisitID() != 0) {
+	
+						vsRows.add(vsRow); // FOR DB;
+						Visit thisVisit = null;
 						try {
-							visitID = vstManager.newVisit(visit);
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
+							thisVisit = vstManager.createVisit(vsRow);
+						}catch(OHServiceException ex){
+							OHServiceExceptionUtil.showMessages(ex);
 						}
-						if (visitID > 0) {
-							visit.setVisitID(visitID);
-							visits.add(visit);
-							hashTableVisits.put(visitID, visit);
-							//visitModified = true;
-							if (smsenable) smsCheckBox.setEnabled(true);
-							if (notifiable) notifyCheckBox.setEnabled(true);
-							//saveButton.setEnabled(true);
-							showAll();
-						}
-					} else {
-						return;
+						visits.add(thisVisit); // FOR GUI
+						hashTableVisits.put(vsRow.getVisitID(), thisVisit);
+						hashTableVsRow.put(vsRow.getVisitID(), vsRow);
+						checked = false;
+						//therapyModified = true;
+						if (smsenable) smsCheckBox.setEnabled(true);
+						if (notifiable) notifyCheckBox.setEnabled(true);
+						checkTherapy.setEnabled(true);
+						//saveButton.setEnabled(true);
+						updateCheckLabel();
+						showAll();
 					}
+					selectedVisit = null;
+					newVsRow.dispose();
 				}
 			});
 		}
@@ -988,7 +1029,7 @@ if(ad) {
 					 * Check visits before save.
 					 */
 					if (visitModified) {
-						if (visits.isEmpty()) {
+						if (vsRows.isEmpty()) {
 							ok = JOptionPane.showConfirmDialog(
 									TherapyEdit.this,
 									MessageBundle.getMessage("angal.therapy.deleteallvisitsfor") + " " + patient.getName(),
@@ -1004,7 +1045,7 @@ if(ad) {
 						} else {
 							boolean result = false;
 							try {
-								result = vstManager.newVisits(visits);
+								result = vstManager.newVisits(vsRows);
 								
 							} catch (OHServiceException ex) {
 								OHServiceExceptionUtil.showMessages(ex);
@@ -1424,7 +1465,9 @@ if(ad) {
 			JList thisList = (JList) e.getSource();
 			ListModel model = thisList.getModel();
 			Therapy th = new Therapy();
+			Visit vs = new Visit();
 			int therapyID = 0;
+			int visitID =0;
 
 			int index = thisList.getSelectedIndex();
 			if (index == -1) {
@@ -1443,14 +1486,15 @@ if(ad) {
 				return;
 			}
 			if (model.getElementAt(index) instanceof Visit) {
-				Visit visit = (Visit) model.getElementAt(index);
+				vs = (Visit) model.getElementAt(index);
 				selectedTherapy = null;
-				selectedVisit = visit;
-				if (visit != null) {
-					noteTextArea.setText(visit.getNote());
+				selectedVisit = vs;
+				if (vs != null) {
+					visitID = vs.getVisitID();
+					noteTextArea.setText(vs.getNote());
 					noteTextArea.setEnabled(true);
 					smsCheckBox.setEnabled(true);
-					smsCheckBox.setSelected(visit.isSms());
+					smsCheckBox.setSelected(vs.isSms());
 				}
 				selectedTherapy = null;
 			} else if (model.getElementAt(index) instanceof Therapy) {
@@ -1465,7 +1509,7 @@ if(ad) {
 					smsCheckBox.setSelected(th.isSms());
 				} else
 					return;
-			}
+			} 
 			for (Component comp : jAgenda.getDayPanel().getComponents()) {
 				AgendaDayObject day = (AgendaDayObject) comp;
 				JList list = day.getList();
@@ -1480,7 +1524,7 @@ if(ad) {
 						}
 						if (model.getElementAt(i) instanceof Visit) {
 							Visit aVisit = (Visit) model.getElementAt(i);
-							if (selectedVisit != null && selectedVisit == aVisit)
+							if (aVisit.getVisitID() == visitID)
 								list.setSelectedIndex(i);
 						}
 					}

@@ -19,6 +19,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -35,6 +38,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -54,17 +58,21 @@ import org.isf.medicals.model.Medical;
 import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
 import org.isf.stat.gui.report.WardVisitsReport;
+import org.isf.therapy.gui.TherapyEdit;
 import org.isf.therapy.manager.TherapyManager;
 import org.isf.therapy.model.Therapy;
 import org.isf.therapy.model.TherapyRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JAgenda;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
+import org.isf.visits.model.VisitRow;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
+import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
@@ -78,7 +86,7 @@ import com.toedter.calendar.JYearChooser;
  * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
-public class VisitView extends JDialog {
+public class VisitView extends ModalJFrame {
 
 	private JAgenda jAgenda;
 
@@ -141,6 +149,7 @@ public class VisitView extends JDialog {
 	private ArrayList<Double> qtyArray = new ArrayList<Double>();
 	private ArrayList<Therapy> therapies = new ArrayList<Therapy>();
 	private ArrayList<TherapyRow> thRows = new ArrayList<TherapyRow>();
+	
 	private ArrayList<Visit> visits = new ArrayList<Visit>();
 	private Ward ward;
 	private boolean ad;
@@ -152,6 +161,50 @@ public class VisitView extends JDialog {
 
 	private JScrollPane jScrollPaneFirstday;
 
+	private ArrayList<VisitRow> vsRows;
+
+	private Hashtable<Integer, VisitRow> hashTableVsRow;
+	public VisitView(TherapyEdit ther) {
+		super();
+		
+		initComponents();
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		// setResizable(false);
+		setTitle("Visits");
+		final int x = (screenSize.width - getWidth()) / 2;
+		final int y = (screenSize.height - getHeight()) / 2;
+		setLocation(x, y);
+		setVisible(true);
+		
+	}
+	public VisitView(Ward ward) {
+		super();
+		this.ward=ward;
+		initComponents();
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		// setResizable(false);
+		setTitle("Visits");
+		final int x = (screenSize.width - getWidth()) / 2;
+		final int y = (screenSize.height - getHeight()) / 2;
+		setLocation(x, y);
+		setVisible(true);
+		 if (ward!=null) {
+			wardBox.setSelectedItem(ward);
+			getButtonBack().setVisible(true);
+			getDateFirstDay().setVisible(true);
+			getVisitFirstday().setVisible(true);
+			getDatesecondDay().setVisible(true);
+			getButtonNext().setVisible(true);
+			getVisitSecondDay().setVisible(true);
+			getPrintTodayButton().setVisible(true);
+			gettomorrowTodayButton().setVisible(true);
+			getCloseButton().setVisible(true);
+			getAddVisitButton().setVisible(true);
+			}
+		
+	}
 	public VisitView() {
 		initComponents();
 		addWindowListener(new WindowAdapter() {
@@ -186,25 +239,88 @@ public class VisitView extends JDialog {
 	private void initComponents() {
 
 		getContentPane().setLayout(new BorderLayout());
+		this.setContentPane(getContentPane());
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	
+
+		pack();
+		setLocationRelativeTo(null);
+		setResizable(false);
+		setVisible(true);
+		addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+				// force close operation
+				closeButton.doClick();
+
+				// to free memory
+				if (medArray != null)
+					medArray.clear();
+				if (therapies != null)
+					therapies.clear();
+				if (thRows != null)
+					thRows.clear();
+				if (qtyArray != null)
+					qtyArray.clear();
+				if (visits != null)
+					visits.clear();
+			}
+		});
+	
 		try {
-			visits = vstManager.getVisitsWard();
-		} catch (OHServiceException e) {
+			vsRows = vstManager.getVisitsWard();
+		} catch (OHServiceException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
 
-		/*
-		 * HashTable of the visits
-		 */
-		hashTableVisits = new Hashtable<Integer, Visit>();
-		if (!visits.isEmpty()) {
-			for (Visit visit : visits) {
-				hashTableVisits.put(visit.getVisitID(), visit);
+	
+	
+	
+		hashTableVsRow = new Hashtable<Integer, VisitRow>();
+		if (!vsRows.isEmpty()) {
+			for (VisitRow vsRow : vsRows) {
+				hashTableVsRow.put(vsRow.getVisitID(), vsRow);
 			}
 		}
+		try {
+			visits = vstManager.getVisits(vsRows);
+		}catch(OHServiceException e){
+			OHServiceExceptionUtil.showMessages(e);
+		}	
+	
+	/*
+	 * HashTable of the visits
+	 */
+	hashTableVisits = new Hashtable<Integer, Visit>();
+	if (!visits.isEmpty()) {
+		for (Visit visit : visits) {
+			hashTableVisits.put(visit.getVisitID(), visit);
+		}
+	}
 		getContentPane().add(getNorthPanel(), BorderLayout.NORTH);
 		getContentPane().add(dayCalendar(), BorderLayout.CENTER);
-		setSize(850, 570);
+		getButtonBack().setVisible(false);
+		getDateFirstDay().setVisible(false);
+		getVisitFirstday().setVisible(false);
+		getDatesecondDay().setVisible(false);
+		getButtonNext().setVisible(false);
+		getVisitSecondDay().setVisible(false);
+		getPrintTodayButton().setVisible(false);
+		gettomorrowTodayButton().setVisible(false);
+		getCloseButton().setVisible(false);
+		getAddVisitButton().setVisible(false);
+		getVisitDateChooser().setVisible(false);
+		getTodayVisit().setVisible(false);
+		
+		
+		
+		
+		
+		
+		
+		
+		setSize(1000, 570);
 	}
 
 	private JPanel dayCalendar() {
@@ -290,6 +406,22 @@ public class VisitView extends JDialog {
 		visitParamPanel.add(gettomorrowTodayButton(), gbc_printsecond);
 
 		
+		
+		GridBagConstraints gbc_addvisit = new GridBagConstraints();
+		gbc_addvisit.fill = GridBagConstraints.CENTER;
+		gbc_addvisit.anchor = GridBagConstraints.CENTER;
+
+		gbc_addvisit.gridy = 0;
+		gbc_addvisit.gridx = 4;
+
+		visitParamPanel.add(getAddVisitButton(), gbc_addvisit);
+		
+
+		
+		
+
+		
+		
 		GridBagConstraints gbc_close = new GridBagConstraints();
 		gbc_close.fill = GridBagConstraints.WEST;
 		gbc_printfirst.anchor = GridBagConstraints.WEST;
@@ -303,6 +435,69 @@ public class VisitView extends JDialog {
 		return visitParamPanel;
 
 	}
+	
+	private JButton getAddVisitButton() {
+		if (addVisit == null) {
+			addVisit = new JButton(MessageBundle.getMessage("angal.therapy.addvisit")); //$NON-NLS-1$
+			addVisit.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
+			addVisit.setMnemonic(KeyEvent.VK_V);
+			addVisit.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
+			addVisit.setHorizontalAlignment(SwingConstants.LEFT);
+			if (admitted) {
+				addVisit.setEnabled(false);
+			}
+			addVisit.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+
+					InsertVisit newVsRow = new InsertVisit(VisitView.this, true, getWard());
+					newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					newVsRow.setVisible(true);
+
+					VisitRow vsRow = newVsRow.getVsRow();
+					if (vsRow != null && vsRow.getVisitID() != 0) {
+						
+						vsRows.add(vsRow); // FOR DB;
+						Visit thisVisit = null;
+						try {
+							thisVisit = vstManager.createVisit(vsRow);
+						}catch(OHServiceException ex){
+							OHServiceExceptionUtil.showMessages(ex);
+						}
+						visits.add(thisVisit); // FOR GUI
+						hashTableVisits.put(vsRow.getVisitID(), thisVisit);
+						hashTableVsRow.put(vsRow.getVisitID(), vsRow);
+						checked = false;
+					
+						showAll();
+					}
+				
+					newVsRow.dispose();
+				}
+					
+				
+			});
+		}
+		return addVisit;
+	}
+	private void showAll() {
+		
+		if (visits != null) showVisits();
+
+		
+		
+	}
+	private void showVisits() {
+		Ward wa = null;
+		hashTableVisits = new Hashtable<Integer, Visit>();
+		for (Visit vs : visits) {
+			hashTableVisits.put(vs.getVisitID(), vs);
+			 wa = vs.getWard();
+		}
+		new VisitView  (wa);
+		dispose();
+	}
+	
 
 	private JPanel datefirstPanel;
 
@@ -351,6 +546,7 @@ public class VisitView extends JDialog {
 			jScrollPaneFirstday = new JScrollPane();
 			jScrollPaneFirstday.setViewportView(visitFirstDayPanel());
 			jScrollPaneFirstday.setAlignmentY(Box.TOP_ALIGNMENT);
+			jScrollPaneFirstday.getViewport().setBackground(Color.WHITE);
 		
 			jScrollPaneFirstday.setMinimumSize(new Dimension(300,400));
 		}
@@ -370,6 +566,7 @@ public class VisitView extends JDialog {
 			String dat = getDate();
 			visfirst = getvisit((visits), dat);
 			jTableFirst.setModel(new VisitModel());
+			jTableFirst.setBackground(Color.white);
 			jTableFirst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 			jTableFirst.setAutoCreateColumnsFromModel(false);
@@ -384,6 +581,7 @@ public class VisitView extends JDialog {
 	private JScrollPane getVisitSecondDay() {
 		if (jScrollPaneSecondtday == null) {
 			jScrollPaneSecondtday = new JScrollPane();
+			jScrollPaneSecondtday.getViewport().setBackground(Color.WHITE);
 			sl_visitParamsPanel.putConstraint(SpringLayout.NORTH, jScrollPaneSecondtday, 0, SpringLayout.NORTH,
 					getVisitFirstday());
 			sl_visitParamsPanel.putConstraint(SpringLayout.EAST, jScrollPaneSecondtday, -104, SpringLayout.WEST,
@@ -401,6 +599,7 @@ public class VisitView extends JDialog {
 	private JTable visitSecondDayPanel() {
 		if (jTableSecond == null) {
 			jTableSecond = new JTable();
+			jTableSecond.setBackground(Color.white);
 			String dat = null;
 			dat = getDateDayAfter(new Date());
 			visSecond = getvisit((visits), dat);
@@ -420,6 +619,62 @@ public class VisitView extends JDialog {
 		return jTableSecond;
 	}
 
+	private JPanel dateViPanel;
+	private JButton dateAdm;
+
+	public JPanel getVisitDateChooser() {
+
+		if (dateViPanel == null) {
+
+			dateViPanel = new JPanel();
+
+			dateAdm = new JButton();
+			dateAdm.setText(MessageBundle.getMessage("Go to date:"));
+			dateAdm.addActionListener(new ActionListener() {
+				
+				public void actionPerformed(ActionEvent e) {
+					Date da= visitDateChooser.getDate();
+					DateFormat dateFormatold = new SimpleDateFormat("dd/MM/yyyy");  
+	                String strDate = dateFormatold.format(da);  
+					
+					DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+					Date date = null;
+					try {
+						date = format.parse(strDate);
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					String dat=getDateDayAfter(date);
+					visfirst = getvisit((visits), strDate);
+					dateFirstLabel.setText(strDate);
+					datesecondLabel.setText(dat);
+
+					visSecond = getvisit((visits), dat);
+				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
+				    jTableFirst.updateUI();
+				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
+				    jTableSecond.updateUI();
+				}
+			});
+
+			dateViPanel.add(dateAdm);
+			dateViPanel.add(getVisitDateField());
+
+		}
+		return dateViPanel;
+	}
+
+	private JDateChooser visitDateChooser;
+	private final String dateFormat = "dd/MM/yyyy";
+	private JDateChooser getVisitDateField() {
+		visitDateChooser = new JDateChooser();
+		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
+		visitDateChooser.setDateFormatString(dateFormat);
+		
+			   
+		return visitDateChooser;
+	}
 	private String getDateDayAfter(Date date) {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Calendar c = Calendar.getInstance();
@@ -602,7 +857,7 @@ public class VisitView extends JDialog {
 						}
 						 ward= (Ward) wardBox.getSelectedItem();
 					new WardVisitsReport(ward.getCode(), date, GeneralData.VISITSHEET);
-					dispose();
+				
 				}
 			});
 		}
@@ -629,7 +884,7 @@ public class VisitView extends JDialog {
 						}
 						 ward= (Ward) wardBox.getSelectedItem();
 					new WardVisitsReport(ward.getCode(), date, GeneralData.VISITSHEET);
-					dispose();
+					
 				}
 			});
 		}
@@ -770,18 +1025,59 @@ public class VisitView extends JDialog {
 
 	private JPanel getNorthPanel() {
 		if (northPanel == null) {
-			northPanel = new JPanel(new GridLayout(0, 2));
+			northPanel = new JPanel(new GridLayout(1, 2));
 
 			if (ad) {
 				northPanel.add(getPatientPanel());
 			} else {
 				northPanel.add(getWardPanel());
+				northPanel.add(getVisitDateChooser());
+				northPanel.add(getTodayVisit());
+				
 			}
 
 		}
 		return northPanel;
 	}
+private JPanel TodayPanel;
+private JButton Todaybut;
+	private JPanel getTodayVisit() {
 
+
+		if (TodayPanel == null) {
+
+			TodayPanel = new JPanel();
+
+			Todaybut= new JButton();
+			Todaybut.setText(MessageBundle.getMessage("Toady Visit"));
+			Todaybut.addActionListener(new ActionListener() {
+				
+				public void actionPerformed(ActionEvent e) {
+					String d = getDate();
+					visfirst = getvisit((visits), d);
+					String da=getDateDayAfter(new Date());
+					visSecond=getvisit((visits),da );
+					
+					
+					visfirst = getvisit((visits), d);
+					dateFirstLabel.setText(d);
+					datesecondLabel.setText(da);
+
+					
+				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
+				    jTableFirst.updateUI();
+				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
+				    jTableSecond.updateUI();
+				}
+			});
+
+			TodayPanel.add(Todaybut);
+		
+
+		}
+		return TodayPanel;
+	
+	}
 	private JPanel getPatientPanel() {
 		if (patientPanel == null) {
 			patientPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -809,9 +1105,9 @@ public class VisitView extends JDialog {
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			for (Ward ward : wardList) {
-		
-					if (ward.getBeds() > 0)
-						wardBox.addItem(ward);
+				
+					wardBox.addItem(ward);
+					
 				
 				if (saveWard != null) {
 					if (saveWard.getCode().equalsIgnoreCase(ward.getCode())) {
@@ -819,11 +1115,29 @@ public class VisitView extends JDialog {
 					}
 				} 
 				}
+
 			
 			wardBox.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
 					
+					Object war = wardBox.getSelectedItem();
+					
+					if (war instanceof Ward) {
+						getButtonBack().setVisible(true);
+						getDateFirstDay().setVisible(true);
+						getVisitFirstday().setVisible(true);
+						getDatesecondDay().setVisible(true);
+						getButtonNext().setVisible(true);
+						getVisitSecondDay().setVisible(true);
+						getPrintTodayButton().setVisible(true);
+						gettomorrowTodayButton().setVisible(true);
+						getCloseButton().setVisible(true);
+						getAddVisitButton().setVisible(true);
+						getVisitDateChooser().setVisible(true);
+						getTodayVisit().setVisible(true);
+
+					}
 					String da= dateFirstLabel.getText();
 					DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 					Date date = null;
