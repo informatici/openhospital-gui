@@ -9,11 +9,13 @@ package org.isf.operation.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -27,6 +29,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
 
+import org.isf.disctype.model.DischargeType;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.operation.manager.OperationBrowserManager;
@@ -109,7 +112,9 @@ public class OperationEdit extends JDialog {
 	private JRadioButton major = null;
 	private JRadioButton minor = null;
 	private JPanel radioButtonPanel;
+	private JLabel operForLabel=null;
 	private boolean insert = false;
+	private JComboBox operBox;
 
 	/**
 	 * 
@@ -180,6 +185,9 @@ public class OperationEdit extends JDialog {
 			codeLabel = new JLabel();
 			codeLabel.setText(MessageBundle.getMessage("angal.common.code")); //$NON-NLS-1$
 			codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+			operForLabel = new JLabel();
+			operForLabel.setText(MessageBundle.getMessage("angal.common.operFor")); //$NON-NLS-1$
+			operForLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			dataPanel = new JPanel();
 			dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS)); // Generated
 			dataPanel.add(typeLabel, null); // Generated
@@ -187,10 +195,25 @@ public class OperationEdit extends JDialog {
 			dataPanel.add(codeLabel, null); // Generated
 			dataPanel.add(getCodeTextField(), null); // Generated
 			dataPanel.add(descLabel, null); // Generated
+			dataPanel.add(operForLabel, null); // Generated
 			dataPanel.add(getDescriptionTextField(), null); // Generated
+			dataPanel.add(getOperFor(), null); 
 			dataPanel.add(getRadioButtonPanel());
 		}
 		return dataPanel;
+	}
+
+	private JComboBox getOperFor() {
+
+				
+				operBox = new JComboBox();
+			
+				operBox.addItem("BOTH");
+				operBox.addItem("ADMISSION");
+				operBox.addItem("OPD");
+			
+			return operBox;
+		
 	}
 
 	/**
@@ -292,7 +315,18 @@ public class OperationEdit extends JDialog {
 								return;
 							}
 						}
+						String opeFor;
+						String op=String.valueOf(operBox.getSelectedItem());
+						
+						if (op.equals("BOTH")) {
+							  opeFor="1";
+						}else if(op.equals("ADMISSION")) {
+							 opeFor="2";
+						}else {
+							opeFor="3";
+						}
 
+						operation.setOpeFor(opeFor);
 						operation.setType((OperationType) typeComboBox.getSelectedItem());
 						operation.setDescription(descriptionTextField.getText());
 						operation.setCode(codeTextField.getText().trim().toUpperCase());

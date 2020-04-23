@@ -72,9 +72,11 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private String[] pColums = { 
 			MessageBundle.getMessage("angal.operation.idm"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.operation.typem"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.operation.namem")  //$NON-NLS-1$
+			MessageBundle.getMessage("angal.operation.namem"),  //$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.operFor") //$NON-NLS-1$
+			
 	};
-	private int[] pColumwidth = { 50, 180, 200 };
+	private int[] pColumwidth = { 50, 180, 200, 100 };
 	private Operation operation;
 	private DefaultTableModel model;
 	private JTable table;
@@ -257,6 +259,21 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				return pOperation.get(r).getType().getDescription();
 			} else if (c == 2) {
 				return pOperation.get(r).getDescription();
+			} else if (c==3) {
+				if (pOperation.get(r).getOpeFor()!=null) {
+				 String p = pOperation.get(r).getOpeFor();
+				 String opeFor;
+				 if (p.equals("1")) {
+					  opeFor="OPD/ADMISSION";
+				}else if(p.equals("2")) {
+					 opeFor="ADMISSION";
+				}else {
+					opeFor="OPD";
+				}
+				 return opeFor;
+				}else {
+					return "";
+				}
 			}
 			return null;
 		}

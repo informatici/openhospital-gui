@@ -296,7 +296,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		JComboBox comboOpe = new JComboBox();
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
-			opeList.addAll(opeManager.getOperation());
+			opeList.addAll(opeManager.getOperationAdm());
 		} catch (OHServiceException ex) {
 			Logger.getLogger(OperationRowAdm.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -368,7 +368,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		/*** for combo operation *****/
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
-			opeList.addAll(opeManager.getOperation());
+			opeList.addAll(opeManager.getOperationAdm());
 		} catch (OHServiceException ex) {
 			//
 		}

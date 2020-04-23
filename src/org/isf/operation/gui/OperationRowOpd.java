@@ -290,7 +290,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		JComboBox comboOpe = new JComboBox();
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
-			opeList.addAll(opeManager.getOperation());
+			opeList.addAll(opeManager.getOperationOpd());
 		} catch (OHServiceException ex) {
 			Logger.getLogger(OperationRowAdm.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -357,7 +357,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		/*** for combo operation *****/
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
-			opeList.addAll(opeManager.getOperation());
+			opeList.addAll(opeManager.getOperationOpd());
 		} catch (OHServiceException ex) {
 			//
 		}
