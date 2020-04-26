@@ -562,6 +562,8 @@ public class PatientInsertExtended extends JDialog {
 							}
 						}
 						patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
+						patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
+						patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
 						
 						if (jInsurance_Yes.isSelected()) {
 							patient.setHasInsurance('Y');
