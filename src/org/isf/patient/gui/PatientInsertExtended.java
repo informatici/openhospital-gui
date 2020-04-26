@@ -16,8 +16,10 @@ import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -255,6 +257,10 @@ public class PatientInsertExtended extends JDialog {
 	private JRadioButton jMother_Alive = null;
 	private JRadioButton jMother_Unknown = null;
 
+	// Profession Components:
+	private JPanel jProfessionPanel = null;
+	private JComboBox jProfessionComboBox = null;
+
 	// ParentTogether Components:
 	private JPanel jParentPanel = null;
 	private ButtonGroup parentGroup = null;
@@ -272,6 +278,10 @@ public class PatientInsertExtended extends JDialog {
 	private JRadioButton jInsurance_Yes = null;
 	private JRadioButton jInsurance_No = null;
 	private JRadioButton jInsurance_Unknown = null;
+
+	// MaritalStatus Components:
+	private JPanel jMaritalPanel = null;
+	private JComboBox jMaritalStatusComboBox = null;
 
 	// COMPONENTS: Note
 	private JPanel jRightPanel = null;
@@ -462,7 +472,8 @@ public class PatientInsertExtended extends JDialog {
 									patient.setFather('U');
 							}
 							patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
-
+							patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
+							patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
 							if (jInsurance_Yes.isSelected()) {
 								patient.setHasInsurance('Y');
 							} else {
@@ -551,6 +562,8 @@ public class PatientInsertExtended extends JDialog {
 							}
 						}
 						patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
+						patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
+						patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
 						
 						if (jInsurance_Yes.isSelected()) {
 							patient.setHasInsurance('Y');
@@ -1079,6 +1092,27 @@ public class PatientInsertExtended extends JDialog {
 		return jBloodTypePanel;
 	}
 
+	/**
+	 * This method initializes jMaritalPanel
+	 * 
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJMaritalPanel() {
+		if (jMaritalPanel == null) {
+			jMaritalPanel = new JPanel();
+			jMaritalPanel = setMyBorder(jMaritalPanel,  MessageBundle.getMessage("angal.patient.maritalstatus"));
+			jMaritalStatusComboBox = new JComboBox(patientManager.getMaritalList());
+			jMaritalPanel.add(jMaritalStatusComboBox);
+
+			if (!insert) {
+				jMaritalStatusComboBox.setSelectedItem(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
+			} 
+		}
+		return jMaritalPanel;
+	}
+
+
+	
 	/**
 	 * This method initializes jFirstNameLabel
 	 * 
@@ -1734,6 +1768,25 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	/**
+	 * This method initializes jProfessionPanel
+	 * 
+	 * @return javax.swing.JPanel
+	 */
+	private JPanel getJProfessionPanel() {
+		if (jProfessionPanel == null) {
+			jProfessionPanel = new JPanel();
+			jProfessionPanel = setMyBorder(jProfessionPanel,  MessageBundle.getMessage("angal.patient.profession"));
+			jProfessionComboBox= new JComboBox(patientManager.getProfessionList());
+			jProfessionPanel.add(jProfessionComboBox);
+
+			if (!insert) {
+				jProfessionComboBox.setSelectedItem(patientManager.getProfessionTranslated(patient.getProfession()));
+			} 
+		}
+		return jProfessionPanel;
+	}
+
+	/**
 	 * This method initializes jFatherPanel
 	 * 
 	 * @return javax.swing.JPanel
@@ -2073,6 +2126,8 @@ public class PatientInsertExtended extends JDialog {
 			jExtensionContent = new JPanel();
 			jExtensionContent.setLayout(new BoxLayout(getJExtensionContent(), BoxLayout.Y_AXIS));
 			jExtensionContent.add(getJBloodTypePanel(), null);
+			jExtensionContent.add(getJMaritalPanel(), null);
+			jExtensionContent.add(getJProfessionPanel(),null);
 			jExtensionContent.add(getJFatherPanel(), null);
 			jExtensionContent.add(getJMotherPanel(), null);
 			jExtensionContent.add(getJParentPanel(), null);

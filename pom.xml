@@ -208,13 +208,6 @@
   			</exclusions>
 		</dependency>
 		<dependency>
-          <groupId>jcu.sal</groupId>
-          <artifactId>sal_isf</artifactId>
-          <version>1.0</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/sal_isf.jar</systemPath>
-        </dependency>
-		<dependency>
 			<groupId>com.github.sarxos</groupId>
 			<artifactId>webcam-capture</artifactId>
 			<version>0.3.11</version>

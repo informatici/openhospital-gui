@@ -91,6 +91,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider jSliderDiuresis;
 	private ScaledJSlider jSliderWeight;
 	private VoIntegerTextField jTextFieldHR;
+	private VoIntegerTextField jTextFieldRR;
 	private VoDoubleTextField jTextFieldTemp;
 	private VoDoubleTextField jTextFieldSaturation;
 	private VoIntegerTextField jTextFieldHGT;
@@ -103,6 +104,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JLabel jLabelAPSlash;
 	private JLabel jLabelAPMax;
 	private JSlider jSliderHR;
+	private JSlider jSliderRR;
 	private ScaledJSlider jSliderTemp;
 	private ScaledJSlider jSliderSaturation;
 	private JScrollPane jScrollPaneNote;
@@ -118,19 +120,24 @@ public class PatientExaminationEdit extends JDialog {
 	private JCheckBox jCheckBoxToggleHGT;
 	private JCheckBox jCheckBoxToggleDiuresis;
 	private JCheckBox jCheckBoxToggleBowel;
+	private JCheckBox jCheckBoxToggleRR;
+	private JCheckBox jCheckBoxToggleAusc;
 	private JComboBox jComboBoxDiuresis;
 	private JComboBox jComboBoxBowel;
+	private JComboBox jAuscComboBox;
 	private JButton jButtonOK;
 	private JButton jButtonDelete;
 	private JButton jButtonCancel;
 	private Action actionSavePatientExamination;
 	private Action actionToggleAP;
 	private Action actionToggleHR;
+	private Action actionToggleRR;
 	private Action actionToggleTemp;
 	private Action actionToggleSaturation;
 	private Action actionToggleHGT;
 	private Action actionToggleDiuresis;
 	private Action actionToggleBowel;
+	private Action actionToggleAusc;
 	private JPanel jPanelGender;
 	private JLabel jLabelGender;
 	private JEditorPane jEditorPaneBMI;
@@ -158,6 +165,8 @@ public class PatientExaminationEdit extends JDialog {
 			STD+MessageBundle.getMessage("angal.examination.heartrateabbr")+ETD+
 			STD+MessageBundle.getMessage("angal.examination.temperatureabbr")+ETD+
 			STD+MessageBundle.getMessage("angal.examination.saturationabbr")+ETD+
+			STD+MessageBundle.getMessage("angal.examination.respiratoryrateabbr")+ETD+
+			STD+MessageBundle.getMessage("angal.examination.auscultationabbr")+ETD+
 			SUMMARY_END_ROW;
 	private final String SUMMARY_FOOTER = "</table></body></html>";
 	
@@ -170,17 +179,20 @@ public class PatientExaminationEdit extends JDialog {
 			MessageBundle.getMessage("angal.examination.temperature"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.examination.saturation"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.examination.hgt"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.respiratoryrateabbr"), //$NON_NLS-1$
 			MessageBundle.getMessage("angal.examination.diuresis"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.examination.diuresis"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.examination.bowel"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.auscultation"), //$NON-NLS-1$
 	};
-	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class, Integer.class, Integer.class, String.class, String.class};
-	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 50, 70, 70};
-	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER};
+	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, String.class, String.class};
+	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70};
+	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER};
 	
 	private final String DATE_FORMAT = "dd/MM/yy HH:mm";
 
 	private JTable jTableSummary;
+
 	private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 
 	/**
@@ -294,6 +306,8 @@ public class PatientExaminationEdit extends JDialog {
 				summary.append(STD).append(patex.getPex_hr() == null ? "-" : patex.getPex_hr()).append(ETD);
 				summary.append(STD).append(patex.getPex_temp() == null ? "-" : patex.getPex_temp()).append(ETD);
 				summary.append(STD).append(patex.getPex_sat() == null ? "-" : patex.getPex_sat()).append(ETD);
+				summary.append(STD).append(patex.getPex_rr() == null ? "-" : patex.getPex_rr()).append(ETD);
+				summary.append(STD).append(examManager.getAuscultationTranslated(patex.getPex_ausc()) == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_ausc())).append(ETD);
 				summary.append(SUMMARY_END_ROW);
 			}
 		}
@@ -319,11 +333,16 @@ public class PatientExaminationEdit extends JDialog {
 		jTextFieldDiuresis.setText(patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) : ""+ExaminationParameters.DIURESIS_INIT);
 		jComboBoxDiuresis.setSelectedItem(patex.getPex_diuresis_desc() != null ? examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) : null);
 		jComboBoxBowel.setSelectedItem(patex.getPex_bowel_desc() != null ? examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc()) : null);
+		jSliderRR.setValue(patex.getPex_rr() != null ? patex.getPex_rr() : ExaminationParameters.RR_INIT);
+		jTextFieldRR.setText(patex.getPex_rr() != null ? String.valueOf(patex.getPex_rr()) : ""+ExaminationParameters.RR_INIT);
+		jAuscComboBox.setSelectedItem(patex.getPex_ausc() != null ? examManager.getAuscultationTranslated(patex.getPex_ausc()) : null);
 		jTextAreaNote.setText(patex.getPex_note());
 		disableAP();
 		disableHR();
 		disableTemp();
 		disableSaturation();
+		disableRR();
+		disableAusc();
 		disableHGT();
 		disableDiuresis();
 		disableBowel();
@@ -607,12 +626,48 @@ public class PatientExaminationEdit extends JDialog {
 				gbc_jTextFieldHGT.gridy = 7;
 				jPanelExamination.add(getJTextFieldHGT(), gbc_jTextFieldHGT);
 			}
+
+			{
+				GridBagConstraints gbc_lblrr = new GridBagConstraints();
+				gbc_lblrr.insets = new Insets(5, 5, 5, 5);
+				gbc_lblrr.gridx = 0;
+				gbc_lblrr.gridy = 8;
+				jPanelExamination.add(getJCheckBoxToggleRR(), gbc_lblrr);
+				
+				JLabel jLabelRR = new JLabel(MessageBundle.getMessage("angal.examination.respiratoryrate")); //$NON-NLS-1$
+				GridBagConstraints gbc_jLabelRR = new GridBagConstraints();
+				gbc_jLabelRR.anchor = GridBagConstraints.WEST;
+				gbc_jLabelRR.insets = new Insets(5, 5, 5, 5);
+				gbc_jLabelRR.gridx = 1;
+				gbc_jLabelRR.gridy = 8;
+				jPanelExamination.add(jLabelRR, gbc_jLabelRR);
+				
+				GridBagConstraints gbc_jSliderRR = new GridBagConstraints();
+				gbc_jSliderRR.insets = new Insets(5, 5, 5, 5);
+				gbc_jSliderRR.gridx = 2;
+				gbc_jSliderRR.gridy = 8;
+				jPanelExamination.add(getJSliderRR(), gbc_jSliderRR);
+				
+				JLabel jLabelRRUnit = new JLabel(MessageBundle.getMessage("angal.examination.respiratoryrateunit"));
+				GridBagConstraints gbc_jLabelRRUnit = new GridBagConstraints();
+				gbc_jLabelRRUnit.insets = new Insets(5, 5, 5, 5);
+				gbc_jLabelRRUnit.gridx = 3;
+				gbc_jLabelRRUnit.gridy = 8;
+				jPanelExamination.add(jLabelRRUnit, gbc_jLabelRRUnit);
+				
+				GridBagConstraints gbc_jTextFieldRR = new GridBagConstraints();
+				gbc_jTextFieldRR.anchor = GridBagConstraints.WEST;
+				gbc_jTextFieldRR.insets = new Insets(5, 0, 5, 0);
+				gbc_jTextFieldRR.gridx = 4;
+				gbc_jTextFieldRR.gridy = 8;
+				jPanelExamination.add(getJTextFieldRR(), gbc_jTextFieldRR);
+			}
 			
 			{
 				GridBagConstraints gbc_chkBoxDiuresis = new GridBagConstraints();
 				gbc_chkBoxDiuresis.insets = new Insets(5, 5, 5, 5);
 				gbc_chkBoxDiuresis.gridx = 0;
-				gbc_chkBoxDiuresis.gridy = 8;
+				gbc_chkBoxDiuresis.gridy = 9;
 				jPanelExamination.add(getJCheckBoxToggleDiuresis(), gbc_chkBoxDiuresis);
 				
 				JLabel jLabelDiuresis = new JLabel(MessageBundle.getMessage("angal.examination.diuresis")); //$NON-NLS-1$
@@ -620,35 +675,35 @@ public class PatientExaminationEdit extends JDialog {
 				gbc_jLabelDiuresis.anchor = GridBagConstraints.WEST;
 				gbc_jLabelDiuresis.insets = new Insets(5, 5, 5, 5);
 				gbc_jLabelDiuresis.gridx = 1;
-				gbc_jLabelDiuresis.gridy = 8;
+				gbc_jLabelDiuresis.gridy = 9;
 				jPanelExamination.add(jLabelDiuresis, gbc_jLabelDiuresis);
 				
 				GridBagConstraints gbc_jSliderDiuresis = new GridBagConstraints();
 				gbc_jSliderDiuresis.insets = new Insets(5, 5, 5, 5);
 				gbc_jSliderDiuresis.fill = GridBagConstraints.HORIZONTAL;
 				gbc_jSliderDiuresis.gridx = 2;
-				gbc_jSliderDiuresis.gridy = 8;
+				gbc_jSliderDiuresis.gridy = 9;
 				jPanelExamination.add(getJSliderDiuresis(), gbc_jSliderDiuresis);
 				
 				JLabel jLabelDiuresisUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.milliliter"));
 				GridBagConstraints gbc_jLabelDiuresisUnit = new GridBagConstraints();
 				gbc_jLabelDiuresisUnit.insets = new Insets(5, 5, 5, 5);
 				gbc_jLabelDiuresisUnit.gridx = 3;
-				gbc_jLabelDiuresisUnit.gridy = 8;
+				gbc_jLabelDiuresisUnit.gridy = 9;
 				jPanelExamination.add(jLabelDiuresisUnit, gbc_jLabelDiuresisUnit);
 	
 				GridBagConstraints gbc_jTextFieldDiuresis = new GridBagConstraints();
 				gbc_jTextFieldDiuresis.anchor = GridBagConstraints.WEST;
 				gbc_jTextFieldDiuresis.insets = new Insets(5, 0, 5, 5);
 				gbc_jTextFieldDiuresis.gridx = 4;
-				gbc_jTextFieldDiuresis.gridy = 8;
+				gbc_jTextFieldDiuresis.gridy = 9;
 				jPanelExamination.add(getJTextFieldDiuresis(), gbc_jTextFieldDiuresis);
 				
 				GridBagConstraints gbc_comboBoxDiuresis = new GridBagConstraints();
 				gbc_comboBoxDiuresis.anchor = GridBagConstraints.CENTER;
 				gbc_comboBoxDiuresis.insets = new Insets(5, 0, 5, 5);
 				gbc_comboBoxDiuresis.gridx = 4;
-				gbc_comboBoxDiuresis.gridy = 9;
+				gbc_comboBoxDiuresis.gridy = 10;
 				jPanelExamination.add(getJComboBoxDiuresis(), gbc_comboBoxDiuresis);
 			}
 			
@@ -656,7 +711,7 @@ public class PatientExaminationEdit extends JDialog {
 				GridBagConstraints gbc_chkBoxBowel = new GridBagConstraints();
 				gbc_chkBoxBowel.insets = new Insets(5, 5, 5, 5);
 				gbc_chkBoxBowel.gridx = 0;
-				gbc_chkBoxBowel.gridy = 10;
+				gbc_chkBoxBowel.gridy = 11;
 				jPanelExamination.add(getJCheckBoxToggleBowel(), gbc_chkBoxBowel);
 				
 				JLabel jLabelBowel = new JLabel(MessageBundle.getMessage("angal.examination.bowel")); //$NON-NLS-1$
@@ -664,15 +719,38 @@ public class PatientExaminationEdit extends JDialog {
 				gbc_jLabelBowel.anchor = GridBagConstraints.WEST;
 				gbc_jLabelBowel.insets = new Insets(5, 5, 5, 5);
 				gbc_jLabelBowel.gridx = 1;
-				gbc_jLabelBowel.gridy = 10;
+				gbc_jLabelBowel.gridy = 11;
 				jPanelExamination.add(jLabelBowel, gbc_jLabelBowel);
 				
 				GridBagConstraints gbc_comboBoxBowel = new GridBagConstraints();
-				gbc_comboBoxBowel.anchor = GridBagConstraints.WEST;
+				gbc_comboBoxBowel.anchor = GridBagConstraints.CENTER;
 				gbc_comboBoxBowel.insets = new Insets(5, 0, 5, 5);
 				gbc_comboBoxBowel.gridx = 2;
-				gbc_comboBoxBowel.gridy = 10;
+				gbc_comboBoxBowel.gridy = 11;
 				jPanelExamination.add(getJComboBoxBowel(), gbc_comboBoxBowel);
+			}
+
+			{
+				GridBagConstraints gbc_lblausc = new GridBagConstraints();
+				gbc_lblausc.insets = new Insets(5, 5, 5, 5);
+				gbc_lblausc.gridx = 0;
+				gbc_lblausc.gridy = 12;
+				jPanelExamination.add(getJCheckBoxToggleAusc(), gbc_lblausc);
+
+				JLabel jLabelAusc = new JLabel(MessageBundle.getMessage("angal.examination.auscultation")); //$NON-NLS-1$
+				GridBagConstraints gbc_jLabelAusc = new GridBagConstraints();
+				gbc_jLabelAusc.anchor = GridBagConstraints.WEST;
+				gbc_jLabelAusc.insets = new Insets(5, 5, 5, 5);
+				gbc_jLabelAusc.gridx = 1;
+				gbc_jLabelAusc.gridy = 12;
+				jPanelExamination.add(jLabelAusc, gbc_jLabelAusc);
+				
+				GridBagConstraints gbc_jPanelFieldAusc = new GridBagConstraints();
+				gbc_jPanelFieldAusc.anchor = GridBagConstraints.CENTER;
+				gbc_jPanelFieldAusc.insets = new Insets(5, 0, 5, 0);
+				gbc_jPanelFieldAusc.gridx = 2;
+				gbc_jPanelFieldAusc.gridy = 12;
+				jPanelExamination.add(getJComboBoxAusc(), gbc_jPanelFieldAusc);
 			}
 		}
 		return jPanelExamination;
@@ -760,6 +838,26 @@ public class PatientExaminationEdit extends JDialog {
 		return jCheckBoxToggleSaturation;
 	}
 	
+	private JCheckBox getJCheckBoxToggleRR() {
+		if (jCheckBoxToggleRR == null) {
+			jCheckBoxToggleRR = new JCheckBox(""); //$NON-NLS-1$
+			jCheckBoxToggleRR.setAction(getActionToggleRR());
+			jCheckBoxToggleRR.addFocusListener(new CheckBoxFocus());
+			jCheckBoxToggleRR.setFocusPainted(true);
+		}
+		return jCheckBoxToggleRR;
+	}
+
+	private JCheckBox getJCheckBoxToggleAusc() {
+		if (jCheckBoxToggleAusc == null) {
+			jCheckBoxToggleAusc = new JCheckBox(""); //$NON-NLS-1$
+			jCheckBoxToggleAusc.setAction(getActionToggleAusc());
+			jCheckBoxToggleAusc.addFocusListener(new CheckBoxFocus());
+			jCheckBoxToggleAusc.setFocusPainted(true);
+		}
+		return jCheckBoxToggleAusc;
+	}
+
 	private JCheckBox getJCheckBoxToggleTemp() {
 		if (jCheckBoxToggleTemp == null) {
 			jCheckBoxToggleTemp = new JCheckBox(""); //$NON-NLS-1$
@@ -1080,6 +1178,34 @@ public class PatientExaminationEdit extends JDialog {
 		return jTextFieldHR;
 	}
 
+	private VoIntegerTextField getJTextFieldRR() {
+		if (jTextFieldRR == null) {
+			jTextFieldRR = new VoIntegerTextField(0,5);
+			jTextFieldRR.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					int rr = Integer.parseInt(jTextFieldRR.getText());
+					jSliderRR.setValue(rr);
+					patex.setPex_rr(rr);
+				}
+			});
+		}
+		return jTextFieldRR;
+	}
+
+	private JComboBox getJComboBoxAusc() {
+		if (jAuscComboBox == null) {
+			jAuscComboBox =  new JComboBox(examManager.getAuscultationList());
+			jAuscComboBox.addActionListener (new ActionListener () {
+				public void actionPerformed(ActionEvent e) {
+					patex.setPex_ausc(examManager.getAuscultationKey((String)jAuscComboBox.getSelectedItem()));
+				}
+			});
+
+		}
+		return jAuscComboBox;
+	}
+
 	private JSlider getJSliderHeight() {
 		if (jSliderHeight == null) {
 			jSliderHeight = new JSlider(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX, ExaminationParameters.HEIGHT_INIT);
@@ -1202,6 +1328,22 @@ public class PatientExaminationEdit extends JDialog {
 		return jSliderHR;
 	}
 	
+	private JSlider getJSliderRR() {
+		if (jSliderRR == null) {
+			jSliderRR = new JSlider(0, 100, 0);
+			jSliderRR.addChangeListener(new ChangeListener() {
+				
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					int rr = jSliderRR.getValue();
+					jTextFieldRR.setText(String.valueOf(rr));
+					patex.setPex_rr(rr);
+				}
+			});
+		}
+		return jSliderRR;
+	}
+
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton();
@@ -1569,6 +1711,28 @@ public class PatientExaminationEdit extends JDialog {
 			}
 		}
 	}
+
+	private void enableRR() throws NumberFormatException {
+		jSliderRR.setEnabled(true);
+		jTextFieldRR.setEnabled(true);
+		patex.setPex_rr(Integer.parseInt(jTextFieldRR.getText()));
+	}
+
+	private void disableRR() {
+		jSliderRR.setEnabled(false);
+		jTextFieldRR.setEnabled(false);
+		patex.setPex_rr(0);
+	}
+
+	private void enableAusc(){
+		jAuscComboBox.setEnabled(true);
+		patex.setPex_ausc(examManager.getAuscultationKey((String)jAuscComboBox.getSelectedItem()));
+	}
+
+	private void disableAusc() {
+		jAuscComboBox.setEnabled(false);
+		patex.setPex_ausc("unknown"); //revist 
+	}
 	
 	private class SwingActionToggleSaturation extends AbstractAction {
 		/**
@@ -1584,6 +1748,42 @@ public class PatientExaminationEdit extends JDialog {
 				disableSaturation();
 			} else {
 				enableSaturation();
+			}
+		}
+	}
+
+	private class SwingActionToggleRR extends AbstractAction {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		public SwingActionToggleRR() {
+			putValue(NAME, ""); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
+		}
+		public void actionPerformed(ActionEvent e) {
+			if (!jCheckBoxToggleRR.isSelected()) {
+				disableRR();
+			} else {
+				enableRR();
+			}
+		}
+	}
+
+	private class SwingActionToggleAusc extends AbstractAction {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		public SwingActionToggleAusc(){
+			putValue(NAME, ""); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
+		}
+		public void actionPerformed(ActionEvent e) {
+			if (!jCheckBoxToggleAusc.isSelected()) {
+				disableAusc();
+			} else {
+				enableAusc();
 			}
 		}
 	}
@@ -1643,6 +1843,20 @@ public class PatientExaminationEdit extends JDialog {
 			actionToggleSaturation = new SwingActionToggleSaturation();
 		}
 		return actionToggleSaturation;
+	}
+
+	private Action getActionToggleRR() {
+		if (actionToggleRR == null) {
+			actionToggleRR = new SwingActionToggleRR();
+		}
+		return actionToggleRR;
+	}
+
+	private Action getActionToggleAusc() {
+		if (actionToggleAusc == null) {
+			actionToggleAusc = new SwingActionToggleAusc();
+		}
+		return actionToggleAusc;
 	}
 	
 	private Action getActionToggleHGT() {
@@ -1781,6 +1995,7 @@ public class PatientExaminationEdit extends JDialog {
 			String datetime = new SimpleDateFormat(DATE_FORMAT).format(new Date(patex.getPex_date().getTime()));
 			String diuresis = patex.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc());
 			String bowel = patex.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc());
+			String ausc = patex.getPex_ausc() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_ausc());
 			if (c == -1) {
 				return patex;
 			} else if (c == 0) {
@@ -1799,12 +2014,16 @@ public class PatientExaminationEdit extends JDialog {
 				return patex.getPex_sat() == null ? "-" : patex.getPex_sat();
 			} else if (c == 7) {
 				return patex.getPex_hgt() == null ? "-" : patex.getPex_hgt();
-			} else if (c == 8) {
-				return patex.getPex_diuresis() == null ? "-" : patex.getPex_diuresis();
+			} else if (c == 8){
+				return patex.getPex_rr() == null ? "-" : patex.getPex_rr();
 			} else if (c == 9) {
-				return diuresis;
+				return patex.getPex_diuresis() == null ? "-" : patex.getPex_diuresis();
 			} else if (c == 10) {
+				return diuresis;
+			} else if (c == 11) {
 				return bowel;
+			}else if (c == 12) {
+				return ausc;
 			}
 			return null;
 		}
