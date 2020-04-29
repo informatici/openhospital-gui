@@ -24,9 +24,11 @@
 	<import value="net.sf.jasperreports.engine.data.*" />
 
 	<parameter name="id" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="type" isForPrompting="false" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT * FROM OPERATIONROW
 LEFT JOIN OPERATION ON OPER_ID=OPE_ID_A
-WHERE OPER_OPD_ID = $P{id} OR OPER_ADMISSION_ID = $P{id}]]></queryString>
+WHERE ($P{type} like 'Opd%' AND OPER_OPD_ID = $P{id}) 
+   OR ($P{type} like 'ADM%' AND OPER_ADMISSION_ID = $P{id})]]></queryString>
 
 	<field name="OPER_ID_A" class="java.lang.Integer"/>
 	<field name="OPER_ID" class="java.lang.String"/>

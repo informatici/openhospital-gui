@@ -352,6 +352,9 @@ ORDER BY DATE DESC]]></queryString>
 					<subreportParameter  name="id">
 						<subreportParameterExpression><![CDATA[$F{IDS}]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter  name="type">
+						<subreportParameterExpression><![CDATA[$F{TYPE}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_ver3_subreport_Operation.jasper"]]></subreportExpression>
 				</subreport>
