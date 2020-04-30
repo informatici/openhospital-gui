@@ -1,7 +1,6 @@
 package org.isf.admission.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -11,28 +10,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.isf.generaldata.ExaminationParameters;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.stat.gui.report.GenericReportPatientVersion2;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.time.Converters;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -59,9 +52,9 @@ public class PatientFolderReportModal extends ModalJFrame{
 	private JPanel labelPanel;
 	private String date;
 	
-	public PatientFolderReportModal(Integer code, String dat) {
+	public PatientFolderReportModal(Integer code, String date) {
 		this.patId=code;
-		this.date=dat;
+		this.date=date;
 		initialize();
 	}
 	private void initialize() {
@@ -180,6 +173,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 
 			choosePanel = new JPanel();
 			chooselabel = new JLabel();
+			//TODO: use bundles
 			chooselabel.setText("Report For:");
 
 			chooseField = new JComboBox();
