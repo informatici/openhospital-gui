@@ -90,10 +90,6 @@ public class InsertVisit extends JDialog {
 	 */
 	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
-	private boolean pat;
-
-
-
 	public InsertVisit(JDialog owner, Boolean ad, Ward ward, Patient patient) {
 		
 		super(owner, true);
@@ -108,10 +104,10 @@ public class InsertVisit extends JDialog {
 		initComponents();
 	}
 	
-	public InsertVisit(ModalJFrame owner, Ward ward) {
+	public InsertVisit(ModalJFrame owner, Date date, Ward ward) {
 		super(owner, true);
+		this.visitDate = date;
 		this.ward=ward;
-		 pat= true;
 		initComponents();
 	}
 
@@ -145,16 +141,15 @@ public class InsertVisit extends JDialog {
 		gbc_ward.gridy = 0;
 		gbc_ward.gridx = 0;
 		patientParamsPanel.add(getWardPanel(), gbc_ward);
-		if (pat) {
-			GridBagConstraints gbc_Pat = new GridBagConstraints();
-			gbc_Pat.fill = GridBagConstraints.VERTICAL;
-			gbc_Pat.anchor = GridBagConstraints.WEST;
+			
+		GridBagConstraints gbc_Pat = new GridBagConstraints();
+		gbc_Pat.fill = GridBagConstraints.VERTICAL;
+		gbc_Pat.anchor = GridBagConstraints.WEST;
 
-			gbc_Pat.gridy = 0;
-			gbc_Pat.gridx = 1;
-			gbc_Pat.gridwidth = 3;
-			patientParamsPanel.add(getPanelChoosePatient(), gbc_Pat);	
-		}
+		gbc_Pat.gridy = 0;
+		gbc_Pat.gridx = 1;
+		gbc_Pat.gridwidth = 3;
+		patientParamsPanel.add(getPanelChoosePatient(), gbc_Pat);	
 
 		GridBagConstraints gbc_Service = new GridBagConstraints();
 		gbc_Service.fill = GridBagConstraints.VERTICAL;
@@ -187,7 +182,7 @@ public class InsertVisit extends JDialog {
 
 	private Ward saveWard = null;
 	
-	private ArrayList<Ward> wardList = null;
+	private ArrayList<Ward> wardList = new ArrayList<Ward>();
 
 	private JPanel ServicePanel;
 
@@ -221,41 +216,32 @@ public class InsertVisit extends JDialog {
 	private JSpinner jSpinnerDur;
 
 	private JPanel getWardPanel() {
-	
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
-			
 			wardBox = new JComboBox();
 			wardBox.addItem("");
 			try {
 				wardList = wbm.getWards();
-			}catch(OHServiceException e){
-				wardList = new ArrayList<Ward>();
-                OHServiceExceptionUtil.showMessages(e);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
 			for (Ward ward : wardList) {
-		
-					
-						wardBox.addItem(ward);
-				
-				if (saveWard != null) {
-					if (saveWard.getCode().equalsIgnoreCase(ward.getCode())) {
+
+				wardBox.addItem(ward);
+				if (this.ward != null) {
+					if (this.ward.getCode().equalsIgnoreCase(ward.getCode())) {
 						wardBox.setSelectedItem(ward);
 					}
-				} 
 				}
-			if(pat) {
-				wardBox.setSelectedItem(ward);
-				
 			}
-			}
+		}
 
-			
-			wardPanel.add(wardBox);
-			wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.ward")));
-		
+		wardPanel.add(wardBox);
+		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.ward")));
+
 		return wardPanel;
 	}
+	
 	private JPanel getService() {
 		if (ServicePanel == null) {
 
