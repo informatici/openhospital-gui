@@ -35,7 +35,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -44,7 +43,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
@@ -53,18 +51,15 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
-import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
 import org.isf.stat.gui.report.WardVisitsReport;
 import org.isf.therapy.gui.TherapyEdit;
-import org.isf.therapy.manager.TherapyManager;
 import org.isf.therapy.model.Therapy;
 import org.isf.therapy.model.TherapyRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.JAgenda;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
@@ -73,8 +68,6 @@ import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
 import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JMonthChooser;
-import com.toedter.calendar.JYearChooser;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
@@ -88,36 +81,13 @@ import com.toedter.calendar.JYearChooser;
  */
 public class VisitView extends ModalJFrame {
 
-	private JAgenda jAgenda;
-
 	private JPanel northPanel;
-	private JPanel monthYearPanel;
-	private JYearChooser yearChooser;
-	private JMonthChooser monthChooser;
 	private JPanel patientPanel;
-	private JPanel eastPanel;
-	private JPanel southPanel;
-	private JTextArea noteTextArea;
-	private JScrollPane noteScrollPane;
-	private JPanel therapyPanel;
-	private JPanel visitPanel;
-	private JPanel notifyAndSMSPanel;
-	private JPanel actionsPanel;
 	private Patient patient;
 	private boolean admitted;
 	private JButton addVisit;
-	private JButton removeVisit;
-
-	private JButton removeTherapy;
-	private JButton addTherapy;
-	private JButton editTherapy;
-	private JButton checkTherapy;
 	private JLabel therapyCheckLabel;
 	private JButton checkIconButton;
-	private JButton smsIconButton;
-	private JButton notifyIconButton;
-	private JCheckBox notifyCheckBox;
-	private JCheckBox smsCheckBox;
 	private JButton closeButton;
 	private JButton saveButton;
 	// private JButton reportButton; TODO to enable when a report will be designed
@@ -125,24 +95,15 @@ public class VisitView extends ModalJFrame {
 	private boolean checked = false;
 	private boolean available = false;
 	private boolean therapyModified = false;
-	private boolean notifiable = false;
-	private boolean smsenable = false;
 	private boolean visitModified = false;
-	private Therapy selectedTherapy;
-	private Visit selectedVisit;
-	private Hashtable<Integer, Therapy> hashTableTherapy;
-	private Hashtable<Integer, TherapyRow> hashTableThRow;
 	private Hashtable<Integer, Visit> hashTableVisits;
 
-	private static final int TherapyButtonWidth = 200;
 	private static final int VisitButtonWidth = 200;
 	private static final int ActionsButtonWidth = 240;
 	private static final int AllButtonHeight = 30;
 
 	private static final long serialVersionUID = 1L;
 
-	private MedicalBrowsingManager medBrowser = new MedicalBrowsingManager();
-	private TherapyManager thManager = Context.getApplicationContext().getBean(TherapyManager.class);
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private ArrayList<Medical> medArray;
@@ -563,8 +524,6 @@ public class VisitView extends ModalJFrame {
 			jTableFirst.setAutoCreateColumnsFromModel(false);
 			jTableFirst.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
 
-			ListSelectionModel listSelectionModel = jTableFirst.getSelectionModel();
-
 		}
 		return jTableFirst;
 	}
@@ -603,8 +562,6 @@ public class VisitView extends ModalJFrame {
 			}
 			jTableSecond.setAutoCreateColumnsFromModel(false);
 			jTableSecond.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
-
-			ListSelectionModel listSelectionModel = jTableSecond.getSelectionModel();
 
 		}
 		return jTableSecond;
@@ -810,41 +767,6 @@ public class VisitView extends ModalJFrame {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = new Date();
 		return dateFormat.format(date);
-	}
-
-	private void showTherapies() {
-
-		hashTableTherapy = new Hashtable<Integer, Therapy>();
-		for (Therapy th : therapies) {
-			hashTableTherapy.put(th.getTherapyID(), th);
-			showTherapy(th);
-		}
-	}
-
-	private void showTherapy(Therapy th) {
-		for (GregorianCalendar gc : th.getDates()) {
-			if (gc.get(GregorianCalendar.YEAR) == yearChooser.getYear()) {
-				if (gc.get(GregorianCalendar.MONTH) == monthChooser.getMonth()) {
-					jAgenda.addElement(th, gc.get(GregorianCalendar.DAY_OF_MONTH));
-					notifyCheckBox.setSelected(th.isNotify());
-				}
-			}
-		}
-	}
-
-
-	private JButton getCheckIconButton() {
-		if (checkIconButton == null) {
-			checkIconButton = new JButton();
-			checkIconButton.setIcon(new ImageIcon("rsc/icons/delete_dialog.png"));
-			checkIconButton.setOpaque(false);
-			checkIconButton.setBorderPainted(false);
-			checkIconButton.setFocusPainted(false);
-			checkIconButton.setContentAreaFilled(false);
-			checkIconButton.setMaximumSize(new Dimension(Short.MAX_VALUE, AllButtonHeight));
-			checkIconButton.setMinimumSize(new Dimension(AllButtonHeight, AllButtonHeight));
-		}
-		return checkIconButton;
 	}
 
 	private JButton getPrintTodayButton() {
