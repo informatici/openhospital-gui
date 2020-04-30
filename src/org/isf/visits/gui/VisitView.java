@@ -166,6 +166,7 @@ public class VisitView extends ModalJFrame {
 	private ArrayList<VisitRow> vsRows;
 
 	private Hashtable<Integer, VisitRow> hashTableVsRow;
+	
 	public VisitView(TherapyEdit ther) {
 		super();
 		
@@ -230,7 +231,7 @@ public class VisitView extends ModalJFrame {
 		});
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// setResizable(false);
-		setTitle("Visits");
+		setTitle("Visits"); //TODO: use bundles
 		final int x = (screenSize.width - getWidth()) / 2;
 		final int y = (screenSize.height - getHeight()) / 2;
 		setLocation(x, y);
@@ -243,7 +244,6 @@ public class VisitView extends ModalJFrame {
 		getContentPane().setLayout(new BorderLayout());
 		this.setContentPane(getContentPane());
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	
 
 		pack();
 		setLocationRelativeTo(null);
@@ -268,7 +268,7 @@ public class VisitView extends ModalJFrame {
 					visits.clear();
 			}
 		});
-	
+
 		try {
 			vsRows = vstManager.getVisitsWard();
 		} catch (OHServiceException e1) {
@@ -276,9 +276,6 @@ public class VisitView extends ModalJFrame {
 			e1.printStackTrace();
 		}
 
-	
-	
-	
 		hashTableVsRow = new Hashtable<Integer, VisitRow>();
 		if (!vsRows.isEmpty()) {
 			for (VisitRow vsRow : vsRows) {
@@ -287,19 +284,19 @@ public class VisitView extends ModalJFrame {
 		}
 		try {
 			visits = vstManager.getVisits(vsRows);
-		}catch(OHServiceException e){
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
-		}	
-	
-	/*
-	 * HashTable of the visits
-	 */
-	hashTableVisits = new Hashtable<Integer, Visit>();
-	if (!visits.isEmpty()) {
-		for (Visit visit : visits) {
-			hashTableVisits.put(visit.getVisitID(), visit);
 		}
-	}
+
+		/*
+		 * HashTable of the visits
+		 */
+		hashTableVisits = new Hashtable<Integer, Visit>();
+		if (!visits.isEmpty()) {
+			for (Visit visit : visits) {
+				hashTableVisits.put(visit.getVisitID(), visit);
+			}
+		}
 		getContentPane().add(getNorthPanel(), BorderLayout.NORTH);
 		getContentPane().add(dayCalendar(), BorderLayout.CENTER);
 		getButtonBack().setVisible(false);
@@ -314,14 +311,7 @@ public class VisitView extends ModalJFrame {
 		getAddVisitButton().setVisible(false);
 		getVisitDateChooser().setVisible(false);
 		getTodayVisit().setVisible(false);
-		
-		
-		
-		
-		
-		
-		
-		
+
 		setSize(1350, 570);
 	}
 
@@ -748,6 +738,18 @@ public class VisitView extends ModalJFrame {
 	private JButton backButton;
 
 	private JButton nextButton;
+	
+	private Object getVisitString(Visit visit, GregorianCalendar d) {
+		//TODO: use bundles
+		StringBuilder strBuilder = new StringBuilder("Time").append(": "); 
+		strBuilder.append(formatDateTime(d)).append(" - "); 
+		strBuilder.append(visit.getPatient().getName()).append(" ");
+		strBuilder.append("(").append(visit.getPatient().getCode()).append(") - ");
+		strBuilder.append("Service").append(": ").append(visit.getService()).append(" ");
+		strBuilder.append("(").append(visit.getDuration()).append("min").append(")"); 
+		
+		return strBuilder.toString();
+	}
 
 	class VisitModel extends DefaultTableModel {
 		public VisitModel() {
@@ -768,21 +770,16 @@ public class VisitView extends ModalJFrame {
 		}
 
 		public Object getValueAt(int r, int c) {
-
 			Visit visit = visitfirst.get(r);
 			GregorianCalendar d = visitfirst.get(r).getDate();
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
-			String da = formatter.format(d.getTime());
-			String dat = getDate();
-			return "Time :" + formatDateTime(d) +  " Patient "+ visit.getPatient().getName() + ", " + visit.getPatient().getCode() + ", Service: " + visit.getService()
-			+" Duration(min) :" + visit.getDuration();
-
+			return getVisitString(visit, d);
 		}
 	}
 	public String formatDateTime(GregorianCalendar time) {
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss"); //$NON-NLS-1$
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm"); //$NON-NLS-1$
 		return format.format(time.getTime());
 	}
+	
 	class VisitSecondModel extends DefaultTableModel {
 		public VisitSecondModel() {
 		}
@@ -805,13 +802,7 @@ public class VisitView extends ModalJFrame {
 
 			Visit visit = visitSecond.get(r);
 			GregorianCalendar d = visitSecond.get(r).getDate();
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); // lowercase "dd"
-			String da = formatter.format(d.getTime());
-			String dat = getDate();
-			return "  " + formatDateTime(d) +  "Patient :"+ visit.getPatient().getName() + ", " + visit.getPatient().getCode() + ", Service: " + visit.getService()
-			+" Duration :" + visit.getDuration();
-
-
+			return getVisitString(visit, d);
 		}
 	}
 
