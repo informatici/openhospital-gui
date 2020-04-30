@@ -399,7 +399,7 @@ public class VisitView extends ModalJFrame {
 
 				public void actionPerformed(ActionEvent e) {
 
-					InsertVisit newVsRow = new InsertVisit(VisitView.this, true, getWard());
+					InsertVisit newVsRow = new InsertVisit(VisitView.this, getWard());
 					newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					newVsRow.setVisible(true);
 

@@ -40,9 +40,6 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.model.Patient;
-import org.isf.therapy.gui.TherapyEntryForm;
-import org.isf.therapy.manager.TherapyManager;
-import org.isf.therapy.model.TherapyRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
@@ -71,7 +68,6 @@ public class InsertVisit extends JDialog {
 	 * Constants
 	 */
 	private final String dateTimeFormat = "dd/MM/yy HH:mm:ss";
-	private static final int textSize = 30;
 
 	/*
 	 * Attributes
@@ -87,7 +83,6 @@ public class InsertVisit extends JDialog {
 	private Date visitDate = null;
 	private JPanel wardPanel;
 	private JComboBox wardBox;
-	private Boolean ad;
 	private Ward ward;
 	private Patient patient;
 	/*
@@ -103,9 +98,7 @@ public class InsertVisit extends JDialog {
 		
 		super(owner, true);
 		this.patient=patient;
-		
 		this.ward=ward;
-		this.ad=ad;
 		initComponents();
 	}
 
@@ -115,9 +108,8 @@ public class InsertVisit extends JDialog {
 		initComponents();
 	}
 	
-	public InsertVisit(ModalJFrame owner, Boolean ad, Ward ward) {
+	public InsertVisit(ModalJFrame owner, Ward ward) {
 		super(owner, true);
-		this.ad=ad;
 		this.ward=ward;
 		 pat= true;
 		initComponents();
@@ -193,8 +185,8 @@ public class InsertVisit extends JDialog {
 		return patientParamsPanel;
 	}
 
-	private JTextField yProgTextField = null;
 	private Ward saveWard = null;
+	
 	private ArrayList<Ward> wardList = null;
 
 	private JPanel ServicePanel;
@@ -321,12 +313,6 @@ public class InsertVisit extends JDialog {
 
 			public void stateChanged(ChangeEvent e) {
 				JSpinner source = (JSpinner) e.getSource();
-				double value = (Double) source.getValue();
-				/*
-				 * sebbene sia utile crea conflitto 
-				 */
-				//int intValue = new Double(value).intValue();
-				//jSliderQty.setValue(intValue);
 			}
 		});
 		return jSpinnerDur;
