@@ -23,24 +23,21 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
-	<parameter name="patientID" isForPrompting="true" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["43"]]></defaultValueExpression>
-	</parameter>
 	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["./rpt/"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="date" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="examId" isForPrompting="true" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT * 
 FROM PATIENT
-LEFT JOIN (SELECT PEX_PAT_ID, PEX_HEIGHT, PEX_WEIGHT FROM PATIENTEXAMINATION WHERE PEX_PAT_ID = $P{patientID} ORDER BY PEX_DATE DESC LIMIT 1) AS HW
-ON PAT_ID = PEX_PAT_ID
-WHERE PAT_ID = $P{patientID}]]></queryString>
+LEFT JOIN PATIENTEXAMINATION ON PAT_ID = PEX_PAT_ID
+WHERE PEX_ID = $P{examId}]]></queryString>
 
-	<field name="PAT_TIMESTAMP" class="java.sql.Timestamp"/>
-	<field name="PAT_BDATE" class="java.sql.Date"/>
+	<field name="PAT_ID" class="java.lang.Integer"/>
 	<field name="PAT_FNAME" class="java.lang.String"/>
 	<field name="PAT_SNAME" class="java.lang.String"/>
 	<field name="PAT_NAME" class="java.lang.String"/>
+	<field name="PAT_BDATE" class="java.sql.Date"/>
+	<field name="PAT_AGE" class="java.lang.Integer"/>
 	<field name="PAT_AGETYPE" class="java.lang.String"/>
 	<field name="PAT_SEX" class="java.lang.String"/>
 	<field name="PAT_ADDR" class="java.lang.String"/>
@@ -56,15 +53,36 @@ WHERE PAT_ID = $P{patientID}]]></queryString>
 	<field name="PAT_PTOGE" class="java.lang.String"/>
 	<field name="PAT_NOTE" class="java.lang.String"/>
 	<field name="PAT_DELETED" class="java.lang.String"/>
-	<field name="PAT_BTYPE" class="java.lang.String"/>
-	<field name="PAT_TAXCODE" class="java.lang.String"/>
-	<field name="PAT_PHOTO" class="java.lang.Object"/>
-	<field name="PAT_ID" class="java.lang.Integer"/>
-	<field name="PAT_AGE" class="java.lang.Integer"/>
 	<field name="PAT_LOCK" class="java.lang.Integer"/>
+	<field name="PAT_BTYPE" class="java.lang.String"/>
+	<field name="PAT_PHOTO" class="java.lang.Object"/>
+	<field name="PAT_TAXCODE" class="java.lang.String"/>
+	<field name="PAT_TIMESTAMP" class="java.sql.Timestamp"/>
+	<field name="PAT_CREATED_BY" class="java.lang.String"/>
+	<field name="PAT_CREATED_DATE" class="java.sql.Timestamp"/>
+	<field name="PAT_LAST_MODIFIED_BY" class="java.lang.String"/>
+	<field name="PAT_LAST_MODIFIED_DATE" class="java.sql.Timestamp"/>
+	<field name="PAT_ACTIVE" class="java.lang.Boolean"/>
+	<field name="PEX_ID" class="java.lang.Integer"/>
+	<field name="PEX_DATE" class="java.sql.Timestamp"/>
 	<field name="PEX_PAT_ID" class="java.lang.Integer"/>
-	<field name="PEX_WEIGHT" class="java.lang.Integer"/>
-	<field name="PEX_HEIGHT" class="java.lang.Double"/>
+	<field name="PEX_HEIGHT" class="java.lang.Integer"/>
+	<field name="PEX_WEIGHT" class="java.lang.Double"/>
+	<field name="PEX_AP_MIN" class="java.lang.Integer"/>
+	<field name="PEX_AP_MAX" class="java.lang.Integer"/>
+	<field name="PEX_HR" class="java.lang.Integer"/>
+	<field name="PEX_TEMP" class="java.lang.Double"/>
+	<field name="PEX_SAT" class="java.lang.Double"/>
+	<field name="PEX_HGT" class="java.lang.Integer"/>
+	<field name="PEX_DIURESIS" class="java.lang.Integer"/>
+	<field name="PEX_DIURESIS_DESC" class="java.lang.String"/>
+	<field name="PEX_BOWEL_DESC" class="java.lang.String"/>
+	<field name="PEX_NOTE" class="java.lang.String"/>
+	<field name="PEX_CREATED_BY" class="java.lang.String"/>
+	<field name="PEX_CREATED_DATE" class="java.sql.Timestamp"/>
+	<field name="PEX_LAST_MODIFIED_BY" class="java.lang.String"/>
+	<field name="PEX_LAST_MODIFIED_DATE" class="java.sql.Timestamp"/>
+	<field name="PEX_ACTIVE" class="java.lang.Boolean"/>
 
 		<background>
 			<band height="0"  isSplitAllowed="true" >
@@ -392,11 +410,8 @@ WHERE PAT_ID = $P{patientID}]]></queryString>
 						width="523"
 						height="28"
 						key="subreport-5"/>
-					<subreportParameter  name="patientID">
-						<subreportParameterExpression><![CDATA[$F{PAT_ID}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter  name="date">
-						<subreportParameterExpression><![CDATA[$P{date}]]></subreportParameterExpression>
+					<subreportParameter  name="examId">
+						<subreportParameterExpression><![CDATA[$F{PEX_ID}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "patient_examination_subreport.jasper"]]></subreportExpression>

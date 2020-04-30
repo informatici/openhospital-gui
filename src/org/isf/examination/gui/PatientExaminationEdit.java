@@ -1284,15 +1284,11 @@ public class PatientExaminationEdit extends ModalJFrame {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					int selectedrow;
-					if (jTableSummary.getSelectedRow() < 0) {
-						String	date= (String) jTableSummary.getValueAt(0,0);
-						new GenericReportExamination(patex.getPatient().getCode(),date, GeneralData.EXAMINATIONCHART);
-					} else {
-						selectedrow = jTableSummary.getSelectedRow();
-					String	date= (String) jTableSummary.getValueAt(selectedrow,0);
-						new GenericReportExamination(patex.getPatient().getCode(),date, GeneralData.EXAMINATIONCHART);
-					}
+					int selectedrow = jTableSummary.getSelectedRow();
+					if (selectedrow < 0) selectedrow = 0;
+					
+					PatientExamination	exam = (PatientExamination) jTableSummary.getValueAt(selectedrow,-1);
+					new GenericReportExamination(patex.getPatient().getCode(), exam.getPex_ID(), GeneralData.EXAMINATIONCHART);
 					
 				}
 			});

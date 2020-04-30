@@ -23,17 +23,13 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
-	<parameter name="patientID" isForPrompting="true" class="java.lang.Integer"/>
-	<parameter name="date" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="examId" isForPrompting="true" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT
      *
 FROM
-     `PATIENTEXAMINATION` PATIENTEXAMINATION
+     PATIENTEXAMINATION
 WHERE
-     PEX_PAT_ID = $P{patientID}
- AND DATE(PEX_DATE) = $P{date}
-ORDER BY
-     PEX_DATE DESC LIMIT 1]]></queryString>
+     PEX_ID = $P{examId}]]></queryString>
 
 	<field name="PEX_ID" class="java.lang.Integer"/>
 	<field name="PEX_DATE" class="java.sql.Timestamp"/>
@@ -74,9 +70,9 @@ ORDER BY
 		</columnHeader>
 		<detail>
 			<band height="194"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="88"
+						x="90"
 						y="28"
 						width="87"
 						height="14"
@@ -96,7 +92,7 @@ ORDER BY
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="88"
+						x="90"
 						y="49"
 						width="87"
 						height="14"
@@ -255,7 +251,7 @@ ORDER BY
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["AP (mmHg):"]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="115"
 						y="70"
@@ -275,9 +271,9 @@ ORDER BY
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["/"]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="133"
+						x="129"
 						y="70"
 						width="23"
 						height="14"
@@ -295,7 +291,7 @@ ORDER BY
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{PEX_AP_MAX}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="90"
 						y="89"
@@ -337,7 +333,7 @@ ORDER BY
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="6"
+						x="5"
 						y="108"
 						width="33"
 						height="14"
@@ -357,7 +353,7 @@ ORDER BY
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="6"
+						x="5"
 						y="127"
 						width="23"
 						height="14"
@@ -375,7 +371,7 @@ ORDER BY
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["O2:"]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="90"
 						y="127"
