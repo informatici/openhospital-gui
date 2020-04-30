@@ -156,7 +156,9 @@ public class VisitView extends ModalJFrame {
 	private JPanel wardPanel;
 	private JButton todayButton;
 	private JButton tomorrowButton;
-
+	private JPanel dateViPanel;
+	private JButton dateAdm;
+	
 	private JTable jTableFirst;
 
 	private JScrollPane jScrollPaneFirstday;
@@ -556,7 +558,6 @@ public class VisitView extends ModalJFrame {
 	private int[] visColumsWidth = { 500, 350 };
 	private boolean[] visColumsResizable = { false, true };
 	private ArrayList<Visit> visitfirst = new ArrayList<Visit>();
-	private ArrayList<Visit> visfirst = new ArrayList<Visit>();
 
 	private JScrollPane jScrollPaneSecondtday;
 
@@ -564,7 +565,7 @@ public class VisitView extends ModalJFrame {
 		if (jTableFirst == null) {
 			jTableFirst = new JTable();
 			String dat = getDate();
-			visfirst = getvisit((visits), dat);
+			visitfirst = getvisit((visits), dat);
 			jTableFirst.setModel(new VisitModel());
 			jTableFirst.setBackground(Color.white);
 			jTableFirst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -593,7 +594,7 @@ public class VisitView extends ModalJFrame {
 		return jScrollPaneSecondtday;
 	}
 
-	private ArrayList<Visit> visSecond = new ArrayList<Visit>();
+	private ArrayList<Visit> visitSecond = new ArrayList<Visit>();
 	private JTable jTableSecond;
 
 	private JTable visitSecondDayPanel() {
@@ -602,7 +603,7 @@ public class VisitView extends ModalJFrame {
 			jTableSecond.setBackground(Color.white);
 			String dat = null;
 			dat = getDateDayAfter(new Date());
-			visSecond = getvisit((visits), dat);
+			visitSecond = getvisit((visits), dat);
 			jTableSecond.setModel(new VisitSecondModel());
 			jTableSecond.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			for (int i = 0; i < visColums.length; i++) {
@@ -619,9 +620,6 @@ public class VisitView extends ModalJFrame {
 		return jTableSecond;
 	}
 
-	private JPanel dateViPanel;
-	private JButton dateAdm;
-
 	public JPanel getVisitDateChooser() {
 
 		if (dateViPanel == null) {
@@ -629,32 +627,16 @@ public class VisitView extends ModalJFrame {
 			dateViPanel = new JPanel();
 
 			dateAdm = new JButton();
+			//TODO: use bundles key instead of labels
 			dateAdm.setText(MessageBundle.getMessage("Go to date:"));
 			dateAdm.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
-					Date da= visitDateChooser.getDate();
-					DateFormat dateFormatold = new SimpleDateFormat("dd/MM/yyyy");  
-	                String strDate = dateFormatold.format(da);  
-					
-					DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					Date date = null;
-					try {
-						date = format.parse(strDate);
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					if (visitDateChooser.getDate() != null) {
+					    updatePanels();
+					} else {
+						visitDateChooser.getCalendarButton().doClick();
 					}
-					String dat=getDateDayAfter(date);
-					visfirst = getvisit((visits), strDate);
-					dateFirstLabel.setText(strDate);
-					datesecondLabel.setText(dat);
-
-					visSecond = getvisit((visits), dat);
-				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
-				    jTableFirst.updateUI();
-				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
-				    jTableSecond.updateUI();
 				}
 			});
 
@@ -671,10 +653,42 @@ public class VisitView extends ModalJFrame {
 		visitDateChooser = new JDateChooser();
 		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 		visitDateChooser.setDateFormatString(dateFormat);
-		
-			   
+		visitDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				updatePanels();
+				
+			}
+		});
 		return visitDateChooser;
 	}
+	
+	private void updatePanels() {
+		Date da = visitDateChooser.getDate();
+		DateFormat dateFormatold = new SimpleDateFormat("dd/MM/yyyy");  
+        String strDate = dateFormatold.format(da);  
+		
+		DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = null;
+		try {
+			date = format.parse(strDate);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String dat=getDateDayAfter(date);
+		visitfirst = getvisit((visits), strDate);
+		dateFirstLabel.setText(strDate);
+		datesecondLabel.setText(dat);
+
+		visitSecond = getvisit((visits), dat);
+		((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
+	    jTableFirst.updateUI();
+	    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
+	    jTableSecond.updateUI();
+	}
+	
 	private String getDateDayAfter(Date date) {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Calendar c = Calendar.getInstance();
@@ -740,9 +754,9 @@ public class VisitView extends ModalJFrame {
 		}
 
 		public int getRowCount() {
-			if (visfirst == null)
+			if (visitfirst == null)
 				return 0;
-			return visfirst.size();
+			return visitfirst.size();
 		}
 
 		public String getColumnName(int c) {
@@ -755,8 +769,8 @@ public class VisitView extends ModalJFrame {
 
 		public Object getValueAt(int r, int c) {
 
-			Visit visit = visfirst.get(r);
-			GregorianCalendar d = visfirst.get(r).getDate();
+			Visit visit = visitfirst.get(r);
+			GregorianCalendar d = visitfirst.get(r).getDate();
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
 			String da = formatter.format(d.getTime());
 			String dat = getDate();
@@ -774,9 +788,9 @@ public class VisitView extends ModalJFrame {
 		}
 
 		public int getRowCount() {
-			if (visSecond == null)
+			if (visitSecond == null)
 				return 0;
-			return visSecond.size();
+			return visitSecond.size();
 		}
 
 		public String getColumnName(int c) {
@@ -789,8 +803,8 @@ public class VisitView extends ModalJFrame {
 
 		public Object getValueAt(int r, int c) {
 
-			Visit visit = visSecond.get(r);
-			GregorianCalendar d = visSecond.get(r).getDate();
+			Visit visit = visitSecond.get(r);
+			GregorianCalendar d = visitSecond.get(r).getDate();
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); // lowercase "dd"
 			String da = formatter.format(d.getTime());
 			String dat = getDate();
@@ -917,11 +931,11 @@ public class VisitView extends ModalJFrame {
 						e1.printStackTrace();
 					}
 					String dat=getDateDayAfter(date);
-					visfirst = getvisit((visits), da);
+					visitfirst = getvisit((visits), da);
 					dateFirstLabel.setText(da);
 					datesecondLabel.setText(dat);
 
-					visSecond = getvisit((visits), dat);
+					visitSecond = getvisit((visits), dat);
 				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
 				    jTableFirst.updateUI();
 				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
@@ -951,12 +965,12 @@ public class VisitView extends ModalJFrame {
 						e1.printStackTrace();
 					}
 					String dat=getDateDayBefore(date);
-					visSecond = getvisit((visits), da);
+					visitSecond = getvisit((visits), da);
 					dateFirstLabel.setText(dat);
 					datesecondLabel.setText(da);
 					ad=true;
-					visfirst.clear();
-					visfirst = getvisit((visits), dat);
+					visitfirst.clear();
+					visitfirst = getvisit((visits), dat);
 				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
 				    jTableFirst.updateUI();
 				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
@@ -1059,12 +1073,12 @@ private JButton Todaybut;
 				
 				public void actionPerformed(ActionEvent e) {
 					String d = getDate();
-					visfirst = getvisit((visits), d);
+					visitfirst = getvisit((visits), d);
 					String da=getDateDayAfter(new Date());
-					visSecond=getvisit((visits),da );
+					visitSecond=getvisit((visits),da );
 					
 					
-					visfirst = getvisit((visits), d);
+					visitfirst = getvisit((visits), d);
 					dateFirstLabel.setText(d);
 					datesecondLabel.setText(da);
 
@@ -1153,11 +1167,11 @@ private JButton Todaybut;
 						e1.printStackTrace();
 					}
 					String dat=getDateDayAfter(date);
-					visfirst = getvisit((visits), da);
+					visitfirst = getvisit((visits), da);
 					dateFirstLabel.setText(da);
 					datesecondLabel.setText(dat);
 
-					visSecond = getvisit((visits), dat);
+					visitSecond = getvisit((visits), dat);
 				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
 				    jTableFirst.updateUI();
 				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
