@@ -2,7 +2,9 @@ package org.isf.operation.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
@@ -98,6 +102,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		table.getColumnModel().getColumn(0).setMaxWidth(pColumwidth[0]);
 		table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
 		table.getColumnModel().getColumn(2).setPreferredWidth(pColumwidth[2]);
+		table.getColumnModel().getColumn(3).setPreferredWidth(pColumwidth[3]);
+		table.getColumnModel().getColumn(3).setCellRenderer(new CenterAlignmentCellRenderer());
 
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -282,6 +288,22 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		public boolean isCellEditable(int arg0, int arg1) {
 			// return super.isCellEditable(arg0, arg1);
 			return false;
+		}
+	}
+	
+	class CenterAlignmentCellRenderer extends DefaultTableCellRenderer {  
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			
+			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+			setHorizontalAlignment(SwingConstants.CENTER);
+			return cell;
 		}
 	}
 

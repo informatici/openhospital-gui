@@ -205,7 +205,7 @@ public class OperationEdit extends JDialog {
 		//TODO: use bundles
 		operBox = new JComboBox();
 
-		operBox.addItem("BOTH");
+		operBox.addItem("OPD/ADMISSION");
 		operBox.addItem("ADMISSION");
 		operBox.addItem("OPD");
 
@@ -315,7 +315,7 @@ public class OperationEdit extends JDialog {
 						String opeFor;
 						String op=String.valueOf(operBox.getSelectedItem());
 						//TODO: use bundles
-						if (op.equals("BOTH")) {
+						if (op.equals("OPD/ADMISSION")) {
 							  opeFor="1";
 						}else if(op.equals("ADMISSION")) {
 							 opeFor="2";
