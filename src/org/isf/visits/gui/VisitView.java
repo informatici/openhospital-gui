@@ -21,8 +21,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,6 +59,7 @@ import org.isf.therapy.model.TherapyRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.time.TimeTools;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.visits.model.VisitRow;
@@ -84,16 +83,11 @@ public class VisitView extends ModalJFrame {
 	private JPanel northPanel;
 	private JPanel patientPanel;
 	private Patient patient;
-	private boolean admitted;
 	private JButton addVisit;
-	private JLabel therapyCheckLabel;
-	private JButton checkIconButton;
 	private JButton closeButton;
 	private JButton saveButton;
 	// private JButton reportButton; TODO to enable when a report will be designed
 
-	private boolean checked = false;
-	private boolean available = false;
 	private boolean therapyModified = false;
 	private boolean visitModified = false;
 	private Hashtable<Integer, Visit> hashTableVisits;
@@ -128,28 +122,33 @@ public class VisitView extends ModalJFrame {
 
 	private Hashtable<Integer, VisitRow> hashTableVsRow;
 	
+	private void initialize() {
+		setDateFirstThenSecond(new Date());
+	}
+	
 	public VisitView(TherapyEdit ther) {
 		super();
-		
+		initialize();
 		initComponents();
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// setResizable(false);
-		setTitle("Visits");
+		setTitle("Visits"); //TODO: use bundles
 		final int x = (screenSize.width - getWidth()) / 2;
 		final int y = (screenSize.height - getHeight()) / 2;
 		setLocation(x, y);
 		setVisible(true);
-		
 	}
+	
 	public VisitView(Ward ward) {
 		super();
 		this.ward=ward;
+		initialize();
 		initComponents();
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// setResizable(false);
-		setTitle("Visits");
+		setTitle("Visits"); //TODO: use bundles
 		final int x = (screenSize.width - getWidth()) / 2;
 		final int y = (screenSize.height - getHeight()) / 2;
 		setLocation(x, y);
@@ -159,7 +158,7 @@ public class VisitView extends ModalJFrame {
 			getButtonBack().setVisible(true);
 			getDateFirstDay().setVisible(true);
 			getVisitFirstday().setVisible(true);
-			getDatesecondDay().setVisible(true);
+			getDateSecondDay().setVisible(true);
 			getButtonNext().setVisible(true);
 			getVisitSecondDay().setVisible(true);
 			getPrintTodayButton().setVisible(true);
@@ -170,6 +169,7 @@ public class VisitView extends ModalJFrame {
 		
 	}
 	public VisitView() {
+		initialize();
 		initComponents();
 		addWindowListener(new WindowAdapter() {
 
@@ -233,8 +233,7 @@ public class VisitView extends ModalJFrame {
 		try {
 			vsRows = vstManager.getVisitsWard();
 		} catch (OHServiceException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			OHServiceExceptionUtil.showMessages(e1);
 		}
 
 		hashTableVsRow = new Hashtable<Integer, VisitRow>();
@@ -263,14 +262,14 @@ public class VisitView extends ModalJFrame {
 		getButtonBack().setVisible(false);
 		getDateFirstDay().setVisible(false);
 		getVisitFirstday().setVisible(false);
-		getDatesecondDay().setVisible(false);
+		getDateSecondDay().setVisible(false);
 		getButtonNext().setVisible(false);
 		getVisitSecondDay().setVisible(false);
 		getPrintTodayButton().setVisible(false);
 		gettomorrowTodayButton().setVisible(false);
 		getCloseButton().setVisible(false);
 		getAddVisitButton().setVisible(false);
-		getVisitDateChooser().setVisible(false);
+		getVisitDateChooserPanel().setVisible(false);
 		getTodayVisit().setVisible(false);
 
 		setSize(1350, 570);
@@ -319,7 +318,7 @@ public class VisitView extends ModalJFrame {
 		gbc_datesecond.gridy = 0;
 		gbc_datesecond.gridx = 2;
 
-		visitParamPanel.add(getDatesecondDay(), gbc_datesecond);
+		visitParamPanel.add(getDateSecondDay(), gbc_datesecond);
 		
 		
 		GridBagConstraints gbc_buttonnext= new GridBagConstraints();
@@ -396,9 +395,6 @@ public class VisitView extends ModalJFrame {
 			addVisit.setMnemonic(KeyEvent.VK_V);
 			addVisit.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			addVisit.setHorizontalAlignment(SwingConstants.LEFT);
-			if (admitted) {
-				addVisit.setEnabled(false);
-			}
 			addVisit.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -420,9 +416,13 @@ public class VisitView extends ModalJFrame {
 						visits.add(thisVisit); // FOR GUI
 						hashTableVisits.put(vsRow.getVisitID(), thisVisit);
 						hashTableVsRow.put(vsRow.getVisitID(), vsRow);
-						checked = false;
-					
-						showAll();
+
+						if (!TimeTools.isSameDay(dateFirst, thisVisit.getDate().getTime())
+								|| !TimeTools.isSameDay(dateSecond, thisVisit.getDate().getTime()))
+							//if new visit date is not already shown, change view
+							dateFirst = thisVisit.getCreatedDate();
+							
+						updatePanels();
 					}
 				
 					newVsRow.dispose();
@@ -433,63 +433,27 @@ public class VisitView extends ModalJFrame {
 		}
 		return addVisit;
 	}
-	private void showAll() {
-		
-		if (visits != null) showVisits();
-
-		
-		
-	}
-	private void showVisits() {
-		Ward wa = null;
-		hashTableVisits = new Hashtable<Integer, Visit>();
-		for (Visit vs : visits) {
-			hashTableVisits.put(vs.getVisitID(), vs);
-			 wa = vs.getWard();
-		}
-		new VisitView  (wa);
-		dispose();
-	}
 	
-
 	private JPanel datefirstPanel;
-
+	private Date dateFirst;
 	private JLabel dateFirstLabel;
-
 	private JPanel getDateFirstDay() {
-
 		if (datefirstPanel == null) {
-
 			datefirstPanel = new JPanel();
-
 			dateFirstLabel = new JLabel();
-	
-				dateFirstLabel.setText(getDate());
-			
-
-			// otherDiaAdmField.setText(manager.getAdmissionVisit().getGa());
 			datefirstPanel.add(dateFirstLabel);
-
 		}
 		return datefirstPanel;
 	}
 
 	private JPanel datesecondPanel;
-
+	private Date dateSecond;
 	private JLabel datesecondLabel;
-
-	private JPanel getDatesecondDay() {
+	private JPanel getDateSecondDay() {
 		if (datesecondPanel == null) {
-
 			datesecondPanel = new JPanel();
-
 			datesecondLabel = new JLabel();
-		
-				datesecondLabel.setText(getDateDayAfter(new Date()));
-			
-			// otherDiaAdmField.setText(manager.getAdmissionVisit().getGa());
 			datesecondPanel.add(datesecondLabel);
-
 		}
 		return datesecondPanel;
 	}
@@ -515,8 +479,6 @@ public class VisitView extends ModalJFrame {
 	private JTable visitFirstDayPanel() {
 		if (jTableFirst == null) {
 			jTableFirst = new JTable();
-			String dat = getDate();
-			visitfirst = getvisit((visits), dat);
 			jTableFirst.setModel(new VisitModel());
 			jTableFirst.setBackground(Color.white);
 			jTableFirst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -550,9 +512,6 @@ public class VisitView extends ModalJFrame {
 		if (jTableSecond == null) {
 			jTableSecond = new JTable();
 			jTableSecond.setBackground(Color.white);
-			String dat = null;
-			dat = getDateDayAfter(new Date());
-			visitSecond = getvisit((visits), dat);
 			jTableSecond.setModel(new VisitSecondModel());
 			jTableSecond.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			for (int i = 0; i < visColums.length; i++) {
@@ -567,7 +526,7 @@ public class VisitView extends ModalJFrame {
 		return jTableSecond;
 	}
 
-	public JPanel getVisitDateChooser() {
+	public JPanel getVisitDateChooserPanel() {
 
 		if (dateViPanel == null) {
 
@@ -580,6 +539,7 @@ public class VisitView extends ModalJFrame {
 				
 				public void actionPerformed(ActionEvent e) {
 					if (visitDateChooser.getDate() != null) {
+						setDateFirstThenSecond(visitDateChooser.getDate());
 					    updatePanels();
 					} else {
 						visitDateChooser.getCalendarButton().doClick();
@@ -588,7 +548,7 @@ public class VisitView extends ModalJFrame {
 			});
 
 			dateViPanel.add(dateAdm);
-			dateViPanel.add(getVisitDateField());
+			dateViPanel.add(getVisitDateChooser());
 
 		}
 		return dateViPanel;
@@ -596,7 +556,7 @@ public class VisitView extends ModalJFrame {
 
 	private JDateChooser visitDateChooser;
 	private final String dateFormat = "dd/MM/yyyy";
-	private JDateChooser getVisitDateField() {
+	private JDateChooser getVisitDateChooser() {
 		visitDateChooser = new JDateChooser();
 		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 		visitDateChooser.setDateFormatString(dateFormat);
@@ -604,6 +564,7 @@ public class VisitView extends ModalJFrame {
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
+				setDateFirstThenSecond(visitDateChooser.getDate());
 				updatePanels();
 				
 			}
@@ -612,59 +573,60 @@ public class VisitView extends ModalJFrame {
 	}
 	
 	private void updatePanels() {
-		Date da = visitDateChooser.getDate();
-		DateFormat dateFormatold = new SimpleDateFormat("dd/MM/yyyy");  
-        String strDate = dateFormatold.format(da);  
 		
-		DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = null;
-		try {
-			date = format.parse(strDate);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		String dat=getDateDayAfter(date);
-		visitfirst = getvisit((visits), strDate);
-		dateFirstLabel.setText(strDate);
-		datesecondLabel.setText(dat);
+		visitfirst = getVisitForDate(dateFirst);
+		dateFirstLabel.setText(TimeTools.formatDateTime(dateFirst, dateFormat));
 
-		visitSecond = getvisit((visits), dat);
+		visitSecond = getVisitForDate(dateSecond);
+		datesecondLabel.setText(TimeTools.formatDateTime(dateSecond, dateFormat));
+		
 		((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
 	    jTableFirst.updateUI();
 	    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
 	    jTableSecond.updateUI();
 	}
 	
-	private String getDateDayAfter(Date date) {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	private void setDateFirstThenSecond(Date date) {
+		dateFirst = date;
 		Calendar c = Calendar.getInstance();
-		c.setTime(date);
+		c.setTime(dateFirst);
 		c.add(Calendar.DATE, 1);
-		date = c.getTime();
-		String dat = dateFormat.format(date);
-		return dat;
+		dateSecond = c.getTime();
 	}
 	
-	private String getDateDayBefore(Date date) {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	private void setDateSecondThenFirst(Date date) {
+		dateSecond = date;
 		Calendar c = Calendar.getInstance();
-		c.setTime(date);
+		c.setTime(dateSecond);
 		c.add(Calendar.DATE, -1);
-		date = c.getTime();
-		String dat = dateFormat.format(date);
-		return dat;
+		dateFirst = c.getTime();
+	}
+	
+	private void setDateDayAfter() {
+		Calendar c = Calendar.getInstance();
+		c.setTime(dateFirst);
+		c.add(Calendar.DATE, 1);
+		dateFirst = c.getTime();
+		c.add(Calendar.DATE, 1);
+		dateSecond = c.getTime();
+	}
+	
+	private void setDateDayBefore() {
+		Calendar c = Calendar.getInstance();
+		c.setTime(dateFirst);
+		dateSecond = c.getTime();
+		c.add(Calendar.DATE, -1);
+		dateFirst = c.getTime();
 	}
 
-	private ArrayList<Visit> getvisit(ArrayList<Visit> arrayList, String dat) {
+	private ArrayList<Visit> getVisitForDate(Date date) {
 		ArrayList<Visit> vis = new ArrayList<Visit>();
 		for (int i = 0; i < visits.size(); i++) {
 			Visit visit = visits.get(i);
-			GregorianCalendar d = visits.get(i).getDate();
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); // lowercase "dd"
-			String da = formatter.format(d.getTime());
-			if (da.equals(dat)&&(visits.get(i).getWard().equals(wardBox.getSelectedItem()))) {
-				vis.add(visits.get(i));
+		
+			if (TimeTools.isSameDay(visit.getDate().getTime(),date)
+					&& (visit.getWard().equals(wardBox.getSelectedItem()))) {
+				vis.add(visit);
 			}
 		}
 		return vis;
@@ -763,12 +725,6 @@ public class VisitView extends ModalJFrame {
 		}
 	}
 
-	private String getDate() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = new Date();
-		return dateFormat.format(date);
-	}
-
 	private JButton getPrintTodayButton() {
 		if (todayButton == null) {
 			todayButton = new JButton();
@@ -777,18 +733,8 @@ public class VisitView extends ModalJFrame {
 			todayButton.setText(MessageBundle.getMessage("angal.visit.visittoday")); //$NON-NLS-1$
 			todayButton.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					String da= dateFirstLabel.getText();
-					DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					Date date = null;
-					
-						try {
-							date = format.parse(da);
-						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						 ward= (Ward) wardBox.getSelectedItem();
-					new WardVisitsReport(ward.getCode(), date, GeneralData.VISITSHEET);
+					ward = (Ward) wardBox.getSelectedItem();
+					new WardVisitsReport(ward.getCode(), dateFirst, GeneralData.VISITSHEET);
 				
 				}
 			});
@@ -803,19 +749,8 @@ public class VisitView extends ModalJFrame {
 			tomorrowButton.setText(MessageBundle.getMessage("angal.visit.visittoday")); //$NON-NLS-1$
 			tomorrowButton.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					
-					String da= datesecondLabel.getText();
-					DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					Date date = null;
-					
-						try {
-							date = format.parse(da);
-						} catch (ParseException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						 ward= (Ward) wardBox.getSelectedItem();
-					new WardVisitsReport(ward.getCode(), date, GeneralData.VISITSHEET);
+					ward = (Ward) wardBox.getSelectedItem();
+					new WardVisitsReport(ward.getCode(), dateSecond, GeneralData.VISITSHEET);
 					
 				}
 			});
@@ -827,32 +762,15 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getButtonNext() {
 		if (nextButton == null) {
-			nextButton = new JButton("Next->"); //$NON-NLS-1$
-			nextButton.setMnemonic(KeyEvent.VK_X);
+			nextButton = new JButton("Next->"); //TODO: use bundles
+			nextButton.setMnemonic(KeyEvent.VK_N);
 			nextButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			nextButton.setHorizontalAlignment(SwingConstants.LEFT);
 			nextButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					String da= datesecondLabel.getText();
-					DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					Date date = null;
-					try {
-						date = format.parse(da);
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					String dat=getDateDayAfter(date);
-					visitfirst = getvisit((visits), da);
-					dateFirstLabel.setText(da);
-					datesecondLabel.setText(dat);
-
-					visitSecond = getvisit((visits), dat);
-				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
-				    jTableFirst.updateUI();
-				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
-				    jTableSecond.updateUI();
+					setDateDayAfter();
+					updatePanels();
 				}
 			});
 		}
@@ -862,32 +780,14 @@ public class VisitView extends ModalJFrame {
 	private JButton getButtonBack() {
 		if (backButton == null) {
 			backButton = new JButton("<-back"); //$NON-NLS-1$
-			backButton.setMnemonic(KeyEvent.VK_X);
+			backButton.setMnemonic(KeyEvent.VK_B);
 			backButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			backButton.setHorizontalAlignment(SwingConstants.LEFT);
 			backButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					String da= dateFirstLabel.getText();
-					DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					Date date = null;
-					try {
-						date = format.parse(da);
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					String dat=getDateDayBefore(date);
-					visitSecond = getvisit((visits), da);
-					dateFirstLabel.setText(dat);
-					datesecondLabel.setText(da);
-					ad=true;
-					visitfirst.clear();
-					visitfirst = getvisit((visits), dat);
-				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
-				    jTableFirst.updateUI();
-				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
-				    jTableSecond.updateUI();
+					setDateDayBefore();
+					updatePanels();
 				}
 			});
 		}
@@ -933,28 +833,6 @@ public class VisitView extends ModalJFrame {
 		return closeButton;
 	}
 
-
-
-	protected void updateCheckLabel() {
-		if (checked) {
-			if (available) {
-				checkIconButton.setIcon(new ImageIcon("rsc/icons/ok_dialog.png"));
-				therapyCheckLabel.setText(MessageBundle.getMessage("angal.therapy.availablem")); //$NON-NLS-1$
-				therapyCheckLabel.setForeground(Color.GREEN);
-			} else {
-				checkIconButton.setIcon(new ImageIcon("rsc/icons/delete_dialog.png"));
-				therapyCheckLabel.setText(MessageBundle.getMessage("angal.therapy.notavailablem")); //$NON-NLS-1$
-				therapyCheckLabel.setForeground(Color.RED);
-			}
-		} else {
-			checkIconButton.setIcon(new ImageIcon("rsc/icons/delete_dialog.png"));
-			therapyCheckLabel.setText(MessageBundle.getMessage("angal.therapy.notcheckedm")); //$NON-NLS-1$
-			therapyCheckLabel.setForeground(Color.RED);
-		}
-
-	}
-
-
 	private JPanel getNorthPanel() {
 		if (northPanel == null) {
 			northPanel = new JPanel(new GridLayout(1, 2));
@@ -963,16 +841,14 @@ public class VisitView extends ModalJFrame {
 				northPanel.add(getPatientPanel());
 			} else {
 				northPanel.add(getWardPanel());
-				northPanel.add(getVisitDateChooser());
+				northPanel.add(getVisitDateChooserPanel());
 				northPanel.add(getTodayVisit());
-				
 			}
-
 		}
 		return northPanel;
 	}
-private JPanel TodayPanel;
-private JButton Todaybut;
+	private JPanel TodayPanel;
+	private JButton Todaybut;
 	private JPanel getTodayVisit() {
 
 
@@ -985,21 +861,8 @@ private JButton Todaybut;
 			Todaybut.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
-					String d = getDate();
-					visitfirst = getvisit((visits), d);
-					String da=getDateDayAfter(new Date());
-					visitSecond=getvisit((visits),da );
-					
-					
-					visitfirst = getvisit((visits), d);
-					dateFirstLabel.setText(d);
-					datesecondLabel.setText(da);
-
-					
-				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
-				    jTableFirst.updateUI();
-				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
-				    jTableSecond.updateUI();
+					setDateFirstThenSecond(new Date());
+					updatePanels();
 				}
 			});
 
@@ -1037,16 +900,15 @@ private JButton Todaybut;
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			for (Ward ward : wardList) {
-				
-					wardBox.addItem(ward);
-					
-				
+
+				wardBox.addItem(ward);
+
 				if (saveWard != null) {
 					if (saveWard.getCode().equalsIgnoreCase(ward.getCode())) {
 						wardBox.setSelectedItem(ward);
 					}
-				} 
 				}
+			}
 
 			
 			wardBox.addActionListener(new ActionListener() {
@@ -1059,36 +921,18 @@ private JButton Todaybut;
 						getButtonBack().setVisible(true);
 						getDateFirstDay().setVisible(true);
 						getVisitFirstday().setVisible(true);
-						getDatesecondDay().setVisible(true);
+						getDateSecondDay().setVisible(true);
 						getButtonNext().setVisible(true);
 						getVisitSecondDay().setVisible(true);
 						getPrintTodayButton().setVisible(true);
 						gettomorrowTodayButton().setVisible(true);
 						getCloseButton().setVisible(true);
 						getAddVisitButton().setVisible(true);
-						getVisitDateChooser().setVisible(true);
+						getVisitDateChooserPanel().setVisible(true);
 						getTodayVisit().setVisible(true);
 
 					}
-					String da= dateFirstLabel.getText();
-					DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					Date date = null;
-					try {
-						date = format.parse(da);
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					String dat=getDateDayAfter(date);
-					visitfirst = getvisit((visits), da);
-					dateFirstLabel.setText(da);
-					datesecondLabel.setText(dat);
-
-					visitSecond = getvisit((visits), dat);
-				    ((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
-				    jTableFirst.updateUI();
-				    ((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
-				    jTableSecond.updateUI();
+					updatePanels();
 				}
 			});
 			
