@@ -8,20 +8,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import org.isf.admission.manager.AdmissionBrowserManager;
-import org.isf.admission.model.Admission;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MovementWard;
 import org.isf.menu.manager.Context;
-import org.isf.opd.model.Opd;
-import org.isf.operation.manager.OperationRowBrowserManager;
-import org.isf.operation.model.OperationRow;
 import org.isf.patient.model.Patient;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableDrugsModel;
-import org.isf.utils.jobjects.OhTableOperationModel;
 
 public class MedicalsrMovPatList extends JPanel {
 	private Patient myPatient;
@@ -47,7 +40,7 @@ public class MedicalsrMovPatList extends JPanel {
 		
 		if (myPatient != null) {
 			try {
-				ArrayList<MovementWard> movPat = movManager.getMovementPat(myPatient);
+				ArrayList<MovementWard> movPat = movManager.getMovementToPatient(myPatient);
 				oprowData = new ArrayList<MovementWard>();
 				for (MovementWard mov : movPat) {
 					oprowData.add(mov);
