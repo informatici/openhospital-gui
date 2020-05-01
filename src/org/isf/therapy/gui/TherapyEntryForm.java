@@ -24,6 +24,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -134,7 +135,7 @@ public class TherapyEntryForm extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public TherapyEntryForm(JDialog owner, int patID, Therapy th) {
+	public TherapyEntryForm(JFrame owner, int patID, Therapy th) {
 		super(owner, true);
 		try {
 			this.medArray = medBrowser.getMedicals();

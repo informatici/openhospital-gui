@@ -25,6 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,8 +33,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SpringLayout;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -43,7 +42,6 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
-import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.VisitRow;
 import org.isf.ward.manager.WardBrowserManager;
@@ -88,8 +86,7 @@ public class InsertVisit extends JDialog {
 	 */
 	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
-	public InsertVisit(JDialog owner, Boolean ad, Ward ward, Patient patient) {
-
+	public InsertVisit(JFrame owner, Ward ward, Patient patient) {
 		super(owner, true);
 		this.patient = patient;
 		this.ward = ward;
@@ -102,8 +99,9 @@ public class InsertVisit extends JDialog {
 		initComponents();
 	}
 
-	public InsertVisit(ModalJFrame owner, Date date, Ward ward) {
+	public InsertVisit(JFrame owner, Date date, Ward ward, Patient patient) {
 		super(owner, true);
+		this.patient = patient;
 		this.visitDate = date;
 		this.ward = ward;
 		initComponents();
@@ -289,12 +287,6 @@ public class InsertVisit extends JDialog {
 		jSpinnerDur.setAlignmentX(Component.LEFT_ALIGNMENT);
 		jSpinnerDur.setPreferredSize(new Dimension(preferredSpinnerWidth, oneLineComponentsHeight));
 		jSpinnerDur.setMaximumSize(new Dimension(Short.MAX_VALUE, oneLineComponentsHeight));
-		jSpinnerDur.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e) {
-				JSpinner source = (JSpinner) e.getSource();
-			}
-		});
 		return jSpinnerDur;
 	}
 
@@ -435,9 +427,10 @@ public class InsertVisit extends JDialog {
 	}
 
 	private JPanel getPanelChoosePatient() {
-		JPanel priceListLabelPanel = new JPanel();
+		JPanel choosePatientPanel = new JPanel();
 		// panelSupRange.add(priceListLabelPanel);
-		priceListLabelPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		choosePatientPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		choosePatientPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectapatient")));
 
 		jAffiliatePersonJButtonAdd = new JButton();
 		jAffiliatePersonJButtonAdd.addActionListener(new ActionListener() {
@@ -451,31 +444,33 @@ public class InsertVisit extends JDialog {
 
 		jAffiliatePersonJTextField = new JTextField(14);
 		jAffiliatePersonJTextField.setEnabled(false);
-		priceListLabelPanel.add(jAffiliatePersonJTextField);
-		priceListLabelPanel.add(jAffiliatePersonJButtonAdd);
-		priceListLabelPanel.add(jAffiliatePersonJButtonSupp);
+		choosePatientPanel.add(jAffiliatePersonJTextField);
+		choosePatientPanel.add(jAffiliatePersonJButtonAdd);
+		choosePatientPanel.add(jAffiliatePersonJButtonSupp);
+		
+		if (patient == null) {
+			jAffiliatePersonJButtonAdd.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					SelectPatient selectPatient = new SelectPatient(InsertVisit.this, false, true);
+					selectPatient.addSelectionListener(InsertVisit.this);
+					selectPatient.setVisible(true);
+					patient = selectPatient.getPatient();
+					// System.out.println("Patient...........+++++++++++++.............."+pat.getFirstName());
+					try {
+						patientSelected(patient);
+					} catch (OHServiceException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 
-		jAffiliatePersonJButtonAdd.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				SelectPatient selectPatient = new SelectPatient(InsertVisit.this, false, true);
-				selectPatient.addSelectionListener(InsertVisit.this);
-				selectPatient.setVisible(true);
-				patient = selectPatient.getPatient();
-				// System.out.println("Patient...........+++++++++++++.............."+pat.getFirstName());
-				try {
-					patientSelected(patient);
-				} catch (OHServiceException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-
-			}
-		});
-		priceListLabelPanel.setBorder(BorderFactory
-				.createTitledBorder(MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectapatient")));
-
-		return priceListLabelPanel;
+			});
+		} else {
+			jAffiliatePersonJTextField.setText(patient.getName());
+			choosePatientPanel.setEnabled(false);
+		}
+		return choosePatientPanel;
 	}
 
 	public void patientSelected(Patient patient) throws OHServiceException {

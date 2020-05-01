@@ -145,6 +145,10 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		this(false);
 		this.owner = owner;
 	}
+	
+	public JAgenda(JFrame owner) {
+		this(false);
+	}
 
 	/**
 	 * JDayChooser constructor.
@@ -1044,7 +1048,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 */
 	public static void main(String[] s) {
 		JFrame frame = new JFrame("JDayChooser");
-		frame.getContentPane().add(new JAgenda(null));
+		frame.getContentPane().add(new JAgenda((JDialog) null));
 		frame.setSize(800,600);
 		//frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
