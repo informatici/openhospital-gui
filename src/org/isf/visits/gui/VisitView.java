@@ -13,7 +13,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -37,7 +36,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -76,6 +74,10 @@ import com.toedter.calendar.JDateChooser;
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
 public class VisitView extends ModalJFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private JPanel northPanel;
 	private JPanel patientPanel;
@@ -83,25 +85,19 @@ public class VisitView extends ModalJFrame {
 	private JButton addFirstVisitButton;
 	private JButton addScondVisitButton;
 	private JButton closeButton;
-	private JButton saveButton;
 	// private JButton reportButton; TODO to enable when a report will be designed
 
-	private boolean therapyModified = false;
-	private boolean visitModified = false;
 	private Hashtable<Integer, Visit> hashTableVisits;
 
 	private static final int VisitButtonWidth = 200;
 	private static final int ActionsButtonWidth = 240;
 	private static final int AllButtonHeight = 30;
 
-	private static final long serialVersionUID = 1L;
-
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	
 	private ArrayList<Visit> visits = new ArrayList<Visit>();
 	private Ward ward;
-	private boolean ad;
 	private JPanel wardPanel;
 	private JButton todayButton;
 	private JButton tomorrowButton;
@@ -118,87 +114,6 @@ public class VisitView extends ModalJFrame {
 	
 	private void initialize() {
 		setDateFirstThenSecond(new Date());
-	}
-	
-	public VisitView(TherapyEdit ther) {
-		super();
-		initialize();
-		initComponents();
-		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		// setResizable(false);
-		setTitle("Visits"); //TODO: use bundles
-		final int x = (screenSize.width - getWidth()) / 2;
-		final int y = (screenSize.height - getHeight()) / 2;
-		setLocation(x, y);
-		setVisible(true);
-	}
-	
-	public VisitView(Ward ward) {
-		super();
-		this.ward=ward;
-		initialize();
-		initComponents();
-		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		// setResizable(false);
-		setTitle("Visits"); //TODO: use bundles
-		final int x = (screenSize.width - getWidth()) / 2;
-		final int y = (screenSize.height - getHeight()) / 2;
-		setLocation(x, y);
-		setVisible(true);
-		 if (ward!=null) {
-			wardBox.setSelectedItem(ward);
-			showGui(true);
-		}
-		
-	}
-	public VisitView() {
-		initialize();
-		initComponents();
-		addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				// force close operation
-				closeButton.doClick();
-
-				// to free memory
-				if (visits != null)
-					visits.clear();
-			}
-		});
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		// setResizable(false);
-		setTitle("Visits"); //TODO: use bundles
-		final int x = (screenSize.width - getWidth()) / 2;
-		final int y = (screenSize.height - getHeight()) / 2;
-		setLocation(x, y);
-		setVisible(true);
-		
-	}
-
-	private void initComponents() {
-
-		getContentPane().setLayout(new BorderLayout());
-		this.setContentPane(getContentPane());
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		pack();
-		setLocationRelativeTo(null);
-		setResizable(false);
-		setVisible(true);
-		addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				// force close operation
-				closeButton.doClick();
-
-				// to free memory
-				if (visits != null)
-					visits.clear();
-			}
-		});
-
 		try {
 			vsRows = vstManager.getVisitsWard();
 		} catch (OHServiceException e1) {
@@ -226,11 +141,35 @@ public class VisitView extends ModalJFrame {
 				hashTableVisits.put(visit.getVisitID(), visit);
 			}
 		}
+	}
+	
+	public VisitView(TherapyEdit ther) {
+		super();
+		initialize();
+		initComponents();
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(null);
+		setVisible(true);
+		addWindowListener(new FreeMemoryAdapter());
+	}
+	
+	public VisitView() {
+		initialize();
+		initComponents();
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(null);
+		setVisible(true);
+		addWindowListener(new FreeMemoryAdapter());
+	}
+
+	private void initComponents() {
+
+		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(getNorthPanel(), BorderLayout.NORTH);
 		getContentPane().add(dayCalendar(), BorderLayout.CENTER);
 		showGui(false);
 
-		setSize(1350, 570);
+		setSize(1350, 600);
 	}
 
 	private JPanel dayCalendar() {
@@ -594,6 +533,22 @@ public class VisitView extends ModalJFrame {
 		return vis;
 	}
 
+	private final class FreeMemoryAdapter extends WindowAdapter {
+		
+		public void windowClosing(WindowEvent e) {
+			// force close operation
+			closeButton.doClick();
+
+			// to free memory
+			freeMemory();
+		}
+	}
+	
+	private void freeMemory() {
+		if (visits != null)
+			visits.clear();
+	}
+
 	class CenterTableCellRenderer extends DefaultTableCellRenderer {
 
 		/**
@@ -765,20 +720,7 @@ public class VisitView extends ModalJFrame {
 
 				public void actionPerformed(ActionEvent e) {
 					// to free memory
-					if (therapyModified || visitModified) {
-						int ok = JOptionPane.showConfirmDialog(VisitView.this,
-								MessageBundle.getMessage("angal.common.save") + "?"); //$NON-NLS-1$
-						if (ok == JOptionPane.YES_OPTION) {
-							saveButton.doClick();
-						} else if (ok == JOptionPane.NO_OPTION) {
-							// NO -> do nothing
-						} else if (ok == JOptionPane.CANCEL_OPTION) {
-							return;
-						}
-					}
-
-					if (visits != null)
-						visits.clear();
+					freeMemory();
 					dispose();
 				}
 			});
@@ -790,13 +732,9 @@ public class VisitView extends ModalJFrame {
 		if (northPanel == null) {
 			northPanel = new JPanel(new GridLayout(1, 2));
 
-			if (ad) {
-				northPanel.add(getPatientPanel());
-			} else {
-				northPanel.add(getWardPanel());
-				northPanel.add(getVisitDateChooserPanel());
-				northPanel.add(getTodayVisit());
-			}
+			northPanel.add(getWardPanel());
+			northPanel.add(getVisitDateChooserPanel());
+			northPanel.add(getTodayVisit());
 		}
 		return northPanel;
 	}
