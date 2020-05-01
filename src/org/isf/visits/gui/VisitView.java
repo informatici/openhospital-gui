@@ -49,13 +49,10 @@ import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
-import org.isf.medicals.model.Medical;
 import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
 import org.isf.stat.gui.report.WardVisitsReport;
 import org.isf.therapy.gui.TherapyEdit;
-import org.isf.therapy.model.Therapy;
-import org.isf.therapy.model.TherapyRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -101,10 +98,6 @@ public class VisitView extends ModalJFrame {
 
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
-	private ArrayList<Medical> medArray;
-	private ArrayList<Double> qtyArray = new ArrayList<Double>();
-	private ArrayList<Therapy> therapies = new ArrayList<Therapy>();
-	private ArrayList<TherapyRow> thRows = new ArrayList<TherapyRow>();
 	
 	private ArrayList<Visit> visits = new ArrayList<Visit>();
 	private Ward ward;
@@ -170,14 +163,6 @@ public class VisitView extends ModalJFrame {
 				closeButton.doClick();
 
 				// to free memory
-				if (medArray != null)
-					medArray.clear();
-				if (therapies != null)
-					therapies.clear();
-				if (thRows != null)
-					thRows.clear();
-				if (qtyArray != null)
-					qtyArray.clear();
 				if (visits != null)
 					visits.clear();
 			}
@@ -209,14 +194,6 @@ public class VisitView extends ModalJFrame {
 				closeButton.doClick();
 
 				// to free memory
-				if (medArray != null)
-					medArray.clear();
-				if (therapies != null)
-					therapies.clear();
-				if (thRows != null)
-					thRows.clear();
-				if (qtyArray != null)
-					qtyArray.clear();
 				if (visits != null)
 					visits.clear();
 			}
@@ -800,14 +777,6 @@ public class VisitView extends ModalJFrame {
 						}
 					}
 
-					if (medArray != null)
-						medArray.clear();
-					if (therapies != null)
-						therapies.clear();
-					if (thRows != null)
-						thRows.clear();
-					if (qtyArray != null)
-						qtyArray.clear();
 					if (visits != null)
 						visits.clear();
 					dispose();
