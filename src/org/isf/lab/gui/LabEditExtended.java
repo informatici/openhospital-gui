@@ -636,8 +636,15 @@ public class LabEditExtended extends ModalJFrame {
 
 				public void actionPerformed(ActionEvent arg0) {					
 					try {
-						ArrayList<LaboratoryForPrint> labs;
-						labs = labManager.getLaboratoryForPrint(lab.getCode());
+						ArrayList<LaboratoryForPrint> labs = new ArrayList<LaboratoryForPrint>();
+						
+						labs.add(new LaboratoryForPrint(
+								lab.getCode(),
+								lab.getExam(),
+								lab.getDate(),
+								lab.getResult()
+							)
+						);
 						if (!labs.isEmpty()) {
 							
 							printManager.print("Laboratory",labs,0);
