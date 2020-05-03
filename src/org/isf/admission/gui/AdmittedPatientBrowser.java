@@ -62,6 +62,7 @@ import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.patient.model.PatientProfilePhoto;
 import org.isf.therapy.gui.TherapyEdit;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
@@ -748,13 +749,15 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonNew.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent event) {
+				final Patient newPatient = new Patient();
+				newPatient.setPatientProfilePhoto(new PatientProfilePhoto());
 
 				if (GeneralData.PATIENTEXTENDED) {
-					PatientInsertExtended newrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, new Patient(), true);
+					final PatientInsertExtended newrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, newPatient, true);
 					newrecord.addPatientListener(AdmittedPatientBrowser.this);
 					newrecord.setVisible(true);
 				} else {
-					PatientInsert newrecord = new PatientInsert(AdmittedPatientBrowser.this, new Patient(), true);
+					final PatientInsert newrecord = new PatientInsert(AdmittedPatientBrowser.this, newPatient, true);
 					newrecord.addPatientListener(AdmittedPatientBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -776,7 +779,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					return;
 				}
 				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
-				
+				// Reloading patient, with profile initialised.
+				patient = admissionManager.loadAdmittedPatients(patient.getPatient().getCode());
 				if (GeneralData.PATIENTEXTENDED) {
 					
 					PatientInsertExtended editrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, patient.getPatient(), false);

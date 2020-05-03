@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,7 +51,9 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.image.ImageUtil;
 import org.isf.video.gui.PatientPhotoPanel;
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -494,17 +497,10 @@ public class PatientInsertExtended extends JDialog {
 
 							patient.setNote(jNoteTextArea.getText().trim());
 
-//							try {
-//								Image photo = ImageIO.read(new File(photoPanel.getPhotoFilePath()));
-//								patient.setPhoto(photo);
-//							} catch (IOException ioe) {
-//								// the photo didn't change
-//								//logger.debug("Patient photo not changed");
-//							}
-
 							try{
 								result = patientManager.newPatient(patient);
 							}catch(OHServiceException ex){
+								ex.printStackTrace();
 								OHServiceExceptionUtil.showMessages(ex);
 							}
 							if (result)
@@ -584,13 +580,6 @@ public class PatientInsertExtended extends JDialog {
 						}
 						patient.setNote(jNoteTextArea.getText().trim());
 
-//						try {
-//							Image photo = ImageIO.read(new File(photoPanel.getPhotoFilePath()));
-//							patient.setPhoto(photo);
-//						} catch (IOException ioe) {
-//							// the photo didn't change
-//							//logger.debug("Patient photo not changed");
-//						}
 
 						try{
 							result = patientManager.updatePatient(patient);
@@ -2239,14 +2228,16 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel getJRightPanel() {
 		if (jRightPanel == null) {
 			jRightPanel = new JPanel(new BorderLayout());
+
 			try {
-				//jRightPanel.add(getJPhoto(), BorderLayout.NORTH);
-				photoPanel = new PatientPhotoPanel(this, patient.getCode(), patient.getPhoto());
-				
-			} catch (IOException e) {
+				final Image image = patient.getPatientProfilePhoto() != null ? patient.getPatientProfilePhoto().getPhotoAsImage() : null;
+				photoPanel = new PatientPhotoPanel(this, patient.getCode(), image);
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
-			if (photoPanel != null) jRightPanel.add(photoPanel, BorderLayout.NORTH);
+			if (photoPanel != null) {
+				jRightPanel.add(photoPanel, BorderLayout.NORTH);
+			}
 			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);
 
 		}
@@ -2294,8 +2285,11 @@ public class PatientInsertExtended extends JDialog {
 		return jMotherNameTextField;
 	}
 	
-	public void setPatientPhoto(Image photo) {
-		patient.setPhoto(photo);
-		patient.setBlobPhoto(null);
+	public void setPatientPhoto(final @Nullable BufferedImage photo) {
+		if (photo != null) {
+			patient.getPatientProfilePhoto().setPhoto(ImageUtil.imageToByte(photo));
+		} else {
+			patient.getPatientProfilePhoto().setPhoto(null);
+		}
 	}
 }
