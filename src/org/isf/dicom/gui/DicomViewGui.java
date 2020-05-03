@@ -1,11 +1,6 @@
 package org.isf.dicom.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -49,6 +44,7 @@ import org.isf.utils.exception.model.OHExceptionMessage;
  * @version 1.0.0
  * 
  */
+@Deprecated // what is this class???
 public class DicomViewGui extends JPanel {
 	/**
 	 * 
@@ -384,12 +380,15 @@ public class DicomViewGui extends JPanel {
 			txt = "";
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.age") + " : " + txt, 10, hi);
 
-		if (ohPatient.getPhoto() != null) {
-			hi += VGAP;
-			BufferedImage bi = new BufferedImage(ohPatient.getPhoto().getWidth(this), ohPatient.getPhoto().getHeight(this), BufferedImage.TYPE_INT_ARGB);
-			bi.getGraphics().drawImage(ohPatient.getPhoto(), 0, 0, this);
-			drawQuadrant(bi.getGraphics(), ohPatient.getPhoto().getHeight(this), ohPatient.getPhoto().getWidth(this), Color.WHITE);
-			canvas.drawImage(Scalr.resize(bi, 100), 10, hi, this);
+		if (ohPatient.getPatientProfilePhoto() != null) {
+			final Image photoAsImage = ohPatient.getPatientProfilePhoto().getPhotoAsImage();
+			if (photoAsImage != null) {
+				hi += VGAP;
+				BufferedImage bi = new BufferedImage(photoAsImage.getWidth(this), photoAsImage.getHeight(this), BufferedImage.TYPE_INT_ARGB);
+				bi.getGraphics().drawImage(photoAsImage, 0, 0, this);
+				drawQuadrant(bi.getGraphics(), photoAsImage.getHeight(this), photoAsImage.getWidth(this), Color.WHITE);
+				canvas.drawImage(Scalr.resize(bi, 100), 10, hi, this);
+			}
 		}
 
 		// canvas.drawImage(bi, 10, hi,this);
