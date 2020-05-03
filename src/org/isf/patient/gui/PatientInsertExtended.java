@@ -125,7 +125,7 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel jMainPanel = null;
 	private boolean insert;
 	private boolean justSave;
-	final private Patient patient;
+	private Patient patient;
 	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	
 	// COMPONENTS: Data
@@ -498,17 +498,8 @@ public class PatientInsertExtended extends JDialog {
 							patient.setNote(jNoteTextArea.getText().trim());
 
 							try{
-								result = patientManager.newPatient(patient);
-							}catch(OHServiceException ex){
-								ex.printStackTrace();
-								OHServiceExceptionUtil.showMessages(ex);
-							}
-							if (result)
+								patient = patientManager.savePatient(patient);
 								firePatientInserted(patient);
-
-							if (!result)
-								JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-							else {
 								if (justSave) {
 									insert = false;
 									justSave = false;
@@ -516,9 +507,12 @@ public class PatientInsertExtended extends JDialog {
 								} else {
 									dispose();
 								}
+							}catch(OHServiceException ex){
+								ex.printStackTrace();
+								OHServiceExceptionUtil.showMessages(ex);
+								JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 							}
-						} else
-							return;
+						}
 					} else {// Update
 
 						patient.setFirstName(firstName);
@@ -582,17 +576,13 @@ public class PatientInsertExtended extends JDialog {
 
 
 						try{
-							result = patientManager.updatePatient(patient);
-						}catch(OHServiceException ex){
-                            OHServiceExceptionUtil.showMessages(ex);
-						}
-						if (result) {
+							patient = patientManager.savePatient(patient);
 							firePatientUpdated(patient);
-						}
-						if (!result)
-							JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-						else
 							dispose();
+						}catch(final OHServiceException ex){
+                            OHServiceExceptionUtil.showMessages(ex);
+							JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+						}
 					}
 				}
 			});

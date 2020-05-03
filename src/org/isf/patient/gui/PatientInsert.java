@@ -259,7 +259,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 			jOkButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					boolean ok = true;
-					boolean result = false;
 					if (insert) {
 						if (jFirstNameTextField.getText().equals("")) {
 							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertfirstname"));
@@ -317,17 +316,12 @@ public class PatientInsert extends JDialog implements ActionListener{
 										patient.setParentTogether('U');
 										
 										try{
-											result = manager.newPatient(patient);
+											patient = manager.newPatient(patient);
+											firePatientInserted(patient);
+											dispose();
 										}catch(OHServiceException ex){
                                             OHServiceExceptionUtil.showMessages(ex);
-										}
-										if (result) {
-											firePatientInserted(patient);
-										}
-										if (!result) {
 											JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-										} else { 
-											dispose();
 										}
 									}
 									}
@@ -386,16 +380,13 @@ public class PatientInsert extends JDialog implements ActionListener{
 						//patient.setHasInsurance('U');
 						//patient.setParentTogether('U');*/
 						try{
-							result = manager.updatePatient(patient);
+							patient = manager.updatePatient(patient);
+							firePatientUpdated(patient);
+							dispose();
 						}catch(OHServiceException ex){
                             OHServiceExceptionUtil.showMessages(ex);
+							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 						}
-						if (result) {
-							firePatientUpdated(patient);
-						}
-						if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-						else  dispose();
-						
 					}
 					};					
 					
