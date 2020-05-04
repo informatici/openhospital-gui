@@ -48,6 +48,7 @@ import org.isf.lab.service.LabIoOperations;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
+import org.isf.serviceprinting.manager.PrintLabels;
 import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -112,6 +113,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	private JPanel jPanelDateTo;
 
+	private JButton printLabelButton;
+
 	/**
 	 * This is the default constructor
 	 */
@@ -173,6 +176,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			if (MainMenu.checkUserGrants("btnlaboratoryedit")) jButtonPanel.add(getButtonEdit(), null);
 			if (MainMenu.checkUserGrants("btnlaboratorydel")) jButtonPanel.add(getButtonDelete(), null);
 			jButtonPanel.add((getPrintTableButton()), null);
+			jButtonPanel.add((getPrintLabelButton()), null);
 			jButtonPanel.add((getCloseButton()), null);
 			
 		}
@@ -207,6 +211,35 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			});
 		}
 		return printTableButton;
+	}
+	
+	private JButton getPrintLabelButton(){
+		if(printLabelButton==null){
+			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel"));
+			
+			printLabelButton.setMnemonic(KeyEvent.VK_O);
+			printLabelButton.addActionListener(new ActionListener() {
+			
+				public void actionPerformed(ActionEvent arg0) {
+					selectedrow = jTable.getSelectedRow();
+					if (selectedrow < 0) {
+						JOptionPane.showMessageDialog(null,
+								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+								JOptionPane.PLAIN_MESSAGE);
+						return;
+					} 
+					laboratory = (Laboratory) (((LabBrowsingModel) model).getValueAt(selectedrow, -1));
+					Integer patId = laboratory.getPatient().getCode();
+					try {
+						new PrintLabels("labelForSamples",patId);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
+					
+				}
+			});
+		}
+		return printLabelButton;
 	}
 
 	private JButton getButtonEdit() {
