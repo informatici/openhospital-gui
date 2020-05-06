@@ -44,7 +44,6 @@ import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
-import org.isf.operation.model.Resultat;
 import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
@@ -65,7 +64,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private JTextField textFieldUnit;
 	private JDateChooser textDate;
 	private JComboBox comboOperation;
-	private JComboBox comboResult;
+	private JComboBox<String> comboResult;
 	private JTextArea textAreaRemark;
 
 	OperationBrowserManager opeManager = new OperationBrowserManager();
@@ -79,6 +78,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private JDateChooser jCalendarDate;
 	private JTable tableData;
 
+	private ArrayList<String> operationResults = opeManager.getResultsList();
+	
 	public OperationRowAdm(Admission adm) {
 		setLayout(new BorderLayout(0, 0));
 		myAdmission = adm;
@@ -146,8 +147,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		gbc_comboResult.gridy = 1;
 		panelForm.add(comboResult, gbc_comboResult);
 		comboResult.addItem(null);
-		for (int i = 0; i < Resultat.values().length; i++) {
-			comboResult.addItem(Resultat.values()[i]);
+		for (int i = 0; i < operationResults.size(); i++) {
+			comboResult.addItem(operationResults.get(i));
 		}
 
 		JLabel lblUniteTrans = new JLabel(MessageBundle.getMessage("angal.operationrowedit.unitetrans")); //$NON-NLS-1$
@@ -394,8 +395,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 		/****** resultat *****/
 		int index = -1;
-		for (int i = 0; i < Resultat.values().length; i++) {
-			if (opeRow.getOpResult() != null && (Resultat.values()[i] + "").equals(opeRow.getOpResult())) { //$NON-NLS-1$
+		for (int i = 0; i < operationResults.size(); i++) {
+			if (opeRow.getOpResult() != null && (operationResults.get(i) + "").equals(opeRow.getOpResult())) { //$NON-NLS-1$
 				index = i;
 			}
 		}

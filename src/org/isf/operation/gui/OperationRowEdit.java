@@ -41,7 +41,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.border.EmptyBorder;
 import org.isf.generaldata.GeneralData;
-import org.isf.operation.model.Resultat;
 import org.isf.utils.exception.OHServiceException;
 
 public class OperationRowEdit extends JPanel {
@@ -95,7 +94,7 @@ public class OperationRowEdit extends JPanel {
 	private JTextArea remarkstextArea ;
 	private JPanel panelButtons;
 	private JLabel lblTransUnite;
-	private JComboBox ResultatcomboBox;
+	private JComboBox<String> ResultatcomboBox;
 	private JLabel lblResultat;
 	private JLabel lblDate;
 	private JComboBox OpecomboBox;
@@ -115,12 +114,13 @@ public class OperationRowEdit extends JPanel {
 	private JSeparator separator_1;
 	private JLabel lblNewLabel;
 	private JLabel titleLabel;
-	
+	private ArrayList<String> operationResults;
 	public OperationRowEdit(OperationRow opRow) {
 		
 		opeRow = opRow;
 		ope = new OperationBrowserManager();
 		opeManageRow = new OperationRowBrowserManager();
+		operationResults = ope.getResultsList();
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel panelHeader = new JPanel();
@@ -216,8 +216,8 @@ public class OperationRowEdit extends JPanel {
 		else{
 			ResultatcomboBox.addItem(""); //$NON-NLS-1$
 		}
-		for(int i = 0; i<Resultat.values().length;i++){
-			ResultatcomboBox.addItem(Resultat.values()[i]);
+		for(int i = 0; i<operationResults.size();i++){
+			ResultatcomboBox.addItem(operationResults.get(i));
 		}
 		
 		lblResultat = new JLabel(MessageBundle.getMessage("angal.operationrowedit.result")); //$NON-NLS-1$
