@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
@@ -324,6 +326,15 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 	
 	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int qanty) {
 				ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+				Collections.sort(drug, new Comparator<MedicalWard>() {
+					@Override
+					public int compare(MedicalWard o1, MedicalWard o2) {
+						  if (o1.getLot().getDueDate() == null || o2.getLot().getDueDate() == null)
+						        return 0;
+						      return o1.getLot().getDueDate().compareTo(o2.getLot().getDueDate());
+					}
+					});
+				
 				MedicalWard medWard =null;
 				int q = qanty;
 				for (MedicalWard elem : drug) {
@@ -334,7 +345,7 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 									if (elem.getQty()<=q) {
 										MedicalWard e = elem;
 										dr.add(e);
-										q =(int) (qanty -elem.getQty()) ;
+										q =(int) (q -elem.getQty()) ;
 										int maxquantity =  (int) (elem.getQty()-0);
 										medWard = elem;
 										addItem(medWard, maxquantity);
@@ -354,7 +365,9 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 								}
 						}					
 						}
-					 
+				
+					
+				
 				 
 				return medWard;
 			}

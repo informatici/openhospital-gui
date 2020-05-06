@@ -628,14 +628,8 @@ public class WardPharmacy extends ModalJFrame implements
 			} else if (c == 0) {
 				return druglist.get(r).getId().getLot().getCode();
 			} else if (c == 1) {
-				ArrayList<Lot> lot = null;
-				try {
-					lot = movManagerD.getLotByMedical(druglist.get(r).getId().getMedical());
-				} catch (OHServiceException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
+			
+				return TimeTools.formatDateTime(druglist.get(r).getId().getLot().getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}  else if (c == 2) {
 				return druglist.get(r).getQty();
 			}
