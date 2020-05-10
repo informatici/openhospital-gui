@@ -128,10 +128,13 @@ SELECT "2" AS ORDERING_FIELD,
 				MMVN_IS_PATIENT AS IS_PATIENT,
 				IF (MMVN_IS_PATIENT = 1 AND MMVN_MDSR_QTY < 0, "Return", -- Return by Patients
 					IF(MMVN_IS_PATIENT = 1 AND MMVN_MDSR_QTY > 0, "Patient",  -- Discharge to Patient
-						"Rectify")) AS MOV_TYPE, -- Rectify / Inventory
+						IF(MMVN_WRD_ID_A_FROM IS NOT NULL OR MMVN_WRD_ID_A_TO IS NOT NULL, "Ward", -- From/To Ward					
+							"Rectify"))) AS MOV_TYPE, -- Rectify / Inventory
 				IF (MMVN_IS_PATIENT = 1 AND MMVN_MDSR_QTY < 0, "Return by Patient", -- Return
 					IF(MMVN_IS_PATIENT = 1 AND MMVN_MDSR_QTY > 0, "Discharge to Patient",  -- Patient
-						"Rectify / Inventory")) AS REASON, -- Rectify
+						IF(MMVN_WRD_ID_A_FROM IS NOT NULL, CONCAT("Transfer from Ward: ", (SELECT WRD_NAME FROM WARD WHERE WRD_ID_A = MMVN_WRD_ID_A_FROM)), -- From Ward
+							 IF(MMVN_WRD_ID_A_TO IS NOT NULL, CONCAT("Transfer to Ward: ", (SELECT WRD_NAME FROM WARD WHERE WRD_ID_A = MMVN_WRD_ID_A_TO)), -- To Ward
+						"Rectify / Inventory")))) AS REASON, -- Rectify
 				IF (MMVN_MDSR_QTY < 0, -MMVN_MDSR_QTY, 0) AS IN_QTY,
 				IF (MMVN_MDSR_QTY > 0, MMVN_MDSR_QTY, 0) AS OUT_QTY,
 				null AS COST
