@@ -82,7 +82,9 @@ public class JTextFieldSearchModel extends JPanel {
 		}
 		if (medicals != null) {
 			for (Medical med : medicals) {
-				medicalMap.put(med.getProd_code(), med);
+				String key = med.getProd_code();
+				if (key == null || key.equals("")) key = med.getType().getCode() + med.getDescription();
+				medicalMap.put(key, med);
 			}
 		}
 	}
