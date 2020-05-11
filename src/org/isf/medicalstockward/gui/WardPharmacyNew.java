@@ -48,13 +48,12 @@ import org.isf.menu.manager.Context;
 import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
-public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
+public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 //LISTENER INTERFACE --------------------------------------------------------
     private EventListenerList movementWardListeners = new EventListenerList();
@@ -188,9 +187,10 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 		pack();
 		setLocationRelativeTo(null);
 	}
+	
 	private boolean isAutomaticLot() {
-				return GeneralData.AUTOMATICLOTWARD_TOWARD;
-			}
+		return GeneralData.AUTOMATICLOTWARD_TOWARD;
+	}
 
 	private JPanel getJPanelNorth() {
 		if (jPanelNorth == null) {
@@ -948,7 +948,7 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
                     jComboBoxMedicals.removeAllItems();
                     ArrayList<Medical> results = getSearchMedicalsResults(searchTextField.getText(), medArray);
                     for (Medical aMedical : results) {
-			jComboBoxMedicals.addItem(aMedical.getDescription());
+                    	jComboBoxMedicals.addItem(aMedical.getDescription());
                     }
                 }
             });
@@ -983,14 +983,10 @@ public class WardPharmacyNew<E> extends JDialog implements SelectionListener {
 		}
 		ArrayList<Object> med = new ArrayList<Object>();
 		for (Medical aMedical : medArray) {
-			
-			
-			
 			if (!med.contains(aMedical.getDescription())) { 
 				med.add(aMedical.getDescription());
 				jComboBoxMedicals.addItem(aMedical.getDescription());
             } 
-                    
 		}
 		return jComboBoxMedicals;
 	}

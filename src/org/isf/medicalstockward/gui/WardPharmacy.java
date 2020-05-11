@@ -56,10 +56,8 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovBrowserManager;
-import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstock.model.Movement;
-import org.isf.medicalstockward.gui.WardPharmacyNew.StockMovModel;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
@@ -75,6 +73,7 @@ import org.isf.stat.gui.report.GenericReportPharmaceuticalStockWard;
 import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.StockCardDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
@@ -83,8 +82,6 @@ import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class WardPharmacy extends ModalJFrame implements 
 	WardPharmacyEdit.MovementWardListeners, 
@@ -161,11 +158,8 @@ public class WardPharmacy extends ModalJFrame implements
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.units"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"),
-			MessageBundle.getMessage("angal.medicalstock.lotduedate")
-			
-			
-			 //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstock.lotduedate") //$NON-NLS-1$
 	};
 	private boolean[] columsResizableIncomes = { true, true, true, true, true, true, true };
 	private int[] columWidthIncomes = { 80, 50, 50, 50, 50 , 50, 50};
@@ -186,8 +180,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private String[] columsDrugs = { 
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units"),
-			
+			MessageBundle.getMessage("angal.medicalstockward.units") //$NON-NLS-1$
 	};
 	private boolean[] columsResizableDrugs = { true, true, true};
 	private int[] columWidthDrugs = { 150, 50, 50};
@@ -518,19 +511,15 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 		return jTableIncomes;
 	}
-	private JPanel JPanelDrugs;
-
-	
     
 	private JScrollPane getJScrollPaneDrugs() {
 		if (jScrollPaneDrugs == null) {
 			jScrollPaneDrugs = new JScrollPane();
-			jScrollPaneDrugs.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (),
-                    "Double click to show lot details ",
+			jScrollPaneDrugs.setBorder (BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder (),
+                    "Double click to show lot details ", //TODO: use bundles
                     TitledBorder.LEFT,
                     TitledBorder.TOP));
 			jScrollPaneDrugs.setViewportView(getJTableDrugs());
-			
 		}
 		return jScrollPaneDrugs;
 	}
@@ -548,10 +537,9 @@ public class WardPharmacy extends ModalJFrame implements
 			jTableDrugs.addMouseListener(new MouseAdapter() {
 				
 		         public void mouseClicked(MouseEvent me) {
-		             if (me.getClickCount() == 2) {     // to detect doble click events
+		             if (me.getClickCount() == 2) {     // to detect double click events
 		                JTable target = (JTable)me.getSource();
 		                int row = target.getSelectedRow(); // select a row
-		                int column = target.getSelectedColumn(); // select a column
 		                Detail(wardDrugs, (String) jTableDrugs.getValueAt(row, 0));// get the value of a row and column.
 		             }
 		          }
@@ -585,7 +573,6 @@ public class WardPharmacy extends ModalJFrame implements
 		 
 		return medWard;
 	}
-	private MovStockInsertingManager movManagerD = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	
 	class StockMovModel extends DefaultTableModel {
@@ -646,7 +633,6 @@ public class WardPharmacy extends ModalJFrame implements
 		if (jPanelCentral == null) {
 			jPanelCentral = new JPanel(new BorderLayout());
 			jPanelCentral.add(getJPanelFilter(), BorderLayout.WEST);
-			
 			jPanelCentral.add(getJTabbedPaneWard(), BorderLayout.CENTER);
 		}
 		return jPanelCentral;
@@ -1035,7 +1021,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jTabbedPaneWard = new JTabbedPane();
 			jTabbedPaneWard.addTab(MessageBundle.getMessage("angal.medicalstockward.outcomes"), getJScrollPaneOutcomes()); //$NON-NLS-1$
 			jTabbedPaneWard.addTab(MessageBundle.getMessage("angal.medicalstockward.incomings"), getJScrollPaneIncomes()); //$NON-NLS-1$
-			jTabbedPaneWard.addTab("Drugs ", getJScrollPaneDrugs()); //$NON-NLS-1$
+			jTabbedPaneWard.addTab(MessageBundle.getMessage("angal.medicalstockward.drugs"), getJScrollPaneDrugs()); //$NON-NLS-1$
 		}
 		return jTabbedPaneWard;
 	}
@@ -1137,7 +1123,6 @@ public class WardPharmacy extends ModalJFrame implements
 								jTableIncomes.setModel(new IncomesModel());
 								jTableOutcomes.setModel(new OutcomesModel());
 								jTableDrugs.setModel(new DrugsModel());
-								
 							} else {
 								remove(jTabbedPaneWard);
 								// jButtonEdit.setVisible(false);
@@ -1152,7 +1137,6 @@ public class WardPharmacy extends ModalJFrame implements
 								added = false;
 							}
 						}
-					
 						jComboBoxWard.setEnabled(false);
 						rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
 						validate();
@@ -1235,7 +1219,6 @@ public class WardPharmacy extends ModalJFrame implements
 			if (c == 3) {
 				return pieces;
 			}
-			
 			if (c == 4) {
 				int packets = 0;
 				if (pcsPerPck != 0) {
@@ -1462,7 +1445,7 @@ public class WardPharmacy extends ModalJFrame implements
 				return MessageBundle.getMessage("angal.medicalstockward.pieces"); //$NON-NLS-1$
 			}
 			if (c == 3) {
-			return	getJRectifyButton();
+				return	getJRectifyButton(); //TODO: nice idea this one, can we make it working?
 			}
 
 			return null;
