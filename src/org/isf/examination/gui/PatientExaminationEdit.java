@@ -1296,7 +1296,7 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private JSlider getJSliderHGT() {
 		if (jSliderHGT == null) {
-			jSliderHGT = new JSlider(0, 200, ExaminationParameters.HGT_INIT);
+			jSliderHGT = new JSlider(ExaminationParameters.HGT_MIN, ExaminationParameters.HGT_MAX, ExaminationParameters.HGT_INIT);
 			jSliderHGT.addChangeListener(new ChangeListener() {
 				
 				@Override
