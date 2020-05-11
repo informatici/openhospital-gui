@@ -88,14 +88,14 @@ public class PatientExaminationEdit extends JDialog {
 	private JPanel jPanelButtons;
 	private JSlider jSliderHeight;
 	private JSlider jSliderHGT;
-	private JSlider jSliderDiuresis;
+	private JSlider jSliderDiuresisVolume;
 	private ScaledJSlider jSliderWeight;
 	private VoIntegerTextField jTextFieldHR;
 	private VoIntegerTextField jTextFieldRR;
 	private VoDoubleTextField jTextFieldTemp;
 	private VoDoubleTextField jTextFieldSaturation;
 	private VoIntegerTextField jTextFieldHGT;
-	private VoIntegerTextField jTextFieldDiuresis;
+	private VoIntegerTextField jTextFieldDiuresisVolume;
 	private VoLimitedTextArea jTextAreaNote;
 	private VoIntegerTextField jTextFieldHeight;
 	private VoDoubleTextField jTextFieldWeight;
@@ -118,11 +118,12 @@ public class PatientExaminationEdit extends JDialog {
 	private JCheckBox jCheckBoxToggleTemp;
 	private JCheckBox jCheckBoxToggleSaturation;
 	private JCheckBox jCheckBoxToggleHGT;
-	private JCheckBox jCheckBoxToggleDiuresis;
+	private JCheckBox jCheckBoxToggleDiuresisVolume;
+	private JCheckBox jCheckBoxToggleDiuresisType;
 	private JCheckBox jCheckBoxToggleBowel;
 	private JCheckBox jCheckBoxToggleRR;
 	private JCheckBox jCheckBoxToggleAusc;
-	private JComboBox jComboBoxDiuresis;
+	private JComboBox jComboBoxDiuresisType;
 	private JComboBox jComboBoxBowel;
 	private JComboBox jAuscComboBox;
 	private JButton jButtonOK;
@@ -135,7 +136,8 @@ public class PatientExaminationEdit extends JDialog {
 	private Action actionToggleTemp;
 	private Action actionToggleSaturation;
 	private Action actionToggleHGT;
-	private Action actionToggleDiuresis;
+	private Action actionToggleDiuresisVolume;
+	private Action actionToggleDiuresisType;
 	private Action actionToggleBowel;
 	private Action actionToggleAusc;
 	private JPanel jPanelGender;
@@ -330,8 +332,8 @@ public class PatientExaminationEdit extends JDialog {
 		jSliderSaturation.setValue(patex.getPex_sat());
 		jTextFieldSaturation.setText(patex.getPex_sat() != null ? String.valueOf(patex.getPex_sat()) : ""+ExaminationParameters.SAT_INIT);
 		jTextFieldHGT.setText(patex.getPex_hgt() != null ? String.valueOf(patex.getPex_hgt()) : ""+ExaminationParameters.HGT_INIT);
-		jTextFieldDiuresis.setText(patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) : ""+ExaminationParameters.DIURESIS_INIT);
-		jComboBoxDiuresis.setSelectedItem(patex.getPex_diuresis_desc() != null ? examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) : null);
+		jTextFieldDiuresisVolume.setText(patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) : ""+ExaminationParameters.DIURESIS_INIT);
+		jComboBoxDiuresisType.setSelectedItem(patex.getPex_diuresis_desc() != null ? examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) : null);
 		jComboBoxBowel.setSelectedItem(patex.getPex_bowel_desc() != null ? examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc()) : null);
 		jSliderRR.setValue(patex.getPex_rr() != null ? patex.getPex_rr() : ExaminationParameters.RR_INIT);
 		jTextFieldRR.setText(patex.getPex_rr() != null ? String.valueOf(patex.getPex_rr()) : ""+ExaminationParameters.RR_INIT);
@@ -344,7 +346,7 @@ public class PatientExaminationEdit extends JDialog {
 		disableRR();
 		disableAusc();
 		disableHGT();
-		disableDiuresis();
+		disableDiuresisVolume();
 		disableBowel();
 	}
 
@@ -664,47 +666,63 @@ public class PatientExaminationEdit extends JDialog {
 			}
 			
 			{
-				GridBagConstraints gbc_chkBoxDiuresis = new GridBagConstraints();
-				gbc_chkBoxDiuresis.insets = new Insets(5, 5, 5, 5);
-				gbc_chkBoxDiuresis.gridx = 0;
-				gbc_chkBoxDiuresis.gridy = 9;
-				jPanelExamination.add(getJCheckBoxToggleDiuresis(), gbc_chkBoxDiuresis);
+				GridBagConstraints gbc_chkBoxDiuresisVolume = new GridBagConstraints();
+				gbc_chkBoxDiuresisVolume.insets = new Insets(5, 5, 5, 5);
+				gbc_chkBoxDiuresisVolume.gridx = 0;
+				gbc_chkBoxDiuresisVolume.gridy = 9;
+				jPanelExamination.add(getJCheckBoxToggleDiuresisVolume(), gbc_chkBoxDiuresisVolume);
+				
+				JLabel jLabelDiuresisVolume = new JLabel(MessageBundle.getMessage("angal.examination.diuresisvolume24h")); //$NON-NLS-1$
+				GridBagConstraints gbc_jLabelDiuresis = new GridBagConstraints();
+				gbc_jLabelDiuresis.anchor = GridBagConstraints.WEST;
+				gbc_jLabelDiuresis.insets = new Insets(5, 5, 5, 5);
+				gbc_jLabelDiuresis.gridx = 1;
+				gbc_jLabelDiuresis.gridy = 9;
+				jPanelExamination.add(jLabelDiuresisVolume, gbc_jLabelDiuresis);
+				
+				GridBagConstraints gbc_jSliderDiuresisVolume = new GridBagConstraints();
+				gbc_jSliderDiuresisVolume.insets = new Insets(5, 5, 5, 5);
+				gbc_jSliderDiuresisVolume.fill = GridBagConstraints.HORIZONTAL;
+				gbc_jSliderDiuresisVolume.gridx = 2;
+				gbc_jSliderDiuresisVolume.gridy = 9;
+				jPanelExamination.add(getJSliderDiuresisVolume(), gbc_jSliderDiuresisVolume);
+				
+				JLabel jLabelDiuresisVolumeUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.milliliter"));
+				GridBagConstraints gbc_jLabelDiuresisVolumeUnit = new GridBagConstraints();
+				gbc_jLabelDiuresisVolumeUnit.insets = new Insets(5, 5, 5, 5);
+				gbc_jLabelDiuresisVolumeUnit.gridx = 3;
+				gbc_jLabelDiuresisVolumeUnit.gridy = 9;
+				jPanelExamination.add(jLabelDiuresisVolumeUnit, gbc_jLabelDiuresisVolumeUnit);
+	
+				GridBagConstraints gbc_jTextFieldDiuresisVolume = new GridBagConstraints();
+				gbc_jTextFieldDiuresisVolume.anchor = GridBagConstraints.WEST;
+				gbc_jTextFieldDiuresisVolume.insets = new Insets(5, 0, 5, 5);
+				gbc_jTextFieldDiuresisVolume.gridx = 4;
+				gbc_jTextFieldDiuresisVolume.gridy = 9;
+				jPanelExamination.add(getJTextFieldDiuresisVolume(), gbc_jTextFieldDiuresisVolume);
+			}
+			
+			{
+				GridBagConstraints gbc_chkBoxDiuresisType = new GridBagConstraints();
+				gbc_chkBoxDiuresisType.insets = new Insets(5, 5, 5, 5);
+				gbc_chkBoxDiuresisType.gridx = 0;
+				gbc_chkBoxDiuresisType.gridy = 10;
+				jPanelExamination.add(getJCheckBoxToggleDiuresisType(), gbc_chkBoxDiuresisType);
 				
 				JLabel jLabelDiuresis = new JLabel(MessageBundle.getMessage("angal.examination.diuresis")); //$NON-NLS-1$
 				GridBagConstraints gbc_jLabelDiuresis = new GridBagConstraints();
 				gbc_jLabelDiuresis.anchor = GridBagConstraints.WEST;
 				gbc_jLabelDiuresis.insets = new Insets(5, 5, 5, 5);
 				gbc_jLabelDiuresis.gridx = 1;
-				gbc_jLabelDiuresis.gridy = 9;
+				gbc_jLabelDiuresis.gridy = 10;
 				jPanelExamination.add(jLabelDiuresis, gbc_jLabelDiuresis);
 				
-				GridBagConstraints gbc_jSliderDiuresis = new GridBagConstraints();
-				gbc_jSliderDiuresis.insets = new Insets(5, 5, 5, 5);
-				gbc_jSliderDiuresis.fill = GridBagConstraints.HORIZONTAL;
-				gbc_jSliderDiuresis.gridx = 2;
-				gbc_jSliderDiuresis.gridy = 9;
-				jPanelExamination.add(getJSliderDiuresis(), gbc_jSliderDiuresis);
-				
-				JLabel jLabelDiuresisUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.milliliter"));
-				GridBagConstraints gbc_jLabelDiuresisUnit = new GridBagConstraints();
-				gbc_jLabelDiuresisUnit.insets = new Insets(5, 5, 5, 5);
-				gbc_jLabelDiuresisUnit.gridx = 3;
-				gbc_jLabelDiuresisUnit.gridy = 9;
-				jPanelExamination.add(jLabelDiuresisUnit, gbc_jLabelDiuresisUnit);
-	
-				GridBagConstraints gbc_jTextFieldDiuresis = new GridBagConstraints();
-				gbc_jTextFieldDiuresis.anchor = GridBagConstraints.WEST;
-				gbc_jTextFieldDiuresis.insets = new Insets(5, 0, 5, 5);
-				gbc_jTextFieldDiuresis.gridx = 4;
-				gbc_jTextFieldDiuresis.gridy = 9;
-				jPanelExamination.add(getJTextFieldDiuresis(), gbc_jTextFieldDiuresis);
-				
-				GridBagConstraints gbc_comboBoxDiuresis = new GridBagConstraints();
-				gbc_comboBoxDiuresis.anchor = GridBagConstraints.CENTER;
-				gbc_comboBoxDiuresis.insets = new Insets(5, 0, 5, 5);
-				gbc_comboBoxDiuresis.gridx = 4;
-				gbc_comboBoxDiuresis.gridy = 10;
-				jPanelExamination.add(getJComboBoxDiuresis(), gbc_comboBoxDiuresis);
+				GridBagConstraints gbc_comboBoxDiuresisType = new GridBagConstraints();
+				gbc_comboBoxDiuresisType.anchor = GridBagConstraints.CENTER;
+				gbc_comboBoxDiuresisType.insets = new Insets(5, 0, 5, 5);
+				gbc_comboBoxDiuresisType.gridx = 2;
+				gbc_comboBoxDiuresisType.gridy = 10;
+				jPanelExamination.add(getJComboBoxDiuresisType(), gbc_comboBoxDiuresisType);
 			}
 			
 			{
@@ -756,14 +774,14 @@ public class PatientExaminationEdit extends JDialog {
 		return jPanelExamination;
 	}
 	
-	private JComboBox getJComboBoxDiuresis() {
-		if (jComboBoxDiuresis == null) {
-			jComboBoxDiuresis = new JComboBox();
+	private JComboBox getJComboBoxDiuresisType() {
+		if (jComboBoxDiuresisType == null) {
+			jComboBoxDiuresisType = new JComboBox();
 			ArrayList<String> diuresisDescription = examManager.getDiuresisDescriptionList();
 			for (String description : diuresisDescription) {
-				jComboBoxDiuresis.addItem(description);
+				jComboBoxDiuresisType.addItem(description);
 			}
-			jComboBoxDiuresis.addItemListener(new ItemListener() {
+			jComboBoxDiuresisType.addItemListener(new ItemListener() {
 				
 				@Override
 				public void itemStateChanged(ItemEvent e) {
@@ -773,7 +791,7 @@ public class PatientExaminationEdit extends JDialog {
 				}
 			});
 		}
-		return jComboBoxDiuresis;
+		return jComboBoxDiuresisType;
 	}
 	
 	private JComboBox getJComboBoxBowel() {
@@ -816,14 +834,24 @@ public class PatientExaminationEdit extends JDialog {
 		return jCheckBoxToggleBowel;
 	}
 	
-	private JCheckBox getJCheckBoxToggleDiuresis() {
-		if (jCheckBoxToggleDiuresis == null) {
-			jCheckBoxToggleDiuresis = new JCheckBox(""); //$NON-NLS-1$
-			jCheckBoxToggleDiuresis.setAction(getActionToggleDiuresis());
-			jCheckBoxToggleDiuresis.addFocusListener(new CheckBoxFocus());
-			jCheckBoxToggleDiuresis.setFocusPainted(true);
+	private JCheckBox getJCheckBoxToggleDiuresisVolume() {
+		if (jCheckBoxToggleDiuresisVolume == null) {
+			jCheckBoxToggleDiuresisVolume = new JCheckBox(""); //$NON-NLS-1$
+			jCheckBoxToggleDiuresisVolume.setAction(getActionToggleDiuresisVolume());
+			jCheckBoxToggleDiuresisVolume.addFocusListener(new CheckBoxFocus());
+			jCheckBoxToggleDiuresisVolume.setFocusPainted(true);
 		}
-		return jCheckBoxToggleDiuresis;
+		return jCheckBoxToggleDiuresisVolume;
+	}
+	
+	private JCheckBox getJCheckBoxToggleDiuresisType() {
+		if (jCheckBoxToggleDiuresisType == null) {
+			jCheckBoxToggleDiuresisType = new JCheckBox(""); //$NON-NLS-1$
+			jCheckBoxToggleDiuresisType.setAction(getActionToggleDiuresisType());
+			jCheckBoxToggleDiuresisType.addFocusListener(new CheckBoxFocus());
+			jCheckBoxToggleDiuresisType.setFocusPainted(true);
+		}
+		return jCheckBoxToggleDiuresisType;
 	}
 	
 	
@@ -1044,16 +1072,16 @@ public class PatientExaminationEdit extends JDialog {
 		return jTextFieldHGT;
 	}
 	
-	private VoIntegerTextField getJTextFieldDiuresis() {
-		if (jTextFieldDiuresis == null) {
-			jTextFieldDiuresis = new VoIntegerTextField(ExaminationParameters.DIURESIS_INIT,5);
-			jTextFieldDiuresis.setInputVerifier(new MinMaxIntegerInputVerifier(0));
-			jTextFieldDiuresis.addFocusListener(new FocusListener() {
+	private VoIntegerTextField getJTextFieldDiuresisVolume() {
+		if (jTextFieldDiuresisVolume == null) {
+			jTextFieldDiuresisVolume = new VoIntegerTextField(ExaminationParameters.DIURESIS_INIT,5);
+			jTextFieldDiuresisVolume.setInputVerifier(new MinMaxIntegerInputVerifier(0));
+			jTextFieldDiuresisVolume.addFocusListener(new FocusListener() {
 				
 				@Override
 				public void focusLost(FocusEvent e) {
-					int height = Integer.parseInt(jTextFieldDiuresis.getText());
-					jSliderDiuresis.setValue(height);
+					int height = Integer.parseInt(jTextFieldDiuresisVolume.getText());
+					jSliderDiuresisVolume.setValue(height);
 					patex.setPex_diuresis(height);
 					
 				}
@@ -1064,7 +1092,7 @@ public class PatientExaminationEdit extends JDialog {
 				}
 			});
 		}
-		return jTextFieldDiuresis;
+		return jTextFieldDiuresisVolume;
 	}
 
 	private VoIntegerTextField getJTextFieldHeight() {
@@ -1277,21 +1305,21 @@ public class PatientExaminationEdit extends JDialog {
 		return jSliderSaturation;
 	}
 	
-	private JSlider getJSliderDiuresis() {
-		if (jSliderDiuresis == null) {
-			jSliderDiuresis = new JSlider(0, 200, ExaminationParameters.DIURESIS_INIT);
-			jSliderDiuresis.addChangeListener(new ChangeListener() {
+	private JSlider getJSliderDiuresisVolume() {
+		if (jSliderDiuresisVolume == null) {
+			jSliderDiuresisVolume = new JSlider(ExaminationParameters.DIURESIS_MIN, ExaminationParameters.DIURESIS_MAX, ExaminationParameters.DIURESIS_INIT);
+			jSliderDiuresisVolume.addChangeListener(new ChangeListener() {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					int value = jSliderDiuresis.getValue();
-					jTextFieldDiuresis.setText(String.valueOf(value));
+					int value = jSliderDiuresisVolume.getValue();
+					jTextFieldDiuresisVolume.setText(String.valueOf(value));
 					patex.setPex_diuresis(value);
 				}
 			});
-			jSliderDiuresis.setFocusable(false);
+			jSliderDiuresisVolume.setFocusable(false);
 		}
-		return jSliderDiuresis;
+		return jSliderDiuresisVolume;
 	}
 	
 	private JSlider getJSliderHGT() {
@@ -1614,7 +1642,7 @@ public class PatientExaminationEdit extends JDialog {
 		patex.setPex_hgt(null);
 	}
 	
-	private void enableBowel() throws NumberFormatException {
+	private void enableBowel() {
 		jComboBoxBowel.setEnabled(true);
 		patex.setPex_bowel_desc(examManager.getBowelDescriptionKey((String) jComboBoxBowel.getSelectedItem()));
 	}
@@ -1624,25 +1652,30 @@ public class PatientExaminationEdit extends JDialog {
 		patex.setPex_bowel_desc(null);
 	}
 	
-	private void enableDiuresis() throws NumberFormatException {
-		jSliderDiuresis.setEnabled(true);
-		jTextFieldDiuresis.setEnabled(true);
-		jComboBoxDiuresis.setEnabled(true);
-		String text = jTextFieldDiuresis.getText();
+	private void enableDiuresisVolume() throws NumberFormatException {
+		jSliderDiuresisVolume.setEnabled(true);
+		jTextFieldDiuresisVolume.setEnabled(true);
+		String text = jTextFieldDiuresisVolume.getText();
 		if (!text.equals("")) {
 			patex.setPex_diuresis(Integer.parseInt(text));
-			patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) jComboBoxDiuresis.getSelectedItem()));
 		} else {
 			patex.setPex_diuresis(null);
-			patex.setPex_diuresis_desc(null);
 		}
 	}
 
-	private void disableDiuresis() {
-		jSliderDiuresis.setEnabled(false);
-		jTextFieldDiuresis.setEnabled(false);
-		jComboBoxDiuresis.setEnabled(false);
+	private void disableDiuresisVolume() {
+		jSliderDiuresisVolume.setEnabled(false);
+		jTextFieldDiuresisVolume.setEnabled(false);
 		patex.setPex_diuresis(null);
+	}
+	
+	private void enableDiuresisType() {
+		jComboBoxDiuresisType.setEnabled(true);
+		patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) jComboBoxDiuresisType.getSelectedItem()));
+	}
+	
+	private void disableDiuresisType() {
+		jComboBoxDiuresisType.setEnabled(false);
 		patex.setPex_diuresis_desc(null);
 	}
 	
@@ -1694,20 +1727,38 @@ public class PatientExaminationEdit extends JDialog {
 		}
 	}
 	
-	private class SwingActionToggleDiuresis extends AbstractAction {
+	private class SwingActionToggleDiuresisVolume extends AbstractAction {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		public SwingActionToggleDiuresis() {
+		public SwingActionToggleDiuresisVolume() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		public void actionPerformed(ActionEvent e) {
-			if (!jCheckBoxToggleDiuresis.isSelected()) {
-				disableDiuresis();
+			if (!jCheckBoxToggleDiuresisVolume.isSelected()) {
+				disableDiuresisVolume();
 			} else {
-				enableDiuresis();
+				enableDiuresisVolume();
+			}
+		}
+	}
+	
+	private class SwingActionToggleDiuresisType extends AbstractAction {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		public SwingActionToggleDiuresisType() {
+			putValue(NAME, ""); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
+		}
+		public void actionPerformed(ActionEvent e) {
+			if (!jCheckBoxToggleDiuresisType.isSelected()) {
+				disableDiuresisType();
+			} else {
+				enableDiuresisType();
 			}
 		}
 	}
@@ -1866,11 +1917,18 @@ public class PatientExaminationEdit extends JDialog {
 		return actionToggleHGT;
 	}
 	
-	private Action getActionToggleDiuresis() {
-		if (actionToggleDiuresis == null) {
-			actionToggleDiuresis = new SwingActionToggleDiuresis();
+	private Action getActionToggleDiuresisVolume() {
+		if (actionToggleDiuresisVolume == null) {
+			actionToggleDiuresisVolume = new SwingActionToggleDiuresisVolume();
 		}
-		return actionToggleDiuresis;
+		return actionToggleDiuresisVolume;
+	}
+	
+	private Action getActionToggleDiuresisType() {
+		if (actionToggleDiuresisType == null) {
+			actionToggleDiuresisType = new SwingActionToggleDiuresisType();
+		}
+		return actionToggleDiuresisType;
 	}
 	
 	private Action getActionToggleBowel() {
