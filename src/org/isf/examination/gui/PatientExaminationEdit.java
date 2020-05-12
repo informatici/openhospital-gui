@@ -331,6 +331,7 @@ public class PatientExaminationEdit extends JDialog {
 		jTextFieldTemp.setText(patex.getPex_temp() != null ? String.valueOf(patex.getPex_temp()) : ""+ExaminationParameters.TEMP_INIT);
 		jSliderSaturation.setValue(patex.getPex_sat());
 		jTextFieldSaturation.setText(patex.getPex_sat() != null ? String.valueOf(patex.getPex_sat()) : ""+ExaminationParameters.SAT_INIT);
+		jSliderHGT.setValue(patex.getPex_hgt() != null ? patex.getPex_hgt() : ExaminationParameters.HGT_INIT);
 		jTextFieldHGT.setText(patex.getPex_hgt() != null ? String.valueOf(patex.getPex_hgt()) : ""+ExaminationParameters.HGT_INIT);
 		jTextFieldDiuresisVolume.setText(patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) : ""+ExaminationParameters.DIURESIS_INIT);
 		jComboBoxDiuresisType.setSelectedItem(patex.getPex_diuresis_desc() != null ? examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) : null);
@@ -347,6 +348,7 @@ public class PatientExaminationEdit extends JDialog {
 		disableAusc();
 		disableHGT();
 		disableDiuresisVolume();
+		disableDiuresisType();
 		disableBowel();
 	}
 
@@ -1057,9 +1059,9 @@ public class PatientExaminationEdit extends JDialog {
 				
 				@Override
 				public void focusLost(FocusEvent e) {
-					int height = Integer.parseInt(jTextFieldHGT.getText());
-					jSliderHGT.setValue(height);
-					patex.setPex_hgt(height);
+					int hgt = Integer.parseInt(jTextFieldHGT.getText());
+					jSliderHGT.setValue(hgt);
+					patex.setPex_hgt(hgt);
 					
 				}
 				
@@ -1080,9 +1082,9 @@ public class PatientExaminationEdit extends JDialog {
 				
 				@Override
 				public void focusLost(FocusEvent e) {
-					int height = Integer.parseInt(jTextFieldDiuresisVolume.getText());
-					jSliderDiuresisVolume.setValue(height);
-					patex.setPex_diuresis(height);
+					int diuresisVolume = Integer.parseInt(jTextFieldDiuresisVolume.getText());
+					jSliderDiuresisVolume.setValue(diuresisVolume);
+					patex.setPex_diuresis(diuresisVolume);
 					
 				}
 				
