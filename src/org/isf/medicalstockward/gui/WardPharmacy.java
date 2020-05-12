@@ -50,6 +50,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -180,10 +181,11 @@ public class WardPharmacy extends ModalJFrame implements
 	private String[] columsDrugs = { 
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.medicalstockward.units"), //$NON-NLS-1$
+			"" //$NON-NLS-1$
 	};
-	private boolean[] columsResizableDrugs = { true, true, true};
-	private int[] columWidthDrugs = { 150, 50, 50};
+	private boolean[] columsResizableDrugs = { true, true, true, true};
+	private int[] columWidthDrugs = { 150, 50, 50, 50};
 	private final int filterWidth = 250;
 	private final int filterSpacing = 5;
 	private String rowCounterText = MessageBundle.getMessage("angal.medicalstockward.count") + ": "; //$NON-NLS-1$ //$NON-NLS-2$
@@ -516,7 +518,7 @@ public class WardPharmacy extends ModalJFrame implements
 		if (jScrollPaneDrugs == null) {
 			jScrollPaneDrugs = new JScrollPane();
 			jScrollPaneDrugs.setBorder (BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder (),
-                    "Double click to show lot details ", //TODO: use bundles
+					MessageBundle.getMessage("angal.medicalstock.clickdrugs")  , //TODO: use bundles
                     TitledBorder.LEFT,
                     TitledBorder.TOP));
 			jScrollPaneDrugs.setViewportView(getJTableDrugs());
@@ -528,18 +530,32 @@ public class WardPharmacy extends ModalJFrame implements
 		if (jTableDrugs == null) {
 			modelDrugs = new DrugsModel();
 			jTableDrugs = new JTable(modelDrugs);
+			 TableCellRenderer buttonRenderer = new JTableButtonRenderer();
+			 jTableDrugs.getColumn("").setCellRenderer(buttonRenderer);
 			for (int i = 0; i < columWidthDrugs.length; i++) {
 				jTableDrugs.getColumnModel().getColumn(i).setMinWidth(columWidthDrugs[i]);
 				if (!columsResizableDrugs[i])
 					jTableDrugs.getColumnModel().getColumn(i).setMaxWidth(columWidthDrugs[i]);
 			}
-			jTableDrugs.setAutoCreateColumnsFromModel(true);
+			
 			jTableDrugs.addMouseListener(new MouseAdapter() {
 				
 		         public void mouseClicked(MouseEvent me) {
+		        	  int column = jTableDrugs.getColumnModel().getColumnIndexAtX(me.getX()); // get the coloum of the button
+		        	  JTable target = (JTable)me.getSource();
+		        	  int row = target.getSelectedRow(); // select a row
+
+		                      /*Checking the row or column is valid or not*/
+		              if (row < jTableDrugs.getRowCount() && row >= 0 && column < jTableDrugs.getColumnCount() && column >= 0) {
+		                  Object value = jTableDrugs.getValueAt(row, column);
+		                  if (value instanceof JButton) {
+		                      /*perform a click event*/
+		                      ((JButton)value).doClick();
+		                  }
+		              }
+		        	 
 		             if (me.getClickCount() == 2) {     // to detect double click events
-		                JTable target = (JTable)me.getSource();
-		                int row = target.getSelectedRow(); // select a row
+
 		                Detail(wardDrugs, (String) jTableDrugs.getValueAt(row, 0));// get the value of a row and column.
 		             }
 		          }
@@ -547,6 +563,13 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 		return jTableDrugs;
 	}
+
+	private static class JTableButtonRenderer implements TableCellRenderer {        
+        @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            JButton button = (JButton)value;
+            return button;  
+        }
+    }
 	private MedicalWard Detail(ArrayList<MedicalWard> drug, String me) {
 		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
 		MedicalWard medWard =null;
@@ -1413,8 +1436,8 @@ public class WardPharmacy extends ModalJFrame implements
 		public DrugsModel() {
 			try {
                 //System.out.println("WardPharmacy: Looking for drugs ");
-				wardMed = wardManager.getMedicalsWardDrug(wardSelected.getCode().charAt(0));
-				wardDrugs = wardManager.getMedicalsWard(wardSelected.getCode().charAt(0));
+				wardMed = wardManager.getMedicalsWardDrug(wardSelected.getCode().charAt(0), true);
+				wardDrugs = wardManager.getMedicalsWard(wardSelected.getCode().charAt(0), true);
 				
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
@@ -1429,8 +1452,8 @@ public class WardPharmacy extends ModalJFrame implements
 			return wardMed.size();
 		}
 
-		public Object getValueAt(int r, int c) {
-			MedicalWard wardDrug = wardMed.get(r);
+		public Object getValueAt(final int r, int c) {
+			final MedicalWard wardDrug = wardMed.get(r);
 			if (c == -1) {
 				return wardDrug;
 			}
@@ -1445,7 +1468,16 @@ public class WardPharmacy extends ModalJFrame implements
 				return MessageBundle.getMessage("angal.medicalstockward.pieces"); //$NON-NLS-1$
 			}
 			if (c == 3) {
-				return	getJRectifyButton(); //TODO: nice idea this one, can we make it working?
+				final JButton button = new JButton(MessageBundle.getMessage("angal.medicalstockward.rectify"));
+                button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent arg0) {
+                    	Medical medic = wardDrug.getMedical();
+                    	WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected, medic);
+    					wardRectify.addMovementWardListener(WardPharmacy.this);
+    					wardRectify.setVisible(true);
+                    }
+                });
+                return button; //TODO: nice idea this one, can we make it working?
 			}
 
 			return null;
@@ -1474,7 +1506,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jRectifyButton.setVisible(false);
 			jRectifyButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected, wardDrugs);
+					WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected);
 					wardRectify.addMovementWardListener(WardPharmacy.this);
 					wardRectify.setVisible(true);
 				}
