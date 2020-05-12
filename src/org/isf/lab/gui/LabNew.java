@@ -292,7 +292,13 @@ public class LabNew extends JDialog implements SelectionListener {
                         lab.setPatient(patientSelected);
                         lab.setNote(jTextAreaNote.getText().trim());
                         lab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
-                        if (lab.getExam().getProcedure() == 1) lab.setResult((String) jComboBoxExamResults.getSelectedItem());
+                        if (lab.getExam().getProcedure() == 1) {
+                        	if (jComboBoxExamResults.getItemCount() > 0)
+                        		lab.setResult((String) jComboBoxExamResults.getSelectedItem());
+                        	else
+                        		//exam without results (only note)
+                        		lab.setResult(lab.getExam().getDefaultResult());
+                        }
 					}
 					
 					try {
@@ -381,6 +387,8 @@ public class LabNew extends JDialog implements SelectionListener {
 				});
 				if (jComboBoxExamResults.getItemCount() > 0)
 					jPanelResults.add(jComboBoxExamResults);
+				else
+					jPanelResults.add(new JLabel(selectedExam.getDefaultResult()));
 
 			} else {
 				
