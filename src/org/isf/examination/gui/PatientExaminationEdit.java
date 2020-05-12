@@ -125,7 +125,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JCheckBox jCheckBoxToggleAusc;
 	private JComboBox jComboBoxDiuresisType;
 	private JComboBox jComboBoxBowel;
-	private JComboBox jAuscComboBox;
+	private JComboBox jComboBoxAuscultation;
 	private JButton jButtonOK;
 	private JButton jButtonDelete;
 	private JButton jButtonCancel;
@@ -309,7 +309,7 @@ public class PatientExaminationEdit extends JDialog {
 				summary.append(STD).append(patex.getPex_temp() == null ? "-" : patex.getPex_temp()).append(ETD);
 				summary.append(STD).append(patex.getPex_sat() == null ? "-" : patex.getPex_sat()).append(ETD);
 				summary.append(STD).append(patex.getPex_rr() == null ? "-" : patex.getPex_rr()).append(ETD);
-				summary.append(STD).append(examManager.getAuscultationTranslated(patex.getPex_ausc()) == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_ausc())).append(ETD);
+				summary.append(STD).append(examManager.getAuscultationTranslated(patex.getPex_auscultation()) == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation())).append(ETD);
 				summary.append(SUMMARY_END_ROW);
 			}
 		}
@@ -334,18 +334,18 @@ public class PatientExaminationEdit extends JDialog {
 		jSliderHGT.setValue(patex.getPex_hgt() != null ? patex.getPex_hgt() : ExaminationParameters.HGT_INIT);
 		jTextFieldHGT.setText(patex.getPex_hgt() != null ? String.valueOf(patex.getPex_hgt()) : ""+ExaminationParameters.HGT_INIT);
 		jTextFieldDiuresisVolume.setText(patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) : ""+ExaminationParameters.DIURESIS_INIT);
-		jComboBoxDiuresisType.setSelectedItem(patex.getPex_diuresis_desc() != null ? examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) : null);
-		jComboBoxBowel.setSelectedItem(patex.getPex_bowel_desc() != null ? examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc()) : null);
+		jComboBoxDiuresisType.setSelectedItem(patex.getPex_diuresis_desc() != null ? examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) : examManager.getDiuresisDescriptionTranslated(ExaminationParameters.DIURESIS_DESC_INIT));
+		jComboBoxBowel.setSelectedItem(patex.getPex_bowel_desc() != null ? examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc()) : examManager.getBowelDescriptionTranslated(ExaminationParameters.BOWEL_DESC_INIT));
 		jSliderRR.setValue(patex.getPex_rr() != null ? patex.getPex_rr() : ExaminationParameters.RR_INIT);
 		jTextFieldRR.setText(patex.getPex_rr() != null ? String.valueOf(patex.getPex_rr()) : ""+ExaminationParameters.RR_INIT);
-		jAuscComboBox.setSelectedItem(patex.getPex_ausc() != null ? examManager.getAuscultationTranslated(patex.getPex_ausc()) : null);
+		jComboBoxAuscultation.setSelectedItem(patex.getPex_auscultation() != null ? examManager.getAuscultationTranslated(patex.getPex_auscultation()) : examManager.getAuscultationTranslated(ExaminationParameters.AUSCULTATION_INIT));
 		jTextAreaNote.setText(patex.getPex_note());
 		disableAP();
 		disableHR();
 		disableTemp();
 		disableSaturation();
 		disableRR();
-		disableAusc();
+		disableAuscultation();
 		disableHGT();
 		disableDiuresisVolume();
 		disableDiuresisType();
@@ -770,7 +770,7 @@ public class PatientExaminationEdit extends JDialog {
 				gbc_jPanelFieldAusc.insets = new Insets(5, 0, 5, 0);
 				gbc_jPanelFieldAusc.gridx = 2;
 				gbc_jPanelFieldAusc.gridy = 12;
-				jPanelExamination.add(getJComboBoxAusc(), gbc_jPanelFieldAusc);
+				jPanelExamination.add(getJComboBoxAuscultation(), gbc_jPanelFieldAusc);
 			}
 		}
 		return jPanelExamination;
@@ -855,8 +855,6 @@ public class PatientExaminationEdit extends JDialog {
 		}
 		return jCheckBoxToggleDiuresisType;
 	}
-	
-	
 	
 	private JCheckBox getJCheckBoxToggleSaturation() {
 		if (jCheckBoxToggleSaturation == null) {
@@ -1223,19 +1221,26 @@ public class PatientExaminationEdit extends JDialog {
 		return jTextFieldRR;
 	}
 
-	private JComboBox getJComboBoxAusc() {
-		if (jAuscComboBox == null) {
-			jAuscComboBox =  new JComboBox(examManager.getAuscultationList());
-			jAuscComboBox.addActionListener (new ActionListener () {
-				public void actionPerformed(ActionEvent e) {
-					patex.setPex_ausc(examManager.getAuscultationKey((String)jAuscComboBox.getSelectedItem()));
+	private JComboBox getJComboBoxAuscultation() {
+		if (jComboBoxAuscultation == null) {
+			jComboBoxAuscultation =  new JComboBox();
+			ArrayList<String> auscultationList = examManager.getAuscultationList();
+			for (String description : auscultationList) {
+				jComboBoxAuscultation.addItem(description);
+			}
+			jComboBoxAuscultation.addItemListener(new ItemListener() {
+				
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					if (e.getStateChange() == ItemEvent.SELECTED) {
+						patex.setPex_auscultation(examManager.getAuscultationKey((String) e.getItem()));
+					}
 				}
 			});
-
 		}
-		return jAuscComboBox;
+		return jComboBoxAuscultation;
 	}
-
+	
 	private JSlider getJSliderHeight() {
 		if (jSliderHeight == null) {
 			jSliderHeight = new JSlider(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX, ExaminationParameters.HEIGHT_INIT);
@@ -1774,17 +1779,17 @@ public class PatientExaminationEdit extends JDialog {
 	private void disableRR() {
 		jSliderRR.setEnabled(false);
 		jTextFieldRR.setEnabled(false);
-		patex.setPex_rr(0);
+		patex.setPex_rr(null);
 	}
 
-	private void enableAusc(){
-		jAuscComboBox.setEnabled(true);
-		patex.setPex_ausc(examManager.getAuscultationKey((String)jAuscComboBox.getSelectedItem()));
+	private void enableAuscultation(){
+		jComboBoxAuscultation.setEnabled(true);
+		patex.setPex_auscultation(examManager.getAuscultationKey((String)jComboBoxAuscultation.getSelectedItem()));
 	}
 
-	private void disableAusc() {
-		jAuscComboBox.setEnabled(false);
-		patex.setPex_ausc("unknown"); //revist 
+	private void disableAuscultation() {
+		jComboBoxAuscultation.setEnabled(false);
+		patex.setPex_auscultation(null); 
 	}
 	
 	private class SwingActionToggleSaturation extends AbstractAction {
@@ -1834,9 +1839,9 @@ public class PatientExaminationEdit extends JDialog {
 		}
 		public void actionPerformed(ActionEvent e) {
 			if (!jCheckBoxToggleAusc.isSelected()) {
-				disableAusc();
+				disableAuscultation();
 			} else {
-				enableAusc();
+				enableAuscultation();
 			}
 		}
 	}
@@ -2055,7 +2060,7 @@ public class PatientExaminationEdit extends JDialog {
 			String datetime = new SimpleDateFormat(DATE_FORMAT).format(new Date(patex.getPex_date().getTime()));
 			String diuresis = patex.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc());
 			String bowel = patex.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc());
-			String ausc = patex.getPex_ausc() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_ausc());
+			String ausc = patex.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation());
 			if (c == -1) {
 				return patex;
 			} else if (c == 0) {
