@@ -371,6 +371,7 @@ public class WardPharmacyRectify extends JDialog {
 							JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleasespecifythereason")); //$NON-NLS-1$
 							return;
 						}
+					
 						
 						Double stock = Double.parseDouble(jLabelStockQty.getText());
 						Double newQty = (Double) jSpinnerNewQty.getValue();
@@ -390,8 +391,12 @@ public class WardPharmacyRectify extends JDialog {
 						boolean result;
 						try {
 							Lot lot = new Lot() ;
-							String b = jTextFieldLotn.getText();
-							lot.setCode(jTextFieldLotn.getText());
+							String lotCode = jTextFieldLotn.getText();
+							if (lotCode.equals("")) { //$NON-NLS-1$
+								JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstock.pleaseselectalot")); //$NON-NLS-1$
+								return;
+							}
+							lot.setCode(lotCode);
 							
 							result = movWardBrowserManager.newMovementWard(new MovementWard(
 									wardSelected, 
