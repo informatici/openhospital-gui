@@ -1163,7 +1163,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	}
 
 	private boolean hasNewPayments() {
-		return insert && payItems.size() > 0 || (payItems.size() - payItemsSaved) > 0;
+		return (insert && payItems.size() > 0) || (payItems.size() - payItemsSaved) > 0;
 	}
 
 	private JButton getJButtonPrintPayment() {
