@@ -549,7 +549,7 @@ public class TherapyEdit extends JDialog {
 							if (number != null) {
 								patient.setTelephone(number);
 								try{
-									patientBrowserManager.updatePatient(patient);
+									patientBrowserManager.savePatient(patient);
 								}catch(OHServiceException ex){
 									OHServiceExceptionUtil.showMessages(ex);
 								}
