@@ -1,12 +1,8 @@
 package org.isf.utils.image;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -47,7 +43,7 @@ public final class ImageUtil {
         return resizedImg;
     }
 
-    public static byte[] imageToByte(final @NotNull BufferedImage bufferedImage) {
+    public static byte[] imageToByte(final BufferedImage bufferedImage) {
         try {
             final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "jpg", outStream);

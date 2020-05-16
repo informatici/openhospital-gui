@@ -316,7 +316,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 										patient.setParentTogether('U');
 										
 										try{
-											patient = manager.newPatient(patient);
+											patient = manager.savePatient(patient);
 											firePatientInserted(patient);
 											dispose();
 										}catch(OHServiceException ex){
@@ -380,7 +380,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 						//patient.setHasInsurance('U');
 						//patient.setParentTogether('U');*/
 						try{
-							patient = manager.updatePatient(patient);
+							patient = manager.savePatient(patient);
 							firePatientUpdated(patient);
 							dispose();
 						}catch(OHServiceException ex){
