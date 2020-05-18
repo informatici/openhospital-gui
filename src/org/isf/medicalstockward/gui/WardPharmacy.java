@@ -52,6 +52,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import org.isf.admission.model.AdmittedPatient;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
@@ -1475,6 +1476,8 @@ public class WardPharmacy extends ModalJFrame implements
                     	WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected, medic);
     					wardRectify.addMovementWardListener(WardPharmacy.this);
     					wardRectify.setVisible(true);
+    					TableCellRenderer buttonRenderer = new JTableButtonRenderer();
+    					jTableDrugs.getColumn("").setCellRenderer(buttonRenderer);
                     }
                 });
                 return button; //TODO: nice idea this one, can we make it working?
@@ -1506,9 +1509,22 @@ public class WardPharmacy extends ModalJFrame implements
 			jRectifyButton.setVisible(false);
 			jRectifyButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected);
-					wardRectify.addMovementWardListener(WardPharmacy.this);
-					wardRectify.setVisible(true);
+				
+					if (jTableDrugs.getSelectedRow() < 0) {
+						WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected);
+						wardRectify.addMovementWardListener(WardPharmacy.this);
+						wardRectify.setVisible(true);
+					}else {
+						int[] indexes = jTableDrugs.getSelectedRows();
+						Medical medic = (((MedicalWard) jTableDrugs.getValueAt(indexes[0], -1)).getMedical());
+						WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected, medic);
+    					wardRectify.addMovementWardListener(WardPharmacy.this);
+    					wardRectify.setVisible(true);
+					}
+					
+					
+					TableCellRenderer buttonRenderer = new JTableButtonRenderer();
+					jTableDrugs.getColumn("").setCellRenderer(buttonRenderer);
 				}
 			});
 		}
