@@ -3,6 +3,7 @@ package org.isf.medicalstockward.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -35,8 +36,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 import javax.swing.table.DefaultTableModel;
 
@@ -55,6 +59,7 @@ import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.jobjects.TextPrompt;
@@ -97,11 +102,14 @@ public class WardPharmacyRectify extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
+	
 	private JTextField jTextFieldReason;
 	private Ward wardSelected;
 	private JComboBox jComboBoxMedical;
 	private JLabel jLabelStockQty;
 	private JSpinner jSpinnerNewQty;
+
+	private boolean lotExist;
 	
 	//Medicals (ALL)
 	private MedicalBrowsingManager medManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
@@ -117,6 +125,8 @@ public class WardPharmacyRectify extends JDialog {
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private Medical medical;
+	private JButton jButtonNewLot;
+	private boolean newLot;
 	
 	
 
@@ -242,7 +252,7 @@ public class WardPharmacyRectify extends JDialog {
 			GridBagConstraints gbc_jLabelStock = new GridBagConstraints();
 			gbc_jLabelStock.anchor = GridBagConstraints.SOUTH;
 			gbc_jLabelStock.insets = new Insets(0, 0, 5, 0);
-			gbc_jLabelStock.gridx = 2;
+			gbc_jLabelStock.gridx = 4;
 			gbc_jLabelStock.gridy = 1;
 			contentPanel.add(jLabelStock, gbc_jLabelStock);
 		}
@@ -263,49 +273,23 @@ public class WardPharmacyRectify extends JDialog {
 			gbc_jComboBoxMedical.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jComboBoxMedical.gridx = 1;
 			gbc_jComboBoxMedical.gridy = 2;
+			gbc_jComboBoxMedical.gridwidth = 2;
 			contentPanel.add(getJComboBoxMedical(), gbc_jComboBoxMedical);
 		}
 		{
-			JLabel jLabelLot = new JLabel(MessageBundle.getMessage("angal.medicalstockward.lotnumberabb")); //$NON-NLS-1$
-			jLabelLot.setHorizontalAlignment(SwingConstants.RIGHT);
-			jLabelLot.setPreferredSize(new Dimension(100, 25));
-			GridBagConstraints gbc_jLabelMedical = new GridBagConstraints();
-			gbc_jLabelMedical.insets = new Insets(0, 0, 5, 5);
-			gbc_jLabelMedical.anchor = GridBagConstraints.EAST;
-			gbc_jLabelMedical.gridx = 0;
-			gbc_jLabelMedical.gridy = 3;
-			contentPanel.add(jLabelLot, gbc_jLabelMedical);
+			GridBagConstraints gbc_jPanelLot = new GridBagConstraints();
+			gbc_jPanelLot.insets = new Insets(0, 0, 5, 5);
+			gbc_jPanelLot.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jPanelLot.gridx = 0;
+			gbc_jPanelLot.gridy = 3;
+			gbc_jPanelLot.gridwidth = 3;
+			contentPanel.add(getJPanelLot(), gbc_jPanelLot);
 		}
-	
-		{
-			jTextFieldLotn = new JTextField();
-			jTextFieldLotn.setEditable(false);
-			GridBagConstraints gbc_jTextFieldReason = new GridBagConstraints();
-			gbc_jTextFieldReason.insets = new Insets(0, 0, 0, 5);
-			gbc_jTextFieldReason.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jTextFieldReason.gridx = 1;
-			gbc_jTextFieldReason.gridy = 3;
-			contentPanel.add(jTextFieldLotn, gbc_jTextFieldReason);
-			jTextFieldLotn.setColumns(10);
-		}
-		{
-		
-			GridBagConstraints gbc_jbuttonLot = new GridBagConstraints();
-			gbc_jbuttonLot.insets = new Insets(0, 0, 0, 5);
-			gbc_jbuttonLot.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jbuttonLot.gridx = 2;
-			gbc_jbuttonLot.gridy = 3;
-			contentPanel.add(getJButtonChooseLot(), gbc_jbuttonLot);
-		
-		}
-		
-		
-		
 		
 		{
 			GridBagConstraints gbc_jLabelStockQty = new GridBagConstraints();
 			gbc_jLabelStockQty.insets = new Insets(0, 0, 5, 0);
-			gbc_jLabelStockQty.gridx = 2;
+			gbc_jLabelStockQty.gridx = 4;
 			gbc_jLabelStockQty.gridy = 2;
 			contentPanel.add(getJLabelStockQty(), gbc_jLabelStockQty);
 		}
@@ -324,6 +308,7 @@ public class WardPharmacyRectify extends JDialog {
 			gbc_jSpinnerNewQuantity.insets = new Insets(0, 0, 5, 5);
 			gbc_jSpinnerNewQuantity.gridx = 1;
 			gbc_jSpinnerNewQuantity.gridy = 4;
+			gbc_jSpinnerNewQuantity.gridwidth = 2;
 			contentPanel.add(getJSpinnerNewQty(), gbc_jSpinnerNewQuantity);
 		}
 		{
@@ -342,8 +327,9 @@ public class WardPharmacyRectify extends JDialog {
 			gbc_jTextFieldReason.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jTextFieldReason.gridx = 1;
 			gbc_jTextFieldReason.gridy = 5;
+			gbc_jTextFieldReason.gridwidth = 2;
 			contentPanel.add(jTextFieldReason, gbc_jTextFieldReason);
-			jTextFieldReason.setColumns(10);
+			
 		}
 		{
 			JPanel jButtonPanel = new JPanel();
@@ -446,6 +432,85 @@ public class WardPharmacyRectify extends JDialog {
 		setLocationRelativeTo(null);
 	}
 
+	private JPanel getJPanelLot() {
+		
+
+		// patientPanel.setPreferredSize(new Dimension());
+		JPanel lotPanel = new JPanel(new SpringLayout());
+
+		GridBagLayout gbl_jPanelData = new GridBagLayout();
+		gbl_jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 00 };
+		
+		gbl_jPanelData.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		gbl_jPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		lotPanel.setLayout(gbl_jPanelData);
+		
+		{
+			JLabel jLabelLot = new JLabel(MessageBundle.getMessage("angal.medicalstockward.lotnumberabb")); //$NON-NLS-1$
+			jLabelLot.setHorizontalAlignment(SwingConstants.RIGHT);
+			jLabelLot.setPreferredSize(new Dimension(100, 25));
+			GridBagConstraints gbc_jLabelMedical = new GridBagConstraints();
+			gbc_jLabelMedical.insets = new Insets(0, 0, 5, 5);
+			gbc_jLabelMedical.anchor = GridBagConstraints.EAST;
+			gbc_jLabelMedical.gridx = 0;
+			gbc_jLabelMedical.gridy = 0;
+			lotPanel.add(jLabelLot, gbc_jLabelMedical);
+		}
+	
+		{
+			jTextFieldLotn = new JTextField();
+			jTextFieldLotn.setEditable(false);
+			GridBagConstraints gbc_jTextFieldReason = new GridBagConstraints();
+			gbc_jTextFieldReason.insets = new Insets(0, 0, 0, 5);
+			gbc_jTextFieldReason.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jTextFieldReason.gridx = 1;
+			gbc_jTextFieldReason.gridy = 0;
+			lotPanel.add(jTextFieldLotn, gbc_jTextFieldReason);
+			jTextFieldLotn.setColumns(10);
+		}
+		{
+		
+			GridBagConstraints gbc_jbuttonLot = new GridBagConstraints();
+			gbc_jbuttonLot.insets = new Insets(0, 0, 0, 5);
+			gbc_jbuttonLot.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jbuttonLot.gridx = 2;
+			gbc_jbuttonLot.gridy = 0;
+			lotPanel.add(getJButtonChooseLot(), gbc_jbuttonLot);
+		
+		}
+		{
+			
+			GridBagConstraints gbc_jbuttonNewLot = new GridBagConstraints();
+			gbc_jbuttonNewLot.insets = new Insets(0, 0, 0, 5);
+			gbc_jbuttonNewLot.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jbuttonNewLot.gridx = 3;
+			gbc_jbuttonNewLot.gridy = 0;
+			lotPanel.add(getJButtonNewLot(), gbc_jbuttonNewLot);
+		
+		}
+		return lotPanel;
+	}
+
+	private JButton getJButtonNewLot() {
+		if (jButtonNewLot == null) {
+			jButtonNewLot = new JButton();
+			jButtonNewLot.setText(MessageBundle.getMessage("angal.medicalstockward.newlot")); //$NON-NLS-1$
+
+			jButtonNewLot.addActionListener(new ActionListener() {
+
+				
+
+				public void actionPerformed(ActionEvent e) {
+					Medical med = (Medical) jComboBoxMedical.getSelectedItem();
+					String medical=med.getDescription();
+					newLot=true;
+					chooseLot(wardDrugs ,medical);
+					 
+				}
+			});
+		}
+		return jButtonNewLot;
+	}
 	private JButton getJButtonChooseLot() {
 		if (jButtonChooseLot == null) {
 			jButtonChooseLot = new JButton();
@@ -456,6 +521,7 @@ public class WardPharmacyRectify extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					Medical med = (Medical) jComboBoxMedical.getSelectedItem();
 					String medical=med.getDescription();
+					newLot=false;
 					 chooseLot(wardDrugs ,medical);
 				}
 			});
@@ -478,10 +544,14 @@ public class WardPharmacyRectify extends JDialog {
 				
 			}
 		}
-		if(dr.size()==0) {
+		if(newLot) {
 			Medical med = (Medical) jComboBoxMedical.getSelectedItem();
 			int qty = askQuantity(med);
+			if (qty == 0) {return null;};
 			Lot addLot = askLot();
+			if (addLot == null) {
+				return null;
+			}
 			
 			
 			
@@ -529,7 +599,8 @@ public class WardPharmacyRectify extends JDialog {
 	private boolean isAutomaticLot() {
 		return GeneralData.AUTOMATICLOT_IN;
 	}
-	protected Lot askLot() {	
+
+	protected Lot askLot() {
 		GregorianCalendar preparationDate = new GregorianCalendar();
 		GregorianCalendar expiringDate = new GregorianCalendar();
 		Lot lot = null;
@@ -552,38 +623,38 @@ public class WardPharmacyRectify extends JDialog {
 		panel.add(preparationDateChooser);
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstockward.rectify.expiringdate"))); //$NON-NLS-1$
 		panel.add(expireDateChooser);
-		
-	
-			int ok = JOptionPane.showConfirmDialog(
-					WardPharmacyRectify.this, 
-					panel, 
+
+		do {
+			int ok = JOptionPane.showConfirmDialog(WardPharmacyRectify.this, panel,
 					MessageBundle.getMessage("angal.medicalstockward.rectify.lotinformations"), //$NON-NLS-1$
 					JOptionPane.OK_CANCEL_OPTION);
-			
+
 			if (ok == JOptionPane.OK_OPTION) {
 				String lotName = lotNameTextField.getText();
-				
-				if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) 
-				{
-					JOptionPane.showMessageDialog(
-							WardPharmacyRectify.this, 
-							MessageBundle.getMessage("angal.medicalstockward.rectify.expirydatebeforepreparationdate")); //$NON-NLS-1$
-				} 
-				else if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) 
-				{
-					JOptionPane.showMessageDialog(
-							WardPharmacyRectify.this, 
-							MessageBundle.getMessage("angal.medicalstockward.rectify.expirydatebeforepreparationdate")); //$NON-NLS-1$
-				} 
-				else 
-				{
+				if (lotName.isEmpty()) {
+					JOptionPane.showMessageDialog(WardPharmacyRectify.this,
+							MessageBundle.getMessage("angal.medicalstockward.rectify.lotnumberSelect")); //$NON-NLS-1$
+					return null;
+				}
+				if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) {
+					JOptionPane.showMessageDialog(WardPharmacyRectify.this,
+							MessageBundle.getMessage("angal.medicalstockward.rectify.expirydatebeforepreparationdate"));
+
+				} else if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) {
+					JOptionPane.showMessageDialog(WardPharmacyRectify.this,
+							MessageBundle.getMessage("angal.medicalstockward.rectify.expirydatebeforepreparationdate"));
+
+				} else {
 					expiringDate.setTime(expireDateChooser.getDate());
 					preparationDate.setTime(preparationDateChooser.getDate());
 					lot = new Lot(lotName, preparationDate, expiringDate);
 				}
-			} 
-		 
+			} else {
+				return null;
+			}
+		} while (lot == null);
 		return lot;
+
 	}
 	protected BigDecimal askCost(int qty) {
 		double cost = 0.;
@@ -652,7 +723,7 @@ public class WardPharmacyRectify extends JDialog {
 						throw new NumberFormatException();
 				} catch (NumberFormatException nfe) {
 					JOptionPane.showMessageDialog(WardPharmacyRectify.this, 
-							MessageBundle.getMessage("")); //$NON-NLS-1$
+							MessageBundle.getMessage("angal.medicalstockward.invalidquantitypleasetryagain")); //$NON-NLS-1$
 					qty = 0;
 				}
 			} else return qty;
@@ -668,6 +739,37 @@ public class WardPharmacyRectify extends JDialog {
 		if (jSpinnerNewQty == null) {
 			jSpinnerNewQty = new JSpinner(new SpinnerNumberModel(0.0, null, null, 1));
 			jSpinnerNewQty.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+			jSpinnerNewQty.addChangeListener(new ChangeListener() {
+			      
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					Medical med = ((Medical) jComboBoxMedical.getSelectedItem());
+					Double stock = Double.parseDouble(jLabelStockQty.getText());
+					Double newQty = (Double) jSpinnerNewQty.getValue();
+					if (newQty<0 && stock ==0.0) {
+						jButtonChooseLot.setEnabled(false);
+						jButtonNewLot.setEnabled(false);
+					}else if (newQty>0 && !lotExist) {
+						jButtonChooseLot.setEnabled(false);
+						jButtonNewLot.setEnabled(true);
+					} else if (newQty<0 && -(newQty)>stock) {
+						jButtonChooseLot.setEnabled(false);
+						jButtonNewLot.setEnabled(false);
+					} else if (newQty<0){
+						jButtonChooseLot.setEnabled(true);
+						jButtonNewLot.setEnabled(false);
+					} else if (newQty>0) {
+						jButtonChooseLot.setEnabled(true);
+						jButtonNewLot.setEnabled(true);
+					}
+					
+				}
+			});
+			
+	
+			
+
 		}
 		return jSpinnerNewQty;
 	}
@@ -698,10 +800,22 @@ public class WardPharmacyRectify extends JDialog {
 		
 			jComboBoxMedical.addActionListener(new ActionListener() {
 				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try {
 						Medical med = ((Medical) jComboBoxMedical.getSelectedItem());
+						ArrayList<MedicalWard> war = wardDrugs;
+						jButtonChooseLot.setEnabled(false);
+						jButtonNewLot.setEnabled(true);
+						lotExist=false;
+						for (MedicalWard medWard : wardDrugs) {
+							if (med.getDescription().equals(medWard.getMedical().getDescription())) {
+								jButtonChooseLot.setEnabled(true);
+								jButtonNewLot.setEnabled(false);
+								lotExist=true;
+							}
+						}
 						Integer code = med.getCode();
 						Double qty = wardMap.get(code);
 						if (qty == null) qty = new Double(0);
