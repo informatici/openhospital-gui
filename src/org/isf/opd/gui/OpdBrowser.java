@@ -124,6 +124,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			MessageBundle.getMessage("angal.opd.alltype"),
 			MessageBundle.getMessage("angal.opd.alltype"));
 	private String[] pColums = { 
+			MessageBundle.getMessage("angal.common.codem"),
+			MessageBundle.getMessage("angal.opd.opdnumber"),
 			MessageBundle.getMessage("angal.common.datem"), 
 			MessageBundle.getMessage("angal.opd.patientid"), 
 			MessageBundle.getMessage("angal.opd.fullname"), 
@@ -136,11 +138,11 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private ArrayList<Opd> pSur;
 	private JTable jTable = null;
 	private OpdBrowsingModel model;
-	private int[] pColumwidth = { 70, 70, 150, 30, 30, 195, 195, 50 };
-	private boolean[] columnResizable = { false, false, true, false, false, true, true, false };
-	private boolean[] columnsVisible = { true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
-	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
-	private boolean[] columnsBold = { false, true, false, false, false, false, false, false };
+	private int[] pColumwidth = {50, 50, 70, 70, 150, 30, 30, 195, 195, 50 };
+	private boolean[] columnResizable = { false, false, false, false, true, false, false, true, true, false };
+	private boolean[] columnsVisible = { true, true, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
+	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
+	private boolean[] columnsBold = { true, true, false, true, false, false, false, false, false, false };
 	private int selectedrow;
 	private OpdBrowserManager manager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 	private JButton filterButton = null;
@@ -998,6 +1000,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			if (c == -1) {
 				return opd;
 			} else if (c == 0) {
+				return opd.getCode();
+			} else if (c == 1) {
+				return opd.getProgYear();
+			} else if (c == 2) {
 				String sVisitDate;
 				if (opd.getVisitDate() == null) {
 					sVisitDate = "";
@@ -1005,19 +1011,19 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					sVisitDate = dateFormat.format(opd.getVisitDate().getTime());
 				}
 				return sVisitDate;
-			} else if (c == 1) {
-				return pat != null ? opd.getPatient().getCode() : null;
-			} else if (c == 2) {
-				return pat != null ? opd.getFullName() : null;
 			} else if (c == 3) {
-				return opd.getSex();
+				return pat != null ? opd.getPatient().getCode() : null;
 			} else if (c == 4) {
-				return opd.getAge();
+				return pat != null ? opd.getFullName() : null;
 			} else if (c == 5) {
-				return opd.getDisease().getDescription();
+				return opd.getSex();
 			} else if (c == 6) {
-				return opd.getDisease().getType().getDescription();
+				return opd.getAge();
 			} else if (c == 7) {
+				return opd.getDisease().getDescription();
+			} else if (c == 8) {
+				return opd.getDisease().getType().getDescription();
+			} else if (c == 9) {
 				String patientStatus;
 				if (opd.getNewPatient() == 'N'){
 					patientStatus = MessageBundle.getMessage("angal.common.new");
