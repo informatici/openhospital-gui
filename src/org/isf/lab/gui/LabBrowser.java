@@ -227,11 +227,11 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 					if (GeneralData.LABEXTENDED) {
 						LabEditExtended editrecord = new LabEditExtended(myFrame, laboratory, false);
 						editrecord.addLabEditExtendedListener(LabBrowser.this);
-						editrecord.setVisible(true);
+						editrecord.showAsModal(LabBrowser.this);
 					} else {
 						LabEdit editrecord = new LabEdit(myFrame, laboratory, false);
 						editrecord.addLabEditListener(LabBrowser.this);
-						editrecord.setVisible(true);
+						editrecord.showAsModal(LabBrowser.this);
 					}
 				}
 			});
