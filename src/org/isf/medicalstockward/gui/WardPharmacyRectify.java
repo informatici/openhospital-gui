@@ -3,7 +3,6 @@ package org.isf.medicalstockward.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -13,7 +12,6 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,8 +19,6 @@ import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
-import javax.management.StringValueExp;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -48,21 +44,16 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
-import org.isf.medicalstock.gui.MovStockMultipleCharging;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
-import org.isf.medicalstockward.gui.WardPharmacyNew.StockMovModel;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
 import org.isf.menu.manager.Context;
-import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.RequestFocusListener;
-import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.model.Ward;
 
@@ -116,15 +107,14 @@ public class WardPharmacyRectify extends JDialog {
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	
-	private ArrayList<Medical> medicals;
+	private ArrayList<Medical> medicals; //list of all medicals available in the application
 	private HashMap<String, Medical> medicalMap; //map medicals by their prod_code
 	private HashMap<Integer, Double> wardMap; //map quantities by their medical_id
 	private JTextField jTextFieldLotn;
 	private JButton jButtonChooseLot;
-	private ArrayList<MedicalWard> wardDrugs;
+	private ArrayList<MedicalWard> wardDrugs; //list of drugs available in the selected ward
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
-	private Medical medical;
 	private JButton jButtonNewLot;
 	private boolean newLot;
 	
@@ -170,7 +160,6 @@ public class WardPharmacyRectify extends JDialog {
 			e.printStackTrace();
 		}
 		wardMap = new HashMap<Integer, Double>();
-		ArrayList<Double> list;
 		for (MedicalWard medWard : wardDrugs) {
 			
 			if(wardMap.containsKey(medWard.getMedical().getCode())){
@@ -202,7 +191,6 @@ public class WardPharmacyRectify extends JDialog {
 			e.printStackTrace();
 		}
 		wardMap = new HashMap<Integer, Double>();
-		ArrayList<Double> list;
 		for (MedicalWard medWard : wardDrugs) {
 			
 			if(wardMap.containsKey(medWard.getMedical().getCode())){
@@ -495,17 +483,13 @@ public class WardPharmacyRectify extends JDialog {
 		if (jButtonNewLot == null) {
 			jButtonNewLot = new JButton();
 			jButtonNewLot.setText(MessageBundle.getMessage("angal.medicalstockward.newlot")); //$NON-NLS-1$
-
 			jButtonNewLot.addActionListener(new ActionListener() {
-
-				
 
 				public void actionPerformed(ActionEvent e) {
 					Medical med = (Medical) jComboBoxMedical.getSelectedItem();
-					String medical=med.getDescription();
-					newLot=true;
-					chooseLot(wardDrugs ,medical);
-					 
+					String medical = med.getDescription();
+					newLot = true;
+					chooseLot(wardDrugs, medical);
 				}
 			});
 		}
@@ -515,14 +499,13 @@ public class WardPharmacyRectify extends JDialog {
 		if (jButtonChooseLot == null) {
 			jButtonChooseLot = new JButton();
 			jButtonChooseLot.setText(MessageBundle.getMessage("angal.medicalstockward.chooselot")); //$NON-NLS-1$
-
 			jButtonChooseLot.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					Medical med = (Medical) jComboBoxMedical.getSelectedItem();
-					String medical=med.getDescription();
-					newLot=false;
-					 chooseLot(wardDrugs ,medical);
+					String medical = med.getDescription();
+					newLot = false;
+					chooseLot(wardDrugs, medical);
 				}
 			});
 		}
@@ -530,21 +513,17 @@ public class WardPharmacyRectify extends JDialog {
 	}
 
 
-	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me) {
-		MedicalWard medWard =null;
+	private MedicalWard chooseLot(ArrayList<MedicalWard> drugList, String medicalDescription) {
+		MedicalWard medWard = null;
 		
-		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+		ArrayList<MedicalWard> drugChooseList = new ArrayList<MedicalWard>();
 		
-		for (MedicalWard elem : drug) {
-			if(elem.getMedical().getDescription().equals(me)) {
-				
-					MedicalWard e = elem;
-						dr.add(e);
-					
-				
+		for (MedicalWard elem : wardDrugs) {
+			if(elem.getMedical().getDescription().equals(medicalDescription)) {
+				drugChooseList.add(elem);
 			}
 		}
-		if(newLot) {
+		if (newLot) {
 			Medical med = (Medical) jComboBoxMedical.getSelectedItem();
 			int qty = askQuantity(med);
 			if (qty == 0) {return null;};
@@ -552,8 +531,6 @@ public class WardPharmacyRectify extends JDialog {
 			if (addLot == null) {
 				return null;
 			}
-			
-			
 			
 			jTextFieldLotn.setText( addLot.getCode());
 			jSpinnerNewQty.setValue(Double.valueOf(qty));
@@ -566,9 +543,10 @@ public class WardPharmacyRectify extends JDialog {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else {
 			
-		JTable lotTable = new JTable(new StockMovModel(dr));
+		} else {
+			
+		JTable lotTable = new JTable(new StockMovModel(drugChooseList));
 		lotTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstockward.rectify.selectalot")), BorderLayout.NORTH); //$NON-NLS-1$
@@ -582,17 +560,15 @@ public class WardPharmacyRectify extends JDialog {
 
 			if (ok == JOptionPane.OK_OPTION) {
 				int row = lotTable.getSelectedRow();
-				if (row != -1) medWard = dr.get(row);
+				if (row != -1) medWard = drugChooseList.get(row);
 					else return null;
-				
-				
 				
 				jTextFieldLotn.setText( medWard.getLot().getCode());
 				jSpinnerNewQty.setValue(medWard.getQty());
 				jLabelStockQty.setText(medWard.getQty().toString());
 				
 			}
-		} while (dr == null);
+		} while (drugChooseList == null);
 		}
 		return medWard;
 	}
@@ -741,7 +717,6 @@ public class WardPharmacyRectify extends JDialog {
 			jSpinnerNewQty.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 			jSpinnerNewQty.addChangeListener(new ChangeListener() {
 			      
-
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					Medical med = ((Medical) jComboBoxMedical.getSelectedItem());
@@ -766,10 +741,6 @@ public class WardPharmacyRectify extends JDialog {
 					
 				}
 			});
-			
-	
-			
-
 		}
 		return jSpinnerNewQty;
 	}
@@ -797,15 +768,12 @@ public class WardPharmacyRectify extends JDialog {
 			for (Medical med : medicals){
 				jComboBoxMedical.addItem(med);
 			}
-		
 			jComboBoxMedical.addActionListener(new ActionListener() {
 				
-
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try {
 						Medical med = ((Medical) jComboBoxMedical.getSelectedItem());
-						ArrayList<MedicalWard> war = wardDrugs;
 						jButtonChooseLot.setEnabled(false);
 						jButtonNewLot.setEnabled(true);
 						lotExist=false;
@@ -839,8 +807,8 @@ public class WardPharmacyRectify extends JDialog {
 		private static final long serialVersionUID = 1L;
 		private ArrayList<MedicalWard> druglist;
 
-		public StockMovModel(ArrayList<MedicalWard> drug) {
-			druglist = drug;
+		public StockMovModel(ArrayList<MedicalWard> drugList) {
+			druglist = drugList;
 		}
 
 		public int getRowCount() {
@@ -868,21 +836,22 @@ public class WardPharmacyRectify extends JDialog {
 		}
 
 		public Object getValueAt(int r, int c) {
+			MedicalWard drug = druglist.get(r);
 			if (c == -1) {
-				return druglist.get(r);
+				return drug;
 			} else if (c == 0) {
-				return druglist.get(r).getId().getLot().getCode();
+				return drug.getId().getLot().getCode();
 			} else if (c == 1) {
 				ArrayList<Lot> lot = null;
 				try {
-					lot = movManager.getLotByMedical(druglist.get(r).getId().getMedical());
+					lot = movManager.getLotByMedical(drug.getId().getMedical());
 				} catch (OHServiceException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}  else if (c == 2) {
-				return druglist.get(r).getQty();
+				return drug.getQty();
 			}
 			return null;
 		}
