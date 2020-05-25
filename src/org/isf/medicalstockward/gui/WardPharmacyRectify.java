@@ -110,15 +110,12 @@ public class WardPharmacyRectify extends JDialog {
 	private ArrayList<Medical> medicals; //list of all medicals available in the application
 	private HashMap<String, Medical> medicalMap; //map medicals by their prod_code
 	private HashMap<Integer, Double> wardMap; //map quantities by their medical_id
-	private JTextField jTextFieldLotn;
+	private JTextField jTextFieldLotNumber;
 	private JButton jButtonChooseLot;
 	private ArrayList<MedicalWard> wardDrugs; //list of drugs available in the selected ward
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private JButton jButtonNewLot;
-	private boolean newLot;
-	
-	
 
 	/**
 	 * Launch the application.
@@ -185,10 +182,9 @@ public class WardPharmacyRectify extends JDialog {
 		wardSelected = ward;
 		medical= medical;
 		try {
-			wardDrugs= wardManager.getMedicalsWard(wardSelected.getCode().charAt(0), false);
+			wardDrugs = wardManager.getMedicalsWard(wardSelected.getCode().charAt(0), false);
 		} catch (OHServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			OHServiceExceptionUtil.showMessages(e);
 		}
 		wardMap = new HashMap<Integer, Double>();
 		for (MedicalWard medWard : wardDrugs) {
@@ -320,6 +316,9 @@ public class WardPharmacyRectify extends JDialog {
 			
 		}
 		{
+			/*
+			 * TODO: to refactor all this part by extracting in separated method all this logic
+			 */
 			JPanel jButtonPanel = new JPanel();
 			jButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 			getContentPane().add(jButtonPanel, BorderLayout.SOUTH);
@@ -331,7 +330,7 @@ public class WardPharmacyRectify extends JDialog {
 						Medical med;
 						
 						/*
-						 *  To override MovWardBrowserManager.validateMovementWard() behaviour
+						 *  To override MovWardBrowserManager.validateMovementWard() behavior
 						 */
 						try {
 							item = jComboBoxMedical.getSelectedItem();
@@ -348,7 +347,7 @@ public class WardPharmacyRectify extends JDialog {
 						}
 						
 						/*
-						 *  To override MovWardBrowserManager.validateMovementWard() behaviour
+						 *  To override MovWardBrowserManager.validateMovementWard() behavior
 						 */
 						String reason = jTextFieldReason.getText().trim();
 						if (reason.equals("")) { //$NON-NLS-1$
@@ -356,27 +355,23 @@ public class WardPharmacyRectify extends JDialog {
 							return;
 						}
 					
-				
-						
 						Double stock = Double.parseDouble(jLabelStockQty.getText());
 						Double newQty = (Double) jSpinnerNewQty.getValue();
 						double quantity = stock.doubleValue() - newQty.doubleValue();
 						double x = -1 * newQty.doubleValue() ;
-						if ((stock.doubleValue() == 0.0 && newQty.doubleValue() < 0.0)||(x>stock.doubleValue())) {
-							
-							
+						if ((stock.doubleValue() == 0.0 && newQty.doubleValue() < 0.0) || (x > stock.doubleValue())) {
+
 							StringBuilder message = new StringBuilder();
 							message.append(MessageBundle.getMessage("angal.medicalstockward.rectifyerror"));
 							JOptionPane.showMessageDialog(WardPharmacyRectify.this, message.toString());
 							return ;
-						
 						}
 						if (quantity == 0.) return;
 						
 						boolean result;
 						try {
 							Lot lot = new Lot() ;
-							String lotCode = jTextFieldLotn.getText();
+							String lotCode = jTextFieldLotNumber.getText();
 							if (lotCode.equals("")) { //$NON-NLS-1$
 								JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstock.pleaseselectalot")); //$NON-NLS-1$
 								return;
@@ -401,7 +396,6 @@ public class WardPharmacyRectify extends JDialog {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
 						}
-						
 					}
 				});
 				jButtonPanel.add(jButtonOk);
@@ -446,15 +440,15 @@ public class WardPharmacyRectify extends JDialog {
 		}
 	
 		{
-			jTextFieldLotn = new JTextField();
-			jTextFieldLotn.setEditable(false);
+			jTextFieldLotNumber = new JTextField();
+			jTextFieldLotNumber.setEditable(false);
 			GridBagConstraints gbc_jTextFieldReason = new GridBagConstraints();
 			gbc_jTextFieldReason.insets = new Insets(0, 0, 0, 5);
 			gbc_jTextFieldReason.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jTextFieldReason.gridx = 1;
 			gbc_jTextFieldReason.gridy = 0;
-			lotPanel.add(jTextFieldLotn, gbc_jTextFieldReason);
-			jTextFieldLotn.setColumns(10);
+			lotPanel.add(jTextFieldLotNumber, gbc_jTextFieldReason);
+			jTextFieldLotNumber.setColumns(10);
 		}
 		{
 		
@@ -486,10 +480,8 @@ public class WardPharmacyRectify extends JDialog {
 			jButtonNewLot.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					Medical med = (Medical) jComboBoxMedical.getSelectedItem();
-					String medical = med.getDescription();
-					newLot = true;
-					chooseLot(wardDrugs, medical);
+					Medical medical = (Medical) jComboBoxMedical.getSelectedItem();
+					chooseLot(medical, true);
 				}
 			});
 		}
@@ -502,10 +494,8 @@ public class WardPharmacyRectify extends JDialog {
 			jButtonChooseLot.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					Medical med = (Medical) jComboBoxMedical.getSelectedItem();
-					String medical = med.getDescription();
-					newLot = false;
-					chooseLot(wardDrugs, medical);
+					Medical medical = (Medical) jComboBoxMedical.getSelectedItem();
+					chooseLot(medical, false);
 				}
 			});
 		}
@@ -513,13 +503,13 @@ public class WardPharmacyRectify extends JDialog {
 	}
 
 
-	private MedicalWard chooseLot(ArrayList<MedicalWard> drugList, String medicalDescription) {
+	private MedicalWard chooseLot(Medical medical, boolean newLot) {
 		MedicalWard medWard = null;
 		
 		ArrayList<MedicalWard> drugChooseList = new ArrayList<MedicalWard>();
 		
 		for (MedicalWard elem : wardDrugs) {
-			if(elem.getMedical().getDescription().equals(medicalDescription)) {
+			if(elem.getMedical().getDescription().equals(medical.getDescription())) {
 				drugChooseList.add(elem);
 			}
 		}
@@ -532,16 +522,15 @@ public class WardPharmacyRectify extends JDialog {
 				return null;
 			}
 			
-			jTextFieldLotn.setText( addLot.getCode());
+			jTextFieldLotNumber.setText( addLot.getCode());
 			jSpinnerNewQty.setValue(Double.valueOf(qty));
 			jLabelStockQty.setText("0");
 			BigDecimal cost = askCost(qty);
 			addLot.setCost(cost);
 			try {
-				boolean res = movStockInsertingManager.storeLot(addLot.getCode(), addLot, med);
+				movStockInsertingManager.storeLot(addLot.getCode(), addLot, med);
 			} catch (OHServiceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				OHServiceExceptionUtil.showMessages(e);
 			}
 			
 		} else {
@@ -563,7 +552,7 @@ public class WardPharmacyRectify extends JDialog {
 				if (row != -1) medWard = drugChooseList.get(row);
 					else return null;
 				
-				jTextFieldLotn.setText( medWard.getLot().getCode());
+				jTextFieldLotNumber.setText( medWard.getLot().getCode());
 				jSpinnerNewQty.setValue(medWard.getQty());
 				jLabelStockQty.setText(medWard.getQty().toString());
 				
@@ -722,19 +711,19 @@ public class WardPharmacyRectify extends JDialog {
 					Medical med = ((Medical) jComboBoxMedical.getSelectedItem());
 					Double stock = Double.parseDouble(jLabelStockQty.getText());
 					Double newQty = (Double) jSpinnerNewQty.getValue();
-					if (newQty<0 && stock ==0.0) {
+					if (newQty < 0 && stock == 0.0) {
 						jButtonChooseLot.setEnabled(false);
 						jButtonNewLot.setEnabled(false);
-					}else if (newQty>0 && !lotExist) {
+					}else if (newQty > 0 && !lotExist) {
 						jButtonChooseLot.setEnabled(false);
 						jButtonNewLot.setEnabled(true);
-					} else if (newQty<0 && -(newQty)>stock) {
+					} else if (newQty < 0 && -(newQty) > stock) {
 						jButtonChooseLot.setEnabled(false);
 						jButtonNewLot.setEnabled(false);
-					} else if (newQty<0){
+					} else if (newQty < 0){
 						jButtonChooseLot.setEnabled(true);
 						jButtonNewLot.setEnabled(false);
-					} else if (newQty>0) {
+					} else if (newQty > 0) {
 						jButtonChooseLot.setEnabled(true);
 						jButtonNewLot.setEnabled(true);
 					}
