@@ -70,7 +70,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		setBackground(Color.DARK_GRAY);
 		if (thumbnails) {
 			setCellRenderer(new ImageListCellRender());
-			setLayoutOrientation(JList.HORIZONTAL_WRAP);
+			setLayoutOrientation(JList.VERTICAL);
 		}
 		else {
 			setCellRenderer(new CellListCellRender());
