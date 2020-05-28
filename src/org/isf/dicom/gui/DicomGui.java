@@ -36,8 +36,11 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.file.FileTools;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -274,14 +277,33 @@ public class DicomGui extends JFrame implements WindowListener {
 					if (dir != null)
 						lastDir = dir.getAbsolutePath();
 					
-					
 					File file = selectedFile;
 					int numfiles = 1;
 					if (selectedFile.isDirectory()) {
-						numfiles = SourceFiles.countFiles(selectedFile, patient);
+						try {
+							numfiles = SourceFiles.countFiles(selectedFile, patient);
+						} catch (OHDicomException e1) {
+							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+							return;
+						}
 						if (numfiles == 1) return;
 						file = selectedFile.listFiles()[0];
+					} else {
+						try {
+							if (!SourceFiles.checkSize(file)) {
+								JOptionPane.showMessageDialog(DicomGui.this, 
+										MessageBundle.getMessage("angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty") + 
+			            				" (" + DicomManagerFactory.getMaxDicomSize() + ")", 
+										"DICOM", JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						} catch (OHDicomException e1) {
+							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+							return;
+						}
 					}
+					
+					
 					
 					//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
 					FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file, numfiles);
@@ -473,7 +495,7 @@ public class DicomGui extends JFrame implements WindowListener {
 		PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 		Patient patient = new Patient();
 		try {
-			patient = patManager.getPatient(129266);
+			patient = patManager.getPatient(1);
 		} catch (OHServiceException e) {
 			e.printStackTrace();
 		}
