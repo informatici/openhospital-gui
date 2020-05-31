@@ -66,7 +66,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private JTextField textFieldUnit;
 	private CustomJDateChooser textDate;
 	private JComboBox comboOperation;
-	private JComboBox<String> comboResult;
+	private JComboBox comboResult;
 	private JTextArea textAreaRemark;
 
 	OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
