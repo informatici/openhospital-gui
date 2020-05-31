@@ -605,7 +605,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		
 		
 		public int getRowCount() {
-			if (admList == null && opdList == null)
+			if (admList == null || opdList == null)
 				return 0;
 			
 			return admList.size() + opdList.size();

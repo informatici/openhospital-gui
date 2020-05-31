@@ -286,26 +286,26 @@ public class LabNew extends JDialog implements SelectionListener {
 					String inOut = jRadioButtonOPD.isSelected() ? "O" : "I";
                                         
                     for (Laboratory lab : examItems) {
-//                        lab.setAge(patientSelected.getAge());
                         lab.setDate(newDate);
                         lab.setExamDate(newDate);
                         lab.setInOutPatient(inOut);
                         lab.setPatient(patientSelected);
-//                        lab.setPatName(patientSelected.getName());
-//                        lab.setSex(patientSelected.getSex()+"");
                         lab.setNote(jTextAreaNote.getText().trim());
-                        lab.setMaterial((String) jComboBoxMaterial.getSelectedItem());
-                        if (lab.getExam().getProcedure() == 1) lab.setResult((String) jComboBoxExamResults.getSelectedItem());
+                        lab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
+                        if (lab.getExam().getProcedure() == 1) {
+                        	if (jComboBoxExamResults.getItemCount() > 0)
+                        		lab.setResult((String) jComboBoxExamResults.getSelectedItem());
+                        	else
+                        		//exam without results (only note)
+                        		lab.setResult(lab.getExam().getDefaultResult());
+                        }
 					}
 					
-					boolean result = false;
-					
 					try {
-						result = labManager.newLaboratory2(examItems, examResults);
+						labManager.newLaboratory2(examItems, examResults);
 						fireLabInserted();
 						dispose();
 					} catch (OHServiceException e1) {
-						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
 					}
 				}
@@ -387,6 +387,8 @@ public class LabNew extends JDialog implements SelectionListener {
 				});
 				if (jComboBoxExamResults.getItemCount() > 0)
 					jPanelResults.add(jComboBoxExamResults);
+				else
+					jPanelResults.add(new JLabel(selectedExam.getDefaultResult()));
 
 			} else {
 				
@@ -653,7 +655,7 @@ public class LabNew extends JDialog implements SelectionListener {
 						
 						if (selectedLab != null) {
 							selectedLab.setNote(jTextAreaNote.getText().trim());
-							selectedLab.setMaterial((String)jComboBoxMaterial.getSelectedItem());
+							selectedLab.setMaterial(labManager.getMaterialKey((String)jComboBoxMaterial.getSelectedItem()));
 						}
 						
 						int selectedRow = jTableExams.getSelectedRow();
@@ -761,7 +763,7 @@ public class LabNew extends JDialog implements SelectionListener {
 							lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));
 						}
 						lab.setExam(exa);
-						lab.setMaterial(mat);
+						lab.setMaterial(labManager.getMaterialKey(mat));
 						addItem(lab);
 					}
 				}

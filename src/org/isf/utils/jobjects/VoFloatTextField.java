@@ -30,7 +30,7 @@ public class VoFloatTextField extends JTextField {
 	}
 
 	protected Document createDefaultModel() {
-		return new IntTextDocument();
+		return new FloatTextDocument();
 	}
 
 	public float getValue() {
@@ -41,7 +41,7 @@ public class VoFloatTextField extends JTextField {
 		}
 	}
 
-	class IntTextDocument extends PlainDocument {
+	class FloatTextDocument extends PlainDocument {
 		/**
 		 * 
 		 */
@@ -57,6 +57,10 @@ public class VoFloatTextField extends JTextField {
 				Float.parseFloat(newString + "0");
 				super.insertString(offs, str, a);
 			} catch (NumberFormatException e) {
+				System.out.println("==> Exception: string is " + str);
+				if (!str.matches("^[a-zA-Z0-9]*$"))
+					//super.insertString(offs, String.valueOf(DecimalFormatSymbols.getInstance(new Locale(GeneralData.LANGUAGE)).getDecimalSeparator()), a);
+					super.insertString(offs, ".", a);
 			}
 		}
 	}

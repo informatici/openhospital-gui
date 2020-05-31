@@ -1,6 +1,5 @@
 package org.isf.dicom.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -12,6 +11,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -23,15 +24,26 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
+import javax.swing.ScrollPaneConstants;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.isf.admission.gui.PatientFolderBrowser;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
 import org.isf.dicom.model.FileDicom;
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
+import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.exception.model.OHSeverityLevel;
+import org.isf.utils.file.FileTools;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * GUI for Dicom Viewer
@@ -75,12 +87,12 @@ public class DicomGui extends JFrame implements WindowListener {
 	/**
 	 * Construct a GUI
 	 * 
-	 * @param, paziente the data wrapper for OH Patient
+	 * @param patient the data wrapper for OH Patient
 	 */
-	public DicomGui(Patient paziente, PatientFolderBrowser owner) {
+	public DicomGui(Patient patient, PatientFolderBrowser owner) {
 		super();
-		this.patient = paziente.getCode().intValue();
-		this.ohPatient = paziente;
+		this.patient = patient.getCode().intValue();
+		this.ohPatient = patient;
 		this.owner = owner;
 
 		initialize();
@@ -164,9 +176,8 @@ public class DicomGui extends JFrame implements WindowListener {
 		jButtonLoadDicom = new JButton();
 		jButtonDeleteDicom = new JButton();
 		jButtonExit = new JButton();
-		jSplitPane1 = new JSplitPane();
-		jSplitPane1.setEnabled(false);
 		jPanelDetail = new DicomViewGui(null, null);
+		jPanelDetail.setName("jPanelDetail");
 		jPanelButton = new JPanel();
 		jPanelButton.add(jButtonLoadDicom);
 		jPanelButton.add(jButtonDeleteDicom);
@@ -197,18 +208,22 @@ public class DicomGui extends JFrame implements WindowListener {
 				.addGroup(GroupLayout.Alignment.TRAILING,
 						jPanel1Layout.createSequentialGroup().addContainerGap().addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(jPanelButton))));
 
-		jSplitPane1.setDividerLocation(position);
-		jSplitPane1.setName("jSplitPane1");
+		//jSplitPane1.setDividerLocation(position);
+		
 		thumbnail = new ThumbnailViewGui(patient, this);
-		jPanelDetail.setName("jPanelDetail");
-		jSplitPane1.setRightComponent(jPanelDetail);
-		jScrollPane2 = new JScrollPane();
-		JPanel tmpPanel = new JPanel(new BorderLayout());
-		tmpPanel.add(thumbnail, BorderLayout.CENTER);
-		jScrollPane2.setViewportView(tmpPanel);
-		jScrollPane2.setName("jScrollPane2");
-		jSplitPane1.setLeftComponent(jScrollPane2);
 		thumbnail.initialize();
+
+		jScrollPane2 = new JScrollPane();
+		jScrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		jScrollPane2.setViewportView(thumbnail);
+		jScrollPane2.setName("jScrollPane2");
+		jScrollPane2.setMinimumSize(new Dimension(150,50));
+
+		jSplitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jScrollPane2, jPanelDetail);
+		jSplitPane1.setName("jSplitPane1");
+		jSplitPane1.setEnabled(false);
+		
 		GroupLayout mainPanelLayout = new GroupLayout(jPanelMain);
 		jPanelMain.setLayout(mainPanelLayout);
 
@@ -225,7 +240,7 @@ public class DicomGui extends JFrame implements WindowListener {
 		addEventListener();
 		this.setContentPane(jPanelMain);
 
-	}// Layered with Netbeans Designer
+	}
 
 	// EVENT LISTENER
 
@@ -242,7 +257,8 @@ public class DicomGui extends JFrame implements WindowListener {
 
 				JFileChooser jfc = new JFileChooser(new File(lastDir));
 
-				jfc.setFileFilter(new FileDicomFilter());
+				jfc.addChoosableFileFilter(new FileDicomFilter());
+				jfc.addChoosableFileFilter(new FileJPEGFilter());
 				jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 				int status = jfc.showDialog(new JLabel(""), MessageBundle.getMessage("angal.dicom.open.txt"));
@@ -260,18 +276,61 @@ public class DicomGui extends JFrame implements WindowListener {
 
 					if (dir != null)
 						lastDir = dir.getAbsolutePath();
-
-					// System.out.println("Scelto "+scelto.getAbsolutePath());
+					
+					File file = selectedFile;
+					int numfiles = 1;
+					if (selectedFile.isDirectory()) {
+						try {
+							numfiles = SourceFiles.countFiles(selectedFile, patient);
+						} catch (OHDicomException e1) {
+							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+							return;
+						}
+						if (numfiles == 1) return;
+						file = selectedFile.listFiles()[0];
+					} else {
+						try {
+							if (!SourceFiles.checkSize(file)) {
+								JOptionPane.showMessageDialog(DicomGui.this, 
+										MessageBundle.getMessage("angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty") + 
+			            				" (" + DicomManagerFactory.getMaxDicomSize() + ")", 
+										"DICOM", JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						} catch (OHDicomException e1) {
+							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+							return;
+						}
+					}
+					
+					
+					
+					//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
+					FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file, numfiles);
+					
+					//shows settings to the user for validation/modification
+					List<Date> dates = FileTools.getTimestampFromName(file);
+					
+					ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
+					preLoadDialog.setVisible(true);
+					
+					if (!preLoadDialog.isSave()) 
+						return; //user pressed CANCEL
+					
+					dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
+					dummyFileDicom.setDicomSeriesDate(preLoadDialog.getDicomDate());
+					dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
+					dummyFileDicom.setDicomType(preLoadDialog.getDicomType());
+					
+					//TODO: to specify in which already existing series to load the file
 
 					if (selectedFile.isDirectory()) {
-						
-						int numfiles = SourceFiles.countFiles(selectedFile, patient);
+						//folder
 						thumbnail.disableLoadButton();
-						new SourceFiles(selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
-
+						new SourceFiles(dummyFileDicom, selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
 					} else {
-						// single file
-						SourceFiles.loadDicom(selectedFile, patient);
+						// single file 
+						SourceFiles.loadDicom(dummyFileDicom, selectedFile, patient);
 						thumbnail.initialize();
 					}
 				}
@@ -300,7 +359,9 @@ public class DicomGui extends JFrame implements WindowListener {
 					}
 				}
 				thumbnail.initialize();
-
+				//selectedElement = null;
+				//detail();
+				((DicomViewGui) jPanelDetail).clear();
 			}
 		});
 	}
@@ -421,6 +482,25 @@ public class DicomGui extends JFrame implements WindowListener {
 
 		((DicomViewGui) jPanelDetail).notifyChanges(ohPatient, serie);
 
+	}
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		Context.setApplicationContext(context);
+		GeneralData.getGeneralData();
+		PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+		Patient patient = new Patient();
+		try {
+			patient = patManager.getPatient(1);
+		} catch (OHServiceException e) {
+			e.printStackTrace();
+		}
+		DicomGui dg = new DicomGui(patient, null);
+		
 	}
 
 }
