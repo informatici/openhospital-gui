@@ -45,6 +45,7 @@
 							<resources>
 								<resource>
 									<directory>src/main/resources</directory>
+									<directory>rsc</directory>
 								</resource>
 							</resources>
 						</configuration>
