@@ -224,7 +224,7 @@ public class JTextFieldSearchModel extends JPanel {
 	 */
 	public static void main(String[] args) {
 		try {
-			PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
+			PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
 			GeneralData.getGeneralData();
 			JDialog newDialog = new JDialog();
 			JTextFieldSearchModel textField = new JTextFieldSearchModel(new JDialog(), Medical.class);

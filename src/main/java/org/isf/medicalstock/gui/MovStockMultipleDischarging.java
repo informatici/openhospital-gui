@@ -94,7 +94,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath()); //$NON-NLS-1$
+			PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath()); //$NON-NLS-1$
 			GeneralData.getGeneralData();
 			new MovStockMultipleDischarging(new JFrame());
 		} catch (Exception e) {

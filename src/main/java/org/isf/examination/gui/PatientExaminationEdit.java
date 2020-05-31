@@ -2140,7 +2140,7 @@ public class PatientExaminationEdit extends JDialog {
 		final int INITIAL_HR = 60;
 		
 		
-		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
+		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
 		GeneralData.getGeneralData();

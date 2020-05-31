@@ -36,7 +36,6 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
-import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
@@ -44,6 +43,8 @@ import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.file.FileTools;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import org.isf.utils.exception.OHDicomException;
 
 /**
  * GUI for Dicom Viewer
@@ -488,7 +489,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
+		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
 		GeneralData.getGeneralData();

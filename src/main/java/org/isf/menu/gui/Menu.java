@@ -53,7 +53,7 @@ public class Menu {
 	}
 
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
+		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
