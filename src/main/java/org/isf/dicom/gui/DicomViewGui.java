@@ -40,11 +40,10 @@ import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.model.FileDicom;
 import org.isf.generaldata.MessageBundle;
 import org.isf.patient.model.Patient;
+import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
-
-import org.isf.utils.exception.OHDicomException;
 
 /**
  * 
@@ -515,7 +514,7 @@ public class DicomViewGui extends JPanel {
 			ecc.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * get the BufferedImage from DICOM object
 	 * 

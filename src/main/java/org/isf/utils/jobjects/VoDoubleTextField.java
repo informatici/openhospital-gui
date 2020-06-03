@@ -1,10 +1,15 @@
 package org.isf.utils.jobjects;
 
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+
+import org.isf.generaldata.GeneralData;
 
 /**
  * 
