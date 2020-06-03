@@ -20,15 +20,6 @@
 	</properties>
 	
 	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<resources>
-			<resource>
-				<directory>src</directory>
-				<includes>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -53,6 +44,7 @@
 							<outputDirectory>${basedir}/target/OpenHospital20/rsc</outputDirectory>
 							<resources>
 								<resource>
+									<directory>src/main/resources</directory>
 									<directory>rsc</directory>
 								</resource>
 							</resources>
