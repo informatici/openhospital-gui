@@ -493,8 +493,8 @@ public class DicomViewGui extends JPanel {
 		try {
 			tmpImg = null;
 			Iterator<?> iter = ImageIO.getImageReadersByFormatName("jpg");
-			ImageReader reader = (ImageReader) iter.next();
-			//JPEGImageReadParam param = (JPEGImageReadParam) reader.getDefaultReadParam();
+			ImageReader reader = (ImageReader) new com.sun.imageio.plugins.jpeg.JPEGImageReader(null);
+			//JPEGImageReadParam param = new JPEGImageReadParam();
 			ImageInputStream imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
 			reader.setInput(imageInputStream, false);
 
