@@ -66,8 +66,11 @@ import org.isf.generaldata.ExaminationParameters;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.stat.gui.report.GenericReportExamination;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ScaledJSlider;
 import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
@@ -75,9 +78,7 @@ import org.isf.utils.jobjects.VoLimitedTextArea;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import org.isf.utils.jobjects.CustomJDateChooser;
-
-public class PatientExaminationEdit extends JDialog {
+public class PatientExaminationEdit extends ModalJFrame {
 
 	/**
 	 * 
@@ -129,6 +130,7 @@ public class PatientExaminationEdit extends JDialog {
 	private JButton jButtonOK;
 	private JButton jButtonDelete;
 	private JButton jButtonCancel;
+	private JButton jButtonPrint;
 	private Action actionSavePatientExamination;
 	private Action actionToggleAP;
 	private Action actionToggleHR;
@@ -215,7 +217,7 @@ public class PatientExaminationEdit extends JDialog {
 	}
 
 	public PatientExaminationEdit(Frame parent, GenderPatientExamination gpatex) {
-		super(parent, true);
+		super();
 		this.patex = gpatex.getPatex();
 		this.isMale = gpatex.isMale();
 		initComponents();
@@ -223,7 +225,7 @@ public class PatientExaminationEdit extends JDialog {
 	}
 
 	public PatientExaminationEdit(Dialog parent, GenderPatientExamination gpatex) {
-		super(parent, true);
+		super();
 		this.patex = gpatex.getPatex();
 		this.isMale = gpatex.isMale();
 		initComponents();
@@ -259,6 +261,7 @@ public class PatientExaminationEdit extends JDialog {
 			jPanelButtons.add(getJButtonOK());
 			jPanelButtons.add(getJButtonDelete());
 			jPanelButtons.add(getJButtonCancel());
+			jPanelButtons.add(getJButtonPrint());
 		}
 		return jPanelButtons;
 	}
@@ -1440,6 +1443,26 @@ public class PatientExaminationEdit extends JDialog {
 			});
 		}
 		return jButtonCancel;
+	}
+	
+	private JButton getJButtonPrint() {
+		if (jButtonPrint == null) {
+			jButtonPrint = new JButton(MessageBundle.getMessage("angal.common.print")); //$NON-NLS-1$
+			jButtonPrint.setMnemonic(KeyEvent.VK_C);
+			jButtonPrint.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					int selectedrow = jTableSummary.getSelectedRow();
+					if (selectedrow < 0) selectedrow = 0;
+					
+					PatientExamination	exam = (PatientExamination) jTableSummary.getValueAt(selectedrow,-1);
+					new GenericReportExamination(patex.getPatient().getCode(), exam.getPex_ID(), GeneralData.EXAMINATIONCHART);
+					
+				}
+			});
+		}
+		return jButtonPrint;
 	}
 	
 	private JPanel getJPanelGender() {
