@@ -331,7 +331,11 @@ public class DicomGui extends JFrame implements WindowListener {
 						new SourceFiles(dummyFileDicom, selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
 					} else {
 						// single file 
-						SourceFiles.loadDicom(dummyFileDicom, selectedFile, patient);
+						try {
+							SourceFiles.loadDicom(dummyFileDicom, selectedFile, patient);
+						} catch (Exception e1) {
+							OHServiceExceptionUtil.showMessages((OHDicomException) e1);
+						}
 						thumbnail.initialize();
 					}
 				}
