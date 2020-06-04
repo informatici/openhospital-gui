@@ -714,18 +714,24 @@ public class WardPharmacyRectify extends JDialog {
 					if (newQty < 0 && stock == 0.0) {
 						jButtonChooseLot.setEnabled(false);
 						jButtonNewLot.setEnabled(false);
+						jTextFieldLotNumber.setText("");
 					}else if (newQty > 0 && !lotExist) {
 						jButtonChooseLot.setEnabled(false);
 						jButtonNewLot.setEnabled(true);
 					} else if (newQty < 0 && -(newQty) > stock) {
 						jButtonChooseLot.setEnabled(false);
 						jButtonNewLot.setEnabled(false);
+						jTextFieldLotNumber.setText("");
 					} else if (newQty < 0){
-						jButtonChooseLot.setEnabled(true);
+						jButtonChooseLot.setEnabled(false);
 						jButtonNewLot.setEnabled(false);
-					} else if (newQty > 0) {
+						jTextFieldLotNumber.setText("");
+					} else if (newQty > 0 && newQty > stock) {
 						jButtonChooseLot.setEnabled(true);
 						jButtonNewLot.setEnabled(true);
+					}else if (newQty > 0 && newQty < stock) {
+						jButtonChooseLot.setEnabled(true);
+						jButtonNewLot.setEnabled(false);
 					}
 					
 				}
@@ -831,14 +837,8 @@ public class WardPharmacyRectify extends JDialog {
 			} else if (c == 0) {
 				return drug.getId().getLot().getCode();
 			} else if (c == 1) {
-				ArrayList<Lot> lot = null;
-				try {
-					lot = movManager.getLotByMedical(drug.getId().getMedical());
-				} catch (OHServiceException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
+			
+				return TimeTools.formatDateTime(drug.getId().getLot().getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}  else if (c == 2) {
 				return drug.getQty();
 			}
