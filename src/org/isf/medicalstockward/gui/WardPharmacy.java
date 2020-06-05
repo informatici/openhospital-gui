@@ -386,38 +386,6 @@ public class WardPharmacy extends ModalJFrame implements
 		return jButtonClose;
 	}
 
-	/*
-	 * TODO evalutate if to keep or not
-	 * 
-	 * private JButton getJButtonDelete() { if (jButtonDelete == null) {
-	 * jButtonDelete = new JButton();
-	 * jButtonDelete.setText(MessageBundle.getMessage
-	 * ("angal.common.delete")); //$NON-NLS-1$
-	 * jButtonDelete.setMnemonic(KeyEvent.VK_D);
-	 * jButtonDelete.setVisible(false); jButtonDelete.addActionListener(new
-	 * ActionListener() {
-	 * 
-	 * public void actionPerformed(ActionEvent event) {
-	 * 
-	 * if (jTableOutcomes.getSelectedRow() < 0 ||
-	 * !jScrollPaneOutcomes.isShowing()) { JOptionPane.showMessageDialog(null,
-	 * MessageBundle
-	 * .getMessage("angal.medicalstockward.pleaseselectanoutcomesmovementfirst"
-	 * ), //$NON-NLS-1$ MessageBundle.getMessage("angal.hospital"),
-	 * //$NON-NLS-1$ JOptionPane.PLAIN_MESSAGE); } else { movSelected =
-	 * (MovementWard) ((jTableOutcomes.getModel())
-	 * .getValueAt(jTableOutcomes.getSelectedRow(), -1)); int ok =
-	 * JOptionPane.showConfirmDialog(WardPharmacy.this,
-	 * MessageBundle.getMessage(
-	 * "angal.medicalstockward.doyoureallywanttodeletethismovement"),
-	 * MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-	 * if (ok == JOptionPane.YES_OPTION) {
-	 * wardManager.deleteMovementWard(movSelected); movementInserted(null); }
-	 * else return;
-	 * 
-	 * } } }); } return jButtonDelete; }
-	 */
-
 	private JPanel getJPanelWard() {
 		if (jPanelWard == null) {
 			jPanelWard = new JPanel();
@@ -519,7 +487,7 @@ public class WardPharmacy extends ModalJFrame implements
 		if (jScrollPaneDrugs == null) {
 			jScrollPaneDrugs = new JScrollPane();
 			jScrollPaneDrugs.setBorder (BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder (),
-					MessageBundle.getMessage("angal.medicalstock.clickdrugs")  , //TODO: use bundles
+					MessageBundle.getMessage("angal.medicalstock.clickdrugs"),
                     TitledBorder.LEFT,
                     TitledBorder.TOP));
 			jScrollPaneDrugs.setViewportView(getJTableDrugs());
@@ -1480,7 +1448,7 @@ public class WardPharmacy extends ModalJFrame implements
     					jTableDrugs.getColumn("").setCellRenderer(buttonRenderer);
                     }
                 });
-                return button; //TODO: nice idea this one, can we make it working?
+                return button;
 			}
 
 			return null;

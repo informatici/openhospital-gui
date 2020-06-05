@@ -49,6 +49,7 @@ import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -298,8 +299,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				try {
 					lot = movManager.getLotByMedical(druglist.get(r).getId().getMedical());
 				} catch (OHServiceException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					OHServiceExceptionUtil.showMessages(e);
 				}
 				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}  else if (c == 2) {
@@ -644,7 +644,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 //									MessageBundle.getMessage("angal.medicalstockwardedit.pieces"),
 //                                                                        wardTo));
 //						} catch (OHException e1) {
-//							// TODO Auto-generated catch block
 //							e1.printStackTrace();
 //						}
 //					}

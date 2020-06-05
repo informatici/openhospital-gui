@@ -49,6 +49,7 @@ import org.isf.medicalstock.model.Movement;
 import org.isf.medstockmovtype.model.MovementType;
 import org.isf.supplier.model.Supplier;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
 
 import com.toedter.calendar.JDateChooser;
@@ -130,8 +131,7 @@ public class MovStockMultipleDialog extends ModalJFrame {
 		try {
 			movements = movMan.getMovementsByReference(refNo);
 		} catch (OHServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			OHServiceExceptionUtil.showMessages(e);
 		}
 		units = new ArrayList<Integer>();
 	}
