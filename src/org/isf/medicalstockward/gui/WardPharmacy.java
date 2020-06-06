@@ -52,7 +52,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import org.isf.admission.model.AdmittedPatient;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
@@ -211,7 +210,6 @@ public class WardPharmacy extends ModalJFrame implements
 	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private ArrayList<MovementWard> listMovementWardFromTo = new ArrayList<MovementWard>();
 	private ArrayList<MedicalWard> wardDrugs;
-	private ArrayList<MedicalWard> wardMed;
 	private ArrayList<MovementWard> wardOutcomes;
 	private ArrayList<Movement> wardIncomes;
 	
@@ -525,7 +523,7 @@ public class WardPharmacy extends ModalJFrame implements
 		        	 
 		             if (me.getClickCount() == 2) {     // to detect double click events
 
-		                Detail(wardDrugs, (String) jTableDrugs.getValueAt(row, 0));// get the value of a row and column.
+		                showLotDetail(wardDrugs, (String) jTableDrugs.getValueAt(row, 0));// get the value of a row and column.
 		             }
 		          }
 		       });
@@ -539,7 +537,7 @@ public class WardPharmacy extends ModalJFrame implements
             return button;  
         }
     }
-	private MedicalWard Detail(ArrayList<MedicalWard> drug, String me) {
+	private MedicalWard showLotDetail(ArrayList<MedicalWard> drug, String me) {
 		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
 		MedicalWard medWard =null;
 		for (MedicalWard elem : drug) {
@@ -1396,33 +1394,29 @@ public class WardPharmacy extends ModalJFrame implements
 		 */
 		private static final long serialVersionUID = 1L;
 
-		int index = 0;
-		int oldQty;
-		int packets;
-		int pieces;
-		int newQty;
+		private ArrayList<MedicalWard> tableModel;
 
 		public DrugsModel() {
 			try {
                 //System.out.println("WardPharmacy: Looking for drugs ");
-				wardMed = wardManager.getMedicalsWardDrug(wardSelected.getCode().charAt(0), true);
+				tableModel = wardManager.getMedicalsWardTotalQuantity(wardSelected.getCode().charAt(0));
 				wardDrugs = wardManager.getMedicalsWard(wardSelected.getCode().charAt(0), true);
 				
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-				wardMed = new ArrayList<MedicalWard>();
+				tableModel = new ArrayList<MedicalWard>();
 				wardDrugs= new ArrayList<MedicalWard>();
 			}
 		}
 
 		public int getRowCount() {
-			if (wardMed == null)
+			if (tableModel == null)
 				return 0;
-			return wardMed.size();
+			return tableModel.size();
 		}
 
 		public Object getValueAt(final int r, int c) {
-			final MedicalWard wardDrug = wardMed.get(r);
+			final MedicalWard wardDrug = tableModel.get(r);
 			if (c == -1) {
 				return wardDrug;
 			}
