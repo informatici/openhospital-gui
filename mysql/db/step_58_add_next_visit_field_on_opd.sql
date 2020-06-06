@@ -1,1 +1,0 @@
-ALTER TABLE opd ADD OPD_DATE_NEXT_VIS datetime NULL;
