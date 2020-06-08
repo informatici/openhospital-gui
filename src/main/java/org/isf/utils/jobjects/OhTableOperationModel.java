@@ -111,6 +111,8 @@ public class OhTableOperationModel<T> implements TableModel{
 			if(obj instanceof OperationRow){
 				OperationRow opdObj=(OperationRow)obj;
 				switch (columnIndex) {
+				case -1:
+					return opdObj;
 				case 0:
 					String dt = "";
 					try {
@@ -124,13 +126,13 @@ public class OhTableOperationModel<T> implements TableModel{
 					
 					break;
 				case 1:
-                                        Operation ope = null;
-                                        try {
-                                            //System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
-                                            ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
-                                        } catch (OHServiceException ex) {
-                                            ex.printStackTrace();
-                                        }
+                    Operation ope = null;
+                    try {
+                        //System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
+                        ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
+                    } catch (OHServiceException ex) {
+                        ex.printStackTrace();
+                    }
 					if(ope != null)					
 						value = ope.getDescription();
 					else

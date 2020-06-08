@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.generaldata.MessageBundle;
+import org.isf.lab.model.Laboratory;
 import org.isf.menu.manager.Context;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
@@ -236,7 +237,6 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				// TODO Auto-generated method stub
 				JTable aTable = (JTable) e.getSource();
 				int itsRow = aTable.rowAtPoint(e.getPoint());
 				if ((itsRow >= 0) && ((aTable.getModel().getRowCount() - 1) >= itsRow)) {
@@ -257,51 +257,29 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		
 		JtableData.setModel(modelOhOpeRow);
 		
-		
-		// ajustWidthJTable();
-		 //JtableData.repaint();
-
 		dialogOpe = new JDialog();
 		dialogOpe.setLocationRelativeTo(null);
 		dialogOpe.setSize(450, 280);
 		dialogOpe.setLocationRelativeTo(null);
 		dialogOpe.setModal(true);
 	}
-	public void selectCorrect(GregorianCalendar startDate,GregorianCalendar endDate) {
+	
+	public void selectCorrect(GregorianCalendar startDate, GregorianCalendar endDate) {
 		JtableData.clearSelection();
 		for (int i = 0; i < oprowData.size(); i++) {
-			//Laboratory laboratory = labList.get(i);
-			
-			Date date = null ;
-			GregorianCalendar end = endDate;
-			date = oprowData.get(i).getOpDate().getTime();
-			GregorianCalendar dateOth = oprowData.get(i).getOpDate();
-		
-			// Check that the operation date is included between admission date and discharge date.
-			// If the patient has not been discharged yet (and then discharge date doesn't exist)
-			// check only that the exam date is the same or after the admission date.
+
+			OperationRow operation = (OperationRow) JtableData.getValueAt(i, -1);
+			Date operationDate = operation.getOpDate().getTime();
+
+			// Check that the operation date is included between startDate and endDate (if any).
 			// On true condition select the corresponding table row.
-			Admission a = oprowData.get(i).getAdmission();
-			if(oprowData.get(i).getAdmission()!=null) {
-			if (!date.before(startDate.getTime()) &&
-					(null == endDate ? true : !date.after(endDate.getTime())))  {
-				
+			if (operationDate.after(startDate.getTime())
+					&& (endDate != null && operationDate.before(endDate.getTime()))) {
+
 				JtableData.addRowSelectionInterval(i, i);
-				
 			}
 		}
-		else {
-			if (dateOth.get(Calendar.YEAR) == startDate.get(Calendar.YEAR) &&
-					dateOth.get(Calendar.DAY_OF_YEAR) == startDate.get(Calendar.DAY_OF_YEAR)&&
-					dateOth.get(Calendar.MONTH) == startDate.get(Calendar.MONTH))  {
-				JtableData.addRowSelectionInterval(i, i);
-				
-			}
-		}
-		}
-		
 	}
-	
 
 	public JTable getJtableData() {
 		return JtableData;

@@ -349,9 +349,9 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	                
 		ListSelectionModel listSelectionModel = admTable.getSelectionModel();
 		listSelectionModel.addListSelectionListener(new ListSelectionListener() {
-//			private Object Object;
 
 			public void valueChanged(ListSelectionEvent e) {
+				
 				// Check that mouse has been released.
 				if (!e.getValueIsAdjusting()) {
 					GregorianCalendar startDate = null;
@@ -359,41 +359,46 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					int selectedRow = admTable.getSelectedRow();
 					Object selectedObject = sorter.getValueAt(selectedRow, -1);
 					Object selectedObject2;
-										
-					//String Selection = (String) admTable.getValueAt(selectedRow, 1);
-					//selectedRow = admTable.convertRowIndexToModel(selectedRow); for Java6 only
+					Admission adm2 = null;
+					Opd opd2 = null;
+					PatientExamination exam2 = null;
 					
-					//if (Selection.compareTo("OPD") != 0) {
+					// Get previous element in list
+					if (selectedRow > 0) {
+						 selectedObject2 = sorter.getValueAt(selectedRow - 1, -1);
+						 if (selectedObject2 instanceof Admission) {
+							 adm2 = (Admission) selectedObject2;
+						 } else if (selectedObject2 instanceof Opd) {
+							 opd2 = (Opd) selectedObject2;
+						 } else if (selectedObject2 instanceof PatientExamination) {
+							 exam2 = (PatientExamination) selectedObject2;
+						 }
+					}
+										
 					if (selectedObject instanceof Admission) {
 						
 						Admission ad = (Admission) selectedObject;
-						//Admission admission = (Admission) (((AdmissionBrowserModel) admModel)
-							//	.getValueAt(selectedRow, -1));
 						startDate = ad.getAdmDate();
 						endDate = ad.getDisDate();
 						
-						    			
-						
 					} else if (selectedObject instanceof Opd) {
 						
-						Opd opd2 = null;
-						Admission ad2 = null;
-						if (selectedRow > 0) {
-							selectedObject2 = selectedObject;
-							 opd2 = (Opd) selectedObject2;
-							
-						}
-							
 						Opd opd = (Opd) selectedObject;
-						//Opd opd = (Opd) (((AdmissionBrowserModel) admModel)
-							//	.getValueAt(selectedRow, -1));
 						startDate = opd.getVisitDate();
-						if (opd2 != null) endDate = opd2.getVisitDate();
-						if (ad2 != null) endDate = ad2.getAdmDate();
+						
+					} else if (selectedObject instanceof PatientExamination) {
+						PatientExamination exam = (PatientExamination) selectedObject;
+						startDate = exam.getPex_date();
 					}
+					
+					if (opd2 != null) endDate = opd2.getVisitDate();
+					if (adm2 != null) endDate = adm2.getAdmDate();
+					if (exam2 != null) endDate = exam2.getPex_date();
+					
 					// Clear past selection, if any.
+					opeList.selectCorrect(startDate, endDate);
+					
 					labTable.clearSelection();
-					opeList.selectCorrect (startDate,endDate);
 					for (int i = 0; i < labList.size(); i++) {
 						//Laboratory laboratory = labList.get(i);
 						Laboratory laboratory = (Laboratory) sorterLab.getValueAt(i, -1);
@@ -410,8 +415,6 @@ public class PatientFolderBrowser extends ModalJFrame implements
 							
 						}
 					}
-					
-					 
 				}
 			}
 		});
