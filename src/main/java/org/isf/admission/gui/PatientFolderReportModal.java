@@ -10,10 +10,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.swing.JButton;
@@ -50,11 +50,11 @@ public class PatientFolderReportModal extends ModalJFrame{
 	private JPanel allPanel;
 	private JCheckBox allCheck;
 	private JPanel labelPanel;
-	private String date;
+	private GregorianCalendar date;
 	
-	public PatientFolderReportModal(Integer code, String date) {
+	public PatientFolderReportModal(Integer code, GregorianCalendar olderDate) {
 		this.patId=code;
-		this.date=date;
+		this.date=olderDate;
 		initialize();
 	}
 	private void initialize() {
@@ -354,33 +354,13 @@ public class PatientFolderReportModal extends ModalJFrame{
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE)); //$NON-NLS-1$
 			jDateChooserDateFrom.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
-			Date date2 = null;
-			DateFormat format = new SimpleDateFormat("dd/MM/yy");
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-			String correctdate = null;
-			try {
-				Date dat = format.parse(date);
-				 correctdate = df.format(dat);
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			try {
-				
-				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(correctdate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			jDateChooserDateFrom.setDate(date2);
+			jDateChooserDateFrom.setDate(date.getTime());
 			jDateChooserDateFrom.addPropertyChangeListener("date", new PropertyChangeListener() {
 				
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					Date date = (Date) evt.getNewValue();
 					jDateChooserDateFrom.setDate(date);
-					
-					
 				}
 			});
 		}

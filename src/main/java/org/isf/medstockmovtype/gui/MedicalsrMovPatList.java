@@ -2,6 +2,7 @@ package org.isf.medstockmovtype.gui;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -18,10 +19,10 @@ import org.isf.utils.jobjects.OhTableDrugsModel;
 
 public class MedicalsrMovPatList extends JPanel {
 	private Patient myPatient;
-	private ArrayList<MovementWard> oprowData;
+	private ArrayList<MovementWard> drugsData;
 	private JDialog dialogDrug;
 	private JTable JtableData;
-	private OhTableDrugsModel<MovementWard> modelOhOpeRow;
+	private OhTableDrugsModel<MovementWard> modelMedWard;
 	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 	private MovWardBrowserManager movManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	public MedicalsrMovPatList(Object object) {
@@ -42,9 +43,9 @@ public class MedicalsrMovPatList extends JPanel {
 			MovWardBrowserManager movManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 			try {
 				ArrayList<MovementWard> movPat = movManager.getMovementToPatient(myPatient);
-				oprowData = new ArrayList<MovementWard>();
+				drugsData = new ArrayList<MovementWard>();
 				for (MovementWard mov : movPat) {
-					oprowData.add(mov);
+					drugsData.add(mov);
 				}
 			} catch (OHServiceException ex) {
 				ex.printStackTrace();
@@ -58,13 +59,17 @@ public class MedicalsrMovPatList extends JPanel {
 		JtableData.setDefaultRenderer(Double.class, cellRenderer);
 		
 		
-		modelOhOpeRow = new OhTableDrugsModel<MovementWard>(oprowData);
+		modelMedWard = new OhTableDrugsModel<MovementWard>(drugsData);
 
-		JtableData.setModel(modelOhOpeRow);
+		JtableData.setModel(modelMedWard);
 		dialogDrug = new JDialog();
 		dialogDrug.setLocationRelativeTo(null);
 		dialogDrug.setSize(450, 280);
 		dialogDrug.setLocationRelativeTo(null);
 		dialogDrug.setModal(true);
+	}
+	
+	public List<MovementWard> getDrugsData() {
+		return drugsData;
 	}
 }

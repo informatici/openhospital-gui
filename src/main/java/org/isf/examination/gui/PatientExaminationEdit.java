@@ -22,7 +22,6 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,6 +74,7 @@ import org.isf.utils.jobjects.ScaledJSlider;
 import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
+import org.isf.utils.time.Converters;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -303,7 +303,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if(patexList != null){
 			for (PatientExamination patex : patexList) {
 				summary.append(SUMMARY_START_ROW);
-				summary.append(STD).append(new SimpleDateFormat(DATE_FORMAT).format(new Date(patex.getPex_date().getTime()))).append(ETD);
+				summary.append(STD).append(new SimpleDateFormat(DATE_FORMAT).format(patex.getPex_date().getTime())).append(ETD);
 				summary.append(STD).append(patex.getPex_height() == null ? "-" : patex.getPex_height()).append(ETD);
 				summary.append(STD).append(patex.getPex_weight() == null ? "-" : patex.getPex_weight()).append(ETD);
 				summary.append(STD).append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
@@ -321,7 +321,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private void updateGUI() {
-		jDateChooserDate.setDate(new Date(patex.getPex_date().getTime()));
+		jDateChooserDate.setDate(patex.getPex_date().getTime());
 		jTextFieldHeight.setText(String.valueOf(patex.getPex_height()));
 		jSliderHeight.setValue(patex.getPex_height());
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
@@ -931,7 +931,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				public void propertyChange(PropertyChangeEvent evt) {
 					Date date = (Date) evt.getNewValue();
 					jDateChooserDate.setDate(date);
-					patex.setPex_date(new Timestamp(date.getTime()));
+					patex.setPex_date(Converters.toCalendar(date));
 					
 				}
 			});
@@ -2080,7 +2080,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			StringBuilder ap_string = new StringBuilder();
 			ap_string.append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
 					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max());
-			String datetime = new SimpleDateFormat(DATE_FORMAT).format(new Date(patex.getPex_date().getTime()));
+			String datetime = new SimpleDateFormat(DATE_FORMAT).format(patex.getPex_date().getTime());
 			String diuresis = patex.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc());
 			String bowel = patex.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc());
 			String ausc = patex.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation());
