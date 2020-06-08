@@ -35,6 +35,8 @@
 	<parameter name="Drugs" isForPrompting="true" class="java.lang.Boolean"/>
 	<parameter name="Examination" isForPrompting="true" class="java.lang.Boolean"/>
 	<parameter name="All" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="Laboratory" isForPrompting="true" class="java.lang.Boolean"/>
+	<parameter name="Operations" isForPrompting="true" class="java.lang.Boolean"/>
 	<queryString><![CDATA[SELECT TYPE, DATE, IDS, NOTE, DETAILS_1, DETAILS_2, DETAILS_3, DETAILS_4
 FROM (
 SELECT CONCAT("Opd", " (", OPD_PROG_YEAR, ")") AS TYPE,
@@ -96,6 +98,28 @@ SELECT "Drugs" AS TYPE,
 		GROUP BY DATE(MMVN_DATE), MMVN_MDSR_ID
 	) AS MEDICALS
 GROUP BY DATE(DATE)
+
+UNION
+
+SELECT "Operations" AS TYPE,
+	   OPER_OPDATE AS DATE, OPE_DESC AS IDS,
+	   GROUP_CONCAT(CONCAT(OPE_DESC, " - ", OPER_RESULT)) AS DETAILS_1,
+	   "" AS DETAILS_2,
+	   "" AS DETAILS_3,
+	   "" AS DETAILS_4,
+	   "" AS NOTE
+	FROM(
+		SELECT OPER_OPDATE, OPE_DESC, OPER_RESULT
+		FROM 
+			OPERATIONROW  
+			LEFT JOIN OPERATION ON (OPE_ID_A = OPER_ID_A)
+			LEFT JOIN OPD ON (OPER_OPD_ID = OPD_ID) 
+			LEFT JOIN ADMISSION ON (OPER_ADMISSION_ID = ADM_ID) 
+		WHERE (OPD_PAT_ID = $P{patientID} OR ADM_PAT_ID = $P{patientID}) 
+		  AND (OPER_OPDATE BETWEEN $P{Date_from} AND $P{Date_to})
+		GROUP BY DATE(OPER_OPDATE)
+	) AS OPERATIONS
+GROUP BY DATE(DATE)
 	
 UNION
 
@@ -135,7 +159,13 @@ GROUP BY LABR_LAB_ID
 ) 
 AS DETAILS
 
-WHERE TYPE LIKE IF ($P!{Opd},'%Opd%','') OR TYPE LIKE IF ($P!{Admission},'%ADM%','') OR TYPE LIKE IF ($P!{Drugs},'%Drugs%','') OR TYPE LIKE IF ($P!{Examination},'%Examination%','') OR TYPE LIKE IF ($P!{All}, '%%','')
+WHERE TYPE LIKE IF ($P!{Opd},'%Opd%','') 
+   OR TYPE LIKE IF ($P!{Admission},'%ADM%','') 
+   OR TYPE LIKE IF ($P!{Drugs},'%Drugs%','') 
+   OR TYPE LIKE IF ($P!{Examination},'%Examination%','') 
+   OR TYPE LIKE IF ($P!{Laboratory},'%Laboratory%','') 
+   OR TYPE LIKE IF ($P!{Operations},'%Operations%','') 
+   OR TYPE LIKE IF ($P!{All}, '%%','')
 ORDER BY DATE DESC]]></queryString>
 
 	<field name="TYPE" class="java.lang.String"/>

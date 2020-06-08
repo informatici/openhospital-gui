@@ -31,7 +31,7 @@ import com.toedter.calendar.JDateChooser;
 
 public class PatientFolderReportModal extends ModalJFrame{
 	private Integer patId;
-	private JPanel jPanelChos;
+	private JPanel jPanelChooser;
 	private JDateChooser jDateChooserDateFrom;
 	private JDateChooser jDateChooserDateTo;
 	private JPanel choosePanel;
@@ -47,6 +47,10 @@ public class PatientFolderReportModal extends ModalJFrame{
 	private JCheckBox drugsCheck;
 	private JPanel examinationPanel;
 	private JCheckBox examinationCheck;
+	private JPanel laboratoryPanel;
+	private JCheckBox laboratoryCheck;
+	private JPanel operationsPanel;
+	private JCheckBox operationCheck;
 	private JPanel allPanel;
 	private JCheckBox allCheck;
 	private JPanel labelPanel;
@@ -68,15 +72,15 @@ public class PatientFolderReportModal extends ModalJFrame{
 	}
 	private JPanel getJContentPane() {
 
-		if (jPanelChos == null) {
-			jPanelChos = new JPanel();
+		if (jPanelChooser == null) {
+			jPanelChooser = new JPanel();
 			
 			GridBagLayout gbl_jPanelExamination = new GridBagLayout();
 			gbl_jPanelExamination.columnWidths = new int[] { 0, 0, 0, 0 };
 			gbl_jPanelExamination.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
 			gbl_jPanelExamination.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0 };
 			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
-			jPanelChos.setLayout(gbl_jPanelExamination);
+			jPanelChooser.setLayout(gbl_jPanelExamination);
 
 			JLabel jLabelDate = new JLabel("DateFrom"); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
@@ -84,14 +88,14 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbc_jLabelDate.insets = new Insets(10, 5, 5, 5);
 			gbc_jLabelDate.gridx = 0;
 			gbc_jLabelDate.gridy = 0;
-			jPanelChos.add(jLabelDate, gbc_jLabelDate);
+			jPanelChooser.add(jLabelDate, gbc_jLabelDate);
 			
 			GridBagConstraints gbc_jDateChooserDate = new GridBagConstraints();
 			gbc_jDateChooserDate.anchor = GridBagConstraints.WEST;
 			gbc_jDateChooserDate.insets = new Insets(10, 5, 5, 5);
 			gbc_jDateChooserDate.gridx = 1;
 			gbc_jDateChooserDate.gridy = 0;
-			jPanelChos.add(getJDateChooserDateFrom(), gbc_jDateChooserDate);
+			jPanelChooser.add(getJDateChooserDateFrom(), gbc_jDateChooserDate);
 			
 			JLabel jLabelDateto = new JLabel("Date to"); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelDateto = new GridBagConstraints();
@@ -99,30 +103,28 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbc_jLabelDateto.insets = new Insets(10, 5, 5, 5);
 			gbc_jLabelDateto.gridx = 0;
 			gbc_jLabelDateto.gridy = 1;
-			jPanelChos.add(jLabelDateto, gbc_jLabelDateto);
+			jPanelChooser.add(jLabelDateto, gbc_jLabelDateto);
 			
 			GridBagConstraints gbc_jDateChooserDateto = new GridBagConstraints();
 			gbc_jDateChooserDateto.anchor = GridBagConstraints.WEST;
 			gbc_jDateChooserDateto.insets = new Insets(10, 5, 5, 5);
 			gbc_jDateChooserDateto.gridx = 1;
 			gbc_jDateChooserDateto.gridy = 1;
-			jPanelChos.add(getJDateChooserDateTo(), gbc_jDateChooserDateto);
+			jPanelChooser.add(getJDateChooserDateTo(), gbc_jDateChooserDateto);
 			
 			GridBagConstraints gbc_jSliderHeight = new GridBagConstraints();
 			gbc_jSliderHeight.insets = new Insets(5, 5, 5, 5);
 			gbc_jSliderHeight.fill = GridBagConstraints.WEST;
 			gbc_jSliderHeight.gridx = 0;
 			gbc_jSliderHeight.gridy = 2;
-			
-			jPanelChos.add(getValueReport(), gbc_jSliderHeight);
+			jPanelChooser.add(getValueReport(), gbc_jSliderHeight);
 			
 			GridBagConstraints gbc_jCancelButtont = new GridBagConstraints();
 			gbc_jCancelButtont.insets = new Insets(5, 5, 5, 5);
 			gbc_jCancelButtont.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jCancelButtont.gridx = 0;
 			gbc_jCancelButtont.gridy = 3;
-		
-			jPanelChos.add(getCloseButton(), gbc_jCancelButtont);
+			jPanelChooser.add(getCloseButton(), gbc_jCancelButtont);
 
 
 			GridBagConstraints gbc_jPrintButtont = new GridBagConstraints();
@@ -130,11 +132,10 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbc_jPrintButtont.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jPrintButtont.gridx = 1;
 			gbc_jPrintButtont.gridy = 3;
-	
-			jPanelChos.add(getPrintButton(), gbc_jPrintButtont);
+			jPanelChooser.add(getPrintButton(), gbc_jPrintButtont);
 		
 		}
-		return jPanelChos;
+		return jPanelChooser;
 	
 	}
 	
@@ -146,13 +147,28 @@ public class PatientFolderReportModal extends ModalJFrame{
 			launchReportButton.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					// GenericReportMY rpt3 = new GenericReportMY(new Integer(6), new Integer(2008), "hmis108_adm_by_diagnosis_in");
-					new GenericReportPatientVersion2(patId, getAllValue(), getAdmissionValue(), getOpdValue(), getExaminationValue(), getDrugsValue(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEET);
+					new GenericReportPatientVersion2(patId, getParameterString(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEET);
+				}
+				
+				protected String getParameterString() {
+					StringBuilder parameterString = new StringBuilder();
+					if (getAllValue()) {
+						parameterString.append("All");
+						return parameterString.toString();
+					}
+					if (getDrugsValue()) parameterString.append("Drugs");
+					if (getExaminationValue()) parameterString.append("Examination");
+					if (getAdmissionValue()) parameterString.append("Admission");
+					if (getOpdValue()) parameterString.append("Opd");
+					if (getLaboratoryValue()) parameterString.append("Laboratory");
+					if (getOperationValue()) parameterString.append("Operations");
+					
+					return parameterString.toString();
 				}
 			});
 		}
 		return launchReportButton;
 	}
-	
 	
 	private JButton getCloseButton() {
 		if (closeButton == null) {
@@ -167,30 +183,6 @@ public class PatientFolderReportModal extends ModalJFrame{
 		}
 		return closeButton;
 	}
-	private JPanel getValue() {
-
-		if (choosePanel == null) {
-
-			choosePanel = new JPanel();
-			chooselabel = new JLabel();
-			//TODO: use bundles
-			chooselabel.setText("Report For:");
-
-			chooseField = new JComboBox();
-			chooseField.addItem("All");
-			chooseField.addItem("Admission");
-			chooseField.addItem("Opd");
-			chooseField.addItem("Drugs");
-			chooseField.addItem("Examination");
-			
-			
-		
-			choosePanel.add(chooselabel);
-			choosePanel.add(chooseField);
-		}
-
-		return choosePanel;
-	}
 	
 	private JPanel getValueReport() {
 
@@ -203,6 +195,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 			choosePanel.add(getPanelAll());
 			choosePanel.add(getPanelAdmission());
 			choosePanel.add(getPanelOpd());
+			choosePanel.add(getPanelLaboratory());
+			choosePanel.add(getPanelOperations());
 			choosePanel.add(getPanelDrugs());
 			choosePanel.add(getPanelExamination());
 			
@@ -210,13 +204,14 @@ public class PatientFolderReportModal extends ModalJFrame{
 
 		return choosePanel;
 	}
+	
 	private JPanel getPanelLabel() {
 		if (labelPanel == null) {
 			labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
 			labelPanel.setAlignmentY(LEFT_ALIGNMENT);
 			
 			
-			labelPanel.add(new JLabel("Report For:"), BorderLayout.CENTER);
+			labelPanel.add(new JLabel(MessageBundle.getMessage("angal.patientfolder.reportfor") + ":"), BorderLayout.CENTER);
 			
 			
 		}
@@ -230,7 +225,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 
 			allCheck.setSelected(true);
 			allPanel.add(allCheck);
-			allPanel.add(new JLabel(MessageBundle.getMessage("angal.patvac.all")), BorderLayout.CENTER);
+			allPanel.add(new JLabel(MessageBundle.getMessage("angal.menu.all")), BorderLayout.CENTER);
 			allCheck.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					examinationCheck.setSelected(false);
@@ -263,6 +258,44 @@ public class PatientFolderReportModal extends ModalJFrame{
 		return examinationPanel;
 	}
 	
+	private JPanel getPanelOperations() {
+		if (operationsPanel == null) {
+			operationsPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
+			
+			operationCheck = new JCheckBox();
+
+			
+			operationsPanel.add(operationCheck);
+			operationsPanel.add(new JLabel(MessageBundle.getMessage("angal.menu.operation")), BorderLayout.CENTER);
+			operationCheck.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					allCheck.setSelected(false);
+					
+				}
+			});
+		}
+		return operationsPanel;
+	}
+	
+	private JPanel getPanelLaboratory() {
+		if (laboratoryPanel == null) {
+			laboratoryPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
+			
+			laboratoryCheck = new JCheckBox();
+
+			
+			laboratoryPanel.add(laboratoryCheck);
+			laboratoryPanel.add(new JLabel(MessageBundle.getMessage("angal.menu.laboratory")), BorderLayout.CENTER);
+			laboratoryCheck.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					allCheck.setSelected(false);
+					
+				}
+			});
+		}
+		return laboratoryPanel;
+	}
+	
 	private JPanel getPanelDrugs() {
 		if (drugsPanel == null) {
 			drugsPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
@@ -271,7 +304,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 
 			
 			drugsPanel.add(drugsCheck);
-			drugsPanel.add(new JLabel(MessageBundle.getMessage("angal.medicalstockward.drugs")), BorderLayout.CENTER);
+			drugsPanel.add(new JLabel(MessageBundle.getMessage("angal.patientfolder.tab.drugs")), BorderLayout.CENTER);
 			drugsCheck.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					allCheck.setSelected(false);
@@ -321,7 +354,12 @@ public class PatientFolderReportModal extends ModalJFrame{
 		return admissionPanel;
 	}
 	
-	
+	public boolean getOperationValue() {
+		return operationCheck.isSelected();
+	}
+	public boolean getLaboratoryValue() {
+		return laboratoryCheck.isSelected();
+	}
 	public boolean getAdmissionValue() {
 		return admissionCheck.isSelected();
 	}
@@ -371,17 +409,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 		if (jDateChooserDateTo == null) {
 			jDateChooserDateTo = new JDateChooser();
 			jDateChooserDateTo.setPreferredSize(new Dimension(200, 40));
-			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE)); //$NON-NLS-1$
 			jDateChooserDateTo.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
-//			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());;
-//			Date date2 = null;
-//			try {
-//				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
-//			} catch (ParseException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
 			jDateChooserDateTo.setDate(new Date());
 			
 			jDateChooserDateTo.addPropertyChangeListener("date", new PropertyChangeListener() {
