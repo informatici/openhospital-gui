@@ -109,7 +109,9 @@ public class OperationEdit extends JDialog {
 	private JRadioButton major = null;
 	private JRadioButton minor = null;
 	private JPanel radioButtonPanel;
+	private JLabel operForLabel=null;
 	private boolean insert = false;
+	private JComboBox operBox;
 
 	/**
 	 * 
@@ -180,6 +182,9 @@ public class OperationEdit extends JDialog {
 			codeLabel = new JLabel();
 			codeLabel.setText(MessageBundle.getMessage("angal.common.code")); //$NON-NLS-1$
 			codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+			operForLabel = new JLabel();
+			operForLabel.setText(MessageBundle.getMessage("angal.operation.operationcontext")); //$NON-NLS-1$
+			operForLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			dataPanel = new JPanel();
 			dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS)); // Generated
 			dataPanel.add(typeLabel, null); // Generated
@@ -189,8 +194,23 @@ public class OperationEdit extends JDialog {
 			dataPanel.add(descLabel, null); // Generated
 			dataPanel.add(getDescriptionTextField(), null); // Generated
 			dataPanel.add(getRadioButtonPanel());
+			dataPanel.add(operForLabel, null); // Generated
+			dataPanel.add(getOperFor(), null); 
 		}
 		return dataPanel;
+	}
+
+	private JComboBox getOperFor() {
+
+		//TODO: use bundles
+		operBox = new JComboBox();
+
+		operBox.addItem("OPD/ADMISSION");
+		operBox.addItem("ADMISSION");
+		operBox.addItem("OPD");
+
+		return operBox;
+
 	}
 
 	/**
@@ -292,7 +312,18 @@ public class OperationEdit extends JDialog {
 								return;
 							}
 						}
+						String opeFor;
+						String op=String.valueOf(operBox.getSelectedItem());
+						//TODO: use bundles
+						if (op.equals("OPD/ADMISSION")) {
+							  opeFor="1";
+						}else if(op.equals("ADMISSION")) {
+							 opeFor="2";
+						}else {
+							opeFor="3";
+						}
 
+						operation.setOpeFor(opeFor);
 						operation.setType((OperationType) typeComboBox.getSelectedItem());
 						operation.setDescription(descriptionTextField.getText());
 						operation.setCode(codeTextField.getText().trim().toUpperCase());
