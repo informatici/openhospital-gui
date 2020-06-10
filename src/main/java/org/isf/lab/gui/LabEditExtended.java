@@ -20,6 +20,7 @@ import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -34,6 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.EventListenerList;
 
@@ -159,6 +161,10 @@ public class LabEditExtended extends ModalJFrame {
 	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
 	private AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+
+	private JTextField examTextField;
+
+	private boolean examChanged;
 	
 	public LabEditExtended(JFrame owner, Laboratory laboratory, boolean inserting) {
 		//super(owner, true);
@@ -197,6 +203,8 @@ public class LabEditExtended extends ModalJFrame {
 					resultPanel = getFirstPanel();
 				else if (examSelected.getProcedure() == 2)
 					resultPanel = getSecondPanel();
+				else if (examSelected.getProcedure() == 3)
+					resultPanel = getThirdPanel();
 			}
 			resultPanel.setBorder(BorderFactory.createTitledBorder(
 					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.lab.result")));
@@ -542,6 +550,8 @@ public class LabEditExtended extends ModalJFrame {
 							resultPanel = getFirstPanel();
 						else if (examSelected.getProcedure() == 2)
 							resultPanel = getSecondPanel();
+						else if (examSelected.getProcedure() == 3)
+							resultPanel = getThirdPanel();
 
 						validate();
 						repaint();
@@ -672,13 +682,18 @@ public class LabEditExtended extends ModalJFrame {
 		}
 		return cancelButton;
 	}
-
+	private boolean isNumeric(String str)
+		{
+		  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+		}
 	private JButton getOkButton() {
 		if (okButton == null) {
 			okButton = new JButton();
 			okButton.setText(MessageBundle.getMessage("angal.common.ok"));
 			okButton.setMnemonic(KeyEvent.VK_O);
 			okButton.addActionListener(new java.awt.event.ActionListener() {
+				
+
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (examComboBox.getSelectedIndex() == 0) {
 						JOptionPane.showMessageDialog(LabEditExtended.this,
@@ -702,7 +717,12 @@ public class LabEditExtended extends ModalJFrame {
 								MessageBundle.getMessage("angal.lab.pleaseinsertavalidexamdate"));
 						return;
 					}
-					
+					if ((examSelected.getProcedure() == 3) && 
+							(!isNumeric(examTextField.getText()) && (!examTextField.getText().isEmpty())) ) {
+
+						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.labnew.onlynumericforprocedure3"));
+							return;
+					}
 					ArrayList<String> labRow = new ArrayList<String>();
 					lab.setDate(new GregorianCalendar());
 					lab.setExamDate(gregDate);
@@ -726,6 +746,9 @@ public class LabEditExtended extends ModalJFrame {
 								labRow.add(eRows.get(i).getDescription());
 							}
 						}
+					}
+					else if (examSelected.getProcedure() == 3) {
+						lab.setResult(examTextField.getText());
 					}
 					boolean result = false;
 					if (insert) {
@@ -836,6 +859,26 @@ public class LabEditExtended extends ModalJFrame {
 				}
 			}
 		}
+		return resultPanel;
+	}
+	
+	private JPanel getThirdPanel() {
+		resultPanel.removeAll();
+		String result="";
+		examTextField = new JTextField();
+		examTextField.setMaximumSize(new Dimension(200, 25));
+		examTextField.setMinimumSize(new Dimension(200, 25));
+		examTextField.setPreferredSize(new Dimension(200, 25));
+		if (insert || examChanged) {
+			result=examSelected.getDefaultResult();
+			examChanged = false;
+		} else {
+			result=lab.getResult();
+		}
+		examTextField.setText(result);
+
+		resultPanel.add(examTextField);
+
 		return resultPanel;
 	}
 
