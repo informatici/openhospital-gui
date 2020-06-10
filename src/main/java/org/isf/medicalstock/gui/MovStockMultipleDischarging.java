@@ -66,8 +66,8 @@ public class MovStockMultipleDischarging extends JDialog {
 	private boolean[] columnEditable = { false, false, false, false, true, false, false, false};
 	private int[] columnWidth = { 50, 100, 70, 50, 70, 50, 100, 80};
 	private boolean[] columnResizable = { false, true, false, false, false, false, false, false};
-	private boolean[] columnVisible = { true, true, true, true, true, true, !GeneralData.AUTOMATICLOT, !GeneralData.AUTOMATICLOT };
-	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
+	private boolean[] columnVisible = { true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_OUT, !GeneralData.AUTOMATICLOT_OUT };
+ 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
 			SwingConstants.CENTER};
 	private boolean[] columnBold = { false, false, false, false, false, true, false, false};
 	private HashMap<String, Medical> medicalMap;
@@ -103,7 +103,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	}
 
 	private boolean isAutomaticLot() {
-		return GeneralData.AUTOMATICLOT;
+		return GeneralData.AUTOMATICLOT_OUT;
 	}
 
 	private boolean isXmpp() {

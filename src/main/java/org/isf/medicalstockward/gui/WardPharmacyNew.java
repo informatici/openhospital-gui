@@ -8,7 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.acl.Owner;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
@@ -29,13 +32,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
+import org.isf.medicalstock.gui.MovStockMultipleDischarging;
+import org.isf.medicalstock.manager.MovStockInsertingManager;
+import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
@@ -44,6 +53,8 @@ import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
@@ -122,14 +133,16 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JButton jButtonAddMedical;
 	private JButton jButtonRemoveMedical;
 	private static final Dimension PatientDimension = new Dimension(300,20);
-
+	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
+	
 	private Patient patientSelected = null;
 	private Ward wardSelected;
-	private Object[] medClasses = {Medical.class, Integer.class};
+	private Object[] medClasses = {Medical.class, Integer.class, String.class};
 	private String[] medColumnNames = {MessageBundle.getMessage("angal.medicalstockward.medical"), 
-									   MessageBundle.getMessage("angal.common.quantity")};
-	private Integer[] medWidth = {200, 150};
-	private boolean[] medResizable = {true, false};
+									   MessageBundle.getMessage("angal.common.quantity"),
+									   MessageBundle.getMessage("angal.medicalstockward.lotnumberabb") };
+	private Integer[] medWidth = {150, 150, 50};
+	private boolean[] medResizable = {true, false, false};
 	
 	//Medicals (ALL)
 	//MedicalBrowsingManager medManager = new MedicalBrowsingManager();
@@ -178,6 +191,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		setTitle(MessageBundle.getMessage("angal.medicalstockwardedit.title"));
 		pack();
 		setLocationRelativeTo(null);
+	}
+	
+	private boolean isAutomaticLot() {
+		return GeneralData.AUTOMATICLOTWARD_TOWARD;
 	}
 
 	private JPanel getJPanelNorth() {
@@ -239,7 +256,256 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 		return jRadioUse;
 	}
+	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
+	
+	class StockMovModel extends DefaultTableModel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private ArrayList<MedicalWard> druglist;
 
+		public StockMovModel(ArrayList<MedicalWard> drug) {
+			druglist = drug;
+		}
+
+		public int getRowCount() {
+			if (druglist == null)
+				return 0;
+			return druglist.size();
+		}
+
+		public String getColumnName(int c) {
+			if (c == 0) {
+				return MessageBundle.getMessage("angal.medicalstock.lotid"); //$NON-NLS-1$
+			}
+			
+			if (c == 1) {
+				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
+			}
+			if (c == 2) {
+				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
+			}
+			return ""; //$NON-NLS-1$
+		}
+
+		public int getColumnCount() {
+			return 3;
+		}
+
+		public Object getValueAt(int r, int c) {
+			if (c == -1) {
+				return druglist.get(r);
+			} else if (c == 0) {
+				return druglist.get(r).getId().getLotId();
+			} else if (c == 1) {
+				ArrayList<Lot> lot = null;
+				try {
+					lot = movManager.getLotByMedicalId(druglist.get(r).getId().getLotId());
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+				}
+				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
+			}  else if (c == 2) {
+				return druglist.get(r).getQty();
+			}
+			return null;
+		}
+
+		@Override
+		public boolean isCellEditable(int arg0, int arg1) {
+			return false;
+		}
+	}
+	
+	private boolean checkQuantityInLot(MedicalWard medWard, double qty) {
+		double wardQty = medWard.getQty();
+		if (qty > wardQty) {
+			JOptionPane.showMessageDialog(WardPharmacyNew.this, 
+					MessageBundle.getMessage("angal.medicalstock.movementquantityisgreaterthanthequantityof")); //$NON-NLS-1$
+			return false;
+		} 
+		return true;
+	}
+	
+	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int qanty) {
+				ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+				Collections.sort(drug, new Comparator<MedicalWard>() {
+					@Override
+					public int compare(MedicalWard o1, MedicalWard o2) {
+						  if (o1.getLot().getDueDate() == null || o2.getLot().getDueDate() == null)
+						        return 0;
+						      return o1.getLot().getDueDate().compareTo(o2.getLot().getDueDate());
+					}
+					});
+				
+				MedicalWard medWard =null;
+				int q = qanty;
+				for (MedicalWard elem : drug) {
+						if(elem.getMedical().getDescription().equals(me)) {
+							
+							if(elem.getQty() != 0.0) {
+								if (q!=0) {
+									if (elem.getQty()<=q) {
+										MedicalWard e = elem;
+										dr.add(e);
+										q =(int) (q -elem.getQty()) ;
+										int maxquantity =  (int) (elem.getQty()-0);
+										medWard = elem;
+										addItem(medWard, maxquantity);
+										
+									}else {
+										MedicalWard e = elem;
+										dr.add(e);
+										int qu = (int) (elem.getQty() -q ) ;
+										medWard = elem;
+										
+										addItem(medWard, q);
+										q=0;
+									}
+								}
+							
+								
+								}
+						}					
+						}
+				
+					
+				
+				 
+				return medWard;
+			}
+	
+	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int qanty) {
+		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+		MedicalWard medWard =null;
+		for (MedicalWard elem : drug) {
+			if(elem.getMedical().getDescription().equals(me)) {
+				if(elem.getQty() != 0.0) {
+					MedicalWard e = elem;
+						dr.add(e);
+					}
+			}
+			
+		}
+	
+			
+			JTable lotTable = new JTable(new StockMovModel(dr));
+			lotTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			JPanel panel = new JPanel(new BorderLayout());
+			panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multipledischarging.selectalot")), BorderLayout.NORTH); //$NON-NLS-1$
+			panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
+			
+			do {
+				int ok = JOptionPane.showConfirmDialog(WardPharmacyNew.this, 
+						panel, 
+						MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$ 
+						JOptionPane.OK_CANCEL_OPTION);
+	
+				if (ok == JOptionPane.OK_OPTION) {
+					int row = lotTable.getSelectedRow();
+					if (row != -1) medWard = dr.get(row);
+						else return null;
+					
+					
+					if (!checkQuantityInLot(medWard, qanty)) medWard = null;
+					
+					
+					addItem(medWard, qanty);
+					
+				}
+				
+			} while (dr == null);
+		 
+		return medWard;
+	}
+	
+	protected int askQuantity(String med ,ArrayList<MedicalWard> drug) {
+		int qty = 0;
+		double totalQty = 0;
+		String prodCode = null ;
+		for (MedicalWard elem : drug) {
+			
+			try {
+				if(med.equals(elem.getMedical().getDescription())) {
+					totalQty += elem.getQty();
+					prodCode = elem.getMedical().getProd_code();
+					
+				}
+			} catch (OHException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+	}
+		double usedQty = 0;
+		StringBuilder message = new StringBuilder();
+		message.append(med.toString())
+			.append("\n") //$NON-NLS-1$
+			.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
+			.append(totalQty); //$NON-NLS-1$
+		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+		
+		if (prodCode != null && !prodCode.equals("")) { //$NON-NLS-1$
+			title.append(" ") //$NON-NLS-1$
+			.append(MessageBundle.getMessage("angal.common.code")) //$NON-NLS-1$
+			.append(": ") //$NON-NLS-1$
+			.append(prodCode);
+		} else { 
+			title.append(": "); //$NON-NLS-1$
+		}
+		
+		do {
+			String quantity = JOptionPane.showInputDialog(WardPharmacyNew.this, 
+					message.toString(), 
+					title.toString(),
+					JOptionPane.QUESTION_MESSAGE);
+		
+			if (quantity != null) {
+				try {
+					qty = Integer.parseInt(quantity);
+					if (qty == 0)
+						return 0;
+					if (qty < 0)
+						throw new NumberFormatException();
+					
+				} catch (NumberFormatException nfe) {
+					JOptionPane.showMessageDialog(WardPharmacyNew.this, 
+							MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+					qty = 0;
+				}
+			} else return qty;
+			if (checkQuantity(totalQty, qty)) {
+
+				if (isAutomaticLot()) {
+					MedicalWard warSe = automaticChoose(wardDrugs, med, qty);
+				} else {
+					MedicalWard warSe = chooseLot(wardDrugs, med, qty);
+				}
+			} else {
+				askQuantity(med, wardDrugs);
+			}
+		} while (qty == 0);
+		
+		return qty;
+
+	}
+	
+	private boolean checkQuantity( double totalQty, double qty) {
+	
+		if (qty > totalQty) {
+			StringBuilder message = new StringBuilder();
+			message.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.thequantityisnotavailable")) //$NON-NLS-1$
+				.append("\n") //$NON-NLS-1$
+				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
+				.append(totalQty);
+			JOptionPane.showMessageDialog(WardPharmacyNew.this, message.toString());
+			return false;
+		}
+		return true;
+	}
 	private JButton getJButtonAddMedical() {
 		if (jButtonAddMedical == null) {
 			jButtonAddMedical = new JButton();
@@ -249,79 +515,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonAddMedical.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					ArrayList<Medical> currentMeds = new ArrayList<Medical>();
-
-					// remove already inserted items
-					for (MedicalWard medItem : medItems) {
-						Medical med = null;
-						med = medItem.getMedical();
-						currentMeds.add(med);
-					}
-					
-//					Icon icon = new ImageIcon("rsc/icons/medical_dialog.png"); //$NON-NLS-1$
-//					Medical med = (Medical)JOptionPane.showInputDialog(
-//					                    WardPharmacyNew.this,
-//					                    "TestTest Test", //$NON-NLS-1$
-//					                    MessageBundle.getMessage("angal.medicalstockwardedit.medical"), //$NON-NLS-1$
-//					                    JOptionPane.PLAIN_MESSAGE,
-//					                    icon,
-//					                    currentMeds.toArray(),
-//					                    ""); //$NON-NLS-1$
-	                Medical med = null;
-	                if (jComboBoxMedicals.getSelectedItem() instanceof Medical) {
-	                        med = (Medical) jComboBoxMedicals.getSelectedItem();
-	                }
-	               	if(currentMeds.contains(med)) {
-	               		JOptionPane.showMessageDialog(WardPharmacyNew.this, 
-							MessageBundle.getMessage("angal.medicalstockwardedit.productalreadyinserted"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.medicalstockwardedit.invalidproduct"), //$NON-NLS-1$
-							JOptionPane.ERROR_MESSAGE);
-	               		return;
-	               	}
-					if (med != null) {
-						int index = medArray.indexOf(med);
-						Double startQty = 0.;
-						Double minQty = 0.;
-						Double maxQty = qtyArray.get(index);
-						Double stepQty = 0.5;
-						JSpinner jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty,minQty,null,stepQty));
-						
-						StringBuilder messageBld = new StringBuilder(med.getDescription()).append("\n");
-						messageBld.append(MessageBundle.getMessage("angal.medicalstockwardedit.insertquantitypiecesormls")).append("\n");
-						messageBld.append(MessageBundle.getMessage("angal.medicalstockwardedit.instock")).append(": ").append(maxQty);
-						
-						int r = JOptionPane.showConfirmDialog(WardPharmacyNew.this, 
-								new Object[] { messageBld.toString(), jSpinnerQty },
-								MessageBundle.getMessage("angal.common.quantity"),
-				        		JOptionPane.OK_CANCEL_OPTION, 
-				        		JOptionPane.PLAIN_MESSAGE);
-						
-						if (r == JOptionPane.OK_OPTION) {
-							try {
-								Double qty = (Double) jSpinnerQty.getValue();
-								if (qty > maxQty) {
-									JOptionPane.showMessageDialog(WardPharmacyNew.this, 
-											MessageBundle.getMessage("angal.medicalstockwardedit.invalidquantitypleaseinsertmax") + " " + maxQty, //$NON-NLS-1$
-											MessageBundle.getMessage("angal.medicalstockwardedit.invalidquantity"), //$NON-NLS-1$
-											JOptionPane.ERROR_MESSAGE);
-									return;
-								}
-								double roundedQty = round(qty, stepQty);
-								if (roundedQty >= stepQty)
-									addItem(med, roundedQty);
-								else
-									JOptionPane.showMessageDialog(WardPharmacyNew.this, 
-											MessageBundle.getMessage("angal.medicalstockwardedit.invalidquantitypleaseinsertatleast") + " " + stepQty, //$NON-NLS-1$
-											MessageBundle.getMessage("angal.medicalstockwardedit.invalidquantity"), //$NON-NLS-1$
-											JOptionPane.ERROR_MESSAGE);
-							} catch (Exception eee) {
-								JOptionPane.showMessageDialog(WardPharmacyNew.this, 
-										MessageBundle.getMessage("angal.medicalstockwardedit.invalidquantitypleasetryagain"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.medicalstockwardedit.invalidquantity"), //$NON-NLS-1$
-										JOptionPane.ERROR_MESSAGE);
-							}
-						} else return;
-					}
+					String medical=(String)jComboBoxMedicals.getSelectedItem();
+					int qanty = askQuantity(medical,wardDrugs);
 				}
 			});
 		}
@@ -354,13 +549,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return jButtonRemoveMedical;
 	}
 
-	private void addItem(Medical med, Double qty) {
-		if (med != null) {
-			
-			MedicalWard item = new MedicalWard(med, qty);
+	private void addItem(MedicalWard ward, int qanty) {
+		if (ward != null) {
+		
+			MedicalWard item = new MedicalWard(ward.getMedical(), (double) qanty, ward.getId().getLot());
 			medItems.add(item);
-			medArray.add(med);
-			qtyArray.add(qty);
+			
+//			medArray.add(med);
+			qtyArray.add((double) qanty);
 			jTableMedicals.updateUI();
 		}
 	}
@@ -427,6 +623,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 							description = patientSelected.getName();
 							age = patientSelected.getAge();
 							weight = patientSelected.getWeight();
+						}else {
+							JOptionPane.showMessageDialog(null,
+									MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseselectpatient"));
+							return;
 						}
 					} 
                     else if (jRadioWard.isSelected()) {
@@ -463,7 +663,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 //									MessageBundle.getMessage("angal.medicalstockwardedit.pieces"),
 //                                                                        wardTo));
 //						} catch (OHException e1) {
-//							// TODO Auto-generated catch block
 //							e1.printStackTrace();
 //						}
 //					}
@@ -495,7 +694,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						for (int i = 0; i < medItems.size(); i++) {
 							manyMovementWard.add(new MovementWard(wardSelected, newDate, isPatient, patientSelected,
 									age, weight, description, medItems.get(i).getMedical(), medItems.get(i).getQty(),
-									MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null));
+									MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null,medItems.get(i).getLot()));
 						}
 
 						result = wardManager.newMovementWard(manyMovementWard);
@@ -676,6 +875,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			if (c == 1) {
 				return medItems.get(r).getQty(); 
 			}
+			if (c == 2) {
+				return medItems.get(r).getId().getLotId(); 
+			}
 			return null;
 		}
 		
@@ -764,7 +966,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
                     jComboBoxMedicals.removeAllItems();
                     ArrayList<Medical> results = getSearchMedicalsResults(searchTextField.getText(), medArray);
                     for (Medical aMedical : results) {
-			jComboBoxMedicals.addItem(aMedical);
+                    	jComboBoxMedicals.addItem(aMedical.getDescription());
                     }
                 }
             });
@@ -797,8 +999,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jComboBoxMedicals.setMaximumSize(new Dimension(300, 24));
 			jComboBoxMedicals.setPreferredSize(new Dimension(300, 24));
 		}
+		ArrayList<Object> med = new ArrayList<Object>();
 		for (Medical aMedical : medArray) {
-                    jComboBoxMedicals.addItem(aMedical);
+			if (!med.contains(aMedical.getDescription())) { 
+				med.add(aMedical.getDescription());
+				jComboBoxMedicals.addItem(aMedical.getDescription());
+            } 
 		}
 		return jComboBoxMedicals;
 	}

@@ -35,6 +35,7 @@
 	<field name="medical" class="java.lang.String"/>
 	<field name="quantity" class="java.lang.Double"/>
 	<field name="patient" class="java.lang.Boolean"/>
+	<field name="lot" class="java.lang.String"/>
 
 	<variable name="Count" class="java.lang.Integer" resetType="Report" calculation="Count">
 		<variableExpression><![CDATA[$F{date}]]></variableExpression>
@@ -89,7 +90,7 @@
 					<reportElement
 						x="149"
 						y="0"
-						width="257"
+						width="132"
 						height="13"
 						key="textField"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -156,6 +157,23 @@
 						<font/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{MEDICAL_RECTIFY}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="276"
+						y="0"
+						width="132"
+						height="13"
+						key="textField-26"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{lot}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>
@@ -280,7 +298,7 @@
 					<reportElement
 						x="149"
 						y="4"
-						width="257"
+						width="132"
 						height="24"
 						key="staticText-1"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -360,6 +378,23 @@
 						<font pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Rectified]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="278"
+						y="4"
+						width="132"
+						height="24"
+						key="staticText-9"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Lot N°]]></text>
 				</staticText>
 			</band>
 		</columnHeader>
