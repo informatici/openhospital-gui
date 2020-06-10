@@ -10,19 +10,20 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import org.isf.generaldata.MessageBundle;
-import org.isf.menu.manager.Context;
+import org.isf.medicals.model.Medical;
+import org.isf.medicalstockward.model.MovementWard;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
 
-public class OhTableOperationModel<T> implements TableModel{
+public class OhTableDrugsModel <T> implements TableModel{
 
 	List<T> dataList;	
 	List<T> filteredList;
-	OperationBrowserManager manageop = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	OperationBrowserManager manageop = new OperationBrowserManager();
 	
-	public  OhTableOperationModel(List<T> dataList) {
+	public  OhTableDrugsModel(List<T> dataList) {
 		this.dataList = dataList;
 		this.filteredList = new ArrayList<T>();
 		
@@ -34,23 +35,7 @@ public class OhTableOperationModel<T> implements TableModel{
 		}
 	}
 	
-	public int filter(String searchQuery){
-		this.filteredList=new ArrayList<T>();
-		
-		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext();) {
-			Object object = (Object) iterator.next();
-			if(object instanceof OperationRow){
-				OperationRow price=(OperationRow) object;
-				String strItem=price.getOperation().getCode()+price.getOpResult();
-				strItem = strItem.toLowerCase();
-				searchQuery = searchQuery.toLowerCase();
-				if(strItem.indexOf(searchQuery)>=0){
-					filteredList.add((T) object);
-				}
-			}
-		}
-		return filteredList.size();
-	}
+
 	
 	@Override
 	public void addTableModelListener(TableModelListener l) {
@@ -73,19 +58,19 @@ public class OhTableOperationModel<T> implements TableModel{
 		String columnLable="";
 		switch (columnIndex) {
 		case 0:
-			columnLable= MessageBundle.getMessage("angal.operationrowlist.date");
+			columnLable= MessageBundle.getMessage("angal.medicalstockward.patient.date");
 			//columnLable= "Date";
 			break;
 		case 1:
-			columnLable= MessageBundle.getMessage("angal.operationrowlist.natureop");
+			columnLable= MessageBundle.getMessage("angal.medicalstockward.patient.decription");
 			//columnLable= "Nature Operation";
 			break;
 		case 2:
-			columnLable= MessageBundle.getMessage("angal.operationrowedit.result");
+			columnLable= MessageBundle.getMessage("angal.medicalstockward.patient.quantity");
 			//columnLable= "Resultat";
 			break;
 		case 3:
-			columnLable= MessageBundle.getMessage("angal.operationrowedit.unitetrans");
+			columnLable= MessageBundle.getMessage("angal.medicalstockward.patient.units");
 			//columnLable= "Unite Trans";
 			break;	
 		default:
@@ -108,41 +93,35 @@ public class OhTableOperationModel<T> implements TableModel{
 		String value="";
 		if(rowIndex >=0 && rowIndex < this.filteredList.size()){
 			T obj=this.filteredList.get(rowIndex);
-			if(obj instanceof OperationRow){
-				OperationRow opdObj=(OperationRow)obj;
+			if(obj instanceof MovementWard){
+				MovementWard DrugObj=(MovementWard)obj;
 				switch (columnIndex) {
-				case -1:
-					return opdObj;
 				case 0:
 					String dt = "";
 					try {
 						final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
-						dt = currentDateFormat.format(opdObj.getOpDate().getTime());
+						dt = currentDateFormat.format(DrugObj.getDate().getTime());
 						value = dt;
 					}
 					catch (Exception ex){
-						value=opdObj.getOpDate().getTime().toString();
+						value=DrugObj.getDate().getTime().toString();
 					}
 					
 					break;
 				case 1:
-                    Operation ope = null;
-                    try {
-                        //System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
-                        ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
-                    } catch (OHServiceException ex) {
-                        ex.printStackTrace();
-                    }
-					if(ope != null)					
-						value = ope.getDescription();
+										Medical drugsname = null;
+					//System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
+					   drugsname = DrugObj.getMedical();
+					if(drugsname != null)					
+						value = drugsname.getDescription();
 					else
 						value = "";
 					break;
 				case 2:
-					value=opdObj.getOpResult();
+					value=String.valueOf(DrugObj.getQuantity());
 					break;
 				case 3:
-					value=opdObj.getTransUnit()+"";
+					value=DrugObj.getUnits();
 					break;	
 				default:
 					break;

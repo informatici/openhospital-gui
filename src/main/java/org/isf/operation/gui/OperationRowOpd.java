@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.isf.operation.gui;
 
 import java.awt.AWTEvent;
@@ -35,56 +30,54 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.isf.admission.gui.AdmissionBrowser;
-import org.isf.admission.model.Admission;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
+import org.isf.opd.gui.OpdEditExtended;
+import org.isf.opd.model.Opd;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
 import org.joda.time.DateTime;
 
-/**
- *
- * @author hp
- */
-public class OperationRowAdm extends JPanel implements AdmissionBrowser.AdmissionListener {
+import com.toedter.calendar.JDateChooser;
+
+public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryListener{
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JLabel labelDate;
 	private JTextField textFieldUnit;
-	private CustomJDateChooser textDate;
+	private JDateChooser textDate;
 	private JComboBox comboOperation;
 	private JComboBox comboResult;
 	private JTextArea textAreaRemark;
 
-	OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-	OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
-	OhTableOperationModel<OperationRow> modelOhOpeRow;
+	private OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
+	private OhTableOperationModel<OperationRow> modelOhOpeRow;
 	private List<OperationRow> oprowData = new ArrayList<OperationRow>();
-	private Admission myAdmission;
+	private Opd myOpd;
+	
+	private ArrayList<String> operationResults = opeManager.getResultsList();
 
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 
-	private CustomJDateChooser jCalendarDate;
+	private JDateChooser jCalendarDate;
 	private JTable tableData;
 
-	private ArrayList<String> operationResults = opeManager.getResultsList();
-	
-	public OperationRowAdm(Admission adm) {
+	public OperationRowOpd(Opd opd) {
 		setLayout(new BorderLayout(0, 0));
-		myAdmission = adm;
+		myOpd = opd;
 		JPanel panelForm = new JPanel();
 		panelForm.setBorder(new EmptyBorder(10, 10, 10, 10));
 		panelForm.setSize(new Dimension(200, 200));
@@ -270,22 +263,23 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		});
 		scrollPaneData.setViewportView(tableData);
 
-		if (myAdmission != null) {
+		if (myOpd != null) {
+			List<OperationRow> res = new ArrayList<OperationRow>();
 			try {
-				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
-				oprowData.addAll(res);
-			} catch (OHServiceException ex) {
-				ex.printStackTrace();
+				res = opeRowManager.getOperationRowByOpd(myOpd);
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
 			}
+			oprowData.addAll(res);
 		}
 		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
 		tableData.setModel(modelOhOpeRow);
 
 	}
 
-	private CustomJDateChooser getJCalendarDate() {
+	private JDateChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			jCalendarDate = new CustomJDateChooser();
+			jCalendarDate = new JDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarDate.setDate(DateTime.now().toDate());
@@ -297,7 +291,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		JComboBox comboOpe = new JComboBox();
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
-			opeList.addAll(opeManager.getOperationAdm());
+			opeList.addAll(opeManager.getOperationOpd());
 		} catch (OHServiceException ex) {
 			Logger.getLogger(OperationRowAdm.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -311,17 +305,12 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	public void addToGrid() {
 		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
-			JOptionPane.showMessageDialog(OperationRowAdm.this,
+			JOptionPane.showMessageDialog(OperationRowOpd.this,
 					MessageBundle.getMessage("angal.operationrowedit.warningdateope"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 			return;
 		}
-		if ((myAdmission != null) && (myAdmission.getAdmDate().after(this.textDate.getDate()))) {
-			JOptionPane.showMessageDialog(OperationRowAdm.this,
-					MessageBundle.getMessage("angal.operationrowedit.warningdateafter"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-			return;
-		}
+		
 
 		OperationRow operationRow = new OperationRow();
 		GregorianCalendar dateop = new GregorianCalendar();
@@ -338,8 +327,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		}
 		Operation op = (Operation) this.comboOperation.getSelectedItem();
 		operationRow.setOperation(op);
-		if (myAdmission != null)
-			operationRow.setAdmission(myAdmission);
+		if (myOpd != null)
+			operationRow.setOpd(myOpd);
 		operationRow.setPrescriber(MainMenu.getUser().getUserName());
 		operationRow.setRemarks(textAreaRemark.getText());
 		int index = tableData.getSelectedRow();
@@ -369,7 +358,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		/*** for combo operation *****/
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
-			opeList.addAll(opeManager.getOperationAdm());
+			opeList.addAll(opeManager.getOperationOpd());
 		} catch (OHServiceException ex) {
 			//
 		}
@@ -411,18 +400,18 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		// int idRow = this.tableData.getSelectedRow();
 		OperationRow operationRow = null;
 		if (idRow < 0) {
-			JOptionPane.showMessageDialog(OperationRowAdm.this,
+			JOptionPane.showMessageDialog(OperationRowOpd.this,
 					MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 			return;
 		} else {
 			operationRow = oprowData.get(idRow);
-			int yesOrNo = JOptionPane.showConfirmDialog(OperationRowAdm.this,
+			int yesOrNo = JOptionPane.showConfirmDialog(OperationRowOpd.this,
 					MessageBundle.getMessage("angal.operationrowlist.confirmdelete"), null, JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
 			if (yesOrNo == JOptionPane.YES_OPTION) {
 				int idOpe = operationRow.getId();
 				if (idOpe > 0) {
-					boolean result = false;
+					boolean result;
 					try {
 						result = opeRowManager.deleteOperationRow(operationRow);
 					} catch (OHServiceException e) {
@@ -430,7 +419,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 						return;
 					}
 					if (result) {
-						JOptionPane.showMessageDialog(OperationRowAdm.this,
+						JOptionPane.showMessageDialog(OperationRowOpd.this,
 								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 						oprowData.remove(idRow);
@@ -439,13 +428,13 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 						tableData.repaint();
 						clearForm();
 					} else {
-						JOptionPane.showMessageDialog(OperationRowAdm.this,
+						JOptionPane.showMessageDialog(OperationRowOpd.this,
 								MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 						return;
 					}
 				} else {
-					JOptionPane.showMessageDialog(OperationRowAdm.this,
+					JOptionPane.showMessageDialog(OperationRowOpd.this,
 							MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 					oprowData.remove(idOpe);
@@ -460,8 +449,12 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		}
 	}
 
+	/**
+	 * TODO: Remove Create or Update operations from this method
+	 * it should only update the view at this point
+	 */
 	@Override
-	public void admissionUpdated(AWTEvent e) {
+	public void surgeryUpdated(AWTEvent e, Opd opd) {
 		try {
 			saveAllOpeRow(oprowData, opeRowManager, e);
 		} catch (OHServiceException e1) {
@@ -469,8 +462,12 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		}
 	}
 
+	/**
+	 * TODO: Remove Create or Update operations from this method
+	 * it should only update the view at this point
+	 */
 	@Override
-	public void admissionInserted(AWTEvent e) {
+	public void surgeryInserted(AWTEvent e, Opd opd) {
 		try {
 			saveAllOpeRow(oprowData, opeRowManager, e);
 		} catch (OHServiceException e1) {
@@ -480,29 +477,18 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, AWTEvent e) throws OHServiceException {
 		for (org.isf.operation.model.OperationRow opRow : listOpe) {
-			if ((opRow.getId() > 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
-				try {
-					RowManager.updateOperationRow(opRow);
-				} catch (OHServiceException e1) {
-					OHServiceExceptionUtil.showMessages(e1);
-				}
+			if ((opRow.getId() > 0) && (opRow.getOpd().getCode() > 0)) {
+				RowManager.updateOperationRow(opRow);
 
 			}
-			if ((opRow.getId() <= 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
-				try {
-					RowManager.newOperationRow(opRow);
-				} catch (OHServiceException e1) {
-					OHServiceExceptionUtil.showMessages(e1);
-				}
+			if ((opRow.getId() <= 0) && (opRow.getOpd().getCode() > 0)) {
+				RowManager.newOperationRow(opRow);
+
 			}
-			if ((opRow.getId() <= 0) && (opRow.getAdmission() == null || opRow.getAdmission().getId() <= 0)) {
-				Admission admiss = (Admission) e.getSource();
-				opRow.setAdmission(admiss);
-				try {
-					RowManager.newOperationRow(opRow);
-				} catch (OHServiceException e1) {
-					OHServiceExceptionUtil.showMessages(e1);
-				}
+			if ((opRow.getId() <= 0) && (opRow.getOpd().getCode() <= 0)) {
+				Opd op = (Opd) e.getSource();
+				opRow.setOpd(op);
+				RowManager.newOperationRow(opRow);
 			}
 		}
 	}
@@ -525,4 +511,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	public void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
+
+
+
+
 }

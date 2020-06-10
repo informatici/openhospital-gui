@@ -1,14 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<name>OpenHospital-gui</name>
 	<url>www.open-hospital.org</url>
 	<organization>
 		<name>Informatici Senza Frontiere</name>
 		<url>www.informaticisenzafrontiere.org</url>
 	</organization>
-	
+
 	<groupId>org.isf</groupId>
 	<artifactId>OH-gui</artifactId>
 	<packaging>jar</packaging>
@@ -18,7 +19,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.framework.version>4.3.18.RELEASE</spring.framework.version>
 	</properties>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -95,21 +96,10 @@
 							</resources>
 						</configuration>
 					</execution>
-					<!-- <execution>
-						<id>copy-doc</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/doc</outputDirectory>
-							<resources>
-								<resource>
-									<directory>doc</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution> -->
+					<!-- <execution> <id>copy-doc</id> <phase>validate</phase> <goals> <goal>copy-resources</goal> 
+						</goals> <configuration> <outputDirectory>${basedir}/target/OpenHospital20/doc</outputDirectory> 
+						<resources> <resource> <directory>doc</directory> </resource> </resources> 
+						</configuration> </execution> -->
 					<execution>
 						<id>copy-report</id>
 						<phase>validate</phase>
@@ -186,7 +176,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<dependencies>
 		<dependency>
   			<groupId>org.isf</groupId>
@@ -208,11 +198,11 @@
 			<groupId>jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<exclusions>
-	          <exclusion>
-	          	<groupId>com.lowagie</groupId>
-				<artifactId>itext</artifactId>
-	          </exclusion>
-	        </exclusions>
+				<exclusion>
+					<groupId>com.lowagie</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+			</exclusions>
 			<version>3.0.0</version>
 		</dependency>
 		<dependency>
@@ -240,17 +230,17 @@
 			<artifactId>dcm4che-imageio</artifactId>
 			<version>2.0.26</version>
 		</dependency>
-	  	<dependency>
-	  		<groupId>org.slf4j</groupId>
-	  		<artifactId>slf4j-api</artifactId>
-	  		<version>1.6.4</version>
-	  	</dependency>
-	  	<dependency>
-	  		<groupId>org.slf4j</groupId>
-	  		<artifactId>slf4j-log4j12</artifactId>
-	  		<version>1.6.4</version>
-	  	</dependency>
-	  	<dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
 			<artifactId>smack</artifactId>
 			<version>3.2.1</version>

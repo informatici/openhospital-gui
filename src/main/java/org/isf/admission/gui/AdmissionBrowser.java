@@ -402,6 +402,7 @@ public class AdmissionBrowser extends JDialog {
 		try {
 			diseaseOutList = dbm.getDiseaseIpdOut();
 			Admission admiss = admissionManager.getCurrentAdmission(patient);
+			//TODO: remove this anti-pattern OperationRowAdm
 			operationad = new OperationRowAdm(admiss);
 			addAdmissionListener((AdmissionListener) operationad);
 		} catch (OHServiceException e) {
@@ -462,7 +463,7 @@ public class AdmissionBrowser extends JDialog {
 			enablePregnancy = true;
 		}
 		ps = new PatientSummary(patient);
-                
+		//TODO: remove this anti-pattern OperationRowAdm
 		operationad = new OperationRowAdm(anAdmission);
 		addAdmissionListener((AdmissionListener) operationad);
                 
