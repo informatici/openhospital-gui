@@ -489,7 +489,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
+		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
 		GeneralData.getGeneralData();

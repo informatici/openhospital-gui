@@ -1,8 +1,6 @@
-/**
- * @author Mwithi
- */
 package org.isf.therapy.gui;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -22,6 +20,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -40,10 +40,13 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 
+import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
@@ -58,9 +61,13 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JAgenda;
 import org.isf.utils.jobjects.JAgenda.AgendaDayObject;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.visits.gui.InsertVisit;
+import org.isf.visits.gui.VisitView;
+import org.isf.visits.gui.VisitView.VisitListener;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
+import org.isf.ward.model.Ward;
 
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
@@ -76,9 +83,10 @@ import com.toedter.calendar.JYearChooser;
  * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
-public class TherapyEdit extends JDialog {
+public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JAgenda jAgenda;
+	
 	private JPanel northPanel;
 	private JPanel monthYearPanel;
 	private JYearChooser yearChooser;
@@ -125,11 +133,12 @@ public class TherapyEdit extends JDialog {
 
 	private static final int TherapyButtonWidth = 200;
 	private static final int VisitButtonWidth = 200;
-	private static final int ActionsButtonWidth = 140;
+	private static final int ActionsButtonWidth = 240;
 	private static final int AllButtonHeight = 30;
 
 	private static final long serialVersionUID = 1L;
 
+	private AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private MedicalBrowsingManager medBrowser = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private TherapyManager thManager = Context.getApplicationContext().getBean(TherapyManager.class);
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
@@ -139,9 +148,10 @@ public class TherapyEdit extends JDialog {
 	private ArrayList<Therapy> therapies = new ArrayList<Therapy>();
 	private ArrayList<TherapyRow> thRows = new ArrayList<TherapyRow>();
 	private ArrayList<Visit> visits = new ArrayList<Visit>();
+	private Ward ward;
 
 	public TherapyEdit(JFrame owner, Patient patient, boolean admitted) {
-		super(owner, true);
+		super();
 		try {
 			this.medArray = medBrowser.getMedicals();
 		} catch (OHServiceException e1) {
@@ -150,6 +160,13 @@ public class TherapyEdit extends JDialog {
 		}
 		this.patient = patient;
 		this.admitted = admitted;
+		if (admitted) {
+			try {
+				this.ward = admMan.getCurrentAdmission(patient).getWard();
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
+			}
+		}
 		initComponents();
 		addWindowListener(new WindowAdapter() {
 
@@ -175,9 +192,27 @@ public class TherapyEdit extends JDialog {
 	private void initComponents() {
 
 		getContentPane().setLayout(new BorderLayout());
-
 		jAgenda = new JAgenda(TherapyEdit.this);
+		
+		loadFromDB();
 
+		for (int i = 0; i < jAgenda.getDayPanel().getComponentCount(); i++) {
+			org.isf.utils.jobjects.JAgenda.AgendaDayObject obj = (org.isf.utils.jobjects.JAgenda.AgendaDayObject) jAgenda
+					.getDayPanel().getComponent(i);
+			if (obj.getList() != null)
+				obj.getList().addMouseListener(new MyMouseListener());
+		}
+		getContentPane().add(jAgenda, BorderLayout.CENTER);
+		getContentPane().add(getNorthPanel(), BorderLayout.NORTH);
+		getContentPane().add(getEastPanel(), BorderLayout.EAST);
+		getContentPane().add(getSouthPanel(), BorderLayout.SOUTH);
+
+		showAll();
+
+		setSize(540, 480);
+	}
+
+	private void loadFromDB() {
 		/*
 		 * Rows in the therapies table
 		 */
@@ -205,13 +240,12 @@ public class TherapyEdit extends JDialog {
 		}catch(OHServiceException e){
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		
 		/*
 		 * Visit(s) in the visits table
 		 */
 		try {
 			visits = vstManager.getVisits(patient.getCode());
-		} catch (OHServiceException e) {
+		}catch(OHServiceException e){
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		
@@ -224,24 +258,29 @@ public class TherapyEdit extends JDialog {
 				hashTableVisits.put(visit.getVisitID(), visit);
 			}
 		}
-
-		for (int i = 0; i < jAgenda.getDayPanel().getComponentCount(); i++) {
-			org.isf.utils.jobjects.JAgenda.AgendaDayObject obj = (org.isf.utils.jobjects.JAgenda.AgendaDayObject) jAgenda
-					.getDayPanel().getComponent(i);
-			if (obj.getList() != null)
-				obj.getList().addMouseListener(new MyMouseListener());
-		}
-
-		getContentPane().add(jAgenda, BorderLayout.CENTER);
-		getContentPane().add(getNorthPanel(), BorderLayout.NORTH);
-		getContentPane().add(getEastPanel(), BorderLayout.EAST);
-		getContentPane().add(getSouthPanel(), BorderLayout.SOUTH);
-
-		showAll();
-
-		setSize(540, 480);
 	}
 
+	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
+		   
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+				boolean hasFocus, int row, int column) {  
+		   
+			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+			cell.setForeground(Color.BLACK);
+			setHorizontalAlignment(LEFT);	   
+			return cell;
+	   }
+	}
+	public String[] visColums = {
+			MessageBundle.getMessage(getDate()),
+			
+	}; 
+	
 	private void showAll() {
 		jAgenda.removeAll();
 		if (therapies != null) showTherapies();
@@ -250,6 +289,13 @@ public class TherapyEdit extends JDialog {
 		smsCheckBox.setEnabled(false);
 		notifyCheckBox.setEnabled(false);
 	}
+
+	private String getDate() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		return dateFormat.format(date);
+	}
+
 
 	private void showTherapies() {
 		
@@ -270,13 +316,26 @@ public class TherapyEdit extends JDialog {
 			}
 		}
 	}
-
 	private void showVisits() {
-		for (Visit visit : visits) {
-			if (visit.getDate().get(GregorianCalendar.YEAR) == yearChooser.getYear()) {
-				if (visit.getDate().get(GregorianCalendar.MONTH) == monthChooser.getMonth()) {
-					jAgenda.addElement(visit, visit.getDate().get(GregorianCalendar.DAY_OF_MONTH));
-				}
+		hashTableVisits = new Hashtable<Integer, Visit>();
+		for (Visit vs : visits) {
+			hashTableVisits.put(vs.getVisitID(), vs);
+			showVisit(vs);
+		}
+	}
+
+	private void showVisit(Visit vs) {
+
+		final String dateTimeFormat = "dd/MM/yy HH:mm:ss";
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		Date vis = vs.getDate().getTime();
+		sdf.setCalendar(vs.getDate());
+		String dateFormatted = sdf.format(vs.getDate().getTime());
+		if (vs.getDate().get(GregorianCalendar.YEAR) == yearChooser.getYear()) {
+			if (vs.getDate().get(GregorianCalendar.MONTH) == monthChooser.getMonth()) {
+
+				jAgenda.addElement(vs, vs.getDate().get(GregorianCalendar.DAY_OF_MONTH));
+
 			}
 		}
 	}
@@ -348,6 +407,7 @@ public class TherapyEdit extends JDialog {
 			visitPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.therapy.visitsandreview"))); //$NON-NLS-1$
 			visitPanel.add(getAddVisitButton());
 			visitPanel.add(getRemoveVisitButton());
+			visitPanel.add(getWorkSheetButton());
 			visitPanel.add(Box.createVerticalGlue());
 
 		}
@@ -369,16 +429,47 @@ public class TherapyEdit extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					if (selectedVisit == null)
 						return;
+					//System.out.println("==> SelectedVisit : " + selectedVisit.getVisitID());
+					//System.out.println("==> hashTableThRow : " + hashTableVisits.get(selectedVisit.getVisitID()));
 					visits.remove(selectedVisit);
+					
 					visitModified = true;
+					selectedVisit = null;
 					saveButton.setEnabled(true);
-					showAll();
+					checked = false;
+					showAll();   
 				}
 			});
 		}
 		return removeVisit;
 	}
+	
+	private JButton worksheetButton;
 
+	private JButton getWorkSheetButton() {
+		if (worksheetButton == null) {
+			worksheetButton = new JButton(MessageBundle.getMessage("angal.menu.worksheet")); //$NON-NLS-1$
+			worksheetButton.setIcon(new ImageIcon("rsc/icons/worksheet_button.png"));
+//			if (admitted) {
+//				worksheetButton.setEnabled(false);
+//			}
+			worksheetButton.setMnemonic(KeyEvent.VK_V);
+			worksheetButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
+			worksheetButton.setHorizontalAlignment(SwingConstants.LEFT);
+
+			worksheetButton.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+
+					VisitView worksheet = new VisitView(TherapyEdit.this, patient, ward);
+					worksheet.addVisitListener(TherapyEdit.this);
+					worksheet.showAsModal(TherapyEdit.this);
+				}
+			});
+		}
+		return worksheetButton;
+	}
+	
 	private JButton getAddVisitButton() {
 		if (addVisit == null) {
 			addVisit = new JButton(MessageBundle.getMessage("angal.therapy.addvisit")); //$NON-NLS-1$
@@ -393,37 +484,27 @@ public class TherapyEdit extends JDialog {
 
 				public void actionPerformed(ActionEvent e) {
 
-					InsertVisit newVisit = new InsertVisit(TherapyEdit.this);
-					newVisit.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					newVisit.setVisible(true);
+					InsertVisit newVsRow = new InsertVisit(TherapyEdit.this, null, patient);
+					newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					newVsRow.setVisible(true);
+
+					Visit visit = newVsRow.getVisit();
 					
-					Date date = newVisit.getVisitDate();
-					
-					if (date != null) {
-						
-						Visit visit = new Visit();
-						visit.setDate(date);
-						visit.setPatient(patient);
-						
-						int visitID = 0;
-						try {
-							visitID = vstManager.newVisit(visit);
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-						}
-						if (visitID > 0) {
-							visit.setVisitID(visitID);
-							visits.add(visit);
-							hashTableVisits.put(visitID, visit);
-							//visitModified = true;
-							if (smsenable) smsCheckBox.setEnabled(true);
-							if (notifiable) notifyCheckBox.setEnabled(true);
-							//saveButton.setEnabled(true);
-							showAll();
-						}
-					} else {
-						return;
+					if (visit != null && visit.getVisitID() != 0) {
+	
+						visits.add(visit); // FOR GUI
+						hashTableVisits.put(visit.getVisitID(), visit);
+						checked = false;
+						//therapyModified = true;
+						if (smsenable) smsCheckBox.setEnabled(true);
+						if (notifiable) notifyCheckBox.setEnabled(true);
+						checkTherapy.setEnabled(true);
+						//saveButton.setEnabled(true);
+						updateCheckLabel();
+						showAll();
 					}
+					selectedVisit = null;
+					newVsRow.dispose();
 				}
 			});
 		}
@@ -997,8 +1078,8 @@ public class TherapyEdit extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					if (selectedTherapy == null)
 						return;
-					System.out.println("==> SelectedTherapy : " + selectedTherapy.getTherapyID());
-					System.out.println("==> hashTableThRow : " + hashTableThRow.get(selectedTherapy.getTherapyID()));
+					//System.out.println("==> SelectedTherapy : " + selectedTherapy.getTherapyID());
+					//System.out.println("==> hashTableThRow : " + hashTableThRow.get(selectedTherapy.getTherapyID()));
 					thRows.remove(hashTableThRow.get(selectedTherapy.getTherapyID()));
 					therapies.remove(selectedTherapy);
 					//thRows.remove(selectedTherapy.getNumTherapy() - 1);
@@ -1021,7 +1102,6 @@ public class TherapyEdit extends JDialog {
 			northPanel = new JPanel(new GridLayout(0, 2));
 			northPanel.add(getMonthYearPanel());
 			northPanel.add(getPatientPanel());
-
 		}
 		return northPanel;
 	}
@@ -1030,11 +1110,6 @@ public class TherapyEdit extends JDialog {
 		if (patientPanel == null) {
 			patientPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			String patientString = MessageBundle.getMessage("angal.therapy.therapyfor") + " " + patient.getName();// + //$NON-NLS-1$
-			// " (Code: "
-			// +
-			// patient.getCode()
-			// +
-			// ")";
 			JLabel patientLabel = new JLabel(patientString);
 			patientLabel.setFont(new Font("Serif", Font.PLAIN, 30));
 			patientPanel.add(patientLabel);
@@ -1042,7 +1117,7 @@ public class TherapyEdit extends JDialog {
 		}
 		return patientPanel;
 	}
-
+	
 	private JPanel getMonthYearPanel() {
 		if (monthYearPanel == null) {
 			monthYearPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -1086,7 +1161,9 @@ public class TherapyEdit extends JDialog {
 			JList thisList = (JList) e.getSource();
 			ListModel model = thisList.getModel();
 			Therapy th = new Therapy();
+			Visit vs = new Visit();
 			int therapyID = 0;
+			int visitID =0;
 
 			int index = thisList.getSelectedIndex();
 			if (index == -1) {
@@ -1105,14 +1182,15 @@ public class TherapyEdit extends JDialog {
 				return;
 			}
 			if (model.getElementAt(index) instanceof Visit) {
-				Visit visit = (Visit) model.getElementAt(index);
+				vs = (Visit) model.getElementAt(index);
 				selectedTherapy = null;
-				selectedVisit = visit;
-				if (visit != null) {
-					noteTextArea.setText(visit.getNote());
+				selectedVisit = vs;
+				if (vs != null) {
+					visitID = vs.getVisitID();
+					noteTextArea.setText(vs.getNote());
 					noteTextArea.setEnabled(true);
 					smsCheckBox.setEnabled(true);
-					smsCheckBox.setSelected(visit.isSms());
+					smsCheckBox.setSelected(vs.isSms());
 				}
 				selectedTherapy = null;
 			} else if (model.getElementAt(index) instanceof Therapy) {
@@ -1127,7 +1205,7 @@ public class TherapyEdit extends JDialog {
 					smsCheckBox.setSelected(th.isSms());
 				} else
 					return;
-			}
+			} 
 			for (Component comp : jAgenda.getDayPanel().getComponents()) {
 				AgendaDayObject day = (AgendaDayObject) comp;
 				JList list = day.getList();
@@ -1142,7 +1220,7 @@ public class TherapyEdit extends JDialog {
 						}
 						if (model.getElementAt(i) instanceof Visit) {
 							Visit aVisit = (Visit) model.getElementAt(i);
-							if (selectedVisit != null && selectedVisit == aVisit)
+							if (aVisit.getVisitID() == visitID)
 								list.setSelectedIndex(i);
 						}
 					}
@@ -1163,9 +1241,10 @@ public class TherapyEdit extends JDialog {
 		}
 	}
 
-	public void therapyInserted() {
-		System.out.println("Therapy successfully inserted"); //$NON-NLS-1$
-
+	@Override
+	public void visitsUpdated(AWTEvent e) {
+		loadFromDB();
+		showAll();
 	}
 
 }
