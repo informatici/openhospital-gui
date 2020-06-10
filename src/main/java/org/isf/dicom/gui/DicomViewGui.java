@@ -45,8 +45,6 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 
-import org.isf.utils.exception.OHDicomException;
-
 /**
  * 
  * Detail for DICOM image
@@ -516,7 +514,7 @@ public class DicomViewGui extends JPanel {
 			ecc.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * get the BufferedImage from DICOM object
 	 * 
