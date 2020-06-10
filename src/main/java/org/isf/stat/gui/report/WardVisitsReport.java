@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ public class WardVisitsReport {
 
 		public WardVisitsReport(String string, Date date, String jasperFileName) {
 			try{
-	            JasperReportsManager jasperReportsManager = new JasperReportsManager();
+	            JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 	            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportWardVisitPdf(string, date, jasperFileName);
 				if (GeneralData.INTERNALVIEWER)
 					JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false);

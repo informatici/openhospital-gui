@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.therapy.gui.TherapyEdit;
 import org.isf.visits.gui.VisitView;
 import org.isf.utils.exception.OHServiceException;
@@ -127,7 +128,7 @@ public class VisitsEdit extends ModalJFrame{
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
 			
-			WardBrowserManager wbm = new WardBrowserManager();
+			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			wardBox = new JComboBox();
 			wardBox.addItem("");
 			try {
