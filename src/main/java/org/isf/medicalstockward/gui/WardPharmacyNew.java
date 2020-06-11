@@ -294,20 +294,21 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 
 		public Object getValueAt(int r, int c) {
+			MedicalWard medicalWard = druglist.get(r);
 			if (c == -1) {
-				return druglist.get(r);
+				return medicalWard;
 			} else if (c == 0) {
-				return druglist.get(r).getId().getLotId();
+				return medicalWard.getId().getLot();
 			} else if (c == 1) {
 				ArrayList<Lot> lot = null;
 				try {
-					lot = movManager.getLotByMedicalId(druglist.get(r).getId().getLotId());
+					lot = movManager.getLotByMedical(medicalWard.getMedical());
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
 				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}  else if (c == 2) {
-				return druglist.get(r).getQty();
+				return medicalWard.getQty();
 			}
 			return null;
 		}
@@ -329,52 +330,48 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	}
 	
 	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int qanty) {
-				ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
-				Collections.sort(drug, new Comparator<MedicalWard>() {
-					@Override
-					public int compare(MedicalWard o1, MedicalWard o2) {
-						  if (o1.getLot().getDueDate() == null || o2.getLot().getDueDate() == null)
-						        return 0;
-						      return o1.getLot().getDueDate().compareTo(o2.getLot().getDueDate());
-					}
-					});
-				
-				MedicalWard medWard =null;
-				int q = qanty;
-				for (MedicalWard elem : drug) {
-						if(elem.getMedical().getDescription().equals(me)) {
-							
-							if(elem.getQty() != 0.0) {
-								if (q!=0) {
-									if (elem.getQty()<=q) {
-										MedicalWard e = elem;
-										dr.add(e);
-										q =(int) (q -elem.getQty()) ;
-										int maxquantity =  (int) (elem.getQty()-0);
-										medWard = elem;
-										addItem(medWard, maxquantity);
-										
-									}else {
-										MedicalWard e = elem;
-										dr.add(e);
-										int qu = (int) (elem.getQty() -q ) ;
-										medWard = elem;
-										
-										addItem(medWard, q);
-										q=0;
-									}
-								}
-							
-								
-								}
-						}					
-						}
-				
-					
-				
-				 
-				return medWard;
+		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+		Collections.sort(drug, new Comparator<MedicalWard>() {
+			@Override
+			public int compare(MedicalWard o1, MedicalWard o2) {
+				if (o1.getLot().getDueDate() == null || o2.getLot().getDueDate() == null)
+					return 0;
+				return o1.getLot().getDueDate().compareTo(o2.getLot().getDueDate());
 			}
+		});
+
+		MedicalWard medWard = null;
+		int q = qanty;
+		for (MedicalWard elem : drug) {
+			if (elem.getMedical().getDescription().equals(me)) {
+
+				if (elem.getQty() != 0.0) {
+					if (q != 0) {
+						if (elem.getQty() <= q) {
+							MedicalWard e = elem;
+							dr.add(e);
+							q = (int) (q - elem.getQty());
+							int maxquantity = (int) (elem.getQty() - 0);
+							medWard = elem;
+							addItem(medWard, maxquantity);
+
+						} else {
+							MedicalWard e = elem;
+							dr.add(e);
+							int qu = (int) (elem.getQty() - q);
+							medWard = elem;
+
+							addItem(medWard, q);
+							q = 0;
+						}
+					}
+
+				}
+			}
+		}
+
+		return medWard;
+	}
 	
 	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int qanty) {
 		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
@@ -420,49 +417,39 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return medWard;
 	}
 	
-	protected int askQuantity(String med ,ArrayList<MedicalWard> drug) {
+	protected int askQuantity(String med, ArrayList<MedicalWard> drug) {
 		int qty = 0;
 		double totalQty = 0;
-		String prodCode = null ;
+		String prodCode = null;
 		for (MedicalWard elem : drug) {
-			
-			try {
-				if(med.equals(elem.getMedical().getDescription())) {
-					totalQty += elem.getQty();
-					prodCode = elem.getMedical().getProd_code();
-					
-				}
-			} catch (OHException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			if (med.equals(elem.getMedical().getDescription())) {
+				totalQty += elem.getQty();
+				prodCode = elem.getMedical().getProd_code();
+
 			}
-			
-			
-			
-	}
+
+		}
 		double usedQty = 0;
 		StringBuilder message = new StringBuilder();
-		message.append(med.toString())
-			.append("\n") //$NON-NLS-1$
-			.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
-			.append(totalQty); //$NON-NLS-1$
+		message.append(med.toString()).append("\n") //$NON-NLS-1$
+				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
+				.append(totalQty); // $NON-NLS-1$
 		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
-		
+
 		if (prodCode != null && !prodCode.equals("")) { //$NON-NLS-1$
 			title.append(" ") //$NON-NLS-1$
-			.append(MessageBundle.getMessage("angal.common.code")) //$NON-NLS-1$
-			.append(": ") //$NON-NLS-1$
-			.append(prodCode);
-		} else { 
+					.append(MessageBundle.getMessage("angal.common.code")) //$NON-NLS-1$
+					.append(": ") //$NON-NLS-1$
+					.append(prodCode);
+		} else {
 			title.append(": "); //$NON-NLS-1$
 		}
-		
+
 		do {
-			String quantity = JOptionPane.showInputDialog(WardPharmacyNew.this, 
-					message.toString(), 
-					title.toString(),
+			String quantity = JOptionPane.showInputDialog(WardPharmacyNew.this, message.toString(), title.toString(),
 					JOptionPane.QUESTION_MESSAGE);
-		
+
 			if (quantity != null) {
 				try {
 					qty = Integer.parseInt(quantity);
@@ -470,13 +457,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						return 0;
 					if (qty < 0)
 						throw new NumberFormatException();
-					
+
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(WardPharmacyNew.this, 
+					JOptionPane.showMessageDialog(WardPharmacyNew.this,
 							MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseinsertavalidvalue")); //$NON-NLS-1$
 					qty = 0;
 				}
-			} else return qty;
+			} else
+				return qty;
 			if (checkQuantity(totalQty, qty)) {
 
 				if (isAutomaticLot()) {
@@ -488,7 +476,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				askQuantity(med, wardDrugs);
 			}
 		} while (qty == 0);
-		
+
 		return qty;
 
 	}
@@ -866,17 +854,18 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 		
 		public Object getValueAt(int r, int c) {
+			MedicalWard medWard = medItems.get(r);
 			if (c == -1) {
-				return medItems.get(r);
+				return medWard;
 			}
 			if (c == 0) {
-				return medItems.get(r).getMedical().getDescription();
+				return medWard.getMedical().getDescription();
 			}
 			if (c == 1) {
-				return medItems.get(r).getQty(); 
+				return medWard.getQty(); 
 			}
 			if (c == 2) {
-				return medItems.get(r).getId().getLotId(); 
+				return medWard.getLot(); 
 			}
 			return null;
 		}

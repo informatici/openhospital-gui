@@ -606,14 +606,16 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 
 		public Object getValueAt(int r, int c) {
+			MedicalWard medicalWard = druglist.get(r);
+			
 			if (c == -1) {
-				return druglist.get(r);
+				return medicalWard;
 			} else if (c == 0) {
-				return druglist.get(r).getId().getLotId();
+				return medicalWard.getId().getLot();
 			} else if (c == 1) {
-				return TimeTools.formatDateTime(druglist.get(r).getId().getLot().getDueDate(), DATE_FORMAT_DD_MM_YYYY);
+				return TimeTools.formatDateTime(medicalWard.getId().getLot().getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}  else if (c == 2) {
-				return druglist.get(r).getQty();
+				return medicalWard.getQty();
 			}
 			return null;
 		}
