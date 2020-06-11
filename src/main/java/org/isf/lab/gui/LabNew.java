@@ -51,6 +51,7 @@ import org.isf.exa.model.Exam;
 import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.lab.gui.LabBrowser.LabBrowsingModel;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryRow;
