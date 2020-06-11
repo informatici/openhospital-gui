@@ -273,10 +273,7 @@ public class LabNew extends JDialog implements SelectionListener {
 		}
 		return jButtonCancel;
 	}
-	private boolean isNumeric(String str)
-		{
-		  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
-		}
+
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton();
@@ -305,10 +302,9 @@ public class LabNew extends JDialog implements SelectionListener {
                         lab.setNote(jTextAreaNote.getText().trim());
                         lab.setMaterial((String) jComboBoxMaterial.getSelectedItem());
                         if (lab.getExam().getProcedure() == 1) lab.setResult((String) jComboBoxExamResults.getSelectedItem());
-                        if ((lab.getExam().getProcedure() == 3) 
-    							&& (!isNumeric(lab.getResult()) && (!lab.getResult().isEmpty())) ) {
+                        if (lab.getExam().getProcedure() == 3 && lab.getResult().isEmpty()) {
     						JOptionPane.showMessageDialog(LabNew.this,
-    								MessageBundle.getMessage("angal.labnew.onlynumericforprocedure3"), //$NON-NLS-1$
+    								MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"), //$NON-NLS-1$
     								"Error", //$NON-NLS-1$
     								JOptionPane.WARNING_MESSAGE);
     						return;
@@ -851,11 +847,11 @@ public class LabNew extends JDialog implements SelectionListener {
 				                    null,
 				                    exa.getDefaultResult()); //$NON-NLS-1$
 
-							if (exaRow != null && isNumeric(exaRow.toString())) {
+							if (exaRow != null && !exaRow.isEmpty()) {
 								lab.setResult(exaRow.toString());
 							}else {
 								JOptionPane.showMessageDialog(LabNew.this,  
-										MessageBundle.getMessage("angal.labnew.onlynumericforprocedure3"),
+										MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"),
 										"Error", //$NON-NLS-1$
 										JOptionPane.WARNING_MESSAGE);
 								return;

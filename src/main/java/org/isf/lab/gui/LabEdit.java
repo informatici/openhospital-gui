@@ -556,10 +556,6 @@ public class LabEdit extends ModalJFrame {
 		return cancelButton;
 	}
 
-	private boolean isNumeric(String str)
-		{
-		  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
-		}
 	private JButton getOkButton() {
 		if (okButton == null) {
 			okButton = new JButton();
@@ -583,9 +579,8 @@ public class LabEdit extends ModalJFrame {
 						return;
 					}
 						
-					if ((examSelected.getProcedure() == 3) && 
-							(!isNumeric(examRowTextField.getText()) && (!examRowTextField.getText().isEmpty())) ) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.labnew.onlynumericforprocedure3"));
+					if (examSelected.getProcedure() == 3 && examRowTextField.getText().isEmpty()) {
+						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"));
 							return;
 					}
 					// exam date	

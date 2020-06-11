@@ -237,13 +237,7 @@ public class ExamEdit extends JDialog {
 						}
 						else{
 							int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
-							if ((procedure == 3) && 
-									(!isNumeric(defTextField.getText()) && (!defTextField.getText().isEmpty())) ) {
-								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.labnew.onlynumericforprocedure3"));
-									return;
-							}
 							
-							ExamBrowsingManager manager = new ExamBrowsingManager();
 							exam.setExamtype((ExamType)typeComboBox.getSelectedItem());
 							exam.setDescription(descriptionTextField.getText());
 							
@@ -258,30 +252,28 @@ public class ExamEdit extends JDialog {
 										JOptionPane.showMessageDialog(ExamEdit.this, MessageBundle.getMessage("angal.exa.changethecodebecauseisalreadyinuse"));
 										return;
 									}
-								} catch (HeadlessException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
 								} catch (OHServiceException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									OHServiceExceptionUtil.showMessages(e1);
 								}
 								try {
 									result = manager.newExam(exam);
+									if (result) fireExamInserted();
 								} catch (OHServiceException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									OHServiceExceptionUtil.showMessages(e1);
 								}
 							} else {
 								try {
 									result = manager.updateExam(exam);
+									if (result) fireExamUpdated();
 								} catch (OHServiceException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									OHServiceExceptionUtil.showMessages(e1);
 								}
 							}
 							if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.exa.thedatacouldnotbesaved"));
-							else  dispose();
+							else  {
+								dispose();
 							}
+						}
 					}
 				});
 			}
@@ -289,10 +281,6 @@ public class ExamEdit extends JDialog {
 		}
 		return okButton;
 	}
-	private boolean isNumeric(String str)
-		{
-		  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
-		}
 	 
 	/**
 	 * This method initializes descriptionTextField	

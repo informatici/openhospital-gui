@@ -20,14 +20,12 @@ import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -48,7 +46,6 @@ import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.manager.LabManager;
-import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.lab.manager.LabRowManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryForPrint;
@@ -56,13 +53,13 @@ import org.isf.lab.model.LaboratoryRow;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class LabEditExtended extends ModalJFrame {
 	/**
@@ -682,10 +679,7 @@ public class LabEditExtended extends ModalJFrame {
 		}
 		return cancelButton;
 	}
-	private boolean isNumeric(String str)
-		{
-		  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
-		}
+
 	private JButton getOkButton() {
 		if (okButton == null) {
 			okButton = new JButton();
@@ -717,10 +711,9 @@ public class LabEditExtended extends ModalJFrame {
 								MessageBundle.getMessage("angal.lab.pleaseinsertavalidexamdate"));
 						return;
 					}
-					if ((examSelected.getProcedure() == 3) && 
-							(!isNumeric(examTextField.getText()) && (!examTextField.getText().isEmpty())) ) {
+					if (examSelected.getProcedure() == 3 && examTextField.getText().isEmpty()) {
 
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.labnew.onlynumericforprocedure3"));
+						JOptionPane.showMessageDialog(LabEditExtended.this, MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"));
 							return;
 					}
 					ArrayList<String> labRow = new ArrayList<String>();
