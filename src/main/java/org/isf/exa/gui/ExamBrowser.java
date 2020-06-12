@@ -28,8 +28,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.exa.gui.ExamEdit.ExamListener;
@@ -187,6 +190,22 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			table.getColumnModel().getColumn(2).setMinWidth(pColumwidth[2]);
 			table.getColumnModel().getColumn(3).setMinWidth(pColumwidth[3]);
 			table.getColumnModel().getColumn(4).setMinWidth(pColumwidth[4]);
+			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+				
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+					if (!e.getValueIsAdjusting()) {
+						selectedrow = table.getSelectedRow();
+						exam = (Exam) (((ExamBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+						if (exam.getProcedure() == 3) {
+							jButtonShow.setEnabled(false);
+						} else {
+							jButtonShow.setEnabled(true);
+						}
+					}
+				}
+			});
 		}
 		return table;
 	}

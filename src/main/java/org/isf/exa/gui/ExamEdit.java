@@ -13,6 +13,7 @@ package org.isf.exa.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -225,46 +226,62 @@ public class ExamEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-                    okButton = new JButton();
-                    okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-                    okButton.setMnemonic(KeyEvent.VK_O);
-                    okButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent e) {
-
-                            exam.setExamtype((ExamType)typeComboBox.getSelectedItem());
-                            exam.setCode(codeTextField.getText().trim().toUpperCase());
-                            exam.setDescription(descriptionTextField.getText().trim());
-                            exam.setProcedure(Integer.parseInt(procComboBox.getSelectedItem().toString()));
-                            exam.setDefaultResult(defTextField.getText().trim().toUpperCase());
-
-                            boolean result = false;
-                            try {
-                                    if (insert) {
-                                            result = manager.newExam(exam);
-                                            if (result) {
-                                                    fireExamInserted();
-                                                    dispose();
-                                            }
-                                    } else {
-                                            result = manager.updateExam(exam);
-                                            if (result) {
-                                                    fireExamUpdated();
-                                                    dispose();
-                                            }
-                                    }
-                                    if (!result) {
-                                        JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                                    }
-                                    else  dispose();
-                            } catch (OHServiceException e1) {
-                                    OHServiceExceptionUtil.showMessages(e1);
-                            }
-                        }
-                    });
+			if (okButton == null) {
+				okButton = new JButton();
+				okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
+	            okButton.setMnemonic(KeyEvent.VK_O);
+				okButton.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(java.awt.event.ActionEvent e) {
+						if((codeTextField.getText().trim().equals(""))||(descriptionTextField.getText().trim().equals(""))){
+							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.exa.pleaseinsertcodeoranddescription"));
+						}
+						else{
+							int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
+							
+							exam.setExamtype((ExamType)typeComboBox.getSelectedItem());
+							exam.setDescription(descriptionTextField.getText());
+							
+							exam.setCode(codeTextField.getText().toUpperCase());
+							exam.setDefaultResult(defTextField.getText().toUpperCase());
+							exam.setProcedure(procedure);
+							
+							boolean result = false;
+							if (insert) {
+								try {
+									if (manager.isKeyPresent(exam)) {
+										JOptionPane.showMessageDialog(ExamEdit.this, MessageBundle.getMessage("angal.exa.changethecodebecauseisalreadyinuse"));
+										return;
+									}
+								} catch (OHServiceException e1) {
+									OHServiceExceptionUtil.showMessages(e1);
+								}
+								try {
+									result = manager.newExam(exam);
+									if (result) fireExamInserted();
+								} catch (OHServiceException e1) {
+									OHServiceExceptionUtil.showMessages(e1);
+								}
+							} else {
+								try {
+									result = manager.updateExam(exam);
+									if (result) fireExamUpdated();
+								} catch (OHServiceException e1) {
+									OHServiceExceptionUtil.showMessages(e1);
+								}
+							}
+							if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.exa.thedatacouldnotbesaved"));
+							else  {
+								dispose();
+							}
+						}
+					}
+				});
+			}
+			return okButton;
 		}
 		return okButton;
 	}
-
+	 
 	/**
 	 * This method initializes descriptionTextField	
 	 * 	
@@ -308,6 +325,7 @@ public class ExamEdit extends JDialog {
 			if (insert) {
 				procComboBox.addItem("1");
 				procComboBox.addItem("2");
+				procComboBox.addItem("3");
 			} else {
 				procComboBox.addItem(exam.getProcedure());
 				procComboBox.setEnabled(false);

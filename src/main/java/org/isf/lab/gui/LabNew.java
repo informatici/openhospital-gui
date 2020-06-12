@@ -35,6 +35,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -49,6 +51,7 @@ import org.isf.exa.model.Exam;
 import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.lab.gui.LabBrowser.LabBrowsingModel;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryRow;
@@ -62,6 +65,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.OhTableModelExam;
+import org.isf.utils.jobjects.CustomJDateChooser;
 //import org.isf.utils.time.TimeTools;
 import org.isf.utils.time.RememberDates;
 
@@ -182,6 +186,7 @@ public class LabNew extends JDialog implements SelectionListener {
     private ArrayList<Laboratory> examItems = new ArrayList<Laboratory>();
 	private ExamTableModel jTableModel;
 	private JButton printLabelButton;
+	private JTextField jTextFieldExamResult;
                 
 	public LabNew(JFrame owner) {
 		super(owner, true);
@@ -293,15 +298,16 @@ public class LabNew extends JDialog implements SelectionListener {
                         lab.setPatient(patientSelected);
                         lab.setNote(jTextAreaNote.getText().trim());
                         lab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
-                        if (lab.getExam().getProcedure() == 1) {
-                        	if (jComboBoxExamResults.getItemCount() > 0)
-                        		lab.setResult((String) jComboBoxExamResults.getSelectedItem());
-                        	else
-                        		//exam without results (only note)
-                        		lab.setResult(lab.getExam().getDefaultResult());
-                        }
-					}
-					
+                        if (lab.getExam().getProcedure() == 1) lab.setResult((String) jComboBoxExamResults.getSelectedItem());
+                        if (lab.getExam().getProcedure() == 3 && lab.getResult().isEmpty()) {
+    						JOptionPane.showMessageDialog(LabNew.this,
+    								MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"), //$NON-NLS-1$
+    								"Error", //$NON-NLS-1$
+    								JOptionPane.WARNING_MESSAGE);
+    						return;
+    					}
+                    }
+                    	
 					try {
 						labManager.newLaboratory2(examItems, examResults);
 						fireLabInserted();
@@ -417,33 +423,55 @@ public class LabNew extends JDialog implements SelectionListener {
 				else
 					jPanelResults.add(new JLabel(selectedExam.getDefaultResult()));
 
-			} else {
+			}  else if (selectedExam.getProcedure() == 2) {
 				
-				try {
-					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
-				} catch (OHServiceException ex) {
-					exaRowArray = null;
-					Logger.getLogger(LabNew.class.getName()).log(Level.SEVERE, null, ex);
-				}
-
 				jPanelResults.removeAll();
-				jPanelResults.setLayout(new GridLayout(14, 1));
+                jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
 
-				ArrayList<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
-				boolean checked;
+                ArrayList<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
+                boolean checked;
+                JPanel resultsContainer = new JPanel();
+                resultsContainer.setLayout(new GridLayout(0,1));
+                JScrollPane resultsContainerScroll = new JScrollPane(resultsContainer);
+                resultsContainerScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                resultsContainerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                resultsContainerScroll.setBounds(0, 0, EastWidth, ResultHeight);
+                jPanelResults.add(resultsContainerScroll);
+                for (ExamRow exaRow : exaRowArray) {
+					if (selectedExam.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
 
-				if (exaRowArray != null) {
-					for (ExamRow exaRow : exaRowArray) {
-						if (selectedExam.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
-	
-							checked = false;
-							LaboratoryRow labRow = new LaboratoryRow();
-							labRow.setDescription(exaRow.getDescription());
-							if (checking.contains(labRow)) checked = true;
-							jPanelResults.add(new CheckBox(exaRow, checked));
-						}
+						checked = false;
+						if (checking.contains(exaRow.getDescription()))
+							checked = true;
+                        resultsContainer.add(new CheckBox(exaRow, checked));
 					}
 				}
+			} else if (selectedExam.getProcedure() == 3) {
+				jTextFieldExamResult = new JTextField();
+				jTextFieldExamResult.setMaximumSize(new Dimension(EastWidth, ComponentHeight));
+				jTextFieldExamResult.setMinimumSize(new Dimension(EastWidth, ComponentHeight));
+				jTextFieldExamResult.setPreferredSize(new Dimension(EastWidth, ComponentHeight));
+				
+				jTextFieldExamResult.setText(selectedLab.getResult());
+				
+				jTextFieldExamResult.getDocument().addDocumentListener(new DocumentListener() {
+					
+					public void removeUpdate(DocumentEvent e) {
+						selectedLab.setResult(jTextFieldExamResult.getText());
+						jTableExams.updateUI();
+					}
+					
+					public void insertUpdate(DocumentEvent e) {
+						selectedLab.setResult(jTextFieldExamResult.getText());
+						jTableExams.updateUI();
+					}
+					
+					public void changedUpdate(DocumentEvent e) {
+						// TODO Auto-generated method stub
+					}
+				});
+
+				jPanelResults.add(jTextFieldExamResult);
 			}
 		}
 		return jPanelResults;
@@ -786,8 +814,10 @@ public class LabNew extends JDialog implements SelectionListener {
 							icon = new ImageIcon("rsc/icons/list_dialog.png"); //$NON-NLS-1$
 							lab.setResult(exa.getDefaultResult());
 
-						} else {
+						} else if (exa.getProcedure() == 2) {
 							lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));
+						} else {
+							lab.setResult(exa.getDefaultResult());
 						}
 						lab.setExam(exa);
 						lab.setMaterial(labManager.getMaterialKey(mat));
