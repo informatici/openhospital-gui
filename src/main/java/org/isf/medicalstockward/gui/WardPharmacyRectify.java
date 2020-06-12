@@ -234,7 +234,7 @@ public class WardPharmacyRectify extends JDialog {
 			contentPanel.add(jLabelRectifyTitle, gbc_jLabelRectifyTitle);
 		}
 		{
-			JLabel jLabelStock = new JLabel(MessageBundle.getMessage("angal.medicalstockwardrectify.instock")); //$NON-NLS-1$
+			JLabel jLabelStock = new JLabel(MessageBundle.getMessage("angal.medicalstockward.rectify.instock")); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelStock = new GridBagConstraints();
 			gbc_jLabelStock.anchor = GridBagConstraints.SOUTH;
 			gbc_jLabelStock.insets = new Insets(0, 0, 5, 0);
@@ -290,7 +290,7 @@ public class WardPharmacyRectify extends JDialog {
 			contentPanel.add(getJPanelLot(), gbc_jPanelLot);
 		}
 		{
-			jLabelInLot = new JLabel(MessageBundle.getMessage("angal.medicalstockwardr.rectify.inlot")); //$NON-NLS-1$
+			jLabelInLot = new JLabel(MessageBundle.getMessage("angal.medicalstockward.rectify.inlot")); //$NON-NLS-1$
 			jLabelInLot.setVisible(false);
 			GridBagConstraints gbc_jLabelLot = new GridBagConstraints();
 			gbc_jLabelLot.anchor = GridBagConstraints.SOUTH;
