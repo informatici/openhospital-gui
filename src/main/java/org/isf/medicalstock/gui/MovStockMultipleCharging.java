@@ -92,11 +92,11 @@ public class MovStockMultipleCharging extends JDialog {
 		MessageBundle.getMessage("angal.medicalstock.multiplecharging.cost"), //$NON-NLS-1$
 		MessageBundle.getMessage("angal.medicalstock.multiplecharging.total") }; //$NON-NLS-1$
 	private final Class[] columnClasses = { String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, String.class, String.class, Double.class, Double.class };
-	private boolean[] columnEditable = { true, false, false, true, true, false, !GeneralData.AUTOMATICLOT, true, true, false };
-	private int[] columnWidth = { 50, 100, 70, 50, 70, 50, 50, 80, 50, 80 };
+	private boolean[] columnEditable = { true, false, false, true, true, false, !GeneralData.AUTOMATICLOT_IN, true, true, false };
+ 	private int[] columnWidth = { 50, 100, 70, 50, 70, 50, 50, 80, 50, 80 };
 	private boolean[] columnResizable = { false, true, false, false, false, false, false, false, false, false };
-	private boolean[] columnVisible = { true, true, true, true, true, true, !GeneralData.AUTOMATICLOT, true, GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST };
-	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
+	private boolean[] columnVisible = { true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, true, GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST };
+ 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT };
 	private boolean[] columnBold = { false, false, false, false, false, true, false, false, false, true };
 	private HashMap<String, Medical> medicalMap;
@@ -130,7 +130,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 
 	private boolean isAutomaticLot() {
-		return GeneralData.AUTOMATICLOT;
+		return GeneralData.AUTOMATICLOT_IN;
 	}
 
 	/**
