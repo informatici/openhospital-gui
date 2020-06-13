@@ -246,7 +246,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 
 			
 			examinationPanel.add(examinationCheck);
-			examinationPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.examination")), BorderLayout.CENTER);
+			examinationPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.examination")), BorderLayout.CENTER);
 			examinationCheck.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					allCheck.setSelected(false);
