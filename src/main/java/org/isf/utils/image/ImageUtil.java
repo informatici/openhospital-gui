@@ -1,7 +1,10 @@
 package org.isf.utils.image;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public final class ImageUtil {
     private ImageUtil() {
@@ -38,5 +41,15 @@ public final class ImageUtil {
         g2.drawImage(src, 0, 0, newWidth, newHeight, null);
         g2.dispose();
         return resizedImg;
+    }
+
+    public static byte[] imageToByte(final BufferedImage bufferedImage) {
+        try {
+            final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", outStream);
+            return outStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to convert image to byte array", e);
+        }
     }
 }

@@ -186,10 +186,8 @@ public class PatientSummary {
 		JLabel patientTOB = new JLabel(MessageBundle.getMessage("angal.patient.tobm") + ": " + filtra(patient.getBloodType()));
 		
 		JLabel patientPhoto = new JLabel();
-		Image photo = patient.getPhoto();
-		
-		if (photo != null) {
-			patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, photo)));
+		if (patient.getPatientProfilePhoto() != null && patient.getPatientProfilePhoto().getPhotoAsImage() != null) {
+			patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, patient.getPatientProfilePhoto().getPhotoAsImage())));
 		} else {
 			try {
 				Image noPhotoImage = ImageIO.read(new File("rsc/images/nophoto.png"));

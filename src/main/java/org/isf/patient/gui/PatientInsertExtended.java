@@ -1,45 +1,6 @@
 package org.isf.patient.gui;
 
-import java.awt.AWTEvent;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.EventListener;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.StringTokenizer;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.event.EventListenerList;
-
+import com.toedter.calendar.JDateChooser;
 import org.isf.agetype.manager.AgeTypeBrowserManager;
 import org.isf.agetype.model.AgeType;
 import org.isf.generaldata.GeneralData;
@@ -50,12 +11,20 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.image.ImageUtil;
 import org.isf.video.gui.PatientPhotoPanel;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
-import com.toedter.calendar.JDateChooser;
+import javax.swing.*;
+import javax.swing.event.EventListenerList;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.io.IOException;
+import java.util.*;
 
 
 /*------------------------------------------
@@ -122,7 +91,7 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel jMainPanel = null;
 	private boolean insert;
 	private boolean justSave;
-	final private Patient patient;
+	private Patient patient;
 	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	
 	// COMPONENTS: Data
@@ -494,25 +463,9 @@ public class PatientInsertExtended extends JDialog {
 
 							patient.setNote(jNoteTextArea.getText().trim());
 
-//							try {
-//								Image photo = ImageIO.read(new File(photoPanel.getPhotoFilePath()));
-//								patient.setPhoto(photo);
-//							} catch (IOException ioe) {
-//								// the photo didn't change
-//								//logger.debug("Patient photo not changed");
-//							}
-
 							try{
-								result = patientManager.newPatient(patient);
-							}catch(OHServiceException ex){
-								OHServiceExceptionUtil.showMessages(ex);
-							}
-							if (result)
+								patient = patientManager.savePatient(patient);
 								firePatientInserted(patient);
-
-							if (!result)
-								JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-							else {
 								if (justSave) {
 									insert = false;
 									justSave = false;
@@ -520,9 +473,12 @@ public class PatientInsertExtended extends JDialog {
 								} else {
 									dispose();
 								}
+							}catch(OHServiceException ex){
+								ex.printStackTrace();
+								OHServiceExceptionUtil.showMessages(ex);
+								JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 							}
-						} else
-							return;
+						}
 					} else {// Update
 
 						patient.setFirstName(firstName);
@@ -586,26 +542,15 @@ public class PatientInsertExtended extends JDialog {
 						}
 						patient.setNote(jNoteTextArea.getText().trim());
 
-//						try {
-//							Image photo = ImageIO.read(new File(photoPanel.getPhotoFilePath()));
-//							patient.setPhoto(photo);
-//						} catch (IOException ioe) {
-//							// the photo didn't change
-//							//logger.debug("Patient photo not changed");
-//						}
 
 						try{
-							result = patientManager.updatePatient(patient);
-						}catch(OHServiceException ex){
-                            OHServiceExceptionUtil.showMessages(ex);
-						}
-						if (result) {
+							patient = patientManager.savePatient(patient);
 							firePatientUpdated(patient);
-						}
-						if (!result)
-							JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-						else
 							dispose();
+						}catch(final OHServiceException ex){
+                            OHServiceExceptionUtil.showMessages(ex);
+							JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+						}
 					}
 				}
 			});
@@ -2241,14 +2186,16 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel getJRightPanel() {
 		if (jRightPanel == null) {
 			jRightPanel = new JPanel(new BorderLayout());
+
 			try {
-				//jRightPanel.add(getJPhoto(), BorderLayout.NORTH);
-				photoPanel = new PatientPhotoPanel(this, patient.getCode(), patient.getPhoto());
-				
-			} catch (IOException e) {
+				final Image image = patient.getPatientProfilePhoto() != null ? patient.getPatientProfilePhoto().getPhotoAsImage() : null;
+				photoPanel = new PatientPhotoPanel(this, patient.getCode(), image);
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
-			if (photoPanel != null) jRightPanel.add(photoPanel, BorderLayout.NORTH);
+			if (photoPanel != null) {
+				jRightPanel.add(photoPanel, BorderLayout.NORTH);
+			}
 			jRightPanel.add(getJNoteScrollPane(), BorderLayout.CENTER);
 
 		}
@@ -2296,8 +2243,11 @@ public class PatientInsertExtended extends JDialog {
 		return jMotherNameTextField;
 	}
 	
-	public void setPatientPhoto(Image photo) {
-		patient.setPhoto(photo);
-		patient.setBlobPhoto(null);
+	public void setPatientPhoto(final BufferedImage photo) {
+		if (photo != null) {
+			patient.getPatientProfilePhoto().setPhoto(ImageUtil.imageToByte(photo));
+		} else {
+			patient.getPatientProfilePhoto().setPhoto(null);
+		}
 	}
 }

@@ -1,42 +1,5 @@
 package org.isf.patient.gui;
 
-import java.awt.AWTEvent;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.EventListenerList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-
 import org.isf.accounting.gui.BillBrowser;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.generaldata.GeneralData;
@@ -51,6 +14,18 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.visits.gui.InsertVisit;
+
+import javax.swing.*;
+import javax.swing.event.EventListenerList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.List;
 
 public class SelectPatient extends JDialog implements PatientListener {
 	
@@ -372,7 +347,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 		}
 		if (jTablePatient.getRowCount() == 1) {
 			
-			patient = (Patient)jTablePatient.getValueAt(0, -1);
+			final Patient selectedPatient = (Patient)jTablePatient.getValueAt(0, -1);
+			patient = reloadSelectedPatient(selectedPatient.getCode());
 			updatePatientSummary();
 		}
 		jTablePatient.updateUI();
@@ -455,11 +431,9 @@ public class SelectPatient extends JDialog implements PatientListener {
 					if (!e.getValueIsAdjusting()) {
 						
 						int index = jTablePatient.getSelectedRow();
-						patient = (Patient)jTablePatient.getValueAt(index, -1);
-						if (patient.getPhoto() != null)
-							patient.setPhoto(patient.getPhoto());
+						final Patient selectedPatient = (Patient)jTablePatient.getValueAt(index, -1);
+						patient = reloadSelectedPatient(selectedPatient.getCode());
 						updatePatientSummary();
-						
 					}
 				}
 			});
@@ -483,6 +457,14 @@ public class SelectPatient extends JDialog implements PatientListener {
 			});
 		}
 		return jTablePatient;
+	}
+
+	private Patient reloadSelectedPatient(Integer code) {
+		try {
+			return patManager.getPatient(code);
+		} catch (OHServiceException ex) {
+			throw new RuntimeException("Unable to load patient");
+		}
 	}
 
 	private void updatePatientSummary() {
