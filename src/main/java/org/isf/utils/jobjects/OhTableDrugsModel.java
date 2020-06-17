@@ -13,9 +13,6 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstockward.model.MovementWard;
 import org.isf.operation.manager.OperationBrowserManager;
-import org.isf.operation.model.Operation;
-import org.isf.operation.model.OperationRow;
-import org.isf.utils.exception.OHServiceException;
 
 public class OhTableDrugsModel <T> implements TableModel{
 

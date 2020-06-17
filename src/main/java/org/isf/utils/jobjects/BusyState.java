@@ -6,9 +6,7 @@
  */
 package org.isf.utils.jobjects;
 
-import java.awt.Component;
 import java.awt.Container;
-import java.awt.Cursor;
 
 /**
  * Offer a method that enable or disable a component and all its children.
