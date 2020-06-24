@@ -24,7 +24,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
@@ -155,39 +154,21 @@ public class PatientExaminationEdit extends ModalJFrame {
 	
 	private final String PATH_FEMALE_GENDER = "rsc/images/sagoma-donna-132x300.jpg"; //$NON-NLS-1$
 	private final String PATH_MALE_GENDER = "rsc/images/sagoma-uomo-132x300.jpg"; //$NON-NLS-1$
-	private final String SUMMARY_START_ROW = "<tr align=\"center\">";
-	private final String SUMMARY_END_ROW = "</tr>";
-	private final String STD = "<td>";
-	private final String ETD = "</td>";
-	private final String SUMMARY_HEADER = "" +
-			"<html><head></head><body><table>"+
-			SUMMARY_START_ROW+
-			STD+MessageBundle.getMessage("angal.common.datem")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.height")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.weight")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.arterialpressureabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.heartrateabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.temperatureabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.saturationabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.respiratoryrateabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.auscultationabbr")+ETD+
-			SUMMARY_END_ROW;
-	private final String SUMMARY_FOOTER = "</table></body></html>";
 	
 	private final String[] columnNames = { 
 			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.height"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.weight"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.arterialpressure"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.heartrate"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.temperature"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.saturation"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.heightabbr"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.weightabbr"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.arterialpressureabbr"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.heartrateabbr"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.temperatureabbr"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.saturationabbr"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.examination.hgt"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.examination.respiratoryrateabbr"), //$NON_NLS-1$
-			MessageBundle.getMessage("angal.examination.diuresis"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.diuresis"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.bowel"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.auscultation"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.diuresisvolume24habbr"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.diuresisabbr"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.bowelabbr"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.examination.auscultationabbr"), //$NON-NLS-1$
 	};
 	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, String.class, String.class};
 	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70};
@@ -282,42 +263,6 @@ public class PatientExaminationEdit extends ModalJFrame {
 		bmi.append("</strong>");
 		bmi.append("</body></html>");
 		jEditorPaneBMI.setText(bmi.toString());
-	}
-	
-	//TODO: try to use JDOM...
-	private void updateSummary() {
-		StringBuilder summary = new StringBuilder();
-		summary.append(SUMMARY_HEADER);
-		ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-		ArrayList<PatientExamination> patexList = null;
-		try {
-			patexList = examManager.getLastNByPatID(patex.getPatient().getCode().intValue(), ExaminationParameters.LIST_SIZE);
-		}catch(OHServiceException e){
-			if(e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
-		}
-		Collections.sort(patexList);
-		if(patexList != null){
-			for (PatientExamination patex : patexList) {
-				summary.append(SUMMARY_START_ROW);
-				summary.append(STD).append(new SimpleDateFormat(DATE_FORMAT).format(patex.getPex_date().getTime())).append(ETD);
-				summary.append(STD).append(patex.getPex_height() == null ? "-" : patex.getPex_height()).append(ETD);
-				summary.append(STD).append(patex.getPex_weight() == null ? "-" : patex.getPex_weight()).append(ETD);
-				summary.append(STD).append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
-					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max()).append(ETD);
-				summary.append(STD).append(patex.getPex_hr() == null ? "-" : patex.getPex_hr()).append(ETD);
-				summary.append(STD).append(patex.getPex_temp() == null ? "-" : patex.getPex_temp()).append(ETD);
-				summary.append(STD).append(patex.getPex_sat() == null ? "-" : patex.getPex_sat()).append(ETD);
-				summary.append(STD).append(patex.getPex_rr() == null ? "-" : patex.getPex_rr()).append(ETD);
-				summary.append(STD).append(examManager.getAuscultationTranslated(patex.getPex_auscultation()) == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation())).append(ETD);
-				summary.append(SUMMARY_END_ROW);
-			}
-		}
-		summary.append(SUMMARY_FOOTER);
-		jEditorPaneSummary.setText(summary.toString());
 	}
 	
 	private void updateGUI() {
@@ -466,6 +411,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	
 				JLabel jLabelAPmin = new JLabel(MessageBundle.getMessage("angal.examination.arterialpressure")); //$NON-NLS-1$
 				GridBagConstraints labelGbc_3 = new GridBagConstraints();
+				labelGbc_3.anchor = GridBagConstraints.WEST;
 				labelGbc_3.insets = new Insets(5, 5, 5, 5);
 				labelGbc_3.gridx = 1;
 				labelGbc_3.gridy = 3;
