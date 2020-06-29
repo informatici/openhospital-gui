@@ -10,8 +10,6 @@ import com.toedter.calendar.IDateEditor;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 
-import org.isf.utils.jobjects.CustomJDateChooser;
-
 /**
  * @author Mwithi
  * 

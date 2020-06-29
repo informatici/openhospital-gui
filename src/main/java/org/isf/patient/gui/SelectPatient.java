@@ -1,7 +1,6 @@
 package org.isf.patient.gui;
 
 import org.isf.accounting.gui.BillBrowser;
-import org.isf.visits.gui.InsertVisit;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
