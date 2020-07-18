@@ -1,6 +1,5 @@
-[![Build Status](https://travis-ci.org/informatici/openhospital-gui.svg?branch=master)](https://travis-ci.org/informatici/openhospital-gui)
 # OpenHospital-gui
-OpenHospital 2.0 (ISF OpenHospital web version) - WIP
+[![Java CI](https://github.com/informatici/openhospital-gui/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/informatici/openhospital-gui/actions?query=workflow%3A%22Java+CI+with+Maven%22)
 
 **OpenHospital-core**
 You need the openhospital-core in order to run the gui.
