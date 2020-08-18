@@ -1,7 +1,8 @@
 package org.isf.video.gui;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dialog;
+
+import javax.swing.JDialog;
 
 public final class PhotoboothDialog extends JDialog {
 

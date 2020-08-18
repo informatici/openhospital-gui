@@ -1,9 +1,16 @@
 package org.isf.operation.gui;
 
-import javax.swing.JPanel;
-import java.awt.GridBagLayout;
 import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -11,15 +18,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.GridBagConstraints;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-
-import java.awt.Insets;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
@@ -28,22 +39,10 @@ import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
-import org.isf.utils.jobjects.VoFloatTextField;
-import org.isf.utils.jobjects.CustomJDateChooser;
-import javax.swing.JButton;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
-import java.awt.BorderLayout;
-import java.awt.Font;
-import javax.swing.JSeparator;
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.border.EmptyBorder;
-import org.isf.generaldata.GeneralData;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.VoFloatTextField;
 
 public class OperationRowEdit extends JPanel {
 	

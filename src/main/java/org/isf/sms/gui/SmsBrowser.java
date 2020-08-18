@@ -38,11 +38,10 @@ import org.isf.sms.manager.SmsManager;
 import org.isf.sms.model.Sms;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * @author Mwithi

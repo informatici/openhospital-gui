@@ -54,16 +54,15 @@ import org.isf.stat.gui.report.GenericReportPharmaceuticalOrder;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalStock;
 import org.isf.stat.gui.report.GenericReportPharmaceuticalStockCard;
 import org.isf.utils.excel.ExcelExporter;
-import org.isf.utils.jobjects.JFromDateToDateChooserDialog;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.JFromDateToDateChooserDialog;
 import org.isf.utils.jobjects.JMonthYearChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * This class shows a complete extended list of medical drugs,

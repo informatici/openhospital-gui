@@ -1,10 +1,12 @@
 package org.isf.utils.image;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public final class ImageUtil {
     private ImageUtil() {

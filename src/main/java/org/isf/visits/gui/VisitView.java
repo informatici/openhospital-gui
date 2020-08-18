@@ -1,11 +1,6 @@
 package org.isf.visits.gui;
 
 import java.awt.AWTEvent;
-
-/**
- * @author Mwithi
- */
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -61,6 +56,10 @@ import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
 import com.toedter.calendar.JDateChooser;
+
+/**
+ * @author Mwithi
+ */
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI

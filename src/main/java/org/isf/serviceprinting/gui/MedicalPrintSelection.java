@@ -1,14 +1,14 @@
 package org.isf.serviceprinting.gui;
 
-import org.isf.medicals.manager.MedicalBrowsingManager;
-import org.isf.medicals.model.Medical;
-import org.isf.medtype.manager.MedicalTypeBrowserManager;
-import org.isf.medtype.model.MedicalType;
-import org.isf.menu.manager.Context;
-import org.isf.serviceprinting.print.Medical4Print;
-import org.isf.serviceprinting.manager.PrintManager;
-import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,15 +21,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
+
+import org.isf.medicals.manager.MedicalBrowsingManager;
+import org.isf.medicals.model.Medical;
+import org.isf.medtype.manager.MedicalTypeBrowserManager;
+import org.isf.medtype.model.MedicalType;
+import org.isf.menu.manager.Context;
+import org.isf.serviceprinting.manager.PrintManager;
+import org.isf.serviceprinting.print.Medical4Print;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
 public class MedicalPrintSelection extends JDialog implements ActionListener{
 	/**

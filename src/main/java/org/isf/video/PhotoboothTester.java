@@ -1,19 +1,21 @@
 package org.isf.video;
 
-import com.github.sarxos.webcam.Webcam;
+import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.JDialog;
+
 import org.isf.video.gui.PhotoboothDialog;
 import org.isf.video.gui.PhotoboothPanelModel;
 import org.isf.video.gui.PhotoboothPanelPresentationModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import com.github.sarxos.webcam.Webcam;
 
 public class PhotoboothTester {
     private static final Logger LOGGER = LoggerFactory.getLogger(PhotoboothTester.class);

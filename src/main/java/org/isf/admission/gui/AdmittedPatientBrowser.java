@@ -67,13 +67,12 @@ import org.isf.therapy.gui.TherapyEdit;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * This class shows a list of all known patients and for each if (and where) they are actually admitted, 

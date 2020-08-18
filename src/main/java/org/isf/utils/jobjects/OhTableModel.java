@@ -1,10 +1,6 @@
 package org.isf.utils.jobjects;
 
 import java.util.ArrayList;
-/**
- * @author u2g
- * This class builds products table with filter
- */
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +14,10 @@ import org.isf.priceslist.model.Price;
 import org.isf.pricesothers.model.PricesOthers;
 import org.isf.utils.exception.OHException;
 
+/**
+ * @author u2g
+ * This class builds products table with filter
+ */
 public class OhTableModel<T> implements TableModel{
 
 	

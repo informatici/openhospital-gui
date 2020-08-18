@@ -1,6 +1,10 @@
 package org.isf.utils.jobjects;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.MenuComponent;
+import java.awt.MenuContainer;
+
 import javax.swing.SwingUtilities;
 
 class DispatchedEvent {

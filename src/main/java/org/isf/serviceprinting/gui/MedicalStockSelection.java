@@ -40,8 +40,8 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.DateTextField;
-import org.isf.ward.model.Ward;
 import org.isf.ward.manager.WardBrowserManager;
+import org.isf.ward.model.Ward;
 
 public class MedicalStockSelection extends JDialog implements ActionListener{
 
