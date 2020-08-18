@@ -216,11 +216,15 @@
 			<groupId>jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<exclusions>
-	          <exclusion>
-	          	<groupId>com.lowagie</groupId>
-				<artifactId>itext</artifactId>
-	          </exclusion>
-	        </exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.lowagie</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+			</exclusions>
 			<version>3.0.0</version>
 		</dependency>
 		<dependency>
