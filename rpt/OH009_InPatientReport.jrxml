@@ -32,8 +32,8 @@
 	<import value="net.sf.jasperreports.engine.data.*" />
 	<import value="it.businesslogic.ireport.IReportScriptlet" />
 
-	<parameter name="fromdate" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="todate" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="fromdate" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="todate" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="Hospital" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="Address" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="City" isForPrompting="false" class="java.lang.String"/>
@@ -56,7 +56,7 @@
 FROM ADMISSION JOIN PATIENT ON PAT_ID = ADM_PAT_ID
 WHERE ADM_DELETED = 'N'
 AND ADM_DATE_DIS IS NOT NULL
-AND DATE(ADM_DATE_DIS) BETWEEN STR_TO_DATE($P{fromdate},'%d/%m/%Y') AND STR_TO_DATE($P{todate},'%d/%m/%Y')
+AND DATE(ADM_DATE_DIS) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 ORDER BY ADM_DATE_DIS]]></queryString>
 
 	<field name="ADM_ID" class="java.lang.Integer"/>
@@ -190,7 +190,7 @@ ORDER BY ADM_DATE_DIS]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Telephone}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="65"
 						y="122"
@@ -205,7 +205,7 @@ ORDER BY ADM_DATE_DIS]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fromdate}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{fromdate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -241,7 +241,7 @@ ORDER BY ADM_DATE_DIS]]></queryString>
 					</textElement>
 				<text><![CDATA[To]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="194"
 						y="122"
@@ -256,7 +256,7 @@ ORDER BY ADM_DATE_DIS]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{todate}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{todate}]]></textFieldExpression>
 				</textField>
 				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -733,7 +733,7 @@ ORDER BY ADM_DATE_DIS]]></queryString>
 					<textElement>
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DISEASE}.contains( " - " ) ? $F{DISEASE}.split( " - " )[1] : $F{DISEASE}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DISEASE}.indexOf( " - " ) > -1 ? $F{DISEASE}.split( " - " )[1] : $F{DISEASE}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
