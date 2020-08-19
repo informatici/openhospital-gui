@@ -42,7 +42,9 @@ Please read Admin and User manuals in doc/ folder
 
 This project uses a consistent code style and provides definitions for use in both IntelliJ and Eclipse IDEs.
 
-For IntelliJ the process for importing the code style is:
+<details><summary>IntelliJ IDEA instructions</summary>
+
+For IntelliJ IDEA the process for importing the code style is:
 
 * Select *Settings* in the *File* menu
 * Select *Editor*
@@ -54,6 +56,10 @@ For IntelliJ the process for importing the code style is:
 * Navigate to the location of the file which relative to the project root is:  `.ide-settings/idea/OpenHospital-code-style-configuration.xml`
 * Select *OK* 
 * At this point the code style is stored as part of the IDE and is used for **all** projects opened in the editor.  To restrict the settings to just this project again select the setting button by the side of the *Scheme* list and select *Copy to Project...*. If successful a notice appears in the window that reads: *For current project*.
+
+</details>
+
+<details><summary>Eclipse instructions</summary>
 
 For Eclipse the process requires loading the formatting style and the import order separately.
 
@@ -70,6 +76,8 @@ For Eclipse the process requires loading the formatting style and the import ord
 * Navigate to the location of the file which relative to the project root is:  `.ide-settings/eclipse/OpenHospital.importorder`
 * Select *Open*
 * As with the formatting styles the import order is applicable to all projects.  In order to change it just for this project repeat the same steps as above for *Configure Project Specific Settings...*
+ 
+</details> 
 
 Please read the OpenHospital [Wiki](https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines)
 
