@@ -31,8 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Login extends JDialog implements ActionListener, KeyListener {
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 76205822226035164L;
 
@@ -43,6 +44,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public interface LoginListener extends EventListener {
+
 		public void loginInserted(AWTEvent e);
 	}
 
@@ -58,7 +60,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
 
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 		};
@@ -140,8 +142,8 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			}
 		}
 		if (!found) {
-			
-			logger.warn("Login failed: " + message);
+
+			logger.warn("Login failed: {}", message);
 			JOptionPane.showMessageDialog(this, message, "",
 					JOptionPane.PLAIN_MESSAGE);
 			pwd.setText("");
@@ -169,11 +171,11 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 		public LoginPanel(Login myFrame) {
 
-            try {
-                users = manager.getUser();
-            } catch (OHServiceException e1) {
-                OHServiceExceptionUtil.showMessages(e1);
-            }
+			try {
+				users = manager.getUser();
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
+			}
 
 			/*
 			 * for (User u : users) System.out.println(u);

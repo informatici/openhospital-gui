@@ -18,11 +18,10 @@ public class Menu {
 
 	private static Logger logger = LoggerFactory.getLogger(Menu.class);
 
-	private final static float MIN_JAVA_VERSION = (float) 1.6; 
-	
+	private final static float MIN_JAVA_VERSION = (float) 1.6;
+
 	/**
 	 * Create the GUI and show it.
-	 * 
 	 */
 	private static void createAndShowGUI() {
 		logger = LoggerFactory.getLogger(Menu.class);
@@ -30,25 +29,25 @@ public class Menu {
 		checkOHVersion();
 		checkJavaVersion();
 		JFrame.setDefaultLookAndFeelDecorated(false);
-		new SplashWindow3("rsc"+File.separator+"images"+File.separator+"Splash.jpg",null,3000);
-		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10,Toolkit.getDefaultToolkit().getSystemEventQueue());
+		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "Splash.jpg", null, 3000);
+		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
 		Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQueue);
 	}
-	
+
 	private static void checkOHVersion() {
 		Version.getVersion();
-		logger.info("OpenHospital version " + Version.VER_MAJOR + "." + Version.VER_MINOR + "." + Version.VER_RELEASE);
-		
+		logger.info("OpenHospital version {}.{}.{}", Version.VER_MAJOR, Version.VER_MINOR, Version.VER_RELEASE);
+
 	}
-	
+
 	public static void checkJavaVersion() {
 		String version = System.getProperty("java.version");
-		logger.info("Java version " + version);
+		logger.info("Java version {}", version);
 		Float f = Float.valueOf(version.substring(0, 3));
 		if (f.floatValue() < MIN_JAVA_VERSION) {
-			logger.error("Java version " + MIN_JAVA_VERSION + " or higher is required.");
+			logger.error("Java version {} or higher is required.", MIN_JAVA_VERSION);
 			logger.info("\n\n=====================\n OpenHospital closed \n=====================\n");
-		    System.exit(1);
+			System.exit(1);
 		}
 	}
 
@@ -57,10 +56,11 @@ public class Menu {
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+
 			public void run() {
 				createAndShowGUI();
 			}
 		});
-		
+
 	}
 }

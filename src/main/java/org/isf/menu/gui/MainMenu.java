@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener {
+
 	private static final long serialVersionUID = 7620582079916035164L;
 	private boolean flag_Xmpp = false;
 	private boolean flag_Sms = false;
@@ -50,7 +51,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			myUser = (User) e.getSource();
 			MDC.put("OHUser", myUser.getUserName());
 			MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
-			logger.info("Logging: \"" + myUser.getUserName() + "\" user has logged the system.");
+			logger.info("Logging: \"{}\" user has logged the system.", myUser.getUserName());
 		}
 	}
 
@@ -139,13 +140,13 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 
 		// get menu items
-        try {
-            myMenu = manager.getMenu(myUser);
-        } catch (OHServiceException e) {
-            OHServiceExceptionUtil.showMessages(e);
-        }
+		try {
+			myMenu = manager.getMenu(myUser);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
 
-        // start connection with xmpp server if is enabled
+		// start connection with xmpp server if is enabled
 		if (flag_Xmpp) {
 			try {
 				Server.getInstance().login(myUser.getUserName(), myUser.getPasswd());
@@ -170,7 +171,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				} else if (message.contains("XMPPError connecting")) {
 					logger.error("No XMPP Server seems to be running: set XMPPMODULEENABLED = false");
 				} else {
-					logger.error("An error occurs: " + e.getMessage());
+					logger.error("An error occurs: {}", e.getMessage());
 				}
 				flag_Xmpp = GeneralData.XMPPMODULEENABLED = false;
 			}
@@ -287,7 +288,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	}
 
 	/*
-	 * 
+	 *
 	 */
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
@@ -295,7 +296,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	}
 
 	/**
-	 * 
 	 * @param itemMenuCode
 	 */
 	private void launchApp(String itemMenuCode) {
@@ -338,6 +338,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	}
 
 	private class MainPanel extends JPanel {
+
 		private static final long serialVersionUID = 4338749100837551874L;
 
 		private JButton button[];
@@ -407,8 +408,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			parentFrame.setMinButtonSize(maxPrf);
 		}
 	}// :~MainPanel
-        
-        public static User getUser() {
+
+	public static User getUser() {
 		return myUser;
 	}
 }// :~MainMenu
