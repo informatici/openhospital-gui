@@ -17,89 +17,91 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ChatTab extends JTabbedPane {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(ChatTab.class);
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	public TabButton tab;
-	 public void addTab(String title,Component component){
-		 	super.addTab(title,component);
-		 	int index;
-		 	index=indexOfTab(title);
-		 	logger.debug("index: " + indexOfTabComponent(this));
-	    	tab=new TabButton(title,indexOfTabComponent(this),this);
-		 	setTabComponentAt(index, tab);
-		 	
-	    }
-	 public Color getTabColor()
-	 {
-		
+
+	public void addTab(String title, Component component) {
+		super.addTab(title, component);
+		int index;
+		index = indexOfTab(title);
+		logger.debug("index: {}", indexOfTabComponent(this));
+		tab = new TabButton(title, indexOfTabComponent(this), this);
+		setTabComponentAt(index, tab);
+
+	}
+
+	public Color getTabColor() {
+
 		return tab.getColor();
-				
-	 }
-	 public void setTabColor(Color color)
-	 {
-		 tab.setColor(color);
-	 }
-	
+
+	}
+
+	public void setTabColor(Color color) {
+		tab.setColor(color);
+	}
+
 	public class TabButton extends JPanel implements ActionListener {
-		
+
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 1L;
 		int tab_number;
-	    ImageIcon reg = null;
-	    ImageIcon over = null;
-	    ChatTab tabReference;
-	    JLabel user= null;
-	    public TabButton( String label,int index,ChatTab tab ){
-	    	
-	        super(new FlowLayout(FlowLayout.LEFT,1,1));
-	    	tabReference=tab;
-	    	tab_number=index;
-	    	user=new JLabel(label);
-	        add(user);
-	        try{
+		ImageIcon reg = null;
+		ImageIcon over = null;
+		ChatTab tabReference;
+		JLabel user = null;
 
-	            // load firefox buttons
-	            reg = new ImageIcon("rsc/icons/regular_close_tab.JPG");
-	            over = new ImageIcon("rsc/icons/hoverOver_close_tab.JPG");
+		public TabButton(String label, int index, ChatTab tab) {
 
-	        } catch( Exception e ){
+			super(new FlowLayout(FlowLayout.LEFT, 1, 1));
+			tabReference = tab;
+			tab_number = index;
+			user = new JLabel(label);
+			add(user);
+			try {
 
-	            e.printStackTrace();
+				// load firefox buttons
+				reg = new ImageIcon("rsc/icons/regular_close_tab.JPG");
+				over = new ImageIcon("rsc/icons/hoverOver_close_tab.JPG");
 
-	        }
-	        setOpaque(false);
-	        final JButton button = new JButton(reg);
-	        button.setMargin(new Insets(1,1,1,1));
-	        button.setOpaque(false);
-	        button.setRolloverIcon(over);
-	        button.setPressedIcon(over);
-	        button.setBorderPainted( false );
-	        button.setContentAreaFilled(false);
-	        button.addActionListener( this );
-	        add( button );
+			} catch (Exception e) {
 
-	    }
-	    
-	    public void setColor(Color color){
-	    	user.setForeground(color);
-	    }
-	    public Color getColor()
-	    {
-	    	return user.getForeground();
-	    }
-	    public void actionPerformed(ActionEvent ae ){
+				e.printStackTrace();
 
-	        tabReference.remove(tabReference.indexOfTabComponent(this));
-	    	
-	    }
-	   
+			}
+			setOpaque(false);
+			final JButton button = new JButton(reg);
+			button.setMargin(new Insets(1, 1, 1, 1));
+			button.setOpaque(false);
+			button.setRolloverIcon(over);
+			button.setPressedIcon(over);
+			button.setBorderPainted(false);
+			button.setContentAreaFilled(false);
+			button.addActionListener(this);
+			add(button);
+
+		}
+
+		public void setColor(Color color) {
+			user.setForeground(color);
+		}
+
+		public Color getColor() {
+			return user.getForeground();
+		}
+
+		public void actionPerformed(ActionEvent ae) {
+
+			tabReference.remove(tabReference.indexOfTabComponent(this));
+
+		}
 
 	}
 }
