@@ -1,17 +1,7 @@
 package org.isf.video.gui;
 
-import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamPanel;
-import com.jgoodies.binding.adapter.ComboBoxAdapter;
-import com.jgoodies.binding.list.SelectionInList;
-import com.jgoodies.forms.factories.CC;
-import org.isf.utils.image.ImageUtil;
-import org.isf.utils.jobjects.Cropping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -20,6 +10,24 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.SwingUtilities;
+
+import org.isf.utils.image.ImageUtil;
+import org.isf.utils.jobjects.Cropping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamPanel;
+import com.jgoodies.binding.adapter.ComboBoxAdapter;
+import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.forms.factories.CC;
 
 public final class PhotoboothComponentImpl extends PhotoboothComponent {
     private static final Logger LOGGER = LoggerFactory.getLogger(PhotoboothComponentImpl.class);

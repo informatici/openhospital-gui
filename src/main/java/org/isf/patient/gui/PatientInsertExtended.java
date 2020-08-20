@@ -1,6 +1,44 @@
 package org.isf.patient.gui;
 
-import com.toedter.calendar.JDateChooser;
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.EventListener;
+import java.util.Locale;
+import java.util.StringTokenizer;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.event.EventListenerList;
+
 import org.isf.agetype.manager.AgeTypeBrowserManager;
 import org.isf.agetype.model.AgeType;
 import org.isf.generaldata.GeneralData;
@@ -17,14 +55,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
-import javax.swing.*;
-import javax.swing.event.EventListenerList;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.io.IOException;
-import java.util.*;
+import com.toedter.calendar.JDateChooser;
 
 
 /*------------------------------------------

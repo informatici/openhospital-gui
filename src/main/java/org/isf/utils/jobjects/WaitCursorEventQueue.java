@@ -1,6 +1,7 @@
 package org.isf.utils.jobjects;
 
-import java.awt.*;
+import java.awt.AWTEvent;
+import java.awt.EventQueue;
 
 
 public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallback {

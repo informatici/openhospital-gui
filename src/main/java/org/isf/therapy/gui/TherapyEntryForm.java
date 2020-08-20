@@ -50,13 +50,12 @@ import org.isf.therapy.model.Therapy;
 import org.isf.therapy.model.TherapyRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.IconButton;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * @author Mwithi

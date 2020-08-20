@@ -34,7 +34,6 @@ package org.isf.opd.gui;
 	  				   Extended patient search to patient code
  *------------------------------------------*/
 
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -55,8 +54,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -105,16 +106,14 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
-import com.toedter.calendar.JDateChooser;
-import java.util.Date;
-import java.util.Iterator;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
+
+import com.toedter.calendar.JDateChooser;
 
 public class OpdEditExtended extends JDialog implements 
         PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener{

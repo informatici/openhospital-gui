@@ -1,9 +1,10 @@
 package org.isf.video.gui;
 
+import java.awt.Dimension;
+import java.awt.Image;
+
 import com.github.sarxos.webcam.Webcam;
 import com.jgoodies.binding.PresentationModel;
-
-import java.awt.*;
 
 public final class PhotoboothPanelPresentationModel extends PresentationModel<PhotoboothPanelModel> {
 

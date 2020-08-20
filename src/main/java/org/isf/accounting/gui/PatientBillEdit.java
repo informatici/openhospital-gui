@@ -64,9 +64,8 @@ import org.isf.stat.gui.report.GenericReportBill;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
-import org.isf.utils.time.RememberDates;
-
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.time.RememberDates;
 /**
  * Create a single Patient Bill
  * it affects tables BILLS, BILLITEMS and BILLPAYMENTS

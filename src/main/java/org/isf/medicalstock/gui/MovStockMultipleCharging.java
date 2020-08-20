@@ -57,12 +57,11 @@ import org.isf.supplier.model.Supplier;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
 import org.isf.utils.time.TimeTools;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
 
 public class MovStockMultipleCharging extends JDialog {
 	/**

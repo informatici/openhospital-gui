@@ -79,6 +79,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ShadowBorder;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
@@ -87,8 +88,6 @@ import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * This class shows essential patient data and allows to create an admission

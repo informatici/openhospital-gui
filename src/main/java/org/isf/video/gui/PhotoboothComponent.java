@@ -1,16 +1,19 @@
 package org.isf.video.gui;
 
-import java.awt.*;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
+import java.awt.Dimension;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import org.isf.gui.BaseComponent;
 
-import javax.swing.*;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 /*
  * Created by JFormDesigner on Mon Mar 09 21:10:41 AEDT 2020
  */
-
-
 
 /**
  * @author User #1
