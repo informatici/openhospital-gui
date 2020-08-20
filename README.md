@@ -8,7 +8,6 @@ You need the openhospital-core in order to run the gui.
 * follow the instructions in the related README.md
 
 **How to build with Maven:**
-_(requires Maven 3.2.5 or lesser installed and configured)_
 
     mvn clean install
     
