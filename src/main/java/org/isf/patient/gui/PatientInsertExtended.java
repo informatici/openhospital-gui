@@ -47,6 +47,7 @@ import org.isf.generaldata.SmsParameters;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.patient.model.PatientProfilePhoto;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.image.ImageUtil;
@@ -2276,9 +2277,11 @@ public class PatientInsertExtended extends JDialog {
 	
 	public void setPatientPhoto(final BufferedImage photo) {
 		if (photo != null) {
-			patient.getPatientProfilePhoto().setPhoto(ImageUtil.imageToByte(photo));
+			PatientProfilePhoto patientProfilePhoto = new PatientProfilePhoto();
+			patientProfilePhoto.setPhoto(ImageUtil.imageToByte(photo));
+			patient.setPatientProfilePhoto(patientProfilePhoto);
 		} else {
-			patient.getPatientProfilePhoto().setPhoto(null);
+			patient.setPatientProfilePhoto(null);
 		}
 	}
 }

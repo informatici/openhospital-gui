@@ -749,8 +749,6 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 			public void actionPerformed(ActionEvent event) {
 				final Patient newPatient = new Patient();
-				newPatient.setPatientProfilePhoto(new PatientProfilePhoto());
-
 				if (GeneralData.PATIENTEXTENDED) {
 					final PatientInsertExtended newrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, newPatient, true);
 					newrecord.addPatientListener(AdmittedPatientBrowser.this);
