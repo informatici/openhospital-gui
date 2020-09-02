@@ -51,6 +51,8 @@ import net.sf.jasperreports.view.JasperViewer;
                     }
                 } else {
                     JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportFromDateToDatePdf(fromDate, toDate, jasperFileName);
+
+                    //TODO: if (jasperReportResultDto.getJasperPrint().getPages().isEmpty()) show message dialog and avoid calling the viewer
                     if (GeneralData.INTERNALVIEWER)
                         JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
                     else {
