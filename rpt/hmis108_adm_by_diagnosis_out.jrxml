@@ -268,7 +268,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
+						<font fontName="SansSerif" size="11" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Month:]]></text>
 				</staticText>
@@ -288,7 +288,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
+						<font fontName="SansSerif" size="11" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Year:]]></text>
 				</staticText>
@@ -301,7 +301,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 						key="staticText-37"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Top">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<text><![CDATA[*only closed admission will be counted]]></text>
 				</staticText>
