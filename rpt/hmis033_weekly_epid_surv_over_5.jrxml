@@ -150,7 +150,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
+						<font fontName="SansSerif" size="11" isBold="false"/>
 					</textElement>
 				<text><![CDATA[From Date:]]></text>
 				</staticText>
@@ -170,7 +170,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
+						<font fontName="SansSerif" size="11" isBold="false"/>
 					</textElement>
 				<text><![CDATA[To DateYear:]]></text>
 				</staticText>
