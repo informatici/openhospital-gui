@@ -342,7 +342,7 @@ FROM (
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font/>
+						<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[MOH 717]]></text>
 				</staticText>
@@ -572,7 +572,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font/>
+						<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[MOH 717]]></text>
 				</staticText>
@@ -733,7 +733,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.1 GENERAL OUTPATIENTS (FILTER CLINICS)]]></text>
 				</staticText>
@@ -801,7 +801,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.1.1]]></text>
 				</staticText>
@@ -818,7 +818,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newmaleover5}]]></textFieldExpression>
 				</textField>
@@ -835,7 +835,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{remaleover5}]]></textFieldExpression>
 				</textField>
@@ -852,7 +852,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(  ($F{newfemaleover5}.longValue()) +($F{refemaleover5}.longValue()) )]]></textFieldExpression>
 				</textField>
@@ -869,7 +869,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Over 5 - Male]]></text>
 				</staticText>
@@ -886,7 +886,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.1.2]]></text>
 				</staticText>
@@ -903,7 +903,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Over 5 - Female]]></text>
 				</staticText>
@@ -920,7 +920,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newfemaleover5}]]></textFieldExpression>
 				</textField>
@@ -937,7 +937,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{refemaleover5}]]></textFieldExpression>
 				</textField>
@@ -954,7 +954,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(  ($F{newmaleunder5}.longValue()) +($F{remaleunder5}.longValue()) )]]></textFieldExpression>
 				</textField>
@@ -971,7 +971,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.1.3]]></text>
 				</staticText>
@@ -988,7 +988,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Children Under 5 - Male]]></text>
 				</staticText>
@@ -1005,7 +1005,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newmaleunder5}]]></textFieldExpression>
 				</textField>
@@ -1022,7 +1022,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{remaleunder5}]]></textFieldExpression>
 				</textField>
@@ -1039,7 +1039,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(  ($F{newmaleover5}.longValue()) +($F{remaleover5}.longValue()) )]]></textFieldExpression>
 				</textField>
@@ -1056,7 +1056,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.1.4]]></text>
 				</staticText>
@@ -1073,7 +1073,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Children Under 5 - Female]]></text>
 				</staticText>
@@ -1090,7 +1090,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newfemaleunder5}]]></textFieldExpression>
 				</textField>
@@ -1107,7 +1107,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{refemaleunder5}]]></textFieldExpression>
 				</textField>
@@ -1124,7 +1124,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(  ($F{newfemaleunder5}.longValue()) +($F{refemaleunder5}.longValue()) )]]></textFieldExpression>
 				</textField>
@@ -1255,7 +1255,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.4.1]]></text>
 				</staticText>
@@ -1272,7 +1272,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[CWC Attendances]]></text>
 				</staticText>
@@ -1289,7 +1289,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1306,7 +1306,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1323,7 +1323,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1340,7 +1340,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.4.2]]></text>
 				</staticText>
@@ -1357,7 +1357,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[ANC Attendances]]></text>
 				</staticText>
@@ -1374,7 +1374,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newANCattend}]]></textFieldExpression>
 				</textField>
@@ -1391,7 +1391,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{reANCattend}]]></textFieldExpression>
 				</textField>
@@ -1408,7 +1408,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(  ($F{newANCattend}.longValue()) +($F{reANCattend}.longValue()) )]]></textFieldExpression>
 				</textField>
@@ -1425,7 +1425,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.4.3]]></text>
 				</staticText>
@@ -1442,7 +1442,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[PNC Attendances]]></text>
 				</staticText>
@@ -1459,7 +1459,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1476,7 +1476,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1493,7 +1493,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1510,7 +1510,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.4.4]]></text>
 				</staticText>
@@ -1527,7 +1527,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[FP Attendances]]></text>
 				</staticText>
@@ -1544,7 +1544,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1561,7 +1561,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1578,7 +1578,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1697,7 +1697,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.5.1]]></text>
 				</staticText>
@@ -1714,7 +1714,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Attendances (Excluding fillings and extractions)]]></text>
 				</staticText>
@@ -1731,7 +1731,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newAttDental}]]></textFieldExpression>
 				</textField>
@@ -1748,7 +1748,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{reAttDental}]]></textFieldExpression>
 				</textField>
@@ -1765,7 +1765,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(  ($F{newAttDental}.longValue()) +($F{reAttDental}.longValue()) )]]></textFieldExpression>
 				</textField>
@@ -1782,7 +1782,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.5.2]]></text>
 				</staticText>
@@ -1799,7 +1799,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Fillings]]></text>
 				</staticText>
@@ -1816,7 +1816,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1833,7 +1833,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1850,7 +1850,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1867,7 +1867,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.5.3]]></text>
 				</staticText>
@@ -1884,7 +1884,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Extractions]]></text>
 				</staticText>
@@ -1901,7 +1901,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1918,7 +1918,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -1935,7 +1935,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -2157,7 +2157,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -2174,7 +2174,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -2191,7 +2191,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -2208,7 +2208,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -2225,7 +2225,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -2242,7 +2242,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[]]></textFieldExpression>
 				</textField>
@@ -2395,7 +2395,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.3.1]]></text>
 				</staticText>
@@ -2412,7 +2412,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[E.N.T. Clinic]]></text>
 				</staticText>
@@ -2429,7 +2429,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newENTclinic}]]></textFieldExpression>
 				</textField>
@@ -2446,7 +2446,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{reENTclinic}]]></textFieldExpression>
 				</textField>
@@ -2463,7 +2463,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(($F{newENTclinic}.longValue()) +
 	($F{reENTclinic}.longValue())
@@ -2482,7 +2482,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.3.2]]></text>
 				</staticText>
@@ -2499,7 +2499,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Eye Clinic]]></text>
 				</staticText>
@@ -2516,7 +2516,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newEYEclinic}]]></textFieldExpression>
 				</textField>
@@ -2533,7 +2533,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{reEYEclinic}]]></textFieldExpression>
 				</textField>
@@ -2550,7 +2550,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(($F{newEYEclinic}.longValue()) +
 	($F{reEYEclinic}.longValue())
@@ -2569,7 +2569,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.3.3]]></text>
 				</staticText>
@@ -2586,7 +2586,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[TB and Leprosy]]></text>
 				</staticText>
@@ -2603,7 +2603,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newTBLclinic}]]></textFieldExpression>
 				</textField>
@@ -2620,7 +2620,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{reTBLclinic}]]></textFieldExpression>
 				</textField>
@@ -2637,7 +2637,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(($F{newTBLclinic}.longValue()) +
 	($F{reTBLclinic}.longValue())
@@ -2656,7 +2656,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.3.4]]></text>
 				</staticText>
@@ -2673,7 +2673,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Sexually Transmitted Infections]]></text>
 				</staticText>
@@ -2690,7 +2690,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newSEXclinic}]]></textFieldExpression>
 				</textField>
@@ -2707,7 +2707,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{reSEXclinic}]]></textFieldExpression>
 				</textField>
@@ -2724,7 +2724,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(($F{newPSYclinic}.longValue()) +
 	($F{rePSYclinic}.longValue())
@@ -2743,7 +2743,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.3.5]]></text>
 				</staticText>
@@ -2760,7 +2760,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Psychiatry]]></text>
 				</staticText>
@@ -2777,7 +2777,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newPSYclinic}]]></textFieldExpression>
 				</textField>
@@ -2794,7 +2794,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{rePSYclinic}]]></textFieldExpression>
 				</textField>
@@ -2811,7 +2811,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(($F{newSEXclinic}.longValue()) +
 	($F{reSEXclinic}.longValue())
@@ -2830,7 +2830,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.3.6]]></text>
 				</staticText>
@@ -2847,7 +2847,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Orthopaedic Clinic]]></text>
 				</staticText>
@@ -2864,7 +2864,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newORTclinic}]]></textFieldExpression>
 				</textField>
@@ -2881,7 +2881,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{reORTclinic}]]></textFieldExpression>
 				</textField>
@@ -2898,7 +2898,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(($F{newORTclinic}.longValue()) +
 	($F{reORTclinic}.longValue())
@@ -2917,7 +2917,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[A.3.7]]></text>
 				</staticText>
@@ -2934,7 +2934,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[All other Special Clinics (Medicine, Paediatrics, Surgery, etc.)]]></text>
 				</staticText>
@@ -2951,7 +2951,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{newOTHclinic}]]></textFieldExpression>
 				</textField>
@@ -2968,7 +2968,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{reOTHclinic}]]></textFieldExpression>
 				</textField>
@@ -2985,7 +2985,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font size="8" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[new java.lang.Long(($F{newOTHclinic}.longValue()) +
 	($F{reOTHclinic}.longValue())
@@ -3129,7 +3129,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[(Revised 2008)]]></text>
 				</staticText>
@@ -3146,7 +3146,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Page 1 of 2"]]></textFieldExpression>
 				</textField>
@@ -3167,7 +3167,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Page 1 of 2"]]></textFieldExpression>
 				</textField>
@@ -3184,7 +3184,7 @@ Original Form should be sent to the District Medical Records Office; The Copy sh
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
+						<font size="7" isBold="false"/>
 					</textElement>
 				<text><![CDATA[(Revised 2008)]]></text>
 				</staticText>
