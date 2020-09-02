@@ -282,7 +282,7 @@ ORDER BY DATE DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" isBold="false"/>
+						<font isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{DATE}]]></textFieldExpression>
 				</textField>
@@ -327,7 +327,7 @@ ORDER BY DATE DESC]]></queryString>
 						stretchType="RelativeToBandHeight"/>
 					<box></box>
 					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica" isBold="false"/>
+						<font fontName="SansSerif" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DETAILS_1}]]></textFieldExpression>
 				</textField>
