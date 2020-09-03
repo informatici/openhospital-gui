@@ -572,7 +572,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 								String toDate = sdf.format(dateTo.getTime());
 								new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList,  fromDate, toDate, true, true);
 								
-							}
+							} else throw new Exception();
 						}
 						if (jScrollPanePending.isShowing()) {
 							int rowsSelected = jTablePending.getSelectedRowCount();					
@@ -617,7 +617,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 									return;
 								}
 							}
-						}
+						} else throw new Exception();
 						if (jScrollPaneClosed.isShowing()) {
 							int rowSelected = jTableClosed.getSelectedRow();
 							Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
