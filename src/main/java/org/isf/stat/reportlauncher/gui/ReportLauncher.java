@@ -290,7 +290,7 @@ public class ReportLauncher extends ModalJFrame{
 			jYearLabel.setText("        " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox();
 
-			for (int i=0;i<4;i++){
+			for (int i=0;i<20;i++){
 				jYearComboBox.addItem((year-i)+"");
 			}
 			

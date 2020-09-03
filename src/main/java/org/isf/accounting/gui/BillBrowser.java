@@ -799,7 +799,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		jAffiliatePersonJButtonAdd.addMouseListener(new MouseAdapter() {
 	        @Override
 	        public void mouseClicked(MouseEvent e) {
-	        	SelectPatient selectPatient = new SelectPatient(BillBrowser.this, false, true );
+	        	SelectPatient selectPatient = new SelectPatient(BillBrowser.this, false, true);
 					selectPatient.addSelectionListener(BillBrowser.this);
 					selectPatient.setVisible(true);	
 					Patient pat = selectPatient.getPatient();
@@ -840,8 +840,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	public void patientSelected(Patient patient) throws OHServiceException {
 		patientParent = patient;
 		jAffiliatePersonJTextField.setText(patientParent != null 
-				? patientParent.getFirstName() + " " + patientParent.getFirstName() 
-				: "");
+				? patientParent.getName() : "");
 		
 		if (patientParent != null) {
 			if (medicalJTextField != null)
