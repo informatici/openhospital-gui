@@ -1,56 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_clinical_sheet_patsubreport" pageWidth="535" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f4073c2a-b3b8-48c7-9a2f-c61ae781c279">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
 	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="net.sf.jasperreports.engine.util.JRImageLoader"/>
 	<import value="java.util.*"/>
 	<import value="org.joda.time.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
-	<import value="net.sf.jasperreports.engine.util.JRImageLoader"/>
 	<parameter name="patientID" class="java.lang.String"/>
-	<parameter name="age" class="java.lang.Integer" isForPrompting="false">
-		<parameterDescription><![CDATA[age in days]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new Integer( (int) ( (new Date().getTime() - $F{PAT_BDATE}.getTime()) / (1000*60*60*24) ))]]></defaultValueExpression>
-	</parameter>
 	<queryString>
 		<![CDATA[SELECT *
 FROM PATIENT
-LEFT JOIN (SELECT PEX_PAT_ID, PEX_HEIGHT, PEX_WEIGHT FROM PATIENTEXAMINATION WHERE PEX_PAT_ID = $P{patientID} ORDER BY PEX_DATE DESC LIMIT 1) AS HW
-ON PAT_ID = PEX_PAT_ID
+LEFT JOIN (SELECT PEX_PAT_ID, PEX_HEIGHT, PEX_WEIGHT FROM PATIENTEXAMINATION WHERE PEX_PAT_ID = $P{patientID} ORDER BY PEX_DATE DESC LIMIT 1) AS HW ON PAT_ID = PEX_PAT_ID
+LEFT JOIN PATIENT_PROFILE_PHOTO ON PROFILE_PHOTO_ID = PAT_PROFILE_PHOTO_ID
 WHERE PAT_ID = $P{patientID}]]>
 	</queryString>
-	<field name="PAT_ID" class="java.lang.Integer"/>
-	<field name="PAT_FNAME" class="java.lang.String"/>
-	<field name="PAT_SNAME" class="java.lang.String"/>
-	<field name="PAT_NAME" class="java.lang.String"/>
-	<field name="PAT_BDATE" class="java.sql.Date"/>
-	<field name="PAT_AGE" class="java.lang.Integer"/>
-	<field name="PAT_AGETYPE" class="java.lang.String"/>
-	<field name="PAT_SEX" class="java.lang.String"/>
-	<field name="PAT_ADDR" class="java.lang.String"/>
-	<field name="PAT_CITY" class="java.lang.String"/>
-	<field name="PAT_NEXT_KIN" class="java.lang.String"/>
-	<field name="PAT_TELE" class="java.lang.String"/>
-	<field name="PAT_MOTH_NAME" class="java.lang.String"/>
-	<field name="PAT_MOTH" class="java.lang.String"/>
-	<field name="PAT_FATH_NAME" class="java.lang.String"/>
-	<field name="PAT_FATH" class="java.lang.String"/>
-	<field name="PAT_LEDU" class="java.lang.String"/>
-	<field name="PAT_ESTA" class="java.lang.String"/>
-	<field name="PAT_PTOGE" class="java.lang.String"/>
-	<field name="PAT_NOTE" class="java.lang.String"/>
-	<field name="PAT_DELETED" class="java.lang.String"/>
-	<field name="PAT_LOCK" class="java.lang.Integer"/>
-	<field name="PAT_BTYPE" class="java.lang.String"/>
-	<field name="PAT_PHOTO" class="java.lang.Object"/>
-	<field name="PAT_TAXCODE" class="java.lang.String"/>
-	<field name="PAT_TIMESTAMP" class="java.sql.Timestamp"/>
-	<field name="PEX_PAT_ID" class="java.lang.Integer"/>
-	<field name="PEX_HEIGHT" class="java.lang.Integer"/>
-	<field name="PEX_WEIGHT" class="java.lang.Double"/>
+	<field name="PAT_ID" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_FNAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_SNAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_BDATE" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_AGE" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_AGETYPE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_SEX" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_ADDR" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_CITY" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_NEXT_KIN" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_TELE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_MOTH_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_MOTH" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_FATH_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_FATH" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_LEDU" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_ESTA" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_PTOGE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_NOTE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_DELETED" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_LOCK" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_BTYPE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_TAXCODE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_TIMESTAMP" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_CREATED_BY" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_CREATED_DATE" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_LAST_MODIFIED_BY" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_LAST_MODIFIED_DATE" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_ACTIVE" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_PROFESSION" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_MAR_STAT" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PROFILE_PHOTO_ID" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PEX_PAT_ID" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PEX_HEIGHT" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Height in cm]]></fieldDescription>
+	</field>
+	<field name="PEX_WEIGHT" class="java.lang.Double">
+		<fieldDescription><![CDATA[Weight in Kg]]></fieldDescription>
+	</field>
+	<field name="PAT_PROFILE_PHOTO_ID" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAT_PHOTO" class="java.lang.Object">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<variable name="now" class="java.util.Date">
 		<variableExpression><![CDATA[new Date()]]></variableExpression>
 	</variable>
@@ -81,7 +164,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</textElement>
 				<text><![CDATA[Passport]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="80" y="19" width="322" height="14" uuid="f48af809-4b93-46ba-9e3b-3ac270753757"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -90,7 +173,7 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Arial" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAT_FNAME} + " " + $F{PAT_SNAME}]]></textFieldExpression>
 			</textField>
@@ -103,7 +186,7 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAT_ID}]]></textFieldExpression>
 			</textField>
@@ -116,7 +199,7 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Patient ID:]]></text>
 			</staticText>
@@ -129,11 +212,11 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Name:]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement key="textField-3" x="80" y="33" width="322" height="14" uuid="e6c8417f-ea01-4fb5-96de-58e117b1ff02"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -146,7 +229,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAT_SEX}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement key="textField-4" x="80" y="61" width="322" height="14" uuid="7c2808a7-13ae-4b42-92d6-fd75364de86e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -168,7 +251,7 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Sex:]]></text>
 			</staticText>
@@ -181,11 +264,11 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Age:]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement key="textField-5" x="80" y="75" width="322" height="14" uuid="15cda3bf-b762-4c24-b232-0ee44303b70e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -198,7 +281,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAT_ADDR}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement key="textField-6" x="80" y="89" width="322" height="14" uuid="a4860ab7-3e96-439d-949a-399bb9756e18"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -220,7 +303,7 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Address:]]></text>
 			</staticText>
@@ -233,7 +316,7 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[City:]]></text>
 			</staticText>
@@ -245,7 +328,7 @@ WHERE PAT_ID = $P{patientID}]]>
 					<bottomPen lineWidth="0.25" lineStyle="Solid"/>
 					<rightPen lineWidth="0.25" lineStyle="Solid"/>
 				</box>
-				<imageExpression><![CDATA[net.sf.jasperreports.engine.util.JRImageLoader.loadImage((byte[])$F{PAT_PHOTO})]]></imageExpression>
+				<imageExpression><![CDATA[$F{PAT_PHOTO}]]></imageExpression>
 			</image>
 			<line>
 				<reportElement key="line-1" x="0" y="1" width="535" height="1" uuid="07ca0ff1-f498-4add-8cd3-2d4624e38a0d"/>
@@ -262,7 +345,7 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Height (cm):]]></text>
 			</staticText>
@@ -275,11 +358,11 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Weight (kg):]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement key="textField-7" x="80" y="117" width="322" height="14" uuid="83679656-e47b-4620-b0b3-920958c5513c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -292,7 +375,7 @@ WHERE PAT_ID = $P{patientID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PEX_WEIGHT}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement key="textField-8" x="80" y="103" width="322" height="14" uuid="ff426412-901c-41e4-868b-686ba38e2ea9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -314,11 +397,11 @@ WHERE PAT_ID = $P{patientID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true" fontName="Arial"/>
 				</textElement>
 				<text><![CDATA[Birth Date:]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement key="textField-9" x="80" y="47" width="322" height="14" uuid="47b800bb-fee6-4ea3-989f-f9c0949eedba"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
