@@ -72,7 +72,7 @@ WHERE BLL_ID = $P{billID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false"/>
+						<font fontName="Courier New" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Hospital}]]></textFieldExpression>
 				</textField>
@@ -216,7 +216,7 @@ WHERE BLL_ID = $P{billID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false"/>
+						<font fontName="Courier New" size="12" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Total]]></text>
 				</staticText>
@@ -318,7 +318,7 @@ WHERE BLL_ID = $P{billID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false"/>
+						<font fontName="Courier New" size="12" isBold="false"/>
 					</textElement>
 				<text><![CDATA[TOT:]]></text>
 				</staticText>

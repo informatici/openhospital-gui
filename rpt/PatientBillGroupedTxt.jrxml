@@ -86,7 +86,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false"/>
+						<font fontName="Courier New" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Hospital}]]></textFieldExpression>
 				</textField>
@@ -226,7 +226,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 						key="textField-30"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false"/>
+						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.moh717monthlyworkloadreportforhospitalspage2b.total" )]]></textFieldExpression>
 				</textField>
@@ -377,7 +377,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 						key="textField-29"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false"/>
+						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.billsreportuserallindate.total" )]]></textFieldExpression>
 				</textField>
