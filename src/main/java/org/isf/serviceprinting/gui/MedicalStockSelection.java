@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -25,6 +26,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.apache.log4j.PropertyConfigurator;
+import org.isf.generaldata.GeneralData;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.model.Movement;
@@ -42,7 +45,12 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.DateTextField;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+/**
+ * @deprecated in favor of new reports StockCard and StockLedger
+ */
 public class MedicalStockSelection extends JDialog implements ActionListener{
 
 	/**
@@ -96,7 +104,7 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 		super(owner, true);
 		initialize();
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	private void initialize() {
@@ -446,22 +454,22 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 					try {
 					switch(selectedIndex){
 						case 0:
-							path="rpt/stockMovementDate.jasper";
+							path="stockMovementDate";
 							pMovements = ioOperations.getMovementForPrint(medical,
 										medicalType,wardSelected ,movementType, movFrom, movTo, lot,MedicalStockIoOperations.MovementOrder.DATE);
 							break;
 						case 1:
-							path="rpt/stockMovementWard.jasper";
+							path="stockMovementWard";
 							pMovements = ioOperations.getMovementForPrint(medical,
 									medicalType,wardSelected ,movementType, movFrom, movTo, lot,MedicalStockIoOperations.MovementOrder.WARD);
 							break;
 						case 2:
-							path="rpt/stockMovementPhrType.jasper";
+							path="stockMovementPhrType";
 							pMovements = ioOperations.getMovementForPrint(medical,
 									medicalType,wardSelected ,movementType, movFrom, movTo, lot,MedicalStockIoOperations.MovementOrder.PHARMACEUTICAL_TYPE);
 							break;
 						case 3:
-							path="rpt/stockMovementType.jasper";
+							path="stockMovementType";
 							pMovements = ioOperations.getMovementForPrint(medical,
 									medicalType,wardSelected ,movementType, movFrom, movTo, lot,MedicalStockIoOperations.MovementOrder.TYPE);
 							break;
@@ -500,6 +508,22 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 	}
 	public void actionPerformed(ActionEvent e) {
 		formatSelected = e.getActionCommand();
+	}
+	
+	public static void main(String[] args) {
+		
+		JFrame frame = new JFrame();
+		
+		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		Context.setApplicationContext(context);
+		GeneralData.getGeneralData();
+		
+		MedicalStockSelection medicalPrintSelection = new MedicalStockSelection(frame);
+		
+		
+		
+		
 	}
 
 }

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -22,6 +23,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.apache.log4j.PropertyConfigurator;
+import org.isf.generaldata.GeneralData;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.medtype.manager.MedicalTypeBrowserManager;
@@ -31,7 +34,12 @@ import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.serviceprinting.print.Medical4Print;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+/**
+ * @deprecated in favor of new reports StockCard and StockLedger
+ */
 public class MedicalPrintSelection extends JDialog implements ActionListener{
 	/**
 	 * 
@@ -62,7 +70,7 @@ public class MedicalPrintSelection extends JDialog implements ActionListener{
 		super(owner, true);
 		initialize();
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	private void initialize() {
@@ -264,7 +272,7 @@ public class MedicalPrintSelection extends JDialog implements ActionListener{
 
 				pMedicals4Print = convertToPrint(pMedicals);
 				try {
-					printManager.print("rpt/pharmaceutical.jasper", pMedicals4Print,format);
+					printManager.print("pharmaceutical", pMedicals4Print,format);
 				} catch (OHServiceException e1) {
 					JOptionPane.showMessageDialog(MedicalPrintSelection.this, e1.getMessage());
 				}
@@ -290,5 +298,21 @@ public class MedicalPrintSelection extends JDialog implements ActionListener{
 	}
 	public void actionPerformed(ActionEvent e) {
 		formatSelected = e.getActionCommand();
+	}
+	
+	public static void main(String[] args) {
+		
+		JFrame frame = new JFrame();
+		
+		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		Context.setApplicationContext(context);
+		GeneralData.getGeneralData();
+		
+		MedicalPrintSelection medicalPrintSelection = new MedicalPrintSelection(frame);
+		
+		
+		
+		
 	}
 }
