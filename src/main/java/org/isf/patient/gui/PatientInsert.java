@@ -271,7 +271,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 								} else {
 									String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
 									try{
-										if (manager.isPatientPresent(name)) {										
+										if (manager.isNamePresent(name)) {										
 											switch (JOptionPane.showConfirmDialog(null, 
 													MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" +
 															MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?", 
@@ -331,7 +331,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 						String name= jFirstNameTextField.getText()+" "+jSecondNameTextField.getText();
 						if(!(patient.getName().equals(name))){
 							try{
-								if(manager.isPatientPresent(name)){										
+								if(manager.isNamePresent(name)){										
 									switch (JOptionPane.showConfirmDialog(null, 
 											MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" +
 													MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?", 
