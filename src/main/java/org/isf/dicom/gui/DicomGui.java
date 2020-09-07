@@ -496,7 +496,7 @@ public class DicomGui extends JFrame implements WindowListener {
 		PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 		Patient patient = new Patient();
 		try {
-			patient = patManager.getPatient(1);
+			patient = patManager.getPatientById(1);
 		} catch (OHServiceException e) {
 			e.printStackTrace();
 		}

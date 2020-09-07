@@ -523,7 +523,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			
 			Patient patient = null;
 			try {
-				patient = patManager.getPatient(thisBill.getPatient().getCode());
+				patient = patManager.getPatientById(thisBill.getPatient().getCode());
 			} catch (OHServiceException e) {
 				if(e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){

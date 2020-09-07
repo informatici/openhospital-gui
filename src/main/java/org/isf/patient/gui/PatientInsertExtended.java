@@ -422,7 +422,7 @@ public class PatientInsertExtended extends JDialog {
 					if (insert) {
 						String name = firstName + " " + secondName;
 						try{
-							if (patientManager.isPatientPresent(name)) {
+							if (patientManager.isNamePresent(name)) {
 								switch (JOptionPane.showConfirmDialog(null,
 										MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" + MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?",
 										MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {

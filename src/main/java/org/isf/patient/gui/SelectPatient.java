@@ -485,7 +485,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 	private Patient reloadSelectedPatient(Integer code) {
 		try {
-			return patManager.getPatient(code);
+			return patManager.getPatientById(code);
 		} catch (OHServiceException ex) {
 			throw new RuntimeException("Unable to load patient");
 		}
