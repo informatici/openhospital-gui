@@ -252,7 +252,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (!GeneralData.ENHANCEDSEARCH) {
 			if(!full)
 				try {
-					patArray = patManager.getPatientHeadWithHeightAndWeight();
+					patArray = patManager.getPatientWithHeightAndWeight(null);
 				} catch (OHServiceException e2) {
 					OHServiceExceptionUtil.showMessages(e2);
 				}
