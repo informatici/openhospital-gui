@@ -1,6 +1,24 @@
 # OpenHospital-gui
 [![Java CI](https://github.com/informatici/openhospital-gui/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/informatici/openhospital-gui/actions?query=workflow%3A%22Java+CI+with+Maven%22)
 
+**Translations**
+
+[![Transifex](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/content/)
+
+[![ar](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Far%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/ar/)
+[![cs](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fcs%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/cs/)
+[![de](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fde%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/de/)
+[![el](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fel%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/el/)
+[![es](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fes%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/es/)
+[![fr](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Ffr%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/fr/)
+[![hi_IN](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fhi_IN%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/hi_IN/)
+[![it](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fit%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/it/)
+[![pt](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fpt%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/pt/)
+[![sq](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fsq%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/sq/)
+[![sw](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fsw%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/sw/)
+[![ta](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fta%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/ta/)
+[![zh_CN](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Ftransifex-open-api.herokuapp.com%2Fbadge%2Finformatici-senza-frontiere-onlus%2Fproject%2Fopenhospital%2Flanguage%2Fzh_CN%2Ftranslated.json)](https://www.transifex.com/informatici-senza-frontiere-onlus/openhospital/language/zh_CN/)
+
 **OpenHospital-core**
 You need the openhospital-core in order to run the gui.
 
