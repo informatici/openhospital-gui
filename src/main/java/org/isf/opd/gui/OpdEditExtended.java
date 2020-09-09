@@ -311,7 +311,8 @@ public class OpdEditExtended extends ModalJFrame implements
      * Opd next visit fields
      */
     private JLabel nextVisitLabel;
-    private JDateChooser opdNextVisitDate ;
+    private JDateChooser opdNextVisitDate;
+    private GregorianCalendar nextDateBackup; //TODO: Workaround for update, a better solution must be found here
 	/**
 	 * This method initializes 
 	 * @wbp.parser.constructor
@@ -1612,11 +1613,12 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JButton getOkButton() {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok"));
-            okButton.setMnemonic(KeyEvent.VK_O);
+			okButton.setMnemonic(KeyEvent.VK_O);
 			okButton.addActionListener(new ActionListener() {
+
 				public void actionPerformed(ActionEvent e) {
 					boolean opdNumExist = false;
-					if(!jOpdNumField.getText().equals("")||!jOpdNumField.getText().contains(" ")) {
+					if (!jOpdNumField.getText().equals("") || !jOpdNumField.getText().contains(" ")) {
 						OpdBrowserManager opm = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 						GregorianCalendar gregDate = new GregorianCalendar();
 						gregDate.setTime(OpdDateFieldCal.getDate());
@@ -1624,15 +1626,14 @@ public class OpdEditExtended extends ModalJFrame implements
 						try {
 							opdNum = Integer.parseInt(jOpdNumField.getText());
 						} catch (NumberFormatException e1) {
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.opd.opdnumbermustbeanumber"));
+							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.opd.opdnumbermustbeanumber"));
 							return;
 						}
 						int opdEdit = 0;
 						if (insert) {
 							try {
 								opdNumExist = opm.isExistOpdNum(opdNum, gregDate.get(Calendar.YEAR));
-							} catch(OHServiceException e1){
+							} catch (OHServiceException e1) {
 								OHServiceExceptionUtil.showMessages(e1);
 							}
 						} else {
@@ -1642,148 +1643,144 @@ public class OpdEditExtended extends ModalJFrame implements
 						if (opdNum != opdEdit) {
 							try {
 								opdNumExist = opm.isExistOpdNum(opdNum, gregDate.get(Calendar.YEAR));
-							} catch(OHServiceException e1){
+							} catch (OHServiceException e1) {
 								OHServiceExceptionUtil.showMessages(e1);
 							}
 						} else {
 							opdNumExist = false;
 						}
 					} else {
-						JOptionPane.showMessageDialog(OpdEditExtended.this,
-								MessageBundle.getMessage("angal.opd.opdnumbermustbeanumber"));
+						JOptionPane.showMessageDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.opd.opdnumbermustbeanumber"));
 						return;
 					}
-					
-					if (opdNumExist) {
-						JOptionPane.showMessageDialog(OpdEditExtended.this,
-								MessageBundle.getMessage("angal.opd.opdnumberalreadyexist"));
-						return;
-					}
-					
-					char newPatient=' ';
-					String referralTo=null;
-					String referralFrom=null;
-					Disease disease=null;
-					Disease disease2=null;
-					Disease disease3=null;
 
-					if (newPatientCheckBox.isSelected()){
-						newPatient='N';
-					}else{
-						newPatient='R';
+					if (opdNumExist) {
+						JOptionPane.showMessageDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.opd.opdnumberalreadyexist"));
+						return;
 					}
-					if (referralToCheckBox.isSelected()){
-						referralTo="R";
-					}else{
-						referralTo="";
-					}
-					if (referralFromCheckBox.isSelected()){
-						referralFrom="R";
-					}else{
-						referralFrom="";
-					}
-					//disease
-					if (diseaseBox1.getSelectedIndex()>0) {
-						disease=((Disease)diseaseBox1.getSelectedItem());
-					}
-					//disease2
-					if (diseaseBox2.getSelectedIndex()>0) {
-						disease2=((Disease)diseaseBox2.getSelectedItem());
-					}
-					//disease3
-					if (diseaseBox3.getSelectedIndex()>0) {
-						disease3=((Disease)diseaseBox3.getSelectedItem());					
-					}
-					
-					if(OpdDateFieldCal.getDate() != null) {
-					    visitDateOpd = new GregorianCalendar();
-                                            visitDateOpd.setTime(OpdDateFieldCal.getDate());
-                                            opd.setVisitDate(visitDateOpd);
-                                        }else{
-                                            opd.setVisitDate(null);
-                                        }
-                                        
-                                        boolean scheduleVisit = false;
-                                        Date now = new Date();
-                                        Date nextVisit = opdNextVisitDate.getDate();
-					if(nextVisit!=null){
-                                            if(nextVisit.compareTo(now) < 0){
-                                                JOptionPane.showMessageDialog(OpdEditExtended.this,
-                                                                MessageBundle.getMessage("angal.opd.notpasseddate"),
-                                                                "",
-                                                                JOptionPane.INFORMATION_MESSAGE);
-                                                return;
-                                            }
-                                            GregorianCalendar gregNextVisit = new GregorianCalendar();
-                                            gregNextVisit.setTime(nextVisit);
-                                            opd.setNextVisitDate(gregNextVisit);
-                                            scheduleVisit = true;
+
+					char newPatient = ' ';
+					String referralTo = null;
+					String referralFrom = null;
+					Disease disease = null;
+					Disease disease2 = null;
+					Disease disease3 = null;
+
+					if (newPatientCheckBox.isSelected()) {
+						newPatient = 'N';
 					} else {
-                                            opd.setNextVisitDate(null);
-                                        }
-					
+						newPatient = 'R';
+					}
+					if (referralToCheckBox.isSelected()) {
+						referralTo = "R";
+					} else {
+						referralTo = "";
+					}
+					if (referralFromCheckBox.isSelected()) {
+						referralFrom = "R";
+					} else {
+						referralFrom = "";
+					}
+					// disease
+					if (diseaseBox1.getSelectedIndex() > 0) {
+						disease = ((Disease) diseaseBox1.getSelectedItem());
+					}
+					// disease2
+					if (diseaseBox2.getSelectedIndex() > 0) {
+						disease2 = ((Disease) diseaseBox2.getSelectedItem());
+					}
+					// disease3
+					if (diseaseBox3.getSelectedIndex() > 0) {
+						disease3 = ((Disease) diseaseBox3.getSelectedItem());
+					}
+
+					if (OpdDateFieldCal.getDate() != null) {
+						visitDateOpd = new GregorianCalendar();
+						visitDateOpd.setTime(OpdDateFieldCal.getDate());
+						opd.setVisitDate(visitDateOpd);
+					} else {
+						opd.setVisitDate(null);
+					}
+
+					boolean scheduleVisit = false;
+					Date now = new Date();
+					Date nextVisit = opdNextVisitDate.getDate();
+					if (nextVisit != null) {
+						if (nextVisit.compareTo(now) < 0) {
+							JOptionPane.showMessageDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.opd.notpasseddate"), "",
+											JOptionPane.INFORMATION_MESSAGE);
+							return;
+						}
+						GregorianCalendar gregNextVisit = new GregorianCalendar();
+						gregNextVisit.setTime(nextVisit);
+						opd.setNextVisitDate(gregNextVisit);
+						scheduleVisit = true;
+					} else {
+						opd.setNextVisitDate(null);
+					}
+
 					opd.setNote(jNoteTextArea.getText());
 					opd.setPatient(opdPatient);
 					opd.setNewPatient(newPatient);
 					opd.setReferralFrom(referralFrom);
 					opd.setReferralTo(referralTo);
-					opd.setDisease(disease);					
+					opd.setDisease(disease);
 					opd.setDisease2(disease2);
 					opd.setDisease3(disease3);
 					opd.setUserID(UserBrowsingManager.getCurrentUser());
-					
-                                        try {
-						if (insert){    //Insert
+
+					try {
+						if (insert) { // Insert
 							opd.setProgYear(Integer.parseInt(jOpdNumField.getText()));
-							//remember for later use
+							// remember for later use
 							RememberDates.setLastOpdVisitDate(visitDateOpd);
 							boolean result = opdManager.newOpd(opd);
 							if (result) {
-                                                            if(scheduleVisit) {
-                                                                Visit visit = new Visit();
-                                                                visit.setDate(opd.getNextVisitDate());
-                                                                visit.setPatient(opd.getPatient());
-                                                                vstManager.newVisit(visit);
-                                                            }
-                                                
-                                                            fireSurgeryInserted(opd);
-                                                            dispose();
+								if (scheduleVisit) {
+									Visit visit = new Visit();
+									visit.setDate(opd.getNextVisitDate());
+									visit.setPatient(opd.getPatient());
+									vstManager.newVisit(visit);
+								}
+
+								fireSurgeryInserted(opd);
+								dispose();
 							}
-							if (!result) JOptionPane.showMessageDialog(OpdEditExtended.this,
-									MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-						}
-						else {    //Update
+							if (!result)
+								JOptionPane.showMessageDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+						} else { // Update
 							Opd updatedOpd = opdManager.updateOpd(opd);
 							if (updatedOpd != null) {
-                                                            if(scheduleVisit) {
-                                                                Iterator<Visit> visits = vstManager.getVisits(opd.getPatient().getCode()).iterator();
-                                                                Visit visit;
-                                                                boolean found = false;
-                                                                while(!found && visits.hasNext()) {
-                                                                    visit = visits.next();
-                                                                    found = visit.getDate().getTimeInMillis() == opd.getNextVisitDate().getTimeInMillis();
-                                                                }
-                                                                if(!found) {
-                                                                    visit = new Visit();
-                                                                    visit.setDate(opd.getNextVisitDate());
-                                                                    visit.setPatient(opd.getPatient());
-                                                                    vstManager.newVisit(visit);
-                                                                }
-                                                            }
-                                                            
-                                                            fireSurgeryUpdated(updatedOpd);
-                                                            dispose();
-							};
-							if (updatedOpd == null) JOptionPane.showMessageDialog(OpdEditExtended.this,
-									MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+								if (scheduleVisit) {
+									
+									Visit visit = new Visit();
+									if (nextDateBackup != null && !TimeTools.isSameDay(opd.getNextVisitDate(), nextDateBackup)) {
+										Iterator<Visit> visits = vstManager.getVisits(opd.getPatient().getCode()).iterator();
+										
+										boolean found = false;
+										while (!found && visits.hasNext()) {
+											visit = visits.next();
+											found = TimeTools.isSameDay(visit.getDate(), nextDateBackup);
+										}
+									}
+									visit.setDate(opd.getNextVisitDate());
+									visit.setPatient(opd.getPatient());
+									vstManager.newVisit(visit);
+								}
+
+								fireSurgeryUpdated(updatedOpd);
+								dispose();
+							}
+							;
+							if (updatedOpd == null)
+								JOptionPane.showMessageDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 						}
-					}catch(OHServiceException ex){
+					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
-					
+
 				};
-			}
-			);	
+			});
 		}
 		return okButton;
 	}
@@ -1926,36 +1923,39 @@ public class OpdEditExtended extends ModalJFrame implements
 	return nextVisitLabel;
     }
 	
-    private JDateChooser getOpdNextVisitDate() {
-        if (opdNextVisitDate == null) {
-            opdNextVisitDate = new JDateChooser((Date) null, "dd/MM/yy");			
-            opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-            opdNextVisitDate.setDateFormatString("dd/MM/yy");
+	private JDateChooser getOpdNextVisitDate() {
+		if (opdNextVisitDate == null) {
+			opdNextVisitDate = new JDateChooser((Date) null, "dd/MM/yy");
+			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
+			opdNextVisitDate.setDateFormatString("dd/MM/yy");
 
-            GregorianCalendar dateIn = null ;
-            Date myDate;
-            String d="";
-            if(!insert) {
-                dateIn  = opd.getNextVisitDate();
-            }
-            if (dateIn==null) {
-                d="";
-            }
-            else {
-                myDate = dateIn.getTime();
-                d = currentDateFormat.format(myDate);
-            }
-            try {
-                if(!d.equals(""))
-                    opdNextVisitDate = new JDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
-                else
-                    opdNextVisitDate = new JDateChooser();
-                opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-                opdNextVisitDate.setDateFormatString("dd/MM/yy");
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        return opdNextVisitDate;
-    }
+			GregorianCalendar nextDate = null;
+			Date myDate;
+			String d = "";
+			if (!insert) {
+				nextDate = opd.getNextVisitDate();
+			}
+			if (nextDate == null) {
+				d = "";
+			} else {
+				myDate = nextDate.getTime();
+				d = currentDateFormat.format(myDate);
+				nextDateBackup = new GregorianCalendar();
+				nextDateBackup.setTime(nextDate.getTime()); // in case of changing
+														// the date during this
+														// update
+			}
+			try {
+				if (!d.equals(""))
+					opdNextVisitDate = new JDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
+				else
+					opdNextVisitDate = new JDateChooser();
+				opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
+				opdNextVisitDate.setDateFormatString("dd/MM/yy");
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return opdNextVisitDate;
+	}
 }
