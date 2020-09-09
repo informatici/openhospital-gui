@@ -1704,9 +1704,19 @@ public class OpdEditExtended extends ModalJFrame implements
 
 					boolean scheduleVisit = false;
 					Date now = new Date();
-					Date nextVisit = opdNextVisitDate.getDate();
+					Date nextVisit = opdNextVisitDate.getDate(); // FIXME:
+																	// despite
+																	// the
+																	// presentation
+																	// dd/MM/yy
+																	// the
+																	// object
+																	// has time
+																	// when
+																	// insert =
+																	// true
 					if (nextVisit != null) {
-						if (nextVisit.compareTo(now) < 0) {
+						if (nextVisit.compareTo(OpdDateFieldCal.getDate()) < 0) {
 							JOptionPane.showMessageDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.opd.notpasseddate"), "",
 											JOptionPane.INFORMATION_MESSAGE);
 							return;
@@ -1762,10 +1772,10 @@ public class OpdEditExtended extends ModalJFrame implements
 											visit = visits.next();
 											found = TimeTools.isSameDay(visit.getDate(), nextDateBackup);
 										}
-									}
-									visit.setDate(opd.getNextVisitDate());
-									visit.setPatient(opd.getPatient());
-									vstManager.newVisit(visit);
+										visit.setDate(opd.getNextVisitDate());
+										visit.setPatient(opd.getPatient());
+										vstManager.newVisit(visit);
+									} 
 								}
 
 								fireSurgeryUpdated(updatedOpd);
