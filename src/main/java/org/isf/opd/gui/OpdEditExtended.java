@@ -128,6 +128,7 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
@@ -136,7 +137,7 @@ import org.isf.visits.model.Visit;
 
 import com.toedter.calendar.JDateChooser;
 
-public class OpdEditExtended extends JDialog implements 
+public class OpdEditExtended extends ModalJFrame implements 
         PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener{
 	
 	/**
@@ -317,7 +318,7 @@ public class OpdEditExtended extends JDialog implements
 	 * 
 	 */
 	public OpdEditExtended(JFrame owner, Opd old, boolean inserting) {
-		super(owner, true);
+		super();
 		opd=old;
 		insert=inserting;
 		try{
@@ -348,7 +349,7 @@ public class OpdEditExtended extends JDialog implements
 	}
 	
 	public OpdEditExtended(JFrame owner, Opd opd, Patient patient, boolean inserting) {
-		super(owner, true);
+		super();
 		this.opd = opd;
 		opdPatient = patient;
 		insert=inserting;
@@ -1594,7 +1595,7 @@ public class OpdEditExtended extends JDialog implements
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.pack();
 					dialog.setLocationRelativeTo(null);
-					dialog.setVisible(true);
+					dialog.showAsModal(OpdEditExtended.this);
 				}
 			});
 		}

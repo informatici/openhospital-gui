@@ -756,7 +756,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.pack();
 					dialog.setLocationRelativeTo(null);
-					dialog.setVisible(true);
+					dialog.showAsModal(AdmittedPatientBrowser.this);
 				}
 			});
 		}
@@ -905,7 +905,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				if (patient  != null) {
 					Opd opd = new Opd(0,' ', -1, new Disease());
 					OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
-					newrecord.setVisible(true);
+					newrecord.showAsModal(myFrame);
 					
 				} /*else {
 					//new OpdBrowser(true);

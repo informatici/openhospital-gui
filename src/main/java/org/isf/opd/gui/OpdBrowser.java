@@ -247,7 +247,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
         Opd newOpd = new Opd(0,' ',-1,new Disease());
         OpdEditExtended editrecord = new OpdEditExtended(myFrame, newOpd, patient, true);
         editrecord.addSurgeryListener(OpdBrowser.this);
-		editrecord.setVisible(true);
+		editrecord.showAsModal(myFrame);
 	}
 	
 	/**
@@ -324,7 +324,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					if (GeneralData.OPDEXTENDED) {
 						OpdEditExtended newrecord = new OpdEditExtended(myFrame, newOpd, true);
 						newrecord.addSurgeryListener(OpdBrowser.this);
-						newrecord.setVisible(true);
+						newrecord.showAsModal(myFrame);
 					} else {
 						OpdEdit newrecord = new OpdEdit(myFrame, newOpd, true);
 						newrecord.addSurgeryListener(OpdBrowser.this);
@@ -365,7 +365,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						if (GeneralData.OPDEXTENDED) {
 							OpdEditExtended editrecord = new OpdEditExtended(myFrame, opd, false);
 							editrecord.addSurgeryListener(OpdBrowser.this);
-							editrecord.setVisible(true);
+							editrecord.showAsModal(myFrame);
 						} else {
 							OpdEdit editrecord = new OpdEdit(myFrame, opd, false);
 							editrecord.addSurgeryListener(OpdBrowser.this);

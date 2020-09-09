@@ -369,7 +369,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 						Opd opd = (Opd)sorter.getValueAt(selectedRow, -1);
 						if (GeneralData.OPDEXTENDED) {
 							OpdEditExtended newrecord = new OpdEditExtended(PatientDataBrowser.this, opd, false);
-							newrecord.setVisible(true);
+							newrecord.showAsModal(PatientDataBrowser.this);
 						} else {
 							OpdEdit newrecord = new OpdEdit(PatientDataBrowser.this, opd, false);
 							newrecord.setVisible(true);

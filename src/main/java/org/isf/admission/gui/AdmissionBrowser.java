@@ -101,6 +101,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ShadowBorder;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
@@ -136,7 +137,7 @@ import org.isf.xmpp.manager.Interaction;
  * 01/01/11 - Alex - GUI and code reengineering
  * 29/12/11 - Nicola - insert alert IN/OUT patient for communication module
  -----------------------------------------------------------*/
-public class AdmissionBrowser extends JDialog {
+public class AdmissionBrowser extends ModalJFrame {
 
 	/**
 	 * 
@@ -409,8 +410,9 @@ public class AdmissionBrowser extends JDialog {
 	 * from AdmittedPatientBrowser
 	 */
 	public AdmissionBrowser(JFrame parentFrame, AdmittedPatient admPatient, boolean editing) {
-		super(parentFrame, (editing ? MessageBundle.getMessage("angal.admission.editadmissionrecord")
-				: MessageBundle.getMessage("angal.admission.newadmission")), true);
+		super();
+		setTitle(editing ? MessageBundle.getMessage("angal.admission.editadmissionrecord")
+						: MessageBundle.getMessage("angal.admission.newadmission"));
 		addAdmissionListener((AdmissionListener) parentFrame);
 		this.editing = editing;
 		patient = admPatient.getPatient();
@@ -474,7 +476,8 @@ public class AdmissionBrowser extends JDialog {
 	 * from PatientDataBrowser
 	 */
 	public AdmissionBrowser(JFrame parentFrame, JFrame parentParentFrame, Patient aPatient, Admission anAdmission) {
-		super(parentFrame, MessageBundle.getMessage("angal.admission.editadmissionrecord"), true);
+		super();
+		setTitle(MessageBundle.getMessage("angal.admission.editadmissionrecord"));
 		addAdmissionListener((AdmissionListener) parentParentFrame);
 		addAdmissionListener((AdmissionListener) parentFrame);
 		this.editing = true;
@@ -533,7 +536,7 @@ public class AdmissionBrowser extends JDialog {
 		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setVisible(true);
+		showAsModal(parent);
 	}
 
 	private JPanel getJContentPane() {
@@ -1872,7 +1875,7 @@ public class AdmissionBrowser extends JDialog {
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.pack();
 					dialog.setLocationRelativeTo(null);
-					dialog.setVisible(true);
+					dialog.showAsModal(AdmissionBrowser.this);
 				}
 			});
 		}
