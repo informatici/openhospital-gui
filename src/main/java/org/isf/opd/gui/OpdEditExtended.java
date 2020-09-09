@@ -1955,6 +1955,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
+			if (opd.getPatient() == null) opdNextVisitDate.setEnabled(false);
 		}
 		return opdNextVisitDate;
 	}
