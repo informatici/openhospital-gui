@@ -103,7 +103,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 			jPanelChooser.setLayout(gbl_jPanelExamination);
 
-			JLabel jLabelDate = new JLabel("DateFrom"); //$NON-NLS-1$
+			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.datefrom")); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
 			gbc_jLabelDate.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDate.insets = new Insets(10, 5, 5, 5);
@@ -118,7 +118,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbc_jDateChooserDate.gridy = 0;
 			jPanelChooser.add(getJDateChooserDateFrom(), gbc_jDateChooserDate);
 			
-			JLabel jLabelDateto = new JLabel("Date to"); //$NON-NLS-1$
+			JLabel jLabelDateto = new JLabel(MessageBundle.getMessage("angal.common.dateto")); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelDateto = new GridBagConstraints();
 			gbc_jLabelDateto.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDateto.insets = new Insets(10, 5, 5, 5);
