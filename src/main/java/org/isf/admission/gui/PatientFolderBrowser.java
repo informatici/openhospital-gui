@@ -572,7 +572,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 								MessageBundle.getMessage("angal.common.nodatatoshow")); //$NON-NLS-1$
 						return;
 					}
-					new PatientFolderReportModal(patient.getCode(),olderDate);
+					new PatientFolderReportModal(PatientFolderBrowser.this, patient.getCode(),olderDate);
 				}
 			});
 		}

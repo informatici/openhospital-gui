@@ -40,6 +40,7 @@ import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -51,6 +52,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import com.toedter.calendar.JDateChooser;
 
 public class PatientFolderReportModal extends ModalJFrame{
+	private JFrame parent;
 	private Integer patId;
 	private JPanel jPanelChooser;
 	private JDateChooser jDateChooserDateFrom;
@@ -77,7 +79,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 	private JPanel labelPanel;
 	private GregorianCalendar date;
 	
-	public PatientFolderReportModal(Integer code, GregorianCalendar olderDate) {
+	public PatientFolderReportModal(JFrame parent, Integer code, GregorianCalendar olderDate) {
+		this.parent = parent;
 		this.patId=code;
 		this.date=olderDate;
 		initialize();
@@ -89,7 +92,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setVisible(true);
+		showAsModal(parent);
 	}
 	private JPanel getJContentPane() {
 
