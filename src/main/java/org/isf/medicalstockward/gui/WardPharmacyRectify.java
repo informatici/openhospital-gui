@@ -518,7 +518,13 @@ public class WardPharmacyRectify extends JDialog {
 			jButtonNewLot.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					Medical medical = (Medical) jComboBoxMedical.getSelectedItem();
+					Medical medical;
+					try {
+						medical = (Medical) jComboBoxMedical.getSelectedItem();
+					} catch (ClassCastException e1) {
+						JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseselectadrug")); //$NON-NLS-1$
+						return;
+					}
 					chooseLot(medical, true);
 				}
 			});
@@ -532,7 +538,13 @@ public class WardPharmacyRectify extends JDialog {
 			jButtonChooseLot.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					Medical medical = (Medical) jComboBoxMedical.getSelectedItem();
+					Medical medical;
+					try {
+						medical = (Medical) jComboBoxMedical.getSelectedItem();
+					} catch (ClassCastException e1) {
+						JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseselectadrug")); //$NON-NLS-1$
+						return;
+					}
 					chooseLot(medical, false);
 				}
 			});
@@ -721,16 +733,15 @@ public class WardPharmacyRectify extends JDialog {
 	 */
 	private JSpinner getJSpinnerNewQty() {
 		if (jSpinnerNewQty == null) {
-			jSpinnerNewQty = new JSpinner(new SpinnerNumberModel(0.0, null, null, 1));
+			jSpinnerNewQty = new JSpinner(new SpinnerNumberModel(0.0, 0.0, null, 1));
 			jSpinnerNewQty.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 			jSpinnerNewQty.addChangeListener(new ChangeListener() {
-			      
+				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					Medical med = ((Medical) jComboBoxMedical.getSelectedItem());
 					Double stock = Double.parseDouble(jLabelStockQty.getText());
 					Double newQty = (Double) jSpinnerNewQty.getValue();
-					jButtonChooseLot.setEnabled(true);
+					if (stock > 0) jButtonChooseLot.setEnabled(true);
 					if (newQty > stock) {
 						jButtonNewLot.setEnabled(true);
 					} else if (newQty < stock) {
