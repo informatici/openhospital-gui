@@ -120,7 +120,7 @@ public class LabEdit extends ModalJFrame {
 	}
 	//---------------------------------------------------------------------------
 	
-	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
+	private static final String VERSION = "v1.1"; 
 	
 	private boolean insert = false;
 
