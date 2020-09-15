@@ -313,19 +313,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		public Object getValueAt(int r, int c) {
 			MedicalWard medicalWard = druglist.get(r);
 			if (c == -1) {
+				
 				return medicalWard;
 			} else if (c == 0) {
 				return medicalWard.getId().getLot();
-			} else if (c == 1) {
-				ArrayList<Lot> lot = null;
-				try {
-					lot = movManager.getLotByMedical(medicalWard.getMedical());
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
-			}  else if (c == 2) {
+			} else if (c == 1) {	
 				return medicalWard.getQty();
+			}  else if (c == 2) {
+				return TimeTools.formatDateTime(medicalWard.getLot().getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}
 			return null;
 		}
@@ -484,10 +479,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				return qty;
 			if (checkQuantity(totalQty, qty)) {
 
-				if (isAutomaticLot()) {
-					MedicalWard warSe = automaticChoose(wardDrugs, med, qty);
+				if (isAutomaticLot() || jRadioPatient.isSelected()) {
+					MedicalWard medicalSelection = automaticChoose(wardDrugs, med, qty);
 				} else {
-					MedicalWard warSe = chooseLot(wardDrugs, med, qty);
+					MedicalWard medicalSelection = chooseLot(wardDrugs, med, qty);
 				}
 			} else {
 				askQuantity(med, wardDrugs);
@@ -773,7 +768,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jRadioPatient.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					System.out.println("in jRadioPatient: " + e.getID());
 					jTextFieldUse.setEnabled(false);
 					jTextFieldPatient.setEnabled(true);
 					jButtonPickPatient.setEnabled(true);
