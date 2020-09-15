@@ -92,7 +92,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		filterButton.doClick();
 	}
 	
-	private static final String VERSION=MessageBundle.getMessage("angal.versione");
+	private static final String VERSION = "v1.1";
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -237,22 +237,28 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JButton getPrintLabelButton(){
 		if(printLabelButton==null){
 			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel"));
-			
 			printLabelButton.setMnemonic(KeyEvent.VK_O);
 			printLabelButton.addActionListener(new ActionListener() {
 			
 				public void actionPerformed(ActionEvent arg0) {
-					selectedrow = jTable.getSelectedRow();
-					if (selectedrow < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} 
-					laboratory = (Laboratory) (((LabBrowsingModel) model).getValueAt(selectedrow, -1));
-					Integer patId = laboratory.getPatient().getCode();
+					Integer labId = null;
+					if (GeneralData.LABEXTENDED) {
+						selectedrow = jTable.getSelectedRow();
+						if (selectedrow < 0) {
+							
+							int ok = JOptionPane.showConfirmDialog(LabBrowser.this, 
+											MessageBundle.getMessage("angal.lab.nopatientselectedprintempylabel"), 
+											MessageBundle.getMessage("angal.hospital"), 
+											JOptionPane.YES_NO_CANCEL_OPTION);
+							
+							if (ok != JOptionPane.YES_OPTION) return;
+						} else {
+							laboratory = (Laboratory) (((LabBrowsingModel) model).getValueAt(selectedrow, -1));
+							labId = laboratory.getCode();
+						}
+					}
 					try {
-						new PrintLabels("labelForSamples",patId);
+						new PrintLabels("labelForSamples", labId);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -515,7 +521,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel getDateFromPanel() {
 		if (jPanelDateFrom == null) {
 			jPanelDateFrom = new JPanel();
-			jPanelDateFrom.add(new JLabel(MessageBundle.getMessage("angal.common.datem") +" "+ MessageBundle.getMessage("angal.common.from") + ": "), null);
+			jPanelDateFrom.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom")), null);
 			jPanelDateFrom.add(getDateFieldFromPanel());
 			
 		}
@@ -540,7 +546,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel getDateToPanel() {
 		if (jPanelDateTo == null) {
 			jPanelDateTo = new JPanel();
-			jPanelDateTo.add(new JLabel(MessageBundle.getMessage("angal.common.datem") +" "+ MessageBundle.getMessage("angal.common.to") + ": "), null);
+			jPanelDateTo.add(new JLabel(MessageBundle.getMessage("angal.common.dateto")), null);
 			jPanelDateTo.add(getDateFieldToPanel());
 			
 		}
