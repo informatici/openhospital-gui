@@ -81,6 +81,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	private int selectedrow;
 	private JComboBox pbox;
+	private ArrayList<Exam> pExam;
 	private String[] pColums = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.exa.typem"),
@@ -191,7 +192,13 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			}
 			pbox.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					reloadTable();
+					pSelection=pbox.getSelectedItem().toString();
+					if (pSelection.compareTo(MessageBundle.getMessage("angal.exa.all")) == 0)
+						model = new ExamBrowsingModel();
+					else
+						model = new ExamBrowsingModel(pSelection);
+					model.fireTableDataChanged();
+					table.updateUI();
 				}
 			});
 		}
@@ -203,6 +210,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		if (table == null) {
 			model = new ExamBrowsingModel();
 			table = new JTable(model);
+			table.setAutoCreateColumnsFromModel(false);
 			sorter = new TableRowSorter<TableModel>(model);
 		    table.setRowSorter(sorter);
 			table.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
@@ -243,17 +251,17 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	                        JOptionPane.PLAIN_MESSAGE);				
 					return;									
 				}
-				Exam e = (Exam)(((ExamBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+				Exam examToDelete = (Exam)(((ExamBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
 				StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.exa.deletefolowingexam"))
 						.append(" :")
 						.append("\n")
 						.append(MessageBundle.getMessage("angal.common.code"))
 						.append("= ")
-						.append(e.getCode())
+						.append(examToDelete.getCode())
 						.append("\n")
 						.append(MessageBundle.getMessage("angal.common.description"))
 						.append("= ")
-						.append(e.getDescription())
+						.append(examToDelete.getDescription())
 						.append("\n?");
 				int n = JOptionPane.showConfirmDialog(
                         null,
@@ -264,7 +272,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 					boolean deleted;
 					
 					try {
-						deleted = manager.deleteExam(e);
+						deleted = manager.deleteExam(examToDelete);
 					} catch (OHServiceException e1) {
 						deleted = false;
 						OHServiceExceptionUtil.showMessages(e1);
@@ -367,8 +375,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
-		private ArrayList<Exam> pExam;
 		
 		public ExamBrowsingModel(String s) {
 			try {
@@ -463,7 +469,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			}
 		}
 	}
-
+	
 	private void reloadTable() {
 		pSelection=pbox.getSelectedItem().toString();
 		if (pSelection.compareTo(MessageBundle.getMessage("angal.exa.all")) == 0)
