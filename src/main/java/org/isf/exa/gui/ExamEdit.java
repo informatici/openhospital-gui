@@ -186,7 +186,7 @@ public class ExamEdit extends JDialog {
 		if (dataPanel == null) {
 			typeLabel = new JLabel(MessageBundle.getMessage("angal.exa.type"));
 			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description"));			
-			codeLabel=new JLabel(MessageBundle.getMessage("angal.common.code"));
+			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code"));
 			procLabel = new JLabel(MessageBundle.getMessage("angal.exa.procedure"));
 			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default"));
 			dataPanel = new JPanel();
@@ -288,7 +288,7 @@ public class ExamEdit extends JDialog {
 									OHServiceExceptionUtil.showMessages(e1);
 								}
 							}
-							if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.exa.thedatacouldnotbesaved"));
+							if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 							else  {
 								dispose();
 							}

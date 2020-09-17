@@ -39,6 +39,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -50,11 +51,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.isf.exa.gui.ExamEdit.ExamListener;
 import org.isf.exa.manager.ExamBrowsingManager;
@@ -77,7 +81,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	private int selectedrow;
 	private JComboBox pbox;
-	private ArrayList<Exam> pExam;
 	private String[] pColums = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.exa.typem"),
@@ -99,7 +102,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	private JPanel jContentPanel;
 	private JPanel buttonPanel;
 	private JTextField searchTextField;
-	private ArrayList<Exam> searchExam = new ArrayList<Exam>();
 	private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 	
 	public ExamBrowser() {
@@ -189,23 +191,20 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			}
 			pbox.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					pSelection=pbox.getSelectedItem().toString();
-					if (pSelection.compareTo(MessageBundle.getMessage("angal.exa.all")) == 0)
-						model = new ExamBrowsingModel();
-					else
-						model = new ExamBrowsingModel(pSelection);
-					model.fireTableDataChanged();
-					table.updateUI();
+					reloadTable();
 				}
 			});
 		}
 		return pbox;
 	}
 
+	private TableRowSorter<TableModel> sorter;
 	private JTable getJTable() {
 		if (table == null) {
 			model = new ExamBrowsingModel();
 			table = new JTable(model);
+			sorter = new TableRowSorter<TableModel>(model);
+		    table.setRowSorter(sorter);
 			table.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
 			table.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
 			table.getColumnModel().getColumn(2).setMinWidth(pColumwidth[2]);
@@ -218,7 +217,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				public void valueChanged(ListSelectionEvent e) {
 					if (!e.getValueIsAdjusting()) {
 						selectedrow = table.getSelectedRow();
-						exam = (Exam) (((ExamBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+						exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 						if (exam.getProcedure() == 3) {
 							jButtonShow.setEnabled(false);
 						} else {
@@ -272,9 +271,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 					}
 					
 					if (true == deleted) {
-						pExam.remove(table.getSelectedRow());
-						model.fireTableDataChanged();
-						table.updateUI();
+						reloadTable();
 					}
 				}
 			}
@@ -315,7 +312,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 						return;
 					} else {
 						selectedrow = table.getSelectedRow();
-						exam = (Exam) (((ExamBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+						exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 						ExamEdit editrecord = new ExamEdit(myFrame, exam, false);
 						editrecord.addExamListener(ExamBrowser.this);
 						editrecord.setVisible(true);
@@ -371,16 +368,16 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		 */
 		private static final long serialVersionUID = 1L;
 		private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
-
+		private ArrayList<Exam> pExam;
+		
 		public ExamBrowsingModel(String s) {
 			try {
-				pExam = manager.getExams(s);
+				pExam = manager.getExamsByTypeDescription(s);
                                 
 			} catch (OHServiceException e) {
 				pExam = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
-                        searchExam = pExam;
 		}
 		public ExamBrowsingModel() {
 			try {
@@ -389,12 +386,11 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				pExam = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
-                        searchExam = pExam;
 		}
 		public int getRowCount() {
 			if (pExam == null)
 				return 0;
-			return searchExam.size();
+			return pExam.size();
 		}
 		
 		public String getColumnName(int c) {
@@ -406,7 +402,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		}
 
 		public Object getValueAt(int r, int c) {
-			Exam exam = searchExam.get(r);
+			Exam exam = pExam.get(r);
 			if(c==-1){
 				return exam;
 			}
@@ -433,45 +429,49 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	@Override
 	public void examUpdated(AWTEvent e) {
-		searchExam.set(selectedrow, exam);
-		((ExamBrowsingModel) table.getModel()).fireTableDataChanged();
-		table.updateUI();
+		reloadTable();
 		if ((table.getRowCount() > 0) && selectedrow > -1)
 			table.setRowSelectionInterval(selectedrow, selectedrow);
-		
 	}
-
 
 	@Override
 	public void examInserted(AWTEvent e) {
-		searchExam.add(0, exam);
-		((ExamBrowsingModel) table.getModel()).fireTableDataChanged();
+		reloadTable();
 		if (table.getRowCount() > 0)
 			table.setRowSelectionInterval(0, 0);
 	}
 	
 	private void filterExam() {
 		String s = searchTextField.getText().trim();
-		searchExam = new ArrayList<Exam>();
-                
-		for (Exam exa : pExam) {
-			if (!s.equals("")) {
-				String name = exa.getSearchString();
-				if (name.contains(s.toLowerCase()))
-					searchExam.add(exa);
-			} else {
-				searchExam.add(exa);
+		if (s.length() == 0) {
+			sorter.setRowFilter(null);
+		} else {
+			try {
+				String[] tokens = s.split(" ");
+				ArrayList<RowFilter<Object, Object>> filters = new ArrayList<RowFilter<Object, Object>>();
+
+				for (int j = 0; j < tokens.length; j++) {
+					String token = tokens[j].toLowerCase();
+
+					RowFilter<Object, Object> filter = RowFilter.regexFilter("(?i)" + token);
+					filters.add(filter);
+				}
+
+				sorter.setRowFilter(RowFilter.andFilter(filters));
+			} catch (PatternSyntaxException pse) {
+				System.out.println("Bad regex pattern");
 			}
 		}
-		if (table.getRowCount() == 0) {
-			exam = null;
-		}
-		if (table.getRowCount() == 1) {
-			exam = (Exam) table.getValueAt(0, -1);
-		}
-                model.fireTableDataChanged();
+	}
+
+	private void reloadTable() {
+		pSelection=pbox.getSelectedItem().toString();
+		if (pSelection.compareTo(MessageBundle.getMessage("angal.exa.all")) == 0)
+			model = new ExamBrowsingModel();
+		else
+			model = new ExamBrowsingModel(pSelection);
+		model.fireTableDataChanged();
 		table.updateUI();
-		searchTextField.requestFocus();
 	}
 
 }

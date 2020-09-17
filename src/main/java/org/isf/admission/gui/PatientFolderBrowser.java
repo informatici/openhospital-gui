@@ -323,24 +323,26 @@ public class PatientFolderBrowser extends ModalJFrame implements
                 /*** apply default oh cellRender *****/
 		labTable.setDefaultRenderer(Object.class, cellRenderer);
 		labTable.setDefaultRenderer(Double.class, cellRenderer);
-                labTable.addMouseMotionListener(new MouseMotionListener() {	
+		labTable.addMouseMotionListener(new MouseMotionListener() {
+
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				JTable aTable =  (JTable)e.getSource();
-		        int itsRow = aTable.rowAtPoint(e.getPoint());
-		        if(itsRow>=0){
-		        	cellRenderer.setHoveredRow(itsRow);
-		        }
-		        else{
-		        	cellRenderer.setHoveredRow(-1);
-		        }
-		        aTable.repaint();
+				JTable aTable = (JTable) e.getSource();
+				int itsRow = aTable.rowAtPoint(e.getPoint());
+				if (itsRow >= 0) {
+					cellRenderer.setHoveredRow(itsRow);
+				} else {
+					cellRenderer.setHoveredRow(-1);
+				}
+				aTable.repaint();
 			}
-			
+
 			@Override
-			public void mouseDragged(MouseEvent e) {}
+			public void mouseDragged(MouseEvent e) {
+			}
 		});
-                labTable.addMouseListener(new MouseAdapter() {
+		labTable.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				cellRenderer.setHoveredRow(-1);
