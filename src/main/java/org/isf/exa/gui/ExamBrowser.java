@@ -192,13 +192,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			}
 			pbox.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					pSelection=pbox.getSelectedItem().toString();
-					if (pSelection.compareTo(MessageBundle.getMessage("angal.exa.all")) == 0)
-						model = new ExamBrowsingModel();
-					else
-						model = new ExamBrowsingModel(pSelection);
-					model.fireTableDataChanged();
-					table.updateUI();
+					reloadTable();
 				}
 			});
 		}
@@ -224,7 +218,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
 					if (!e.getValueIsAdjusting()) {
-						selectedrow = table.getSelectedRow();
+						selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 						exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 						if (exam.getProcedure() == 3) {
 							jButtonShow.setEnabled(false);
@@ -251,7 +245,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	                        JOptionPane.PLAIN_MESSAGE);				
 					return;									
 				}
-				Exam examToDelete = (Exam)(((ExamBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
+				Exam examToDelete = (Exam)(((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 				StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.exa.deletefolowingexam"))
 						.append(" :")
 						.append("\n")
@@ -319,7 +314,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						selectedrow = table.getSelectedRow();
+						selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 						exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 						ExamEdit editrecord = new ExamEdit(myFrame, exam, false);
 						editrecord.addExamListener(ExamBrowser.this);
@@ -346,8 +341,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		                        JOptionPane.PLAIN_MESSAGE);				
 						return;									
 					}else {		
-						selectedrow = table.getSelectedRow();
-						exam = (Exam)(((ExamBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+						selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
+						exam = (Exam)(((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 						new ExamShow(myFrame, exam);
 					}
 				}
