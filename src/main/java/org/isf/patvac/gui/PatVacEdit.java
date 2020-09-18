@@ -73,7 +73,7 @@ public class PatVacEdit extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = -4271389493861772053L;
-	private static final String VERSION = MessageBundle.getMessage("angal.versione");
+	private static final String VERSION = "v1.2";
 	private boolean insert = false;
 
 	private PatientVaccine patVac = null;

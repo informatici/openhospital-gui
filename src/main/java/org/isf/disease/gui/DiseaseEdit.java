@@ -110,7 +110,7 @@ public class DiseaseEdit extends JDialog {
 			((DiseaseListener)listeners[i]).diseaseUpdated(event);
 	}
 	
-	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
+	private static final String VERSION="v1.2"; 
 
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

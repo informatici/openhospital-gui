@@ -69,7 +69,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
+	private static final String VERSION="v1.2"; 
 
 	public void diseaseInserted(AWTEvent e) {
 		pDisease.add(0,disease);
