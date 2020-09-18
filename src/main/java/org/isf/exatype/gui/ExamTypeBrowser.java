@@ -63,7 +63,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2"; 
+	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
 
 	private ArrayList<ExamType> pExamType;
 	private String[] pColums = {

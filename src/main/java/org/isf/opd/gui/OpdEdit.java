@@ -129,7 +129,7 @@ public class OpdEdit extends JDialog {
 			((SurgeryListener)listeners[i]).surgeryUpdated(event, opd);
 	}
 	
-	private static final String VERSION="v1.2"; 
+	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
 
 	private JPanel insertPanel = null;
 	private JLabel jLabel = null;

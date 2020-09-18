@@ -62,7 +62,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2"; 
+	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
 
 	private ArrayList<VaccineType> pVaccineType;
 	
