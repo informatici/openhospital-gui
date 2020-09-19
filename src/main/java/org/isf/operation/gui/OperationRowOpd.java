@@ -252,7 +252,6 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		tableData.addMouseMotionListener(new MouseMotionListener() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				// TODO Auto-generated method stub
 				JTable aTable = (JTable) e.getSource();
 				int itsRow = aTable.rowAtPoint(e.getPoint());
 				if (itsRow >= 0) {
@@ -264,10 +263,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			}
 
 			@Override
-			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void mouseDragged(MouseEvent e) {}
 		});
 		tableData.addMouseListener(new MouseAdapter() {
 			@Override
@@ -470,33 +466,25 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		}
 	}
 
-	/**
-	 * TODO: Remove Create or Update operations from this method
-	 * it should only update the view at this point
-	 */
 	@Override
 	public void surgeryUpdated(AWTEvent e, Opd opd) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, e);
+			saveAllOpeRow(oprowData, opeRowManager, opd);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 	}
 
-	/**
-	 * TODO: Remove Create or Update operations from this method
-	 * it should only update the view at this point
-	 */
 	@Override
 	public void surgeryInserted(AWTEvent e, Opd opd) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, e);
+			saveAllOpeRow(oprowData, opeRowManager, opd);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 	}
 
-	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, AWTEvent e) throws OHServiceException {
+	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager RowManager, Opd opd) throws OHServiceException {
 		for (org.isf.operation.model.OperationRow opRow : listOpe) {
 			if ((opRow.getId() > 0) && (opRow.getOpd().getCode() > 0)) {
 				RowManager.updateOperationRow(opRow);
@@ -507,8 +495,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 			}
 			if ((opRow.getId() <= 0) && (opRow.getOpd().getCode() <= 0)) {
-				Opd op = (Opd) e.getSource();
-				opRow.setOpd(op);
+				opRow.setOpd(opd);
 				RowManager.newOperationRow(opRow);
 			}
 		}
