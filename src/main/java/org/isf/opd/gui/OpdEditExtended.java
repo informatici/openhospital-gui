@@ -340,9 +340,6 @@ public class OpdEditExtended extends ModalJFrame implements
 					opdPatient.setCode(0);
 				}
 			}
-			//TODO: remove this anti-pattern OperationRowOpd
-			operationop = new OperationRowOpd(opd);
-			addSurgeryListener((SurgeryListener) operationop);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -372,9 +369,6 @@ public class OpdEditExtended extends ModalJFrame implements
 					opdPatient.setCode(0);
 				}
 			}
-			//TODO: remove this anti-pattern OperationRowOpd
-			operationop = new OperationRowOpd(opd);
-			addSurgeryListener((SurgeryListener) operationop);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -552,11 +546,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			jPanelCentral.setLayout(new BoxLayout(jPanelCentral, BoxLayout.Y_AXIS));
 			jPanelCentral.add(getDataPanel());
 			jPanelCentral.add(Box.createVerticalStrut(10));
-			if (GeneralData.OPDOPERATION) { //TODO: Evaluate the need of this parameter, if false should also be hidden the OPE_FOR feature
-				jPanelCentral.add(getJTabbedPaneOpd());
-			}else {
-				jPanelCentral.add(getJPanelPatient());
-			}
+			jPanelCentral.add(getJTabbedPaneOpd());
 			
 		}
 		return jPanelCentral;
@@ -1348,7 +1338,9 @@ public class OpdEditExtended extends ModalJFrame implements
 		if (jTabbedPaneOpd == null) {
 			jTabbedPaneOpd = new JTabbedPane();
 			jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.opd.patient"), getJPanelPatient());
-			jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.admission.operation"), getMultiOperationTab());
+			if ((insert && MainMenu.checkUserGrants("btnopdnewoperation"))
+							|| (!insert && MainMenu.checkUserGrants("btnopdeditoperation"))) 
+							jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.admission.operation"), getMultiOperationTab());
 			jTabbedPaneOpd.setPreferredSize(new Dimension(200,400));
 		}
 		return jTabbedPaneOpd;
@@ -1358,8 +1350,8 @@ public class OpdEditExtended extends ModalJFrame implements
 		if (jPanelOperation == null) {
 			jPanelOperation = new JPanel();
 			jPanelOperation.setLayout(new BorderLayout(0, 0));
-			// jPanelOperation.add(formOperation, BorderLayout.NORTH);
-			// jPanelOperation.add(listOperation);
+			operationop = new OperationRowOpd(opd);
+			addSurgeryListener((SurgeryListener) operationop);
 			jPanelOperation.add(operationop);
 		}
 		return jPanelOperation;
