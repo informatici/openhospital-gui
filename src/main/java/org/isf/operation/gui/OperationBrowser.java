@@ -97,8 +97,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			MessageBundle.getMessage("angal.operation.idm"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.operation.typem"),  //$NON-NLS-1$
 			MessageBundle.getMessage("angal.operation.namem"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.operation.operationcontext") //$NON-NLS-1$
-			
+			MessageBundle.getMessage("angal.operation.operationcontext").toUpperCase() //$NON-NLS-1$
 	};
 	private int[] pColumwidth = { 50, 180, 200, 100 };
 	private Operation operation;
