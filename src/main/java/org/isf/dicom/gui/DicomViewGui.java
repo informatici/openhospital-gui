@@ -73,7 +73,8 @@ import org.isf.utils.exception.model.OHSeverityLevel;
  * 
  * @author Pietro Castellucci
  * @version 1.0.0
- * 
+ *
+ * @deprecated TODO: explain
  */
 @Deprecated // what is this class???
 public class DicomViewGui extends JPanel {

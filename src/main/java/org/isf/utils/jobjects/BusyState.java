@@ -40,6 +40,7 @@ import java.awt.Container;
  * @author Giuseppe Sacco
  * @deprecated
  */
+@Deprecated
 public class BusyState {
 	static public void setBusyState(Container panel, boolean busy) {
 		/*panel.setCursor(new Cursor( busy ? Cursor.WAIT_CURSOR : Cursor.DEFAULT_CURSOR));
