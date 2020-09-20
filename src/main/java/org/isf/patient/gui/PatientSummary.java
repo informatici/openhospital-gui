@@ -382,7 +382,7 @@ public class PatientSummary {
 		if (patient.getMother() == 'A')
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisalive"));
 		else if (patient.getMother() == 'D')
-			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisdead"));;
+			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisdead"));
 		// added
 			labelBfr.append((patient.getMother_name() == null || patient.getMother_name().compareTo("") == 0 ? "<BR>" : "(" + patient.getMother_name() + ")<BR>"));
 		if (patient.getFather() == 'A')

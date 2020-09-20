@@ -454,7 +454,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 		if(date3!=null){
 		 return jDateChooserDateTo.getDate();
 		}else {	
-			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());;
+			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 			Date date2 = null;
 			try {
 				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
