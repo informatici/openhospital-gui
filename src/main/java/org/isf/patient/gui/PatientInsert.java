@@ -382,8 +382,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 							sex='F';
 						}else{
 							sex='M';
-						};
-						patient.setSex(sex);
+						}
+							patient.setSex(sex);
 						patient.setAddress(jAddressTextField.getText());
 						patient.setCity(jCityTextField.getText());
 						patient.setNextKin(jNextKinTextField.getText());
@@ -409,8 +409,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 						}
 					}
-					};					
-					
+					}
+
 				}
 			});
 			

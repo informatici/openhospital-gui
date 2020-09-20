@@ -237,7 +237,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-			};
+			}
 		});
 		return closeButton;
 	}

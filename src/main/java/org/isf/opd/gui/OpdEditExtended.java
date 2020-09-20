@@ -1056,7 +1056,7 @@ public class OpdEditExtended extends ModalJFrame implements
 					setAttendance();
 				}
 			});
-		};
+		}
 		Disease elem2 = null;
 		diseaseBox1.addItem("");
 		
@@ -1094,7 +1094,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		if (diseaseBox2 == null) {
 			diseaseBox2 = new JComboBox();
 			diseaseBox2.setMaximumSize(new Dimension(400, 50));
-		};
+		}
 		Disease elem2=null;
 		diseaseBox2.addItem("");
 
@@ -1308,7 +1308,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		if (diseaseBox3 == null) {
 			diseaseBox3 = new JComboBox();
 			diseaseBox3.setMaximumSize(new Dimension(400, 50));
-		};
+		}
 		Disease elem2=null;
 		diseaseBox3.addItem("");
 
@@ -1775,7 +1775,6 @@ public class OpdEditExtended extends ModalJFrame implements
 								fireSurgeryUpdated(updatedOpd);
 								dispose();
 							}
-							;
 							if (updatedOpd == null)
 								JOptionPane.showMessageDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 						}
@@ -1783,7 +1782,7 @@ public class OpdEditExtended extends ModalJFrame implements
 						OHServiceExceptionUtil.showMessages(ex);
 					}
 
-				};
+				}
 			});
 		}
 		return okButton;

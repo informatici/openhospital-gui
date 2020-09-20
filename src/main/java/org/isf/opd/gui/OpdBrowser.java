@@ -779,7 +779,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDiseaseBox = new JComboBox();
 			jDiseaseBox.setMaximumSize(new Dimension(300, 50));
 			
-		};
+		}
 		try{
 			if (((DiseaseType)jDiseaseTypeBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.opd.alltype"))){
 				diseases = diseaseManager.getDiseaseOpd();

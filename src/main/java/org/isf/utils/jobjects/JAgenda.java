@@ -1111,8 +1111,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 			}
 			super.paint(g);
 		}
-	};
-	
+	}
+
 	/**
 	 * 
 	 * @author Mwithi

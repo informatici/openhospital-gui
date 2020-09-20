@@ -177,7 +177,6 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 		for (int i = 0; i < fdb.length; i++)
 			dicomThumbsModel.addInstance(fdb[i]);
-		;
 
 	}
 

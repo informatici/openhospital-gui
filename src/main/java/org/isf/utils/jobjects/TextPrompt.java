@@ -49,7 +49,7 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 	private static final long serialVersionUID = 1L;
 
 	public enum Show {
-		ALWAYS, FOCUS_GAINED, FOCUS_LOST;
+		ALWAYS, FOCUS_GAINED, FOCUS_LOST
 	}
 
 	private JTextComponent component;

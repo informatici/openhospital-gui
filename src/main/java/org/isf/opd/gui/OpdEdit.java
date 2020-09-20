@@ -572,8 +572,8 @@ public class OpdEdit extends JDialog {
 					} catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
 					}
-				};
-			}
+				}
+              }
 			);	
 		}
 		return okButton;
