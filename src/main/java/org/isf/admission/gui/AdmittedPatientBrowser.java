@@ -1284,7 +1284,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 				if (key != null) {
 					String s = key + lastKey;
-					s.trim();
+					s = s.trim();
 					String[] tokens = s.split(" ");
 
 					if (!s.equals("")) {

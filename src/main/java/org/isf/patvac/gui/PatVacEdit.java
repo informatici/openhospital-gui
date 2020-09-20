@@ -269,7 +269,7 @@ public class PatVacEdit extends JDialog {
 							lastKey = s;
 						}
 						s = jTextPatientSrc.getText() + lastKey;
-						s.trim();
+						s = s.trim();
 						filterPatient(s);
 					}
 

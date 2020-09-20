@@ -276,7 +276,7 @@ public class LabEditExtended extends ModalJFrame {
 						lastKey = s;
 					}
 					s = jTextPatientSrc.getText() + lastKey;
-					s.trim();
+					s = s.trim();
 					
 					filterPatient(s);
 				}
