@@ -66,7 +66,7 @@ public class ExamRowEdit extends JDialog {
 	private EventListenerList examRowListeners = new EventListenerList();
 
     public interface ExamRowListener extends EventListener {
-        public void examRowInserted(AWTEvent e);
+        void examRowInserted(AWTEvent e);
     }
 
     public void addExamListener(ExamRowListener l) {

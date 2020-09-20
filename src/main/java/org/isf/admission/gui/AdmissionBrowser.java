@@ -147,9 +147,9 @@ public class AdmissionBrowser extends ModalJFrame {
 	private EventListenerList admissionListeners = new EventListenerList();
 
     	public interface AdmissionListener extends EventListener {
-		public void admissionUpdated(AWTEvent e);
+		void admissionUpdated(AWTEvent e);
 
-		public void admissionInserted(AWTEvent e);
+		void admissionInserted(AWTEvent e);
 	}
 
 	public void addAdmissionListener(AdmissionListener l) {

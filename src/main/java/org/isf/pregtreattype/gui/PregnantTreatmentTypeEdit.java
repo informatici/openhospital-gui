@@ -53,8 +53,8 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 	private EventListenerList pregnantTreatmentTypeListeners = new EventListenerList();
 
     public interface PregnantTreatmentTypeListener extends EventListener {
-        public void pregnantTreatmentTypeUpdated(AWTEvent e);
-        public void pregnantTreatmentTypeInserted(AWTEvent e);
+        void pregnantTreatmentTypeUpdated(AWTEvent e);
+        void pregnantTreatmentTypeInserted(AWTEvent e);
     }
 
     public void addPregnantTreatmentTypeListener(PregnantTreatmentTypeListener l) {

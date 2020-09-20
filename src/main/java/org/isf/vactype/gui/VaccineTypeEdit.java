@@ -61,8 +61,8 @@ public class VaccineTypeEdit extends JDialog{
 
         
     public interface VaccineTypeListener extends EventListener {
-        public void vaccineTypeUpdated(AWTEvent e);
-        public void vaccineTypeInserted(AWTEvent e);
+        void vaccineTypeUpdated(AWTEvent e);
+        void vaccineTypeInserted(AWTEvent e);
     }
     
     public void addVaccineTypeListener(VaccineTypeListener l) {

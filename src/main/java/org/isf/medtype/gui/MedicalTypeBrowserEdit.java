@@ -53,8 +53,8 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	private EventListenerList medicalTypeListeners = new EventListenerList();
 
     public interface MedicalTypeListener extends EventListener {
-        public void medicalTypeUpdated(AWTEvent e);
-        public void medicalTypeInserted(AWTEvent e);
+        void medicalTypeUpdated(AWTEvent e);
+        void medicalTypeInserted(AWTEvent e);
     }
 
     public void addMedicalTypeListener(MedicalTypeListener l) {

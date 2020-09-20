@@ -64,8 +64,8 @@ public class WardEdit extends JDialog {
 	private EventListenerList wardListeners = new EventListenerList();
 	
 	public interface WardListener extends EventListener {
-		public void wardUpdated(AWTEvent e);
-		public void wardInserted(AWTEvent e);
+		void wardUpdated(AWTEvent e);
+		void wardInserted(AWTEvent e);
 	}
 	
 	public void addWardListener(WardListener l) {

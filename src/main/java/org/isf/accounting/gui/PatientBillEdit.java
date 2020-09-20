@@ -100,7 +100,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private EventListenerList patientBillListener = new EventListenerList();
 	
 	public interface PatientBillListener extends EventListener {
-		public void billInserted(AWTEvent aEvent);
+		void billInserted(AWTEvent aEvent);
 	}
 	
 	public void addPatientBillListener(PatientBillListener l) {

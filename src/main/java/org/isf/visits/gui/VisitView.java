@@ -100,7 +100,7 @@ public class VisitView extends ModalJFrame {
 	private EventListenerList visitViewListeners = new EventListenerList();
 
     public interface VisitListener extends EventListener {
-        public void visitsUpdated(AWTEvent e);
+        void visitsUpdated(AWTEvent e);
     }
 
     public void addVisitListener(VisitListener l) {

@@ -70,8 +70,8 @@ public class ExamEdit extends JDialog {
 	private EventListenerList examListeners = new EventListenerList();
 
     public interface ExamListener extends EventListener {
-        public void examUpdated(AWTEvent e);
-        public void examInserted(AWTEvent e);
+        void examUpdated(AWTEvent e);
+        void examInserted(AWTEvent e);
     }
 
     public void addExamListener(ExamListener l) {

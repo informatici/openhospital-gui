@@ -98,7 +98,7 @@ public class LabEdit extends ModalJFrame {
 	private EventListenerList labEditListener = new EventListenerList();
 	
 	public interface LabEditListener extends EventListener {
-		public void labUpdated();
+		void labUpdated();
 	}
 	
 	public void addLabEditListener(LabEditListener l) {

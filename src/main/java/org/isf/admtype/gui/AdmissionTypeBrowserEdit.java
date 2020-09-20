@@ -53,8 +53,8 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 	private EventListenerList admissionTypeListeners = new EventListenerList();
 
     public interface LaboratoryTypeListener extends EventListener {
-        public void admissionTypeUpdated(AWTEvent e);
-        public void admissionTypeInserted(AWTEvent e);
+        void admissionTypeUpdated(AWTEvent e);
+        void admissionTypeInserted(AWTEvent e);
     }
 
     public void addAdmissionTypeListener(LaboratoryTypeListener l) {

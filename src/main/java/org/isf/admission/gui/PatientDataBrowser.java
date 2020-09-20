@@ -96,7 +96,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
 
     public interface DeleteAdmissionListener extends EventListener {
-        public void deleteAdmissionUpdated(AWTEvent e);
+        void deleteAdmissionUpdated(AWTEvent e);
     }
 
     public void addDeleteAdmissionListener(DeleteAdmissionListener l) {

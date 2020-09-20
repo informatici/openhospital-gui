@@ -53,8 +53,8 @@ public class InsertMalnutrition extends JDialog {
 	private EventListenerList malnutritionListeners = new EventListenerList();
 
     public interface MalnutritionListener extends EventListener {
-        public void malnutritionUpdated(Malnutrition maln);
-        public void malnutritionInserted();
+        void malnutritionUpdated(Malnutrition maln);
+        void malnutritionInserted();
     }
 
     public void addMalnutritionListener(MalnutritionListener l) {

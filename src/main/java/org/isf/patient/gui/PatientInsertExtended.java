@@ -102,9 +102,9 @@ public class PatientInsertExtended extends JDialog {
 	private EventListenerList patientListeners = new EventListenerList();
 	
 	public interface PatientListener extends EventListener {
-		public void patientUpdated(AWTEvent e);
+		void patientUpdated(AWTEvent e);
 
-		public void patientInserted(AWTEvent e);
+		void patientInserted(AWTEvent e);
 	}
 
 	public void addPatientListener(PatientListener l) {

@@ -64,8 +64,8 @@ public class ExamTypeEdit extends JDialog{
     private EventListenerList examTypeListeners = new EventListenerList();
 
     public interface ExamTypeListener extends EventListener {
-        public void examTypeUpdated(AWTEvent e);
-        public void examTypeInserted(AWTEvent e);
+        void examTypeUpdated(AWTEvent e);
+        void examTypeInserted(AWTEvent e);
     }
 
     public void addExamTypeListener(ExamTypeListener l) {
