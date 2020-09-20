@@ -245,7 +245,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		public OperationBrowserModel(String s) {
 			try {
-				pOperation = operationManager.getOperation(s);
+				pOperation = operationManager.getOperationByTypeDescription(s);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
