@@ -105,7 +105,10 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private JTable table;
 	private JFrame myFrame;
 	private String pSelection;
-
+	
+	private OperationBrowserManager operationManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private OperationTypeBrowserManager operationTypeManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+	
 	public OperationBrowser() {
 
 		setTitle(MessageBundle.getMessage("angal.operation.operationsbrowser")); //$NON-NLS-1$
@@ -132,12 +135,11 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		selectlabel = new JLabel(MessageBundle.getMessage("angal.operation.selecttype")); //$NON-NLS-1$
 		buttonPanel.add(selectlabel);
 
-		OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 		pbox = new JComboBox();
 		pbox.addItem(MessageBundle.getMessage("angal.operation.allm")); //$NON-NLS-1$
 		ArrayList<OperationType> type;
 		try {
-			type = manager.getOperationType();
+			type = operationTypeManager.getOperationType();
 			for (OperationType elem : type) {
 				pbox.addItem(elem);
 			}
@@ -202,14 +204,13 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 					return;
 				} else {
-					OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 					Operation m = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 					int n = JOptionPane.showConfirmDialog(
 							null, MessageBundle.getMessage("angal.operation.deleteoperation") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
 									+ m.getDescription() + "\" ?", //$NON-NLS-1$
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
 					try {
-						if ((n == JOptionPane.YES_OPTION) && (manager.deleteOperation(m))) {
+						if ((n == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(m))) {
 							pOperation.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();
@@ -243,18 +244,16 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		private static final long serialVersionUID = 1L;
 
 		public OperationBrowserModel(String s) {
-			OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 			try {
-				pOperation = manager.getOperation(s);
+				pOperation = operationManager.getOperation(s);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 
 		public OperationBrowserModel() {
-			OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 			try {
-				pOperation = manager.getOperation();
+				pOperation = operationManager.getOperation();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -276,15 +275,16 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		}
 
 		public Object getValueAt(int r, int c) {
-			String p = pOperation.get(r).getOpeFor();
+			Operation operation = pOperation.get(r);
+			String p = operation.getOpeFor();
 			if (c == 0) {
-				return pOperation.get(r).getCode();
+				return operation.getCode();
 			} else if (c == -1) {
-				return pOperation.get(r);
+				return operation;
 			} else if (c == 1) {
-				return pOperation.get(r).getType().getDescription();
+				return operation.getType().getDescription();
 			} else if (c == 2) {
-				return pOperation.get(r).getDescription();
+				return operation.getDescription();
 			} else if (c==3) { //TODO: use bundles 
 				if (p != null) {
 				 String opeFor;
