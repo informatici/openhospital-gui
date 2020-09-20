@@ -197,7 +197,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			((SurgeryListener)listeners[i]).surgeryUpdated(event, opd);
 	}
 	
-	private static final String VERSION="1.3"; 
+	private static final String VERSION="v1.4"; 
 
 	private static final String LastOPDLabel = "<html><i>"+MessageBundle.getMessage("angal.opd.lastopdvisitm")+"</i></html>:";
 	private static final String LastNoteLabel = "<html><i>"+MessageBundle.getMessage("angal.opd.lastopdnote")+"</i></html>:";
@@ -390,6 +390,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				radiof.setSelected(true);			
 			}
 			if (insert) getLastOpd(p.getCode());
+			opdNextVisitDate.setEnabled(true);
 	}
 	
 	private void resetPatient() {
@@ -403,6 +404,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		setMyMatteBorder(jPanelPatient, MessageBundle.getMessage("angal.opd.patient"));
 		radiom.setSelected(true);
 		opdPatient=null;
+		opdNextVisitDate.setEnabled(false);
 	}
 	
 	//Alex: Resetting history from the last OPD visit for the patient
@@ -563,9 +565,9 @@ public class OpdEditExtended extends ModalJFrame implements
 		setLocationRelativeTo(null);
 
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.opd.newopdregistration")+"("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.opd.newopdregistration")+" ("+VERSION+")");
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.opd.editopdregistration")+"("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.opd.editopdregistration")+" ("+VERSION+")");
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		//this.setVisible(true);
