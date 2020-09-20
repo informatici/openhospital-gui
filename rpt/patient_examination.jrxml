@@ -30,6 +30,7 @@
 	<queryString><![CDATA[SELECT * 
 FROM PATIENT
 LEFT JOIN PATIENTEXAMINATION ON PAT_ID = PEX_PAT_ID
+LEFT JOIN PATIENT_PROFILE_PHOTO f ON (PROFILE_PHOTO_ID = f.PAT_PROFILE_PHOTO_ID)
 WHERE PEX_ID = $P{examId}]]></queryString>
 
 	<field name="PAT_ID" class="java.lang.Integer"/>

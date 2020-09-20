@@ -76,7 +76,6 @@ ORDER BY VST_DATE ASC]]></queryString>
 	<field name="PAT_DELETED" class="java.lang.String"/>
 	<field name="PAT_LOCK" class="java.lang.Integer"/>
 	<field name="PAT_BTYPE" class="java.lang.String"/>
-	<field name="PAT_PHOTO" class="java.lang.Object"/>
 	<field name="PAT_TAXCODE" class="java.lang.String"/>
 	<field name="PAT_TIMESTAMP" class="java.sql.Timestamp"/>
 	<field name="PAT_CREATED_BY" class="java.lang.String"/>
@@ -84,6 +83,9 @@ ORDER BY VST_DATE ASC]]></queryString>
 	<field name="PAT_LAST_MODIFIED_BY" class="java.lang.String"/>
 	<field name="PAT_LAST_MODIFIED_DATE" class="java.sql.Timestamp"/>
 	<field name="PAT_ACTIVE" class="java.lang.Boolean"/>
+	<field name="PAT_PROFESSION" class="java.lang.String"/>
+	<field name="PAT_MAR_STAT" class="java.lang.String"/>
+	<field name="PROFILE_PHOTO_ID" class="java.lang.Integer"/>
 	<field name="WRD_ID_A" class="java.lang.String"/>
 	<field name="WRD_NAME" class="java.lang.String"/>
 	<field name="WRD_TELE" class="java.lang.String"/>

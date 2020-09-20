@@ -65,7 +65,6 @@ WHERE VST_WRD_ID_A = $P{wardID} AND DATE(VST_DATE)=$P{date}]]></queryString>
 	<field name="PAT_DELETED" class="java.lang.String"/>
 	<field name="PAT_LOCK" class="java.lang.Integer"/>
 	<field name="PAT_BTYPE" class="java.lang.String"/>
-	<field name="PAT_PHOTO" class="java.lang.Object"/>
 	<field name="PAT_TAXCODE" class="java.lang.String"/>
 	<field name="PAT_TIMESTAMP" class="java.sql.Timestamp"/>
 	<field name="PAT_CREATED_BY" class="java.lang.String"/>
@@ -73,6 +72,9 @@ WHERE VST_WRD_ID_A = $P{wardID} AND DATE(VST_DATE)=$P{date}]]></queryString>
 	<field name="PAT_LAST_MODIFIED_BY" class="java.lang.String"/>
 	<field name="PAT_LAST_MODIFIED_DATE" class="java.sql.Timestamp"/>
 	<field name="PAT_ACTIVE" class="java.lang.Boolean"/>
+	<field name="PAT_PROFESSION" class="java.lang.String"/>
+	<field name="PAT_MAR_STAT" class="java.lang.String"/>
+	<field name="PROFILE_PHOTO_ID" class="java.lang.Integer"/>
 
 		<background>
 			<band height="0"  isSplitAllowed="true" >
