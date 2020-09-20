@@ -53,8 +53,8 @@ public class DeliveryTypeBrowserEdit extends JDialog{
     private EventListenerList deliveryTypeListeners = new EventListenerList();
 
     public interface DeliveryTypeListener extends EventListener {
-        public void deliveryTypeUpdated(AWTEvent e);
-        public void deliveryTypeInserted(AWTEvent e);
+        void deliveryTypeUpdated(AWTEvent e);
+        void deliveryTypeInserted(AWTEvent e);
     }
 
     public void addDeliveryTypeListener(DeliveryTypeListener l) {

@@ -50,7 +50,7 @@ public class SubMenu extends JDialog implements ActionListener{
 	private EventListenerList commandListeners = new EventListenerList();
 
     public interface CommandListener extends EventListener {
-        public void commandInserted(AWTEvent e);
+        void commandInserted(AWTEvent e);
     }
 
     public void addCommandListener(CommandListener listener) {

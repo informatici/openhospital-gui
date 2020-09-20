@@ -94,7 +94,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	private EventListenerList labListener = new EventListenerList();
 	
 	public interface LabListener extends EventListener {
-		public void labInserted();
+		void labInserted();
 	}
 	
 	public void addLabListener(LabListener l) {

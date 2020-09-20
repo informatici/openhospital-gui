@@ -73,8 +73,8 @@ public class DiseaseEdit extends JDialog {
 	private EventListenerList diseaseListeners = new EventListenerList();
 	
 	public interface DiseaseListener extends EventListener {
-		public void diseaseUpdated(AWTEvent e);
-		public void diseaseInserted(AWTEvent e);
+		void diseaseUpdated(AWTEvent e);
+		void diseaseInserted(AWTEvent e);
 	}
 	
 	public void addDiseaseListener(DiseaseListener l) {

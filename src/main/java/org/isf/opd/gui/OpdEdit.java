@@ -94,8 +94,8 @@ public class OpdEdit extends JDialog {
 	private EventListenerList surgeryListeners = new EventListenerList();
 	
 	public interface SurgeryListener extends EventListener {
-		public void surgeryUpdated(AWTEvent e, Opd opd);
-		public void surgeryInserted(AWTEvent e, Opd opd);
+		void surgeryUpdated(AWTEvent e, Opd opd);
+		void surgeryInserted(AWTEvent e, Opd opd);
 	}
 	
 	public void addSurgeryListener(SurgeryListener l) {

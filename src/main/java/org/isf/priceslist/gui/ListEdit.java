@@ -51,8 +51,8 @@ public class ListEdit extends JDialog {
 	private EventListenerList listListeners = new EventListenerList();
 	
 	public interface ListListener extends EventListener {
-		public void listUpdated(AWTEvent e);
-		public void listInserted(AWTEvent e);
+		void listUpdated(AWTEvent e);
+		void listInserted(AWTEvent e);
 	}
 	
 	public void addListListener(ListListener l) {

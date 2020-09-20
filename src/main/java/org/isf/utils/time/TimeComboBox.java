@@ -41,7 +41,7 @@ public class TimeComboBox extends JPanel{
 	private EventListenerList timeComboListeners = new EventListenerList();
 
     public interface TimeComboListener extends EventListener {
-        public void dateSet(AWTEvent e);
+        void dateSet(AWTEvent e);
     }
 
     public void addTimeComboListener(TimeComboListener l) {

@@ -53,8 +53,8 @@ public class GroupEdit extends JDialog {
 	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
     public interface GroupListener extends EventListener {
-        public void groupUpdated(AWTEvent e);
-        public void groupInserted(AWTEvent e);
+        void groupUpdated(AWTEvent e);
+        void groupInserted(AWTEvent e);
     }
 
     public void addGroupListener(GroupListener l) {

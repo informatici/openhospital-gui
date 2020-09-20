@@ -66,7 +66,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 	public interface LoginListener extends EventListener {
 
-		public void loginInserted(AWTEvent e);
+		void loginInserted(AWTEvent e);
 	}
 
 	public void addLoginListener(LoginListener listener) {

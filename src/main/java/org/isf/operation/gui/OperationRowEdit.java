@@ -72,11 +72,11 @@ public class OperationRowEdit extends JPanel {
 			List<OperationList> operationRowListener = new ArrayList<OperationList>();
 
 			public interface OperationRowListener extends EventListener {
-				public void operationRowInserted(AWTEvent aEvent);
+				void operationRowInserted(AWTEvent aEvent);
 			}
 
 			public interface OperationRowEditListener extends EventListener{
-				public void operationRowEdited(AWTEvent event);
+				void operationRowEdited(AWTEvent event);
 			}
 			
 			public void addOperationRowListener(OperationList l) {

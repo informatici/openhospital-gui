@@ -54,8 +54,8 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	private EventListenerList medicaldsrstockmovTypeListeners = new EventListenerList();
 
     public interface MedicaldsrstockmovTypeListener extends EventListener {
-        public void medicaldsrstockmovTypeUpdated(AWTEvent e);
-        public void medicaldsrstockmovTypeInserted(AWTEvent e);
+        void medicaldsrstockmovTypeUpdated(AWTEvent e);
+        void medicaldsrstockmovTypeInserted(AWTEvent e);
     }
 
     public void addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener l) {

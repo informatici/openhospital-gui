@@ -53,8 +53,8 @@ public class DicomTypeEdit extends JDialog{
 	private EventListenerList dicomTypeListeners = new EventListenerList();
 
     public interface DicomTypeListener extends EventListener {
-        public void dicomTypeUpdated(AWTEvent e);
-        public void dicomTypeInserted(AWTEvent e);
+        void dicomTypeUpdated(AWTEvent e);
+        void dicomTypeInserted(AWTEvent e);
     }
 
     public void addDicomTypeListener(DicomTypeListener l) {

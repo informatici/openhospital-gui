@@ -53,8 +53,8 @@ public class PricesOthersEdit extends JDialog {
 	private EventListenerList OthersListeners = new EventListenerList();
 	
 	public interface PricesOthersListener extends EventListener {
-		public void pOthersUpdated(AWTEvent e);
-		public void pOthersInserted(AWTEvent e);
+		void pOthersUpdated(AWTEvent e);
+		void pOthersInserted(AWTEvent e);
 	}
 	
 	public void addOtherListener(PricesOthersListener l) {
