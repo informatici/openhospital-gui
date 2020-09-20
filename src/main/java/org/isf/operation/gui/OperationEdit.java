@@ -222,13 +222,20 @@ public class OperationEdit extends JDialog {
 	}
 
 	private JComboBox getOperFor() {
-
-		//TODO: use bundles
+		
 		operBox = new JComboBox();
-
-		operBox.addItem("OPD/ADMISSION");
-		operBox.addItem("ADMISSION");
-		operBox.addItem("OPD");
+		//TODO: replace integer values with mnemonic ones
+		operBox.addItem(OperationBrowser.OPD_ADMISSION); 	// = "1"
+		operBox.addItem(OperationBrowser.ADMISSION);		// = "2"
+		operBox.addItem(OperationBrowser.OPD);				// = "3"
+		
+		if (!insert) {
+			int index = operation.getOpeFor().equals("1") ? 0
+							: operation.getOpeFor().equals("2") ? 1
+											: operation.getOpeFor().equals("3") ? 2 
+															: 0; // default
+			operBox.setSelectedIndex(index);
+		}
 
 		return operBox;
 
@@ -333,18 +340,8 @@ public class OperationEdit extends JDialog {
 								return;
 							}
 						}
-						String opeFor;
-						String op=String.valueOf(operBox.getSelectedItem());
-						//TODO: use bundles
-						if (op.equals("OPD/ADMISSION")) {
-							  opeFor="1";
-						}else if(op.equals("ADMISSION")) {
-							 opeFor="2";
-						}else {
-							opeFor="3";
-						}
-
-						operation.setOpeFor(opeFor);
+						String opeForSelection = String.valueOf(operBox.getSelectedIndex()+1);
+						operation.setOpeFor(opeForSelection);
 						operation.setType((OperationType) typeComboBox.getSelectedItem());
 						operation.setDescription(descriptionTextField.getText());
 						operation.setCode(codeTextField.getText().trim().toUpperCase());

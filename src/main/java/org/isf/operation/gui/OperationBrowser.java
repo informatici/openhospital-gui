@@ -83,6 +83,11 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 
 	}
+	
+	//TODO: replace with mapping mnemonic / translation in OperationBrowserManager
+	public static String OPD = MessageBundle.getMessage("angal.admission.opd").toUpperCase();
+	public static String ADMISSION = MessageBundle.getMessage("angal.admission.admission").toUpperCase();
+	public static String OPD_ADMISSION = OPD + " / " + ADMISSION;
 
 	private int pfrmBase = 8;
 	private int pfrmWidth = 5;
@@ -285,19 +290,17 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				return operation.getType().getDescription();
 			} else if (c == 2) {
 				return operation.getDescription();
-			} else if (c==3) { //TODO: use bundles 
+			} else if (c == 3) { // TODO: use bundles
 				if (p != null) {
-				 String opeFor;
-				 if (p.equals("1")) {
-					  opeFor="OPD/ADMISSION";
-				}else if(p.equals("2")) {
-					 opeFor="ADMISSION";
-				}else {
-					opeFor="OPD";
-				}
-				 return opeFor;
-				}else {
-					return "";
+					if (p.equals("1")) {
+						return OPD_ADMISSION;
+					} else if (p.equals("2")) {
+						return ADMISSION;
+					} else {
+						return OPD;
+					}
+				} else {
+					return MessageBundle.getMessage("angal.common.notdefined");
 				}
 			}
 			return null;
