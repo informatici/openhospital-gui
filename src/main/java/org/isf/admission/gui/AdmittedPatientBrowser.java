@@ -83,7 +83,6 @@ import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
-import org.isf.patient.model.PatientProfilePhoto;
 import org.isf.therapy.gui.TherapyEdit;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
