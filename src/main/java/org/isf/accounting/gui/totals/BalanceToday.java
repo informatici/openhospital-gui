@@ -13,13 +13,9 @@ public class BalanceToday {
     }
 
     public BigDecimal getBalanceToday() {
-        BigDecimal balanceToday = BigDecimal.ZERO;
-        for (Bill bill : billToday) {
-            if (!bill.getStatus().equals("D")) {
-                BigDecimal balance = new BigDecimal(Double.toString(bill.getBalance()));
-                balanceToday = balanceToday.add(balance);
-            }
-        }
-        return balanceToday;
+        return billToday.stream()
+                .filter(bill -> !bill.getStatus().equals("D"))
+                .map(bill -> new BigDecimal(Double.toString(bill.getBalance())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

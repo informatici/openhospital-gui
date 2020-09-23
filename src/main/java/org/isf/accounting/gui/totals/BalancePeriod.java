@@ -16,13 +16,9 @@ public class BalancePeriod {
     }
 
     public BigDecimal getBalancePeriod() {
-        BigDecimal balancePeriod = new BigDecimal(0);
-        for (Bill bill : billPeriod) {
-            if (!bill.getStatus().equals("D")) {
-                BigDecimal balance = new BigDecimal(Double.toString(bill.getBalance()));
-                balancePeriod = balancePeriod.add(balance);
-            }
-        }
-        return balancePeriod;
+        return billPeriod.stream()
+                .filter(bill -> !bill.getStatus().equals("D"))
+                .map(bill -> new BigDecimal(Double.toString(bill.getBalance())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

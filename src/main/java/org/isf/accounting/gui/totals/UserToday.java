@@ -18,17 +18,10 @@ public class UserToday {
     }
 
     public BigDecimal getUserToday() {
-        BigDecimal userToday = BigDecimal.ZERO;
-        if(paymentsToday != null){
-            for (BillPayments payment : paymentsToday) {
-                if (notDeletedBills.contains(payment.getBill().getId())) {
-                    BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
-                    String payUser = payment.getUser();
-                    if (!GeneralData.SINGLEUSER && payUser.equals(user))
-                        userToday = userToday.add(payAmount);
-                }
-            }
-        }
-        return userToday;
+        return paymentsToday.stream()
+                .filter(payment -> notDeletedBills.contains(payment.getBill().getId()))
+                .filter(payment -> !GeneralData.SINGLEUSER && payment.getUser().equals(user))
+                .map(payment -> new BigDecimal(Double.toString(payment.getAmount())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

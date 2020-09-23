@@ -27,7 +27,7 @@ public class UserPeriodTest {
         );
 
         // when:
-        BigDecimal result = userPeriod.getUserPeriod();
+        BigDecimal result = userPeriod.getUserPaymentsFromPeriod();
 
         // then:
         assertEquals(25, result.longValue());
@@ -46,7 +46,7 @@ public class UserPeriodTest {
         );
 
         // when:
-        BigDecimal result = userPeriod.getUserPeriod();
+        BigDecimal result = userPeriod.getUserPaymentsFromPeriod();
 
         // then:
         assertEquals(10, result.longValue());
@@ -65,7 +65,7 @@ public class UserPeriodTest {
         );
 
         // when:
-        BigDecimal result = userPeriod.getUserPeriod();
+        BigDecimal result = userPeriod.getUserPaymentsFromPeriod();
 
         // then:
         assertEquals(10, result.longValue());

@@ -18,13 +18,9 @@ public class TotalPeriod {
     }
 
     public BigDecimal getTotalPeriod() {
-        BigDecimal totalPeriod = new BigDecimal(0);
-        for (BillPayments payment : paymentsPeriod) {
-            if (notDeletedBills.contains(payment.getBill().getId())) {
-                BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
-                totalPeriod = totalPeriod.add(payAmount);
-            }
-        }
-        return totalPeriod;
+        return paymentsPeriod.stream()
+                .filter(payment -> notDeletedBills.contains(payment.getBill().getId()))
+                .map(payment -> new BigDecimal(Double.toString(payment.getAmount())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

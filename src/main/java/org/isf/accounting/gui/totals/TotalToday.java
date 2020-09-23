@@ -5,6 +5,7 @@ import org.isf.generaldata.GeneralData;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Optional;
 
 public class TotalToday {
     private final Collection<Integer> notDeletedBills;
@@ -16,15 +17,15 @@ public class TotalToday {
     }
 
     public BigDecimal getTotalsToday() {
-        BigDecimal totalToday = BigDecimal.ZERO;
-        if(paymentsToday != null){
-            for (BillPayments payment : paymentsToday) {
-                if (notDeletedBills.contains(payment.getBill().getId())) {
-                    BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
-                    totalToday = totalToday.add(payAmount);
-                }
-            }
-        }
-        return totalToday;
+        return Optional.ofNullable(paymentsToday)
+                .map(this::calculateTotalFromTodaysPayments)
+                .orElse(BigDecimal.ZERO);
+    }
+
+    private BigDecimal calculateTotalFromTodaysPayments(Collection<BillPayments> paymentsToday) {
+        return paymentsToday.stream()
+                .filter(payment -> notDeletedBills.contains(payment.getBill().getId()))
+                .map(payment -> new BigDecimal(Double.toString(payment.getAmount())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
