@@ -6,19 +6,19 @@ import org.isf.generaldata.GeneralData;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-public class UserToday {
+public class UserTotal {
     private final Collection<Integer> notDeletedBills;
-    private final Collection<BillPayments> paymentsToday;
+    private final Collection<BillPayments> paymentsFromPeriod;
     private final String user;
 
-    public UserToday(Collection<Integer> notDeletedBills, Collection<BillPayments> paymentsToday, String user) {
+    public UserTotal(Collection<Integer> notDeletedBills, Collection<BillPayments> paymentsFromPeriod, String user) {
         this.notDeletedBills = notDeletedBills;
-        this.paymentsToday = paymentsToday;
+        this.paymentsFromPeriod = paymentsFromPeriod;
         this.user = user;
     }
 
-    public BigDecimal getUserToday() {
-        return paymentsToday.stream()
+    public BigDecimal getValue() {
+        return paymentsFromPeriod.stream()
                 .filter(payment -> notDeletedBills.contains(payment.getBill().getId()))
                 .filter(payment -> !GeneralData.SINGLEUSER && payment.getUser().equals(user))
                 .map(payment -> new BigDecimal(Double.toString(payment.getAmount())))

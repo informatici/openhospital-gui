@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class UserTodayTest {
+public class UserTotalTest {
 
     public static final String TEST_USER = "testUser";
     public static final String OTHER_USER = "dupaUser";
@@ -17,7 +17,7 @@ public class UserTodayTest {
     @Test
     public void shouldCalculateFromPayments() {
         // given:
-        UserToday userToday = new UserToday(
+        UserTotal userTotal = new UserTotal(
                 Arrays.asList(1, 2),
                 Arrays.asList(
                         TestPayment.withAmountBillAndUser(10, TestBill.notDeletedBillWithBalance(1, 1), TEST_USER),
@@ -27,7 +27,7 @@ public class UserTodayTest {
         );
 
         // when:
-        BigDecimal result = userToday.getUserToday();
+        BigDecimal result = userTotal.getValue();
 
         // then:
         assertEquals(25, result.longValue());
@@ -36,7 +36,7 @@ public class UserTodayTest {
     @Test
     public void shouldSkipPaymentsForDeletedBills() {
         // given:
-        UserToday userToday = new UserToday(
+        UserTotal userTotal = new UserTotal(
                 Arrays.asList(1),
                 Arrays.asList(
                         TestPayment.withAmountBillAndUser(10, TestBill.notDeletedBillWithBalance(1, 1), TEST_USER),
@@ -46,7 +46,7 @@ public class UserTodayTest {
         );
 
         // when:
-        BigDecimal result = userToday.getUserToday();
+        BigDecimal result = userTotal.getValue();
 
         // then:
         assertEquals(10, result.longValue());
@@ -55,7 +55,7 @@ public class UserTodayTest {
     @Test
     public void shouldSkipPaymentForOtherUser() {
         // given:
-        UserToday userToday = new UserToday(
+        UserTotal userTotal = new UserTotal(
                 Arrays.asList(1, 2),
                 Arrays.asList(
                         TestPayment.withAmountBillAndUser(10, TestBill.notDeletedBillWithBalance(1, 1), TEST_USER),
@@ -65,7 +65,7 @@ public class UserTodayTest {
         );
 
         // when:
-        BigDecimal result = userToday.getUserToday();
+        BigDecimal result = userTotal.getValue();
 
         // then:
         assertEquals(10, result.longValue());

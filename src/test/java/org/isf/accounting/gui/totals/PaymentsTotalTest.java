@@ -9,12 +9,12 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class TotalPeriodTest {
+public class PaymentsTotalTest {
 
     @Test
     public void shouldCalculateFromPayments() {
         // given:
-        TotalPeriod TotalPeriod = new TotalPeriod(
+        PaymentsTotal PaymentsTotal = new PaymentsTotal(
                 Arrays.asList(1, 2),
                 Arrays.asList(
                         TestPayment.withAmountAndBill(10, TestBill.notDeletedBillWithBalance(1, 1)),
@@ -23,7 +23,7 @@ public class TotalPeriodTest {
         );
 
         // when:
-        BigDecimal result = TotalPeriod.getTotalPeriod();
+        BigDecimal result = PaymentsTotal.getValue();
 
         // then:
         assertEquals(25, result.longValue());
@@ -32,7 +32,7 @@ public class TotalPeriodTest {
     @Test
     public void shouldSkipPaymentsForDeletedBills() {
         // given:
-        TotalPeriod TotalPeriod = new TotalPeriod(
+        PaymentsTotal PaymentsTotal = new PaymentsTotal(
                 Arrays.asList(1),
                 Arrays.asList(
                         TestPayment.withAmountAndBill(10, TestBill.notDeletedBillWithBalance(1, 1)),
@@ -41,7 +41,7 @@ public class TotalPeriodTest {
         );
 
         // when:
-        BigDecimal result = TotalPeriod.getTotalPeriod();
+        BigDecimal result = PaymentsTotal.getValue();
 
         // then:
         assertEquals(10, result.longValue());
