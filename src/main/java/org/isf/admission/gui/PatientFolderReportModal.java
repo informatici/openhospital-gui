@@ -256,6 +256,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 					admissionCheck.setSelected(false);
 					drugsCheck.setSelected(false);
 					opdCheck.setSelected(false);
+					operationCheck.setSelected(false);
+					laboratoryCheck.setSelected(false);
 				}
 			});
 			
