@@ -61,7 +61,7 @@ public class ExamRowEdit extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION=MessageBundle.getMessage("angal.versione");
+	private static final String VERSION="v1.2";
 	
 	private EventListenerList examRowListeners = new EventListenerList();
 
