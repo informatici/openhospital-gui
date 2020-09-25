@@ -103,7 +103,7 @@ public class VoDateTextField extends JTextField {
 	public VoDateTextField(String type, String todayDate, int cols) throws IllegalArgumentException {
 		super(cols);
 		if (!(type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy") ||
-				type.equals("mm/dd/yyyy") || type.equals("mm/dd/yyyy")))
+				type.equals("mm/dd/yy") || type.equals("mm/dd/yyyy")))
 			throw new IllegalArgumentException();
 		setType(type);
 		this.setDocument(new ManagedData());
@@ -116,7 +116,7 @@ public class VoDateTextField extends JTextField {
 	public VoDateTextField(String type, GregorianCalendar todayDate, int cols) throws IllegalArgumentException{
 		super(cols);
 		if (!(type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy") ||
-				type.equals("mm/dd/yyyy") || type.equals("mm/dd/yyyy")))
+				type.equals("mm/dd/yy") || type.equals("mm/dd/yyyy")))
 			throw new IllegalArgumentException();
 		setType(type);
 		this.setDocument(new ManagedData());

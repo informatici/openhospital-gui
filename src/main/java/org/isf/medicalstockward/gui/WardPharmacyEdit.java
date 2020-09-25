@@ -254,7 +254,7 @@ public class WardPharmacyEdit extends JDialog {
 						lastKey = s;
 					}
 					s = jTextFieldSearchMedical.getText() + lastKey;
-					s.trim();
+					s = s.trim();
 					
 					jComboBoxDrugs.removeAllItems();
 					getJComboBoxDrugs(s);

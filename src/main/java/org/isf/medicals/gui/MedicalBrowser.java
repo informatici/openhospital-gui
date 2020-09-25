@@ -741,7 +741,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 					if (key != null) {
 
 						String s = key + lastKey;
-						s.trim();
+						s = s.trim();
 						String[] tokens = s.split(" ");
 
 						if (!s.equals("")) {
