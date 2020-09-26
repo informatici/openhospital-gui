@@ -27,14 +27,16 @@ public class BillDataLoader {
     public List<Bill> loadBills(String status) throws OHServiceException {
         List<Bill> tableArray = new ArrayList<>();
 
-        if (status.equals("O")) {
-            tableArray = getPendingBills(status, tableArray);
-        }
-        else if (status.equals("ALL")) {
-            tableArray = getAllBills();
-        }
-        else if (status.equals("C")) {
-            tableArray = getClosedBills(status);
+        switch (status) {
+            case "O":
+                tableArray = getPendingBills(status);
+                break;
+            case "ALL":
+                tableArray = getAllBills();
+                break;
+            case "C":
+                tableArray = getClosedBills(status);
+                break;
         }
 
         Collections.sort(tableArray, Collections.reverseOrder());
@@ -64,7 +66,7 @@ public class BillDataLoader {
                 .collect(Collectors.toList());
     }
 
-    private List<Bill> getPendingBills(String status, List<Bill> tableArray) throws OHServiceException {
+    private List<Bill> getPendingBills(String status) throws OHServiceException {
         return patientParent != null ? billManager.getPendingBillsAffiliate(patientParent.getCode()) :
                 billPeriod.stream()
                 .filter(bill -> bill.getStatus().equals(status))
