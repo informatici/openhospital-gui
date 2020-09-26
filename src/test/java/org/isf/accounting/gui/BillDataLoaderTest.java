@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -36,10 +37,10 @@ public class BillDataLoaderTest {
         );
 
         // when:
-        BillDataLoader.BillData result = billDataLoader.loadData("O");
+        List<Bill> result = billDataLoader.loadBills("O");
 
         // then:
-        assertEquals(3, result.getTableArray().size());
+        assertEquals(3, result.size());
     }
 
     @Test
@@ -59,10 +60,10 @@ public class BillDataLoaderTest {
         );
 
         // when:
-        BillDataLoader.BillData result = billDataLoader.loadData("O");
+        List<Bill> result = billDataLoader.loadBills("O");
 
         // then:
-        assertEquals(1, result.getTableArray().size());
+        assertEquals(1, result.size());
     }
 
     @Test
@@ -82,10 +83,10 @@ public class BillDataLoaderTest {
         );
 
         // when:
-        BillDataLoader.BillData result = billDataLoader.loadData("ALL");
+        List<Bill> result = billDataLoader.loadBills("ALL");
 
         // then:
-        assertEquals(3, result.getTableArray().size());
+        assertEquals(3, result.size());
     }
 
     @Test
@@ -105,10 +106,10 @@ public class BillDataLoaderTest {
         );
 
         // when:
-        BillDataLoader.BillData result = billDataLoader.loadData("C");
+        List<Bill> result = billDataLoader.loadBills("C");
 
         // then:
-        assertEquals(1, result.getTableArray().size());
+        assertEquals(1, result.size());
     }
 
 

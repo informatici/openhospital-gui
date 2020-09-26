@@ -6,6 +6,7 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BillDataLoader {
     private final List<Bill> billPeriod;
@@ -26,40 +27,32 @@ public class BillDataLoader {
 
 
 
-    public BillData loadData(String status) throws OHServiceException {
-        Map<Integer, Bill> mapBill = new HashMap<>();
+    public List<Bill> loadBills(String status) throws OHServiceException {
+        Map<Integer, Bill> billsSortedById;
         List<Bill> tableArray = new ArrayList<>();
         List<Bill> billAll = new ArrayList<>();
-
 
         /*
          * Mappings Bills in the period
          */
-        for (Bill bill : billPeriod) {
-            //mapBill.clear();
-            mapBill.put(bill.getId(), bill);
-        }
+        billsSortedById = billPeriod.stream()
+                .collect(Collectors.toMap(Bill::getId, bill -> bill, (a, b) -> b));
 
         /*
          * Merging the two bills lists
          */
         billAll.addAll(billPeriod);
-        for (Bill bill : billFromPayments) {
-            if (mapBill.get(bill.getId()) == null)
-                billAll.add(bill);
-        }
+        billFromPayments.stream()
+                .filter(bill -> billsSortedById.get(bill.getId()) == null)
+                .forEach(billAll::add);
 
         if (status.equals("O")) {
             if (patientParent != null) {
                 tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
             } else {
-                if (status.equals("O")) {
-                    for (Bill bill : billPeriod) {
-
-                        if (bill.getStatus().equals(status))
-                            tableArray.add(bill);
-                    }
-                }
+                billPeriod.stream()
+                        .filter(bill -> bill.getStatus().equals(status))
+                        .forEach(tableArray::add);
             }
         }
         else if (status.equals("ALL")) {
@@ -69,31 +62,12 @@ public class BillDataLoader {
 
         }
         else if (status.equals("C")) {
-
-            for (Bill bill : billPeriod) {
-
-                if (bill.getStatus().equals(status))
-                    tableArray.add(bill);
-            }
+            billPeriod.stream()
+                    .filter(bill -> bill.getStatus().equals(status))
+                    .forEach(tableArray::add);
         }
 
         Collections.sort(tableArray, Collections.reverseOrder());
-        return new BillData(mapBill, billAll, tableArray);
-    }
-
-    static class BillData {
-        private final Map<Integer, Bill> mapBill;
-        private final List<Bill> billAll;
-        private final List<Bill> tableArray;
-
-        BillData(Map<Integer, Bill> mapBill, List<Bill> billAll, List<Bill> tableArray) {
-            this.mapBill = mapBill;
-            this.billAll = billAll;
-            this.tableArray = tableArray;
-        }
-
-        public List<Bill> getTableArray() {
-            return tableArray;
-        }
+        return tableArray;
     }
 }

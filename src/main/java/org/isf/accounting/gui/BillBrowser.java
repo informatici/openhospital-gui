@@ -862,13 +862,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jComboUsers = new JComboBox();
 			users.forEach(user -> jComboUsers.addItem(user));
 			
-			jComboUsers.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent arg0) {
-					user = (String) jComboUsers.getSelectedItem();
-					jTableUser.setValueAt("<html><b>"+user+"</b></html>", 0, 0);
-					updateTotals();
-				}
+			jComboUsers.addActionListener(arg0 -> {
+				user = (String) jComboUsers.getSelectedItem();
+				jTableUser.setValueAt("<html><b>"+user+"</b></html>", 0, 0);
+				updateTotals();
 			});
 		}
 		return jComboUsers;
@@ -950,7 +947,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		if (jTableClosed == null) {
 			jTableClosed = new JTable();
 			jTableClosed.setModel(new BillTableModel("C")); //$NON-NLS-1$
-			// TODO: move to utils
 			decorateTable(jTableClosed);
 			jTableClosed.setAutoCreateColumnsFromModel(false);
 			jTableClosed.setDefaultRenderer(String.class, new StringTableCellRenderer());
@@ -982,7 +978,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 
 	private void decorateTable(JTable table) {
-		for (int i = 0; i < columsWidth.length; i++) {
+		IntStream.range(0, columsWidth.length).forEach(i -> {
 			table.getColumnModel().getColumn(i).setMinWidth(columsWidth[i]);
 			if (!columsResizable[i]) table.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
 			if (alignCenter[i]) {
@@ -991,7 +987,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					table.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 				}
 			}
-		}
+		});
 	}
 
 	private JScrollPane getJScrollPaneBills() {
@@ -1171,9 +1167,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				paymentsToday = billManager.getPayments(dateToday0, dateToday24);
 			}catch(OHServiceException e){
 				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
+					e.getMessages().forEach(msg -> JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
 				}
 			}
 		} else {
@@ -1216,74 +1210,19 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	public class BillTableModel extends DefaultTableModel {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
-		private ArrayList<Bill> tableArray = new ArrayList<Bill>();
-		
-		/*
-		 * All Bills
-		 */
-		private ArrayList<Bill> billAll = new ArrayList<Bill>();
+		private ArrayList<Bill> tableArray = new ArrayList<>();
 		
 		public BillTableModel(String status) {
 			loadData(status);
 		}
 		
 		private void loadData(String status) {
-			
-			tableArray.clear();
-			mapBill.clear();
-			
-			mapping(status);
-		}
-		
-		private void mapping(String status) {
-			
-			/*
-			 * Mappings Bills in the period 
-			 */
-			//mapBill.clear();
-			billPeriod.forEach(bill -> mapBill.put(bill.getId(), bill));
-			
-			/*
-			 * Merging the two bills lists
-			 */
-			billAll.addAll(billPeriod);
-			billFromPayments.stream()
-					.filter(bill -> mapBill.get(bill.getId()) == null)
-					.forEachOrdered(bill -> billAll.add(bill));
-
-			if (status.equals("O")) {
-				if (patientParent != null) {
-					try {
-						tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
-					} catch (OHServiceException e) {
-						if(e.getMessages() != null){
-							e.getMessages()
-									.forEach(msg -> JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
-						}
-					}
-				} else {
-					billPeriod.stream()
-							.filter(bill -> bill.getStatus().equals(status))
-							.forEachOrdered(bill -> tableArray.add(bill));
-				}
+			try {
+				tableArray = (ArrayList<Bill>) new BillDataLoader(billPeriod, billFromPayments, patientParent, billManager).loadBills(status);
+			} catch (OHServiceException e) {
+				e.printStackTrace();
 			}
-			else if (status.equals("ALL")) {
-
-				Collections.sort(billAll);
-				tableArray = billAll;
-
-			}
-			else if (status.equals("C")) {
-				billPeriod.stream()
-						.filter(bill -> bill.getStatus().equals(status))
-						.forEachOrdered(bill -> tableArray.add(bill));
-			}
-			
-			tableArray.sort(Collections.reverseOrder());
 		}
 		
 		public Class<?> getColumnClass(int columnIndex) {
