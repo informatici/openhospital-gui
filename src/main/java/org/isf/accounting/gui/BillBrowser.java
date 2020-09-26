@@ -1219,7 +1219,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		
 		private void loadData(String status) {
 			try {
-				tableArray = (ArrayList<Bill>) new BillDataLoader(billPeriod, billFromPayments, patientParent, billManager).loadBills(status);
+				tableArray = (ArrayList<Bill>) new BillDataLoader(billPeriod, billFromPayments, patientParent, billManager)
+						.loadBills(status);
 			} catch (OHServiceException e) {
 				e.printStackTrace();
 			}

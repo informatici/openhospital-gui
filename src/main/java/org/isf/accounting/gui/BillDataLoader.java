@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 public class BillDataLoader {
     private final List<Bill> billPeriod;
-
     private final List<Bill> billFromPayments;
     private final Patient patientParent;
     private final BillBrowserManager billManager;
@@ -25,49 +24,50 @@ public class BillDataLoader {
         this.billManager = billManager;
     }
 
-
-
     public List<Bill> loadBills(String status) throws OHServiceException {
-        Map<Integer, Bill> billsSortedById;
         List<Bill> tableArray = new ArrayList<>();
-        List<Bill> billAll = new ArrayList<>();
-
-        /*
-         * Mappings Bills in the period
-         */
-        billsSortedById = billPeriod.stream()
-                .collect(Collectors.toMap(Bill::getId, bill -> bill, (a, b) -> b));
-
-        /*
-         * Merging the two bills lists
-         */
-        billAll.addAll(billPeriod);
-        billFromPayments.stream()
-                .filter(bill -> billsSortedById.get(bill.getId()) == null)
-                .forEach(billAll::add);
 
         if (status.equals("O")) {
-            if (patientParent != null) {
-                tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
-            } else {
-                billPeriod.stream()
-                        .filter(bill -> bill.getStatus().equals(status))
-                        .forEach(tableArray::add);
-            }
+            tableArray = getPendingBills(status, tableArray);
         }
         else if (status.equals("ALL")) {
-
-            Collections.sort(billAll);
-            tableArray = billAll;
-
+            tableArray = getAllBills();
         }
         else if (status.equals("C")) {
-            billPeriod.stream()
-                    .filter(bill -> bill.getStatus().equals(status))
-                    .forEach(tableArray::add);
+            tableArray = getClosedBills(status);
         }
 
         Collections.sort(tableArray, Collections.reverseOrder());
         return tableArray;
+    }
+
+    private List<Bill> getAllBills() {
+        List<Bill> billAll = mergeBillsFromPeriodAndFromPayments();
+        Collections.sort(billAll);
+        return billAll;
+    }
+
+    private List<Bill> mergeBillsFromPeriodAndFromPayments() {
+        List<Bill> billAll = new ArrayList<>();
+        Map<Integer, Bill> billsSortedById = billPeriod.stream()
+                .collect(Collectors.toMap(Bill::getId, bill -> bill, (a, b) -> b));
+        billAll.addAll(billPeriod);
+        billFromPayments.stream()
+                .filter(bill -> billsSortedById.get(bill.getId()) == null)
+                .forEach(billAll::add);
+        return billAll;
+    }
+
+    private List<Bill> getClosedBills(String status) {
+        return billPeriod.stream()
+                .filter(bill -> bill.getStatus().equals(status))
+                .collect(Collectors.toList());
+    }
+
+    private List<Bill> getPendingBills(String status, List<Bill> tableArray) throws OHServiceException {
+        return patientParent != null ? billManager.getPendingBillsAffiliate(patientParent.getCode()) :
+                billPeriod.stream()
+                .filter(bill -> bill.getStatus().equals(status))
+                .collect(Collectors.toList());
     }
 }

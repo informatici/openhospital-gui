@@ -73,6 +73,7 @@ public class Menu {
 	}
 
 	public static void main(String[] args) {
+		System.setProperty("prism.allowhidpi", "false");
 		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
