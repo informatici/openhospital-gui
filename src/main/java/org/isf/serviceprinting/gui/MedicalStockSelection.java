@@ -509,21 +509,4 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		formatSelected = e.getActionCommand();
 	}
-	
-	public static void main(String[] args) {
-		
-		JFrame frame = new JFrame();
-		
-		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		Context.setApplicationContext(context);
-		GeneralData.getGeneralData();
-		
-		MedicalStockSelection medicalPrintSelection = new MedicalStockSelection(frame);
-		
-		
-		
-		
-	}
-
 }

@@ -300,19 +300,4 @@ public class MedicalPrintSelection extends JDialog implements ActionListener{
 		formatSelected = e.getActionCommand();
 	}
 	
-	public static void main(String[] args) {
-		
-		JFrame frame = new JFrame();
-		
-		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		Context.setApplicationContext(context);
-		GeneralData.getGeneralData();
-		
-		MedicalPrintSelection medicalPrintSelection = new MedicalPrintSelection(frame);
-		
-		
-		
-		
-	}
 }
