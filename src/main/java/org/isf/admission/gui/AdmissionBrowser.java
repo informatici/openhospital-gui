@@ -209,192 +209,91 @@ public class AdmissionBrowser extends ModalJFrame {
 	private int pregnancyTabIndex;
 	
 	private JPanel jContentPane = null;
-	
 	// enable is if patient is female
 	private boolean enablePregnancy = false;
-
 	// viewing is if you set ward to pregnancy
 	private boolean viewingPregnancy = false;
-
 	private GregorianCalendar visitDate = null;
-
 	private float weight = 0.0f;
-
 	private VoLimitedTextField weightField = null;
-
 	private CustomJDateChooser visitDateFieldCal = null; // Calendar
-
 	private JComboBox treatmTypeBox = null;
 
 	private final int preferredWidthDates = 110;
-	
 	private final int preferredWidthDiagnosis = 550;
-	
 	private final int preferredWidthTypes = 220;
-	
 	private final int preferredHeightLine = 24;
-	
+
 	private GregorianCalendar deliveryDate = null;
-
 	private CustomJDateChooser deliveryDateFieldCal = null;
-
 	private JComboBox deliveryTypeBox = null;
-
 	private JComboBox deliveryResultTypeBox = null;
-	
 	private ArrayList<PregnantTreatmentType> treatmTypeList = null;
-
 	private ArrayList<DeliveryType> deliveryTypeList = null;
-
 	private ArrayList<DeliveryResultType> deliveryResultTypeList = null;
-
 	private GregorianCalendar ctrl1Date = null;
-
 	private GregorianCalendar ctrl2Date = null;
-
 	private GregorianCalendar abortDate = null;
-
 	private CustomJDateChooser ctrl1DateFieldCal = null;
-
 	private CustomJDateChooser ctrl2DateFieldCal = null;
-
 	private CustomJDateChooser abortDateFieldCal = null;
 	
 	private JComboBox wardBox;
-
 	private ArrayList<Ward> wardList = null;
-
 	// save value during a swith
 	private Ward saveWard = null;
-
 	private String saveYProg = null;
-
 	private JTextField yProgTextField = null;
-
 	private JTextField FHUTextField = null;
-
 	private JPanel wardPanel;
-
 	private JPanel fhuPanel;
-
 	private JPanel yearProgPanel;
-	
 	private JComboBox diseaseInBox;
-	
 	private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-
 	private ArrayList<Disease> diseaseInList = null;
-	
 	private ArrayList<Disease> diseaseOutList = null;
-	
 	private ArrayList<Disease> diseaseAllList = null;
-
 	private JCheckBox malnuCheck;
-
 	private JPanel diseaseInPanel;
-
 	private JPanel malnuPanel;
-	
 	private GregorianCalendar dateIn = null;
-
 	private CustomJDateChooser dateInFieldCal = null;
-
 	private JComboBox admTypeBox = null;
-
 	private ArrayList<AdmissionType> admTypeList = null;
-
 	private JPanel admissionDatePanel;
-
 	private JPanel admissionTypePanel;
-	
 	private JComboBox diseaseOut1Box = null;
-	
 	private JComboBox diseaseOut2Box = null;
-	
 	private JComboBox diseaseOut3Box = null;
-
 	private JPanel diseaseOutPanel;
-	
 	private JPanel diseaseOut1Panel;
-	
 	private JPanel diseaseOut2Panel;
-	
 	private JPanel diseaseOut3Panel;
-	
-	//private JComboBox operationBox = null;
 
-	//private JRadioButton operationResultRadioP = null;
-
-	//private JRadioButton operationResultRadioN = null;
-
-	//private JRadioButton operationResultRadioU = null;
-
-	//private ArrayList<Operation> operationList = null;
-	
-	//private GregorianCalendar operationDate = null;
-
-	//private CustomJDateChooser operationDateFieldCal = null;
-
-	//private VoDateTextField operationDateField = null;
-
-	//private float trsfUnit = 0.0f;
-
-	//private JSpinner trsfUnitField = null;
-	
 	private GregorianCalendar dateOut = null;
-
 	private CustomJDateChooser dateOutFieldCal = null;
-
 	private JComboBox disTypeBox = null;
-
 	private ArrayList<DischargeType> disTypeList = null;
 
 	private JPanel dischargeDatePanel;
-
 	private JPanel dischargeTypePanel;
-	
 	private JPanel bedDaysPanel;
-
 	private JPanel buttonPanel = null;
-
 	private JLabel labelRequiredFields;
-
 	private JButton closeButton = null;
-
 	private JButton saveButton = null;
-	
 	private JButton jButtonExamination = null;
-
-	//private JPanel operationDatePanel;
-
-	//private JPanel transfusionPanel;
-
-	//private JPanel operationPanel;
-
-	//private JPanel resultPanel;
-
 	private JPanel visitDatePanel;
-
 	private JPanel weightPanel;
-
 	private JPanel treatmentPanel;
-
 	private JPanel deliveryDatePanel;
-
 	private JPanel deliveryTypePanel;
-
 	private JPanel deliveryResultTypePanel;
-
 	private JPanel control1DatePanel;
-
 	private JPanel control2DatePanel;
-
 	private JPanel abortDatePanel;
-
 	private VoLimitedTextField bedDaysTextField;
-	
     private OperationRowAdm operationad;
-        
 	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
         
 	private JTextField searchDiseasetextField;
@@ -652,39 +551,6 @@ public class AdmissionBrowser extends ModalJFrame {
 		return jPanelOperation; 
 	}
         
-//	private JPanel getOperationTab() {
-//		if (jPanelOperation == null) {
-//			jPanelOperation = new JPanel();
-//			
-//			GroupLayout layout = new GroupLayout(jPanelOperation);
-//			jPanelOperation.setLayout(layout);
-//			
-//			layout.setAutoCreateGaps(true);
-//			layout.setAutoCreateContainerGaps(true);
-//			
-//			layout.setHorizontalGroup(layout.createSequentialGroup()
-//					.addGroup(layout.createParallelGroup(LEADING)
-//                                                        .addComponent(getOperationDatePanel(), GroupLayout.PREFERRED_SIZE, preferredWidthDates, GroupLayout.PREFERRED_SIZE)
-//                                                        .addComponent(getOperationPanel(), GroupLayout.PREFERRED_SIZE,  GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-//						.addGroup(layout.createSequentialGroup()
-//							.addComponent(getOperationResultPanel())
-//							.addComponent(getTransfusionPanel())
-//                                                )
-//					)
-//			);
-//			
-//			layout.setVerticalGroup(layout.createSequentialGroup()
-//                                                .addComponent(getOperationDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-//                                                .addComponent(getOperationPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-//					.addGroup(layout.createParallelGroup(BASELINE)
-//							.addComponent(getOperationResultPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-//							.addComponent(getTransfusionPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
-//                                        )
-//			);
-//		}
-//		return jPanelOperation;
-//	}
-
 	private JPanel getDeliveryTab() {
 		if (jPanelDelivery == null) {
 			jPanelDelivery = new JPanel();
@@ -1596,151 +1462,6 @@ public class AdmissionBrowser extends ModalJFrame {
 		return diseaseOut3Panel;
 	}
 
-	/*
-	 * simply an utility
-	 */
-//	private JRadioButton getRadioButton(String label, char mn, boolean active) {
-//		JRadioButton rb = new JRadioButton(label);
-//		rb.setMnemonic(KeyEvent.VK_A + (mn - 'A'));
-//		rb.setSelected(active);
-//		rb.setName(label);
-//		return rb;
-//	}
-
-	/*
-	 * admission sheet: 5th row: insert select operation type and result
-	 */
-//	private JPanel getOperationPanel() {
-//		if (operationPanel == null) {
-//			operationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-//                        operationPanel.setPreferredSize(new Dimension(250, 55));
-//			OperationBrowserManager obm = new OperationBrowserManager();
-//			operationBox = new JComboBox();
-//			operationBox.addItem("");
-//			try {
-//				operationList = obm.getOperation();
-//			}catch(OHServiceException e){
-//                OHServiceExceptionUtil.showMessages(e);
-//			}
-//			if(operationList != null){
-//				for (Operation elem : operationList) {
-//					operationBox.addItem(elem);
-//					if (editing) {
-//						if (admission.getOperation() != null && admission.getOperation().getCode().equalsIgnoreCase(elem.getCode())) {
-//							operationBox.setSelectedItem(elem);
-//						}
-//					}
-//				}
-//			}
-//			operationBox.addActionListener(new ActionListener() {
-//				public void actionPerformed(ActionEvent e) {
-//					if (operationBox.getSelectedIndex() == 0) {
-//						// operationDateField.setText("");
-//						operationDateFieldCal.setDate(null);
-//					} else {
-//						/*
-//						 * if (!operationDateField.getText().equals("")){ // leave
-//						 * old date value }
-//						 */
-//						if (operationDateFieldCal.getDate() != null) {
-//							// leave old date value
-//						}
-//	
-//						else {
-//							// set today date
-//							operationDateFieldCal.setDate((new GregorianCalendar()).getTime());
-//						}
-//					}
-//				}
-//			});
-//
-//			operationPanel.add(operationBox);
-//			operationPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.operationtype")));
-//		}
-//		return operationPanel;
-//	}
-
-	/**
-	 * @return
-	 */
-//	private JPanel getOperationResultPanel() {
-//		if (resultPanel == null) {
-//			resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-//			
-//			operationResultRadioP = getRadioButton(MessageBundle.getMessage("angal.admission.positive"), 'P', false);
-//			operationResultRadioN = getRadioButton(MessageBundle.getMessage("angal.admission.negative"), 'N', false);
-//			operationResultRadioU = getRadioButton(MessageBundle.getMessage("angal.admission.unknown"), 'U', true);
-//			
-//			ButtonGroup resultGroup = new ButtonGroup();
-//			resultGroup.add(operationResultRadioP);
-//			resultGroup.add(operationResultRadioN);
-//			resultGroup.add(operationResultRadioU);
-//			
-//			if (editing) {
-//				if (admission.getOpResult() != null) {
-//					if (admission.getOpResult().equalsIgnoreCase("P"))
-//						operationResultRadioP.setSelected(true);
-//					else 
-//						operationResultRadioN.setSelected(true);
-//				}
-//			} 
-//	
-//			resultPanel.add(operationResultRadioP);
-//			resultPanel.add(operationResultRadioN);
-//			resultPanel.add(operationResultRadioU);
-//	
-//			resultPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.operationresult")));
-//		}
-//		return resultPanel;
-//	}
-
-	/*
-	 * admission sheet: 6th row: insert operation date and transusional unit
-	 */
-//	private JPanel getOperationDatePanel() {
-//		if (operationDatePanel == null) {
-//			operationDatePanel = new JPanel();
-//			
-//			Date myDate = null;
-//			if (editing && admission.getOpDate() != null) {
-//				operationDate = admission.getOpDate();
-//				myDate = operationDate.getTime();
-//			}
-//			operationDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
-//			operationDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-//			operationDateFieldCal.setDateFormatString("dd/MM/yy");
-//			
-//			operationDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.operationdate")));
-//			operationDatePanel.add(operationDateFieldCal);
-//		}
-//		return operationDatePanel;
-//	}
-	
-	/**
-	 * @return
-	 */
-//	private JPanel getTransfusionPanel() {
-//		if (transfusionPanel == null) {
-//			transfusionPanel = new JPanel();
-//			
-//			float start = 0;
-//			float min = 0;
-//			float step = (float) 0.5;
-//			
-//			SpinnerModel model = new SpinnerNumberModel(start, min, null, step);
-//			trsfUnitField = new JSpinner(model);
-//			trsfUnitField.setPreferredSize(new Dimension(preferredWidthTransfusionSpinner, preferredHeightLine));
-//			
-//			if (editing && admission.getTransUnit() != null) {
-//				trsfUnit = admission.getTransUnit().floatValue();
-//				trsfUnitField.setValue(trsfUnit);
-//			}
-//			
-//			transfusionPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.transfusionalunit")));
-//			transfusionPanel.add(trsfUnitField);
-//		}
-//		return transfusionPanel;
-//	}
 
 	private JPanel getDischargeTypePanel() {
 		if (dischargeTypePanel == null) {
