@@ -24,12 +24,12 @@
 ######## Environment check:
 
 # SET JAVA_HOME
-# JAVA_HOME=/usr/lib/jvm/java-14-openjdk-amd64/
+#JAVA_HOME=/usr/lib/jvm/java-14-openjdk-amd64/
 
 # check if java home exists
 
 if [ -z $JAVA_HOME ]; then
-  echo "JAVA_HOME not found. Please set it up properly."
+  echo "Error - JAVA_HOME not found. Please set it up properly."
   exit
 fi
 
@@ -37,8 +37,12 @@ JAVA_BIN=$JAVA_HOME/bin/java
 
 ######## OPENHOSPITAL Configuration
 # OPENHOSPITAL_HOME is the directory where OpenHospital files are located
+#OPENHOSPITAL_HOME=/usr/local/OpenHospital
 
-OPENHOSPITAL_HOME=/usr/local/OpenHospital
+if [ -z $OPENHOSPITAL_HOME ]; then
+  echo "Warning - OPENHOSPITAL_HOME not found. Please set it up properly."
+  OPENHOSPITAL_HOME=$PWD
+fi
 
 ####### DO NOT EDIT BELOW THIS LINE #######
 
