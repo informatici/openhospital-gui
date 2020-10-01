@@ -23,21 +23,25 @@
 
 ######## Environment check:
 
-# check for java home
-JAVA_EXE=$JAVA_HOME/bin/java
+# SET JAVA_HOME
+JAVA_HOME=/usr/lib/jvm/java-14-openjdk-amd64/
+
+JAVA_BIN=$JAVA_HOME/bin/java
+
+# check if java home exists
 
 if [ -z $JAVA_HOME ]; then
   echo "JAVA_HOME not found. Please set it up properly."
-  JAVA_EXE=java
 fi
 
-######## OPENHOSPITAL Configuration:
+######## OPENHOSPITAL Configuration
+# OPENHOSPITAL_HOME is the directory where OpenHospital files are located
 
-# add the libraries to the OPENHOSPITAL_CLASSPATH.
-# EXEDIR is the directory where this executable is.
-EXEDIR=${0%/*}
+OPENHOSPITAL_HOME=/usr/local/OpenHospital
 
-DIRLIBS=${EXEDIR}/bin/*.jar
+####### DO NOT EDIT BELOW THIS LINE #######
+
+DIRLIBS=${OPENHOSPITAL_HOME}/bin/*.jar
 for i in ${DIRLIBS}
 do
   if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
@@ -47,8 +51,7 @@ do
   fi
 done
 
-
-DIRLIBS=${EXEDIR}/lib/*.jar
+DIRLIBS=${OPENHOSPITAL_HOME}/lib/*.jar
 for i in ${DIRLIBS}
 do
   if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
@@ -58,7 +61,7 @@ do
   fi
 done
 
-DIRLIBS=${EXEDIR}/lib/*.zip
+DIRLIBS=${OPENHOSPITAL_HOME}/lib/*.zip
 for i in ${DIRLIBS}
 do
   if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
@@ -68,11 +71,10 @@ do
   fi
 done
 
-OPENHOSPITAL_CLASSPATH="${EXEDIR}/../classes":$OPENHOSPITAL_CLASSPATH
-OPENHOSPITAL_CLASSPATH="${EXEDIR}/bundle":$OPENHOSPITAL_CLASSPATH
-OPENHOSPITAL_CLASSPATH="${EXEDIR}/rpt":$OPENHOSPITAL_CLASSPATH
-OPENHOSPITAL_CLASSPATH="${EXEDIR}":$OPENHOSPITAL_CLASSPATH
-OPENHOSPITAL_HOME="${EXEDIR}"
+OPENHOSPITAL_CLASSPATH="${OPENHOSPITAL_HOME}/bundle":$OPENHOSPITAL_CLASSPATH
+OPENHOSPITAL_CLASSPATH="${OPENHOSPITAL_HOME}/rpt":$OPENHOSPITAL_CLASSPATH
+OPENHOSPITAL_CLASSPATH="${OPENHOSPITAL_HOME}/rsc":$OPENHOSPITAL_CLASSPATH
+OPENHOSPITAL_CLASSPATH="${OPENHOSPITAL_HOME}":$OPENHOSPITAL_CLASSPATH
 
 ARCH=$(uname -m)
 case $ARCH in
@@ -87,4 +89,8 @@ case $ARCH in
 		;;
 esac
 
-$JAVA_EXE -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OPENHOSPITAL_CLASSPATH:$CLASSPATH" org.isf.menu.gui.Menu "$@"
+######### OPENHOSPITAL STARTUP
+
+cd $OPENHOSPITAL_HOME
+
+$JAVA_BIN -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OPENHOSPITAL_CLASSPATH:$CLASSPATH" org.isf.menu.gui.Menu "$@"
