@@ -1402,7 +1402,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				return TimeTools.formatDateTime(thisBill.getDate(), "dd/MM/yy - HH:mm:ss");
 			}
 			if (c == ++index) {
-				int patID = thisBill.getPatient().getCode();
+				int patID = thisBill.getBillPatient().getCode();
 				return patID == 0 ? "" : String.valueOf(patID);
 				//return thisBill.getId();
 			}
