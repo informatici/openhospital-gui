@@ -32,8 +32,8 @@
 	<parameter name="City" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="Email" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="Telephone" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="fromdate" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="todate" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="fromdate" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="todate" isForPrompting="true" class="java.util.Date"/>
 	<queryString><![CDATA[SELECT DATE_FORMAT(DATE,'%Y-%m') AS DATE, 
 		SUM(BILLED) AS BILLED, 
         SUM(INCOME) AS INCOME,
@@ -53,7 +53,7 @@ SELECT 	BLL_ID,
 		BLL_BALANCE AS BALANCE
 FROM BILLS
 WHERE BLL_STATUS <> 'D' AND BLL_STATUS <> 'X'
-AND DATE(BLL_DATE) BETWEEN STR_TO_DATE($P{fromdate},'%d/%m/%Y') AND STR_TO_DATE($P{todate},'%d/%m/%Y')
+AND DATE(BLL_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 
 UNION
 
@@ -64,7 +64,7 @@ SELECT 	BLL_ID,
 		0 AS BALANCE
 FROM BILLPAYMENTS JOIN BILLS ON BLL_ID = BLP_ID_BILL
 WHERE BLL_STATUS <> 'D' AND BLL_STATUS <> 'X'
-AND DATE(BLP_DATE) BETWEEN STR_TO_DATE($P{fromdate},'%d/%m/%Y') AND STR_TO_DATE($P{todate},'%d/%m/%Y')
+AND DATE(BLP_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 
 ORDER BY BLL_DATE
 ) AS BILLS
@@ -179,7 +179,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new SimpleDateFormat("dd/MM/yyyy").parse($P{fromdate})]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{fromdate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -213,7 +213,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new SimpleDateFormat("dd/MM/yyyy").parse($P{todate})]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{todate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement

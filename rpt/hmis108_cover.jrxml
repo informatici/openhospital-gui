@@ -23,16 +23,16 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
-	<parameter name="fromdate" isForPrompting="true" class="java.lang.String">
+	<parameter name="fromdate" isForPrompting="true" class="java.util.Date">
 		<parameterDescription><![CDATA[starting date of period]]></parameterDescription>
 	</parameter>
-	<parameter name="todate" isForPrompting="true" class="java.lang.String">
+	<parameter name="todate" isForPrompting="true" class="java.util.Date">
 		<parameterDescription><![CDATA[ending date of period]]></parameterDescription>
 	</parameter>
 	<queryString><![CDATA[select wardid, ward, beds, admissions, deads, patient_days, 
     round(patient_days / admissions, 2) f,
-    round(patient_days / (DATEDIFF(str_to_date($P{todate},'%d/%m/%Y'),str_to_date($P{fromdate},'%d/%m/%Y')) + 1), 2) g,
-    round((patient_days / (DATEDIFF(str_to_date($P{todate},'%d/%m/%Y'),str_to_date($P{fromdate},'%d/%m/%Y')) + 1) * 100) / beds, 2) h
+    round(patient_days / (DATEDIFF(DATE($P{todate}),DATE($P{fromdate})) + 1), 2) g,
+    round((patient_days / (DATEDIFF(DATE($P{todate}),DATE($P{fromdate})) + 1) * 100) / beds, 2) h
 from (
 SELECT 	WRD_ID_A wardid, 
 	WRD_NAME ward, 
@@ -40,17 +40,17 @@ SELECT 	WRD_ID_A wardid,
 	(select count(*) 
           from ADMISSION a
           where a.ADM_WRD_ID_A = w.WRD_ID_A
-            and a.ADM_DATE_DIS between str_to_date($P{fromdate},'%d/%m/%Y') and str_to_date($P{todate},'%d/%m/%Y')
+            and DATE(a.ADM_DATE_DIS) between DATE($P{fromdate}) and DATE($P{todate})
             and a.ADM_DELETED='N') admissions,
     (select count(*) 
           from ADMISSION a
           where a.ADM_WRD_ID_A = w.WRD_ID_A
             and a.ADM_DIST_ID_A='D'
-            and a.ADM_DATE_DIS between str_to_date($P{fromdate},'%d/%m/%Y') and str_to_date($P{todate},'%d/%m/%Y')
+            and DATE(a.ADM_DATE_DIS) between DATE($P{fromdate}) and DATE($P{todate})
             and a.ADM_DELETED='N')  deads,
 	(select sum(DATEDIFF(a.ADM_DATE_DIS, a.ADM_DATE_ADM))
           from ADMISSION a
-          where a.ADM_DATE_DIS between str_to_date($P{fromdate},'%d/%m/%Y') and str_to_date($P{todate},'%d/%m/%Y')
+          where DATE(a.ADM_DATE_DIS) between DATE($P{fromdate}) and DATE($P{todate})
             and a.ADM_WRD_ID_A = w.WRD_ID_A
             and a.ADM_DELETED = 'N' )  patient_days
     FROM WARD w
@@ -67,12 +67,12 @@ SELECT 	WRD_ID_A wardid,
 	<field name="h" class="java.math.BigDecimal"/>
 
 	<variable name="month" class="java.lang.String" resetType="Report" calculation="Nothing">
-		<variableExpression><![CDATA[$P{fromdate}.substring( 3, 5 )]]></variableExpression>
-		<initialValueExpression><![CDATA[$P{fromdate}.substring( 3, 5 )]]></initialValueExpression>
+		<variableExpression><![CDATA[new SimpleDateFormat("MM").format($P{fromdate})]]></variableExpression>
+		<initialValueExpression><![CDATA[new SimpleDateFormat("MM").format($P{fromdate})]]></initialValueExpression>
 	</variable>
 	<variable name="year" class="java.lang.String" resetType="Report" calculation="Nothing">
-		<variableExpression><![CDATA[$P{fromdate}.substring( 6, 10 )]]></variableExpression>
-		<initialValueExpression><![CDATA[$P{fromdate}.substring( 6, 10 )]]></initialValueExpression>
+		<variableExpression><![CDATA[new SimpleDateFormat("yyyy").format($P{fromdate})]]></variableExpression>
+		<initialValueExpression><![CDATA[new SimpleDateFormat("yyyy").format($P{fromdate})]]></initialValueExpression>
 	</variable>
 	<variable name="SUM_beds_1" class="java.lang.Integer" resetType="Page" calculation="Sum">
 		<variableExpression><![CDATA[$F{beds}]]></variableExpression>
@@ -190,7 +190,7 @@ Average Occupancy
 					</textElement>
 				<text><![CDATA[HMIS 108:      INPATIENT MONTHLY REPORT ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="474"
 						y="4"
@@ -205,9 +205,9 @@ Average Occupancy
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fromdate}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{fromdate}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="474"
 						y="19"
@@ -222,7 +222,7 @@ Average Occupancy
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{todate}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{todate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement

@@ -23,35 +23,35 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
-	<parameter name="fromdate" isForPrompting="true" class="java.lang.String">
+	<parameter name="fromdate" isForPrompting="true" class="java.util.Date">
 		<parameterDescription><![CDATA[starting date]]></parameterDescription>
 	</parameter>
-	<parameter name="todate" isForPrompting="true" class="java.lang.String">
+	<parameter name="todate" isForPrompting="true" class="java.util.Date">
 		<parameterDescription><![CDATA[end date
 ]]></parameterDescription>
 	</parameter>
 	<queryString><![CDATA[SELECT concat(DIS_DCL_ID_A,' - ',DIS_DESC) description, DIS_DESC, 
    (select count(*) from ADMISSION a
     where a.ADM_IN_DIS_ID_A = d.dis_id_a
-    and ADM_DATE_ADM between STR_TO_DATE($P{fromdate},'%d/%m/%Y') and STR_TO_DATE($P{todate},'%d/%m/%Y')
+    and DATE(ADM_DATE_ADM) between DATE($P{fromdate}) and DATE($P{todate})
     and a.ADM_DELETED=0 ) ipd_admitted_diagin,
    (select count(*) from ADMISSION a
     where a.ADM_IN_DIS_ID_A = d.dis_id_a
-    and ADM_DATE_ADM between STR_TO_DATE($P{fromdate},'%d/%m/%Y') and STR_TO_DATE($P{todate},'%d/%m/%Y')
+    and DATE(ADM_DATE_ADM) between DATE($P{fromdate}) and DATE($P{todate})
     and a.ADM_DELETED=0
     and a.ADM_DIST_ID_A='D' ) ipd_dead_diagin,
    (select count(*) from ADMISSION a
     where a.ADM_OUT_DIS_ID_A = d.dis_id_a
-    and ADM_DATE_ADM between STR_TO_DATE($P{fromdate},'%d/%m/%Y') and STR_TO_DATE($P{todate},'%d/%m/%Y')
+    and DATE(ADM_DATE_ADM) between DATE($P{fromdate}) and DATE($P{todate})
     and a.ADM_DELETED=0 ) ipd_admitted_diagout,
    (select count(*) from ADMISSION a
     where a.ADM_OUT_DIS_ID_A = d.dis_id_a
-    and ADM_DATE_ADM between STR_TO_DATE($P{fromdate},'%d/%m/%Y') and STR_TO_DATE($P{todate},'%d/%m/%Y')
+    and DATE(ADM_DATE_ADM) between DATE($P{fromdate}) and DATE($P{todate})
     and a.ADM_DELETED=0
     and a.ADM_DIST_ID_A='D' ) ipd_dead_diagout,
    (select count(*) from OPD o
     where o.OPD_DIS_ID_A = d.dis_id_a
-    and o.OPD_DATE_VIS between STR_TO_DATE($P{fromdate},'%d/%m/%Y') and STR_TO_DATE($P{todate},'%d/%m/%Y')
+    and DATE(o.OPD_DATE_VIS) between DATE($P{fromdate}) and DATE($P{todate})
     and o.OPD_NEW_PAT = 'N') opd_newattendance
 FROM DISEASE d
 where d.DIS_DCL_ID_A in ('ND','OC')
@@ -81,37 +81,49 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						key="staticText-3"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
 					</textElement>
 				<text><![CDATA[HMIS 033 b: Weekly Epidemiological Surveillance]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="462"
 						y="15"
 						width="73"
 						height="14"
 						key="textField-1"/>
-					<box leftPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box leftPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{todate}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{todate}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="462"
 						y="1"
 						width="73"
 						height="14"
 						key="textField-2"/>
-					<box leftPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box leftPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{fromdate}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{fromdate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -123,7 +135,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						key="staticText-19"/>
-					<box leftPadding="2" rightPadding="2" topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
 					</textElement>
@@ -139,7 +155,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						key="staticText-20"/>
-					<box leftPadding="2" rightPadding="2" topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<box leftPadding="2" rightPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
 					</textElement>
@@ -160,7 +180,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="174"
 						height="22"
 						key="staticText-4"/>
-					<box leftPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box leftPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
@@ -173,7 +197,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="90"
 						height="11"
 						key="staticText-7"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
@@ -186,7 +214,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="90"
 						height="11"
 						key="staticText-8"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
@@ -199,7 +231,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="staticText-9"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
@@ -212,7 +248,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="staticText-10"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
@@ -225,7 +265,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="staticText-11"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
@@ -238,7 +282,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="staticText-12"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
@@ -251,7 +299,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="90"
 						height="11"
 						key="staticText-21"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
@@ -264,7 +316,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="staticText-22"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
@@ -277,7 +333,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="staticText-23"/>
-					<box topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
@@ -294,7 +354,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="174"
 						height="11"
 						key="textField"/>
-					<box leftPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box leftPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
@@ -307,7 +371,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="textField"/>
-					<box rightPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box rightPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
@@ -320,7 +388,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="textField"/>
-					<box rightPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box rightPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
@@ -333,7 +405,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="textField"/>
-					<box rightPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box rightPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
@@ -346,7 +422,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="textField"/>
-					<box rightPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box rightPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
@@ -359,7 +439,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="textField-9"/>
-					<box rightPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box rightPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
@@ -372,7 +456,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="45"
 						height="11"
 						key="textField-10"/>
-					<box rightPadding="2" topBorder="Thin" topBorderColor="#000000" leftBorder="Thin" leftBorderColor="#000000" rightBorder="Thin" rightBorderColor="#000000" bottomBorder="Thin" bottomBorderColor="#000000"/>
+					<box rightPadding="2">					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
@@ -393,7 +481,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="100"
 						height="14"
 						key="textField-3"/>
-					<box leftPadding="2" topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<box leftPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement>
 						<font size="8"/>
 					</textElement>
@@ -406,7 +498,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="150"
 						height="14"
 						key="textField-4"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
@@ -419,7 +515,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="43"
 						height="14"
 						key="textField-5"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement>
 						<font size="8"/>
 					</textElement>
@@ -436,7 +536,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="100"
 						height="12"
 						key="textField-6"/>
-					<box leftPadding="2" topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<box leftPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement>
 						<font size="8"/>
 					</textElement>
@@ -449,7 +553,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="150"
 						height="12"
 						key="textField-7"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
@@ -462,7 +570,11 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 						width="43"
 						height="12"
 						key="textField-8"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
 					<textElement>
 						<font size="8"/>
 					</textElement>

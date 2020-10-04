@@ -29,23 +29,23 @@
 	<parameter name="City" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="Email" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="Telephone" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="fromdate" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="todate" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="fromdate" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="todate" isForPrompting="true" class="java.util.Date"/>
 	<queryString><![CDATA[SELECT 	BLL_ID, 
 	BLL_DATE, 
 	BLL_UPDATE, 
 	CONCAT(BLL_ID_PAT, " - ", BLL_PAT_NAME) AS PAT_NAME, 
 	BLL_AMOUNT, 
-    	IF(DATE(BLL_DATE) BETWEEN $P{fromdate} AND $P{todate}, BLL_AMOUNT, 0) BILLED,
-	SUM(IF(DATE(BLP_DATE) BETWEEN $P{fromdate} AND $P{todate}, BLP_AMOUNT, 0)) INCOME,
-	IF(DATE(BLL_DATE) BETWEEN $P{fromdate} AND $P{todate}, BLL_BALANCE, 0) RECEIVABLES,
+    	IF(DATE(BLL_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate}), BLL_AMOUNT, 0) BILLED,
+	SUM(IF(DATE(BLP_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate}), BLP_AMOUNT, 0)) INCOME,
+	IF(DATE(BLL_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate}), BLL_BALANCE, 0) RECEIVABLES,
 	BLL_BALANCE, 
 	BLL_STATUS
 	FROM (
 		SELECT * FROM BILLS LEFT JOIN BILLPAYMENTS ON BLL_ID = BLP_ID_BILL 
 		WHERE BLL_STATUS <> 'D' AND BLL_STATUS <> 'X'
-		AND (DATE(BLP_DATE) BETWEEN $P{fromdate} AND $P{todate}
-			OR DATE(BLL_DATE) BETWEEN $P{fromdate} AND $P{todate})
+		AND (DATE(BLP_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
+			OR DATE(BLL_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate}))
 	) AS BILLS_PLUS_PAYMENTS
 
 GROUP BY BLL_ID
@@ -82,7 +82,7 @@ ORDER BY BLL_DATE]]></queryString>
 	</variable>
 
 		<group  name="BLL_DATE" >
-			<groupExpression><![CDATA[$F{BLL_DATE}.before( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($P{fromdate})) ? new Integer(0) : new Integer(1)]]></groupExpression>
+			<groupExpression><![CDATA[$F{BLL_DATE}.before($P{fromdate}) ? new Integer(0) : new Integer(1)]]></groupExpression>
 			<groupHeader>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -256,7 +256,7 @@ ORDER BY BLL_DATE]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new SimpleDateFormat("yyyy-MM-dd").parse($P{fromdate})]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{fromdate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -290,7 +290,7 @@ ORDER BY BLL_DATE]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new SimpleDateFormat("yyyy-MM-dd").parse($P{todate})]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{todate}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -502,8 +502,8 @@ ORDER BY BLL_DATE]]></queryString>
 					<textElement textAlignment="Center">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[($F{BLL_DATE}.after( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($P{fromdate}) ) &&
- $F{BLL_DATE}.before( new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($P{todate})) ? 
+				<textFieldExpression   class="java.lang.String"><![CDATA[($F{BLL_DATE}.after($P{fromdate}) &&
+ $F{BLL_DATE}.before($P{todate}) ? 
 new SimpleDateFormat("dd/MM/yy").format($F{BLL_DATE}) : 
 new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression>
 				</textField>
