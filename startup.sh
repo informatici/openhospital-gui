@@ -23,17 +23,21 @@
 
 ######## Environment check:
 
-# SET JAVA_HOME
+# SET JAVA_BIN or JAVA_HOME
+JAVA_BIN = `which java`
 #JAVA_HOME=/usr/lib/jvm/java-14-openjdk-amd64/
 
 # check if java home exists
 
+if [ -z $JAVA_BIN ]; then
+  echo "Warning - JAVA_BIN not found. Please set it up properly."
 if [ -z $JAVA_HOME ]; then
   echo "Error - JAVA_HOME not found. Please set it up properly."
   exit
+  fi
+  JAVA_BIN=$JAVA_HOME/bin/java
 fi
 
-JAVA_BIN=$JAVA_HOME/bin/java
 
 ######## OPENHOSPITAL Configuration
 # OPENHOSPITAL_HOME is the directory where OpenHospital files are located
