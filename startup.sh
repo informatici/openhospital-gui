@@ -35,9 +35,9 @@ if [ -z $JAVA_HOME ]; then
   echo "Error - JAVA_HOME not found. Please set it up properly."
   exit
   fi
+  # set JAVA_BIN
   JAVA_BIN=$JAVA_HOME/bin/java
 fi
-
 
 ######## OPENHOSPITAL Configuration
 # OPENHOSPITAL_HOME is the directory where OpenHospital files are located
@@ -48,7 +48,7 @@ if [ -z $OPENHOSPITAL_HOME ]; then
   OPENHOSPITAL_HOME=$PWD
 fi
 
-####### DO NOT EDIT BELOW THIS LINE #######
+######################## DO NOT EDIT BELOW THIS LINE ########################
 
 DIRLIBS=${OPENHOSPITAL_HOME}/bin/*.jar
 for i in ${DIRLIBS}
@@ -100,6 +100,4 @@ esac
 
 ######### OPENHOSPITAL STARTUP
 
-cd $OPENHOSPITAL_HOME
-
-$JAVA_BIN -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OPENHOSPITAL_CLASSPATH" org.isf.menu.gui.Menu "$@"
+cd $OPENHOSPITAL_HOME&& $JAVA_BIN -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OPENHOSPITAL_CLASSPATH" org.isf.menu.gui.Menu "$@"
