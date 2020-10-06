@@ -39,7 +39,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -70,6 +69,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.EventListenerList;
 
+import org.isf.admission.gui.validation.OperationRowValidator;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.admission.model.AdmittedPatient;
@@ -91,7 +91,6 @@ import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.operation.gui.OperationRowAdm;
-import org.isf.operation.model.OperationRow;
 import org.isf.patient.gui.PatientSummary;
 import org.isf.patient.model.Patient;
 import org.isf.pregtreattype.manager.PregnantTreatmentTypeBrowserManager;
@@ -99,7 +98,6 @@ import org.isf.pregtreattype.model.PregnantTreatmentType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
-import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ShadowBorder;
@@ -188,26 +186,19 @@ public class AdmissionBrowser extends ModalJFrame {
 			((AdmissionListener) listeners[i]).admissionUpdated(event);
 	}
 
+	private final OperationRowValidator operationRowValidator = new OperationRowValidator();
+    private final DiseaseFinder diseaseFinder = new DiseaseFinder();
+
 	private Patient patient = null;
-
 	private boolean editing = false;
-
 	private Admission admission = null;
-
 	private PatientSummary ps = null;
-	
 	private JTextArea textArea = null;
-
 	private JTabbedPane jTabbedPaneAdmission;
-
 	private JPanel jPanelAdmission;
-
 	private JPanel jPanelOperation;
-
 	private JPanel jPanelDelivery;
-
 	private int pregnancyTabIndex;
-	
 	private JPanel jContentPane = null;
 	// enable is if patient is female
 	private boolean enablePregnancy = false;
@@ -218,12 +209,10 @@ public class AdmissionBrowser extends ModalJFrame {
 	private VoLimitedTextField weightField = null;
 	private CustomJDateChooser visitDateFieldCal = null; // Calendar
 	private JComboBox treatmTypeBox = null;
-
 	private final int preferredWidthDates = 110;
 	private final int preferredWidthDiagnosis = 550;
 	private final int preferredWidthTypes = 220;
 	private final int preferredHeightLine = 24;
-
 	private GregorianCalendar deliveryDate = null;
 	private CustomJDateChooser deliveryDateFieldCal = null;
 	private JComboBox deliveryTypeBox = null;
@@ -237,7 +226,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private CustomJDateChooser ctrl1DateFieldCal = null;
 	private CustomJDateChooser ctrl2DateFieldCal = null;
 	private CustomJDateChooser abortDateFieldCal = null;
-	
+
 	private JComboBox wardBox;
 	private ArrayList<Ward> wardList = null;
 	// save value during a swith
@@ -911,61 +900,59 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 				}
 			}
-			wardBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					// set yProg
-					if (wardBox.getSelectedIndex() == 0) {
-						yProgTextField.setText("");
-						return;
+			wardBox.addActionListener(e -> {
+				// set yProg
+				if (wardBox.getSelectedIndex() == 0) {
+					yProgTextField.setText("");
+					return;
+				} else {
+					String wardId = ((Ward) wardBox.getSelectedItem()).getCode();
+					if (editing && wardId.equalsIgnoreCase(admission.getWard().getCode())) {
+						yProgTextField.setText("" + admission.getYProg());
 					} else {
-						String wardId = ((Ward) wardBox.getSelectedItem()).getCode();
-						if (editing && wardId.equalsIgnoreCase(admission.getWard().getCode())) {
-							yProgTextField.setText("" + admission.getYProg());
-						} else {
-							int nextProg = 1;
-							try {
-								nextProg = admissionManager.getNextYProg(wardId);
-							}catch(OHServiceException ex){
-                                OHServiceExceptionUtil.showMessages(ex);
-							}
-							yProgTextField.setText("" + nextProg);
-
-							// get default selected warn default beds number
-							int nBeds = (((Ward) wardBox.getSelectedItem()).getBeds()).intValue();
-							int usedBeds = 0;
-							try {
-								usedBeds = admissionManager.getUsedWardBed(wardId);
-							}catch(OHServiceException ex){
-                                OHServiceExceptionUtil.showMessages(ex);
-							}
-							int freeBeds = nBeds - usedBeds;
-							if (freeBeds <= 0)
-								JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.wardwithnobedsavailable"));
+						int nextProg = 1;
+						try {
+							nextProg = admissionManager.getNextYProg(wardId);
+						}catch(OHServiceException ex){
+							OHServiceExceptionUtil.showMessages(ex);
 						}
+						yProgTextField.setText("" + nextProg);
+
+						// get default selected warn default beds number
+						int nBeds = (((Ward) wardBox.getSelectedItem()).getBeds()).intValue();
+						int usedBeds = 0;
+						try {
+							usedBeds = admissionManager.getUsedWardBed(wardId);
+						}catch(OHServiceException ex){
+							OHServiceExceptionUtil.showMessages(ex);
+						}
+						int freeBeds = nBeds - usedBeds;
+						if (freeBeds <= 0)
+							JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.wardwithnobedsavailable"));
 					}
-
-					// switch panel
-					if (((Ward) wardBox.getSelectedItem()).getCode().equalsIgnoreCase("M")) {
-						if (!viewingPregnancy) {
-							saveWard = (Ward) wardBox.getSelectedItem();
-							saveYProg = yProgTextField.getText();
-							viewingPregnancy = true;
-							jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, true);
-							validate();
-							repaint();
-						}
-					} else {
-						if (viewingPregnancy) {
-							saveWard = (Ward) wardBox.getSelectedItem();
-							saveYProg = yProgTextField.getText();
-							viewingPregnancy = false;
-							jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, false);
-							validate();
-							repaint();
-						}
-					}
-
 				}
+
+				// switch panel
+				if (((Ward) wardBox.getSelectedItem()).getCode().equalsIgnoreCase("M")) {
+					if (!viewingPregnancy) {
+						saveWard = (Ward) wardBox.getSelectedItem();
+						saveYProg = yProgTextField.getText();
+						viewingPregnancy = true;
+						jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, true);
+						validate();
+						repaint();
+					}
+				} else {
+					if (viewingPregnancy) {
+						saveWard = (Ward) wardBox.getSelectedItem();
+						saveYProg = yProgTextField.getText();
+						viewingPregnancy = false;
+						jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, false);
+						validate();
+						repaint();
+					}
+				}
+
 			});
 			
 			wardPanel.add(wardBox);
@@ -989,18 +976,10 @@ public class AdmissionBrowser extends ModalJFrame {
                     Disease diseaseIn = admission.getDiseaseIn();
                     diseaseInBox.removeAllItems();
                     diseaseInBox.addItem("");
-                    for (Disease elem : diseaseInList) {
-                            diseaseInBox.addItem(elem);
-
-                            //search for saved DiseaseIn
-                            if (editing && found == null && diseaseIn != null && diseaseIn.getCode().equalsIgnoreCase(elem.getCode())) {
-                                    diseaseInBox.setSelectedItem(elem);
-                                    found = elem;
-                            }
-                    }
+			found = findAndSelectDisease(found, diseaseIn, diseaseInList, diseaseInBox);
 
 
-                    if (editing && found == null && diseaseIn != null) {
+			if (editing && found == null && diseaseIn != null) {
 
                             //Not found: search among all diseases
                             try {
@@ -1039,24 +1018,22 @@ public class AdmissionBrowser extends ModalJFrame {
 
                     searchButton = new JButton("");
                     diseaseInPanel.add(searchButton);
-                    searchButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent arg0) {
-                            diseaseInBox.removeAllItems();
-                            diseaseInBox.addItem("");
-                            for(Disease disease: 
-                                    getSearchDiagnosisResults(searchDiseasetextField.getText(), diseaseInList)) {
-                                diseaseInBox.addItem(disease);
-                            }
-                            
-                            if(diseaseInBox.getItemCount() >= 2){
-                                diseaseInBox.setSelectedIndex(1);
-                            }
-                            diseaseInBox.requestFocus();
-                            if(diseaseInBox.getItemCount() > 2){
-                                diseaseInBox.showPopup();
-                            }
-                        }
-                    });
+                    searchButton.addActionListener(arg0 -> {
+						diseaseInBox.removeAllItems();
+						diseaseInBox.addItem("");
+						for(Disease disease:
+								diseaseFinder.getSearchDiagnosisResults(searchDiseasetextField.getText(), diseaseInList)) {
+							diseaseInBox.addItem(disease);
+						}
+
+						if(diseaseInBox.getItemCount() >= 2){
+							diseaseInBox.setSelectedIndex(1);
+						}
+						diseaseInBox.requestFocus();
+						if(diseaseInBox.getItemCount() > 2){
+							diseaseInBox.showPopup();
+						}
+					});
                     searchButton.setPreferredSize(new Dimension(20, 20));
                     searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 
@@ -1187,18 +1164,9 @@ public class AdmissionBrowser extends ModalJFrame {
                     Disease diseaseOut1 = admission.getDiseaseOut1();
                     diseaseOut1Box.removeAllItems();
                     diseaseOut1Box.addItem("");
-                    for (Disease elem : diseaseOutList) {
-                            diseaseOut1Box.addItem(elem);
+			found = findAndSelectDisease(found, diseaseOut1, diseaseOutList, diseaseOut1Box);
 
-                            // search for saved diseaseOut1
-                            if (editing && found == null && diseaseOut1 != null
-                                            && diseaseOut1.getCode().equalsIgnoreCase(elem.getCode())) {
-                                    diseaseOut1Box.setSelectedItem(elem);
-                                    found = elem;
-                            }
-                    }
-
-                    if (editing && found == null && diseaseOut1 != null) {
+			if (editing && found == null && diseaseOut1 != null) {
 
                             // Not found: search among all diseases
                             try {
@@ -1244,7 +1212,7 @@ public class AdmissionBrowser extends ModalJFrame {
                             diseaseOut1Box.removeAllItems();
                             diseaseOut1Box.addItem("");
                             for(Disease disease: 
-                                    getSearchDiagnosisResults(searchDiseaseOut1textField.getText(), diseaseOutList)) {
+                                    diseaseFinder.getSearchDiagnosisResults(searchDiseaseOut1textField.getText(), diseaseOutList)) {
                                 diseaseOut1Box.addItem(disease);
                             }
                             
@@ -1285,18 +1253,9 @@ public class AdmissionBrowser extends ModalJFrame {
                     Disease diseaseOut2 = admission.getDiseaseOut2();
                     diseaseOut2Box.removeAllItems();
                     diseaseOut2Box.addItem("");
-                    for (Disease elem : diseaseOutList) {
-                            diseaseOut2Box.addItem(elem);
+			found = findAndSelectDisease(found, diseaseOut2, diseaseOutList, diseaseOut2Box);
 
-                            // Search for saved disaseOut2
-                            if (editing && found == null && diseaseOut2 != null
-                                            && diseaseOut2.getCode().equalsIgnoreCase(elem.getCode())) {
-                                    diseaseOut2Box.setSelectedItem(elem);
-                                    found = elem;
-                            }
-                    }
-
-                    if (editing && found == null && diseaseOut2 != null) {
+			if (editing && found == null && diseaseOut2 != null) {
 
                             // Not found: search among all diseases
                             try {
@@ -1342,7 +1301,7 @@ public class AdmissionBrowser extends ModalJFrame {
                             diseaseOut2Box.removeAllItems();
                             diseaseOut2Box.addItem("");
                             for(Disease disease: 
-                                    getSearchDiagnosisResults(searchDiseaseOut2textField.getText(), diseaseOutList)) {
+                                    diseaseFinder.getSearchDiagnosisResults(searchDiseaseOut2textField.getText(), diseaseOutList)) {
                                 diseaseOut2Box.addItem(disease);
                             }
                             
@@ -1382,18 +1341,10 @@ public class AdmissionBrowser extends ModalJFrame {
                     Disease diseaseOut3 = admission.getDiseaseOut3();
                     diseaseOut3Box.removeAllItems();
                     diseaseOut3Box.addItem("");
-                    for (Disease elem : diseaseOutList) {
-                            diseaseOut3Box.addItem(elem);
+                    // TODO: populate diseaseList
+			found = findAndSelectDisease(found, diseaseOut3, diseaseOutList, diseaseOut3Box);
 
-                            // Search for saved diseaseOut3
-                            if (editing && found == null && diseaseOut3 != null
-                                            && diseaseOut3.getCode().equalsIgnoreCase(elem.getCode())) {
-                                    diseaseOut3Box.setSelectedItem(elem);
-                                    found = elem;
-                            }
-                    }
-
-                    if (editing && found == null && diseaseOut3 != null) {
+			if (editing && found == null && diseaseOut3 != null) {
 
                             // Not found: search among all diseases
                             ArrayList<Disease> diseaseAllList = null;
@@ -1440,7 +1391,7 @@ public class AdmissionBrowser extends ModalJFrame {
                             diseaseOut3Box.removeAllItems();
                             diseaseOut3Box.addItem("");
                             for(Disease disease: 
-                                    getSearchDiagnosisResults(searchDiseaseOut3textField.getText(), diseaseOutList)) {
+                                    diseaseFinder.getSearchDiagnosisResults(searchDiseaseOut3textField.getText(), diseaseOutList)) {
                                 diseaseOut3Box.addItem(disease);
                             }
                             
@@ -1460,6 +1411,20 @@ public class AdmissionBrowser extends ModalJFrame {
                     diseaseOut3Panel.add(diseaseOut3Box);
                 }
 		return diseaseOut3Panel;
+	}
+
+	private Disease findAndSelectDisease(Disease found, Disease diseaseOut3, ArrayList<Disease> diseaseOutList, JComboBox diseaseBox) {
+		for (Disease elem : diseaseOutList) {
+			diseaseBox.addItem(elem);
+
+			// Search for saved diseaseOut3
+			if (editing && found == null && diseaseOut3 != null
+					&& diseaseOut3.getCode().equalsIgnoreCase(elem.getCode())) {
+				diseaseBox.setSelectedItem(elem); // if present set selected item in parent class
+				found = elem;
+			}
+		}
+		return found;
 	}
 
 
@@ -1742,30 +1707,6 @@ public class AdmissionBrowser extends ModalJFrame {
                         admission.setDisDate(null);
                     }
 
-					// get operation ( it can be null)
-//						if (operationBox.getSelectedIndex() == 0) {
-//							admission.setOperation(null);
-//						} else {
-//							admission.setOperation(operationList.get(operationBox.getSelectedIndex() - 1));
-//						}
-//
-//						// get operation date (may be null)
-//                                                if(operationDateFieldCal.getDate() != null) {
-//                                                    operationDate = new GregorianCalendar();
-//                                                    operationDate.setTime(operationDateFieldCal.getDate());
-//                                                    admission.setOpDate(operationDate);
-//                                                }else{
-//                                                    admission.setOpDate(null);
-//                                                }
-//
-//						// get operation result (can be null)
-//						if (operationResultRadioN.isSelected()) {
-//							admission.setOpResult("N");
-//						} else if (operationResultRadioP.isSelected()) {
-//							admission.setOpResult("P");
-//						} else {
-//							admission.setOpResult(null);
-//						}
 
 		// get discharge type (it can be null)
 		// if isDischarge, null value not allowed
@@ -1794,15 +1735,6 @@ public class AdmissionBrowser extends ModalJFrame {
 					} else {
 						admission.setNote(textArea.getText());
 					}
-
-					// get transfusional unit (it can be null)
-//						try {
-//								float f = (Float) trsfUnitField.getValue();
-//								admission.setTransUnit(new Float(f));
-//						} catch (Exception ex) {
-//							JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.pleaseinsertavalidunitvalue"));
-//							return;
-//						}
 
 					// fields for pregnancy status
 					if (isPregnancy) {
@@ -1908,16 +1840,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 					// ready to save...
 					if (!editing && !isDischarge) {
-                                                /**** operation date control ****/
-//						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
-//						{
-//							JOptionPane.showMessageDialog(AdmissionBrowser.this,
-//                                                                            MessageBundle.getMessage("angal.admission.check.operationdate"), MessageBundle.getMessage("angal.hospital"),
-//										JOptionPane.PLAIN_MESSAGE);
-//				  		    return;
-//						}	
-					    /*********************************/
-						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
+						List<OHExceptionMessage> errors = operationRowValidator.checkAllOperationRowDate(operationad.getOprowData(), admission);
 						if(!errors.isEmpty()) {
 							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 						} else {
@@ -1940,15 +1863,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						}
 						
 					} else if (!editing && isDischarge) {
-                                                /**** operation date control ****/
-//						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
-//						{								
-//					  		  JOptionPane.showMessageDialog(AdmissionBrowser.this,
-//                                                                                MessageBundle.getMessage("angal.admission.check.operationdate") , MessageBundle.getMessage("angal.hospital"),
-//											JOptionPane.PLAIN_MESSAGE);
-//					  		  return;						    
-//						}
-						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
+						List<OHExceptionMessage> errors = operationRowValidator.checkAllOperationRowDate(operationad.getOprowData(), admission);
 						if(!errors.isEmpty()) {
 							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 						} else {
@@ -1964,15 +1879,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						}
 						
 					} else {
-                                                /**** operation date control ****/
-//						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
-//						{
-//							JOptionPane.showMessageDialog(AdmissionBrowser.this,
-//                                                                            MessageBundle.getMessage("angal.admission.check.operationdate"), MessageBundle.getMessage("angal.hospital"),
-//										JOptionPane.PLAIN_MESSAGE);
-//				  		    return;
-//						}
-						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
+						List<OHExceptionMessage> errors = operationRowValidator.checkAllOperationRowDate(operationad.getOprowData(), admission);
 						if(!errors.isEmpty()) {
 							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 						} else {
@@ -2004,65 +1911,4 @@ public class AdmissionBrowser extends ModalJFrame {
 		return saveButton;
 	}
 
-	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
-        String query = s.trim();
-        ArrayList<Disease> results = new ArrayList<Disease>();
-        for (Disease disease : diseaseList) {
-            if(!query.equals("")) {
-		String[] patterns = query.split(" ");
-		String name = disease.getDescription().toLowerCase();
-		boolean patternFound = false;
-                for (String pattern : patterns) {
-                    if (name.contains(pattern.toLowerCase())) {
-                        patternFound = true;
-                        //It is sufficient that only one pattern matches the query
-                        break;
-                    }
-                }
-		if (patternFound){
-                    results.add(disease);
-                }
-            } else {
-                results.add(disease);
-            }
-        }		
-	return results;
-    }    
-        
-    @SuppressWarnings("deprecation")
-	public List<OHExceptionMessage> checkAllOperationRowDate(List<OperationRow> list, Admission admission){
-    	DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));
-    	List<OHExceptionMessage> errors = new ArrayList<OHExceptionMessage>();
-		Date beginDate,endDate;
-		if(admission.getAdmDate()!=null)beginDate=admission.getAdmDate().getTime();else beginDate=null;
-		if(admission.getDisDate()!=null)endDate=admission.getDisDate().getTime();else endDate=null;
-		for (org.isf.operation.model.OperationRow opRow : list) {
-			Date currentRowDate = opRow.getOpDate().getTime();
-			/**
-			 * prevent for fails due to time 
-			 */
-			currentRowDate.setHours(23);
-			currentRowDate.setMinutes(59);
-			currentRowDate.setSeconds(59);
-			
-			if((beginDate!=null)&&(endDate!=null)){
-				if((currentRowDate.before(beginDate))||(currentRowDate.after(endDate))){
-					errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"), 
-							MessageBundle.getMessage("angal.admission.invalidoperationdate") + " " 
-							+ MessageBundle.getMessage("angal.admission.theoperationdatebetween") + " "
-                            + currentDateFormat.format(beginDate) + " " + MessageBundle.getMessage("angal.admission.and") + " " 
-							+ currentDateFormat.format(endDate), OHSeverityLevel.ERROR));
-				}
-			}
-			if((beginDate!=null)&&(endDate==null)){
-				if(currentRowDate.before(beginDate)){
-					errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"), 
-							MessageBundle.getMessage("angal.admission.invalidoperationdate") + " " 
-							+ MessageBundle.getMessage("angal.admission.theoperationdatenewerthan") + " "
-                            + currentDateFormat.format(beginDate), OHSeverityLevel.ERROR));
-				}
-			}
-		}
-		return errors;
-	}
 }// class
