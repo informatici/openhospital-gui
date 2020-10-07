@@ -1,41 +1,35 @@
-# OpenHospital-gui
+# Open Hospital - GUI
 [![Java CI](https://github.com/informatici/openhospital-gui/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/informatici/openhospital-gui/actions?query=workflow%3A%22Java+CI+with+Maven%22)
 
-**OpenHospital-core**
-You need the openhospital-core in order to run the gui.
+This is the GUI component of [Open Hospital][openhospital]: it contains a graphical user interface (GUI) made with Java Swing.  
+This project depends on the [Core component][openhospital-core] for the business logic and the data abstraction layer.  
+An alternative user interface based on React and currently still work-in-progress is available [here][openhospital-ui].
 
-* clone [openhospital-core](https://github.com/informatici/openhospital-core)
-* follow the instructions in the related README.md
+## How to build
 
-**How to build with Maven:**
+To build this project you'll need Java JDK 8+ and Maven. 
+Additionally, you'll need to build and install locally the [Core component][openhospital-core] of Open Hospital.
+Once you do that, to build this project just issue:
 
-    mvn clean install
+    mvn package
     
-**How to create the DataBase**:
+To run the tests simply issue:
 
-You need a local (or remote) MySQL server where to run the script in mysql/db/ folder
+    mvn test
+    
+## How to launch Open Hospital
 
-    create_all_en.sql
-	
-For remote MySQL server you need to change IP (localost) and PORT (3306) in rsc/applicationContext.properties:
+To launch Open Hospital GUI, use the scripts `startup.sh` (on Linux) or `startup.cmd` (on Windows).  
+You will need a MySQL database running locally (e.g. the Docker container available in the Core project),
+or any similar SQL database. Before running the application, you should change 
+`rsc/database.properties` accordingly.
 
-    <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/oh" />
+For futher information, please refer to the Admin and User manuals in the [Doc project][openhospital-doc].
 
-**With docker compose**
+## How to contribute
 
-Simply run (it will run on localhost:3306):
-
-    docker-compose up 
-
-**How to launch the software**:
-
-Use scripts startup.sh (Linux) or startup.cmd (Windows)
-
-**Other info**
-
-Please read Admin and User manuals in doc/ folder
-
-# How to contribute
+You can find the contribution guidelines in the [Open Hospital wiki][contribution-guide].  
+A list of open issues is available on [Jira][jira].
 
 ## Code style
 
@@ -81,3 +75,11 @@ For Eclipse the process requires loading the formatting style and the import ord
 Please read the OpenHospital [Wiki](https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines)
 
 See the Open Issues on [Jira](https://openhospital.atlassian.net/issues/)
+
+ [openhospital]: https://www.open-hospital.org/
+ [openhospital-core]: https://github.com/informatici/openhospital-core
+ [openhospital-ui]: https://github.com/informatici/openhospital-ui
+ [openhospital-doc]: https://github.com/informatici/openhospital-doc
+ [contribution-guide]: https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines
+ [jira]: https://openhospital.atlassian.net/issues/
+ [database.prop]: https://github.com/informatici/openhospital-core/blob/develop/src/test/resources/database.properties
