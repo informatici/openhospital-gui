@@ -33,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -67,6 +68,7 @@ import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
+import org.isf.utils.time.Converters;
 import org.joda.time.DateTime;
 
 /**
@@ -332,7 +334,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 			return;
 		}
-		if ((myAdmission != null) && (myAdmission.getAdmDate().after(this.textDate.getDate()))) {
+		if ((myAdmission != null) && (myAdmission.getAdmDate().isAfter(Converters.convertToLocalDateTime(this.textDate.getDate())))) {
 			JOptionPane.showMessageDialog(OperationRowAdm.this,
 					MessageBundle.getMessage("angal.operationrowedit.warningdateafter"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
@@ -340,9 +342,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		}
 
 		OperationRow operationRow = new OperationRow();
-		GregorianCalendar dateop = new GregorianCalendar();
-		dateop.setTime(this.textDate.getDate());
-		operationRow.setOpDate(dateop);
+		operationRow.setOpDate(Converters.convertToLocalDateTime(this.textDate.getDate()));
 		if (this.comboResult.getSelectedItem() != null)
 			operationRow.setOpResult(this.comboResult.getSelectedItem().toString());
 		else
@@ -365,8 +365,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			tableData.setModel(modelOhOpeRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
-			dateop.setTime(this.textDate.getDate());
-			opeInter.setOpDate(dateop);
+			opeInter.setOpDate(Converters.convertToLocalDateTime(this.textDate.getDate()));
 			opeInter.setOpResult(this.comboResult.getSelectedItem().toString());
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
@@ -406,7 +405,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		}
 
 		if (opeRow != null) {
-			textDate.setDate(opeRow.getOpDate().getTime());
+			textDate.setDate(Converters.toDate(opeRow.getOpDate()));
 			textAreaRemark.setText(opeRow.getRemarks());
 			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
 		}

@@ -22,8 +22,11 @@
 package org.isf.utils.time;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Optional;
 
 import org.joda.time.DateTime;
 
@@ -41,6 +44,17 @@ public class Converters {
         if (datetime == null)
             return null;
         return convertToSQLDate(datetime.getTime());
+    }
+
+    public static LocalDateTime convertToLocalDateTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static Date toDate(LocalDateTime localDateTime) {
+        return Optional.ofNullable(localDateTime)
+                .map(ldt -> ldt.atZone(ZoneId.systemDefault()).toInstant())
+                .map(Date::from)
+                .orElse(null);
     }
 
     /**
