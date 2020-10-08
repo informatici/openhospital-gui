@@ -97,7 +97,6 @@ import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
-import org.joda.time.DateTime;
 
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
@@ -910,8 +909,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				public void actionPerformed(ActionEvent e) {
 					dateFrom = dateToday0;
 					dateTo = dateToday24;
-					jCalendarFrom.setDateFromLocalDateTime(dateFrom);
-					jCalendarTo.setDateFromLocalDateTime(dateTo);
+					jCalendarFrom.setDate(dateFrom);
+					jCalendarTo.setDate(dateTo);
 					
 					jButtonToday.setEnabled(false);
 				}
@@ -937,8 +936,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							.withMonth(month)
 							.withDayOfMonth(YearMonth.of(dateFrom.getYear(), month).lengthOfMonth())
 							.atStartOfDay();
-					jCalendarFrom.setDateFromLocalDateTime(dateFrom);
-					jCalendarTo.setDateFromLocalDateTime(dateTo);
+					jCalendarFrom.setDate(dateFrom);
+					jCalendarTo.setDate(dateTo);
 				}
 			});
 		}
@@ -962,8 +961,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							.withMonth(12)
 							.withDayOfMonth(YearMonth.of(LocalDate.now().getYear(), month).lengthOfMonth())
 							.atStartOfDay();
-					jCalendarFrom.setDateFromLocalDateTime(dateFrom);
-					jCalendarTo.setDateFromLocalDateTime(dateTo);
+					jCalendarFrom.setDate(dateFrom);
+					jCalendarTo.setDate(dateTo);
 				}
 			});
 		}

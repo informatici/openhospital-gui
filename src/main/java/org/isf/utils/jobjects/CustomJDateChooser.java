@@ -145,7 +145,7 @@ public class CustomJDateChooser extends JDateChooser {
 		this.calendarButton.setMnemonic(keyChar);
 	}
 
-	public void setDateFromLocalDateTime(LocalDateTime localDate) {
+	public void setDate(LocalDateTime localDate) {
 		setDate(Converters.toDate(localDate));
 	}
 

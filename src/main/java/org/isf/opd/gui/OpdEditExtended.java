@@ -73,6 +73,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -130,6 +131,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 import org.isf.visits.manager.VisitManager;
@@ -219,7 +221,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JComboBox diseaseBox3 = null;
 	private JLabel jLabelAge = null;
 	private JLabel jLabelSex = null;
-	private GregorianCalendar visitDateOpd = null;
+	private LocalDateTime visitDateOpd = null;
 	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
 	private CustomJDateChooser OpdDateFieldCal = null; 
 	private JButton okButton = null;
@@ -311,8 +313,8 @@ public class OpdEditExtended extends ModalJFrame implements
      * Opd next visit fields
      */
     private JLabel nextVisitLabel;
-    private JDateChooser opdNextVisitDate;
-    private GregorianCalendar nextDateBackup; //TODO: Workaround for update, a better solution must be found here
+    private CustomJDateChooser opdNextVisitDate;
+    private LocalDateTime nextDateBackup; //TODO: Workaround for update, a better solution must be found here
 	/**
 	 * This method initializes 
 	 * @wbp.parser.constructor
@@ -447,7 +449,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		}
 		
 		StringBuilder lastOPDDisease = new StringBuilder();
-		lastOPDDisease.append(MessageBundle.getMessage("angal.opd.on")).append(" ").append(currentDateFormat.format(lastOpd.getVisitDate().getTime())).append(" - ");
+		lastOPDDisease.append(MessageBundle.getMessage("angal.opd.on")).append(" ").append(currentDateFormat.format(lastOpd.getVisitDate())).append(" - ");
 		if (lastOPDDisease1 != null) {
 			setAttendance();
 			lastOPDDisease.append(lastOPDDisease1.getDescription());
@@ -906,24 +908,22 @@ public class OpdEditExtended extends ModalJFrame implements
 		if (OpdDateFieldCal == null) {
 			String d = "";
 	
-			java.util.Date myDate = null;
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDateGregorian()==null) {
-					visitDateOpd = new GregorianCalendar();
+					visitDateOpd = LocalDateTime.now();
 				}				
 				else {
-					visitDateOpd=RememberDates.getLastOpdVisitDateGregorian();
+					visitDateOpd = Converters.convertToLocalDateTime(RememberDates.getLastOpdVisitDateGregorian());
 				}
 			}
 			 else {
-				visitDateOpd  = opd.getVisitDate();
+				visitDateOpd  = opd.getVisitDate().atStartOfDay();
 			}
 			if (visitDateOpd==null) {
 				d="";
 			}
 			else {
-				myDate = visitDateOpd.getTime();
-				d = currentDateFormat.format(myDate);
+				d = currentDateFormat.format(visitDateOpd);
 			}
 			try {
 				OpdDateFieldCal = new CustomJDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
@@ -1689,16 +1689,14 @@ public class OpdEditExtended extends ModalJFrame implements
 					}
 
 					if (OpdDateFieldCal.getDate() != null) {
-						visitDateOpd = new GregorianCalendar();
-						visitDateOpd.setTime(OpdDateFieldCal.getDate());
-						opd.setVisitDate(visitDateOpd);
+						visitDateOpd = OpdDateFieldCal.getLocalDateTime();
+						opd.setVisitDate(visitDateOpd.toLocalDate());
 					} else {
 						opd.setVisitDate(null);
 					}
 
 					boolean scheduleVisit = false;
-					Date now = new Date();
-					Date nextVisit = opdNextVisitDate.getDate(); // FIXME:
+					LocalDateTime nextVisit = opdNextVisitDate.getLocalDateTime(); // FIXME:
 																	// despite
 																	// the
 																	// presentation
@@ -1710,14 +1708,12 @@ public class OpdEditExtended extends ModalJFrame implements
 																	// insert =
 																	// true
 					if (nextVisit != null) {
-						if (nextVisit.compareTo(OpdDateFieldCal.getDate()) < 0) {
+						if (nextVisit.compareTo(OpdDateFieldCal.getLocalDateTime()) < 0) {
 							JOptionPane.showMessageDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.opd.notpasseddate"), "",
 											JOptionPane.INFORMATION_MESSAGE);
 							return;
 						}
-						GregorianCalendar gregNextVisit = new GregorianCalendar();
-						gregNextVisit.setTime(nextVisit);
-						opd.setNextVisitDate(gregNextVisit);
+						opd.setNextVisitDate(nextVisit);
 						scheduleVisit = true;
 					} else {
 						opd.setNextVisitDate(null);
@@ -1737,7 +1733,7 @@ public class OpdEditExtended extends ModalJFrame implements
 						if (insert) { // Insert
 							opd.setProgYear(Integer.parseInt(jOpdNumField.getText()));
 							// remember for later use
-							RememberDates.setLastOpdVisitDate(visitDateOpd);
+							RememberDates.setLastOpdVisitDate(Converters.toCalendar(visitDateOpd));
 							boolean result = opdManager.newOpd(opd);
 							if (result) {
 								if (scheduleVisit) {
@@ -1928,12 +1924,11 @@ public class OpdEditExtended extends ModalJFrame implements
 	
 	private JDateChooser getOpdNextVisitDate() {
 		if (opdNextVisitDate == null) {
-			opdNextVisitDate = new JDateChooser((Date) null, "dd/MM/yy");
+			opdNextVisitDate = new CustomJDateChooser();
 			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			opdNextVisitDate.setDateFormatString("dd/MM/yy");
 
-			GregorianCalendar nextDate = null;
-			Date myDate;
+			LocalDateTime nextDate = null;
 			String d = "";
 			if (!insert) {
 				nextDate = opd.getNextVisitDate();
@@ -1941,18 +1936,16 @@ public class OpdEditExtended extends ModalJFrame implements
 			if (nextDate == null) {
 				d = "";
 			} else {
-				myDate = nextDate.getTime();
-				d = currentDateFormat.format(myDate);
-				nextDateBackup = new GregorianCalendar();
-				nextDateBackup.setTime(nextDate.getTime()); // in case of changing
+				d = currentDateFormat.format(nextDate);
+				nextDateBackup = nextDate; // in case of changing
 														// the date during this
 														// update
 			}
 			try {
-				if (!d.equals(""))
-					opdNextVisitDate = new JDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
-				else
-					opdNextVisitDate = new JDateChooser();
+				opdNextVisitDate = new CustomJDateChooser();
+				if (!d.equals("")) {
+					opdNextVisitDate.setDate(currentDateFormat.parse(d));
+				}
 				opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
 				opdNextVisitDate.setDateFormatString("dd/MM/yy");
 			} catch (ParseException e) {

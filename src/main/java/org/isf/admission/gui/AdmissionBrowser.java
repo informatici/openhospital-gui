@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -1264,7 +1263,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						dateInFieldCal.setDate((Date) evt.getOldValue());
 						return;
 					}
-					dateInFieldCal.setDateFromLocalDateTime(newValue);
+					dateInFieldCal.setDate(newValue);
 					dateIn = newValue;
 					updateBedDays();
 					getDiseaseInPanel();

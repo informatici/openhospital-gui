@@ -121,4 +121,12 @@ public class Converters {
         calendar.setTime(date);
         return calendar;
     }
+
+    public static GregorianCalendar toCalendar(LocalDateTime localDateTime) {
+        return toCalendar(toDate(localDateTime));
+    }
+
+    public static LocalDateTime convertToLocalDateTime(GregorianCalendar gregorianCalendar) {
+        return convertToLocalDateTime(toDate(gregorianCalendar));
+    }
 }

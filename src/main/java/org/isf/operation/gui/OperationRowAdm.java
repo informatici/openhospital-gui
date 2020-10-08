@@ -524,7 +524,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	public void clearForm() {
 		comboOperation.setSelectedItem(null);
-		textDate.setDate(null);
+		textDate.setDate((LocalDateTime) null);
 		textAreaRemark.setText(""); //$NON-NLS-1$
 		comboResult.setSelectedIndex(-1);
 		textFieldUnit.setText(""); //$NON-NLS-1$
