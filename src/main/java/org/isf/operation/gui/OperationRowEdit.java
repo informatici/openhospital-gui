@@ -32,6 +32,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -358,7 +359,7 @@ public class OperationRowEdit extends JPanel {
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			if(opeRow !=null ){
-				jCalendarDate.setDate(this.opeRow.getOpDate().getTime());
+				jCalendarDate.setDate(this.opeRow.getOpDate());
 			}
 		}			
 		return jCalendarDate;
@@ -410,7 +411,7 @@ public class OperationRowEdit extends JPanel {
 						JOptionPane.PLAIN_MESSAGE);
 	      }
 	      else{
-	    	  if(getMyOpd().getDate().after(this.jCalendarDate.getDate())){
+	    	  if(getMyOpd().getDate().isAfter(this.jCalendarDate.getLocalDateTime())){
 	    		  JOptionPane.showMessageDialog(OperationRowEdit.this,
 		    			  MessageBundle.getMessage("angal.operationrowedit.warningdateafter"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.PLAIN_MESSAGE);
@@ -418,9 +419,7 @@ public class OperationRowEdit extends JPanel {
 	    	  }
 			if(opeRow!=null){
 	        	OperationRow updateOpeRow = opeRow;
-	        	GregorianCalendar dateop = new GregorianCalendar();
-				dateop.setTime(jCalendarDate.getDate());
-				updateOpeRow.setOpDate(dateop);
+				updateOpeRow.setOpDate(jCalendarDate.getLocalDateTime());
 				updateOpeRow.setOpResult(resultComboBox.getSelectedItem().toString());
 				updateOpeRow.setTransUnit(Float.parseFloat(TransTextField.getText()));
 	        	Operation op = (Operation)OpecomboBox.getSelectedItem();
@@ -448,9 +447,7 @@ public class OperationRowEdit extends JPanel {
 	        }
 	        else{
 	        	OperationRow operationRow = new OperationRow();
-	        	GregorianCalendar dateop = new GregorianCalendar();
-				dateop.setTime(this.jCalendarDate.getDate());
-				operationRow.setOpDate(dateop);
+				operationRow.setOpDate(jCalendarDate.getLocalDateTime());
 				operationRow.setOpResult(this.resultComboBox.getSelectedItem().toString());
 				operationRow.setTransUnit(Float.parseFloat(this.TransTextField.getText()));
 	        	Operation op = (Operation)this.OpecomboBox.getSelectedItem();

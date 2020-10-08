@@ -33,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -63,9 +64,7 @@ import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.OhDefaultCellRenderer;
-import org.isf.utils.jobjects.OhTableOperationModel;
-import org.isf.utils.jobjects.VoFloatTextField;
+import org.isf.utils.jobjects.*;
 import org.joda.time.DateTime;
 
 import com.toedter.calendar.JDateChooser;
@@ -78,7 +77,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 	private static final long serialVersionUID = 1L;
 	private JLabel labelDate;
 	private JTextField textFieldUnit;
-	private JDateChooser textDate;
+	private LocalDateSupportingJDateChooser textDate;
 	private JComboBox comboOperation;
 	private JComboBox comboResult;
 	private JTextArea textAreaRemark;
@@ -93,7 +92,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 
-	private JDateChooser jCalendarDate;
+	private LocalDateSupportingJDateChooser jCalendarDate;
 	private JTable tableData;
 
 	public OperationRowOpd(Opd opd) {
@@ -294,9 +293,9 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 	}
 
-	private JDateChooser getJCalendarDate() {
+	private LocalDateSupportingJDateChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			jCalendarDate = new JDateChooser();
+			jCalendarDate = new LocalDateSupportingJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarDate.setDate(DateTime.now().toDate());
@@ -330,9 +329,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		
 
 		OperationRow operationRow = new OperationRow();
-		GregorianCalendar dateop = new GregorianCalendar();
-		dateop.setTime(this.textDate.getDate());
-		operationRow.setOpDate(dateop);
+		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		if (this.comboResult.getSelectedItem() != null)
 			operationRow.setOpResult(this.comboResult.getSelectedItem().toString());
 		else
@@ -355,8 +352,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			tableData.setModel(modelOhOpeRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
-			dateop.setTime(this.textDate.getDate());
-			opeInter.setOpDate(dateop);
+			opeInter.setOpDate(this.textDate.getLocalDateTime());
 			opeInter.setOpResult(this.comboResult.getSelectedItem().toString());
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
@@ -396,7 +392,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		}
 
 		if (opeRow != null) {
-			textDate.setDate(opeRow.getOpDate().getTime());
+			textDate.setDate(opeRow.getOpDate());
 			textAreaRemark.setText(opeRow.getRemarks());
 			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
 		}
@@ -503,7 +499,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 	public void clearForm() {
 		comboOperation.setSelectedItem(null);
-		textDate.setDate(null);
+		textDate.setDate((LocalDateTime) null);
 		textAreaRemark.setText(""); //$NON-NLS-1$
 		comboResult.setSelectedIndex(-1);
 		textFieldUnit.setText(""); //$NON-NLS-1$
