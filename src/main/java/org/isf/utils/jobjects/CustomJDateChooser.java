@@ -79,6 +79,10 @@ public class CustomJDateChooser extends JDateChooser {
 		this(Converters.toDate(date), dateFormatString);
 	}
 
+	public CustomJDateChooser(LocalDateTime date) {
+		this(Converters.toDate(date));
+	}
+
 	/**
 	 * @param date
 	 * @param dateFormatString

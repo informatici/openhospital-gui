@@ -37,6 +37,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -1149,10 +1150,10 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			if (ok != JOptionPane.OK_OPTION) return;
 		}
 		
-		GregorianCalendar[] admissionRange = new GregorianCalendar[2];
-		GregorianCalendar[] dischargeRange = new GregorianCalendar[2];	
+		LocalDateTime[] admissionRange = new LocalDateTime[2];
+		LocalDateTime[] dischargeRange = new LocalDateTime[2];
 		for(int i = 0; i <= dateChoosers.length - 1; i++) {
-			GregorianCalendar date = (GregorianCalendar) dateChoosers[i].getCalendar();
+			LocalDateTime date = dateChoosers[i].getLocalDateTime();
 			switch (i) {
 			case 0:
 				admissionRange[0] = date;
