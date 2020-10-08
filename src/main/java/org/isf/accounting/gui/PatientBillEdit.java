@@ -32,6 +32,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -86,6 +88,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 /**
  * Create a single Patient Bill
@@ -381,8 +384,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private Bill thisBill;
 	private Patient patientSelected;
 	private boolean foundList;
-	private GregorianCalendar billDate = new GregorianCalendar();
-	private GregorianCalendar today = new GregorianCalendar();
+	private LocalDateTime billDate = LocalDateTime.now();
+	private LocalDateTime today = LocalDateTime.now();
 	
 	private Object[] billClasses = {Price.class, Integer.class, Double.class};
 	private String[] billColumnNames = {MessageBundle.getMessage("angal.newbill.item"), MessageBundle.getMessage("angal.newbill.qty"), MessageBundle.getMessage("angal.newbill.amount")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -660,14 +663,16 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			
 			if (insert) {
 				//To remind last used
-				billDate.set(Calendar.YEAR, RememberDates.getLastBillDateGregorian().get(Calendar.YEAR));
-				billDate.set(Calendar.MONTH, RememberDates.getLastBillDateGregorian().get(Calendar.MONTH));
-				billDate.set(Calendar.DAY_OF_MONTH, RememberDates.getLastBillDateGregorian().get(Calendar.DAY_OF_MONTH));
-				jCalendarDate = new CustomJDateChooser(billDate.getTime()); 
+				billDate = LocalDate.now()
+						.withYear(RememberDates.getLastBillDateGregorian().get(Calendar.YEAR))
+						.withMonth(RememberDates.getLastBillDateGregorian().get(Calendar.MONTH))
+						.withDayOfMonth(RememberDates.getLastBillDateGregorian().get(Calendar.DAY_OF_MONTH))
+						.atTime(billDate.toLocalTime());
+				jCalendarDate = new CustomJDateChooser(billDate);
 			} else { 
 				//get BillDate
-				jCalendarDate = new CustomJDateChooser(thisBill.getDate().getTime());
-				billDate.setTime(jCalendarDate.getDate());
+				jCalendarDate = new CustomJDateChooser(thisBill.getDate());
+				billDate = jCalendarDate.getLocalDateTime();
 			}
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
@@ -696,10 +701,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						} else {
 							jCalendarDate.setDate(((Calendar)evt.getNewValue()).getTime());
 						}
-						billDate.setTime(jCalendarDate.getDate());
+						billDate = jCalendarDate.getLocalDateTime();
 					} else {
 						jCalendarDate.setDate(((Calendar)evt.getNewValue()).getTime());
-						billDate.setTime(jCalendarDate.getDate());
+						billDate = jCalendarDate.getLocalDateTime();
 					}
 				}	
 			});
@@ -1102,7 +1107,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					}
 					
 					if (insert) {
-						RememberDates.setLastBillDate(billDate);			//to remember for next INSERT
+						RememberDates.setLastBillDate(Converters.toCalendar(Converters.toDate(billDate)));			//to remember for next INSERT
 						Bill newBill = new Bill(0,							//Bill ID
 								billDate,			 						//from calendar
 								billDate,									//most recent payment 
@@ -1217,7 +1222,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				public void actionPerformed(ActionEvent e) {
 					
-					GregorianCalendar datePay = new GregorianCalendar();
+					LocalDateTime datePay = LocalDateTime.now();
 					
 					Icon icon = new ImageIcon("rsc/icons/money_dialog.png"); //$NON-NLS-1$
 					int ok = JOptionPane.showConfirmDialog(PatientBillEdit.this,
@@ -1229,7 +1234,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					if (ok == JOptionPane.NO_OPTION) return;
 					
 					if (balance.compareTo(new BigDecimal(0)) > 0) {
-						if (billDate.before(today)) { //if Bill is in the past the user will be asked for PAID date
+						if (billDate.isBefore(today)) { //if Bill is in the past the user will be asked for PAID date
 							
 							icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 	
@@ -1245,7 +1250,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					        		icon);
 	
 					        if (r == JOptionPane.OK_OPTION) {
-					        	datePay.setTime(datePayChooser.getDate());
+					        	datePay = datePayChooser.getLocalDateTime();
 					        } else {
 					            return;
 					        }
@@ -1255,7 +1260,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					        	addPayment(datePay, balance.doubleValue());
 					        }
 						} else {
-							datePay = new GregorianCalendar();
+							datePay = LocalDateTime.now();
 							addPayment(datePay, balance.doubleValue());
 						}
 					}
@@ -1315,9 +1320,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					Icon icon = new ImageIcon("rsc/icons/money_dialog.png"); //$NON-NLS-1$
 					BigDecimal amount = new BigDecimal(0);
 					
-					GregorianCalendar datePay = new GregorianCalendar();
-					
-					
+					LocalDateTime datePay = LocalDateTime.now();
+
 					String quantity = (String) JOptionPane.showInputDialog(
 		                    PatientBillEdit.this,
 		                    MessageBundle.getMessage("angal.newbill.insertquantity"), //$NON-NLS-1$
@@ -1339,7 +1343,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						}
 					} else return;
 					
-					if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
+					if (billDate.isBefore(today)) { //if is a bill in the past the user will be asked for date of payment
 						
 						icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 						
@@ -1354,7 +1358,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				        		JOptionPane.PLAIN_MESSAGE);
 
 				        if (r == JOptionPane.OK_OPTION) {
-				        	datePay.setTime(datePayChooser.getDate());
+				        	datePay = datePayChooser.getLocalDateTime();
 				        } else {
 				            return;
 				        }
@@ -1364,7 +1368,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				        	addPayment(datePay, amount.doubleValue());
 				        }
 					} else {
-						datePay = new GregorianCalendar();
+						datePay = LocalDateTime.now();
 						addPayment(datePay, amount.doubleValue());
 					}
 				}
@@ -1373,27 +1377,22 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		return jButtonAddRefund;
 	}
 	
-	private boolean isValidPaymentDate(GregorianCalendar datePay) {
-		GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar lastPay = new GregorianCalendar();
-	    if (payItems.size() > 0) { 
-	    	lastPay = payItems.get(payItems.size()-1).getDate();
-		} else {
-			lastPay = billDate;
-		}
-	    if (datePay.before(billDate)) {
+	private boolean isValidPaymentDate(LocalDateTime datePay) {
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime lastPay = payItems.size() > 0 ? payItems.get(payItems.size()-1).getDate() : billDate;
+	    if (datePay.isBefore(billDate)) {
 	    	JOptionPane.showMessageDialog(PatientBillEdit.this, 
 					MessageBundle.getMessage("angal.newbill.paymentbeforebilldate"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.newbill.invaliddate"), //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
 	    	return false;
-	    } else if (datePay.before(lastPay)) {
+	    } else if (datePay.isBefore(lastPay)) {
 	    	JOptionPane.showMessageDialog(PatientBillEdit.this, 
 					MessageBundle.getMessage("angal.newbill.datebeforelastpayment"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.newbill.invaliddate"), //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
 	    	return false;
-	    } else if (datePay.after(now)) {
+	    } else if (datePay.isAfter(now)) {
 	    	JOptionPane.showMessageDialog(PatientBillEdit.this, 
 					MessageBundle.getMessage("angal.newbill.payementinthefuturenotallowed"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.newbill.invaliddate"), //$NON-NLS-1$
@@ -1418,7 +1417,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					Icon icon = new ImageIcon("rsc/icons/money_dialog.png"); //$NON-NLS-1$
 					BigDecimal amount = new BigDecimal(0);
 					
-					GregorianCalendar datePay = new GregorianCalendar();
+					LocalDateTime datePay = LocalDateTime.now();
 					
 					String quantity = (String) JOptionPane.showInputDialog(
 		                    PatientBillEdit.this,
@@ -1441,7 +1440,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						}
 					} else return;
 					
-					if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
+					if (billDate.isBefore(today)) { //if is a bill in the past the user will be asked for date of payment
 						
 						icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 						
@@ -1456,7 +1455,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				        		JOptionPane.PLAIN_MESSAGE);
 
 				        if (r == JOptionPane.OK_OPTION) {
-				        	datePay.setTime(datePayChooser.getDate());
+				        	datePay = datePayChooser.getLocalDateTime();
 				        } else {
 				            return;
 				        }
@@ -1465,7 +1464,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				        	addPayment(datePay, amount.doubleValue());
 				        }
 					} else {
-						datePay = new GregorianCalendar();
+						datePay = LocalDateTime.now();
 						addPayment(datePay, amount.doubleValue());
 					}
 				}
@@ -1857,7 +1856,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	private void updateUI() {
 		
-		jCalendarDate.setDate(thisBill.getDate().getTime());
+		jCalendarDate.setDateFromLocalDateTime(thisBill.getDate());
 		jTextFieldPatient.setText(patientSelected.getName());
 		jTextFieldPatient.setEditable(false);
 		jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.changepatient")); //$NON-NLS-1$
@@ -1889,7 +1888,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		}
 	}
 	
-	private void addPayment(GregorianCalendar datePay, double qty) {
+	private void addPayment(LocalDateTime datePay, double qty) {
 		if (qty != 0) {
 			try {
 				BillPayments pay = new BillPayments(0,
@@ -2095,9 +2094,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		return format.format(time.getTime());
 	}
 	
-	public String formatDateTime(GregorianCalendar time) {
+	public String formatDateTime(LocalDateTime time) {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");  //$NON-NLS-1$
-		return format.format(time.getTime());
+		return format.format(time);
 	}
 	
 	public boolean isSameDay(GregorianCalendar billDate, GregorianCalendar today) {
@@ -2110,12 +2109,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (!insert) {
 			//System.out.println("la date de la facture: "+thisBill.getDate().getTime().toString());
 			//GregorianCalendar thisday = TimeTools.getServerDateTime();
-			GregorianCalendar thisday = new GregorianCalendar();
-			GregorianCalendar billDate = thisBill.getDate();
-			int thisMonth = thisday.get(GregorianCalendar.MONTH);
-			int billMonth = billDate.get(GregorianCalendar.MONTH);
-			int thisYear = thisday.get(GregorianCalendar.YEAR);
-			int billBillYear = billDate.get(GregorianCalendar.YEAR);
+			LocalDateTime thisday = LocalDateTime.now();
+			LocalDateTime billDate = thisBill.getDate();
+			int thisMonth = thisday.getMonthValue();
+			int billMonth = billDate.getMonthValue();
+			int thisYear = thisday.getYear();
+			int billBillYear = billDate.getYear();
 			if(thisYear>billBillYear || thisMonth>billMonth){
 				jButtonAddMedical.setEnabled(false);
 				jButtonAddOperation.setEnabled(false);
