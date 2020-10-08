@@ -57,6 +57,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -420,7 +422,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						String dt="[not specified]";
 						try {
 							final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
-							dt = currentDateFormat.format(opd.getVisitDate().getTime());
+							dt = currentDateFormat.format(opd.getVisitDate());
 						}
 						catch (Exception ex){
 						}
@@ -713,16 +715,18 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		return true;
 	}
 	
-	private GregorianCalendar getDateFrom() {
-		return new GregorianCalendar(Integer.valueOf(yearFrom.getText()),
-									 Integer.valueOf(monthFrom.getText()) - 1, 
-									 Integer.valueOf(dayFrom.getText()));
+	private LocalDate getDateFrom() {
+		return LocalDate.now()
+				.withYear(Integer.valueOf(yearFrom.getText()))
+				.withMonth(Integer.valueOf(monthFrom.getText()) - 1)
+				.withDayOfMonth(Integer.valueOf(dayFrom.getText()));
 	}
 	
-	private GregorianCalendar getDateTo() {
-		return new GregorianCalendar(Integer.valueOf(yearTo.getText()), 
-									 Integer.valueOf(monthTo.getText()) - 1, 
-									 Integer.valueOf(dayTo.getText()));
+	private LocalDate getDateTo() {
+		return LocalDate.now()
+				.withYear(Integer.valueOf(yearTo.getText()))
+				.withMonth(Integer.valueOf(monthTo.getText()) - 1)
+				.withDayOfMonth(Integer.valueOf(dayTo.getText()));
 	}
 
 	
@@ -1050,7 +1054,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		
 		private static final long serialVersionUID = -9129145534999353730L;
 		
-		public OpdBrowsingModel(String diseaseTypeCode,String diseaseCode, GregorianCalendar dateFrom,GregorianCalendar dateTo,int ageFrom, int ageTo,char sex,char newPatient) {
+		public OpdBrowsingModel(String diseaseTypeCode, String diseaseCode, LocalDate dateFrom, LocalDate dateTo, int ageFrom, int ageTo, char sex, char newPatient) {
 			try {
 				pSur = manager.getOpd(diseaseTypeCode,diseaseCode,dateFrom,dateTo,ageFrom,ageTo,sex,newPatient);
 			}catch(OHServiceException e){
@@ -1102,7 +1106,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				if (opd.getVisitDate() == null) {
 					sVisitDate = "";
 				} else {
-					sVisitDate = dateFormat.format(opd.getVisitDate().getTime());
+					sVisitDate = dateFormat.format(opd.getVisitDate());
 				}
 				return sVisitDate;
 			} else if (c == 3) {
@@ -1178,10 +1182,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					else if(radioNew.isSelected()) newPatient='N';
 					else newPatient='R';
 					
-					GregorianCalendar dateFrom = getDateFrom();
-					GregorianCalendar dateTo = getDateTo();
+					LocalDateTime dateFrom = getDateFrom().atStartOfDay();
+					LocalDateTime dateTo = getDateTo().atStartOfDay();
 					
-					if(dateFrom.after(dateTo)){
+					if(dateFrom.isAfter(dateTo)){
 						JOptionPane.showMessageDialog(OpdBrowser.this, MessageBundle.getMessage("angal.opd.datefrommustbebefordateto"));
 						return;
 					}
