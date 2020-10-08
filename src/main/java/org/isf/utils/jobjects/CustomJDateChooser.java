@@ -38,7 +38,7 @@ import org.isf.utils.time.Converters;
  * it overrides Font attribution
  *
  */
-public class CustomJDateChooser extends JDateChooser {
+public class CustomJDateChooser extends LocalDateSupportingJDateChooser {
 
 	/**
 	 * 
@@ -76,11 +76,13 @@ public class CustomJDateChooser extends JDateChooser {
 	}
 
 	public CustomJDateChooser(LocalDateTime date, String dateFormatString) {
-		this(Converters.toDate(date), dateFormatString);
+		super(Converters.toDate(date), dateFormatString);
+		this.setMnemonic(0);
 	}
 
 	public CustomJDateChooser(LocalDateTime date) {
-		this(Converters.toDate(date));
+		super(date);
+		this.setMnemonic(0);
 	}
 
 	/**
@@ -145,13 +147,4 @@ public class CustomJDateChooser extends JDateChooser {
 		this.calendarButton.setMnemonic(keyChar);
 	}
 
-	public void setDate(LocalDateTime localDate) {
-		setDate(Converters.toDate(localDate));
-	}
-
-	public LocalDateTime getLocalDateTime() {
-		return Optional.ofNullable(getDate())
-				.map(Converters::convertToLocalDateTime)
-				.orElse(null);
-	}
 }
