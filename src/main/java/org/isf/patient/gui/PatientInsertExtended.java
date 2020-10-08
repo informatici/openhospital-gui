@@ -72,6 +72,7 @@ import org.isf.patient.model.PatientProfilePhoto;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.image.ImageUtil;
+import org.isf.utils.time.Converters;
 import org.isf.video.gui.PatientPhotoPanel;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -670,7 +671,7 @@ public class PatientInsertExtended extends JDialog {
 		}
 		
 		patient.setAge(years);
-		patient.setBirthDate(bdate.toDate());
+		patient.setBirthDate(Converters.convertToLocalDateTime(bdate.toDate()).toLocalDate());
 		patient.setAgetype("");
 		return true;
 	}
@@ -799,7 +800,7 @@ public class PatientInsertExtended extends JDialog {
 			jBirthDateGroupPanel.setLayout(new BorderLayout());
 
 			if (!insert) {
-				Date sBirthDate = patient.getBirthDate();
+				Date sBirthDate = Converters.toDate(patient.getBirthDate().atStartOfDay());
 
 				if (sBirthDate != null) {
 					cBirthDate = Calendar.getInstance();
