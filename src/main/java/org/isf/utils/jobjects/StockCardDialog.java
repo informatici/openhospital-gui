@@ -26,6 +26,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -74,7 +75,7 @@ public class StockCardDialog extends JDialog {
 		initAndShow();
 	}
 
-	public StockCardDialog(Frame owner, Medical medical, Date dateFrom, Date dateTo) {
+	public StockCardDialog(Frame owner, Medical medical, LocalDateTime dateFrom, LocalDateTime dateTo) {
 		super(owner, true);
 		if (medical != null)
 			textField = new JTextFieldSearchModel(this, medical);

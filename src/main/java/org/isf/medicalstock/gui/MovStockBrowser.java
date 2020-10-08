@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -261,8 +262,8 @@ public class MovStockBrowser extends ModalJFrame {
 
 				StockCardDialog stockCardDialog = new StockCardDialog(MovStockBrowser.this,
 						medical,
-						movDateFrom.getCompleteDate().getTime(),
-						movDateTo.getCompleteDate().getTime());
+						movDateFrom.getCompleteDate(),
+						movDateTo.getCompleteDate());
 				medical = stockCardDialog.getMedical();
 				Date dateFrom = stockCardDialog.getDateFrom();
 				Date dateTo = stockCardDialog.getDateTo();
@@ -289,8 +290,8 @@ public class MovStockBrowser extends ModalJFrame {
 
 			public void actionPerformed(ActionEvent e) {
 
-				StockLedgerDialog stockCardDialog = new StockLedgerDialog(MovStockBrowser.this, movDateFrom.getCompleteDate().getTime(),
-						movDateTo.getCompleteDate().getTime());
+				StockLedgerDialog stockCardDialog = new StockLedgerDialog(MovStockBrowser.this, movDateFrom.getCompleteDate(),
+						movDateTo.getCompleteDate());
 				Date dateFrom = stockCardDialog.getDateFrom();
 				Date dateTo = stockCardDialog.getDateTo();
 
@@ -693,9 +694,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JTable getMovTable() {
-		GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar old = new GregorianCalendar();
-		old.add(GregorianCalendar.WEEK_OF_YEAR, -1);
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime old = LocalDateTime.now().minusWeeks(1);
 
 		model = new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 		movTable = new JTable(model);
@@ -826,8 +826,8 @@ public class MovStockBrowser extends ModalJFrame {
 				String wardSelected = null;
 				boolean dateOk = true;
 
-				GregorianCalendar movFrom = movDateFrom.getCompleteDate();
-				GregorianCalendar movTo = movDateTo.getCompleteDate();
+				LocalDateTime movFrom = movDateFrom.getCompleteDate();
+				LocalDateTime movTo = movDateTo.getCompleteDate();
 				if ((movFrom == null) || (movTo == null)) {
 					if (!((movFrom == null) && (movTo == null))) {
 						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstock.chooseavalidmovementdate"));
@@ -842,8 +842,8 @@ public class MovStockBrowser extends ModalJFrame {
 				}
 
 				if (!isAutomaticLot()) {
-					GregorianCalendar prepFrom = lotPrepFrom.getCompleteDate();
-					GregorianCalendar prepTo = lotPrepTo.getCompleteDate();
+					LocalDateTime prepFrom = lotPrepFrom.getCompleteDate();
+					LocalDateTime prepTo = lotPrepTo.getCompleteDate();
 					if ((prepFrom == null) || (prepTo == null)) {
 						if (!((prepFrom == null) && (prepTo == null))) {
 							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstock.chooseavalidpreparationdate"));
@@ -857,8 +857,8 @@ public class MovStockBrowser extends ModalJFrame {
 					}
 				}
 
-				GregorianCalendar dueFrom = lotDueFrom.getCompleteDate();
-				GregorianCalendar dueTo = lotDueTo.getCompleteDate();
+				LocalDateTime dueFrom = lotDueFrom.getCompleteDate();
+				LocalDateTime dueTo = lotDueTo.getCompleteDate();
 				if ((dueFrom == null) || (dueTo == null)) {
 					if (!((dueFrom == null) && (dueTo == null))) {
 						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstock.chooseavalidduedate"));
@@ -1176,19 +1176,18 @@ public class MovStockBrowser extends ModalJFrame {
 		private static final long serialVersionUID = 1L;
 
 		public MovBrowserModel() {
-			GregorianCalendar now = new GregorianCalendar();
-			GregorianCalendar old = new GregorianCalendar();
-			old.add(GregorianCalendar.WEEK_OF_YEAR, -1);
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime old = now.minusWeeks(1);
 
 			new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 			updateTotals();
 		}
 
 		public MovBrowserModel(Integer medicalCode, String medicalType,
-				String ward, String movType, GregorianCalendar movFrom,
-				GregorianCalendar movTo, GregorianCalendar lotPrepFrom,
-				GregorianCalendar lotPrepTo, GregorianCalendar lotDueFrom,
-				GregorianCalendar lotDueTo) {
+				String ward, String movType, LocalDateTime movFrom,
+				LocalDateTime movTo, LocalDateTime lotPrepFrom,
+				LocalDateTime lotPrepTo, LocalDateTime lotDueFrom,
+				LocalDateTime lotDueTo) {
 			try {
 				moves = movBrowserManager.getMovements(medicalCode, medicalType, ward,
 						movType, movFrom, movTo, lotPrepFrom, lotPrepTo,
@@ -1270,18 +1269,18 @@ public class MovStockBrowser extends ModalJFrame {
 		}
 	}
 
-	private String formatDate(GregorianCalendar time) {
+	private String formatDate(LocalDateTime time) {
 		if (time == null)
 			return MessageBundle.getMessage("angal.medicalstock.nodate");
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_DD_MM_YY);
-		return sdf.format(time.getTime());
+		return sdf.format(time);
 	}
 
-	private String formatDateTime(GregorianCalendar time) {
+	private String formatDateTime(LocalDateTime time) {
 		if (time == null)
 			return MessageBundle.getMessage("angal.medicalstock.nodate");
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_DD_MM_YY_HH_MM);
-		return sdf.format(time.getTime());
+		return sdf.format(time);
 	}
 
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
