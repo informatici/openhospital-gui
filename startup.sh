@@ -43,6 +43,9 @@ fi
 # OPENHOSPITAL_HOME is the directory where OpenHospital files are located
 #OPENHOSPITAL_HOME=/usr/local/OpenHospital
 
+# set current dir
+CURRENT_DIR=$PWD
+
 if [ -z $OPENHOSPITAL_HOME ]; then
   echo "Warning - OPENHOSPITAL_HOME not found. Please set it up properly."
   OPENHOSPITAL_HOME=$PWD
@@ -101,3 +104,6 @@ esac
 ######### OPENHOSPITAL STARTUP
 
 cd $OPENHOSPITAL_HOME&& $JAVA_BIN -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OPENHOSPITAL_CLASSPATH" org.isf.menu.gui.Menu "$@"
+
+# go back to working directory
+cd $CURRENT_DIR
