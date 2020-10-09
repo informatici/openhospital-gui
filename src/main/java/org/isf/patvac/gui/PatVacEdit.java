@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -62,6 +63,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
@@ -111,7 +113,7 @@ public class PatVacEdit extends JDialog {
 	private String s;
 	private ArrayList<Patient> pat = null;
 	private CustomJDateChooser vaccineDateFieldCal = null;
-	private GregorianCalendar dateIn = null;
+	private LocalDateTime dateIn = null;
 	private int patNextYProg;
 
 	private static final Integer panelWidth = 500;
@@ -336,14 +338,14 @@ public class PatVacEdit extends JDialog {
 	 * @return JDateChooser
 	 */
 	private CustomJDateChooser getVaccineDateFieldCal() {
-		java.util.Date myDate = null;
+		LocalDateTime myDate = null;
 		if (insert) {
-			dateIn = RememberDates.getLastPatientVaccineDateGregorian();
+			dateIn = Converters.convertToLocalDateTime(RememberDates.getLastPatientVaccineDateGregorian());
 		} else {
 			dateIn = patVac.getVaccineDate();
 		}
 		if (dateIn != null) {
-			myDate = dateIn.getTime();
+			myDate = dateIn;
 		}
 
 		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
@@ -699,8 +701,7 @@ public class PatVacEdit extends JDialog {
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 
-					GregorianCalendar gregDate = new GregorianCalendar();
-					gregDate.setTime(vaccineDateFieldCal.getDate());
+					LocalDateTime vaccineDate = vaccineDateFieldCal.getLocalDateTime();
                     patVac.setProgr(Integer.parseInt(progrTextField.getText()));
 
 					// check on patient
@@ -709,7 +710,7 @@ public class PatVacEdit extends JDialog {
 						return;
 					}
 
-					patVac.setVaccineDate(gregDate);
+					patVac.setVaccineDate(vaccineDate);
 					patVac.setVaccine((Vaccine) vaccineComboBox.getSelectedItem());
 					patVac.setPatient(selectedPatient);
 					patVac.setLock(0);
@@ -739,7 +740,7 @@ public class PatVacEdit extends JDialog {
 					if (!result)
 						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.thedatacouldnobesaved"));
 					else {
-						patVac = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(), new Vaccine("", "", new VaccineType("", "")), 0);
+						patVac = new PatientVaccine(0, 0, LocalDateTime.now(), new Patient(), new Vaccine("", "", new VaccineType("", "")), 0);
 						dispose();
 					}
 				}

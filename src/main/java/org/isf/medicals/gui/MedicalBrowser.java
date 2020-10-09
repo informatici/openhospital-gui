@@ -77,6 +77,7 @@ import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.JFromDateToDateChooserDialog;
 import org.isf.utils.jobjects.JMonthYearChooser;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -408,8 +409,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 							icon);
 
 					if (r == JOptionPane.OK_OPTION) {
-						new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, false);
-						new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, true);
+						new GenericReportPharmaceuticalStock(dateChooser.getLocalDateTime(), report, filter, groupBy, sortBy, false);
+						new GenericReportPharmaceuticalStock(dateChooser.getLocalDateTime(), report, filter, groupBy, sortBy, true);
 						return;
 
 					} else {
@@ -448,7 +449,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 					boolean toExcel = dataRange.isExcel();
 
 					if (!dataRange.isCancel()) {
-						new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom, dateTo, medical, null, toExcel);
+						new GenericReportPharmaceuticalStockCard("ProductLedger", Converters.convertToLocalDateTime(dateFrom), Converters.convertToLocalDateTime(dateTo), medical, null, toExcel);
 						return;
 					}
 				}

@@ -330,7 +330,7 @@ public class WardPharmacy extends ModalJFrame implements
 					boolean toExcel = stockCardDialog.isExcel();
 
 					if (!stockCardDialog.isCancel()) {
-						new GenericReportPharmaceuticalStockCard("ProductLedgerWard", dateFrom, dateTo, medical, wardSelected, toExcel);
+						new GenericReportPharmaceuticalStockCard("ProductLedgerWard", Converters.convertToLocalDateTime(dateFrom), Converters.convertToLocalDateTime(dateTo), medical, wardSelected, toExcel);
 						return;
 					}
 				}
@@ -1594,7 +1594,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 							if (r == JOptionPane.OK_OPTION) {
 
-								new GenericReportPharmaceuticalStockWard(dateChooser.getDate(), "PharmaceuticalStockWard", wardSelected); //$NON-NLS-1$
+								new GenericReportPharmaceuticalStockWard(dateChooser.getLocalDateTime(), "PharmaceuticalStockWard", wardSelected); //$NON-NLS-1$
 								return;
 
 							} else {

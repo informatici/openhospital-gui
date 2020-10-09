@@ -265,8 +265,8 @@ public class MovStockBrowser extends ModalJFrame {
 						movDateFrom.getCompleteDate(),
 						movDateTo.getCompleteDate());
 				medical = stockCardDialog.getMedical();
-				Date dateFrom = stockCardDialog.getDateFrom();
-				Date dateTo = stockCardDialog.getDateTo();
+				LocalDateTime dateFrom = stockCardDialog.getLocalDateTimeFrom();
+				LocalDateTime dateTo = stockCardDialog.getLocalDateTimeTo();
 				boolean toExcel = stockCardDialog.isExcel();
 
 				if (!stockCardDialog.isCancel()) {
@@ -292,8 +292,8 @@ public class MovStockBrowser extends ModalJFrame {
 
 				StockLedgerDialog stockCardDialog = new StockLedgerDialog(MovStockBrowser.this, movDateFrom.getCompleteDate(),
 						movDateTo.getCompleteDate());
-				Date dateFrom = stockCardDialog.getDateFrom();
-				Date dateTo = stockCardDialog.getDateTo();
+				LocalDateTime dateFrom = stockCardDialog.getLocalDateTimeFrom();
+				LocalDateTime dateTo = stockCardDialog.getLocalDateTimeTo();
 
 				if (!stockCardDialog.isCancel()) {
 					new GenericReportPharmaceuticalStockCard("ProductLedger_multi", dateFrom, dateTo, null, null, false);

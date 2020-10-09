@@ -35,6 +35,7 @@ import javax.swing.JPanel;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
+import org.isf.utils.time.Converters;
 
 /**
  * @author Mwithi
@@ -162,11 +163,19 @@ public class StockCardDialog extends JDialog {
 		return dateFrom;
 	}
 
+	public LocalDateTime getLocalDateTimeFrom() {
+		return Converters.convertToLocalDateTime(getDateFrom());
+	}
+
 	/**
 	 * @return the dateTo
 	 */
 	public Date getDateTo() {
 		return dateTo;
+	}
+
+	public LocalDateTime getLocalDateTimeTo() {
+		return Converters.convertToLocalDateTime(getDateTo());
 	}
 
 	/**
