@@ -358,7 +358,7 @@ WHERE PEX_ID = $P{examId}]]>
 		<property name="com.jaspersoft.studio.field.tree.path" value="patient_profile_photo"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="PAT_PHOTO" class="java.lang.Object">
+	<field name="PAT_PHOTO" class="byte[]">
 		<property name="com.jaspersoft.studio.field.name" value="PAT_PHOTO"/>
 		<property name="com.jaspersoft.studio.field.label" value="PAT_PHOTO"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="patient_profile_photo"/>
