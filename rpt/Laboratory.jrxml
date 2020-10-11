@@ -29,7 +29,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleNome}]]></textFieldExpression>
 			</textField>
@@ -42,7 +42,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleIndirizzo}]]></textFieldExpression>
 			</textField>
@@ -55,7 +55,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleCitta}]]></textFieldExpression>
 			</textField>
@@ -68,7 +68,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleTel}]]></textFieldExpression>
 			</textField>
@@ -81,7 +81,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleFax}]]></textFieldExpression>
 			</textField>
@@ -94,7 +94,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleMail}]]></textFieldExpression>
 			</textField>
