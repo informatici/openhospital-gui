@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.admission.gui;
 
 import java.awt.BorderLayout;
@@ -19,6 +40,7 @@ import java.util.Locale;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -30,6 +52,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import com.toedter.calendar.JDateChooser;
 
 public class PatientFolderReportModal extends ModalJFrame{
+	private JFrame parent;
 	private Integer patId;
 	private JPanel jPanelChooser;
 	private JDateChooser jDateChooserDateFrom;
@@ -56,7 +79,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 	private JPanel labelPanel;
 	private GregorianCalendar date;
 	
-	public PatientFolderReportModal(Integer code, GregorianCalendar olderDate) {
+	public PatientFolderReportModal(JFrame parent, Integer code, GregorianCalendar olderDate) {
+		this.parent = parent;
 		this.patId=code;
 		this.date=olderDate;
 		initialize();
@@ -68,7 +92,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setVisible(true);
+		showAsModal(parent);
 	}
 	private JPanel getJContentPane() {
 
@@ -82,7 +106,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 			jPanelChooser.setLayout(gbl_jPanelExamination);
 
-			JLabel jLabelDate = new JLabel("DateFrom"); //$NON-NLS-1$
+			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.datefrom")); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
 			gbc_jLabelDate.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDate.insets = new Insets(10, 5, 5, 5);
@@ -97,7 +121,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbc_jDateChooserDate.gridy = 0;
 			jPanelChooser.add(getJDateChooserDateFrom(), gbc_jDateChooserDate);
 			
-			JLabel jLabelDateto = new JLabel("Date to"); //$NON-NLS-1$
+			JLabel jLabelDateto = new JLabel(MessageBundle.getMessage("angal.common.dateto")); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelDateto = new GridBagConstraints();
 			gbc_jLabelDateto.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDateto.insets = new Insets(10, 5, 5, 5);
@@ -232,6 +256,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 					admissionCheck.setSelected(false);
 					drugsCheck.setSelected(false);
 					opdCheck.setSelected(false);
+					operationCheck.setSelected(false);
+					laboratoryCheck.setSelected(false);
 				}
 			});
 			
@@ -430,7 +456,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 		if(date3!=null){
 		 return jDateChooserDateTo.getDate();
 		}else {	
-			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());;
+			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 			Date date2 = null;
 			try {
 				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);

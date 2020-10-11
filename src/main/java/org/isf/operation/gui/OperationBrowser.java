@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.operation.gui;
 
 import java.awt.AWTEvent;
@@ -62,6 +83,11 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 
 	}
+	
+	//TODO: replace with mapping mnemonic / translation in OperationBrowserManager
+	public static String OPD = MessageBundle.getMessage("angal.admission.opd").toUpperCase();
+	public static String ADMISSION = MessageBundle.getMessage("angal.admission.admission").toUpperCase();
+	public static String OPD_ADMISSION = OPD + " / " + ADMISSION;
 
 	private int pfrmBase = 8;
 	private int pfrmWidth = 5;
@@ -76,8 +102,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			MessageBundle.getMessage("angal.operation.idm"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.operation.typem"),  //$NON-NLS-1$
 			MessageBundle.getMessage("angal.operation.namem"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.operation.operationcontext") //$NON-NLS-1$
-			
+			MessageBundle.getMessage("angal.operation.operationcontext").toUpperCase() //$NON-NLS-1$
 	};
 	private int[] pColumwidth = { 50, 180, 200, 100 };
 	private Operation operation;
@@ -85,7 +110,10 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private JTable table;
 	private JFrame myFrame;
 	private String pSelection;
-
+	
+	private OperationBrowserManager operationManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private OperationTypeBrowserManager operationTypeManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+	
 	public OperationBrowser() {
 
 		setTitle(MessageBundle.getMessage("angal.operation.operationsbrowser")); //$NON-NLS-1$
@@ -112,12 +140,11 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		selectlabel = new JLabel(MessageBundle.getMessage("angal.operation.selecttype")); //$NON-NLS-1$
 		buttonPanel.add(selectlabel);
 
-		OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 		pbox = new JComboBox();
 		pbox.addItem(MessageBundle.getMessage("angal.operation.allm")); //$NON-NLS-1$
 		ArrayList<OperationType> type;
 		try {
-			type = manager.getOperationType();
+			type = operationTypeManager.getOperationType();
 			for (OperationType elem : type) {
 				pbox.addItem(elem);
 			}
@@ -182,14 +209,13 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 					return;
 				} else {
-					OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 					Operation m = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 					int n = JOptionPane.showConfirmDialog(
 							null, MessageBundle.getMessage("angal.operation.deleteoperation") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
 									+ m.getDescription() + "\" ?", //$NON-NLS-1$
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
 					try {
-						if ((n == JOptionPane.YES_OPTION) && (manager.deleteOperation(m))) {
+						if ((n == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(m))) {
 							pOperation.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();
@@ -223,18 +249,16 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		private static final long serialVersionUID = 1L;
 
 		public OperationBrowserModel(String s) {
-			OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 			try {
-				pOperation = manager.getOperation(s);
+				pOperation = operationManager.getOperationByTypeDescription(s);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 
 		public OperationBrowserModel() {
-			OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 			try {
-				pOperation = manager.getOperation();
+				pOperation = operationManager.getOperation();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -256,28 +280,27 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		}
 
 		public Object getValueAt(int r, int c) {
-			String p = pOperation.get(r).getOpeFor();
+			Operation operation = pOperation.get(r);
+			String p = operation.getOpeFor();
 			if (c == 0) {
-				return pOperation.get(r).getCode();
+				return operation.getCode();
 			} else if (c == -1) {
-				return pOperation.get(r);
+				return operation;
 			} else if (c == 1) {
-				return pOperation.get(r).getType().getDescription();
+				return operation.getType().getDescription();
 			} else if (c == 2) {
-				return pOperation.get(r).getDescription();
-			} else if (c==3) { //TODO: use bundles 
+				return operation.getDescription();
+			} else if (c == 3) { // TODO: use bundles
 				if (p != null) {
-				 String opeFor;
-				 if (p.equals("1")) {
-					  opeFor="OPD/ADMISSION";
-				}else if(p.equals("2")) {
-					 opeFor="ADMISSION";
-				}else {
-					opeFor="OPD";
-				}
-				 return opeFor;
-				}else {
-					return "";
+					if (p.equals("1")) {
+						return OPD_ADMISSION;
+					} else if (p.equals("2")) {
+						return ADMISSION;
+					} else {
+						return OPD;
+					}
+				} else {
+					return MessageBundle.getMessage("angal.common.notdefined");
 				}
 			}
 			return null;

@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.lab.gui;
 
 import java.awt.AWTEvent;
@@ -9,6 +30,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -72,7 +94,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	private EventListenerList labListener = new EventListenerList();
 	
 	public interface LabListener extends EventListener {
-		public void labInserted();
+		void labInserted();
 	}
 	
 	public void addLabListener(LabListener l) {
@@ -176,7 +198,6 @@ public class LabNew extends JDialog implements SelectionListener {
 	
 	//Results (ALL)
 	private ExamRowBrowsingManager examRowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-	private ArrayList<ExamRow> exaRowArray;
 	
 	//Arrays for this Patient
 	private ArrayList<ArrayList<LaboratoryRow>> examResults = new ArrayList<ArrayList<LaboratoryRow>>();
@@ -192,13 +213,6 @@ public class LabNew extends JDialog implements SelectionListener {
 			exaArray = exaManager.getExams();
 		} catch (OHServiceException e) {
 			exaArray = null;
-			OHServiceExceptionUtil.showMessages(e);
-		}
-		
-		try {
-			exaRowArray = examRowManager.getExamRow();
-		} catch (OHServiceException e) {
-			exaRowArray = null;
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		
@@ -248,6 +262,20 @@ public class LabNew extends JDialog implements SelectionListener {
 		if (jTextAreaNote == null) {
 			jTextAreaNote = new JTextArea(3,50);
 			jTextAreaNote.setText("");
+			jTextAreaNote.addKeyListener(new KeyListener() {
+				
+				@Override
+				public void keyTyped(KeyEvent e) {
+					selectedLab.setNote(jTextAreaNote.getText().trim());
+					examItems.get(jTableExams.getSelectedRow()).setNote(jTextAreaNote.getText().trim());
+				}
+
+				@Override
+				public void keyPressed(KeyEvent e) {}
+
+				@Override
+				public void keyReleased(KeyEvent e) {}
+			});
 			//jTextAreaNote.setPreferredSize(TextAreaNoteDimension);
 		}
 		return jTextAreaNote;
@@ -293,14 +321,13 @@ public class LabNew extends JDialog implements SelectionListener {
                         lab.setExamDate(newDate);
                         lab.setInOutPatient(inOut);
                         lab.setPatient(patientSelected);
-                        lab.setNote(jTextAreaNote.getText().trim());
-                        lab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
-                        if (lab.getExam().getProcedure() == 1) lab.setResult((String) jComboBoxExamResults.getSelectedItem());
                         if (lab.getExam().getProcedure() == 3 && lab.getResult().isEmpty()) {
     						JOptionPane.showMessageDialog(LabNew.this,
     								MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"), //$NON-NLS-1$
     								"Error", //$NON-NLS-1$
     								JOptionPane.WARNING_MESSAGE);
+    						//select the first exam with the missing value
+    						jTableExams.setRowSelectionInterval(examItems.indexOf(lab), examItems.indexOf(lab));
     						return;
     					}
                     }
@@ -383,7 +410,6 @@ public class LabNew extends JDialog implements SelectionListener {
 		} else {
 			jPanelResults.removeAll();
 			int selectedRow = jTableExams.getSelectedRow();
-			final Laboratory selectedLab = (Laboratory)jTableExams.getValueAt(selectedRow, -1);
 			Exam selectedExam = selectedLab.getExam();
                        
 			if (selectedExam.getProcedure() == 1) {
@@ -395,6 +421,7 @@ public class LabNew extends JDialog implements SelectionListener {
 				txtResultValue.setMaximumSize(new Dimension(EastWidth, ComponentHeight));
 				txtResultValue.setMinimumSize(new Dimension(EastWidth, ComponentHeight));
 				txtResultValue.setPreferredSize(new Dimension(EastWidth, ComponentHeight));
+				ArrayList<ExamRow> exaRowArray;
 				try {
 					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
@@ -412,6 +439,7 @@ public class LabNew extends JDialog implements SelectionListener {
 				jComboBoxExamResults.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						selectedLab.setResult(jComboBoxExamResults.getSelectedItem().toString());
+						examItems.set(selectedRow, selectedLab);
 						jTableExams.updateUI();
 					}
 				});
@@ -421,6 +449,8 @@ public class LabNew extends JDialog implements SelectionListener {
 					jPanelResults.add(new JLabel(selectedExam.getDefaultResult()));
 
 			}  else if (selectedExam.getProcedure() == 2) {
+				
+				
 				
 				jPanelResults.removeAll();
                 jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
@@ -434,15 +464,27 @@ public class LabNew extends JDialog implements SelectionListener {
                 resultsContainerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
                 resultsContainerScroll.setBounds(0, 0, EastWidth, ResultHeight);
                 jPanelResults.add(resultsContainerScroll);
-                for (ExamRow exaRow : exaRowArray) {
-					if (selectedExam.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
-
-						checked = false;
-						if (checking.contains(exaRow.getDescription()))
-							checked = true;
-                        resultsContainer.add(new CheckBox(exaRow, checked));
-					}
+                ArrayList<ExamRow> exaRowArray;
+                try {
+					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
+				} catch (OHServiceException ex) {
+					exaRowArray = null;
+					Logger.getLogger(LabNew.class.getName()).log(Level.SEVERE, null, ex);
 				}
+                if (exaRowArray != null) {
+	                for (ExamRow exaRow : exaRowArray) {
+						if (selectedExam.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
+							
+							checked = false;
+							LaboratoryRow labRow = new LaboratoryRow();
+							labRow.setDescription(exaRow.getDescription());
+							if (checking.contains(labRow))
+								checked = true;
+							
+	                        resultsContainer.add(new CheckBox(exaRow, checked));
+						}
+					}
+                }
 			} else if (selectedExam.getProcedure() == 3) {
 				jTextFieldExamResult = new JTextField();
 				jTextFieldExamResult.setMaximumSize(new Dimension(EastWidth, ComponentHeight));
@@ -508,6 +550,15 @@ public class LabNew extends JDialog implements SelectionListener {
 			for (String elem : matList) {
 				jComboBoxMaterial.addItem(elem);
 			}
+			jComboBoxMaterial.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					selectedLab.setMaterial(labManager.getMaterialKey((String)jComboBoxMaterial.getSelectedItem()));
+					examItems.get(jTableExams.getSelectedRow()).setMaterial(labManager.getMaterialKey((String)jComboBoxMaterial.getSelectedItem()));
+					jTableExams.updateUI();
+				}
+			});
 			jComboBoxMaterial.setPreferredSize(new Dimension(EastWidth, ComponentHeight));
 			jComboBoxMaterial.setMaximumSize(new Dimension(EastWidth, ComponentHeight));
 			jComboBoxMaterial.setEnabled(false);
@@ -700,21 +751,15 @@ public class LabNew extends JDialog implements SelectionListener {
 			jTableExams.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			ListSelectionModel listSelectionModel = jTableExams.getSelectionModel();
 			listSelectionModel.addListSelectionListener(new ListSelectionListener() {
-
+				
 				public void valueChanged(ListSelectionEvent e) {
 					// Check that mouse has been released.
-//					if (!e.getValueIsAdjusting()) {
-						
-						if (selectedLab != null) {
-							selectedLab.setNote(jTextAreaNote.getText().trim());
-							selectedLab.setMaterial(labManager.getMaterialKey((String)jComboBoxMaterial.getSelectedItem()));
-						}
-						
+					if (!e.getValueIsAdjusting()) {
 						int selectedRow = jTableExams.getSelectedRow();
 						
 						if (selectedRow > -1) {
 							selectedLab = (Laboratory)jTableExams.getValueAt(selectedRow, -1);
-							jComboBoxMaterial.setSelectedItem(selectedLab.getMaterial());
+							jComboBoxMaterial.setSelectedItem(labManager.getMaterialTranslated(selectedLab.getMaterial()));
 							jTextAreaNote.setText(selectedLab.getNote());
 							jPanelResults = getJPanelResults();
 							jComboBoxMaterial.setEnabled(true);
@@ -723,7 +768,7 @@ public class LabNew extends JDialog implements SelectionListener {
 							validate();
 							repaint();
 						}
-//					}
+					}
 				}
 			});
 		}
@@ -800,6 +845,13 @@ public class LabNew extends JDialog implements SelectionListener {
 
 						if (exa.getProcedure() == 1) {
 							ArrayList<ExamRow> exaRowTemp = new ArrayList<ExamRow>();
+							ArrayList<ExamRow> exaRowArray;
+							try {
+								exaRowArray = examRowManager.getExamRowByExamCode(exa.getCode());
+							} catch (OHServiceException e1) {
+								exaRowArray = null;
+								Logger.getLogger(LabNew.class.getName()).log(Level.SEVERE, null, e1);
+							}
 							// if(exaRowArray != null)
 							for (ExamRow exaRow : exaRowArray) {
 								// if(exaRow != null){
@@ -889,14 +941,15 @@ public class LabNew extends JDialog implements SelectionListener {
 		}
 
 		public Object getValueAt(int r, int c) {
+			Laboratory laboratory = examItems.get(r);
 			if (c == -1) {
-			    return examItems.get(r);
+			    return laboratory;
 			}
 			if (c == 0) {
-                return examItems.get(r).getExam().getDescription();
+                return laboratory.getExam().getDescription();
 			}
 			if (c == 1) {
-                return examItems.get(r).getResult();
+                return laboratory.getResult();
 			}
 			return null;
 		}

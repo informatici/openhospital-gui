@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.admission.gui;
 
 import static javax.swing.GroupLayout.Alignment.BASELINE;
@@ -80,6 +101,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ShadowBorder;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
@@ -115,7 +137,7 @@ import org.isf.xmpp.manager.Interaction;
  * 01/01/11 - Alex - GUI and code reengineering
  * 29/12/11 - Nicola - insert alert IN/OUT patient for communication module
  -----------------------------------------------------------*/
-public class AdmissionBrowser extends JDialog {
+public class AdmissionBrowser extends ModalJFrame {
 
 	/**
 	 * 
@@ -125,9 +147,9 @@ public class AdmissionBrowser extends JDialog {
 	private EventListenerList admissionListeners = new EventListenerList();
 
     	public interface AdmissionListener extends EventListener {
-		public void admissionUpdated(AWTEvent e);
+		void admissionUpdated(AWTEvent e);
 
-		public void admissionInserted(AWTEvent e);
+		void admissionInserted(AWTEvent e);
 	}
 
 	public void addAdmissionListener(AdmissionListener l) {
@@ -388,8 +410,9 @@ public class AdmissionBrowser extends JDialog {
 	 * from AdmittedPatientBrowser
 	 */
 	public AdmissionBrowser(JFrame parentFrame, AdmittedPatient admPatient, boolean editing) {
-		super(parentFrame, (editing ? MessageBundle.getMessage("angal.admission.editadmissionrecord")
-				: MessageBundle.getMessage("angal.admission.newadmission")), true);
+		super();
+		setTitle(editing ? MessageBundle.getMessage("angal.admission.editadmissionrecord")
+						: MessageBundle.getMessage("angal.admission.newadmission"));
 		addAdmissionListener((AdmissionListener) parentFrame);
 		this.editing = editing;
 		patient = admPatient.getPatient();
@@ -453,7 +476,8 @@ public class AdmissionBrowser extends JDialog {
 	 * from PatientDataBrowser
 	 */
 	public AdmissionBrowser(JFrame parentFrame, JFrame parentParentFrame, Patient aPatient, Admission anAdmission) {
-		super(parentFrame, MessageBundle.getMessage("angal.admission.editadmissionrecord"), true);
+		super();
+		setTitle(MessageBundle.getMessage("angal.admission.editadmissionrecord"));
 		addAdmissionListener((AdmissionListener) parentParentFrame);
 		addAdmissionListener((AdmissionListener) parentFrame);
 		this.editing = true;
@@ -512,7 +536,7 @@ public class AdmissionBrowser extends JDialog {
 		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setVisible(true);
+		showAsModal(parent);
 	}
 
 	private JPanel getJContentPane() {
@@ -1851,7 +1875,7 @@ public class AdmissionBrowser extends JDialog {
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.pack();
 					dialog.setLocationRelativeTo(null);
-					dialog.setVisible(true);
+					dialog.showAsModal(AdmissionBrowser.this);
 				}
 			});
 		}

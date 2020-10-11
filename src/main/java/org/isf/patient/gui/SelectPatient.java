@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.patient.gui;
 
 import java.awt.AWTEvent;
@@ -57,7 +78,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private EventListenerList selectionListener = new EventListenerList();
 	
 	public interface SelectionListener extends EventListener {
-		public void patientSelected(Patient patient);
+		void patientSelected(Patient patient);
 	}
 	
 	public void addSelectionListener(SelectionListener l) {
@@ -252,7 +273,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (!GeneralData.ENHANCEDSEARCH) {
 			if(!full)
 				try {
-					patArray = patManager.getPatientHeadWithHeightAndWeight();
+					patArray = patManager.getPatientWithHeightAndWeight(null);
 				} catch (OHServiceException e2) {
 					OHServiceExceptionUtil.showMessages(e2);
 				}
@@ -341,7 +362,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private void filterPatient() {
 		
 		String s = jTextFieldSearchPatient.getText() + lastKey;
-		s.trim();
+		s = s.trim();
 		String[] s1 = s.split(" ");
 		
 		//System.out.println(s);
@@ -485,7 +506,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 	private Patient reloadSelectedPatient(Integer code) {
 		try {
-			return patManager.getPatient(code);
+			return patManager.getPatientById(code);
 		} catch (OHServiceException ex) {
 			throw new RuntimeException("Unable to load patient");
 		}

@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.admission.gui;
 
 import java.awt.AWTEvent;
@@ -62,7 +83,6 @@ import org.isf.patient.gui.PatientInsert;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
-import org.isf.patient.model.PatientProfilePhoto;
 import org.isf.therapy.gui.TherapyEdit;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
@@ -735,7 +755,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.pack();
 					dialog.setLocationRelativeTo(null);
-					dialog.setVisible(true);
+					dialog.showAsModal(AdmittedPatientBrowser.this);
 				}
 			});
 		}
@@ -884,7 +904,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				if (patient  != null) {
 					Opd opd = new Opd(0,' ', -1, new Disease());
 					OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
-					newrecord.setVisible(true);
+					newrecord.showAsModal(myFrame);
 					
 				} /*else {
 					//new OpdBrowser(true);
@@ -1264,7 +1284,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 				if (key != null) {
 					String s = key + lastKey;
-					s.trim();
+					s = s.trim();
 					String[] tokens = s.split(" ");
 
 					if (!s.equals("")) {

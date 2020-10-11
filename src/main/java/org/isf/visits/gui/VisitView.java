@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.visits.gui;
 
 import java.awt.AWTEvent;
@@ -79,7 +100,7 @@ public class VisitView extends ModalJFrame {
 	private EventListenerList visitViewListeners = new EventListenerList();
 
     public interface VisitListener extends EventListener {
-        public void visitsUpdated(AWTEvent e);
+        void visitsUpdated(AWTEvent e);
     }
 
     public void addVisitListener(VisitListener l) {
@@ -442,7 +463,7 @@ public class VisitView extends ModalJFrame {
 			dateViPanel = new JPanel();
 
 			dateAdm = new JButton();
-			dateAdm.setText(MessageBundle.getMessage("Go to date:")); //TODO: use bundles key instead of labels
+			dateAdm.setText(MessageBundle.getMessage("angal.visit.gotodate")+":"); //$NON-NLS-1$
 			dateAdm.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
@@ -573,7 +594,7 @@ public class VisitView extends ModalJFrame {
 	}
 
 	public String[] visColums = { 
-			MessageBundle.getMessage("Visits"), //TODO: use bundles
+			MessageBundle.getMessage("angal.visit.visits"), //$NON-NLS-1$
 	};
 	private SpringLayout sl_visitParamsPanel;
 
@@ -582,14 +603,12 @@ public class VisitView extends ModalJFrame {
 	private JButton nextButton;
 	
 	private Object getVisitString(Visit visit, GregorianCalendar d) {
-		//TODO: use bundles
-		StringBuilder strBuilder = new StringBuilder("Time").append(": "); 
-		strBuilder.append(formatDateTime(d)).append(" - "); 
-		strBuilder.append(visit.getPatient().getName()).append(" ");
-		strBuilder.append("(").append(visit.getPatient().getCode()).append(") - ");
-		strBuilder.append("Service").append(": ").append(visit.getService()).append(" ");
-		strBuilder.append("(").append(visit.getDuration()).append("min").append(")"); 
-		
+		StringBuilder strBuilder = new StringBuilder(); 
+		strBuilder.append(formatDateTime(d)).append(" - ");  //$NON-NLS-1$
+		strBuilder.append("(").append(MessageBundle.getMessage("angal.common.patientID")).append(": ").append(visit.getPatient().getCode()).append(") - "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		strBuilder.append(visit.getPatient().getName()).append(" - "); //$NON-NLS-1$
+		strBuilder.append(visit.getService() == null || visit.getService().isEmpty() ? MessageBundle.getMessage("angal.common.notdefined") : visit.getService()).append(" "); //$NON-NLS-1$ //$NON-NLS-2$
+		strBuilder.append("(").append(visit.getDuration()).append(MessageBundle.getMessage("angal.common.minutesabbr")).append(")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 		return strBuilder.toString();
 	}
 
@@ -651,9 +670,9 @@ public class VisitView extends ModalJFrame {
 	private JButton getPrintTodayButton() {
 		if (todayButton == null) {
 			todayButton = new JButton();
-			todayButton.setMnemonic(KeyEvent.VK_R);
+			todayButton.setMnemonic(KeyEvent.VK_1);
 			todayButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
-			todayButton.setText(MessageBundle.getMessage("angal.visit.visittoday")); //$NON-NLS-1$
+			todayButton.setText(MessageBundle.getMessage("angal.visit.printthisday") + " (1)"); //$NON-NLS-1$
 			todayButton.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					new WardVisitsReport(getWard().getCode(), dateFirst, GeneralData.VISITSHEET);
@@ -667,8 +686,8 @@ public class VisitView extends ModalJFrame {
 	private JButton getPrintTomorrowButton() {
 		if (tomorrowButton == null) {
 			tomorrowButton = new JButton();
-			tomorrowButton.setMnemonic(KeyEvent.VK_R);
-			tomorrowButton.setText(MessageBundle.getMessage("angal.visit.visittoday")); //$NON-NLS-1$
+			tomorrowButton.setMnemonic(KeyEvent.VK_2);
+			tomorrowButton.setText(MessageBundle.getMessage("angal.visit.printthisday") + " (2)"); //$NON-NLS-1$
 			tomorrowButton.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					ward = (Ward) wardBox.getSelectedItem();
@@ -684,7 +703,7 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getButtonNext() {
 		if (nextButton == null) {
-			nextButton = new JButton("Next->"); //TODO: use bundles
+			nextButton = new JButton(MessageBundle.getMessage("angal.visit.nextabbr") + "->"); //$NON-NLS-1$
 			nextButton.setMnemonic(KeyEvent.VK_N);
 			nextButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			nextButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -701,8 +720,8 @@ public class VisitView extends ModalJFrame {
 	
 	private JButton getButtonBack() {
 		if (backButton == null) {
-			backButton = new JButton("<-back"); //$NON-NLS-1$
-			backButton.setMnemonic(KeyEvent.VK_B);
+			backButton = new JButton("<-" + MessageBundle.getMessage("angal.visit.previousabbr")); //$NON-NLS-1$
+			backButton.setMnemonic(KeyEvent.VK_P);
 			backButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			backButton.setHorizontalAlignment(SwingConstants.LEFT);
 			backButton.addActionListener(new ActionListener() {
@@ -755,7 +774,7 @@ public class VisitView extends ModalJFrame {
 			TodayPanel = new JPanel();
 
 			Todaybut= new JButton();
-			Todaybut.setText(MessageBundle.getMessage("Toady Visit")); //TODO: use bundles
+			Todaybut.setText(MessageBundle.getMessage("angal.common.today")); //$NON-NLS-1$
 			Todaybut.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
@@ -815,7 +834,7 @@ public class VisitView extends ModalJFrame {
 		}
 
 		wardPanel.add(wardBox);
-		wardPanel.setBorder(BorderFactory.createTitledBorder("Select a ward:")); //TODO: use bundles
+		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.visit.selectaward"))); //$NON-NLS-1$
 
 		return wardPanel;
 	}

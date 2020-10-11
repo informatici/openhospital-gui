@@ -1,3 +1,25 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.isf.lab.gui;
 
 /*------------------------------------------
  * LabEdit - Add/edit a laboratory exam
@@ -5,8 +27,6 @@
  * modification history
  * 
  *------------------------------------------*/
-
-package org.isf.lab.gui;
 
 import java.awt.AWTEvent;
 import java.awt.Color;
@@ -71,7 +91,7 @@ public class LabEditExtended extends ModalJFrame {
 	private EventListenerList labEditExtendedListener = new EventListenerList();
 	
 	public interface LabEditExtendedListener extends EventListener {
-		public void labUpdated();
+		void labUpdated();
 	}
 	
 	public void addLabEditExtendedListener(LabEditExtendedListener l) {
@@ -93,7 +113,7 @@ public class LabEditExtended extends ModalJFrame {
 	}
 	//---------------------------------------------------------------------------
 	
-	//private static final String VERSION=MessageBundle.getMessage("angal.versione");
+	//private static final String VERSION="v1.2";
 	private static final String VERSION="2.0";
 	
 	private boolean insert = false;
@@ -256,7 +276,7 @@ public class LabEditExtended extends ModalJFrame {
 						lastKey = s;
 					}
 					s = jTextPatientSrc.getText() + lastKey;
-					s.trim();
+					s = s.trim();
 					
 					filterPatient(s);
 				}

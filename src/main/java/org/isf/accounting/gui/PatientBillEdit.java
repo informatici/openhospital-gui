@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.accounting.gui;
 
 import java.awt.AWTEvent;
@@ -79,7 +100,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private EventListenerList patientBillListener = new EventListenerList();
 	
 	public interface PatientBillListener extends EventListener {
-		public void billInserted(AWTEvent aEvent);
+		void billInserted(AWTEvent aEvent);
 	}
 	
 	public void addPatientBillListener(PatientBillListener l) {
@@ -205,8 +226,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		}
 		if (patientPendingBills.isEmpty()){
 			// BILL
-			thisBill.setPatient(patientSelected);
-			thisBill.setPatient(true);
+			thisBill.setBillPatient(patientSelected);
+			thisBill.setIsPatient(true);
 			thisBill.setPatName(patientSelected.getName());
 		} else {
 			if (patientPendingBills.size() == 1) {
@@ -218,8 +239,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					if(response==JOptionPane.YES_OPTION){
 						insert = true;
 							//thisBill.setPatID(patientSelected.getCode());
-							thisBill.setPatient(patientSelected);
-							thisBill.setPatient(true);
+							thisBill.setBillPatient(patientSelected);
+							thisBill.setIsPatient(true);
 							thisBill.setPatName(patientSelected.getName());							
 					}else{
 						insert = false;
@@ -251,8 +272,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					if(response==JOptionPane.YES_OPTION){
 						insert = true;
 							//thisBill.setPatID(patientSelected.getCode());
-							thisBill.setPatient(patientSelected);
-							thisBill.setPatient(true);
+							thisBill.setBillPatient(patientSelected);
+							thisBill.setIsPatient(true);
 							thisBill.setPatName(patientSelected.getName());						
 					}else if(response==JOptionPane.NO_OPTION) {
 						//il faut proposer quelque chose
@@ -408,8 +429,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	public PatientBillEdit(JFrame owner, Patient patient) {
 		initCurrencyCod();
 		Bill bill = new Bill();
-		bill.setPatient(true);
-		bill.setPatient(patient);
+		bill.setIsPatient(true);
+		bill.setBillPatient(patient);
 		bill.setPatName(patient.getName());
 		PatientBillEdit newBill = new PatientBillEdit(owner, bill, true);
 		newBill.setPatientSelected(patient);
@@ -487,7 +508,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (thisBill.isList()) {
 			for (PriceList list : lstArray) {
 				
-				if (list.getId() == thisBill.getList().getId()) {
+				if (list.getId() == thisBill.getPriceList().getId()) {
 					listSelected = list;
 					foundList = true;
 					break;
@@ -513,7 +534,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							JOptionPane.WARNING_MESSAGE);
 					list = lstArray.get(0);
 				}
-				thisBill.setList(list);
+				thisBill.setPriceList(list);
 				thisBill.setListName(list.getName());
 				
 			}
@@ -523,7 +544,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			
 			Patient patient = null;
 			try {
-				patient = patManager.getPatient(thisBill.getPatient().getCode());
+				patient = patManager.getPatientById(thisBill.getBillPatient().getCode());
 			} catch (OHServiceException e) {
 				if(e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){
@@ -542,8 +563,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						JOptionPane.WARNING_MESSAGE,
 						icon);
 				
-				thisBill.setPatient(false);
-				thisBill.getPatient().setCode(0);
+				thisBill.setIsPatient(false);
+				thisBill.getBillPatient().setCode(0);
 			}
 		}
 	}
@@ -615,7 +636,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				
 				jComboBoxPriceList.addItem(lst);
 				if (!insert)
-					if (lst.getId() == thisBill.getList().getId())
+					if (lst.getId() == thisBill.getPriceList().getId())
 						list = lst;
 			}
 			if (list != null) 
@@ -720,8 +741,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					
 					patientSelected = null;
 					//BILL
-					thisBill.setPatient(false);
-					thisBill.getPatient().setCode(0);
+					thisBill.setIsPatient(false);
+					thisBill.getBillPatient().setCode(0);
 					thisBill.setPatName(""); //$NON-NLS-1$
 					//INTERFACE
 					jTextFieldPatient.setText(""); //$NON-NLS-1$
@@ -1090,7 +1111,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 								listSelected.getName(),						//List name
 								thisBill.isPatient(),						//is a Patient?
 								thisBill.isPatient() ? 
-									thisBill.getPatient() : null,			//Patient ID
+									thisBill.getBillPatient() : null,			//Patient ID
 								thisBill.isPatient() ? 
 									patientSelected.getName() : 
 									jTextFieldPatient.getText(),			//Patient Name
@@ -1121,7 +1142,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 								listSelected.getName(),						//List name
 								thisBill.isPatient(),						//is a Patient?
 								thisBill.isPatient() ?
-									thisBill.getPatient() : null,			//Patient ID
+									thisBill.getBillPatient() : null,			//Patient ID
 								thisBill.isPatient() ?
 									thisBill.getPatName() :
 									jTextFieldPatient.getText(),			//Patient Name

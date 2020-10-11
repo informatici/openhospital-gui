@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.medicalstockward.gui;
 
 import java.awt.AWTEvent;
@@ -63,7 +84,7 @@ public class WardPharmacyRectify extends JDialog {
     private EventListenerList movementWardListeners = new EventListenerList();
 	
 	public interface MovementWardListeners extends EventListener {
-		public void movementInserted(AWTEvent e);
+		void movementInserted(AWTEvent e);
 	}
 	
 	public void addMovementWardListener(MovementWardListeners l) {
@@ -497,7 +518,13 @@ public class WardPharmacyRectify extends JDialog {
 			jButtonNewLot.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					Medical medical = (Medical) jComboBoxMedical.getSelectedItem();
+					Medical medical;
+					try {
+						medical = (Medical) jComboBoxMedical.getSelectedItem();
+					} catch (ClassCastException e1) {
+						JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseselectadrug")); //$NON-NLS-1$
+						return;
+					}
 					chooseLot(medical, true);
 				}
 			});
@@ -511,7 +538,13 @@ public class WardPharmacyRectify extends JDialog {
 			jButtonChooseLot.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					Medical medical = (Medical) jComboBoxMedical.getSelectedItem();
+					Medical medical;
+					try {
+						medical = (Medical) jComboBoxMedical.getSelectedItem();
+					} catch (ClassCastException e1) {
+						JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseselectadrug")); //$NON-NLS-1$
+						return;
+					}
 					chooseLot(medical, false);
 				}
 			});
@@ -700,16 +733,15 @@ public class WardPharmacyRectify extends JDialog {
 	 */
 	private JSpinner getJSpinnerNewQty() {
 		if (jSpinnerNewQty == null) {
-			jSpinnerNewQty = new JSpinner(new SpinnerNumberModel(0.0, null, null, 1));
+			jSpinnerNewQty = new JSpinner(new SpinnerNumberModel(0.0, 0.0, null, 1));
 			jSpinnerNewQty.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
 			jSpinnerNewQty.addChangeListener(new ChangeListener() {
-			      
+				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					Medical med = ((Medical) jComboBoxMedical.getSelectedItem());
 					Double stock = Double.parseDouble(jLabelStockQty.getText());
 					Double newQty = (Double) jSpinnerNewQty.getValue();
-					jButtonChooseLot.setEnabled(true);
+					if (stock > 0) jButtonChooseLot.setEnabled(true);
 					if (newQty > stock) {
 						jButtonNewLot.setEnabled(true);
 					} else if (newQty < stock) {

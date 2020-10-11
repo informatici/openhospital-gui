@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.lab.gui;
 
 /*------------------------------------------
@@ -71,7 +92,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		filterButton.doClick();
 	}
 	
-	private static final String VERSION=MessageBundle.getMessage("angal.versione");
+	private static final String VERSION = "v1.1";
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -216,22 +237,28 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JButton getPrintLabelButton(){
 		if(printLabelButton==null){
 			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel"));
-			
 			printLabelButton.setMnemonic(KeyEvent.VK_O);
 			printLabelButton.addActionListener(new ActionListener() {
 			
 				public void actionPerformed(ActionEvent arg0) {
-					selectedrow = jTable.getSelectedRow();
-					if (selectedrow < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} 
-					laboratory = (Laboratory) (((LabBrowsingModel) model).getValueAt(selectedrow, -1));
-					Integer patId = laboratory.getPatient().getCode();
+					Integer labId = null;
+					if (GeneralData.LABEXTENDED) {
+						selectedrow = jTable.getSelectedRow();
+						if (selectedrow < 0) {
+							
+							int ok = JOptionPane.showConfirmDialog(LabBrowser.this, 
+											MessageBundle.getMessage("angal.lab.nopatientselectedprintempylabel"), 
+											MessageBundle.getMessage("angal.hospital"), 
+											JOptionPane.YES_NO_CANCEL_OPTION);
+							
+							if (ok != JOptionPane.YES_OPTION) return;
+						} else {
+							laboratory = (Laboratory) (((LabBrowsingModel) model).getValueAt(selectedrow, -1));
+							labId = laboratory.getCode();
+						}
+					}
 					try {
-						new PrintLabels("labelForSamples",patId);
+						new PrintLabels("labelForSamples", labId);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -494,7 +521,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel getDateFromPanel() {
 		if (jPanelDateFrom == null) {
 			jPanelDateFrom = new JPanel();
-			jPanelDateFrom.add(new JLabel(MessageBundle.getMessage("angal.common.datem") +" "+ MessageBundle.getMessage("angal.common.from") + ": "), null);
+			jPanelDateFrom.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom")), null);
 			jPanelDateFrom.add(getDateFieldFromPanel());
 			
 		}
@@ -519,7 +546,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel getDateToPanel() {
 		if (jPanelDateTo == null) {
 			jPanelDateTo = new JPanel();
-			jPanelDateTo.add(new JLabel(MessageBundle.getMessage("angal.common.datem") +" "+ MessageBundle.getMessage("angal.common.to") + ": "), null);
+			jPanelDateTo.add(new JLabel(MessageBundle.getMessage("angal.common.dateto")), null);
 			jPanelDateTo.add(getDateFieldToPanel());
 			
 		}

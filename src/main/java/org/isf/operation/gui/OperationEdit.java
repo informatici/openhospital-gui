@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.operation.gui;
 
 /*----------------------------------------------------------
@@ -52,9 +73,9 @@ public class OperationEdit extends JDialog {
 	private EventListenerList operationListeners = new EventListenerList();
 
 	public interface OperationListener extends EventListener {
-		public void operationUpdated(AWTEvent e);
+		void operationUpdated(AWTEvent e);
 
-		public void operationInserted(AWTEvent e);
+		void operationInserted(AWTEvent e);
 	}
 
 	public void addOperationListener(OperationListener l) {
@@ -201,13 +222,20 @@ public class OperationEdit extends JDialog {
 	}
 
 	private JComboBox getOperFor() {
-
-		//TODO: use bundles
+		
 		operBox = new JComboBox();
-
-		operBox.addItem("OPD/ADMISSION");
-		operBox.addItem("ADMISSION");
-		operBox.addItem("OPD");
+		//TODO: replace integer values with mnemonic ones
+		operBox.addItem(OperationBrowser.OPD_ADMISSION); 	// = "1"
+		operBox.addItem(OperationBrowser.ADMISSION);		// = "2"
+		operBox.addItem(OperationBrowser.OPD);				// = "3"
+		
+		if (!insert) {
+			int index = operation.getOpeFor().equals("1") ? 0
+							: operation.getOpeFor().equals("2") ? 1
+											: operation.getOpeFor().equals("3") ? 2 
+															: 0; // default
+			operBox.setSelectedIndex(index);
+		}
 
 		return operBox;
 
@@ -312,18 +340,8 @@ public class OperationEdit extends JDialog {
 								return;
 							}
 						}
-						String opeFor;
-						String op=String.valueOf(operBox.getSelectedItem());
-						//TODO: use bundles
-						if (op.equals("OPD/ADMISSION")) {
-							  opeFor="1";
-						}else if(op.equals("ADMISSION")) {
-							 opeFor="2";
-						}else {
-							opeFor="3";
-						}
-
-						operation.setOpeFor(opeFor);
+						String opeForSelection = String.valueOf(operBox.getSelectedIndex()+1);
+						operation.setOpeFor(opeForSelection);
 						operation.setType((OperationType) typeComboBox.getSelectedItem());
 						operation.setDescription(descriptionTextField.getText());
 						operation.setCode(codeTextField.getText().trim().toUpperCase());

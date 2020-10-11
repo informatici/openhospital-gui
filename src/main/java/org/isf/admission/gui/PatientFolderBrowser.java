@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.admission.gui;
 
 import java.awt.AWTEvent;
@@ -102,7 +123,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
 
     public interface DeleteAdmissionListener extends EventListener {
-        public void deleteAdmissionUpdated(AWTEvent e);
+        void deleteAdmissionUpdated(AWTEvent e);
     }
 
     public void addDeleteAdmissionListener(DeleteAdmissionListener l) {
@@ -302,24 +323,26 @@ public class PatientFolderBrowser extends ModalJFrame implements
                 /*** apply default oh cellRender *****/
 		labTable.setDefaultRenderer(Object.class, cellRenderer);
 		labTable.setDefaultRenderer(Double.class, cellRenderer);
-                labTable.addMouseMotionListener(new MouseMotionListener() {	
+		labTable.addMouseMotionListener(new MouseMotionListener() {
+
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				JTable aTable =  (JTable)e.getSource();
-		        int itsRow = aTable.rowAtPoint(e.getPoint());
-		        if(itsRow>=0){
-		        	cellRenderer.setHoveredRow(itsRow);
-		        }
-		        else{
-		        	cellRenderer.setHoveredRow(-1);
-		        }
-		        aTable.repaint();
+				JTable aTable = (JTable) e.getSource();
+				int itsRow = aTable.rowAtPoint(e.getPoint());
+				if (itsRow >= 0) {
+					cellRenderer.setHoveredRow(itsRow);
+				} else {
+					cellRenderer.setHoveredRow(-1);
+				}
+				aTable.repaint();
 			}
-			
+
 			@Override
-			public void mouseDragged(MouseEvent e) {}
+			public void mouseDragged(MouseEvent e) {
+			}
 		});
-                labTable.addMouseListener(new MouseAdapter() {
+		labTable.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				cellRenderer.setHoveredRow(-1);
@@ -551,7 +574,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 								MessageBundle.getMessage("angal.common.nodatatoshow")); //$NON-NLS-1$
 						return;
 					}
-					new PatientFolderReportModal(patient.getCode(),olderDate);
+					new PatientFolderReportModal(PatientFolderBrowser.this, patient.getCode(),olderDate);
 				}
 			});
 		}

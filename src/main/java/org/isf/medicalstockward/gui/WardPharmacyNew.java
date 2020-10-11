@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2020 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.medicalstockward.gui;
 
 import java.awt.AWTEvent;
@@ -40,7 +61,6 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
-import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
@@ -49,7 +69,6 @@ import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -60,8 +79,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
     private EventListenerList movementWardListeners = new EventListenerList();
 	
 	public interface MovementWardListeners extends EventListener {
-		public void movementUpdated(AWTEvent e);
-		public void movementInserted(AWTEvent e);
+		void movementUpdated(AWTEvent e);
+		void movementInserted(AWTEvent e);
 	}
 	
 	public void addMovementWardListener(MovementWardListeners l) {
@@ -292,19 +311,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		public Object getValueAt(int r, int c) {
 			MedicalWard medicalWard = druglist.get(r);
 			if (c == -1) {
+				
 				return medicalWard;
 			} else if (c == 0) {
 				return medicalWard.getId().getLot();
-			} else if (c == 1) {
-				ArrayList<Lot> lot = null;
-				try {
-					lot = movManager.getLotByMedical(medicalWard.getMedical());
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
-			}  else if (c == 2) {
+			} else if (c == 1) {	
 				return medicalWard.getQty();
+			}  else if (c == 2) {
+				return TimeTools.formatDateTime(medicalWard.getLot().getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}
 			return null;
 		}
@@ -463,10 +477,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				return qty;
 			if (checkQuantity(totalQty, qty)) {
 
-				if (isAutomaticLot()) {
-					MedicalWard warSe = automaticChoose(wardDrugs, med, qty);
+				if (isAutomaticLot() || jRadioPatient.isSelected()) {
+					MedicalWard medicalSelection = automaticChoose(wardDrugs, med, qty);
 				} else {
-					MedicalWard warSe = chooseLot(wardDrugs, med, qty);
+					MedicalWard medicalSelection = chooseLot(wardDrugs, med, qty);
 				}
 			} else {
 				askQuantity(med, wardDrugs);
@@ -752,7 +766,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jRadioPatient.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					System.out.println("in jRadioPatient: " + e.getID());
 					jTextFieldUse.setEnabled(false);
 					jTextFieldPatient.setEnabled(true);
 					jButtonPickPatient.setEnabled(true);
