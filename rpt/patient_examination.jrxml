@@ -19,7 +19,6 @@
 		<![CDATA[SELECT *
 FROM PATIENT
 LEFT JOIN PATIENTEXAMINATION ON PAT_ID = PEX_PAT_ID
-LEFT JOIN PATIENT_PROFILE_PHOTO ON PAT_ID = PAT_PROFILE_PHOTO_ID
 WHERE PEX_ID = $P{examId}]]>
 	</queryString>
 	<field name="PAT_ID" class="java.lang.Integer">
@@ -350,18 +349,6 @@ WHERE PEX_ID = $P{examId}]]>
 		<property name="com.jaspersoft.studio.field.name" value="PEX_ACTIVE"/>
 		<property name="com.jaspersoft.studio.field.label" value="PEX_ACTIVE"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="patientexamination"/>
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="PAT_PROFILE_PHOTO_ID" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="PAT_PROFILE_PHOTO_ID"/>
-		<property name="com.jaspersoft.studio.field.label" value="PAT_PROFILE_PHOTO_ID"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="patient_profile_photo"/>
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="PAT_PHOTO" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="PAT_PHOTO"/>
-		<property name="com.jaspersoft.studio.field.label" value="PAT_PHOTO"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="patient_profile_photo"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
