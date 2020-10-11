@@ -208,7 +208,7 @@ ORDER BY DATE DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 				<text><![CDATA[ PATIENT CLINICAL SHEET]]></text>
 				</staticText>
@@ -282,7 +282,7 @@ ORDER BY DATE DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" isBold="false"/>
+						<font isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{DATE}]]></textFieldExpression>
 				</textField>
@@ -299,7 +299,7 @@ ORDER BY DATE DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+						<font isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TYPE}]]></textFieldExpression>
 				</textField>
@@ -313,7 +313,7 @@ ORDER BY DATE DESC]]></queryString>
 						isRemoveLineWhenBlank="true"/>
 					<box></box>
 					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica-Oblique" isItalic="true"/>
+						<font fontName="SansSerif" isItalic="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NOTE}]]></textFieldExpression>
 				</textField>
@@ -327,7 +327,7 @@ ORDER BY DATE DESC]]></queryString>
 						stretchType="RelativeToBandHeight"/>
 					<box></box>
 					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica" isBold="false"/>
+						<font fontName="SansSerif" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DETAILS_1}]]></textFieldExpression>
 				</textField>

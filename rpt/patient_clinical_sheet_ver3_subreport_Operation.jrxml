@@ -138,7 +138,7 @@ WHERE ($P{type} like 'Opd%' AND OPER_OPD_ID = $P{id})
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+						<font size="10" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Operation Date]]></text>
 				</staticText>

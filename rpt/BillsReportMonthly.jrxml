@@ -105,7 +105,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Hospital}]]></textFieldExpression>
 				</textField>
@@ -194,7 +194,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+						<font fontName="Arial" size="14" isBold="true"/>
 					</textElement>
 				<text><![CDATA[TO]]></text>
 				</staticText>
@@ -228,7 +228,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+						<font fontName="Arial" size="14" isBold="true"/>
 					</textElement>
 				<text><![CDATA[report from]]></text>
 				</staticText>
@@ -249,7 +249,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Month]]></text>
 				</staticText>
@@ -266,7 +266,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Billed / Income]]></text>
 				</staticText>
@@ -283,7 +283,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Receivable]]></text>
 				</staticText>
@@ -300,7 +300,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Cash Collections]]></text>
 				</staticText>
@@ -387,7 +387,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.25"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+						<font isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_BILLED}]]></textFieldExpression>
 				</textField>
@@ -404,7 +404,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.25"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+						<font isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_INCOME}]]></textFieldExpression>
 				</textField>
@@ -421,7 +421,7 @@ GROUP BY YEAR(DATE), MONTH(DATE)]]></queryString>
 					<rightPen lineWidth="0.25"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+						<font isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_RECEIVABLE}]]></textFieldExpression>
 				</textField>
