@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hmis105_opd_referrals" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="03158dba-b8e5-4f7c-965f-94020ba8f8f2">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hmis105_opd_referrals" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="hmis105_opd_referrals" whenResourceMissingType="Key" uuid="03158dba-b8e5-4f7c-965f-94020ba8f8f2">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -64,7 +65,7 @@ order by category]]>
 	</background>
 	<title>
 		<band height="50" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-2" mode="Opaque" x="0" y="1" width="392" height="28" forecolor="#FFFFFF" backcolor="#000000" uuid="7dd4a62d-9ab6-4197-89b7-efe2ae193bad"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -75,9 +76,9 @@ order by category]]>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[HMIS105: HEALTH UNIT OUTPATIENT MONTHLY REPORT]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Hmis105.Health.Unit.Outpatient.Monthly.Report}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-3" x="0" y="29" width="535" height="15" uuid="a60956a3-ab2d-431e-be14-99de5f92fa80"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -88,8 +89,8 @@ order by category]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[1. OUTPATIENT ATTENDANCE / REFERRALS]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{1.Outpatient.Attendance.REferrals}]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-1" x="462" y="15" width="73" height="14" uuid="57eb54b3-6ff7-4296-ab6d-65429f6de34d"/>
 				<box leftPadding="2">
@@ -116,7 +117,7 @@ order by category]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{month}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-19" mode="Opaque" x="393" y="1" width="69" height="14" forecolor="#FFFFFF" backcolor="#000000" uuid="4ad19bdf-8806-499b-bb98-c677b864c23f"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -127,9 +128,9 @@ order by category]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Month:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-20" mode="Opaque" x="393" y="15" width="69" height="14" forecolor="#FFFFFF" backcolor="#000000" uuid="da62c22d-836a-4be2-8ae3-5c3dffd9a47a"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -140,8 +141,8 @@ order by category]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Year:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Year}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -149,7 +150,7 @@ order by category]]>
 	</pageHeader>
 	<columnHeader>
 		<band height="22" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-4" x="0" y="0" width="241" height="22" uuid="63f517a8-0476-43fe-aa5a-6973487134e9"/>
 				<box leftPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -160,9 +161,9 @@ order by category]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Category]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Category}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-5" x="241" y="0" width="90" height="11" uuid="95d86355-e592-458e-9a66-6d950d733e86"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -173,9 +174,9 @@ order by category]]>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Under five years older]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Under.Five.Years.Older}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-6" x="354" y="0" width="90" height="11" uuid="6ca4d1ff-2135-429d-841c-92157ebe9998"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -186,9 +187,9 @@ order by category]]>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Five years and older]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Five.Years.And.Older}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" x="241" y="11" width="45" height="11" uuid="5abc49bd-1acd-456c-bc76-8fabeb4485d0"/>
 				<box rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -199,9 +200,9 @@ order by category]]>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[M]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{M}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-10" x="286" y="11" width="45" height="11" uuid="6dc832a3-2026-47d8-8104-8caa6df1a74c"/>
 				<box rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -212,9 +213,9 @@ order by category]]>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{F}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-15" x="354" y="11" width="45" height="11" uuid="21cebf3e-2616-45c1-82f5-c5296e32b6a6"/>
 				<box rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -225,9 +226,9 @@ order by category]]>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[M]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{M}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-16" x="399" y="11" width="45" height="11" uuid="ae7b9cbb-2989-48d2-af77-98af84559022"/>
 				<box rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -238,8 +239,8 @@ order by category]]>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{F}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
