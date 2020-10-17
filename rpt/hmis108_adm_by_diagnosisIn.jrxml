@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.12.0.final using JasperReports Library version 6.12.1-ac0eebdb29e4c0985457bab279a6db744d661530  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hmis108_adm_by_diagnosisn" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="3b5d25a2-2792-48f3-8137-5870b9440b20">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hmis108_adm_by_diagnosisIn" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="hmis108_adm_by_diagnosisIn" whenResourceMissingType="Key" uuid="3b5d25a2-2792-48f3-8137-5870b9440b20">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -160,7 +160,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 	</background>
 	<title>
 		<band height="68" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-2" mode="Opaque" x="0" y="1" width="392" height="28" forecolor="#FFFFFF" backcolor="#000000" uuid="919b1b12-ed83-4185-a094-c089be7ebbcc"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -171,9 +171,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[HMIS108: HEALTH UNIT INPATIENT MONTHLY REPORT]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Hmis108HealthUnitInpatientMonthlyReport}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-3" x="0" y="29" width="535" height="15" uuid="b0612b82-1b4f-41d3-bd12-8ca4ee980246"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -184,8 +184,8 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[NUMBER OF ADMISSIONS AND DEATH BY DIAGNOSIS* (disease IN, admission date)]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{NumberOfAdmissionsAndDeathByDiagnosisDiseaseInAdmissionDate}]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-1" x="462" y="15" width="73" height="14" uuid="63c6c14b-5e6c-4aa7-8727-64cc0f027f1b"/>
 				<box leftPadding="2">
@@ -212,7 +212,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				</textElement>
 				<textFieldExpression><![CDATA[$P{month}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-19" mode="Opaque" x="393" y="1" width="69" height="14" forecolor="#FFFFFF" backcolor="#000000" uuid="7df3e5b8-e085-443a-abcb-176c53b4acfc"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -223,9 +223,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Month:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-20" mode="Opaque" x="393" y="15" width="69" height="14" forecolor="#FFFFFF" backcolor="#000000" uuid="53194085-c46b-484e-928c-cccabe0b32be"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -236,15 +236,15 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Year:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Year}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-36" x="0" y="44" width="535" height="15" uuid="748dc187-d645-461b-9855-f576d55526e7"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[*only closed admission will be counted]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{OnlyClosedAdmissionWillBeCounted}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -252,7 +252,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 	</pageHeader>
 	<columnHeader>
 		<band height="43" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-4" x="0" y="0" width="174" height="33" uuid="bcf5bdee-408e-4797-ba28-b35267b243d4"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -263,9 +263,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Diagnosis]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Diagnosis}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-22" x="174" y="0" width="152" height="11" uuid="a6517933-5230-421b-998f-25a0f1bd5a10"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -276,9 +276,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Under five years older]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{UnderFiveYearsOlder}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-23" x="326" y="0" width="152" height="11" uuid="8b0d513b-3238-4b61-88a5-a9a8e168b912"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -289,9 +289,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Five years and older]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{FiveYearsAndOlder}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-24" x="174" y="11" width="76" height="11" uuid="dc82cba0-478b-4aaf-b03b-d225e8950937"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -302,9 +302,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Cases]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Cases}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-25" x="250" y="11" width="76" height="11" uuid="0f3ae299-f599-4c8e-8ad2-9ecbaf9d9401"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -315,9 +315,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Deaths]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Deaths}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-26" x="174" y="22" width="38" height="11" uuid="c03dd3c9-5444-463c-8d4f-fd74811a00d0"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -328,9 +328,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[M]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{M}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-27" x="212" y="22" width="38" height="11" uuid="84282a71-472f-4190-85d8-f71f6b617d9e"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -341,9 +341,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{F}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-28" x="250" y="22" width="38" height="11" uuid="b0d9911c-3b80-4723-98c7-952dcea63102"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -354,9 +354,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[M]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{M}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-29" x="288" y="22" width="38" height="11" uuid="17ee317f-4d00-451d-a4ed-5dc0a945756d"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -367,9 +367,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{F}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-30" x="326" y="11" width="76" height="11" uuid="a22092d7-834e-4518-80e3-2948fe684744"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -380,9 +380,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Cases]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Cases}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-31" x="402" y="11" width="76" height="11" uuid="42240a24-88e1-4d86-9b43-aaf4bc7b4217"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -393,9 +393,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Deaths]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Deaths}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-32" x="326" y="22" width="38" height="11" uuid="4d515d5e-f417-4548-8514-d5a39afc3a6c"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -406,9 +406,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[M]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{M}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-33" x="364" y="22" width="38" height="11" uuid="e8bb70df-41e9-4cdd-ae37-1191172aabe2"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -419,9 +419,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{F}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-34" x="402" y="22" width="38" height="11" uuid="6c2ed801-8819-45ae-baeb-66aea15e1021"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -432,9 +432,9 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[M]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{M}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-35" x="440" y="22" width="38" height="11" uuid="fd0f7939-8b0d-4402-941e-bdd70cdac2fc"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -445,8 +445,8 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[F]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{F}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -673,7 +673,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 	</lastPageFooter>
 	<summary>
 		<band height="15" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-21" x="0" y="0" width="174" height="15" uuid="34b6e350-1f5a-4236-817a-528ac37db9ac"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -684,8 +684,8 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="10" isBold="true" pdfEncoding="Cp1250" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[TOTALS]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Totals}]]></textFieldExpression>
+			</textField>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-17" x="174" y="0" width="38" height="15" uuid="20dbb219-afb9-4c39-a2b3-8548e6efc315"/>
 				<box>
