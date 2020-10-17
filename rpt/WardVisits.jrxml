@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WardVisits" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="39cdb462-cf88-457c-a218-33ebe2ca104c">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WardVisits" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="WardVisits" whenResourceMissingType="Key" uuid="39cdb462-cf88-457c-a218-33ebe2ca104c">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
@@ -270,13 +270,13 @@ ORDER BY VST_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-1" x="0" y="91" width="103" height="20" uuid="40079b4c-4cee-402d-bd3f-ced058957732"/>
 				<textElement textAlignment="Left">
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Visits in date:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{VisitsInDate}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -287,7 +287,7 @@ ORDER BY VST_DATE ASC]]>
 			<rectangle>
 				<reportElement key="rectangle-1" mode="Opaque" x="0" y="0" width="524" height="17" forecolor="#000000" backcolor="#808080" uuid="3c9c79cd-6db7-4360-9ab0-4426cd863b25"/>
 			</rectangle>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-2" x="262" y="0" width="79" height="17" forecolor="#FFFFFF" uuid="89327bfd-e99d-4c36-8d1d-dca1e4066570"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -298,9 +298,9 @@ ORDER BY VST_DATE ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Patient Name]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{PatientName}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-3" x="0" y="0" width="94" height="17" forecolor="#FFFFFF" uuid="d1658dfd-073d-41b8-9592-37e460e05269"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -311,9 +311,9 @@ ORDER BY VST_DATE ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Date]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-4" x="341" y="0" width="79" height="17" forecolor="#FFFFFF" uuid="36720014-6e55-4028-9ba0-a19f3a2530f8"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -324,9 +324,9 @@ ORDER BY VST_DATE ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Patient Code]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{PatientCode}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-5" x="183" y="0" width="79" height="17" forecolor="#FFFFFF" uuid="932cb746-913a-4871-b64e-719b66560061"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -337,9 +337,9 @@ ORDER BY VST_DATE ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Duration (min)]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{DurationMin}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-6" x="94" y="0" width="90" height="17" forecolor="#FFFFFF" uuid="eb28a3d8-22a2-4b80-b990-071c9b64d8a4"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -350,9 +350,9 @@ ORDER BY VST_DATE ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Service]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Service}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-7" x="420" y="0" width="98" height="17" forecolor="#FFFFFF" uuid="6b22c9da-5793-4e61-81ea-ba83fbd0ce5c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -363,8 +363,8 @@ ORDER BY VST_DATE ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Note]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Note}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
