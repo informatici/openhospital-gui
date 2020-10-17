@@ -113,7 +113,7 @@ public class ReportLauncher extends ModalJFrame{
 		{"angal.stat.pageonecensusinfo", 				"hmis108_cover", 													"twodatesfrommonthyear"},
 		{"angal.stat.pageonereferrals", 				"hmis108_referrals", 												"monthyear"},
 		{"angal.stat.pageoneoperations", 				"hmis108_operations", 												"monthyear"},
-		{"angal.stat.inpatientdiagnosisin", 			"hmis108_adm_by_diagnosis_in", 										"monthyear"},
+		{"angal.stat.inpatientdiagnosisin", 			"hmis108_adm_by_diagnosisIn", 										"monthyear"},
 		{"angal.stat.inpatientdiagnosisout", 			"hmis108_adm_by_diagnosis_out", 									"monthyear"},
 		{"angal.stat.opdattendance", 					"hmis105_opd_attendance", 											"monthyear"},
 		{"angal.stat.opdreferrals", 					"hmis105_opd_referrals", 											"monthyear"},
