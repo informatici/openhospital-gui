@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hmis108_cover" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="3da1a980-22df-45a2-9ff8-016d6c27b23a">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hmis108_cover" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="hmis108_cover" whenResourceMissingType="Key" uuid="3da1a980-22df-45a2-9ff8-016d6c27b23a">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -79,7 +80,7 @@ SELECT 	WRD_ID_A wardid,
 	</title>
 	<pageHeader>
 		<band height="153" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-3" x="239" y="92" width="57" height="51" uuid="e272c3d4-8192-4aeb-9d32-573a23ac67e7"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -90,10 +91,9 @@ SELECT 	WRD_ID_A wardid,
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[(E)
-Patient Days]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{ePatientDays}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-4" x="296" y="92" width="70" height="51" uuid="104f1d52-17a2-4bba-b17c-2989082b80bf"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -104,10 +104,9 @@ Patient Days]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[(F)
-Average  stay= E/C]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{AverageStay}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-8" x="452" y="92" width="83" height="51" uuid="54160604-a323-41fe-83d3-2616f1b2c5ff"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -118,11 +117,9 @@ Average  stay= E/C]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[(H)
-Bed Occupancy
-=(G x 100)/B]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{BedOccupancy}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" x="365" y="92" width="88" height="51" uuid="2f349eea-1632-4d7f-ae07-eeeee2f11f22"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -133,11 +130,9 @@ Bed Occupancy
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[(G)
-Average Occupancy
-=E/days in period]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{AverageOccupancy}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-15" mode="Opaque" x="0" y="0" width="421" height="36" forecolor="#FFFFFF" backcolor="#000000" uuid="654cbc74-0563-4168-b551-4aed456c7103"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -148,8 +143,8 @@ Average Occupancy
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="18" isBold="true"/>
 				</textElement>
-				<text><![CDATA[HMIS 108:      INPATIENT MONTHLY REPORT ]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Hmis108InpatientMonthlyReport}]]></textFieldExpression>
+			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField" x="474" y="4" width="61" height="15" uuid="66f18c63-aed0-4806-ad97-5fde7cb81364"/>
 				<box>
@@ -176,7 +171,7 @@ Average Occupancy
 				</textElement>
 				<textFieldExpression><![CDATA[$P{todate}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-19" x="0" y="72" width="238" height="14" uuid="1b279ba2-0e17-4d49-a870-d2de3ca6d160"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -187,9 +182,9 @@ Average Occupancy
 				<textElement>
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[1. Census information]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{CensusInformation}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-20" x="1" y="92" width="93" height="51" uuid="ce1ac614-b09e-466d-afb8-682c76dbbd9e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -200,10 +195,9 @@ Average Occupancy
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[(A)
-List of Wards]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{ListOfWards}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-21" x="94" y="92" width="41" height="51" uuid="946c44f2-8979-47be-bec8-4d8b45777b0c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -214,10 +208,9 @@ List of Wards]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[(B)
-Beds]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Beds}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-22" x="135" y="92" width="63" height="51" uuid="1f7304ec-bb9e-4ebd-85c0-e58882811555"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -228,10 +221,9 @@ Beds]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[(C)
-Admissions]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Admissions}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-23" x="198" y="92" width="41" height="51" uuid="de849798-ed5f-4d22-89be-6024e608ad0d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -242,10 +234,9 @@ Admissions]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[(D)
-Deaths]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Deaths}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-32" mode="Transparent" x="434" y="4" width="35" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="503d0d9c-893b-4c5d-9421-143e361ce871"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -257,9 +248,9 @@ Deaths]]></text>
 					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[From:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{From}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-33" mode="Transparent" x="434" y="19" width="35" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="504c10fa-b54c-4354-8ac6-233dd8e6986a"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -271,9 +262,9 @@ Deaths]]></text>
 					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[To:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-34" mode="Transparent" x="0" y="36" width="421" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="d9b8534f-e7c9-49e5-8cfe-f5aab23cb43c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -285,8 +276,8 @@ Deaths]]></text>
 					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Report version 1.3.1 (patient days: discharged this month, days=(dismission - admission ) +1 ]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{ReportVersionPatientDaysDischargedThisMonthDaysDismissionMinusAdmissionPlusOne}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
