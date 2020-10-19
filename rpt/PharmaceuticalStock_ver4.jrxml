@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalStock_ver4" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="3b4ad867-b6eb-4382-9eee-db98328ee9cd">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalStock_ver4" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PharmaceuticalStock_ver4" whenResourceMissingType="Key" uuid="3b4ad867-b6eb-4382-9eee-db98328ee9cd">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -92,27 +92,27 @@ ORDER BY $P!{sortBy}]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{MDSRT_DESC}]]></textFieldExpression>
 				</textField>
-				<staticText>
+				<textField>
 					<reportElement key="staticText-10" x="365" y="0" width="74" height="18" forecolor="#FFFFFF" uuid="17da9c40-cc95-4b3b-b0af-1ae53bfd8a62"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" isBold="true"/>
 					</textElement>
-					<text><![CDATA[QTY]]></text>
-				</staticText>
-				<staticText>
+					<textFieldExpression><![CDATA[$R{Qty}]]></textFieldExpression>
+				</textField>
+				<textField>
 					<reportElement key="staticText-11" x="309" y="0" width="56" height="18" forecolor="#FFFFFF" uuid="94d42ab8-63ed-426d-8d72-896f09a688e4"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" isBold="true"/>
 					</textElement>
-					<text><![CDATA[CRITICAL]]></text>
-				</staticText>
-				<staticText>
+					<textFieldExpression><![CDATA[$R{Critical}]]></textFieldExpression>
+				</textField>
+				<textField>
 					<reportElement key="staticText-12" x="439" y="0" width="62" height="18" forecolor="#FFFFFF" uuid="2531c24a-ad0b-4783-b2ee-53a0d921d51f"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" isBold="true"/>
 					</textElement>
-					<text><![CDATA[VALUE]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[$R{ValueMAIUSC}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -130,7 +130,7 @@ ORDER BY $P!{sortBy}]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{GROUP_VALUE}]]></textFieldExpression>
 				</textField>
-				<staticText>
+				<textField>
 					<reportElement key="staticText-9" x="221" y="0" width="83" height="19" uuid="09c764d6-1dab-44c9-a081-b7186fbd0407"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -141,8 +141,8 @@ ORDER BY $P!{sortBy}]]>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font fontName="Arial" size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Value]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[$R{Value}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
@@ -203,7 +203,7 @@ ORDER BY $P!{sortBy}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-8" x="0" y="70" width="39" height="20" uuid="d0c3c136-977b-458a-90ae-351bce25d5fe"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -214,8 +214,8 @@ ORDER BY $P!{sortBy}]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Date:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Date}+":"]]></textFieldExpression>
+			</textField>
 			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
 				<reportElement key="textField-22" x="44" y="70" width="219" height="20" uuid="bcd9c51e-06f7-4cd0-aac1-d24610690dee"/>
 				<box>
@@ -379,7 +379,7 @@ ORDER BY $P!{sortBy}]]>
 	</pageFooter>
 	<summary>
 		<band height="19" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-13" x="211" y="0" width="92" height="19" uuid="ba51f8bb-60d0-475a-8105-82a9b7214b07"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -390,8 +390,8 @@ ORDER BY $P!{sortBy}]]>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Value]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{TotalValue}]]></textFieldExpression>
+			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-29" x="307" y="0" width="194" height="19" uuid="220503b6-789d-4667-a268-35840562e0b7"/>
 				<box>
