@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalExpiration" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b9099a0c-14d9-4ffe-a517-c8b93d5d8656">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalExpiration" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="PharmaceuticalExpiration" whenResourceMissingType="Key" uuid="b9099a0c-14d9-4ffe-a517-c8b93d5d8656">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
@@ -144,7 +144,7 @@ WHERE QTY > 0]]>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 				</graphicElement>
 			</rectangle>
-			<staticText>
+			<textField>
 				<reportElement key="staticText" x="5" y="5" width="468" height="40" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="3d4ba071-41a6-4bf7-b81e-3e7c964f4788"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -156,8 +156,8 @@ WHERE QTY > 0]]>
 					<font fontName="Arial" size="24" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Expiring Medicals]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{ExpiringMedicals}]]></textFieldExpression>
+			</textField>
 			<line direction="BottomUp">
 				<reportElement key="line" mode="Opaque" x="0" y="60" width="535" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="1b5a7618-e0d8-4e99-be3d-ca68d85fe8ef"/>
 				<graphicElement>
@@ -250,7 +250,7 @@ WHERE QTY > 0]]>
 				</textElement>
 				<textFieldExpression><![CDATA["[" + $F{MMV_LT_ID_A}.toUpperCase() + "]"]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText" positionType="Float" x="0" y="0" width="67" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="38ae8abd-c8a5-4acb-866b-b1c291eea007"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -262,8 +262,8 @@ WHERE QTY > 0]]>
 					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[LOT ID:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{LotId}+":"]]></textFieldExpression>
+			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement key="textField" x="287" y="0" width="59" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="2d66dd18-a2cb-4ed9-9db9-40e9b8910f44"/>
 				<box>
@@ -278,7 +278,7 @@ WHERE QTY > 0]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{QTY}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText" positionType="Float" x="218" y="0" width="65" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="5606100a-5eca-4480-9283-3fb0c81ce8dc"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -290,9 +290,9 @@ WHERE QTY > 0]]>
 					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[QUANTITY:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Quantity}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-1" positionType="Float" x="388" y="0" width="65" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="e49ef9bc-faa3-4ab6-a6dc-2eca70384c31"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -304,8 +304,8 @@ WHERE QTY > 0]]>
 					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[EXP DATE:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{ExpDate}+":"]]></textFieldExpression>
+			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-7" x="460" y="0" width="75" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="a3fb2e84-9da4-4564-9137-9aab7f23b4f8"/>
 				<box>
