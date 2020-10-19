@@ -113,7 +113,7 @@ order by category]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Month}+":"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-20" mode="Opaque" x="393" y="15" width="69" height="14" forecolor="#FFFFFF" backcolor="#000000" uuid="bddd8392-82e4-4402-a978-9a09e1787f26"/>
@@ -126,7 +126,7 @@ order by category]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Year}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Year}+":"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

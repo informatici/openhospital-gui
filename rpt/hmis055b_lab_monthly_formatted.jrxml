@@ -321,7 +321,7 @@ from (
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Year}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Year}+":"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="702" y="39" width="76" height="15" uuid="035da4b6-e6ca-47fa-bffb-57066a61f7ce"/>

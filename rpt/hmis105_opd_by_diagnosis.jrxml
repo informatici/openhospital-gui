@@ -167,7 +167,7 @@ order by diseasetype, disease]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Month}+":"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-20" mode="Opaque" x="393" y="15" width="69" height="14" forecolor="#FFFFFF" backcolor="#000000" uuid="fe6d0ec7-7e8b-49fc-8327-f7c37df4533b"/>
@@ -180,7 +180,7 @@ order by diseasetype, disease]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Year}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Year}+":"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement key="staticText-21" x="324" y="19" width="44" height="10" forecolor="#FFFFFF" uuid="f6bd278f-7f5e-46c9-8074-c248e52c9de8"/>

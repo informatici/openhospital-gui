@@ -220,7 +220,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Month}+":"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-20" mode="Opaque" x="393" y="15" width="69" height="14" forecolor="#FFFFFF" backcolor="#000000" uuid="58753f20-3d91-40bd-956e-613448a1f283"/>
@@ -233,7 +233,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Year}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Year}+":"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-37" x="0" y="44" width="535" height="15" uuid="ee7d4c20-d409-44ac-b4ef-dc8cbf5c1b3b"/>

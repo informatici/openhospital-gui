@@ -102,7 +102,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{From.Date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{From.Date}+":"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-20" mode="Opaque" x="393" y="15" width="69" height="14" forecolor="#FFFFFF" backcolor="#000000" uuid="f1ed454b-4675-454a-9ada-8c00e44bdc6a"/>
@@ -115,7 +115,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{To.DateYear}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{To.DateYear}+":"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
