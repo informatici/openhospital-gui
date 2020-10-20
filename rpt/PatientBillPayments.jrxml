@@ -35,7 +35,7 @@ WHERE BLP_ID_BILL = $P{billID} ORDER BY BLP_DATE ASC]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Payments Statement"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{PaymentsStatement}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
