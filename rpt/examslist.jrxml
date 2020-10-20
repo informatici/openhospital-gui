@@ -119,7 +119,7 @@ order by 1,2,3]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{List.Of.Exams.By.Type}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-5" x="422" y="3" width="53" height="14" uuid="b9810e8a-93b1-40bc-973e-c79994e3f3d2"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -130,8 +130,8 @@ order by 1,2,3]]>
 				<textElement>
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[v. 1.0]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["v. 1.0"]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
