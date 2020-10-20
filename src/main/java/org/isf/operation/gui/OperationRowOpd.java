@@ -64,7 +64,10 @@ import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.*;
+import org.isf.utils.jobjects.LocalDateSupportingJDateChooser;
+import org.isf.utils.jobjects.OhDefaultCellRenderer;
+import org.isf.utils.jobjects.OhTableOperationModel;
+import org.isf.utils.jobjects.VoFloatTextField;
 import org.joda.time.DateTime;
 
 import com.toedter.calendar.JDateChooser;
