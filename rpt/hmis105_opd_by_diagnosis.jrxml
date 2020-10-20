@@ -182,7 +182,7 @@ order by diseasetype, disease]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Year}+":"]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-21" x="324" y="19" width="44" height="10" forecolor="#FFFFFF" uuid="f6bd278f-7f5e-46c9-8074-c248e52c9de8"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -193,8 +193,8 @@ order by diseasetype, disease]]>
 				<textElement>
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[version 1.1]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["version 1.1"]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
