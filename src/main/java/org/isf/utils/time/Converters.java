@@ -24,6 +24,7 @@ package org.isf.utils.time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Optional;
@@ -126,7 +127,7 @@ public class Converters {
         return toCalendar(toDate(localDateTime));
     }
 
-    public static LocalDateTime convertToLocalDateTime(GregorianCalendar gregorianCalendar) {
-        return convertToLocalDateTime(toDate(gregorianCalendar));
+    public static LocalDateTime convertToLocalDateTime(Calendar gregorianCalendar) {
+        return convertToLocalDateTime(toDate((GregorianCalendar) gregorianCalendar));
     }
 }
