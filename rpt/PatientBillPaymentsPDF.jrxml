@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillPaymentsPDF" pageWidth="158" pageHeight="288" whenNoDataType="NoPages" columnWidth="148" leftMargin="5" rightMargin="5" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="666b73d4-0375-4b8d-9d33-1e7aefdd6812">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillPaymentsPDF" pageWidth="158" pageHeight="288" whenNoDataType="NoPages" columnWidth="148" leftMargin="5" rightMargin="5" topMargin="0" bottomMargin="0" resourceBundle="PatientBillPaymentsPDF" whenResourceMissingType="Key" isIgnorePagination="true" uuid="666b73d4-0375-4b8d-9d33-1e7aefdd6812">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -76,7 +76,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_ID_PAT} + " - " + $F{BLL_PAT_NAME}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-8" x="0" y="57" width="31" height="9" uuid="f993d514-a19a-4c66-91b3-d4a8ec798f3d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -87,9 +87,9 @@ ORDER BY BLP_DATE ASC]]>
 				<textElement verticalAlignment="Bottom">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[Patient:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Patient}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" x="0" y="65" width="31" height="9" uuid="203a5850-17ae-4573-90d0-1f17028baefa"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -100,9 +100,9 @@ ORDER BY BLP_DATE ASC]]>
 				<textElement verticalAlignment="Bottom">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[Cashier:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Cashier}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-10" x="0" y="73" width="31" height="9" uuid="946bbb77-a431-4c4d-b08b-28e851511002"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -113,8 +113,8 @@ ORDER BY BLP_DATE ASC]]>
 				<textElement verticalAlignment="Bottom">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[Date:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Date}+":"]]></textFieldExpression>
+			</textField>
 			<textField textAdjust="StretchHeight" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-23" x="31" y="73" width="117" height="9" uuid="4c9f1c02-7507-4840-9398-347e8d3c9e99"/>
 				<box>
@@ -226,7 +226,7 @@ ORDER BY BLP_DATE ASC]]>
 	</pageFooter>
 	<summary>
 		<band height="22" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-7" x="0" y="0" width="94" height="11" uuid="ab6b217f-04b6-470d-b55b-664b9b549172"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -237,8 +237,8 @@ ORDER BY BLP_DATE ASC]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TOTAL:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Total}+":"]]></textFieldExpression>
+			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="false">
 				<reportElement key="textField-26" x="93" y="0" width="55" height="10" uuid="6e03c072-dc2c-4d5b-8f7c-ad4feab387ed"/>
 				<box>
@@ -252,7 +252,7 @@ ORDER BY BLP_DATE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAID}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-11" x="0" y="10" width="94" height="11" uuid="2e16520b-e405-4962-baed-6be96e00a73a"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -263,8 +263,8 @@ ORDER BY BLP_DATE ASC]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[BALANCE:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Balance}+":"]]></textFieldExpression>
+			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="false">
 				<reportElement key="textField-27" x="93" y="10" width="55" height="10" uuid="5549df65-238b-41e7-8696-ac581b3721a5"/>
 				<box>
