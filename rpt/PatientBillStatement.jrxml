@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillStatement" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="5954f20c-84c3-4f3e-a07d-ad86564e7ee2">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillStatement" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PatientBillStatement" whenResourceMissingType="Key" uuid="5954f20c-84c3-4f3e-a07d-ad86564e7ee2">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -169,7 +169,7 @@ ORDER BY BLL_DATE]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-13" x="0" y="83" width="535" height="21" uuid="2954ef11-1e58-4300-9355-67b377e4b67a"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -180,8 +180,8 @@ ORDER BY BLL_DATE]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Patient Statement (all)]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{PatientStatementAll}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -189,7 +189,7 @@ ORDER BY BLL_DATE]]>
 	</pageHeader>
 	<columnHeader>
 		<band height="32" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-2" x="0" y="0" width="42" height="32" uuid="62a33fe6-1df1-48ab-b7d5-7a0d21f55a5e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -200,9 +200,9 @@ ORDER BY BLL_DATE]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Bill ID]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{BillId}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-3" x="107" y="0" width="123" height="32" uuid="0f074aa3-5a9a-4fee-85c5-8015f9421448"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -213,9 +213,9 @@ ORDER BY BLL_DATE]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Patient]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Patient}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-8" x="42" y="0" width="65" height="32" uuid="32d38843-1da0-4a5b-9fff-e91b0426a718"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -226,9 +226,9 @@ ORDER BY BLL_DATE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Date]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" x="230" y="0" width="63" height="32" uuid="4b833665-97f6-45dc-9414-ab6b68ce858a"/>
 				<box rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -239,9 +239,9 @@ ORDER BY BLL_DATE]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Amount]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Amount}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-10" x="293" y="0" width="65" height="32" uuid="86c60d93-c6ab-460b-baeb-7499e77c5b9e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -252,9 +252,9 @@ ORDER BY BLL_DATE]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Last Payment]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{LastPayment}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-11" x="427" y="0" width="65" height="32" uuid="c379de39-05b0-4702-9614-c98c566b3aa6"/>
 				<box rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -265,9 +265,9 @@ ORDER BY BLL_DATE]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Balance]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Balance}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-14" x="358" y="0" width="69" height="32" uuid="05750ab7-7a06-4c4d-a2cd-dc2bbf2da918"/>
 				<box rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -278,9 +278,9 @@ ORDER BY BLL_DATE]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Paid]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Paid}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-20" x="492" y="0" width="43" height="32" uuid="a1758cbf-8d05-455c-835e-029b9c7d9bd9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -291,8 +291,8 @@ ORDER BY BLL_DATE]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Status]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Status}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -421,7 +421,7 @@ ORDER BY BLL_DATE]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_RECEIVABLES}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-7" x="0" y="50" width="117" height="25" uuid="6cb8f052-fc91-4fe8-a620-62d233e76132"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -432,8 +432,8 @@ ORDER BY BLL_DATE]]>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TOTAL BILLED]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{TotalBilled}]]></textFieldExpression>
+			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-28" x="0" y="94" width="117" height="25" uuid="b96e5dc4-2db0-43c0-96ca-f566919459f9"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -448,7 +448,7 @@ ORDER BY BLL_DATE]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_INCOME}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-18" x="209" y="50" width="117" height="25" uuid="5d4170df-1b43-4d78-8300-8dfc6a46bd37"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -459,9 +459,9 @@ ORDER BY BLL_DATE]]>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TOTAL INCOME]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{TotalIncome}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-19" x="418" y="50" width="117" height="25" uuid="aca7e9fb-1425-41f7-9c2e-eb7d907f5cb0"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -472,29 +472,29 @@ ORDER BY BLL_DATE]]>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[RECEIVABLES]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Receivables}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-23" x="0" y="75" width="117" height="19" uuid="fa59f1d6-7c4b-415f-9b14-d0d8fe490c4b"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[(accrued in period)]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["("+$R{AccruedInPeriod}+")"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-24" x="209" y="75" width="117" height="19" uuid="20a927c5-f4d2-4f88-8db7-b784cc22376b"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[(accrued in period)]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["("+$R{AccruedInPeriod}+")"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-25" x="418" y="75" width="117" height="19" uuid="7c0e6c0a-2ee1-4dd6-981c-08ac4933be50"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[(accrued in period)]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["("+$R{AccruedInPeriod}+")"]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>
