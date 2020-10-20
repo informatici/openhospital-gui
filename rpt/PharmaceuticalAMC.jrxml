@@ -270,7 +270,7 @@ GROUP BY MDSR_ID]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{AvgValue}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-14" x="493" y="0" width="32" height="17" forecolor="#000000" uuid="e7c96e01-cdd3-4869-800b-5463dfcfd105"/>
 				<box rightPadding="10">
 					<pen lineWidth="0.0" lineStyle="Solid"/>
@@ -282,8 +282,8 @@ GROUP BY MDSR_ID]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
