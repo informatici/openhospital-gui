@@ -369,7 +369,7 @@ WHERE PEX_ID = $P{examId}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[" "+$R{PatientExamination}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-2" x="164" y="8" width="73" height="13" uuid="125450bc-cedb-45e0-8c83-1a2a3710c5b4"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -380,8 +380,8 @@ WHERE PEX_ID = $P{examId}]]>
 				<textElement>
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[version 1.0]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["version 1.0"]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement key="staticText-9" x="0" y="22" width="350" height="11" uuid="c7979dcd-1742-4d74-821e-da0841f5912c"/>
 				<box>

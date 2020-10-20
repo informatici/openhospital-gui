@@ -223,7 +223,7 @@ GROUP BY BLP_USR_ID_A]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Sign}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-16" x="372" y="90" width="163" height="25" uuid="63b6e835-2508-4a1a-abe4-a04079a7b9bb"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -234,8 +234,8 @@ GROUP BY BLP_USR_ID_A]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[________________________]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["________________________"]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>
