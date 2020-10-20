@@ -112,7 +112,7 @@ SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM DISEASE WHERE D
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-16" x="76" y="100" width="73" height="13" uuid="123d6ed4-9df9-41d6-8f34-e617a83c1aa9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -123,8 +123,8 @@ SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM DISEASE WHERE D
 				<textElement>
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[version 1.0]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{version} +" 1.0"]]></textFieldExpression>
+			</textField>
 			<image onErrorType="Blank">
 				<reportElement key="image-1" x="0" y="0" width="154" height="73" uuid="308717e1-7b52-422b-a09d-172bcbc92d38"/>
 				<box>
