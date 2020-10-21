@@ -1960,7 +1960,6 @@ FROM (
 					<subreportParameterExpression><![CDATA[$P{year}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "MOH717_Monthly_Workload_Report_for_Hospitals_page2b.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
