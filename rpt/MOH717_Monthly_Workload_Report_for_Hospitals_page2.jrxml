@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MOH717_Monthly_Workload_Report_for_Hospitals_page2" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="c44c6d3d-888a-4730-8ec7-68d7792312e8">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MOH717_Monthly_Workload_Report_for_Hospitals_page2b" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="MOH717_Monthly_Workload_Report_for_Hospitals_page2" whenResourceMissingType="Key" uuid="c44c6d3d-888a-4730-8ec7-68d7792312e8">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -319,7 +320,7 @@ FROM (
 	</title>
 	<pageHeader>
 		<band height="35" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-1" x="458" y="0" width="77" height="17" uuid="415dc65f-b888-4018-bcb0-f87b602a6619"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -330,9 +331,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[MOH 717]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["MOH 717"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-2" x="0" y="15" width="54" height="10" uuid="ab051ff6-8845-4c44-9873-6daabc87ad27"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -343,9 +344,9 @@ FROM (
 				<textElement textAlignment="Right">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[FACILITY NAME:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{FacilityName}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-3" x="187" y="15" width="34" height="10" uuid="10b5cb4a-685b-4419-a77d-d529c4fac99d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -356,9 +357,9 @@ FROM (
 				<textElement textAlignment="Right">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[MONTH:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Month}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-4" x="329" y="15" width="34" height="10" uuid="98096441-a954-49b3-88a3-8b6829a4c7f5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -369,9 +370,9 @@ FROM (
 				<textElement textAlignment="Right">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[YEAR:]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<textFieldExpression><![CDATA[$R{Year}+":"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-1" x="59" y="14" width="88" height="10" uuid="e38c7e96-d2ee-47f1-82ef-2f13c6d88b3f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -384,7 +385,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-2" x="227" y="14" width="88" height="10" uuid="b367389f-d4a4-4f7d-af55-b5f5985edc99"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -397,7 +398,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$P{month}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-3" x="368" y="14" width="72" height="10" uuid="51bf18a0-229c-4d43-836b-cef3250a3b95"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -417,7 +418,7 @@ FROM (
 	</columnHeader>
 	<detail>
 		<band height="726" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-5" x="0" y="0" width="535" height="18" uuid="6bef587e-3189-4e18-9795-e468291f6144"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -428,9 +429,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[B. INPATIENT SERVICES]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{B.InpatientServices}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-6" x="0" y="18" width="186" height="20" uuid="45a0d05a-a52c-42dc-9b42-6db34c3e962c"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -441,9 +442,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[B.1 INPATIENTS]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1 " +$R{Inpatients}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-10" x="0" y="38" width="40" height="16" uuid="0a428888-2fca-4888-a28a-98c407beed02"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -454,9 +455,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.1]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.1"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-11" x="40" y="38" width="146" height="16" uuid="85c2db0f-5287-4794-a2ad-37e0ded0668f"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -467,9 +468,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Discharges]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Discharges}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-12" x="0" y="54" width="40" height="16" uuid="bc9ec472-46e8-417d-a234-01268b2cc44c"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -480,9 +481,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.2]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.2"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-13" x="40" y="54" width="146" height="16" uuid="b324ed5a-dc01-43c5-b275-2ef6c952823c"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -493,9 +494,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Deaths]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Deaths}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-14" x="0" y="70" width="40" height="16" uuid="0d0e56ec-b477-4958-9281-9ab50c84c139"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -506,9 +507,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.3]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.3"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-15" x="40" y="70" width="146" height="16" uuid="c55c9f99-06e2-4823-bdbd-34becdd78c9c"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -519,9 +520,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Abscondees]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Abscondees}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-18" x="0" y="86" width="40" height="16" uuid="ab1145fc-8885-4ee7-9c4f-5aeb9c3702ae"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -532,9 +533,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="true" isItalic="true"/>
 				</textElement>
-				<text><![CDATA[B.1.4]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.4"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-19" x="40" y="86" width="146" height="16" uuid="c0dfb9ed-dac7-403a-96b6-b5da7e443e11"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -545,9 +546,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="true" isItalic="true"/>
 				</textElement>
-				<text><![CDATA[TOTAL DISCHARGES, DEATHS, etc.]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{TotalDischargesDeaths}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-20" x="186" y="18" width="50" height="20" uuid="4ea409b7-0b0e-4385-bf97-e02c6504cc7c"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -558,9 +559,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[GENERAL ADULTS]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{GeneralAdults}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-21" x="236" y="18" width="54" height="20" uuid="001a1a46-d5ab-46b5-810a-aa5deb8e0760"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -571,9 +572,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[GENERAL PAEDIATRICS]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{GeneralPaediatrics}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-22" x="354" y="18" width="41" height="20" uuid="d19321eb-c94f-4b76-ac8f-4bf1f6e04b0b"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -584,9 +585,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[AMENITY]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Amenity}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-23" x="290" y="18" width="64" height="20" uuid="36aa4fd4-1962-4471-9d69-132e0d2fe26c"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -597,8 +598,8 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[MATERNITY Mothers Only]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{MaternityMothersOnly}]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement key="staticText-26" x="395" y="18" width="140" height="20" uuid="a2e34488-d9e9-4e80-b918-f9a672ecfbf0"/>
 				<box>
@@ -872,7 +873,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$V{B.1.4}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-47" x="0" y="102" width="40" height="16" uuid="5ad08590-0a38-4957-aebf-275ddc0959d6"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -883,9 +884,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.9]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.9"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-48" x="40" y="102" width="146" height="16" uuid="c394a070-ee13-48f2-b626-178b7fba2fb8"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -896,9 +897,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Admissions]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Admissions}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-49" x="0" y="118" width="40" height="16" uuid="c6df4683-e837-408f-ab61-be66b305eec7"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -909,9 +910,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.10]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.10"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-50" x="40" y="118" width="146" height="16" uuid="700287b8-afb0-490d-8f77-6be3f7374bda"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -922,9 +923,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Paroles]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Paroles}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-51" x="0" y="134" width="40" height="16" uuid="ca6c97bd-d99d-4d45-99df-a3fd5bdb1f3d"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -935,9 +936,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.11]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.11"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-52" x="40" y="134" width="146" height="16" uuid="5b836359-bd9b-4537-beb8-52570b6b032c"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -948,8 +949,8 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Occupied Bed Days - NHIF Members]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{OccupiedBedDaysNhifMembers}]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-30" x="186" y="102" width="50" height="16" uuid="47d7edab-fca6-4076-954e-47e636a57bb9"/>
 				<box>
@@ -989,7 +990,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matAdm}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-56" x="395" y="102" width="140" height="16" uuid="ab7e6133-a637-4875-8cce-ccc15447b09a"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1000,8 +1001,8 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-33" x="354" y="102" width="41" height="16" uuid="5469b2d9-4501-4474-bffc-7b084340dc1c"/>
 				<box>
@@ -1015,7 +1016,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amnDeath}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-58" x="186" y="118" width="50" height="16" uuid="251a73c8-f72f-4d9a-8e36-8644d737269b"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1026,9 +1027,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-59" x="236" y="118" width="54" height="16" uuid="d58e5f13-0782-496b-afe2-64c48b0a19b4"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1039,9 +1040,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-60" x="290" y="118" width="64" height="16" uuid="cf9f26e2-9e6f-4adf-8393-518b24c108af"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1052,9 +1053,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-61" x="354" y="118" width="41" height="16" uuid="74a503ab-1bea-4b93-a05e-e828824d0ad4"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1065,9 +1066,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-62" x="395" y="118" width="140" height="16" uuid="67814ada-c108-4b21-ae0d-403607bc7966"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1078,8 +1079,8 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-22" x="186" y="134" width="50" height="16" uuid="690c449f-d2fa-4b80-9691-a45f60fa9169"/>
 				<box>
@@ -1149,7 +1150,7 @@ FROM (
 			($F{amnBedDaysNHIF}.intValue())
 		     )]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-68" x="0" y="150" width="40" height="16" uuid="4f8dfc78-5802-4342-a1d8-bb484fec3efd"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1160,9 +1161,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.11a]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.11a"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-69" x="40" y="150" width="146" height="16" uuid="0b69dc2b-9479-4945-89bc-2f6bb4501775"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1173,9 +1174,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Occupied Bed Days - Non-NHIF Members]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{OccupiedBedDaysNonNhifMembers}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-70" x="0" y="166" width="40" height="16" uuid="3f82e835-1909-479a-b544-1b0b9df85c51"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1186,9 +1187,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.12]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.12"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-71" x="40" y="166" width="146" height="16" uuid="1580f17e-c3df-46b4-a5e5-222d6b28e7b0"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1199,9 +1200,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Well Persons Days]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{WellPersonsDays}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-72" x="0" y="182" width="40" height="16" uuid="b8134593-29f6-4126-a0c8-5cab5644cb57"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1212,9 +1213,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.5]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.5"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-73" x="40" y="182" width="146" height="16" uuid="64fec483-a48b-4ce4-83c1-af885c27b999"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1225,8 +1226,8 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Beds - Authorized]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Beds}+" - "+$R{Authorized}]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-26" x="186" y="150" width="50" height="16" uuid="6cee7171-d87a-4e2a-869f-76f34153c204"/>
 				<box>
@@ -1296,7 +1297,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amnBedDays}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-79" x="186" y="166" width="50" height="16" uuid="d06f7398-2467-4f12-af7a-321291fe0ba5"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1307,9 +1308,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-80" x="236" y="166" width="54" height="16" uuid="ddf10394-5fef-4891-963e-ff950552973f"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1320,9 +1321,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-81" x="290" y="166" width="64" height="16" uuid="ae3d004c-b9ae-4e1b-b36d-4270684d4235"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1333,9 +1334,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-82" x="354" y="166" width="41" height="16" uuid="599218cd-7775-4f8c-afe6-55be82981a5a"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1346,9 +1347,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-83" x="395" y="166" width="140" height="16" uuid="a0238839-965f-4d10-afc4-953f76e5279e"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1359,8 +1360,8 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-34" x="186" y="182" width="50" height="16" uuid="17f2606c-5086-412b-89c1-b6c04b124546"/>
 				<box>
@@ -1430,7 +1431,7 @@ FROM (
 			($F{amnBeds}.intValue())
 		     )]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-89" x="0" y="198" width="40" height="16" uuid="ef03c73b-a87d-4b14-b3f9-8bf1192808b3"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1441,9 +1442,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.11a]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.11a"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-90" x="40" y="198" width="146" height="16" uuid="14255df6-de95-4cef-b562-85929ac9de1a"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1454,9 +1455,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Beds - Actual Physical]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Beds}+" - "+$R{ActualPhysical}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-91" x="0" y="214" width="40" height="16" uuid="4795d79f-3f22-474f-8888-5f9ac0c4e9a1"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1467,9 +1468,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.12]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.12"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-92" x="40" y="214" width="146" height="16" uuid="aa55e3c6-640a-4720-afb1-600d762b87fb"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1480,9 +1481,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Cots - Authorized]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Cots} +" - "+$R{Authorized}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-93" x="0" y="230" width="40" height="16" uuid="624a0157-9a26-41f4-a2f2-9a433e59be28"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1493,9 +1494,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[B.1.5]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["B.1.5"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-94" x="40" y="230" width="146" height="16" uuid="6e539387-9efd-4aa8-9ecb-0c51020a68ba"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1506,9 +1507,9 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Cots - Actual Physical]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Cots} +" - " + $R{ActualPhysical}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-95" x="186" y="198" width="50" height="16" uuid="b7c686ee-411c-4c61-b597-dcca90ebb389"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1519,9 +1520,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-96" x="236" y="198" width="54" height="16" uuid="6515dea8-0ecf-4286-b05c-a9fc92981a11"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1532,9 +1533,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-97" x="290" y="198" width="64" height="16" uuid="3460bcaf-14e6-4ced-8519-ca4c581c1879"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1545,9 +1546,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-98" x="395" y="198" width="140" height="16" uuid="92336330-5f15-43f6-8731-054ae448f034"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1558,9 +1559,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-99" x="354" y="198" width="41" height="16" uuid="b6959bfd-6dbf-4714-8e27-92a2796d0ffa"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1571,9 +1572,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-100" x="186" y="214" width="50" height="16" uuid="a286f123-e618-41d4-a2aa-1f897ac9d6fd"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1584,9 +1585,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-101" x="236" y="214" width="54" height="16" uuid="4d0069d3-090b-4169-b706-187f39302114"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1597,9 +1598,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-102" x="290" y="214" width="64" height="16" uuid="397f27ac-174b-4ba9-b0fe-23b88bc17f64"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1610,9 +1611,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-103" x="354" y="214" width="41" height="16" uuid="d8a9a2b0-e7b6-4646-b938-6d1fc62a0238"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1623,9 +1624,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-104" x="395" y="214" width="140" height="16" uuid="c2fe1c8c-c307-4bca-ac3b-50120829bae4"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1636,9 +1637,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-105" x="186" y="230" width="50" height="16" uuid="346f43d9-fbb0-42a9-87d0-663b2c20b07f"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1649,9 +1650,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-106" x="236" y="230" width="54" height="16" uuid="bde76575-adde-4f83-a927-0bf9b33a947e"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1662,9 +1663,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-107" x="290" y="230" width="64" height="16" uuid="19b005ad-7a0f-480a-b4c9-b2c49477a37c"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1675,9 +1676,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-108" x="354" y="230" width="41" height="16" uuid="c33bfeae-1d9d-428f-9f05-3850d71b8700"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1688,9 +1689,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-109" x="395" y="230" width="140" height="16" uuid="184da5b4-3e89-4c5f-839c-4f8beb51c923"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1701,9 +1702,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-230" x="235" y="651" width="99" height="16" uuid="7ba8f98e-d697-4fd0-94ce-90e9892128bd"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1714,9 +1715,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Name]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Name}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-231" x="334" y="651" width="67" height="16" uuid="cf934e99-ac51-4efe-b925-5e0ed1904197"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1727,9 +1728,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Signature]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Signature}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-232" x="401" y="651" width="67" height="16" uuid="bab311b3-c148-462e-816c-1c8b8fe0be8e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1740,9 +1741,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Date]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-233" x="468" y="651" width="67" height="16" uuid="9252f2af-9aec-4543-8046-0b1d923f9b86"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1753,9 +1754,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Designation]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Designation}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-234" x="136" y="667" width="99" height="16" uuid="7240af12-6b23-4812-82c3-50f1ab4af1d0"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1766,9 +1767,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Prepared by:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{PreparedBy}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-235" x="235" y="667" width="99" height="16" uuid="3f39b557-25c0-4f17-a42f-cb64ba160819"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1779,9 +1780,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-236" x="334" y="667" width="67" height="16" uuid="c0a31d66-8b5b-4251-9e36-29ac4c7fbf5b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1792,9 +1793,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-237" x="401" y="667" width="67" height="16" uuid="a5fbd9e2-dd25-419e-b61f-5779243a3185"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1805,9 +1806,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-238" x="468" y="667" width="67" height="16" uuid="059234a9-5a4f-4c2a-a96b-c057c5a254cc"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1818,9 +1819,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-239" x="136" y="683" width="99" height="16" uuid="c6f47da5-a365-4f05-823d-85b571126086"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1831,9 +1832,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Checked by:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{CheckedBy}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-240" x="235" y="683" width="99" height="16" uuid="ccb29e74-8de5-4653-803c-8e06e660f217"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1844,9 +1845,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-241" x="334" y="683" width="67" height="16" uuid="27f56b7b-4bc3-4305-9f30-925e44fa8e5c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1857,9 +1858,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-242" x="401" y="683" width="67" height="16" uuid="ba30d3b6-5d23-4fd8-a63c-263534d6b6ef"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1870,9 +1871,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-243" x="468" y="683" width="67" height="16" uuid="df0487ad-91c9-4bdd-b3f8-24b2ae7f1639"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1883,9 +1884,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-244" x="136" y="699" width="99" height="16" uuid="2db2fb4b-142b-4af0-90c6-dc8ff3246051"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1896,9 +1897,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Entered by:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{EnteredBy}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-245" x="235" y="699" width="99" height="16" uuid="410bc9d4-b5c2-4f22-910f-a3f1a6f4bd3e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1909,9 +1910,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-246" x="334" y="699" width="67" height="16" uuid="d4d6ce06-507a-40a3-ad09-58c9a1d497f9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1922,9 +1923,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-247" x="401" y="699" width="67" height="16" uuid="4b030840-0e70-4180-ad69-3c26075b1d67"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1935,9 +1936,9 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-248" x="468" y="699" width="67" height="16" uuid="c8a2a5bc-42ae-45d9-836d-145951e743a3"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1948,8 +1949,8 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
 			<subreport isUsingCache="true">
 				<reportElement key="subreport-1" x="0" y="257" width="535" height="381" uuid="0c46e421-7997-4d42-83f8-e576080a3bab"/>
 				<subreportParameter name="month">
@@ -1959,7 +1960,6 @@ FROM (
 					<subreportParameterExpression><![CDATA[$P{year}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "MOH717_Monthly_Workload_Report_for_Hospitals_page2b.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
@@ -1968,7 +1968,7 @@ FROM (
 	</columnFooter>
 	<pageFooter>
 		<band height="16" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-24" x="0" y="0" width="81" height="16" uuid="f81ce6dc-721a-4288-a9c0-62a6e99deaa0"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1979,8 +1979,8 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[(Revised 2008)]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["("+$R{Revised}+" 2008)"]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-4" x="454" y="0" width="81" height="16" uuid="6b68ae61-b287-403d-8908-4c92b9b9f269"/>
 				<box>
@@ -1998,7 +1998,7 @@ FROM (
 	</pageFooter>
 	<lastPageFooter>
 		<band height="16" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-25" x="0" y="0" width="81" height="16" uuid="f9c17b46-56e2-4ddb-bb5c-64ca1adab495"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -2009,8 +2009,8 @@ FROM (
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="false"/>
 				</textElement>
-				<text><![CDATA[(Revised 2008)]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["("+$R{Revised}+" 2008)"]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-5" x="454" y="0" width="81" height="16" uuid="a9deec8e-7cba-498e-9f4b-9e3acc87cc41"/>
 				<box>
