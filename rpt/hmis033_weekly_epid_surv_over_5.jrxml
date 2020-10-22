@@ -96,7 +96,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 				<text><![CDATA[HMIS 033 b: Weekly Epidemiological Surveillance]]></text>
 				</staticText>
@@ -113,7 +113,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+						<font fontName="SansSerif" size="10" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$P{todate}]]></textFieldExpression>
 				</textField>
@@ -130,7 +130,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+						<font fontName="SansSerif" size="10" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$P{fromdate}]]></textFieldExpression>
 				</textField>
@@ -150,7 +150,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
+						<font fontName="SansSerif" size="11" isBold="false"/>
 					</textElement>
 				<text><![CDATA[From Date:]]></text>
 				</staticText>
@@ -170,7 +170,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
+						<font fontName="SansSerif" size="11" isBold="false"/>
 					</textElement>
 				<text><![CDATA[To DateYear:]]></text>
 				</staticText>
@@ -195,7 +195,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
+						<font size="8" isBold="true" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
 				<text><![CDATA[Diagnosis]]></text>
 				</staticText>
@@ -212,7 +212,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[In Patient (diag in)]]></text>
 				</staticText>
@@ -229,7 +229,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Out Patient]]></text>
 				</staticText>
@@ -246,7 +246,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Cases]]></text>
 				</staticText>
@@ -263,7 +263,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Dead]]></text>
 				</staticText>
@@ -280,7 +280,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Cases]]></text>
 				</staticText>
@@ -297,7 +297,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Dead]]></text>
 				</staticText>
@@ -314,7 +314,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[In Patient (diag out)]]></text>
 				</staticText>
@@ -331,7 +331,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Cases]]></text>
 				</staticText>
@@ -348,7 +348,7 @@ order by DIS_DCL_ID_A,DIS_DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Dead]]></text>
 				</staticText>

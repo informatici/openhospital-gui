@@ -76,7 +76,7 @@ order by 1,2,3,4 desc]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+						<font isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DCL_DESC}]]></textFieldExpression>
 				</textField>
@@ -106,7 +106,7 @@ order by 1,2,3,4 desc]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="14" isBold="true"/>
+						<font fontName="SansSerif" size="10" isBold="true"/>
 					</textElement>
 				<text><![CDATA[OPD diagnoses by age, sex]]></text>
 				</staticText>
@@ -199,7 +199,7 @@ order by 1,2,3,4 desc]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true" isUnderline="true"/>
+						<font fontName="SansSerif" size="10" isBold="true" isUnderline="true"/>
 					</textElement>
 				<text><![CDATA[Disease / Type]]></text>
 				</staticText>
@@ -216,7 +216,7 @@ order by 1,2,3,4 desc]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isBold="true" isUnderline="true"/>
+						<font fontName="SansSerif" isBold="true" isUnderline="true"/>
 					</textElement>
 				<text><![CDATA[Count]]></text>
 				</staticText>
@@ -233,7 +233,7 @@ order by 1,2,3,4 desc]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isBold="true" isUnderline="true"/>
+						<font fontName="SansSerif" isBold="true" isUnderline="true"/>
 					</textElement>
 				<text><![CDATA[age]]></text>
 				</staticText>
@@ -250,7 +250,7 @@ order by 1,2,3,4 desc]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isBold="true" isUnderline="true"/>
+						<font fontName="SansSerif" isBold="true" isUnderline="true"/>
 					</textElement>
 				<text><![CDATA[sex]]></text>
 				</staticText>

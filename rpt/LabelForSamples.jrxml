@@ -25,14 +25,37 @@
 	<import value="net.sf.jasperreports.engine.util.JRImageLoader" />
 	<import value="org.joda.time.*" />
 
-	<parameter name="laboratoryID" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT LAB_SEX, LAB_AGE, PAT_ID
-FROM LABORATORY LEFT JOIN PATIENT ON LAB_PAT_ID = PAT_ID
-WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
+	<parameter name="patientID" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[SELECT * 
+FROM PATIENT
+WHERE PAT_ID Like $P{patientID}]]></queryString>
 
-	<field name="LAB_SEX" class="java.lang.String"/>
-	<field name="LAB_AGE" class="java.lang.Integer"/>
 	<field name="PAT_ID" class="java.lang.Integer"/>
+	<field name="PAT_FNAME" class="java.lang.String"/>
+	<field name="PAT_SNAME" class="java.lang.String"/>
+	<field name="PAT_NAME" class="java.lang.String"/>
+	<field name="PAT_BDATE" class="java.sql.Date"/>
+	<field name="PAT_AGE" class="java.lang.Integer"/>
+	<field name="PAT_AGETYPE" class="java.lang.String"/>
+	<field name="PAT_SEX" class="java.lang.String"/>
+	<field name="PAT_ADDR" class="java.lang.String"/>
+	<field name="PAT_CITY" class="java.lang.String"/>
+	<field name="PAT_NEXT_KIN" class="java.lang.String"/>
+	<field name="PAT_TELE" class="java.lang.String"/>
+	<field name="PAT_MOTH_NAME" class="java.lang.String"/>
+	<field name="PAT_MOTH" class="java.lang.String"/>
+	<field name="PAT_FATH_NAME" class="java.lang.String"/>
+	<field name="PAT_FATH" class="java.lang.String"/>
+	<field name="PAT_LEDU" class="java.lang.String"/>
+	<field name="PAT_ESTA" class="java.lang.String"/>
+	<field name="PAT_PTOGE" class="java.lang.String"/>
+	<field name="PAT_NOTE" class="java.lang.String"/>
+	<field name="PAT_DELETED" class="java.lang.String"/>
+	<field name="PAT_LOCK" class="java.lang.Integer"/>
+	<field name="PAT_BTYPE" class="java.lang.String"/>
+	<field name="PAT_PHOTO" class="java.lang.Object"/>
+	<field name="PAT_TAXCODE" class="java.lang.String"/>
+	<field name="PAT_TIMESTAMP" class="java.sql.Timestamp"/>
 
 	<variable name="now" class="java.util.Date" resetType="Report" calculation="Nothing">
 		<variableExpression><![CDATA[new Date()]]></variableExpression>
@@ -42,10 +65,22 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 			</band>
 		</background>
 		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
 			<band height="56"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="48"
+						x="50"
 						y="5"
 						width="39"
 						height="10"
@@ -56,14 +91,14 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{PAT_ID}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="3"
+						x="5"
 						y="5"
 						width="45"
 						height="10"
@@ -74,13 +109,13 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Patient ID:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="22"
+						x="24"
 						y="17"
 						width="23"
 						height="9"
@@ -93,11 +128,11 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 					<textElement>
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{LAB_SEX}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{PAT_SEX}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="3"
+						x="5"
 						y="17"
 						width="20"
 						height="9"
@@ -108,13 +143,13 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Sex:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="45"
+						x="47"
 						y="17"
 						width="20"
 						height="9"
@@ -125,13 +160,13 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Age:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="3"
+						x="5"
 						y="28"
 						width="44"
 						height="9"
@@ -142,13 +177,13 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Exam type:]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
-						x="48"
+						x="50"
 						y="36"
 						width="82"
 						height="0"
@@ -157,7 +192,7 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 				</line>
 				<staticText>
 					<reportElement
-						x="3"
+						x="5"
 						y="41"
 						width="25"
 						height="9"
@@ -168,13 +203,13 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Date:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="74"
+						x="76"
 						y="41"
 						width="25"
 						height="9"
@@ -185,13 +220,13 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Time:]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
-						x="30"
+						x="32"
 						y="48"
 						width="44"
 						height="1"
@@ -200,7 +235,7 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="102"
+						x="104"
 						y="48"
 						width="26"
 						height="1"
@@ -209,7 +244,7 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 				</line>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="64"
+						x="66"
 						y="17"
 						width="23"
 						height="9"
@@ -222,20 +257,8 @@ WHERE LAB_ID Like $P{laboratoryID}]]></queryString>
 					<textElement>
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{LAB_AGE}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{PAT_AGE}]]></textFieldExpression>
 				</textField>
-			</band>
-		</title>
-		<pageHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnHeader>
-		<detail>
-			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</detail>
 		<columnFooter>

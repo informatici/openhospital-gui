@@ -84,7 +84,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 				<text><![CDATA[HMIS105: HEALTH UNIT OUTPATIENT MONTHLY REPORT]]></text>
 				</staticText>
@@ -101,7 +101,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+						<font isBold="true"/>
 					</textElement>
 				<text><![CDATA[1. OUTPATIENT ATTENDANCE]]></text>
 				</staticText>
@@ -118,7 +118,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+						<font fontName="SansSerif" size="10" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{year}]]></textFieldExpression>
 				</textField>
@@ -135,7 +135,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+						<font fontName="SansSerif" size="10" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{month}]]></textFieldExpression>
 				</textField>
@@ -155,7 +155,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
+						<font fontName="SansSerif" size="11" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Month:]]></text>
 				</staticText>
@@ -175,7 +175,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="11" isBold="false"/>
+						<font fontName="SansSerif" size="11" isBold="false"/>
 					</textElement>
 				<text><![CDATA[Year:]]></text>
 				</staticText>
@@ -200,7 +200,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
+						<font size="8" isBold="true" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
 				<text><![CDATA[Category]]></text>
 				</staticText>
@@ -217,7 +217,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Under five years older]]></text>
 				</staticText>
@@ -234,7 +234,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Five years and older]]></text>
 				</staticText>
@@ -251,7 +251,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[M]]></text>
 				</staticText>
@@ -268,7 +268,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[F]]></text>
 				</staticText>
@@ -285,7 +285,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[M]]></text>
 				</staticText>
@@ -302,7 +302,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<text><![CDATA[F]]></text>
 				</staticText>
@@ -404,7 +404,7 @@ order by category]]></queryString>
 						key="textField-9"/>
 					<box rightPadding="2"></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
+						<font size="8" isBold="true" isPdfEmbedded ="true" pdfEncoding ="Cp1250"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{total}]]></textFieldExpression>
 				</textField>
@@ -539,7 +539,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SUM_maleupto4_1}]]></textFieldExpression>
 				</textField>
@@ -556,7 +556,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SUM_femaleupto4_1}]]></textFieldExpression>
 				</textField>
@@ -573,7 +573,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SUM_maleover4_1}]]></textFieldExpression>
 				</textField>
@@ -590,7 +590,7 @@ order by category]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SUM_femaleover4_1}]]></textFieldExpression>
 				</textField>
