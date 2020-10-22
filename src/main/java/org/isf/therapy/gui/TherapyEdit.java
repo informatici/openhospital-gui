@@ -43,6 +43,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -83,6 +84,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JAgenda;
 import org.isf.utils.jobjects.JAgenda.AgendaDayObject;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.time.Converters;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.visits.gui.VisitView;
 import org.isf.visits.gui.VisitView.VisitListener;
@@ -328,10 +330,10 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private void showTherapy(Therapy th) {
-		for (GregorianCalendar gc : th.getDates()) {
-			if (gc.get(GregorianCalendar.YEAR) == yearChooser.getYear()) {
-				if (gc.get(GregorianCalendar.MONTH) == monthChooser.getMonth()) {
-					jAgenda.addElement(th, gc.get(GregorianCalendar.DAY_OF_MONTH));
+		for (LocalDateTime localDateTime : th.getDates()) {
+			if (localDateTime.getYear() == yearChooser.getYear()) {
+				if (localDateTime.getMonthValue() == monthChooser.getMonth()) {
+					jAgenda.addElement(th, localDateTime.getDayOfMonth());
 					notifyCheckBox.setSelected(th.isNotify());
 				}
 			}
@@ -346,17 +348,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private void showVisit(Visit vs) {
-
-		final String dateTimeFormat = "dd/MM/yy HH:mm:ss";
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-		Date vis = vs.getDate().getTime();
-		sdf.setCalendar(vs.getDate());
-		String dateFormatted = sdf.format(vs.getDate().getTime());
-		if (vs.getDate().get(GregorianCalendar.YEAR) == yearChooser.getYear()) {
-			if (vs.getDate().get(GregorianCalendar.MONTH) == monthChooser.getMonth()) {
-
-				jAgenda.addElement(vs, vs.getDate().get(GregorianCalendar.DAY_OF_MONTH));
-
+		if (vs.getDate().getYear() == yearChooser.getYear()) {
+			if (vs.getDate().getMonthValue() == monthChooser.getMonth()) {
+				jAgenda.addElement(vs, vs.getDate().getDayOfMonth());
 			}
 		}
 	}

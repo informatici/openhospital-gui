@@ -34,6 +34,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -73,6 +74,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.IconButton;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -138,7 +140,7 @@ public class TherapyEntryForm extends JDialog {
 	private ArrayList<JRadioButton> radioButtonSet;
 	private JSpinner jSpinnerFreqInPeriod;
 	private CustomJDateChooser therapyStartdate;
-	private GregorianCalendar therapyEndDate;
+	private LocalDateTime therapyEndDate;
 	private JSpinner jSpinnerDays;
 	private JSpinner jSpinnerWeeks;
 	private JSpinner jSpinnerMonths;
@@ -221,11 +223,11 @@ public class TherapyEntryForm extends JDialog {
 	}
 
 	private void fillCalendarsFromTherapy(Therapy th) {
-		GregorianCalendar[] dates = th.getDates();
+		LocalDateTime[] dates = th.getDates();
 		int datesLength = dates.length;
-		GregorianCalendar firstDay = dates[0];
-		GregorianCalendar lastDay = dates[datesLength - 1];
-		GregorianCalendar secondDay;
+		LocalDateTime firstDay = dates[0];
+		LocalDateTime lastDay = dates[datesLength - 1];
+		LocalDateTime secondDay;
 		
 		if (datesLength > 1) {
 			secondDay = dates[1];
@@ -235,15 +237,15 @@ public class TherapyEntryForm extends JDialog {
 		int days = TimeTools.getDaysBetweenDates(firstDay, secondDay, true);
 
 		jSpinnerFreqInPeriod.setValue(days > 0 ? days : 1);
-		therapyStartdate.setDate(firstDay.getTime());
-		endDateLabel.setText(dateFormat.format(lastDay.getTime()));
+		therapyStartdate.setDate(firstDay);
+		endDateLabel.setText(dateFormat.format(lastDay));
 
 		fillDaysWeeksMonthsFromDates(firstDay, lastDay); 
 	}
 
-	private void fillDaysWeeksMonthsFromDates(GregorianCalendar firstDay, GregorianCalendar lastDay) {
-		DateTime dateFrom = new DateTime(firstDay);
-		DateTime dateTo = new DateTime(lastDay);
+	private void fillDaysWeeksMonthsFromDates(LocalDateTime firstDay, LocalDateTime lastDay) {
+		DateTime dateFrom = new DateTime(Converters.toCalendar(firstDay));
+		DateTime dateTo = new DateTime(Converters.toCalendar(lastDay));
 		Period period = new Period(dateFrom, dateTo, PeriodType.standard());
 		
 		jSpinnerMonths.setValue(period.getMonths());
@@ -532,13 +534,12 @@ public class TherapyEntryForm extends JDialog {
 		int weeks = (Integer) jSpinnerWeeks.getValue();
 		int months = (Integer) jSpinnerMonths.getValue();
 		
-		therapyEndDate = new GregorianCalendar();
-		therapyEndDate.setTime(therapyStartdate.getDate());
-		therapyEndDate.add(GregorianCalendar.DAY_OF_YEAR, days - 1);
-		therapyEndDate.add(GregorianCalendar.WEEK_OF_YEAR, weeks);
-		therapyEndDate.add(GregorianCalendar.MONTH, months);
+		therapyEndDate = therapyStartdate.getLocalDateTime()
+				.plusDays(days - 1)
+				.plusWeeks(weeks)
+				.plusMonths(months);
 		
-		endDateLabel.setText(dateFormat.format(therapyEndDate.getTime()));
+		endDateLabel.setText(dateFormat.format(therapyEndDate));
 	}
 
 	private JPanel getStartEndDatePanel() {
@@ -764,9 +765,8 @@ public class TherapyEntryForm extends JDialog {
 					 * estrapolazione Dati
 					 */
 					
-					GregorianCalendar startDate = new GregorianCalendar();
-					startDate.setTime(therapyStartdate.getDate());
-					GregorianCalendar endDate = therapyEndDate;
+					LocalDateTime startDate = therapyStartdate.getLocalDateTime();
+					LocalDateTime endDate = therapyEndDate;
 					Medical medical = (Medical) medicalsList.getSelectedValue();
 					if (medical == null) {
 						JOptionPane.showMessageDialog(TherapyEntryForm.this, MessageBundle.getMessage("angal.therapy.selectapharmaceutical"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$

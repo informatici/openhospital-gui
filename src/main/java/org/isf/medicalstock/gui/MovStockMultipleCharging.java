@@ -37,6 +37,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -436,8 +437,8 @@ public class MovStockMultipleCharging extends JDialog {
 						Lot lot = null;
 						boolean isNewLot = false;
 						if (isAutomaticLot()) {
-							GregorianCalendar preparationDate = new GregorianCalendar();
-							GregorianCalendar expiringDate = askExpiringDate();
+							LocalDateTime preparationDate = LocalDateTime.now();
+							LocalDateTime expiringDate = askExpiringDate();
 							lot = new Lot("", preparationDate, expiringDate); //$NON-NLS-1$
 							// Cost
 							BigDecimal cost = new BigDecimal(0);
@@ -470,9 +471,8 @@ public class MovStockMultipleCharging extends JDialog {
 						}
 
 						// Date
-						GregorianCalendar date = new GregorianCalendar();
-						date.setTime(jDateChooser.getDate());
-						
+						LocalDateTime date = jDateChooser.getLocalDateTime();
+
 						// RefNo
 						String refNo = jTextFieldReference.getText().trim();
 						
@@ -563,8 +563,8 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 
 	protected Lot askLot() {
-		GregorianCalendar preparationDate = new GregorianCalendar();
-		GregorianCalendar expiringDate = new GregorianCalendar();
+		LocalDateTime preparationDate = LocalDateTime.now();
+		LocalDateTime expiringDate = LocalDateTime.now();
 		Lot lot = null;
 
 		JTextField lotNameTextField = new JTextField(15);
@@ -621,8 +621,8 @@ public class MovStockMultipleCharging extends JDialog {
 				} 
 				else 
 				{
-					expiringDate.setTime(expireDateChooser.getDate());
-					preparationDate.setTime(preparationDateChooser.getDate());
+					expiringDate = expireDateChooser.getLocalDateTime();
+					preparationDate = preparationDateChooser.getLocalDateTime();
 					lot = new Lot(lotName, preparationDate, expiringDate);
 				}
 			} else {
@@ -708,8 +708,8 @@ public class MovStockMultipleCharging extends JDialog {
 		return lot;
 	}
 
-	protected GregorianCalendar askExpiringDate() {
-		GregorianCalendar date = new GregorianCalendar();
+	protected LocalDateTime askExpiringDate() {
+		LocalDateTime date = LocalDateTime.now();
 		CustomJDateChooser expireDateChooser = new CustomJDateChooser(new Date());
 		{
 			expireDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
@@ -723,7 +723,7 @@ public class MovStockMultipleCharging extends JDialog {
 				JOptionPane.OK_CANCEL_OPTION); 
 
 		if (ok == JOptionPane.OK_OPTION) {
-			date.setTime(expireDateChooser.getDate());
+			date = expireDateChooser.getLocalDateTime();
 		}
 		return date;
 	}
@@ -907,7 +907,7 @@ public class MovStockMultipleCharging extends JDialog {
 				lot.setCode((String) value);
 			} else if (c == 7) {
 				try {
-					GregorianCalendar date = TimeTools.parseDate((String) value, DATE_FORMAT_DD_MM_YYYY, true);
+					LocalDateTime date = TimeTools.parseDate((String) value, DATE_FORMAT_DD_MM_YYYY, true);
 					lot.setDueDate(date);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -936,10 +936,9 @@ public class MovStockMultipleCharging extends JDialog {
 			JOptionPane.showMessageDialog(MovStockMultipleCharging.this, MessageBundle.getMessage("angal.medicalstock.multiplecharging.pleaseselectasupplier")); //$NON-NLS-1$
 			return false;
 		}
-		
-		GregorianCalendar thisDate = new GregorianCalendar();
-		thisDate.setTime(jDateChooser.getDate());
-		
+
+		LocalDateTime thisDate = jDateChooser.getLocalDateTime();
+
 		// Check and set all movements
 		for (int i = 0; i < movements.size(); i++) {
 			Movement mov = movements.get(i);

@@ -35,6 +35,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +63,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.time.Converters;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 
@@ -90,16 +93,16 @@ public class SmsBrowser extends ModalJFrame {
 	private SmsManager smsManager = Context.getApplicationContext().getBean(SmsManager.class);
 	private List<Sms> smsList = null;
 	
-	private final DateTime dateTimeAtStartOfToday = new DateTime(new DateMidnight());  
-	private final DateTime dateTimeAtEndOfToday = new DateTime((new DateMidnight()).plusDays(1));
+	private final LocalDateTime dateTimeAtStartOfToday = LocalDate.now().atStartOfDay();
+	private final LocalDateTime dateTimeAtEndOfToday = LocalDate.now().atStartOfDay().plusDays(1);
 
 	private SmsTableModel model;
 	private JPanel jFilterPanel;
 	private CustomJDateChooser jFromDateChooser;
 	private CustomJDateChooser jToDateChooser;
 	
-	private Date dateFrom;
-	private Date dateTo;
+	private LocalDateTime dateFrom;
+	private LocalDateTime dateTo;
 	private JLabel jDateFromLabel;
 	private JLabel jDateToLabel;
 
@@ -112,8 +115,8 @@ public class SmsBrowser extends ModalJFrame {
 	}
 
 	private void initVariables() {
-		dateFrom = dateTimeAtStartOfToday.toDate();
-		dateTo = dateTimeAtEndOfToday.toDate();
+		dateFrom = dateTimeAtStartOfToday;
+		dateTo = dateTimeAtEndOfToday;
 		updateModel(dateFrom, dateTo);
 		for (int size : columnPreferredSize) {
 			width += size;
@@ -163,13 +166,13 @@ public class SmsBrowser extends ModalJFrame {
 		if (jFromDateChooser == null) {
 			jFromDateChooser = new CustomJDateChooser();
 			jFromDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-			jFromDateChooser.setDate(dateTimeAtStartOfToday.toDate());
+			jFromDateChooser.setDate(dateTimeAtStartOfToday);
 			jFromDateChooser.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jFromDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
 
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
-					dateFrom = (Date) evt.getNewValue();
+					dateFrom = Converters.convertToLocalDateTime((Date) evt.getNewValue());
 					updateModel(dateFrom, dateTo);
 					updateGUI();
 					
@@ -183,13 +186,13 @@ public class SmsBrowser extends ModalJFrame {
 		if (jToDateChooser == null) {
 			jToDateChooser = new CustomJDateChooser();
 			jToDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-			jToDateChooser.setDate(dateTimeAtEndOfToday.toDate());
+			jToDateChooser.setDate(dateTimeAtEndOfToday);
 			jToDateChooser.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jToDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
 
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
-					dateTo = (Date) evt.getNewValue();
+					dateTo = Converters.convertToLocalDateTime((Date) evt.getNewValue());
 					updateModel(dateFrom, dateTo);
 					updateGUI();
 				} 
@@ -307,7 +310,7 @@ public class SmsBrowser extends ModalJFrame {
 		return jDeleteButton;
 	}
 	
-	private void updateModel(Date from, Date to) {
+	private void updateModel(LocalDateTime from, LocalDateTime to) {
 		try {
 			smsList = smsManager.getAll(from, to);
 		} catch (OHServiceException e) {
@@ -393,26 +396,24 @@ public class SmsBrowser extends ModalJFrame {
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			cell.setForeground(Color.BLACK);
 			Sms sms = smsList.get(row);
-			DateTime date = new DateTime(sms.getSmsDateSched().getTime());
 			if (sms.getSmsDateSent() != null) cell.setForeground(Color.GRAY); // sent
-			else if (date.isAfter(dateTimeAtEndOfToday) || date.isEqual(dateTimeAtEndOfToday)) cell.setForeground(Color.BLUE); // send tomorrow
+			else if (sms.getSmsDateSched().isAfter(dateTimeAtEndOfToday) || sms.getSmsDateSched().isEqual(dateTimeAtEndOfToday)) cell.setForeground(Color.BLUE); // send tomorrow
 			return cell;
 		}
 	}
 	
-	public String formatDateTime(Date smsDateSent) {
+	public String formatDateTime(LocalDateTime smsDateSent) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		if (smsDateSent != null) return sdf.format(smsDateSent);
 		return null;
 	}
 	
-	public String formatTodayDateTime(Date smsDateSent) {
+	public String formatTodayDateTime(LocalDateTime smsDateSent) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat sdfToday = new SimpleDateFormat("HH:mm");
 		if (smsDateSent != null) {
-			DateTime date = new DateTime(smsDateSent.getTime());
-			if (date.isAfter(dateTimeAtStartOfToday) &&
-					date.isBefore(dateTimeAtEndOfToday))
+			if (smsDateSent.isAfter(dateTimeAtStartOfToday) &&
+					smsDateSent.isBefore(dateTimeAtEndOfToday))
 				return sdfToday.format(smsDateSent);
 			return sdf.format(smsDateSent);
 		}

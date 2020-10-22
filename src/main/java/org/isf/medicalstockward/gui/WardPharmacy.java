@@ -43,6 +43,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -99,6 +100,7 @@ import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.StockCardDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -163,8 +165,8 @@ public class WardPharmacy extends ModalJFrame implements
 	// private JButton jButtonDelete;
 	private JButton jButtonEdit;
 	private CustomJDateChooser jCalendarFrom;
-	private GregorianCalendar dateFrom = new GregorianCalendar();
-	private GregorianCalendar dateTo = new GregorianCalendar();
+	private LocalDateTime dateFrom = LocalDateTime.now();
+	private LocalDateTime dateTo = LocalDateTime.now();
 	private CustomJDateChooser jCalendarTo;
 	private DefaultTableModel modelIncomes;
 	private DefaultTableModel modelOutcomes;
@@ -321,14 +323,14 @@ public class WardPharmacy extends ModalJFrame implements
 						}
 					}
 
-					StockCardDialog stockCardDialog = new StockCardDialog(WardPharmacy.this, medical, dateFrom.getTime(), dateTo.getTime());
+					StockCardDialog stockCardDialog = new StockCardDialog(WardPharmacy.this, medical, dateFrom, dateTo);
 					medical = stockCardDialog.getMedical();
 					Date dateFrom = stockCardDialog.getDateFrom();
 					Date dateTo = stockCardDialog.getDateTo();
 					boolean toExcel = stockCardDialog.isExcel();
 
 					if (!stockCardDialog.isCancel()) {
-						new GenericReportPharmaceuticalStockCard("ProductLedgerWard", dateFrom, dateTo, medical, wardSelected, toExcel);
+						new GenericReportPharmaceuticalStockCard("ProductLedgerWard", Converters.convertToLocalDateTime(dateFrom), Converters.convertToLocalDateTime(dateTo), medical, wardSelected, toExcel);
 						return;
 					}
 				}
@@ -435,16 +437,14 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private CustomJDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
-			dateTo.set(GregorianCalendar.HOUR_OF_DAY, 23);
-			dateTo.set(GregorianCalendar.MINUTE, 59);
-			dateTo.set(GregorianCalendar.SECOND, 59);
-			jCalendarTo = new CustomJDateChooser(dateTo.getTime()); // Calendar
+			dateTo = dateTo.toLocalDate().atTime(23, 59, 59);
+			jCalendarTo = new CustomJDateChooser(dateTo); // Calendar
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarTo.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarTo.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
 
 				public void propertyChange(PropertyChangeEvent evt) {
-					dateTo.setTime((Date) evt.getNewValue());
+					dateTo = Converters.convertToLocalDateTime((Date) evt.getNewValue());
 					jTableOutcomes.setModel(new OutcomesModel());
 					jTableIncomes.setModel(new IncomesModel());
 					rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
@@ -457,16 +457,14 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private CustomJDateChooser getJCalendarFrom() {
 		if (jCalendarFrom == null) {
-			dateFrom.set(GregorianCalendar.HOUR_OF_DAY, 0);
-			dateFrom.set(GregorianCalendar.MINUTE, 0);
-			dateFrom.set(GregorianCalendar.SECOND, 0);
-			jCalendarFrom = new CustomJDateChooser(dateFrom.getTime()); // Calendar
+			dateFrom = dateFrom.toLocalDate().atStartOfDay();
+			jCalendarFrom = new CustomJDateChooser(dateFrom); // Calendar
 			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarFrom.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarFrom.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
 
 				public void propertyChange(PropertyChangeEvent evt) {
-					dateFrom.setTime((Date) evt.getNewValue());
+					dateFrom = Converters.convertToLocalDateTime((Date) evt.getNewValue());
 					jTableOutcomes.setModel(new OutcomesModel());
 					jTableIncomes.setModel(new IncomesModel());
 					rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
@@ -1596,7 +1594,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 							if (r == JOptionPane.OK_OPTION) {
 
-								new GenericReportPharmaceuticalStockWard(dateChooser.getDate(), "PharmaceuticalStockWard", wardSelected); //$NON-NLS-1$
+								new GenericReportPharmaceuticalStockWard(dateChooser.getLocalDateTime(), "PharmaceuticalStockWard", wardSelected); //$NON-NLS-1$
 								return;
 
 							} else {
@@ -1677,8 +1675,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 			filename.append("_").append(jComboBoxMedicals.getSelectedItem());
 		}
-		filename.append("_").append(TimeTools.formatDateTime(jCalendarFrom.getDate(), "yyyyMMdd"))
-				.append("_").append(TimeTools.formatDateTime(jCalendarTo.getDate(), "yyyyMMdd"));
+		filename.append("_").append(TimeTools.formatDateTime(jCalendarFrom.getLocalDateTime(), "yyyyMMdd"))
+				.append("_").append(TimeTools.formatDateTime(jCalendarTo.getLocalDateTime(), "yyyyMMdd"));
 
 		return filename.toString();
 	}
@@ -1723,14 +1721,14 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 	}
 
-	public String formatDate(GregorianCalendar time) {
+	public String formatDate(LocalDateTime time) {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); //$NON-NLS-1$
-		return format.format(time.getTime());
+		return format.format(time);
 	}
 
-	public String formatDateTime(GregorianCalendar time) {
+	public String formatDateTime(LocalDateTime time) {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //$NON-NLS-1$
-		return format.format(time.getTime());
+		return format.format(time);
 	}
 
 	private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {

@@ -25,6 +25,7 @@ import java.awt.Font;
 import java.awt.LayoutManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 
@@ -35,6 +36,7 @@ import javax.swing.JPanel;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.time.Converters;
 
 /**
  * @author Nanni
@@ -65,7 +67,11 @@ public class JFromDateToDateChooser extends JPanel {
 		this.dateTimeTo = new Date();
 		initComponents();
 	}
-	
+
+	public JFromDateToDateChooser(LocalDateTime from, LocalDateTime to) {
+		this(Converters.toDate(from), Converters.toDate(to));
+	}
+
 	public JFromDateToDateChooser(Date dateFrom, Date dateTo) {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
 		this.setLayout(layout);

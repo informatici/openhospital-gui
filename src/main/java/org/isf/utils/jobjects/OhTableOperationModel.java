@@ -138,11 +138,11 @@ public class OhTableOperationModel<T> implements TableModel{
 					String dt = "";
 					try {
 						final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
-						dt = currentDateFormat.format(opdObj.getOpDate().getTime());
+						dt = currentDateFormat.format(opdObj.getOpDate());
 						value = dt;
 					}
 					catch (Exception ex){
-						value=opdObj.getOpDate().getTime().toString();
+						value=opdObj.getOpDate().toString();
 					}
 					
 					break;

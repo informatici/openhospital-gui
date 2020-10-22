@@ -35,6 +35,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -79,6 +80,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 
 public class LabEditExtended extends ModalJFrame {
@@ -159,7 +161,7 @@ public class LabEditExtended extends ModalJFrame {
 	
 	//private VoDateTextField examDateField = null;
 	private CustomJDateChooser examDateFieldCal = null;
-	private GregorianCalendar dateIn = null;
+	private LocalDateTime dateIn = null;
 
 	
 	private static final Integer panelWidth=500; 
@@ -387,16 +389,12 @@ public class LabEditExtended extends ModalJFrame {
 	}
 
 	private CustomJDateChooser getExamDateFieldCal() {
-		java.util.Date myDate = null;
 		if (insert) {
-			dateIn = RememberDates.getLastLabExamDateGregorian();
+			dateIn = Converters.convertToLocalDateTime(RememberDates.getLastLabExamDateGregorian());
 		} else { 
-			dateIn = lab.getExamDate();
+			dateIn = lab.getExamDate().atStartOfDay();
 		}
-		if (dateIn != null) {
-			myDate = dateIn.getTime();
-		}
-		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
+		return (new CustomJDateChooser(dateIn, "dd/MM/yy"));
 	}
 	
 	private JCheckBox getInPatientCheckBox() {
@@ -723,9 +721,9 @@ public class LabEditExtended extends ModalJFrame {
 								MessageBundle.getMessage("angal.lab.pleaseselectapatient"));
 						return;
 					}
-					GregorianCalendar gregDate = new GregorianCalendar();
+					LocalDateTime examDate = LocalDateTime.now();
 					try {
-						gregDate.setTime(examDateFieldCal.getDate());
+						examDate = examDateFieldCal.getLocalDateTime();
 					} catch (Exception e1) {
 						JOptionPane.showMessageDialog(LabEditExtended.this, 
 								MessageBundle.getMessage("angal.lab.pleaseinsertavalidexamdate"));
@@ -737,9 +735,9 @@ public class LabEditExtended extends ModalJFrame {
 							return;
 					}
 					ArrayList<String> labRow = new ArrayList<String>();
-					lab.setDate(new GregorianCalendar());
-					lab.setExamDate(gregDate);
-					RememberDates.setLastLabExamDate(gregDate);
+					lab.setDate(LocalDateTime.now());
+					lab.setExamDate(examDate.toLocalDate());
+					RememberDates.setLastLabExamDate(Converters.toCalendar(examDate));
 					lab.setMaterial(labManager.getMaterialKey(matSelected));
 					lab.setExam(examSelected);
 					lab.setNote(noteTextArea.getText());

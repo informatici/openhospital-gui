@@ -26,6 +26,7 @@ package org.isf.stat.gui.report;
  */
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 
@@ -49,7 +50,7 @@ public class GenericReportPharmaceuticalStock {
 	private final Logger logger = LoggerFactory.getLogger(GenericReportPharmaceuticalStock.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-	public GenericReportPharmaceuticalStock(Date date, String jasperFileName, String filter, String groupBy, String sortBy, boolean toExcel) {
+	public GenericReportPharmaceuticalStock(LocalDateTime date, String jasperFileName, String filter, String groupBy, String sortBy, boolean toExcel) {
 		try{
             File defaultFilename = new File(jasperReportsManager.compileDefaultFilename(jasperFileName));
             

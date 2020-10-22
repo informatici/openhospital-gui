@@ -64,6 +64,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.table.TableSorter;
+import org.isf.utils.time.Converters;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
@@ -548,11 +549,11 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			
 			} else if (c == 0) {
 				if (r < admList.size()) {
-					Date myDate = (admList.get(r)).getAdmDate().getTime();	
+					Date myDate = Converters.toDate((admList.get(r)).getAdmDate());
 					return myDate;
 				} else {
 					int z = r - admList.size();
-					Date myDate = (opdList.get(z)).getVisitDate().getTime();
+					Date myDate = Converters.toDate((opdList.get(z)).getVisitDate().atStartOfDay());
 					return myDate;
 				}
 				
@@ -619,7 +620,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					if (admList.get(r).getDisDate()==null)
 						return MessageBundle.getMessage("angal.admission.present");
 					else {
-						Date myDate = admList.get(r).getDisDate().getTime();
+						Date myDate = Converters.toDate(admList.get(r).getDisDate());
 						return myDate;
 					}
 				} else {

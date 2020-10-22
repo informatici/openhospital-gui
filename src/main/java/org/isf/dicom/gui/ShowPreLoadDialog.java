@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +53,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 import com.toedter.calendar.JDateChooser;
@@ -75,14 +77,14 @@ class ShowPreLoadDialog extends JDialog {
 		private JList datesList;
 		private JButton buttonCancel;
 		private JButton buttonOK;
-		private JDateChooser dateChooser;
+		private CustomJDateChooser dateChooser;
 		private VoLimitedTextField descriptionTextField;
 		private JComboBox dicomTypeComboBox;
 		
 		/*
 		 * Attributes
 		 */
-		private Date dicomDate;
+		private LocalDateTime dicomDate;
 		private DicomType dicomType;
 		private String dicomDescription;
 		private List<Date> dates;
@@ -132,7 +134,7 @@ class ShowPreLoadDialog extends JDialog {
 			gbc_date.gridx = 1;
 			gbc_date.gridy = 0;
 			gbc_date.fill = GridBagConstraints.HORIZONTAL;
-			dateChooser = new JDateChooser(this.dicomDate);
+			dateChooser = new CustomJDateChooser(this.dicomDate);
 			centerPanel.add(dateChooser, gbc_date);
 			
 			if (!dates.isEmpty()) {
@@ -265,7 +267,7 @@ class ShowPreLoadDialog extends JDialog {
 				buttonOK.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent arg0) {
-						dicomDate = dateChooser.getDate();
+						dicomDate = dateChooser.getLocalDateTime();
 						dicomDescription = descriptionTextField.getText().trim();
 						save = true;
 						dispose();
@@ -275,7 +277,7 @@ class ShowPreLoadDialog extends JDialog {
 			return buttonOK;
 		}
 
-		public Date getDicomDate() {
+		public LocalDateTime getDicomDate() {
 			return dicomDate;
 		}
 

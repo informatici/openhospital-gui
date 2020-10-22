@@ -33,9 +33,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -77,6 +77,7 @@ import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.JFromDateToDateChooserDialog;
 import org.isf.utils.jobjects.JMonthYearChooser;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -408,8 +409,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 							icon);
 
 					if (r == JOptionPane.OK_OPTION) {
-						new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, false);
-						new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, true);
+						new GenericReportPharmaceuticalStock(dateChooser.getLocalDateTime(), report, filter, groupBy, sortBy, false);
+						new GenericReportPharmaceuticalStock(dateChooser.getLocalDateTime(), report, filter, groupBy, sortBy, true);
 						return;
 
 					} else {
@@ -448,7 +449,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 					boolean toExcel = dataRange.isExcel();
 
 					if (!dataRange.isCancel()) {
-						new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom, dateTo, medical, null, toExcel);
+						new GenericReportPharmaceuticalStockCard("ProductLedger", Converters.convertToLocalDateTime(dateFrom), Converters.convertToLocalDateTime(dateTo), medical, null, toExcel);
 						return;
 					}
 				}
@@ -645,48 +646,31 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 		int i = 0;
 
 		if (options.indexOf(option) == i) {
-			GregorianCalendar gc = new GregorianCalendar();
-
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			from = TimeTools.formatDateTimeReport(LocalDate.now());
 			to = from;
 		}
 		if (options.indexOf(option) == ++i) {
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			LocalDate gc = getFromDate();
+			from = TimeTools.formatDateTimeReport(gc);
 
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			LocalDate toDate = getToDatePlusMonth(0);
+			to = TimeTools.formatDateTimeReport(toDate);
+		}
+
+		if (options.indexOf(option) == ++i) {
+			from = TimeTools.formatDateTimeReport(getFromDate());
+			to = TimeTools.formatDateTimeReport(getToDatePlusMonth(1));
 		}
 		if (options.indexOf(option) == ++i) {
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-
-			gc.add(GregorianCalendar.MONTH, 1);
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			from = TimeTools.formatDateTimeReport(getFromDate());
+			to = TimeTools.formatDateTimeReport(getToDatePlusMonth(2));
 		}
 		if (options.indexOf(option) == ++i) {
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-
-			gc.add(GregorianCalendar.MONTH, 2);
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			from = TimeTools.formatDateTimeReport(getFromDate());
+			to = TimeTools.formatDateTimeReport(getToDatePlusMonth(3));
 		}
 		if (options.indexOf(option) == ++i) {
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-
-			gc.add(GregorianCalendar.MONTH, 3);
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-		}
-		if (options.indexOf(option) == ++i) {
-			GregorianCalendar monthYear;
+			LocalDate monthYear;
 			icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 			JMonthYearChooser monthYearChooser = new JMonthYearChooser();
 			int r = JOptionPane.showConfirmDialog(MedicalBrowser.this,
@@ -697,19 +681,20 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 					icon);
 
 			if (r == JOptionPane.OK_OPTION) {
-				monthYear = monthYearChooser.getDate();
+				monthYear = monthYearChooser.getLocalDate();
 			} else {
 				return;
 			}
 
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			LocalDate fromDate = getFromDate();
+			from = TimeTools.formatDateTimeReport(fromDate);
 
-			gc.set(GregorianCalendar.MONTH, monthYear.get(GregorianCalendar.MONTH));
-			gc.set(GregorianCalendar.YEAR, monthYear.get(GregorianCalendar.YEAR));
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			LocalDate toDate = LocalDate.of(
+					monthYear.getYear(),
+					monthYear.getMonth(),
+					monthYear.getMonth().maxLength()
+			);
+			to = TimeTools.formatDateTimeReport(toDate);
 		}
 		new GenericReportFromDateToDate(
 				from,
@@ -717,6 +702,17 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 				"PharmaceuticalExpiration",
 				MessageBundle.getMessage("angal.medicals.expiringreport"),
 				false);
+	}
+
+	private LocalDate getToDatePlusMonth(int monthsToMove) {
+		return LocalDate.now()
+				.plusMonths(monthsToMove)
+				.withDayOfMonth(LocalDate.now().lengthOfMonth());
+	}
+
+	private LocalDate getFromDate() {
+		return LocalDate.now()
+				.withDayOfMonth(1);
 	}
 
 	class MedicalBrowsingModel extends DefaultTableModel {

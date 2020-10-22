@@ -28,6 +28,7 @@ package org.isf.stat.gui.report;
 import java.io.File;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 
@@ -53,7 +54,7 @@ public class GenericReportPharmaceuticalStockCard {
 	private final static Logger logger = LoggerFactory.getLogger(GenericReportPharmaceuticalStockCard.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-	public GenericReportPharmaceuticalStockCard(String jasperFileName, Date dateFrom, Date dateTo, Medical medical, Ward ward, boolean toExcel) {
+	public GenericReportPharmaceuticalStockCard(String jasperFileName, LocalDateTime dateFrom, LocalDateTime dateTo, Medical medical, Ward ward, boolean toExcel) {
 		if (dateFrom == null || dateTo == null)
 			return;
 		try{
@@ -86,7 +87,7 @@ public class GenericReportPharmaceuticalStockCard {
         }
 	}
 	
-	private String compileStockCardFilename(String jasperFileName, Date dateFrom, Date dateTo, Medical medical, Ward ward) {
+	private String compileStockCardFilename(String jasperFileName, LocalDateTime dateFrom, LocalDateTime dateTo, Medical medical, Ward ward) {
 		Format formatter = new SimpleDateFormat("yyyyMMdd");
 	    StringBuilder fileName = new StringBuilder(jasperFileName);
 	    if (ward != null) {

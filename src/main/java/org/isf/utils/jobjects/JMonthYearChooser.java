@@ -27,6 +27,7 @@ package org.isf.utils.jobjects;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -37,6 +38,7 @@ import org.isf.generaldata.GeneralData;
 
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
+import org.isf.utils.time.Converters;
 
 /**
  * @author Mwithi
@@ -87,7 +89,10 @@ public class JMonthYearChooser extends JPanel {
 	public GregorianCalendar getDate() {
 		return gc;
 	}
-	
+
+	public LocalDate getLocalDate() {
+		return Converters.convertToLocalDateTime(gc).toLocalDate();
+	}
 	/**
 	 * @param args
 	 */

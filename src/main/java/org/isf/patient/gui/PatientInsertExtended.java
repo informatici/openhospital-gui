@@ -36,9 +36,10 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.EventListener;
 import java.util.Locale;
 import java.util.StringTokenizer;
@@ -72,10 +73,9 @@ import org.isf.patient.model.PatientProfilePhoto;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.image.ImageUtil;
+import org.isf.utils.time.Converters;
 import org.isf.video.gui.PatientPhotoPanel;
 import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -193,7 +193,7 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel jBirthDateLabelPanel = null;
 	private JLabel jBirthDateLabel = null;
 	private JPanel jBirthDateGroupPanel = null;
-	private Calendar cBirthDate = null;
+	private LocalDate birthDate = null;
 	private JButton jBirthDateReset = null;
 	private JLabel jBirthDateAge = null;
 
@@ -641,10 +641,9 @@ public class PatientInsertExtended extends JDialog {
 			}
 			
 		} else if (jAgeType_BirthDate.isSelected()) {
-			if (cBirthDate == null) return false;
+			if (birthDate == null) return false;
 			else {
-				bdate = new DateTime(cBirthDate);
-				calcAge(bdate);
+				calcAge(birthDate);
 			}
 		} else if (jAgeType_Description.isSelected()) {
 			int index = jAgeDescComboBox.getSelectedIndex();
@@ -670,7 +669,7 @@ public class PatientInsertExtended extends JDialog {
 		}
 		
 		patient.setAge(years);
-		patient.setBirthDate(bdate.toDate());
+		patient.setBirthDate(Converters.convertToLocalDateTime(bdate.toDate()).toLocalDate());
 		patient.setAgetype("");
 		return true;
 	}
@@ -763,6 +762,10 @@ public class PatientInsertExtended extends JDialog {
 
 			private static final long serialVersionUID = -78813689560070139L;
 
+			public BirthDateChooser(LocalDate localDate) {
+				this(Converters.toCalendar(localDate.atStartOfDay()));
+			}
+
 			public BirthDateChooser(Calendar cBirthDate) {
 				super();
 				super.setLocale(new Locale(GeneralData.LANGUAGE));
@@ -779,17 +782,15 @@ public class PatientInsertExtended extends JDialog {
 				super.propertyChange(e);
 
 				if (super.dateSelected) {
-					cBirthDate = super.jcalendar.getCalendar();
-					DateTime bdate = new DateTime(cBirthDate);
-					if (bdate.isAfter(new DateTime())) super.setCalendar(new DateTime().toGregorianCalendar());
-					else calcAge(bdate);
+					birthDate = Converters.convertToLocalDateTime(super.jcalendar.getCalendar()).toLocalDate();
+					if (birthDate.isAfter(LocalDate.now())) super.setCalendar(Converters.toCalendar(LocalDateTime.now()));
+					else calcAge(birthDate);
 				}
 
 				if (super.dateEditor.getDate() != null) {
-					cBirthDate = super.getCalendar();
-					DateTime bdate = new DateTime(cBirthDate);
-					if (bdate.isAfter(new DateTime())) super.setCalendar(new DateTime().toGregorianCalendar());
-					else calcAge(bdate);
+					birthDate = Converters.convertToLocalDateTime(super.getCalendar()).toLocalDate();
+					if (birthDate.isAfter(LocalDate.now())) super.setCalendar(Converters.toCalendar(LocalDateTime.now()));
+					else calcAge(birthDate);
 				}
 			}
 		}
@@ -799,15 +800,14 @@ public class PatientInsertExtended extends JDialog {
 			jBirthDateGroupPanel.setLayout(new BorderLayout());
 
 			if (!insert) {
-				Date sBirthDate = patient.getBirthDate();
+				LocalDate sBirthDate = patient.getBirthDate();
 
 				if (sBirthDate != null) {
-					cBirthDate = Calendar.getInstance();
-					cBirthDate.setTimeInMillis(sBirthDate.getTime());
+					birthDate = sBirthDate;
 				}
 			}
 
-			final BirthDateChooser jBirthDateChooser = new BirthDateChooser(cBirthDate);
+			final BirthDateChooser jBirthDateChooser = new BirthDateChooser(birthDate);
 			jBirthDateGroupPanel.add(jBirthDateChooser, BorderLayout.CENTER);
 
 			if (jBirthDateReset == null) {
@@ -820,7 +820,7 @@ public class PatientInsertExtended extends JDialog {
 						/*
 						 * jAgeField.setText(""); jAgeField.setEditable(true);
 						 */
-						cBirthDate = null;
+						birthDate = null;
 					}
 				});
 
@@ -830,8 +830,8 @@ public class PatientInsertExtended extends JDialog {
 		return jBirthDateGroupPanel;
 	}
 
-	private void calcAge(DateTime bdate) {
-		Period p = new Period(bdate, new DateTime(), PeriodType.yearMonthDay());
+	private void calcAge(LocalDate bdate) {
+		java.time.Period p = java.time.Period.between(bdate, LocalDate.now());
 		years = p.getYears();
 		months = p.getMonths();
 		days = p.getDays();
@@ -1302,7 +1302,7 @@ public class PatientInsertExtended extends JDialog {
 			if (!insert) {
 				if (patient.getBirthDate() != null) {
 					jAgeType_BirthDate.setSelected(true);
-					calcAge(new DateTime(patient.getBirthDate()));
+					calcAge(patient.getBirthDate());
 				} else if (patient.getAgetype() != null && patient.getAgetype().compareTo("") != 0) {
 					parseAgeType();
 					jAgeType_Description.setSelected(true);
