@@ -33,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -60,6 +61,7 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
+import org.isf.utils.jobjects.LocalDateSupportingJDateChooser;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.manager.WardBrowserManager;
@@ -86,7 +88,7 @@ public class InsertVisit extends JDialog {
 	/*
 	 * Attributes
 	 */
-	private JDateChooser visitDateChooser;
+	private LocalDateSupportingJDateChooser visitDateChooser;
 	private JPanel buttonsPanel;
 	private JButton buttonOK;
 	private JButton buttonCancel;
@@ -94,7 +96,7 @@ public class InsertVisit extends JDialog {
 	/*
 	 * Return Value
 	 */
-	private Date visitDate = null;
+	private LocalDateTime visitDate = null;
 	private JPanel wardPanel;
 	private JComboBox wardBox;
 	private Ward ward;
@@ -111,13 +113,13 @@ public class InsertVisit extends JDialog {
 		initComponents();
 	}
 
-	public InsertVisit(JDialog owner, Date date) {
+	public InsertVisit(JDialog owner, LocalDateTime date) {
 		super(owner, true);
 		this.visitDate = date;
 		initComponents();
 	}
 
-	public InsertVisit(JFrame owner, Date date, Ward ward, Patient patient) {
+	public InsertVisit(JFrame owner, LocalDateTime date, Ward ward, Patient patient) {
 		super(owner, true);
 		this.patient = patient;
 		this.visitDate = date;
@@ -344,8 +346,7 @@ public class InsertVisit extends JDialog {
 								MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
 						return;
 					}
-					GregorianCalendar date = new GregorianCalendar();
-					date.setTime(visitDateChooser.getDate());
+					LocalDateTime date = visitDateChooser.getLocalDateTime();
 					int visitID = 0;
 					String note = null;
 					Object o = jSpinnerDur.getValue();
@@ -405,7 +406,7 @@ public class InsertVisit extends JDialog {
 	}
 
 	private JDateChooser getVisitDateField() {
-		visitDateChooser = new JDateChooser();
+		visitDateChooser = new LocalDateSupportingJDateChooser();
 		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 		visitDateChooser.setDateFormatString(dateTimeFormat); // $NON-NLS-1$
 		if (visitDate != null)
@@ -498,7 +499,7 @@ public class InsertVisit extends JDialog {
 
 	}
 
-	public Date getVisitDate() {
+	public LocalDateTime getVisitDate() {
 		return visitDate;
 	}
 

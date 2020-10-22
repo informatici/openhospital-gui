@@ -29,6 +29,7 @@ package org.isf.utils.time;
 import java.awt.FlowLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.time.LocalDateTime;
 import java.util.GregorianCalendar;
 
 import javax.swing.JLabel;
@@ -61,6 +62,10 @@ public class DateTextField extends JPanel{
 		day.setText("");
 		month.setText("");
 		year.setText("");
+	}
+
+	public DateTextField(LocalDateTime localDateTime) {
+		this(Converters.toCalendar(localDateTime));
 	}
 	
 	public DateTextField(GregorianCalendar time){
@@ -166,6 +171,11 @@ public class DateTextField extends JPanel{
 		toModify.set(GregorianCalendar.YEAR,Integer.valueOf(year.getText()));
 		return toModify;
 	}
+
+	public LocalDateTime getCompleteLocalDateTime(){
+		return Converters.convertToLocalDateTime(getCompleteDate());
+	}
+
 	/**
 	 * This method returns the date displayed by the object
 	 * @return GregorianCalendar

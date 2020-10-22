@@ -25,6 +25,7 @@ package org.isf.stat.gui.report;
  * Created on 15/giu/08
  */
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 
@@ -46,7 +47,7 @@ public class GenericReportPharmaceuticalStockWard {
 	private final Logger logger = LoggerFactory.getLogger(GenericReportPharmaceuticalStockWard.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-	public GenericReportPharmaceuticalStockWard(Date date, String jasperFileName, Ward ward) {
+	public GenericReportPharmaceuticalStockWard(LocalDateTime date, String jasperFileName, Ward ward) {
 		try{
             JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPharmaceuticalStockWardPdf(date, jasperFileName, ward);
             if (GeneralData.INTERNALVIEWER)

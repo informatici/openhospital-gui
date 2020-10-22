@@ -34,6 +34,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EventListener;
@@ -433,7 +434,7 @@ public class WardPharmacyRectify extends JDialog {
 							movStockInsertingManager.storeLot(selectedLot.getCode(), selectedLot, med);
 							result = movWardBrowserManager.newMovementWard(new MovementWard(
 									wardSelected, 
-									new GregorianCalendar(), 
+									LocalDateTime.now(),
 									false, null, 0, 0, 
 									reason, 
 									med, 
@@ -619,8 +620,8 @@ public class WardPharmacyRectify extends JDialog {
 	}
 
 	protected Lot askLot() {
-		GregorianCalendar preparationDate = new GregorianCalendar();
-		GregorianCalendar expiringDate = new GregorianCalendar();
+		LocalDateTime preparationDate = LocalDateTime.now();
+		LocalDateTime expiringDate = LocalDateTime.now();
 		Lot lot = null;
 		JTextField lotNameTextField = new JTextField(15);
 		lotNameTextField.addAncestorListener(new RequestFocusListener());
@@ -663,8 +664,8 @@ public class WardPharmacyRectify extends JDialog {
 							MessageBundle.getMessage("angal.medicalstockward.rectify.expirydatebeforepreparationdate"));
 
 				} else {
-					expiringDate.setTime(expireDateChooser.getDate());
-					preparationDate.setTime(preparationDateChooser.getDate());
+					expiringDate = expireDateChooser.getLocalDateTime();
+					preparationDate = preparationDateChooser.getLocalDateTime();
 					lot = new Lot(lotName, preparationDate, expiringDate);
 				}
 			} else {

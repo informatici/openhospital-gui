@@ -32,6 +32,7 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -283,17 +284,17 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		dialogOpe.setModal(true);
 	}
 	
-	public void selectCorrect(GregorianCalendar startDate, GregorianCalendar endDate) {
+	public void selectCorrect(LocalDateTime startDate, LocalDateTime endDate) {
 		JtableData.clearSelection();
 		for (int i = 0; i < oprowData.size(); i++) {
 
 			OperationRow operation = (OperationRow) JtableData.getValueAt(i, -1);
-			Date operationDate = operation.getOpDate().getTime();
+			LocalDateTime operationDate = operation.getOpDate();
 
 			// Check that the operation date is included between startDate and endDate (if any).
 			// On true condition select the corresponding table row.
-			if (operationDate.after(startDate.getTime())
-					&& (endDate != null && operationDate.before(endDate.getTime()))) {
+			if (operationDate.isAfter(startDate)
+					&& (endDate != null && operationDate.isBefore(endDate))) {
 
 				JtableData.addRowSelectionInterval(i, i);
 			}

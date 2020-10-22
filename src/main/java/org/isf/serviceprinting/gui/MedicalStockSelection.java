@@ -30,7 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -420,8 +420,8 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Movement> pMovements=null;
-				GregorianCalendar movFrom = movDateFrom.getCompleteDate();
-				GregorianCalendar movTo = movDateTo.getCompleteDate();
+				LocalDateTime movFrom = movDateFrom.getCompleteDate();
+				LocalDateTime movTo = movDateTo.getCompleteDate();
 				boolean correctDate = true;
 				if ((movFrom==null) || (movTo == null)) {
 					JOptionPane.showMessageDialog(null, "Date/s not valid");

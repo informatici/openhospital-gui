@@ -40,6 +40,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -218,7 +220,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 					
 					try {
 						ArrayList<LaboratoryForPrint> labs;
-						labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDate(), dateTo.getDate());
+						labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
 						if (!labs.isEmpty()) {
 							
 							printManager.print("Laboratory",labs,0);
@@ -313,7 +315,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
                 public void actionPerformed(ActionEvent event) {
                     laboratory = new Laboratory(0, new Exam("", "",
                                     new ExamType("", ""), 0, ""),
-                                    new GregorianCalendar(), "P", "", new Patient(), "");
+							LocalDateTime.now(), "P", "", new Patient(), "");
                     if (GeneralData.LABEXTENDED) {
                         if (GeneralData.LABMULTIPLEINSERT) {
                                 LabNew editrecord = new LabNew(myFrame);
@@ -386,9 +388,9 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	protected String getLabMessage(Laboratory lab) {
 		StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.lab.deletefollowinglabexam"))
 				.append(";\n")
-				.append(MessageBundle.getMessage("angal.lab.registationdate")).append("=").append(dateFormat.format(lab.getDate().getTime()))
+				.append(MessageBundle.getMessage("angal.lab.registationdate")).append("=").append(dateFormat.format(lab.getDate()))
 				.append("\n")
-				.append(MessageBundle.getMessage("angal.lab.examdate")).append("=").append(dateTimeFormat.format(lab.getExamDate().getTime()))
+				.append(MessageBundle.getMessage("angal.lab.examdate")).append("=").append(dateTimeFormat.format(lab.getExamDate()))
 				.append("\n")
 				.append(MessageBundle.getMessage("angal.lab.exam")).append("=").append(lab.getExam())
 				.append("\n")
@@ -569,7 +571,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 					typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
 					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
 						typeSelected = null;
-					model = new LabBrowsingModel(typeSelected, dateFrom.getDate(), dateTo.getDate());
+					model = new LabBrowsingModel(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
 					model.fireTableDataChanged();
 					jTable.updateUI();
 				}
@@ -591,7 +593,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		private static final long serialVersionUID = 1L;
 		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
 
-		public LabBrowsingModel(String exam, GregorianCalendar dateFrom, GregorianCalendar dateTo) {
+		public LabBrowsingModel(String exam, LocalDate dateFrom, LocalDate dateTo) {
 			try {
 				pLabs = manager.getLaboratory(exam, dateFrom, dateTo);
 			} catch (OHServiceException e) {
@@ -633,7 +635,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			if (c == -1) {
 				return lab;
 			} else if (c == 0) {
-				return dateFormat.format(lab.getExamDate().getTime());
+				return dateFormat.format(lab.getExamDate());
 			} else if (c == 1) {
 				return lab.getPatName();
 			} else if (c == 2) {

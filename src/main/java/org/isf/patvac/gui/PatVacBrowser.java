@@ -42,6 +42,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -208,10 +209,10 @@ public class PatVacBrowser extends ModalJFrame {
 		   buttonNew.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
-					patientVaccine = new PatientVaccine(0,0,new GregorianCalendar(),new Patient(),
+					patientVaccine = new PatientVaccine(0,0, LocalDateTime.now(),new Patient(),
 							                new Vaccine ("","",new VaccineType("","")),0);
 							
-					PatientVaccine  last = new PatientVaccine(0,0,new GregorianCalendar(),new Patient(),
+					PatientVaccine  last = new PatientVaccine(0,0,LocalDateTime.now(),new Patient(),
 							                     new Vaccine ("","",new VaccineType("","")),0);
                     new PatVacEdit (myFrame, patientVaccine, true);
                     
@@ -296,7 +297,7 @@ public class PatVacBrowser extends ModalJFrame {
 					patientVaccine = (PatientVaccine) (((PatVacBrowsingModel) model).getValueAt(selectedrow, -1));
                     int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.patvac.deleteselectedpatientvaccinerow") +
-								"\n"+ MessageBundle.getMessage("angal.patvac.vaccinedate")+" = " +  dateFormat.format( patientVaccine.getVaccineDate().getTime()) +
+								"\n"+ MessageBundle.getMessage("angal.patvac.vaccinedate")+" = " +  dateFormat.format( patientVaccine.getVaccineDate()) +
 								"\n "+ MessageBundle.getMessage("angal.patvac.vaccine")+" = " + patientVaccine.getVaccine().getDescription() + 
 								"\n "+ MessageBundle.getMessage("angal.patvac.patient")+" =" + patientVaccine.getPatName() + 
 								"\n ?",
@@ -757,13 +758,10 @@ public class PatVacBrowser extends ModalJFrame {
 						return;
 					}
 			        
-			        GregorianCalendar gcFrom = new GregorianCalendar();
-					gcFrom.setTime(dateFrom.getDate());
-					GregorianCalendar gcTo = new GregorianCalendar();
-				    gcTo.setTime(dateTo.getDate());
-				   
-				   
-			        model = new PatVacBrowsingModel(vaccineTypeCode, vaccineCode, gcFrom, gcTo, sex, ageFrom, ageTo);
+			        LocalDateTime dateFrom = PatVacBrowser.this.dateFrom.getLocalDateTime();
+					LocalDateTime dateTo = PatVacBrowser.this.dateTo.getLocalDateTime();
+
+			        model = new PatVacBrowsingModel(vaccineTypeCode, vaccineCode, dateFrom, dateTo, sex, ageFrom, ageTo);
 					model.fireTableDataChanged();
 					jTable.updateUI();
 					updateRowCounter();
@@ -830,7 +828,7 @@ public class PatVacBrowser extends ModalJFrame {
 		}
 		
 		public PatVacBrowsingModel(String vaccineTypeCode, String vaccineCode,
-				GregorianCalendar dateFrom, GregorianCalendar dateTo, char sex,
+				LocalDateTime dateFrom, LocalDateTime dateTo, char sex,
 				int ageFrom, int ageTo) {
 			try {
 				lPatVac = manager.getPatientVaccine(vaccineTypeCode, vaccineCode, dateFrom, dateTo, sex, ageFrom, ageTo);
@@ -892,7 +890,7 @@ public class PatVacBrowser extends ModalJFrame {
 			if (c == -1) {
 				return patVac;
 			} else if (getNumber(c) == 0) {
-				return dateFormat.format(patVac.getVaccineDate().getTime());
+				return dateFormat.format(patVac.getVaccineDate());
 			} else if (getNumber(c) == 1) {
 				return patVac.getPatName();
 			} else if (getNumber(c) == 2) {

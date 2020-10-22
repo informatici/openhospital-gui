@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -613,7 +614,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					String description = "";
 					int age = 0;
 					float weight = 0;
-					GregorianCalendar newDate = new GregorianCalendar();
+					LocalDateTime newDate = LocalDateTime.now();
 					Ward wardTo = null; //
 					if (jRadioPatient.isSelected()) {
 						isPatient = true;
