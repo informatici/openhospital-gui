@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH010_OutPatientReport" pageWidth="1133" pageHeight="793" orientation="Landscape" columnWidth="1073" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="1ae95539-9794-4bfc-954e-7879664f4181">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH010_OutPatientReport" pageWidth="1133" pageHeight="793" orientation="Landscape" columnWidth="1073" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="OH010_OutPatientReport" whenResourceMissingType="Key" uuid="1ae95539-9794-4bfc-954e-7879664f4181">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="344"/>
 	<property name="ireport.y" value="0"/>
@@ -133,7 +134,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 			<rectangle radius="0">
 				<reportElement key="rectangle-1" mode="Opaque" x="0" y="1" width="1073" height="48" forecolor="#00CCCC" backcolor="#000099" uuid="fe4e94a5-70ea-4b23-8940-58adbb4250a5"/>
 			</rectangle>
-			<staticText>
+			<textField>
 				<reportElement key="staticText" x="5" y="5" width="997" height="40" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="c1194b78-4348-4952-a281-e3f414701a1d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -144,9 +145,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Justified" verticalAlignment="Top" rotation="None">
 					<font fontName="Arial" size="24" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[OutPatient]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<textFieldExpression><![CDATA[$R{OutPatient}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-4" x="0" y="49" width="1073" height="22" uuid="ac94292f-01bd-48ee-ad16-f2b014e15ec5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -159,7 +160,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-5" x="0" y="71" width="1073" height="17" uuid="7a880592-39cf-460e-84a4-9af62bc13461"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -172,7 +173,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-6" x="0" y="88" width="1073" height="17" uuid="9ea7c0e8-de1c-441e-90c5-1cbdd0b71e6d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -185,7 +186,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-7" x="0" y="105" width="1073" height="17" uuid="ec7f622b-3368-4c77-9f99-50391a32eb95"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -198,7 +199,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-8" x="65" y="122" width="64" height="17" uuid="83adc030-5739-4a9e-83a9-1a3017e5bfa6"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -211,7 +212,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fromdate}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-1" x="0" y="122" width="65" height="17" uuid="1a1de1fb-ff20-4cb3-998b-5a14a839a684"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -222,9 +223,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[From]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{From}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-2" x="129" y="122" width="65" height="17" uuid="774511e3-5965-4822-8546-cfd8199a2189"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -235,9 +236,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[To]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-9" x="194" y="122" width="64" height="17" uuid="1985a4d2-3de0-4911-8639-a40e4614dbe4"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -277,7 +278,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<text><![CDATA[OPD]]></text>
 			</staticText>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-6" mode="Opaque" x="174" y="0" width="78" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="bc0561c1-b5b3-4391-a7af-6180ab551ab3"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -288,9 +289,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[CITY]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{City}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-7" mode="Opaque" x="252" y="0" width="78" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="d164705d-a41b-4dd2-ad74-7e4cbe9f6135"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -301,9 +302,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ADDRESS]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Address}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-8" mode="Opaque" x="330" y="0" width="40" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="5bd0c5c1-546a-4490-8012-916b4dda9da2"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -314,9 +315,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[SEX	]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{SEX}+"	"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" mode="Opaque" x="370" y="0" width="40" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="8f680fd6-98d1-462f-8d23-5b10aa294f59"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -327,9 +328,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[AGE]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Age}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-10" mode="Opaque" x="531" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="d22aed07-f11b-4d64-a7f8-a0fb7e4c6525"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -340,9 +341,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TYPE]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Type}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-11" mode="Opaque" x="573" y="0" width="115" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="8ee666ef-cff4-4273-bbd7-91081b6447e6"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -353,9 +354,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[DISEASE 1]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Disease}+" 1"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-12" mode="Opaque" x="688" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="895500d7-6426-400b-b7b7-d94834427a5f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -366,9 +367,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TYPE]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Type}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-13" mode="Opaque" x="730" y="0" width="115" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="ae226bd3-2291-4af8-bb38-c38c6b19e892"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -379,9 +380,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[DISEASE 2]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Disease}+" 2"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-14" mode="Opaque" x="845" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="bd1c5885-c510-4907-996f-897113ad5fe8"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -392,9 +393,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TYPE]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Type}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-15" mode="Opaque" x="887" y="0" width="115" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="581830ce-a0c4-43fb-a775-6a1166596c65"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -405,9 +406,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[DISEASE 3]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Disease}+" 3"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-16" mode="Opaque" x="1002" y="0" width="35" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="181c4fff-d4fb-4f47-bbf9-4c1d57f54c76"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -418,9 +419,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[FROM]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{FromUppercase}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-17" mode="Opaque" x="1037" y="0" width="36" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="fa1d0d31-318c-47b6-ab54-485edd32c069"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -431,9 +432,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TO]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{ToUppercase}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-18" mode="Opaque" x="99" y="0" width="75" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="852aa98c-36f2-4986-9978-e36fb603a2b2"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -444,9 +445,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[DATE]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{DateUppercase}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-19" mode="Opaque" x="452" y="0" width="79" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="d4efaf93-378e-4e09-bb67-65eea2af1e9f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -457,9 +458,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ATTENDANCE]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Attendance}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-28" mode="Opaque" x="410" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="6b747df1-5fc5-4e8d-a4fe-cc95c81f1516"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -470,9 +471,9 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[DAYS]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Days}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-29" mode="Opaque" x="50" y="0" width="49" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="f7b20011-daa4-488b-8264-2b908b713f41"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -483,8 +484,8 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PATID]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Patid}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -788,20 +789,20 @@ $F{DAYS}]]></textFieldExpression>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-20" x="148" y="43" width="94" height="16" uuid="0ba5020a-c914-4525-bef5-68a26836a16f"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Under 5]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Under}+" 5"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-21" x="242" y="43" width="94" height="16" uuid="a3914307-063f-4926-bb8b-f3b2dc683fe9"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[6 to 10 years]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["6 "+$R{to}+" 10 "+$R{Years}]]></textFieldExpression>
+			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="false">
 				<reportElement key="textField-21" x="242" y="59" width="94" height="21" uuid="77666200-e675-44e9-9cf8-627a2294e241"/>
 				<textElement textAlignment="Center">
@@ -809,20 +810,20 @@ $F{DAYS}]]></textFieldExpression>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{DAY_SIX_TO_TEN}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-22" x="430" y="43" width="113" height="16" uuid="8f12c5c5-28e9-4d53-b976-46259610083b"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-23" x="336" y="43" width="94" height="16" uuid="f3e524ba-f8f8-47b4-90da-78a5a297a9df"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Adult]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Adult}]]></textFieldExpression>
+			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="false">
 				<reportElement key="textField-22" x="336" y="59" width="94" height="21" uuid="a714a98b-0c44-4e31-b37e-9435df08293d"/>
 				<textElement textAlignment="Center">
@@ -851,20 +852,20 @@ $F{DAYS}]]></textFieldExpression>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{NIGHT_OVER_TEN}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-24" x="1" y="59" width="147" height="21" uuid="62874585-795d-4f7c-bd97-d93aece65d6a"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Day (from 8am to 5pm)]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Day}+" ("+$R{from}+" 8am "+$R{to}+" 5pm)"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-25" x="1" y="80" width="147" height="21" uuid="5904976a-6bb3-49d4-ad25-04319060cc7b"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Night (from 5pm to 8am)]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Night}+" ("+$R{from}+" 5pm "+$R{to}+" 8am)"]]></textFieldExpression>
+			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="false">
 				<reportElement key="textField-26" x="430" y="59" width="113" height="21" uuid="cb96c327-dc42-4e07-8bcd-3981e36bc6c3"/>
 				<textElement textAlignment="Center">
@@ -879,20 +880,20 @@ $F{DAYS}]]></textFieldExpression>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_NIGHT}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-26" x="543" y="43" width="79" height="16" uuid="eee8353e-f9d5-4c66-86af-58ce71e76036"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[New]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{New}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-27" x="622" y="43" width="79" height="16" uuid="5917aca3-ea3c-4225-99c3-48342ef9863c"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Re]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Re}]]></textFieldExpression>
+			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="false">
 				<reportElement key="textField-28" x="543" y="59" width="79" height="21" uuid="54d75894-b2d9-47db-bfb8-2c849a55c213"/>
 				<textElement textAlignment="Center">
