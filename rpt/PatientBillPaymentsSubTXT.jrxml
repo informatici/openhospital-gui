@@ -65,7 +65,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 						key="textField-25"/>
 					<box></box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false"/>
+						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbillpaymentssubtxt.payments" )]]></textFieldExpression>
 				</textField>
@@ -78,7 +78,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 						key="textField-27"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false"/>
+						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.billsreport.amount" )]]></textFieldExpression>
 				</textField>
@@ -175,7 +175,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 						key="textField-24"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false"/>
+						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.billsreportuserallindate.total" )]]></textFieldExpression>
 				</textField>
@@ -188,7 +188,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 						key="textField-26"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false"/>
+						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbillpaymentssubtxt.rest" )]]></textFieldExpression>
 				</textField>

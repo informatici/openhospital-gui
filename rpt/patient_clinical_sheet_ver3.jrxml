@@ -104,18 +104,18 @@ UNION
 SELECT "Operations" AS TYPE,
 	   OPER_OPDATE AS DATE, OPE_DESC AS IDS,
 	   GROUP_CONCAT(CONCAT(OPE_DESC, " - ", OPER_RESULT)) AS DETAILS_1,
-	   OPER_REMARKS AS DETAILS_2,
+	   "" AS DETAILS_2,
 	   "" AS DETAILS_3,
 	   "" AS DETAILS_4,
 	   "" AS NOTE
 	FROM(
-		SELECT OPER_OPDATE, OPE_DESC, OPER_RESULT, OPER_REMARKS
+		SELECT OPER_OPDATE, OPE_DESC, OPER_RESULT
 		FROM 
 			OPERATIONROW  
 			LEFT JOIN OPERATION ON (OPE_ID_A = OPER_ID_A)
 			LEFT JOIN OPD ON (OPER_OPD_ID = OPD_ID) 
 			LEFT JOIN ADMISSION ON (OPER_ADMISSION_ID = ADM_ID) 
-		WHERE (OPD_PAT_ID = $P{patientID} OR (IF($P!{Operations},true,false) AND IF($P!{Admission},false,true) AND ADM_PAT_ID = $P{patientID}))
+		WHERE (OPD_PAT_ID = $P{patientID} OR ADM_PAT_ID = $P{patientID}) 
 		  AND (OPER_OPDATE BETWEEN $P{Date_from} AND $P{Date_to})
 		GROUP BY DATE(OPER_OPDATE)
 	) AS OPERATIONS
@@ -154,21 +154,7 @@ SELECT "Laboratory" AS TYPE,
 	AND EXA_PROC = 2
 GROUP BY LABR_LAB_ID
 
-UNION
 
-SELECT "Laboratory" AS TYPE,
-	   LAB_DATE AS DATE, LAB_RES AS IDS,
-	   EXA_DESC DETAILS_1,
-	   LAB_RES AS DETAILS_2,
-	   "" AS DETAILS_3,
-	   "" AS DETAILS_4,
-	   LAB_NOTE AS NOTE
-	FROM 
-		LABORATORY  
-		LEFT JOIN EXAM ON (EXA_ID_A = LAB_EXA_ID_A) 
-		LEFT JOIN LABORATORYROW ON LABR_LAB_ID = LAB_ID
-	WHERE LAB_PAT_ID = $P{patientID} AND (LAB_DATE BETWEEN $P{Date_from} AND $P{Date_to})
-    AND EXA_PROC = 3
     
 ) 
 AS DETAILS
@@ -222,7 +208,7 @@ ORDER BY DATE DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 				<text><![CDATA[ PATIENT CLINICAL SHEET]]></text>
 				</staticText>
@@ -296,7 +282,7 @@ ORDER BY DATE DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" isBold="false"/>
+						<font isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{DATE}]]></textFieldExpression>
 				</textField>
@@ -313,7 +299,7 @@ ORDER BY DATE DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+						<font isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TYPE}]]></textFieldExpression>
 				</textField>
@@ -327,7 +313,7 @@ ORDER BY DATE DESC]]></queryString>
 						isRemoveLineWhenBlank="true"/>
 					<box></box>
 					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica-Oblique" isItalic="true"/>
+						<font fontName="SansSerif" isItalic="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NOTE}]]></textFieldExpression>
 				</textField>
@@ -341,7 +327,7 @@ ORDER BY DATE DESC]]></queryString>
 						stretchType="RelativeToBandHeight"/>
 					<box></box>
 					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica" isBold="false"/>
+						<font fontName="SansSerif" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DETAILS_1}]]></textFieldExpression>
 				</textField>

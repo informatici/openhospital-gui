@@ -647,43 +647,43 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 		if (options.indexOf(option) == i) {
 			GregorianCalendar gc = new GregorianCalendar();
 
-			from = TimeTools.formatDateTimeReport(gc);
+			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 			to = from;
 		}
 		if (options.indexOf(option) == ++i) {
 			GregorianCalendar gc = new GregorianCalendar();
 			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTimeReport(gc);
+			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 
 			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTimeReport(gc);
+			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 		}
 		if (options.indexOf(option) == ++i) {
 			GregorianCalendar gc = new GregorianCalendar();
 			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTimeReport(gc);
+			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 
 			gc.add(GregorianCalendar.MONTH, 1);
 			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTimeReport(gc);
+			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 		}
 		if (options.indexOf(option) == ++i) {
 			GregorianCalendar gc = new GregorianCalendar();
 			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTimeReport(gc);
+			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 
 			gc.add(GregorianCalendar.MONTH, 2);
 			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTimeReport(gc);
+			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 		}
 		if (options.indexOf(option) == ++i) {
 			GregorianCalendar gc = new GregorianCalendar();
 			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTimeReport(gc);
+			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 
 			gc.add(GregorianCalendar.MONTH, 3);
 			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTimeReport(gc);
+			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 		}
 		if (options.indexOf(option) == ++i) {
 			GregorianCalendar monthYear;
@@ -704,12 +704,12 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 			GregorianCalendar gc = new GregorianCalendar();
 			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTimeReport(gc);
+			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 
 			gc.set(GregorianCalendar.MONTH, monthYear.get(GregorianCalendar.MONTH));
 			gc.set(GregorianCalendar.YEAR, monthYear.get(GregorianCalendar.YEAR));
 			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTimeReport(gc);
+			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
 		}
 		new GenericReportFromDateToDate(
 				from,
