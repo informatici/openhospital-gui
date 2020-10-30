@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH002_RegisteredPatientsByProvenance" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="91824bbf-b3b8-4456-a8da-2a4102185562">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH002_RegisteredPatientsByProvenance" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="OH002_RegisteredPatientsByProvenance" whenResourceMissingType="Key" uuid="91824bbf-b3b8-4456-a8da-2a4102185562">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -40,7 +41,7 @@ ORDER BY NUMBER DESC]]>
 			<rectangle radius="0">
 				<reportElement key="rectangle-1" mode="Opaque" x="0" y="1" width="535" height="48" forecolor="#00CCCC" backcolor="#000099" uuid="1d43314a-9f63-4287-b8bd-f2261ad0a6b1"/>
 			</rectangle>
-			<staticText>
+			<textField>
 				<reportElement key="staticText" x="5" y="5" width="288" height="40" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="9f7e1dc0-a214-4b7a-8857-feaa63778a7c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -52,8 +53,8 @@ ORDER BY NUMBER DESC]]>
 					<font fontName="Arial" size="24" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Registered Patients]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{RegisteredPatients}]]></textFieldExpression>
+			</textField>
 			<image>
 				<reportElement key="image-1" x="476" y="5" width="56" height="40" uuid="c05e2136-45c3-49de-972a-af00b2d1fa06"/>
 				<box>
@@ -64,7 +65,7 @@ ORDER BY NUMBER DESC]]>
 				</box>
 				<imageExpression><![CDATA[$P{LOGO_PATH} + "Splash.jpg"]]></imageExpression>
 			</image>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-4" x="0" y="49" width="535" height="22" uuid="215e6cc0-9928-4de5-8f33-944aa883bced"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -77,7 +78,7 @@ ORDER BY NUMBER DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-5" x="0" y="71" width="535" height="17" uuid="5f87b2ac-f314-4394-b84b-ae7a74b555e0"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -90,7 +91,7 @@ ORDER BY NUMBER DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-6" x="0" y="88" width="535" height="17" uuid="f8e1958a-2844-4737-814b-c53e233f9c11"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -103,7 +104,7 @@ ORDER BY NUMBER DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-7" x="0" y="105" width="535" height="17" uuid="a5e428ff-cfa4-4f82-8465-7c34c20e30de"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -116,7 +117,7 @@ ORDER BY NUMBER DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-2" x="293" y="5" width="180" height="40" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="b714e4b7-5ea4-4101-ab5e-efdd76976a61"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -128,9 +129,9 @@ ORDER BY NUMBER DESC]]>
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[ by Provenance]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<textFieldExpression><![CDATA[" "+$R{byProvenance}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-8" x="194" y="122" width="64" height="17" uuid="429a22b3-e364-4304-819e-400c45f38c23"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -143,7 +144,7 @@ ORDER BY NUMBER DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{todate}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-3" x="129" y="122" width="65" height="17" uuid="dba0e401-8d42-4b20-bcc5-dee169bc4cce"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -154,9 +155,9 @@ ORDER BY NUMBER DESC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[To]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-9" x="65" y="122" width="64" height="17" uuid="455fffd0-cf1b-431d-96d6-2a698f6f9a20"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -169,7 +170,7 @@ ORDER BY NUMBER DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fromdate}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-4" x="0" y="122" width="65" height="17" uuid="95843134-7b15-4709-8aab-d207870a2550"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -180,28 +181,28 @@ ORDER BY NUMBER DESC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[From]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{From}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="22" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText" positionType="Float" x="40" y="0" width="97" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="2d8275c6-ad9e-4104-8bb5-e603abbc9396"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[City]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{City}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-1" positionType="Float" x="137" y="0" width="97" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="364da5fe-f074-466c-b5c4-77393ad7777c"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="Arial" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Address]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Address}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
