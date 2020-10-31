@@ -24,7 +24,7 @@
 ######## Environment check:
 
 # SET JAVA_BIN or JAVA_HOME
-JAVA_BIN = `which java`
+JAVA_BIN=`which java`
 #JAVA_HOME=/usr/lib/jvm/java-14-openjdk-amd64/
 
 # check if java home exists
