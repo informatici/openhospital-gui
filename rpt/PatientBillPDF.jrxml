@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillPDF" pageWidth="158" pageHeight="288" whenNoDataType="NoPages" columnWidth="148" leftMargin="5" rightMargin="5" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="541b11ae-63fa-42ed-80e7-72f5a4e2eb64">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillPDF" pageWidth="158" pageHeight="288" whenNoDataType="NoPages" columnWidth="148" leftMargin="5" rightMargin="5" topMargin="0" bottomMargin="0" resourceBundle="PatientBillPDF" whenResourceMissingType="Key" isIgnorePagination="true" uuid="541b11ae-63fa-42ed-80e7-72f5a4e2eb64">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -82,7 +82,7 @@ WHERE BLL_ID = $P{billID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_ID_PAT} + " - " + $F{BLL_PAT_NAME}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-8" x="0" y="57" width="31" height="9" uuid="892e4bb3-70a0-43fe-a50c-c9dd0037a7ae"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -93,9 +93,9 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement verticalAlignment="Bottom">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[Patient:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Patient}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" x="0" y="65" width="31" height="9" uuid="a97ff447-b4ea-414d-b246-7c6e129cadf5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -106,9 +106,9 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement verticalAlignment="Bottom">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[Cashier:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Cashier}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-10" x="0" y="73" width="31" height="9" uuid="3058aeb0-3ca6-4e95-bdac-92f0a191b629"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -119,8 +119,8 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement verticalAlignment="Bottom">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[Date:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Date}+":"]]></textFieldExpression>
+			</textField>
 			<textField textAdjust="StretchHeight" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-23" x="31" y="73" width="117" height="9" uuid="36513a41-9ee8-437f-a3e1-8bfff017f446"/>
 				<box>
@@ -258,7 +258,7 @@ WHERE BLL_ID = $P{billID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_BILL}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-7" x="0" y="-1" width="94" height="12" uuid="1106cc03-f8e8-4f79-a747-2c5d881aef0c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -269,8 +269,8 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TOTAL:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Total}+":"]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBill" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="357797de-bc7b-4785-bebc-f9faf3a06ad3">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBill" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PatientBill" whenResourceMissingType="Key" uuid="357797de-bc7b-4785-bebc-f9faf3a06ad3">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
@@ -186,7 +186,7 @@ WHERE BLL_ID = $P{billID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_ID_PAT} + " - " + $F{BLL_PAT_NAME}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-8" x="0" y="31" width="49" height="18" uuid="605abf8b-680b-45d9-a191-6bd93a63d047"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -197,9 +197,9 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Patient:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Patient}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" x="0" y="50" width="49" height="18" uuid="f7cddc02-b466-4837-bfcf-d8f7eef4d5d9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -210,8 +210,8 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Cashier:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Cashier}+":"]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-22" x="0" y="105" width="535" height="31" uuid="b9c90113-74d6-4544-a260-545702cb4135"/>
 				<box>
@@ -226,7 +226,7 @@ WHERE BLL_ID = $P{billID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA["Items Statement"]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-10" x="0" y="69" width="49" height="18" uuid="89ce9f48-1204-4107-821d-4e333dc541d5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -237,8 +237,8 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Date:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Date}+":"]]></textFieldExpression>
+			</textField>
 			<textField textAdjust="StretchHeight" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-23" x="54" y="69" width="188" height="18" uuid="cf293076-ebac-47f8-b263-49db554f84fe"/>
 				<box>
@@ -271,7 +271,7 @@ WHERE BLL_ID = $P{billID}]]>
 	</pageHeader>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-2" x="0" y="11" width="49" height="19" uuid="987609f2-0e61-47d0-ab1c-496af6021ead"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -282,9 +282,9 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement>
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Code]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Code}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-3" x="54" y="11" width="236" height="19" uuid="3b4c4eac-f2d7-47eb-9d3a-9122ca0800d9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -295,9 +295,9 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement>
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Item]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Item}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-4" x="294" y="11" width="71" height="19" uuid="48a2fabd-cb3c-4d45-8c68-c53ebfde9ccd"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -308,9 +308,9 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Price]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Price}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-5" x="368" y="11" width="88" height="19" uuid="23cec365-dfc3-4c48-a4c8-3887f15543e8"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -321,9 +321,9 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement textAlignment="Center">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Quantity]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-6" x="460" y="11" width="75" height="19" uuid="014f0d5f-263b-4bf0-8d61-8440ae981586"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -334,8 +334,8 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -422,7 +422,7 @@ WHERE BLL_ID = $P{billID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_BILL}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-7" x="388" y="0" width="68" height="25" uuid="161bf3dc-1f21-45bf-9df7-b92844f15d1f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -433,8 +433,8 @@ WHERE BLL_ID = $P{billID}]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[TOTAL:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Total}+":"]]></textFieldExpression>
+			</textField>
 			<subreport isUsingCache="true">
 				<reportElement key="subreport-1" x="0" y="63" width="535" height="245" uuid="8528524f-1368-4760-b161-da2a1b763eca"/>
 				<subreportParameter name="billID">

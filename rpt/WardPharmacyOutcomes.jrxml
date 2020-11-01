@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WardPharmacyOutcomes" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="ce0e3de5-8e25-4ad5-bb74-0019a2ccae19">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WardPharmacyOutcomes" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="WardPharmacyOutcomes" whenResourceMissingType="Key" uuid="ce0e3de5-8e25-4ad5-bb74-0019a2ccae19">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -222,7 +222,7 @@
 	</pageHeader>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-1" x="149" y="4" width="132" height="24" uuid="162d1d21-c7ce-421b-a3c1-c9d5bf191d05"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -233,9 +233,9 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Medical]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Medical}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-2" x="3" y="4" width="34" height="24" uuid="202a89f1-2286-48aa-9f99-d5869edf545e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -246,9 +246,9 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Date]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-6" x="483" y="4" width="52" height="24" uuid="90db9f03-508f-4feb-a487-1d4aed048803"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -259,9 +259,9 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Qty]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Qty}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-7" x="97" y="4" width="52" height="24" uuid="c2db6061-4a8f-4eb1-b591-90bf433939b6"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -272,9 +272,9 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[N.]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{N.}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-8" x="406" y="4" width="77" height="24" uuid="7ebe854b-422b-4a35-8010-0a07e6d047d3"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -285,9 +285,9 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Rectified]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Rectified}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" x="278" y="4" width="132" height="24" uuid="b8065596-dc40-446c-8bd4-0b9d6e41cf9b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -298,8 +298,8 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Lot N°]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{LotN}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>

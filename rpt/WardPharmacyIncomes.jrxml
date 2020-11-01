@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WardPharmacyIncomes" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="0e4d2a90-f4a7-42ef-aacd-dfdf30c2826c">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WardPharmacyIncomes" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="WardPharmacyIncomes" whenResourceMissingType="Key" uuid="0e4d2a90-f4a7-42ef-aacd-dfdf30c2826c">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -176,7 +176,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["" + $F{ward} + " - INCOMING DRUGS"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["" + $F{ward} + " "+ $R{IncomingDrugs}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -185,7 +185,7 @@
 	</pageHeader>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-1" x="73" y="4" width="183" height="24" uuid="1da5a5e1-7ed4-47ac-a904-b93915a51b1e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -196,9 +196,9 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Medical]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Medical}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-2" x="3" y="4" width="70" height="24" uuid="b3ab22e4-f9ff-42b2-a9f2-562fa3c0e099"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -209,9 +209,9 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Date]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-6" x="427" y="4" width="108" height="24" uuid="204b02e5-d1e5-499e-975c-e0e062f8eea8"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -222,9 +222,9 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Qty]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Qty}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-7" x="256" y="4" width="172" height="24" uuid="4763510e-1c86-463b-b8b9-f209b1cc2f67"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -235,8 +235,8 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Lot N°]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{LotN}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>

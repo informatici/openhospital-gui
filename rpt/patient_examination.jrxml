@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_examination" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b7e0aab0-1467-4a10-b5bb-43326790937b">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_examination" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_examination" whenResourceMissingType="Key" uuid="b7e0aab0-1467-4a10-b5bb-43326790937b">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -356,7 +356,7 @@ WHERE PEX_ID = $P{examId}]]>
 	</background>
 	<title>
 		<band height="38" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-1" x="-3" y="0" width="164" height="21" uuid="efba0482-e8ee-43d2-b7fc-890242a6ef7b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -367,9 +367,9 @@ WHERE PEX_ID = $P{examId}]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ PATIENT EXAMINATION]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[" "+$R{PatientExamination}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-2" x="164" y="8" width="73" height="13" uuid="125450bc-cedb-45e0-8c83-1a2a3710c5b4"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -380,9 +380,9 @@ WHERE PEX_ID = $P{examId}]]>
 				<textElement>
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[version 1.0]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA["version 1.0"]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" x="0" y="22" width="350" height="11" uuid="c7979dcd-1742-4d74-821e-da0841f5912c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -393,8 +393,8 @@ WHERE PEX_ID = $P{examId}]]>
 				<textElement>
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[this report show the last examination of the patient]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{ThisReportShowTheLastExaminationOfThePatient}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -415,7 +415,7 @@ WHERE PEX_ID = $P{examId}]]>
 	</columnHeader>
 	<detail>
 		<band height="220" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-13" x="5" y="5" width="143" height="13" uuid="68f2be87-c8d0-4eeb-8a7d-b6ecacc17d2d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -426,8 +426,8 @@ WHERE PEX_ID = $P{examId}]]>
 				<textElement>
 					<font fontName="Arial" size="8" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Examination]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Examination}]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-1" positionType="Float" x="90" y="52" width="87" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="6a9b2fe6-f4f2-407e-93db-df9020837c4f"/>
 				<box>
@@ -517,7 +517,7 @@ WHERE PEX_ID = $P{examId}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["HEIGHT (cm):"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Height}+":"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="staticText-8" positionType="Float" x="5" y="73" width="68" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="70692d45-0be2-4fd4-b439-3f95a8093151"/>
@@ -530,7 +530,7 @@ WHERE PEX_ID = $P{examId}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["WEIGHT(kg):"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Weight}+":"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="staticText-9" positionType="Float" x="5" y="93" width="68" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="42f0d952-f635-4713-a6bc-734bc2586d90"/>

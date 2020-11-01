@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalAMC" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoPages" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="7fdd9e83-a5cd-47e3-b5a4-7b0dcf28b99e">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalAMC" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoPages" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PharmaceuticalAMC" whenResourceMissingType="Key" uuid="7fdd9e83-a5cd-47e3-b5a4-7b0dcf28b99e">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -150,7 +150,7 @@ GROUP BY MDSR_ID]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-8" x="0" y="70" width="39" height="20" uuid="2d4f2142-3f49-466c-b1a9-282700032b4c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -161,8 +161,8 @@ GROUP BY MDSR_ID]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Date:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Date}+":"]]></textFieldExpression>
+			</textField>
 			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
 				<reportElement key="textField-22" x="44" y="70" width="219" height="20" uuid="709a8dec-0ed1-49af-84b3-69dd4791e2a0"/>
 				<box>
@@ -186,20 +186,20 @@ GROUP BY MDSR_ID]]>
 	</pageHeader>
 	<columnHeader>
 		<band height="17" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-9" x="0" y="0" width="52" height="17" uuid="6a740b18-c625-4baf-a873-71b86f9b21a0"/>
 				<textElement>
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Code]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Code}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-10" x="57" y="0" width="199" height="17" uuid="629463f7-647f-4f7e-a801-47b30ca6e080"/>
 				<textElement>
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Description]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Description}]]></textFieldExpression>
+			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-26" x="590" y="0" width="64" height="17" forecolor="#000000" uuid="8d887f74-1df3-4c39-9439-af5f822f2ea5"/>
 				<textElement textAlignment="Right">
@@ -221,7 +221,7 @@ GROUP BY MDSR_ID]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MONTH_LABEL_4}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-11" x="321" y="0" width="70" height="17" forecolor="#000000" uuid="ba038270-85e1-4f22-be8e-20c439e395b1"/>
 				<box rightPadding="10">
 					<pen lineWidth="0.0" lineStyle="Solid"/>
@@ -233,9 +233,9 @@ GROUP BY MDSR_ID]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[AMC]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Amc}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-12" x="256" y="0" width="65" height="17" uuid="bcca5107-3049-4cfe-952d-030ec48a129f"/>
 				<box rightPadding="10">
 					<pen lineWidth="0.0" lineStyle="Solid"/>
@@ -247,8 +247,8 @@ GROUP BY MDSR_ID]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Critical]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Critical}]]></textFieldExpression>
+			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-30" x="526" y="0" width="64" height="17" forecolor="#999999" uuid="0976d782-53a8-4b1d-9c6b-f6310ec5a895"/>
 				<textElement textAlignment="Right">
@@ -256,7 +256,7 @@ GROUP BY MDSR_ID]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MONTH_LABEL_1}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-13" x="391" y="0" width="101" height="17" forecolor="#0066CC" uuid="e1fbab2c-e576-408f-a046-ae9683115a8c"/>
 				<box rightPadding="10">
 					<pen lineWidth="0.0" lineStyle="Solid"/>
@@ -268,9 +268,9 @@ GROUP BY MDSR_ID]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[AVG Value]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{AvgValue}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-14" x="493" y="0" width="32" height="17" forecolor="#000000" uuid="e7c96e01-cdd3-4869-800b-5463dfcfd105"/>
 				<box rightPadding="10">
 					<pen lineWidth="0.0" lineStyle="Solid"/>
@@ -282,8 +282,8 @@ GROUP BY MDSR_ID]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -429,7 +429,7 @@ GROUP BY MDSR_ID]]>
 	</columnFooter>
 	<pageFooter>
 		<band height="102" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-15" x="0" y="60" width="782" height="13" forecolor="#FF0000" uuid="eac66737-2689-473e-9652-b6e0e549a1b5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -440,9 +440,9 @@ GROUP BY MDSR_ID]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Red: the AMC is over 50% far from the critical level]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{FootNotes3}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-16" x="0" y="47" width="782" height="13" forecolor="#FFCC00" uuid="f9139b45-ebd9-4a16-b029-969ebeec01c6"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -453,9 +453,9 @@ GROUP BY MDSR_ID]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Orange: the AMC is between 20% and 50% far from the critical level]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{FootNotes2}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-17" x="0" y="34" width="782" height="13" forecolor="#66CC00" uuid="4aae4c4a-4fa2-49a7-a158-b798ee6f6c69"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -466,8 +466,8 @@ GROUP BY MDSR_ID]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Green: the AMC is within 20% close to the critical level]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{FootNotes1}]]></textFieldExpression>
+			</textField>
 			<line>
 				<reportElement key="line-2" mode="Opaque" x="0" y="77" width="782" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="4c368262-fc24-4cab-82db-5ac39307cda5"/>
 			</line>
@@ -548,7 +548,7 @@ GROUP BY MDSR_ID]]>
 			<line>
 				<reportElement key="line-1" x="0" y="3" width="782" height="1" uuid="6f70ee86-6c2f-447f-a839-fc82e75604dd"/>
 			</line>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-18" x="289" y="9" width="101" height="18" forecolor="#0066CC" uuid="0edc7dac-1b3d-491f-876e-f94846004d42"/>
 				<box rightPadding="10">
 					<pen lineWidth="0.0" lineStyle="Solid"/>
@@ -560,8 +560,8 @@ GROUP BY MDSR_ID]]>
 				<textElement textAlignment="Right">
 					<font fontName="Arial" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[AVG Total]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{AvgTotal}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>

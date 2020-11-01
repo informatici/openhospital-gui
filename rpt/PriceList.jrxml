@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PriceList" columnCount="2" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="260" columnSpacing="14" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="6b1310c2-54b7-454e-90a6-65726cadd27e">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PriceList" columnCount="2" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="260" columnSpacing="14" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PriceList" whenResourceMissingType="Key" uuid="6b1310c2-54b7-454e-90a6-65726cadd27e">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -44,7 +44,7 @@
 			<rectangle radius="0">
 				<reportElement key="rectangle-1" mode="Opaque" x="0" y="1" width="535" height="48" forecolor="#00CCCC" backcolor="#000099" uuid="60b6da4f-23fc-4c9b-978c-8956b205640a"/>
 			</rectangle>
-			<staticText>
+			<textField>
 				<reportElement key="staticText" x="5" y="5" width="471" height="40" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="e4f3520f-cbd2-4cf3-b680-dff52d7747e6"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -56,8 +56,8 @@
 					<font fontName="Arial" size="24" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[PriceList]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{PriceList}]]></textFieldExpression>
+			</textField>
 			<image>
 				<reportElement key="image-1" x="476" y="5" width="56" height="40" uuid="c5e0caf3-fc70-4ce6-bce3-7ee2452e1f76"/>
 				<box>

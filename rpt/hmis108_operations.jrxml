@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hmis108_operations" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="d81c1cfa-2539-4595-a35b-4561a72eec6b">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="hmis108_operations" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="hmis108_operations" whenResourceMissingType="Key" uuid="d81c1cfa-2539-4595-a35b-4561a72eec6b">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -135,7 +136,7 @@ group by opType, opDesc]]>
 	</background>
 	<title>
 		<band height="50" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-1" mode="Opaque" x="0" y="0" width="421" height="23" forecolor="#FFFFFF" backcolor="#000000" uuid="d05bd228-ffa8-4eb7-b2f9-2b7fd1b757cf"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -146,9 +147,9 @@ group by opType, opDesc]]>
 				<textElement textAlignment="Right">
 					<font size="18" isBold="true"/>
 				</textElement>
-				<text><![CDATA[HMIS 108:      INPATIENT MONTHLY REPORT ]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Hmis108InpatientMonthlyReport}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-2" x="436" y="0" width="92" height="20" uuid="ffb76e66-dbd1-4303-9578-e42610255b90"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -159,9 +160,9 @@ group by opType, opDesc]]>
 				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[page 1 ]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Page1}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-3" mode="Transparent" x="209" y="32" width="35" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="846ca5d1-ed8b-412e-835c-8611a1b50686"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -173,9 +174,9 @@ group by opType, opDesc]]>
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Month:]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-4" mode="Transparent" x="340" y="32" width="35" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="f4e7f14d-5947-4ef9-b4d6-d504ffbe642a"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -187,8 +188,8 @@ group by opType, opDesc]]>
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Year:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Year}]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-1" x="378" y="32" width="76" height="15" uuid="0acb6f88-9e9a-4f00-957a-027b8681b916"/>
 				<box>
@@ -222,7 +223,7 @@ group by opType, opDesc]]>
 	</pageHeader>
 	<columnHeader>
 		<band height="45" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-5" x="1" y="0" width="155" height="14" uuid="60ac320a-4958-47c6-8d00-7ea4e2bb40ae"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -233,9 +234,9 @@ group by opType, opDesc]]>
 				<textElement>
 					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[3. Operations]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Operations}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-7" mode="Opaque" x="0" y="25" width="280" height="16" backcolor="#CCCCCC" uuid="11b31a0e-8fed-4426-b723-70b87293a0bb"/>
 				<box leftPadding="5">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -246,9 +247,9 @@ group by opType, opDesc]]>
 				<textElement>
 					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Description]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Description}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-8" mode="Opaque" x="280" y="25" width="60" height="16" backcolor="#CCCCCC" uuid="bc8e7aa6-01ab-4c96-9fd2-dfb92c773f01"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -259,9 +260,9 @@ group by opType, opDesc]]>
 				<textElement textAlignment="Center">
 					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Positive]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Positive}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-9" mode="Opaque" x="340" y="25" width="60" height="16" backcolor="#CCCCCC" uuid="a50156a4-3876-43db-bd7c-41182d067558"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -272,9 +273,9 @@ group by opType, opDesc]]>
 				<textElement textAlignment="Center">
 					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Negative]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Negative}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-10" mode="Opaque" x="400" y="25" width="60" height="16" backcolor="#CCCCCC" uuid="463429f8-9eeb-488b-8392-ebb89852f31e"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -285,9 +286,9 @@ group by opType, opDesc]]>
 				<textElement textAlignment="Center">
 					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Undefined]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Undefined}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-11" mode="Opaque" x="460" y="25" width="60" height="16" backcolor="#CCCCCC" uuid="7af02d45-ce98-4436-9ca2-54fef905a189"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -298,8 +299,8 @@ group by opType, opDesc]]>
 				<textElement textAlignment="Center">
 					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Total count]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{TotalCount}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -425,7 +426,7 @@ group by opType, opDesc]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{SUM_totOk}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement key="staticText-12" positionType="Float" x="219" y="1" width="61" height="15" uuid="1385a986-6c8e-4759-8287-f194202279f3"/>
 				<box rightPadding="5">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -436,8 +437,8 @@ group by opType, opDesc]]>
 				<textElement textAlignment="Right">
 					<font isBold="true" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[TOTAL]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnFooter>
 	<pageFooter>

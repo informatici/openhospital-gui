@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Laboratory" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="455b698a-3a6c-447d-9570-be963546da05">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Laboratory" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="Laboratory" whenResourceMissingType="Key" uuid="455b698a-3a6c-447d-9570-be963546da05">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -105,7 +105,7 @@
 	</pageHeader>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement key="staticText-1" x="258" y="4" width="277" height="24" uuid="01cda026-85b1-444c-af37-58ceb0bafbfc"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -116,9 +116,9 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Result]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Result}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-2" x="1" y="4" width="112" height="24" uuid="cefb9c69-4778-452a-87de-3eeeff336bed"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -129,9 +129,9 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Date]]></text>
-			</staticText>
-			<staticText>
+				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
 				<reportElement key="staticText-3" x="113" y="4" width="145" height="24" uuid="be006c66-abed-4a48-88fa-b3e7b44c42fc"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -142,8 +142,8 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Arial" size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Exam]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$R{Exam}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
