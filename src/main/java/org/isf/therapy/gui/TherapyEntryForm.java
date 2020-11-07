@@ -33,11 +33,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.swing.Box;
@@ -90,6 +89,7 @@ public class TherapyEntryForm extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public static final String PATTERN = "dd/MM/yy";
 
 	/*
 	 * Managers
@@ -145,7 +145,7 @@ public class TherapyEntryForm extends JDialog {
 	private JSpinner jSpinnerWeeks;
 	private JSpinner jSpinnerMonths;
 	private JLabel endDateLabel;
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy"); //$NON-NLS-1$
+	private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(PATTERN); //$NON-NLS-1$
 	private final String[] radioButtonLabels = {MessageBundle.getMessage("angal.therapy.one"), MessageBundle.getMessage("angal.therapy.two"), MessageBundle.getMessage("angal.therapy.three"), MessageBundle.getMessage("angal.therapy.four")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private JButton buttonCancel;
 	private JButton buttonOK;
@@ -176,7 +176,7 @@ public class TherapyEntryForm extends JDialog {
 		} else {
 			therapy = new Therapy();
 			radioButtonSet.get(0).setSelected(true);
-			endDateLabel.setText(dateFormat.format(new Date()));
+			endDateLabel.setText(dateFormat.format(LocalDateTime.now()));
 		}
 	}
 
@@ -513,7 +513,7 @@ public class TherapyEntryForm extends JDialog {
 		if (therapyStartdate == null) {
 			therapyStartdate = new CustomJDateChooser(new Date());
 			therapyStartdate.setLocale(new Locale(GeneralData.LANGUAGE));
-			therapyStartdate.setDateFormatString(dateFormat.toPattern());
+			therapyStartdate.setDateFormatString(PATTERN);
 
 			therapyStartdate.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
 
