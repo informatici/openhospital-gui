@@ -71,6 +71,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -924,7 +925,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				d = currentDateFormat.format(visitDateOpd);
 			}
 
-			OpdDateFieldCal = new CustomJDateChooser(LocalDateTime.parse(d, currentDateFormat), "dd/MM/yy");
+			OpdDateFieldCal = new CustomJDateChooser(LocalDate.parse(d, currentDateFormat).atStartOfDay(), "dd/MM/yy");
 			OpdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			OpdDateFieldCal.setDateFormatString("dd/MM/yy");
 			OpdDateFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
@@ -1940,7 +1941,7 @@ public class OpdEditExtended extends ModalJFrame implements
 
 			opdNextVisitDate = new CustomJDateChooser();
 			if (!d.equals("")) {
-				opdNextVisitDate.setDate(LocalDateTime.parse(d, currentDateFormat));
+				opdNextVisitDate.setDate(LocalDate.parse(d, currentDateFormat).atStartOfDay());
 			}
 			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			opdNextVisitDate.setDateFormatString("dd/MM/yy");

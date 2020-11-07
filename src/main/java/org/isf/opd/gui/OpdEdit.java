@@ -519,7 +519,7 @@ public class OpdEdit extends JDialog {
 					else {
 						try {
 							// currentDateFormat.setLenient(false); TODO: verify if it's needed
-							LocalDateTime myDate = LocalDateTime.parse(d, currentDateFormat);
+							LocalDateTime myDate = LocalDate.parse(d, currentDateFormat).atStartOfDay();
 							gregDate = myDate.toLocalDate();
 						} catch (DateTimeParseException pe) {
 							JOptionPane.showMessageDialog(OpdEdit.this,
