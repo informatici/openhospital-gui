@@ -39,8 +39,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -2293,7 +2293,7 @@ public class AdmissionBrowser extends ModalJFrame {
         
     @SuppressWarnings("deprecation")
 	public List<OHExceptionMessage> checkAllOperationRowDate(List<OperationRow> list, Admission admission){
-    	DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));
+    	DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", new Locale(GeneralData.LANGUAGE));
     	List<OHExceptionMessage> errors = new ArrayList<OHExceptionMessage>();
 		LocalDateTime beginDate,endDate;
 		if(admission.getAdmDate()!=null)beginDate=admission.getAdmDate();else beginDate=null;

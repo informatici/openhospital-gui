@@ -21,7 +21,7 @@
  */
 package org.isf.utils.jobjects;
 
-import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -117,7 +117,7 @@ public class OhTableDrugsModel <T> implements TableModel{
 				case 0:
 					String dt = "";
 					try {
-						final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
+						final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", Locale.FRENCH);
 						dt = currentDateFormat.format(DrugObj.getDate());
 						value = dt;
 					}

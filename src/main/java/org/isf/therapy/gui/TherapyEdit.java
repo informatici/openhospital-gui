@@ -41,12 +41,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
@@ -314,9 +311,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private String getDate() {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		return dateFormat.format(date);
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd")
+				.format(LocalDateTime.now());
 	}
 
 

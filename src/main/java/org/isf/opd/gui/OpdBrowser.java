@@ -55,10 +55,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -110,7 +109,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private static final String VERSION="1.2.2"; 
 	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yy");
 
 	private JPanel jButtonPanel = null;
 	private JPanel jContainPanel = null;
@@ -421,7 +420,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 								.getValueAt(jTable.getSelectedRow(), -1));
 						String dt="[not specified]";
 						try {
-							final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", Locale.ITALIAN);
 							dt = currentDateFormat.format(opd.getVisitDate());
 						}
 						catch (Exception ex){
