@@ -48,6 +48,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -588,7 +589,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 										billsIdList.add(billTemp.getId());
 									}
 								}
-								java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+								DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 								String fromDate = sdf.format(dateFrom);
 								String toDate = sdf.format(dateTo);
 								new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList,  fromDate, toDate, true, true);
@@ -626,7 +627,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 											billsIdList.add(billTemp.getId());
 										//}
 									}
-									java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+									DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 									String fromDate = sdf.format(dateFrom);
 									String toDate = sdf.format(dateTo);
 									new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList,  fromDate, toDate, true, true);
