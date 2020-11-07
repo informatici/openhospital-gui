@@ -29,6 +29,7 @@ import java.io.File;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
@@ -88,7 +89,7 @@ public class GenericReportPharmaceuticalStockCard {
 	}
 	
 	private String compileStockCardFilename(String jasperFileName, LocalDateTime dateFrom, LocalDateTime dateTo, Medical medical, Ward ward) {
-		Format formatter = new SimpleDateFormat("yyyyMMdd");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 	    StringBuilder fileName = new StringBuilder(jasperFileName);
 	    if (ward != null) {
 	    	fileName.append("_").append(ward.getDescription());
@@ -97,9 +98,9 @@ public class GenericReportPharmaceuticalStockCard {
 	    	fileName.append("_").append(medical.getCode());
 	    }
 	    fileName.append("_").append(MessageBundle.getMessage("angal.common.from"))
-	    		.append("_").append(formatter.format(dateFrom))
+	    		.append("_").append(dateTimeFormatter.format(dateFrom))
 	    		.append("_").append(MessageBundle.getMessage("angal.common.to"))
-	    		.append("_").append(formatter.format(dateTo));
+	    		.append("_").append(dateTimeFormatter.format(dateTo));
         return  fileName.toString();
     }
 }
