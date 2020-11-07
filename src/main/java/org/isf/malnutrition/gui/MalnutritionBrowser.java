@@ -26,6 +26,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -237,7 +238,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-			};
+			}
 		});
 		return closeButton;
 	}
@@ -313,9 +314,9 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		}
 	}
 
-	private String getConvertedString(GregorianCalendar time) {
+	private String getConvertedString(LocalDateTime time) {
 		if (time == null)
 			return MessageBundle.getMessage("angal.malnutrition.nodate");
-		return TimeTools.formatDateTime(time.getTime(), "dd/MM/yyyy");
+		return TimeTools.formatDateTime(time, "dd/MM/yyyy");
 	}
 }

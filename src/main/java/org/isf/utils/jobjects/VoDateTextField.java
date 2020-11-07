@@ -21,9 +21,13 @@
  */
 package org.isf.utils.jobjects;
 
+import org.isf.utils.time.Converters;
+
 import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.GregorianCalendar;
 
 import javax.swing.JOptionPane;
@@ -103,7 +107,7 @@ public class VoDateTextField extends JTextField {
 	public VoDateTextField(String type, String todayDate, int cols) throws IllegalArgumentException {
 		super(cols);
 		if (!(type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy") ||
-				type.equals("mm/dd/yyyy") || type.equals("mm/dd/yyyy")))
+				type.equals("mm/dd/yy") || type.equals("mm/dd/yyyy")))
 			throw new IllegalArgumentException();
 		setType(type);
 		this.setDocument(new ManagedData());
@@ -116,7 +120,7 @@ public class VoDateTextField extends JTextField {
 	public VoDateTextField(String type, GregorianCalendar todayDate, int cols) throws IllegalArgumentException{
 		super(cols);
 		if (!(type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy") ||
-				type.equals("mm/dd/yyyy") || type.equals("mm/dd/yyyy")))
+				type.equals("mm/dd/yy") || type.equals("mm/dd/yyyy")))
 			throw new IllegalArgumentException();
 		setType(type);
 		this.setDocument(new ManagedData());
@@ -214,6 +218,10 @@ public class VoDateTextField extends JTextField {
 			calendar.set(Integer.parseInt(getText().substring(6,8)) + 2000,Integer.parseInt(getText().substring(0,2)) - 1,Integer.parseInt(getText().substring(3,5)));
 		//System.out.println(calendar.get(Calendar.DAY_OF_MONTH)+ " " + calendar.get(Calendar.MONTH) + " " + calendar.get(Calendar.YEAR));
 		return calendar;
+	}
+
+	public LocalDate getLocalDate() {
+		return Converters.convertToLocalDateTime(getDate()).toLocalDate();
 	}
 	
 	public void setDate(GregorianCalendar time){

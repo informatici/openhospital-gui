@@ -73,9 +73,9 @@ public class OperationEdit extends JDialog {
 	private EventListenerList operationListeners = new EventListenerList();
 
 	public interface OperationListener extends EventListener {
-		public void operationUpdated(AWTEvent e);
+		void operationUpdated(AWTEvent e);
 
-		public void operationInserted(AWTEvent e);
+		void operationInserted(AWTEvent e);
 	}
 
 	public void addOperationListener(OperationListener l) {

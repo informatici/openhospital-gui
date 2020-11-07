@@ -63,8 +63,8 @@ public class SupplierEdit extends JDialog {
 	private EventListenerList supplierListeners = new EventListenerList();
 	
 	public interface SupplierListener extends EventListener {
-		public void supplierUpdated(AWTEvent e);
-		public void supplierInserted(AWTEvent e);
+		void supplierUpdated(AWTEvent e);
+		void supplierInserted(AWTEvent e);
 	}
 	
 	public void addSupplierListener(SupplierListener l) {

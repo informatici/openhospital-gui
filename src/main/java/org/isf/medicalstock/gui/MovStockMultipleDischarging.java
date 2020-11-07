@@ -34,6 +34,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -326,9 +327,8 @@ public class MovStockMultipleDischarging extends JDialog {
 						}
 
 						// Date
-						GregorianCalendar date = new GregorianCalendar();
-						date.setTime(jDateChooser.getDate());
-						
+						LocalDateTime date = jDateChooser.getLocalDateTime();
+
 						// RefNo
 						String refNo = jTextFieldReference.getText();
 						
@@ -952,9 +952,8 @@ public class MovStockMultipleDischarging extends JDialog {
 		}
 		
 		// Check the Date
-		GregorianCalendar thisDate = new GregorianCalendar();
-		thisDate.setTime(jDateChooser.getDate());
-		
+		LocalDateTime thisDate = jDateChooser.getLocalDateTime();
+
 		// Check and set all movements
 		for (int i = 0; i < movements.size(); i++) {
 			Movement mov = movements.get(i);

@@ -118,11 +118,11 @@ public class OhTableDrugsModel <T> implements TableModel{
 					String dt = "";
 					try {
 						final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
-						dt = currentDateFormat.format(DrugObj.getDate().getTime());
+						dt = currentDateFormat.format(DrugObj.getDate());
 						value = dt;
 					}
 					catch (Exception ex){
-						value=DrugObj.getDate().getTime().toString();
+						value=DrugObj.getDate().toString();
 					}
 					
 					break;

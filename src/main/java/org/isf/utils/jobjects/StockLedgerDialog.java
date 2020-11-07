@@ -26,6 +26,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.time.Converters;
 
 /**
  * @author Mwithi
@@ -59,7 +61,7 @@ public class StockLedgerDialog extends JDialog {
 		initAndShow();
 	}
 
-	public StockLedgerDialog(Frame owner, Date dateFrom, Date dateTo) {
+	public StockLedgerDialog(Frame owner, LocalDateTime dateFrom, LocalDateTime dateTo) {
 		super(owner, true);
 		dateRange = new JFromDateToDateChooser(dateFrom, dateTo);
 		initAndShow();
@@ -125,11 +127,19 @@ public class StockLedgerDialog extends JDialog {
 		return dateFrom;
 	}
 
+	public LocalDateTime getLocalDateTimeFrom() {
+		return Converters.convertToLocalDateTime(getDateFrom());
+	}
+
 	/**
 	 * @return the dateTo
 	 */
 	public Date getDateTo() {
 		return dateTo;
+	}
+
+	public LocalDateTime getLocalDateTimeTo() {
+		return Converters.convertToLocalDateTime(getDateTo());
 	}
 
 	/**

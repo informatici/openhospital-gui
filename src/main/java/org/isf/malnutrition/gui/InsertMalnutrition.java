@@ -53,8 +53,8 @@ public class InsertMalnutrition extends JDialog {
 	private EventListenerList malnutritionListeners = new EventListenerList();
 
     public interface MalnutritionListener extends EventListener {
-        public void malnutritionUpdated(Malnutrition maln);
-        public void malnutritionInserted();
+        void malnutritionUpdated(Malnutrition maln);
+        void malnutritionInserted();
     }
 
     public void addMalnutritionListener(MalnutritionListener l) {
@@ -189,8 +189,8 @@ public class InsertMalnutrition extends JDialog {
 				} catch (NumberFormatException e) {
 					maln.setWeight(0);
 				}
-				maln.setDateSupp(suppDate.getCompleteDate());
-				maln.setDateConf(confDate.getCompleteDate());
+				maln.setDateSupp(suppDate.getCompleteLocalDateTime());
+				maln.setDateConf(confDate.getCompleteLocalDateTime());
 				
 				if (inserting) {
 					boolean inserted = false;

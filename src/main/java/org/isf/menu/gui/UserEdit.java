@@ -59,8 +59,8 @@ public class UserEdit extends JDialog {
 	private EventListenerList userListeners = new EventListenerList();
 
     public interface UserListener extends EventListener {
-        public void userUpdated(AWTEvent e);
-        public void userInserted(AWTEvent e);
+        void userUpdated(AWTEvent e);
+        void userInserted(AWTEvent e);
     }
 
     public void addUserListener(UserListener l) {

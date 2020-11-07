@@ -65,13 +65,13 @@ public class ExamEdit extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION=MessageBundle.getMessage("angal.versione");  
+	private static final String VERSION="v1.2";  
 	
 	private EventListenerList examListeners = new EventListenerList();
 
     public interface ExamListener extends EventListener {
-        public void examUpdated(AWTEvent e);
-        public void examInserted(AWTEvent e);
+        void examUpdated(AWTEvent e);
+        void examInserted(AWTEvent e);
     }
 
     public void addExamListener(ExamListener l) {

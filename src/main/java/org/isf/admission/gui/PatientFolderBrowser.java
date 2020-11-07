@@ -37,6 +37,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EventListener;
@@ -88,6 +90,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.table.TableSorter;
+import org.isf.utils.time.Converters;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
@@ -123,7 +126,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
 
     public interface DeleteAdmissionListener extends EventListener {
-        public void deleteAdmissionUpdated(AWTEvent e);
+        void deleteAdmissionUpdated(AWTEvent e);
     }
 
     public void addDeleteAdmissionListener(DeleteAdmissionListener l) {
@@ -377,8 +380,8 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				
 				// Check that mouse has been released.
 				if (!e.getValueIsAdjusting()) {
-					GregorianCalendar startDate = null;
-					GregorianCalendar endDate = null;
+					LocalDateTime startDate = null;
+					LocalDateTime endDate = null;
 					int selectedRow = admTable.getSelectedRow();
 					Object selectedObject = sorter.getValueAt(selectedRow, -1);
 					Object selectedObject2;
@@ -407,14 +410,14 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					} else if (selectedObject instanceof Opd) {
 						
 						Opd opd = (Opd) selectedObject;
-						startDate = opd.getVisitDate();
+						startDate = opd.getVisitDate().atStartOfDay();
 						
 					} else if (selectedObject instanceof PatientExamination) {
 						PatientExamination exam = (PatientExamination) selectedObject;
 						startDate = exam.getPex_date();
 					}
 					
-					if (opd2 != null) endDate = opd2.getVisitDate();
+					if (opd2 != null) endDate = opd2.getVisitDate().atStartOfDay();
 					if (adm2 != null) endDate = adm2.getAdmDate();
 					if (exam2 != null) endDate = exam2.getPex_date();
 					
@@ -425,14 +428,14 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					for (int i = 0; i < labList.size(); i++) {
 						//Laboratory laboratory = labList.get(i);
 						Laboratory laboratory = (Laboratory) sorterLab.getValueAt(i, -1);
-						Date examDate = laboratory.getExamDate().getTime();
+						LocalDate examDate = laboratory.getExamDate();
 						
 						// Check that the exam date is included between admission date and discharge date.
 						// If the patient has not been discharged yet (and then discharge date doesn't exist)
 						// check only that the exam date is the same or after the admission date.
 						// On true condition select the corresponding table row.
-						if (!examDate.before(startDate.getTime()) &&
-								(null == endDate ? true : !examDate.after(endDate.getTime())))  {
+						if (!examDate.isBefore(startDate.toLocalDate()) &&
+								(null == endDate ? true : !examDate.isAfter(endDate.toLocalDate())))  {
 							
 							labTable.addRowSelectionInterval(i, i);
 							
@@ -728,7 +731,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					
 					
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");  
-					Date myDate = (admList.get(r)).getAdmDate().getTime();	
+					LocalDateTime myDate = (admList.get(r)).getAdmDate();
 					String strDate = dateFormat.format(myDate);  
 					
 					return strDate;
@@ -736,17 +739,16 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				} else if (r< opdList.size()+admList.size()) {
 					int z = r - admList.size();
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");  
-					Date myDate = (opdList.get(z)).getVisitDate().getTime();
+					LocalDate myDate = (opdList.get(z)).getVisitDate();
 					String strDate = dateFormat.format(myDate);  
 					
 					return strDate;
 					
 				} else {
 					int f = r - (opdList.size()+admList.size());
-					GregorianCalendar cal = examinationList.get(f).getPex_date();
+					LocalDateTime pexDate = examinationList.get(f).getPex_date();
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");  
-					Date myDate = cal.getTime();
-					String strDate = dateFormat.format(myDate);  
+					String strDate = dateFormat.format(pexDate);
 					
 					return strDate;
 					
@@ -846,7 +848,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					if (admList.get(r).getDisDate()==null)
 						return MessageBundle.getMessage("angal.admission.present"); //$NON-NLS-1$
 					else {
-						Date myDate = admList.get(r).getDisDate().getTime();
+						Date myDate = Converters.toDate(admList.get(r).getDisDate());
 						return myDate;
 					}
 				} else if (r< opdList.size()+admList.size()){
@@ -907,10 +909,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			if (c == -1) {
 				return labList.get(r);
 			} else if (c == 0) {
-				//System.out.println(labList.get(r).getExam().getExamtype().getDescription());
-				
-				Date examDate = labList.get(r).getExamDate().getTime();	
-				return examDate;
+				return Converters.toDate(labList.get(r).getExamDate().atStartOfDay());
 			} else if (c == 1) {
 				return labList.get(r).getExam().getDescription();
 			}else if (c == 2) {

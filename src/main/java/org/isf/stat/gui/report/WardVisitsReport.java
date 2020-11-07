@@ -21,6 +21,7 @@
  */
 package org.isf.stat.gui.report;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
@@ -38,7 +39,7 @@ import net.sf.jasperreports.view.JasperViewer;
 public class WardVisitsReport {
 	   private final Logger logger = LoggerFactory.getLogger(GenericReportPatient.class);
 
-		public WardVisitsReport(String string, Date date, String jasperFileName) {
+		public WardVisitsReport(String string, LocalDateTime date, String jasperFileName) {
 			try{
 	            JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 	            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportWardVisitPdf(string, date, jasperFileName);

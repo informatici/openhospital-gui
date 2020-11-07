@@ -35,6 +35,7 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 
@@ -297,7 +298,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 				public void actionPerformed(ActionEvent e) {
 					String number = jNumberTextField.getText().replaceAll(" ", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$
 					String text = jTextArea.getText();
-					Date schedDate = jSchedDateChooser.getDate();
+					LocalDateTime schedDate = jSchedDateChooser.getLocalDateTime();
 					
 					Sms smsToSend = new Sms();
 					smsToSend.setSmsNumber(number);

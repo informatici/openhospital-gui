@@ -64,8 +64,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private EventListenerList patientListeners = new EventListenerList();
 	
 	public interface PatientListener extends EventListener {
-		public void patientUpdated(AWTEvent e);
-		public void patientInserted(AWTEvent e);
+		void patientUpdated(AWTEvent e);
+		void patientInserted(AWTEvent e);
 	}
 	
 	public void addPatientListener(PatientListener l) {
@@ -382,8 +382,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 							sex='F';
 						}else{
 							sex='M';
-						};
-						patient.setSex(sex);
+						}
+							patient.setSex(sex);
 						patient.setAddress(jAddressTextField.getText());
 						patient.setCity(jCityTextField.getText());
 						patient.setNextKin(jNextKinTextField.getText());
@@ -409,8 +409,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 						}
 					}
-					};					
-					
+					}
+
 				}
 			});
 			

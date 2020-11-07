@@ -50,6 +50,7 @@ import org.isf.stat.gui.report.GenericReportPatientVersion2;
 import org.isf.utils.jobjects.ModalJFrame;
 
 import com.toedter.calendar.JDateChooser;
+import org.isf.utils.time.Converters;
 
 public class PatientFolderReportModal extends ModalJFrame{
 	private JFrame parent;
@@ -171,7 +172,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			launchReportButton.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					// GenericReportMY rpt3 = new GenericReportMY(new Integer(6), new Integer(2008), "hmis108_adm_by_diagnosis_in");
-					new GenericReportPatientVersion2(patId, getParameterString(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEET);
+					new GenericReportPatientVersion2(patId, getParameterString(), Converters.convertToLocalDateTime(getDateFromValue()), Converters.convertToLocalDateTime(getDateToValue()), GeneralData.PATIENTSHEET);
 				}
 				
 				protected String getParameterString() {
@@ -256,6 +257,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 					admissionCheck.setSelected(false);
 					drugsCheck.setSelected(false);
 					opdCheck.setSelected(false);
+					operationCheck.setSelected(false);
+					laboratoryCheck.setSelected(false);
 				}
 			});
 			
@@ -454,7 +457,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 		if(date3!=null){
 		 return jDateChooserDateTo.getDate();
 		}else {	
-			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());;
+			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 			Date date2 = null;
 			try {
 				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);

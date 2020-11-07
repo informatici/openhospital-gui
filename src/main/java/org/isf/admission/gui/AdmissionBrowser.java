@@ -39,11 +39,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,6 +103,7 @@ import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ShadowBorder;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
@@ -145,9 +147,9 @@ public class AdmissionBrowser extends ModalJFrame {
 	private EventListenerList admissionListeners = new EventListenerList();
 
     	public interface AdmissionListener extends EventListener {
-		public void admissionUpdated(AWTEvent e);
+		void admissionUpdated(AWTEvent e);
 
-		public void admissionInserted(AWTEvent e);
+		void admissionInserted(AWTEvent e);
 	}
 
 	public void addAdmissionListener(AdmissionListener l) {
@@ -204,7 +206,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private boolean enablePregnancy = false;
 	// viewing is if you set ward to pregnancy
 	private boolean viewingPregnancy = false;
-	private GregorianCalendar visitDate = null;
+	private LocalDateTime visitDate = null;
 	private float weight = 0.0f;
 	private VoLimitedTextField weightField = null;
 	private CustomJDateChooser visitDateFieldCal = null; // Calendar
@@ -213,16 +215,16 @@ public class AdmissionBrowser extends ModalJFrame {
 	private final int preferredWidthDiagnosis = 550;
 	private final int preferredWidthTypes = 220;
 	private final int preferredHeightLine = 24;
-	private GregorianCalendar deliveryDate = null;
+	private LocalDateTime deliveryDate = null;
 	private CustomJDateChooser deliveryDateFieldCal = null;
 	private JComboBox deliveryTypeBox = null;
 	private JComboBox deliveryResultTypeBox = null;
 	private ArrayList<PregnantTreatmentType> treatmTypeList = null;
 	private ArrayList<DeliveryType> deliveryTypeList = null;
 	private ArrayList<DeliveryResultType> deliveryResultTypeList = null;
-	private GregorianCalendar ctrl1Date = null;
-	private GregorianCalendar ctrl2Date = null;
-	private GregorianCalendar abortDate = null;
+	private LocalDateTime ctrl1Date = null;
+	private LocalDateTime ctrl2Date = null;
+	private LocalDateTime abortDate = null;
 	private CustomJDateChooser ctrl1DateFieldCal = null;
 	private CustomJDateChooser ctrl2DateFieldCal = null;
 	private CustomJDateChooser abortDateFieldCal = null;
@@ -245,7 +247,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JCheckBox malnuCheck;
 	private JPanel diseaseInPanel;
 	private JPanel malnuPanel;
-	private GregorianCalendar dateIn = null;
+	private LocalDateTime dateIn = null;
 	private CustomJDateChooser dateInFieldCal = null;
 	private JComboBox admTypeBox = null;
 	private ArrayList<AdmissionType> admTypeList = null;
@@ -258,8 +260,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel diseaseOut1Panel;
 	private JPanel diseaseOut2Panel;
 	private JPanel diseaseOut3Panel;
-
-	private GregorianCalendar dateOut = null;
+	private LocalDateTime dateOut = null;
 	private CustomJDateChooser dateOutFieldCal = null;
 	private JComboBox disTypeBox = null;
 	private ArrayList<DischargeType> disTypeList = null;
@@ -340,7 +341,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (editing) {
 			dateIn = admission.getAdmDate();
 		} else {
-			dateIn = new GregorianCalendar(); // RememberDates.getLastAdmInDateGregorian();
+			dateIn = LocalDateTime.now(); // RememberDates.getLastAdmInDateGregorian();
 		}
 
 		initialize(parentFrame);
@@ -400,7 +401,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (editing) {
 			dateIn = admission.getAdmDate();
 		} else {
-			dateIn = new GregorianCalendar(); //RememberDates.getLastAdmInDateGregorian();
+			dateIn = LocalDateTime.now(); //RememberDates.getLastAdmInDateGregorian();
 		}
 		
 		initialize(parentFrame);
@@ -539,7 +540,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 		return jPanelOperation; 
 	}
-        
+
 	private JPanel getDeliveryTab() {
 		if (jPanelDelivery == null) {
 			jPanelDelivery = new JPanel();
@@ -680,15 +681,13 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getVisitDatePanel() {
 		if (visitDatePanel == null) {
 			visitDatePanel = new JPanel();
-			
-			Date myDate = null;
+
 			if (editing && admission.getVisitDate() != null) {
 				visitDate = admission.getVisitDate();
-				myDate = visitDate.getTime();
 			} else {
-				visitDate = new GregorianCalendar();
+				visitDate = LocalDateTime.now();
 			}
-			visitDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy"); // Calendar
+			visitDateFieldCal = new CustomJDateChooser(visitDate, "dd/MM/yy"); // Calendar
 			visitDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			visitDateFieldCal.setDateFormatString("dd/MM/yy");
 	
@@ -757,13 +756,11 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getDeliveryDatePanel() {
 		if (deliveryDatePanel == null) {
 			deliveryDatePanel = new JPanel();
-			
-			Date myDate = null;
+
 			if (editing && admission.getDeliveryDate() != null) {
 				deliveryDate = admission.getDeliveryDate();
-				myDate = deliveryDate.getTime();
-			} 
-			deliveryDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy"); // Calendar
+			}
+			deliveryDateFieldCal = new CustomJDateChooser(deliveryDate, "dd/MM/yy"); // Calendar
 			deliveryDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			deliveryDateFieldCal.setDateFormatString("dd/MM/yy");
 			
@@ -776,12 +773,10 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getAbortDatePanel() {
 		if (abortDatePanel == null) {
 			abortDatePanel = new JPanel();
-			Date myDate = null;
 			if (editing && admission.getAbortDate() != null) {
 				abortDate = admission.getAbortDate();
-				myDate = abortDate.getTime();
 			}
-			abortDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
+			abortDateFieldCal = new CustomJDateChooser(abortDate, "dd/MM/yy");
 			abortDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			abortDateFieldCal.setDateFormatString("dd/MM/yy");
 	
@@ -794,13 +789,11 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getControl1DatePanel() {
 		if (control1DatePanel == null) {
 			control1DatePanel = new JPanel();
-			
-			Date myDate = null;
+
 			if (editing && admission.getCtrlDate1() != null) {
 				ctrl1Date = admission.getCtrlDate1();
-				myDate = ctrl1Date.getTime();
-			} 
-			ctrl1DateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
+			}
+			ctrl1DateFieldCal = new CustomJDateChooser(ctrl1Date, "dd/MM/yy");
 			ctrl1DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			ctrl1DateFieldCal.setDateFormatString("dd/MM/yy");
 
@@ -813,13 +806,11 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getControl2DatePanel() {
 		if (control2DatePanel == null) {
 			control2DatePanel = new JPanel();
-			
-			Date myDate = null;
+
 			if (editing && admission.getCtrlDate2() != null) {
 				ctrl2Date = admission.getCtrlDate2();
-				myDate = ctrl2Date.getTime();
-			} 
-			ctrl2DateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
+			}
+			ctrl2DateFieldCal = new CustomJDateChooser(ctrl2Date, "dd/MM/yy");
 			ctrl2DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			ctrl2DateFieldCal.setDateFormatString("dd/MM/yy");
 
@@ -1101,22 +1092,22 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing) {
 				dateIn = admission.getAdmDate();
 			} else {
-				dateIn = RememberDates.getLastAdmInDateGregorian();
+				dateIn = Converters.convertToLocalDateTime(Converters.toDate(RememberDates.getLastAdmInDateGregorian()));
 			}
-			dateInFieldCal = new CustomJDateChooser(dateIn.getTime(), "dd/MM/yy"); // Calendar
+			dateInFieldCal = new CustomJDateChooser(dateIn, "dd/MM/yy"); // Calendar
 			dateInFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateInFieldCal.setDateFormatString("dd/MM/yy");
 			dateInFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
 				
 				public void propertyChange(PropertyChangeEvent evt) {
-					Date newValue = (Date) evt.getNewValue();
-					if (newValue.before(patient.getBirthDate())) {
+					LocalDateTime newValue = Converters.convertToLocalDateTime((Date) evt.getNewValue());
+					if (newValue.toLocalDate().isBefore(patient.getBirthDate())) {
 						JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.thepatientwasnotyetbornatselecteddate"));
 						dateInFieldCal.setDate((Date) evt.getOldValue());
 						return;
 					}
 					dateInFieldCal.setDate(newValue);
-					dateIn.setTime(newValue);
+					dateIn = newValue;
 					updateBedDays();
 					getDiseaseInPanel();
 					getDiseaseOut1Panel();
@@ -1470,8 +1461,8 @@ public class AdmissionBrowser extends ModalJFrame {
 	
 	private void updateBedDays() {
 		try {
-			Date admission = dateInFieldCal.getDate();
-			Date discharge = dateOutFieldCal.getDate();
+			LocalDateTime admission = dateInFieldCal.getLocalDateTime();
+			LocalDateTime discharge = dateOutFieldCal.getLocalDateTime();
 			int bedDays = TimeTools.getDaysBetweenDates(admission, discharge, false);
 			if (bedDays == 0) bedDays++;
 			bedDaysTextField.setText(String.valueOf(bedDays));
@@ -1486,13 +1477,11 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getDischargeDatePanel() {
 		if (dischargeDatePanel == null) {
 			dischargeDatePanel = new JPanel();
-			
-			Date myDate = null;
+
 			if (editing && admission.getDisDate() != null) {
 				dateOut = admission.getDisDate();
-				myDate = dateOut.getTime();
 			}
-			dateOutFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
+			dateOutFieldCal = new CustomJDateChooser(editing ? dateOut : null, "dd/MM/yy");
 			dateOutFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateOutFieldCal.setDateFormatString("dd/MM/yy");
 			dateOutFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
@@ -1680,10 +1669,9 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 
 					if(dateInFieldCal.getDate() != null) {
-					    dateIn = new GregorianCalendar();
-                        dateIn.setTime(dateInFieldCal.getDate());
+					    dateIn = dateInFieldCal.getLocalDateTime();
                         admission.setAdmDate(dateIn);
-                        RememberDates.setLastAdmInDate(dateIn);
+                        RememberDates.setLastAdmInDate(Converters.toCalendar(Converters.toDate(dateIn)));
                     }else{
                         admission.setAdmDate(null);
                     }
@@ -1699,8 +1687,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					// check and get date out (it can be null)
 					// if set date out, isDischarge is set
 					if (dateOutFieldCal.getDate() != null) {
-					    dateOut = new GregorianCalendar();
-					    dateOut.setTime(dateOutFieldCal.getDate());
+					    dateOut = dateOutFieldCal.getLocalDateTime();
                         admission.setDisDate(dateOut);
                         isDischarge = true;
 					}else{
@@ -1762,8 +1749,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 						// get delivery date
 						if (deliveryDateFieldCal.getDate() != null) {
-                            deliveryDate = new GregorianCalendar();
-                            deliveryDate.setTime(deliveryDateFieldCal.getDate());
+                            deliveryDate = deliveryDateFieldCal.getLocalDateTime();
                             admission.setDeliveryDate(deliveryDate);
 						} else{
                             admission.setDeliveryDate(null);
@@ -1785,8 +1771,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 						// get ctrl1 date
 						if (ctrl1DateFieldCal.getDate() != null) {
-                            ctrl1Date = new GregorianCalendar();
-                            ctrl1Date.setTime(ctrl1DateFieldCal.getDate() );
+                            ctrl1Date = ctrl1DateFieldCal.getLocalDateTime();
                             admission.setCtrlDate1(ctrl1Date);
 						} else{
                             admission.setCtrlDate1(null);
@@ -1794,8 +1779,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 						// get ctrl2 date
 						if (ctrl2DateFieldCal.getDate() != null) {
-                            ctrl2Date = new GregorianCalendar();
-                            ctrl2Date.setTime(ctrl2DateFieldCal.getDate());
+                            ctrl2Date = ctrl2DateFieldCal.getLocalDateTime();
                             admission.setCtrlDate2(ctrl2Date);
 						} else{
                             admission.setCtrlDate2(null);
@@ -1803,8 +1787,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 						// get abort date
 						if (abortDateFieldCal.getDate() != null) {
-                            abortDate = new GregorianCalendar();
-                            abortDate.setTime(abortDateFieldCal.getDate());
+                            abortDate = abortDateFieldCal.getLocalDateTime();
                             admission.setAbortDate(abortDate);
 						} else{
                             admission.setAbortDate(null);

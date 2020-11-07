@@ -66,6 +66,7 @@ import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
+import org.isf.utils.time.Converters;
 
 /**
  * 
@@ -73,7 +74,8 @@ import org.isf.utils.exception.model.OHSeverityLevel;
  * 
  * @author Pietro Castellucci
  * @version 1.0.0
- * 
+ *
+ * @deprecated TODO: explain
  */
 @Deprecated // what is this class???
 public class DicomViewGui extends JPanel {
@@ -456,7 +458,7 @@ public class DicomViewGui extends JPanel {
 		hi += VGAP;
 		txt = "";
 		Date d = null;
-		d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : tmpDbFile.getDicomStudyDate();
+		d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : Converters.toDate(tmpDbFile.getDicomStudyDate());
 		DateFormat df = DateFormat.getDateInstance();
 		if (d != null)
 			txt = df.format(d);

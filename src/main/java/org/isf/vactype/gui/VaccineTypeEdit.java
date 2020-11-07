@@ -55,14 +55,14 @@ public class VaccineTypeEdit extends JDialog{
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
+	private static final String VERSION="v1.2"; 
 
     private EventListenerList vaccineTypeListeners = new EventListenerList();
 
         
     public interface VaccineTypeListener extends EventListener {
-        public void vaccineTypeUpdated(AWTEvent e);
-        public void vaccineTypeInserted(AWTEvent e);
+        void vaccineTypeUpdated(AWTEvent e);
+        void vaccineTypeInserted(AWTEvent e);
     }
     
     public void addVaccineTypeListener(VaccineTypeListener l) {

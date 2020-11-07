@@ -37,6 +37,7 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,6 +70,7 @@ import org.isf.patient.model.Patient;
 import org.isf.stat.gui.report.WardVisitsReport;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.LocalDateSupportingJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 import org.isf.visits.manager.VisitManager;
@@ -100,7 +102,7 @@ public class VisitView extends ModalJFrame {
 	private EventListenerList visitViewListeners = new EventListenerList();
 
     public interface VisitListener extends EventListener {
-        public void visitsUpdated(AWTEvent e);
+        void visitsUpdated(AWTEvent e);
     }
 
     public void addVisitListener(VisitListener l) {
@@ -151,7 +153,7 @@ public class VisitView extends ModalJFrame {
 	private JFrame owner;
 
 	private void initialize() {
-		setDateFirstThenSecond(new Date());
+		setDateFirstThenSecond(LocalDateTime.now());
 		
 	}
 
@@ -355,17 +357,17 @@ public class VisitView extends ModalJFrame {
 			}
 			visits.add(thisVisit); // FOR GUI
 
-			if (!TimeTools.isSameDay(dateFirst, thisVisit.getDate().getTime())
-					&& !TimeTools.isSameDay(dateSecond, thisVisit.getDate().getTime()))
+			if (!TimeTools.isSameDay(dateFirst, thisVisit.getDate())
+					&& !TimeTools.isSameDay(dateSecond, thisVisit.getDate()))
 				//if new visit date is not already shown, change view
-				setDateFirstThenSecond(thisVisit.getDate().getTime());
+				setDateFirstThenSecond(thisVisit.getDate());
 				
 			updatePanels();
 		}
 	}
 	
 	private JPanel datefirstPanel;
-	private Date dateFirst;
+	private LocalDateTime dateFirst;
 	private JLabel dateFirstLabel;
 	private JPanel getDateFirstDay() {
 		if (datefirstPanel == null) {
@@ -377,7 +379,7 @@ public class VisitView extends ModalJFrame {
 	}
 
 	private JPanel datesecondPanel;
-	private Date dateSecond;
+	private LocalDateTime dateSecond;
 	private JLabel datesecondLabel;
 	private JPanel getDateSecondDay() {
 		if (datesecondPanel == null) {
@@ -468,7 +470,7 @@ public class VisitView extends ModalJFrame {
 				
 				public void actionPerformed(ActionEvent e) {
 					if (visitDateChooser.getDate() != null) {
-						setDateFirstThenSecond(visitDateChooser.getDate());
+						setDateFirstThenSecond(visitDateChooser.getLocalDateTime());
 					    updatePanels();
 					} else {
 						visitDateChooser.getCalendarButton().doClick();
@@ -483,17 +485,17 @@ public class VisitView extends ModalJFrame {
 		return dateViPanel;
 	}
 
-	private JDateChooser visitDateChooser;
+	private LocalDateSupportingJDateChooser visitDateChooser;
 	private final String dateFormat = "dd/MM/yyyy";
 	private JDateChooser getVisitDateChooser() {
-		visitDateChooser = new JDateChooser();
+		visitDateChooser = new LocalDateSupportingJDateChooser();
 		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 		visitDateChooser.setDateFormatString(dateFormat);
 		visitDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				setDateFirstThenSecond(visitDateChooser.getDate());
+				setDateFirstThenSecond(visitDateChooser.getLocalDateTime());
 				updatePanels();
 				
 			}
@@ -515,45 +517,32 @@ public class VisitView extends ModalJFrame {
 	    jTableSecond.updateUI();
 	}
 	
-	private void setDateFirstThenSecond(Date date) {
+	private void setDateFirstThenSecond(LocalDateTime date) {
 		dateFirst = date;
-		Calendar c = Calendar.getInstance();
-		c.setTime(dateFirst);
-		c.add(Calendar.DATE, 1);
-		dateSecond = c.getTime();
+		dateSecond = date.plusDays(1);
 	}
 	
-	private void setDateSecondThenFirst(Date date) {
+	private void setDateSecondThenFirst(LocalDateTime date) {
 		dateSecond = date;
-		Calendar c = Calendar.getInstance();
-		c.setTime(dateSecond);
-		c.add(Calendar.DATE, -1);
-		dateFirst = c.getTime();
+		dateFirst = date.minusDays(1);
 	}
 	
 	private void setDateDayAfter() {
-		Calendar c = Calendar.getInstance();
-		c.setTime(dateFirst);
-		c.add(Calendar.DATE, 1);
-		dateFirst = c.getTime();
-		c.add(Calendar.DATE, 1);
-		dateSecond = c.getTime();
+		dateFirst = dateFirst.plusDays(1);
+		dateSecond = dateFirst.plusDays(1);
 	}
 	
 	private void setDateDayBefore() {
-		Calendar c = Calendar.getInstance();
-		c.setTime(dateFirst);
-		dateSecond = c.getTime();
-		c.add(Calendar.DATE, -1);
-		dateFirst = c.getTime();
+		dateSecond = dateFirst;
+		dateFirst = dateFirst.minusDays(1);
 	}
 
-	private ArrayList<Visit> getVisitForDate(Date date) {
+	private ArrayList<Visit> getVisitForDate(LocalDateTime date) {
 		ArrayList<Visit> vis = new ArrayList<Visit>();
 		for (int i = 0; i < visits.size(); i++) {
 			Visit visit = visits.get(i);
 		
-			if (TimeTools.isSameDay(visit.getDate().getTime(),date)) {
+			if (TimeTools.isSameDay(visit.getDate(), date)) {
 				vis.add(visit);
 			}
 		}
@@ -602,7 +591,7 @@ public class VisitView extends ModalJFrame {
 
 	private JButton nextButton;
 	
-	private Object getVisitString(Visit visit, GregorianCalendar d) {
+	private Object getVisitString(Visit visit, LocalDateTime d) {
 		StringBuilder strBuilder = new StringBuilder(); 
 		strBuilder.append(formatDateTime(d)).append(" - ");  //$NON-NLS-1$
 		strBuilder.append("(").append(MessageBundle.getMessage("angal.common.patientID")).append(": ").append(visit.getPatient().getCode()).append(") - "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -632,13 +621,13 @@ public class VisitView extends ModalJFrame {
 
 		public Object getValueAt(int r, int c) {
 			Visit visit = visitfirst.get(r);
-			GregorianCalendar d = visitfirst.get(r).getDate();
+			LocalDateTime d = visitfirst.get(r).getDate();
 			return getVisitString(visit, d);
 		}
 	}
-	public String formatDateTime(GregorianCalendar time) {
+	public String formatDateTime(LocalDateTime time) {
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm"); //$NON-NLS-1$
-		return format.format(time.getTime());
+		return format.format(time);
 	}
 	
 	class VisitSecondModel extends DefaultTableModel {
@@ -660,10 +649,8 @@ public class VisitView extends ModalJFrame {
 		}
 
 		public Object getValueAt(int r, int c) {
-
 			Visit visit = visitSecond.get(r);
-			GregorianCalendar d = visitSecond.get(r).getDate();
-			return getVisitString(visit, d);
+			return getVisitString(visit, visitSecond.get(r).getDate());
 		}
 	}
 
@@ -778,7 +765,7 @@ public class VisitView extends ModalJFrame {
 			Todaybut.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
-					setDateFirstThenSecond(new Date());
+					setDateFirstThenSecond(LocalDateTime.now());
 					updatePanels();
 				}
 			});

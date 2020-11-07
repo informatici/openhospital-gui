@@ -49,6 +49,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EventListener;
@@ -84,6 +86,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 
 
@@ -94,8 +97,8 @@ public class OpdEdit extends JDialog {
 	private EventListenerList surgeryListeners = new EventListenerList();
 	
 	public interface SurgeryListener extends EventListener {
-		public void surgeryUpdated(AWTEvent e, Opd opd);
-		public void surgeryInserted(AWTEvent e, Opd opd);
+		void surgeryUpdated(AWTEvent e, Opd opd);
+		void surgeryInserted(AWTEvent e, Opd opd);
 	}
 	
 	public void addSurgeryListener(SurgeryListener l) {
@@ -129,7 +132,7 @@ public class OpdEdit extends JDialog {
 			((SurgeryListener)listeners[i]).surgeryUpdated(event, opd);
 	}
 	
-	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
+	private static final String VERSION="v1.2"; 
 
 	private JPanel insertPanel = null;
 	private JLabel jLabel = null;
@@ -151,7 +154,7 @@ public class OpdEdit extends JDialog {
 	private JComboBox diseaseBox3 = null;
 	private JLabel jLabel2 = null;
 	private JLabel jLabel3 = null;
-	private GregorianCalendar dateIn = null;
+	private LocalDateTime dateIn = null;
 	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
 	private VoDateTextField OpdDateField = null;
 	private JPanel jPanel2 = null;
@@ -469,7 +472,7 @@ public class OpdEdit extends JDialog {
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					boolean result = false;
-					GregorianCalendar gregDate = new GregorianCalendar();
+					LocalDate gregDate = LocalDate.now();
 					char newPatient=' ';
 					String referralTo="";
 					String referralFrom="";
@@ -517,7 +520,7 @@ public class OpdEdit extends JDialog {
 						try {
 							currentDateFormat.setLenient(false);
 							Date myDate = currentDateFormat.parse(d);
-							gregDate.setTime(myDate);
+							gregDate = Converters.convertToLocalDateTime(myDate).toLocalDate();
 						} catch (ParseException pe) {
 							JOptionPane.showMessageDialog(OpdEdit.this,
 									MessageBundle.getMessage("angal.opd.pleaseinsertavalidattendancedate"));
@@ -549,7 +552,7 @@ public class OpdEdit extends JDialog {
 							opd.setProgYear(opdManager.getProgYear(date.get(GregorianCalendar.YEAR))+1);
 
 							//remember for later use
-							RememberDates.setLastOpdVisitDate(gregDate);
+							RememberDates.setLastOpdVisitDate(Converters.toCalendar(gregDate.atStartOfDay()));
 							
 							result = opdManager.newOpd(opd);
 							if (result) {
@@ -572,8 +575,8 @@ public class OpdEdit extends JDialog {
 					} catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
 					}
-				};
-			}
+				}
+              }
 			);	
 		}
 		return okButton;
@@ -900,16 +903,15 @@ public class OpdEdit extends JDialog {
 			Date myDate = null;
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDateGregorian() == null) {
-					dateIn = new GregorianCalendar();
+					dateIn = LocalDateTime.now();
 				} else {
-					dateIn = RememberDates.getLastOpdVisitDateGregorian();
+					dateIn = Converters.convertToLocalDateTime(RememberDates.getLastOpdVisitDateGregorian());
 				}
 			} else {
-				dateIn = opd.getVisitDate();
+				dateIn = opd.getVisitDate().atStartOfDay();
 			}
 			
-			myDate = dateIn.getTime();
-			d = currentDateFormat.format(myDate);
+			d = currentDateFormat.format(dateIn);
 			
 			OpdDateField = new VoDateTextField("dd/mm/yy", d, 15);
 

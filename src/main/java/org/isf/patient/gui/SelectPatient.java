@@ -78,7 +78,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private EventListenerList selectionListener = new EventListenerList();
 	
 	public interface SelectionListener extends EventListener {
-		public void patientSelected(Patient patient);
+		void patientSelected(Patient patient);
 	}
 	
 	public void addSelectionListener(SelectionListener l) {
@@ -362,7 +362,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private void filterPatient() {
 		
 		String s = jTextFieldSearchPatient.getText() + lastKey;
-		s.trim();
+		s = s.trim();
 		String[] s1 = s.split(" ");
 		
 		//System.out.println(s);

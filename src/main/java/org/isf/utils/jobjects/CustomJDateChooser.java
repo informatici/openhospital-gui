@@ -22,11 +22,14 @@
 package org.isf.utils.jobjects;
 
 import java.awt.Font;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 import com.toedter.calendar.IDateEditor;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
+import org.isf.utils.time.Converters;
 
 /**
  * @author Mwithi
@@ -35,7 +38,7 @@ import com.toedter.calendar.JDateChooser;
  * it overrides Font attribution
  *
  */
-public class CustomJDateChooser extends JDateChooser {
+public class CustomJDateChooser extends LocalDateSupportingJDateChooser {
 
 	/**
 	 * 
@@ -69,6 +72,16 @@ public class CustomJDateChooser extends JDateChooser {
 	 */
 	public CustomJDateChooser(Date date, String dateFormatString) {
 		super(date, dateFormatString);
+		this.setMnemonic(0);
+	}
+
+	public CustomJDateChooser(LocalDateTime date, String dateFormatString) {
+		super(Converters.toDate(date), dateFormatString);
+		this.setMnemonic(0);
+	}
+
+	public CustomJDateChooser(LocalDateTime date) {
+		super(date);
 		this.setMnemonic(0);
 	}
 
@@ -133,4 +146,5 @@ public class CustomJDateChooser extends JDateChooser {
 	public void setMnemonic(int keyChar) {
 		this.calendarButton.setMnemonic(keyChar);
 	}
+
 }

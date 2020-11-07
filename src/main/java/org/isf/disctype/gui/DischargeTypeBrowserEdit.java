@@ -53,8 +53,8 @@ public class DischargeTypeBrowserEdit extends JDialog{
 	private EventListenerList dischargeTypeListeners = new EventListenerList();
 
     public interface DischargeTypeListener extends EventListener {
-        public void dischargeTypeUpdated(AWTEvent e);
-        public void dischargeTypeInserted(AWTEvent e);
+        void dischargeTypeUpdated(AWTEvent e);
+        void dischargeTypeInserted(AWTEvent e);
     }
 
     public void addDischargeTypeListener(DischargeTypeListener l) {

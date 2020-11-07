@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -86,6 +87,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.OhTableModelExam;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 
 public class LabNew extends JDialog implements SelectionListener {
@@ -94,7 +96,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	private EventListenerList labListener = new EventListenerList();
 	
 	public interface LabListener extends EventListener {
-		public void labInserted();
+		void labInserted();
 	}
 	
 	public void addLabListener(LabListener l) {
@@ -305,20 +307,20 @@ public class LabNew extends JDialog implements SelectionListener {
 
 				public void actionPerformed(ActionEvent e) {
 					
-					GregorianCalendar newDate = new GregorianCalendar();
+					LocalDateTime newDate = LocalDateTime.now();
 					try {
-						newDate.setTime(jCalendarDate.getDate());
+						newDate= jCalendarDate.getLocalDateTime();
 					} catch (Exception e1) {
 						JOptionPane.showMessageDialog(LabNew.this, 
 								MessageBundle.getMessage("angal.lab.pleaseinsertavalidexamdate"));
 						return;
 					}
-					RememberDates.setLastLabExamDate(newDate);
+					RememberDates.setLastLabExamDate(Converters.toCalendar(newDate));
 					String inOut = jRadioButtonOPD.isSelected() ? "O" : "I";
                                         
                     for (Laboratory lab : examItems) {
                         lab.setDate(newDate);
-                        lab.setExamDate(newDate);
+                        lab.setExamDate(newDate.toLocalDate());
                         lab.setInOutPatient(inOut);
                         lab.setPatient(patientSelected);
                         if (lab.getExam().getProcedure() == 3 && lab.getResult().isEmpty()) {

@@ -2203,7 +2203,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[UNDER 5 YEARS - DAILY OUTPATIENT MORBIDITY SUMMARY SHEET]]></text>
 				</staticText>
@@ -2298,7 +2298,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Address}]]></textFieldExpression>
 				</textField>
@@ -2315,7 +2315,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Hospital}]]></textFieldExpression>
 				</textField>
@@ -2332,7 +2332,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{month}]]></textFieldExpression>
 				</textField>
@@ -2349,7 +2349,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{year}]]></textFieldExpression>
 				</textField>
@@ -2370,7 +2370,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[DISEASES]]></text>
 				</staticText>
@@ -2387,7 +2387,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[1]]></text>
 				</staticText>
@@ -2404,7 +2404,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[2]]></text>
 				</staticText>
@@ -2421,7 +2421,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[3]]></text>
 				</staticText>
@@ -2438,7 +2438,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[4]]></text>
 				</staticText>
@@ -2455,7 +2455,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[5]]></text>
 				</staticText>
@@ -2472,7 +2472,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[6]]></text>
 				</staticText>
@@ -2489,7 +2489,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[7]]></text>
 				</staticText>
@@ -2506,7 +2506,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[8]]></text>
 				</staticText>
@@ -2523,7 +2523,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[9]]></text>
 				</staticText>
@@ -2540,7 +2540,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[10]]></text>
 				</staticText>
@@ -2557,7 +2557,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[11]]></text>
 				</staticText>
@@ -2574,7 +2574,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[12]]></text>
 				</staticText>
@@ -2591,7 +2591,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[13]]></text>
 				</staticText>
@@ -2608,7 +2608,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[14]]></text>
 				</staticText>
@@ -2625,7 +2625,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[15]]></text>
 				</staticText>
@@ -2642,7 +2642,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[16]]></text>
 				</staticText>
@@ -2659,7 +2659,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[17]]></text>
 				</staticText>
@@ -2676,7 +2676,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[18]]></text>
 				</staticText>
@@ -2693,7 +2693,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[19]]></text>
 				</staticText>
@@ -2710,7 +2710,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[20]]></text>
 				</staticText>
@@ -2727,7 +2727,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[21]]></text>
 				</staticText>
@@ -2744,7 +2744,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[22]]></text>
 				</staticText>
@@ -2761,7 +2761,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[23]]></text>
 				</staticText>
@@ -2778,7 +2778,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[24]]></text>
 				</staticText>
@@ -2795,7 +2795,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[25]]></text>
 				</staticText>
@@ -2812,7 +2812,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[26]]></text>
 				</staticText>
@@ -2829,7 +2829,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[27]]></text>
 				</staticText>
@@ -2848,7 +2848,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Totals]]></text>
 				</staticText>
@@ -2865,7 +2865,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[31]]></text>
 				</staticText>
@@ -2882,7 +2882,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[30]]></text>
 				</staticText>
@@ -2899,7 +2899,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[29]]></text>
 				</staticText>
@@ -2916,7 +2916,7 @@ WHERE OPD_REFERRAL_TO = 'R'
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 				<text><![CDATA[28]]></text>
 				</staticText>

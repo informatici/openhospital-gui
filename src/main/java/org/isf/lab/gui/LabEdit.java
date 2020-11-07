@@ -41,6 +41,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -86,6 +88,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 
 public class LabEdit extends ModalJFrame {
@@ -98,7 +101,7 @@ public class LabEdit extends ModalJFrame {
 	private EventListenerList labEditListener = new EventListenerList();
 	
 	public interface LabEditListener extends EventListener {
-		public void labUpdated();
+		void labUpdated();
 	}
 	
 	public void addLabEditListener(LabEditListener l) {
@@ -156,7 +159,7 @@ public class LabEdit extends ModalJFrame {
 
 //	private VoDateTextField examDateField = null;
 	private CustomJDateChooser examDateFieldCal = null;
-	private GregorianCalendar dateIn = null;
+	private LocalDateTime dateIn = null;
 
 	
 	private static final Integer panelWidth=500; 
@@ -320,14 +323,14 @@ public class LabEdit extends ModalJFrame {
 	}
 
 	private CustomJDateChooser getExamDateFieldCal() {
-		java.util.Date myDate = null;
+		LocalDateTime myDate = null;
 		if (insert) {
-			dateIn = RememberDates.getLastLabExamDateGregorian();
+			dateIn = Converters.convertToLocalDateTime(RememberDates.getLastLabExamDateGregorian().getTime());
 		} else { 
-			dateIn = lab.getExamDate();
+			dateIn = lab.getExamDate().atStartOfDay();
 		}
 		if (dateIn != null) {
-			myDate = dateIn.getTime();
+			myDate = dateIn;
 		}
 		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
 	}
@@ -601,12 +604,12 @@ public class LabEdit extends ModalJFrame {
 							return;
 					}
 					// exam date	
-					GregorianCalendar gregDate = new GregorianCalendar();
+					LocalDateTime examDate = LocalDateTime.now();
 					ArrayList<String> labRow = new ArrayList<String>();
-					RememberDates.setLastLabExamDate(gregDate);
+					RememberDates.setLastLabExamDate(Converters.toCalendar(examDate));
 					
-					lab.setDate(new GregorianCalendar());
-					lab.setExamDate(gregDate);
+					lab.setDate(LocalDateTime.now());
+					lab.setExamDate(examDate.toLocalDate());
 					lab.setMaterial(labManager.getMaterialKey(matSelected));
 					lab.setExam(examSelected);
 					lab.setNote(noteTextArea.getText());
