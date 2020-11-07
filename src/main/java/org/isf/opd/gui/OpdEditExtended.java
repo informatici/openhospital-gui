@@ -71,12 +71,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -222,7 +220,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JLabel jLabelAge = null;
 	private JLabel jLabelSex = null;
 	private LocalDateTime visitDateOpd = null;
-	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", Locale.ITALIAN);
 	private CustomJDateChooser OpdDateFieldCal = null; 
 	private JButton okButton = null;
 	private JButton cancelButton = null;
@@ -925,20 +923,18 @@ public class OpdEditExtended extends ModalJFrame implements
 			else {
 				d = currentDateFormat.format(visitDateOpd);
 			}
-			try {
-				OpdDateFieldCal = new CustomJDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
-				OpdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-				OpdDateFieldCal.setDateFormatString("dd/MM/yy");
-				OpdDateFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
+
+			OpdDateFieldCal = new CustomJDateChooser(LocalDateTime.parse(d, currentDateFormat), "dd/MM/yy");
+			OpdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
+			OpdDateFieldCal.setDateFormatString("dd/MM/yy");
+			OpdDateFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
 					
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
 						jOpdNumField.setText(getOpdNum());
 					}
-				});
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			});
+
 		}
 		return OpdDateFieldCal;
 	}
@@ -1941,16 +1937,14 @@ public class OpdEditExtended extends ModalJFrame implements
 														// the date during this
 														// update
 			}
-			try {
-				opdNextVisitDate = new CustomJDateChooser();
-				if (!d.equals("")) {
-					opdNextVisitDate.setDate(currentDateFormat.parse(d));
-				}
-				opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-				opdNextVisitDate.setDateFormatString("dd/MM/yy");
-			} catch (ParseException e) {
-				e.printStackTrace();
+
+			opdNextVisitDate = new CustomJDateChooser();
+			if (!d.equals("")) {
+				opdNextVisitDate.setDate(LocalDateTime.parse(d, currentDateFormat));
 			}
+			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
+			opdNextVisitDate.setDateFormatString("dd/MM/yy");
+
 			if (opd.getPatient() == null) opdNextVisitDate.setEnabled(false);
 		}
 		return opdNextVisitDate;
