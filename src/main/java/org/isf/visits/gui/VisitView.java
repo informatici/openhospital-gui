@@ -36,13 +36,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -626,8 +623,7 @@ public class VisitView extends ModalJFrame {
 		}
 	}
 	public String formatDateTime(LocalDateTime time) {
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm"); //$NON-NLS-1$
-		return format.format(time);
+		return DateTimeFormatter.ofPattern("HH:mm").format(time);
 	}
 	
 	class VisitSecondModel extends DefaultTableModel {

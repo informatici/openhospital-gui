@@ -43,8 +43,8 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -2048,7 +2048,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			StringBuilder ap_string = new StringBuilder();
 			ap_string.append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
 					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max());
-			String datetime = new SimpleDateFormat(DATE_FORMAT).format(patex.getPex_date());
+			String datetime = DateTimeFormatter.ofPattern(DATE_FORMAT).format(patex.getPex_date());
 			String diuresis = patex.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc());
 			String bowel = patex.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc());
 			String ausc = patex.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation());

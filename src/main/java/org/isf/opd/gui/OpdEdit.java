@@ -47,10 +47,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EventListener;
@@ -155,7 +155,7 @@ public class OpdEdit extends JDialog {
 	private JLabel jLabel2 = null;
 	private JLabel jLabel3 = null;
 	private LocalDateTime dateIn = null;
-	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", Locale.ITALIAN);
 	private VoDateTextField OpdDateField = null;
 	private JPanel jPanel2 = null;
 	private JButton okButton = null;
@@ -518,10 +518,10 @@ public class OpdEdit extends JDialog {
 					}
 					else {
 						try {
-							currentDateFormat.setLenient(false);
-							Date myDate = currentDateFormat.parse(d);
-							gregDate = Converters.convertToLocalDateTime(myDate).toLocalDate();
-						} catch (ParseException pe) {
+							// currentDateFormat.setLenient(false); TODO: verify if it's needed
+							LocalDateTime myDate = LocalDate.parse(d, currentDateFormat).atStartOfDay();
+							gregDate = myDate.toLocalDate();
+						} catch (DateTimeParseException pe) {
 							JOptionPane.showMessageDialog(OpdEdit.this,
 									MessageBundle.getMessage("angal.opd.pleaseinsertavalidattendancedate"));
 							return;

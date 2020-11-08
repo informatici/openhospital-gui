@@ -49,10 +49,9 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
@@ -1272,14 +1271,14 @@ public class MovStockBrowser extends ModalJFrame {
 	private String formatDate(LocalDateTime time) {
 		if (time == null)
 			return MessageBundle.getMessage("angal.medicalstock.nodate");
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_DD_MM_YY);
+		DateTimeFormatter sdf = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
 		return sdf.format(time);
 	}
 
 	private String formatDateTime(LocalDateTime time) {
 		if (time == null)
 			return MessageBundle.getMessage("angal.medicalstock.nodate");
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_DD_MM_YY_HH_MM);
+		DateTimeFormatter sdf = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY_HH_MM);
 		return sdf.format(time);
 	}
 
