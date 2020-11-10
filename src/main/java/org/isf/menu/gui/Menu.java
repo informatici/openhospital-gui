@@ -46,7 +46,7 @@ public class Menu {
 	 */
 	private static void createAndShowGUI() {
 		logger = LoggerFactory.getLogger(Menu.class);
-		logger.info("\n\n=====================\nStarting OpenHospital\n=====================\n");
+		logger.info("\n\n=====================\nStarting Open Hospital\n=====================\n");
 		checkOHVersion();
 		checkJavaVersion();
 		JFrame.setDefaultLookAndFeelDecorated(false);
@@ -57,7 +57,7 @@ public class Menu {
 
 	private static void checkOHVersion() {
 		Version.getVersion();
-		logger.info("OpenHospital version {}.{}.{}", Version.VER_MAJOR, Version.VER_MINOR, Version.VER_RELEASE);
+		logger.info("Open Hospital version {}.{}.{}", Version.VER_MAJOR, Version.VER_MINOR, Version.VER_RELEASE);
 
 	}
 
@@ -67,7 +67,7 @@ public class Menu {
 		Float f = Float.valueOf(version.substring(0, 3));
 		if (f.floatValue() < MIN_JAVA_VERSION) {
 			logger.error("Java version {} or higher is required.", MIN_JAVA_VERSION);
-			logger.info("\n\n=====================\n OpenHospital closed \n=====================\n");
+			logger.info("\n\n=====================\n Open Hospital closed \n=====================\n");
 			System.exit(1);
 		}
 	}

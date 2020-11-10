@@ -39,7 +39,7 @@ if [ -z $JAVA_HOME ]; then
   JAVA_BIN=$JAVA_HOME/bin/java
 fi
 
-######## OPENHOSPITAL Configuration
+######## OPEN HOSPITAL Configuration
 # OPENHOSPITAL_HOME is the directory where OpenHospital files are located
 #OPENHOSPITAL_HOME=/usr/local/OpenHospital
 
@@ -101,7 +101,7 @@ case $ARCH in
 		;;
 esac
 
-######### OPENHOSPITAL STARTUP
+######### OPEN HOSPITAL STARTUP
 
 cd $OPENHOSPITAL_HOME&& $JAVA_BIN -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OPENHOSPITAL_CLASSPATH" org.isf.menu.gui.Menu "$@"
 

@@ -13,9 +13,9 @@
 			- org.isf.stat.reportlauncher.gui.ReportLauncher.java
 			
 	Communication new module:
-	This module allow users, to share informations and files. I have also modify 
-	many other source file, to make possible the sharing of informations on openhospital
-	such as information about In/out patient, statistic informations, informations about medical's stock
+	This module allows users to share information and files. I have also modified
+	many other source files to make possible the sharing of information on Open Hospital
+	such as information about In/out patient, statistic information, information about medical stock, etc.
 ========================================================================================================
 2.
 	20/02/2012
