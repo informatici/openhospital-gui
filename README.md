@@ -72,7 +72,7 @@ For Eclipse the process requires loading the formatting style and the import ord
  
 </details> 
 
-Please read the OpenHospital [Wiki](https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines)
+Please read the Open Hospital [Wiki](https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines)
 
 See the Open Issues on [Jira](https://openhospital.atlassian.net/issues/)
 

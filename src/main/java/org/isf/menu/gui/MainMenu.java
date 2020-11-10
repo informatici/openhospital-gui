@@ -304,7 +304,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private void actionExit(int status) {
 		if (status == 2)
 			logger.info("Login failed.");
-		logger.info("\n\n=====================\n OpenHospital closed \n=====================\n");
+		logger.info("\n\n=====================\n Open Hospital closed \n=====================\n");
 		System.exit(status);
 	}
 

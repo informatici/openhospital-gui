@@ -31,7 +31,7 @@ if [ -z $JAVA_HOME ]; then
   JAVA_EXE=java
 fi
 
-######## OPENHOSPITAL Configuration:
+######## OPEN HOSPITAL Configuration:
 
 # add the libraries to the OPENHOSPITAL_CLASSPATH.
 # EXEDIR is the directory where this executable is.
