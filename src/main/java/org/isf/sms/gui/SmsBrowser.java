@@ -34,9 +34,9 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -403,14 +403,14 @@ public class SmsBrowser extends ModalJFrame {
 	}
 	
 	public String formatDateTime(LocalDateTime smsDateSent) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		DateTimeFormatter sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		if (smsDateSent != null) return sdf.format(smsDateSent);
 		return null;
 	}
 	
 	public String formatTodayDateTime(LocalDateTime smsDateSent) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		SimpleDateFormat sdfToday = new SimpleDateFormat("HH:mm");
+		DateTimeFormatter sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter sdfToday = DateTimeFormatter.ofPattern("HH:mm");
 		if (smsDateSent != null) {
 			if (smsDateSent.isAfter(dateTimeAtStartOfToday) &&
 					smsDateSent.isBefore(dateTimeAtEndOfToday))

@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.EventListener;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import javax.swing.BorderFactory;
@@ -763,7 +764,7 @@ public class PatientInsertExtended extends JDialog {
 			private static final long serialVersionUID = -78813689560070139L;
 
 			public BirthDateChooser(LocalDate localDate) {
-				this(Converters.toCalendar(localDate.atStartOfDay()));
+				this(Optional.ofNullable(localDate).map(ld -> Converters.toCalendar(ld.atStartOfDay())).orElse(null));
 			}
 
 			public BirthDateChooser(Calendar cBirthDate) {

@@ -35,10 +35,10 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EventListener;
@@ -730,7 +730,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					
 					
 					
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");  
+					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yy");
 					LocalDateTime myDate = (admList.get(r)).getAdmDate();
 					String strDate = dateFormat.format(myDate);  
 					
@@ -738,7 +738,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					
 				} else if (r< opdList.size()+admList.size()) {
 					int z = r - admList.size();
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");  
+					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yy");
 					LocalDate myDate = (opdList.get(z)).getVisitDate();
 					String strDate = dateFormat.format(myDate);  
 					
@@ -747,7 +747,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				} else {
 					int f = r - (opdList.size()+admList.size());
 					LocalDateTime pexDate = examinationList.get(f).getPex_date();
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");  
+					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yy");
 					String strDate = dateFormat.format(pexDate);
 					
 					return strDate;

@@ -42,12 +42,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -1722,13 +1721,11 @@ public class WardPharmacy extends ModalJFrame implements
 	}
 
 	public String formatDate(LocalDateTime time) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); //$NON-NLS-1$
-		return format.format(time);
+		return DateTimeFormatter.ofPattern("dd/MM/yyyy").format(time);
 	}
 
 	public String formatDateTime(LocalDateTime time) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //$NON-NLS-1$
-		return format.format(time);
+		return DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(time);
 	}
 
 	private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {

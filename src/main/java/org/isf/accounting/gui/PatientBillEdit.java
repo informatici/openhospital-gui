@@ -31,9 +31,9 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -1913,14 +1913,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		public void setValueAt(Object value, int rowIndex, int columnIndex) {
 		}
 	}
-
-	public String formatDate(GregorianCalendar time) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  //$NON-NLS-1$
-		return format.format(time.getTime());
-	}
 	
 	public String formatDateTime(LocalDateTime time) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");  //$NON-NLS-1$
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm:ss");  //$NON-NLS-1$
 		return format.format(time);
 	}
 	
