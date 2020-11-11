@@ -39,7 +39,6 @@ public class WardComboBoxInitializer {
     private final Ward saveWard;
     private final boolean editing;
     private final Admission admission;
-    private List<Ward> wardList;
 
     public WardComboBoxInitializer(JComboBox wardBox,
                                    WardBrowserManager wardBrowserManager,
@@ -52,27 +51,17 @@ public class WardComboBoxInitializer {
         this.saveWard = saveWard;
         this.editing = editing;
         this.admission = admission;
-        initialize();
     }
 
     public void initialize() {
         wardBox.addItem("");
-        try {
-            wardList = wardBrowserManager.getWards();
-        }catch(OHServiceException e){
-            wardList = new ArrayList<>();
-            OHServiceExceptionUtil.showMessages(e);
-        }
-        for (Ward ward : wardList) {
-            // if patient is a male you don't see pregnancy case
-            if (("" + patient.getSex()).equalsIgnoreCase("F") && !ward.isFemale()) {
-                continue;
-            } else if (("" + patient.getSex()).equalsIgnoreCase("M") && !ward.isMale()) {
-                continue;
-            } else {
-                if (ward.getBeds() > 0)
-                    wardBox.addItem(ward);
-            }
+        List<Ward> wardList = fetchWards();
+        populateWardBoxWithElements(wardList);
+        selectItem(wardList);
+    }
+
+    private void selectItem(List<Ward> wardList) {
+        wardList.forEach(ward -> {
             if (saveWard != null) {
                 if (saveWard.getCode().equalsIgnoreCase(ward.getCode())) {
                     wardBox.setSelectedItem(ward);
@@ -82,6 +71,31 @@ public class WardComboBoxInitializer {
                     wardBox.setSelectedItem(ward);
                 }
             }
+        });
+    }
+
+    private void populateWardBoxWithElements(List<Ward> wardList) {
+        wardList.stream()
+                .filter(ward -> !(isFemale(patient) && !ward.isFemale()))
+                .filter(ward -> !(isMale(patient) && !ward.isMale()))
+                .filter(ward -> ward.getBeds() > 0)
+                .forEach(wardBox::addItem);
+    }
+
+    private List<Ward> fetchWards() {
+        try {
+            return wardBrowserManager.getWards();
+        }catch(OHServiceException e){
+            OHServiceExceptionUtil.showMessages(e);
+            return new ArrayList<>();
         }
+    }
+
+    private boolean isFemale(Patient patient) {
+        return ("" + patient.getSex()).equalsIgnoreCase("F");
+    }
+
+    private boolean isMale(Patient patient) {
+        return ("" + patient.getSex()).equalsIgnoreCase("M");
     }
 }

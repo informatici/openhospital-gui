@@ -71,6 +71,7 @@ import javax.swing.event.AncestorListener;
 import javax.swing.event.EventListenerList;
 
 import org.isf.admission.gui.validation.OperationRowValidator;
+import org.isf.admission.gui.ward.WardComboBoxInitializer;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.admission.model.AdmittedPatient;
@@ -865,32 +866,16 @@ public class AdmissionBrowser extends ModalJFrame {
 			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			wardBox = new JComboBox();
 			wardBox.addItem("");
-			try {
-				wardList = wbm.getWards();
-			}catch(OHServiceException e){
-				wardList = new ArrayList<Ward>();
-                OHServiceExceptionUtil.showMessages(e);
-			}
-			for (Ward ward : wardList) {
-				// if patient is a male you don't see pregnancy case
-				if (("" + patient.getSex()).equalsIgnoreCase("F") && !ward.isFemale()) {
-					continue;
-				} else if (("" + patient.getSex()).equalsIgnoreCase("M") && !ward.isMale()) {
-					continue;
-				} else {
-					if (ward.getBeds() > 0)
-						wardBox.addItem(ward);
-				}
-				if (saveWard != null) {
-					if (saveWard.getCode().equalsIgnoreCase(ward.getCode())) {
-						wardBox.setSelectedItem(ward);
-					}
-				} else if (editing) {
-					if (admission.getWard().getCode().equalsIgnoreCase(ward.getCode())) {
-						wardBox.setSelectedItem(ward);
-					}
-				}
-			}
+
+			new WardComboBoxInitializer(
+					wardBox,
+					wbm,
+					patient,
+					saveWard,
+					editing,
+					admission
+			).initialize();
+
 			wardBox.addActionListener(e -> {
 				// set yProg
 				if (wardBox.getSelectedIndex() == 0) {
