@@ -28,7 +28,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
 import java.util.ArrayList;
 import java.util.List;
 

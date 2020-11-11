@@ -23,7 +23,7 @@ package org.isf.admission.gui;
 
 import org.isf.disease.model.Disease;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
