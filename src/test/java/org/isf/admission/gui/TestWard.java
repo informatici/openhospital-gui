@@ -21,23 +21,43 @@
  */
 package org.isf.admission.gui;
 
-import org.isf.admission.model.Admission;
 import org.isf.ward.model.Ward;
 
-import java.time.LocalDateTime;
-import java.util.GregorianCalendar;
-
-public class TestAdmission {
-    public static Admission withAdmAndDisDate(LocalDateTime admDate, LocalDateTime disDate) {
-        Admission admission = new Admission();
-        admission.setAdmDate(admDate);
-        admission.setDisDate(disDate);
-        return admission;
+public class TestWard {
+    public static Ward maleWardWithBeds(String code) {
+        Ward ward = ward(code);
+        ward.setBeds(1);
+        ward.setMale(true);
+        ward.setFemale(false);
+        return ward;
     }
 
-    public static Admission withAdmAndDisDateAndWard(LocalDateTime admDate, LocalDateTime disDate, Ward ward) {
-        Admission admission = withAdmAndDisDate(admDate, disDate);
-        admission.setWard(ward);
-        return admission;
+    public static Ward femaleWardWithBeds(String code) {
+        Ward ward = ward(code);
+        ward.setBeds(1);
+        ward.setMale(false);
+        ward.setFemale(true);
+        return ward;
+    }
+
+    private static Ward ward(String code) {
+        Ward ward = new Ward();
+        ward.setCode(code);
+        ward.setDescription("desc");
+        ward.setDocs(1);
+        ward.setEmail("test1488@hwdp.pl");
+        ward.setFax("1234");
+        ward.setPharmacy(false);
+        ward.setTelephone("+48 1238282");
+        ward.setNurs(1);
+        return  ward;
+    }
+
+    public static Ward maleWardWithoutBeds(String code) {
+        Ward ward = ward(code);
+        ward.setBeds(0);
+        ward.setMale(true);
+        ward.setFemale(false);
+        return ward;
     }
 }

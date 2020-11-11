@@ -19,25 +19,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.isf.admission.gui;
+package org.isf.admission.gui.ward;
 
-import org.isf.admission.model.Admission;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
-import java.time.LocalDateTime;
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TestAdmission {
-    public static Admission withAdmAndDisDate(LocalDateTime admDate, LocalDateTime disDate) {
-        Admission admission = new Admission();
-        admission.setAdmDate(admDate);
-        admission.setDisDate(disDate);
-        return admission;
+public class WardBrowserManagerStub extends WardBrowserManager {
+    private final List<Ward> wards = new ArrayList<>();
+
+    @Override
+    public ArrayList<Ward> getWards() {
+        return new ArrayList<>(wards);
     }
 
-    public static Admission withAdmAndDisDateAndWard(LocalDateTime admDate, LocalDateTime disDate, Ward ward) {
-        Admission admission = withAdmAndDisDate(admDate, disDate);
-        admission.setWard(ward);
-        return admission;
+    @Override
+    public boolean newWard(Ward ward) {
+        wards.add(ward);
+        return true;
+    }
+
+    public void clear() {
+        wards.clear();
     }
 }
