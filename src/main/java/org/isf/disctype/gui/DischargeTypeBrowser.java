@@ -137,14 +137,11 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jNewButton = new JButton();
 			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
 			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					DischargeType mdsr = new DischargeType("","");
-					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,mdsr, true);
-					newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				DischargeType mdsr = new DischargeType("","");
+				DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,mdsr, true);
+				newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -160,22 +157,19 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jEditButton = new JButton();
 			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
 			jEditButton.setMnemonic(KeyEvent.VK_E);
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						dischargeType = (DischargeType) (((DischargeTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
-						DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,dischargeType, false);
-						newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					dischargeType = (DischargeType) (((DischargeTypeBrowserModel) model)
+							.getValueAt(selectedrow, -1));
+					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,dischargeType, false);
+					newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -192,11 +186,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jCloseButton = new JButton();
 			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
 			jCloseButton.setMnemonic(KeyEvent.VK_C);
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -211,40 +201,37 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jDeteleButton = new JButton();
 			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
 			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						DischargeType dis = (DischargeType) (((DischargeTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-                        int n = JOptionPane.showConfirmDialog(null,
-                                MessageBundle.getMessage("angal.disctype.deleterow") + " \" "+dis.getDescription() + "\" ?",
-                                MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+			jDeteleButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					DischargeType dis = (DischargeType) (((DischargeTypeBrowserModel) model)
+							.getValueAt(jTable.getSelectedRow(), -1));
+					int n = JOptionPane.showConfirmDialog(null,
+							MessageBundle.getMessage("angal.disctype.deleterow") + " \" " + dis.getDescription() + "\" ?",
+							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
 
-                        if ((n == JOptionPane.YES_OPTION)) {
+					if ((n == JOptionPane.YES_OPTION)) {
 
-                            boolean deleted;
+						boolean deleted;
 
-                            try {
-                                deleted = manager.deleteDischargeType(dis);
-                            } catch (OHServiceException e) {
-                                deleted = false;
-                                OHServiceExceptionUtil.showMessages(e);
-                            }
+						try {
+							deleted = manager.deleteDischargeType(dis);
+						} catch (OHServiceException e) {
+							deleted = false;
+							OHServiceExceptionUtil.showMessages(e);
+						}
 
-                            if (true == deleted) {
-                                pDischargeType.remove(jTable.getSelectedRow());
-                                model.fireTableDataChanged();
-                                jTable.updateUI();
-                            }
-                        }
+						if (true == deleted) {
+							pDischargeType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
+						}
 					}
 				}
-				
 			});
 		}
 		return jDeteleButton;
