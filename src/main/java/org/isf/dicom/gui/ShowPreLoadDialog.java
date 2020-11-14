@@ -195,22 +195,16 @@ class ShowPreLoadDialog extends JDialog {
 				dicomTypeComboBox.addItem("");
 				try {
 					ArrayList<DicomType> dicomTypeList = dicomTypeMan.getDicomType();
-					for (DicomType dicomType : dicomTypeList) {
-						dicomTypeComboBox.addItem(dicomType);
-					}
+					dicomTypeList.forEach(dicomType -> dicomTypeComboBox.addItem(dicomType));
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e, ShowPreLoadDialog.this);
 				}
-				dicomTypeComboBox.addItemListener(new ItemListener() {
-					
-					@Override
-					public void itemStateChanged(ItemEvent e) {
-						if (e.getStateChange() == ItemEvent.SELECTED) {
-							try {
-								dicomType = (DicomType) e.getItem();
-							} catch (ClassCastException e1) {
-								dicomType = null;
-							}
+				dicomTypeComboBox.addItemListener(e -> {
+					if (e.getStateChange() == ItemEvent.SELECTED) {
+						try {
+							dicomType = (DicomType) e.getItem();
+						} catch (ClassCastException e1) {
+							dicomType = null;
 						}
 					}
 				});
@@ -223,14 +217,10 @@ class ShowPreLoadDialog extends JDialog {
 			if (datesList == null) {
 				datesList = new JList(dates.toArray());
 				datesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				datesList.addListSelectionListener(new ListSelectionListener() {
-					
-					@Override
-					public void valueChanged(ListSelectionEvent e) {
-						if (!e.getValueIsAdjusting()) {
-							Date selectedDate = (Date) ((JList) e.getSource()).getSelectedValue();
-							dateChooser.setDate(selectedDate);
-						}
+				datesList.addListSelectionListener(e -> {
+					if (!e.getValueIsAdjusting()) {
+						Date selectedDate = (Date) ((JList) e.getSource()).getSelectedValue();
+						dateChooser.setDate(selectedDate);
 					}
 				});
 			}
@@ -250,12 +240,7 @@ class ShowPreLoadDialog extends JDialog {
 			if (buttonCancel == null) {
 				buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel"));
 				buttonCancel.setMnemonic(KeyEvent.VK_N);
-				buttonCancel.addActionListener(new ActionListener() {
-
-					public void actionPerformed(ActionEvent arg0) {
-						dispose();
-					}
-				});
+				buttonCancel.addActionListener(arg0 -> dispose());
 			}
 			return buttonCancel;
 		}
@@ -264,14 +249,11 @@ class ShowPreLoadDialog extends JDialog {
 			if (buttonOK == null) {
 				buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok"));
 				buttonOK.setMnemonic(KeyEvent.VK_O);
-				buttonOK.addActionListener(new ActionListener() {
-
-					public void actionPerformed(ActionEvent arg0) {
-						dicomDate = dateChooser.getLocalDateTime();
-						dicomDescription = descriptionTextField.getText().trim();
-						save = true;
-						dispose();
-					}
+				buttonOK.addActionListener(arg0 -> {
+					dicomDate = dateChooser.getLocalDateTime();
+					dicomDescription = descriptionTextField.getText().trim();
+					save = true;
+					dispose();
 				});
 			}
 			return buttonOK;

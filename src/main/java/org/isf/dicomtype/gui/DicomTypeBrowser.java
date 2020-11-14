@@ -135,14 +135,11 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jNewButton = new JButton();
 			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
 			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					DicomType dicomType = new DicomType("","");
-					DicomTypeEdit newrecord = new DicomTypeEdit(myFrame,dicomType, true);
-					newrecord.addDicomTypeListener(DicomTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				DicomType dicomType = new DicomType("","");
+				DicomTypeEdit newrecord = new DicomTypeEdit(myFrame,dicomType, true);
+				newrecord.addDicomTypeListener(DicomTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -158,22 +155,19 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jEditButton = new JButton();
 			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
 			jEditButton.setMnemonic(KeyEvent.VK_E);
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						dicomType = (DicomType) (((DicomTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
-						DicomTypeEdit newrecord = new DicomTypeEdit(myFrame,dicomType, false);
-						newrecord.addDicomTypeListener(DicomTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					dicomType = (DicomType) (((DicomTypeBrowserModel) model)
+							.getValueAt(selectedrow, -1));
+					DicomTypeEdit newrecord = new DicomTypeEdit(myFrame,dicomType, false);
+					newrecord.addDicomTypeListener(DicomTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -209,40 +203,36 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jDeteleButton = new JButton();
 			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
 			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						DicomType dicomType = (DicomType) (((DicomTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-                        int n = JOptionPane.showConfirmDialog(null,
-                                MessageBundle.getMessage("angal.dicomtype.deleterow") + " \" "+dicomType.getDicomTypeDescription() + "\" ?",
-                                MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+			jDeteleButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					DicomType dicomType = (DicomType) ((model).getValueAt(jTable.getSelectedRow(), -1));
+					int n = JOptionPane.showConfirmDialog(null,
+							MessageBundle.getMessage("angal.dicomtype.deleterow") + " \" " + dicomType.getDicomTypeDescription() + "\" ?",
+							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
 
-                        if ((n == JOptionPane.YES_OPTION)) {
+					if ((n == JOptionPane.YES_OPTION)) {
 
-                            boolean deleted;
+						boolean deleted;
 
-                            try {
-                                deleted = manager.deleteDicomType(dicomType);
-                            } catch (OHServiceException e) {
-                                deleted = false;
-                                OHServiceExceptionUtil.showMessages(e);
-                            }
+						try {
+							deleted = manager.deleteDicomType(dicomType);
+						} catch (OHServiceException e) {
+							deleted = false;
+							OHServiceExceptionUtil.showMessages(e);
+						}
 
-                            if (true == deleted) {
-                                pDicomType.remove(jTable.getSelectedRow());
-                                model.fireTableDataChanged();
-                                jTable.updateUI();
-                            }
-                        }
+						if (true == deleted) {
+							pDicomType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
+						}
 					}
 				}
-				
 			});
 		}
 		return jDeteleButton;
