@@ -24,7 +24,9 @@ package org.isf.distype.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.EventListener;
+import java.util.stream.IntStream;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -74,8 +76,8 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((DiseaseTypeListener)listeners[i]).diseaseTypeInserted(event);
+		Arrays.stream(listeners)
+				.forEach(listener -> ((DiseaseTypeListener) listener).diseaseTypeInserted(event));
     }
     private void fireDiseaseUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -192,11 +194,7 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 			cancelButton = new JButton();
 			cancelButton.setMnemonic(KeyEvent.VK_C);
 			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -211,45 +209,44 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 			okButton = new JButton();
 			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
 			okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+			okButton.addActionListener(e -> {
+				DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
-                    try{
-                        if (descriptionTextField.getText().equals(lastdescription)){
-                            dispose();
-                        }
-                        diseaseType.setDescription(descriptionTextField.getText());
-                        diseaseType.setCode(codeTextField.getText());
-                        boolean result = false;
-                        if (insert) {      // inserting
-                            result = manager.newDiseaseType(diseaseType);
-                            if (result) {
-                                fireDiseaseInserted();
-                            }
-                            if (!result) JOptionPane.showMessageDialog(null,  MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                            else  dispose();
-                        }
-                        else {                          // updating
-                            if (descriptionTextField.getText().equals(lastdescription)){
-                                dispose();
-                            }else{
-                                result = manager.updateDiseaseType(diseaseType);
-                                if (result) {
-                                    fireDiseaseUpdated();
-                                }
-                                if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                                else  dispose();
-                            }
+				try {
+					if (descriptionTextField.getText().equals(lastdescription)) {
+						dispose();
+					}
+					diseaseType.setDescription(descriptionTextField.getText());
+					diseaseType.setCode(codeTextField.getText());
+					boolean result = false;
+					if (insert) {      // inserting
+						result = manager.newDiseaseType(diseaseType);
+						if (result) {
+							fireDiseaseInserted();
+						}
+						if (!result)
+							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+						else dispose();
+					} else {                          // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
+							dispose();
+						} else {
+							result = manager.updateDiseaseType(diseaseType);
+							if (result) {
+								fireDiseaseUpdated();
+							}
+							if (!result)
+								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							else dispose();
+						}
 
-                        }
-                    } catch (OHServiceException ex) {
-                        if(ex.getMessages() != null){
-                            for(OHExceptionMessage msg : ex.getMessages()){
-                                JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-                            }
-                        }
-                    }
+					}
+				} catch (OHServiceException ex) {
+					if (ex.getMessages() != null) {
+						for (OHExceptionMessage msg : ex.getMessages()) {
+							JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						}
+					}
 				}
 			});
 		}

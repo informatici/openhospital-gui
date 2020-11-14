@@ -133,97 +133,84 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 			type = disTypeManager.getDiseaseType();
 		}catch(OHServiceException e){
 			if(e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
+				e.getMessages()
+						.forEach(msg -> JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
 			}
 		}
 		//for efficiency in the sequent for
 		if(type != null){
-			for (DiseaseType elem : type) {
-				pbox.addItem(elem);
-			}
+			type.forEach(elem -> pbox.addItem(elem));
 		}
-		pbox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				pSelection = (DiseaseType) pbox.getSelectedItem();
-				if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.disease.allm")) == 0)
-					model = new DiseaseBrowserModel();
-				else
-					model = new DiseaseBrowserModel(pSelection.getCode());
-				model.fireTableDataChanged();
-				table.updateUI();
-			}
+		pbox.addActionListener(arg0 -> {
+			pSelection = (DiseaseType) pbox.getSelectedItem();
+			if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.disease.allm")) == 0)
+				model = new DiseaseBrowserModel();
+			else
+				model = new DiseaseBrowserModel(pSelection.getCode());
+			model.fireTableDataChanged();
+			table.updateUI();
 		});
 		buttonPanel.add(pbox);
 		
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new"));
 		buttonNew.setMnemonic(KeyEvent.VK_N);
-		buttonNew.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent event) {
-				disease=new Disease(null,"",new DiseaseType("",""));	//disease will reference the new record
-				DiseaseEdit newrecord = new DiseaseEdit(myFrame,disease,true);
-				newrecord.addDiseaseListener(DiseaseBrowser.this);
-				newrecord.setVisible(true);
-			}
+		buttonNew.addActionListener(event -> {
+			disease=new Disease(null,"",new DiseaseType("",""));	//disease will reference the new record
+			DiseaseEdit newrecord = new DiseaseEdit(myFrame,disease,true);
+			newrecord.addDiseaseListener(DiseaseBrowser.this);
+			newrecord.setVisible(true);
 		});
 		buttonPanel.add(buttonNew);
 		
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit"));
 		buttonEdit.setMnemonic(KeyEvent.VK_E);
-		buttonEdit.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(				
-							DiseaseBrowser.this,
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {		
-					selectedrow = table.getSelectedRow();
-					disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));	
-					DiseaseEdit editrecord = new DiseaseEdit(myFrame,disease,false);
-					editrecord.addDiseaseListener(DiseaseBrowser.this);
-					editrecord.setVisible(true);
-				}
+		buttonEdit.addActionListener(event -> {
+			if (table.getSelectedRow() < 0) {
+				JOptionPane.showMessageDialog(
+						DiseaseBrowser.this,
+						MessageBundle.getMessage("angal.common.pleaseselectarow"),
+						MessageBundle.getMessage("angal.hospital"),
+						JOptionPane.PLAIN_MESSAGE);
+				return;
+			}else {
+				selectedrow = table.getSelectedRow();
+				disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				DiseaseEdit editrecord = new DiseaseEdit(myFrame,disease,false);
+				editrecord.addDiseaseListener(DiseaseBrowser.this);
+				editrecord.setVisible(true);
 			}
 		});
 		buttonPanel.add(buttonEdit);
 		
 		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete"));
 		buttonDelete.setMnemonic(KeyEvent.VK_D);
-		buttonDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(				
-							DiseaseBrowser.this,
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {
-					selectedrow = table.getSelectedRow();
-					disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
-					int n = JOptionPane.showConfirmDialog(
-							DiseaseBrowser.this,
-							MessageBundle.getMessage("angal.disease.deletedisease") + " \""+disease.getDescription()+"\" ?",
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.YES_NO_OPTION);
-					try{
-						if ((n == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))){
-							disease.setIpdInInclude(false);
-							disease.setIpdOutInclude(false);
-							disease.setOpdInclude(false);
-							diseaseUpdated(null);
-						}
-					}catch(OHServiceException e){
-						if(e.getMessages() != null){
-							for(OHExceptionMessage msg : e.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
+		buttonDelete.addActionListener(event -> {
+			if (table.getSelectedRow() < 0) {
+				JOptionPane.showMessageDialog(
+						DiseaseBrowser.this,
+						MessageBundle.getMessage("angal.common.pleaseselectarow"),
+						MessageBundle.getMessage("angal.hospital"),
+						JOptionPane.PLAIN_MESSAGE);
+				return;
+			}else {
+				selectedrow = table.getSelectedRow();
+				disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				int n = JOptionPane.showConfirmDialog(
+						DiseaseBrowser.this,
+						MessageBundle.getMessage("angal.disease.deletedisease") + " \""+disease.getDescription()+"\" ?",
+						MessageBundle.getMessage("angal.hospital"),
+						JOptionPane.YES_NO_OPTION);
+				try{
+					if ((n == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))){
+						disease.setIpdInInclude(false);
+						disease.setIpdOutInclude(false);
+						disease.setOpdInclude(false);
+						diseaseUpdated(null);
+					}
+				}catch(OHServiceException e){
+					if(e.getMessages() != null){
+						for(OHExceptionMessage msg : e.getMessages()){
+							JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 						}
 					}
 				}
@@ -233,11 +220,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		
 		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
 		buttonClose.setMnemonic(KeyEvent.VK_C);
-		buttonClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
+		buttonClose.addActionListener(arg0 -> dispose());
 		buttonPanel.add(buttonClose);
 		
 		add(buttonPanel, BorderLayout.SOUTH);
@@ -259,9 +242,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				pDisease = manager.getDisease(s);
 			}catch(OHServiceException e){
 				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
+					e.getMessages()
+							.forEach(msg -> JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
 				}
 			}
 		}
@@ -270,9 +252,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				pDisease = manager.getDiseaseAll();
 			}catch(OHServiceException e){
 				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
+					e.getMessages()
+							.forEach(msg -> JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
 				}
 			}
 		}
