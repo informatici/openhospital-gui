@@ -24,10 +24,9 @@ package org.isf.agetype.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -120,30 +119,27 @@ public class AgeTypeBrowser extends ModalJFrame {
 			jEditSaveButton = new JButton();
 			jEditSaveButton.setText(MessageBundle.getMessage("angal.common.edit"));
 			jEditSaveButton.setMnemonic(KeyEvent.VK_E);
-			jEditSaveButton.addActionListener(new ActionListener() {
+			jEditSaveButton.addActionListener(event -> {
+				if (!edit) {
+					edit = true;
+					jEditSaveButton.setText(MessageBundle.getMessage("angal.common.save"));
+					jEditSaveButton.setMnemonic(KeyEvent.VK_S);
+					jTable.updateUI();
 
-				public void actionPerformed(ActionEvent event) {
-					if (!edit) {
-						edit = true;
-						jEditSaveButton.setText(MessageBundle.getMessage("angal.common.save"));
-						jEditSaveButton.setMnemonic(KeyEvent.VK_S);
-						jTable.updateUI();
-
-					} else {
-					    if(jTable.isEditing()){
-                            jTable.getCellEditor().stopCellEditing();
-                        }
-						AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
-						try {
-							manager.updateAgeType(pAgeType);
-						}catch(OHServiceException e){
-                            OHServiceExceptionUtil.showMessages(e);
-						}
-						edit = false;
-						jTable.updateUI();
-						jEditSaveButton.setText(MessageBundle.getMessage("angal.common.edit"));
-						jEditSaveButton.setMnemonic(KeyEvent.VK_E);
+				} else {
+					if (jTable.isEditing()) {
+						jTable.getCellEditor().stopCellEditing();
 					}
+					AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
+					try {
+						manager.updateAgeType(pAgeType);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
+					edit = false;
+					jTable.updateUI();
+					jEditSaveButton.setText(MessageBundle.getMessage("angal.common.edit"));
+					jEditSaveButton.setMnemonic(KeyEvent.VK_E);
 				}
 			});
 		}
@@ -160,11 +156,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 			jCloseButton = new JButton();
 			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
 			jCloseButton.setMnemonic(KeyEvent.VK_C);
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -173,9 +165,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 		if (jTable == null) {
 			model = new AgeTypeBrowserModel();
 			jTable = new JTable(model);
-			for (int i = 0; i < pColums.length; i++) {
-				jTable.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
-			}
+			IntStream.range(0, pColums.length)
+					.forEachOrdered(i -> jTable.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]));
 			jTable.setDefaultRenderer(Object.class,new ColorTableCellRenderer());
 		}
 		return jTable;
@@ -193,7 +184,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 			try {
 				pAgeType = manager.getAgeType();
 			}catch(OHServiceException e){
-				pAgeType = new ArrayList<AgeType>();
+				pAgeType = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
