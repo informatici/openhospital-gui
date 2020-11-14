@@ -24,6 +24,7 @@ package org.isf.dlvrrestype.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -46,9 +47,6 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DeliveryResultTypeBrowserEdit extends JDialog{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList deliveryresultTypeListeners = new EventListenerList();
 
@@ -74,20 +72,18 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((DeliveryResultTypeListener)listeners[i]).deliveryresultTypeInserted(event);
+		Arrays.stream(listeners)
+				.forEach(listener -> ((DeliveryResultTypeListener)listener).deliveryresultTypeInserted(event));
     }
+
     private void fireDeliveryResultUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+			private static final long serialVersionUID = 1L;
+		};
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;};
-
-        EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((DeliveryResultTypeListener)listeners[i]).deliveryresultTypeUpdated(event);
+		EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
+		Arrays.stream(listeners)
+				.forEach(listener -> ((DeliveryResultTypeListener) listener).deliveryresultTypeUpdated(event));
     }
     
 	private JPanel jContentPane = null;
@@ -211,40 +207,37 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 			okButton = new JButton();
 			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
 			okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
-					try{
+			okButton.addActionListener(e -> {
+				DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
+				try {
 
-						deliveryresultType.setDescription(descriptionTextField.getText());
-						deliveryresultType.setCode(codeTextField.getText());
-						
-						if (insert) {     // inserting
-							if (true == manager.newDeliveryResultType(deliveryresultType)) {
-								fireDeliveryResultInserted();
+					deliveryresultType.setDescription(descriptionTextField.getText());
+					deliveryresultType.setCode(codeTextField.getText());
+
+					if (insert) {     // inserting
+						if (true == manager.newDeliveryResultType(deliveryresultType)) {
+							fireDeliveryResultInserted();
+							dispose();
+						} else
+							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+					} else {            // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
+							dispose();
+						} else {
+							if (true == manager.updateDeliveryResultType(deliveryresultType)) {
+								fireDeliveryResultUpdated();
 								dispose();
-							} else 
+							} else
 								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 						}
-						else {            // updating
-							if (descriptionTextField.getText().equals(lastdescription)){
-								dispose();	
-							} else {
-								if (true == manager.updateDeliveryResultType(deliveryresultType)) {
-									fireDeliveryResultUpdated();
-									dispose();
-								} else 
-									JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-							}
-						}
-					}catch(OHServiceException ex){
-						if(ex.getMessages() != null){
-							for(OHExceptionMessage msg : ex.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
+					}
+				} catch (OHServiceException ex) {
+					if (ex.getMessages() != null) {
+						for (OHExceptionMessage msg : ex.getMessages()) {
+							JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 						}
 					}
-                }
+				}
 			});
 		}
 		return okButton;

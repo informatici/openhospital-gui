@@ -24,6 +24,7 @@ package org.isf.dlvrtype.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -74,8 +75,8 @@ public class DeliveryTypeBrowserEdit extends JDialog{
             private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = deliveryTypeListeners.getListeners(DeliveryTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((DeliveryTypeListener)listeners[i]).deliveryTypeInserted(event);
+        Arrays.stream(listeners)
+                .forEach(listener -> ((DeliveryTypeListener)listener).deliveryTypeInserted(event));
     }
     private void fireDeliveryUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -210,43 +211,41 @@ public class DeliveryTypeBrowserEdit extends JDialog{
             okButton = new JButton();
             okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
             okButton.setMnemonic(KeyEvent.VK_O);
-            okButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                	DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
+            okButton.addActionListener(e -> {
+                DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
-                    try{
+                try{
+                    if (descriptionTextField.getText().equals(lastdescription)){
+                        dispose();
+                    }
+                    deliveryType.setDescription(descriptionTextField.getText());
+                    deliveryType.setCode(codeTextField.getText());
+                    boolean result = false;
+                    if (insert) {      // inserting
+                        result = manager.newDeliveryType(deliveryType);
+                        if (result) {
+                            fireDeliveryInserted();
+                        }
+                        if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.dlvrtype.thdatacouldnotbesaved"));
+                        else  dispose();
+                    }
+                    else {                          // updating
                         if (descriptionTextField.getText().equals(lastdescription)){
                             dispose();
-                        }
-                        deliveryType.setDescription(descriptionTextField.getText());
-                        deliveryType.setCode(codeTextField.getText());
-                        boolean result = false;
-                        if (insert) {      // inserting
-                            result = manager.newDeliveryType(deliveryType);
+                        }else{
+                            result = manager.updateDeliveryType(deliveryType);
                             if (result) {
-                                fireDeliveryInserted();
+                                fireDeliveryUpdated();
                             }
                             if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.dlvrtype.thdatacouldnotbesaved"));
                             else  dispose();
                         }
-                        else {                          // updating
-                            if (descriptionTextField.getText().equals(lastdescription)){
-                                dispose();
-                            }else{
-                                result = manager.updateDeliveryType(deliveryType);
-                                if (result) {
-                                    fireDeliveryUpdated();
-                                }
-                                if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.dlvrtype.thdatacouldnotbesaved"));
-                                else  dispose();
-                            }
 
-                        }
-                    }catch(OHServiceException ex){
-                        if(ex.getMessages() != null){
-                            for(OHExceptionMessage msg : ex.getMessages()){
-                                JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-                            }
+                    }
+                }catch(OHServiceException ex){
+                    if(ex.getMessages() != null){
+                        for(OHExceptionMessage msg : ex.getMessages()){
+                            JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
                         }
                     }
                 }
