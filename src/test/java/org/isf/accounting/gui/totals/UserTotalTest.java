@@ -28,7 +28,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTotalTest {
 
@@ -51,7 +51,7 @@ public class UserTotalTest {
         BigDecimal result = userTotal.getValue();
 
         // then:
-        assertEquals(25, result.longValue());
+        assertThat(result.longValue()).isEqualTo(25);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class UserTotalTest {
         BigDecimal result = userTotal.getValue();
 
         // then:
-        assertEquals(10, result.longValue());
+        assertThat(result.longValue()).isEqualTo(10);
     }
 
     @Test
@@ -89,6 +89,6 @@ public class UserTotalTest {
         BigDecimal result = userTotal.getValue();
 
         // then:
-        assertEquals(10, result.longValue());
+        assertThat(result.longValue()).isEqualTo(10);
     }
 }

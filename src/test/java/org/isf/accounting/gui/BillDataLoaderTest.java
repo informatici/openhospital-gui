@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BillDataLoaderTest {
     @Test
@@ -61,7 +61,7 @@ public class BillDataLoaderTest {
         List<Bill> result = billDataLoader.loadBills("O");
 
         // then:
-        assertEquals(3, result.size());
+        assertThat(result.size()).isEqualTo(3);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class BillDataLoaderTest {
         List<Bill> result = billDataLoader.loadBills("O");
 
         // then:
-        assertEquals(1, result.size());
+        assertThat(result.size()).isEqualTo(1);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class BillDataLoaderTest {
         List<Bill> result = billDataLoader.loadBills("ALL");
 
         // then:
-        assertEquals(3, result.size());
+        assertThat(result.size()).isEqualTo(3);
     }
 
     @Test
@@ -130,7 +130,7 @@ public class BillDataLoaderTest {
         List<Bill> result = billDataLoader.loadBills("C");
 
         // then:
-        assertEquals(1, result.size());
+        assertThat(result.size()).isEqualTo(1);
     }
 
 

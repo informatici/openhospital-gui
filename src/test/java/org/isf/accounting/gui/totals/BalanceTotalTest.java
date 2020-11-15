@@ -27,7 +27,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BalanceTotalTest {
     @Test
@@ -42,7 +42,7 @@ public class BalanceTotalTest {
         BigDecimal result = balanceTotal.getValue();
 
         // then:
-        assertEquals(234, result.longValue());
+        assertThat(result.longValue()).isEqualTo(234);
     }
 
     @Test
@@ -57,6 +57,6 @@ public class BalanceTotalTest {
         BigDecimal result = balanceTotal.getValue();
 
         // then:
-        assertEquals(123, result.longValue());
+        assertThat(result.longValue()).isEqualTo(123);
     }
 }

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DiseaseFinderTest {
     private DiseaseFinder diseaseFinder = new DiseaseFinder();
@@ -42,7 +42,7 @@ public class DiseaseFinderTest {
         List<Disease> result = diseaseFinder.getSearchDiagnosisResults("id", diseases);
 
         // then:
-        assertEquals(1, result.size());
+        assertThat(result.size()).isEqualTo(1);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class DiseaseFinderTest {
         List<Disease> result = diseaseFinder.getSearchDiagnosisResults("", diseases);
 
         // then:
-        assertEquals(1, result.size());
+        assertThat(result.size()).isEqualTo(1);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class DiseaseFinderTest {
         List<Disease> result = diseaseFinder.getSearchDiagnosisResults("hiv", diseases);
 
         // then:
-        assertTrue(result.isEmpty());
+        assertThat(result.isEmpty()).isTrue();
     }
 
 }

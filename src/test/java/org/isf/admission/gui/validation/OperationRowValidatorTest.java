@@ -32,8 +32,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class OperationRowValidatorTest {
     OperationRowValidator operationRowValidator;
@@ -58,7 +57,7 @@ public class OperationRowValidatorTest {
         );
 
         // then:
-        assertTrue(result.isEmpty());
+        assertThat(result.isEmpty()).isTrue();
     }
 
     @Test
@@ -75,7 +74,7 @@ public class OperationRowValidatorTest {
         );
 
         // then:
-        assertTrue(result.isEmpty());
+        assertThat(result.isEmpty()).isTrue();
     }
 
     @Test
@@ -96,7 +95,7 @@ public class OperationRowValidatorTest {
         );
 
         // then:
-        assertEquals(2, result.size());
+        assertThat(result.size()).isEqualTo(2);
     }
 
     @Test
@@ -117,7 +116,7 @@ public class OperationRowValidatorTest {
         );
 
         // then:
-        assertEquals(2, result.size());
+        assertThat(result.size()).isEqualTo(2);
     }
 
     @Test
@@ -138,7 +137,7 @@ public class OperationRowValidatorTest {
         );
 
         // then:
-        assertEquals(2, result.size());
+        assertThat(result.size()).isEqualTo(2);
     }
 
     @Test
@@ -159,6 +158,6 @@ public class OperationRowValidatorTest {
         );
 
         // then:
-        assertEquals(1, result.size());
+        assertThat(result.size()).isEqualTo(1);
     }
 }

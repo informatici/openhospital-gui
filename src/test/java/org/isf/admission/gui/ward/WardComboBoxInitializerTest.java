@@ -31,12 +31,12 @@ import org.isf.ward.model.Ward;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.JComboBox;
+import javax.swing.*;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class WardComboBoxInitializerTest {
     private WardBrowserManager wardBrowserManager;
@@ -92,9 +92,9 @@ public class WardComboBoxInitializerTest {
         ).initialize();
 
         // then:
-        assertEquals(2, wardComboBox.getItemCount());
-        assertEquals("", wardComboBox.getItemAt(0));
-        assertEquals(new Integer(1), ((Ward) wardComboBox.getItemAt(1)).getBeds());
+        assertThat(wardComboBox.getItemCount()).isEqualTo(2);
+        assertThat(wardComboBox.getItemAt(0)).isEqualTo("");
+        assertThat(((Ward) wardComboBox.getItemAt(1)).getBeds()).isEqualTo(1);
     }
 
     @Test
@@ -116,9 +116,9 @@ public class WardComboBoxInitializerTest {
         ).initialize();
 
         // then:
-        assertEquals(2, wardComboBox.getItemCount());
-        assertEquals("", wardComboBox.getItemAt(0));
-        assertTrue(((Ward) wardComboBox.getItemAt(1)).isFemale());
+        assertThat(wardComboBox.getItemCount()).isEqualTo(2);
+        assertThat(wardComboBox.getItemAt(0)).isEqualTo("");
+        assertThat(((Ward) wardComboBox.getItemAt(1)).isFemale()).isTrue();
     }
 
     @Test
@@ -141,7 +141,8 @@ public class WardComboBoxInitializerTest {
         ).initialize();
 
         // then:
-        assertEquals(recentlySavedWard.getCode(), ((Ward) wardComboBox.getSelectedItem()).getCode());
+        assertThat(((Ward) wardComboBox.getSelectedItem()).getCode())
+                .isEqualTo(recentlySavedWard.getCode());
     }
 
     @Test
@@ -167,7 +168,7 @@ public class WardComboBoxInitializerTest {
         ).initialize();
 
         // then:
-        assertEquals(editedWard.getCode(), ((Ward) wardComboBox.getSelectedItem()).getCode());
+        assertThat(((Ward) wardComboBox.getSelectedItem()).getCode()).isEqualTo(editedWard.getCode());
     }
 
 }
