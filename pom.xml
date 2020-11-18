@@ -334,14 +334,6 @@
 		</dependency> -->
   </dependencies>
   <repositories>
-    	<repository>
-        	<id>spring-libs-release</id>
-        	<name>Spring Releases</name>
-        	<url>https://repo.spring.io/libs-release</url>
-        	<snapshots>
-            	<enabled>false</enabled>
-        	</snapshots>
-    	</repository>
         <repository>
                 <id>dcm4che</id>
                 <name>Dcm4Che Repository</name>
