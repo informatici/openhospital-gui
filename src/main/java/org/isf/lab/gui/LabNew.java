@@ -380,7 +380,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					} 
 					
 					try {
-						new PrintLabels("labelForSamples",patientSelected.getCode());
+						new PrintLabels("LabelForSamples",patientSelected.getCode());
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
