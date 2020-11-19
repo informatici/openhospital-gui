@@ -332,12 +332,18 @@
 			<version>4.13</version>
 			<scope>test</scope>
 		</dependency>
-	  	<!-- <dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>poi-3.7</version>
-			<scope>provided</scope>
-		</dependency> -->
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.18.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- <dependency>
+          <groupId>org.apache.poi</groupId>
+          <artifactId>poi</artifactId>
+          <version>poi-3.7</version>
+          <scope>provided</scope>
+      </dependency> -->
   </dependencies>
   <repositories>
     	<repository>
