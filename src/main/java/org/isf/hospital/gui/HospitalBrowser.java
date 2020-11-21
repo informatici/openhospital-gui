@@ -332,7 +332,7 @@ public class HospitalBrowser extends ModalJFrame{
 	
 	private void updateHospital(HospitalBrowsingManager manager, Hospital hospital) {
 		try {
-			manager.updateHospital(hospital);
+			this.hospital = manager.updateHospital(hospital);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
