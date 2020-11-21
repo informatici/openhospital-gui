@@ -24,9 +24,11 @@ package org.isf.admission.gui;
 import org.isf.disease.model.Disease;
 import org.junit.Test;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,6 +69,48 @@ public class DiseaseFinderTest {
 
         // then:
         assertThat(result.isEmpty()).isTrue();
+    }
+
+    @Test
+    public void shouldFindAndSelectAndAddAllFromDiseaseList() {
+        // given:
+        ArrayList<Disease> diseases = new ArrayList<>(
+                Arrays.asList(
+                        TestDisease.diseaseWithCode("ebola"),
+                        TestDisease.diseaseWithCode("hiv")
+                )
+        );
+        Disease diseaseToFind = TestDisease.diseaseWithCode("ebola");
+        JComboBox<Disease> diseaseBox = new JComboBox<>();
+
+        // when:
+        Optional<Disease> result = diseaseFinder.findAndSelectDisease(diseaseToFind, diseases, diseaseBox);
+
+        // then:
+        assertThat(result.isPresent()).isTrue();
+        assertThat(diseaseBox.getItemCount()).isEqualTo(2);
+        assertThat(diseaseBox.getSelectedItem()).isEqualTo(diseaseToFind);
+    }
+
+    @Test
+    public void shouldFindAndSelectAndAddSelectedFromAllDiseaseList() {
+        // given:
+        ArrayList<Disease> diseases = new ArrayList<>(
+                Arrays.asList(
+                        TestDisease.diseaseWithCode("ebola"),
+                        TestDisease.diseaseWithCode("hiv")
+                )
+        );
+        Disease diseaseToFind = TestDisease.diseaseWithCode("ebola");
+        JComboBox<Disease> diseaseBox = new JComboBox<>();
+
+        // when:
+        Optional<Disease> result = diseaseFinder.findAndSelectFromAllDiseases(diseaseToFind, diseases, diseaseBox);
+
+        // then:
+        assertThat(result.isPresent()).isTrue();
+        assertThat(diseaseBox.getItemCount()).isEqualTo(1);
+        assertThat(diseaseBox.getSelectedItem()).isEqualTo(diseaseToFind);
     }
 
 }

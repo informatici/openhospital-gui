@@ -22,11 +22,22 @@
 package org.isf.admission.gui;
 
 import org.isf.disease.model.Disease;
+import org.isf.distype.model.DiseaseType;
 
 public class TestDisease {
     public static Disease diseaseWithDescription(String description) {
         Disease disease = new Disease();
         disease.setDescription(description);
+        return disease;
+    }
+
+    public static Disease diseaseWithCode(String code) {
+        Disease disease = new Disease();
+        disease.setCode(code);
+        disease.setDescription("test");
+        DiseaseType diseaseType = new DiseaseType();
+        diseaseType.setCode("test2");
+        disease.setType(diseaseType);
         return disease;
     }
 }
