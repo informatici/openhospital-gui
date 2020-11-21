@@ -339,11 +339,11 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- <dependency>
-          <groupId>org.apache.poi</groupId>
-          <artifactId>poi</artifactId>
-          <version>poi-3.7</version>
-          <scope>provided</scope>
-      </dependency> -->
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>poi-3.7</version>
+			<scope>provided</scope>
+		</dependency> -->
   </dependencies>
   <repositories>
     	<repository>
