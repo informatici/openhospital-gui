@@ -28,6 +28,7 @@ import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -42,36 +43,30 @@ public class OperationRowValidator {
     public final DateTimeFormatter currentDateFormat;
 
     public OperationRowValidator() {
-        currentDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss", new Locale(GeneralData.LANGUAGE));
+        currentDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", new Locale(GeneralData.LANGUAGE));
     }
 
     @SuppressWarnings("deprecation")
     public List<OHExceptionMessage> checkAllOperationRowDate(List<OperationRow> operationRows, Admission admission) {
         Optional<LocalDateTime> beginDate = Optional.ofNullable(admission.getAdmDate());
         Optional<LocalDateTime> endDate = Optional.ofNullable(admission.getDisDate());
-        Stream<LocalDateTime> updatedOperationDatesStream = getUpdatedOperationDates(operationRows);
+        Stream<LocalDate> updatedOperationDatesStream = getUpdatedOperationDates(operationRows);
         if ((beginDate.isPresent()) && (endDate.isPresent())) {
-            return validateAgainstBeginAndEndDate(updatedOperationDatesStream, beginDate.get(), endDate.get());
+            return validateAgainstBeginAndEndDate(updatedOperationDatesStream, beginDate.get().toLocalDate(), endDate.get().toLocalDate());
         } else if ((beginDate.isPresent()) && (!endDate.isPresent())) {
-            return validateAgainstBeginDate(updatedOperationDatesStream, beginDate.get());
+            return validateAgainstBeginDate(updatedOperationDatesStream, beginDate.get().toLocalDate());
         } else {
             return Collections.EMPTY_LIST;
         }
     }
 
-    private Stream<LocalDateTime> getUpdatedOperationDates(List<OperationRow> list) {
+    private Stream<LocalDate> getUpdatedOperationDates(List<OperationRow> list) {
         return list.stream()
                 .map(operationRow -> operationRow.getOpDate())
-                .map(currentRowDate -> {
-                    /**
-                     * prevent for fails due to time
-                     */
-                    return currentRowDate.toLocalDate()
-                            .atTime(23, 59, 59);
-                });
+                .map(LocalDateTime::toLocalDate);
     }
 
-    private List<OHExceptionMessage> validateAgainstBeginDate(Stream<LocalDateTime> operationDatesStream, LocalDateTime beginDate) {
+    private List<OHExceptionMessage> validateAgainstBeginDate(Stream<LocalDate> operationDatesStream, LocalDate beginDate) {
         return operationDatesStream
                 .filter(currentRowDate -> (currentRowDate.isBefore(beginDate)))
                 .map(currentRowDate -> new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"),
@@ -81,7 +76,7 @@ public class OperationRowValidator {
                 .collect(Collectors.toList());
     }
 
-    private List<OHExceptionMessage> validateAgainstBeginAndEndDate(Stream<LocalDateTime> operationDatesStream, LocalDateTime beginDate, LocalDateTime endDate) {
+    private List<OHExceptionMessage> validateAgainstBeginAndEndDate(Stream<LocalDate> operationDatesStream, LocalDate beginDate, LocalDate endDate) {
         return operationDatesStream
                 .filter(currentRowDate -> (currentRowDate.isBefore(beginDate) || currentRowDate.isAfter(endDate)))
                 .map(currentRowDate -> new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"),

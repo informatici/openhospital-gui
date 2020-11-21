@@ -140,24 +140,4 @@ public class OperationRowValidatorTest {
         assertThat(result.size()).isEqualTo(2);
     }
 
-    @Test
-    public void shouldIgnoreHourWhenComparingDischargeDates() {
-        // given:
-        LocalDateTime firstOperationDate = LocalDateTime.of(2020, 2, 1, 10, 00);
-        LocalDateTime secondOperationDate = LocalDateTime.of(2020, 2, 3, 12, 00);
-        LocalDateTime admissionDate = LocalDateTime.of(2020, 2, 1, 11, 00);
-        LocalDateTime dischargeDate = LocalDateTime.of(2020, 2, 3, 11, 00);
-
-        // when:
-        List<OHExceptionMessage> result = operationRowValidator.checkAllOperationRowDate(
-                Arrays.asList(
-                        TestOperationRow.withOpDate(firstOperationDate),
-                        TestOperationRow.withOpDate(secondOperationDate)
-                ),
-                TestAdmission.withAdmAndDisDate(admissionDate, dischargeDate)
-        );
-
-        // then:
-        assertThat(result.size()).isEqualTo(1);
-    }
 }
