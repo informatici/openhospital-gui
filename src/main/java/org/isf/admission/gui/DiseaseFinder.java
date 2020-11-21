@@ -21,14 +21,9 @@
  */
 package org.isf.admission.gui;
 
-import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
-import org.isf.generaldata.MessageBundle;
-import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
 import javax.swing.JComboBox;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -41,28 +36,22 @@ public class DiseaseFinder {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Disease> findAndSelectDisease(Disease disease, List<Disease> diseaseOutList, JComboBox diseaseBox) {
-        for (Disease elem : diseaseOutList) {
-            diseaseBox.addItem(elem);
-            // Search for saved diseaseOut3
-            if (disease != null && disease.getCode().equalsIgnoreCase(elem.getCode())) {
-                diseaseBox.setSelectedItem(elem); // TODO: if present set selected item in parent class
-                return Optional.ofNullable(elem);
-            }
-        }
-        return Optional.empty();
+    public Optional<Disease> findAndSelectDisease(Disease diseaseToFind, List<Disease> diseaseOutList, JComboBox diseaseBox) {
+        return diseaseOutList.stream()
+                .peek(disease -> diseaseBox.addItem(disease))
+                .filter(disease -> diseaseToFind.getCode().equalsIgnoreCase(disease.getCode()))
+                .peek(disease -> diseaseBox.setSelectedItem(disease))
+                .collect(Collectors.toList())
+                .stream()
+                .findFirst();
     }
 
     public Optional<Disease> findAndSelectFromAllDiseases(Disease diseaseIn, List<Disease> diseaseAllList, JComboBox diseaseInBox) {
-        //Not found: search among all diseases
-        for (Disease elem : diseaseAllList) {
-            if (diseaseIn.getCode().equalsIgnoreCase(elem.getCode())) {
-                diseaseInBox.addItem(elem);
-                diseaseInBox.setSelectedItem(elem);
-                return Optional.of(elem);
-            }
-        }
-        return Optional.empty();
+        return diseaseAllList.stream()
+                .filter(disease -> diseaseIn.getCode().equalsIgnoreCase(disease.getCode()))
+                .peek(disease -> diseaseInBox.addItem(disease))
+                .peek(disease -> diseaseInBox.setSelectedItem(disease))
+                .findFirst();
     }
 
     private boolean diseaseMatchPatterns(String query, Disease disease) {
