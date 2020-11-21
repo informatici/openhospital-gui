@@ -93,6 +93,46 @@ public class DiseaseFinderTest {
     }
 
     @Test
+    public void shouldReturnEmptyForNullDiseaseToFind() {
+        // given:
+        ArrayList<Disease> diseases = new ArrayList<>(
+                Arrays.asList(
+                        TestDisease.diseaseWithCode("ebola"),
+                        TestDisease.diseaseWithCode("hiv")
+                )
+        );
+        Disease diseaseToFind = null;
+        JComboBox<Disease> diseaseBox = new JComboBox<>();
+
+        // when:
+        Optional<Disease> result = diseaseFinder.findAndSelectDisease(diseaseToFind, diseases, diseaseBox);
+
+        // then:
+        assertThat(result.isPresent()).isFalse();
+        assertThat(diseaseBox.getItemCount()).isEqualTo(2);
+    }
+
+    @Test
+    public void shouldReturnEmptyForNotFoundDisease() {
+        // given:
+        ArrayList<Disease> diseases = new ArrayList<>(
+                Arrays.asList(
+                        TestDisease.diseaseWithCode("ebola"),
+                        TestDisease.diseaseWithCode("hiv")
+                )
+        );
+        Disease diseaseToFind = TestDisease.diseaseWithCode("mkbewe");
+        JComboBox<Disease> diseaseBox = new JComboBox<>();
+
+        // when:
+        Optional<Disease> result = diseaseFinder.findAndSelectDisease(diseaseToFind, diseases, diseaseBox);
+
+        // then:
+        assertThat(result.isPresent()).isFalse();
+        assertThat(diseaseBox.getItemCount()).isEqualTo(2);
+    }
+
+    @Test
     public void shouldFindAndSelectAndAddSelectedFromAllDiseaseList() {
         // given:
         ArrayList<Disease> diseases = new ArrayList<>(
@@ -113,4 +153,23 @@ public class DiseaseFinderTest {
         assertThat(diseaseBox.getSelectedItem()).isEqualTo(diseaseToFind);
     }
 
+    @Test
+    public void shouldReturnEmptyForNotFoundFromAllDiseaseList() {
+        // given:
+        ArrayList<Disease> diseases = new ArrayList<>(
+                Arrays.asList(
+                        TestDisease.diseaseWithCode("ebola"),
+                        TestDisease.diseaseWithCode("hiv")
+                )
+        );
+        Disease diseaseToFind = TestDisease.diseaseWithCode("mkbewe");
+        JComboBox<Disease> diseaseBox = new JComboBox<>();
+
+        // when:
+        Optional<Disease> result = diseaseFinder.findAndSelectFromAllDiseases(diseaseToFind, diseases, diseaseBox);
+
+        // then:
+        assertThat(result.isPresent()).isFalse();
+        assertThat(diseaseBox.getItemCount()).isEqualTo(0);
+    }
 }
