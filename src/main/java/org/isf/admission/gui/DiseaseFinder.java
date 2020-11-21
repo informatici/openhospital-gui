@@ -21,7 +21,11 @@
  */
 package org.isf.admission.gui;
 
+import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
+import org.isf.generaldata.MessageBundle;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
 import javax.swing.JComboBox;
 import java.util.ArrayList;
@@ -31,23 +35,31 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DiseaseFinder {
-    public List<Disease> getSearchDiagnosisResults(String query, ArrayList<Disease> diseaseList) {
+    public List<Disease> getSearchDiagnosisResults(String query, List<Disease> diseaseList) {
         return diseaseList.stream()
                 .filter(disease -> query.equals("") || diseaseMatchPatterns(query, disease))
                 .collect(Collectors.toList());
     }
 
-    public Optional<Disease> findAndSelectDisease(Disease found, Disease diseaseOut3, ArrayList<Disease> diseaseOutList, JComboBox diseaseBox) {
+    public Optional<Disease> findAndSelectDisease(Disease disease, List<Disease> diseaseOutList, JComboBox diseaseBox) {
         for (Disease elem : diseaseOutList) {
             diseaseBox.addItem(elem);
-
             // Search for saved diseaseOut3
-            if (
-                    // TODO: editing && - move this outside if not editing don't run search
-                    found == null && diseaseOut3 != null
-                    && diseaseOut3.getCode().equalsIgnoreCase(elem.getCode())) {
+            if (disease != null && disease.getCode().equalsIgnoreCase(elem.getCode())) {
                 diseaseBox.setSelectedItem(elem); // TODO: if present set selected item in parent class
                 return Optional.ofNullable(elem);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Disease> findAndSelectFromAllDiseases(Disease diseaseIn, List<Disease> diseaseAllList, JComboBox diseaseInBox) {
+        //Not found: search among all diseases
+        for (Disease elem : diseaseAllList) {
+            if (diseaseIn.getCode().equalsIgnoreCase(elem.getCode())) {
+                diseaseInBox.addItem(elem);
+                diseaseInBox.setSelectedItem(elem);
+                return Optional.of(elem);
             }
         }
         return Optional.empty();

@@ -800,8 +800,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		priceListLabelPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		
 		jAffiliatePersonJButtonAdd  = new JButton();
-		jAffiliatePersonJButtonAdd.addActionListener(e -> {
-		});
 		jAffiliatePersonJButtonAdd.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
 		
 		jAffiliatePersonJButtonSupp  = new JButton();
