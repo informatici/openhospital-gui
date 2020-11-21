@@ -37,6 +37,9 @@ public class DiseaseFinder {
     }
 
     public Optional<Disease> findAndSelectDisease(Disease diseaseToFind, List<Disease> diseaseOutList, JComboBox diseaseBox) {
+        if(diseaseToFind == null) {
+            return Optional.empty();
+        }
         return diseaseOutList.stream()
                 .peek(disease -> diseaseBox.addItem(disease))
                 .filter(disease -> diseaseToFind.getCode().equalsIgnoreCase(disease.getCode()))
