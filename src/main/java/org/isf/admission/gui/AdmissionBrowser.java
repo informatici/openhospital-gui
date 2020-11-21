@@ -864,7 +864,6 @@ public class AdmissionBrowser extends ModalJFrame {
 			
 			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			wardBox = new JComboBox();
-			wardBox.addItem("");
 
 			new WardComboBoxInitializer(
 					wardBox,
