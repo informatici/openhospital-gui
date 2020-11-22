@@ -395,9 +395,14 @@ public class WardEdit extends JDialog {
 					ward.setFemale(isFemaleCheck.isSelected());
 
 					boolean result = false;
+					Ward savedWard = null;
 					if (insert) { // inserting
 						try {
-							result = manager.newWard(ward);
+							savedWard = manager.newWard(ward);
+							if(savedWard != null) {
+								ward.setLock(savedWard.getLock());
+								result = true;
+							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -406,7 +411,11 @@ public class WardEdit extends JDialog {
 						}
 					} else {
 						try { // updating
-							result = manager.updateWard(ward);
+							savedWard = manager.updateWard(ward);
+							if(savedWard != null) {
+								ward.setLock(savedWard.getLock());
+								result = true;
+							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}

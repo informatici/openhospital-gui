@@ -24,7 +24,6 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
-import org.springframework.beans.BeansException;
 
 /**
  * This class shows a list of wards.
@@ -49,14 +48,6 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	}
 	
 	public void wardUpdated(AWTEvent e) {
-		try {
-			ArrayList<Ward> wards = Context.getApplicationContext().getBean(WardBrowserManager.class).getWards(ward);
-			if(wards.size() == 1) {
-				ward = wards.get(0);
-			}
-		} catch (OHServiceException ex) {
-			OHServiceExceptionUtil.showMessages(ex);
-		}
 		pWard.set(selectedrow,ward);
 		((WardBrowserModel)table.getModel()).fireTableDataChanged();
 		table.updateUI();
