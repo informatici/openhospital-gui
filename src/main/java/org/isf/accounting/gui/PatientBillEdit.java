@@ -571,7 +571,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				//To remind last used
 				billDate = LocalDate.now()
 						.withYear(RememberDates.getLastBillDateGregorian().get(Calendar.YEAR))
-						.withMonth(RememberDates.getLastBillDateGregorian().get(Calendar.MONTH))
+						.withMonth(RememberDates.getLastBillDateGregorian().get(Calendar.MONTH) + 1)
 						.withDayOfMonth(RememberDates.getLastBillDateGregorian().get(Calendar.DAY_OF_MONTH))
 						.atTime(billDate.toLocalTime());
 				jCalendarDate = new CustomJDateChooser(billDate);
