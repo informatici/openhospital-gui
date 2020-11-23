@@ -56,9 +56,6 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryResultTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<DeliveryResultType> pDeliveryResultType;
 	private String[] pColums = {
@@ -79,14 +76,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 	private DeliveryResultType deliveryresultType = null;
 	private final JFrame myFrame;
-	
-	
-	
-	
-	/**
-	 * This method initializes 
-	 * 
-	 */
+
 	public DeliveryResultTypeBrowser() {
 		super();
 		myFrame=this;
@@ -105,7 +95,6 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.dlvrrestype.deliveryresulttypebrowsing"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
 	}
 	
 	
@@ -138,110 +127,82 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 			jNewButton = new JButton();
 			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
 			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					deliveryresultType = new DeliveryResultType("","");
-					DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, true);
-					newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				deliveryresultType = new DeliveryResultType("","");
+				DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, true);
+				newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
 	}
 	
-	/**
-	 * This method initializes jEditButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
 	private JButton getJEditButton() {
 		if (jEditButton == null) {
 			jEditButton = new JButton();
 			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
 			jEditButton.setMnemonic(KeyEvent.VK_E);
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						deliveryresultType = (DeliveryResultType) (((DeliveryResultTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
-						DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, false);
-						newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					deliveryresultType = (DeliveryResultType) (((DeliveryResultTypeBrowserModel) model)
+							.getValueAt(selectedrow, -1));
+					DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, false);
+					newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
 		return jEditButton;
 	}
 	
-	/**
-	 * This method initializes jCloseButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
 			jCloseButton = new JButton();
 			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
 			jCloseButton.setMnemonic(KeyEvent.VK_C);
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
 	
-	/**
-	 * This method initializes jDeteleButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
 	private JButton getJDeteleButton() {
 		if (jDeteleButton == null) {
 			jDeteleButton = new JButton();
 			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
 			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						DeliveryResultType dis = (DeliveryResultType) (((DeliveryResultTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.dlvrrestype.deletedeliveryresulttype") + "\" " + dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						try{
-							if ((n == JOptionPane.YES_OPTION)
-									&& (manager.deleteDeliveryResultType(dis))) {
-								pDeliveryResultType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
-						}catch(OHServiceException e){
-							if(e.getMessages() != null){
-								for(OHExceptionMessage msg : e.getMessages()){
-									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-								}
+			jDeteleButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					DeliveryResultType dis = (DeliveryResultType) (((DeliveryResultTypeBrowserModel) model)
+							.getValueAt(jTable.getSelectedRow(), -1));
+					int n = JOptionPane.showConfirmDialog(null,
+							MessageBundle.getMessage("angal.dlvrrestype.deletedeliveryresulttype") + "\" " + dis.getDescription() + "\" ?",
+							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+					try{
+						if ((n == JOptionPane.YES_OPTION)
+								&& (manager.deleteDeliveryResultType(dis))) {
+							pDeliveryResultType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
+						}
+					}catch(OHServiceException e){
+						if(e.getMessages() != null){
+							for(OHExceptionMessage msg : e.getMessages()){
+								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
 						}
 					}
 				}
-				
 			});
 		}
 		return jDeteleButton;
@@ -255,18 +216,8 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
 		}return jTable;
 	}
-	
-	
-	
-	
-	
-	
+
 class DeliveryResultTypeBrowserModel extends DefaultTableModel {
-		
-		
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 
@@ -322,14 +273,11 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 		if ((jTable.getRowCount() > 0) && selectedrow > -1)
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 	}
-	
-	
+
 	public void deliveryresultTypeInserted(AWTEvent e) {
 		pDeliveryResultType.add(0, deliveryresultType);
 		((DeliveryResultTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		if (jTable.getRowCount() > 0)
 			jTable.setRowSelectionInterval(0, 0);
 	}
-	
-	
 }

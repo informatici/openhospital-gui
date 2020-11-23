@@ -136,14 +136,11 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 			jNewButton = new JButton();
 			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
 			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					diseaseType = new DiseaseType("","");
-					DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, true);
-					newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				diseaseType = new DiseaseType("","");
+				DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, true);
+				newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -159,22 +156,19 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 			jEditButton = new JButton();
 			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
 			jEditButton.setMnemonic(KeyEvent.VK_E);
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						diseaseType = (DiseaseType) (((DiseaseTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
-						DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, false);
-						newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					diseaseType = (DiseaseType) (((DiseaseTypeBrowserModel) model)
+							.getValueAt(selectedrow, -1));
+					DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, false);
+					newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -191,11 +185,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 			jCloseButton = new JButton();
 			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
 			jCloseButton.setMnemonic(KeyEvent.VK_C);
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -210,36 +200,33 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 			jDeteleButton = new JButton();
 			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
 			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						DiseaseType dis = (DiseaseType) (((DiseaseTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.distype.deletediseasetype") + " \" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						try{
-							if ((n == JOptionPane.YES_OPTION)
-									&& (manager.deleteDiseaseType(dis))) {
-								pDiseaseType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
-						} catch (OHServiceException ex) {
-							if(ex.getMessages() != null){
-								for(OHExceptionMessage msg : ex.getMessages()){
-									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-								}
+			jDeteleButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					DiseaseType dis = (DiseaseType) (((DiseaseTypeBrowserModel) model)
+							.getValueAt(jTable.getSelectedRow(), -1));
+					int n = JOptionPane.showConfirmDialog(null,
+							MessageBundle.getMessage("angal.distype.deletediseasetype") + " \" "+dis.getDescription() + "\" ?",
+							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+					try{
+						if ((n == JOptionPane.YES_OPTION)
+								&& (manager.deleteDiseaseType(dis))) {
+							pDiseaseType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
+						}
+					} catch (OHServiceException ex) {
+						if(ex.getMessages() != null){
+							for(OHExceptionMessage msg : ex.getMessages()){
+								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
 						}
 					}
 				}
-				
 			});
 		}
 		return jDeteleButton;
@@ -273,9 +260,8 @@ class DiseaseTypeBrowserModel extends DefaultTableModel {
 				pDiseaseType = manager.getDiseaseType();
 			}catch(OHServiceException e){
 				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
+					e.getMessages()
+							.forEach(msg -> JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
 				}
 			}
 		}

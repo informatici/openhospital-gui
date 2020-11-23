@@ -56,9 +56,6 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<DeliveryType> pDeliveryType;
 	private String[] pColums = {
@@ -79,20 +76,14 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	private DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 	private DeliveryType deliveryType = null;
 	private final JFrame myFrame;
-	
-	
-	/**
-	 * This method initializes 
-	 * 
-	 */
+
 	public DeliveryTypeBrowser() {
 		super();
 		myFrame=this;
 		initialize();
 		setVisible(true);
 	}
-	
-	
+
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
@@ -103,10 +94,8 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.dlvrtype.deliverytypebrowsing"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
 	}
-	
-	
+
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
@@ -136,14 +125,11 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			jNewButton = new JButton();
 			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
 			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					deliveryType = new DeliveryType("","");
-					DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, true);
-					newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				deliveryType = new DeliveryType("","");
+				DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, true);
+				newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -159,22 +145,19 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			jEditButton = new JButton();
 			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
 			jEditButton.setMnemonic(KeyEvent.VK_E);
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						deliveryType = (DeliveryType) (((DeliveryTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
-						DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, false);
-						newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					deliveryType = (DeliveryType) (((DeliveryTypeBrowserModel) model)
+							.getValueAt(selectedrow, -1));
+					DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, false);
+					newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -191,11 +174,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			jCloseButton = new JButton();
 			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
 			jCloseButton.setMnemonic(KeyEvent.VK_C);
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -210,36 +189,33 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			jDeteleButton = new JButton();
 			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
 			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						DeliveryType dis = (DeliveryType) (((DeliveryTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.dlvrtype.deletedeliverytype") + " \" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-                        try{
-                            if ((n == JOptionPane.YES_OPTION)
-                                    && (manager.deleteDeliveryType(dis))) {
-                                pDeliveryType.remove(jTable.getSelectedRow());
-                                model.fireTableDataChanged();
-                                jTable.updateUI();
-                            }
-                        }catch(OHServiceException e){
-                            if(e.getMessages() != null){
-                                for(OHExceptionMessage msg : e.getMessages()){
-                                    JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-                                }
-                            }
-                        }
+			jDeteleButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					DeliveryType dis = (DeliveryType) (((DeliveryTypeBrowserModel) model)
+							.getValueAt(jTable.getSelectedRow(), -1));
+					int n = JOptionPane.showConfirmDialog(null,
+							MessageBundle.getMessage("angal.dlvrtype.deletedeliverytype") + " \" " + dis.getDescription() + "\" ?",
+							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+					try {
+						if ((n == JOptionPane.YES_OPTION)
+								&& (manager.deleteDeliveryType(dis))) {
+							pDeliveryType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
+						}
+					} catch (OHServiceException e) {
+						if (e.getMessages() != null) {
+							for (OHExceptionMessage msg : e.getMessages()) {
+								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+							}
+						}
 					}
 				}
-				
 			});
 		}
 		return jDeteleButton;
@@ -273,9 +249,8 @@ class DeliveryTypeBrowserModel extends DefaultTableModel {
                 pDeliveryType = manager.getDeliveryType();
             }catch(OHServiceException e){
                 if(e.getMessages() != null){
-                    for(OHExceptionMessage msg : e.getMessages()){
-                        JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-                    }
+					e.getMessages()
+							.forEach(msg -> JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
                 }
             }
 		}

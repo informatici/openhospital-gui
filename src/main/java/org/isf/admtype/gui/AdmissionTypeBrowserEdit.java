@@ -25,6 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
 import java.util.EventListener;
+import java.util.stream.IntStream;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -74,8 +75,8 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((LaboratoryTypeListener)listeners[i]).admissionTypeInserted(event);
+		IntStream.range(0, listeners.length)
+				.forEachOrdered(i -> ((LaboratoryTypeListener) listeners[i]).admissionTypeInserted(event));
     }
     private void fireAdmissionUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -86,8 +87,8 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((LaboratoryTypeListener)listeners[i]).admissionTypeUpdated(event);
+		IntStream.range(0, listeners.length)
+				.forEachOrdered(i -> ((LaboratoryTypeListener) listeners[i]).admissionTypeUpdated(event));
     }
     
 	private JPanel jContentPane = null;
@@ -211,48 +212,47 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 			okButton = new JButton();
 			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
 			okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
+			okButton.addActionListener(e -> {
+				AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
-					if (descriptionTextField.getText().equals(lastdescription)){
-						dispose();	
+				if (descriptionTextField.getText().equals(lastdescription)) {
+					dispose();
+				}
+
+				admissionType.setDescription(descriptionTextField.getText());
+				admissionType.setCode(codeTextField.getText());
+				boolean result = false;
+				if (insert) {      // inserting
+					try {
+						result = manager.newAdmissionType(admissionType);
+						if (result) {
+							fireAdmissionInserted(admissionType);
+						}
+						if (!result)
+							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+						else dispose();
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 					}
-				
-					admissionType.setDescription(descriptionTextField.getText());
-					admissionType.setCode(codeTextField.getText());
-					boolean result = false;
-					if (insert) {      // inserting
+				} else {                          // updating
+					if (descriptionTextField.getText().equals(lastdescription)) {
+						dispose();
+					} else {
 						try {
-							result = manager.newAdmissionType(admissionType);
-                            if (result) {
-                                fireAdmissionInserted(admissionType);
-                            }
-                            if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                            else  dispose();
-						}catch(OHServiceException ex){
+							result = manager.updateAdmissionType(admissionType);
+							if (result) {
+								fireAdmissionUpdated();
+							}
+							if (!result)
+								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							else dispose();
+						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
-                    }
-                    else {                          // updating
-                    	if (descriptionTextField.getText().equals(lastdescription)){
-    						dispose();	
-    					}else{
-    						try {
-								result = manager.updateAdmissionType(admissionType);
-                                if (result) {
-                                    fireAdmissionUpdated();
-                                }
-                                if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                                else  dispose();
-    						}catch(OHServiceException ex){
-    							OHServiceExceptionUtil.showMessages(ex);
-    						}
-    					}
-                    	
 					}
-					
-                }
+
+				}
+
 			});
 		}
 		return okButton;

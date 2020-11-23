@@ -38,6 +38,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventListener;
 
 import javax.swing.JButton;
@@ -106,8 +107,9 @@ public class DiseaseEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((DiseaseListener)listeners[i]).diseaseUpdated(event);
+		Arrays.stream(listeners).forEach(
+				eventListener -> ((DiseaseListener)eventListener).diseaseUpdated(event)
+		);
 	}
 	
 	private static final String VERSION="v1.2"; 
@@ -271,11 +273,7 @@ public class DiseaseEdit extends JDialog {
 			cancelButton = new JButton();
 			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
 			cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -290,37 +288,34 @@ public class DiseaseEdit extends JDialog {
 			okButton = new JButton();
 			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
 			okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+			okButton.addActionListener(e -> {
+				DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
-					disease.setType((DiseaseType)typeComboBox.getSelectedItem());
-					disease.setDescription(descriptionTextField.getText());
-					disease.setCode(codeTextField.getText().trim().toUpperCase());
-					disease.setOpdInclude(includeOpdCheckBox.isSelected());
-					disease.setIpdInInclude(includeIpdInCheckBox.isSelected());
-					disease.setIpdOutInclude(includeIpdOutCheckBox.isSelected());
-					
-					boolean result = false;
-					try{
-						if (insert) { // inserting
-							result = manager.newDisease(disease);
-							if (result) {
-								fireDiseaseInserted();
-							}
-						} else { // updating
-							result = manager.updateDisease(disease);
-							if (result) {
-								fireDiseaseUpdated();
-							}
+				disease.setType((DiseaseType) typeComboBox.getSelectedItem());
+				disease.setDescription(descriptionTextField.getText());
+				disease.setCode(codeTextField.getText().trim().toUpperCase());
+				disease.setOpdInclude(includeOpdCheckBox.isSelected());
+				disease.setIpdInInclude(includeIpdInCheckBox.isSelected());
+				disease.setIpdOutInclude(includeIpdOutCheckBox.isSelected());
+
+				boolean result = false;
+				try {
+					if (insert) { // inserting
+						result = manager.newDisease(disease);
+						if (result) {
+							fireDiseaseInserted();
 						}
-                        if (!result) {
-                        	JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                        }
-                        else  dispose();
-					}catch(OHServiceException ex){
-						OHServiceExceptionUtil.showMessages(ex);
+					} else { // updating
+						result = manager.updateDisease(disease);
+						if (result) {
+							fireDiseaseUpdated();
+						}
 					}
+					if (!result) {
+						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+					} else dispose();
+				} catch (OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 		}
@@ -415,9 +410,8 @@ public class DiseaseEdit extends JDialog {
 				}
 			}catch(OHServiceException e){
 				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
+					e.getMessages()
+							.forEach(msg -> JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
 				}
 			}
 			

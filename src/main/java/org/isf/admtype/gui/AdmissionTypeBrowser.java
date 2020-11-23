@@ -137,14 +137,11 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 			jNewButton = new JButton();
 			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
 			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					AdmissionType mdsr = new AdmissionType("","");
-					AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame,mdsr, true);
-					newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				AdmissionType mdsr = new AdmissionType("","");
+				AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame,mdsr, true);
+				newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -160,22 +157,19 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 			jEditButton = new JButton();
 			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
 			jEditButton.setMnemonic(KeyEvent.VK_E);
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						admissionType = (AdmissionType) (((AdmissionTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
-						AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame,admissionType, false);
-						newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					admissionType = (AdmissionType) (((AdmissionTypeBrowserModel) model)
+							.getValueAt(selectedrow, -1));
+					AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame,admissionType, false);
+					newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -211,32 +205,29 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 			jDeteleButton = new JButton();
 			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
 			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						AdmissionType dis = (AdmissionType) (((AdmissionTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.admtype.deleterow")+ " \""+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						try{
-							if ((n == JOptionPane.YES_OPTION)
-									&& (admissionTypeManager.deleteAdmissionType(dis))) {
-								pAdmissionType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
-						}catch(OHServiceException e){
-                            OHServiceExceptionUtil.showMessages(e);
+			jDeteleButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					AdmissionType dis = (AdmissionType) (((AdmissionTypeBrowserModel) model)
+							.getValueAt(jTable.getSelectedRow(), -1));
+					int n = JOptionPane.showConfirmDialog(null,
+							MessageBundle.getMessage("angal.admtype.deleterow")+ " \""+dis.getDescription() + "\" ?",
+							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+					try{
+						if ((n == JOptionPane.YES_OPTION)
+								&& (admissionTypeManager.deleteAdmissionType(dis))) {
+							pAdmissionType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
+					}catch(OHServiceException e){
+OHServiceExceptionUtil.showMessages(e);
 					}
 				}
-				
 			});
 		}
 		return jDeteleButton;

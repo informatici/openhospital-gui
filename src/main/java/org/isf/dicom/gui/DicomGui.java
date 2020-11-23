@@ -272,89 +272,86 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private void actionListenerJButtonLoadDicom() {
 
-		jButtonLoadDicom.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		jButtonLoadDicom.addActionListener(e -> {
+			JFileChooser jfc = new JFileChooser(new File(lastDir));
 
-				JFileChooser jfc = new JFileChooser(new File(lastDir));
+			jfc.addChoosableFileFilter(new FileDicomFilter());
+			jfc.addChoosableFileFilter(new FileJPEGFilter());
+			jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-				jfc.addChoosableFileFilter(new FileDicomFilter());
-				jfc.addChoosableFileFilter(new FileJPEGFilter());
-				jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			int status = jfc.showDialog(new JLabel(""), MessageBundle.getMessage("angal.dicom.open.txt"));
 
-				int status = jfc.showDialog(new JLabel(""), MessageBundle.getMessage("angal.dicom.open.txt"));
+			if (status == JFileChooser.APPROVE_OPTION) {
 
-				if (status == JFileChooser.APPROVE_OPTION) {
+				File selectedFile = jfc.getSelectedFile();
 
-					File selectedFile = jfc.getSelectedFile();
+				File dir = null;
 
-					File dir = null;
+				try {
+					dir = selectedFile.getParentFile();
+				} catch (Exception ec) {
+				}
 
+				if (dir != null)
+					lastDir = dir.getAbsolutePath();
+
+				File file = selectedFile;
+				int numfiles = 1;
+				if (selectedFile.isDirectory()) {
 					try {
-						dir = selectedFile.getParentFile();
-					} catch (Exception ec) {
+						numfiles = SourceFiles.countFiles(selectedFile, patient);
+					} catch (OHDicomException e1) {
+						OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+						return;
 					}
-
-					if (dir != null)
-						lastDir = dir.getAbsolutePath();
-					
-					File file = selectedFile;
-					int numfiles = 1;
-					if (selectedFile.isDirectory()) {
-						try {
-							numfiles = SourceFiles.countFiles(selectedFile, patient);
-						} catch (OHDicomException e1) {
-							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+					if (numfiles == 1) return;
+					file = selectedFile.listFiles()[0];
+				} else {
+					try {
+						if (!SourceFiles.checkSize(file)) {
+							JOptionPane.showMessageDialog(DicomGui.this,
+									MessageBundle.getMessage("angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty") +
+									" (" + DicomManagerFactory.getMaxDicomSize() + ")",
+									"DICOM", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						if (numfiles == 1) return;
-						file = selectedFile.listFiles()[0];
-					} else {
-						try {
-							if (!SourceFiles.checkSize(file)) {
-								JOptionPane.showMessageDialog(DicomGui.this, 
-										MessageBundle.getMessage("angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty") + 
-			            				" (" + DicomManagerFactory.getMaxDicomSize() + ")", 
-										"DICOM", JOptionPane.ERROR_MESSAGE);
-								return;
-							}
-						} catch (OHDicomException e1) {
-							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
-							return;
-						}
+					} catch (OHDicomException e1) {
+						OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+						return;
 					}
-					
-					//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
-					FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file, numfiles);
-					
-					//shows settings to the user for validation/modification
-					List<Date> dates = FileTools.getTimestampFromName(file);
-					
-					ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
-					preLoadDialog.setVisible(true);
-					
-					if (!preLoadDialog.isSave()) 
-						return; //user pressed CANCEL
-					
-					dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
-					dummyFileDicom.setDicomSeriesDate(preLoadDialog.getDicomDate());
-					dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
-					dummyFileDicom.setDicomType(preLoadDialog.getDicomType());
-					
-					//TODO: to specify in which already existing series to load the file
+				}
 
-					if (selectedFile.isDirectory()) {
-						//folder
-						thumbnail.disableLoadButton();
-						new SourceFiles(dummyFileDicom, selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
-					} else {
-						// single file 
-						try {
-							SourceFiles.loadDicom(dummyFileDicom, selectedFile, patient);
-						} catch (Exception e1) {
-							OHServiceExceptionUtil.showMessages((OHDicomException) e1);
-						}
-						thumbnail.initialize();
+				//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
+				FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file, numfiles);
+
+				//shows settings to the user for validation/modification
+				List<Date> dates = FileTools.getTimestampFromName(file);
+
+				ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
+				preLoadDialog.setVisible(true);
+
+				if (!preLoadDialog.isSave())
+					return; //user pressed CANCEL
+
+				dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
+				dummyFileDicom.setDicomSeriesDate(preLoadDialog.getDicomDate());
+				dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
+				dummyFileDicom.setDicomType(preLoadDialog.getDicomType());
+
+				//TODO: to specify in which already existing series to load the file
+
+				if (selectedFile.isDirectory()) {
+					//folder
+					thumbnail.disableLoadButton();
+					new SourceFiles(dummyFileDicom, selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
+				} else {
+					// single file
+					try {
+						SourceFiles.loadDicom(dummyFileDicom, selectedFile, patient);
+					} catch (Exception e1) {
+						OHServiceExceptionUtil.showMessages((OHDicomException) e1);
 					}
+					thumbnail.initialize();
 				}
 			}
 		});
@@ -374,9 +371,8 @@ public class DicomGui extends JFrame implements WindowListener {
 						DicomManagerFactory.getManager().deleteSerie(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
 					}catch(OHServiceException ex){
 						if(ex.getMessages() != null){
-							for(OHExceptionMessage msg : ex.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
+							ex.getMessages()
+									.forEach(msg -> JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
 						}
 					}
 				}
@@ -389,11 +385,8 @@ public class DicomGui extends JFrame implements WindowListener {
 	}
 
 	private void actionListenerJButtonExit() {
-		jButtonExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(100);
-				// this.dispose();
-			}
+		jButtonExit.addActionListener(e -> {
+			System.exit(100);
 		});
 	}
 
@@ -403,7 +396,6 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Invoked the first time a window is made visible.
 	 */
 	public void windowOpened(WindowEvent e) {
-		// System.out.println("windowOpened");
 	}
 
 	/**

@@ -24,6 +24,7 @@ package org.isf.disctype.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -74,8 +75,8 @@ public class DischargeTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((DischargeTypeListener)listeners[i]).dischargeTypeInserted(event);
+		Arrays.stream(listeners)
+				.forEach(eventListener -> ((DischargeTypeListener)eventListener).dischargeTypeInserted(event));
     }
     private void fireDischargeUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -86,8 +87,8 @@ public class DischargeTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((DischargeTypeListener)listeners[i]).dischargeTypeUpdated(event);
+		Arrays.stream(listeners)
+				.forEach(eventListener -> ((DischargeTypeListener)eventListener).dischargeTypeUpdated(event));
     }
     
 	private JPanel jContentPane = null;
@@ -190,11 +191,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
 			cancelButton = new JButton();
 			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
 			cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -209,44 +206,43 @@ public class DischargeTypeBrowserEdit extends JDialog{
 			okButton = new JButton();
 			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
 			okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
+			okButton.addActionListener(e -> {
+				DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 
-					dischargeType.setDescription(descriptionTextField.getText());
-					dischargeType.setCode(codeTextField.getText());					
-					boolean result = false;
-					if (insert) {      // inserting
+				dischargeType.setDescription(descriptionTextField.getText());
+				dischargeType.setCode(codeTextField.getText());
+				boolean result = false;
+				if (insert) {      // inserting
+					try {
+						result = manager.newDischargeType(dischargeType);
+						if (result) {
+							fireDischargeInserted(dischargeType);
+						}
+						if (!result)
+							JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+						else dispose();
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
+						return;
+					}
+				} else {                          // updating
+					if (descriptionTextField.getText().equals(lastdescription)) {
+						dispose();
+					} else {
 						try {
-							result = manager.newDischargeType(dischargeType);
-                            if (result) {
-                                fireDischargeInserted(dischargeType);
-                            }
-                            if (!result) JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                            else  dispose();
+							result = manager.updateDischargeType(dischargeType);
+							if (result) {
+								fireDischargeUpdated();
+							}
+							if (!result)
+								JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							else dispose();
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
 							return;
 						}
-                    }
-                    else {                          // updating
-                    	if (descriptionTextField.getText().equals(lastdescription)){
-    						dispose();	
-    					}else{
-    						try {
-								result = manager.updateDischargeType(dischargeType);
-                                if (result) {
-                                    fireDischargeUpdated();
-                                }
-                                if (!result) JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                                else  dispose();
-							} catch (OHServiceException e1) {
-								OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
-								return;
-							}
-    					}
 					}
-                }
+				}
 			});
 		}
 		return okButton;
@@ -344,11 +340,6 @@ public class DischargeTypeBrowserEdit extends JDialog{
 		}
 		return jDescriptionLabelPanel;
 	}
-	
-	
-	
-
-
 }  //  @jve:decl-index=0:visual-constraint="146,61"
 
 

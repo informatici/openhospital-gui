@@ -28,6 +28,8 @@ import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import javax.swing.AbstractListModel;
@@ -97,18 +99,16 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			setCellRenderer(new CellListCellRender());
 		}
 
-		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
+		getSelectionModel().addListSelectionListener(e -> {
 
-				if (thumbnailViewEnabled && e.getValueIsAdjusting() == false) {
-					DefaultListSelectionModel sel = (DefaultListSelectionModel) e.getSource();
+			if (thumbnailViewEnabled && e.getValueIsAdjusting() == false) {
+				DefaultListSelectionModel sel = (DefaultListSelectionModel) e.getSource();
 
-					if (sel.isSelectionEmpty())
-						disableDeleteButton();
-					else
-						enableDeleteButton((FileDicom) getModel().getElementAt(sel.getLeadSelectionIndex()));
+				if (sel.isSelectionEmpty())
+					disableDeleteButton();
+				else
+					enableDeleteButton((FileDicom) getModel().getElementAt(sel.getLeadSelectionIndex()));
 
-				}
 			}
 		});
 		addMouseListener(new MouseListener() {
@@ -175,8 +175,9 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 		dicomThumbsModel.clear();
 
-		for (int i = 0; i < fdb.length; i++)
-			dicomThumbsModel.addInstance(fdb[i]);
+		Arrays.stream(fdb).forEach(
+				fileDicom -> dicomThumbsModel.addInstance(fileDicom)
+		);
 
 	}
 
@@ -190,7 +191,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 		public DicomThumbsModel() {
 
-			thumbnailList = new LinkedList<FileDicom>();
+			thumbnailList = new LinkedList<>();
 
 		}
 
