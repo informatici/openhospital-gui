@@ -1159,7 +1159,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				public void actionPerformed(ActionEvent e) {
 					jComboPatResult.removeAllItems();
 					try {
-						pat = patBrowser.getPatientWithHeightAndWeight(jTextPatientSrc.getText());
+						pat = patBrowser.getPatientsByOneOfFieldsLike(jTextPatientSrc.getText());
 					}catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
 						pat = new ArrayList<Patient>();

@@ -135,7 +135,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			try {
-				patArray = patManager.getPatientWithHeightAndWeight(null);
+				patArray = patManager.getPatientsByOneOfFieldsLike(null);
 			}catch(OHServiceException ex){
 				if(ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
@@ -168,7 +168,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			try {
-				patArray = patManager.getPatientWithHeightAndWeight(null);
+				patArray = patManager.getPatientsByOneOfFieldsLike(null);
 			}catch(OHServiceException ex){
 				if(ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
@@ -201,7 +201,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			try {
-				patArray = patManager.getPatientWithHeightAndWeight(null);
+				patArray = patManager.getPatientsByOneOfFieldsLike(null);
 			}catch(OHServiceException ex){
 				if(ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
@@ -234,7 +234,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (!GeneralData.ENHANCEDSEARCH) {
 			if(!full)
 				try {
-					patArray = patManager.getPatientWithHeightAndWeight(null);
+					patArray = patManager.getPatientsByOneOfFieldsLike(null);
 				} catch (OHServiceException e2) {
 					if(e2.getMessages() != null){
 						for(OHExceptionMessage msg : e2.getMessages()){
@@ -273,7 +273,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (!GeneralData.ENHANCEDSEARCH) {
 			if(!full)
 				try {
-					patArray = patManager.getPatientWithHeightAndWeight(null);
+					patArray = patManager.getPatientsByOneOfFieldsLike(null);
 				} catch (OHServiceException e2) {
 					OHServiceExceptionUtil.showMessages(e2);
 				}
@@ -567,7 +567,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 				
 				public void actionPerformed(ActionEvent e) {
 					try {
-						patArray = patManager.getPatientWithHeightAndWeight(jTextFieldSearchPatient.getText());
+						patArray = patManager.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 					}catch(OHServiceException ex){
 						if(ex.getMessages() != null){
 							for(OHExceptionMessage msg : ex.getMessages()){
