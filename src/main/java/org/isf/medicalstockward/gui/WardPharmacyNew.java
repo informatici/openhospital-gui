@@ -71,6 +71,8 @@ import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHExceptionUtil;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -133,8 +135,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			if (lastExam != null) {
 				patientWeight = lastExam.getPex_weight().floatValue();
 			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(WardPharmacyNew.this, MessageBundle.getMessage("angal.medicalstockwardedit.theselectedpatienthasnoweightdefined"));
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e, WardPharmacyNew.this);
+			JOptionPane.showMessageDialog(WardPharmacyNew.this, MessageBundle.getMessage("angal.medicalstockwardedit.problemoccurredwhileretrievingweight"));
 		}
 	}
 	
