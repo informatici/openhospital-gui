@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -130,11 +131,13 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		jButtonTrashPatient.setEnabled(true);
 		
 		ExaminationBrowserManager exm = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+		
 		try {
-			PatientExamination lastExam = exm.getLastByPatID(patientSelected.getCode());
-			if (lastExam != null) {
-				patientWeight = lastExam.getPex_weight().floatValue();
-			}
+			Optional.ofNullable(exm.getLastByPatID(patientSelected.getCode()))
+			.map(lastExam -> lastExam.getPex_weight())
+			.map(weight -> weight.floatValue())
+			.ifPresent(w -> patientWeight = w);
+			
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, WardPharmacyNew.this);
 			JOptionPane.showMessageDialog(WardPharmacyNew.this, MessageBundle.getMessage("angal.medicalstockwardedit.problemoccurredwhileretrievingweight"));
