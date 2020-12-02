@@ -201,7 +201,7 @@ public class WardPharmacyEdit extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					jComboBoxPatients.removeAllItems();
 					try {
-						pat = patBrowser.getPatientWithHeightAndWeight(jTextFieldSearchPatient.getText());
+						pat = patBrowser.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 					}catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
 						pat = new ArrayList<Patient>();

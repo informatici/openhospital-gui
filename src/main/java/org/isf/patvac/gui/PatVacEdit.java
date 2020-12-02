@@ -532,7 +532,7 @@ public class PatVacEdit extends JDialog {
 
 		if (GeneralData.ENHANCEDSEARCH){
 			try {
-				pat = patBrowser.getPatientWithHeightAndWeight(regExp);
+				pat = patBrowser.getPatientsByOneOfFieldsLike(regExp);
 			}catch(OHServiceException ex){
 				OHServiceExceptionUtil.showMessages(ex);
 				pat = new ArrayList<Patient>();

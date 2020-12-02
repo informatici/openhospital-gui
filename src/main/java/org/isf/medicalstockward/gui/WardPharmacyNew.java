@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +58,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import org.isf.examination.manager.ExaminationBrowserManager;
+import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
@@ -69,6 +72,8 @@ import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHExceptionUtil;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -124,9 +129,19 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.changepatient")); //$NON-NLS-1$
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.changethepatientassociatedwiththismovement")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
-//		if (patientSelected.getWeight() == 0) {
-//			JOptionPane.showMessageDialog(WardPharmacyNew.this, MessageBundle.getMessage("angal.medicalstockwardedit.theselectedpatienthasnoweightdefined"));
-//		}
+		
+		ExaminationBrowserManager exm = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+		
+		try {
+			Optional.ofNullable(exm.getLastByPatID(patientSelected.getCode()))
+			.map(lastExam -> lastExam.getPex_weight())
+			.map(weight -> weight.floatValue())
+			.ifPresent(w -> patientWeight = w);
+			
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e, WardPharmacyNew.this);
+			JOptionPane.showMessageDialog(WardPharmacyNew.this, MessageBundle.getMessage("angal.medicalstockwardedit.problemoccurredwhileretrievingweight"));
+		}
 	}
 	
 	private static final long serialVersionUID = 1L;
@@ -151,6 +166,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	
 	private Patient patientSelected = null;
+	private float patientWeight;
 	private Ward wardSelected;
 	private Object[] medClasses = {Medical.class, Integer.class, String.class};
 	private String[] medColumnNames = {MessageBundle.getMessage("angal.medicalstockward.medical"), 
@@ -612,7 +628,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					boolean isPatient;
 					String description = "";
 					int age = 0;
-					float weight = 0;
 					GregorianCalendar newDate = new GregorianCalendar();
 					Ward wardTo = null; //
 					if (jRadioPatient.isSelected()) {
@@ -620,7 +635,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						if (patientSelected != null) {
 							description = patientSelected.getName();
 							age = patientSelected.getAge();
-							weight = patientSelected.getWeight();
 						}else {
 							JOptionPane.showMessageDialog(null,
 									MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseselectpatient"));
@@ -691,7 +705,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						// MedicaldsrstockmovTypeBrowserManager().getMovementType("charge");
 						for (int i = 0; i < medItems.size(); i++) {
 							manyMovementWard.add(new MovementWard(wardSelected, newDate, isPatient, patientSelected,
-									age, weight, description, medItems.get(i).getMedical(), medItems.get(i).getQty(),
+									age, patientWeight, description, medItems.get(i).getMedical(), medItems.get(i).getQty(),
 									MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null,medItems.get(i).getLot()));
 						}
 
