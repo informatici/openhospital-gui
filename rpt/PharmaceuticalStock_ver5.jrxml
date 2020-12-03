@@ -3,6 +3,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalStock_ver5" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoPages" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PharmaceuticalStock_ver5" whenResourceMissingType="Key" uuid="fb0a8910-231a-47ff-871d-3d7d0721069a">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -245,7 +246,7 @@ ORDER BY $P!{sortBy}]]>
 	<title>
 		<band height="90" splitType="Stretch">
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-18" x="0" y="0" width="782" height="22" uuid="07f7c5f8-d900-4e7c-b005-7b11cdfafd07"/>
+				<reportElement key="textField-18" x="555" y="0" width="227" height="22" uuid="07f7c5f8-d900-4e7c-b005-7b11cdfafd07"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -258,7 +259,7 @@ ORDER BY $P!{sortBy}]]>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-19" x="0" y="22" width="782" height="17" uuid="2a5a8b84-1e5c-4298-ac5d-b17ba2a255ac"/>
+				<reportElement key="textField-19" x="555" y="22" width="227" height="17" uuid="2a5a8b84-1e5c-4298-ac5d-b17ba2a255ac"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -271,7 +272,7 @@ ORDER BY $P!{sortBy}]]>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-20" x="0" y="39" width="782" height="17" uuid="1d752a3b-9993-45a6-8989-939b9bd21d6e"/>
+				<reportElement key="textField-20" x="555" y="39" width="227" height="17" uuid="1d752a3b-9993-45a6-8989-939b9bd21d6e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -284,7 +285,7 @@ ORDER BY $P!{sortBy}]]>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-21" x="0" y="56" width="782" height="17" uuid="2d211826-c28d-4f7b-88cf-cf94c503f51d"/>
+				<reportElement key="textField-21" x="555" y="56" width="227" height="17" uuid="2d211826-c28d-4f7b-88cf-cf94c503f51d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -321,6 +322,13 @@ ORDER BY $P!{sortBy}]]>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="555" height="73" uuid="34ff4031-465a-4aea-b893-371dfba2c64e"/>
+				<textElement verticalAlignment="Middle">
+					<font size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Stock.at.the.date}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

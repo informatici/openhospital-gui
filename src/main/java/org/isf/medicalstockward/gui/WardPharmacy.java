@@ -95,9 +95,11 @@ import org.isf.stat.gui.report.GenericReportPharmaceuticalStockWard;
 import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.BusyState;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.StockCardDialog;
+import org.isf.utils.jobjects.StockLedgerDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
@@ -219,6 +221,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private JButton jExportToExcelButton = null;
 	private JButton jRectifyButton = null;
 	private JButton jButtonStockCard;
+	private JButton jButtonStockLedger;
 
 	/*
 	 * Managers and datas
@@ -289,6 +292,7 @@ public class WardPharmacy extends ModalJFrame implements
 			if (MainMenu.checkUserGrants("btnmedicalswardexcel")) //$NON-NLS-1$
 				jPanelButtons.add(getExportToExcelButton());
 			jPanelButtons.add(getJButtonStockCard());
+			jPanelButtons.add(getJButtonStockLedger());
 			jPanelButtons.add(getJButtonClose());
 		}
 		return jPanelButtons;
@@ -335,6 +339,28 @@ public class WardPharmacy extends ModalJFrame implements
 			});
 		}
 		return jButtonStockCard;
+	}
+	
+	private JButton getJButtonStockLedger() {
+		if (jButtonStockLedger == null) {
+			jButtonStockLedger = new JButton(MessageBundle.getMessage("angal.medicalstockward.stockledger"));
+			jButtonStockLedger.setMnemonic(KeyEvent.VK_L);
+			jButtonStockLedger.setVisible(false);
+			jButtonStockLedger.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent event){
+
+					StockLedgerDialog stockCardDialog = new StockLedgerDialog(WardPharmacy.this, dateFrom.getTime(), dateTo.getTime());
+					Date dateFrom = stockCardDialog.getDateFrom();
+					Date dateTo = stockCardDialog.getDateTo();
+					
+					if (!stockCardDialog.isCancel()) {
+						new GenericReportPharmaceuticalStockCard("ProductLedgerWard_multi", dateFrom, dateTo, null, wardSelected, false);
+						return;
+					}
+				}
+			});
+		}
+		return jButtonStockLedger;
 	}
 
 	private JButton getJButtonNew() {
@@ -1146,6 +1172,7 @@ public class WardPharmacy extends ModalJFrame implements
 							if (editAllowed)
 								jButtonEdit.setVisible(true);
 							jButtonStockCard.setVisible(true);
+							jButtonStockLedger.setVisible(true);
 							validate();
 							setLocationRelativeTo(null);
 							// jButtonDelete.setVisible(true);

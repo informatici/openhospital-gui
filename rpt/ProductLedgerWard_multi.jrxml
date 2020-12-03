@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProductLedger_multi" pageWidth="842" pageHeight="595" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isSummaryNewPage="true" resourceBundle="ProductLedger" whenResourceMissingType="Key" uuid="becf25da-2b38-446a-92d6-811b2d2176b8">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProductLedgerWard_multi" pageWidth="842" pageHeight="595" whenNoDataType="NoPages" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isSummaryNewPage="true" resourceBundle="ProductLedgerWard_multi" whenResourceMissingType="Key" uuid="e91c92c6-5ad4-4043-b9e0-a1233025884b">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -34,18 +32,28 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="WardCode" class="java.lang.String"/>
+	<parameter name="WardName" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT DISTINCT(MDSR_ID), MDSR_CODE, MDSR_DESC, MDSRT_DESC
+		<![CDATA[SELECT MDSR_ID
+
+ FROM (
+
+SELECT DISTINCT(MMVN_MDSR_ID) AS MDSR_ID
+FROM MEDICALDSRSTOCKMOVWARD
+WHERE DATE(MMVN_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
+AND MMVN_WRD_ID_A = $P{WardCode}
+
+UNION
+
+SELECT DISTINCT(MMV_MDSR_ID) AS MDSR_ID
 FROM MEDICALDSRSTOCKMOV
-LEFT JOIN MEDICALDSR ON MDSR_ID = MMV_MDSR_ID
-LEFT JOIN MEDICALDSRTYPE ON MDSRT_ID_A = MDSR_MDSRT_ID_A
 WHERE DATE(MMV_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
-ORDER BY LENGTH(MDSR_CODE) ASC, MDSR_CODE ASC, MDSR_DESC ASC]]>
+AND MMV_WRD_ID_A = $P{WardCode}
+
+) AS MOVEMENTS]]>
 	</queryString>
-	<field name="MDSR_ID" class="java.lang.Integer"/>
-	<field name="MDSR_CODE" class="java.lang.String"/>
-	<field name="MDSR_DESC" class="java.lang.String"/>
-	<field name="MDSRT_DESC" class="java.lang.String"/>
+	<field name="MDSR_ID" class="java.lang.String"/>
 	<group name="PRODUCT" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{MDSR_ID}]]></groupExpression>
 		<groupHeader>
@@ -70,7 +78,7 @@ ORDER BY LENGTH(MDSR_CODE) ASC, MDSR_CODE ASC, MDSR_DESC ASC]]>
 	<detail>
 		<band height="66" splitType="Stretch">
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-1" x="-30" y="0" width="842" height="66" uuid="112134d7-cfea-44ab-81f6-e0105a5256bb"/>
+				<reportElement key="subreport-1" x="-30" y="0" width="842" height="66" uuid="669b6eaa-a7da-4bfb-a5f2-df0fc8df624c"/>
 				<subreportParameter name="Hospital">
 					<subreportParameterExpression><![CDATA[$P{Hospital}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -98,11 +106,14 @@ ORDER BY LENGTH(MDSR_CODE) ASC, MDSR_CODE ASC, MDSR_DESC ASC]]>
 				<subreportParameter name="Currency">
 					<subreportParameterExpression><![CDATA[$P{Currency}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="SUBREPORT_DIR">
-					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				<subreportParameter name="WardCode">
+					<subreportParameterExpression><![CDATA[$P{WardCode}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="WardName">
+					<subreportParameterExpression><![CDATA[$P{WardName}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "ProductLedger.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "ProductLedgerWard.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
@@ -115,7 +126,7 @@ ORDER BY LENGTH(MDSR_CODE) ASC, MDSR_CODE ASC, MDSR_DESC ASC]]>
 	<summary>
 		<band height="100" splitType="Stretch">
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-2" x="-30" y="0" width="842" height="100" uuid="d165da7e-b3c3-4d43-827c-b66caa3a1168"/>
+				<reportElement key="subreport-2" x="-30" y="0" width="842" height="100" uuid="48273c10-837f-48f0-8da5-7f05e6ed59b7"/>
 				<subreportParameter name="Hospital">
 					<subreportParameterExpression><![CDATA[$P{Hospital}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -140,11 +151,20 @@ ORDER BY LENGTH(MDSR_CODE) ASC, MDSR_CODE ASC, MDSR_DESC ASC]]>
 				<subreportParameter name="Currency">
 					<subreportParameterExpression><![CDATA[$P{Currency}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="WardCode">
+					<subreportParameterExpression><![CDATA[$P{WardCode}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Ward">
+					<subreportParameterExpression><![CDATA[$P{WardName}]]></subreportParameterExpression>
+				</subreportParameter>
 				<subreportParameter name="Date">
+					<subreportParameterExpression><![CDATA[$P{todate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DateReport">
 					<subreportParameterExpression><![CDATA[$P{todate}.toLocaleString()]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} +  "PharmaceuticalStock_ver5.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "PharmaceuticalStockWard.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</summary>

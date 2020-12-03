@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProductLedgerWard" pageWidth="842" pageHeight="595" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="ProductLedgerWard" whenResourceMissingType="Key" uuid="5c5ee514-3f90-4def-ab1b-6fd1006dea07">
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProductLedgerWard" pageWidth="842" pageHeight="595" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="ProductLedgerWard" whenResourceMissingType="Empty" uuid="5c5ee514-3f90-4def-ab1b-6fd1006dea07">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -44,7 +44,7 @@
 			FROM MEDICALDSRSTOCKMOV
 			LEFT JOIN MEDICALDSRSTOCKMOVTYPE ON MMV_MMVT_ID_A = MMVT_ID_A
 			WHERE MMVT_TYPE LIKE '%-%'
-			AND DATE(MMV_DATE) < $P{fromdate}
+			AND DATE(MMV_DATE) < DATE($P{fromdate})
 			AND MMV_WRD_ID_A = $P{WardCode}
 			AND MMV_MDSR_ID = $P{productID}
 			GROUP BY MMV_MDSR_ID) AS IN_QTY,
@@ -54,7 +54,7 @@
 			LEFT JOIN MEDICALDSRSTOCKMOVTYPE ON MMV_MMVT_ID_A = MMVT_ID_A
 			LEFT JOIN MEDICALDSRlot ON MMV_LT_ID_A = LT_ID_A
 			WHERE MMVT_TYPE LIKE '%-%'
-			AND DATE(MMV_DATE) < $P{fromdate}
+			AND DATE(MMV_DATE) < DATE($P{fromdate})
 			AND MMV_WRD_ID_A = $P{WardCode}
 			AND MMV_MDSR_ID = $P{productID}
 			GROUP BY MMV_MDSR_ID) AS COST
@@ -62,7 +62,7 @@
 	FROM MEDICALDSRSTOCKMOVWARD
 		LEFT JOIN MEDICALDSR ON MMVN_MDSR_ID = MDSR_ID
 		LEFT JOIN MEDICALDSRTYPE ON MDSR_MDSRT_ID_A = MDSRT_ID_A
-	WHERE DATE(MMVN_DATE) < $P{fromdate}
+	WHERE DATE(MMVN_DATE) < DATE($P{fromdate})
 		AND MMVN_WRD_ID_A = $P{WardCode}
 		AND MMVN_MDSR_ID = $P{productID}
 
@@ -113,7 +113,7 @@ SELECT "2" AS ORDERING_FIELD,
 					LEFT JOIN
 				MEDICALDSR ON MMVN_MDSR_ID = MDSR_ID
 			WHERE
-				DATE(MMVN_DATE) BETWEEN $P{fromdate} AND $P{todate}
+				DATE(MMVN_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 					AND MMVN_WRD_ID_A = $P{WardCode}
 					AND MMVN_MDSR_ID = $P{productID}
 			UNION
@@ -143,7 +143,7 @@ SELECT "2" AS ORDERING_FIELD,
 				MEDICALDSRlot ON MMV_LT_ID_A = LT_ID_A
 
 			WHERE
-				DATE(MMV_DATE) BETWEEN $P{fromdate} AND $P{todate}
+				DATE(MMV_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 					AND MMV_WRD_ID_A = $P{WardCode}
 					AND MMV_MDSR_ID = $P{productID}
 
@@ -168,7 +168,7 @@ SELECT 	"3" AS ORDERING_FIELD,
 			FROM MEDICALDSRSTOCKMOV
 			LEFT JOIN MEDICALDSRSTOCKMOVTYPE ON MMV_MMVT_ID_A = MMVT_ID_A
 			WHERE MMVT_TYPE LIKE '%-%'
-			AND DATE(MMV_DATE) <= $P{todate}
+			AND DATE(MMV_DATE) <= DATE($P{todate})
 			AND MMV_WRD_ID_A = $P{WardCode}
 			AND MMV_MDSR_ID = $P{productID}
 			GROUP BY MMV_MDSR_ID) AS IN_QTY,
@@ -178,7 +178,7 @@ SELECT 	"3" AS ORDERING_FIELD,
 	FROM MEDICALDSRSTOCKMOVWARD
 		LEFT JOIN MEDICALDSR ON MMVN_MDSR_ID = MDSR_ID
 		LEFT JOIN MEDICALDSRTYPE ON MDSR_MDSRT_ID_A = MDSRT_ID_A
-	WHERE DATE(MMVN_DATE) <= $P{todate}
+	WHERE DATE(MMVN_DATE) <= DATE($P{todate})
 		AND MMVN_WRD_ID_A = $P{WardCode}
 		AND MMVN_MDSR_ID = $P{productID}
 ) AS BEGIN_MOV_END
