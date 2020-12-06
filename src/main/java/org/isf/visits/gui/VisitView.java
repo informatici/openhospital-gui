@@ -616,6 +616,11 @@ public class VisitView extends ModalJFrame {
 	class VisitModel extends DefaultTableModel {
 		public VisitModel() {
 		}
+		
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			return false;
+		}
 
 		public int getRowCount() {
 			if (visitfirst == null)
@@ -644,6 +649,11 @@ public class VisitView extends ModalJFrame {
 	
 	class VisitSecondModel extends DefaultTableModel {
 		public VisitSecondModel() {
+		}
+
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			return false;
 		}
 
 		public int getRowCount() {
