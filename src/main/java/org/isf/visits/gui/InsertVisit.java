@@ -259,7 +259,7 @@ public class InsertVisit extends JDialog {
 			ServicePanel = new JPanel();
 
 			Servicelabel = new JLabel();
-			Servicelabel.setText(""); //$NON-NLS-1$
+			Servicelabel.setText(MessageBundle.getMessage("angal.visit.service")); //$NON-NLS-1$
 
 			ServiceField = new JTextField(10);
 			ServiceField.setEditable(true);
@@ -279,7 +279,7 @@ public class InsertVisit extends JDialog {
 			DurationPanel = new JPanel();
 
 			Durationlabel = new JLabel();
-			Durationlabel.setText(""); //$NON-NLS-1$
+			Durationlabel.setText(MessageBundle.getMessage("angal.visit.durationinminutes")); //$NON-NLS-1$
 
 			DurationField = new JTextField(10);
 			DurationField.setEditable(true);
