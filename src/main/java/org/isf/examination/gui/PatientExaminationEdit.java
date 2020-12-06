@@ -46,6 +46,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -986,7 +987,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				
 				@Override
 				public void focusLost(FocusEvent e) {
-					patex.setPex_ap_min((Integer) jSpinnerAPmin.getValue());
+					patex.setPex_ap_min(jSpinnerAPmin.getValue());
 					
 				}
 				
@@ -1196,16 +1197,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if (jComboBoxAuscultation == null) {
 			jComboBoxAuscultation =  new JComboBox();
 			ArrayList<String> auscultationList = examManager.getAuscultationList();
-			for (String description : auscultationList) {
-				jComboBoxAuscultation.addItem(description);
-			}
-			jComboBoxAuscultation.addItemListener(new ItemListener() {
-				
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					if (e.getStateChange() == ItemEvent.SELECTED) {
-						patex.setPex_auscultation(examManager.getAuscultationKey((String) e.getItem()));
-					}
+			auscultationList.forEach(description -> jComboBoxAuscultation.addItem(description));
+			jComboBoxAuscultation.addItemListener(e -> {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					patex.setPex_auscultation(examManager.getAuscultationKey((String) e.getItem()));
 				}
 			});
 		}
@@ -1215,15 +1210,11 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JSlider getJSliderHeight() {
 		if (jSliderHeight == null) {
 			jSliderHeight = new JSlider(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX, ExaminationParameters.HEIGHT_INIT);
-			jSliderHeight.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					int value = jSliderHeight.getValue();
-					jTextFieldHeight.setText(String.valueOf(value));
-					patex.setPex_height(value);
-					updateBMI();
-				}
+			jSliderHeight.addChangeListener(e -> {
+				int value = jSliderHeight.getValue();
+				jTextFieldHeight.setText(String.valueOf(value));
+				patex.setPex_height(value);
+				updateBMI();
 			});
 			jSliderHeight.setFocusable(false);
 		}
@@ -1233,16 +1224,12 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private ScaledJSlider getJSliderWeight() {
 		if (jSliderWeight == null) {
 			jSliderWeight = new ScaledJSlider(ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_MAX, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_INIT);
-			jSliderWeight.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					double value = jSliderWeight.getScaledValue();
-					//double weight = (double) value / 10;
-					jTextFieldWeight.setText(String.valueOf(value));
-					patex.setPex_weight(value);
-					updateBMI();
-				}
+			jSliderWeight.addChangeListener(e -> {
+				double value = jSliderWeight.getScaledValue();
+				//double weight = (double) value / 10;
+				jTextFieldWeight.setText(String.valueOf(value));
+				patex.setPex_weight(value);
+				updateBMI();
 			});
 			jSliderWeight.setFocusable(false);
 		}
@@ -1252,14 +1239,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private ScaledJSlider getJSliderTemp() {
 		if (jSliderTemp == null) {
 			jSliderTemp = new ScaledJSlider(ExaminationParameters.TEMP_MIN, ExaminationParameters.TEMP_MAX, ExaminationParameters.TEMP_STEP, ExaminationParameters.TEMP_INIT);
-			jSliderTemp.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					double value = jSliderTemp.getScaledValue();
-					jTextFieldTemp.setText(String.valueOf(value));
-					patex.setPex_temp(value);
-				}
+			jSliderTemp.addChangeListener(e -> {
+				double value = jSliderTemp.getScaledValue();
+				jTextFieldTemp.setText(String.valueOf(value));
+				patex.setPex_temp(value);
 			});
 			jSliderTemp.setFocusable(false);
 		}
@@ -1269,14 +1252,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private ScaledJSlider getJSliderSaturation() {
 		if (jSliderSaturation == null) {
 			jSliderSaturation = new ScaledJSlider(ExaminationParameters.SAT_MIN, 100, ExaminationParameters.SAT_STEP, ExaminationParameters.SAT_INIT); //MAX / STEP
-			jSliderSaturation.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					double value = jSliderSaturation.getScaledValue();
-					jTextFieldSaturation.setText(String.valueOf(value));
-					patex.setPex_sat(value);
-				}
+			jSliderSaturation.addChangeListener(e -> {
+				double value = jSliderSaturation.getScaledValue();
+				jTextFieldSaturation.setText(String.valueOf(value));
+				patex.setPex_sat(value);
 			});
 			jSliderSaturation.setFocusable(false);
 		}
@@ -1286,14 +1265,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JSlider getJSliderDiuresisVolume() {
 		if (jSliderDiuresisVolume == null) {
 			jSliderDiuresisVolume = new JSlider(ExaminationParameters.DIURESIS_MIN, ExaminationParameters.DIURESIS_MAX, ExaminationParameters.DIURESIS_INIT);
-			jSliderDiuresisVolume.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					int value = jSliderDiuresisVolume.getValue();
-					jTextFieldDiuresisVolume.setText(String.valueOf(value));
-					patex.setPex_diuresis(value);
-				}
+			jSliderDiuresisVolume.addChangeListener(e -> {
+				int value = jSliderDiuresisVolume.getValue();
+				jTextFieldDiuresisVolume.setText(String.valueOf(value));
+				patex.setPex_diuresis(value);
 			});
 			jSliderDiuresisVolume.setFocusable(false);
 		}
@@ -1303,14 +1278,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JSlider getJSliderHGT() {
 		if (jSliderHGT == null) {
 			jSliderHGT = new JSlider(ExaminationParameters.HGT_MIN, ExaminationParameters.HGT_MAX, ExaminationParameters.HGT_INIT);
-			jSliderHGT.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					int value = jSliderHGT.getValue();
-					jTextFieldHGT.setText(String.valueOf(value));
-					patex.setPex_hgt(value);
-				}
+			jSliderHGT.addChangeListener(e -> {
+				int value = jSliderHGT.getValue();
+				jTextFieldHGT.setText(String.valueOf(value));
+				patex.setPex_hgt(value);
 			});
 			jSliderHGT.setFocusable(false);
 		}
@@ -1320,14 +1291,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JSlider getJSliderHR() {
 		if (jSliderHR == null) {
 			jSliderHR = new JSlider(ExaminationParameters.HR_MIN, ExaminationParameters.HR_MAX, ExaminationParameters.HR_INIT);
-			jSliderHR.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					int hr = jSliderHR.getValue();
-					jTextFieldHR.setText(String.valueOf(hr));
-					patex.setPex_hr(hr);
-				}
+			jSliderHR.addChangeListener(e -> {
+				int hr = jSliderHR.getValue();
+				jTextFieldHR.setText(String.valueOf(hr));
+				patex.setPex_hr(hr);
 			});
 			jSliderHR.setFocusable(false);
 		}
@@ -1337,14 +1304,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JSlider getJSliderRR() {
 		if (jSliderRR == null) {
 			jSliderRR = new JSlider(0, 100, 0);
-			jSliderRR.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					int rr = jSliderRR.getValue();
-					jTextFieldRR.setText(String.valueOf(rr));
-					patex.setPex_rr(rr);
-				}
+			jSliderRR.addChangeListener(e -> {
+				int rr = jSliderRR.getValue();
+				jTextFieldRR.setText(String.valueOf(rr));
+				patex.setPex_rr(rr);
 			});
 		}
 		return jSliderRR;
@@ -1364,34 +1327,27 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jButtonDelete = new JButton();
 			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
 			jButtonDelete.setMnemonic(KeyEvent.VK_D);
-			jButtonDelete.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					int[] row = jTableSummary.getSelectedRows();
-					if (row.length == 0) {
-						JOptionPane.showMessageDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.pleaseselectarow"));
-						return;
+			jButtonDelete.addActionListener(e -> {
+				int[] row = jTableSummary.getSelectedRows();
+				if (row.length == 0) {
+					JOptionPane.showMessageDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.pleaseselectarow"));
+					return;
+				}
+				int ok = JOptionPane.showConfirmDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.doyouwanttoproceed"));
+				if (ok == JOptionPane.OK_OPTION) {
+					ArrayList<PatientExamination> patexList = new ArrayList<>();
+					Arrays.stream(row)
+							.forEach(value -> patexList.add((PatientExamination) jTableSummary.getModel().getValueAt(value, -1)));
+					try {
+						examManager.remove(patexList);
+					} catch(OHServiceException ex){
+						if(ex.getMessages() != null){
+							ex.getMessages().forEach(msg -> JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity()));
+						}
+					} finally {
+						JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
+						model.reloadData();
 					}
-					int ok = JOptionPane.showConfirmDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.doyouwanttoproceed"));
-					if (ok == JOptionPane.OK_OPTION) {
-						ArrayList<PatientExamination> patexList = new ArrayList<PatientExamination>();
-						for (int i = 0; i < row.length; i++) {
-							patexList.add((PatientExamination) jTableSummary.getModel().getValueAt(row[i], -1));
-						}
-						try {
-							examManager.remove(patexList);
-						}catch(OHServiceException ex){
-							if(ex.getMessages() != null){
-								for(OHExceptionMessage msg : ex.getMessages()){
-									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-								}
-							}
-						} finally {
-							JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
-							model.reloadData();
-						}
-					} else return;
 				}
 			});
 		}
@@ -1402,13 +1358,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
 			jButtonCancel.setMnemonic(KeyEvent.VK_C);
-			jButtonCancel.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					dispose();
-				}
-			});
+			jButtonCancel.addActionListener(e -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -1417,17 +1367,13 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if (jButtonPrint == null) {
 			jButtonPrint = new JButton(MessageBundle.getMessage("angal.common.print")); //$NON-NLS-1$
 			jButtonPrint.setMnemonic(KeyEvent.VK_C);
-			jButtonPrint.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					int selectedrow = jTableSummary.getSelectedRow();
-					if (selectedrow < 0) selectedrow = 0;
-					
-					PatientExamination	exam = (PatientExamination) jTableSummary.getValueAt(selectedrow,-1);
-					new GenericReportExamination(patex.getPatient().getCode(), exam.getPex_ID(), GeneralData.EXAMINATIONCHART);
-					
-				}
+			jButtonPrint.addActionListener(e -> {
+				int selectedrow = jTableSummary.getSelectedRow();
+				if (selectedrow < 0) selectedrow = 0;
+
+				PatientExamination	exam = (PatientExamination) jTableSummary.getValueAt(selectedrow,-1);
+				new GenericReportExamination(patex.getPatient().getCode(), exam.getPex_ID(), GeneralData.EXAMINATIONCHART);
+
 			});
 		}
 		return jButtonPrint;
@@ -1552,9 +1498,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 	
 	private void enableAP() {
 		jSpinnerAPmin.setEnabled(true);
-		patex.setPex_ap_min((Integer)jSpinnerAPmin.getValue());
+		patex.setPex_ap_min(jSpinnerAPmin.getValue());
 		jSpinnerAPmax.setEnabled(true);
-		patex.setPex_ap_max((Integer)jSpinnerAPmax.getValue());
+		patex.setPex_ap_max(jSpinnerAPmax.getValue());
 	}
 
 	private void disableAP() {
@@ -1965,22 +1911,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return scrollPane;
 	}
 
-	private JEditorPane getJEditorPaneSummary() {
-		if (jEditorPaneSummary == null) {
-			jEditorPaneSummary = new JEditorPane();
-			jEditorPaneSummary.setFont(new Font("Arial", Font.PLAIN, 11));
-			jEditorPaneSummary.setContentType("text/html");
-			jEditorPaneSummary.setEditable(false);
-			jEditorPaneSummary.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-			
-		}
-		return jEditorPaneSummary;
-	}
-	
 	public class JTableModelSummary extends AbstractTableModel {
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
@@ -2037,11 +1968,6 @@ public class PatientExaminationEdit extends ModalJFrame {
 			return false;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see javax.swing.table.TableModel#getValueAt(int, int)
-		 */
 		@Override
 		public Object getValueAt(int r, int c) {
 			PatientExamination patex = patexList.get(r);
@@ -2151,7 +2077,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 //			patex.setPex_ap_min(INITIAL_AP_MIN);
 //			patex.setPex_ap_max(INITIAL_AP_MAX);
 //			patex.setPex_hr(INITIAL_HR);
-			
+
 			GenderPatientExamination gpatex = new GenderPatientExamination(patex, patex.getPatient().getSex() == 'M');
 			
 			PatientExaminationEdit dialog = new PatientExaminationEdit(gpatex);
