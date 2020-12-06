@@ -195,6 +195,7 @@ public class VisitView extends ModalJFrame {
 
 	private void initComponents() {
 
+		setTitle(MessageBundle.getMessage("angal.visit.worksheet"));
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(getNorthPanel(), BorderLayout.NORTH);
 		getContentPane().add(dayCalendar(), BorderLayout.CENTER);
