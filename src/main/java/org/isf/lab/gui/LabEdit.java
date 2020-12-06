@@ -92,12 +92,9 @@ import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 
 public class LabEdit extends ModalJFrame {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1055379190540460482L;
 
-	//LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList labEditListener = new EventListenerList();
 	
 	public interface LabEditListener extends EventListener {
@@ -112,9 +109,7 @@ public class LabEdit extends ModalJFrame {
 	private void fireLabUpdated() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
+
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = labEditListener.getListeners(LabEditListener.class);
@@ -182,7 +177,6 @@ public class LabEdit extends ModalJFrame {
 	private boolean examChanged;
 
 	public LabEdit(JFrame owner, Laboratory laboratory, boolean inserting) {
-		//super(owner, true);
 		insert = inserting;
 		lab = laboratory;
 		initialize();

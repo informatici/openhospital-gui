@@ -216,11 +216,6 @@ public class ExamPicker extends javax.swing.JPanel {
         gbc_jTextFieldFind.gridx = 1;
         gbc_jTextFieldFind.gridy = 0;
         jPanel3.add(jTextFieldFind, gbc_jTextFieldFind);
-        
-
-        
-        
-
         jTextFieldFind.getDocument().addDocumentListener(new DocumentListener(){
 
             @Override
