@@ -16,7 +16,7 @@ public class ExamFilterFactoryTest {
     @Test
     public void shouldBuildFiltersForAllWordsProvided() {
         // given:
-        String text = "dupa kupa siki";
+        String text = "mkbewe mokebe testo";
 
         // when:
         List<RowFilter<Object, Object>> rowFilters = examFilterFactory.buildFilters(text);
@@ -29,6 +29,18 @@ public class ExamFilterFactoryTest {
     public void shouldReturnEmptyForEmptyText() {
         // given:
         String text = "";
+
+        // when:
+        List<RowFilter<Object, Object>> rowFilters = examFilterFactory.buildFilters(text);
+
+        // then
+        assertThat(rowFilters.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void shouldReturnEmptyForBadPattern() {
+        // given:
+        String text = "*hgf*";
 
         // when:
         List<RowFilter<Object, Object>> rowFilters = examFilterFactory.buildFilters(text);

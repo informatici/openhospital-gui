@@ -157,7 +157,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				}
 			});
 			panelSearch.add(searchTextField);
-                        //jContentPanel.add(panelSearch);
 			validate();
 		}
 		return jContentPanel;
@@ -182,17 +181,12 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		if (pbox == null) {
 			pbox = new JComboBox();
 			pbox.addItem(MessageBundle.getMessage("angal.exa.all"));
-			ArrayList<ExamType> type;
 			try {
-				type = manager.getExamType();	//for efficiency in the sequent for
+				ArrayList<ExamType> types = manager.getExamType();	//for efficiency in the sequent for
+				types.forEach(examType -> pbox.addItem(examType));
 			} catch (OHServiceException e1) {
-				type = null;
 				OHServiceExceptionUtil.showMessages(e1);
 			}
-			Optional.ofNullable(type)
-					.ifPresent(examTypes -> examTypes
-							.forEach(examType -> pbox.addItem(examType))
-					);
 			pbox.addActionListener(arg0 -> reloadTable());
 		}
 		return pbox;
@@ -212,18 +206,14 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			table.getColumnModel().getColumn(3).setMinWidth(pColumwidth[3]);
 			table.getColumnModel().getColumn(4).setMinWidth(pColumwidth[4]);
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-				
-				@Override
-				public void valueChanged(ListSelectionEvent e) {
-					if (!e.getValueIsAdjusting()) {
-						selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-						exam = (Exam) (model.getValueAt(selectedrow, -1));
-						if (exam.getProcedure() == 3) {
-							jButtonShow.setEnabled(false);
-						} else {
-							jButtonShow.setEnabled(true);
-						}
+			table.getSelectionModel().addListSelectionListener(e -> {
+				if (!e.getValueIsAdjusting()) {
+					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
+					exam = (Exam) (model.getValueAt(selectedrow, -1));
+					if (exam.getProcedure() == 3) {
+						jButtonShow.setEnabled(false);
+					} else {
+						jButtonShow.setEnabled(true);
 					}
 				}
 			});
@@ -305,7 +295,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 							MessageBundle.getMessage("angal.common.pleaseselectarow"),
 							MessageBundle.getMessage("angal.hospital"),
 							JOptionPane.PLAIN_MESSAGE);
-					return;
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					exam = (Exam) (model.getValueAt(selectedrow, -1));
@@ -329,7 +318,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 							MessageBundle.getMessage("angal.common.pleaseselectarow"),
 							MessageBundle.getMessage("angal.hospital"),
 							JOptionPane.PLAIN_MESSAGE);
-					return;
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					exam = (Exam) (model.getValueAt(selectedrow, -1));
@@ -408,7 +396,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
