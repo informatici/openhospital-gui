@@ -41,11 +41,10 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -73,6 +72,8 @@ import org.isf.exa.model.Exam;
 import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.lab.gui.elements.ExamComboBox;
+import org.isf.lab.gui.elements.PatientComboBox;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.manager.LabRowManager;
 import org.isf.lab.model.Laboratory;
@@ -108,16 +109,14 @@ public class LabEdit extends ModalJFrame {
 	
 	private void fireLabUpdated() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+			private static final long serialVersionUID = 1L;
+		};
 
-
-			private static final long serialVersionUID = 1L;};
-		
 		EventListener[] listeners = labEditListener.getListeners(LabEditListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((LabEditListener)listeners[i]).labUpdated();
+		Arrays.stream(listeners)
+				.forEach(listener -> ((LabEditListener) listener).labUpdated());
 	}
-	//---------------------------------------------------------------------------
-	
+
 	private static final String VERSION = "v1.1"; 
 	
 	private boolean insert = false;
@@ -142,7 +141,7 @@ public class LabEdit extends ModalJFrame {
 	private JComboBox matComboBox = null;
 	private JComboBox examComboBox = null;
 	private JComboBox examRowComboBox = null;
-	private JComboBox patientComboBox = null;
+	private PatientComboBox patientComboBox = null;
 	private Exam examSelected = null;
 	private JScrollPane noteScrollPane = null;
 
@@ -193,7 +192,6 @@ public class LabEdit extends ModalJFrame {
 			this.setTitle(MessageBundle.getMessage("angal.lab.editlaboratoryexam")+"("+VERSION+")");
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//this.setVisible(true);
 	}
 
 
@@ -345,9 +343,8 @@ public class LabEdit extends ModalJFrame {
 	 * If no patient is chosen only Name, Age and Sex will be saved
 	 * in LABORATORY table (Name can be empty)
 	 */
-	private JComboBox getPatientComboBox() {
+	private PatientComboBox getPatientComboBox() {
 		if (patientComboBox == null) {
-			patientComboBox = new JComboBox();
 			patSelected=null;
 			PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 			ArrayList<Patient> pat = null;
@@ -356,36 +353,22 @@ public class LabEdit extends ModalJFrame {
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			patientComboBox.addItem(MessageBundle.getMessage("angal.lab.selectapatient"));
-			if(pat != null){
-				for (Patient elem : pat) {
-					if (lab.getPatient() != null && !insert) {
-						if (elem.getCode() == lab.getPatient().getCode()) {
-							patSelected=elem;
-						}
+			patientComboBox = PatientComboBox.withPatientsAndPatientFromLaboratorySelected(pat, lab, insert);
+
+			patientComboBox.addActionListener(arg0 -> {
+				if (patientComboBox.getSelectedIndex()>0) {
+					AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+					patSelected = (Patient)patientComboBox.getSelectedItem();
+					patTextField.setText(patSelected.getName());
+					ageTextField.setText(patSelected.getAge()+"");
+					sexTextField.setText(patSelected.getSex()+"");
+					Admission admission = null;
+					try {
+						admission = admMan.getCurrentAdmission(patSelected);
+					}catch(OHServiceException e){
+						OHServiceExceptionUtil.showMessages(e);
 					}
-					patientComboBox.addItem(elem);
-				}
-			}
-			if (patSelected!=null)
-				patientComboBox.setSelectedItem(patSelected);
-			
-			patientComboBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					if (patientComboBox.getSelectedIndex()>0) {
-						AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-						patSelected = (Patient)patientComboBox.getSelectedItem();
-						patTextField.setText(patSelected.getName());
-						ageTextField.setText(patSelected.getAge()+"");
-						sexTextField.setText(patSelected.getSex()+"");
-						Admission admission = null;
-						try {
-							admission = admMan.getCurrentAdmission(patSelected);
-						}catch(OHServiceException e){
-							OHServiceExceptionUtil.showMessages(e);
-						}
-						inPatientCheckBox.setSelected(admission != null ? true : false);
-					}
+					inPatientCheckBox.setSelected(admission != null ? true : false);
 				}
 			});
 		}
@@ -405,7 +388,7 @@ public class LabEdit extends ModalJFrame {
 
 	private JComboBox getExamComboBox() {
 		if (examComboBox == null) {
-			examComboBox = new JComboBox();
+
 			Exam examSel=null;
 			ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 			ArrayList<Exam> exams;
@@ -415,37 +398,23 @@ public class LabEdit extends ModalJFrame {
 				exams = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			examComboBox.addItem(MessageBundle.getMessage("angal.lab.selectanexam"));
+			examComboBox = ExamComboBox.withExamsAndExamFromLaboratorySelected(exams, lab, insert);
 			
-			if (null != exams) {
-				for (Exam elem : exams) {
-					if (!insert && elem.getCode()!=null) {
-						if (elem.getCode().equalsIgnoreCase((lab.getExam().getCode()))) {
-							examSel=elem;
-						}
-					}
-					examComboBox.addItem(elem);
-				}
-			}
-			examComboBox.setSelectedItem(examSel);
-			
-			examComboBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					if (!(examComboBox.getSelectedItem() instanceof String)) {
-						examSelected = (Exam) examComboBox
-								.getSelectedItem();
+			examComboBox.addActionListener(arg0 -> {
+				if (!(examComboBox.getSelectedItem() instanceof String)) {
+					examSelected = (Exam) examComboBox
+							.getSelectedItem();
 
-						if (examSelected.getProcedure() == 1)
-							resultPanel = getFirstPanel();
-						else if (examSelected.getProcedure() == 2)
-							resultPanel = getSecondPanel();
-						else if (examSelected.getProcedure() == 3)
-							resultPanel = getThirdPanel();
-					
+					if (examSelected.getProcedure() == 1)
+						resultPanel = getFirstPanel();
+					else if (examSelected.getProcedure() == 2)
+						resultPanel = getSecondPanel();
+					else if (examSelected.getProcedure() == 3)
+						resultPanel = getThirdPanel();
 
-						validate();
-						repaint();
-					}
+
+					validate();
+					repaint();
 				}
 			});
 			resultPanel = null;
