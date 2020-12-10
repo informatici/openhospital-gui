@@ -170,7 +170,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 		gbc_Service.gridy = 1;
 		gbc_Service.gridx = 0;
-		patientParamsPanel.add(getService(), gbc_Service);
+		patientParamsPanel.add(getServicePanel(), gbc_Service);
 
 		GridBagConstraints gbc_Duration = new GridBagConstraints();
 		gbc_Duration.fill = GridBagConstraints.VERTICAL;
@@ -178,7 +178,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		gbc_Duration.gridy = 2;
 		gbc_Duration.gridx = 0;
 		gbc_Duration.gridwidth = 2;
-		patientParamsPanel.add(getDuration(), gbc_Duration);
+		patientParamsPanel.add(getDurationPanel(), gbc_Duration);
 
 		GridBagConstraints gbc_date = new GridBagConstraints();
 		gbc_date.fill = GridBagConstraints.VERTICAL;
@@ -196,15 +196,11 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	private ArrayList<Ward> wardList = new ArrayList<Ward>();
 
-	private JPanel ServicePanel;
+	private JPanel servicePanel;
 
-	private JLabel Servicelabel;
+	private JTextField serviceField;
 
-	private JTextField ServiceField;
-
-	private JPanel DurationPanel;
-
-	private JLabel Durationlabel;
+	private JPanel durationPanel;
 
 	private JTextField DurationField;
 
@@ -251,43 +247,38 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		return wardPanel;
 	}
 
-	private JPanel getService() {
-		if (ServicePanel == null) {
+	private JPanel getServicePanel() {
+		if (servicePanel == null) {
+			servicePanel = new JPanel();
 
-			ServicePanel = new JPanel();
+			JLabel servicelabel = new JLabel(MessageBundle.getMessage("angal.visit.service"));  //$NON-NLS-1$
 
-			Servicelabel = new JLabel();
-			Servicelabel.setText(MessageBundle.getMessage("angal.visit.service")); //$NON-NLS-1$
+			serviceField = new JTextField(10);
+			serviceField.setEditable(true);
+			serviceField.setFocusable(true);
 
-			ServiceField = new JTextField(10);
-			ServiceField.setEditable(true);
-			ServiceField.setFocusable(true);
-
-			ServicePanel.add(Servicelabel);
-			ServicePanel.add(ServiceField);
+			servicePanel.add(servicelabel);
+			servicePanel.add(serviceField);
 
 		}
-		return ServicePanel;
+		return servicePanel;
 	}
 
-	private JPanel getDuration() {
+	private JPanel getDurationPanel() {
+		if (durationPanel == null) {
+			durationPanel = new JPanel();
 
-		if (DurationPanel == null) {
-
-			DurationPanel = new JPanel();
-
-			Durationlabel = new JLabel();
-			Durationlabel.setText(MessageBundle.getMessage("angal.visit.durationinminutes")); //$NON-NLS-1$
+			JLabel durationlabel = new JLabel(MessageBundle.getMessage("angal.visit.durationinminutes")); //$NON-NLS-1$
 
 			DurationField = new JTextField(10);
 			DurationField.setEditable(true);
 			DurationField.setFocusable(true);
 
-			DurationPanel.add(Durationlabel);
-			DurationPanel.add(getSpinnerQty());
+			durationPanel.add(durationlabel);
+			durationPanel.add(getSpinnerQty());
 
 		}
-		return DurationPanel;
+		return durationPanel;
 	}
 
 	private final int preferredSpinnerWidth = 100;
@@ -350,7 +341,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 					Number n = (Number) o;
 					int i = n.intValue();
 					String duration = String.valueOf(i);
-					String service = ServiceField.getText();
+					String service = serviceField.getText();
 					Object ward = wardBox.getSelectedItem();
 					if (ward instanceof Ward) {
 						saveWard = getWard();
@@ -499,7 +490,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	}
 
 	public String getServ() {
-		return ServiceField.getText();
+		return serviceField.getText();
 	}
 
 	public String getdur() {
