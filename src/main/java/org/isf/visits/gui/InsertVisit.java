@@ -126,14 +126,14 @@ public class InsertVisit extends JDialog {
 	}
 
 	private void initComponents() {
-		setSize(new Dimension(500, 250));
+		//setSize(new Dimension(500, 250));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		getContentPane().add(getpVisitInf());
 
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
 
-		setLocationRelativeTo(null);
 		pack();
+		setLocationRelativeTo(null);
 
 	}
 
