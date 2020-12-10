@@ -121,12 +121,11 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		this.visitDate = date;
 		this.ward = ward;
 		initComponents();
-		
-		
+
 	}
 
 	private void initComponents() {
-		//setSize(new Dimension(500, 250));
+		// setSize(new Dimension(500, 250));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		getContentPane().add(getpVisitInf());
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
@@ -251,7 +250,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (servicePanel == null) {
 			servicePanel = new JPanel();
 
-			JLabel servicelabel = new JLabel(MessageBundle.getMessage("angal.visit.service"));  //$NON-NLS-1$
+			JLabel servicelabel = new JLabel(MessageBundle.getMessage("angal.visit.service")); //$NON-NLS-1$
 
 			serviceField = new JTextField(10);
 			serviceField.setEditable(true);
@@ -325,12 +324,13 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
 			buttonOK.setMnemonic(KeyEvent.VK_O);
 			buttonOK.addActionListener(new ActionListener() {
+
 				private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 
 				public void actionPerformed(ActionEvent arg0) {
 					if (visitDateChooser.getDate() == null) {
 						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-								"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
 						return;
 					}
 					GregorianCalendar date = new GregorianCalendar();
@@ -348,15 +348,14 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 					} else {
 						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-								"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
 						return;
 					}
 
 					boolean sms = false;
 					if (patientSelected == null) {
-						JOptionPane.showMessageDialog(InsertVisit.this,
-								"", //$NON-NLS-1$
-								"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
+										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
 						return;
 					}
 					try {
@@ -413,8 +412,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 
-					JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(InsertVisit.this,
-							visitDateChooser.getDate());
+					JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(InsertVisit.this, visitDateChooser.getDate());
 					schedDate.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					schedDate.setVisible(true);
 
@@ -432,7 +430,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		}
 		return admButton;
 	}
-	
+
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
 			jButtonPickPatient = new JButton();
@@ -447,7 +445,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 					sp.addSelectionListener(InsertVisit.this);
 					sp.pack();
 					sp.setVisible(true);
-					
+
 				}
 			});
 		}
@@ -463,14 +461,13 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		patientTextField.setEditable(false);
 		choosePatientPanel.add(patientTextField);
 		choosePatientPanel.add(getJButtonPickPatient());
-		
+
 		return choosePatientPanel;
 	}
 
-	public void patientSelected(Patient patient){
+	public void patientSelected(Patient patient) {
 		patientSelected = patient;
-		patientTextField.setText(
-				patientSelected != null ? patientSelected.getFirstName() + " " + patientSelected.getSecondName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
+		patientTextField.setText(patientSelected != null ? patientSelected.getFirstName() + " " + patientSelected.getSecondName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
 		jButtonPickPatient.setText(MessageBundle.getMessage("angal.visit.changepatient")); //$NON-NLS-1$
 		pack();
 	}
