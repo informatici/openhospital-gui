@@ -31,8 +31,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -56,6 +54,7 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.gui.SelectPatient;
+import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -71,7 +70,7 @@ import com.toedter.calendar.JDateChooser;
  * @author Mwithi
  * 
  */
-public class InsertVisit extends JDialog {
+public class InsertVisit extends JDialog implements SelectionListener {
 
 	/**
 	 * 
@@ -98,7 +97,6 @@ public class InsertVisit extends JDialog {
 	private JPanel wardPanel;
 	private JComboBox wardBox;
 	private Ward ward;
-	private Patient patient;
 	/*
 	 * Managers
 	 */
@@ -106,7 +104,7 @@ public class InsertVisit extends JDialog {
 
 	public InsertVisit(JFrame owner, Ward ward, Patient patient) {
 		super(owner, true);
-		this.patient = patient;
+		this.patientSelected = patient;
 		this.ward = ward;
 		initComponents();
 	}
@@ -119,21 +117,22 @@ public class InsertVisit extends JDialog {
 
 	public InsertVisit(JFrame owner, Date date, Ward ward, Patient patient) {
 		super(owner, true);
-		this.patient = patient;
+		this.patientSelected = patient;
 		this.visitDate = date;
 		this.ward = ward;
 		initComponents();
+
 	}
 
 	private void initComponents() {
-		setSize(new Dimension(500, 250));
+		// setSize(new Dimension(500, 250));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		getContentPane().add(getpVisitInf());
-
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
 
+		setResizable(false);
+		pack();
 		setLocationRelativeTo(null);
-
 	}
 
 	private JPanel getpVisitInf() {
@@ -170,7 +169,7 @@ public class InsertVisit extends JDialog {
 
 		gbc_Service.gridy = 1;
 		gbc_Service.gridx = 0;
-		patientParamsPanel.add(getService(), gbc_Service);
+		patientParamsPanel.add(getServicePanel(), gbc_Service);
 
 		GridBagConstraints gbc_Duration = new GridBagConstraints();
 		gbc_Duration.fill = GridBagConstraints.VERTICAL;
@@ -178,7 +177,7 @@ public class InsertVisit extends JDialog {
 		gbc_Duration.gridy = 2;
 		gbc_Duration.gridx = 0;
 		gbc_Duration.gridwidth = 2;
-		patientParamsPanel.add(getDuration(), gbc_Duration);
+		patientParamsPanel.add(getDurationPanel(), gbc_Duration);
 
 		GridBagConstraints gbc_date = new GridBagConstraints();
 		gbc_date.fill = GridBagConstraints.VERTICAL;
@@ -196,15 +195,11 @@ public class InsertVisit extends JDialog {
 
 	private ArrayList<Ward> wardList = new ArrayList<Ward>();
 
-	private JPanel ServicePanel;
+	private JPanel servicePanel;
 
-	private JLabel Servicelabel;
+	private JTextField serviceField;
 
-	private JTextField ServiceField;
-
-	private JPanel DurationPanel;
-
-	private JLabel Durationlabel;
+	private JPanel durationPanel;
 
 	private JTextField DurationField;
 
@@ -214,13 +209,11 @@ public class InsertVisit extends JDialog {
 
 	private JButton admButton;
 
-	private JButton jAffiliatePersonJButtonAdd;
+	private JButton jButtonPickPatient;
 
-	private JButton jAffiliatePersonJButtonSupp;
+	private JTextField patientTextField;
 
-	private JTextField jAffiliatePersonJTextField;
-
-	private Patient patientParent;
+	private Patient patientSelected;
 
 	private Visit visit;
 
@@ -253,43 +246,38 @@ public class InsertVisit extends JDialog {
 		return wardPanel;
 	}
 
-	private JPanel getService() {
-		if (ServicePanel == null) {
+	private JPanel getServicePanel() {
+		if (servicePanel == null) {
+			servicePanel = new JPanel();
 
-			ServicePanel = new JPanel();
+			JLabel servicelabel = new JLabel(MessageBundle.getMessage("angal.visit.service")); //$NON-NLS-1$
 
-			Servicelabel = new JLabel();
-			Servicelabel.setText(MessageBundle.getMessage("angal.visit.service")); //$NON-NLS-1$
+			serviceField = new JTextField(10);
+			serviceField.setEditable(true);
+			serviceField.setFocusable(true);
 
-			ServiceField = new JTextField(10);
-			ServiceField.setEditable(true);
-			ServiceField.setFocusable(true);
-
-			ServicePanel.add(Servicelabel);
-			ServicePanel.add(ServiceField);
+			servicePanel.add(servicelabel);
+			servicePanel.add(serviceField);
 
 		}
-		return ServicePanel;
+		return servicePanel;
 	}
 
-	private JPanel getDuration() {
+	private JPanel getDurationPanel() {
+		if (durationPanel == null) {
+			durationPanel = new JPanel();
 
-		if (DurationPanel == null) {
-
-			DurationPanel = new JPanel();
-
-			Durationlabel = new JLabel();
-			Durationlabel.setText(MessageBundle.getMessage("angal.visit.durationinminutes")); //$NON-NLS-1$
+			JLabel durationlabel = new JLabel(MessageBundle.getMessage("angal.visit.durationinminutes")); //$NON-NLS-1$
 
 			DurationField = new JTextField(10);
 			DurationField.setEditable(true);
 			DurationField.setFocusable(true);
 
-			DurationPanel.add(Durationlabel);
-			DurationPanel.add(getSpinnerQty());
+			durationPanel.add(durationlabel);
+			durationPanel.add(getSpinnerQty());
 
 		}
-		return DurationPanel;
+		return durationPanel;
 	}
 
 	private final int preferredSpinnerWidth = 100;
@@ -336,12 +324,13 @@ public class InsertVisit extends JDialog {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
 			buttonOK.setMnemonic(KeyEvent.VK_O);
 			buttonOK.addActionListener(new ActionListener() {
+
 				private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 
 				public void actionPerformed(ActionEvent arg0) {
 					if (visitDateChooser.getDate() == null) {
 						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-								"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
 						return;
 					}
 					GregorianCalendar date = new GregorianCalendar();
@@ -352,27 +341,26 @@ public class InsertVisit extends JDialog {
 					Number n = (Number) o;
 					int i = n.intValue();
 					String duration = String.valueOf(i);
-					String service = ServiceField.getText();
+					String service = serviceField.getText();
 					Object ward = wardBox.getSelectedItem();
 					if (ward instanceof Ward) {
 						saveWard = getWard();
 
 					} else {
 						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-								"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
 						return;
 					}
 
 					boolean sms = false;
-					if (patient == null) {
-						JOptionPane.showMessageDialog(InsertVisit.this,
-								"", //$NON-NLS-1$
-								"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+					if (patientSelected == null) {
+						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
+										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
 						return;
 					}
 					try {
 
-						visit = visitManager.newVisit(visitID, date, patient, note, sms, saveWard, duration, service);
+						visit = visitManager.newVisit(visitID, date, patientSelected, note, sms, saveWard, duration, service);
 						visitID = visit.getVisitID();
 					} catch (OHServiceException e) {
 						// TODO Auto-generated catch block
@@ -424,8 +412,7 @@ public class InsertVisit extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 
-					JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(InsertVisit.this,
-							visitDateChooser.getDate());
+					JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(InsertVisit.this, visitDateChooser.getDate());
 					schedDate.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					schedDate.setVisible(true);
 
@@ -444,58 +431,45 @@ public class InsertVisit extends JDialog {
 		return admButton;
 	}
 
-	private JPanel getPanelChoosePatient() {
-		JPanel choosePatientPanel = new JPanel();
-		// panelSupRange.add(priceListLabelPanel);
-		choosePatientPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		choosePatientPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectapatient"))); //$NON-NLS-1$
+	private JButton getJButtonPickPatient() {
+		if (jButtonPickPatient == null) {
+			jButtonPickPatient = new JButton();
+			jButtonPickPatient.setText(MessageBundle.getMessage("angal.visit.pickpatient")); //$NON-NLS-1$
+			jButtonPickPatient.setMnemonic(KeyEvent.VK_P);
+			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
+			jButtonPickPatient.addActionListener(new ActionListener() {
 
-		jAffiliatePersonJButtonAdd = new JButton();
-		jAffiliatePersonJButtonAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		jAffiliatePersonJButtonAdd.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
+				public void actionPerformed(ActionEvent e) {
 
-		jAffiliatePersonJButtonSupp = new JButton();
-		jAffiliatePersonJButtonSupp.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
-
-		jAffiliatePersonJTextField = new JTextField(14);
-		jAffiliatePersonJTextField.setEnabled(false);
-		choosePatientPanel.add(jAffiliatePersonJTextField);
-		choosePatientPanel.add(jAffiliatePersonJButtonAdd);
-		choosePatientPanel.add(jAffiliatePersonJButtonSupp);
-		
-		if (patient == null) {
-			jAffiliatePersonJButtonAdd.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					SelectPatient selectPatient = new SelectPatient(InsertVisit.this, false, true);
-					selectPatient.addSelectionListener(InsertVisit.this);
-					selectPatient.setVisible(true);
-					patient = selectPatient.getPatient();
-					// System.out.println("Patient...........+++++++++++++.............."+pat.getFirstName());
-					try {
-						patientSelected(patient);
-					} catch (OHServiceException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					SelectPatient sp = new SelectPatient(InsertVisit.this, patientSelected);
+					sp.addSelectionListener(InsertVisit.this);
+					sp.pack();
+					sp.setVisible(true);
 
 				}
 			});
-		} else {
-			jAffiliatePersonJTextField.setText(patient.getName());
-			choosePatientPanel.setEnabled(false);
 		}
+		return jButtonPickPatient;
+	}
+
+	private JPanel getPanelChoosePatient() {
+		JPanel choosePatientPanel = new JPanel();
+		choosePatientPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		choosePatientPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.pleaseselectapatient"))); //$NON-NLS-1$
+
+		patientTextField = new JTextField(14);
+		patientTextField.setEditable(false);
+		choosePatientPanel.add(patientTextField);
+		choosePatientPanel.add(getJButtonPickPatient());
+
 		return choosePatientPanel;
 	}
 
-	public void patientSelected(Patient patient) throws OHServiceException {
-		patientParent = patient;
-		jAffiliatePersonJTextField.setText(
-				patientParent != null ? patientParent.getFirstName() + " " + patientParent.getFirstName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
-
+	public void patientSelected(Patient patient) {
+		patientSelected = patient;
+		patientTextField.setText(patientSelected != null ? patientSelected.getFirstName() + " " + patientSelected.getSecondName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
+		jButtonPickPatient.setText(MessageBundle.getMessage("angal.visit.changepatient")); //$NON-NLS-1$
+		pack();
 	}
 
 	public Date getVisitDate() {
@@ -513,7 +487,7 @@ public class InsertVisit extends JDialog {
 	}
 
 	public String getServ() {
-		return ServiceField.getText();
+		return serviceField.getText();
 	}
 
 	public String getdur() {
@@ -525,7 +499,7 @@ public class InsertVisit extends JDialog {
 	}
 
 	public Patient getPatient() {
-		return patientParent;
+		return patientSelected;
 	}
 
 	public Visit getVisit() {

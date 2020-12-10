@@ -698,13 +698,5 @@ public class SelectPatient extends JDialog implements PatientListener {
 	public void patientInserted(AWTEvent e) {
 		Patient patient = (Patient) e.getSource();
 		patSearch.add(0, patient);
-		((SelectPatientModel) jTablePatient.getModel()).fireTableDataChanged();
-		if (jTablePatient.getRowCount() > 0)
-			jTablePatient.setRowSelectionInterval(0, 0);
-	}
-		
-	List<InsertVisit> visitListeners = new ArrayList<InsertVisit>();
-	public void addSelectionListener(InsertVisit l) {
-		visitListeners.add(l);
 	}
 }
