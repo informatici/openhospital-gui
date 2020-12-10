@@ -133,6 +133,7 @@ public class InsertVisit extends JDialog {
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
 
 		setLocationRelativeTo(null);
+		pack();
 
 	}
 
