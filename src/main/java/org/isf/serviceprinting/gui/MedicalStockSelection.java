@@ -30,7 +30,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -47,8 +46,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.apache.log4j.PropertyConfigurator;
-import org.isf.generaldata.GeneralData;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.model.Movement;
@@ -66,8 +63,6 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.DateTextField;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @deprecated in favor of new reports StockCard and StockLedger

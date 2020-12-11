@@ -59,7 +59,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import org.isf.examination.manager.ExaminationBrowserManager;
-import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
@@ -72,7 +71,6 @@ import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.gui.OHExceptionUtil;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
