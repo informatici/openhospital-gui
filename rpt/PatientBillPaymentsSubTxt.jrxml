@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="PatientBillPaymentsSubTXT"
+		 name="PatientBillPaymentsSubTxt"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Landscape"
