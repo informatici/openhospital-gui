@@ -36,7 +36,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+						<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
 				</textField>
@@ -62,7 +62,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left">
-						<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+						<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["" + $F{medical}]]></textFieldExpression>
 				</textField>
@@ -75,7 +75,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+						<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{MEDICAL_TOTAL}]]></textFieldExpression>
 				</textField>
@@ -88,7 +88,7 @@
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left">
-						<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+						<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{lot}]]></textFieldExpression>
 				</textField>
@@ -109,7 +109,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleNome}]]></textFieldExpression>
 			</textField>
@@ -122,7 +122,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleCitta} + ", " + $P{ospedaleIndirizzo}]]></textFieldExpression>
 			</textField>
@@ -135,7 +135,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleTel}]]></textFieldExpression>
 			</textField>
@@ -148,7 +148,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleFax}]]></textFieldExpression>
 			</textField>
@@ -161,7 +161,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ospedaleMail}]]></textFieldExpression>
 			</textField>
@@ -174,7 +174,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["" + $F{ward} + " "+ $R{IncomingDrugs}]]></textFieldExpression>
 			</textField>
@@ -194,7 +194,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Medical}]]></textFieldExpression>
 			</textField>
@@ -207,7 +207,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
 			</textField>
@@ -220,7 +220,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Qty}]]></textFieldExpression>
 			</textField>
@@ -233,7 +233,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{LotN}]]></textFieldExpression>
 			</textField>
@@ -259,7 +259,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>

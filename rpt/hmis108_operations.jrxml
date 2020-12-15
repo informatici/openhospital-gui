@@ -68,7 +68,7 @@ group by opType, opDesc]]>
 						<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement>
-						<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+						<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{opType}]]></textFieldExpression>
 				</textField>
@@ -171,7 +171,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
@@ -185,7 +185,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Year}]]></textFieldExpression>
@@ -199,7 +199,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="10"/>
+					<font fontName="DejaVuSans" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{year}]]></textFieldExpression>
 			</textField>
@@ -212,7 +212,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="10"/>
+					<font fontName="DejaVuSans" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{month}]]></textFieldExpression>
 			</textField>
@@ -232,7 +232,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Operations}]]></textFieldExpression>
 			</textField>
@@ -245,7 +245,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Description}]]></textFieldExpression>
 			</textField>
@@ -258,7 +258,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Positive}]]></textFieldExpression>
 			</textField>
@@ -271,7 +271,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Negative}]]></textFieldExpression>
 			</textField>
@@ -284,7 +284,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Undefined}]]></textFieldExpression>
 			</textField>
@@ -297,7 +297,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{TotalCount}]]></textFieldExpression>
 			</textField>
@@ -452,7 +452,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
@@ -469,7 +469,7 @@ group by opType, opDesc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>

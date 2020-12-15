@@ -221,7 +221,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
@@ -234,7 +234,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
@@ -247,7 +247,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
@@ -260,7 +260,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
@@ -274,7 +274,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{DateFrom}]]></textFieldExpression>
 			</textField>
@@ -302,7 +302,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{DateTo}]]></textFieldExpression>
 			</textField>
@@ -330,7 +330,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Medical}]]></textFieldExpression>
 			</textField>
@@ -358,7 +358,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{MedicalType}]]></textFieldExpression>
 			</textField>
@@ -386,7 +386,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Store}]]></textFieldExpression>
 			</textField>
@@ -414,7 +414,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{UoM}]]></textFieldExpression>
 			</textField>
@@ -442,7 +442,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Prod.Code}]]></textFieldExpression>
 			</textField>
@@ -470,7 +470,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Curr.}]]></textFieldExpression>
 			</textField>
@@ -505,7 +505,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{ID.Record}]]></textFieldExpression>
 			</textField>
@@ -519,7 +519,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
 			</textField>
@@ -533,7 +533,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Mov.Type}]]></textFieldExpression>
 			</textField>
@@ -547,7 +547,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Reference}]]></textFieldExpression>
 			</textField>
@@ -561,7 +561,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Lot}]]></textFieldExpression>
 			</textField>
@@ -575,7 +575,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Exp.Date}]]></textFieldExpression>
 			</textField>
@@ -589,7 +589,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Origin.Dest.}]]></textFieldExpression>
 			</textField>
@@ -603,7 +603,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Out}]]></textFieldExpression>
 			</textField>
@@ -617,7 +617,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Progr.Value}]]></textFieldExpression>
 			</textField>
@@ -631,7 +631,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{In}]]></textFieldExpression>
 			</textField>
@@ -645,7 +645,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Balance}]]></textFieldExpression>
 			</textField>
@@ -659,7 +659,7 @@ ORDER BY ORDERING_FIELD ASC, MMV_DATE ASC, MMV_REFNO DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Arial" size="10" isBold="true"/>
+					<font fontName="DejaVuSans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Unit.Avg.Price}]]></textFieldExpression>
 			</textField>

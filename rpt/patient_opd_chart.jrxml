@@ -82,7 +82,7 @@ SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM DISEASE WHERE D
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
@@ -95,7 +95,7 @@ SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM DISEASE WHERE D
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
@@ -108,7 +108,7 @@ SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM DISEASE WHERE D
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
@@ -187,7 +187,7 @@ SELECT "Third Diagnosis:" AS FIELD, CONCAT((SELECT DIS_DESC FROM DISEASE WHERE D
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{DoctorSignature}]]></textFieldExpression>
 			</textField>

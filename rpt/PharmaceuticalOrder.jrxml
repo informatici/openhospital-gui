@@ -46,7 +46,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
@@ -59,7 +59,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
@@ -72,7 +72,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
@@ -85,7 +85,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
@@ -98,7 +98,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Date}+":"]]></textFieldExpression>
 			</textField>
@@ -131,7 +131,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Code}]]></textFieldExpression>
 			</textField>
@@ -144,7 +144,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Item}]]></textFieldExpression>
 			</textField>
@@ -157,7 +157,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{InStore}]]></textFieldExpression>
 			</textField>
@@ -170,7 +170,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{CriticalLevel}]]></textFieldExpression>
 			</textField>
@@ -183,7 +183,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Still}]]></textFieldExpression>
 			</textField>
@@ -196,7 +196,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Order}]]></textFieldExpression>
 			</textField>
@@ -213,7 +213,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MDSR_CODE}]]></textFieldExpression>
 			</textField>
@@ -226,7 +226,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MDSR_DESC}]]></textFieldExpression>
 			</textField>
@@ -239,7 +239,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{QTY}]]></textFieldExpression>
 			</textField>
@@ -252,7 +252,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MDSR_MIN_STOCK_QTI}]]></textFieldExpression>
 			</textField>
@@ -265,7 +265,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{ORDER}.doubleValue() > 0 ? $V{ORDER} : null]]></textFieldExpression>
 			</textField>
@@ -278,7 +278,7 @@ ORDER BY MDSR_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVuSans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{ORDER}.doubleValue() < 0 ? new Double( -$V{ORDER}.doubleValue()) : null]]></textFieldExpression>
 			</textField>
