@@ -24,6 +24,7 @@ package org.isf.operation.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -39,10 +40,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -64,6 +67,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.VoFloatTextField;
+import org.springframework.data.util.Pair;
 
 public class OperationRowEdit extends JPanel {
 	
@@ -137,14 +141,14 @@ public class OperationRowEdit extends JPanel {
 	private JLabel lblNewLabel;
 	private JLabel titleLabel;
 	
-	private ArrayList<String> operationResults;
+	private ArrayList<Pair<String, String>> operationResults;
 	
 	public OperationRowEdit(OperationRow opRow) {
 		
 		opeRow = opRow;
 		ope = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 		opeManageRow = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
-		operationResults = ope.getResultsList();
+		operationResults = getOpResultsAsPair(ope.getResultsList());
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel panelHeader = new JPanel();
@@ -235,7 +239,7 @@ public class OperationRowEdit extends JPanel {
 		
 		resultComboBox = new JComboBox();
 		if(this.opeRow!=null){
-			resultComboBox.addItem(opeRow.getOpResult());
+			resultComboBox.addItem(Pair.of(opeRow.getOpResult(), MessageBundle.getMessage(opeRow.getOpResult())));
 		}
 		else{
 			resultComboBox.addItem(""); //$NON-NLS-1$
@@ -243,7 +247,7 @@ public class OperationRowEdit extends JPanel {
 		for(int i = 0; i<operationResults.size();i++){
 			resultComboBox.addItem(operationResults.get(i));
 		}
-		
+		resultComboBox.setRenderer(new ComboResultRenderer());
 		lblResultat = new JLabel(MessageBundle.getMessage("angal.operationrowedit.result")); //$NON-NLS-1$
 		lblResultat.setBorder(new EmptyBorder(0, 0, 0, 4));
 		lblResultat.setHorizontalAlignment(SwingConstants.LEFT);
@@ -421,7 +425,8 @@ public class OperationRowEdit extends JPanel {
 	        	GregorianCalendar dateop = new GregorianCalendar();
 				dateop.setTime(jCalendarDate.getDate());
 				updateOpeRow.setOpDate(dateop);
-				updateOpeRow.setOpResult(resultComboBox.getSelectedItem().toString());
+				Pair<String, String> p = (Pair<String, String>)this.resultComboBox.getSelectedItem();
+				updateOpeRow.setOpResult(p.getFirst());
 				updateOpeRow.setTransUnit(Float.parseFloat(TransTextField.getText()));
 	        	Operation op = (Operation)OpecomboBox.getSelectedItem();
 	        	updateOpeRow.setOperation(op);
@@ -451,7 +456,8 @@ public class OperationRowEdit extends JPanel {
 	        	GregorianCalendar dateop = new GregorianCalendar();
 				dateop.setTime(this.jCalendarDate.getDate());
 				operationRow.setOpDate(dateop);
-				operationRow.setOpResult(this.resultComboBox.getSelectedItem().toString());
+				Pair<String, String> p = (Pair<String, String>)this.resultComboBox.getSelectedItem();
+				operationRow.setOpResult(p.getFirst());
 				operationRow.setTransUnit(Float.parseFloat(this.TransTextField.getText()));
 	        	Operation op = (Operation)this.OpecomboBox.getSelectedItem();
 	        	operationRow.setOperation(op);
@@ -501,5 +507,29 @@ public class OperationRowEdit extends JPanel {
 
 	public void setTitleLabel(JLabel titleLabel) {
 		this.titleLabel = titleLabel;
+	}
+	
+	public class ComboResultRenderer extends DefaultListCellRenderer {
+
+	    public Component getListCellRendererComponent(
+	                                   JList list,
+	                                   Object value,
+	                                   int index,
+	                                   boolean isSelected,
+	                                   boolean cellHasFocus) {
+	        if (value instanceof Pair) {
+	            value = ((Pair)value).getSecond();
+	        }
+	        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+	        return this;
+	    }
+	}
+	
+	private ArrayList<Pair<String, String>> getOpResultsAsPair(ArrayList<String> opResults) {
+		ArrayList<Pair<String, String>> result = new ArrayList<Pair<String,String>>();
+		for (String item : opResults) {
+			result.add(Pair.of(item, MessageBundle.getMessage(item)));
+		}
+		return result;
 	}
 }

@@ -160,7 +160,7 @@ public class OhTableOperationModel<T> implements TableModel{
 						value = "";
 					break;
 				case 2:
-					value=opdObj.getOpResult();
+					value=MessageBundle.getMessage(opdObj.getOpResult());
 					break;
 				case 3:
 					value=opdObj.getTransUnit()+"";

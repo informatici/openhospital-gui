@@ -23,6 +23,7 @@ package org.isf.operation.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -37,12 +38,15 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -68,6 +72,7 @@ import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
 import org.joda.time.DateTime;
+import org.springframework.data.util.Pair;
 
 /**
  *
@@ -96,7 +101,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private CustomJDateChooser jCalendarDate;
 	private JTable tableData;
 
-	private ArrayList<String> operationResults = opeManager.getResultsList();
+	private ArrayList<Pair<String, String>> operationResults = getOpResultsAsPair(opeManager.getResultsList());
 	
 	public OperationRowAdm(Admission adm) {
 		setLayout(new BorderLayout(0, 0));
@@ -168,7 +173,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		for (int i = 0; i < operationResults.size(); i++) {
 			comboResult.addItem(operationResults.get(i));
 		}
-
+		comboResult.setRenderer(new ComboResultRenderer());
 		JLabel lblUniteTrans = new JLabel(MessageBundle.getMessage("angal.operationrowedit.unitetrans")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblUniteTrans = new GridBagConstraints();
 		gbc_lblUniteTrans.anchor = GridBagConstraints.EAST;
@@ -343,9 +348,10 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		GregorianCalendar dateop = new GregorianCalendar();
 		dateop.setTime(this.textDate.getDate());
 		operationRow.setOpDate(dateop);
-		if (this.comboResult.getSelectedItem() != null)
-			operationRow.setOpResult(this.comboResult.getSelectedItem().toString());
-		else
+		if (this.comboResult.getSelectedItem() != null) {
+			Pair<String, String> p = (Pair<String, String>)this.comboResult.getSelectedItem();
+			operationRow.setOpResult(p.getFirst());
+		} else
 			operationRow.setOpResult(""); //$NON-NLS-1$
 		try {
 			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
@@ -367,7 +373,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			OperationRow opeInter = oprowData.get(index);
 			dateop.setTime(this.textDate.getDate());
 			opeInter.setOpDate(dateop);
-			opeInter.setOpResult(this.comboResult.getSelectedItem().toString());
+			Pair<String, String> p = (Pair<String, String>)this.comboResult.getSelectedItem();
+			opeInter.setOpResult(p.getFirst());
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
 			opeInter.setOperation(op);
@@ -414,7 +421,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		/****** resultat *****/
 		int index = -1;
 		for (int i = 0; i < operationResults.size(); i++) {
-			if (opeRow.getOpResult() != null && (operationResults.get(i) + "").equals(opeRow.getOpResult())) { //$NON-NLS-1$
+			if (opeRow.getOpResult() != null && (operationResults.get(i).getFirst()).equals(opeRow.getOpResult())) { //$NON-NLS-1$
 				index = i;
 			}
 		}
@@ -540,5 +547,29 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	public void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
+	}
+	
+	public class ComboResultRenderer extends DefaultListCellRenderer {
+
+	    public Component getListCellRendererComponent(
+	                                   JList list,
+	                                   Object value,
+	                                   int index,
+	                                   boolean isSelected,
+	                                   boolean cellHasFocus) {
+	        if (value instanceof Pair) {
+	            value = ((Pair)value).getSecond();
+	        }
+	        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+	        return this;
+	    }
+	}
+	
+	private ArrayList<Pair<String, String>> getOpResultsAsPair(ArrayList<String> opResults) {
+		ArrayList<Pair<String, String>> result = new ArrayList<Pair<String,String>>();
+		for (String item : opResults) {
+			result.add(Pair.of(item, MessageBundle.getMessage(item)));
+		}
+		return result;
 	}
 }
