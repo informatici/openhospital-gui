@@ -6,6 +6,7 @@ import org.isf.lab.model.Laboratory;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Optional;
 
 public class ExamComboBox extends JComboBox {
     private ExamComboBox() {
@@ -13,21 +14,20 @@ public class ExamComboBox extends JComboBox {
 
     public static ExamComboBox withExamsAndExamFromLaboratorySelected(List<Exam> exams, Laboratory lab, boolean insert) {
         ExamComboBox examComboBox = new ExamComboBox();
-        Exam examSel = null;
         examComboBox.addItem(MessageBundle.getMessage("angal.lab.selectanexam"));
-
-        if (null != exams) {
-            for (Exam elem : exams) {
-                if (!insert && elem.getCode()!=null) {
-                    if (elem.getCode().equalsIgnoreCase((lab.getExam().getCode()))) {
-                        examSel=elem;
-                    }
-                }
-                examComboBox.addItem(elem);
-            }
-        }
-        examComboBox.setSelectedItem(examSel);
+        Optional.ofNullable(exams).ifPresent(examList ->
+                examList.stream()
+                        .peek(exam -> examComboBox.addItem(exam))
+                        .filter(exam -> (lab.getExam() != null && !insert) && exam.getCode().equals(lab.getExam().getCode()))
+                        .forEach(exam -> examComboBox.setSelectedItem(exam))
+        );
 
         return examComboBox;
+    }
+
+    public Optional<Exam> getSelectedExam() {
+        return Optional.ofNullable(getSelectedItem())
+                .filter(o -> o instanceof Exam)
+                .map(o -> (Exam) o);
     }
 }

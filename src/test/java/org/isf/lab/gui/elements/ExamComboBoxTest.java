@@ -6,8 +6,11 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ExamComboBoxTest {
     @Test
@@ -21,10 +24,12 @@ public class ExamComboBoxTest {
 
         // when:
         ExamComboBox examComboBox = ExamComboBox.withExamsAndExamFromLaboratorySelected(exams, laboratory, false);
+        Optional<Exam> selectedExam = examComboBox.getSelectedExam();
 
         // then:
         assertEquals(3, examComboBox.getItemCount());
-        assertEquals(exam2, examComboBox.getSelectedItem());
+        assertTrue(selectedExam.isPresent());
+        assertEquals(exam2, selectedExam.get());
     }
 
     @Test
@@ -38,10 +43,11 @@ public class ExamComboBoxTest {
 
         // when:
         ExamComboBox examComboBox = ExamComboBox.withExamsAndExamFromLaboratorySelected(exams, laboratory, true);
+        Optional<Exam> selectedExam = examComboBox.getSelectedExam();
 
         // then:
         assertEquals(3, examComboBox.getItemCount());
-        assertNull(examComboBox.getSelectedItem());
+        assertFalse(selectedExam.isPresent());
     }
 
 }

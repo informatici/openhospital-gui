@@ -45,7 +45,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventListener;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -73,6 +76,7 @@ import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.gui.elements.ExamComboBox;
+import org.isf.lab.gui.elements.MatComboBox;
 import org.isf.lab.gui.elements.PatientComboBox;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.manager.LabRowManager;
@@ -139,7 +143,7 @@ public class LabEdit extends ModalJFrame {
 	private JButton cancelButton = null;
 	private JButton printButton = null;
 	private JComboBox matComboBox = null;
-	private JComboBox examComboBox = null;
+	private ExamComboBox examComboBox = null;
 	private JComboBox examRowComboBox = null;
 	private PatientComboBox patientComboBox = null;
 	private Exam examSelected = null;
@@ -252,7 +256,7 @@ public class LabEdit extends ModalJFrame {
 			patientLabel.setBounds(5, 60, labelWidth, 20);
 			inPatientCheckBox = getInPatientCheckBox();
 			inPatientCheckBox.setBounds(labelWidth+5, 60, labelWidth, 20);
-			patientComboBox=getPatientComboBox();
+			patientComboBox = getPatientComboBox();
 			patientComboBox.setBounds((labelWidth+5)*2, 60, 385, 20);
 
 			nameLabel = new JLabel(MessageBundle.getMessage("angal.lab.name"));
@@ -345,7 +349,7 @@ public class LabEdit extends ModalJFrame {
 	 */
 	private PatientComboBox getPatientComboBox() {
 		if (patientComboBox == null) {
-			patSelected=null;
+
 			PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 			ArrayList<Patient> pat = null;
 			try {
@@ -354,6 +358,7 @@ public class LabEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			patientComboBox = PatientComboBox.withPatientsAndPatientFromLaboratorySelected(pat, lab, insert);
+			patSelected = patientComboBox.getSelectedPatient().orElse(null);
 
 			patientComboBox.addActionListener(arg0 -> {
 				if (patientComboBox.getSelectedIndex()>0) {
@@ -386,10 +391,8 @@ public class LabEdit extends ModalJFrame {
 		return buttonPanel;
 	}
 
-	private JComboBox getExamComboBox() {
+	private ExamComboBox getExamComboBox() {
 		if (examComboBox == null) {
-
-			Exam examSel=null;
 			ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 			ArrayList<Exam> exams;
 			try {
@@ -399,11 +402,11 @@ public class LabEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			examComboBox = ExamComboBox.withExamsAndExamFromLaboratorySelected(exams, lab, insert);
-			
+			examSelected = examComboBox.getSelectedExam().orElse(null);
+
 			examComboBox.addActionListener(arg0 -> {
-				if (!(examComboBox.getSelectedItem() instanceof String)) {
-					examSelected = (Exam) examComboBox
-							.getSelectedItem();
+				examComboBox.getSelectedExam().ifPresent(exam -> {
+					examSelected = exam;
 
 					if (examSelected.getProcedure() == 1)
 						resultPanel = getFirstPanel();
@@ -415,7 +418,7 @@ public class LabEdit extends ModalJFrame {
 
 					validate();
 					repaint();
-				}
+				});
 			});
 			resultPanel = null;
 		}
@@ -425,18 +428,9 @@ public class LabEdit extends ModalJFrame {
 	
 	private JComboBox getMatComboBox() {
 		if (matComboBox == null) {
-			matComboBox = new JComboBox();
-			matComboBox.addItem("");
 			LabManager labMan = Context.getApplicationContext().getBean(LabManager.class);
-			for (String elem : labMan.getMaterialList()) {
-				matComboBox.addItem(elem);
-				if (!insert) {
-					try {	
-						matComboBox.setSelectedItem(labManager.getMaterialTranslated(lab.getMaterial()));
-						}
-					catch (Exception e) {}
-				}
-			}
+			ArrayList<String> materialList = labMan.getMaterialList();
+			matComboBox = MatComboBox.withMaterialsAndMaterialFromLabSelected(materialList, lab, insert, labManager::getMaterialTranslated);
 		}
 		return matComboBox;
 	}
@@ -591,12 +585,10 @@ public class LabEdit extends ModalJFrame {
 						lab.setResult(examRowComboBox.getSelectedItem().toString());
 					else if (examSelected.getProcedure() == 2) {
 						lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults"));
-						for (int i = 0; i < resultPanel.getComponentCount(); i++) {
-							if (((SubPanel) resultPanel.getComponent(i))
-									.getSelectedResult().equalsIgnoreCase("P")) {
-								labRow.add(eRows.get(i).getDescription());
-							}
-						}
+						labRow = IntStream.range(0, resultPanel.getComponentCount())
+									.filter(i -> ((SubPanel) resultPanel.getComponent(i)).getSelectedResult().equalsIgnoreCase("P"))
+									.mapToObj(i -> eRows.get(i).getDescription())
+									.collect(Collectors.toCollection(ArrayList::new));
 					}else if (examSelected.getProcedure() == 3) {
 						lab.setResult(examRowTextField.getText());
 					}
@@ -644,18 +636,14 @@ public class LabEdit extends ModalJFrame {
 		}
 		examRowComboBox.addItem(result);
 
-		ArrayList<ExamRow> rows;
 		try {
-			rows = rowManager.getExamRowByExamCode(examSelected.getCode());
+			List<ExamRow> rows = rowManager.getExamRowByExamCode(examSelected.getCode());
+			String finalResult = result;
+			rows.stream()
+					.filter(r -> !r.getDescription().equals(finalResult))
+					.forEach(r -> examRowComboBox.addItem(r.getDescription()));
 		} catch (OHServiceException e) {
-			rows = null;
 			OHServiceExceptionUtil.showMessages(e);
-		}
-		if (null != rows) {
-			for (ExamRow r : rows) {
-				if (!r.getDescription().equals(result))
-					examRowComboBox.addItem(r.getDescription());
-			}
 		}
 		if (examRowComboBox.getItemCount() > 0) resultPanel.add(examRowComboBox);
 
@@ -675,8 +663,7 @@ public class LabEdit extends ModalJFrame {
 		
 		if (insert) {
 			if (null != eRows) {
-				for (ExamRow r : eRows)
-					resultPanel.add(new SubPanel(r, "N"));
+				eRows.forEach(r -> resultPanel.add(new SubPanel(r, "N")));
 			}
 		} else {
 

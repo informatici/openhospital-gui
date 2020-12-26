@@ -1,14 +1,16 @@
 package org.isf.lab.gui.elements;
 
-import org.isf.exa.model.Exam;
 import org.isf.lab.model.Laboratory;
 import org.isf.patient.model.Patient;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class PatientComboBoxTest {
     @Test
@@ -22,10 +24,12 @@ public class PatientComboBoxTest {
 
         // when:
         PatientComboBox patientComboBox = PatientComboBox.withPatientsAndPatientFromLaboratorySelected(patients, laboratory, false);
+        Optional<Patient> selectedPatient = patientComboBox.getSelectedPatient();
 
         // then:
         assertEquals(3, patientComboBox.getItemCount());
-        assertEquals(patient2, patientComboBox.getSelectedItem());
+        assertTrue(selectedPatient.isPresent());
+        assertEquals(patient2, selectedPatient.get());
     }
 
     @Test
@@ -39,9 +43,11 @@ public class PatientComboBoxTest {
 
         // when:
         PatientComboBox patientComboBox = PatientComboBox.withPatientsAndPatientFromLaboratorySelected(patients, laboratory, true);
+        Optional<Patient> selectedPatient = patientComboBox.getSelectedPatient();
 
         // then:
         assertEquals(3, patientComboBox.getItemCount());
         assertEquals("angal.lab.selectapatient", patientComboBox.getSelectedItem());
+        assertFalse(selectedPatient.isPresent());
     }
 }

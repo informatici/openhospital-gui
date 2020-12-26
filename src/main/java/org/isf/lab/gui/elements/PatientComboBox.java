@@ -6,26 +6,26 @@ import org.isf.patient.model.Patient;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Optional;
 
 public class PatientComboBox extends JComboBox {
+    public Optional<Patient> getSelectedPatient() {
+        return Optional.ofNullable(getSelectedItem())
+                .filter(selectedItem -> selectedItem instanceof Patient)
+                .map(selectedItem -> (Patient) selectedItem);
+    }
+
+
     public static PatientComboBox withPatientsAndPatientFromLaboratorySelected(List<Patient> patients, Laboratory laboratory, boolean inserting) {
         PatientComboBox patientComboBox = new PatientComboBox();
-        Patient patSelected = null;
-
         patientComboBox.addItem(MessageBundle.getMessage("angal.lab.selectapatient"));
-        if(patients != null){
-            for (Patient elem : patients) {
-                if (laboratory.getPatient() != null && !inserting) {
-                    if (elem.getCode() == laboratory.getPatient().getCode()) {
-                        patSelected = elem;
-                    }
-                }
-                patientComboBox.addItem(elem);
-            }
-        }
-        if (patSelected!=null)
-            patientComboBox.setSelectedItem(patSelected);
-
+        Optional.ofNullable(patients).ifPresent(patients2 ->
+                patients2.stream()
+                        .peek(patient -> patientComboBox.addItem(patient))
+                        .filter(patient -> (laboratory.getPatient() != null && !inserting) && patient.getCode().equals(laboratory.getPatient().getCode()))
+                        .forEach(patient -> patientComboBox.setSelectedItem(patient))
+        );
         return patientComboBox;
     }
+
 }
