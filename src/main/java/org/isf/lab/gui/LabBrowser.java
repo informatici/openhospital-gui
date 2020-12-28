@@ -44,6 +44,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.stream.IntStream;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -394,16 +395,16 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			model = new LabBrowsingModel();
 			jTable = new JTable(model);
 			TableColumnModel columnModel = jTable.getColumnModel();
-			for (int i = 0; i < model.getColumnCount(); i++) {
+			IntStream.range(0, model.getColumnCount()).forEach(i -> {
 				jTable.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
-				if (!columnsResizable[i]) 
+				if (!columnsResizable[i])
 					columnModel.getColumn(i).setMaxWidth(maxWidth[i]);
 				if (!columnsVisible[i]) {
 					columnModel.getColumn(i).setMaxWidth(0);
 					columnModel.getColumn(i).setMinWidth(0);
 					columnModel.getColumn(i).setPreferredWidth(0);
 				}
-			}
+			});
 		}
 		return jTable;
 	}
@@ -492,16 +493,13 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (filterButton == null) {
 			filterButton = new JButton(MessageBundle.getMessage("angal.lab.search"));
 			filterButton.setMnemonic(KeyEvent.VK_S);
-			filterButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
-					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
-						typeSelected = null;
-					model = new LabBrowsingModel(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
-					model.fireTableDataChanged();
-					jTable.updateUI();
-				}
+			filterButton.addActionListener(e -> {
+				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
+				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
+					typeSelected = null;
+				model = new LabBrowsingModel(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
+				model.fireTableDataChanged();
+				jTable.updateUI();
 			});
 		}
 		return filterButton;

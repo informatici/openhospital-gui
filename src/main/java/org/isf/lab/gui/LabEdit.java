@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.EventListener;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -427,35 +428,37 @@ public class LabEdit extends ModalJFrame {
 
 	
 	private JComboBox getMatComboBox() {
-		if (matComboBox == null) {
-			LabManager labMan = Context.getApplicationContext().getBean(LabManager.class);
-			ArrayList<String> materialList = labMan.getMaterialList();
-			matComboBox = MatComboBox.withMaterialsAndMaterialFromLabSelected(materialList, lab, insert, labManager::getMaterialTranslated);
-		}
-		return matComboBox;
+		return Optional.ofNullable(matComboBox)
+				.orElseGet(() -> {
+					LabManager labMan = Context.getApplicationContext().getBean(LabManager.class);
+					ArrayList<String> materialList = labMan.getMaterialList();
+					return MatComboBox.withMaterialsAndMaterialFromLabSelected(materialList, lab, insert, labManager::getMaterialTranslated);
+				});
 	}
 
 	private JTextArea getNoteTextArea() {
-		if (noteTextArea == null) {
-			noteTextArea = new JTextArea(10,30);
-			if (!insert){
-				noteTextArea.setText(lab.getNote());
-			}
-			noteTextArea.setLineWrap(true);
-			noteTextArea.setPreferredSize(new Dimension(10,30));
-			noteTextArea.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		}
-		return noteTextArea;
+		return Optional.ofNullable(noteTextArea)
+				.orElseGet(() -> {
+					noteTextArea = new JTextArea(10,30);
+					if (!insert){
+						noteTextArea.setText(lab.getNote());
+					}
+					noteTextArea.setLineWrap(true);
+					noteTextArea.setPreferredSize(new Dimension(10,30));
+					noteTextArea.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+					return noteTextArea;
+		});
 	}
 	
 	private VoLimitedTextField getPatientTextField() {
-		if (patTextField == null) {
-			patTextField = new VoLimitedTextField(100);
-			if (!insert) {
-				patTextField.setText(lab.getPatName());
-			}
-		}
-		return patTextField;
+		return Optional.ofNullable(patTextField)
+				.orElseGet(() -> {
+					patTextField = new VoLimitedTextField(100);
+					if (!insert) {
+						patTextField.setText(lab.getPatName());
+					}
+					return patTextField;
+		});
 	}
 	
 	private VoLimitedTextField getAgeTextField() {
@@ -491,27 +494,23 @@ public class LabEdit extends ModalJFrame {
 		if (printButton == null) {
 			printButton = new JButton(MessageBundle.getMessage("angal.lab.print"));
 			printButton.setMnemonic(KeyEvent.VK_P);
-			printButton.addActionListener(new ActionListener() {
+			printButton.addActionListener(arg0 -> {
+				try {
+					ArrayList<LaboratoryForPrint> labs = new ArrayList<LaboratoryForPrint>();
 
-				public void actionPerformed(ActionEvent arg0) {					
-					try {
-						ArrayList<LaboratoryForPrint> labs = new ArrayList<LaboratoryForPrint>();
-						
-						labs.add(new LaboratoryForPrint(
-								lab.getCode(),
-								lab.getExam(),
-								lab.getDate(),
-								lab.getResult()
-							)
-						);
-						if (!labs.isEmpty()) {
-							
-							printManager.print("Laboratory",labs,0);
-						}
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
+					labs.add(new LaboratoryForPrint(
+							lab.getCode(),
+							lab.getExam(),
+							lab.getDate(),
+							lab.getResult()
+						)
+					);
+					if (!labs.isEmpty()) {
+
+						printManager.print("Laboratory",labs,0);
 					}
-					
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 
 			});
@@ -524,11 +523,7 @@ public class LabEdit extends ModalJFrame {
 			cancelButton = new JButton();
 			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));
 			cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -671,7 +666,7 @@ public class LabEdit extends ModalJFrame {
 			try {
 				lRows = lRowManager.getLabRowByLabId(lab.getCode());
 			} catch (OHServiceException e) {
-				lRows = new ArrayList<LaboratoryRow>();
+				lRows = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			boolean find;

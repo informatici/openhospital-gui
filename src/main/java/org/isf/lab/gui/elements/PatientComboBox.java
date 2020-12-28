@@ -28,4 +28,23 @@ public class PatientComboBox extends JComboBox {
         return patientComboBox;
     }
 
+    public void addPatientsFilteredByKey(List<Patient> patients, String key) {
+        for (Patient elem : patients) {
+            if (key != null) {
+                //Search key extended to name and code
+                StringBuilder sbName = new StringBuilder();
+                sbName.append(elem.getSecondName().toUpperCase());
+                sbName.append(elem.getFirstName().toUpperCase());
+                sbName.append(elem.getCode());
+                String name = sbName.toString();
+
+                if (name.toLowerCase().contains(key.toLowerCase())) {
+                    this.addItem(elem);
+                }
+            } else {
+                this.addItem(elem);
+            }
+        }
+    }
+
 }

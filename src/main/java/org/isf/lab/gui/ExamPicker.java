@@ -32,6 +32,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JDialog;
@@ -271,11 +273,7 @@ public class ExamPicker extends javax.swing.JPanel {
                 jButtonSelectMouseClicked(evt);
             }
         });
-        jButtonSelect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSelectActionPerformed(evt);
-            }
-        });
+        jButtonSelect.addActionListener(evt -> jButtonSelectActionPerformed(evt));
 
         jButtonQuit.setText(MessageBundle.getMessage("angal.common.cancel"));
         jButtonQuit.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -335,13 +333,10 @@ public class ExamPicker extends javax.swing.JPanel {
     
     public ArrayList<Exam> getAllSelectedObject(){
     	OhTableModelExam<?> model=(OhTableModelExam<?>)jTableData.getModel();
-    	ArrayList<Exam> exams = new ArrayList<Exam>();
     	int[] selectedRows = this.jTableData.getSelectedRows();
-         
-    	for(int i = 0; i<selectedRows.length;i++){
-    		exams.add((Exam) model.getObjectAt(selectedRows[i]));
-    	}
-    	return exams;
+        return (ArrayList) Arrays.stream(selectedRows)
+                .mapToObj(row -> model.getObjectAt(row))
+                .collect(Collectors.toList());
     }
 
 	private void setSelectedRow(int selectedRow) {
