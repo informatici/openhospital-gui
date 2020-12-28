@@ -39,13 +39,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -53,7 +51,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -773,7 +770,7 @@ public class LabEditExtended extends ModalJFrame {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 
-		examRowComboBox.populateWithExamRowsWithDescriptionNotEqualToLabResult(rows, result);
+		examRowComboBox.addExamRowsWithDescriptionNotEqualTo(rows, result);
 		if (examRowComboBox.getItemCount() > 0) resultPanel.add(examRowComboBox);
 
 		return resultPanel;

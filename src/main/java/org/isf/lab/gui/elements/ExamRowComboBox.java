@@ -6,10 +6,10 @@ import javax.swing.*;
 import java.util.List;
 
 public class ExamRowComboBox extends JComboBox {
-    public void populateWithExamRowsWithDescriptionNotEqualToLabResult(List<ExamRow> examRows, String labResult) {
+    public void addExamRowsWithDescriptionNotEqualTo(List<ExamRow> examRows, String notEqualTo) {
         if (null != examRows) {
             for (ExamRow r : examRows) {
-                if (!r.getDescription().equals(labResult))
+                if (!r.getDescription().equals(notEqualTo))
                     addItem(r.getDescription());
             }
         }
