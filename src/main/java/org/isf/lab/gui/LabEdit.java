@@ -77,6 +77,7 @@ import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.gui.elements.ExamComboBox;
+import org.isf.lab.gui.elements.ExamRowSubPanel;
 import org.isf.lab.gui.elements.MatComboBox;
 import org.isf.lab.gui.elements.PatientComboBox;
 import org.isf.lab.manager.LabManager;
@@ -581,7 +582,7 @@ public class LabEdit extends ModalJFrame {
 					else if (examSelected.getProcedure() == 2) {
 						lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults"));
 						labRow = IntStream.range(0, resultPanel.getComponentCount())
-									.filter(i -> ((SubPanel) resultPanel.getComponent(i)).getSelectedResult().equalsIgnoreCase("P"))
+									.filter(i -> ((ExamRowSubPanel) resultPanel.getComponent(i)).getSelectedResult().equalsIgnoreCase("P"))
 									.mapToObj(i -> eRows.get(i).getDescription())
 									.collect(Collectors.toCollection(ArrayList::new));
 					}else if (examSelected.getProcedure() == 3) {
@@ -658,7 +659,7 @@ public class LabEdit extends ModalJFrame {
 		
 		if (insert) {
 			if (null != eRows) {
-				eRows.forEach(r -> resultPanel.add(new SubPanel(r, "N")));
+				eRows.forEach(r -> resultPanel.add(ExamRowSubPanel.forExamRow(r)));
 			}
 		} else {
 
@@ -669,22 +670,9 @@ public class LabEdit extends ModalJFrame {
 				lRows = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			boolean find;
-			if (null != eRows) {
-				for (ExamRow r : eRows) {
-					find = false;
-					for (LaboratoryRow lR : lRows) {
-						if (r.getDescription()
-								.equalsIgnoreCase(lR.getDescription()))
-							find = true;
-					}
-					if (find) {
-						resultPanel.add(new SubPanel(r, "P"));
-					} else {
-						resultPanel.add(new SubPanel(r, "N"));
-					}
-				}
-			}
+			ArrayList<LaboratoryRow> finalLRows = lRows;
+			Optional.ofNullable(eRows).ifPresent(examRows ->
+					examRows.forEach(r -> resultPanel.add(ExamRowSubPanel.forExamRowAndLaboratoryRows(r, finalLRows))));
 		}
 		return resultPanel;
 	}
@@ -707,47 +695,6 @@ public class LabEdit extends ModalJFrame {
 
 		return resultPanel;
 	}
-	class SubPanel extends JPanel {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		private JLabel label = null;
-
-		private JRadioButton radioPos = null;
-
-		private JRadioButton radioNeg = null;
-
-		private ButtonGroup group = null;
-
-		public SubPanel(ExamRow row, String result) {
-			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			label = new JLabel(row.getDescription());
-			this.add(label);
-
-			group = new ButtonGroup();
-			radioPos = new JRadioButton(MessageBundle.getMessage("angal.lab.p"));
-			radioNeg = new JRadioButton(MessageBundle.getMessage("angal.lab.n"));
-			group.add(radioPos);
-			group.add(radioNeg);
-
-			this.add(radioPos);
-			this.add(radioNeg);
-			if (result.equals(MessageBundle.getMessage("angal.lab.p")))
-				radioPos.setSelected(true);
-			else
-				radioNeg.setSelected(true);
-		}
-
-		public String getSelectedResult() {
-			if (radioPos.isSelected())
-				return MessageBundle.getMessage("angal.lab.p");
-			else
-				return MessageBundle.getMessage("angal.lab.n");
-		}
-
-	}
 
 }
