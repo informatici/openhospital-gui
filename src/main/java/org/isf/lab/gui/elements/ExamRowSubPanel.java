@@ -24,17 +24,11 @@ public class ExamRowSubPanel extends JPanel {
     }
 
     public static ExamRowSubPanel forExamRowAndLaboratoryRows(ExamRow r, List<LaboratoryRow> lRows) {
-        boolean find = false;
-        for (LaboratoryRow lR : lRows) {
-            if (r.getDescription()
-                    .equalsIgnoreCase(lR.getDescription()))
-                find = true;
-        }
-        if (find) {
-            return new ExamRowSubPanel(r, "P");
-        } else {
-            return new ExamRowSubPanel(r, "N");
-        }
+        return lRows.stream()
+                .filter(laboratoryRow -> r.getDescription().equalsIgnoreCase(laboratoryRow.getDescription()))
+                .findFirst()
+                .map(laboratoryRow -> new ExamRowSubPanel(r, "P"))
+                .orElse(new ExamRowSubPanel(r, "N"));
     }
 
     private ExamRowSubPanel(ExamRow row, String result) {

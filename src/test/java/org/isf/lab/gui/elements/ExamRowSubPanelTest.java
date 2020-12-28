@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class ExamRowSubPanelTest {
     @Before
@@ -29,7 +29,7 @@ public class ExamRowSubPanelTest {
         ExamRowSubPanel result = ExamRowSubPanel.forExamRow(examRow);
 
         // then:
-        Assertions.assertThat(result.getSelectedResult()).isEqualTo("N");
+        assertThat(result.getSelectedResult()).isEqualTo("N");
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ExamRowSubPanelTest {
         ExamRowSubPanel result = ExamRowSubPanel.forExamRowAndLaboratoryRows(examRow, laboratoryRows);
 
         // then:
-        Assertions.assertThat(result.getSelectedResult()).isEqualTo("P");
+        assertThat(result.getSelectedResult()).isEqualTo("P");
     }
 
     @Test
@@ -63,6 +63,6 @@ public class ExamRowSubPanelTest {
         ExamRowSubPanel result = ExamRowSubPanel.forExamRowAndLaboratoryRows(examRow, laboratoryRows);
 
         // then:
-        Assertions.assertThat(result.getSelectedResult()).isEqualTo("N");
+        assertThat(result.getSelectedResult()).isEqualTo("N");
     }
 }

@@ -1,6 +1,5 @@
 package org.isf.exa.gui;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import javax.swing.*;
@@ -8,7 +7,6 @@ import javax.swing.*;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
 
 public class ExamFilterFactoryTest {
     private ExamFilterFactory examFilterFactory = new ExamFilterFactory();

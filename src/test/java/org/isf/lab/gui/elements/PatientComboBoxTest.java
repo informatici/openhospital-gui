@@ -8,9 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 public class PatientComboBoxTest {
     @Test
@@ -27,9 +25,9 @@ public class PatientComboBoxTest {
         Optional<Patient> selectedPatient = patientComboBox.getSelectedPatient();
 
         // then:
-        assertEquals(3, patientComboBox.getItemCount());
-        assertTrue(selectedPatient.isPresent());
-        assertEquals(patient2, selectedPatient.get());
+        assertThat(patientComboBox.getItemCount()).isEqualTo(3);
+        assertThat(selectedPatient.isPresent()).isTrue();
+        assertThat(selectedPatient.get()).isEqualTo(patient2);
     }
 
     @Test
@@ -46,8 +44,8 @@ public class PatientComboBoxTest {
         Optional<Patient> selectedPatient = patientComboBox.getSelectedPatient();
 
         // then:
-        assertEquals(3, patientComboBox.getItemCount());
-        assertEquals("angal.lab.selectapatient", patientComboBox.getSelectedItem());
-        assertFalse(selectedPatient.isPresent());
+        assertThat(patientComboBox.getItemCount()).isEqualTo(3);
+        assertThat(selectedPatient.isPresent()).isFalse();
+        assertThat(patientComboBox.getSelectedItem()).isEqualTo("angal.lab.selectapatient");
     }
 }

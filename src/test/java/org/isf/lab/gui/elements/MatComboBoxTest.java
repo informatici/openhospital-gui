@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 public class MatComboBoxTest {
     @Test
@@ -22,8 +22,8 @@ public class MatComboBoxTest {
         MatComboBox matComboBox = MatComboBox.withMaterialsAndMaterialFromLabSelected(materials, laboratory, false, testTranslator);
 
         // then:
-        assertEquals(3, matComboBox.getItemCount());
-        assertEquals("mat2translated", matComboBox.getSelectedItem());
+        assertThat(matComboBox.getItemCount()).isEqualTo(3);
+        assertThat(matComboBox.getSelectedItem()).isEqualTo("mat2translated");
     }
 
     @Test
@@ -38,8 +38,8 @@ public class MatComboBoxTest {
         MatComboBox matComboBox = MatComboBox.withMaterialsAndMaterialFromLabSelected(materials, laboratory, true, testTranslator);
 
         // then:
-        assertEquals(3, matComboBox.getItemCount());
-        assertEquals("", matComboBox.getSelectedItem());
+        assertThat(matComboBox.getItemCount()).isEqualTo(3);
+        assertThat(matComboBox.getSelectedItem()).isEqualTo("");
     }
 
 }
