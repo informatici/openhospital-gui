@@ -520,8 +520,8 @@ public class LabEditExtended extends ModalJFrame {
 				exams = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			examComboBox.addItem(MessageBundle.getMessage("angal.lab.selectanexam"));
 			examComboBox = ExamComboBox.withExamsAndExamFromLaboratorySelected(exams, lab, insert);
+			examComboBox.addItem(MessageBundle.getMessage("angal.lab.selectanexam"));
 
 			examComboBox.addActionListener(arg0 -> {
 				if (!(examComboBox.getSelectedItem() instanceof String)) {
