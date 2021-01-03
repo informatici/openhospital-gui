@@ -23,11 +23,12 @@ package org.isf.lab.gui.elements;
 
 import java.util.List;
 import java.util.Optional;
-import javax.swing.*;
 
 import org.isf.exa.model.Exam;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.model.Laboratory;
+
+import javax.swing.JComboBox;
 
 public class ExamComboBox extends JComboBox {
     private ExamComboBox() {
