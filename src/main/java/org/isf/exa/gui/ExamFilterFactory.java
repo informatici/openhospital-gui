@@ -21,14 +21,20 @@
  */
 package org.isf.exa.gui;
 
-import javax.swing.RowFilter;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
+import javax.swing.RowFilter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExamFilterFactory {
+    private final Logger logger = LoggerFactory.getLogger(ExamFilterFactory.class);
+
     public List<RowFilter<Object, Object>> buildFilters(String s) {
         try {
             return Arrays.stream(s.split(" "))
@@ -37,7 +43,7 @@ public class ExamFilterFactory {
                     .map(token -> RowFilter.regexFilter("(?i)" + token))
                     .collect(Collectors.toList());
         } catch (PatternSyntaxException pse) {
-            System.out.println("Bad regex pattern");
+            logger.info("Bad regex pattern");
             return Collections.emptyList();
         }
     }

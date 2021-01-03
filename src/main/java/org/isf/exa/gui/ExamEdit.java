@@ -237,56 +237,53 @@ public class ExamEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			if (okButton == null) {
-				okButton = new JButton();
-				okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-	            okButton.setMnemonic(KeyEvent.VK_O);
-				okButton.addActionListener(e -> {
-					if((codeTextField.getText().trim().equals(""))||(descriptionTextField.getText().trim().equals(""))){
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.exa.pleaseinsertcodeoranddescription"));
-					}
-					else{
-						int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
+			okButton = new JButton();
+			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
+			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton.addActionListener(e -> {
+				if ((codeTextField.getText().trim().isEmpty()) || (descriptionTextField.getText().trim().isEmpty())) {
+					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.exa.pleaseinsertcodeoranddescription"));
+				} else {
+					int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
 
-						exam.setExamtype((ExamType)typeComboBox.getSelectedItem());
-						exam.setDescription(descriptionTextField.getText());
+					exam.setExamtype((ExamType) typeComboBox.getSelectedItem());
+					exam.setDescription(descriptionTextField.getText());
 
-						exam.setCode(codeTextField.getText().toUpperCase());
-						exam.setDefaultResult(defTextField.getText().toUpperCase());
-						exam.setProcedure(procedure);
+					exam.setCode(codeTextField.getText().toUpperCase());
+					exam.setDefaultResult(defTextField.getText().toUpperCase());
+					exam.setProcedure(procedure);
 
-						boolean result = false;
-						if (insert) {
-							try {
-								if (manager.isKeyPresent(exam)) {
-									JOptionPane.showMessageDialog(ExamEdit.this, MessageBundle.getMessage("angal.exa.changethecodebecauseisalreadyinuse"));
-									return;
-								}
-							} catch (OHServiceException e1) {
-								OHServiceExceptionUtil.showMessages(e1);
+					boolean result = false;
+					if (insert) {
+						try {
+							if (manager.isKeyPresent(exam)) {
+								JOptionPane.showMessageDialog(ExamEdit.this, MessageBundle.getMessage("angal.exa.changethecodebecauseisalreadyinuse"));
+								return;
 							}
-							try {
-								result = manager.newExam(exam);
-								if (result) fireExamInserted();
-							} catch (OHServiceException e1) {
-								OHServiceExceptionUtil.showMessages(e1);
-							}
-						} else {
-							try {
-								result = manager.updateExam(exam);
-								if (result) fireExamUpdated();
-							} catch (OHServiceException e1) {
-								OHServiceExceptionUtil.showMessages(e1);
-							}
+						} catch (OHServiceException e1) {
+							OHServiceExceptionUtil.showMessages(e1);
 						}
-						if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-						else  {
-							dispose();
+						try {
+							result = manager.newExam(exam);
+							if (result) fireExamInserted();
+						} catch (OHServiceException e1) {
+							OHServiceExceptionUtil.showMessages(e1);
+						}
+					} else {
+						try {
+							result = manager.updateExam(exam);
+							if (result) fireExamUpdated();
+						} catch (OHServiceException e1) {
+							OHServiceExceptionUtil.showMessages(e1);
 						}
 					}
-				});
-			}
-			return okButton;
+					if (!result)
+						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+					else {
+						dispose();
+					}
+				}
+			});
 		}
 		return okButton;
 	}
