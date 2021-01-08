@@ -162,17 +162,11 @@ public class VisitView extends ModalJFrame {
 	private void loadDataForWard(Ward ward) {
 		try {
 			if (ward != null)
-				vsRows = vstManager.getVisitsWard(ward.getCode());
+				visits = vstManager.getVisitsWard(ward.getCode());
 			else
-				vsRows = vstManager.getVisitsWard(null);
+				visits = vstManager.getVisitsWard(null);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
-		}
-
-		try {
-			visits = vstManager.getVisits(vsRows);
-		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
 		}
 	}
 
