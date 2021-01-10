@@ -21,11 +21,12 @@
  */
 package org.isf.lab.gui.elements;
 
-import org.isf.exa.model.ExamRow;
-
-import javax.swing.*;
 import java.util.List;
 import java.util.Optional;
+
+import javax.swing.JComboBox;
+
+import org.isf.exa.model.ExamRow;
 
 public class ExamRowComboBox extends JComboBox {
     public void addExamRowsWithDescriptionNotEqualTo(List<ExamRow> examRows, final String notEqualTo) {

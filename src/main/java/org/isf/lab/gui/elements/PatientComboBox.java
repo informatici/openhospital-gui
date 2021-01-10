@@ -21,13 +21,14 @@
  */
 package org.isf.lab.gui.elements;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.swing.JComboBox;
+
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.model.Laboratory;
 import org.isf.patient.model.Patient;
-
-import javax.swing.*;
-import java.util.List;
-import java.util.Optional;
 
 public class PatientComboBox extends JComboBox {
     public Optional<Patient> getSelectedPatient() {

@@ -21,12 +21,17 @@
  */
 package org.isf.lab.gui.elements;
 
+import java.util.List;
+
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
 import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.model.LaboratoryRow;
-
-import javax.swing.*;
-import java.util.List;
 
 public class ExamRowSubPanel extends JPanel {
 

@@ -21,11 +21,12 @@
  */
 package org.isf.lab.gui.elements;
 
-import org.isf.lab.model.Laboratory;
-
-import javax.swing.*;
 import java.util.List;
 import java.util.function.Function;
+
+import javax.swing.JComboBox;
+
+import org.isf.lab.model.Laboratory;
 
 public class MatComboBox extends JComboBox {
     private MatComboBox() {
