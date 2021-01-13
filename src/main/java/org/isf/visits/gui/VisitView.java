@@ -150,8 +150,6 @@ public class VisitView extends ModalJFrame {
 
 	private JScrollPane jScrollPaneFirstday;
 
-	private ArrayList<Visit> vsRows;
-
 	private JFrame owner;
 
 	private void initialize() {
@@ -347,7 +345,6 @@ public class VisitView extends ModalJFrame {
 	private void addVisit(Visit vsRow) {
 		if (vsRow != null && vsRow.getVisitID() != 0) {
 
-			vsRows.add(vsRow); // FOR DB;
 			Visit thisVisit = null;
 			try {
 				thisVisit = vstManager.createVisit(vsRow);
