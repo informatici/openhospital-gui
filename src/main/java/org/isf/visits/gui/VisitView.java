@@ -345,17 +345,11 @@ public class VisitView extends ModalJFrame {
 	private void addVisit(Visit vsRow) {
 		if (vsRow != null && vsRow.getVisitID() != 0) {
 
-			Visit thisVisit = null;
-			try {
-				thisVisit = vstManager.createVisit(vsRow);
-			} catch (OHServiceException ex) {
-				OHServiceExceptionUtil.showMessages(ex);
-			}
-			visits.add(thisVisit); // FOR GUI
+			visits.add(vsRow); // FOR GUI
 
-			if (!TimeTools.isSameDay(dateFirst, thisVisit.getDate().getTime()) && !TimeTools.isSameDay(dateSecond, thisVisit.getDate().getTime()))
+			if (!TimeTools.isSameDay(dateFirst, vsRow.getDate().getTime()) && !TimeTools.isSameDay(dateSecond, vsRow.getDate().getTime()))
 				// if new visit date is not already shown, change view
-				setDateFirstThenSecond(thisVisit.getDate().getTime());
+				setDateFirstThenSecond(vsRow.getDate().getTime());
 
 			updatePanels();
 		}
