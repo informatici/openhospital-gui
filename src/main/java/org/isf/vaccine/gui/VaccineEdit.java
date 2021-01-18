@@ -263,7 +263,7 @@ public class VaccineEdit extends JDialog {
                     if (insert) {
                         try {
                         	savedVaccine = manager.newVaccine(vaccine);
-                        	if(savedVaccine != null) {
+                        	if (savedVaccine != null) {
                         		vaccine.setLock(savedVaccine.getLock());
                         		result = true;
                         	}
@@ -280,7 +280,7 @@ public class VaccineEdit extends JDialog {
                     }else{
                         try{
                         	savedVaccine = manager.updateVaccine(vaccine);
-                        	if(savedVaccine != null) {
+                        	if (savedVaccine != null) {
                         		vaccine.setLock(savedVaccine.getLock());
                         		result = true;
                         	}

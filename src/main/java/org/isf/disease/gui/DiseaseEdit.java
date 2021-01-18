@@ -306,7 +306,7 @@ public class DiseaseEdit extends JDialog {
 					try{
 						if (insert) { // inserting
 							savedDisease = manager.newDisease(disease);
-							if(savedDisease != null) {
+							if (savedDisease != null) {
 								disease.setLock(savedDisease.getLock());
 								result  = true;
 							}
@@ -316,7 +316,7 @@ public class DiseaseEdit extends JDialog {
 							}
 						} else { // updating
 							savedDisease = manager.updateDisease(disease);
-							if(savedDisease != null) {
+							if (savedDisease != null) {
 								disease.setLock(savedDisease.getLock());
 								result  = true;
 							}
