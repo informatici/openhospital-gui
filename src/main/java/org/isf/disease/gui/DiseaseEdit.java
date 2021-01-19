@@ -302,14 +302,25 @@ public class DiseaseEdit extends JDialog {
 					disease.setIpdOutInclude(includeIpdOutCheckBox.isSelected());
 					
 					boolean result = false;
+					Disease savedDisease = null;
 					try{
 						if (insert) { // inserting
-							result = manager.newDisease(disease);
+							savedDisease = manager.newDisease(disease);
+							if (savedDisease != null) {
+								disease.setLock(savedDisease.getLock());
+								result  = true;
+							}
+							
 							if (result) {
 								fireDiseaseInserted();
 							}
 						} else { // updating
-							result = manager.updateDisease(disease);
+							savedDisease = manager.updateDisease(disease);
+							if (savedDisease != null) {
+								disease.setLock(savedDisease.getLock());
+								result  = true;
+							}
+							
 							if (result) {
 								fireDiseaseUpdated();
 							}

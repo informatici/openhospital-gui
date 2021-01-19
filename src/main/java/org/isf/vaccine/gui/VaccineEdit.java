@@ -258,10 +258,16 @@ public class VaccineEdit extends JDialog {
 							                        ((VaccineType)vaccineTypeComboBox.getSelectedItem()).getDescription()));
 
                     boolean result = false;
+                    Vaccine savedVaccine = null;
                     VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
                     if (insert) {
                         try {
-                            result = manager.newVaccine(vaccine);
+                        	savedVaccine = manager.newVaccine(vaccine);
+                        	if (savedVaccine != null) {
+                        		vaccine.setLock(savedVaccine.getLock());
+                        		result = true;
+                        	}
+                        	
                             if (result) {
                                 fireVaccineInserted();
                                 dispose();
@@ -273,7 +279,12 @@ public class VaccineEdit extends JDialog {
                         
                     }else{
                         try{
-                            result = manager.updateVaccine(vaccine);
+                        	savedVaccine = manager.updateVaccine(vaccine);
+                        	if (savedVaccine != null) {
+                        		vaccine.setLock(savedVaccine.getLock());
+                        		result = true;
+                        	}
+                        	
                             if (result) {
                                 fireVaccineUpdated();
                                 dispose();
