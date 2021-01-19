@@ -246,6 +246,11 @@
 		    <version>6.16.0</version>
 		</dependency>
 		<dependency>
+		    <groupId>net.sf.jasperreports</groupId>
+		    <artifactId>jasperreports-fonts</artifactId>
+		    <version>6.16.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.toedter</groupId>
 			<artifactId>jcalendar</artifactId>
 			<version>1.4</version>
