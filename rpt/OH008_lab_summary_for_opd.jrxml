@@ -76,7 +76,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" size="10" isBold="true"/>
+						<font fontName="DejaVu Sans" size="10" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{EXAM}]]></textFieldExpression>
 				</textField>
@@ -106,7 +106,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" size="10" isBold="true" isUnderline="true"/>
+						<font fontName="DejaVu Sans" size="10" isBold="true" isUnderline="true"/>
 					</textElement>
 				<text><![CDATA[Laboratory Monthly Report (OPD only)]]></text>
 				</staticText>
@@ -123,7 +123,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" size="8"/>
+						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{year}]]></textFieldExpression>
 				</textField>
@@ -140,7 +140,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" size="8"/>
+						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{month}]]></textFieldExpression>
 				</textField>
@@ -157,7 +157,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="SansSerif" size="8"/>
+						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
 				<text><![CDATA[Month]]></text>
 				</staticText>
@@ -174,7 +174,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="SansSerif" size="8"/>
+						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
 				<text><![CDATA[Year]]></text>
 				</staticText>
@@ -199,7 +199,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" size="10" isBold="true"/>
+						<font fontName="DejaVu Sans" size="10" isBold="true"/>
 					</textElement>
 				<text><![CDATA[Exam:]]></text>
 				</staticText>
@@ -216,7 +216,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif"/>
+						<font fontName="DejaVu Sans"/>
 					</textElement>
 				<text><![CDATA[Sex]]></text>
 				</staticText>
@@ -233,7 +233,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif"/>
+						<font fontName="DejaVu Sans"/>
 					</textElement>
 				<text><![CDATA[Category]]></text>
 				</staticText>
@@ -250,7 +250,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="SansSerif"/>
+						<font fontName="DejaVu Sans"/>
 					</textElement>
 				<text><![CDATA[Count]]></text>
 				</staticText>
@@ -271,7 +271,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="SansSerif" size="8"/>
+						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{COUNT}]]></textFieldExpression>
 				</textField>
@@ -288,7 +288,7 @@ order by 1,2,3]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement>
-						<font fontName="SansSerif" size="8"/>
+						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CATEGORY}]]></textFieldExpression>
 				</textField>

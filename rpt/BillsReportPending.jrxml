@@ -144,7 +144,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="DejaVuSans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
@@ -157,7 +157,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="DejaVuSans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
@@ -170,7 +170,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="DejaVuSans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
@@ -183,7 +183,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="14" isBold="true"/>
+					<font fontName="DejaVu Sans" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Periodical.Incomes.Billed.And.Receivables.Report.With.Pending.Invoices}]]></textFieldExpression>
 			</textField>
@@ -200,7 +200,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fromdate}]]></textFieldExpression>
 			</textField>
@@ -213,7 +213,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="14" isBold="true"/>
+					<font fontName="DejaVu Sans" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
 			</textField>
@@ -226,7 +226,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{todate}]]></textFieldExpression>
 			</textField>
@@ -239,7 +239,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="14" isBold="true"/>
+					<font fontName="DejaVu Sans" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Report.From}]]></textFieldExpression>
 			</textField>
@@ -378,7 +378,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAT_NAME}]]></textFieldExpression>
 			</textField>
@@ -391,7 +391,7 @@ ORDER BY BLL_DATE]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{BLL_DATE}.after($P{fromdate}) &&
  $F{BLL_DATE}.before($P{todate}) ?
@@ -408,7 +408,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_AMOUNT}]]></textFieldExpression>
 			</textField>
@@ -421,7 +421,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_UPDATE}]]></textFieldExpression>
 			</textField>
@@ -435,7 +435,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_BALANCE}.compareTo( new Double(0) ) != 0 ? $F{BLL_BALANCE} : null]]></textFieldExpression>
 			</textField>
@@ -449,7 +449,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{INCOME}.compareTo( new Double(0) ) != 0 ? $F{INCOME} : null]]></textFieldExpression>
 			</textField>
@@ -462,7 +462,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_STATUS}]]></textFieldExpression>
 			</textField>
@@ -506,7 +506,7 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 			<textField pattern="#,##0.00" isBlankWhenNull="false">
 				<reportElement key="textField-30" x="209" y="80" width="117" height="25" uuid="2e00dfb1-89a8-41d1-8b3d-82ca4a511c89"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_INCOME}]]></textFieldExpression>
 			</textField>
@@ -539,21 +539,21 @@ new SimpleDateFormat("(dd/MM/yy)").format($F{BLL_DATE}))]]></textFieldExpression
 			<textField>
 				<reportElement key="staticText-23" x="0" y="61" width="117" height="19" uuid="4866c23d-c692-4a18-9cba-4d593db5d6fe"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Accrued.In.Period}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-24" x="209" y="61" width="117" height="19" uuid="45f6c84c-11eb-4649-8556-a3a67b836cda"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Accrued.In.Period}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-25" x="418" y="61" width="117" height="19" uuid="4b6708a8-bf3c-42c7-b77e-c8df960177d5"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Accrued.In.Period}]]></textFieldExpression>
 			</textField>

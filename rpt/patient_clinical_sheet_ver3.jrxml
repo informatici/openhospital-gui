@@ -258,35 +258,35 @@ ORDER BY DATE DESC]]>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-3" x="75" y="60" width="460" height="13" isRemoveLineWhenBlank="true" uuid="8c6b7e88-2a94-4b49-b949-1b0f9ac14e54"/>
 				<textElement>
-					<font fontName="SansSerif" isItalic="true"/>
+					<font fontName="DejaVu Sans" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOTE}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-4" stretchType="RelativeToBandHeight" x="75" y="8" width="460" height="13" uuid="953c5e45-2879-4d26-9db8-e2ffdf797a41"/>
 				<textElement>
-					<font fontName="SansSerif" isBold="false"/>
+					<font fontName="DejaVu Sans" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DETAILS_1}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-5" x="75" y="21" width="460" height="13" isRemoveLineWhenBlank="true" uuid="76b9dd4e-f6aa-421a-8577-4792fd3c2100"/>
 				<textElement>
-					<font fontName="SansSerif"/>
+					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DETAILS_2}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-6" x="75" y="34" width="460" height="13" isRemoveLineWhenBlank="true" uuid="2970c65b-3f79-410d-9626-31b41af81994"/>
 				<textElement>
-					<font fontName="SansSerif"/>
+					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DETAILS_3}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-7" x="75" y="47" width="460" height="13" isRemoveLineWhenBlank="true" uuid="b3d2434d-c55b-48c0-aca2-edabd12aeeac"/>
 				<textElement>
-					<font fontName="SansSerif"/>
+					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DETAILS_4}]]></textFieldExpression>
 			</textField>

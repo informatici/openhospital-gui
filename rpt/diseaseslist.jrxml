@@ -55,7 +55,7 @@ order by DCL_DESC, DIS_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="SansSerif" size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Diseases.List}]]></textFieldExpression>
 			</textField>
@@ -75,7 +75,7 @@ order by DCL_DESC, DIS_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="SansSerif" size="10" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Disease.Type}]]></textFieldExpression>
 			</textField>
@@ -88,7 +88,7 @@ order by DCL_DESC, DIS_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="SansSerif" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{In.Patient}]]></textFieldExpression>
 			</textField>
@@ -101,7 +101,7 @@ order by DCL_DESC, DIS_DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="SansSerif" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Out.Patient}]]></textFieldExpression>
 			</textField>

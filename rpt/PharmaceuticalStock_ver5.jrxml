@@ -100,42 +100,42 @@ ORDER BY $P!{sortBy}]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="DejaVuSans" size="12" isBold="true"/>
+						<font fontName="DejaVu Sans" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{MDSRT_DESC}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement key="staticText-10" x="611" y="0" width="74" height="18" forecolor="#FFFFFF" uuid="0699d9df-a578-4108-84b4-aea1d9153e27"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="DejaVuSans" isBold="true"/>
+						<font fontName="DejaVu Sans" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{Qty}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement key="staticText-11" x="555" y="0" width="56" height="18" forecolor="#FFFFFF" uuid="47331401-4f40-4503-a117-42ea284f957f"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="DejaVuSans" isBold="true"/>
+						<font fontName="DejaVu Sans" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{Critical}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement key="staticText-12" x="685" y="0" width="62" height="18" forecolor="#FFFFFF" uuid="b96c6cfc-dacf-4a38-98bb-0a0362c5ae66"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="DejaVuSans" isBold="true"/>
+						<font fontName="DejaVu Sans" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{Value}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement key="staticText-14" x="219" y="0" width="336" height="18" forecolor="#FFFFFF" uuid="b6bc4abb-47bb-45c0-8122-5f420886e5a5"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="DejaVuSans" isBold="true"/>
+						<font fontName="DejaVu Sans" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{Nom}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement key="staticText-15" x="152" y="0" width="67" height="18" forecolor="#FFFFFF" uuid="3f997978-fec3-403f-bd93-00cd2b80ca65"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="DejaVuSans" isBold="true"/>
+						<font fontName="DejaVu Sans" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{Exp}]]></textFieldExpression>
 				</textField>
@@ -152,7 +152,7 @@ ORDER BY $P!{sortBy}]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="DejaVuSans" size="12" isBold="true"/>
+						<font fontName="DejaVu Sans" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{GROUP_VALUE}]]></textFieldExpression>
 				</textField>
@@ -165,7 +165,7 @@ ORDER BY $P!{sortBy}]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="DejaVuSans" size="12" isBold="true"/>
+						<font fontName="DejaVu Sans" size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Value " + $F{MDSRT_DESC}]]></textFieldExpression>
 				</textField>
@@ -191,7 +191,7 @@ ORDER BY $P!{sortBy}]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="DejaVuSans" size="8" isBold="true"/>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{MDSR_MIN_STOCK_QTI}]]></textFieldExpression>
 				</textField>
@@ -204,7 +204,7 @@ ORDER BY $P!{sortBy}]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="DejaVuSans" size="8" isBold="true"/>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{MEDICAL_SUM}]]></textFieldExpression>
 				</textField>
@@ -220,7 +220,7 @@ ORDER BY $P!{sortBy}]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="DejaVuSans" size="8" isBold="true"/>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{MEDICAL_VALUE}]]></textFieldExpression>
 				</textField>
@@ -233,7 +233,7 @@ ORDER BY $P!{sortBy}]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="DejaVuSans" size="8" isBold="true"/>
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{MDSR_DESC}]]></textFieldExpression>
 				</textField>
@@ -254,7 +254,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="DejaVuSans" size="12" isBold="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
@@ -267,7 +267,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
@@ -280,7 +280,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
@@ -293,7 +293,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="DejaVuSans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
@@ -306,7 +306,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVuSans" size="12" isBold="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Date}+":"]]></textFieldExpression>
 			</textField>
@@ -449,7 +449,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
@@ -463,7 +463,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
@@ -477,7 +477,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="DejaVuSans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
@@ -501,7 +501,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="DejaVuSans" size="12" isBold="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{TotalValue}]]></textFieldExpression>
 			</textField>
@@ -514,7 +514,7 @@ ORDER BY $P!{sortBy}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="DejaVuSans" size="12" isBold="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_VALUE}]]></textFieldExpression>
 			</textField>

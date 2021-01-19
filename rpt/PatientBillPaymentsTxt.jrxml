@@ -43,7 +43,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
@@ -56,7 +56,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
@@ -69,7 +69,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
@@ -82,7 +82,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
@@ -99,7 +99,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["BILL N. " + $F{BLL_ID}]]></textFieldExpression>
 			</textField>
@@ -112,7 +112,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Date: " + $F{BLL_UPDATE}.toLocaleString()]]></textFieldExpression>
 			</textField>
@@ -125,7 +125,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["PAT. N. " + $F{BLL_ID_PAT} + " - " + $F{BLL_PAT_NAME}]]></textFieldExpression>
 			</textField>
@@ -138,7 +138,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Cashier: " + $F{BLL_USR_ID_A}]]></textFieldExpression>
 			</textField>
@@ -155,7 +155,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
 			</textField>
@@ -172,7 +172,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLP_DATE}]]></textFieldExpression>
 			</textField>
@@ -185,7 +185,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLP_AMOUNT}]]></textFieldExpression>
 			</textField>
@@ -208,7 +208,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAID}]]></textFieldExpression>
 			</textField>
@@ -221,7 +221,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{TotalUPPERCASE}+":"]]></textFieldExpression>
 			</textField>
@@ -234,7 +234,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Balance}+":"]]></textFieldExpression>
 			</textField>
@@ -247,7 +247,7 @@ ORDER BY BLP_DATE ASC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_BALANCE}]]></textFieldExpression>
 			</textField>

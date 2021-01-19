@@ -49,7 +49,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
@@ -62,7 +62,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
@@ -75,7 +75,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
@@ -88,7 +88,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
@@ -105,7 +105,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{BillN}+" " + $P{billID}]]></textFieldExpression>
 			</textField>
@@ -118,7 +118,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Date}+": " + $F{BLL_UPDATE}.toLocaleString()]]></textFieldExpression>
 			</textField>
@@ -131,7 +131,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Pat.N}+" " + $F{BLL_ID_PAT} + " - " + $F{BLL_PAT_NAME}]]></textFieldExpression>
 			</textField>
@@ -144,7 +144,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Cashier}+": " + $F{BLL_USR_ID_A}]]></textFieldExpression>
 			</textField>
@@ -161,7 +161,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
 			</textField>
@@ -178,7 +178,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLI_ITEM_DESC}]]></textFieldExpression>
 			</textField>
@@ -191,7 +191,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLI_ITEM_AMOUNT} + "  x  " + $F{BLI_QTY}]]></textFieldExpression>
 			</textField>
@@ -204,7 +204,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_ITEM}]]></textFieldExpression>
 			</textField>
@@ -227,7 +227,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_BILL}]]></textFieldExpression>
 			</textField>
@@ -240,7 +240,7 @@ WHERE BLL_ID = $P{billID}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Courier New" size="12" isBold="false"/>
+					<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Tot}+":"]]></textFieldExpression>
 			</textField>
