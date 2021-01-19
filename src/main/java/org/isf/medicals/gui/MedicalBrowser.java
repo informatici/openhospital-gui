@@ -639,51 +639,38 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 		if (option == null)
 			return;
 
-		String from = null;
-		String to = null;
+		GregorianCalendar from = new GregorianCalendar();
+		GregorianCalendar to = new GregorianCalendar();
+		to.setTime(from.getTime());
 
 		int i = 0;
 
 		if (options.indexOf(option) == i) {
-			GregorianCalendar gc = new GregorianCalendar();
-
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-			to = from;
+			//today, nothing to change
+			//to.setTime(from.getTime());
 		}
 		if (options.indexOf(option) == ++i) {
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			//this month
+			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
 		}
 		if (options.indexOf(option) == ++i) {
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-
-			gc.add(GregorianCalendar.MONTH, 1);
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+			//next month
+			to.add(GregorianCalendar.MONTH, 1);
+			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
 		}
 		if (options.indexOf(option) == ++i) {
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-
-			gc.add(GregorianCalendar.MONTH, 2);
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+			//next two month
+			to.add(GregorianCalendar.MONTH, 2);
+			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
 		}
 		if (options.indexOf(option) == ++i) {
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-
-			gc.add(GregorianCalendar.MONTH, 3);
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+			//next three month
+			to.add(GregorianCalendar.MONTH, 3);
+			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
 		}
 		if (options.indexOf(option) == ++i) {
 			GregorianCalendar monthYear;
@@ -702,18 +689,15 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 				return;
 			}
 
-			GregorianCalendar gc = new GregorianCalendar();
-			gc.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			from = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
-
-			gc.set(GregorianCalendar.MONTH, monthYear.get(GregorianCalendar.MONTH));
-			gc.set(GregorianCalendar.YEAR, monthYear.get(GregorianCalendar.YEAR));
-			gc.set(GregorianCalendar.DAY_OF_MONTH, gc.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-			to = TimeTools.formatDateTime(gc, "dd/MM/yyyy");
+			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+			//other month
+			to.set(GregorianCalendar.MONTH, monthYear.get(GregorianCalendar.MONTH));
+			to.set(GregorianCalendar.YEAR, monthYear.get(GregorianCalendar.YEAR));
+			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
 		}
 		new GenericReportFromDateToDate(
-				from,
-				to,
+				TimeTools.formatDateTime(from, "dd/MM/yyyy"),
+				TimeTools.formatDateTime(to, "dd/MM/yyyy"),
 				"PharmaceuticalExpiration",
 				MessageBundle.getMessage("angal.medicals.expiringreport"),
 				false);
