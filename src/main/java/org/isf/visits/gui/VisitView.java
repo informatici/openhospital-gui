@@ -150,8 +150,6 @@ public class VisitView extends ModalJFrame {
 
 	private JScrollPane jScrollPaneFirstday;
 
-	private ArrayList<Visit> vsRows;
-
 	private JFrame owner;
 
 	private void initialize() {
@@ -162,17 +160,11 @@ public class VisitView extends ModalJFrame {
 	private void loadDataForWard(Ward ward) {
 		try {
 			if (ward != null)
-				vsRows = vstManager.getVisitsWard(ward.getCode());
+				visits = vstManager.getVisitsWard(ward.getCode());
 			else
-				vsRows = vstManager.getVisitsWard(null);
+				visits = vstManager.getVisitsWard(null);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
-		}
-
-		try {
-			visits = vstManager.getVisits(vsRows);
-		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
 		}
 	}
 
@@ -353,18 +345,11 @@ public class VisitView extends ModalJFrame {
 	private void addVisit(Visit vsRow) {
 		if (vsRow != null && vsRow.getVisitID() != 0) {
 
-			vsRows.add(vsRow); // FOR DB;
-			Visit thisVisit = null;
-			try {
-				thisVisit = vstManager.createVisit(vsRow);
-			} catch (OHServiceException ex) {
-				OHServiceExceptionUtil.showMessages(ex);
-			}
-			visits.add(thisVisit); // FOR GUI
+			visits.add(vsRow); // FOR GUI
 
-			if (!TimeTools.isSameDay(dateFirst, thisVisit.getDate().getTime()) && !TimeTools.isSameDay(dateSecond, thisVisit.getDate().getTime()))
+			if (!TimeTools.isSameDay(dateFirst, vsRow.getDate().getTime()) && !TimeTools.isSameDay(dateSecond, vsRow.getDate().getTime()))
 				// if new visit date is not already shown, change view
-				setDateFirstThenSecond(thisVisit.getDate().getTime());
+				setDateFirstThenSecond(vsRow.getDate().getTime());
 
 			updatePanels();
 		}
