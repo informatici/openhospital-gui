@@ -57,13 +57,9 @@ import org.isf.vactype.model.VaccineType;
  *
  * modification history
  *  20/10/2011 - Cla - insert vaccinetype managment
- *
  */
 public class VaccineEdit extends JDialog {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList vaccineListeners = new EventListenerList();
 
@@ -83,9 +79,6 @@ public class VaccineEdit extends JDialog {
     private void fireVaccineInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = vaccineListeners.getListeners(VaccineListener.class);
@@ -95,9 +88,6 @@ public class VaccineEdit extends JDialog {
     private void fireVaccineUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = vaccineListeners.getListeners(VaccineListener.class);
@@ -125,7 +115,6 @@ public class VaccineEdit extends JDialog {
 	private boolean insert = false;
 
 	/**
-     *
 	 * This is the default constructor; we pass the arraylist and the selected row
      * because we need to update them
 	 */
@@ -138,8 +127,6 @@ public class VaccineEdit extends JDialog {
 
 	/**
 	 * This method initializes this
-	 *
-	 * @return void
 	 */
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();

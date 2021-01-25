@@ -51,13 +51,9 @@ import org.isf.utils.jobjects.ModalJFrame;
  * It is possible to edit-insert-delete records
  * 
  * @author Mwithi
- * 
  */
 public class SupplierBrowser extends ModalJFrame implements SupplierEdit.SupplierListener {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public void supplierInserted(AWTEvent e) {
@@ -120,8 +116,6 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.supplier.suppliersbrowser"));
@@ -321,10 +315,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	}
 	
 	class SupplierBrowserModel extends DefaultTableModel {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public SupplierBrowserModel() {

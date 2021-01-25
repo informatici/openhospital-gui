@@ -77,10 +77,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoDateTextField;
 
 public class LabBrowser extends ModalJFrame implements LabListener, LabEditListener, LabEditExtendedListener {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public void labInserted() {
@@ -149,8 +146,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	/**
 	 * This method initializes this Frame, sets the correct Dimensions
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -585,9 +580,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	 * 
 	 */
 	class LabBrowsingModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
 
@@ -654,7 +647,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	/**
 	 * This method updates the Table because a laboratory test has been updated
 	 * Sets the focus on the same record as before
-	 * 
 	 */
 	public void laboratoryUpdated() {
 		pLabs.set(pLabs.size() - selectedrow - 1, laboratory);
@@ -667,7 +659,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	/**
 	 * This method updates the Table because a laboratory test has been inserted
 	 * Sets the focus on the first record
-	 * 
 	 */
 	public void laboratoryInserted() {
 		pLabs.add(pLabs.size(), laboratory);

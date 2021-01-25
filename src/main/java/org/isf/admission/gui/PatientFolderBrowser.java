@@ -264,7 +264,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		sorter = new TableSorter(admModel);
 		admTable = new JTable(sorter);   
                 
-                /*** apply default oh cellRender *****/
+                /* ** apply default oh cellRender **** */
 		admTable.setDefaultRenderer(Object.class, cellRenderer);
 		admTable.setDefaultRenderer(Double.class, cellRenderer);
 		admTable.addMouseMotionListener(new MouseMotionListener() {			
@@ -320,7 +320,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		labModel = new LabBrowserModel();
 		sorterLab = new TableSorter(labModel);
 		labTable = new JTable(sorterLab);
-                /*** apply default oh cellRender *****/
+                /* ** apply default oh cellRender **** */
 		labTable.setDefaultRenderer(Object.class, cellRenderer);
 		labTable.setDefaultRenderer(Double.class, cellRenderer);
 		labTable.addMouseMotionListener(new MouseMotionListener() {

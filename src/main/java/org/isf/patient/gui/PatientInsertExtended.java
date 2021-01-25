@@ -322,8 +322,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes
-	 * @param owner 
-	 * 
+	 * @param owner
 	 */
 	public PatientInsertExtended(JFrame owner, Patient old, boolean inserting) {
 		super(owner, true);
@@ -351,7 +350,6 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
 	 */
 	private void initialize() {
 
@@ -757,7 +755,6 @@ public class PatientInsertExtended extends JDialog {
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-
 	private JPanel getJBirthDateGroupPanel() {
 		class BirthDateChooser extends JDateChooser {
 
@@ -1325,8 +1322,6 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes ageType & ageTypeMonths
-	 * 
-	 * @return javax.swing.JPanel
 	 */
 	private void parseAgeType() {
 
@@ -2135,7 +2130,7 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	/**
-	 * set a specific border+title to a panel
+	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);

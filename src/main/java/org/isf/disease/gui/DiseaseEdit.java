@@ -134,7 +134,6 @@ public class DiseaseEdit extends JDialog {
 	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 	/**
-	 * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
 	 * because we need to update them
 	 */
@@ -147,8 +146,6 @@ public class DiseaseEdit extends JDialog {
 	
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		this.setContentPane(getJContentPane());

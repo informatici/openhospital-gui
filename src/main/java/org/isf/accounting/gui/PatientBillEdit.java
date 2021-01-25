@@ -121,7 +121,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			((PatientBillListener)listeners[i]).billInserted(event);
 	}
 //---------------------------------------------------------------------------
-	/**
+	/* *
 	public void patientSelected(Patient patient) {
 		patientSelected = patient;
 		ArrayList<Bill> patientPendingBills;
@@ -213,7 +213,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		//jTextFieldSearch.setEnabled(true);
 		//jTextFieldSearch.grabFocus();
 		checkIfsameMonth();
-	} **/
+	} * */
 	
 	public void patientSelected(Patient patient){
 		// patientSelected = patient;
@@ -246,9 +246,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						insert = false;
 						setBill(patientPendingBills.get(0));
 						
-						/******* Check if it is same month ***************/
+						/* ****** Check if it is same month ************** */
 						//checkIfsameMonth();
-						/*************************************************/
+						/* *********************************************** */
 					}
 				}
 				else{
@@ -257,9 +257,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					insert = false;
 					setBill(patientPendingBills.get(0));
 					
-					/******* Check if it is same month ***************/
+					/* ****** Check if it is same month ************** */
 					//checkIfsameMonth();
-					/*************************************************/
+					/* *********************************************** */
 				}
 			} else {
 
@@ -284,9 +284,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						if(resp==JOptionPane.YES_OPTION){							
 							insert = false;
 							setBill(patientPendingBills.get(0));						
-							/******* Check if it is same month ***************/
+							/* ****** Check if it is same month ************** */
 							//checkIfsameMonth();
-							/*************************************************/
+							/* *********************************************** */
 						} else {
 							dispose();
 						}

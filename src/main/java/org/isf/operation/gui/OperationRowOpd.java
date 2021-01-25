@@ -72,9 +72,6 @@ import com.toedter.calendar.JDateChooser;
 
 public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JLabel labelDate;
 	private JTextField textFieldUnit;
@@ -245,7 +242,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		panelGridData.add(scrollPaneData);
 
 		tableData = new JTable();
-		/*** apply default oh cellRender *****/
+		/* ** apply default oh cellRender **** */
 		tableData.setDefaultRenderer(Object.class, cellRenderer);
 		tableData.setDefaultRenderer(Double.class, cellRenderer);
 
@@ -372,7 +369,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 	public void addToForm() {
 		OperationRow opeRow = (OperationRow) oprowData.get(tableData.getSelectedRow());
-		/*** for combo operation *****/
+		/* ** for combo operation **** */
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
 			opeList.addAll(opeManager.getOperationOpd());
@@ -401,7 +398,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
 		}
 
-		/****** resultat *****/
+		/* ***** resultat **** */
 		int index = -1;
 		for (int i = 0; i < operationResults.size(); i++) {
 			if (opeRow.getOpResult() != null && (operationResults.get(i) + "").equals(opeRow.getOpResult())) { //$NON-NLS-1$
@@ -409,7 +406,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			}
 		}
 		comboResult.setSelectedIndex(index + 1);
-		/*************/
+		/* *********** */
 
 	}
 
@@ -519,8 +516,5 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 	public void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
-
-
-
 
 }

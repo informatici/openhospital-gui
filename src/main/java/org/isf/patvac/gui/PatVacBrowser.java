@@ -80,9 +80,6 @@ import org.isf.vactype.model.VaccineType;
 
 public class PatVacBrowser extends ModalJFrame {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final String VERSION="v1.2";
@@ -141,8 +138,6 @@ public class PatVacBrowser extends ModalJFrame {
 
 	/**
 	 * This method initializes this Frame, sets the correct Dimensions
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -646,10 +641,9 @@ public class PatVacBrowser extends ModalJFrame {
 	/**
 	 * This method initializes comboVaccine.
 	 * It used to display available vaccine  
-      * 
+     *
 	 * @return vaccineComboBox (JComboBox)
 	 */
-	
 	private JComboBox getComboVaccines() {
 		if (vaccineComboBox == null) {
 			vaccineComboBox = new JComboBox();
@@ -683,7 +677,6 @@ public class PatVacBrowser extends ModalJFrame {
 	 * 
 	 * @return dateFrom (JPanel)
 	 */
-	
 	private CustomJDateChooser getDateFromPanel() {
 		if (dateFrom == null) {
 			GregorianCalendar now = new GregorianCalendar();
@@ -716,7 +709,7 @@ public class PatVacBrowser extends ModalJFrame {
 	}
 	
 	/**
-	 * This method initializes filterButton, which is the button that perform
+	 * This method initializes filterButton, which is the button that performs
 	 * the filtering and calls the methods to refresh the Table
 	 * 
 	 * @return filterButton (JButton)
@@ -807,14 +800,9 @@ public class PatVacBrowser extends ModalJFrame {
 	
 	/**
 	 * This class defines the model for the Table
-	 * 
-	 * 
 	 */
-	
 	class PatVacBrowsingModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 
@@ -862,7 +850,7 @@ public class PatVacBrowser extends ModalJFrame {
 
 		/** 
 	     * This method converts a column number in the table
-	     * to the right number of the datas.
+	     * to the right number in the data.
 	     */
 	    protected int getNumber(int col) {
 	    	// right number to return
@@ -919,11 +907,7 @@ public class PatVacBrowser extends ModalJFrame {
 		
 	}
 
-	/**
-	 * 
-	 */
 	private void updateRowCounter() {
 		rowCounter.setText(rowCounterText + lPatVac.size());
 	}
 }
-

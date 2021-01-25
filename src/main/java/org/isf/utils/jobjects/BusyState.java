@@ -31,8 +31,8 @@ import java.awt.Container;
 
 /**
  * Offer a method that enable or disable a component and all its children.
- * The cursor is changed to <code>WAIT_CURSOR</code> when disabling widgets, to
- * <code>DEFAULT_CURSOR</code> when enabling them.
+ * The cursor is changed to {@code WAIT_CURSOR} when disabling widgets, to
+ * {@code DEFAULT_CURSOR} when enabling them.
  * 
  * The method is not recursive, so <i>grandchildren</i> aren't processed: it only
  * works on a component and its first level children.

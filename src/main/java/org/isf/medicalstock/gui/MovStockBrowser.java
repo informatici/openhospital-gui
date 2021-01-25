@@ -106,9 +106,6 @@ import org.slf4j.LoggerFactory;
 
 public class MovStockBrowser extends ModalJFrame {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static Logger logger = LoggerFactory.getLogger(MovStockBrowser.class);
@@ -226,7 +223,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * this method controls if the automaticlot option is on
+	 * This method controls if the automaticlot option is on
 	 *
 	 * @return
 	 */
@@ -809,11 +806,10 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * this method creates the button that filters the data
+	 * This method creates the button that filters the data
 	 *
 	 * @return
 	 */
-
 	private JButton getFilterButton() {
 		filterButton = new JButton(MessageBundle.getMessage("angal.medicalstock.filter"));
 		filterButton.setMnemonic(KeyEvent.VK_F);
@@ -924,7 +920,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * this method creates the button that close the mask
+	 * This method creates the button that close the mask
 	 *
 	 * @return
 	 */
@@ -941,13 +937,13 @@ public class MovStockBrowser extends ModalJFrame {
 		return closeButton;
 	}
 
-	/**
-	 * this method creates the button that deletes all the records in
-	 * medicaldsrstockmov and lot it is for training pourposes only to be
-	 * deleted in production environment
-	 *
-	 * @return
-	 */
+//	/**
+//	 * This method creates the button that deletes all the records in
+//	 * medicaldsrstockmov and lot it is for training pourposes only to be
+//	 * deleted in production environment
+//	 *
+//	 * @return
+//	 */
 	/*private JButton getdeleteAllButton() {
 		deleteAllButton = new JButton(MessageBundle.getMessage("angal.medicalstock.deleteall"));
 		deleteAllButton.setMnemonic(KeyEvent.VK_D);
@@ -980,7 +976,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}*/
 
 	//	/**
-	//	 * this method creates the button that load the insert movement mask
+	//	 * This method creates the button that load the insert movement mask
 	//	 *
 	//	 * @return
 	//	 */
@@ -1001,7 +997,7 @@ public class MovStockBrowser extends ModalJFrame {
 	//	}
 
 	/**
-	 * this method creates the button that load the charging movement mask
+	 * This method creates the button that load the charging movement mask
 	 *
 	 * @return
 	 */
@@ -1024,7 +1020,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * this method creates the button that load the discharging movement mask
+	 * This method creates the button that load the discharging movement mask
 	 *
 	 * @return
 	 */
@@ -1170,9 +1166,6 @@ public class MovStockBrowser extends ModalJFrame {
 	 */
 	class MovBrowserModel extends DefaultTableModel {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public MovBrowserModel() {
@@ -1286,9 +1279,6 @@ public class MovStockBrowser extends ModalJFrame {
 
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -1303,9 +1293,6 @@ public class MovStockBrowser extends ModalJFrame {
 
 	class RightAlignCellRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -1317,9 +1304,6 @@ public class MovStockBrowser extends ModalJFrame {
 
 	class DecimalFormatRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 		private final DecimalFormat formatter100 = new DecimalFormat("#,##0.000");
 		private final DecimalFormat formatter10 = new DecimalFormat("#,##0.00");

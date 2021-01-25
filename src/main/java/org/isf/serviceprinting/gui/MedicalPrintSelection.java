@@ -56,10 +56,9 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 /**
  * @deprecated in favor of new reports StockCard and StockLedger
  */
+@Deprecated
 public class MedicalPrintSelection extends JDialog implements ActionListener{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JPanel selectionPanel;
 	private JPanel buttonsPanel;

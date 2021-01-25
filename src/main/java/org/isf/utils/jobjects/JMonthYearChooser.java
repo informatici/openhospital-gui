@@ -21,10 +21,6 @@
  */
 package org.isf.utils.jobjects;
 
-/**
- * MonthYearChooser.java - 14/dic/2012
- */
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.GregorianCalendar;
@@ -39,14 +35,11 @@ import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
 /**
+ * MonthYearChooser.java - 14/dic/2012
  * @author Mwithi
- *
  */
 public class JMonthYearChooser extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private GregorianCalendar gc = new GregorianCalendar();

@@ -75,7 +75,7 @@ public class MedicalsrMovPatList extends JPanel {
 		}
 		JtableData = new JTable();
 		scrollPaneData.setViewportView(JtableData);
-		/*** apply default oh cellRender *****/
+		/* ** apply default oh cellRender **** */
 		JtableData.setDefaultRenderer(Object.class, cellRenderer);
 		JtableData.setDefaultRenderer(Double.class, cellRenderer);
 		
