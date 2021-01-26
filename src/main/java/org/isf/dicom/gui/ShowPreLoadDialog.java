@@ -140,7 +140,6 @@ class ShowPreLoadDialog extends JDialog {
 				gbc_dateListLabel.insets = new Insets(5, 5, 5, 5);
 				gbc_dateListLabel.gridx = 0;
 				gbc_dateListLabel.gridy = 1;
-				gbc_dateListLabel.anchor = GridBagConstraints.WEST;
 				gbc_dateListLabel.anchor = GridBagConstraints.NORTHWEST;
 				JLabel dateListLabel = new JLabel("Other dates" + ":");
 				centerPanel.add(dateListLabel, gbc_dateListLabel);
