@@ -47,9 +47,6 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList medicaldsrstockmovTypeListeners = new EventListenerList();
 
@@ -69,9 +66,6 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
     private void fireMedicaldsrstockmovInserted(MovementType anMedicaldsrstockmovType) {
         AWTEvent event = new AWTEvent(anMedicaldsrstockmovType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
@@ -81,9 +75,6 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
     private void fireMedicaldsrstockmovUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
@@ -113,7 +104,6 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	private MedicaldsrstockmovTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 	
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -128,8 +118,6 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		
@@ -390,5 +378,3 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 
 
 }  //  @jve:decl-index=0:visual-constraint="146,61"
-
-

@@ -46,9 +46,6 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DeliveryResultTypeBrowserEdit extends JDialog{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList deliveryresultTypeListeners = new EventListenerList();
 
@@ -68,9 +65,6 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
     private void fireDeliveryResultInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
@@ -80,9 +74,6 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
     private void fireDeliveryResultUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
@@ -105,8 +96,8 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
 	private JLabel jDescripitonLabel = null;
+
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -121,8 +112,6 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		
@@ -344,5 +333,4 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 
 
 }  //  @jve:decl-index=0:visual-constraint="146,61"
-
 

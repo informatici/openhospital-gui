@@ -21,10 +21,6 @@
  */
 package org.isf.utils.jobjects;
 
-/**
- * just a subclass to set transparency and some stuff.
- */
-
 import javax.swing.Icon;
 import javax.swing.JButton;
 
@@ -33,12 +29,11 @@ import javax.swing.JButton;
  * 
  * JButton subclass, it help to create a transparent
  * button with only an Icon in the center
+ *
+ * just a subclass to set transparency and some stuff.
  */
 public class IconButton extends JButton {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**

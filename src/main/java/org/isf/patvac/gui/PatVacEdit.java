@@ -69,9 +69,7 @@ import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
 public class PatVacEdit extends JDialog {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -4271389493861772053L;
 	private static final String VERSION = "v1.2";
 	private boolean insert = false;
@@ -142,8 +140,6 @@ public class PatVacEdit extends JDialog {
 
 	/**
 	 * This method initializes this Frame, sets the correct Dimensions
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 
@@ -233,7 +229,6 @@ public class PatVacEdit extends JDialog {
 	 * 
 	 * @return JPanel
 	 */
-
 	private JPanel getPatientSearchPanel() {
 		if (jPatientSearchPanel == null) {
 			jPatientSearchPanel = new JPanel();
@@ -309,7 +304,6 @@ public class PatVacEdit extends JDialog {
 	 * 
 	 * @return JButton
 	 */
-
 	private JButton getJSearchButton() {
 		if (jSearchButton == null) {
 			jSearchButton = new JButton();
@@ -367,7 +361,7 @@ public class PatVacEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes vaccineTypeCOmboBox. It used to display available
+	 * This method initializes vaccineTypeCOmboBox. It is used to display available
 	 * vaccine types
 	 * 
 	 * @return vaccineTypeComboBox (JComboBox)
@@ -411,7 +405,7 @@ public class PatVacEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes comboVaccine. It used to display available
+	 * This method initializes comboVaccine. It is used to display available
 	 * vaccines
 	 * 
 	 * @return vaccineComboBox (JComboBox)
@@ -453,8 +447,6 @@ public class PatVacEdit extends JDialog {
 
 	/**
 	 * This method filter patient based on search string
-	 * 
-	 * @return void
 	 */
 	private void filterPatient(String key) {
 		patientComboBox.removeAllItems();
@@ -498,8 +490,6 @@ public class PatVacEdit extends JDialog {
 
 	/**
 	 * This method reset patient's additonal data
-	 * 
-	 * @return void
 	 */
 	private void resetPatVacPat() {
 		patTextField.setText("");
@@ -510,8 +500,6 @@ public class PatVacEdit extends JDialog {
 
 	/**
 	 * This method sets patient's additonal data
-	 * 
-	 * @return void
 	 */
 	private void setPatient(Patient selectedPatient) {
 		patTextField.setText(selectedPatient.getName());
@@ -520,7 +508,7 @@ public class PatVacEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes patientComboBox. It used to display available
+	 * This method initializes patientComboBox. It is used to display available
 	 * patients
 	 * 
 	 * @return patientComboBox (JComboBox)
@@ -753,7 +741,6 @@ public class PatVacEdit extends JDialog {
 	 * 
 	 * @return cancelButton (JPanel)
 	 */
-
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
 			cancelButton = new JButton();

@@ -61,10 +61,6 @@ import org.isf.utils.jobjects.VoLimitedTextField;
  */
 public class MedicalEdit extends JDialog {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private EventListenerList medicalListeners = new EventListenerList();
@@ -85,9 +81,6 @@ public class MedicalEdit extends JDialog {
 	private void fireMedicalInserted(Medical medical) {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -99,9 +92,6 @@ public class MedicalEdit extends JDialog {
 	private void fireMedicalUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -133,7 +123,6 @@ public class MedicalEdit extends JDialog {
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 
 	/**
-	 * 
 	 * This is the default constructor; we pass the arraylist and the
 	 * selectedrow because we need to update them
 	 */
@@ -151,8 +140,6 @@ public class MedicalEdit extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 
@@ -378,6 +365,7 @@ public class MedicalEdit extends JDialog {
 		}
 		return descriptionTextField;
 	}
+
 	/**
 	 * This method initializes codeTextField
 	 * 

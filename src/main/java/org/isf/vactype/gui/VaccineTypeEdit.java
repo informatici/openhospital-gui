@@ -77,9 +77,6 @@ public class VaccineTypeEdit extends JDialog{
     private void fireVaccineInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
@@ -91,9 +88,6 @@ public class VaccineTypeEdit extends JDialog{
     private void fireVaccineUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
 		EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
@@ -118,7 +112,6 @@ public class VaccineTypeEdit extends JDialog{
 	private JLabel jDescripitonLabel = null;
 
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -133,8 +126,6 @@ public class VaccineTypeEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		
@@ -355,6 +346,4 @@ public class VaccineTypeEdit extends JDialog{
 		}
 		return jDescriptionLabelPanel;
 	}
-}  //
-
-
+}

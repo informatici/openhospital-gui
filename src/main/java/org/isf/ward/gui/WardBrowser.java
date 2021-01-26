@@ -51,13 +51,9 @@ import org.isf.ward.model.Ward;
  * It is possible to edit-insert-delete records
  * 
  * @author Rick
- * 
  */
 public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public void wardInserted(AWTEvent e) {
@@ -129,8 +125,6 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.ward.wardsbrowser"));
@@ -330,10 +324,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	}
 	
 	class WardBrowserModel extends DefaultTableModel {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public WardBrowserModel() {

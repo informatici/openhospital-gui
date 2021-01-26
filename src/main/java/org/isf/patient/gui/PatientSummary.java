@@ -67,7 +67,7 @@ public class PatientSummary {
 	}
 
 	/**
-	 * a short summary in AdmissionBrowser
+	 * A short summary in AdmissionBrowser
 	 * 
 	 * @return
 	 */
@@ -90,7 +90,7 @@ public class PatientSummary {
 	}
 
 	/**
-	 * create and returns a JPanel with all patient's informations
+	 * Create and returns a JPanel with all patient's information
 	 * 
 	 * @return
 	 */

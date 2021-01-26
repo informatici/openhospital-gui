@@ -79,10 +79,6 @@ import org.isf.ward.model.Ward;
 import com.toedter.calendar.JDateChooser;
 
 /**
- * @author Mwithi
- */
-
-/**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
  * Builder, which is free for non-commercial use. If Jigloo is being used
  * commercially (ie, by a corporation, company or business for any purpose
@@ -91,12 +87,11 @@ import com.toedter.calendar.JDateChooser;
  * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
  * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
+ *
+ * @author Mwithi
  */
 public class VisitView extends ModalJFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList visitViewListeners = new EventListenerList();
 
@@ -112,9 +107,6 @@ public class VisitView extends ModalJFrame {
 	private void fireVisitsUpdated() {
 		AWTEvent event = new AWTEvent(VisitView.this, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -570,9 +562,6 @@ public class VisitView extends ModalJFrame {
 
 	class CenterTableCellRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

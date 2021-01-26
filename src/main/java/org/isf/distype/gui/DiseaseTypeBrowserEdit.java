@@ -105,9 +105,9 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
 	private JLabel jDescripitonLabel = null;
+
 	/**
-     * 
-	 * This is the default constructor; we pass the arraylist and the selectedrow
+     * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
 	public DiseaseTypeBrowserEdit(JFrame owner,DiseaseType old,boolean inserting) {
@@ -121,8 +121,6 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		
@@ -350,5 +348,3 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 
 
 }  //  @jve:decl-index=0:visual-constraint="146,61"
-
-

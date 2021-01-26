@@ -62,9 +62,6 @@ import org.isf.xmpp.manager.Interaction;
 
 public class ReportLauncher extends ModalJFrame{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int pfrmExactWidth = 500;
 	private int pfrmExactHeight = 165;
@@ -146,9 +143,7 @@ public class ReportLauncher extends ModalJFrame{
 	}
 
 	/**
-	 * This method initializes this	
-	 * 	
-	 * @return void	
+	 * This method initializes this
 	 */
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.stat.reportlauncher"));
@@ -460,8 +455,8 @@ public class ReportLauncher extends ModalJFrame{
 		
 	}
 
-	/*
-	 * set a specific border+title to a panel
+	/**
+	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(

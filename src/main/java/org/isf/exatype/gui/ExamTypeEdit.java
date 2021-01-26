@@ -54,9 +54,6 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class ExamTypeEdit extends JDialog{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final String VERSION="v1.2"; 
@@ -79,9 +76,6 @@ public class ExamTypeEdit extends JDialog{
     private void fireExamTypeInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
@@ -91,9 +85,6 @@ public class ExamTypeEdit extends JDialog{
     private void fireExamTypeUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
@@ -116,8 +107,8 @@ public class ExamTypeEdit extends JDialog{
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
 	private JLabel jDescripitonLabel = null;
+
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -132,8 +123,6 @@ public class ExamTypeEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		
@@ -354,5 +343,3 @@ public class ExamTypeEdit extends JDialog{
 
 
 }  //  @jve:decl-index=0:visual-constraint="146,61"
-
-

@@ -52,9 +52,6 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
 public class UserEdit extends JDialog {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList userListeners = new EventListenerList();
 
@@ -74,9 +71,6 @@ public class UserEdit extends JDialog {
     private void fireUserInserted(User aUser) {
         AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = userListeners.getListeners(UserListener.class);
@@ -86,9 +80,6 @@ public class UserEdit extends JDialog {
     private void fireUserUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = userListeners.getListeners(UserListener.class);
@@ -118,7 +109,6 @@ public class UserEdit extends JDialog {
 	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
     
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -132,8 +122,6 @@ public class UserEdit extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		

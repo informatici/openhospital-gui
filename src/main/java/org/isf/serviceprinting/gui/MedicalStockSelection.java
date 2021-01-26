@@ -67,11 +67,9 @@ import org.isf.ward.model.Ward;
 /**
  * @deprecated in favor of new reports StockCard and StockLedger
  */
+@Deprecated
 public class MedicalStockSelection extends JDialog implements ActionListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private JPanel selectionPanel;
@@ -135,6 +133,7 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 		this.setTitle("Movement Stock Print Selection");
 		pack();
 	}
+
 	/**
 	 * ascaksch
 	 * @return un pannello

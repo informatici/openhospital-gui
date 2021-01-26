@@ -1660,9 +1660,9 @@ public class AdmissionBrowser extends ModalJFrame {
 //		return operationPanel;
 //	}
 
-	/**
-	 * @return
-	 */
+//	/**
+//	 * @return
+//	 */
 //	private JPanel getOperationResultPanel() {
 //		if (resultPanel == null) {
 //			resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -2187,7 +2187,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 					// ready to save...
 					if (!editing && !isDischarge) {
-                                                /**** operation date control ****/
+                                                /* *** operation date control *** */
 //						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
 //						{
 //							JOptionPane.showMessageDialog(AdmissionBrowser.this,
@@ -2195,7 +2195,7 @@ public class AdmissionBrowser extends ModalJFrame {
 //										JOptionPane.PLAIN_MESSAGE);
 //				  		    return;
 //						}	
-					    /*********************************/
+					    /* ******************************* */
 						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
 						if(!errors.isEmpty()) {
 							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
@@ -2219,7 +2219,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						}
 						
 					} else if (!editing && isDischarge) {
-                                                /**** operation date control ****/
+                                                /* *** operation date control *** */
 //						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
 //						{								
 //					  		  JOptionPane.showMessageDialog(AdmissionBrowser.this,
@@ -2243,7 +2243,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						}
 						
 					} else {
-                                                /**** operation date control ****/
+                                                /* *** operation date control *** */
 //						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
 //						{
 //							JOptionPane.showMessageDialog(AdmissionBrowser.this,
@@ -2317,7 +2317,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		if(admission.getDisDate()!=null)endDate=admission.getDisDate().getTime();else endDate=null;
 		for (org.isf.operation.model.OperationRow opRow : list) {
 			Date currentRowDate = opRow.getOpDate().getTime();
-			/**
+			/*
 			 * prevent for fails due to time 
 			 */
 			currentRowDate.setHours(23);

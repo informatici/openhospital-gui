@@ -42,13 +42,9 @@ import org.isf.utils.jobjects.ModalJFrame;
  * This class launch reports creation
  * 
  * @author Rick
- *
  */
 public class DiseasesListLauncher extends ModalJFrame{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final String VERSION="v 1.0"; 
@@ -77,9 +73,7 @@ public class DiseasesListLauncher extends ModalJFrame{
 	}
 
 	/**
-	 * This method initializes this	
-	 * 	
-	 * @return void	
+	 * This method initializes this
 	 */
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.stat.diseasereport") + " ("+VERSION+")");
@@ -181,8 +175,8 @@ public class DiseasesListLauncher extends ModalJFrame{
 	}
 
 	
-	/*
-	 * set a specific border+title to a panel
+	/**
+	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(

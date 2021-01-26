@@ -74,9 +74,7 @@ import org.joda.time.DateTime;
  * @author hp
  */
 public class OperationRowAdm extends JPanel implements AdmissionBrowser.AdmissionListener {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JLabel labelDate;
 	private JTextField textFieldUnit;
@@ -247,7 +245,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		panelGridData.add(scrollPaneData);
 
 		tableData = new JTable();
-		/*** apply default oh cellRender *****/
+		/* ** apply default oh cellRender **** */
 		tableData.setDefaultRenderer(Object.class, cellRenderer);
 		tableData.setDefaultRenderer(Double.class, cellRenderer);
 
@@ -382,7 +380,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	public void addToForm() {
 		OperationRow opeRow = (OperationRow) oprowData.get(tableData.getSelectedRow());
-		/*** for combo operation *****/
+		/* ** for combo operation **** */
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {
 			opeList.addAll(opeManager.getOperationAdm());
@@ -411,7 +409,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
 		}
 
-		/****** resultat *****/
+		/* ***** resultat **** */
 		int index = -1;
 		for (int i = 0; i < operationResults.size(); i++) {
 			if (opeRow.getOpResult() != null && (operationResults.get(i) + "").equals(opeRow.getOpResult())) { //$NON-NLS-1$
@@ -419,7 +417,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			}
 		}
 		comboResult.setSelectedIndex(index + 1);
-		/*************/
+		/* *********** */
 
 	}
 
