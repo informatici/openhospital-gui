@@ -203,7 +203,6 @@ public class WardPharmacyRectify extends JDialog {
 	public WardPharmacyRectify(JFrame owner, Ward ward, Medical medical) {
 		super(owner, true);
 		wardSelected = ward;
-		medical= medical;
 		try {
 			wardDrugs = wardManager.getMedicalsWard(wardSelected.getCode().charAt(0), false);
 		} catch (OHServiceException e) {
