@@ -210,14 +210,8 @@ public class PatientDataBrowser extends ModalJFrame implements
 				break;
 			}
 		}
-		if (isMalnutrition){
-			patientData.add(ps.getPatientCompleteSummary(), BorderLayout.WEST);
-		}
-		else {
-			//patientData.add(ps.getPatientDataPanel(), BorderLayout.WEST);			
-			patientData.add(ps.getPatientCompleteSummary(), BorderLayout.WEST);
-		}
-		
+		patientData.add(ps.getPatientCompleteSummary(), BorderLayout.WEST);
+
 		return patientData;
 	}
 	
