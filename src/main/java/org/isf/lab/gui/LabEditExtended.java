@@ -417,7 +417,10 @@ public class LabEditExtended extends ModalJFrame {
 		//String key = s;
 		PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 		try {
-			pat = patBrowser.getPatient();
+			if (insert) {
+				// TODO: Investigate whether this should be deprecated in favor of getPatient(int page, int size)
+				pat = patBrowser.getPatient();
+			}
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
