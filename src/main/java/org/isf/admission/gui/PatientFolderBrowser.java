@@ -695,9 +695,17 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		}
 
 		public int getRowCount() {
-			if (admList == null && opdList == null && examinationList == null)
-				return 0;
-			return admList.size() + opdList.size() + examinationList.size();
+			int count = 0;
+			if (admList != null) {
+				count += admList.size();
+			}
+			if (opdList != null) {
+				count += opdList.size();
+			}
+			if (examinationList != null) {
+				count += examinationList.size();
+			}
+			return count;
 		}
 
 		public String getColumnName(int c) {
