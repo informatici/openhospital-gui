@@ -29,6 +29,12 @@ public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallba
 	private final DelayTimer waitTimer;
 	private final EventQueue parentQueue;
 
+	public WaitCursorEventQueue(int delay) {
+		this.waitTimer = new DelayTimer(this, delay);
+		this.cursorManager = new CursorManager(waitTimer);
+		this.parentQueue = null;
+	}
+	
 	public WaitCursorEventQueue(int delay, EventQueue systemQueue) {
 		this.waitTimer = new DelayTimer(this, delay);
 		this.cursorManager = new CursorManager(waitTimer);

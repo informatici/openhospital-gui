@@ -51,7 +51,7 @@ public class Menu {
 		checkJavaVersion();
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "Splash.jpg", null, 3000);
-		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
+		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10);
 		Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQueue);
 	}
 
