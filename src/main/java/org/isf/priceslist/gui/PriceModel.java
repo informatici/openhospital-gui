@@ -80,7 +80,7 @@ import org.isf.utils.treetable.TreeTableModel;
  * @author Scott Violet
  */
 
-public class PriceModel extends AbstractTreeTableModel implements TreeTableModel {
+public class PriceModel extends AbstractTreeTableModel {
 
      // Names of the columns.
     static protected String[] cNames = {"Name", "Prices"};
