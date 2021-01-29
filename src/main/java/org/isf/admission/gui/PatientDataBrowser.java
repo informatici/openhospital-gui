@@ -516,10 +516,14 @@ class AdmissionBrowserModel extends DefaultTableModel {
 		
 		
 		public int getRowCount() {
-			if (admList == null && opdList == null)
-				return 0;
-			
-			return admList.size() + opdList.size();
+			int count = 0;
+			if (admList != null) {
+				count += admList.size();
+			}
+			if (opdList != null) {
+				count += opdList.size();
+			}
+			return count;
 		}
 
 		public String getColumnName(int c) {
