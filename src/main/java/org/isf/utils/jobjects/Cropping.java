@@ -21,12 +21,6 @@
  */
 package org.isf.utils.jobjects;
 
-/**
- * Cropping.java - 27/gen/2014
- *
- * @author Internet, Mwithi
- */
-
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -50,10 +44,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
 
+/**
+ * Cropping.java - 27/gen/2014
+ *
+ * @author Internet, Mwithi
+ */
 public class Cropping extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	BufferedImage image;
@@ -250,4 +247,3 @@ class ClipMoverAndResizer extends MouseInputAdapter {
 		}
 	}
 }
-

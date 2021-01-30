@@ -21,11 +21,6 @@
  */
 package org.isf.utils.jobjects;
 
-/**
- * 02-mar-2006
- * @author Theo
- */
-
 import java.awt.FlowLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -35,11 +30,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-
+/**
+ * 02-mar-2006
+ * @author Theo
+ */
 public class DateTextField extends JPanel{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JTextField day;
 	private JTextField month;
@@ -50,7 +46,6 @@ public class DateTextField extends JPanel{
 	 * This is the constructor of the DateTextField object
 	 * It displays the Date of the parameter "time"
 	 * This object consists in 3 textfields (day,month,year) editable by the user
-	 * @param time (GregorianCalendar)
 	 */
 	public DateTextField(){
 		date=new GregorianCalendar();
@@ -59,6 +54,13 @@ public class DateTextField extends JPanel{
 		month.setText("");
 		year.setText("");
 	}
+
+	/**
+	 * This is the constructor of the DateTextField object
+	 * It displays the Date of the parameter "time"
+	 * This object consists in 3 textfields (day,month,year) editable by the user
+	 * @param time (GregorianCalendar)
+	 */
 	public DateTextField(GregorianCalendar time){
 		date=time;
 		initialize();
@@ -125,6 +127,7 @@ public class DateTextField extends JPanel{
 		add(new JLabel("/"));
 		add(year);
 	}
+
 	/**
 	 * This method returns the day displayed by the object
 	 * @return int
@@ -132,6 +135,7 @@ public class DateTextField extends JPanel{
 	public int getDay(){
 		return Integer.valueOf(day.getText());
 	}
+
 	/**
 	 * This method returns the month displayed by the object
 	 * @return int
@@ -139,6 +143,7 @@ public class DateTextField extends JPanel{
 	public int getMonth(){
 		return Integer.valueOf(month.getText());
 	}
+
 	/**
 	 * This method returns the year displayed by the object
 	 * @return int
@@ -146,6 +151,7 @@ public class DateTextField extends JPanel{
 	public int getYear(){
 		return Integer.valueOf(year.getText());
 	}
+
 	/**
 	 * This method update the parameter toModify setting the date displayed by the object
 	 * @param toModify (GregorianCalendar)
@@ -157,6 +163,7 @@ public class DateTextField extends JPanel{
 		toModify.set(GregorianCalendar.YEAR,Integer.valueOf(year.getText()));
 		return toModify;
 	}
+
 	/**
 	 * This method returns the date displayed by the object
 	 * @return GregorianCalendar
@@ -173,6 +180,7 @@ public class DateTextField extends JPanel{
 		date.set(GregorianCalendar.YEAR,getYear());
 		return date;
 	}
+
 	/**
 	 * This is a basic control for the day field input
 	 * @param day (String)
@@ -187,6 +195,7 @@ public class DateTextField extends JPanel{
 			return false;
 		return true;
 	}
+
 	/**
 	 * This is a basic control for the month field input
 	 * @param month (String)
@@ -201,6 +210,7 @@ public class DateTextField extends JPanel{
 			return false;
 		return true;
 	}
+
 	/**
 	 * This is a basic control for the year field input
 	 * @param year (String)

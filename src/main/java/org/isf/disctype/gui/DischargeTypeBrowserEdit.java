@@ -121,8 +121,6 @@ public class DischargeTypeBrowserEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		

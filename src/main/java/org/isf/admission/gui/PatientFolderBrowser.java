@@ -264,7 +264,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		sorter = new TableSorter(admModel);
 		admTable = new JTable(sorter);   
                 
-                /*** apply default oh cellRender *****/
+                /* ** apply default oh cellRender **** */
 		admTable.setDefaultRenderer(Object.class, cellRenderer);
 		admTable.setDefaultRenderer(Double.class, cellRenderer);
 		admTable.addMouseMotionListener(new MouseMotionListener() {			
@@ -320,7 +320,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		labModel = new LabBrowserModel();
 		sorterLab = new TableSorter(labModel);
 		labTable = new JTable(sorterLab);
-                /*** apply default oh cellRender *****/
+                /* ** apply default oh cellRender **** */
 		labTable.setDefaultRenderer(Object.class, cellRenderer);
 		labTable.setDefaultRenderer(Double.class, cellRenderer);
 		labTable.addMouseMotionListener(new MouseMotionListener() {
@@ -695,9 +695,17 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		}
 
 		public int getRowCount() {
-			if (admList == null && opdList == null && examinationList == null)
-				return 0;
-			return admList.size() + opdList.size() + examinationList.size();
+			int count = 0;
+			if (admList != null) {
+				count += admList.size();
+			}
+			if (opdList != null) {
+				count += opdList.size();
+			}
+			if (examinationList != null) {
+				count += examinationList.size();
+			}
+			return count;
 		}
 
 		public String getColumnName(int c) {

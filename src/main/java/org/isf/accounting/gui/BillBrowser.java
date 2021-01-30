@@ -21,13 +21,6 @@
  */
 package org.isf.accounting.gui;
 
-/**
- * Browsing of table BILLS
- * 
- * @author Mwithi
- * 
- */
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -98,6 +91,12 @@ import org.joda.time.DateTime;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
+/**
+ * Browsing of table BILLS
+ *
+ * @author Mwithi
+ *
+ */
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	public void billInserted(AWTEvent event){
@@ -368,8 +367,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					
 					if (option == null) return;
 					
-					String from = null;
-					String to = null;
+					GregorianCalendar from = null;
+					GregorianCalendar to = null;
 					
 					int i = 0;
 					
@@ -379,38 +378,36 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					}
 					if (options.indexOf(option) == i) {
 							
-							from = TimeTools.formatDateTimeReport(dateToday0);
-							to = TimeTools.formatDateTimeReport(dateToday24);
+							String fromString = TimeTools.formatDateTimeReport(dateFrom);
+							String toString = TimeTools.formatDateTimeReport(dateTo);
 							String user;
 							if (GeneralData.SINGLEUSER) {
 								user = "admin";
 							} else {
 								user = UserBrowsingManager.getCurrentUser();
 							}
-							new GenericReportUserInDate(from, to, user, "BillsReportUserInDate");
+							new GenericReportUserInDate(fromString, toString, user, "BillsReportUserInDate");
 							return;
 						}
 					if (options.indexOf(option) == ++i) {
 						
-						from = TimeTools.formatDateTimeReport(dateToday0);
-						to = TimeTools.formatDateTimeReport(dateToday24);
+						from = TimeTools.getDateToday0();
+						to = TimeTools.getDateToday0();
 					}
 					if (options.indexOf(option) == ++i) {
 						
-						from = TimeTools.formatDateTimeReport(dateFrom);
-						to = TimeTools.formatDateTimeReport(dateTo);
+						from = dateFrom;
+						to = dateTo;
 					}
 					if (options.indexOf(option) == ++i) {
 						
 						month = jComboBoxMonths.getMonth();
-						GregorianCalendar thisMonthFrom = dateFrom;
-						GregorianCalendar thisMonthTo = dateTo;
-						thisMonthFrom.set(GregorianCalendar.MONTH, month);
-						thisMonthFrom.set(GregorianCalendar.DAY_OF_MONTH, 1);
-						thisMonthTo.set(GregorianCalendar.MONTH, month);
-						thisMonthTo.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-						from = TimeTools.formatDateTimeReport(thisMonthFrom);
-						to = TimeTools.formatDateTimeReport(thisMonthTo);
+						from = dateFrom;
+						to = dateTo;
+						from.set(GregorianCalendar.MONTH, month);
+						from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+						to.set(GregorianCalendar.MONTH, month);
+						to.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
 					}
 					if (options.indexOf(option) == ++i) {
 						
@@ -433,14 +430,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				            return;
 				        }
 				        
-						GregorianCalendar thisMonthFrom = dateFrom;
-						GregorianCalendar thisMonthTo = dateTo;
-						thisMonthFrom.set(GregorianCalendar.MONTH, month);
-						thisMonthFrom.set(GregorianCalendar.DAY_OF_MONTH, 1);
-						thisMonthTo.set(GregorianCalendar.MONTH, month);
-						thisMonthTo.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-						from = TimeTools.formatDateTimeReport(thisMonthFrom);
-						to = TimeTools.formatDateTimeReport(thisMonthTo);
+						from = dateFrom;
+						to = dateTo;
+						from.set(GregorianCalendar.MONTH, month);
+						from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+						to.set(GregorianCalendar.MONTH, month);
+						to.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
 					}
 					if (patientParent == null && options.indexOf(option) == ++i) {
 						JOptionPane.showMessageDialog(BillBrowser.this, MessageBundle.getMessage("angal.billbrowser.pleaseselectapatient"));
@@ -463,10 +458,18 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					if (option == null) return;
 					
 					if (options.indexOf(option) == 0) {
-						new GenericReportFromDateToDate(from, to, GeneralData.BILLSREPORTPENDING, MessageBundle.getMessage("angal.billbrowser.shortreportonlybaddebts"), false);
+						new GenericReportFromDateToDate(
+										TimeTools.formatDateTime(from, "dd/MM/yyyy"), 
+										TimeTools.formatDateTime(to, "dd/MM/yyyy"), 
+										GeneralData.BILLSREPORTPENDING, 
+										MessageBundle.getMessage("angal.billbrowser.shortreportonlybaddebts"), false);
 					}
 					if (options.indexOf(option) == 1) {
-						new GenericReportFromDateToDate(from, to, GeneralData.BILLSREPORT, MessageBundle.getMessage("angal.billbrowser.fullreportallbills"), false);
+						new GenericReportFromDateToDate(
+										 TimeTools.formatDateTime(from, "dd/MM/yyyy"), 
+										TimeTools.formatDateTime(to, "dd/MM/yyyy"), 
+										GeneralData.BILLSREPORT, 
+										MessageBundle.getMessage("angal.billbrowser.fullreportallbills"), false);
 					}
 				}
 			});

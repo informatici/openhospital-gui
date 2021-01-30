@@ -66,9 +66,6 @@ import org.isf.utils.jobjects.VoLimitedTextField;
  */
 public class OperationEdit extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList operationListeners = new EventListenerList();
 
@@ -89,9 +86,6 @@ public class OperationEdit extends JDialog {
 	private void fireOperationInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -103,9 +97,6 @@ public class OperationEdit extends JDialog {
 	private void fireOperationUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -135,7 +126,6 @@ public class OperationEdit extends JDialog {
 	private JComboBox operBox;
 
 	/**
-	 * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
 	 * because we need to update them
 	 */
@@ -148,8 +138,6 @@ public class OperationEdit extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 

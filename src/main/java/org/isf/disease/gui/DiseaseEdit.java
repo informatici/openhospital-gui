@@ -134,7 +134,6 @@ public class DiseaseEdit extends JDialog {
 	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 	/**
-	 * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
 	 * because we need to update them
 	 */
@@ -147,8 +146,6 @@ public class DiseaseEdit extends JDialog {
 	
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		this.setContentPane(getJContentPane());
@@ -302,14 +299,25 @@ public class DiseaseEdit extends JDialog {
 					disease.setIpdOutInclude(includeIpdOutCheckBox.isSelected());
 					
 					boolean result = false;
+					Disease savedDisease = null;
 					try{
 						if (insert) { // inserting
-							result = manager.newDisease(disease);
+							savedDisease = manager.newDisease(disease);
+							if (savedDisease != null) {
+								disease.setLock(savedDisease.getLock());
+								result  = true;
+							}
+							
 							if (result) {
 								fireDiseaseInserted();
 							}
 						} else { // updating
-							result = manager.updateDisease(disease);
+							savedDisease = manager.updateDisease(disease);
+							if (savedDisease != null) {
+								disease.setLock(savedDisease.getLock());
+								result  = true;
+							}
+							
 							if (result) {
 								fireDiseaseUpdated();
 							}

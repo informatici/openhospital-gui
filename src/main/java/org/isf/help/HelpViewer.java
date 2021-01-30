@@ -21,10 +21,6 @@
  */
 package org.isf.help;
 
-/**
- * HelpViewer.java - 27/nov/2012
- */
-
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -36,21 +32,16 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 
 /**
+ * HelpViewer.java - 27/nov/2012
  * @author Mwithi
  * 
  */
 public class HelpViewer extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final String MANUAL_PDF_FILE = "doc/UserManual.pdf";
 
-	/**
-	 * 
-	 */
 	public HelpViewer() {
 		File file = new File(MANUAL_PDF_FILE);
 		if (file != null) {

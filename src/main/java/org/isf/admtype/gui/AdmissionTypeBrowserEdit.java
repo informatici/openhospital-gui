@@ -122,8 +122,6 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		

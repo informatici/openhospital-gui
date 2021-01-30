@@ -78,9 +78,7 @@ import org.isf.utils.exception.model.OHSeverityLevel;
  */
 @Deprecated // what is this class???
 public class DicomViewGui extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	// status of fremereader
@@ -183,7 +181,7 @@ public class DicomViewGui extends JPanel {
 	}
 
 	/**
-	 * initialize GUI
+	 * Initialize GUI
 	 */
 	void initComponent() {
 
@@ -487,8 +485,6 @@ public class DicomViewGui extends JPanel {
 
 	/**
 	 * Load actual frame from storage
-	 * 
-	 * @return
 	 */
 	private void refreshFrame() {
 		Long id = frames[frameIndex];
@@ -511,10 +507,9 @@ public class DicomViewGui extends JPanel {
 	}
 	
 	/**
-	 * get the BufferedImage from JPG/JPEG object
+	 * Get the BufferedImage from JPG/JPEG object
 	 * 
 	 * @param dett
-	 * @return
 	 */
 	private void getImageFromJPG(FileDicom dett) {
 		try {
@@ -543,10 +538,9 @@ public class DicomViewGui extends JPanel {
 	}
 	
 	/**
-	 * get the BufferedImage from DICOM object
+	 * Get the BufferedImage from DICOM object
 	 * 
 	 * @param dett
-	 * @return
 	 */
 	private void getImageFromDicom(FileDicom dett) {
 		try {
@@ -662,7 +656,7 @@ public class DicomViewGui extends JPanel {
 	class DicomViewGuiMouseWheelListener implements MouseWheelListener {
 
 		/**
-		 * mouse wheel rolled
+		 * Mouse wheel rolled
 		 */
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -682,7 +676,7 @@ public class DicomViewGui extends JPanel {
 	class DicomViewGuiMouseMotionListener implements MouseMotionListener {
 
 		/**
-		 * mouse dragged, if is also pressed a button calculate the displacement
+		 * Mouse dragged, if is also pressed a button calculate the displacement
 		 * of position with point of initial position
 		 */
 		public void mouseDragged(MouseEvent e) {
@@ -692,7 +686,7 @@ public class DicomViewGui extends JPanel {
 		}
 
 		/**
-		 * mouse moved, NOT USED
+		 * Mouse moved, NOT USED
 		 */
 		public void mouseMoved(MouseEvent e) {
 		}
@@ -726,19 +720,19 @@ public class DicomViewGui extends JPanel {
 		}
 
 		/**
-		 * mouse clicked in frame, NOT USED
+		 * Mouse clicked in frame, NOT USED
 		 */
 		public void mouseClicked(MouseEvent e) {
 		}
 
 		/**
-		 * mouse entred in frame, NOT USED
+		 * Mouse entred in frame, NOT USED
 		 */
 		public void mouseEntered(MouseEvent e) {
 		}
 
 		/**
-		 * mouse exited of frame, NOT USED
+		 * Mouse exited of frame, NOT USED
 		 */
 		public void mouseExited(MouseEvent e) {
 		}

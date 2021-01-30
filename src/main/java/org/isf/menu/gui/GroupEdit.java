@@ -44,9 +44,6 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
 public class GroupEdit extends JDialog {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList groupListeners = new EventListenerList();
 
@@ -68,9 +65,6 @@ public class GroupEdit extends JDialog {
     private void fireGroupInserted(UserGroup aGroup) {
         AWTEvent event = new AWTEvent(aGroup, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = groupListeners.getListeners(GroupListener.class);
@@ -80,9 +74,6 @@ public class GroupEdit extends JDialog {
     private void fireGroupUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = groupListeners.getListeners(GroupListener.class);
@@ -105,7 +96,6 @@ public class GroupEdit extends JDialog {
 	private boolean insert = false;
     
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -119,8 +109,6 @@ public class GroupEdit extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		

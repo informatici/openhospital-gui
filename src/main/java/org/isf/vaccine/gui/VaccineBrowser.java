@@ -57,13 +57,9 @@ import org.isf.vactype.model.VaccineType;
  * 
  * modification history
  * 20/10/2011 - Cla - insert vaccinetype managment
- *
  */
 public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public void vaccineInserted(AWTEvent e) {
@@ -116,8 +112,6 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 
 	/**
 	 * This method initializes this
-	 *
-	 * @return void
 	 */
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.vaccine.vaccinebrowser"));
@@ -356,9 +350,6 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 
 	class VaccineBrowserModel extends DefaultTableModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public VaccineBrowserModel() {
