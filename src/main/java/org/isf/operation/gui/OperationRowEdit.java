@@ -402,7 +402,7 @@ public class OperationRowEdit extends JPanel {
 			for (String description : operationResults) {
 				comboResult.addItem(description);
 			}
-			if(opeRow != null){
+			if (opeRow != null){
 				boolean found = false;
 				for (String elem : operationResults) {
 					if(opeRow.getOpResult().equals(ope.getResultDescriptionKey(elem))) {
@@ -411,11 +411,11 @@ public class OperationRowEdit extends JPanel {
 						break;
 					}				
 				}
-				if(!found){
+				if (!found){
 					//comboOpe.addItem("");
 					comboResult.addItem(null);
 				}
-				for ( String elem : operationResults) {
+				for (String elem : operationResults) {
 					
 					comboResult.addItem(elem);
 				}
