@@ -164,8 +164,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						medicalType = (MedicalType) (((MedicalTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						medicalType = (MedicalType) (model.getValueAt(selectedrow, -1));
 						MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame,medicalType, false);
 						newrecord.addMedicalTypeListener(MedicalTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -215,8 +214,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						MedicalType dis = (MedicalType) (((MedicalTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						MedicalType dis = (MedicalType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.medtype.deletemedicaltype")+" \" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

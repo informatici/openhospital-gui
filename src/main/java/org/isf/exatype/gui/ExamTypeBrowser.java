@@ -176,8 +176,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						examType = (ExamType) (((ExamTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						examType = (ExamType) (model.getValueAt(selectedrow, -1));
 						ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, false);
 						newrecord.addExamTypeListener(ExamTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -225,8 +224,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						ExamType dis = (ExamType) (((ExamTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						ExamType dis = (ExamType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.exatype.deleteexamtype")+"\" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

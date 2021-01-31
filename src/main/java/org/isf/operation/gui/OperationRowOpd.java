@@ -384,7 +384,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 	}
 
 	public void addToForm() {
-		OperationRow opeRow = (OperationRow) oprowData.get(tableData.getSelectedRow());
+		OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
 		/* ** for combo operation **** */
 		ArrayList<Operation> opeList = new ArrayList<Operation>();
 		try {

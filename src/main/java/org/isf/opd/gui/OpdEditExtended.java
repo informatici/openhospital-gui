@@ -1832,7 +1832,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	 * set a specific border+title+matte to a panel
 	 */
 	private JPanel setMyMatteBorder(JPanel c, String title) {
-		c.setBorder(new TitledBorder(new MatteBorder(1, 20, 1, 1, (Color) new Color(153, 180, 209)), title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		c.setBorder(new TitledBorder(new MatteBorder(1, 20, 1, 1, new Color(153, 180, 209)), title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		return c;
 	}
 

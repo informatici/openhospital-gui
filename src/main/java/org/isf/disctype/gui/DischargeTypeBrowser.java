@@ -170,8 +170,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						dischargeType = (DischargeType) (((DischargeTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						dischargeType = (DischargeType) (model.getValueAt(selectedrow, -1));
 						DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,dischargeType, false);
 						newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -219,8 +218,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						DischargeType dis = (DischargeType) (((DischargeTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						DischargeType dis = (DischargeType) (model.getValueAt(jTable.getSelectedRow(), -1));
                         int n = JOptionPane.showConfirmDialog(null,
                                 MessageBundle.getMessage("angal.disctype.deleterow") + " \" "+dis.getDescription() + "\" ?",
                                 MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

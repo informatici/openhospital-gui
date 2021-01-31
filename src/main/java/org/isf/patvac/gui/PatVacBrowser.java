@@ -243,7 +243,7 @@ public class PatVacBrowser extends ModalJFrame {
 					} 
 					
 					selectedrow = jTable.getSelectedRow();
-					patientVaccine = (PatientVaccine) (((PatVacBrowsingModel) model).getValueAt(selectedrow, -1));
+					patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
 
 					PatientVaccine last = new PatientVaccine(patientVaccine.getCode(),
 								                  patientVaccine.getProgr(),
@@ -288,7 +288,7 @@ public class PatVacBrowser extends ModalJFrame {
 						return;
 					} 
 					selectedrow = jTable.getSelectedRow();
-					patientVaccine = (PatientVaccine) (((PatVacBrowsingModel) model).getValueAt(selectedrow, -1));
+					patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
                     int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.patvac.deleteselectedpatientvaccinerow") +
 								"\n"+ MessageBundle.getMessage("angal.patvac.vaccinedate")+" = " +  dateFormat.format( patientVaccine.getVaccineDate().getTime()) +
