@@ -171,8 +171,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						pregnantTreatmentType = (PregnantTreatmentType) (((PregnantTreatmentTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						pregnantTreatmentType = (PregnantTreatmentType) (model.getValueAt(selectedrow, -1));
 						PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame,pregnantTreatmentType, false);
 						newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -221,8 +220,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						PregnantTreatmentType dis = (PregnantTreatmentType) (((PregnantTreatmentTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						PregnantTreatmentType dis = (PregnantTreatmentType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.preagtreattype.deletetreatmenttype") + " \" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

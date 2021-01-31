@@ -169,8 +169,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						medicaldsrstockmovType = (MovementType) (((MedicaldsrstockmovTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						medicaldsrstockmovType = (MovementType) (model.getValueAt(selectedrow, -1));
 						MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,medicaldsrstockmovType, false);
 						newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -218,8 +217,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						MovementType dis = (MovementType) (((MedicaldsrstockmovTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						MovementType dis = (MovementType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.medstockmovtype.deletemovementtype")+" \" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

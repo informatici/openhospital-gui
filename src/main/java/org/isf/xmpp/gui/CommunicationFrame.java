@@ -285,7 +285,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
 					logger.debug("Selected file: {}", file.toString());
-					String receiver = (String) (((RosterEntry) buddyList.getSelectedValue()).getName());
+					String receiver = ((RosterEntry) buddyList.getSelectedValue()).getName();
 					logger.debug("Receiver: {}", receiver);
 					interaction.sendFile(receiver, file, null);
 				}
@@ -295,7 +295,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String user_name = (String) ((RosterEntry) buddyList.getSelectedValue()).getName();
+				String user_name = ((RosterEntry) buddyList.getSelectedValue()).getName();
 				String info = null;
 				try {
 					info = userBrowsingManager.getUsrInfo(user_name);

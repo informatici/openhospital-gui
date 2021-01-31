@@ -168,8 +168,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						dicomType = (DicomType) (((DicomTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						dicomType = (DicomType) (model.getValueAt(selectedrow, -1));
 						DicomTypeEdit newrecord = new DicomTypeEdit(myFrame,dicomType, false);
 						newrecord.addDicomTypeListener(DicomTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -217,8 +216,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						DicomType dicomType = (DicomType) (((DicomTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						DicomType dicomType = (DicomType) (model.getValueAt(jTable.getSelectedRow(), -1));
                         int n = JOptionPane.showConfirmDialog(null,
                                 MessageBundle.getMessage("angal.dicomtype.deleterow") + " \" "+dicomType.getDicomTypeDescription() + "\" ?",
                                 MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

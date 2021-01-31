@@ -252,7 +252,7 @@ public class MovStockBrowser extends ModalJFrame {
 			public void actionPerformed(ActionEvent e) {
 				Medical medical = null;
 				if (movTable.getSelectedRow() > -1) {
-					Movement movement = (Movement) (((MovBrowserModel) model).getValueAt(movTable.getSelectedRow(), -1));
+					Movement movement = (Movement) (model.getValueAt(movTable.getSelectedRow(), -1));
 					medical = movement.getMedical();
 				}
 

@@ -169,8 +169,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						diseaseType = (DiseaseType) (((DiseaseTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						diseaseType = (DiseaseType) (model.getValueAt(selectedrow, -1));
 						DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, false);
 						newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -218,8 +217,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						DiseaseType dis = (DiseaseType) (((DiseaseTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						DiseaseType dis = (DiseaseType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.distype.deletediseasetype") + " \" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
