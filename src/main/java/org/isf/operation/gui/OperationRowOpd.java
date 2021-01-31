@@ -414,7 +414,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
 		}
 
-		/****** resultat *****/
+		/* ***** resultat **** */
 		int index = 0;
 		for (int i = 0; i < operationResults.size(); i++) {
 			if (opeRow.getOpResult() != null && (opeManager.getResultDescriptionKey(operationResults.get(i) + "")).equals(opeRow.getOpResult())) { //$NON-NLS-1$ 
@@ -422,7 +422,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			}
 		}
 		comboResult.setSelectedIndex(index);
-		/*************/
+		/* *********** */
 
 	}
 
