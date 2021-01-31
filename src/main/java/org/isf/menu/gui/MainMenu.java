@@ -218,8 +218,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			Iterator<UserMenuItem> altIt = junkMenu.iterator();
 			while (altIt.hasNext()) {
 				UserMenuItem umi = altIt.next();
-				if (myMenu.contains(umi))
-					myMenu.remove(umi);
+				myMenu.remove(umi);
 			}
 		} else { // remove only "communication" if flag_Xmpp = false
 			if (!flag_Xmpp) {
@@ -233,8 +232,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				Iterator<UserMenuItem> altIt = junkMenu.iterator();
 				while (altIt.hasNext()) {
 					UserMenuItem umi = altIt.next();
-					if (myMenu.contains(umi))
-						myMenu.remove(umi);
+					myMenu.remove(umi);
 				}
 			}
 		}
@@ -251,8 +249,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			Iterator<UserMenuItem> altIt = junkMenu.iterator();
 			while (altIt.hasNext()) {
 				UserMenuItem umi = altIt.next();
-				if (myMenu.contains(umi))
-					myMenu.remove(umi);
+				myMenu.remove(umi);
 			}
 		}
 
@@ -267,8 +264,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		Iterator<UserMenuItem> altIt = junkMenu.iterator();
 		while (altIt.hasNext()) {
 			UserMenuItem umi = altIt.next();
-			if (myMenu.contains(umi))
-				myMenu.remove(umi);
+			myMenu.remove(umi);
 		}
 
 		setTitle(myUser.getUserName());

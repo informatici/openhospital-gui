@@ -128,8 +128,7 @@ class PrivilegeTree extends JDialog {
 			Iterator<UserMenuItem> altIt = junkMenu.iterator();
 			while (altIt.hasNext()) {
 				UserMenuItem umi = altIt.next();
-				if (rootMenu.contains(umi))
-					rootMenu.remove(umi);
+				rootMenu.remove(umi);
 			}
 			junkMenu = new ArrayList<UserMenuItem>();
 		}
