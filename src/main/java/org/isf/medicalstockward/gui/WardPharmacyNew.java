@@ -354,7 +354,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	}
 	
 	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int qanty) {
-		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
 		Collections.sort(drug, new Comparator<MedicalWard>() {
 			@Override
 			public int compare(MedicalWard o1, MedicalWard o2) {
@@ -373,7 +372,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					if (q != 0) {
 						if (elem.getQty() <= q) {
 							MedicalWard e = elem;
-							dr.add(e);
 							q = (int) (q - elem.getQty());
 							int maxquantity = (int) (elem.getQty() - 0);
 							medWard = elem;
@@ -381,7 +379,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 						} else {
 							MedicalWard e = elem;
-							dr.add(e);
 							int qu = (int) (elem.getQty() - q);
 							medWard = elem;
 
