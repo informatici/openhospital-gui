@@ -105,8 +105,8 @@ public class DicomViewGui extends JPanel {
 	private int y = -1;
 	private int totX = -1;
 	private int totY = -1;
-	private final static Color colScr = Color.LIGHT_GRAY;
-	private final static int VGAP = 15;
+	private static final Color colScr = Color.LIGHT_GRAY;
+	private static final int VGAP = 15;
 
 	/**
 	 * Construct a new detail for DICOM image

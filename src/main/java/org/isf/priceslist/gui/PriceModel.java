@@ -83,12 +83,12 @@ import org.isf.utils.treetable.TreeTableModel;
 public class PriceModel extends AbstractTreeTableModel {
 
      // Names of the columns.
-    static protected String[] cNames = {"Name", "Prices"};
+     protected static String[] cNames = {"Name", "Prices"};
 
     // Types of the columns.
-    static protected Class<?>[] cTypes = {TreeTableModel.class, Double.class};
+    protected static Class<?>[] cTypes = {TreeTableModel.class, Double.class};
     
-    static protected String[] cCategories = {"EXA","OPE","MED","OTH"};
+    protected static String[] cCategories = {"EXA","OPE","MED","OTH"};
       
     public PriceModel(Object root) {
 		//super(new PriceNode((Price)root));
