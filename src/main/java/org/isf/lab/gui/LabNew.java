@@ -795,7 +795,6 @@ public class LabNew extends JDialog implements SelectionListener {
 			jButtonAddExam.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					Icon icon = new ImageIcon("rsc/icons/material_dialog.png");
 					String mat = "";
 
 					OhTableModelExam<Price> modelOh = new OhTableModelExam<Price>(exaArray);
@@ -820,8 +819,6 @@ public class LabNew extends JDialog implements SelectionListener {
 					Laboratory lab = null;
 					boolean alreadyIn = false;
 
-					icon = new ImageIcon("rsc/icons/exam_dialog.png"); //$NON-NLS-1$
-
 					if (exams.size() < 1) {
 						return;
 					}
@@ -843,27 +840,7 @@ public class LabNew extends JDialog implements SelectionListener {
 							continue;
 						}
 
-						if (exa.getProcedure() == 1) {
-							ArrayList<ExamRow> exaRowTemp = new ArrayList<ExamRow>();
-							ArrayList<ExamRow> exaRowArray;
-							try {
-								exaRowArray = examRowManager.getExamRowByExamCode(exa.getCode());
-							} catch (OHServiceException e1) {
-								exaRowArray = null;
-								Logger.getLogger(LabNew.class.getName()).log(Level.SEVERE, null, e1);
-							}
-							// if(exaRowArray != null)
-							for (ExamRow exaRow : exaRowArray) {
-								// if(exaRow != null){
-								if (exa.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
-									exaRowTemp.add(exaRow);
-								}
-								// }
-							}
-							icon = new ImageIcon("rsc/icons/list_dialog.png"); //$NON-NLS-1$
-							lab.setResult(exa.getDefaultResult());
-
-						} else if (exa.getProcedure() == 2) {
+						if (exa.getProcedure() == 2) {
 							lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));
 						} else {
 							lab.setResult(exa.getDefaultResult());
