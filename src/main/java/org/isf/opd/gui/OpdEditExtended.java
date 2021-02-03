@@ -1020,8 +1020,8 @@ public class OpdEditExtended extends ModalJFrame implements
 			diseaseTypeBox.setMaximumSize(new Dimension(400,50));
 			diseaseTypeBox.addItem(allType);
 			for (DiseaseType elem : types) {
-				if(!insert && opd.getDisease().getType() != null) {
-					if(opd.getDisease().getType().equals(elem.getCode())) {
+				if (!insert && opd.getDisease().getType() != null) {
+					if (opd.getDisease().getType().getCode().equals(elem.getCode())) {
 						elem2=elem;}
 				}
 				diseaseTypeBox.addItem(elem);
