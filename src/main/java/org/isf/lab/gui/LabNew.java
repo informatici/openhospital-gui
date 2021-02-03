@@ -104,9 +104,6 @@ public class LabNew extends JDialog implements SelectionListener {
 	private void fireLabInserted() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = labListener.getListeners(LabListener.class);
@@ -839,12 +836,10 @@ public class LabNew extends JDialog implements SelectionListener {
 							continue;
 						}
 
-						if (exa.getProcedure() == 1) {
+						if (exa.getProcedure() == 1 || exa.getProcedure() == 3) {
 							lab.setResult(exa.getDefaultResult());
-						} else if (exa.getProcedure() == 2) {
+						} else { // exa.getProcedure() == 2
 							lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));
-						} else {
-							lab.setResult(exa.getDefaultResult());
 						}
 						lab.setExam(exa);
 						lab.setMaterial(labManager.getMaterialKey(mat));
