@@ -285,10 +285,10 @@ public class OpdEdit extends JDialog {
 			DiseaseType elem2 = null;
 			diseaseTypeBox.setMaximumSize(new Dimension(400,50));
 			diseaseTypeBox.addItem(allType);
-			if(types != null){
+			if (types != null){
 				for (DiseaseType elem : types) {
-					if (!insert && opd.getDisease().getType() != null){
-						if(opd.getDisease().getType().equals(elem.getCode())){
+					if (!insert && opd.getDisease().getType() != null) {
+						if (opd.getDisease().getType().getCode().equals(elem.getCode())) {
 							elem2=elem;}
 					}
 					diseaseTypeBox.addItem(elem);
