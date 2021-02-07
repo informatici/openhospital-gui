@@ -33,8 +33,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -143,14 +141,11 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 			jNewButton = new JButton();
 			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
 			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					examType = new ExamType("","");
-					ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, true);
-					newrecord.addExamTypeListener(ExamTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				examType = new ExamType("","");
+				ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, true);
+				newrecord.addExamTypeListener(ExamTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -166,22 +161,19 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 			jEditButton = new JButton();
 			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
 			jEditButton.setMnemonic(KeyEvent.VK_E);
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						examType = (ExamType) (((ExamTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
-						ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, false);
-						newrecord.addExamTypeListener(ExamTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+					return;
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					examType = (ExamType) (model
+							.getValueAt(selectedrow, -1));
+					ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, false);
+					newrecord.addExamTypeListener(ExamTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -198,11 +190,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 			jCloseButton = new JButton();
 			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
 			jCloseButton.setMnemonic(KeyEvent.VK_C);
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -217,39 +205,35 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 			jDeteleButton = new JButton();
 			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
 			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						ExamType dis = (ExamType) (((ExamTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.exatype.deleteexamtype")+"\" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						
-						if (n == JOptionPane.YES_OPTION) {
-							
-							boolean deleted;
-							try {
-								deleted = manager.deleteExamType(dis);
-							} catch (OHServiceException e) {
-								deleted = false;
-								OHServiceExceptionUtil.showMessages(e);
-							}
-							
-							if (true == deleted) {
-								pExamType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
+			jDeteleButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					JOptionPane.showMessageDialog(null,
+							MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
+							JOptionPane.PLAIN_MESSAGE);
+				} else {
+					ExamType dis = (ExamType) (((ExamTypeBrowserModel) model)
+							.getValueAt(jTable.getSelectedRow(), -1));
+					int n = JOptionPane.showConfirmDialog(null,
+							MessageBundle.getMessage("angal.exatype.deleteexamtype")+"\" "+dis.getDescription() + "\" ?",
+							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+
+					if (n == JOptionPane.YES_OPTION) {
+
+						boolean deleted;
+						try {
+							deleted = manager.deleteExamType(dis);
+						} catch (OHServiceException e) {
+							deleted = false;
+							OHServiceExceptionUtil.showMessages(e);
+						}
+
+						if (deleted) {
+							pExamType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
 					}
 				}
-				
 			});
 		}
 		return jDeteleButton;
@@ -315,9 +299,6 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 		}
 	}
 
-
-
-
 	public void examTypeUpdated(AWTEvent e) {
 		pExamType.set(selectedrow, examType);
 		((ExamTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
@@ -325,14 +306,11 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 		if ((jTable.getRowCount() > 0) && selectedrow > -1)
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 	}
-	
-	
+
 	public void examTypeInserted(AWTEvent e) {
 		pExamType.add(0, examType);
 		((ExamTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		if (jTable.getRowCount() > 0)
 			jTable.setRowSelectionInterval(0, 0);
 	}
-	
-	
 }

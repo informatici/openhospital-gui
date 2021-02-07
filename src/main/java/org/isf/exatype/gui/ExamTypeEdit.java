@@ -32,6 +32,7 @@ package org.isf.exatype.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -77,29 +78,22 @@ public class ExamTypeEdit extends JDialog{
     }
 
     private void fireExamTypeInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+			private static final long serialVersionUID = 1L;
+		};
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;};
-
-        EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((ExamTypeListener)listeners[i]).examTypeInserted(event);
+		EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
+		Arrays.stream(listeners).forEach(listener -> ((ExamTypeListener) listener).examTypeInserted(event));
     }
-    private void fireExamTypeUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;};
+	private void fireExamTypeUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((ExamTypeListener)listeners[i]).examTypeUpdated(event);
-    }
+		EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
+		Arrays.stream(listeners).forEach(listener -> ((ExamTypeListener) listener).examTypeUpdated(event));
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -130,14 +124,7 @@ public class ExamTypeEdit extends JDialog{
 	}
 
 
-	/**
-	 * This method initializes this
-	 * 
-	 * @return void
-	 */
 	private void initialize() {
-		
-//		this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.exatype.newexamtype")+"  ("+VERSION+")");
@@ -150,11 +137,6 @@ public class ExamTypeEdit extends JDialog{
 		this.setLocationRelativeTo(null);
 	}
 
-	/**
-	 * This method initializes jContentPane
-	 * 
-	 * @return javax.swing.JPanel
-	 */
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
@@ -165,11 +147,6 @@ public class ExamTypeEdit extends JDialog{
 		return jContentPane;
 	}
 
-	/**
-	 * This method initializes dataPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			dataPanel = new JPanel();
@@ -179,11 +156,6 @@ public class ExamTypeEdit extends JDialog{
 		return dataPanel;
 	}
 
-	/**
-	 * This method initializes buttonPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
@@ -193,21 +165,12 @@ public class ExamTypeEdit extends JDialog{
 		return buttonPanel;
 	}
 
-	/**
-	 * This method initializes cancelButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
 			cancelButton = new JButton();
 			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
 			cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -222,49 +185,42 @@ public class ExamTypeEdit extends JDialog{
 			okButton = new JButton();
 			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
 			okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
-					try{
-						examType.setDescription(descriptionTextField.getText());
-						examType.setCode(codeTextField.getText());
-						
-						if (insert) {     // inserting
-							if (true == manager.newExamType(examType)) {
-	                           fireExamTypeInserted();
-	                           dispose();
-	                        } else
-	                        	JOptionPane.showMessageDialog(null,  MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-	                    }
-	                    else {            // updating
-	                    	if (descriptionTextField.getText().equals(lastdescription)){
-	    						dispose();	
-	    					}else{
-								if (true == manager.updateExamType(examType)) {
-									fireExamTypeUpdated();
-									dispose();
-		                        }else
-		                        	JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-	    					}
-						}
-					} catch(OHServiceException ex){
-						if(ex.getMessages() != null){
-							for(OHExceptionMessage msg : ex.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
+			okButton.addActionListener(e -> {
+				ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
+				try {
+					examType.setDescription(descriptionTextField.getText());
+					examType.setCode(codeTextField.getText());
+
+					if (insert) {     // inserting
+						if (manager.newExamType(examType)) {
+							fireExamTypeInserted();
+							dispose();
+						} else
+							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+					} else {            // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
+							dispose();
+						} else {
+							if (manager.updateExamType(examType)) {
+								fireExamTypeUpdated();
+								dispose();
+							} else
+								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 						}
 					}
-                }
+				} catch (OHServiceException ex) {
+					if (ex.getMessages() != null) {
+						for (OHExceptionMessage msg : ex.getMessages()) {
+							JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+						}
+					}
+				}
 			});
 		}
 		return okButton;
 	}
 
-	/**
-	 * This method initializes descriptionTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */
+
 	private JTextField getDescriptionTextField() {
 		if (descriptionTextField == null) {
 			descriptionTextField = new JTextField(20);
@@ -276,11 +232,6 @@ public class ExamTypeEdit extends JDialog{
 		return descriptionTextField;
 	}
 	
-	/**
-	 * This method initializes codeTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
 			codeTextField = new VoLimitedTextField(2);
@@ -292,11 +243,6 @@ public class ExamTypeEdit extends JDialog{
 		return codeTextField;
 	}
 
-	/**
-	 * This method initializes jDataPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
 			jDataPanel = new JPanel();
@@ -309,11 +255,6 @@ public class ExamTypeEdit extends JDialog{
 		return jDataPanel;
 	}
 
-	/**
-	 * This method initializes jCodeLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
-	 */
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
 			jCodeLabel = new JLabel();
@@ -322,11 +263,6 @@ public class ExamTypeEdit extends JDialog{
 		return jCodeLabel;
 	}
 
-	/**
-	 * This method initializes jCodeLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
 	private JPanel getJCodeLabelPanel() {
 		if (jCodeLabelPanel == null) {
 			jCodeLabelPanel = new JPanel();
@@ -336,11 +272,6 @@ public class ExamTypeEdit extends JDialog{
 		return jCodeLabelPanel;
 	}
 
-	/**
-	 * This method initializes jDescriptionLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
 			jDescripitonLabel = new JLabel();
@@ -353,6 +284,6 @@ public class ExamTypeEdit extends JDialog{
 	
 
 
-}  //  @jve:decl-index=0:visual-constraint="146,61"
+}
 
 

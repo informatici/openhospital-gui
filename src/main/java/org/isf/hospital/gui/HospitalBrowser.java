@@ -24,8 +24,6 @@ package org.isf.hospital.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
@@ -271,57 +269,44 @@ public class HospitalBrowser extends ModalJFrame{
 			ExitJButton.setMnemonic(KeyEvent.VK_C);
 			UpdateJButton.setEnabled(false);
 			
-			ExitJButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					if (isModified())
-					{						
-						//open confirm save window
-						saveConfirm();
-					}
-					dispose();
+			ExitJButton.addActionListener(arg0 -> {
+				if (isModified()) {
+					saveConfirm();
 				}
+				dispose();
 			});
-			EditJButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					nameJTextField.setEditable(true);
-					addJTextField.setEditable(true);
-					cityJTextField.setEditable(true);
-					teleJTextField.setEditable(true);
-					faxJTextField.setEditable(true);
-					emailJTextField.setEditable(true);
-					currencyCodJTextField.setEditable(true);
-					UpdateJButton.setEnabled(true);
-					EditJButton.setEnabled(false);
-					SwingUtilities.invokeLater(new Runnable() { 
-						public void run() { 
-							nameJTextField.requestFocus(); 
-						} 
-					} );
-				}
+			EditJButton.addActionListener(arg0 -> {
+				nameJTextField.setEditable(true);
+				addJTextField.setEditable(true);
+				cityJTextField.setEditable(true);
+				teleJTextField.setEditable(true);
+				faxJTextField.setEditable(true);
+				emailJTextField.setEditable(true);
+				currencyCodJTextField.setEditable(true);
+				UpdateJButton.setEnabled(true);
+				EditJButton.setEnabled(false);
+				SwingUtilities.invokeLater(() -> nameJTextField.requestFocus());
 			});
-			UpdateJButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					nameJTextField.setEditable(false);
-					addJTextField.setEditable(false);
-					cityJTextField.setEditable(false);
-					teleJTextField.setEditable(false);
-					faxJTextField.setEditable(false);
-					emailJTextField.setEditable(false);
-					currencyCodJTextField.setEditable(false);
-					hospital.setDescription(nameJTextField.getText());
-					hospital.setAddress(addJTextField.getText());
-					hospital.setCity(cityJTextField.getText());
-					hospital.setTelephone(teleJTextField.getText());
-					hospital.setFax(faxJTextField.getText());
-					hospital.setEmail(emailJTextField.getText());
-					hospital.setCurrencyCod(currencyCodJTextField.getText());
-					
-					updateHospital(manager, hospital);
-					
-					UpdateJButton.setEnabled(false);
-					EditJButton.setEnabled(true);
-				}
-				
+			UpdateJButton.addActionListener(arg0 -> {
+				nameJTextField.setEditable(false);
+				addJTextField.setEditable(false);
+				cityJTextField.setEditable(false);
+				teleJTextField.setEditable(false);
+				faxJTextField.setEditable(false);
+				emailJTextField.setEditable(false);
+				currencyCodJTextField.setEditable(false);
+				hospital.setDescription(nameJTextField.getText());
+				hospital.setAddress(addJTextField.getText());
+				hospital.setCity(cityJTextField.getText());
+				hospital.setTelephone(teleJTextField.getText());
+				hospital.setFax(faxJTextField.getText());
+				hospital.setEmail(emailJTextField.getText());
+				hospital.setCurrencyCod(currencyCodJTextField.getText());
+
+				updateHospital(manager, hospital);
+
+				UpdateJButton.setEnabled(false);
+				EditJButton.setEnabled(true);
 			});
 			jButtonPanel.add(EditJButton);
 			jButtonPanel.add(UpdateJButton);

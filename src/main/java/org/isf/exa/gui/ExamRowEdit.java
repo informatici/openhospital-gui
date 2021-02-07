@@ -34,6 +34,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.EventListener;
 
 import javax.swing.JButton;
@@ -86,8 +87,8 @@ public class ExamRowEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examRowListeners.getListeners(ExamRowListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((ExamRowListener)listeners[i]).examRowInserted(event);
+		Arrays.stream(listeners)
+				.forEach(listener -> ((ExamRowListener)listener).examRowInserted(event));
     }
 	
 	private JPanel jContentPane = null;

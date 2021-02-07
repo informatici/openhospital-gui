@@ -724,7 +724,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 		ArrayList<Medical> medicalList = new ArrayList<Medical>();
 
-		public MedicalBrowsingModel(String key, boolean isType) {
+		public MedicalBrowsingModel(String key, boolean isType) { // TODO: separate class + tests
 			if (isType) {
 				try {
 					medicalList = pMedicals = medicalBrowsingManager.getMedicals(key, false);
@@ -733,7 +733,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 					OHServiceExceptionUtil.showMessages(e);
 				}
 			} else {
-				for (Medical med : pMedicals) {
+				for (Medical med : pMedicals) {  // todo: medicals finder
 					if (key != null) {
 
 						String s = key + lastKey;
