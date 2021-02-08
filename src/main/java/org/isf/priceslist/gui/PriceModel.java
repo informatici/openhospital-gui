@@ -75,7 +75,6 @@ import org.isf.utils.treetable.TreeTableModel;
  *
  * @author Philip Milne
  * @author Scott Violet
- * @version %I% %G%
  */
 public class PriceModel extends AbstractTreeTableModel {
 

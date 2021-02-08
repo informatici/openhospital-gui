@@ -87,7 +87,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			MessageBundle.getMessage("angal.exa.procm"),
 			MessageBundle.getMessage("angal.exa.defaultm")
 	};
-	private int[] pColumnwidth = {60,330,160,60,130};
+	private int[] pColumnWidth = {60,330,160,60,130};
 	private Exam exam;
 
 	private DefaultTableModel model ;
@@ -206,11 +206,11 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			table.setAutoCreateColumnsFromModel(false);
 			sorter = new TableRowSorter<TableModel>(model);
 		    table.setRowSorter(sorter);
-			table.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
-			table.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
-			table.getColumnModel().getColumn(2).setMinWidth(pColumnwidth[2]);
-			table.getColumnModel().getColumn(3).setMinWidth(pColumnwidth[3]);
-			table.getColumnModel().getColumn(4).setMinWidth(pColumnwidth[4]);
+			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
+			table.getColumnModel().getColumn(2).setMinWidth(pColumnWidth[2]);
+			table.getColumnModel().getColumn(3).setMinWidth(pColumnWidth[3]);
+			table.getColumnModel().getColumn(4).setMinWidth(pColumnWidth[4]);
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 				

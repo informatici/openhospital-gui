@@ -114,7 +114,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			MessageBundle.getMessage("angal.lab.resultm") 
 	};
 	private boolean[] columnsResizable = {false, true, true, false};
-	private int[] pColumnwidth = { 100, 200, 200, 200 };
+	private int[] pColumnWidth = { 100, 200, 200, 200 };
 	private int[] maxWidth = {150, 200, 200, 200};
 	private boolean[] columnsVisible = { true, GeneralData.LABEXTENDED, true, true};
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
@@ -441,7 +441,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			jTable = new JTable(model);
 			TableColumnModel columnModel = jTable.getColumnModel();
 			for (int i = 0; i < model.getColumnCount(); i++) {
-				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnwidth[i]);
+				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
 				if (!columnsResizable[i]) 
 					columnModel.getColumn(i).setMaxWidth(maxWidth[i]);
 				if (!columnsVisible[i]) {

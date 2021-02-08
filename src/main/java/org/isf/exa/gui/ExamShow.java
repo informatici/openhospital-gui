@@ -70,7 +70,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumnwidth = {50,250};
+	private int[] pColumnWidth = {50,250};
 	private DefaultTableModel model ;
 	private JTable table;
 	private ExamRow examRow = null;
@@ -114,8 +114,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
                         
 			model = new ExamRowBrowsingModel(exam.getCode());
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
-			table.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
+			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 			jContentPane.add(new JScrollPane(table),BorderLayout.CENTER);
 		}
 		return dataPanel;

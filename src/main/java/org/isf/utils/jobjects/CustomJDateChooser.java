@@ -29,10 +29,10 @@ import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 
 /**
- * @author Mwithi
- * <p>
  * JDateChooser override, needs JCalendar(r)
  * it overrides Font attribution
+ *
+ * @author Mwithi
  */
 public class CustomJDateChooser extends JDateChooser {
 

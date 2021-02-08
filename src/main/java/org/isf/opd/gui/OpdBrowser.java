@@ -164,7 +164,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private ArrayList<Opd> pSur;
 	private JTable jTable = null;
 	private OpdBrowsingModel model;
-	private int[] pColumnwidth = {50, 50, 70, 70, 150, 30, 30, 195, 195, 50 };
+	private int[] pColumnWidth = {50, 50, 70, 70, 150, 30, 30, 195, 195, 50 };
 	private boolean[] columnResizable = { false, false, false, false, true, false, false, true, true, false };
 	private boolean[] columnsVisible = { true, true, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
 	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
@@ -195,10 +195,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
 			cellRenderer.setHorizontalAlignment(JLabel.RIGHT);
 			for (int i = 0; i < model.getColumnCount(); i++) {
-				columnModel.getColumn(i).setMinWidth(pColumnwidth[i]);
+				columnModel.getColumn(i).setMinWidth(pColumnWidth[i]);
 				columnModel.getColumn(i).setCellRenderer(new AlignmentCellRenderer());
 				if (!columnResizable[i])
-					columnModel.getColumn(i).setMaxWidth(pColumnwidth[i]);
+					columnModel.getColumn(i).setMaxWidth(pColumnWidth[i]);
 				if (!columnsVisible[i]) {
 					columnModel.getColumn(i).setMaxWidth(0);
 					columnModel.getColumn(i).setMinWidth(0);

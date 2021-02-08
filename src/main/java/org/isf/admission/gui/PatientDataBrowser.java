@@ -217,11 +217,11 @@ public class PatientDataBrowser extends ModalJFrame implements
 	private ArrayList<Opd> opdList;
 	
 //	private String[] pColumns = {MessageBundle.getMessage("angal.admission.admissionm"),MessageBundle.getMessage("angal.admission.wards"), MessageBundle.getMessage("angal.admission.diagnosis"), MessageBundle.getMessage("angal.admission.operation"), MessageBundle.getMessage("angal.admission.result"), MessageBundle.getMessage("angal.admission.discharge") };
-//	private int[] pColumnwidth = {120, 150, 200, 200, 100, 120 };
+//	private int[] pColumnWidth = {120, 150, 200, 200, 100, 120 };
 
 	//Alex: modified to include OPD
 	private String[] pColumns = {MessageBundle.getMessage("angal.common.datem"),MessageBundle.getMessage("angal.admission.wards"), MessageBundle.getMessage("angal.admission.diagnosisinm"), MessageBundle.getMessage("angal.admission.diagnosisoutm"), MessageBundle.getMessage("angal.admission.statusm") };
-	private int[] pColumnwidth = {120, 150, 200, 200, 120 };
+	private int[] pColumnWidth = {120, 150, 200, 200, 120 };
 	
 	private DefaultTableModel admModel;
 
@@ -252,7 +252,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 		sorter.sortByColumn(0, false); //sort by first column, descending
 				
 		for (int i = 0; i< pColumns.length; i++){
-			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnwidth[i]);
+			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			if (i == 0 || i == 4) {
 				admTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
 			}

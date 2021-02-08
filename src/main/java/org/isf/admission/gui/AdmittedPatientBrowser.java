@@ -173,7 +173,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			informations.toString(), 
 			MessageBundle.getMessage("angal.admission.ward")
 	};
-	private int[] pColumnwidth = { 100, 200, 80, 50, 150, 100 };
+	private int[] pColumnWidth = { 100, 200, 80, 50, 150, 100 };
 	private boolean[] pColumnResizable = {false, false, false, false, true, false};
 	private AdmittedPatient patient;
 	private JTable table;
@@ -672,8 +672,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		table.setAutoCreateColumnsFromModel(false);
 		
 		for (int i = 0; i< pColumns.length; i++){
-			table.getColumnModel().getColumn(i).setMinWidth(pColumnwidth[i]);
-			if (!pColumnResizable[i]) table.getColumnModel().getColumn(i).setMaxWidth(pColumnwidth[i]);
+			table.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
+			if (!pColumnResizable[i]) table.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
 		}
 		
 		table.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
@@ -681,8 +681,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		table.getColumnModel().getColumn(3).setCellRenderer(new CenterTableCellRenderer());
 
 		int tableWidth = 0;
-		for (int i = 0; i< pColumnwidth.length; i++){
-			tableWidth += pColumnwidth[i];
+		for (int i = 0; i< pColumnWidth.length; i++){
+			tableWidth += pColumnWidth[i];
 		}
 		
 		scrollPane = new JScrollPane(table);

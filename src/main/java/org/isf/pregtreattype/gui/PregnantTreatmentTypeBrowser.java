@@ -60,7 +60,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 			MessageBundle.getMessage("angal.common.code"),
 			MessageBundle.getMessage("angal.common.description")
 	};
-	private int[] pColumnwidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200 };
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
@@ -238,8 +238,8 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		if (jTable == null) {
 			model = new PregnantTreatmentTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 	

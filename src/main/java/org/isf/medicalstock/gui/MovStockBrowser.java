@@ -163,7 +163,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
 			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, true };
 
-	private int[] pColumnwidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70 };
+	private int[] pColumnWidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70 };
 	private static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
 	private static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
 
@@ -312,7 +312,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JScrollPane getTable() {
 		JScrollPane scrollPane = new JScrollPane(getMovTable());
 		int totWidth = 0;
-		for (int colWidth : pColumnwidth) {
+		for (int colWidth : pColumnWidth) {
 			totWidth += colWidth;
 		}
 		scrollPane.setPreferredSize(new Dimension(totWidth, 450));
@@ -322,7 +322,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JScrollPane getTableTotal() {
 		JScrollPane scrollPane = new JScrollPane(getJTableTotal());
 		int totWidth = 0;
-		for (int colWidth : pColumnwidth) {
+		for (int colWidth : pColumnWidth) {
 			totWidth += colWidth;
 		}
 		scrollPane.setPreferredSize(new Dimension(totWidth, 20));
@@ -700,10 +700,10 @@ public class MovStockBrowser extends ModalJFrame {
 
 		for (int i = 0; i < pColumns.length; i++) {
 			movTable.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
-			movTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnwidth[i]);
+			movTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			//			if (!pColumnResizable[i]) {
 			//				movTable.getColumnModel().getColumn(i).setResizable(pColumnResizable[i]);
-			//				movTable.getColumnModel().getColumn(i).setMaxWidth(pColumnwidth[i]);
+			//				movTable.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
 			//			}
 			if (!pColumnVisible[i]) {
 				movTable.getColumnModel().getColumn(i).setMinWidth(0);
@@ -754,7 +754,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 			for (int i = 0; i < pColumns.length; i++) {
 				jTableTotal.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
-				jTableTotal.getColumnModel().getColumn(i).setPreferredWidth(pColumnwidth[i]);
+				jTableTotal.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 				if (!pColumnVisible[i]) {
 					jTableTotal.getColumnModel().getColumn(i).setMinWidth(0);
 					jTableTotal.getColumnModel().getColumn(i).setMaxWidth(0);
