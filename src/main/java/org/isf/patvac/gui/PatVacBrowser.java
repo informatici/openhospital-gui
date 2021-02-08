@@ -116,7 +116,7 @@ public class PatVacBrowser extends ModalJFrame {
 	
 		
 	private String[] pColumns = { MessageBundle.getMessage("angal.common.datem"), MessageBundle.getMessage("angal.patvac.patientm"), MessageBundle.getMessage("angal.patvac.sexm"),MessageBundle.getMessage("angal.patvac.agem"), MessageBundle.getMessage("angal.patvac.vaccinem"), MessageBundle.getMessage("angal.patvac.vaccinetypem")};
-	private int[] pColumnwidth = { 100, 150, 50, 50, 150, 150};
+	private int[] pColumnWidth = { 100, 150, 50, 50, 150, 150};
 	private boolean[] columnsVisible = { true, GeneralData.PATIENTVACCINEEXTENDED, true, true, true, true};
 	private PatVacManager manager;
 	private PatVacBrowsingModel model;
@@ -776,18 +776,18 @@ public class PatVacBrowser extends ModalJFrame {
 			jTable = new JTable(model);
 			TableColumnModel columnModel = jTable.getColumnModel();
 			if (GeneralData.PATIENTVACCINEEXTENDED) {
-				columnModel.getColumn(0).setMinWidth(pColumnwidth[0]);
-				columnModel.getColumn(1).setMinWidth(pColumnwidth[1]);
-				columnModel.getColumn(2).setMinWidth(pColumnwidth[2]);
-				columnModel.getColumn(3).setMinWidth(pColumnwidth[3]);
-				columnModel.getColumn(4).setMinWidth(pColumnwidth[4]);
-				columnModel.getColumn(5).setMinWidth(pColumnwidth[5]);
+				columnModel.getColumn(0).setMinWidth(pColumnWidth[0]);
+				columnModel.getColumn(1).setMinWidth(pColumnWidth[1]);
+				columnModel.getColumn(2).setMinWidth(pColumnWidth[2]);
+				columnModel.getColumn(3).setMinWidth(pColumnWidth[3]);
+				columnModel.getColumn(4).setMinWidth(pColumnWidth[4]);
+				columnModel.getColumn(5).setMinWidth(pColumnWidth[5]);
 			} else {
-				columnModel.getColumn(0).setMinWidth(pColumnwidth[0]);
-				columnModel.getColumn(1).setMaxWidth(pColumnwidth[2]);
-				columnModel.getColumn(2).setMinWidth(pColumnwidth[3]);
-				columnModel.getColumn(3).setMinWidth(pColumnwidth[4]);
-				columnModel.getColumn(4).setMinWidth(pColumnwidth[5]);
+				columnModel.getColumn(0).setMinWidth(pColumnWidth[0]);
+				columnModel.getColumn(1).setMaxWidth(pColumnWidth[2]);
+				columnModel.getColumn(2).setMinWidth(pColumnWidth[3]);
+				columnModel.getColumn(3).setMinWidth(pColumnWidth[4]);
+				columnModel.getColumn(4).setMinWidth(pColumnWidth[5]);
 			}
 		}
 		return jTable;

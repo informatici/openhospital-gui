@@ -60,7 +60,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumnwidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
@@ -241,8 +241,8 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 		if (jTable == null) {
 			model = new DeliveryTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 	

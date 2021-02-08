@@ -211,7 +211,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			MessageBundle.getMessage("angal.admission.diagnosisoutm"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.admission.statusm") //$NON-NLS-1$
 	};
-	private int[] pColumnwidth = {120, 150, 200, 200, 120 };
+	private int[] pColumnWidth = {120, 150, 200, 200, 120 };
 	
 	private String[] plColumns = {
 			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
@@ -287,7 +287,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		
 		
 		for (int i = 0; i< pColumns.length; i++){
-			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnwidth[i]);
+			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			if (i == 0 || i == 4) {
 				admTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
 			}

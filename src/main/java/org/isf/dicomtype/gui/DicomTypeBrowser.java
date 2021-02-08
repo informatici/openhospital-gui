@@ -60,7 +60,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumnwidth = {80, 200, 80};
+	private int[] pColumnWidth = {80, 200, 80};
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
@@ -244,8 +244,8 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 		if (jTable == null) {
 			model = new DicomTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 

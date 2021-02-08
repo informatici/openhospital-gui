@@ -60,7 +60,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumnwidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200 };
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
@@ -235,8 +235,8 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 		if (jTable == null) {
 			model = new MedicalTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 	

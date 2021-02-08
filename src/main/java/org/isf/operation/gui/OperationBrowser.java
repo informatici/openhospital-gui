@@ -100,7 +100,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			MessageBundle.getMessage("angal.operation.namem"),  //$NON-NLS-1$
 			MessageBundle.getMessage("angal.operation.operationcontext").toUpperCase() //$NON-NLS-1$
 	};
-	private int[] pColumnwidth = { 50, 180, 200, 100 };
+	private int[] pColumnWidth = { 50, 180, 200, 100 };
 	private Operation operation;
 	private DefaultTableModel model;
 	private JTable table;
@@ -122,10 +122,10 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		myFrame = this;
 		model = new OperationBrowserModel();
 		table = new JTable(model);
-		table.getColumnModel().getColumn(0).setMaxWidth(pColumnwidth[0]);
-		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnwidth[1]);
-		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnwidth[2]);
-		table.getColumnModel().getColumn(3).setPreferredWidth(pColumnwidth[3]);
+		table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
+		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
+		table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
 		table.getColumnModel().getColumn(3).setCellRenderer(new CenterAlignmentCellRenderer());
 
 		setLayout(new BorderLayout());

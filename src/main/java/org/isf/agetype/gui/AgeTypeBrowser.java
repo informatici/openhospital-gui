@@ -59,7 +59,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 			MessageBundle.getMessage("angal.agetype.to"),
 			MessageBundle.getMessage("angal.common.description")
 	};
-	private int[] pColumnwidth = { 80, 80, 80, 200 };
+	private int[] pColumnWidth = { 80, 80, 80, 200 };
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jEditSaveButton = null;
@@ -168,7 +168,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 			model = new AgeTypeBrowserModel();
 			jTable = new JTable(model);
 			for (int i = 0; i < pColumns.length; i++) {
-				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnwidth[i]);
+				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
 			}
 			jTable.setDefaultRenderer(Object.class,new ColorTableCellRenderer());
 		}

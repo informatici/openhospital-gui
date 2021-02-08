@@ -94,7 +94,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 			MessageBundle.getMessage("angal.disease.typem"),
 			MessageBundle.getMessage("angal.disease.namem")
 	};
-	private int[] pColumnwidth = {50, 180, 200 };
+	private int[] pColumnWidth = {50, 180, 200 };
 	private Disease disease;
 	private DefaultTableModel model ;
 	private JTable table;
@@ -111,9 +111,9 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		model = new DiseaseBrowserModel();
 		table = new JTable(model);
 		table.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
-		table.getColumnModel().getColumn(0).setMaxWidth(pColumnwidth[0]);
-		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnwidth[1]);
-		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnwidth[2]);
+		table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
+		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		add(new JScrollPane(table), BorderLayout.CENTER);

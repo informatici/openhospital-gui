@@ -124,7 +124,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 			MessageBundle.getMessage("angal.menu.userm"), 
 			MessageBundle.getMessage("angal.menu.groupm"), 
 			MessageBundle.getMessage("angal.menu.descm") };
-	private int[] pColumnwidth = {70, 70, 150 };
+	private int[] pColumnWidth = {70, 70, 150 };
 	private User user;
 	private DefaultTableModel model ;
 	private JTable table;
@@ -152,10 +152,10 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		
 		model = new UserBrowserModel();
 		table = new JTable(model);
-		table.getColumnModel().getColumn(0).setPreferredWidth(pColumnwidth[0]);
-		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnwidth[1]);
-		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnwidth[2]);
-		//table.getColumnModel().getColumn(3).setPreferredWidth(pColumnwidth[3]);
+		table.getColumnModel().getColumn(0).setPreferredWidth(pColumnWidth[0]);
+		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
+		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
+		//table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
 				
 		scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);

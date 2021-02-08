@@ -94,7 +94,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 			MessageBundle.getMessage("angal.malnutrition.heightm"),
 			MessageBundle.getMessage("angal.malnutrition.weightm") };
 
-	private int[] pColumnwidth = { 200, 200, 150, 150 };
+	private int[] pColumnWidth = { 200, 200, 150, 150 };
 
 	private DefaultTableModel model;
 
@@ -242,10 +242,10 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JTable getTable() {
 		model = new MalnBrowsingModel(admId);
 		table = new JTable(model);
-		table.getColumnModel().getColumn(0).setMaxWidth(pColumnwidth[0]);
-		table.getColumnModel().getColumn(1).setMaxWidth(pColumnwidth[1]);
-		table.getColumnModel().getColumn(2).setMaxWidth(pColumnwidth[2]);
-		table.getColumnModel().getColumn(3).setMaxWidth(pColumnwidth[3]);
+		table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+		table.getColumnModel().getColumn(1).setMaxWidth(pColumnWidth[1]);
+		table.getColumnModel().getColumn(2).setMaxWidth(pColumnWidth[2]);
+		table.getColumnModel().getColumn(3).setMaxWidth(pColumnWidth[3]);
 		return table;
 	}
 

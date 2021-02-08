@@ -136,7 +136,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	};
 	private String[] pColumnsSorter = { "MDSRT_DESC", "MDSR_CODE", "MDSR_DESC", null, "STOCK", "MDSR_MIN_STOCK_QTI", "STOCK" };
 	private boolean[] pColumnsNormalSorting = { true, true, true, true, true, true, false };
-	private int[] pColumnwidth = { 100, 100, 400, 60, 60, 80, 100 };
+	private int[] pColumnWidth = { 100, 100, 400, 60, 60, 80, 100 };
 	private boolean[] pColumnResizable = { true, true, true, true, true, true, true };
 	private Medical medical;
 	private DefaultTableModel model;
@@ -186,7 +186,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	private JScrollPane getScrollPane() {
 		JScrollPane scrollPane = new JScrollPane(getJTable());
 		int totWidth = 0;
-		for (int colWidth : pColumnwidth) {
+		for (int colWidth : pColumnWidth) {
 			totWidth += colWidth;
 		}
 		scrollPane.setPreferredSize(new Dimension(totWidth, 450));
@@ -199,10 +199,10 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 			table = new JTable(model);
 			table.setAutoCreateRowSorter(true);
 			table.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
-			for (int i = 0; i < pColumnwidth.length; i++) {
-				table.getColumnModel().getColumn(i).setMinWidth(pColumnwidth[i]);
+			for (int i = 0; i < pColumnWidth.length; i++) {
+				table.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
 				if (!pColumnResizable[i])
-					table.getColumnModel().getColumn(i).setMaxWidth(pColumnwidth[i]);
+					table.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
 			}
 		}
 		return table;

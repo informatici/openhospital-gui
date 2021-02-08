@@ -63,7 +63,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private PatientBrowserModel model;
-	private int[] pColumnwidth = { 200, 30, 25 ,100, 100, 50 };
+	private int[] pColumnWidth = { 200, 30, 25 ,100, 100, 50 };
 	private int selectedrow;
 	private Patient patient;
 	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
@@ -74,14 +74,14 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 		if (jTable == null) {
 			model = new PatientBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
-			jTable.getColumnModel().getColumn(2).setMinWidth(pColumnwidth[2]);
-			jTable.getColumnModel().getColumn(2).setMaxWidth(pColumnwidth[2]);
-			jTable.getColumnModel().getColumn(3).setMinWidth(pColumnwidth[3]);
-			jTable.getColumnModel().getColumn(3).setMaxWidth(pColumnwidth[3]);
-			jTable.getColumnModel().getColumn(4).setMinWidth(pColumnwidth[4]);
-			jTable.getColumnModel().getColumn(5).setMinWidth(pColumnwidth[5]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
+			jTable.getColumnModel().getColumn(2).setMinWidth(pColumnWidth[2]);
+			jTable.getColumnModel().getColumn(2).setMaxWidth(pColumnWidth[2]);
+			jTable.getColumnModel().getColumn(3).setMinWidth(pColumnWidth[3]);
+			jTable.getColumnModel().getColumn(3).setMaxWidth(pColumnWidth[3]);
+			jTable.getColumnModel().getColumn(4).setMinWidth(pColumnWidth[4]);
+			jTable.getColumnModel().getColumn(5).setMinWidth(pColumnWidth[5]);
 		}return jTable;
 	}
 	

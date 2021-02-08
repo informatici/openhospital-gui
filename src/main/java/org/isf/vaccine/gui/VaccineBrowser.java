@@ -94,7 +94,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 			MessageBundle.getMessage("angal.vaccine.vaccinetype"),
 			MessageBundle.getMessage("angal.common.description")
 	};
-	private int[] pColumnwidth = {100, 50, 120};
+	private int[] pColumnWidth = {100, 50, 120};
 	private int selectedrow;
 	private ArrayList<Vaccine> pVaccine;
 	private Vaccine vaccine;
@@ -341,9 +341,9 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		if (table == null) {
 			model = new VaccineBrowserModel();
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMaxWidth(pColumnwidth[0]);
-			table.getColumnModel().getColumn(1).setPreferredWidth(pColumnwidth[1]);
-			table.getColumnModel().getColumn(2).setPreferredWidth(pColumnwidth[2]);
+			table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+			table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
+			table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
 		}
 		return table;
 	}

@@ -99,7 +99,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			MessageBundle.getMessage("angal.ward.haspharmacy"),
 			MessageBundle.getMessage("angal.ward.ismale"),
 			MessageBundle.getMessage("angal.ward.isfemale")};
-	private int[] pColumnwidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30};
+	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30};
 	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class};
 	private int selectedrow;
 	private ArrayList<Ward> pWard;
@@ -308,17 +308,17 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (table == null) {
 			model = new WardBrowserModel();
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMaxWidth(pColumnwidth[0]);
-			table.getColumnModel().getColumn(1).setPreferredWidth(pColumnwidth[1]);
-			table.getColumnModel().getColumn(2).setPreferredWidth(pColumnwidth[2]);
-			table.getColumnModel().getColumn(3).setPreferredWidth(pColumnwidth[3]);
-			table.getColumnModel().getColumn(4).setPreferredWidth(pColumnwidth[4]);
-			table.getColumnModel().getColumn(5).setPreferredWidth(pColumnwidth[5]);
-			table.getColumnModel().getColumn(6).setPreferredWidth(pColumnwidth[6]);
-			table.getColumnModel().getColumn(7).setPreferredWidth(pColumnwidth[7]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnwidth[8]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnwidth[9]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnwidth[10]);
+			table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+			table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
+			table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
+			table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
+			table.getColumnModel().getColumn(4).setPreferredWidth(pColumnWidth[4]);
+			table.getColumnModel().getColumn(5).setPreferredWidth(pColumnWidth[5]);
+			table.getColumnModel().getColumn(6).setPreferredWidth(pColumnWidth[6]);
+			table.getColumnModel().getColumn(7).setPreferredWidth(pColumnWidth[7]);
+			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnWidth[8]);
+			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnWidth[9]);
+			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnWidth[10]);
 		}
 		return table;
 	}
