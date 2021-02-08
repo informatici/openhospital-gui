@@ -35,15 +35,9 @@ import org.isf.generaldata.MessageBundle;
 
 /**
  * @author Mwithi
- * 
- * 
- * 
  */
 public class JFromDateToDateChooserDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/*

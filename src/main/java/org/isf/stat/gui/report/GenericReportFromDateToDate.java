@@ -41,16 +41,16 @@ import org.slf4j.LoggerFactory;
 
 import net.sf.jasperreports.view.JasperViewer;
 
-/*--------------------------------------------------------
- * GenericReportLauncer2Dates
- *  - lancia tutti i report che come parametri hanno "da data" "a data"
- * 	- la classe prevede l'inizializzazione attraverso 
- *    dadata, adata, nome del report (senza .jasper)
- *---------------------------------------------------------
+/**
+ * --------------------------------------------------------
+ * GenericReportFromDateToDate
+ *  - launch all reports that have "from date" "to date" as parameters
+ * 	- the class expects initialization through dadata, adata, name of the report (without .jasper)
+ * ---------------------------------------------------------
  * modification history
- * 09/06/2007 - prima versione
- *
- *-----------------------------------------------------------------*/
+ * 09/06/2007 - first version
+ * -----------------------------------------------------------------
+ */
 	public class GenericReportFromDateToDate {
 
     private final Logger logger = LoggerFactory.getLogger(GenericReportFromDateToDate.class);
@@ -64,7 +64,7 @@ import net.sf.jasperreports.view.JasperViewer;
 					JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFilename);
 
                     int iRetVal = fcExcel.showSaveDialog(null);
-                    if(iRetVal == JFileChooser.APPROVE_OPTION)
+                    if (iRetVal == JFileChooser.APPROVE_OPTION)
                     {
                         File exportFile = fcExcel.getSelectedFile();
                         FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();

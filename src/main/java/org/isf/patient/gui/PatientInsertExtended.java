@@ -79,8 +79,8 @@ import org.joda.time.PeriodType;
 
 import com.toedter.calendar.JDateChooser;
 
-
-/*------------------------------------------
+/**
+ * ------------------------------------------
  * PatientInsertExtended - model for the patient entry
  * -----------------------------------------
  * modification history
@@ -89,12 +89,11 @@ import com.toedter.calendar.JDateChooser;
  * 19/08/2008 - mex        - changed educational level with blood type
  * 26/08/2008 - cla		   - added calendar for calculating age
  * 						   - modified age field from int to varchar
- * 28/08/2008 - cla		   - added tooltip for age field and cheching name and age for patient editing
+ * 28/08/2008 - cla		   - added tooltip for age field and checking name and age for patient editing
  * 05/09/2008 - alex       - added patient code
  * 01/01/2009 - Fabrizio   - modified assignment to age field to set an int value
- *------------------------------------------*/
-
-
+ * ------------------------------------------
+ */
 public class PatientInsertExtended extends JDialog {
 
 	private static final long serialVersionUID = -827831581202765055L;
@@ -921,7 +920,7 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	/**
-	 * This method initializes jAdressPanel
+	 * This method initializes jAddressPanel
 	 * 
 	 * @return javax.swing.JPanel
 	 */
@@ -951,11 +950,11 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	/**
-	 * This method initializes jAdressTextField
+	 * This method initializes jAddressTextField
 	 * 
 	 * @return javax.swing.JTextField
 	 */
-	private JTextField getJAdressTextField() {
+	private JTextField getJAddressTextField() {
 		if (jAddressTextField == null) {
 			jAddressTextField = new JTextField(15);
 			if (!insert)
@@ -1536,7 +1535,7 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel getJAddressFieldPanel() {
 		if (jAddressFieldPanel == null) {
 			jAddressFieldPanel = new JPanel();
-			jAddressFieldPanel.add(getJAdressTextField(), null);
+			jAddressFieldPanel.add(getJAddressTextField(), null);
 		}
 		return jAddressFieldPanel;
 	}
@@ -1657,7 +1656,7 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	/**
-	 * This method initializes jAdressPanel
+	 * This method initializes jAddressPanel
 	 * 
 	 * @return javax.swing.JPanel
 	 */
@@ -1941,7 +1940,7 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	/**
-	 * This method initializes jMotherUnknowRadioButton
+	 * This method initializes jMotherUnknownRadioButton
 	 * 
 	 * @return javax.swing.JRadioButton
 	 */

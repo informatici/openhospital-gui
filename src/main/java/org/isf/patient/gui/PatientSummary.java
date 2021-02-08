@@ -47,16 +47,15 @@ import org.isf.utils.time.TimeTools;
 
 /**
  * A class to compose a summary of the data of a given patient
- * 
+ *
  * @author flavio
- * 
  */
 public class PatientSummary {
 
 	private Patient patient;
 	
 	private int maximumWidth = 350;
-	private int borderTickness = 10;
+	private int borderThickness = 10;
 	private int imageMaxWidth = 140;
 
 	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
@@ -73,7 +72,7 @@ public class PatientSummary {
 	 */
 	public JPanel getPatientDataPanel() {
 		
-		JPanel p = new JPanel(new BorderLayout(borderTickness, borderTickness));
+		JPanel p = new JPanel(new BorderLayout(borderThickness, borderThickness));
 
 		p.add(getPatientTitlePanel(), BorderLayout.NORTH);
 		JPanel dataPanel = null;
@@ -96,7 +95,7 @@ public class PatientSummary {
 	 */
 	public JPanel getPatientCompleteSummary() {
 
-		JPanel p = new JPanel(new BorderLayout(borderTickness,borderTickness));
+		JPanel p = new JPanel(new BorderLayout(borderThickness, borderThickness));
 
 		//p.add(getPatientTitlePanel(), BorderLayout.NORTH);
 		p.add(getPatientCard(), BorderLayout.NORTH);
@@ -404,7 +403,7 @@ public class PatientSummary {
 		return lP;
 	}
 
-	// alex: modified with scroolbar
+	// alex: modified with scrollbar
 	private JPanel getPatientNotePanel() {
 		JTextArea textArea = new JTextArea(3, 40);
 		textArea.setText(patient.getNote());

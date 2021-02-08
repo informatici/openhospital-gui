@@ -36,16 +36,16 @@ import org.slf4j.LoggerFactory;
 
 import net.sf.jasperreports.view.JasperViewer;
 
-/*--------------------------------------------------------
+/**
+ * --------------------------------------------------------
  * GenericReportUserInDate
- *  - lancia un particolare report sull'utente
- * 	- la classe prevede l'inizializzazione attraverso 
- *    dadata, adata, utente, nome del report (senza .jasper)
- *---------------------------------------------------------
+ *  - launch a particular user report
+ * 	- the class expects initialization through dadata, adata, user, report name (without .jasper)
+ * ---------------------------------------------------------
  * modification history
- * 06/12/2011 - prima versione
- *
- *-----------------------------------------------------------------*/
+ * 06/12/2011 - first version
+ * -----------------------------------------------------------------
+ */
 	public class GenericReportUserInDate {
 
     private final Logger logger = LoggerFactory.getLogger(GenericReportUserInDate.class);

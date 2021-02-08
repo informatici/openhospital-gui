@@ -56,10 +56,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
 public class PatientInsert extends JDialog implements ActionListener{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private EventListenerList patientListeners = new EventListenerList();
 	
@@ -79,9 +76,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 private void firePatientInserted(Patient aPatient) {
 	        AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
 
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;};
 
 	        EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
@@ -93,9 +87,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private void firePatientUpdated(Patient aPatient) {
 		AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
@@ -162,7 +153,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JPanel jPanel2 = null;
 	private JPanel jPanel3 = null;
 	private JPanel jPanel5 = null;
-	private JPanel jAdress = null;
+	private JPanel jAddress = null;
 	private JPanel jCity = null;
 	private JPanel jNextKin = null;
 	private JPanel jTelephone = null;
@@ -182,7 +173,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	
 	/**
 	 * This method initializes 
-	 * 
 	 */
 	public PatientInsert(JDialog owner, Patient old, boolean inserting) {
 		super(owner, true);
@@ -200,7 +190,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	
 	/**
 	 * This method initializes this
-	 * 
 	 */
 	private void initialize() {
 		
@@ -325,7 +314,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 										patient.setTelephone(jTelephoneTextField.getText());
 										patient.setNote(jNoteTextArea.getText());
 										
-										//PatientExtended Compatibilty
+										//PatientExtended Compatibility
 										patient.setBirthDate(null);
 										patient.setAgetype("");
 										patient.setMother_name("");
@@ -350,9 +339,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 						}
 					}else{//Update
 						String name= jFirstNameTextField.getText()+" "+jSecondNameTextField.getText();
-						if(!(patient.getName().equals(name))){
+						if (!(patient.getName().equals(name))){
 							try{
-								if(manager.isNamePresent(name)){										
+								if (manager.isNamePresent(name)){										
 									switch (JOptionPane.showConfirmDialog(null, 
 											MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" +
 													MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?", 
@@ -371,14 +360,14 @@ public class PatientInsert extends JDialog implements ActionListener{
 						}else{
 							ok=true;
 						}
-						if(ok){
+						if (ok){
 						
 						patient.setFirstName(jFirstNameTextField.getText());
 						patient.setSecondName(jSecondNameTextField.getText());
 						patient.setAge(age.intValue());
 						if (sexSelect.equals(" ")) {
 							sex=patient.getSex();
-						}else if(sexSelect.equals(MessageBundle.getMessage("angal.patient.female"))) {
+						}else if (sexSelect.equals(MessageBundle.getMessage("angal.patient.female"))) {
 							sex='F';
 						}else{
 							sex='M';
@@ -390,7 +379,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 						patient.setTelephone(jTelephoneTextField.getText());
 						patient.setNote(jNoteTextArea.getText());
 						
-						//PatientExtended Compatibilty: NO NEEDED on Edit
+						//PatientExtended Compatibility: NO NEEDED on Edit
 						//patient.setBirthDate("");
 						//patient.setAgetype("");
 						//patient.setMother_name("");
@@ -444,8 +433,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 * 	
 	 * @return javax.swing.JTextField	
 	 */
-	
-	
 	private JTextField getAgeField() {
 		if (ageField == null) {
 			ageField = new JTextField(15);
@@ -504,7 +491,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJFirstNameTextField() {
 		if (jFirstNameTextField == null) {
 			jFirstNameTextField = new JTextField(15);
-			if(!insert)jFirstNameTextField.setText(patient.getFirstName());
+			if (!insert)jFirstNameTextField.setText(patient.getFirstName());
 		}
 		return jFirstNameTextField;
 	}
@@ -530,7 +517,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJSecondNameTextField() {
 		if (jSecondNameTextField == null) {
 			jSecondNameTextField = new JTextField(15);
-			if(!insert)jSecondNameTextField.setText(patient.getSecondName());		
+			if (!insert)jSecondNameTextField.setText(patient.getSecondName());		
 			
 		}
 		return jSecondNameTextField;
@@ -551,11 +538,11 @@ public class PatientInsert extends JDialog implements ActionListener{
 			radiof.setMnemonic(KeyEvent.VK_A+('F'-'A')); 
 			sexPanel.add(getJSexLabelPanel(), null);
 			sexPanel.add(radiom, radiom.getName());
-			if(insert){
+			if (insert){
 				radiom.setSelected(true);
 			}
 			else{
-				if(patient.getSex()=='F')
+				if (patient.getSex()=='F')
 					radiof.setSelected(true);
 				else radiom.setSelected(true);
 			}			
@@ -570,7 +557,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	}
 	
 	/**
-	 * This method initializes jAdressPanel	
+	 * This method initializes jAddressPanel
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
@@ -585,14 +572,14 @@ public class PatientInsert extends JDialog implements ActionListener{
 	}
 	
 	/**
-	 * This method initializes jAdressTextField	
+	 * This method initializes jAddressTextField
 	 * 	
 	 * @return javax.swing.JTextField	
 	 */
-	private JTextField getJAdressTextField() {
+	private JTextField getJAddressTextField() {
 		if (jAddressTextField == null) {
 			jAddressTextField = new JTextField(15);
-			if(!insert)jAddressTextField.setText(patient.getAddress());
+			if (!insert)jAddressTextField.setText(patient.getAddress());
 		}
 		return jAddressTextField;
 	}
@@ -620,7 +607,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJCityTextField() {
 		if (jCityTextField == null) {
 			jCityTextField = new JTextField(15);
-			if(!insert)jCityTextField.setText(patient.getCity());
+			if (!insert)jCityTextField.setText(patient.getCity());
 		}
 		return jCityTextField;
 	}
@@ -648,7 +635,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJTelephoneTextField() {
 		if (jTelephoneTextField == null) {
 			jTelephoneTextField = new JTextField(15);
-			if(!insert)jTelephoneTextField.setText(patient.getTelephone());
+			if (!insert)jTelephoneTextField.setText(patient.getTelephone());
 		}
 		return jTelephoneTextField;
 	}
@@ -676,7 +663,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJNextKinTextField() {
 		if (jNextKinTextField == null) {
 			jNextKinTextField = new JTextField(15);
-			if(!insert)jNextKinTextField.setText(patient.getNextKin());
+			if (!insert)jNextKinTextField.setText(patient.getNextKin());
 		}
 		return jNextKinTextField;
 	}
@@ -751,7 +738,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 			jLabelPanel.add(getJSecondName(), null);
 			jLabelPanel.add(getJAge(), null);
 			jLabelPanel.add(getSexPanel(), null);
-			jLabelPanel.add(getJAdress(), null);
+			jLabelPanel.add(getJAddress(), null);
 			jLabelPanel.add(getJCity(), null);
 			jLabelPanel.add(getJNextKin(), null);
 			jLabelPanel.add(getJTelephone(), null);
@@ -868,7 +855,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JPanel getJPanel() {
 		if (jPanel == null) {
 			jPanel = new JPanel();
-			jPanel.add(getJAdressTextField(), null);
+			jPanel.add(getJAddressTextField(), null);
 		}
 		return jPanel;
 	}
@@ -913,19 +900,19 @@ public class PatientInsert extends JDialog implements ActionListener{
 	}
 
 	/**
-	 * This method initializes jAdress	
+	 * This method initializes jAddress
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	private JPanel getJAdress() {
-		if (jAdress == null) {
-			jAdress = new JPanel();
-			jAdress.setLayout(new BorderLayout());
-			jAdress.add(getJAddressPanel(), java.awt.BorderLayout.WEST);
-			jAdress.add(getJPanel(), java.awt.BorderLayout.EAST);
+	private JPanel getJAddress() {
+		if (jAddress == null) {
+			jAddress = new JPanel();
+			jAddress.setLayout(new BorderLayout());
+			jAddress.add(getJAddressPanel(), java.awt.BorderLayout.WEST);
+			jAddress.add(getJPanel(), java.awt.BorderLayout.EAST);
 			
 		}
-		return jAdress;
+		return jAddress;
 	}
 
 	/**
@@ -981,7 +968,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JPanel getJDataContainPanel() {
 		if (jDataContainPanel == null) {
 			jDataContainPanel = new JPanel();
-			if(!insert){
+			if (!insert){
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel,patient.getName());
 			}else{
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel,MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
@@ -994,11 +981,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 	}
 
 
-
-	
-
 	/**
-	 * set a specific border+title to a panel
+	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title){
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
@@ -1065,6 +1049,5 @@ public class PatientInsert extends JDialog implements ActionListener{
 		}
 		return jNotePanel;
 	}
-	
-	
-}  //  @jve:decl-index=0:visual-constraint="378,59"
+
+}

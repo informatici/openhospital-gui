@@ -46,25 +46,20 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * Browsing of table AgeType
- * 
+ *
  * @author Alessandro
- * 
  */
-
 public class AgeTypeBrowser extends ModalJFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<AgeType> pAgeType;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code"),
 			MessageBundle.getMessage("angal.agetype.from"),
 			MessageBundle.getMessage("angal.agetype.to"),
 			MessageBundle.getMessage("angal.common.description")
 	};
-	private int[] pColumwidth = { 80, 80, 80, 200 };
+	private int[] pColumnwidth = { 80, 80, 80, 200 };
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jEditSaveButton = null;
@@ -75,7 +70,6 @@ public class AgeTypeBrowser extends ModalJFrame {
 
 	/**
 	 * This method initializes
-	 * 
 	 */
 	public AgeTypeBrowser() {
 		super();
@@ -130,7 +124,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 						jTable.updateUI();
 
 					} else {
-					    if(jTable.isEditing()){
+					    if (jTable.isEditing()){
                             jTable.getCellEditor().stopCellEditing();
                         }
 						AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
@@ -173,8 +167,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 		if (jTable == null) {
 			model = new AgeTypeBrowserModel();
 			jTable = new JTable(model);
-			for (int i = 0; i < pColums.length; i++) {
-				jTable.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
+			for (int i = 0; i < pColumns.length; i++) {
+				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnwidth[i]);
 			}
 			jTable.setDefaultRenderer(Object.class,new ColorTableCellRenderer());
 		}
@@ -183,9 +177,6 @@ public class AgeTypeBrowser extends ModalJFrame {
 
 	class AgeTypeBrowserModel extends DefaultTableModel {
 
-		/**
-	     * 
-	     */
 		private static final long serialVersionUID = 1L;
 		private AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 		
@@ -205,11 +196,11 @@ public class AgeTypeBrowser extends ModalJFrame {
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -258,9 +249,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 	}
 	
 	class ColorTableCellRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

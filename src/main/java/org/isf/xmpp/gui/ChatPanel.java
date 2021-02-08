@@ -36,9 +36,6 @@ import javax.swing.JTextField;
 
 public class ChatPanel extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ChatMessages chatMessages;
 	private JTextField send;
@@ -47,7 +44,6 @@ public class ChatPanel extends JPanel {
 	{
 		setLayout(new GridLayout(1,0));
 		createChatPanel();
-
 	}
 
 	protected JPanel createChatPanel() {
@@ -65,7 +61,7 @@ public class ChatPanel extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int key =e.getKeyCode();
-				if(key==KeyEvent.VK_ENTER)
+				if (key==KeyEvent.VK_ENTER)
 				{
 					CommunicationFrame frame = (CommunicationFrame)CommunicationFrame.getFrame();
 					String receiver =frame.getSelectedUser();
@@ -91,9 +87,6 @@ public class ChatPanel extends JPanel {
 						brm.setValue(brm.getMaximum());
 				} else
 					wasAtBottom = ((brm.getValue() + brm.getExtent()) == brm.getMaximum());
-
-
-
 			}
 		});
 

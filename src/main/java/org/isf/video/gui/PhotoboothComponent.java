@@ -32,12 +32,10 @@ import org.isf.gui.BaseComponent;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-/*
- * Created by JFormDesigner on Mon Mar 09 21:10:41 AEDT 2020
- */
 
 /**
  * @author User #1
+ * Created by JFormDesigner on Mon Mar 09 21:10:41 AEDT 2020
  */
 public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentationModel> {
 
@@ -180,7 +178,5 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 	private JButton okButton;
 	private JButton cancelButton;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
-
-
 
 }

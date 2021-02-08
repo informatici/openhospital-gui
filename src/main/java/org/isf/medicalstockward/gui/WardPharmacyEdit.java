@@ -119,9 +119,6 @@ public class WardPharmacyEdit extends JDialog {
 	private void fireMovementWardUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = movementWardListeners.getListeners(MovementWardListeners.class);
@@ -452,11 +449,11 @@ public class WardPharmacyEdit extends JDialog {
 		}
 		
 		for (Patient elem : pat) {
-			if(key != null)	{
+			if (key != null)	{
 				s1 = key.split(" ");
 				int a = 0;
 				for (int i = 0; i < s1.length; i++) {
-					if(elem.getSearchString().contains(key.toLowerCase()) == true) {
+					if (elem.getSearchString().contains(key.toLowerCase()) == true) {
 						a++;
 					}
 				}
@@ -605,9 +602,9 @@ public class WardPharmacyEdit extends JDialog {
 		}
 		
 		for (MedicalWard elem : medList) {
-			if(key != null)
+			if (key != null)
 			{
-				if(elem.toString().toLowerCase().contains(key.toLowerCase()) == true)
+				if (elem.toString().toLowerCase().contains(key.toLowerCase()) == true)
 					jComboBoxDrugs.addItem(elem);
 			}
 			else jComboBoxDrugs.addItem(elem);

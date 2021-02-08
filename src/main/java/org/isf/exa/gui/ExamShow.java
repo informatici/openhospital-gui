@@ -21,14 +21,6 @@
  */
 package org.isf.exa.gui;
 
-/*------------------------------------------
- * ExamShow - list all possible results for an exam
- * -----------------------------------------
- * modification history
- * 03/11/2006 - ross - changed title
- * 			         - version is now 1.0 
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -54,11 +46,17 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
+/**
+ * ------------------------------------------
+ * ExamShow - list all possible results for an exam
+ * -----------------------------------------
+ * modification history
+ * 03/11/2006 - ross - changed title
+ * 			         - version is now 1.0
+ * ------------------------------------------
+ */
 public class ExamShow extends JDialog implements ExamRowListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private JPanel jContentPane = null;
@@ -68,11 +66,11 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private Exam exam = null;
 	private JButton newButton = null;
 	private JButton deleteButton = null;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumwidth = {50,250};
+	private int[] pColumnwidth = {50,250};
 	private DefaultTableModel model ;
 	private JTable table;
 	private ExamRow examRow = null;
@@ -116,8 +114,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
                         
 			model = new ExamRowBrowsingModel(exam.getCode());
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			table.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);			
+			table.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
+			table.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
 			jContentPane.add(new JScrollPane(table),BorderLayout.CENTER);
 		}
 		return dataPanel;
@@ -134,7 +132,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	}
 	
 	private JButton getNewButton(){
-		if(newButton == null){
+		if (newButton == null){
 			newButton = new JButton();
 			newButton.setText(MessageBundle.getMessage("angal.common.new"));  // Generated
             newButton.setMnemonic(KeyEvent.VK_N);
@@ -229,16 +227,16 @@ class ExamRowBrowsingModel extends DefaultTableModel {
             }
 
             public String getColumnName(int c) {
-                return pColums[c];
+                return pColumns[c];
             }
 
             public int getColumnCount() {
-                return pColums.length;
+                return pColumns.length;
             }
 
             public Object getValueAt(int r, int c) {
                 ExamRow examRow = pExamRow.get(r);
-                if(c==-1){
+                if (c==-1){
                     return examRow;
                 }
                 else if (c == 0) {

@@ -21,40 +21,6 @@
  */
 package org.isf.opd.gui;
 
-/*------------------------------------------
- * OpdEdit - add/edit an OPD registration
- * -----------------------------------------
- * modification history
- * 11/12/2005 - Vero, Rick  - first beta version 
- * 07/11/2006 - ross - renamed from Surgery 
- *                   - added visit date, disease 2, diseas3
- *                   - disease is not mandatory if re-attendance
- * 			         - version is now 1.0 
- * 28/05/2008 - ross - added referral to / referral from check boxes
- * 12/06/2008 - ross - added patient data
- * 					 - fixed error on checking "male"/"female" option: should check after translation
- * 					 - version is not a resource into the boundle, is locale to the form
- *                   - form rearranged in x,y coordinates 
- * 			         - version is now 1.1 
- * 26/08/2008 - teo  - added patient chooser 
- * 01/09/2008 - alex - added constructor for call from Admission
- * 					 - set Patient oriented OPD
- * 					 - history management for the patients
- * 					 - version now is 1.2
- * 01/01/2009 - Fabrizio - modified age fields back to Integer type
- * 13/02/2009 - Alex - added possibility to edit patient through EditButton
- * 					   added Edit.png icon
- * 					   fixed a bug on the first element in the comboBox
- * 13/02/2009 - Alex - added trash button for resetting searchfield
- * 03/13/2009 - Alex - lastOpdVisit appears at the bottom
- * 					   added control on duplicated diseases
- * 					   added re-attendance checkbox for a clear view
- * 					   new/re-attendance managed freely
- * 07/13/2009 - Alex - note field for the visit recall last visit note when start OPD from
-	  				   Admission and added Note even in Last OPD Visit
-	  				   Extended patient search to patient code
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -137,12 +103,44 @@ import org.isf.visits.model.Visit;
 
 import com.toedter.calendar.JDateChooser;
 
-public class OpdEditExtended extends ModalJFrame implements 
+/**
+ * ------------------------------------------
+ * OpdEditExtended - add/edit an OPD registration
+ * -----------------------------------------
+ * modification history
+ * 11/12/2005 - Vero, Rick  - first beta version
+ * 07/11/2006 - ross - renamed from Surgery
+ *                   - added visit date, disease 2, disease 3
+ *                   - disease is not mandatory if re-attendance
+ * 			         - version is now 1.0
+ * 28/05/2008 - ross - added referral to / referral from check boxes
+ * 12/06/2008 - ross - added patient data
+ * 					 - fixed error on checking "male"/"female" option: should check after translation
+ * 					 - version is not a resource into the bundle, is locale to the form
+ *                   - form rearranged in x,y coordinates
+ * 			         - version is now 1.1
+ * 26/08/2008 - teo  - added patient chooser
+ * 01/09/2008 - alex - added constructor for call from Admission
+ * 					 - set Patient oriented OPD
+ * 					 - history management for the patients
+ * 					 - version now is 1.2
+ * 01/01/2009 - Fabrizio - modified age fields back to Integer type
+ * 13/02/2009 - Alex - added possibility to edit patient through EditButton
+ * 					   added Edit.png icon
+ * 					   fixed a bug on the first element in the comboBox
+ * 13/02/2009 - Alex - added trash button for resetting searchfield
+ * 03/13/2009 - Alex - lastOpdVisit appears at the bottom
+ * 					   added control on duplicated diseases
+ * 					   added re-attendance checkbox for a clear view
+ * 					   new/re-attendance managed freely
+ * 07/13/2009 - Alex - note field for the visit recall last visit note when start OPD from
+ *  				   Admission and added Note even in Last OPD Visit
+ *	  				   Extended patient search to patient code
+ * ------------------------------------------
+ * */
+public class OpdEditExtended extends ModalJFrame implements
         PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public void patientInserted(AWTEvent e) {
@@ -175,9 +173,6 @@ public class OpdEditExtended extends ModalJFrame implements
 	private void fireSurgeryInserted(Opd opd) {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
@@ -187,9 +182,6 @@ public class OpdEditExtended extends ModalJFrame implements
 	private void fireSurgeryUpdated(Opd opd) {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
@@ -292,7 +284,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JLabel JlabelOpd;
         
     /*
-     * Adds: Textfields and buttoms to enable search in diognoses 
+     * Adds: Textfields and buttons to enable search in diagnosis
      */
     private JTextField searchDiseaseTextField;
     private JTextField searchDiseaseTextField2;
@@ -313,10 +305,11 @@ public class OpdEditExtended extends ModalJFrame implements
     private JLabel nextVisitLabel;
     private JDateChooser opdNextVisitDate;
     private GregorianCalendar nextDateBackup; //TODO: Workaround for update, a better solution must be found here
+
 	/**
-	 * This method initializes 
+	 * This method initializes
+	 *
 	 * @wbp.parser.constructor
-	 * 
 	 */
 	public OpdEditExtended(JFrame owner, Opd old, boolean inserting) {
 		super();
@@ -330,7 +323,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		try{
-			if(!insert) {
+			if (!insert) {
 				opdPatient = opd.getPatient();
 				if (opdPatient != null && opd.getPatient().getCode() != 0) { 
 					PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
@@ -359,7 +352,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		try{
-			if(!insert) {
+			if (!insert) {
 				opdPatient = opd.getPatient();
 				if (opdPatient != null && opd.getPatient().getCode() != 0) { 
 					PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
@@ -384,9 +377,9 @@ public class OpdEditExtended extends ModalJFrame implements
 			jFieldNextKin.setText(p.getNextKin());
 			jPatientNote.setText(opdPatient.getNote());
 			setMyMatteBorder(jPanelPatient, MessageBundle.getMessage("angal.opd.patient") + " (code: " + opdPatient.getCode() + ")");
-			if(p.getSex() == 'M') {
+			if (p.getSex() == 'M') {
 				radiom.setSelected(true);				
-			} else if(p.getSex() == 'F') {
+			} else if (p.getSex() == 'F') {
 				radiof.setSelected(true);			
 			}
 			if (insert) getLastOpd(p.getCode());
@@ -467,7 +460,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	private void setAttendance() {
 		if (!insert) return;
 		Object selectedObject = diseaseBox1.getSelectedItem();
-		if(selectedObject instanceof Disease) {
+		if (selectedObject instanceof Disease) {
 			Disease disease = (Disease) selectedObject;
 			if (lastOPDDisease1 != null && disease.getCode().equals(lastOPDDisease1.getCode())) {
 				rePatientCheckBox.setSelected(true);
@@ -515,7 +508,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			});
 			jPanelNorth.add(rePatientCheckBox);
 			jPanelNorth.add(newPatientCheckBox);
-			if(!insert){
+			if (!insert){
 				if (opd.getNewPatient() == 'N')
 					newPatientCheckBox.setSelected(true);
 				else
@@ -523,14 +516,14 @@ public class OpdEditExtended extends ModalJFrame implements
 			}
 			referralFromCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.from"));
 			jPanelNorth.add(referralFromCheckBox);
-			if(!insert){
+			if (!insert){
 				referralFrom = opd.getReferralFrom();
 				if (referralFrom == null) referralFrom="";
 				if (referralFrom.equals("R"))referralFromCheckBox.setSelected(true);
 			}
 			referralToCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.to"));
 			jPanelNorth.add(referralToCheckBox);
-			if(!insert){
+			if (!insert){
 				referralTo = opd.getReferralTo();
 				if (referralTo == null) referralTo="";
 				if (referralTo.equals("R"))referralToCheckBox.setSelected(true);
@@ -556,7 +549,6 @@ public class OpdEditExtended extends ModalJFrame implements
 
 	/**
 	 * This method initializes this
-	 * 
 	 */
 	private void initialize() {
 		this.setContentPane(getMainPanel());
@@ -713,7 +705,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelDisease1.gridy = 3;
 			gbc_jLabelDisease1.gridx = 0;
             jPanelData.add(jLabelDisease1, gbc_jLabelDisease1);
-            /////////////Seach text field/////////////
+            /////////////Search text field/////////////
             GridBagConstraints gbc_searchDiseaseTextField = new GridBagConstraints();
 			gbc_searchDiseaseTextField.weightx = 0.5;
 			gbc_searchDiseaseTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -732,7 +724,7 @@ public class OpdEditExtended extends ModalJFrame implements
                 public void keyTyped(KeyEvent e) {}
             });
 			jPanelData.add(searchDiseaseTextField, gbc_searchDiseaseTextField);
-            /////////////Seach text button/////////////
+            /////////////Search text button/////////////
             GridBagConstraints gbc_searchDiseaseButton = new GridBagConstraints();
 			gbc_searchDiseaseButton.insets = new Insets(5, 5, 5, 5);
 			gbc_searchDiseaseButton.gridy = 3;
@@ -742,7 +734,7 @@ public class OpdEditExtended extends ModalJFrame implements
             searchDiseaseButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
             searchDiseaseButton.addActionListener(this);
 			jPanelData.add(searchDiseaseButton, gbc_searchDiseaseButton);
-            /////////////Disesases combo/////////////
+            /////////////Diseases combo/////////////
 			GridBagConstraints gbc_jLabelDiseaseBox = new GridBagConstraints();
 			gbc_jLabelDiseaseBox.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelDiseaseBox.fill = GridBagConstraints.HORIZONTAL;
@@ -759,7 +751,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelDis2.gridy = 4;
 			gbc_jLabelDis2.gridx = 0;
 			jPanelData.add(jLabelDis2, gbc_jLabelDis2);
-            /////////////Seach text field/////////////
+            /////////////Search text field/////////////
             GridBagConstraints gbc_searchDiseaseTextField2 = new GridBagConstraints();
 			gbc_searchDiseaseTextField2.weightx = 0.5;
 			gbc_searchDiseaseTextField2.fill = GridBagConstraints.HORIZONTAL;
@@ -778,7 +770,7 @@ public class OpdEditExtended extends ModalJFrame implements
                 public void keyTyped(KeyEvent e) {}
             });
 			jPanelData.add(searchDiseaseTextField2, gbc_searchDiseaseTextField2);
-            /////////////Seach text button/////////////
+            /////////////Search text button/////////////
             GridBagConstraints gbc_searchDiseaseButton2 = new GridBagConstraints();
 			gbc_searchDiseaseButton2.insets = new Insets(5, 5, 5, 5);
 			gbc_searchDiseaseButton2.gridy = 4;
@@ -788,7 +780,7 @@ public class OpdEditExtended extends ModalJFrame implements
             searchDiseaseButton2.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
             searchDiseaseButton2.addActionListener(this);
 			jPanelData.add(searchDiseaseButton2, gbc_searchDiseaseButton2);
-            /////////////Disesases combo/////////////
+            /////////////Diseases combo/////////////
 			GridBagConstraints gbc_jLabelDisBox2 = new GridBagConstraints();
 			gbc_jLabelDisBox2.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelDisBox2.fill = GridBagConstraints.HORIZONTAL;
@@ -806,7 +798,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelDis3.gridx = 0;
 			jPanelData.add(jLabelDis3, gbc_jLabelDis3);
 			GridBagConstraints gbc_jLabelDisBox3 = new GridBagConstraints();
-            /////////////Seach text field/////////////
+            /////////////Search text field/////////////
             GridBagConstraints gbc_searchDiseaseTextField3 = new GridBagConstraints();
 			gbc_searchDiseaseTextField3.weightx = 0.5;
 			gbc_searchDiseaseTextField3.fill = GridBagConstraints.HORIZONTAL;
@@ -825,7 +817,7 @@ public class OpdEditExtended extends ModalJFrame implements
                 public void keyTyped(KeyEvent e) {}
             });
 			jPanelData.add(searchDiseaseTextField3, gbc_searchDiseaseTextField3);
-            /////////////Seach text button/////////////
+            /////////////Search text button/////////////
             GridBagConstraints gbc_searchDiseaseButton3 = new GridBagConstraints();
 			gbc_searchDiseaseButton3.insets = new Insets(5, 5, 5, 5);
 			gbc_searchDiseaseButton3.gridy = 5;
@@ -835,7 +827,7 @@ public class OpdEditExtended extends ModalJFrame implements
             searchDiseaseButton3.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			jPanelData.add(searchDiseaseButton3, gbc_searchDiseaseButton3);
             searchDiseaseButton3.addActionListener(this);
-            /////////////Disesases combo/////////////
+            /////////////Diseases combo/////////////
 			gbc_jLabelDisBox3.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelDisBox3.fill = GridBagConstraints.HORIZONTAL;
 			gbc_jLabelDisBox3.weightx = 0.5;
@@ -899,9 +891,6 @@ public class OpdEditExtended extends ModalJFrame implements
 		return jPanelData;
 	}
 
-	/**
-	 * 
-	 */
 	private CustomJDateChooser getOpdDateFieldCal() {
 		if (OpdDateFieldCal == null) {
 			String d = "";
@@ -1065,7 +1054,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				diseaseBox1.addItem(elem);
 			else if (elem.getType().equals((DiseaseType)diseaseTypeBox.getSelectedItem()))
 				diseaseBox1.addItem(elem);
-			if(!insert && opd.getDisease()!=null){
+			if (!insert && opd.getDisease()!=null){
 				if (opd.getDisease().getCode().equals(elem.getCode())) {
 					elem2 = elem;}
 				
@@ -1100,7 +1089,7 @@ public class OpdEditExtended extends ModalJFrame implements
 
 		for (Disease elem : diseasesOPD) {
 			diseaseBox2.addItem(elem);
-			if(!insert && opd.getDisease2()!=null){
+			if (!insert && opd.getDisease2()!=null){
 				if (opd.getDisease2().getCode().equals(elem.getCode())) {
 					elem2 = elem;}
 			} 
@@ -1123,9 +1112,6 @@ public class OpdEditExtended extends ModalJFrame implements
 		return diseaseBox2;
 	}
 
-	/**
-	 * 
-	 */
 	private VoLimitedTextField getJTextPatientSrc() {
 		if (jTextPatientSrc == null) {
 			jTextPatientSrc = new VoLimitedTextField(16,20);
@@ -1187,12 +1173,12 @@ public class OpdEditExtended extends ModalJFrame implements
 		}
 				
 		for (Patient elem : pat) {
-			if(key != null) {
+			if (key != null) {
 				s1 = key.split(" ");
 				String name = elem.getSearchString();
 				int a = 0;
 				for (int i = 0; i < s1.length; i++) {
-					if(name.contains(s1[i].toLowerCase()) == true) {
+					if (name.contains(s1[i].toLowerCase()) == true) {
 						a++;
 					}
 				}
@@ -1314,7 +1300,7 @@ public class OpdEditExtended extends ModalJFrame implements
 
 		for (Disease elem : diseasesOPD) {
 			diseaseBox3.addItem(elem);
-			if(!insert && opd.getDisease3()!=null){
+			if (!insert && opd.getDisease3()!=null){
 				if (opd.getDisease3().getCode().equals(elem.getCode())) {
 					elem2 = elem;}
 			}
@@ -1508,7 +1494,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			radiom.setFocusable(false);
 			radiof.setFocusable(false);
 
-			if(opdPatient != null) setPatient(opdPatient);
+			if (opdPatient != null) setPatient(opdPatient);
 		}
 		return jPanelPatient;
 	}
@@ -1602,7 +1588,6 @@ public class OpdEditExtended extends ModalJFrame implements
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-
 	//alex: modified method to take data from Patient Object instead from jTextFields
 	private JButton getOkButton() {
 		if (okButton == null) {
@@ -1698,17 +1683,7 @@ public class OpdEditExtended extends ModalJFrame implements
 
 					boolean scheduleVisit = false;
 					Date now = new Date();
-					Date nextVisit = opdNextVisitDate.getDate(); // FIXME:
-																	// despite
-																	// the
-																	// presentation
-																	// dd/MM/yy
-																	// the
-																	// object
-																	// has time
-																	// when
-																	// insert =
-																	// true
+					Date nextVisit = opdNextVisitDate.getDate(); // FIXME: despite the presentation dd/MM/yy the object has time when insert = true
 					if (nextVisit != null) {
 						if (nextVisit.compareTo(OpdDateFieldCal.getDate()) < 0) {
 							JOptionPane.showMessageDialog(OpdEditExtended.this, MessageBundle.getMessage("angal.opd.notpasseddate"), "",
@@ -1818,7 +1793,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	}
 	
 	/*
-	 * set a specific border+title to a panel
+	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
@@ -1829,7 +1804,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	}
 	
 	/*
-	 * set a specific border+title+matte to a panel
+	 * Set a specific border+title+matte to a panel
 	 */
 	private JPanel setMyMatteBorder(JPanel c, String title) {
 		c.setBorder(new TitledBorder(new MatteBorder(1, 20, 1, 1, new Color(153, 180, 209)), title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -1846,7 +1821,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	@Override
     public void actionPerformed(ActionEvent ae) {
         JButton source = (JButton) ae.getSource();
-        if(source == searchDiseaseButton) {
+        if (source == searchDiseaseButton) {
             diseaseBox1.removeAllItems();
             diseaseBox1.addItem("");
             for(Disease disease: 
@@ -1854,14 +1829,14 @@ public class OpdEditExtended extends ModalJFrame implements
                             diseasesOPD == null? diseasesAll : diseasesOPD )) {
                 diseaseBox1.addItem(disease);
             }
-            if(diseaseBox1.getItemCount() >= 2){
+            if (diseaseBox1.getItemCount() >= 2){
                 diseaseBox1.setSelectedIndex(1);
             }
             diseaseBox1.requestFocus();
-            if(diseaseBox1.getItemCount() > 2){
+            if (diseaseBox1.getItemCount() > 2){
                 diseaseBox1.showPopup();
             }
-        } else if(source == searchDiseaseButton2) {
+        } else if (source == searchDiseaseButton2) {
             diseaseBox2.removeAllItems();
             diseaseBox2.addItem("");
             for(Disease disease: 
@@ -1869,14 +1844,14 @@ public class OpdEditExtended extends ModalJFrame implements
                             diseasesOPD == null? diseasesAll : diseasesOPD)) {
                 diseaseBox2.addItem(disease);
             }
-            if(diseaseBox2.getItemCount() >= 2){
+            if (diseaseBox2.getItemCount() >= 2){
                 diseaseBox2.setSelectedIndex(1);
             }
             diseaseBox2.requestFocus();
-            if(diseaseBox2.getItemCount() > 2){
+            if (diseaseBox2.getItemCount() > 2){
                 diseaseBox2.showPopup();
             }
-        } else if(source == searchDiseaseButton3) {
+        } else if (source == searchDiseaseButton3) {
             diseaseBox3.removeAllItems();
             diseaseBox3.addItem("");
             for(Disease disease: 
@@ -1884,11 +1859,11 @@ public class OpdEditExtended extends ModalJFrame implements
                             diseasesOPD == null? diseasesAll : diseasesOPD)) {
                 diseaseBox3.addItem(disease);
             }
-            if(diseaseBox3.getItemCount() >= 2){
+            if (diseaseBox3.getItemCount() >= 2){
                 diseaseBox3.setSelectedIndex(1);
             }
             diseaseBox3.requestFocus();
-            if(diseaseBox3.getItemCount() > 2){
+            if (diseaseBox3.getItemCount() > 2){
                 diseaseBox3.showPopup();
             }
         }
@@ -1898,7 +1873,7 @@ public class OpdEditExtended extends ModalJFrame implements
         String query = s.trim();
         ArrayList<Disease> results = new ArrayList<Disease>();
         for (Disease disease : diseaseList) {
-            if(!query.equals("")) {
+            if (!query.equals("")) {
 		String[] patterns = query.split(" ");
 		String name = disease.getDescription().toLowerCase();
 		boolean patternFound = false;

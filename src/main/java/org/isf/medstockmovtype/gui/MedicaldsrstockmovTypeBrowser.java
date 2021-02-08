@@ -49,31 +49,26 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * Browsing of table MedicalStockMovType
- * 
+ *
  * @author Furlanetto, Zoia, Finotto
- * 
  */
-
 public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements MedicaldsrstockmovTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<MovementType> pMedicaldsrstockmovType;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm"),
 			MessageBundle.getMessage("angal.medstockmovtype.typem")
 	};
-	private int[] pColumwidth = {80, 200, 40};
+	private int[] pColumnwidth = {80, 200, 40};
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteBUtton = null;
 	private JTable jTable = null;
 	private MedicaldsrstockmovTypeBrowserModel model;
 	private int selectedrow;
@@ -82,8 +77,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	private final JFrame myFrame;
 	
 	/**
-	 * This method initializes 
-	 * 
+	 * This method initializes
 	 */
 	public MedicaldsrstockmovTypeBrowser() {
 		super();
@@ -124,7 +118,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
@@ -200,16 +194,16 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteBUtton == null) {
+			jDeleteBUtton = new JButton();
+			jDeleteBUtton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteBUtton.setMnemonic(KeyEvent.VK_D);
+			jDeleteBUtton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,
@@ -244,23 +238,20 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteBUtton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new MedicaldsrstockmovTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
 		}return jTable;
 	}
 	
 	class MedicaldsrstockmovTypeBrowserModel extends DefaultTableModel {
 
-		/**
-		* 
-		*/
 		private static final long serialVersionUID = 1L;
 
 		public MedicaldsrstockmovTypeBrowserModel() {
@@ -279,11 +270,11 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -308,8 +299,6 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	}
 
 
-
-
 	public void medicaldsrstockmovTypeUpdated(AWTEvent e) {
 		pMedicaldsrstockmovType.set(selectedrow, medicaldsrstockmovType);
 		((MedicaldsrstockmovTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
@@ -326,6 +315,5 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 		if (jTable.getRowCount() > 0)
 			jTable.setRowSelectionInterval(0, 0);
 	}
-	
-	
+
 }

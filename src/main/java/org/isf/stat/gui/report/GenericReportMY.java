@@ -39,17 +39,14 @@ import org.slf4j.LoggerFactory;
 
 import net.sf.jasperreports.view.JasperViewer;
 
-/*--------------------------------------------------------
- * GenericReportLauncerMY - lancia tutti i report che come parametri hanno
- * 							anno e mese
- * 							la classe prevede l'inizializzazione attraverso 
- *                          anno, mese, nome del report (senza .jasper)
- *---------------------------------------------------------
+/**
+ * --------------------------------------------------------
+ * GenericReportLauncerMY - launch all the reports that have as parameters year and month
+ * 							the class expects initialization through year, month, report name (without .jasper)
+ * ---------------------------------------------------------
  * modification history
- * 11/11/2006 - prima versione
- *
- *-----------------------------------------------------------------*/
-
+ * 11/11/2006 - first version
+ * -----------------------------------------------------------------*/
 public class GenericReportMY {
 
     private final Logger logger = LoggerFactory.getLogger(GenericReportMY.class);
@@ -63,7 +60,7 @@ public class GenericReportMY {
 				JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFilename);
 
                 int iRetVal = fcExcel.showSaveDialog(null);
-                if(iRetVal == JFileChooser.APPROVE_OPTION)
+                if (iRetVal == JFileChooser.APPROVE_OPTION)
                 {
                     File exportFile = fcExcel.getSelectedFile();
                     FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();

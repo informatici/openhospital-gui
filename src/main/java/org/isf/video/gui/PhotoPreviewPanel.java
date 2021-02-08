@@ -31,9 +31,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class PhotoPreviewPanel extends JPanel	{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private Image img;
 	
@@ -52,7 +50,7 @@ public class PhotoPreviewPanel extends JPanel	{
 	//override paint method of panel
 	public void paint(Graphics g)	{
 		//draw the image
-		if(img != null)	{
+		if (img != null)	{
 			g.drawImage(img, 0, 0, this);
 		}
 	}

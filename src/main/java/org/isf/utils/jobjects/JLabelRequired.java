@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 
 /**
  * JLabelRequired.java - 28/gen/2014
+ *
  * @author Mwithi
  */
 public class JLabelRequired extends JLabel {

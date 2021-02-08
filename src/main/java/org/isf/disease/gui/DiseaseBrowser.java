@@ -21,17 +21,6 @@
  */
 package org.isf.disease.gui;
 
-/*------------------------------------------
- * DiseaseBrowser - This class shows a list of diseases.
- * 					It is possible to filter data with a selection combo box
- * 					and edit-insert-delete records
- * -----------------------------------------
- * modification history
- * 25-gen-2006 - Rick, Vero, Pupo - first beta version
- * 03/11/2006 - ross - version is now 1.0 
- *------------------------------------------*/
-
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -63,11 +52,19 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.ModalJFrame;
 
+/**
+ * ------------------------------------------
+ * DiseaseBrowser - This class shows a list of diseases.
+ * 					It is possible to filter data with a selection combo box
+ * 					and edit-insert-delete records
+ * -----------------------------------------
+ * modification history
+ * 25-gen-2006 - Rick, Vero, Pupo - first beta version
+ * 03/11/2006 - ross - version is now 1.0
+ * ------------------------------------------
+ */
 public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final String VERSION="v1.2"; 
 
@@ -92,12 +89,12 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	private JLabel selectlabel;
 	private JComboBox pbox;
 	private ArrayList<Disease> pDisease;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.disease.typem"),
 			MessageBundle.getMessage("angal.disease.namem")
 	};
-	private int[] pColumwidth = {50, 180, 200 };
+	private int[] pColumnwidth = {50, 180, 200 };
 	private Disease disease;
 	private DefaultTableModel model ;
 	private JTable table;
@@ -114,9 +111,9 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		model = new DiseaseBrowserModel();
 		table = new JTable(model);
 		table.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
-		table.getColumnModel().getColumn(0).setMaxWidth(pColumwidth[0]);
-		table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
-		table.getColumnModel().getColumn(2).setPreferredWidth(pColumwidth[2]);
+		table.getColumnModel().getColumn(0).setMaxWidth(pColumnwidth[0]);
+		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnwidth[1]);
+		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnwidth[2]);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -132,14 +129,14 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		try {
 			type = disTypeManager.getDiseaseType();
 		}catch(OHServiceException e){
-			if(e.getMessages() != null){
+			if (e.getMessages() != null){
 				for(OHExceptionMessage msg : e.getMessages()){
 					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
 			}
 		}
 		//for efficiency in the sequent for
-		if(type != null){
+		if (type != null){
 			for (DiseaseType elem : type) {
 				pbox.addItem(elem);
 			}
@@ -220,7 +217,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 							diseaseUpdated(null);
 						}
 					}catch(OHServiceException e){
-						if(e.getMessages() != null){
+						if (e.getMessages() != null){
 							for(OHExceptionMessage msg : e.getMessages()){
 								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
@@ -248,17 +245,14 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	
 	
 	class DiseaseBrowserModel extends DefaultTableModel {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public DiseaseBrowserModel(String s) {
 			try {
 				pDisease = manager.getDisease(s);
 			}catch(OHServiceException e){
-				if(e.getMessages() != null){
+				if (e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -269,7 +263,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 			try {
 				pDisease = manager.getDiseaseAll();
 			}catch(OHServiceException e){
-				if(e.getMessages() != null){
+				if (e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -283,11 +277,11 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 		
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 		
 		public Object getValueAt(int r, int c) {
@@ -312,10 +306,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	
 	//////////////////////////////////////////////////////////////////////////////////////
 	class ColorTableCellRenderer extends DefaultTableCellRenderer
-	{  
-	   /**
-		 * 
-		 */
+	{
+
 		private static final long serialVersionUID = 1L;
 
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
@@ -323,7 +315,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	   {  
 		   Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 		   cell.setForeground(Color.BLACK);
-		   if(!((Disease)table.getValueAt(row,-1)).getIpdInInclude() &&
+		   if (!((Disease)table.getValueAt(row,-1)).getIpdInInclude() &&
 				   !((Disease)table.getValueAt(row,-1)).getIpdOutInclude() &&
 				   !((Disease)table.getValueAt(row,-1)).getOpdInclude()) {
 			   cell.setForeground(Color.GRAY);

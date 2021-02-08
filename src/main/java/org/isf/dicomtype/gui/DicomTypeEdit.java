@@ -46,9 +46,6 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DicomTypeEdit extends JDialog{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList dicomTypeListeners = new EventListenerList();
 
@@ -68,9 +65,6 @@ public class DicomTypeEdit extends JDialog{
     private void fireDicomTypeInserted(DicomType anDicomType) {
         AWTEvent event = new AWTEvent(anDicomType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
@@ -80,9 +74,6 @@ public class DicomTypeEdit extends JDialog{
     private void fireDicomUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
@@ -104,7 +95,7 @@ public class DicomTypeEdit extends JDialog{
 	private JLabel jCodeLabel = null;
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescripitonLabel = null;
+	private JLabel jDescriptionLabel = null;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -336,13 +327,12 @@ public class DicomTypeEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescripitonLabel = new JLabel();
-			jDescripitonLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel();
+			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
 			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescripitonLabel, null);
+			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}
 		return jDescriptionLabelPanel;
 	}
 
-}  //  @jve:decl-index=0:visual-constraint="146,61"
-
+}

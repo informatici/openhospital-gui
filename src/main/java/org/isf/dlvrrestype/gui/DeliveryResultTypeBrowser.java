@@ -49,30 +49,25 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * Browsing of table DeliveryResultType
- * 
+ *
  * @author Furlanetto, Zoia, Finotto
- * 
  */
-
 public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryResultTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<DeliveryResultType> pDeliveryResultType;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumwidth = {80, 200 };
+	private int[] pColumnwidth = {80, 200 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private DeliveryResultTypeBrowserModel model;
 	private int selectedrow;
@@ -81,11 +76,8 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	private final JFrame myFrame;
 	
 	
-	
-	
 	/**
-	 * This method initializes 
-	 * 
+	 * This method initializes
 	 */
 	public DeliveryResultTypeBrowser() {
 		super();
@@ -126,7 +118,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
@@ -202,16 +194,16 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton();
+			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,
@@ -231,7 +223,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 								jTable.updateUI();
 							}
 						}catch(OHServiceException e){
-							if(e.getMessages() != null){
+							if (e.getMessages() != null){
 								for(OHExceptionMessage msg : e.getMessages()){
 									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 								}
@@ -242,15 +234,15 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new DeliveryResultTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnwidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnwidth[1]);
 		}return jTable;
 	}
 	
@@ -260,11 +252,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	
 	
 class DeliveryResultTypeBrowserModel extends DefaultTableModel {
-		
-		
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 
@@ -272,7 +260,7 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 			try {
 				pDeliveryResultType = manager.getDeliveryResultType();
 			}catch(OHServiceException e){
-				if(e.getMessages() != null){
+				if (e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -287,11 +275,11 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -328,6 +316,5 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 		if (jTable.getRowCount() > 0)
 			jTable.setRowSelectionInterval(0, 0);
 	}
-	
 	
 }

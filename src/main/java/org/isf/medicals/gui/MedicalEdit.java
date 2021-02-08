@@ -432,4 +432,4 @@ public class MedicalEdit extends JDialog {
 		return typeComboBox;
 	}
 
-} // @jve:decl-index=0:visual-constraint="82,7"
+}

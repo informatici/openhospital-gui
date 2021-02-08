@@ -273,7 +273,7 @@ public class OperationRowEdit extends JPanel {
 		
 		remarkstextArea = new JTextArea();
 		remarkstextArea.setTabSize(5);
-		if(this.opeRow!=null){
+		if (this.opeRow!=null){
 			remarkstextArea.setText(opeRow.getRemarks());
 		}
 		
@@ -301,7 +301,7 @@ public class OperationRowEdit extends JPanel {
 		gbc_separator_1.gridy = 7;
 		panelBody.add(separator_1, gbc_separator_1);
 		
-		if(this.opeRow != null){
+		if (this.opeRow != null){
 			TransTextField.setText(opeRow.getTransUnit()+""); //$NON-NLS-1$
 		}
 		
@@ -349,7 +349,7 @@ public class OperationRowEdit extends JPanel {
 			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			if(opeRow !=null ){
+			if (opeRow !=null ){
 				jCalendarDate.setDate(this.opeRow.getOpDate().getTime());
 			}
 		}			
@@ -365,16 +365,16 @@ public class OperationRowEdit extends JPanel {
                             } catch (OHServiceException ex) {
                                 ex.printStackTrace();
                             }
-		if(opeRow != null){
+		if (opeRow != null){
 			boolean found = false;
 			for (org.isf.operation.model.Operation elem : opeList) {
-				if(opeRow.getOperation().getCode().equals(elem.getCode())){
+				if (opeRow.getOperation().getCode().equals(elem.getCode())){
 					found = true;
 					comboOpe.addItem(elem);
 					break;	
 				}					
 			}
-			if(!found){
+			if (!found){
 				//comboOpe.addItem("");
 				comboOpe.addItem(null);
 			}
@@ -401,7 +401,7 @@ public class OperationRowEdit extends JPanel {
 			if (opeRow != null){
 				boolean found = false;
 				for (String elem : operationResults) {
-					if(opeRow.getOpResult().equals(ope.getResultDescriptionKey(elem))) {
+					if (opeRow.getOpResult().equals(ope.getResultDescriptionKey(elem))) {
 						found = true;
 						comboResult.addItem(elem);
 						break;
@@ -420,21 +420,21 @@ public class OperationRowEdit extends JPanel {
 		return comboResult;
 	}
 	
-	/***************  functions events ******/
+	/* **************  functions events ***** */
 	private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDataMouseClicked
-	      if((this.jCalendarDate.getDate()==null) || (this.OpecomboBox.getSelectedItem()==null)){ 
+	      if ((this.jCalendarDate.getDate()==null) || (this.OpecomboBox.getSelectedItem()==null)){
 	    	  JOptionPane.showMessageDialog(OperationRowEdit.this,
 	    			  MessageBundle.getMessage("angal.operationrowedit.warningdateope"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
 						JOptionPane.PLAIN_MESSAGE);
 	      }
 	      else{
-	    	  if(getMyOpd().getDate().after(this.jCalendarDate.getDate())){
+	    	  if (getMyOpd().getDate().after(this.jCalendarDate.getDate())){
 	    		  JOptionPane.showMessageDialog(OperationRowEdit.this,
 		    			  MessageBundle.getMessage("angal.operationrowedit.warningdateafter"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.PLAIN_MESSAGE);
 	    		  return;
 	    	  }
-			if(opeRow!=null){
+			if (opeRow!=null){
 	        	OperationRow updateOpeRow = opeRow;
 	        	GregorianCalendar dateop = new GregorianCalendar();
 				dateop.setTime(jCalendarDate.getDate());
@@ -454,7 +454,7 @@ public class OperationRowEdit extends JPanel {
 					OHServiceExceptionUtil.showMessages(e);
 					return;
 				}
-	        	if(result){
+	        	if (result){
 	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
 	        				MessageBundle.getMessage("angal.operationrowedit.updatesucces"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.PLAIN_MESSAGE);
@@ -473,8 +473,8 @@ public class OperationRowEdit extends JPanel {
 				dateop.setTime(this.jCalendarDate.getDate());
 				operationRow.setOpDate(dateop);
 				
-				String opReslt = ope.getResultDescriptionKey((String) this.resultComboBox.getSelectedItem());
-				operationRow.setOpResult(opReslt);
+				String opResult = ope.getResultDescriptionKey((String) this.resultComboBox.getSelectedItem());
+				operationRow.setOpResult(opResult);
 
 				operationRow.setTransUnit(Float.parseFloat(this.TransTextField.getText()));
 	        	Operation op = (Operation)this.OpecomboBox.getSelectedItem();
@@ -489,7 +489,7 @@ public class OperationRowEdit extends JPanel {
 					OHServiceExceptionUtil.showMessages(e);
 					return;
 				}
-	        	if(result){
+	        	if (result){
 	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
 	        				MessageBundle.getMessage("angal.operationrowedit.savesucces"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.PLAIN_MESSAGE);

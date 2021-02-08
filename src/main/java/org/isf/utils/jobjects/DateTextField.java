@@ -64,10 +64,10 @@ public class DateTextField extends JPanel{
 	public DateTextField(GregorianCalendar time){
 		date=time;
 		initialize();
-		if(String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)).length()==1)
+		if (String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)).length()==1)
 			day.setText("0"+String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)));
 		else day.setText(String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)));
-		if(String.valueOf(time.get(GregorianCalendar.MONTH)+1).length()==1)
+		if (String.valueOf(time.get(GregorianCalendar.MONTH)+1).length()==1)
 			month.setText("0"+String.valueOf(time.get(GregorianCalendar.MONTH)+1));
 		else month.setText(String.valueOf(time.get(GregorianCalendar.MONTH)+1));
 		year.setText(String.valueOf(time.get(GregorianCalendar.YEAR)));
@@ -169,7 +169,7 @@ public class DateTextField extends JPanel{
 	 * @return GregorianCalendar
 	 */
 	public GregorianCalendar getCompleteDate(){
-		if((day.getText().length()==0)||(month.getText().length()==0)||(year.getText().length()==0)){
+		if ((day.getText().length()==0)||(month.getText().length()==0)||(year.getText().length()==0)){
 			day.setText("");
 			month.setText("");
 			year.setText("");
@@ -225,7 +225,7 @@ public class DateTextField extends JPanel{
 	}
 	
 	public void setEnabled(boolean enabled){
-		if(enabled){
+		if (enabled){
 			day.setEnabled(true);
 			month.setEnabled(true);
 			year.setEnabled(true);

@@ -57,9 +57,7 @@ import org.slf4j.LoggerFactory;
 import com.github.sarxos.webcam.Webcam;
 
 public class PatientPhotoPanel extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 9129641275344016618L;
 	
 	private final Logger logger = LoggerFactory.getLogger(PatientInsertExtended.class);
@@ -224,9 +222,6 @@ public class PatientPhotoPanel extends JPanel {
 
 class CroppingDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	/*

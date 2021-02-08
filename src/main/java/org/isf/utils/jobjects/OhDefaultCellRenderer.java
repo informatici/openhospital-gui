@@ -32,16 +32,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * 
  * @author u2g
- *
  */
 public class OhDefaultCellRenderer extends DefaultTableCellRenderer{
-	
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	Color darkOrange=new Color(159, 188, 208);
 	Color lightOrange=new Color(231, 236, 240);
@@ -67,7 +61,7 @@ public class OhDefaultCellRenderer extends DefaultTableCellRenderer{
 		boolean found=false;
 		for (Iterator<Integer> iterator = this.centeredColumns.iterator(); iterator.hasNext();) {
 			Integer centered = (Integer) iterator.next();
-			if(centered==column){
+			if (centered==column){
 				
 				lbl.setHorizontalAlignment(CENTER);
 				found=true;
@@ -76,21 +70,21 @@ public class OhDefaultCellRenderer extends DefaultTableCellRenderer{
 			
 		}
 		
-		if(!found){
+		if (!found){
 			lbl.setHorizontalAlignment(LEFT);
 		}
-		if(isSelected){
+		if (isSelected){
 			cmp.setBackground(darkOrange);
 		}
 		else{
-			if(row % 2== 0){
+			if (row % 2== 0){
 				cmp.setBackground(lightGray);
 			}
 			else{
 				cmp.setBackground(lightOrange);
 			}				
 		}
-		if(row == hoveredRow){
+		if (row == hoveredRow){
 			cmp.setBackground(darkOrange);
 	    }
 		return cmp;

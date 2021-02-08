@@ -21,18 +21,6 @@
  */
 package org.isf.stat.reportlauncher.gui;
 
-/*--------------------------------------------------------
- * ReportLauncher - lancia tutti i report che come parametri hanno
- * 					anno e mese
- * 					la classe prevede l'inizializzazione attraverso 
- *                  anno, mese, nome del report (senza .jasper)
- *---------------------------------------------------------
- * modification history
- * 01/01/2006 - rick - prima versione. lancia HMIS1081 e HMIS1081 
- * 11/11/2006 - ross - resa barbaramente generica (ad angal)
- * 16/11/2014 - eppesuig - show WAIT_CURSOR during generateReport()
- *-----------------------------------------------------------------*/
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -60,6 +48,17 @@ import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
 
+/**
+ * --------------------------------------------------------
+ * ReportLauncher - launch all the reports that have as parameters year and month
+ * 					the class expects the initialization through year, month, name of the report (without .jasper)
+ * ---------------------------------------------------------
+ * modification history
+ * 01/01/2006 - rick - first version. launches HMIS1081 and HMIS1081
+ * 11/11/2006 - ross - rendered generic (ad angal)
+ * 16/11/2014 - eppesuig - show WAIT_CURSOR during generateReport()
+ * -----------------------------------------------------------------
+ */
 public class ReportLauncher extends ModalJFrame{
 
 	private static final long serialVersionUID = 1L;
@@ -181,7 +180,7 @@ public class ReportLauncher extends ModalJFrame{
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
 			jButtonPanel.setLayout(new FlowLayout());
-			if(GeneralData.XMPPMODULEENABLED)
+			if (GeneralData.XMPPMODULEENABLED)
 				jButtonPanel.add(getComboShareReport(),null);
 			jButtonPanel.add(getJOkButton(), null);
 			jButtonPanel.add(getJCSVButton(), null);

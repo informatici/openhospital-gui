@@ -87,7 +87,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	private JScrollPane jScrollPane = null;
 	private JTable table = null;
 	private DefaultTableModel model = null;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code"),
 			MessageBundle.getMessage("angal.ward.name"),
 			MessageBundle.getMessage("angal.ward.telephone"),
@@ -99,7 +99,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			MessageBundle.getMessage("angal.ward.haspharmacy"),
 			MessageBundle.getMessage("angal.ward.ismale"),
 			MessageBundle.getMessage("angal.ward.isfemale")};
-	private int[] pColumwidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30};
+	private int[] pColumnwidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30};
 	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class};
 	private int selectedrow;
 	private ArrayList<Ward> pWard;
@@ -308,17 +308,17 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (table == null) {
 			model = new WardBrowserModel();
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMaxWidth(pColumwidth[0]);
-			table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
-			table.getColumnModel().getColumn(2).setPreferredWidth(pColumwidth[2]);
-			table.getColumnModel().getColumn(3).setPreferredWidth(pColumwidth[3]);
-			table.getColumnModel().getColumn(4).setPreferredWidth(pColumwidth[4]);
-			table.getColumnModel().getColumn(5).setPreferredWidth(pColumwidth[5]);
-			table.getColumnModel().getColumn(6).setPreferredWidth(pColumwidth[6]);
-			table.getColumnModel().getColumn(7).setPreferredWidth(pColumwidth[7]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumwidth[8]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumwidth[9]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumwidth[10]);
+			table.getColumnModel().getColumn(0).setMaxWidth(pColumnwidth[0]);
+			table.getColumnModel().getColumn(1).setPreferredWidth(pColumnwidth[1]);
+			table.getColumnModel().getColumn(2).setPreferredWidth(pColumnwidth[2]);
+			table.getColumnModel().getColumn(3).setPreferredWidth(pColumnwidth[3]);
+			table.getColumnModel().getColumn(4).setPreferredWidth(pColumnwidth[4]);
+			table.getColumnModel().getColumn(5).setPreferredWidth(pColumnwidth[5]);
+			table.getColumnModel().getColumn(6).setPreferredWidth(pColumnwidth[6]);
+			table.getColumnModel().getColumn(7).setPreferredWidth(pColumnwidth[7]);
+			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnwidth[8]);
+			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnwidth[9]);
+			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnwidth[10]);
 		}
 		return table;
 	}
@@ -343,11 +343,11 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 		
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 		
 		public Object getValueAt(int r, int c) {

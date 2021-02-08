@@ -50,7 +50,7 @@ import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
 /**
- * This class shows a list of vaccine.
+ * This class shows a list of vaccines.
  * It is possible to edit-insert-delete records
  *
  * @author Eva
@@ -89,12 +89,12 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	private JScrollPane jScrollPane = null;
 	private JTable table = null;
 	private DefaultTableModel model = null;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code"),
 			MessageBundle.getMessage("angal.vaccine.vaccinetype"),
 			MessageBundle.getMessage("angal.common.description")
 	};
-	private int[] pColumwidth = {100, 50, 120};
+	private int[] pColumnwidth = {100, 50, 120};
 	private int selectedrow;
 	private ArrayList<Vaccine> pVaccine;
 	private Vaccine vaccine;
@@ -341,9 +341,9 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		if (table == null) {
 			model = new VaccineBrowserModel();
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMaxWidth(pColumwidth[0]);
-			table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
-			table.getColumnModel().getColumn(2).setPreferredWidth(pColumwidth[2]);
+			table.getColumnModel().getColumn(0).setMaxWidth(pColumnwidth[0]);
+			table.getColumnModel().getColumn(1).setPreferredWidth(pColumnwidth[1]);
+			table.getColumnModel().getColumn(2).setPreferredWidth(pColumnwidth[2]);
 		}
 		return table;
 	}
@@ -378,11 +378,11 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {

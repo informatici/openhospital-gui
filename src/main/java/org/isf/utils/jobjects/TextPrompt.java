@@ -43,9 +43,7 @@ import javax.swing.text.JTextComponent;
  * class construction.
  */
 public class TextPrompt extends JLabel implements FocusListener, DocumentListener {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public enum Show {
@@ -84,10 +82,9 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 
 	/**
 	 * Convenience method to change the alpha value of the current foreground
-	 * Color to the specifice value.
-	 * 
-	 * @param alpha
-	 *            value in the range of 0 - 1.0.
+	 * Color to the specific value.
+	 *
+	 * @param alpha value in the range of 0 - 1.0.
 	 */
 	public void changeAlpha(float alpha) {
 		changeAlpha((int) (alpha * 255));
@@ -95,10 +92,9 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 
 	/**
 	 * Convenience method to change the alpha value of the current foreground
-	 * Color to the specifice value.
-	 * 
-	 * @param alpha
-	 *            value in the range of 0 - 255.
+	 * Color to the specific value.
+	 *
+	 * @param alpha value in the range of 0 - 255.
 	 */
 	public void changeAlpha(int alpha) {
 		alpha = alpha > 255 ? 255 : alpha < 0 ? 0 : alpha;
@@ -116,9 +112,8 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 	 * Convenience method to change the style of the current Font. The style
 	 * values are found in the Font class. Common values might be: Font.BOLD,
 	 * Font.ITALIC and Font.BOLD + Font.ITALIC.
-	 * 
-	 * @param style
-	 *            value representing the the new style of the Font.
+	 *
+	 * @param style value representing the the new style of the Font.
 	 */
 	public void changeStyle(int style) {
 		setFont(getFont().deriveFont(style));
@@ -134,16 +129,15 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 	}
 
 	/**
-	 * Set the prompt Show property to control when the promt is shown. Valid
+	 * Set the prompt Show property to control when the prompt is shown. Valid
 	 * values are:
-	 * 
-	 * Show.AWLAYS (default) - always show the prompt Show.Focus_GAINED - show
+	 * <p>
+	 * Show.ALWAYS (default) - always show the prompt Show.Focus_GAINED - show
 	 * the prompt when the component gains focus (and hide the prompt when focus
 	 * is lost) Show.Focus_LOST - show the prompt when the component loses focus
 	 * (and hide the prompt when focus is gained)
-	 * 
-	 * @param show
-	 *            a valid Show enum
+	 *
+	 * @param show a valid Show enum
 	 */
 	public void setShow(Show show) {
 		this.show = show;
@@ -161,10 +155,9 @@ public class TextPrompt extends JLabel implements FocusListener, DocumentListene
 	/**
 	 * Show the prompt once. Once the component has gained/lost focus once, the
 	 * prompt will not be shown again.
-	 * 
-	 * @param showPromptOnce
-	 *            when true the prompt will only be shown once, otherwise it
-	 *            will be shown repeatedly.
+	 *
+	 * @param showPromptOnce when true the prompt will only be shown once, otherwise it
+	 * will be shown repeatedly.
 	 */
 	public void setShowPromptOnce(boolean showPromptOnce) {
 		this.showPromptOnce = showPromptOnce;

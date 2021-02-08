@@ -70,7 +70,6 @@ import org.isf.utils.jobjects.VoFloatTextField;
 import org.joda.time.DateTime;
 
 /**
- *
  * @author hp
  */
 public class OperationRowAdm extends JPanel implements AdmissionBrowser.AdmissionListener {
@@ -371,8 +370,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			OperationRow opeInter = oprowData.get(index);
 			dateop.setTime(this.textDate.getDate());
 			opeInter.setOpDate(dateop);
-			String opReslt = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
-			opeInter.setOpResult(opReslt);
+			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
 			opeInter.setOperation(op);

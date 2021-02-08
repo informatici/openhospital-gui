@@ -136,13 +136,9 @@ public class GroupEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes dataPanel	
-	 * 	
+	 * This method initializes dataPanel
+	 *
 	 * @return javax.swing.JPanel
-	 * 
-	 * nome text
-	 * desc text
-	 
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
@@ -272,7 +268,5 @@ public class GroupEdit extends JDialog {
 		}
 		return nameTextField;
 	}
-	
-
 
 }

@@ -68,9 +68,6 @@ public class PricesOthersEdit extends JDialog {
 	private void fireOtherInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
 		EventListener[] listeners = OthersListeners.getListeners(PricesOthersListener.class);
@@ -80,9 +77,6 @@ public class PricesOthersEdit extends JDialog {
 	private void fireOtherUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = OthersListeners.getListeners(PricesOthersListener.class);

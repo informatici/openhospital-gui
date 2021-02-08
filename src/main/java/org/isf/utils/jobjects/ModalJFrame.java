@@ -29,13 +29,9 @@ import javax.swing.JFrame;
 
 /**
  * @author Santhosh Kumar T - santhosh@in.fiorano.com
- * 
  */
 public class ModalJFrame extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	protected final JFrame frame = this;
@@ -44,7 +40,7 @@ public class ModalJFrame extends JFrame {
 	
 
 	/**
-	 * method to enable/disable a owner JFrame launching this ModalJFrame
+	 * Method to enable/disable a owner JFrame launching this ModalJFrame
 	 * @param owner - the JFrame owner
 	 */
 	public void showAsModal(final JFrame owner) {

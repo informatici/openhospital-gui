@@ -37,13 +37,9 @@ import org.isf.medicals.model.Medical;
 
 /**
  * @author Mwithi
- *
  */
 public class StockCardDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JTextFieldSearchModel textField;
 	private JFromDateToDateChooser dateRange;

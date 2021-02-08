@@ -21,10 +21,6 @@
  */
 package org.isf.stat.gui.report;
 
-/*
- * Created on 15/giu/08
- */
-
 import java.io.File;
 import java.util.Date;
 import java.util.Locale;
@@ -44,6 +40,9 @@ import org.slf4j.LoggerFactory;
 
 import net.sf.jasperreports.view.JasperViewer;
 
+/*
+ * Created on 15/Jun/08
+ */
 public class GenericReportPharmaceuticalStock {
 	
 	private final Logger logger = LoggerFactory.getLogger(GenericReportPharmaceuticalStock.class);
@@ -57,7 +56,7 @@ public class GenericReportPharmaceuticalStock {
 				JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFilename);
 
                 int iRetVal = fcExcel.showSaveDialog(null);
-                if(iRetVal == JFileChooser.APPROVE_OPTION)
+                if (iRetVal == JFileChooser.APPROVE_OPTION)
                 {
                     File exportFile = fcExcel.getSelectedFile();
                     FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();

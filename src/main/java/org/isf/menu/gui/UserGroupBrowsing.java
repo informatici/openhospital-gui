@@ -77,8 +77,8 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	private int pfrmHeight;
 	private int selectedrow;
 	private ArrayList<UserGroup> pGroup;
-	private String[] pColums = { MessageBundle.getMessage("angal.menu.groupm"), MessageBundle.getMessage("angal.menu.descm") };
-	private int[] pColumwidth = {70,  100 };
+	private String[] pColumns = { MessageBundle.getMessage("angal.menu.groupm"), MessageBundle.getMessage("angal.menu.descm") };
+	private int[] pColumnwidth = {70,  100 };
 	private UserGroup group;
 	private DefaultTableModel model ;
 	private JTable table;
@@ -103,8 +103,8 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		
 		model = new UserGroupBrowserModel();
 		table = new JTable(model);
-		table.getColumnModel().getColumn(0).setPreferredWidth(pColumwidth[0]);
-		table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
+		table.getColumnModel().getColumn(0).setPreferredWidth(pColumnwidth[0]);
+		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnwidth[1]);
 				
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -238,11 +238,11 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {

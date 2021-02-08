@@ -21,17 +21,6 @@
  */
 package org.isf.medicalstock.gui;
 
-/*------------------------------------------
- * MovStockBrowser - list medicals movement. let the user search for movements
- * 					  and insert a new movements
- * -----------------------------------------
- * modification history
- * 30/03/2006 - Theo - first beta version
- * 03/11/2006 - ross - changed title, removed delete all button
- *                   - corrected an error in datetextfield class (the month displayed in the filter was -1
- * 			         - version is now  1.0
- *------------------------------------------*/
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -104,6 +93,18 @@ import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * ------------------------------------------
+ * MovStockBrowser - list medicals movement. let the user search for movements
+ * 					  and insert a new movements
+ * -----------------------------------------
+ * modification history
+ * 30/03/2006 - Theo - first beta version
+ * 03/11/2006 - ross - changed title, removed delete all button
+ *                   - corrected an error in datetextfield class (the month displayed in the filter was -1
+ * 			         - version is now  1.0
+ * ------------------------------------------
+ */
 public class MovStockBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -140,7 +141,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private BigDecimal totalAmount;
 	private MovBrowserModel model;
 	private ArrayList<Movement> moves;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.medicalstock.refno"),
 			MessageBundle.getMessage("angal.common.datem"),                //1
 			MessageBundle.getMessage("angal.medicalstock.typem"),            //2
@@ -162,14 +163,14 @@ public class MovStockBrowser extends ModalJFrame {
 	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
 			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, true };
 
-	private int[] pColumwidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70 };
+	private int[] pColumnwidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70 };
 	private static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
 	private static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
 
 	private String currencyCod;
 
 	/*
-	 *Adds to facilitate the selection of products
+	 * Adds to facilitate the selection of products
 	 */
 	private JPanel searchPanel;
 	private JTextField searchTextField;
@@ -236,7 +237,7 @@ public class MovStockBrowser extends ModalJFrame {
 		if (MainMenu.checkUserGrants("btnpharmstockcharge"))
 			buttonPanel.add(getChargeButton());
 		if (MainMenu.checkUserGrants("btnpharmstockdischarge"))
-			buttonPanel.add(getDishargeButton());
+			buttonPanel.add(getDischargeButton());
 		buttonPanel.add(getExportToExcelButton());
 		buttonPanel.add(getStockCardButton());
 		buttonPanel.add(getStockLedgerButton());
@@ -311,7 +312,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JScrollPane getTable() {
 		JScrollPane scrollPane = new JScrollPane(getMovTable());
 		int totWidth = 0;
-		for (int colWidth : pColumwidth) {
+		for (int colWidth : pColumnwidth) {
 			totWidth += colWidth;
 		}
 		scrollPane.setPreferredSize(new Dimension(totWidth, 450));
@@ -321,7 +322,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JScrollPane getTableTotal() {
 		JScrollPane scrollPane = new JScrollPane(getJTableTotal());
 		int totWidth = 0;
-		for (int colWidth : pColumwidth) {
+		for (int colWidth : pColumnwidth) {
 			totWidth += colWidth;
 		}
 		scrollPane.setPreferredSize(new Dimension(totWidth, 20));
@@ -697,12 +698,12 @@ public class MovStockBrowser extends ModalJFrame {
 		model = new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 		movTable = new JTable(model);
 
-		for (int i = 0; i < pColums.length; i++) {
+		for (int i = 0; i < pColumns.length; i++) {
 			movTable.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
-			movTable.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
+			movTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnwidth[i]);
 			//			if (!pColumnResizable[i]) {
 			//				movTable.getColumnModel().getColumn(i).setResizable(pColumnResizable[i]);
-			//				movTable.getColumnModel().getColumn(i).setMaxWidth(pColumwidth[i]);
+			//				movTable.getColumnModel().getColumn(i).setMaxWidth(pColumnwidth[i]);
 			//			}
 			if (!pColumnVisible[i]) {
 				movTable.getColumnModel().getColumn(i).setMinWidth(0);
@@ -736,7 +737,7 @@ public class MovStockBrowser extends ModalJFrame {
 					new Object[][] {
 							{ "", "", "", "<html><b>Total Qty: </b></html>", totalQti, "", "", "", "", "", "<html><b>Total: </b></html>", currencyCod,
 									totalAmount }
-					}, new String[pColums.length]) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					}, new String[pColumns.length]) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 				private static final long serialVersionUID = 1L;
 
@@ -751,9 +752,9 @@ public class MovStockBrowser extends ModalJFrame {
 			jTableTotal.setCellSelectionEnabled(false);
 			jTableTotal.setColumnSelectionAllowed(false);
 
-			for (int i = 0; i < pColums.length; i++) {
+			for (int i = 0; i < pColumns.length; i++) {
 				jTableTotal.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
-				jTableTotal.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
+				jTableTotal.getColumnModel().getColumn(i).setPreferredWidth(pColumnwidth[i]);
 				if (!pColumnVisible[i]) {
 					jTableTotal.getColumnModel().getColumn(i).setMinWidth(0);
 					jTableTotal.getColumnModel().getColumn(i).setMaxWidth(0);
@@ -1024,7 +1025,7 @@ public class MovStockBrowser extends ModalJFrame {
 	 *
 	 * @return
 	 */
-	private JButton getDishargeButton() {
+	private JButton getDischargeButton() {
 		dischargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.discharge"));
 		dischargeButton.setMnemonic(KeyEvent.VK_D);
 		dischargeButton.addActionListener(new ActionListener() {
@@ -1055,7 +1056,7 @@ public class MovStockBrowser extends ModalJFrame {
 	//				fcExcel.setFileFilter(excelFilter);
 	//
 	//				int iRetVal = fcExcel.showOpenDialog(MovStockBrowser.this);
-	//				if(iRetVal == JFileChooser.APPROVE_OPTION)
+	//				if (iRetVal == JFileChooser.APPROVE_OPTION)
 	//				{
 	//					ExcelImporter xlsImport = new ExcelImporter();
 	//					try
@@ -1199,11 +1200,11 @@ public class MovStockBrowser extends ModalJFrame {
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		/**

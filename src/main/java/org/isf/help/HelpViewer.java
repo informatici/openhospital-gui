@@ -33,8 +33,8 @@ import org.isf.generaldata.MessageBundle;
 
 /**
  * HelpViewer.java - 27/nov/2012
+ *
  * @author Mwithi
- * 
  */
 public class HelpViewer extends JDialog {
 

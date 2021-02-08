@@ -35,6 +35,7 @@ import javax.swing.text.DefaultStyledDocument;
 
 /**
  * 02-mar-2006
+ *
  * @author Theo
  */
 public class DateTextField extends JPanel{
@@ -67,10 +68,10 @@ public class DateTextField extends JPanel{
 	public DateTextField(GregorianCalendar time){
 		date=time;
 		initialize();
-		if(String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)).length()==1)
+		if (String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)).length()==1)
 			day.setText("0"+String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)));
 		else day.setText(String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)));
-		if(String.valueOf(time.get(GregorianCalendar.MONTH)+1).length()==1)
+		if (String.valueOf(time.get(GregorianCalendar.MONTH)+1).length()==1)
 			month.setText("0"+String.valueOf(time.get(GregorianCalendar.MONTH)+1));
 		else month.setText(String.valueOf(time.get(GregorianCalendar.MONTH)+1));
 		year.setText(String.valueOf(time.get(GregorianCalendar.YEAR)));
@@ -177,7 +178,7 @@ public class DateTextField extends JPanel{
 	 * @return GregorianCalendar
 	 */
 	public GregorianCalendar getCompleteDate(){
-		if((day.getText().length()==0)||(month.getText().length()==0)||(year.getText().length()==0)){
+		if ((day.getText().length()==0)||(month.getText().length()==0)||(year.getText().length()==0)){
 			day.setText("");
 			month.setText("");
 			year.setText("");
@@ -195,7 +196,7 @@ public class DateTextField extends JPanel{
 	 * @return boolean (true if valid, false otherwise)
 	 */
 	private boolean isValidDay(String day) {
-		if(day.length()<2) return false;
+		if (day.length()<2) return false;
 		if (day.charAt(0) < '0' || day.charAt(0) > '9' || day.charAt(1) < '0' || day.charAt(1) > '9') {
 			return false;
 		}
@@ -211,7 +212,7 @@ public class DateTextField extends JPanel{
 	 * @return boolean (true if valid, false otherwise)
 	 */
 	private boolean isValidMonth(String month) {
-		if(month.length()<2)return false;
+		if (month.length()<2)return false;
 		if (month.charAt(0) < '0' ||month.charAt(0) > '9' || month.charAt(1) < '0' || month.charAt(1) > '9') {
 			return false;
 		}
@@ -227,7 +228,7 @@ public class DateTextField extends JPanel{
 	 * @return boolean (true if valid, false otherwise)
 	 */
 	private boolean isValidYear(String year) {
-		if(year.length()<4)return false;
+		if (year.length()<4)return false;
 		if (year.charAt(0) < '0' || year.charAt(0) > '9' || year.charAt(1) < '0' || year.charAt(1) > '9'
 				|| year.charAt(2) < '0' || year.charAt(2) > '9' || year.charAt(3) < '0'|| year.charAt(3) > '9') {
 			return false;
@@ -236,14 +237,14 @@ public class DateTextField extends JPanel{
 	}
 	
 	public boolean isDateValid(){
-		if((day.getText().equals(""))||(month.getText().equals(""))||
+		if ((day.getText().equals(""))||(month.getText().equals(""))||
 				year.getText().equals(""))return false;
-		if(isValidDay(day.getText()) && isValidMonth(month.getText()) && isValidYear(year.getText()))return true;
+		if (isValidDay(day.getText()) && isValidMonth(month.getText()) && isValidYear(year.getText()))return true;
 		else return false;
 	}
 	
 	public void setEnabled(boolean enabled){
-		if(enabled){
+		if (enabled){
 			day.setEnabled(true);
 			month.setEnabled(true);
 			year.setEnabled(true);

@@ -304,9 +304,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		System.exit(status);
 	}
 
-	/*
-	 *
-	 */
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 		launchApp(command);
@@ -424,9 +421,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			}
 			parentFrame.setMinButtonSize(maxPrf);
 		}
-	}// :~MainPanel
+	}
 
 	public static User getUser() {
 		return myUser;
 	}
-}// :~MainMenu
+}

@@ -21,15 +21,6 @@
  */
 package org.isf.exa.gui;
 
-/*------------------------------------------
- * ExamEdit - add/edit an exam
- * -----------------------------------------
- * modification history
- * 03/11/2006 - ross - Enlarged Destription from 50 to 100 
- *                   - removed toupper for the description
- * 			         - version is now 1.0 
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -58,6 +49,16 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
+/**
+ * ------------------------------------------
+ * ExamEdit - add/edit an exam
+ * -----------------------------------------
+ * modification history
+ * 03/11/2006 - ross - Enlarged Description from 50 to 100
+ *                   - removed toupper for the description
+ * 			         - version is now 1.0
+ * ------------------------------------------
+ */
 public class ExamEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -239,7 +240,7 @@ public class ExamEdit extends JDialog {
 	            okButton.setMnemonic(KeyEvent.VK_O);
 				okButton.addActionListener(new java.awt.event.ActionListener() {
 					public void actionPerformed(java.awt.event.ActionEvent e) {
-						if((codeTextField.getText().trim().equals(""))||(descriptionTextField.getText().trim().equals(""))){
+						if ((codeTextField.getText().trim().equals(""))||(descriptionTextField.getText().trim().equals(""))){
 							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.exa.pleaseinsertcodeoranddescription"));
 						}
 						else{
@@ -327,7 +328,7 @@ public class ExamEdit extends JDialog {
 	}
 	
 	private JComboBox getProcComboBox(){
-		if(procComboBox==null){
+		if (procComboBox==null){
 			procComboBox = new JComboBox();
 			if (insert) {
 				procComboBox.addItem("1");
@@ -371,5 +372,4 @@ public class ExamEdit extends JDialog {
 		return typeComboBox;
 	}
 
-
-}  //  @jve:decl-index=0:visual-constraint="82,7"
+}
