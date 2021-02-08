@@ -75,7 +75,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	private int[] columWidth = {100, 100, 50, 50, 50, 100, 100};
 	private boolean[] columResizable = {false, true, false, false, false, false, false};
 	
-	static protected Class<?>[] cTypes = {String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class};
+	protected static Class<?>[] cTypes = {String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class};
 	
 	private PricesOthers pOthers;
 	PricesOthersManager pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);

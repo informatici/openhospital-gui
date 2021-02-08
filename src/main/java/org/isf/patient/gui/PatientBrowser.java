@@ -202,8 +202,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						patient = (Patient) (((PatientBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						patient = (Patient) (model.getValueAt(selectedrow, -1));
 						PatientInsert editrecord = new PatientInsert(PatientBrowser.this, patient, false);
 						editrecord.addPatientListener(PatientBrowser.this);
 						editrecord.setVisible(true);
@@ -252,8 +251,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						Patient pat = (Patient) (((PatientBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						Patient pat = (Patient) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.patient.deletepatient") + " \" "+pat.getName() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

@@ -94,7 +94,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private CustomJDateChooser jCalendarDate;
 	private JTable tableData;
 
-	private ArrayList<String> operationResults = opeManager.getResultsList();
+	private ArrayList<String> operationResults = opeManager.getResultDescriptionList();
+
 	
 	public OperationRowAdm(Admission adm) {
 		setLayout(new BorderLayout(0, 0));
@@ -155,17 +156,13 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		gbc_labelResultat.gridy = 1;
 		panelForm.add(labelResultat, gbc_labelResultat);
 
-		comboResult = new JComboBox();
+		comboResult = getComboResultBox();
 		GridBagConstraints gbc_comboResult = new GridBagConstraints();
 		gbc_comboResult.insets = new Insets(0, 0, 5, 5);
 		gbc_comboResult.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboResult.gridx = 1;
 		gbc_comboResult.gridy = 1;
 		panelForm.add(comboResult, gbc_comboResult);
-		comboResult.addItem(null);
-		for (int i = 0; i < operationResults.size(); i++) {
-			comboResult.addItem(operationResults.get(i));
-		}
 
 		JLabel lblUniteTrans = new JLabel(MessageBundle.getMessage("angal.operationrowedit.unitetrans")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblUniteTrans = new GridBagConstraints();
@@ -322,6 +319,14 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		comboOpe.setEnabled(true);
 		return comboOpe;
 	}
+	
+	private JComboBox getComboResultBox() {
+		JComboBox comboResult = new JComboBox();
+			for (String description : operationResults) {
+				comboResult.addItem(description);
+			}
+		return comboResult;
+	}
 
 	public void addToGrid() {
 		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
@@ -341,9 +346,10 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		GregorianCalendar dateop = new GregorianCalendar();
 		dateop.setTime(this.textDate.getDate());
 		operationRow.setOpDate(dateop);
-		if (this.comboResult.getSelectedItem() != null)
-			operationRow.setOpResult(this.comboResult.getSelectedItem().toString());
-		else
+		if (this.comboResult.getSelectedItem() != null) {
+			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			operationRow.setOpResult(opResult);
+		} else
 			operationRow.setOpResult(""); //$NON-NLS-1$
 		try {
 			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
@@ -365,7 +371,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			OperationRow opeInter = oprowData.get(index);
 			dateop.setTime(this.textDate.getDate());
 			opeInter.setOpDate(dateop);
-			opeInter.setOpResult(this.comboResult.getSelectedItem().toString());
+			String opReslt = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			opeInter.setOpResult(opReslt);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
 			opeInter.setOperation(op);
@@ -410,13 +417,13 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		}
 
 		/* ***** resultat **** */
-		int index = -1;
+		int index = 0;
 		for (int i = 0; i < operationResults.size(); i++) {
-			if (opeRow.getOpResult() != null && (operationResults.get(i) + "").equals(opeRow.getOpResult())) { //$NON-NLS-1$
+			if (opeRow.getOpResult() != null && (opeManager.getResultDescriptionKey(operationResults.get(i) + "")).equals(opeRow.getOpResult())) { //$NON-NLS-1$ 
 				index = i;
 			}
 		}
-		comboResult.setSelectedIndex(index + 1);
+		comboResult.setSelectedIndex(index);
 		/* *********** */
 
 	}
@@ -539,4 +546,5 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	public void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
+	
 }

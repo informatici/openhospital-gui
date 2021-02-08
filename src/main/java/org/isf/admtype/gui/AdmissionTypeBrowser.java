@@ -170,8 +170,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						admissionType = (AdmissionType) (((AdmissionTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						admissionType = (AdmissionType) (model.getValueAt(selectedrow, -1));
 						AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame,admissionType, false);
 						newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -219,8 +218,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						AdmissionType dis = (AdmissionType) (((AdmissionTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						AdmissionType dis = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.admtype.deleterow")+ " \""+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

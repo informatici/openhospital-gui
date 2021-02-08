@@ -1020,8 +1020,8 @@ public class OpdEditExtended extends ModalJFrame implements
 			diseaseTypeBox.setMaximumSize(new Dimension(400,50));
 			diseaseTypeBox.addItem(allType);
 			for (DiseaseType elem : types) {
-				if(!insert && opd.getDisease().getType() != null) {
-					if(opd.getDisease().getType().equals(elem.getCode())) {
+				if (!insert && opd.getDisease().getType() != null) {
+					if (opd.getDisease().getType().getCode().equals(elem.getCode())) {
 						elem2=elem;}
 				}
 				diseaseTypeBox.addItem(elem);
@@ -1832,7 +1832,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	 * set a specific border+title+matte to a panel
 	 */
 	private JPanel setMyMatteBorder(JPanel c, String title) {
-		c.setBorder(new TitledBorder(new MatteBorder(1, 20, 1, 1, (Color) new Color(153, 180, 209)), title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		c.setBorder(new TitledBorder(new MatteBorder(1, 20, 1, 1, new Color(153, 180, 209)), title, TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		return c;
 	}
 

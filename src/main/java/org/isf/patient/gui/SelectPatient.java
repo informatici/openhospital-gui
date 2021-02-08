@@ -70,7 +70,6 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoLimitedTextField;
-import org.isf.visits.gui.InsertVisit;
 
 public class SelectPatient extends JDialog implements PatientListener {
 	

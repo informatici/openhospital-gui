@@ -165,7 +165,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private ArrayList<Medical> medArray;
-	private ArrayList<Double> qtyArray = new ArrayList<Double>();
 	private ArrayList<Therapy> therapies = new ArrayList<Therapy>();
 	private ArrayList<TherapyRow> thRows = new ArrayList<TherapyRow>();
 	private ArrayList<Visit> visits = new ArrayList<Visit>();
@@ -199,7 +198,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				if (medArray != null) medArray.clear();
 				if (therapies != null) therapies.clear();
 				if (thRows != null) thRows.clear();
-				if (qtyArray != null) qtyArray.clear();
 				if (visits != null) visits.clear();
 			}
 		});
@@ -870,7 +868,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					if (medArray != null) medArray.clear();
 					if (therapies != null) therapies.clear();
 					if (thRows != null) thRows.clear();
-					if (qtyArray != null) qtyArray.clear();
 					if (visits != null) visits.clear();
 					dispose();
 				}

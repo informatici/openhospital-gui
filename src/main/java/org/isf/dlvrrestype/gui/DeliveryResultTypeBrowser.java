@@ -171,8 +171,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						deliveryresultType = (DeliveryResultType) (((DeliveryResultTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						deliveryresultType = (DeliveryResultType) (model.getValueAt(selectedrow, -1));
 						DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, false);
 						newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -220,8 +219,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						DeliveryResultType dis = (DeliveryResultType) (((DeliveryResultTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						DeliveryResultType dis = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.dlvrrestype.deletedeliveryresulttype") + "\" " + dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

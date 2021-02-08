@@ -39,7 +39,7 @@ public class Menu {
 
 	private static Logger logger = LoggerFactory.getLogger(Menu.class);
 
-	private final static float MIN_JAVA_VERSION = (float) 1.8;
+	private static final float MIN_JAVA_VERSION = (float) 1.8;
 
 	/**
 	 * Create the GUI and show it.

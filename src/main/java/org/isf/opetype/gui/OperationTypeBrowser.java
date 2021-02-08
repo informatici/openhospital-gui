@@ -170,8 +170,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						operationType = (OperationType) (((OperationTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						operationType = (OperationType) (model.getValueAt(selectedrow, -1));
 						OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, false);
 						newrecord.addOperationTypeListener(OperationTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -219,8 +218,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						OperationType dis = (OperationType) (((OperationTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						OperationType dis = (OperationType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.opetype.deleteoperationtype")+" \" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

@@ -172,8 +172,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						vaccineType = (VaccineType) (((VaccineTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						vaccineType = (VaccineType) (model.getValueAt(selectedrow, -1));
 						VaccineTypeEdit editrecord = new VaccineTypeEdit(myFrame,vaccineType, false);
 						editrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
 						editrecord.setVisible(true);
@@ -221,8 +220,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						VaccineType dis = (VaccineType) (((VaccineTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						VaccineType dis = (VaccineType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.vactype.deletevaccinetype")+"\" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);

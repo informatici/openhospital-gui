@@ -361,7 +361,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						Opd opd = (Opd)(((OpdBrowsingModel) model).getValueAt(selectedrow, -1));
+						Opd opd = (Opd)(model.getValueAt(selectedrow, -1));
 						if (GeneralData.OPDEXTENDED) {
 							OpdEditExtended editrecord = new OpdEditExtended(myFrame, opd, false);
 							editrecord.addSurgeryListener(OpdBrowser.this);
@@ -415,8 +415,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						Opd opd = (Opd) (((OpdBrowsingModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						Opd opd = (Opd) (model.getValueAt(jTable.getSelectedRow(), -1));
 						String dt="[not specified]";
 						try {
 							final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);

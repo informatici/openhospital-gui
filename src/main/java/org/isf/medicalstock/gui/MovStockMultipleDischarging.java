@@ -976,7 +976,8 @@ public class MovStockMultipleDischarging extends JDialog {
 			movManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
 			
 			if (isXmpp()) {
-				if(shareWith.isEnabled()&& (!(((String)shareWith.getSelectedItem())==MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody")))){ //$NON-NLS-1$
+				if (shareWith.isEnabled() && (!(((String) shareWith.getSelectedItem())
+						.equals(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody"))))){ //$NON-NLS-1$
 					CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
 					for (Medical med : pool) {
 						frame.sendMessage(
