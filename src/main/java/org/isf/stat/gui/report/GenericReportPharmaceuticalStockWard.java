@@ -21,10 +21,6 @@
  */
 package org.isf.stat.gui.report;
 
-/*
- * Created on 15/giu/08
- */
-
 import java.util.Date;
 import java.util.Locale;
 
@@ -41,6 +37,9 @@ import org.slf4j.LoggerFactory;
 
 import net.sf.jasperreports.view.JasperViewer;
 
+/*
+ * Created on 15/Jun/08
+ */
 public class GenericReportPharmaceuticalStockWard {
 	
 	private final Logger logger = LoggerFactory.getLogger(GenericReportPharmaceuticalStockWard.class);

@@ -53,9 +53,6 @@ import org.slf4j.LoggerFactory;
 
 public class Login extends JDialog implements ActionListener, KeyListener {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 76205822226035164L;
 
 	private final Logger logger = LoggerFactory.getLogger(Login.class);
@@ -80,9 +77,6 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	private void fireLoginInserted(User aUser) {
 		AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 *
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 

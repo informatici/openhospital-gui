@@ -50,10 +50,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.time.TimeTools;
 
 public class MalnutritionBrowser extends JDialog implements MalnutritionListener {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Override
@@ -92,12 +89,12 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 	private JTable table;
 
-	private String[] pColums = { MessageBundle.getMessage("angal.malnutrition.datesuppm"),
+	private String[] pColumns = { MessageBundle.getMessage("angal.malnutrition.datesuppm"),
 			MessageBundle.getMessage("angal.malnutrition.dateconfm"),
 			MessageBundle.getMessage("angal.malnutrition.heightm"),
 			MessageBundle.getMessage("angal.malnutrition.weightm") };
 
-	private int[] pColumwidth = { 200, 200, 150, 150 };
+	private int[] pColumnWidth = { 200, 200, 150, 150 };
 
 	private DefaultTableModel model;
 
@@ -204,7 +201,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 							JOptionPane.YES_NO_OPTION);
 
 					if (n == JOptionPane.YES_OPTION) {	
-						if(m==null){
+						if (m==null){
 							JOptionPane.showMessageDialog(
 									MalnutritionBrowser.this,
 									MessageBundle.getMessage("angal.common.pleaseselectarow"));
@@ -245,18 +242,15 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JTable getTable() {
 		model = new MalnBrowsingModel(admId);
 		table = new JTable(model);
-		table.getColumnModel().getColumn(0).setMaxWidth(pColumwidth[0]);
-		table.getColumnModel().getColumn(1).setMaxWidth(pColumwidth[1]);
-		table.getColumnModel().getColumn(2).setMaxWidth(pColumwidth[2]);
-		table.getColumnModel().getColumn(3).setMaxWidth(pColumwidth[3]);
+		table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+		table.getColumnModel().getColumn(1).setMaxWidth(pColumnWidth[1]);
+		table.getColumnModel().getColumn(2).setMaxWidth(pColumnWidth[2]);
+		table.getColumnModel().getColumn(3).setMaxWidth(pColumnWidth[3]);
 		return table;
 	}
 
 	class MalnBrowsingModel extends DefaultTableModel {
-
-		/**
-		 * 
-		 */
+		
 		private static final long serialVersionUID = 1L;
 
 		public MalnBrowsingModel(String s) {
@@ -283,11 +277,11 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {

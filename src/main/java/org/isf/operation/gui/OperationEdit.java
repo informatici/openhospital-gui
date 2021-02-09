@@ -21,12 +21,6 @@
  */
 package org.isf.operation.gui;
 
-/*----------------------------------------------------------
- * modification history
- * ====================
- * 13/02/09 - Alex - added Major/Minor control
- -----------------------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -60,9 +54,13 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
  * This class allows operations edits and inserts
- * 
+ *
  * @author Rick, Vero, Pupo
- * 
+ * ----------------------------------------------------------
+ * modification history
+ * ====================
+ * 13/02/09 - Alex - added Major/Minor control
+ * -----------------------------------------------------------
  */
 public class OperationEdit extends JDialog {
 

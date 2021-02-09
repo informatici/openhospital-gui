@@ -100,9 +100,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class PatientExaminationEdit extends ModalJFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel jPanelExamination;
@@ -1381,7 +1378,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 						try {
 							examManager.remove(patexList);
 						}catch(OHServiceException ex){
-							if(ex.getMessages() != null){
+							if (ex.getMessages() != null){
 								for(OHExceptionMessage msg : ex.getMessages()){
 									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 								}
@@ -1531,7 +1528,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			try {
 				examManager.saveOrUpdate(patex);
 			}catch(OHServiceException ex){
-				if(ex.getMessages() != null){
+				if (ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -1743,9 +1740,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private class SwingActionToggleDiuresisType extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleDiuresisType() {
 			putValue(NAME, ""); //$NON-NLS-1$
@@ -1783,9 +1778,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private class SwingActionToggleSaturation extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleSaturation() {
 			putValue(NAME, ""); //$NON-NLS-1$
@@ -1801,9 +1794,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 
 	private class SwingActionToggleRR extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleRR() {
 			putValue(NAME, ""); //$NON-NLS-1$
@@ -1819,9 +1810,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 
 	private class SwingActionToggleAusc extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleAusc(){
 			putValue(NAME, ""); //$NON-NLS-1$
@@ -1837,9 +1826,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private class SwingActionToggleTemp extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleTemp() {
 			putValue(NAME, ""); //$NON-NLS-1$
@@ -1855,9 +1842,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private class SwingActionToggleHR extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleHR() {
 			putValue(NAME, ""); //$NON-NLS-1$
@@ -1977,9 +1962,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	public class JTableModelSummary extends AbstractTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
@@ -1993,7 +1976,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			try {
 				patexList = examManager.getLastNByPatID(patex.getPatient().getCode().intValue(), ExaminationParameters.LIST_SIZE);
 			}catch(OHServiceException e){
-				if(e.getMessages() != null){
+				if (e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -2038,7 +2021,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see javax.swing.table.TableModel#getValueAt(int, int)
 		 */
 		@Override
@@ -2103,9 +2086,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

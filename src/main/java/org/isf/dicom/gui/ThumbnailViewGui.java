@@ -55,17 +55,13 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.time.TimeTools;
 
 /**
- * Component for DICOM thumbnails composizion and visualizzation
- * 
+ * Component for DICOM thumbnails composition and visualization
+ *
  * @author Pietro Castellucci
  * @version 1.0.0
- * 
  */
 public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int patID = -1;
 	private DicomGui dicomViewer = null;
@@ -75,7 +71,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 	/**
 	 * Initialize Component
-	 * 
+	 *
 	 * @param patID
 	 */
 	public ThumbnailViewGui(int patID, DicomGui owner) {
@@ -164,7 +160,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		try {
 			fdb = DicomManagerFactory.getManager().loadPatientFiles(patID);
 		}catch(OHServiceException ex){
-			if(ex.getMessages() != null){
+			if (ex.getMessages() != null){
 				for(OHExceptionMessage msg : ex.getMessages()){
 					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
@@ -182,9 +178,6 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 	public static class DicomThumbsModel extends AbstractListModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private LinkedList<FileDicom> thumbnailList;
 

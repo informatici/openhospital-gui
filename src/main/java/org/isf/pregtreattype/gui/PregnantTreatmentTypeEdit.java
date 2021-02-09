@@ -95,7 +95,7 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 	private JLabel jCodeLabel = null;
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescripitonLabel = null;
+	private JLabel jDescriptionLabel = null;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -323,15 +323,12 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescripitonLabel = new JLabel();
-			jDescripitonLabel.setText(MessageBundle.getMessage("angal.preagtreattype.description2"));
+			jDescriptionLabel = new JLabel();
+			jDescriptionLabel.setText(MessageBundle.getMessage("angal.preagtreattype.description2"));
 			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescripitonLabel, null);
+			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}
 		return jDescriptionLabelPanel;
 	}
-	
 
-
-}  //  @jve:decl-index=0:visual-constraint="146,61"
-
+}

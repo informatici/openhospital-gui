@@ -78,7 +78,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	private Patient myPatient;
 	private Image ico;
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	// private int[] pColumwidth = { 50, 120 ,70, 70 };
+	// private int[] pColumnWidth = { 50, 120 ,70, 70 };
 
 	OhTableOperationModel<OperationRow> modelOhOpeRow;
 	OperationRowBrowserManager opeRowManager;
@@ -461,6 +461,5 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	public void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
-
 
 }

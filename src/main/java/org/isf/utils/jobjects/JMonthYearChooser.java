@@ -36,6 +36,7 @@ import com.toedter.calendar.JYearChooser;
 
 /**
  * MonthYearChooser.java - 14/dic/2012
+ *
  * @author Mwithi
  */
 public class JMonthYearChooser extends JPanel {

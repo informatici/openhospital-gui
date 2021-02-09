@@ -261,21 +261,21 @@ public class MedicalPrintSelection extends JDialog implements ActionListener{
 				ArrayList<Medical4Print> pMedicals4Print;
 				boolean expiring=isExpiring.isSelected();
 				String medical=null;
-				if(medicalBox.getSelectedItem() instanceof Medical){
+				if (medicalBox.getSelectedItem() instanceof Medical){
 					medical=((Medical)medicalBox.getSelectedItem()).getDescription();
-				}else if(!(((String)medicalBox.getSelectedItem()).equalsIgnoreCase("All")) ){
+				}else if (!(((String)medicalBox.getSelectedItem()).equalsIgnoreCase("All")) ){
 					medical=(String)medicalBox.getSelectedItem();
 				}
 				String medicalType=null;
-				if(!(medicalTypeBox.getSelectedItem() instanceof String)){
+				if (!(medicalTypeBox.getSelectedItem() instanceof String)){
 					medicalType=((MedicalType)medicalTypeBox.getSelectedItem()).getCode();
 				}
 				int format = 0;
-				if(formatSelected.equalsIgnoreCase("Java")){
+				if (formatSelected.equalsIgnoreCase("Java")){
 					format=PrintManager.toDisplay;
-				}else if(formatSelected.equalsIgnoreCase("Pdf")){
+				}else if (formatSelected.equalsIgnoreCase("Pdf")){
 					format=PrintManager.toPdf;
-				}else if(formatSelected.equalsIgnoreCase("Print")){
+				}else if (formatSelected.equalsIgnoreCase("Print")){
 					format=PrintManager.toPrint;
 				}
 				try {

@@ -95,7 +95,7 @@ public class OperationTypeEdit extends JDialog{
 	private JLabel jCodeLabel = null;
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescripitonLabel = null;
+	private JLabel jDescriptionLabel = null;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -108,7 +108,6 @@ public class OperationTypeEdit extends JDialog{
 		lastdescription= operationType.getDescription();
 		initialize();
 	}
-
 
 	/**
 	 * This method initializes this
@@ -331,15 +330,12 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescripitonLabel = new JLabel();
-			jDescripitonLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel();
+			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
 			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescripitonLabel, null);
+			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}
 		return jDescriptionLabelPanel;
 	}
-	
 
-
-}  //  @jve:decl-index=0:visual-constraint="146,61"
-
+}

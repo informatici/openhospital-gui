@@ -78,8 +78,8 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 			MessageBundle.getMessage("angal.common.description"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.priceslist.currency") //$NON-NLS-1$
 	};
-	private int[] columWidth = {100, 100, 200, 100};
-	private boolean[] columResizable = {false, false, true, false};
+	private int[] columnWidth = {100, 100, 200, 100};
+	private boolean[] columnResizable = {false, false, true, false};
 	
 	private PriceList list;
 	PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
@@ -250,7 +250,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 							} else return;
 							
 							// Save new list
-							if(newName.equals("")) newName = MessageBundle.getMessage("angal.priceslist.copyof").concat(" ").concat(list.getName()); 
+							if (newName.equals("")) newName = MessageBundle.getMessage("angal.priceslist.copyof").concat(" ").concat(list.getName()); 
 							PriceList copiedList = new PriceList(list.getId(),MessageBundle.getMessage("angal.priceslist.acode"),newName,MessageBundle.getMessage("angal.priceslist.adescription"),list.getCurrency());
 							
 							boolean result = false;
@@ -352,10 +352,10 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 			jTablePriceLists = new JTable();
 			jTablePriceLists.setModel(new ListBrowserModel());
 			
-			for (int i=0;i<columWidth.length; i++){
-				jTablePriceLists.getColumnModel().getColumn(i).setMinWidth(columWidth[i]);
+			for (int i = 0; i< columnWidth.length; i++){
+				jTablePriceLists.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
 		    	
-		    	if (!columResizable[i]) jTablePriceLists.getColumnModel().getColumn(i).setMaxWidth(columWidth[i]);
+		    	if (!columnResizable[i]) jTablePriceLists.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
 			}
 			jTablePriceLists.setAutoCreateColumnsFromModel(false); 
 		}
@@ -363,10 +363,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 	}
 	
 	class ListBrowserModel extends DefaultTableModel {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public ListBrowserModel() {

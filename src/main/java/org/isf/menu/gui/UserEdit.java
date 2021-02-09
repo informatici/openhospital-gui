@@ -377,7 +377,7 @@ public class UserEdit extends JDialog {
                 } catch (OHServiceException e) {
                     OHServiceExceptionUtil.showMessages(e);
                 }
-                if(group != null) {
+                if (group != null) {
                     for (UserGroup elem : group) {
                         typeComboBox.addItem(elem);
                     }
@@ -392,6 +392,5 @@ public class UserEdit extends JDialog {
 		}
 		return typeComboBox;
 	}
-
 
 }

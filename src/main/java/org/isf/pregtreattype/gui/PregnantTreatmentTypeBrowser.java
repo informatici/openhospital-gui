@@ -49,29 +49,24 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * Browsing of table PregnantTreatmentType
- * 
+ *
  * @author Furlanetto, Zoia, Finotto
- * 
  */
-
 public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<PregnantTreatmentType> pPregnantTreatmentType;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code"),
 			MessageBundle.getMessage("angal.common.description")
 	};
-	private int[] pColumwidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200 };
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private PregnantTreatmentTypeBrowserModel model;
 	private int selectedrow;
@@ -79,12 +74,9 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 	private PregnantTreatmentType pregnantTreatmentType = null;
 	private final JFrame myFrame;
 	
-	
-	
-	
+
 	/**
 	 * This method initializes 
-	 * 
 	 */
 	public PregnantTreatmentTypeBrowser() {
 		super();
@@ -125,7 +117,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
@@ -202,16 +194,16 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton();
+			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,
@@ -239,26 +231,22 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new PregnantTreatmentTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 	
 	
 	
 class PregnantTreatmentTypeBrowserModel extends DefaultTableModel {
-		
-		
-		/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 		public PregnantTreatmentTypeBrowserModel() {
@@ -277,11 +265,11 @@ class PregnantTreatmentTypeBrowserModel extends DefaultTableModel {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {

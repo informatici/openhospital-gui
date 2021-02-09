@@ -93,17 +93,6 @@ import org.isf.ward.model.Ward;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
-
-/**
- * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
- * Builder, which is free for non-commercial use. If Jigloo is being used
- * commercially (ie, by a corporation, company or business for any purpose
- * whatever) then you should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details. Use of Jigloo implies
- * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
- * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
- * ANY CORPORATE OR COMMERCIAL PURPOSE.
- */
 public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JAgenda jAgenda;
@@ -928,7 +917,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 						available = false;
 						OHServiceExceptionUtil.showMessages(ex);
 					}
-					if(medOutStock != null 
+					if (medOutStock != null
 							&& !medOutStock.isEmpty()){
 						available = false;
 					}
@@ -981,8 +970,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	/*
-	 * new AddTherapy action
-	 * 
+	 * New AddTherapy action
 	 */
 	private JButton getAddTherapyButton() {
 		if (addTherapy == null) {
@@ -1033,7 +1021,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	
 	/*
 	 * RemoveTherapy action
-	 * 
 	 */
 	private JButton getEditTherapyButton() {
 		if (editTherapy == null) {

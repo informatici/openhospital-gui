@@ -45,17 +45,12 @@ import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableModel;
 
 /**
- *
  * @author u2g
  */
 public class BillItemPicker extends javax.swing.JPanel {
 	
-	
-	
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -66,7 +61,7 @@ public class BillItemPicker extends javax.swing.JPanel {
 		OhTableModel<?> ohModel = (OhTableModel<?>) model;
 		jTextFieldFind.setText(ohModel.getSearchQuery());
 		jTextFieldFind.selectAll();
-		if(jTableData.getRowCount()>0){
+		if (jTableData.getRowCount()>0){
 			jTableData.setRowSelectionInterval(0, 0);
 		}		
 	}
@@ -233,7 +228,7 @@ public class BillItemPicker extends javax.swing.JPanel {
 					validateSelection();
 				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 					int selectedRow = jTableData.getSelectedRow();
-					if(jTableData.getRowCount() > 0 && selectedRow<0){
+					if (jTableData.getRowCount() > 0 && selectedRow<0){
 						selectedRow=0;
 					}
 					if (jTableData.getRowCount() > 0 && selectedRow >= 0) {

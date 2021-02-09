@@ -46,31 +46,27 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.ModalJFrame;
+
 /**
  * Browsing of table DiseaseType
- * 
+ *
  * @author Furlanetto, Zoia, Finotto
- * 
  */
-
 public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<DiseaseType> pDiseaseType;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumwidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200 };
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private DiseaseTypeBrowserModel model;
 	private int selectedrow;
@@ -79,11 +75,8 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 	private final JFrame myFrame;
 	
 	
-	
-	
 	/**
-	 * This method initializes 
-	 * 
+	 * This method initializes
 	 */
 	public DiseaseTypeBrowser() {
 		super();
@@ -124,7 +117,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
@@ -200,16 +193,16 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton();
+			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,
@@ -229,7 +222,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 								jTable.updateUI();
 							}
 						} catch (OHServiceException ex) {
-							if(ex.getMessages() != null){
+							if (ex.getMessages() != null){
 								for(OHExceptionMessage msg : ex.getMessages()){
 									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 								}
@@ -240,29 +233,22 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new DiseaseTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 	
-	
-	
-	
-	
+
 	
 class DiseaseTypeBrowserModel extends DefaultTableModel {
 		
-		
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
@@ -270,7 +256,7 @@ class DiseaseTypeBrowserModel extends DefaultTableModel {
 			try {
 				pDiseaseType = manager.getDiseaseType();
 			}catch(OHServiceException e){
-				if(e.getMessages() != null){
+				if (e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -285,11 +271,11 @@ class DiseaseTypeBrowserModel extends DefaultTableModel {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {

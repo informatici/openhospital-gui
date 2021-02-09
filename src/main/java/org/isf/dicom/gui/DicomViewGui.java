@@ -68,12 +68,10 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 
 /**
- * 
  * Detail for DICOM image
- * 
+ *
  * @author Pietro Castellucci
  * @version 1.0.0
- *
  * @deprecated TODO: explain
  */
 @Deprecated // what is this class???
@@ -129,7 +127,7 @@ public class DicomViewGui extends JPanel {
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
 			}catch(OHServiceException ex){
-				if(ex.getMessages() != null){
+				if (ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -160,7 +158,7 @@ public class DicomViewGui extends JPanel {
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
 			}catch(OHServiceException ex){
-				if(ex.getMessages() != null){
+				if (ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -498,7 +496,7 @@ public class DicomViewGui extends JPanel {
 			}
 			else return;
 		}catch(OHServiceException ex){
-			if(ex.getMessages() != null){
+			if (ex.getMessages() != null){
 				for(OHExceptionMessage msg : ex.getMessages()){
 					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
@@ -587,7 +585,7 @@ public class DicomViewGui extends JPanel {
 	 * Set image in frame viewer
 	 * 
 	 * @param frame
-	 *            , the frame to viusualize
+	 *            , the frame to visualize
 	 */
 	private void setFrame(int frame) {
 		frameIndex = frame;
@@ -651,7 +649,7 @@ public class DicomViewGui extends JPanel {
 	int p2y = 0;
 	
 	/**
-	 * Mouse whell listener for DicomViewGui
+	 * Mouse wheel listener for DicomViewGui
 	 */
 	class DicomViewGuiMouseWheelListener implements MouseWheelListener {
 
@@ -726,7 +724,7 @@ public class DicomViewGui extends JPanel {
 		}
 
 		/**
-		 * Mouse entred in frame, NOT USED
+		 * Mouse entered into frame, NOT USED
 		 */
 		public void mouseEntered(MouseEvent e) {
 		}

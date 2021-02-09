@@ -28,8 +28,8 @@ import javax.swing.JSlider;
 
 /**
  * JSlider customization in order to manage decimal values and a given step
- * @author Mwithi
  *
+ * @author Mwithi
  */
 public class ScaledJSlider extends JSlider {
 

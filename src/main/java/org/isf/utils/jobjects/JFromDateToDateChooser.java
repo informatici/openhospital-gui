@@ -38,7 +38,6 @@ import org.isf.generaldata.MessageBundle;
 
 /**
  * @author Nanni
- *
  */
 public class JFromDateToDateChooser extends JPanel {
 	
@@ -50,14 +49,8 @@ public class JFromDateToDateChooser extends JPanel {
 	private Date dateTimeFrom;
 	private Date dateTimeTo;
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	public JFromDateToDateChooser() {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
 		this.setLayout(layout);

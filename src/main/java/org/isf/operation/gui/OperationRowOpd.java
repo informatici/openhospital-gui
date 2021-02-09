@@ -363,8 +363,8 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			OperationRow opeInter = oprowData.get(index);
 			dateop.setTime(this.textDate.getDate());
 			opeInter.setOpDate(dateop);
-			String opReslt = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
-			opeInter.setOpResult(opReslt);
+			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
 			opeInter.setOperation(op);
@@ -528,4 +528,3 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 	}
 
 }
-

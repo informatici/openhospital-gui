@@ -52,6 +52,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import com.toedter.calendar.JDateChooser;
 
 public class PatientFolderReportModal extends ModalJFrame{
+	
 	private JFrame parent;
 	private Integer patId;
 	private JPanel jPanelChooser;
@@ -85,6 +86,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 		this.date=olderDate;
 		initialize();
 	}
+	
 	private void initialize() {
 		this.setLayout(new BorderLayout());
 		this.add(getJContentPane(), BorderLayout.CENTER);
@@ -94,6 +96,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 		setResizable(false);
 		showAsModal(parent);
 	}
+	
 	private JPanel getJContentPane() {
 
 		if (jPanelChooser == null) {
@@ -143,20 +146,20 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbc_jSliderHeight.gridy = 2;
 			jPanelChooser.add(getValueReport(), gbc_jSliderHeight);
 			
-			GridBagConstraints gbc_jCancelButtont = new GridBagConstraints();
-			gbc_jCancelButtont.insets = new Insets(5, 5, 5, 5);
-			gbc_jCancelButtont.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jCancelButtont.gridx = 0;
-			gbc_jCancelButtont.gridy = 3;
-			jPanelChooser.add(getCloseButton(), gbc_jCancelButtont);
+			GridBagConstraints gbc_jCancelButton = new GridBagConstraints();
+			gbc_jCancelButton.insets = new Insets(5, 5, 5, 5);
+			gbc_jCancelButton.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jCancelButton.gridx = 0;
+			gbc_jCancelButton.gridy = 3;
+			jPanelChooser.add(getCloseButton(), gbc_jCancelButton);
 
 
-			GridBagConstraints gbc_jPrintButtont = new GridBagConstraints();
-			gbc_jPrintButtont.insets = new Insets(5, 5, 5, 5);
-			gbc_jPrintButtont.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jPrintButtont.gridx = 1;
-			gbc_jPrintButtont.gridy = 3;
-			jPanelChooser.add(getPrintButton(), gbc_jPrintButtont);
+			GridBagConstraints gbc_jPrintButton = new GridBagConstraints();
+			gbc_jPrintButton.insets = new Insets(5, 5, 5, 5);
+			gbc_jPrintButton.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jPrintButton.gridx = 1;
+			gbc_jPrintButton.gridy = 3;
+			jPanelChooser.add(getPrintButton(), gbc_jPrintButton);
 		
 		}
 		return jPanelChooser;
@@ -403,7 +406,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 		return examinationCheck.isSelected();
 	}
 	public String getTypeField() {
-		if(chooseField.getSelectedItem().equals("All")) {
+		if (chooseField.getSelectedItem().equals("All")) {
 			return "";
 		} else {
 		return (String) chooseField.getSelectedItem();
@@ -453,7 +456,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 	public Date getDateToValue() {
 		
 		Date date3 = jDateChooserDateTo.getDate();
-		if(date3!=null){
+		if (date3!=null){
 		 return jDateChooserDateTo.getDate();
 		}else {	
 			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
@@ -473,7 +476,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 	public Date getDateFromValue() {
 		
 		Date date3 = jDateChooserDateFrom.getDate();
-		if(date3!=null){
+		if (date3!=null){
 		return jDateChooserDateFrom.getDate();
 		}else {
 			String date = "01/01/2000";

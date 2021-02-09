@@ -80,13 +80,9 @@ import org.joda.time.PeriodType;
 
 /**
  * @author Mwithi
- * 
  */
 public class TherapyEntryForm extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/*
@@ -289,7 +285,7 @@ public class TherapyEntryForm extends JDialog {
 				double value = (Double) source.getValue();
 				therapy.setQty(value);
 				/*
-				 * sebbene sia utile crea conflitto 
+				 * although it is useful it creates conflicts
 				 */
 				//int intValue = new Double(value).intValue();
 				//jSliderQty.setValue(intValue);
@@ -761,9 +757,8 @@ public class TherapyEntryForm extends JDialog {
 				
 				public void actionPerformed(ActionEvent arg0) {
 					/*
-					 * estrapolazione Dati
+					 * Data extrapolation
 					 */
-					
 					GregorianCalendar startDate = new GregorianCalendar();
 					startDate.setTime(therapyStartdate.getDate());
 					GregorianCalendar endDate = therapyEndDate;

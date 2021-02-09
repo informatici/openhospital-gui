@@ -46,20 +46,10 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.ModalJFrame;
 
-
-
 public class PatientBrowser extends ModalJFrame implements PatientListener{
 	
-	
-	
-	
-	
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private String[] pColums = { MessageBundle.getMessage("angal.patient.namem"), 
+	private String[] pColumns = { MessageBundle.getMessage("angal.patient.namem"),
 			MessageBundle.getMessage("angal.patient.agem"),
 			MessageBundle.getMessage("angal.patient.sexm"),
 			MessageBundle.getMessage("angal.patient.addressm"),
@@ -70,10 +60,10 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private PatientBrowserModel model;
-	private int[] pColumwidth = { 200, 30, 25 ,100, 100, 50 };
+	private int[] pColumnWidth = { 200, 30, 25 ,100, 100, 50 };
 	private int selectedrow;
 	private Patient patient;
 	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
@@ -84,20 +74,19 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 		if (jTable == null) {
 			model = new PatientBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
-			jTable.getColumnModel().getColumn(2).setMinWidth(pColumwidth[2]);
-			jTable.getColumnModel().getColumn(2).setMaxWidth(pColumwidth[2]);
-			jTable.getColumnModel().getColumn(3).setMinWidth(pColumwidth[3]);
-			jTable.getColumnModel().getColumn(3).setMaxWidth(pColumwidth[3]);
-			jTable.getColumnModel().getColumn(4).setMinWidth(pColumwidth[4]);
-			jTable.getColumnModel().getColumn(5).setMinWidth(pColumwidth[5]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
+			jTable.getColumnModel().getColumn(2).setMinWidth(pColumnWidth[2]);
+			jTable.getColumnModel().getColumn(2).setMaxWidth(pColumnWidth[2]);
+			jTable.getColumnModel().getColumn(3).setMinWidth(pColumnWidth[3]);
+			jTable.getColumnModel().getColumn(3).setMaxWidth(pColumnWidth[3]);
+			jTable.getColumnModel().getColumn(4).setMinWidth(pColumnWidth[4]);
+			jTable.getColumnModel().getColumn(5).setMinWidth(pColumnWidth[5]);
 		}return jTable;
 	}
 	
 	/**
 	 * This method initializes 
-	 * 
 	 */
 	public PatientBrowser() {
 		super();
@@ -115,18 +104,15 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
 	}
 	
 	
-	
-	
 	/**
 	 * This method initializes this
-	 * 
 	 */
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -233,16 +219,16 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton();
+			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(PatientBrowser.this,
@@ -265,7 +251,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 
 							}
 						}catch(OHServiceException e){
-							if(e.getMessages() != null){
+							if (e.getMessages() != null){
 								for(OHExceptionMessage msg : e.getMessages()){
 									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 								}
@@ -276,15 +262,11 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 class PatientBrowserModel extends DefaultTableModel {
 		
-		
-		/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 		public PatientBrowserModel() {
@@ -292,7 +274,7 @@ class PatientBrowserModel extends DefaultTableModel {
 			try {
 				pPat = manager.getPatient();
 			} catch (OHServiceException e) {
-				if(e.getMessages() != null){
+				if (e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -307,11 +289,11 @@ class PatientBrowserModel extends DefaultTableModel {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		
@@ -364,8 +346,4 @@ public void patientInserted(AWTEvent e) {
 		jTable.setRowSelectionInterval(0, 0);
 }
 
-
-
-
-	
 }

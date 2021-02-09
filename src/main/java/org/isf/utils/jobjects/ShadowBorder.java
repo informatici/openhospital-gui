@@ -28,17 +28,12 @@ import java.awt.Graphics;
 import javax.swing.border.AbstractBorder;
 
 /**
- * 
  * Custom Border which create a component shadow with specified offset and color
- * 
- * @author Mwithi
  *
+ * @author Mwithi
  */
 public class ShadowBorder extends AbstractBorder {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Color color;
 	private int offset;

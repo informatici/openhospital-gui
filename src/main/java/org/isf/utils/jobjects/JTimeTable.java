@@ -37,20 +37,14 @@ import javax.swing.JPanel;
 import org.isf.generaldata.MessageBundle;
 
 /**
+ * JTimeTable is a JPanel showing 24 hours and 5 range of minutes.
+ * <p>
+ * It helps to select a time through a mouse listener and getters methods.
+ *
  * @author Mwithi
- * 
- * JTimeTable is a JPanel showing 24 hours and
- * 5 range of minutes.
- * 
- * It helps to select a time through a mouse
- * listner and getters methods.
- * 
  */
 public class JTimeTable extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int hour;
 	private int minute;

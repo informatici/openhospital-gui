@@ -62,11 +62,9 @@ import org.isf.utils.treetable.JTreeTable;
 
 /**
  * Browsing of table PriceList
- * 
+ *
  * @author Alessandro
- * 
  */
-
 public class PricesBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -85,8 +83,8 @@ public class PricesBrowser extends ModalJFrame {
 	private JPanel jPanelDescription;
     protected static String[] cCategories = {"EXA","OPE","MED","OTH"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     protected static String[] cCategoriesNames = {MessageBundle.getMessage("angal.priceslist.exams"),MessageBundle.getMessage("angal.priceslist.operations"),MessageBundle.getMessage("angal.priceslist.medicals"),MessageBundle.getMessage("angal.priceslist.others")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-    private boolean[] columsResizable = {true, false};
-	private int[] columWidth = {400,150};
+    private boolean[] columnsResizable = {true, false};
+	private int[] columnWidth = {400,150};
     
 	private PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 	private ArrayList<PriceList> listArray;
@@ -341,10 +339,10 @@ public class PricesBrowser extends ModalJFrame {
 		    jTreeTable.getTree().expandRow(2);
 		    jTreeTable.getTree().expandRow(1);
 		    
-		    for (int i=0;i<columWidth.length; i++){
-		    	jTreeTable.getColumnModel().getColumn(i).setMinWidth(columWidth[i]);
+		    for (int i = 0; i< columnWidth.length; i++){
+		    	jTreeTable.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
 		    	
-		    	if (!columsResizable[i]) jTreeTable.getColumnModel().getColumn(i).setMaxWidth(columWidth[i]);
+		    	if (!columnsResizable[i]) jTreeTable.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
 			}
 		    jTreeTable.setAutoCreateColumnsFromModel(false); 
 		    

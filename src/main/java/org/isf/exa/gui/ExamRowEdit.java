@@ -21,14 +21,6 @@
  */
 package org.isf.exa.gui;
 
-/*------------------------------
- * ExamRowEdit - add/edit Exams Result 
- * ----------------------------------
- * modification history
- * 3/11/2006 - enlarged the form width 
- * 			 - version is now 1.0 
- *------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -54,6 +46,15 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
+/**
+ * ------------------------------
+ * ExamRowEdit - add/edit Exams Result
+ * ----------------------------------
+ * modification history
+ * 3/11/2006 - enlarged the form width
+ * 			 - version is now 1.0
+ * ------------------------------
+ */
 public class ExamRowEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -209,7 +210,7 @@ public class ExamRowEdit extends JDialog {
 							dispose();
 						}
 					}catch(OHServiceException ex){
-						if(ex.getMessages() != null){
+						if (ex.getMessages() != null){
 							for(OHExceptionMessage msg : ex.getMessages()){
 								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
@@ -233,6 +234,5 @@ public class ExamRowEdit extends JDialog {
 		}
 		return descriptionTextField;
 	}
-	
 
 }

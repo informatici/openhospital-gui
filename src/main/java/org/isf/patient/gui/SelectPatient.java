@@ -89,9 +89,6 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private void fireSelectedPatient(Patient patient) {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = selectionListener.getListeners(SelectionListener.class);
@@ -118,12 +115,12 @@ public class SelectPatient extends JDialog implements PatientListener {
 	}
 	private JButton buttonNew;
 	private PatientSummary ps;
-	private String[] patColums = {
+	private String[] patColumns = {
 			MessageBundle.getMessage("angal.common.code"),
 			MessageBundle.getMessage("angal.patient.name")
 	}; 
-	private int[] patColumsWidth = { 100, 250 };
-	private boolean[] patColumsResizable = { false, true };
+	private int[] patColumnsWidth = { 100, 250 };
+	private boolean[] patColumnsResizable = { false, true };
 
 	PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	ArrayList<Patient> patArray = new ArrayList<Patient>();
@@ -136,7 +133,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			try {
 				patArray = patManager.getPatientsByOneOfFieldsLike(null);
 			}catch(OHServiceException ex){
-				if(ex.getMessages() != null){
+				if (ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
 						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -169,7 +166,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			try {
 				patArray = patManager.getPatientsByOneOfFieldsLike(null);
 			}catch(OHServiceException ex){
-				if(ex.getMessages() != null){
+				if (ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
 						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -202,7 +199,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			try {
 				patArray = patManager.getPatientsByOneOfFieldsLike(null);
 			}catch(OHServiceException ex){
-				if(ex.getMessages() != null){
+				if (ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
 						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -228,14 +225,15 @@ public class SelectPatient extends JDialog implements PatientListener {
 			jSearchButton.doClick();
 		}
 	}
+
 	public SelectPatient(JFrame owner, boolean abbleAddPatient, boolean full) {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
-			if(!full)
+			if (!full)
 				try {
 					patArray = patManager.getPatientsByOneOfFieldsLike(null);
 				} catch (OHServiceException e2) {
-					if(e2.getMessages() != null){
+					if (e2.getMessages() != null){
 						for(OHExceptionMessage msg : e2.getMessages()){
 							JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 						}
@@ -245,7 +243,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 				try {
 					patArray = patManager.getPatient();
 				} catch (OHServiceException e1) {
-					if(e1.getMessages() != null){
+					if (e1.getMessages() != null){
 						for(OHExceptionMessage msg : e1.getMessages()){
 							JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 						}
@@ -267,10 +265,11 @@ public class SelectPatient extends JDialog implements PatientListener {
 		setLocationRelativeTo(null);
 		buttonNew.setVisible(abbleAddPatient);
 	}
+
 	public SelectPatient(JDialog owner, boolean abbleAddPatient, boolean full) {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
-			if(!full)
+			if (!full)
 				try {
 					patArray = patManager.getPatientsByOneOfFieldsLike(null);
 				} catch (OHServiceException e2) {
@@ -298,6 +297,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		setLocationRelativeTo(null);
 		buttonNew.setVisible(abbleAddPatient);
 	}
+
 	private void initComponents() {
 		add(getJPanelTop(), BorderLayout.NORTH);
 		add(getJPanelCenter(), BorderLayout.CENTER);
@@ -461,9 +461,9 @@ public class SelectPatient extends JDialog implements PatientListener {
 			jTablePatient = new JTable();
 			jTablePatient.setModel(new SelectPatientModel());
 			jTablePatient.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			for (int i = 0 ; i < patColums.length; i++) {
-				jTablePatient.getColumnModel().getColumn(i).setMinWidth(patColumsWidth[i]);
-				if (!patColumsResizable[i]) jTablePatient.getColumnModel().getColumn(i).setMaxWidth(patColumsWidth[i]);
+			for (int i = 0; i < patColumns.length; i++) {
+				jTablePatient.getColumnModel().getColumn(i).setMinWidth(patColumnsWidth[i]);
+				if (!patColumnsResizable[i]) jTablePatient.getColumnModel().getColumn(i).setMaxWidth(patColumnsWidth[i]);
 			}
 			jTablePatient.setAutoCreateColumnsFromModel(false);
 			jTablePatient.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
@@ -568,7 +568,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 					try {
 						patArray = patManager.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 					}catch(OHServiceException ex){
-						if(ex.getMessages() != null){
+						if (ex.getMessages() != null){
 							for(OHExceptionMessage msg : ex.getMessages()){
 								JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
@@ -616,9 +616,6 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 	class SelectPatientModel extends DefaultTableModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public SelectPatientModel() {
@@ -631,11 +628,11 @@ public class SelectPatient extends JDialog implements PatientListener {
 		}
 
 		public String getColumnName(int c) {
-			return patColums[c];
+			return patColumns[c];
 		}
 
 		public int getColumnCount() {
-			return patColums.length;
+			return patColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -664,10 +661,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	}
 	
 	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
-		   
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 

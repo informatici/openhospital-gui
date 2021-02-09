@@ -113,35 +113,30 @@ import org.isf.xmpp.manager.Interaction;
 
 /**
  * This class shows essential patient data and allows to create an admission
- * record or modify an existing one
+ * record or modify an existing one.
  * 
  * release 2.5 nov-10-06
  * 
  * @author flavio
- * 
- */
-
-/*----------------------------------------------------------
+ * ----------------------------------------------------------
  * modification history
  * ====================
  * 23/10/06 - flavio - borders set to not resizable
- *                     changed Disease IN (/OUT) into Dignosis IN (/OUT)
+ *                     changed Disease IN (/OUT) into Diagnosis IN (/OUT)
  *                     
  * 10/11/06 - ross - added RememberDate for admission Date
- * 				   - only diseses with flag In Patient (IPD) are displayed
+ * 				   - only diseases with flag In Patient (IPD) are displayed
  *                 - on Insert. in edit all are displayed
- *                 - the correct way should be to display the IPD + the one aready registered
+ *                 - the correct way should be to display the IPD + the one already registered
  * 18/08/08 - Alex/Andrea - Calendar added
  * 13/02/09 - Alex - Cosmetic changes to UI
  * 10/01/11 - Claudia - insert ward beds availability 
  * 01/01/11 - Alex - GUI and code reengineering
  * 29/12/11 - Nicola - insert alert IN/OUT patient for communication module
- -----------------------------------------------------------*/
+ * -----------------------------------------------------------
+ */
 public class AdmissionBrowser extends ModalJFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private EventListenerList admissionListeners = new EventListenerList();
@@ -162,10 +157,6 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private void fireAdmissionInserted(Admission anAdmission) {
 		AWTEvent event = new AWTEvent(anAdmission, AWTEvent.RESERVED_ID_MAX + 1) {
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -176,10 +167,6 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private void fireAdmissionUpdated(Admission anAdmission) {
 		AWTEvent event = new AWTEvent(anAdmission, AWTEvent.RESERVED_ID_MAX + 1) {
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
@@ -789,7 +776,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}catch(OHServiceException e){
                 OHServiceExceptionUtil.showMessages(e);
 			}
-			if(treatmTypeList != null){
+			if (treatmTypeList != null){
 				for (PregnantTreatmentType elem : treatmTypeList) {
 					treatmTypeBox.addItem(elem);
 					if (editing) {
@@ -855,7 +842,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}catch(OHServiceException e){
                 OHServiceExceptionUtil.showMessages(e);
 			}
-			if(deliveryResultTypeList != null){
+			if (deliveryResultTypeList != null){
 				for (DeliveryResultType elem : deliveryResultTypeList) {
 					deliveryResultTypeBox.addItem(elem);
 					if (editing) {
@@ -883,7 +870,7 @@ public class AdmissionBrowser extends ModalJFrame {
             }catch(OHServiceException e){
                 OHServiceExceptionUtil.showMessages(e);
             }
-			if(deliveryTypeList != null){
+			if (deliveryTypeList != null){
 				for (DeliveryType elem : deliveryTypeList) {
 					deliveryTypeBox.addItem(elem);
 					if (editing) {
@@ -1182,11 +1169,11 @@ public class AdmissionBrowser extends ModalJFrame {
                                 diseaseInBox.addItem(disease);
                             }
                             
-                            if(diseaseInBox.getItemCount() >= 2){
+                            if (diseaseInBox.getItemCount() >= 2){
                                 diseaseInBox.setSelectedIndex(1);
                             }
                             diseaseInBox.requestFocus();
-                            if(diseaseInBox.getItemCount() > 2){
+                            if (diseaseInBox.getItemCount() > 2){
                                 diseaseInBox.showPopup();
                             }
                         }
@@ -1382,11 +1369,11 @@ public class AdmissionBrowser extends ModalJFrame {
                                 diseaseOut1Box.addItem(disease);
                             }
                             
-                            if(diseaseOut1Box.getItemCount() >= 2){
+                            if (diseaseOut1Box.getItemCount() >= 2){
                                 diseaseOut1Box.setSelectedIndex(1);
                             }
                             diseaseOut1Box.requestFocus();
-                            if(diseaseOut1Box.getItemCount() > 2){
+                            if (diseaseOut1Box.getItemCount() > 2){
                                 diseaseOut1Box.showPopup();
                             }
                         }
@@ -1422,7 +1409,7 @@ public class AdmissionBrowser extends ModalJFrame {
                     for (Disease elem : diseaseOutList) {
                             diseaseOut2Box.addItem(elem);
 
-                            // Search for saved disaseOut2
+                            // Search for saved diseaseOut2
                             if (editing && found == null && diseaseOut2 != null
                                             && diseaseOut2.getCode().equalsIgnoreCase(elem.getCode())) {
                                     diseaseOut2Box.setSelectedItem(elem);
@@ -1480,11 +1467,11 @@ public class AdmissionBrowser extends ModalJFrame {
                                 diseaseOut2Box.addItem(disease);
                             }
                             
-                            if(diseaseOut2Box.getItemCount() >= 2){
+                            if (diseaseOut2Box.getItemCount() >= 2){
                                 diseaseOut2Box.setSelectedIndex(1);
                             }
                             diseaseOut2Box.requestFocus();
-                            if(diseaseOut2Box.getItemCount() > 2){
+                            if (diseaseOut2Box.getItemCount() > 2){
                                 diseaseOut2Box.showPopup();
                             }
                         }
@@ -1578,11 +1565,11 @@ public class AdmissionBrowser extends ModalJFrame {
                                 diseaseOut3Box.addItem(disease);
                             }
                             
-                            if(diseaseOut3Box.getItemCount() >= 2){
+                            if (diseaseOut3Box.getItemCount() >= 2){
                                 diseaseOut3Box.setSelectedIndex(1);
                             }
                             diseaseOut3Box.requestFocus();
-                            if(diseaseOut3Box.getItemCount() > 2){
+                            if (diseaseOut3Box.getItemCount() > 2){
                                 diseaseOut3Box.showPopup();
                             }
                         }
@@ -1607,9 +1594,9 @@ public class AdmissionBrowser extends ModalJFrame {
 //		return rb;
 //	}
 
-	/*
-	 * admission sheet: 5th row: insert select operation type and result
-	 */
+//	/*
+//	 * admission sheet: 5th row: insert select operation type and result
+//	 */
 //	private JPanel getOperationPanel() {
 //		if (operationPanel == null) {
 //			operationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -1622,7 +1609,7 @@ public class AdmissionBrowser extends ModalJFrame {
 //			}catch(OHServiceException e){
 //                OHServiceExceptionUtil.showMessages(e);
 //			}
-//			if(operationList != null){
+//			if (operationList != null){
 //				for (Operation elem : operationList) {
 //					operationBox.addItem(elem);
 //					if (editing) {
@@ -1694,9 +1681,9 @@ public class AdmissionBrowser extends ModalJFrame {
 //		return resultPanel;
 //	}
 
-	/*
-	 * admission sheet: 6th row: insert operation date and transusional unit
-	 */
+//	/*
+//	 * admission sheet: 6th row: insert operation date and transusional unit
+//	 */
 //	private JPanel getOperationDatePanel() {
 //		if (operationDatePanel == null) {
 //			operationDatePanel = new JPanel();
@@ -1716,9 +1703,9 @@ public class AdmissionBrowser extends ModalJFrame {
 //		return operationDatePanel;
 //	}
 	
-	/**
-	 * @return
-	 */
+//	/**
+//	 * @return
+//	 */
 //	private JPanel getTransfusionPanel() {
 //		if (transfusionPanel == null) {
 //			transfusionPanel = new JPanel();
@@ -1833,7 +1820,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (MainMenu.checkUserGrants("btnadmadmexamination")) buttonPanel.add(getJButtonExamination());
 			buttonPanel.add(getCloseButton());
 			
-			if(GeneralData.XMPPMODULEENABLED){
+			if (GeneralData.XMPPMODULEENABLED){
 			Interaction share= new Interaction();
 			Collection<String> contacts = share.getContactOnline();
 			contacts.add("-- Share alert with: nobody --");
@@ -1993,7 +1980,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						admission.setFHU(FHUTextField.getText());
 					}
 
-					if(dateInFieldCal.getDate() != null) {
+					if (dateInFieldCal.getDate() != null) {
 					    dateIn = new GregorianCalendar();
                         dateIn.setTime(dateInFieldCal.getDate());
                         admission.setAdmDate(dateIn);
@@ -2029,7 +2016,7 @@ public class AdmissionBrowser extends ModalJFrame {
 //						}
 //
 //						// get operation date (may be null)
-//                                                if(operationDateFieldCal.getDate() != null) {
+//                                                if (operationDateFieldCal.getDate() != null) {
 //                                                    operationDate = new GregorianCalendar();
 //                                                    operationDate.setTime(operationDateFieldCal.getDate());
 //                                                    admission.setOpDate(operationDate);
@@ -2188,7 +2175,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					// ready to save...
 					if (!editing && !isDischarge) {
                                                 /* *** operation date control *** */
-//						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
+//						if (!checkAllOperationRowDate(operationad.getOprowData(), admission))
 //						{
 //							JOptionPane.showMessageDialog(AdmissionBrowser.this,
 //                                                                            MessageBundle.getMessage("angal.admission.check.operationdate"), MessageBundle.getMessage("angal.hospital"),
@@ -2197,7 +2184,7 @@ public class AdmissionBrowser extends ModalJFrame {
 //						}	
 					    /* ******************************* */
 						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
-						if(!errors.isEmpty()) {
+						if (!errors.isEmpty()) {
 							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 						} else {
 							int newKey = -1;
@@ -2220,7 +2207,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						
 					} else if (!editing && isDischarge) {
                                                 /* *** operation date control *** */
-//						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
+//						if (!checkAllOperationRowDate(operationad.getOprowData(), admission))
 //						{								
 //					  		  JOptionPane.showMessageDialog(AdmissionBrowser.this,
 //                                                                                MessageBundle.getMessage("angal.admission.check.operationdate") , MessageBundle.getMessage("angal.hospital"),
@@ -2228,7 +2215,7 @@ public class AdmissionBrowser extends ModalJFrame {
 //					  		  return;						    
 //						}
 						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
-						if(!errors.isEmpty()) {
+						if (!errors.isEmpty()) {
 							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 						} else {
 							try {
@@ -2244,7 +2231,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						
 					} else {
                                                 /* *** operation date control *** */
-//						if(!checkAllOperationRowDate(operationad.getOprowData(), admission))
+//						if (!checkAllOperationRowDate(operationad.getOprowData(), admission))
 //						{
 //							JOptionPane.showMessageDialog(AdmissionBrowser.this,
 //                                                                            MessageBundle.getMessage("angal.admission.check.operationdate"), MessageBundle.getMessage("angal.hospital"),
@@ -2252,7 +2239,7 @@ public class AdmissionBrowser extends ModalJFrame {
 //				  		    return;
 //						}
 						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
-						if(!errors.isEmpty()) {
+						if (!errors.isEmpty()) {
 							OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 						} else {
 							try {
@@ -2287,7 +2274,7 @@ public class AdmissionBrowser extends ModalJFrame {
         String query = s.trim();
         ArrayList<Disease> results = new ArrayList<Disease>();
         for (Disease disease : diseaseList) {
-            if(!query.equals("")) {
+            if (!query.equals("")) {
 		String[] patterns = query.split(" ");
 		String name = disease.getDescription().toLowerCase();
 		boolean patternFound = false;
@@ -2313,8 +2300,8 @@ public class AdmissionBrowser extends ModalJFrame {
     	DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));
     	List<OHExceptionMessage> errors = new ArrayList<OHExceptionMessage>();
 		Date beginDate,endDate;
-		if(admission.getAdmDate()!=null)beginDate=admission.getAdmDate().getTime();else beginDate=null;
-		if(admission.getDisDate()!=null)endDate=admission.getDisDate().getTime();else endDate=null;
+		if (admission.getAdmDate()!=null)beginDate=admission.getAdmDate().getTime();else beginDate=null;
+		if (admission.getDisDate()!=null)endDate=admission.getDisDate().getTime();else endDate=null;
 		for (org.isf.operation.model.OperationRow opRow : list) {
 			Date currentRowDate = opRow.getOpDate().getTime();
 			/*
@@ -2324,8 +2311,8 @@ public class AdmissionBrowser extends ModalJFrame {
 			currentRowDate.setMinutes(59);
 			currentRowDate.setSeconds(59);
 			
-			if((beginDate!=null)&&(endDate!=null)){
-				if((currentRowDate.before(beginDate))||(currentRowDate.after(endDate))){
+			if ((beginDate!=null)&&(endDate!=null)){
+				if ((currentRowDate.before(beginDate))||(currentRowDate.after(endDate))){
 					errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"), 
 							MessageBundle.getMessage("angal.admission.invalidoperationdate") + " " 
 							+ MessageBundle.getMessage("angal.admission.theoperationdatebetween") + " "
@@ -2333,8 +2320,8 @@ public class AdmissionBrowser extends ModalJFrame {
 							+ currentDateFormat.format(endDate), OHSeverityLevel.ERROR));
 				}
 			}
-			if((beginDate!=null)&&(endDate==null)){
-				if(currentRowDate.before(beginDate)){
+			if ((beginDate!=null)&&(endDate==null)){
+				if (currentRowDate.before(beginDate)){
 					errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"), 
 							MessageBundle.getMessage("angal.admission.invalidoperationdate") + " " 
 							+ MessageBundle.getMessage("angal.admission.theoperationdatenewerthan") + " "
@@ -2344,4 +2331,4 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 		return errors;
 	}
-}// class
+}

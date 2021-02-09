@@ -21,14 +21,6 @@
  */
 package org.isf.exatype.gui;
 
-/*------------------------------------------
- * ExamTypeBrowser - list all exam types. let the user select an exam type to edit
- * -----------------------------------------
- * modification history
- * ??/??/2005 - first beta version 
- * 03/11/2006 - ross - version is now 1.0
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -55,42 +47,44 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
 
-
+/**
+ * ------------------------------------------
+ * ExamTypeBrowser - list all exam types. Let the user select an exam type to edit
+ * -----------------------------------------
+ * modification history
+ * ??/??/2005 - first beta version
+ * 03/11/2006 - ross - version is now 1.0
+ * ------------------------------------------
+ */
 public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final String VERSION="v1.2"; 
 
 	private ArrayList<ExamType> pExamType;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumwidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private ExamTypeBrowserModel model;
 	private int selectedrow;
 	private ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
 	private ExamType examType = null;
 	private final JFrame myFrame;
-	
-	
-	
+
 	
 	/**
 	 * This method initializes 
-	 * 
 	 */
 	public ExamTypeBrowser() {
 		super();
@@ -131,7 +125,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
@@ -207,16 +201,16 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton();
+			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,
@@ -250,24 +244,20 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new ExamTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 	
 class ExamTypeBrowserModel extends DefaultTableModel {
 		
-		
-		/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 		public ExamTypeBrowserModel() {
@@ -287,11 +277,11 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -314,8 +304,6 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 	}
 
 
-
-
 	public void examTypeUpdated(AWTEvent e) {
 		pExamType.set(selectedrow, examType);
 		((ExamTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
@@ -331,6 +319,5 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 		if (jTable.getRowCount() > 0)
 			jTable.setRowSelectionInterval(0, 0);
 	}
-	
-	
+
 }

@@ -54,18 +54,16 @@ import org.isf.menu.model.UserMenuItem;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
-/*----------------------------------------------------------
+/**
+ * ----------------------------------------------------------
  * modification history
  * ====================
- * 25/03/09 - alex - User PrivilegeTree is build now on rootMenu;
+ * 25/03/09 - alex - User PrivilegeTree is built now on rootMenu;
  * 					 new MenuItems for a user will be set as inactive
- -----------------------------------------------------------*/
-
+ * -----------------------------------------------------------
+ */
 class PrivilegeTree extends JDialog {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	private UserGroup aGroup;
@@ -325,8 +323,7 @@ class PrivilegeTree extends JDialog {
 }
 
 /**
- * This class renders a item name 
- * 
+ * This class renders a item name
  */
 class UserItemNameTreeCellRenderer extends DefaultTreeCellRenderer {
 

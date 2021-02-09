@@ -57,15 +57,10 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 import com.toedter.calendar.JDateChooser;
 
 /**
- * 
  * @author Mwithi
- *
  */
 class ShowPreLoadDialog extends JDialog {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		
 		/*
@@ -289,4 +284,4 @@ class ShowPreLoadDialog extends JDialog {
 		public boolean isSave() {
 			return save;
 		}
-	}
+}

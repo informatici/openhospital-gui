@@ -395,7 +395,7 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 			wardList = wbm.getWards();
 		}catch(OHServiceException e){
 			wardList = new ArrayList<Ward>();
-			if(e.getMessages() != null){
+			if (e.getMessages() != null){
 				for(OHExceptionMessage msg : e.getMessages()){
 					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
@@ -441,7 +441,7 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 								.getSelectedItem()).getCode();
 					}
 					String movementType=null;
-					if(!(movTypeBox.getSelectedItem() instanceof String)){
+					if (!(movTypeBox.getSelectedItem() instanceof String)){
 						movementType=((MovementType)movTypeBox.getSelectedItem()).getCode();
 					}
 					String wardSelected=null;
@@ -457,11 +457,11 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 					
 					MedicalStockIoOperations ioOperations = Context.getApplicationContext().getBean(MedicalStockIoOperations.class);
 					int format=0;String path=null;
-					if(formatSelected.equalsIgnoreCase("Java")){
+					if (formatSelected.equalsIgnoreCase("Java")){
 						format=PrintManager.toDisplay;
-					}else if(formatSelected.equalsIgnoreCase("Pdf")){
+					}else if (formatSelected.equalsIgnoreCase("Pdf")){
 						format=PrintManager.toPdf;
-					}else if(formatSelected.equalsIgnoreCase("Print")){
+					}else if (formatSelected.equalsIgnoreCase("Print")){
 						format=PrintManager.toPrint;
 					}
 					int selectedIndex=orderBox.getSelectedIndex();

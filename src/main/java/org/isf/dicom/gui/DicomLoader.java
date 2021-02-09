@@ -34,15 +34,12 @@ import org.isf.generaldata.MessageBundle;
 
 /**
  * Progress loading
- * 
+ *
  * @author Pietro Castellucci
  * @version 1.0.0
  */
 public class DicomLoader extends AbstractDicomLoader {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private int numfiles = 0;

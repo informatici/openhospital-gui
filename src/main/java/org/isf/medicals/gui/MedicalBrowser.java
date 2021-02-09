@@ -94,10 +94,7 @@ import org.slf4j.LoggerFactory;
  * - pieces per packet
  */
 public class MedicalBrowser extends ModalJFrame implements MedicalListener { // implements RowSorterListener{
-
-	/**
-	 *
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	private static Logger logger = LoggerFactory.getLogger(MedicalBrowser.class);
@@ -128,7 +125,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	private int selectedrow;
 	private JComboBox pbox;
 	private ArrayList<Medical> pMedicals;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.medicals.typem"),
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm"),
@@ -137,10 +134,10 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 			MessageBundle.getMessage("angal.medicals.critlevelm"),
 			MessageBundle.getMessage("angal.medicals.outofstockm")
 	};
-	private String[] pColumsSorter = { "MDSRT_DESC", "MDSR_CODE", "MDSR_DESC", null, "STOCK", "MDSR_MIN_STOCK_QTI", "STOCK" };
-	private boolean[] pColumsNormalSorting = { true, true, true, true, true, true, false };
-	private int[] pColumwidth = { 100, 100, 400, 60, 60, 80, 100 };
-	private boolean[] pColumResizable = { true, true, true, true, true, true, true };
+	private String[] pColumnsSorter = { "MDSRT_DESC", "MDSR_CODE", "MDSR_DESC", null, "STOCK", "MDSR_MIN_STOCK_QTI", "STOCK" };
+	private boolean[] pColumnsNormalSorting = { true, true, true, true, true, true, false };
+	private int[] pColumnWidth = { 100, 100, 400, 60, 60, 80, 100 };
+	private boolean[] pColumnResizable = { true, true, true, true, true, true, true };
 	private Medical medical;
 	private DefaultTableModel model;
 	private JTable table;
@@ -189,7 +186,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	private JScrollPane getScrollPane() {
 		JScrollPane scrollPane = new JScrollPane(getJTable());
 		int totWidth = 0;
-		for (int colWidth : pColumwidth) {
+		for (int colWidth : pColumnWidth) {
 			totWidth += colWidth;
 		}
 		scrollPane.setPreferredSize(new Dimension(totWidth, 450));
@@ -202,10 +199,10 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 			table = new JTable(model);
 			table.setAutoCreateRowSorter(true);
 			table.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
-			for (int i = 0; i < pColumwidth.length; i++) {
-				table.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
-				if (!pColumResizable[i])
-					table.getColumnModel().getColumn(i).setMaxWidth(pColumwidth[i]);
+			for (int i = 0; i < pColumnWidth.length; i++) {
+				table.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
+				if (!pColumnResizable[i])
+					table.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
 			}
 		}
 		return table;
@@ -363,9 +360,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 					int sortedColumn = ((SortKey) sortedKeys.get(0)).getColumn();
 					SortOrder sortedOrder = ((SortKey) sortedKeys.get(0)).getSortOrder();
 
-					String columnName = pColumsSorter[sortedColumn];
+					String columnName = pColumnsSorter[sortedColumn];
 					String columnOrder = sortedOrder.toString().equals("ASCENDING") ? "ASC" : "DESC";
-					if (!pColumsNormalSorting[sortedColumn])
+					if (!pColumnsNormalSorting[sortedColumn])
 						columnOrder = sortedOrder.toString().equals("ASCENDING") ? "DESC" : "ASC";
 					if (groupBy == null) {
 						groupBy = "%";
@@ -705,9 +702,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 	class MedicalBrowsingModel extends DefaultTableModel {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		ArrayList<Medical> medicalList = new ArrayList<Medical>();
@@ -782,11 +776,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -808,7 +802,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 			} else if (c == 5) {
 				return minQuantity;
 			} else if (c == 6) {
-				//if(actualQty<=minQuantity)return true;
+				//if (actualQty<=minQuantity)return true;
 				if (actualQty == 0)
 					return true;
 				else
@@ -826,9 +820,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 	class ColorTableCellRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,

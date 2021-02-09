@@ -91,33 +91,26 @@ import org.isf.utils.table.TableSorter;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
-/** 
-* This class shows patient data and the list of admissions and lab exams.
-* 
-* last release  jun-14-08
-* @author chiara
-* 
-*/
-
-/*----------------------------------------------------------
+/**
+ * This class shows patient data and the list of admissions and lab exams.
+ *
+ * last release  jun-14-08
+ * @author chiara
+ *
+ * ----------------------------------------------------------
  * modification history
  * ====================
  * 14/06/08 - chiara - first version
  *                     
  * 30/06/08 - fabrizio - implemented automatic selection of exams within the admission period
- * 
  * 05/09/08 - alessandro - second version:
  * 						 - same PatientSummary than PatientDataBrowser
  * 						 - includes OPD in the table
- -----------------------------------------------------------*/
+ * -----------------------------------------------------------
+ */
 public class PatientFolderBrowser extends ModalJFrame implements 
 				PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener  {
 
-
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3427327158197856822L;
 	
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
@@ -211,22 +204,22 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	
     private OperationList opeList;
         
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.admission.wards"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.admission.diagnosisinm"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.admission.diagnosisoutm"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.admission.statusm") //$NON-NLS-1$
 	};
-	private int[] pColumwidth = {120, 150, 200, 200, 120 };
+	private int[] pColumnWidth = {120, 150, 200, 200, 120 };
 	
-	private String[] plColums = {
+	private String[] plColumns = {
 			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.lab.examm"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.codem"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.lab.resultm") //$NON-NLS-1$
 	};
-	private int[] plColumwidth = { 150, 200, 50, 200 };
+	private int[] plColumnwidth = { 150, 200, 50, 200 };
 
 	private DefaultTableModel admModel;
 	private DefaultTableModel labModel;
@@ -272,7 +265,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			public void mouseMoved(MouseEvent e) {
 				JTable aTable =  (JTable)e.getSource();
 		        int itsRow = aTable.rowAtPoint(e.getPoint());
-		        if(itsRow>=0){
+		        if (itsRow>=0){
 		        	cellRenderer.setHoveredRow(itsRow);
 		        }
 		        else{
@@ -293,8 +286,8 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		//sorter.addMouseListenerToHeaderInTable(admTable); no needed
 		
 		
-		for (int i=0;i<pColums.length; i++){
-			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
+		for (int i = 0; i< pColumns.length; i++){
+			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			if (i == 0 || i == 4) {
 				admTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
 			}
@@ -350,8 +343,8 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		});
 		sorterLab.sortByColumn(0, false);
 		
-		for (int i=0;i<plColums.length; i++){
-			labTable.getColumnModel().getColumn(i).setPreferredWidth(plColumwidth[i]);
+		for (int i = 0; i< plColumns.length; i++){
+			labTable.getColumnModel().getColumn(i).setPreferredWidth(plColumnwidth[i]);
 			if (i==0){
 			labTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
 			}
@@ -652,9 +645,6 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	
 	class AdmissionBrowserModel extends DefaultTableModel {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -453243229156512947L;
 		private AdmissionBrowserManager manager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 		private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
@@ -709,11 +699,11 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}	
 		
 		public Object getValueAt(int r, int c) {
@@ -903,11 +893,11 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		}
 
 		public String getColumnName(int c) {
-			return plColums[c];
+			return plColumns[c];
 		}
 
 		public int getColumnCount() {
-			return plColums.length;
+			return plColumns.length;
 		}	
 		
 		
@@ -976,4 +966,4 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	    }
 	}
 	
-}// class
+}

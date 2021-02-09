@@ -85,6 +85,7 @@ public class VaccineEdit extends JDialog {
         for (int i = 0; i < listeners.length; i++)
             ((VaccineListener)listeners[i]).vaccineInserted(event);
     }
+
     private void fireVaccineUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
@@ -334,7 +335,7 @@ public class VaccineEdit extends JDialog {
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			if(types != null){
+			if (types != null){
 				for (VaccineType elem : types) {
 					vaccineTypeComboBox.addItem(elem);
 				}

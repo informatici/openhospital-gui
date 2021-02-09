@@ -87,7 +87,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	private JScrollPane jScrollPane = null;
 	private JTable table = null;
 	private DefaultTableModel model = null;
-	private String[] pColums = { MessageBundle.getMessage("angal.supplier.id"),
+	private String[] pColumns = { MessageBundle.getMessage("angal.supplier.id"),
 			MessageBundle.getMessage("angal.supplier.namem"),
 			MessageBundle.getMessage("angal.supplier.addressm"),
 			MessageBundle.getMessage("angal.supplier.taxcode"),
@@ -96,7 +96,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 			MessageBundle.getMessage("angal.supplier.emailm"),
 			MessageBundle.getMessage("angal.supplier.note"),
 			MessageBundle.getMessage("angal.supplier.deletedm")};
-	private int[] pColumwidth = {45, 80, 60, 60, 80, 30, 30, 30, 30};
+	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30};
 	private int selectedrow;
 	private List<Supplier> pSupplier;
 	private Supplier supplier;
@@ -301,15 +301,15 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		if (table == null) {
 			model = new SupplierBrowserModel();
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMaxWidth(pColumwidth[0]);
-			table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
-			table.getColumnModel().getColumn(2).setPreferredWidth(pColumwidth[2]);
-			table.getColumnModel().getColumn(3).setPreferredWidth(pColumwidth[3]);
-			table.getColumnModel().getColumn(4).setPreferredWidth(pColumwidth[4]);
-			table.getColumnModel().getColumn(5).setPreferredWidth(pColumwidth[5]);
-			table.getColumnModel().getColumn(6).setPreferredWidth(pColumwidth[6]);
-			table.getColumnModel().getColumn(7).setPreferredWidth(pColumwidth[7]);
-			table.getColumnModel().getColumn(8).setPreferredWidth(pColumwidth[8]);
+			table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+			table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
+			table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
+			table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
+			table.getColumnModel().getColumn(4).setPreferredWidth(pColumnWidth[4]);
+			table.getColumnModel().getColumn(5).setPreferredWidth(pColumnWidth[5]);
+			table.getColumnModel().getColumn(6).setPreferredWidth(pColumnWidth[6]);
+			table.getColumnModel().getColumn(7).setPreferredWidth(pColumnWidth[7]);
+			table.getColumnModel().getColumn(8).setPreferredWidth(pColumnWidth[8]);
 		}
 		return table;
 	}
@@ -332,11 +332,11 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 		
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 		
 		public Object getValueAt(int r, int c) {
@@ -370,7 +370,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		 */
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
-			if (columnIndex == pColums.length - 1) return Boolean.class;
+			if (columnIndex == pColumns.length - 1) return Boolean.class;
 			return super.getColumnClass(columnIndex);
 		}
 		@Override

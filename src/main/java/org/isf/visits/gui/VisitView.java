@@ -79,15 +79,6 @@ import org.isf.ward.model.Ward;
 import com.toedter.calendar.JDateChooser;
 
 /**
- * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
- * Builder, which is free for non-commercial use. If Jigloo is being used
- * commercially (ie, by a corporation, company or business for any purpose
- * whatever) then you should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details. Use of Jigloo implies
- * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
- * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
- * ANY CORPORATE OR COMMERCIAL PURPOSE.
- *
  * @author Mwithi
  */
 public class VisitView extends ModalJFrame {
@@ -118,7 +109,7 @@ public class VisitView extends ModalJFrame {
 	private JPanel northPanel;
 	private Patient patient;
 	private JButton addFirstVisitButton;
-	private JButton addScondVisitButton;
+	private JButton addSecondVisitButton;
 	private JButton closeButton;
 	// private JButton reportButton; TODO to enable when a report will be
 	// designed
@@ -311,13 +302,13 @@ public class VisitView extends ModalJFrame {
 	}
 
 	private JButton getAddVisitSecondButton() {
-		if (addScondVisitButton == null) {
-			addScondVisitButton = new JButton(MessageBundle.getMessage("angal.therapy.addvisit")); //$NON-NLS-1$
-			addScondVisitButton.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
-			addScondVisitButton.setMnemonic(KeyEvent.VK_V);
-			addScondVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
-			addScondVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addScondVisitButton.addActionListener(new ActionListener() {
+		if (addSecondVisitButton == null) {
+			addSecondVisitButton = new JButton(MessageBundle.getMessage("angal.therapy.addvisit")); //$NON-NLS-1$
+			addSecondVisitButton.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
+			addSecondVisitButton.setMnemonic(KeyEvent.VK_V);
+			addSecondVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
+			addSecondVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
+			addSecondVisitButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 
@@ -331,7 +322,7 @@ public class VisitView extends ModalJFrame {
 				}
 			});
 		}
-		return addScondVisitButton;
+		return addSecondVisitButton;
 	}
 
 	private void addVisit(Visit vsRow) {
@@ -385,8 +376,8 @@ public class VisitView extends ModalJFrame {
 		return jScrollPaneFirstday;
 	}
 
-	private int[] visColumsWidth = { 500, 350 };
-	private boolean[] visColumsResizable = { false, true };
+	private int[] visColumnsWidth = { 500, 350 };
+	private boolean[] visColumnsResizable = { false, true };
 	private ArrayList<Visit> visitfirst = new ArrayList<Visit>();
 
 	private JScrollPane jScrollPaneSecondtday;
@@ -428,9 +419,9 @@ public class VisitView extends ModalJFrame {
 			jTableSecond.setModel(new VisitSecondModel());
 			jTableSecond.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			for (int i = 0; i < visColums.length; i++) {
-				jTableFirst.getColumnModel().getColumn(i).setMinWidth(visColumsWidth[i]);
-				if (!visColumsResizable[i])
-					jTableFirst.getColumnModel().getColumn(i).setMaxWidth(visColumsWidth[i]);
+				jTableFirst.getColumnModel().getColumn(i).setMinWidth(visColumnsWidth[i]);
+				if (!visColumnsResizable[i])
+					jTableFirst.getColumnModel().getColumn(i).setMaxWidth(visColumnsWidth[i]);
 			}
 			jTableSecond.setAutoCreateColumnsFromModel(false);
 			jTableSecond.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
@@ -727,6 +718,7 @@ public class VisitView extends ModalJFrame {
 		}
 		return backButton;
 	}
+
 	private JButton getCloseButton() {
 		if (closeButton == null) {
 			closeButton = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$

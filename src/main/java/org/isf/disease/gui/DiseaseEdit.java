@@ -21,16 +21,6 @@
  */
 package org.isf.disease.gui;
 
-/*------------------------------------------
- * LabEdit - Add/edit a Disease
- * -----------------------------------------
- * modification history
- * 25/01/2006 - Rick, Vero, Pupo - first beta version
- * 03/11/2006 - ross - added flags OPD / IPD
- * 			         - changed title, version is now 1.0 
- * 09/06/2007 - ross - when updating, now the user can change the "dis type" also
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -63,11 +53,19 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
+/**
+ * ------------------------------------------
+ * DiseaseEdit - Add/edit a Disease
+ * -----------------------------------------
+ * modification history
+ * 25/01/2006 - Rick, Vero, Pupo - first beta version
+ * 03/11/2006 - ross - added flags OPD / IPD
+ * 			         - changed title, version is now 1.0
+ * 09/06/2007 - ross - when updating, now the user can change the "dis type" also
+ * ------------------------------------------
+ */
 public class DiseaseEdit extends JDialog {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private EventListenerList diseaseListeners = new EventListenerList();
@@ -88,9 +86,6 @@ public class DiseaseEdit extends JDialog {
 	private void fireDiseaseInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
@@ -100,9 +95,6 @@ public class DiseaseEdit extends JDialog {
 	private void fireDiseaseUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
@@ -369,7 +361,7 @@ public class DiseaseEdit extends JDialog {
 	}
 
 	
-	//private JLabel inludeOpdLabel = null;
+	//private JLabel includeOpdLabel = null;
 	//private JCheckBox includeOpdCheckBox  = null;
 
 	
@@ -382,7 +374,7 @@ public class DiseaseEdit extends JDialog {
 			jNewPatientPanel.add(includeOpdCheckBox);
 			jNewPatientPanel.add(includeIpdInCheckBox);
 			jNewPatientPanel.add(includeIpdOutCheckBox);
-			if(!insert){
+			if (!insert){
 				if (disease.getOpdInclude()) includeOpdCheckBox.setSelected(true);
 				if (disease.getIpdInInclude()) includeIpdInCheckBox.setSelected(true);
 				if (disease.getIpdOutInclude()) includeIpdOutCheckBox.setSelected(true);
@@ -390,8 +382,6 @@ public class DiseaseEdit extends JDialog {
 		}
 		return jNewPatientPanel;
 	}
-
-	
 	
 	/**
 	 * This method initializes typeComboBox	
@@ -422,7 +412,7 @@ public class DiseaseEdit extends JDialog {
 					//typeComboBox.setEnabled(false);
 				}
 			}catch(OHServiceException e){
-				if(e.getMessages() != null){
+				if (e.getMessages() != null){
 					for(OHExceptionMessage msg : e.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -433,5 +423,4 @@ public class DiseaseEdit extends JDialog {
 		return typeComboBox;
 	}
 	
-	
-}  //  @jve:decl-index=0:visual-constraint="82,7"
+}

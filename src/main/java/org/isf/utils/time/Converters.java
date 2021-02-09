@@ -28,7 +28,7 @@ import java.util.GregorianCalendar;
 import org.joda.time.DateTime;
 
 /**
- * Created by nicosalvato on 2016-08-25.
+ * @author nicosalvato on 2016-08-25.
  * Contact: nicosalvato@gmail.com
  */
 public class Converters {

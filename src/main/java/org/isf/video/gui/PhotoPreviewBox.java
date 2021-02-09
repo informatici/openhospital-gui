@@ -37,10 +37,7 @@ public class PhotoPreviewBox extends Box {
 
 	//private static ArrayList<JButton> lstPhotoPreviewsButton = new ArrayList<JButton>();
 	//private static ArrayList<String> lstPhotoPaths = new ArrayList<String>();
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	public JButton photoButton;
 	private ImageIcon previewIcon;

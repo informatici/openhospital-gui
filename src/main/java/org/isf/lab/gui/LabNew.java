@@ -361,7 +361,7 @@ public class LabNew extends JDialog implements SelectionListener {
             return jPanelButtons;
 	}
 	private JButton getPrintLabelButton(){
-		if(printLabelButton==null){
+		if (printLabelButton==null){
 			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel"));
 			printLabelButton.setMnemonic(KeyEvent.VK_O);
 			printLabelButton.addActionListener(new ActionListener() {
@@ -772,7 +772,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	}
 	
 	public JPanel getJPanelExamButtons() {
-		if(jPanelExamButtons == null) {
+		if (jPanelExamButtons == null) {
 			jPanelExamButtons = new JPanel();
 			jPanelExamButtons.setLayout(new BoxLayout(jPanelExamButtons, BoxLayout.X_AXIS));
 			jPanelExamButtons.add(getJButtonAddExam());

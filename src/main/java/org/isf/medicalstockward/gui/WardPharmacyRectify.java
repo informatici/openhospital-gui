@@ -80,7 +80,7 @@ import org.isf.ward.model.Ward;
 
 public class WardPharmacyRectify extends JDialog {
 
-	//LISTENER INTERFACE --------------------------------------------------------
+	// LISTENER INTERFACE --------------------------------------------------------
     private EventListenerList movementWardListeners = new EventListenerList();
 	
 	public interface MovementWardListeners extends EventListener {
@@ -98,9 +98,6 @@ public class WardPharmacyRectify extends JDialog {
 	private void fireMovementWardInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = movementWardListeners.getListeners(MovementWardListeners.class);
@@ -108,10 +105,7 @@ public class WardPharmacyRectify extends JDialog {
 			((MovementWardListeners)listeners[i]).movementInserted(event);
 	}
 	//---------------------------------------------------------------------------
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	
@@ -211,7 +205,7 @@ public class WardPharmacyRectify extends JDialog {
 		wardMap = new HashMap<Integer, Double>();
 		for (MedicalWard medWard : wardDrugs) {
 			
-			if(wardMap.containsKey(medWard.getMedical().getCode())){
+			if (wardMap.containsKey(medWard.getMedical().getCode())){
 			 Double qu = wardMap.get(medWard.getMedical().getCode());
 			 wardMap.put(medWard.getMedical().getCode(), qu + medWard.getQty());
 			} else {
@@ -558,7 +552,7 @@ public class WardPharmacyRectify extends JDialog {
 		ArrayList<MedicalWard> drugChooseList = new ArrayList<MedicalWard>();
 		
 		for (MedicalWard elem : wardDrugs) {
-			if(elem.getMedical().getDescription().equals(medical.getDescription())) {
+			if (elem.getMedical().getDescription().equals(medical.getDescription())) {
 				drugChooseList.add(elem);
 			}
 		}

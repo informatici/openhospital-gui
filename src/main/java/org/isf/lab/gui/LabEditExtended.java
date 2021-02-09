@@ -21,13 +21,6 @@
  */
 package org.isf.lab.gui;
 
-/*------------------------------------------
- * LabEdit - Add/edit a laboratory exam
- * -----------------------------------------
- * modification history
- * 
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -81,10 +74,14 @@ import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
+/** ------------------------------------------
+ * LabEditExtended - Add/edit a laboratory exam
+ * -----------------------------------------
+ * modification history
+ * ------------------------------------------
+ */
 public class LabEditExtended extends ModalJFrame {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -6576310684918676344L;
 	
 	//LISTENER INTERFACE --------------------------------------------------------
@@ -96,15 +93,11 @@ public class LabEditExtended extends ModalJFrame {
 	
 	public void addLabEditExtendedListener(LabEditExtendedListener l) {
 		labEditExtendedListener.add(LabEditExtendedListener.class, l);
-		
 	}
 	
 	private void fireLabUpdated() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = labEditExtendedListener.getListeners(LabEditExtendedListener.class);
@@ -358,7 +351,7 @@ public class LabEditExtended extends ModalJFrame {
 			/*
 			 * Teo : Adding scroll capabilities at note textArea
 			 */
-			if(noteScrollPane == null)
+			if (noteScrollPane == null)
 			{
 				noteScrollPane = new JScrollPane(noteTextArea);
 				noteScrollPane.setBounds(labelWidth+5, 50, 440, 35);
@@ -442,7 +435,7 @@ public class LabEditExtended extends ModalJFrame {
 				return patientComboBox;
 			}
 			
-			if(pat != null){
+			if (pat != null){
 				for (Patient elem : pat) {
 					patientComboBox.addItem(elem);
 				}
@@ -483,7 +476,7 @@ public class LabEditExtended extends ModalJFrame {
 				sbName.append(elem.getCode());
 				String name = sbName.toString();
 				
-				if(name.toLowerCase().contains(key.toLowerCase())) {
+				if (name.toLowerCase().contains(key.toLowerCase())) {
 					patientComboBox.addItem(elem);
 				}
 			} else {

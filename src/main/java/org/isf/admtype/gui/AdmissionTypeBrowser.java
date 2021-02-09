@@ -49,29 +49,24 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * Browsing of table AdmissionType
- * 
+ *
  * @author Furlanetto, Zoia, Finotto
- * 
  */
-
 public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<AdmissionType> pAdmissionType;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code"),
 			MessageBundle.getMessage("angal.common.description")
 	};
-	private int[] pColumwidth = {80, 200, 80};
+	private int[] pColumnWidth = {80, 200, 80};
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private AdmissionTypeBrowserModel model;
 	private int selectedrow;
@@ -84,7 +79,6 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 	
 	/**
 	 * This method initializes 
-	 * 
 	 */
 	public AdmissionTypeBrowser() {
 		super();
@@ -125,7 +119,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
@@ -201,16 +195,16 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton();
+			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,
@@ -237,24 +231,20 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new AdmissionTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 
 class AdmissionTypeBrowserModel extends DefaultTableModel {
 		
-		
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
@@ -274,11 +264,11 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {

@@ -65,14 +65,10 @@ import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
 
 /**
- * 
  * @author Mwithi
  */
 public class SmsEdit extends JDialog implements SelectionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel jCenterPanel;
@@ -91,7 +87,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	private JButton JTimeButton;
 	private JButton jPatientButton;
 	
-	private int MAX_LENGHT;
+	private int MAX_LENGTH;
 	
 	private SmsManager smsManager = Context.getApplicationContext().getBean(SmsManager.class);
 	
@@ -117,7 +113,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	}
 	
 	private void initialize() {
-		MAX_LENGHT = smsManager.getMAX_LENGHT();
+		MAX_LENGTH = smsManager.getMAX_LENGHT();
 	}
 
 	private void initComponents() {
@@ -265,7 +261,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 				@Override
 				public void keyReleased(KeyEvent e) {
 					JTextArea thisTextArea = (JTextArea) e.getComponent();
-					int remainingChars = MAX_LENGHT - thisTextArea.getText().length();
+					int remainingChars = MAX_LENGTH - thisTextArea.getText().length();
 					jLabelCount.setText(String.valueOf(remainingChars));
 				}
 				
@@ -314,8 +310,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 						
 						if (e1.getMessages().get(0).getTitle().equals("testMaxLenghtError")) {
 							
-							int textLenght = text.length();
-							int textParts = (textLenght + MAX_LENGHT - 1) / MAX_LENGHT;
+							int textLength = text.length();
+							int textParts = (textLength + MAX_LENGTH - 1) / MAX_LENGTH;
 							StringBuilder message = new StringBuilder();
 							message.append(e1.getMessages().get(0).getMessage())
 								.append("\n")
@@ -395,7 +391,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	
 	private JLabel getJLabelCount() {
 		if (jLabelCount == null) {
-			jLabelCount = new JLabel(String.valueOf(MAX_LENGHT));
+			jLabelCount = new JLabel(String.valueOf(MAX_LENGTH));
 			jLabelCount.setForeground(Color.GRAY);
 		}
 		return jLabelCount;

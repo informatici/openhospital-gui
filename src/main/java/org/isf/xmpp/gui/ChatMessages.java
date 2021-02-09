@@ -43,9 +43,6 @@ import org.slf4j.LoggerFactory;
 
 public class ChatMessages extends JTextPane {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	private Document sDoc;
 	private Color greenColor = new Color(0, 100, 0);

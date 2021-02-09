@@ -58,7 +58,6 @@ public class Menu {
 	private static void checkOHVersion() {
 		Version.getVersion();
 		logger.info("Open Hospital version {}.{}.{}", Version.VER_MAJOR, Version.VER_MINOR, Version.VER_RELEASE);
-
 	}
 
 	public static void checkJavaVersion() {
