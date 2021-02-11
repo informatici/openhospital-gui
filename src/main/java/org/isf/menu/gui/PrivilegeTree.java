@@ -54,18 +54,16 @@ import org.isf.menu.model.UserMenuItem;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
-/*----------------------------------------------------------
+/**
+ * ----------------------------------------------------------
  * modification history
  * ====================
- * 25/03/09 - alex - User PrivilegeTree is build now on rootMenu;
+ * 25/03/09 - alex - User PrivilegeTree is built now on rootMenu;
  * 					 new MenuItems for a user will be set as inactive
- -----------------------------------------------------------*/
-
+ * -----------------------------------------------------------
+ */
 class PrivilegeTree extends JDialog {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	private UserGroup aGroup;
@@ -73,7 +71,7 @@ class PrivilegeTree extends JDialog {
 	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 	
 	public PrivilegeTree(UserGroupBrowsing parent, UserGroup aGroup) {
-		super(parent,MessageBundle.getMessage("angal.menu.menuitmebrowser"),true );
+		super(parent,MessageBundle.getMessage("angal.menu.menuitembrowser"),true );
 		this.aGroup=aGroup;
 		
 		Rectangle r = parent.getBounds();
@@ -93,7 +91,7 @@ class PrivilegeTree extends JDialog {
             OHServiceExceptionUtil.showMessages(e);
         }
 
-        UserMenuItem menuRoot = new UserMenuItem("main", "main", "main", "",
+        UserMenuItem menuRoot = new UserMenuItem("main", "angal.menu.menuitemmainmenu", "angal.menu.menuitemmainmenu", "",
 				'M', "", "", true, 1, true);
 		// the root 
 		root = new DefaultMutableTreeNode(menuRoot);
@@ -128,8 +126,7 @@ class PrivilegeTree extends JDialog {
 			Iterator<UserMenuItem> altIt = junkMenu.iterator();
 			while (altIt.hasNext()) {
 				UserMenuItem umi = altIt.next();
-				if (rootMenu.contains(umi))
-					rootMenu.remove(umi);
+				rootMenu.remove(umi);
 			}
 			junkMenu = new ArrayList<UserMenuItem>();
 		}
@@ -326,8 +323,7 @@ class PrivilegeTree extends JDialog {
 }
 
 /**
- * This class renders a item name 
- * 
+ * This class renders a item name
  */
 class UserItemNameTreeCellRenderer extends DefaultTreeCellRenderer {
 

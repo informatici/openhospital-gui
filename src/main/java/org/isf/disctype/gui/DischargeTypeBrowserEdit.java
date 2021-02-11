@@ -46,9 +46,6 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DischargeTypeBrowserEdit extends JDialog{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList dischargeTypeListeners = new EventListenerList();
 
@@ -68,9 +65,6 @@ public class DischargeTypeBrowserEdit extends JDialog{
     private void fireDischargeInserted(DischargeType anDischargeType) {
         AWTEvent event = new AWTEvent(anDischargeType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
@@ -80,9 +74,6 @@ public class DischargeTypeBrowserEdit extends JDialog{
     private void fireDischargeUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
@@ -104,11 +95,11 @@ public class DischargeTypeBrowserEdit extends JDialog{
 	private JLabel jCodeLabel = null;
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescripitonLabel = null;
+	private JLabel jDescriptionLabel = null;
+
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
-     * because we need to update them
+	 * because we need to update them
 	 */
 	public DischargeTypeBrowserEdit(JFrame owner,DischargeType old,boolean inserting) {
 		super(owner,true);
@@ -121,8 +112,6 @@ public class DischargeTypeBrowserEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		
@@ -337,18 +326,12 @@ public class DischargeTypeBrowserEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescripitonLabel = new JLabel();
-			jDescripitonLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel();
+			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
 			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescripitonLabel, null);
+			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}
 		return jDescriptionLabelPanel;
 	}
-	
-	
-	
 
-
-}  //  @jve:decl-index=0:visual-constraint="146,61"
-
-
+}

@@ -63,9 +63,6 @@ import org.isf.utils.jobjects.OhTableOperationModel;
 
 public class OperationList extends JPanel implements OperationRowListener, OperationRowEditListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JTable JtableData;
 	private JLabel TypeSourceLabelValue;
@@ -81,7 +78,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	private Patient myPatient;
 	private Image ico;
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	// private int[] pColumwidth = { 50, 120 ,70, 70 };
+	// private int[] pColumnWidth = { 50, 120 ,70, 70 };
 
 	OhTableOperationModel<OperationRow> modelOhOpeRow;
 	OperationRowBrowserManager opeRowManager;
@@ -204,7 +201,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		});
 		panelButtons.add(cancelButton);
 
-		/**** getting data **/
+		/* *** getting data *** */
 		if (myOpd != null) {
 			try {
 				oprowData = opeRowManager.getOperationRowByOpd(myOpd);
@@ -249,7 +246,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		});
 		scrollPaneData.setViewportView(JtableData);
 
-		/*** apply default oh cellRender *****/
+		/* ** apply default oh cellRender **** */
 		JtableData.setDefaultRenderer(Object.class, cellRenderer);
 		JtableData.setDefaultRenderer(Double.class, cellRenderer);
 		JtableData.addMouseMotionListener(new MouseMotionListener() {
@@ -348,7 +345,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		this.parentContainer = parentContainer;
 	}
 
-	/****** functions events *****/
+	/* ***** functions events **** */
 	private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
 		this.setVisible(false);
 		this.parentContainer.dispose();
@@ -464,6 +461,5 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	public void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
-
 
 }

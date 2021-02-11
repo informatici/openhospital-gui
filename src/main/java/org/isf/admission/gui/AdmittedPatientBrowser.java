@@ -95,29 +95,25 @@ import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
 /**
- * This class shows a list of all known patients and for each if (and where) they are actually admitted, 
+ * This class shows a list of all known patients and for each if (and where) they are actually admitted,
  * you can:
- *  filter patients by ward and admission status
- *  search for patient with given name 
- *  add a new patient, edit or delete an existing patient record
- *  view extended data of a selected patient 
- *  add an admission record (or modify existing admission record, or set a discharge) of a selected patient
- * 
+ * filter patients by ward and admission status
+ * search for patient with given name
+ * add a new patient, edit or delete an existing patient record
+ * view extended data of a selected patient
+ * add an admission record (or modify existing admission record, or set a discharge) of a selected patient
+ * <p>
  * release 2.2 oct-23-06
- * 
+ *
  * @author flavio
- * 
- */
-
-
-/*----------------------------------------------------------
+ * ----------------------------------------------------------
  * modification history
  * ====================
  * 23/10/06 - flavio - lastKey reset
  * 10/11/06 - ross - removed from the list the deleted patients
  *                   the list is now in alphabetical  order (modified IoOperations)
  * 12/08/08 - alessandro - Patient Extended
- * 01/01/09 - Fabrizio   - The OPD button is conditioned to the extended funcionality of OPD.
+ * 01/01/09 - Fabrizio   - The OPD button is conditioned to the extended functionality of OPD.
  *                         Reorganized imports.
  * 13/02/09 - Alex - Search Key extended to patient code & notes
  * 29/05/09 - Alex - fixed mnemonic keys for Admission, OPD and PatientSheet
@@ -127,17 +123,13 @@ import org.isf.ward.model.Ward;
  * 05/12/09 - Alex - fixed exception on filter after saving admission
  * 06/12/09 - Alex - fixed exception on filter after saving admission (ALL FILTERS)
  * 06/12/09 - Alex - Cosmetic changes to GUI
- -----------------------------------------------------------*/
-
+ * -----------------------------------------------------------
+ */
 public class AdmittedPatientBrowser extends ModalJFrame implements
 		PatientInsert.PatientListener,// AdmissionBrowser.AdmissionListener,
 		PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener, //by Alex
 		PatientDataBrowser.DeleteAdmissionListener {
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final int PANEL_WITDH = 240;
@@ -173,7 +165,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			.append(MessageBundle.getMessage("angal.admission.telephone"))
 			.append(" / ")
 			.append(MessageBundle.getMessage("angal.patient.note"));
-	private String[] pColums = { 
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code"), 
 			MessageBundle.getMessage("angal.admission.name"),
 			MessageBundle.getMessage("angal.admission.age"), 
@@ -181,8 +173,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			informations.toString(), 
 			MessageBundle.getMessage("angal.admission.ward")
 	};
-	private int[] pColumwidth = { 100, 200, 80, 50, 150, 100 };
-	private boolean[] pColumResizable = {false, false, false, false, true, false};
+	private int[] pColumnWidth = { 100, 200, 80, 50, 150, 100 };
+	private boolean[] pColumnResizable = {false, false, false, false, true, false};
 	private AdmittedPatient patient;
 	private JTable table;
 	private JScrollPane scrollPane;
@@ -216,10 +208,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			filterPatient(searchString.getText());
 		}
 	}
-	
-	/*
-	 * manage PatientDataBrowser messages
-	 */
+
 	public void deleteAdmissionUpdated(AWTEvent e) {
 		Admission adm = (Admission) e.getSource();
 		
@@ -278,7 +267,6 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	/*
 	 * param contains info about patient admission,
 	 * ward can varying or patient may be discharged
-	 * 
 	 */
 	public void admissionUpdated(AWTEvent e) {
 		Admission adm = (Admission) e.getSource();
@@ -683,9 +671,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		table = new JTable(new AdmittedPatientBrowserModel(null));
 		table.setAutoCreateColumnsFromModel(false);
 		
-		for (int i=0;i<pColums.length; i++){
-			table.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
-			if (!pColumResizable[i]) table.getColumnModel().getColumn(i).setMaxWidth(pColumwidth[i]);
+		for (int i = 0; i< pColumns.length; i++){
+			table.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
+			if (!pColumnResizable[i]) table.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
 		}
 		
 		table.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
@@ -693,8 +681,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		table.getColumnModel().getColumn(3).setCellRenderer(new CenterTableCellRenderer());
 
 		int tableWidth = 0;
-		for (int i = 0; i<pColumwidth.length; i++){
-			tableWidth += pColumwidth[i];
+		for (int i = 0; i< pColumnWidth.length; i++){
+			tableWidth += pColumnWidth[i];
 		}
 		
 		scrollPane = new JScrollPane(table);
@@ -1100,7 +1088,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				}
 
 				try{
-					if(patientManager.mergePatient(mergedPatient, patient2)){
+					if (patientManager.mergePatient(mergedPatient, patient2)){
 						fireMyDeletedPatient(patient2);
 					}
 				}catch(OHServiceException e){
@@ -1211,9 +1199,6 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 	class AdmittedPatientBrowserModel extends DefaultTableModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		ArrayList<AdmittedPatient> patientList = new ArrayList<AdmittedPatient>();
@@ -1253,16 +1238,16 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 				// lower age limit
 				String ageLimit = patientAgeFromTextField.getText();
-				if(ageLimit.matches("\\d+")) {
-					if(!(ap.getPatient().getAge() >= Integer.valueOf(ageLimit))) {
+				if (ageLimit.matches("\\d+")) {
+					if (!(ap.getPatient().getAge() >= Integer.valueOf(ageLimit))) {
 						continue;
 					}
 				}
 				
 				// upper age limit
 				ageLimit = patientAgeToTextField.getText();
-				if(ageLimit.matches("\\d+")) {
-					if(!(ap.getPatient().getAge() <= Integer.valueOf(ageLimit))) {
+				if (ageLimit.matches("\\d+")) {
+					if (!(ap.getPatient().getAge() <= Integer.valueOf(ageLimit))) {
 						continue;
 					}
 				}
@@ -1278,7 +1263,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					break;
 				}
 				
-				if(sex != null && !sex.equals(ap.getPatient().getSex())) {
+				if (sex != null && !sex.equals(ap.getPatient().getSex())) {
 					continue;
 				}
 
@@ -1309,11 +1294,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -1357,10 +1342,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	
 	
 	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
-		   
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 

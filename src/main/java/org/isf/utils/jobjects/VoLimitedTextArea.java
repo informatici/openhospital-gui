@@ -27,23 +27,16 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
 /**
- * returns a JTextArea of the wanted length
- * 
- * @author studente
+ * Returns a JTextArea of the wanted length
  *
+ * @author studente
  */
 public class VoLimitedTextArea extends JTextArea {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public class LimitedDimension extends DefaultStyledDocument {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private final int MAXCHARS;
 		
@@ -70,7 +63,6 @@ public class VoLimitedTextArea extends JTextArea {
 	}
 
 	/**
-	 * 
 	 * @param maxChars - the max number of chars
 	 */
 	public VoLimitedTextArea(int maxChars) {
@@ -79,7 +71,6 @@ public class VoLimitedTextArea extends JTextArea {
 	}
 
 	/**
-	 * 
 	 * @param maxChars - the max number of chars
 	 * @param text
 	 * @param rows
@@ -89,9 +80,8 @@ public class VoLimitedTextArea extends JTextArea {
 		super(text, rows, columns);
 		this.setDocument(new LimitedDimension(maxChars));
 	}
-	
+
 	/**
-	 * 
 	 * @param maxChars - the max number of chars
 	 * @param rows
 	 * @param columns

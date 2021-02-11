@@ -67,28 +67,24 @@ import org.isf.priceslist.model.Price;
 import org.isf.utils.treetable.AbstractTreeTableModel;
 import org.isf.utils.treetable.TreeTableModel;
 
-
 /**
- * FileSystemModel is a TreeTableModel representing a hierarchical file 
- * system. Nodes in the FileSystemModel are FileNodes which, when they 
- * are directory nodes, cache their children to avoid repeatedly querying 
- * the real file system. 
- * 
- * @version %I% %G%
+ * FileSystemModel is a TreeTableModel representing a hierarchical file
+ * system. Nodes in the FileSystemModel are FileNodes which, when they
+ * are directory nodes, cache their children to avoid repeatedly querying
+ * the real file system.
  *
  * @author Philip Milne
  * @author Scott Violet
  */
-
-public class PriceModel extends AbstractTreeTableModel implements TreeTableModel {
+public class PriceModel extends AbstractTreeTableModel {
 
      // Names of the columns.
-    static protected String[] cNames = {"Name", "Prices"};
+     protected static String[] cNames = {"Name", "Prices"};
 
     // Types of the columns.
-    static protected Class<?>[] cTypes = {TreeTableModel.class, Double.class};
+    protected static Class<?>[] cTypes = {TreeTableModel.class, Double.class};
     
-    static protected String[] cCategories = {"EXA","OPE","MED","OTH"};
+    protected static String[] cCategories = {"EXA","OPE","MED","OTH"};
       
     public PriceModel(Object root) {
 		//super(new PriceNode((Price)root));

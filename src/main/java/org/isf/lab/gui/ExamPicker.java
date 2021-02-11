@@ -48,18 +48,15 @@ import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableModelExam;
 
 /**
- *
  * @author julio
  */
 public class ExamPicker extends javax.swing.JPanel {
 
-	   OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-    /**
-	 * 
-	 */
+    OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
+
 	private static final long serialVersionUID = 1L;
 	/**
-     * Creates new form ChooseMedicaments
+     * Creates new form ExamPicker
      */
     public ExamPicker(TableModel model) {
         initComponents(model);
@@ -96,7 +93,7 @@ public class ExamPicker extends javax.swing.JPanel {
         jTableData.setSelectionModel(new DefaultListSelectionModel() {
 		    @Override
 		    public void setSelectionInterval(int index0, int index1) {
-		        if(super.isSelectedIndex(index0)) {
+		        if (super.isSelectedIndex(index0)) {
 		            super.removeSelectionInterval(index0, index1);
 		        }
 		        else {
@@ -114,7 +111,7 @@ public class ExamPicker extends javax.swing.JPanel {
 				// TODO Auto-generated method stub
 				JTable aTable =  (JTable)e.getSource();
 		        int itsRow = aTable.rowAtPoint(e.getPoint());
-		        if(itsRow>=0){
+		        if (itsRow>=0){
 		        	cellRenderer.setHoveredRow(itsRow);
 		        }
 		        else{
@@ -155,7 +152,7 @@ public class ExamPicker extends javax.swing.JPanel {
         jTableData.addKeyListener(new KeyAdapter() {
         	@Override
         	public void keyPressed(KeyEvent e) {
-        		if(e.getKeyCode()==KeyEvent.VK_ENTER){
+        		if (e.getKeyCode()==KeyEvent.VK_ENTER){
         			validateSelection();
         		}
         		super.keyPressed(e);
@@ -228,7 +225,7 @@ public class ExamPicker extends javax.swing.JPanel {
                 String text = jTextFieldFind.getText();
                 OhTableModelExam<Price> model=(OhTableModelExam<Price>)jTableData.getModel();
                 model.filter(text);
-                if(jTableData.getRowCount()>0){
+                if (jTableData.getRowCount()>0){
                 	jTableData.setRowSelectionInterval(0, 0);
                 }
                 jTableData.repaint();
@@ -240,7 +237,7 @@ public class ExamPicker extends javax.swing.JPanel {
 
                 OhTableModelExam<Price> model=(OhTableModelExam<Price>)jTableData.getModel();
                 model.filter(text);
-                if(jTableData.getRowCount()>0){
+                if (jTableData.getRowCount()>0){
                 	jTableData.setRowSelectionInterval(0, 0);
                 }
                 jTableData.repaint();
@@ -257,7 +254,7 @@ public class ExamPicker extends javax.swing.JPanel {
         	@Override
         	public void keyPressed(KeyEvent e) {
         		// TODO Auto-generated method stub
-        		if(e.getKeyCode()==KeyEvent.VK_ENTER){
+        		if (e.getKeyCode()==KeyEvent.VK_ENTER){
         			validateSelection();
         		}
         		super.keyPressed(e);

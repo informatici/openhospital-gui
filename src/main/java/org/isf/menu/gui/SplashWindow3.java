@@ -32,14 +32,8 @@ import javax.swing.JLabel;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
-
 class SplashWindow3 extends JWindow {
-	
-	
-	
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	public SplashWindow3(String filename, Frame f, int waitTime){
@@ -95,8 +89,6 @@ class SplashWindow3 extends JWindow {
         setVisible(true);
         Thread splashThread = new Thread(waitRunner, "SplashThread");
         splashThread.start();
-
     }
-    
- 
+
 }

@@ -68,19 +68,15 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 
 /**
- * 
  * Detail for DICOM image
- * 
+ *
  * @author Pietro Castellucci
  * @version 1.0.0
- *
  * @deprecated TODO: explain
  */
 @Deprecated // what is this class???
 public class DicomViewGui extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	// status of fremereader
@@ -107,8 +103,8 @@ public class DicomViewGui extends JPanel {
 	private int y = -1;
 	private int totX = -1;
 	private int totY = -1;
-	private final static Color colScr = Color.LIGHT_GRAY;
-	private final static int VGAP = 15;
+	private static final Color colScr = Color.LIGHT_GRAY;
+	private static final int VGAP = 15;
 
 	/**
 	 * Construct a new detail for DICOM image
@@ -131,7 +127,7 @@ public class DicomViewGui extends JPanel {
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
 			}catch(OHServiceException ex){
-				if(ex.getMessages() != null){
+				if (ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -162,7 +158,7 @@ public class DicomViewGui extends JPanel {
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
 			}catch(OHServiceException ex){
-				if(ex.getMessages() != null){
+				if (ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
@@ -183,7 +179,7 @@ public class DicomViewGui extends JPanel {
 	}
 
 	/**
-	 * initialize GUI
+	 * Initialize GUI
 	 */
 	void initComponent() {
 
@@ -487,8 +483,6 @@ public class DicomViewGui extends JPanel {
 
 	/**
 	 * Load actual frame from storage
-	 * 
-	 * @return
 	 */
 	private void refreshFrame() {
 		Long id = frames[frameIndex];
@@ -502,7 +496,7 @@ public class DicomViewGui extends JPanel {
 			}
 			else return;
 		}catch(OHServiceException ex){
-			if(ex.getMessages() != null){
+			if (ex.getMessages() != null){
 				for(OHExceptionMessage msg : ex.getMessages()){
 					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 				}
@@ -511,10 +505,9 @@ public class DicomViewGui extends JPanel {
 	}
 	
 	/**
-	 * get the BufferedImage from JPG/JPEG object
+	 * Get the BufferedImage from JPG/JPEG object
 	 * 
 	 * @param dett
-	 * @return
 	 */
 	private void getImageFromJPG(FileDicom dett) {
 		try {
@@ -543,10 +536,9 @@ public class DicomViewGui extends JPanel {
 	}
 	
 	/**
-	 * get the BufferedImage from DICOM object
+	 * Get the BufferedImage from DICOM object
 	 * 
 	 * @param dett
-	 * @return
 	 */
 	private void getImageFromDicom(FileDicom dett) {
 		try {
@@ -593,7 +585,7 @@ public class DicomViewGui extends JPanel {
 	 * Set image in frame viewer
 	 * 
 	 * @param frame
-	 *            , the frame to viusualize
+	 *            , the frame to visualize
 	 */
 	private void setFrame(int frame) {
 		frameIndex = frame;
@@ -657,12 +649,12 @@ public class DicomViewGui extends JPanel {
 	int p2y = 0;
 	
 	/**
-	 * Mouse whell listener for DicomViewGui
+	 * Mouse wheel listener for DicomViewGui
 	 */
 	class DicomViewGuiMouseWheelListener implements MouseWheelListener {
 
 		/**
-		 * mouse wheel rolled
+		 * Mouse wheel rolled
 		 */
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
@@ -682,7 +674,7 @@ public class DicomViewGui extends JPanel {
 	class DicomViewGuiMouseMotionListener implements MouseMotionListener {
 
 		/**
-		 * mouse dragged, if is also pressed a button calculate the displacement
+		 * Mouse dragged, if is also pressed a button calculate the displacement
 		 * of position with point of initial position
 		 */
 		public void mouseDragged(MouseEvent e) {
@@ -692,7 +684,7 @@ public class DicomViewGui extends JPanel {
 		}
 
 		/**
-		 * mouse moved, NOT USED
+		 * Mouse moved, NOT USED
 		 */
 		public void mouseMoved(MouseEvent e) {
 		}
@@ -726,19 +718,19 @@ public class DicomViewGui extends JPanel {
 		}
 
 		/**
-		 * mouse clicked in frame, NOT USED
+		 * Mouse clicked in frame, NOT USED
 		 */
 		public void mouseClicked(MouseEvent e) {
 		}
 
 		/**
-		 * mouse entred in frame, NOT USED
+		 * Mouse entered into frame, NOT USED
 		 */
 		public void mouseEntered(MouseEvent e) {
 		}
 
 		/**
-		 * mouse exited of frame, NOT USED
+		 * Mouse exited of frame, NOT USED
 		 */
 		public void mouseExited(MouseEvent e) {
 		}

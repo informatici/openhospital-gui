@@ -52,8 +52,6 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
 
-
-
 public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 /*
 	// x cattura chiusura finestra e lancio evento quit
@@ -95,15 +93,9 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	
 	// messaggi raccolti da UserEdit_________________________________________ 
     
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-
-
-
-	public void userInserted(AWTEvent e) {				
+	public void userInserted(AWTEvent e) {
 		User u = (User)e.getSource();
 		pUser.add(0,u);	
 		((UserBrowserModel)table.getModel()).fireTableDataChanged();
@@ -128,11 +120,11 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private JLabel selectlabel;
 	private JComboBox pbox;
 	private ArrayList<User> pUser;
-	private String[] pColums = { 
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.menu.userm"), 
 			MessageBundle.getMessage("angal.menu.groupm"), 
 			MessageBundle.getMessage("angal.menu.descm") };
-	private int[] pColumwidth = {70, 70, 150 };
+	private int[] pColumnWidth = {70, 70, 150 };
 	private User user;
 	private DefaultTableModel model ;
 	private JTable table;
@@ -160,10 +152,10 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		
 		model = new UserBrowserModel();
 		table = new JTable(model);
-		table.getColumnModel().getColumn(0).setPreferredWidth(pColumwidth[0]);
-		table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
-		table.getColumnModel().getColumn(2).setPreferredWidth(pColumwidth[2]);
-		//table.getColumnModel().getColumn(3).setPreferredWidth(pColumwidth[3]);
+		table.getColumnModel().getColumn(0).setPreferredWidth(pColumnWidth[0]);
+		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
+		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
+		//table.getColumnModel().getColumn(3).setPreferredWidth(pColumnWidth[3]);
 				
 		scrollPane = new JScrollPane(table);
 		add(scrollPane, BorderLayout.CENTER);
@@ -181,7 +173,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
         } catch (OHServiceException e) {
             OHServiceExceptionUtil.showMessages(e);
         }
-        if(group != null) {
+        if (group != null) {
             for (UserGroup elem : group) {
                 pbox.addItem(elem);
             }
@@ -346,9 +338,6 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		
 	class UserBrowserModel extends DefaultTableModel {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public UserBrowserModel(String s) {
@@ -372,11 +361,11 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {

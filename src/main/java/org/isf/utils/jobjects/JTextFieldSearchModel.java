@@ -55,13 +55,9 @@ import org.isf.utils.jobjects.TextPrompt.Show;
 
 /**
  * @author Nanni
- *
  */
 public class JTextFieldSearchModel extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final int CODE_COLUMN_WIDTH = 100;
 	

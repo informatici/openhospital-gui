@@ -137,14 +137,15 @@ public class OperationRowEdit extends JPanel {
 	private JLabel lblNewLabel;
 	private JLabel titleLabel;
 	
-	private ArrayList<String> operationResults;
+	private ArrayList<String> operationResults = ope.getResultDescriptionList();
+
 	
 	public OperationRowEdit(OperationRow opRow) {
 		
 		opeRow = opRow;
 		ope = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 		opeManageRow = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
-		operationResults = ope.getResultsList();
+		operationResults = ope.getResultDescriptionList();
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel panelHeader = new JPanel();
@@ -233,16 +234,7 @@ public class OperationRowEdit extends JPanel {
 		//panelBody.add(DateTextField, gbc_DateTextField);
 		DateTextField.setColumns(10);
 		
-		resultComboBox = new JComboBox();
-		if(this.opeRow!=null){
-			resultComboBox.addItem(opeRow.getOpResult());
-		}
-		else{
-			resultComboBox.addItem(""); //$NON-NLS-1$
-		}
-		for(int i = 0; i<operationResults.size();i++){
-			resultComboBox.addItem(operationResults.get(i));
-		}
+		resultComboBox = getComboResultBox();
 		
 		lblResultat = new JLabel(MessageBundle.getMessage("angal.operationrowedit.result")); //$NON-NLS-1$
 		lblResultat.setBorder(new EmptyBorder(0, 0, 0, 4));
@@ -281,7 +273,7 @@ public class OperationRowEdit extends JPanel {
 		
 		remarkstextArea = new JTextArea();
 		remarkstextArea.setTabSize(5);
-		if(this.opeRow!=null){
+		if (this.opeRow!=null){
 			remarkstextArea.setText(opeRow.getRemarks());
 		}
 		
@@ -309,7 +301,7 @@ public class OperationRowEdit extends JPanel {
 		gbc_separator_1.gridy = 7;
 		panelBody.add(separator_1, gbc_separator_1);
 		
-		if(this.opeRow != null){
+		if (this.opeRow != null){
 			TransTextField.setText(opeRow.getTransUnit()+""); //$NON-NLS-1$
 		}
 		
@@ -357,7 +349,7 @@ public class OperationRowEdit extends JPanel {
 			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			if(opeRow !=null ){
+			if (opeRow !=null ){
 				jCalendarDate.setDate(this.opeRow.getOpDate().getTime());
 			}
 		}			
@@ -373,16 +365,16 @@ public class OperationRowEdit extends JPanel {
                             } catch (OHServiceException ex) {
                                 ex.printStackTrace();
                             }
-		if(opeRow != null){
+		if (opeRow != null){
 			boolean found = false;
 			for (org.isf.operation.model.Operation elem : opeList) {
-				if(opeRow.getOperation().getCode().equals(elem.getCode())){
+				if (opeRow.getOperation().getCode().equals(elem.getCode())){
 					found = true;
 					comboOpe.addItem(elem);
 					break;	
 				}					
 			}
-			if(!found){
+			if (!found){
 				//comboOpe.addItem("");
 				comboOpe.addItem(null);
 			}
@@ -401,27 +393,56 @@ public class OperationRowEdit extends JPanel {
 		comboOpe.setEnabled(true);
 		return comboOpe;
 	}
+	private JComboBox getComboResultBox() {
+		JComboBox comboResult = new JComboBox();
+			for (String description : operationResults) {
+				comboResult.addItem(description);
+			}
+			if (opeRow != null){
+				boolean found = false;
+				for (String elem : operationResults) {
+					if (opeRow.getOpResult().equals(ope.getResultDescriptionKey(elem))) {
+						found = true;
+						comboResult.addItem(elem);
+						break;
+					}				
+				}
+				if (!found){
+					//comboOpe.addItem("");
+					comboResult.addItem(null);
+				}
+				for (String elem : operationResults) {
+					
+					comboResult.addItem(elem);
+				}
+			}
+			
+		return comboResult;
+	}
 	
-	/***************  functions events ******/
+	/* **************  functions events ***** */
 	private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDataMouseClicked
-	      if((this.jCalendarDate.getDate()==null) || (this.OpecomboBox.getSelectedItem()==null)){ 
+	      if ((this.jCalendarDate.getDate()==null) || (this.OpecomboBox.getSelectedItem()==null)){
 	    	  JOptionPane.showMessageDialog(OperationRowEdit.this,
 	    			  MessageBundle.getMessage("angal.operationrowedit.warningdateope"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
 						JOptionPane.PLAIN_MESSAGE);
 	      }
 	      else{
-	    	  if(getMyOpd().getDate().after(this.jCalendarDate.getDate())){
+	    	  if (getMyOpd().getDate().after(this.jCalendarDate.getDate())){
 	    		  JOptionPane.showMessageDialog(OperationRowEdit.this,
 		    			  MessageBundle.getMessage("angal.operationrowedit.warningdateafter"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.PLAIN_MESSAGE);
 	    		  return;
 	    	  }
-			if(opeRow!=null){
+			if (opeRow!=null){
 	        	OperationRow updateOpeRow = opeRow;
 	        	GregorianCalendar dateop = new GregorianCalendar();
 				dateop.setTime(jCalendarDate.getDate());
 				updateOpeRow.setOpDate(dateop);
-				updateOpeRow.setOpResult(resultComboBox.getSelectedItem().toString());
+				
+				String opResult = ope.getResultDescriptionKey((String) this.resultComboBox.getSelectedItem());
+				updateOpeRow.setOpResult(opResult);
+				
 				updateOpeRow.setTransUnit(Float.parseFloat(TransTextField.getText()));
 	        	Operation op = (Operation)OpecomboBox.getSelectedItem();
 	        	updateOpeRow.setOperation(op);
@@ -433,7 +454,7 @@ public class OperationRowEdit extends JPanel {
 					OHServiceExceptionUtil.showMessages(e);
 					return;
 				}
-	        	if(result){
+	        	if (result){
 	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
 	        				MessageBundle.getMessage("angal.operationrowedit.updatesucces"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.PLAIN_MESSAGE);
@@ -451,7 +472,10 @@ public class OperationRowEdit extends JPanel {
 	        	GregorianCalendar dateop = new GregorianCalendar();
 				dateop.setTime(this.jCalendarDate.getDate());
 				operationRow.setOpDate(dateop);
-				operationRow.setOpResult(this.resultComboBox.getSelectedItem().toString());
+				
+				String opResult = ope.getResultDescriptionKey((String) this.resultComboBox.getSelectedItem());
+				operationRow.setOpResult(opResult);
+
 				operationRow.setTransUnit(Float.parseFloat(this.TransTextField.getText()));
 	        	Operation op = (Operation)this.OpecomboBox.getSelectedItem();
 	        	operationRow.setOperation(op);
@@ -465,7 +489,7 @@ public class OperationRowEdit extends JPanel {
 					OHServiceExceptionUtil.showMessages(e);
 					return;
 				}
-	        	if(result){
+	        	if (result){
 	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
 	        				MessageBundle.getMessage("angal.operationrowedit.savesucces"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.PLAIN_MESSAGE);
@@ -502,4 +526,5 @@ public class OperationRowEdit extends JPanel {
 	public void setTitleLabel(JLabel titleLabel) {
 		this.titleLabel = titleLabel;
 	}
+	
 }

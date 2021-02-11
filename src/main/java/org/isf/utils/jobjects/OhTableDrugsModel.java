@@ -35,7 +35,7 @@ import org.isf.medicals.model.Medical;
 import org.isf.medicalstockward.model.MovementWard;
 import org.isf.operation.manager.OperationBrowserManager;
 
-public class OhTableDrugsModel <T> implements TableModel{
+public class OhTableDrugsModel <T> implements TableModel {
 
 	List<T> dataList;	
 	List<T> filteredList;
@@ -45,15 +45,13 @@ public class OhTableDrugsModel <T> implements TableModel{
 		this.dataList = dataList;
 		this.filteredList = new ArrayList<T>();
 		
-		if(dataList!=null){
+		if (dataList!=null){
 			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
 				T t = (T) iterator.next();
 				this.filteredList.add(t);			
 			}
 		}
 	}
-	
-
 	
 	@Override
 	public void addTableModelListener(TableModelListener l) {
@@ -73,33 +71,33 @@ public class OhTableDrugsModel <T> implements TableModel{
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		String columnLable="";
+		String columnLabel="";
 		switch (columnIndex) {
 		case 0:
-			columnLable= MessageBundle.getMessage("angal.medicalstockward.patient.date");
-			//columnLable= "Date";
+			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.date");
+			//columnLabel= "Date";
 			break;
 		case 1:
-			columnLable= MessageBundle.getMessage("angal.medicalstockward.patient.decription");
-			//columnLable= "Nature Operation";
+			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.decription");
+			//columnLabel= "Nature Operation";
 			break;
 		case 2:
-			columnLable= MessageBundle.getMessage("angal.medicalstockward.patient.quantity");
-			//columnLable= "Resultat";
+			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.quantity");
+			//columnLabel= "Resultat";
 			break;
 		case 3:
-			columnLable= MessageBundle.getMessage("angal.medicalstockward.patient.units");
-			//columnLable= "Unite Trans";
+			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.units");
+			//columnLabel= "Unite Trans";
 			break;	
 		default:
 			break;
 		}
-		return columnLable;
+		return columnLabel;
 	}
 
 	@Override
 	public int getRowCount() {
-		if(this.filteredList==null){
+		if (this.filteredList==null){
 			return 0;
 		}
 		return this.filteredList.size();
@@ -109,9 +107,9 @@ public class OhTableDrugsModel <T> implements TableModel{
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
 		String value="";
-		if(rowIndex >=0 && rowIndex < this.filteredList.size()){
+		if (rowIndex >=0 && rowIndex < this.filteredList.size()){
 			T obj=this.filteredList.get(rowIndex);
-			if(obj instanceof MovementWard){
+			if (obj instanceof MovementWard){
 				MovementWard DrugObj=(MovementWard)obj;
 				switch (columnIndex) {
 				case 0:
@@ -130,7 +128,7 @@ public class OhTableDrugsModel <T> implements TableModel{
 										Medical drugsname = null;
 					//System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
 					   drugsname = DrugObj.getMedical();
-					if(drugsname != null)					
+					if (drugsname != null)
 						value = drugsname.getDescription();
 					else
 						value = "";

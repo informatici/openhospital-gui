@@ -21,11 +21,6 @@
  */
 package org.isf.utils.time;
 
-/**
- * 02-mar-2006
- * @author Theo
- */
-
 import java.awt.FlowLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -38,11 +33,13 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
-
+/**
+ * 02-mar-2006
+ *
+ * @author Theo
+ */
 public class DateTextField extends JPanel{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JTextField day;
 	private JTextField month;
@@ -53,7 +50,6 @@ public class DateTextField extends JPanel{
 	 * This is the constructor of the DateTextField object
 	 * It displays the Date of the parameter "time"
 	 * This object consists in 3 textfields (day,month,year) editable by the user
-	 * @param time (GregorianCalendar)
 	 */
 	public DateTextField(){
 		date=new GregorianCalendar();
@@ -62,14 +58,20 @@ public class DateTextField extends JPanel{
 		month.setText("");
 		year.setText("");
 	}
-	
+
+	/**
+	 * This is the constructor of the DateTextField object
+	 * It displays the Date of the parameter "time"
+	 * This object consists in 3 textfields (day,month,year) editable by the user
+	 * @param time (GregorianCalendar)
+	 */
 	public DateTextField(GregorianCalendar time){
 		date=time;
 		initialize();
-		if(String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)).length()==1)
+		if (String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)).length()==1)
 			day.setText("0"+String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)));
 		else day.setText(String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)));
-		if(String.valueOf(time.get(GregorianCalendar.MONTH)+1).length()==1)
+		if (String.valueOf(time.get(GregorianCalendar.MONTH)+1).length()==1)
 			month.setText("0"+String.valueOf(time.get(GregorianCalendar.MONTH)+1));
 		else month.setText(String.valueOf(time.get(GregorianCalendar.MONTH)+1));
 		year.setText(String.valueOf(time.get(GregorianCalendar.YEAR)));
@@ -134,6 +136,7 @@ public class DateTextField extends JPanel{
 		add(new JLabel("/"));
 		add(year);
 	}
+
 	/**
 	 * This method returns the day displayed by the object
 	 * @return int
@@ -141,6 +144,7 @@ public class DateTextField extends JPanel{
 	public int getDay(){
 		return Integer.valueOf(day.getText());
 	}
+
 	/**
 	 * This method returns the month displayed by the object
 	 * @return int
@@ -148,6 +152,7 @@ public class DateTextField extends JPanel{
 	public int getMonth(){
 		return Integer.valueOf(month.getText());
 	}
+
 	/**
 	 * This method returns the year displayed by the object
 	 * @return int
@@ -155,6 +160,7 @@ public class DateTextField extends JPanel{
 	public int getYear(){
 		return Integer.valueOf(year.getText());
 	}
+
 	/**
 	 * This method update the parameter toModify setting the date displayed by the object
 	 * @param toModify (GregorianCalendar)
@@ -166,12 +172,13 @@ public class DateTextField extends JPanel{
 		toModify.set(GregorianCalendar.YEAR,Integer.valueOf(year.getText()));
 		return toModify;
 	}
+
 	/**
 	 * This method returns the date displayed by the object
 	 * @return GregorianCalendar
 	 */
 	public GregorianCalendar getCompleteDate(){
-		if((day.getText().length()==0)||(month.getText().length()==0)||(year.getText().length()==0)){
+		if ((day.getText().length()==0)||(month.getText().length()==0)||(year.getText().length()==0)){
 			day.setText("");
 			month.setText("");
 			year.setText("");
@@ -182,13 +189,14 @@ public class DateTextField extends JPanel{
 		date.set(GregorianCalendar.YEAR,getYear());
 		return date;
 	}
+
 	/**
 	 * This is a basic control for the day field input
 	 * @param day (String)
 	 * @return boolean (true if valid, false otherwise)
 	 */
 	private boolean isValidDay(String day) {
-		if(day.length()<2) return false;
+		if (day.length()<2) return false;
 		if (day.charAt(0) < '0' || day.charAt(0) > '9' || day.charAt(1) < '0' || day.charAt(1) > '9') {
 			return false;
 		}
@@ -197,13 +205,14 @@ public class DateTextField extends JPanel{
 			return false;
 		return true;
 	}
+
 	/**
 	 * This is a basic control for the month field input
 	 * @param month (String)
 	 * @return boolean (true if valid, false otherwise)
 	 */
 	private boolean isValidMonth(String month) {
-		if(month.length()<2)return false;
+		if (month.length()<2)return false;
 		if (month.charAt(0) < '0' ||month.charAt(0) > '9' || month.charAt(1) < '0' || month.charAt(1) > '9') {
 			return false;
 		}
@@ -212,13 +221,14 @@ public class DateTextField extends JPanel{
 			return false;
 		return true;
 	}
+
 	/**
 	 * This is a basic control for the year field input
 	 * @param year (String)
 	 * @return boolean (true if valid, false otherwise)
 	 */
 	private boolean isValidYear(String year) {
-		if(year.length()<4)return false;
+		if (year.length()<4)return false;
 		if (year.charAt(0) < '0' || year.charAt(0) > '9' || year.charAt(1) < '0' || year.charAt(1) > '9'
 				|| year.charAt(2) < '0' || year.charAt(2) > '9' || year.charAt(3) < '0'|| year.charAt(3) > '9') {
 			return false;
@@ -227,14 +237,14 @@ public class DateTextField extends JPanel{
 	}
 	
 	public boolean isDateValid(){
-		if((day.getText().equals(""))||(month.getText().equals(""))||
+		if ((day.getText().equals(""))||(month.getText().equals(""))||
 				year.getText().equals(""))return false;
-		if(isValidDay(day.getText()) && isValidMonth(month.getText()) && isValidYear(year.getText()))return true;
+		if (isValidDay(day.getText()) && isValidMonth(month.getText()) && isValidYear(year.getText()))return true;
 		else return false;
 	}
 	
 	public void setEnabled(boolean enabled){
-		if(enabled){
+		if (enabled){
 			day.setEnabled(true);
 			month.setEnabled(true);
 			year.setEnabled(true);
@@ -249,11 +259,8 @@ public class DateTextField extends JPanel{
 	 * This class extends DefaultStyledDocument and is needed to limit of each input field
 	 * @author someone (found on the web)
 	 */
-	
 	public class DocumentoLimitato extends DefaultStyledDocument {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private final int NUMERO_MASSIMO_CARATTERI;
 

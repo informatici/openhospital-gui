@@ -39,15 +39,9 @@ import org.isf.generaldata.MessageBundle;
 
 /**
  * @author Mwithi
- * 
- * 
- * 
  */
 public class JDateAndTimeChooserDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/*

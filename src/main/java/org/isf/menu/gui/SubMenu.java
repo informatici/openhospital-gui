@@ -41,12 +41,9 @@ import javax.swing.event.EventListenerList;
 
 import org.isf.menu.model.UserMenuItem;
 
-
-
 public class SubMenu extends JDialog implements ActionListener{
 	private static final long serialVersionUID = 7620582079916035164L;
-	
-	
+
 	private EventListenerList commandListeners = new EventListenerList();
 
     public interface CommandListener extends EventListener {
@@ -64,9 +61,6 @@ public class SubMenu extends JDialog implements ActionListener{
     private void fireCommandInserted(String aCommand) {
         AWTEvent event = new AWTEvent(aCommand, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = commandListeners.getListeners(CommandListener.class);

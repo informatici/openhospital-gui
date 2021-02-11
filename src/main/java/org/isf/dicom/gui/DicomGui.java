@@ -67,16 +67,12 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * GUI for Dicom Viewer
- * 
+ *
  * @author Pietro Castellucci
  * @version 1.0.0
- * 
  */
 public class DicomGui extends JFrame implements WindowListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	// STATUS
@@ -106,7 +102,7 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	/**
 	 * Construct a GUI
-	 * 
+	 *
 	 * @param patient the data wrapper for OH Patient
 	 */
 	public DicomGui(Patient patient, PatientFolderBrowser owner) {
@@ -174,7 +170,7 @@ public class DicomGui extends JFrame implements WindowListener {
 			w = Math.round(screensize.width * factor);
 			x = Math.round((screensize.width - w) / 2);
 			y = Math.round((screensize.height - h) / 2);
-		} 
+		}
 
 		this.setBounds(x, y, w, h);
 
@@ -224,12 +220,14 @@ public class DicomGui extends JFrame implements WindowListener {
 				.addGroup(
 						GroupLayout.Alignment.TRAILING,
 						jPanel1Layout.createSequentialGroup().addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE))
-								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)).addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE))
+								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 				.addGroup(GroupLayout.Alignment.TRAILING,
-						jPanel1Layout.createSequentialGroup().addContainerGap().addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(jPanelButton))));
+						jPanel1Layout.createSequentialGroup().addContainerGap()
+								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(jPanelButton))));
 
 		//jSplitPane1.setDividerLocation(position);
-		
+
 		thumbnail = new ThumbnailViewGui(patient, this);
 		thumbnail.initialize();
 
@@ -238,18 +236,19 @@ public class DicomGui extends JFrame implements WindowListener {
 		jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		jScrollPane2.setViewportView(thumbnail);
 		jScrollPane2.setName("jScrollPane2");
-		jScrollPane2.setMinimumSize(new Dimension(150,50));
+		jScrollPane2.setMinimumSize(new Dimension(150, 50));
 
 		jSplitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jScrollPane2, jPanelDetail);
 		jSplitPane1.setName("jSplitPane1");
 		jSplitPane1.setEnabled(false);
-		
+
 		GroupLayout mainPanelLayout = new GroupLayout(jPanelMain);
 		jPanelMain.setLayout(mainPanelLayout);
 
 		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addGroup(mainPanelLayout.createSequentialGroup().addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE).addGap(10, 10, 10)));
+				.addGroup(
+						mainPanelLayout.createSequentialGroup().addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE).addGap(10, 10, 10)));
 
 		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
 				GroupLayout.Alignment.TRAILING,
@@ -273,6 +272,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	private void actionListenerJButtonLoadDicom() {
 
 		jButtonLoadDicom.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 
 				JFileChooser jfc = new JFileChooser(new File(lastDir));
@@ -296,7 +296,7 @@ public class DicomGui extends JFrame implements WindowListener {
 
 					if (dir != null)
 						lastDir = dir.getAbsolutePath();
-					
+
 					File file = selectedFile;
 					int numfiles = 1;
 					if (selectedFile.isDirectory()) {
@@ -306,14 +306,15 @@ public class DicomGui extends JFrame implements WindowListener {
 							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
 							return;
 						}
-						if (numfiles == 1) return;
+						if (numfiles == 1)
+							return;
 						file = selectedFile.listFiles()[0];
 					} else {
 						try {
 							if (!SourceFiles.checkSize(file)) {
-								JOptionPane.showMessageDialog(DicomGui.this, 
-										MessageBundle.getMessage("angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty") + 
-			            				" (" + DicomManagerFactory.getMaxDicomSize() + ")", 
+								JOptionPane.showMessageDialog(DicomGui.this,
+										MessageBundle.getMessage("angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty") +
+												" (" + DicomManagerFactory.getMaxDicomSize() + ")",
 										"DICOM", JOptionPane.ERROR_MESSAGE);
 								return;
 							}
@@ -322,24 +323,24 @@ public class DicomGui extends JFrame implements WindowListener {
 							return;
 						}
 					}
-					
+
 					//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
 					FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file, numfiles);
-					
+
 					//shows settings to the user for validation/modification
 					List<Date> dates = FileTools.getTimestampFromName(file);
-					
+
 					ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
 					preLoadDialog.setVisible(true);
-					
-					if (!preLoadDialog.isSave()) 
+
+					if (!preLoadDialog.isSave())
 						return; //user pressed CANCEL
-					
+
 					dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
 					dummyFileDicom.setDicomSeriesDate(preLoadDialog.getDicomDate());
 					dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
 					dummyFileDicom.setDicomType(preLoadDialog.getDicomType());
-					
+
 					//TODO: to specify in which already existing series to load the file
 
 					if (selectedFile.isDirectory()) {
@@ -362,20 +363,23 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private void actionListenerJButtonDeleteDicom() {
 		jButtonDeleteDicom.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 
 				Object[] options = { MessageBundle.getMessage("angal.dicom.delete.yes"), MessageBundle.getMessage("angal.dicom.delete.no") };
 
-				int n = JOptionPane.showOptionDialog(DicomGui.this, MessageBundle.getMessage("angal.dicom.delete.request"), MessageBundle.getMessage("angal.dicom.delete.title"),
+				int n = JOptionPane.showOptionDialog(DicomGui.this, MessageBundle.getMessage("angal.dicom.delete.request"),
+						MessageBundle.getMessage("angal.dicom.delete.title"),
 						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "");
 
-				if (n == 0){
+				if (n == 0) {
 					try {
 						DicomManagerFactory.getManager().deleteSerie(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
-					}catch(OHServiceException ex){
-						if(ex.getMessages() != null){
-							for(OHExceptionMessage msg : ex.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
+					} catch (OHServiceException ex) {
+						if (ex.getMessages() != null) {
+							for (OHExceptionMessage msg : ex.getMessages()) {
+								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(),
+										msg.getLevel().getSwingSeverity());
 							}
 						}
 					}
@@ -390,6 +394,7 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private void actionListenerJButtonExit() {
 		jButtonExit.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				System.exit(100);
 				// this.dispose();
@@ -428,7 +433,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Invoked when a window is changed from a normal to a minimized state. For
 	 * many platforms, a minimized window is displayed as the icon specified in
 	 * the window's iconImage property.
-	 * 
+	 *
 	 * @see java.awt.Frame#setIconImage
 	 */
 	public void windowIconified(WindowEvent e) {
@@ -505,7 +510,7 @@ public class DicomGui extends JFrame implements WindowListener {
 		((DicomViewGui) jPanelDetail).notifyChanges(ohPatient, serie);
 
 	}
-	
+
 	/**
 	 * @param args
 	 */
@@ -522,7 +527,7 @@ public class DicomGui extends JFrame implements WindowListener {
 			e.printStackTrace();
 		}
 		DicomGui dg = new DicomGui(patient, null);
-		
+
 	}
 
 }

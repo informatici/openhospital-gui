@@ -21,13 +21,6 @@
  */
 package org.isf.vactype.gui;
 
-/*------------------------------------------
- * VaccineTypeBrowser - list all vaccine types. let the user select an vaccine type to edit
- * -----------------------------------------
- * modification history
- * 19/10/2011 - Cla - version is now 1.0
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -54,30 +47,34 @@ import org.isf.vactype.gui.VaccineTypeEdit.VaccineTypeListener;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
-
+/**
+ * ------------------------------------------
+ * VaccineTypeBrowser - list all vaccine types. let the user select an vaccine type to edit
+ * -----------------------------------------
+ * modification history
+ * 19/10/2011 - Cla - version is now 1.0
+ * ------------------------------------------
+ */
 public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final String VERSION="v1.2"; 
 
 	private ArrayList<VaccineType> pVaccineType;
 	
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumwidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private VaccineTypeBrowserModel model;
 	private int selectedrow;
@@ -88,7 +85,6 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 	
 	/**
 	 * This method initializes 
-	 * 
 	 */
 	public VaccineTypeBrowser() {
 		super();
@@ -127,7 +123,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
@@ -172,8 +168,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						vaccineType = (VaccineType) (((VaccineTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						vaccineType = (VaccineType) (model.getValueAt(selectedrow, -1));
 						VaccineTypeEdit editrecord = new VaccineTypeEdit(myFrame,vaccineType, false);
 						editrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
 						editrecord.setVisible(true);
@@ -204,16 +199,16 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton();
+			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,
@@ -221,8 +216,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						VaccineType dis = (VaccineType) (((VaccineTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						VaccineType dis = (VaccineType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.vactype.deletevaccinetype")+"\" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
@@ -242,15 +236,15 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new VaccineTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 	
@@ -277,11 +271,11 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -304,8 +298,6 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 	}
 
 
-
-
 public void vaccineTypeUpdated(AWTEvent e) {
 	pVaccineType.set(selectedrow, vaccineType);
 	((VaccineTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
@@ -322,6 +314,4 @@ public void vaccineTypeInserted(AWTEvent e) {
 		jTable.setRowSelectionInterval(0, 0);
 }
 
-
-	
 }

@@ -97,9 +97,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private void fireMovementWardInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = movementWardListeners.getListeners(MovementWardListeners.class);
@@ -191,7 +188,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JComboBox wardBox;
 	private JPanel panelWard;
         /*
-         *Adds to facilitate the selection of products 
+         * Adds to facilitate the selection of products
          */
         private JPanel searchPanel;
         private JTextField searchTextField;
@@ -288,9 +285,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	
 	class StockMovModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private ArrayList<MedicalWard> druglist;
 
@@ -353,8 +348,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return true;
 	}
 	
-	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int qanty) {
-		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int quantity) {
 		Collections.sort(drug, new Comparator<MedicalWard>() {
 			@Override
 			public int compare(MedicalWard o1, MedicalWard o2) {
@@ -365,7 +359,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		});
 
 		MedicalWard medWard = null;
-		int q = qanty;
+		int q = quantity;
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
 
@@ -373,7 +367,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					if (q != 0) {
 						if (elem.getQty() <= q) {
 							MedicalWard e = elem;
-							dr.add(e);
 							q = (int) (q - elem.getQty());
 							int maxquantity = (int) (elem.getQty() - 0);
 							medWard = elem;
@@ -381,7 +374,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 						} else {
 							MedicalWard e = elem;
-							dr.add(e);
 							int qu = (int) (elem.getQty() - q);
 							medWard = elem;
 
@@ -397,12 +389,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return medWard;
 	}
 	
-	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int qanty) {
+	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int quantity) {
 		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
 		MedicalWard medWard =null;
 		for (MedicalWard elem : drug) {
-			if(elem.getMedical().getDescription().equals(me)) {
-				if(elem.getQty() != 0.0) {
+			if (elem.getMedical().getDescription().equals(me)) {
+				if (elem.getQty() != 0.0) {
 					MedicalWard e = elem;
 						dr.add(e);
 					}
@@ -429,10 +421,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						else return null;
 					
 					
-					if (!checkQuantityInLot(medWard, qanty)) medWard = null;
+					if (!checkQuantityInLot(medWard, quantity)) medWard = null;
 					
 					
-					addItem(medWard, qanty);
+					addItem(medWard, quantity);
 					
 				}
 				
@@ -528,7 +520,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 				public void actionPerformed(ActionEvent e) {
 					String medical=(String)jComboBoxMedicals.getSelectedItem();
-					int qanty = askQuantity(medical,wardDrugs);
+					int quantity = askQuantity(medical,wardDrugs);
 				}
 			});
 		}
@@ -561,14 +553,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return jButtonRemoveMedical;
 	}
 
-	private void addItem(MedicalWard ward, int qanty) {
+	private void addItem(MedicalWard ward, int quantity) {
 		if (ward != null) {
 		
-			MedicalWard item = new MedicalWard(ward.getMedical(), (double) qanty, ward.getId().getLot());
+			MedicalWard item = new MedicalWard(ward.getMedical(), (double) quantity, ward.getId().getLot());
 			medItems.add(item);
 			
 //			medArray.add(med);
-			qtyArray.add((double) qanty);
+			qtyArray.add((double) quantity);
 			jTableMedicals.updateUI();
 		}
 	}
@@ -641,7 +633,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					} 
                     else if (jRadioWard.isSelected()) {
 						Object selectedObj = wardBox.getSelectedItem();
-						if(selectedObj instanceof Ward){
+						if (selectedObj instanceof Ward){
 							wardTo = (Ward) selectedObj;
 						}
 						else{
@@ -955,7 +947,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
                             Logger.getLogger(WardPharmacyNew.class.getName()).log(Level.SEVERE, null, ex);
                         }
 			wardBox.addItem("");
-			if(wardList != null) {
+			if (wardList != null) {
                             for (org.isf.ward.model.Ward elem : wardList) {
 				if (!wardSelected.getCode().equals(elem.getCode()))
 					wardBox.addItem(elem);
@@ -1023,7 +1015,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
             String query = s.trim();
             ArrayList<Medical> results = new ArrayList<Medical>();
             for (Medical medoc : medicalsList) {
-                if(!query.equals("")) {
+                if (!query.equals("")) {
                     String[] patterns = query.split(" ");
                     String code = medoc.getProd_code().toLowerCase();
                     String description = medoc.getDescription().toLowerCase();

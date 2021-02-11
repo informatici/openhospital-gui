@@ -24,7 +24,6 @@ package org.isf.video.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,9 +57,7 @@ import org.slf4j.LoggerFactory;
 import com.github.sarxos.webcam.Webcam;
 
 public class PatientPhotoPanel extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 9129641275344016618L;
 	
 	private final Logger logger = LoggerFactory.getLogger(PatientInsertExtended.class);
@@ -138,9 +135,6 @@ public class PatientPhotoPanel extends JPanel {
 				btnDeletePhoto.setVisible(true);
 			else
 				btnDeletePhoto.setVisible(false);
-
-			GridBagConstraints gbs = new GridBagConstraints();
-			gbs.anchor = GridBagConstraints.CENTER;
 			
 			final Box buttonBox1 = Box.createHorizontalBox();
 
@@ -228,9 +222,6 @@ public class PatientPhotoPanel extends JPanel {
 
 class CroppingDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	/*

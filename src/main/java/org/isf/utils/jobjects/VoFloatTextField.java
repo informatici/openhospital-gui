@@ -28,18 +28,13 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
 /**
- * 
  * @author http://www.java2s.com/Code/Java/Swing-JFC/Textfieldonlyacceptsnumbers.htm
- *
  */
 public class VoFloatTextField extends JTextField {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
 	 * @param defval - default value
 	 * @param columns - number of columns to show
 	 */
@@ -63,9 +58,7 @@ public class VoFloatTextField extends JTextField {
 	}
 
 	class FloatTextDocument extends PlainDocument {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {

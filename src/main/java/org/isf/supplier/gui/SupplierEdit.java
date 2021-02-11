@@ -52,13 +52,9 @@ import org.isf.utils.jobjects.VoLimitedTextField;
  * This class allows suppliers edits and inserts
  * 
  * @author Mwithi
- * 
  */
 public class SupplierEdit extends JDialog {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private EventListenerList supplierListeners = new EventListenerList();
 	
@@ -78,9 +74,6 @@ public class SupplierEdit extends JDialog {
 	private void fireSupplierInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
@@ -90,9 +83,6 @@ public class SupplierEdit extends JDialog {
 	private void fireSupplierUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
@@ -137,7 +127,6 @@ public class SupplierEdit extends JDialog {
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 	
 	/**
-	 * 
 	 * This is the default constructor; we pass the parent frame
 	 * (because it is a jdialog), the arraylist and the selected
 	 * row because we need to update them
@@ -151,8 +140,6 @@ public class SupplierEdit extends JDialog {
 	
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -456,4 +443,4 @@ public class SupplierEdit extends JDialog {
 		}
 		return isDeletedCheck;
 	}
-} 
+}

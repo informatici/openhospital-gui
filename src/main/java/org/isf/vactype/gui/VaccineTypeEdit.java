@@ -21,13 +21,6 @@
  */
 package org.isf.vactype.gui;
 
-/*------------------------------------------
- * VaccineTypeEdit - Edit/new a vaccine type
- * -----------------------------------------
- * modification history
- * 19/10/2011 - Cla - version is now 1.0
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
@@ -51,6 +44,14 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
+/**
+ * ------------------------------------------
+ * VaccineTypeEdit - Edit/new a vaccine type
+ * -----------------------------------------
+ * modification history
+ * 19/10/2011 - Cla - version is now 1.0
+ * ------------------------------------------
+ */
 public class VaccineTypeEdit extends JDialog{
 
 	private static final long serialVersionUID = 1L;
@@ -77,9 +78,6 @@ public class VaccineTypeEdit extends JDialog{
     private void fireVaccineInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
@@ -91,9 +89,6 @@ public class VaccineTypeEdit extends JDialog{
     private void fireVaccineUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
 		EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
@@ -115,10 +110,9 @@ public class VaccineTypeEdit extends JDialog{
 	private JLabel jCodeLabel = null;
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescripitonLabel = null;
+	private JLabel jDescriptionLabel = null;
 
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -133,8 +127,6 @@ public class VaccineTypeEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		
@@ -348,13 +340,11 @@ public class VaccineTypeEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescripitonLabel = new JLabel();
-			jDescripitonLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel();
+			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
 			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescripitonLabel, null);
+			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}
 		return jDescriptionLabelPanel;
 	}
-}  //
-
-
+}

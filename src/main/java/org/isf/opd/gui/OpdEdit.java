@@ -21,22 +21,6 @@
  */
 package org.isf.opd.gui;
 
-/*------------------------------------------
- * OpdEdit - add/edit an OPD registration
- * -----------------------------------------
- * modification history
- * 11/12/2005 - Vero, Rick  - first beta version 
- * 07/11/2006 - ross - renamed from Surgery 
- *                   - added visit date, disease 2, diseas3
- *                   - disease is not mandatory if re-attendance
- * 			         - version is now 1.0 
- * 28/05/2008 - ross - added referral to / referral from check boxes
- * 			         - version is now 1.1 
- * 09/01/2009 - fabrizio - Removed unuseful control on variable dateIn.
- *                         Cosmetic changes to code style.
- *------------------------------------------*/
-
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -86,7 +70,22 @@ import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
-
+/**
+ * ------------------------------------------
+ * OpdEdit - add/edit an OPD registration
+ * -----------------------------------------
+ * modification history
+ * 11/12/2005 - Vero, Rick  - first beta version
+ * 07/11/2006 - ross - renamed from Surgery
+ *                   - added visit date, disease 2, disease 3
+ *                   - disease is not mandatory if re-attendance
+ * 			         - version is now 1.0
+ * 28/05/2008 - ross - added referral to / referral from check boxes
+ * 			         - version is now 1.1
+ * 09/01/2009 - fabrizio - Removed unuseful control on variable dateIn.
+ *                         Cosmetic changes to code style.
+ * ------------------------------------------
+ * */
 public class OpdEdit extends JDialog {
 	
 	private static final long serialVersionUID = -7369841416710920082L;
@@ -185,7 +184,7 @@ public class OpdEdit extends JDialog {
 	private ArrayList<Disease> diseasesAll;
 	
     /*
-     * Adds: Textfields and buttoms to enable search in diognoses 
+     * Adds: Textfields and buttons to enable search in diagnosis
      */
     private JTextField searchDiseaseTextField;
     private JTextField searchDiseaseTextField2;
@@ -195,8 +194,7 @@ public class OpdEdit extends JDialog {
     private JButton searchDiseaseButton3;
         
 	/**
-	 * This method initializes 
-	 * 
+	 * This method initializes
 	 */
 	public OpdEdit(JFrame owner,Opd old,boolean inserting) {
 		super(owner, true);
@@ -215,7 +213,6 @@ public class OpdEdit extends JDialog {
 	
 	/**
 	 * This method initializes this
-	 * 
 	 */
 	private void initialize() {
 		this.setBounds(100, 50, 450, 500);
@@ -285,10 +282,10 @@ public class OpdEdit extends JDialog {
 			DiseaseType elem2 = null;
 			diseaseTypeBox.setMaximumSize(new Dimension(400,50));
 			diseaseTypeBox.addItem(allType);
-			if(types != null){
+			if (types != null){
 				for (DiseaseType elem : types) {
-					if (!insert && opd.getDisease().getType() != null){
-						if(opd.getDisease().getType().equals(elem.getCode())){
+					if (!insert && opd.getDisease().getType() != null) {
+						if (opd.getDisease().getType().getCode().equals(elem.getCode())) {
 							elem2=elem;}
 					}
 					diseaseTypeBox.addItem(elem);
@@ -333,7 +330,7 @@ public class OpdEdit extends JDialog {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		diseaseBox.addItem("");
-		if(diseases != null){
+		if (diseases != null){
 			for (Disease elem : diseases) {
 				diseaseBox.addItem(elem);
 				if (!insert && opd.getDisease() != null) {
@@ -374,10 +371,10 @@ public class OpdEdit extends JDialog {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		diseaseBox2.addItem("");
-		if(diseases != null){
+		if (diseases != null){
 			for (Disease elem : diseases) {
 				diseaseBox2.addItem(elem);
-				if(!insert && opd.getDisease2()!=null){
+				if (!insert && opd.getDisease2()!=null){
 					if (opd.getDisease2().getCode().equals(elem.getCode())) {
 						elem2 = elem;}
 				}
@@ -387,7 +384,7 @@ public class OpdEdit extends JDialog {
 			diseaseBox2.setSelectedItem(elem2);
 		} else { //try in the cancelled diseases
 			if (opd.getDisease2()!=null) {
-				if(diseasesAll != null){
+				if (diseasesAll != null){
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease2().getCode().equals(elem.getCode())) {
 							JOptionPane.showMessageDialog(OpdEdit.this,MessageBundle.getMessage("angal.opd.disease2mayhavebeencancelled"));
@@ -414,10 +411,10 @@ public class OpdEdit extends JDialog {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		diseaseBox3.addItem("");
-		if(diseases != null){
+		if (diseases != null){
 			for (Disease elem : diseases) {
 				diseaseBox3.addItem(elem);
-				if(!insert && opd.getDisease3()!=null){
+				if (!insert && opd.getDisease3()!=null){
 					if (opd.getDisease3().getCode().equals(elem.getCode())) {
 						elem2 = elem;}
 				}
@@ -427,7 +424,7 @@ public class OpdEdit extends JDialog {
 			diseaseBox3.setSelectedItem(elem2);
 		} else { //try in the cancelled diseases
 			if (opd.getDisease3()!=null) {
-				if(diseasesAll != null){
+				if (diseasesAll != null){
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease3().getCode().equals(elem.getCode())) {
 							JOptionPane.showMessageDialog(OpdEdit.this,MessageBundle.getMessage("angal.opd.disease3mayhavebeencancelled"));
@@ -649,9 +646,9 @@ public class OpdEdit extends JDialog {
 			group=new ButtonGroup();
 			radiom = new JRadioButton(MessageBundle.getMessage("angal.opd.male"));
 			radiof = new JRadioButton(MessageBundle.getMessage("angal.opd.female"));
-			if(insert)radiom.setSelected(true);
+			if (insert)radiom.setSelected(true);
 			else{
-				if(opd.getSex()=='F')
+				if (opd.getSex()=='F')
 					radiof.setSelected(true);
 				else radiom.setSelected(true);
 			}			
@@ -719,11 +716,11 @@ public class OpdEdit extends JDialog {
                         diseaseBox.addItem(disease);
                     }
 
-                    if(diseaseBox.getItemCount() >= 2){
+                    if (diseaseBox.getItemCount() >= 2){
                         diseaseBox.setSelectedIndex(1);
                     }
                     diseaseBox.requestFocus();
-                    if(diseaseBox.getItemCount() > 2){
+                    if (diseaseBox.getItemCount() > 2){
                         diseaseBox.showPopup();
                     }
                 }
@@ -775,11 +772,11 @@ public class OpdEdit extends JDialog {
 	                                    diseaseBox2.addItem(disease);
 	                                }
 	
-	                                if(diseaseBox2.getItemCount() >= 2){
+	                                if (diseaseBox2.getItemCount() >= 2){
 	                                    diseaseBox2.setSelectedIndex(1);
 	                                }
 	                                diseaseBox2.requestFocus();
-	                                if(diseaseBox2.getItemCount() > 2){
+	                                if (diseaseBox2.getItemCount() > 2){
 	                                    diseaseBox2.showPopup();
 	                                }
 	                            }
@@ -830,11 +827,11 @@ public class OpdEdit extends JDialog {
                         diseaseBox3.addItem(disease);
                     }
 
-                    if(diseaseBox3.getItemCount() >= 2){
+                    if (diseaseBox3.getItemCount() >= 2){
                         diseaseBox3.setSelectedIndex(1);
                     }
                     diseaseBox3.requestFocus();
-                    if(diseaseBox3.getItemCount() > 2){
+                    if (diseaseBox3.getItemCount() > 2){
                         diseaseBox3.showPopup();
                     }
                 }
@@ -872,19 +869,19 @@ public class OpdEdit extends JDialog {
 			jNewPatientPanel = new JPanel();
 			newPatientCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.newattendance"));
 			jNewPatientPanel.add(newPatientCheckBox);
-			if(!insert){
+			if (!insert){
 				if (opd.getNewPatient() == 'N')newPatientCheckBox.setSelected(true);
 			}
 			referralFromCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.from"));
 			jNewPatientPanel.add(referralFromCheckBox);
-			if(!insert){
+			if (!insert){
 				referralFrom = opd.getReferralFrom();
 				if (referralFrom == null) referralFrom="";
 				if (referralFrom.equals("R"))referralFromCheckBox.setSelected(true);
 			}
 			referralToCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.to"));
 			jNewPatientPanel.add(referralToCheckBox);
-			if(!insert){
+			if (!insert){
 				referralTo = opd.getReferralTo();
 				if (referralTo == null) referralTo="";
 				if (referralTo.equals("R"))referralToCheckBox.setSelected(true);
@@ -937,7 +934,7 @@ public class OpdEdit extends JDialog {
         String query = s.trim();
         ArrayList<Disease> results = new ArrayList<Disease>();
         for (Disease disease : diseaseList) {
-            if(!query.equals("")) {
+            if (!query.equals("")) {
 		String[] patterns = query.split(" ");
 		String name = disease.getDescription().toLowerCase();
 		boolean patternFound = false;
@@ -958,4 +955,4 @@ public class OpdEdit extends JDialog {
         return results;
     }    
 	
-}  //  @jve:decl-index=0:visual-constraint="10,10"  
+}

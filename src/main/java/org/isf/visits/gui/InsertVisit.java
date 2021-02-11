@@ -68,13 +68,9 @@ import com.toedter.calendar.JDateChooser;
 
 /**
  * @author Mwithi
- * 
  */
 public class InsertVisit extends JDialog implements SelectionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/*

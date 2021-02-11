@@ -53,12 +53,12 @@ public class OhTableModelExam<T> implements TableModel{
 		
 		for (Iterator<Exam> iterator = this.dataListExam.iterator(); iterator.hasNext();) {
 			Object object = (Object) iterator.next();	
-			if(object instanceof Exam){
+			if (object instanceof Exam){
 				Exam exam =(Exam) object;
 				String strItem = exam.getCode() + exam.getDescription();				
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if(strItem.indexOf(searchQuery)>=0){
+				if (strItem.indexOf(searchQuery)>=0){
 					filteredList.add((Exam) object);
 				}
 			}
@@ -86,24 +86,24 @@ public class OhTableModelExam<T> implements TableModel{
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		String columnLable="";
+		String columnLabel="";
 		switch (columnIndex) {
 		case 0:
-			columnLable= MessageBundle.getMessage("angal.common.codem");
+			columnLabel= MessageBundle.getMessage("angal.common.codem");
 			break;
 		case 1:
-			columnLable= MessageBundle.getMessage("angal.common.description");
+			columnLabel= MessageBundle.getMessage("angal.common.description");
 			break;
 
 		default:
 			break;
 		}
-		return columnLable;
+		return columnLabel;
 	}
 
 	@Override
 	public int getRowCount() {
-		if(this.filteredList==null){
+		if (this.filteredList==null){
 			return 0;
 		}
 		return this.filteredList.size();
@@ -113,11 +113,11 @@ public class OhTableModelExam<T> implements TableModel{
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
 		String value="";
-		if(rowIndex>=0 && rowIndex<this.filteredList.size()){
+		if (rowIndex>=0 && rowIndex<this.filteredList.size()){
 			Exam obj=this.filteredList.get(rowIndex);
-			if(obj instanceof Exam){
+			if (obj instanceof Exam){
 				Exam mdwObj=(Exam)obj;
-				if(columnIndex==0){
+				if (columnIndex==0){
 					value=mdwObj.getCode()+"";
 				}
 				else{
@@ -129,7 +129,7 @@ public class OhTableModelExam<T> implements TableModel{
 	}
 	
 	public Exam getObjectAt(int rowIndex){
-		if(rowIndex>=0 && rowIndex<this.filteredList.size()){
+		if (rowIndex>=0 && rowIndex<this.filteredList.size()){
 			return this.filteredList.get(rowIndex);			
 		}
 		return null;

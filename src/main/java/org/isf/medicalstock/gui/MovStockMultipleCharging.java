@@ -85,9 +85,7 @@ import org.isf.utils.jobjects.TextPrompt.Show;
 import org.isf.utils.time.TimeTools;
 
 public class MovStockMultipleCharging extends JDialog {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private static final String DATE_FORMAT_DD_MM_YYYY_HH_MM_SS = "dd/MM/yyyy HH:mm:ss"; //$NON-NLS-1$
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
@@ -771,7 +769,7 @@ public class MovStockMultipleCharging extends JDialog {
             } catch (OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
             }
-            if(suppliers != null) {
+            if (suppliers != null) {
                 for (Supplier sup : suppliers) {
                     jComboBoxSupplier.addItem(sup);
                 }
@@ -976,9 +974,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -997,9 +993,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	class DecimalFormatRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private final DecimalFormat formatter = new DecimalFormat("#,##0.00"); //$NON-NLS-1$
 
@@ -1022,9 +1016,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	class StockMovModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private ArrayList<Lot> lotList;
 
@@ -1089,9 +1081,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	class StockMedModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private ArrayList<Medical> medList;
 

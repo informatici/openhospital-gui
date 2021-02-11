@@ -28,14 +28,15 @@ import java.util.GregorianCalendar;
 import org.joda.time.DateTime;
 
 /**
- * Created by nicosalvato on 2016-08-25.
+ * @author nicosalvato on 2016-08-25.
  * Contact: nicosalvato@gmail.com
  */
 public class Converters {
+
     /**
-     * Returns a {@link String} representing the date in format <code>yyyy-MM-dd HH:mm:ss</code>.
+     * Returns a {@link String} representing the date in format {@code yyyy-MM-dd HH:mm:ss}.
      * @param datetime {@link GregorianCalendar} object.
-     * @return the date in format <code>yyyy-MM-dd HH:mm:ss</code>.
+     * @return the date in format {@code yyyy-MM-dd HH:mm:ss}.
      */
     public static String convertToSQLDate(GregorianCalendar datetime) {
         if (datetime == null)
@@ -44,9 +45,9 @@ public class Converters {
     }
 
     /**
-     * Returns a {@link String} representing the date in format <code>yyyy-MM-dd HH:mm:ss</code>.
+     * Returns a {@link String} representing the date in format {@code yyyy-MM-dd HH:mm:ss}.
      * @param datetime {@link Date} input.
-     * @return the date in format <code>yyyy-MM-dd HH:mm:ss</code>.
+     * @return the date in format {@code yyyy-MM-dd HH:mm:ss}.
      */
     public static String convertToSQLDate(Date datetime) {
         if (datetime == null)
@@ -56,9 +57,9 @@ public class Converters {
     }
 
     /**
-     * Returns a {@link String} representing the date in format <code>yyyy-MM-dd</code>.
+     * Returns a {@link String} representing the date in format {@code yyyy-MM-dd}.
      * @param date {@link Date} object.
-     * @return the date in format <code>yyyy-MM-dd</code>.
+     * @return the date in format {@code yyyy-MM-dd}.
      */
     public static String convertToSQLDateLimited(GregorianCalendar date) {
         if (date == null)
@@ -67,9 +68,9 @@ public class Converters {
     }
 
     /**
-     * Returns a {@link String} representing the date in format <code>yyyy-MM-dd</code>.
+     * Returns a {@link String} representing the date in format {@code yyyy-MM-dd}.
      * @param date {@link Date} object.
-     * @return the date in format <code>yyyy-MM-dd</code>.
+     * @return the date in format {@code yyyy-MM-dd}.
      */
     public static String convertToSQLDateLimited(Date date) {
         if (date == null)
@@ -81,7 +82,7 @@ public class Converters {
     /**
      * Converts a {@link GregorianCalendar} to a {@link Date}.
      * @param calendar the calendar to convert.
-     * @return the converted value or <code>null</code> if the passed value is <code>null</code>.
+     * @return the converted value or {@code null} if the passed value is {@code null}.
      */
     public static Date toDate(GregorianCalendar calendar) {
         if (calendar == null)

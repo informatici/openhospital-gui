@@ -47,7 +47,7 @@ public class OhTableOperationModel<T> implements TableModel{
 		this.dataList = dataList;
 		this.filteredList = new ArrayList<T>();
 		
-		if(dataList!=null){
+		if (dataList!=null){
 			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
 				T t = (T) iterator.next();
 				this.filteredList.add(t);			
@@ -60,12 +60,12 @@ public class OhTableOperationModel<T> implements TableModel{
 		
 		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext();) {
 			Object object = (Object) iterator.next();
-			if(object instanceof OperationRow){
+			if (object instanceof OperationRow){
 				OperationRow price=(OperationRow) object;
 				String strItem=price.getOperation().getCode()+price.getOpResult();
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if(strItem.indexOf(searchQuery)>=0){
+				if (strItem.indexOf(searchQuery)>=0){
 					filteredList.add((T) object);
 				}
 			}
@@ -91,33 +91,33 @@ public class OhTableOperationModel<T> implements TableModel{
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		String columnLable="";
+		String columnLabel="";
 		switch (columnIndex) {
 		case 0:
-			columnLable= MessageBundle.getMessage("angal.operationrowlist.date");
-			//columnLable= "Date";
+			columnLabel= MessageBundle.getMessage("angal.operationrowlist.date");
+			//columnLabel= "Date";
 			break;
 		case 1:
-			columnLable= MessageBundle.getMessage("angal.operationrowlist.natureop");
-			//columnLable= "Nature Operation";
+			columnLabel= MessageBundle.getMessage("angal.operationrowlist.natureop");
+			//columnLabel= "Nature Operation";
 			break;
 		case 2:
-			columnLable= MessageBundle.getMessage("angal.operationrowedit.result");
-			//columnLable= "Resultat";
+			columnLabel= MessageBundle.getMessage("angal.operationrowedit.result");
+			//columnLabel= "Resultat";
 			break;
 		case 3:
-			columnLable= MessageBundle.getMessage("angal.operationrowedit.unitetrans");
-			//columnLable= "Unite Trans";
+			columnLabel= MessageBundle.getMessage("angal.operationrowedit.unitetrans");
+			//columnLabel= "Unite Trans";
 			break;	
 		default:
 			break;
 		}
-		return columnLable;
+		return columnLabel;
 	}
 
 	@Override
 	public int getRowCount() {
-		if(this.filteredList==null){
+		if (this.filteredList==null){
 			return 0;
 		}
 		return this.filteredList.size();
@@ -127,9 +127,9 @@ public class OhTableOperationModel<T> implements TableModel{
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
 		String value="";
-		if(rowIndex >=0 && rowIndex < this.filteredList.size()){
+		if (rowIndex >=0 && rowIndex < this.filteredList.size()){
 			T obj=this.filteredList.get(rowIndex);
-			if(obj instanceof OperationRow){
+			if (obj instanceof OperationRow){
 				OperationRow opdObj=(OperationRow)obj;
 				switch (columnIndex) {
 				case -1:
@@ -154,13 +154,13 @@ public class OhTableOperationModel<T> implements TableModel{
                     } catch (OHServiceException ex) {
                         ex.printStackTrace();
                     }
-					if(ope != null)					
+					if (ope != null)
 						value = ope.getDescription();
 					else
 						value = "";
 					break;
 				case 2:
-					value=opdObj.getOpResult();
+					value=manageop.getResultDescriptionTranslated(opdObj.getOpResult());
 					break;
 				case 3:
 					value=opdObj.getTransUnit()+"";

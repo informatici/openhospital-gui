@@ -66,9 +66,6 @@ public class ListEdit extends JDialog {
 	private void fireListInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
 		EventListener[] listeners = listListeners.getListeners(ListListener.class);
@@ -78,9 +75,6 @@ public class ListEdit extends JDialog {
 	private void fireListUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = listListeners.getListeners(ListListener.class);

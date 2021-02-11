@@ -21,16 +21,6 @@
  */
 package org.isf.exa.gui;
 
-/*------------------------------------------
- * ExamBrowser - list all exams. let the user select an exam to edit
- * -----------------------------------------
- * modification history
- * 11/12/2005 - bob  - first beta version 
- * 03/11/2006 - ross - changed button Show into Results 
- * 			         - version is now 1.0 
- * 10/11/2006 - ross - corretto eliminazione esame, prima non si cancellava mai
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -70,11 +60,19 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
 
+/**
+ * ------------------------------------------
+ * ExamBrowser - list all exams. Let the user select an exam to edit
+ * -----------------------------------------
+ * modification history
+ * 11/12/2005 - bob  - first beta version
+ * 03/11/2006 - ross - changed button Show into Results
+ * 			         - version is now 1.0
+ * 10/11/2006 - ross - corrected exam deletion, before it was never deleted
+ * ------------------------------------------
+ */
 public class ExamBrowser extends ModalJFrame implements ExamListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final String VERSION="v1.2"; 
@@ -82,15 +80,16 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	private int selectedrow;
 	private JComboBox pbox;
 	private ArrayList<Exam> pExam;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.exa.typem"),
 			MessageBundle.getMessage("angal.common.descriptionm"),
 			MessageBundle.getMessage("angal.exa.procm"),
 			MessageBundle.getMessage("angal.exa.defaultm")
 	};
-	private int[] pColumwidth = {60,330,160,60,130};
+	private int[] pColumnWidth = {60,330,160,60,130};
 	private Exam exam;
+
 	private DefaultTableModel model ;
 	private JTable table;
 	private final JFrame myFrame;
@@ -207,11 +206,11 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			table.setAutoCreateColumnsFromModel(false);
 			sorter = new TableRowSorter<TableModel>(model);
 		    table.setRowSorter(sorter);
-			table.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			table.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
-			table.getColumnModel().getColumn(2).setMinWidth(pColumwidth[2]);
-			table.getColumnModel().getColumn(3).setMinWidth(pColumwidth[3]);
-			table.getColumnModel().getColumn(4).setMinWidth(pColumwidth[4]);
+			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
+			table.getColumnModel().getColumn(2).setMinWidth(pColumnWidth[2]);
+			table.getColumnModel().getColumn(3).setMinWidth(pColumnWidth[3]);
+			table.getColumnModel().getColumn(4).setMinWidth(pColumnWidth[4]);
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 				
@@ -366,9 +365,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 
 	class ExamBrowsingModel extends DefaultTableModel {
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		
 		public ExamBrowsingModel(String s) {
@@ -395,16 +391,16 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
 			Exam exam = pExam.get(r);
-			if(c==-1){
+			if (c==-1){
 				return exam;
 			}
 			else if (c == 0) {

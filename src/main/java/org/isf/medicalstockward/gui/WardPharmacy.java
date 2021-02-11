@@ -175,7 +175,7 @@ public class WardPharmacy extends ModalJFrame implements
 	// private Medical drugSelected;
 	private MovementWard movSelected;
 	private boolean added = false;
-	private String[] columsIncomes = {
+	private String[] columnsIncomes = {
 			MessageBundle.getMessage("angal.common.date"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.from"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
@@ -184,9 +184,9 @@ public class WardPharmacy extends ModalJFrame implements
 			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstock.lotduedate") //$NON-NLS-1$
 	};
-	private boolean[] columsResizableIncomes = { true, true, true, true, true, true, true };
-	private int[] columWidthIncomes = { 80, 50, 50, 50, 50, 50, 50 };
-	private String[] columsOutcomes = {
+	private boolean[] columnsResizableIncomes = { true, true, true, true, true, true, true };
+	private int[] columnWidthIncomes = { 80, 50, 50, 50, 50, 50, 50 };
+	private String[] columnsOutcomes = {
 			MessageBundle.getMessage("angal.common.date"),  //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.purpose"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.age"),  //$NON-NLS-1$
@@ -198,16 +198,16 @@ public class WardPharmacy extends ModalJFrame implements
 			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"),
 			MessageBundle.getMessage("angal.medicalstock.lotduedate")//$NON-NLS-1$
 	};
-	private boolean[] columsResizableOutcomes = { false, true, false, false, false, true, false, false, true };
-	private int[] columWidthOutcomes = { 150, 150, 50, 50, 50, 170, 50, 50, 50 };
-	private String[] columsDrugs = {
+	private boolean[] columnsResizableOutcomes = { false, true, false, false, false, true, false, false, true };
+	private int[] columnWidthOutcomes = { 150, 150, 50, 50, 50, 170, 50, 50, 50 };
+	private String[] columnsDrugs = {
 			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstockward.units"), //$NON-NLS-1$
 			"" //$NON-NLS-1$
 	};
-	private boolean[] columsResizableDrugs = { true, true, true, true };
-	private int[] columWidthDrugs = { 150, 50, 50, 50 };
+	private boolean[] columnsResizableDrugs = { true, true, true, true };
+	private int[] columnWidthDrugs = { 150, 50, 50, 50 };
 	private final int filterWidth = 250;
 	private final int filterSpacing = 5;
 	private String rowCounterText = MessageBundle.getMessage("angal.medicalstockward.count") + ": "; //$NON-NLS-1$ //$NON-NLS-2$
@@ -239,7 +239,7 @@ public class WardPharmacy extends ModalJFrame implements
 	//private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel"; //$NON-NLS-1$
 
 	/*
-	 *Adds to facilitate the selection of products
+	 * Adds to facilitate the selection of products
 	 */
 	private JPanel searchPanel;
 	private JTextField searchTextField;
@@ -514,10 +514,10 @@ public class WardPharmacy extends ModalJFrame implements
 		if (jTableIncomes == null) {
 			modelIncomes = new IncomesModel();
 			jTableIncomes = new JTable(modelIncomes);
-			for (int i = 0; i < columWidthIncomes.length; i++) {
-				jTableIncomes.getColumnModel().getColumn(i).setMinWidth(columWidthIncomes[i]);
-				if (!columsResizableIncomes[i])
-					jTableIncomes.getColumnModel().getColumn(i).setMaxWidth(columWidthIncomes[i]);
+			for (int i = 0; i < columnWidthIncomes.length; i++) {
+				jTableIncomes.getColumnModel().getColumn(i).setMinWidth(columnWidthIncomes[i]);
+				if (!columnsResizableIncomes[i])
+					jTableIncomes.getColumnModel().getColumn(i).setMaxWidth(columnWidthIncomes[i]);
 			}
 			jTableIncomes.setAutoCreateColumnsFromModel(false);
 		}
@@ -542,16 +542,16 @@ public class WardPharmacy extends ModalJFrame implements
 			jTableDrugs = new JTable(modelDrugs);
 			TableCellRenderer buttonRenderer = new JTableButtonRenderer();
 			jTableDrugs.getColumn("").setCellRenderer(buttonRenderer);
-			for (int i = 0; i < columWidthDrugs.length; i++) {
-				jTableDrugs.getColumnModel().getColumn(i).setMinWidth(columWidthDrugs[i]);
-				if (!columsResizableDrugs[i])
-					jTableDrugs.getColumnModel().getColumn(i).setMaxWidth(columWidthDrugs[i]);
+			for (int i = 0; i < columnWidthDrugs.length; i++) {
+				jTableDrugs.getColumnModel().getColumn(i).setMinWidth(columnWidthDrugs[i]);
+				if (!columnsResizableDrugs[i])
+					jTableDrugs.getColumnModel().getColumn(i).setMaxWidth(columnWidthDrugs[i]);
 			}
 
 			jTableDrugs.addMouseListener(new MouseAdapter() {
 
 				public void mouseClicked(MouseEvent me) {
-					int column = jTableDrugs.getColumnModel().getColumnIndexAtX(me.getX()); // get the coloum of the button
+					int column = jTableDrugs.getColumnModel().getColumnIndexAtX(me.getX()); // get the column of the button
 					JTable target = (JTable) me.getSource();
 					int row = target.getSelectedRow(); // select a row
 
@@ -616,9 +616,6 @@ public class WardPharmacy extends ModalJFrame implements
 
 	class StockMovModel extends DefaultTableModel {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 		private ArrayList<MedicalWard> druglist;
 
@@ -1096,10 +1093,10 @@ public class WardPharmacy extends ModalJFrame implements
 			modelOutcomes = new OutcomesModel();
 			jTableOutcomes = new JTable(modelOutcomes);
 			jTableOutcomes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			for (int i = 0; i < columWidthOutcomes.length; i++) {
-				jTableOutcomes.getColumnModel().getColumn(i).setPreferredWidth(columWidthOutcomes[i]);
-				if (!columsResizableOutcomes[i])
-					jTableOutcomes.getColumnModel().getColumn(i).setMaxWidth(columWidthOutcomes[i]);
+			for (int i = 0; i < columnWidthOutcomes.length; i++) {
+				jTableOutcomes.getColumnModel().getColumn(i).setPreferredWidth(columnWidthOutcomes[i]);
+				if (!columnsResizableOutcomes[i])
+					jTableOutcomes.getColumnModel().getColumn(i).setMaxWidth(columnWidthOutcomes[i]);
 			}
 			jTableOutcomes.setDefaultRenderer(Object.class, new BlueBoldTableCellRenderer());
 			jTableOutcomes.setAutoCreateColumnsFromModel(false);
@@ -1297,11 +1294,11 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 
 		public String getColumnName(int c) {
-			return columsIncomes[c];
+			return columnsIncomes[c];
 		}
 
 		public int getColumnCount() {
-			return columsIncomes.length;
+			return columnsIncomes.length;
 		}
 
 		public boolean isCellEditable(int arg0, int arg1) {
@@ -1311,9 +1308,6 @@ public class WardPharmacy extends ModalJFrame implements
 
 	class OutcomesModel extends DefaultTableModel {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 		//private ArrayList<MovementWard> wardOutcomes; --> Global
 
@@ -1443,11 +1437,11 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 
 		public String getColumnName(int c) {
-			return columsOutcomes[c];
+			return columnsOutcomes[c];
 		}
 
 		public int getColumnCount() {
-			return columsOutcomes.length;
+			return columnsOutcomes.length;
 		}
 
 		public boolean isCellEditable(int arg0, int arg1) {
@@ -1458,9 +1452,6 @@ public class WardPharmacy extends ModalJFrame implements
 
 	class DrugsModel extends DefaultTableModel {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		private ArrayList<MedicalWard> tableModel;
@@ -1519,11 +1510,11 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 
 		public String getColumnName(int c) {
-			return columsDrugs[c];
+			return columnsDrugs[c];
 		}
 
 		public int getColumnCount() {
-			return columsDrugs.length;
+			return columnsDrugs.length;
 		}
 
 		public boolean isCellEditable(int arg0, int arg1) {
@@ -1711,9 +1702,6 @@ public class WardPharmacy extends ModalJFrame implements
 
 	class CenterBoldTableCellRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
@@ -1729,9 +1717,6 @@ public class WardPharmacy extends ModalJFrame implements
 
 	class BlueBoldTableCellRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,

@@ -46,9 +46,6 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class OperationTypeEdit extends JDialog{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList operationTypeListeners = new EventListenerList();
 
@@ -68,9 +65,6 @@ public class OperationTypeEdit extends JDialog{
     private void fireOperationInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
@@ -80,9 +74,6 @@ public class OperationTypeEdit extends JDialog{
     private void fireOperationUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
@@ -104,9 +95,9 @@ public class OperationTypeEdit extends JDialog{
 	private JLabel jCodeLabel = null;
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescripitonLabel = null;
+	private JLabel jDescriptionLabel = null;
+
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -118,11 +109,8 @@ public class OperationTypeEdit extends JDialog{
 		initialize();
 	}
 
-
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		
@@ -342,16 +330,12 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescripitonLabel = new JLabel();
-			jDescripitonLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel();
+			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
 			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescripitonLabel, null);
+			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}
 		return jDescriptionLabelPanel;
 	}
-	
 
-
-}  //  @jve:decl-index=0:visual-constraint="146,61"
-
-
+}

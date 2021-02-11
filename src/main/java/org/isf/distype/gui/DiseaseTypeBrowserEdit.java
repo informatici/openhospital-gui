@@ -45,10 +45,7 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DiseaseTypeBrowserEdit extends JDialog{
-
-    /**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private EventListenerList diseaseTypeListeners = new EventListenerList();
 
@@ -67,10 +64,7 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 
     private void fireDiseaseInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-
-			/**
-			 * 
-			 */
+        	
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
@@ -79,10 +73,7 @@ public class DiseaseTypeBrowserEdit extends JDialog{
     }
     private void fireDiseaseUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-
-			/**
-			 * 
-			 */
+        	
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
@@ -104,10 +95,10 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 	private JLabel jCodeLabel = null;
 	private JPanel jCodeLabelPanel = null;
 	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescripitonLabel = null;
+	private JLabel jDescriptionLabel = null;
+
 	/**
-     * 
-	 * This is the default constructor; we pass the arraylist and the selectedrow
+     * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
 	public DiseaseTypeBrowserEdit(JFrame owner,DiseaseType old,boolean inserting) {
@@ -121,8 +112,6 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		
@@ -244,7 +233,7 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 
                         }
                     } catch (OHServiceException ex) {
-                        if(ex.getMessages() != null){
+                        if (ex.getMessages() != null){
                             for(OHExceptionMessage msg : ex.getMessages()){
                                 JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
                             }
@@ -339,16 +328,12 @@ public class DiseaseTypeBrowserEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescripitonLabel = new JLabel();
-			jDescripitonLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel();
+			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
 			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescripitonLabel, null);
+			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}
 		return jDescriptionLabelPanel;
 	}
 	
-
-
-}  //  @jve:decl-index=0:visual-constraint="146,61"
-
-
+}

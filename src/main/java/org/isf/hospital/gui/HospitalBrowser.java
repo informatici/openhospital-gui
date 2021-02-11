@@ -47,15 +47,11 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
  * Shows information about the hospital
- * 
- * @author Fin8, Furla, Thoia
  *
+ * @author Fin8, Furla, Thoia
  */
 public class HospitalBrowser extends ModalJFrame{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private int pfrmBase = 96;
 	private int pfrmWidth = 24;
@@ -338,4 +334,3 @@ public class HospitalBrowser extends ModalJFrame{
 		}
 	}
 }
-

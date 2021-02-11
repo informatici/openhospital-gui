@@ -21,14 +21,6 @@
  */
 package org.isf.exa.gui;
 
-/*------------------------------
- * ExamRowEdit - add/edit Exams Result 
- * ----------------------------------
- * modification history
- * 3/11/2006 - enlarged the form width 
- * 			 - version is now 1.0 
- *------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -54,11 +46,17 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
+/**
+ * ------------------------------
+ * ExamRowEdit - add/edit Exams Result
+ * ----------------------------------
+ * modification history
+ * 3/11/2006 - enlarged the form width
+ * 			 - version is now 1.0
+ * ------------------------------
+ */
 public class ExamRowEdit extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static final String VERSION="v1.2";
@@ -80,9 +78,6 @@ public class ExamRowEdit extends JDialog {
     private void fireExamRowInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examRowListeners.getListeners(ExamRowListener.class);
@@ -101,7 +96,6 @@ public class ExamRowEdit extends JDialog {
 	private ExamRow examRow = null;
     
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -114,8 +108,6 @@ public class ExamRowEdit extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -218,7 +210,7 @@ public class ExamRowEdit extends JDialog {
 							dispose();
 						}
 					}catch(OHServiceException ex){
-						if(ex.getMessages() != null){
+						if (ex.getMessages() != null){
 							for(OHExceptionMessage msg : ex.getMessages()){
 								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
@@ -242,6 +234,5 @@ public class ExamRowEdit extends JDialog {
 		}
 		return descriptionTextField;
 	}
-	
 
 }

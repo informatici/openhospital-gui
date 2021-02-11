@@ -33,17 +33,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
 /**
- * returns a JTextField for date
- * it can manage dates in format dd/mm/yyyy, dd/mm/yy, mm/dd/yyyy or mm/dd/yy
- * 
- * @author Rick
+ * Returns a JTextField for date it can manage dates in format dd/mm/yyyy, dd/mm/yy, mm/dd/yyyy or mm/dd/yy
  *
+ * @author Rick
  */
 public class VoDateTextField extends JTextField {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private String TYPE;
 	private String currentDate = "nothing";
@@ -53,10 +48,7 @@ public class VoDateTextField extends JTextField {
 	}
 	
 	public class ManagedData extends DefaultStyledDocument {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private int MAXCHARS = 0;
 		
@@ -84,7 +76,7 @@ public class VoDateTextField extends JTextField {
 	}
 	
 	/**
-	 * constructor with no default date
+	 * Constructor with no default date
 	 */
 	public VoDateTextField(String type, int cols) throws IllegalArgumentException {
 		super(cols);
@@ -98,7 +90,7 @@ public class VoDateTextField extends JTextField {
 	}
 	
 	/**
-	 * constructor with default date
+	 * Constructor with default date
 	 */
 	public VoDateTextField(String type, String todayDate, int cols) throws IllegalArgumentException {
 		super(cols);
@@ -127,7 +119,7 @@ public class VoDateTextField extends JTextField {
 	}
 	
 	/**
-	 * when focus is lost check if the date is correct or not
+	 * When focus is lost check if the date is correct or not
 	 */
 	private void check() {
 		
@@ -199,7 +191,7 @@ public class VoDateTextField extends JTextField {
 	}
 	
 	/**
-	 * returns a GregorianCalendar for date use
+	 * Returns a GregorianCalendar for date use
 	 */
 	public GregorianCalendar getDate() {
 		GregorianCalendar calendar = new GregorianCalendar();
@@ -218,11 +210,11 @@ public class VoDateTextField extends JTextField {
 	
 	public void setDate(GregorianCalendar time){
 		String string;
-		if(time.get(GregorianCalendar.DAY_OF_MONTH)>9)
+		if (time.get(GregorianCalendar.DAY_OF_MONTH)>9)
 			string=String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH));
 		else
 			string="0"+String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH));
-		if(time.get(GregorianCalendar.MONTH)+1>9)
+		if (time.get(GregorianCalendar.MONTH)+1>9)
 			string+="/"+String.valueOf(time.get(GregorianCalendar.MONTH)+1);
 		else
 			string+="/0"+String.valueOf(time.get(GregorianCalendar.MONTH)+1);
@@ -231,11 +223,11 @@ public class VoDateTextField extends JTextField {
 	}
 	
 	private String getConvertedString(GregorianCalendar time){
-		String string;if(time.get(GregorianCalendar.DAY_OF_MONTH)>9)
+		String string;if (time.get(GregorianCalendar.DAY_OF_MONTH)>9)
 			string=String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH));
 		else
 			string="0"+String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH));
-		if(time.get(GregorianCalendar.MONTH)+1>9)
+		if (time.get(GregorianCalendar.MONTH)+1>9)
 			string+="/"+String.valueOf(time.get(GregorianCalendar.MONTH)+1);
 		else
 			string+="/0"+String.valueOf(time.get(GregorianCalendar.MONTH)+1);

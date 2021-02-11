@@ -45,9 +45,6 @@ import org.isf.utils.time.DateTextField;
 
 public class InsertMalnutrition extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private EventListenerList malnutritionListeners = new EventListenerList();

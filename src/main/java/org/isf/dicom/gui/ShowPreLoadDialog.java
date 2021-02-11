@@ -57,15 +57,10 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 import com.toedter.calendar.JDateChooser;
 
 /**
- * 
  * @author Mwithi
- *
  */
 class ShowPreLoadDialog extends JDialog {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		
 		/*
@@ -140,7 +135,6 @@ class ShowPreLoadDialog extends JDialog {
 				gbc_dateListLabel.insets = new Insets(5, 5, 5, 5);
 				gbc_dateListLabel.gridx = 0;
 				gbc_dateListLabel.gridy = 1;
-				gbc_dateListLabel.anchor = GridBagConstraints.WEST;
 				gbc_dateListLabel.anchor = GridBagConstraints.NORTHWEST;
 				JLabel dateListLabel = new JLabel("Other dates" + ":");
 				centerPanel.add(dateListLabel, gbc_dateListLabel);
@@ -290,4 +284,4 @@ class ShowPreLoadDialog extends JDialog {
 		public boolean isSave() {
 			return save;
 		}
-	}
+}

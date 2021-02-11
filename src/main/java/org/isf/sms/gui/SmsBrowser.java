@@ -68,10 +68,7 @@ import org.joda.time.DateTime;
  * @author Mwithi
  */
 public class SmsBrowser extends ModalJFrame {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	private JTable jSmsTable;
@@ -334,9 +331,6 @@ public class SmsBrowser extends ModalJFrame {
 	
 	class SmsTableModel extends DefaultTableModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		
 		public SmsTableModel() {
@@ -384,9 +378,7 @@ public class SmsBrowser extends ModalJFrame {
  	}
 	
 	class ColorTableCellRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

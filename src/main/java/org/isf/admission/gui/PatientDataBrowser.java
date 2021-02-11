@@ -67,7 +67,12 @@ import org.isf.utils.table.TableSorter;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
-/*----------------------------------------------------
+/**
+ * This class shows and allows to modify all patient data and all patient admissions.
+ *
+ * last release  oct-23-06
+ * @author flavio
+ * ----------------------------------------------------
  * (org.isf.admission.gui)PatientDataBrowser
  * ---------------------------------------------------
  * modification history
@@ -75,23 +80,12 @@ import org.isf.ward.model.Ward;
  * 					 - modified EDIT and DELETE methods to match the selection
  * 					 - fixed record elimination in the view port
  * 					 - modified some panels in GUI
- *------------------------------------------*/
-
-/**
-* This class shows and allows to modify all patient data and all patient admissions 
-* 
-* last release  oct-23-06
-* @author flavio
-* 
-*/
+ * ------------------------------------------
+ */
 public class PatientDataBrowser extends ModalJFrame implements 
 				PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener, OpdEditExtended.SurgeryListener {
 	
 	
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
 
@@ -210,14 +204,8 @@ public class PatientDataBrowser extends ModalJFrame implements
 				break;
 			}
 		}
-		if (isMalnutrition){
-			patientData.add(ps.getPatientCompleteSummary(), BorderLayout.WEST);
-		}
-		else {
-			//patientData.add(ps.getPatientDataPanel(), BorderLayout.WEST);			
-			patientData.add(ps.getPatientCompleteSummary(), BorderLayout.WEST);
-		}
-		
+		patientData.add(ps.getPatientCompleteSummary(), BorderLayout.WEST);
+
 		return patientData;
 	}
 	
@@ -228,15 +216,15 @@ public class PatientDataBrowser extends ModalJFrame implements
 	private ArrayList<Ward> ward;
 	private ArrayList<Opd> opdList;
 	
-//	private String[] pColums = {MessageBundle.getMessage("angal.admission.admissionm"),MessageBundle.getMessage("angal.admission.wards"), MessageBundle.getMessage("angal.admission.diagnosis"), MessageBundle.getMessage("angal.admission.operation"), MessageBundle.getMessage("angal.admission.result"), MessageBundle.getMessage("angal.admission.discharge") };
-//	private int[] pColumwidth = {120, 150, 200, 200, 100, 120 };
+//	private String[] pColumns = {MessageBundle.getMessage("angal.admission.admissionm"),MessageBundle.getMessage("angal.admission.wards"), MessageBundle.getMessage("angal.admission.diagnosis"), MessageBundle.getMessage("angal.admission.operation"), MessageBundle.getMessage("angal.admission.result"), MessageBundle.getMessage("angal.admission.discharge") };
+//	private int[] pColumnWidth = {120, 150, 200, 200, 100, 120 };
 
 	//Alex: modified to include OPD
-	private String[] pColums = {MessageBundle.getMessage("angal.common.datem"),MessageBundle.getMessage("angal.admission.wards"), MessageBundle.getMessage("angal.admission.diagnosisinm"), MessageBundle.getMessage("angal.admission.diagnosisoutm"), MessageBundle.getMessage("angal.admission.statusm") };
-	private int[] pColumwidth = {120, 150, 200, 200, 120 };
+	private String[] pColumns = {MessageBundle.getMessage("angal.common.datem"),MessageBundle.getMessage("angal.admission.wards"), MessageBundle.getMessage("angal.admission.diagnosisinm"), MessageBundle.getMessage("angal.admission.diagnosisoutm"), MessageBundle.getMessage("angal.admission.statusm") };
+	private int[] pColumnWidth = {120, 150, 200, 200, 120 };
 	
 	private DefaultTableModel admModel;
-	
+
 	//Alex: added table sorter, for java6 only
 	//private TableRowSorter<AdmissionBrowserModel> adm_sorter;
 
@@ -263,8 +251,8 @@ public class PatientDataBrowser extends ModalJFrame implements
 		//sorter.addMouseListenerToHeaderInTable(admTable); no needed
 		sorter.sortByColumn(0, false); //sort by first column, descending
 				
-		for (int i=0;i<pColums.length; i++){
-			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
+		for (int i = 0; i< pColumns.length; i++){
+			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			if (i == 0 || i == 4) {
 				admTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
 			}
@@ -522,18 +510,22 @@ class AdmissionBrowserModel extends DefaultTableModel {
 		
 		
 		public int getRowCount() {
-			if (admList == null && opdList == null)
-				return 0;
-			
-			return admList.size() + opdList.size();
+			int count = 0;
+			if (admList != null) {
+				count += admList.size();
+			}
+			if (opdList != null) {
+				count += opdList.size();
+			}
+			return count;
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}	
 		
 		

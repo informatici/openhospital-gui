@@ -27,23 +27,16 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
 /**
- * returns a JTextField of the wanted length
- * 
- * @author studente
+ * Returns a JTextField of the wanted length
  *
+ * @author studente
  */
 public class VoLimitedTextField extends JTextField {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public class LimitedDimension extends DefaultStyledDocument {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private final int MAXCHARS;
 		

@@ -21,26 +21,20 @@
  */
 package org.isf.utils.jobjects;
 
-/**
- * JLabelRequired.java - 28/gen/2014
- * @author Mwithi
- */
-
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
+/**
+ * JLabelRequired.java - 28/gen/2014
+ *
+ * @author Mwithi
+ */
 public class JLabelRequired extends JLabel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1519907071350395237L;
 	
 	private static String MARK = " *";
 
-	/**
-	 * 
-	 */
 	public JLabelRequired() {
 	}
 

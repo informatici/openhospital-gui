@@ -31,8 +31,8 @@ import java.awt.Container;
 
 /**
  * Offer a method that enable or disable a component and all its children.
- * The cursor is changed to <code>WAIT_CURSOR</code> when disabling widgets, to
- * <code>DEFAULT_CURSOR</code> when enabling them.
+ * The cursor is changed to {@code WAIT_CURSOR} when disabling widgets, to
+ * {@code DEFAULT_CURSOR} when enabling them.
  * 
  * The method is not recursive, so <i>grandchildren</i> aren't processed: it only
  * works on a component and its first level children.
@@ -42,7 +42,7 @@ import java.awt.Container;
  */
 @Deprecated
 public class BusyState {
-	static public void setBusyState(Container panel, boolean busy) {
+	public static void setBusyState(Container panel, boolean busy) {
 		/*panel.setCursor(new Cursor( busy ? Cursor.WAIT_CURSOR : Cursor.DEFAULT_CURSOR));
 		for (Component comp : panel.getComponents()) {
 			comp.setEnabled(!busy);

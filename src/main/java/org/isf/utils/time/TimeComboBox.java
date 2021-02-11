@@ -33,10 +33,6 @@ import javax.swing.event.EventListenerList;
 
 public class TimeComboBox extends JPanel{
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList timeComboListeners = new EventListenerList();
 
@@ -55,9 +51,6 @@ public class TimeComboBox extends JPanel{
     private void fireDateSet() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
         EventListener[] listeners = timeComboListeners.getListeners(TimeComboListener.class);
         for (int i = 0; i < listeners.length; i++)
@@ -81,6 +74,7 @@ public class TimeComboBox extends JPanel{
 		add(months);
 		add(years);
 	}
+
 	private void initialize(GregorianCalendar time){
 		years=new JComboBox();
 		for(int y=2006;y<2020;y++){
@@ -110,19 +104,20 @@ public class TimeComboBox extends JPanel{
 		});
 		setDays(time);
 	}
+
 	public void setDays(GregorianCalendar time){
-		if(days!=null)days.removeActionListener(action);
+		if (days!=null)days.removeActionListener(action);
 		else days=new JComboBox();
 		days.removeAllItems();
 
 		int numDays;
 		int month=time.get(GregorianCalendar.MONTH)+1;
-		if(month==1||month==3||month==5||month==7||month==8||month==10||month==12){
+		if (month==1||month==3||month==5||month==7||month==8||month==10||month==12){
 			numDays=31;
 		}
 		else{
-			if(month==2)
-				if(time.get(GregorianCalendar.YEAR)%4==0)numDays=29;
+			if (month==2)
+				if (time.get(GregorianCalendar.YEAR)%4==0)numDays=29;
 				else numDays=28;
 			else {
 				numDays=30;

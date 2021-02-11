@@ -36,9 +36,6 @@ import org.isf.generaldata.GeneralData;
 
 public class JDateAndTimeChooser extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private CustomJDateChooser date;
 	private JTimeTable timeTable;

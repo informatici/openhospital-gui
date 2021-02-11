@@ -49,30 +49,25 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * Browsing of table DeliveryType
- * 
+ *
  * @author Furlanetto, Zoia, Finotto
- * 
  */
-
 public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<DeliveryType> pDeliveryType;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumwidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private DeliveryTypeBrowserModel model;
 	private int selectedrow;
@@ -83,7 +78,6 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	
 	/**
 	 * This method initializes 
-	 * 
 	 */
 	public DeliveryTypeBrowser() {
 		super();
@@ -124,7 +118,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
@@ -169,8 +163,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						deliveryType = (DeliveryType) (((DeliveryTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						deliveryType = (DeliveryType) (model.getValueAt(selectedrow, -1));
 						DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, false);
 						newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -201,16 +194,16 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton();
+			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,
@@ -218,8 +211,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						DeliveryType dis = (DeliveryType) (((DeliveryTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						DeliveryType dis = (DeliveryType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.dlvrtype.deletedeliverytype") + " \" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
@@ -231,7 +223,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
                                 jTable.updateUI();
                             }
                         }catch(OHServiceException e){
-                            if(e.getMessages() != null){
+                            if (e.getMessages() != null){
                                 for(OHExceptionMessage msg : e.getMessages()){
                                     JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
                                 }
@@ -242,15 +234,15 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new DeliveryTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 	
@@ -261,10 +253,6 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	
 class DeliveryTypeBrowserModel extends DefaultTableModel {
 		
-		
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
@@ -272,7 +260,7 @@ class DeliveryTypeBrowserModel extends DefaultTableModel {
             try{
                 pDeliveryType = manager.getDeliveryType();
             }catch(OHServiceException e){
-                if(e.getMessages() != null){
+                if (e.getMessages() != null){
                     for(OHExceptionMessage msg : e.getMessages()){
                         JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
                     }
@@ -287,11 +275,11 @@ class DeliveryTypeBrowserModel extends DefaultTableModel {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -311,9 +299,7 @@ class DeliveryTypeBrowserModel extends DefaultTableModel {
 			return false;
 		}
 	}
-
-
-
+	
 
 public void deliveryTypeUpdated(AWTEvent e) {
 	pDeliveryType.set(selectedrow, deliveryType);
@@ -330,6 +316,5 @@ public void deliveryTypeInserted(AWTEvent e) {
 	if (jTable.getRowCount() > 0)
 		jTable.setRowSelectionInterval(0, 0);
 }
-	
-	
+
 }

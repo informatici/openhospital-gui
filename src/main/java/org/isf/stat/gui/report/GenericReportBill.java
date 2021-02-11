@@ -21,10 +21,6 @@
  */
 package org.isf.stat.gui.report;
 
-/*
- * Created on 15/giu/08
- */
-
 import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -54,6 +50,9 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
+/*
+ * Created on 15/Jun/08
+ */
 public class GenericReportBill {
 
     private final Logger logger = LoggerFactory.getLogger(GenericReportBill.class);

@@ -41,7 +41,6 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -105,9 +104,6 @@ public class LabNew extends JDialog implements SelectionListener {
 	private void fireLabInserted() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = labListener.getListeners(LabListener.class);
@@ -365,7 +361,7 @@ public class LabNew extends JDialog implements SelectionListener {
             return jPanelButtons;
 	}
 	private JButton getPrintLabelButton(){
-		if(printLabelButton==null){
+		if (printLabelButton==null){
 			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel"));
 			printLabelButton.setMnemonic(KeyEvent.VK_O);
 			printLabelButton.addActionListener(new ActionListener() {
@@ -776,7 +772,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	}
 	
 	public JPanel getJPanelExamButtons() {
-		if(jPanelExamButtons == null) {
+		if (jPanelExamButtons == null) {
 			jPanelExamButtons = new JPanel();
 			jPanelExamButtons.setLayout(new BoxLayout(jPanelExamButtons, BoxLayout.X_AXIS));
 			jPanelExamButtons.add(getJButtonAddExam());
@@ -795,7 +791,6 @@ public class LabNew extends JDialog implements SelectionListener {
 			jButtonAddExam.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					Icon icon = new ImageIcon("rsc/icons/material_dialog.png");
 					String mat = "";
 
 					OhTableModelExam<Price> modelOh = new OhTableModelExam<Price>(exaArray);
@@ -820,8 +815,6 @@ public class LabNew extends JDialog implements SelectionListener {
 					Laboratory lab = null;
 					boolean alreadyIn = false;
 
-					icon = new ImageIcon("rsc/icons/exam_dialog.png"); //$NON-NLS-1$
-
 					if (exams.size() < 1) {
 						return;
 					}
@@ -843,30 +836,10 @@ public class LabNew extends JDialog implements SelectionListener {
 							continue;
 						}
 
-						if (exa.getProcedure() == 1) {
-							ArrayList<ExamRow> exaRowTemp = new ArrayList<ExamRow>();
-							ArrayList<ExamRow> exaRowArray;
-							try {
-								exaRowArray = examRowManager.getExamRowByExamCode(exa.getCode());
-							} catch (OHServiceException e1) {
-								exaRowArray = null;
-								Logger.getLogger(LabNew.class.getName()).log(Level.SEVERE, null, e1);
-							}
-							// if(exaRowArray != null)
-							for (ExamRow exaRow : exaRowArray) {
-								// if(exaRow != null){
-								if (exa.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
-									exaRowTemp.add(exaRow);
-								}
-								// }
-							}
-							icon = new ImageIcon("rsc/icons/list_dialog.png"); //$NON-NLS-1$
+						if (exa.getProcedure() == 1 || exa.getProcedure() == 3) {
 							lab.setResult(exa.getDefaultResult());
-
-						} else if (exa.getProcedure() == 2) {
+						} else { // exa.getProcedure() == 2
 							lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));
-						} else {
-							lab.setResult(exa.getDefaultResult());
 						}
 						lab.setExam(exa);
 						lab.setMaterial(labManager.getMaterialKey(mat));

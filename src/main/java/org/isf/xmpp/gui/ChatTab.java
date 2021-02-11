@@ -41,9 +41,6 @@ public class ChatTab extends JTabbedPane {
 
 	private final Logger logger = LoggerFactory.getLogger(ChatTab.class);
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 	public TabButton tab;
 
@@ -58,9 +55,7 @@ public class ChatTab extends JTabbedPane {
 	}
 
 	public Color getTabColor() {
-
 		return tab.getColor();
-
 	}
 
 	public void setTabColor(Color color) {
@@ -69,9 +64,6 @@ public class ChatTab extends JTabbedPane {
 
 	public class TabButton extends JPanel implements ActionListener {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 		int tab_number;
 		ImageIcon reg = null;
@@ -107,7 +99,6 @@ public class ChatTab extends JTabbedPane {
 			button.setContentAreaFilled(false);
 			button.addActionListener(this);
 			add(button);
-
 		}
 
 		public void setColor(Color color) {
@@ -119,11 +110,8 @@ public class ChatTab extends JTabbedPane {
 		}
 
 		public void actionPerformed(ActionEvent ae) {
-
 			tabReference.remove(tabReference.indexOfTabComponent(this));
-
 		}
 
 	}
 }
-

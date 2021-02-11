@@ -45,15 +45,9 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
 
-
-
 public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 
 	public void groupInserted(AWTEvent e) {
 		pGroup.add(0,group);
@@ -77,8 +71,8 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	private int pfrmHeight;
 	private int selectedrow;
 	private ArrayList<UserGroup> pGroup;
-	private String[] pColums = { MessageBundle.getMessage("angal.menu.groupm"), MessageBundle.getMessage("angal.menu.descm") };
-	private int[] pColumwidth = {70,  100 };
+	private String[] pColumns = { MessageBundle.getMessage("angal.menu.groupm"), MessageBundle.getMessage("angal.menu.descm") };
+	private int[] pColumnWidth = {70,  100 };
 	private UserGroup group;
 	private DefaultTableModel model ;
 	private JTable table;
@@ -103,8 +97,8 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		
 		model = new UserGroupBrowserModel();
 		table = new JTable(model);
-		table.getColumnModel().getColumn(0).setPreferredWidth(pColumwidth[0]);
-		table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
+		table.getColumnModel().getColumn(0).setPreferredWidth(pColumnWidth[0]);
+		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
 				
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -217,11 +211,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 		
 	class UserGroupBrowserModel extends DefaultTableModel {
-		
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public UserGroupBrowserModel() {
@@ -238,11 +228,11 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {

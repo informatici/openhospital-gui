@@ -49,29 +49,24 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * Browsing of table OperationType
- * 
+ *
  * @author Furlanetto, Zoia, Finotto
- * 
  */
-
 public class OperationTypeBrowser extends ModalJFrame implements OperationTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<OperationType> pOperationType;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
 			MessageBundle.getMessage("angal.common.descriptionm")
 	};
-	private int[] pColumwidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200 };
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private OperationTypeBrowserModel model;
 	private int selectedrow;
@@ -79,12 +74,9 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 	private OperationType operationType = null;
 	private final JFrame myFrame;
 	
-	
-	
-	
+
 	/**
 	 * This method initializes 
-	 * 
 	 */
 	public OperationTypeBrowser() {
 		super();
@@ -125,7 +117,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
@@ -170,8 +162,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
-						operationType = (OperationType) (((OperationTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
+						operationType = (OperationType) (model.getValueAt(selectedrow, -1));
 						OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, false);
 						newrecord.addOperationTypeListener(OperationTypeBrowser.this);
 						newrecord.setVisible(true);
@@ -202,16 +193,16 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton();
+			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
+			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,
@@ -219,8 +210,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 								JOptionPane.PLAIN_MESSAGE);
 						return;
 					} else {
-						OperationType dis = (OperationType) (((OperationTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
+						OperationType dis = (OperationType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.opetype.deleteoperationtype")+" \" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
@@ -247,25 +237,21 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new OperationTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
 	
 	
 class OperationTypeBrowserModel extends DefaultTableModel {
 		
-		
-		/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 		public OperationTypeBrowserModel() {
@@ -285,11 +271,11 @@ class OperationTypeBrowserModel extends DefaultTableModel {
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -328,6 +314,5 @@ public void operationTypeInserted(AWTEvent e) {
 	if (jTable.getRowCount() > 0)
 		jTable.setRowSelectionInterval(0, 0);
 }
-	
-	
+
 }

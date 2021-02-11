@@ -21,20 +21,6 @@
  */
 package org.isf.lab.gui;
 
-/*------------------------------------------
- * LabEdit - Add/edit a laboratory exam
- * -----------------------------------------
- * modification history
- * 02/03/2006 - Davide - first beta version
- * 03/11/2006 - ross - changed title, enlarged window
- *                   - changed note from textfield to textarea
- * 			         - version is now 1.0 
- * 08/11/2006 - ross - added age, sex, exam date, material
- *                   - added editing capability 
- * 18/08/2008 - Teo  - Add scroll capabilities at note JTextArea
- * 13/02/2009 - Alex - add calendar
- *------------------------------------------*/
-
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -88,10 +74,23 @@ import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
+/**
+ * ------------------------------------------
+ * LabEdit - Add/edit a laboratory exam
+ * -----------------------------------------
+ * modification history
+ * 02/03/2006 - Davide - first beta version
+ * 03/11/2006 - ross - changed title, enlarged window
+ *                   - changed note from textfield to textarea
+ * 			         - version is now 1.0
+ * 08/11/2006 - ross - added age, sex, exam date, material
+ *                   - added editing capability
+ * 18/08/2008 - Teo  - Add scroll capabilities at note JTextArea
+ * 13/02/2009 - Alex - add calendar
+ * ------------------------------------------
+ */
 public class LabEdit extends ModalJFrame {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1055379190540460482L;
 
 	//LISTENER INTERFACE --------------------------------------------------------
@@ -109,9 +108,6 @@ public class LabEdit extends ModalJFrame {
 	private void fireLabUpdated() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = labEditListener.getListeners(LabEditListener.class);
@@ -304,7 +300,7 @@ public class LabEdit extends ModalJFrame {
 			/*
 			 * Teo : Adding scroll capabilities at note textArea
 			 */
-			if(noteScrollPane == null)
+			if (noteScrollPane == null)
 			{
 				noteScrollPane = new JScrollPane(noteTextArea);
 				noteScrollPane.setBounds(labelWidth+5, 110, 440, 40);
@@ -360,7 +356,7 @@ public class LabEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			patientComboBox.addItem(MessageBundle.getMessage("angal.lab.selectapatient"));
-			if(pat != null){
+			if (pat != null){
 				for (Patient elem : pat) {
 					if (lab.getPatient() != null && !insert) {
 						if (elem.getCode() == lab.getPatient().getCode()) {
@@ -761,9 +757,6 @@ public class LabEdit extends ModalJFrame {
 	}
 	class SubPanel extends JPanel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		private JLabel label = null;

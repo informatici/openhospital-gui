@@ -72,10 +72,10 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 			MessageBundle.getMessage("angal.pricesothers.daily"),
 			MessageBundle.getMessage("angal.pricesothers.discharge"),
 			MessageBundle.getMessage("angal.pricesothers.undefined")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-	private int[] columWidth = {100, 100, 50, 50, 50, 100, 100};
-	private boolean[] columResizable = {false, true, false, false, false, false, false};
+	private int[] columnWidth = {100, 100, 50, 50, 50, 100, 100};
+	private boolean[] columnResizable = {false, true, false, false, false, false, false};
 	
-	static protected Class<?>[] cTypes = {String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class};
+	protected static Class<?>[] cTypes = {String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class};
 	
 	private PricesOthers pOthers;
 	PricesOthersManager pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
@@ -240,9 +240,9 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 			    }
 			};
 			jTablePricesOthers.setModel(new PricesOthersBrowserModel());
-			for (int i=0;i<columWidth.length; i++){
-				jTablePricesOthers.getColumnModel().getColumn(i).setMinWidth(columWidth[i]);
-		    	if (!columResizable[i]) jTablePricesOthers.getColumnModel().getColumn(i).setMaxWidth(columWidth[i]);
+			for (int i = 0; i< columnWidth.length; i++){
+				jTablePricesOthers.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
+		    	if (!columnResizable[i]) jTablePricesOthers.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
 			}
 			jTablePricesOthers.setAutoCreateColumnsFromModel(false);
 		}
@@ -250,10 +250,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	}
 
 class PricesOthersBrowserModel extends DefaultTableModel {
-		
-		/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 		public PricesOthersBrowserModel() {

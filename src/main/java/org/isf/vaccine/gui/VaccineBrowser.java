@@ -50,20 +50,16 @@ import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
 /**
- * This class shows a list of vaccine.
+ * This class shows a list of vaccines.
  * It is possible to edit-insert-delete records
  *
  * @author Eva
  * 
  * modification history
  * 20/10/2011 - Cla - insert vaccinetype managment
- *
  */
 public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public void vaccineInserted(AWTEvent e) {
@@ -93,12 +89,12 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	private JScrollPane jScrollPane = null;
 	private JTable table = null;
 	private DefaultTableModel model = null;
-	private String[] pColums = {
+	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code"),
 			MessageBundle.getMessage("angal.vaccine.vaccinetype"),
 			MessageBundle.getMessage("angal.common.description")
 	};
-	private int[] pColumwidth = {100, 50, 120};
+	private int[] pColumnWidth = {100, 50, 120};
 	private int selectedrow;
 	private ArrayList<Vaccine> pVaccine;
 	private Vaccine vaccine;
@@ -116,8 +112,6 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 
 	/**
 	 * This method initializes this
-	 *
-	 * @return void
 	 */
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.vaccine.vaccinebrowser"));
@@ -347,18 +341,15 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		if (table == null) {
 			model = new VaccineBrowserModel();
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMaxWidth(pColumwidth[0]);
-			table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
-			table.getColumnModel().getColumn(2).setPreferredWidth(pColumwidth[2]);
+			table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+			table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
+			table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
 		}
 		return table;
 	}
 
 	class VaccineBrowserModel extends DefaultTableModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public VaccineBrowserModel() {
@@ -387,11 +378,11 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
