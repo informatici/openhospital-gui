@@ -192,7 +192,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{year}]]></textFieldExpression>
 			</textField>
@@ -205,7 +205,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{year}]]></textFieldExpression>
 			</textField>
@@ -218,7 +218,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="11" isBold="false"/>
+					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Month}+":"]]></textFieldExpression>
 			</textField>
@@ -231,7 +231,7 @@ $F{AliveFemaleAdult}.longValue()+$F{DeadFemaleAdult}.longValue())]]></variableEx
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="11" isBold="false"/>
+					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Year}+":"]]></textFieldExpression>
 			</textField>

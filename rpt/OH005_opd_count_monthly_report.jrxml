@@ -50,7 +50,7 @@ order by 1,2,3 desc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="SansSerif" size="10" isBold="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{OPDNewAtt.AndReAtt.ByAgeSex}]]></textFieldExpression>
 			</textField>
@@ -63,7 +63,7 @@ order by 1,2,3 desc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{year}]]></textFieldExpression>
 			</textField>
@@ -76,7 +76,7 @@ order by 1,2,3 desc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{month}]]></textFieldExpression>
 			</textField>
@@ -89,7 +89,7 @@ order by 1,2,3 desc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left">
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Month}]]></textFieldExpression>
 			</textField>
@@ -102,7 +102,7 @@ order by 1,2,3 desc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left">
-					<font fontName="SansSerif" size="8"/>
+					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Year}]]></textFieldExpression>
 			</textField>
@@ -122,7 +122,7 @@ order by 1,2,3 desc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="SansSerif" size="10" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" size="10" isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{category}]]></textFieldExpression>
 			</textField>
@@ -135,7 +135,7 @@ order by 1,2,3 desc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="SansSerif" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Count}]]></textFieldExpression>
 			</textField>
@@ -148,7 +148,7 @@ order by 1,2,3 desc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="SansSerif" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{age}]]></textFieldExpression>
 			</textField>
@@ -161,7 +161,7 @@ order by 1,2,3 desc]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="SansSerif" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{sex}]]></textFieldExpression>
 			</textField>

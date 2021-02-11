@@ -86,7 +86,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Hospital}]]></textFieldExpression>
 				</textField>
@@ -103,7 +103,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 				</textField>
@@ -120,7 +120,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Email}]]></textFieldExpression>
 				</textField>
@@ -137,7 +137,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{Telephone}]]></textFieldExpression>
 				</textField>
@@ -154,7 +154,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbill.billn") + $P{billID}]]></textFieldExpression>
 				</textField>
@@ -171,7 +171,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.billsreport.date" ) + $F{BLL_UPDATE}.toLocaleString()]]></textFieldExpression>
 				</textField>
@@ -188,7 +188,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbillextendedtxt.patn" ) + $F{BLL_ID_PAT} + " - " + $F{BLL_PAT_NAME}]]></textFieldExpression>
 				</textField>
@@ -205,7 +205,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbill.cashier" ) + $F{BLL_USR_ID_A}]]></textFieldExpression>
 				</textField>
@@ -226,7 +226,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 						key="textField-30"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.moh717monthlyworkloadreportforhospitalspage2b.total" )]]></textFieldExpression>
 				</textField>
@@ -248,7 +248,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{BLI_ITEM_DESC}]]></textFieldExpression>
 				</textField>
@@ -266,7 +266,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{BLI_QTY}]]></textFieldExpression>
 				</textField>
@@ -283,7 +283,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_ITEM}]]></textFieldExpression>
 				</textField>
@@ -301,7 +301,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{BLI_ITEM_AMOUNT}]]></textFieldExpression>
 				</textField>
@@ -319,7 +319,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbillextendedtxt.time" )]]></textFieldExpression>
 				</textField>
@@ -348,7 +348,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_BILL}]]></textFieldExpression>
 				</textField>
@@ -377,7 +377,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 						key="textField-29"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.billsreportuserallindate.total" )]]></textFieldExpression>
 				</textField>

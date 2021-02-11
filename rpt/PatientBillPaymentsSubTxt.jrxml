@@ -65,7 +65,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 						key="textField-25"/>
 					<box></box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbillpaymentssubtxt.payments" )]]></textFieldExpression>
 				</textField>
@@ -78,7 +78,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 						key="textField-27"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.billsreport.amount" )]]></textFieldExpression>
 				</textField>
@@ -99,7 +99,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{BLP_DATE}]]></textFieldExpression>
 				</textField>
@@ -116,7 +116,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{BLP_AMOUNT}]]></textFieldExpression>
 				</textField>
@@ -145,7 +145,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{PAID}]]></textFieldExpression>
 				</textField>
@@ -162,7 +162,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{BLL_BALANCE}]]></textFieldExpression>
 				</textField>
@@ -175,7 +175,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 						key="textField-24"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.billsreportuserallindate.total" )]]></textFieldExpression>
 				</textField>
@@ -188,7 +188,7 @@ ORDER BY BLP_DATE ASC]]></queryString>
 						key="textField-26"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Courier New" size="12" isBold="false" isItalic="false"/>
+						<font fontName="DejaVu Sans Mono" size="12" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbillpaymentssubtxt.rest" )]]></textFieldExpression>
 				</textField>

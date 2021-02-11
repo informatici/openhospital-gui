@@ -54,14 +54,14 @@ WHERE $X{IN ,BLP_ID_BILL, collectionbillsId } ORDER BY BLP_DATE ASC]]>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-3" x="341" y="26" width="118" height="19" uuid="a2028be8-199f-4863-aca8-6332c2291a0e"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true" isItalic="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbillpayments.notpaid" )]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-7" x="341" y="7" width="118" height="19" uuid="2343b81e-fc56-49c2-9d30-3d7f8df1db16"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbillpayments.paid" )]]></textFieldExpression>
 			</textField>

@@ -365,7 +365,7 @@ WHERE PEX_ID = $P{examId}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" "+$R{PatientExamination}]]></textFieldExpression>
 			</textField>
@@ -424,7 +424,7 @@ WHERE PEX_ID = $P{examId}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="8" isBold="true" isUnderline="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isUnderline="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Examination}]]></textFieldExpression>
 			</textField>
@@ -803,7 +803,7 @@ WHERE PEX_ID = $P{examId}]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="8" isBold="true"/>
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Date:"]]></textFieldExpression>
 			</textField>

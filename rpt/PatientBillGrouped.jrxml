@@ -78,7 +78,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
 			</textField>
@@ -91,7 +91,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Address} + " - " + $P{City}]]></textFieldExpression>
 			</textField>
@@ -104,7 +104,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
@@ -117,7 +117,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
 			</textField>
@@ -134,7 +134,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="18"/>
+					<font fontName="DejaVu Sans" size="18"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbill.billsgroup")]]></textFieldExpression>
 			</textField>
@@ -186,14 +186,14 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="18"/>
+					<font fontName="DejaVu Sans" size="18"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLL_STATUS}.equals( "D" ) ? "DELETED" : null]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-26" x="0" y="31" width="49" height="16" uuid="c7fefd0b-5cf9-4f58-b178-90bebe730bb9"/>
 				<textElement>
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.opd.patient")]]></textFieldExpression>
 			</textField>
@@ -220,7 +220,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="18"/>
+					<font fontName="DejaVu Sans" size="18"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbill.detailsinvoice")]]></textFieldExpression>
 			</textField>
@@ -231,35 +231,35 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-29" x="0" y="4" width="49" height="18" uuid="38849200-e8f9-418b-8b98-565ffcabf147"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="Arial" size="12" isBold="true" isItalic="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.oh009inpatientreport.code" )]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-31" x="460" y="4" width="75" height="18" uuid="af0e2fc1-1578-4d9e-ac26-028b49919b6e"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font fontName="Arial" size="12" isBold="true" isItalic="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.moh717monthlyworkloadreportforhospitalspage2b.total" )]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-32" x="382" y="4" width="74" height="18" uuid="528333da-044e-4b35-89fd-89a1311fdd86"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="Arial" size="12" isBold="true" isItalic="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.billsreport.quantity" )]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-33" x="305" y="4" width="71" height="18" uuid="a3986887-665e-434e-ba77-f457fa9f8d93"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font fontName="Arial" size="12" isBold="true" isItalic="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbill.unitprice" )]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-35" x="54" y="4" width="245" height="18" uuid="56b108c8-ff6f-4015-b775-ec543b95b0a0"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="Arial" size="12" isBold="true" isItalic="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.patientbill.designation" )]]></textFieldExpression>
 			</textField>
@@ -276,7 +276,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLI_ID_PRICE}]]></textFieldExpression>
 			</textField>
@@ -289,7 +289,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLI_ITEM_DESC}]]></textFieldExpression>
 			</textField>
@@ -302,7 +302,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLI_ITEM_AMOUNT}]]></textFieldExpression>
 			</textField>
@@ -315,7 +315,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BLI_QTY}]]></textFieldExpression>
 			</textField>
@@ -328,7 +328,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_ITEM}]]></textFieldExpression>
 			</textField>
@@ -342,28 +342,28 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 			<textField pattern="dd/MM/yyyy HH.mm" isBlankWhenNull="false">
 				<reportElement key="textField-37" x="40" y="1" width="82" height="14" uuid="5c942180-554d-428a-afbf-7105dcb87861"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement key="textField-38" x="0" y="1" width="40" height="14" uuid="7f0016bc-cad5-4876-86c9-59db3fe5d794"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Printed]]></text>
 			</staticText>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-39" x="382" y="1" width="54" height="14" uuid="1c0bde70-2868-4f90-9f5b-7332af39f352"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.diseaseslist.page" ) +" "+ $V{PAGE_NUMBER} +" "+ $P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.diseaseslist.of" )]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" isBlankWhenNull="false">
 				<reportElement key="textField-40" x="436" y="1" width="54" height="14" uuid="bf5312b4-d8aa-491e-a248-74c1bc2b0932"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
@@ -380,14 +380,14 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="14" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL_BILL}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField-30" x="382" y="0" width="74" height="25" uuid="f092b526-bdf2-4668-b37e-db905ef1a4de"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial" size="12" isBold="true" isItalic="false"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( "angal.report.billsreportuserallindate.total" )]]></textFieldExpression>
 			</textField>
