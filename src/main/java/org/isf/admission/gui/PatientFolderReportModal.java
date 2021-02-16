@@ -60,7 +60,6 @@ public class PatientFolderReportModal extends ModalJFrame{
 	private JDateChooser jDateChooserDateTo;
 	private JPanel choosePanel;
 	private JLabel chooselabel;
-	private JComboBox chooseField;
 	private JButton launchReportButton;
 	private JButton closeButton;
 	private JPanel admissionPanel;
@@ -405,15 +404,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 	public boolean getExaminationValue() {
 		return examinationCheck.isSelected();
 	}
-	public String getTypeField() {
-		if (chooseField.getSelectedItem().equals("All")) {
-			return "";
-		} else {
-		return (String) chooseField.getSelectedItem();
-		}
-	}
-	
-	
+
 	private JDateChooser getJDateChooserDateFrom() {
 		if (jDateChooserDateFrom == null) {
 			jDateChooserDateFrom = new JDateChooser();
