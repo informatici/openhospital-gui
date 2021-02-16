@@ -33,19 +33,15 @@ import javax.swing.table.TableModel;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstockward.model.MovementWard;
-import org.isf.operation.manager.OperationBrowserManager;
 
 public class OhTableDrugsModel <T> implements TableModel {
 
-	List<T> dataList;	
 	List<T> filteredList;
-	OperationBrowserManager manageop = new OperationBrowserManager();
-	
+
 	public  OhTableDrugsModel(List<T> dataList) {
-		this.dataList = dataList;
 		this.filteredList = new ArrayList<T>();
 		
-		if (dataList!=null){
+		if (dataList != null) {
 			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
 				T t = (T) iterator.next();
 				this.filteredList.add(t);			
@@ -56,7 +52,6 @@ public class OhTableDrugsModel <T> implements TableModel {
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -71,7 +66,7 @@ public class OhTableDrugsModel <T> implements TableModel {
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		String columnLabel="";
+		String columnLabel = "";
 		switch (columnIndex) {
 		case 0:
 			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.date");
@@ -97,7 +92,7 @@ public class OhTableDrugsModel <T> implements TableModel {
 
 	@Override
 	public int getRowCount() {
-		if (this.filteredList==null){
+		if (this.filteredList == null) {
 			return 0;
 		}
 		return this.filteredList.size();
@@ -105,11 +100,10 @@ public class OhTableDrugsModel <T> implements TableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
-		String value="";
-		if (rowIndex >=0 && rowIndex < this.filteredList.size()){
+		String value = "";
+		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
 			T obj=this.filteredList.get(rowIndex);
-			if (obj instanceof MovementWard){
+			if (obj instanceof MovementWard) {
 				MovementWard DrugObj=(MovementWard)obj;
 				switch (columnIndex) {
 				case 0:
@@ -119,15 +113,15 @@ public class OhTableDrugsModel <T> implements TableModel {
 						dt = currentDateFormat.format(DrugObj.getDate().getTime());
 						value = dt;
 					}
-					catch (Exception ex){
-						value=DrugObj.getDate().getTime().toString();
+					catch (Exception ex) {
+						value = DrugObj.getDate().getTime().toString();
 					}
 					
 					break;
 				case 1:
-										Medical drugsname = null;
+					Medical drugsname = null;
 					//System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
-					   drugsname = DrugObj.getMedical();
+					drugsname = DrugObj.getMedical();
 					if (drugsname != null)
 						value = drugsname.getDescription();
 					else
@@ -149,20 +143,17 @@ public class OhTableDrugsModel <T> implements TableModel {
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void removeTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }
