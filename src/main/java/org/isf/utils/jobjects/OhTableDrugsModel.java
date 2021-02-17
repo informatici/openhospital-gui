@@ -30,6 +30,7 @@ import java.util.Locale;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstockward.model.MovementWard;
@@ -51,7 +52,7 @@ public class OhTableDrugsModel <T> implements TableModel {
 	
 	@Override
 	public void addTableModelListener(TableModelListener l) {
-		// TODO Auto-generated method stub
+		// TODO
 	}
 
 	@Override
@@ -104,34 +105,34 @@ public class OhTableDrugsModel <T> implements TableModel {
 		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
 			T obj=this.filteredList.get(rowIndex);
 			if (obj instanceof MovementWard) {
-				MovementWard DrugObj=(MovementWard)obj;
+				MovementWard drugObj=(MovementWard)obj;
 				switch (columnIndex) {
 				case 0:
 					String dt = "";
 					try {
-						final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
-						dt = currentDateFormat.format(DrugObj.getDate().getTime());
+						final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));
+						dt = currentDateFormat.format(drugObj.getDate().getTime());
 						value = dt;
 					}
 					catch (Exception ex) {
-						value = DrugObj.getDate().getTime().toString();
+						value = drugObj.getDate().getTime().toString();
 					}
 					
 					break;
 				case 1:
 					Medical drugsname = null;
 					//System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
-					drugsname = DrugObj.getMedical();
+					drugsname = drugObj.getMedical();
 					if (drugsname != null)
 						value = drugsname.getDescription();
 					else
 						value = "";
 					break;
 				case 2:
-					value=String.valueOf(DrugObj.getQuantity());
+					value=String.valueOf(drugObj.getQuantity());
 					break;
 				case 3:
-					value=DrugObj.getUnits();
+					value=drugObj.getUnits();
 					break;	
 				default:
 					break;
@@ -148,12 +149,12 @@ public class OhTableDrugsModel <T> implements TableModel {
 
 	@Override
 	public void removeTableModelListener(TableModelListener l) {
-		// TODO Auto-generated method stub
+		// TODO
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
+		// TODO
 	}
 
 }
