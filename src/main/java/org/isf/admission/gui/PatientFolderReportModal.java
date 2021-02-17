@@ -39,7 +39,6 @@ import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -59,7 +58,6 @@ public class PatientFolderReportModal extends ModalJFrame{
 	private JDateChooser jDateChooserDateFrom;
 	private JDateChooser jDateChooserDateTo;
 	private JPanel choosePanel;
-	private JLabel chooselabel;
 	private JButton launchReportButton;
 	private JButton closeButton;
 	private JPanel admissionPanel;
@@ -237,7 +235,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			labelPanel.setAlignmentY(LEFT_ALIGNMENT);
 			
 			
-			labelPanel.add(new JLabel(MessageBundle.getMessage("angal.patientfolder.reportfor") + ":"), BorderLayout.CENTER);
+			labelPanel.add(new JLabel(MessageBundle.getMessage("angal.patientfolder.reportfor") + ':'), BorderLayout.CENTER);
 			
 			
 		}
