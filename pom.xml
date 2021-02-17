@@ -132,9 +132,14 @@
 									<directory>${basedir}</directory>
 									<include>oh.ico</include>
 									<include>README.md</include>
-									<include>*.cmd</include>
-									<include>*.sh</include>
+									<include>startup.cmd</include>
+									<include>startup.sh</include>
 								</resource>
+								<resource>
+		                       		<directory>../openhospital-core</directory>
+		                       		<include>SetupGSM.cmd</include>
+									<include>SetupGSM.sh</include>
+		                    	</resource>
 							</resources>
 						</configuration>
 					</execution>
