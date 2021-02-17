@@ -41,18 +41,17 @@ public class OhTableDrugsModel <T> implements TableModel {
 
 	public  OhTableDrugsModel(List<T> dataList) {
 		this.filteredList = new ArrayList<T>();
-		
+
 		if (dataList != null) {
 			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
 				T t = (T) iterator.next();
-				this.filteredList.add(t);			
+				this.filteredList.add(t);
 			}
 		}
 	}
-	
+
 	@Override
 	public void addTableModelListener(TableModelListener l) {
-		// TODO
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class OhTableDrugsModel <T> implements TableModel {
 		case 3:
 			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.units");
 			//columnLabel= "Unite Trans";
-			break;	
+			break;
 		default:
 			break;
 		}
@@ -117,7 +116,7 @@ public class OhTableDrugsModel <T> implements TableModel {
 					catch (Exception ex) {
 						value = drugObj.getDate().getTime().toString();
 					}
-					
+
 					break;
 				case 1:
 					Medical drugsname = null;
@@ -133,11 +132,11 @@ public class OhTableDrugsModel <T> implements TableModel {
 					break;
 				case 3:
 					value=drugObj.getUnits();
-					break;	
+					break;
 				default:
 					break;
 				}
-			}			
+			}
 		}
 		return value;
 	}
@@ -149,12 +148,10 @@ public class OhTableDrugsModel <T> implements TableModel {
 
 	@Override
 	public void removeTableModelListener(TableModelListener l) {
-		// TODO
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// TODO
 	}
 
 }
