@@ -79,6 +79,9 @@
 								<resource>
 									<directory>lib/native</directory>
 								</resource>
+								<resource>
+		                       		<directory>../openhospital-core/lib/native</directory>
+		                    	</resource>
 							</resources>
 						</configuration>
 					</execution>
