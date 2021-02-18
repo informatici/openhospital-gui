@@ -74,12 +74,12 @@ For Eclipse the process requires loading the formatting style and the import ord
 
 Please read the Open Hospital [Wiki](https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines)
 
-See the Open Issues on [Jira](https://openhospital.atlassian.net/issues/)
+See the Open Issues on [Jira](https://openhospital.atlassian.net/jira/software/c/projects/OP/issues/?filter=allopenissues)
 
  [openhospital]: https://www.open-hospital.org/
  [openhospital-core]: https://github.com/informatici/openhospital-core
  [openhospital-ui]: https://github.com/informatici/openhospital-ui
  [openhospital-doc]: https://github.com/informatici/openhospital-doc
  [contribution-guide]: https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines
- [jira]: https://openhospital.atlassian.net/issues/
+ [jira]: https://openhospital.atlassian.net/jira/software/c/projects/OP/issues/
  [database.prop]: https://github.com/informatici/openhospital-core/blob/develop/src/test/resources/database.properties
