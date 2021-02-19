@@ -24,6 +24,10 @@ package org.isf.utils.jobjects;
 import java.awt.AWTEvent;
 import java.awt.EventQueue;
 
+/**
+ * Suggested serving size:
+ * Toolkit.getDefaultToolkit().getSystemEventQueue().push(new WaitCursorEventQueue(70));
+ */
 public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallback {
 	private final CursorManager cursorManager;
 	private final DelayTimer waitTimer;
