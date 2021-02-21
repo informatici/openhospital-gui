@@ -149,7 +149,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			MessageBundle.getMessage("angal.medicalstockward.female") 
 	};
 	private JComboBox patientSexBox = new JComboBox(patientSexItems);
-	private JCheckBox wardCheck[] = null;
+	private JCheckBox[] wardCheck = null;
 	private JTextField searchString = null;
 	private JButton jSearchButton = null;
 	private JButton jButtonExamination;
@@ -445,7 +445,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			}
 		} 
 		
-		JPanel checkPanel[] = new JPanel[wardList.size()];
+		JPanel[] checkPanel = new JPanel[wardList.size()];
 		wardCheck = new JCheckBox[wardList.size()];
 
 		for (int i = 0; i < wardList.size(); i++) {
