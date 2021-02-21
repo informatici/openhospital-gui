@@ -355,7 +355,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		private static final long serialVersionUID = 4338749100837551874L;
 
-		private JButton button[];
+		private JButton[] button;
 		private MainMenu parentFrame = null;
 
 		public MainPanel(MainMenu parentFrame) {
@@ -402,7 +402,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			add(buttons, BorderLayout.CENTER);
 		}
 
-		private void setButtonsSize(JButton button[]) {
+		private void setButtonsSize(JButton[] button) {
 			int maxH = 0;
 			int maxMax = 0;
 			int maxMin = 0;

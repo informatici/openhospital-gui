@@ -144,7 +144,7 @@ public class SubMenu extends JDialog implements ActionListener{
 
 		private static final long serialVersionUID = 4338749100837551874L;
 
-		private JButton button[];
+		private JButton[] button;
 		private String title;
 		
 		public SubPanel(SubMenu dialogFrame, String subName) {
@@ -197,7 +197,7 @@ public class SubMenu extends JDialog implements ActionListener{
 			
 		}
 		
-		private void setButtonsSize(JButton button[]) {
+		private void setButtonsSize(JButton[] button) {
 			int maxH = 0;
 			int maxMax = 0;
 			int maxMin = 0;
