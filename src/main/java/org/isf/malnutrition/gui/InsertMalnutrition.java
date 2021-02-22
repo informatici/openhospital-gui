@@ -196,7 +196,7 @@ public class InsertMalnutrition extends JDialog {
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					if (true == inserted) {
+					if (inserted) {
 						fireMalnutritionInserted();
 						dispose();
 					}

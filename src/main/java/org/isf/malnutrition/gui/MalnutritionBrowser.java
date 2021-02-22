@@ -214,7 +214,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 								OHServiceExceptionUtil.showMessages(e);
 							}
 							
-							if (true == deleted) {
+							if (deleted) {
 								pMaln.remove(table.getSelectedRow());
 								model.fireTableDataChanged();
 								table.updateUI();
@@ -257,7 +257,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 			pMaln = null;
 			
-			if (null != s && false == s.isEmpty()) {
+			if (null != s && !s.isEmpty()) {
 				try {
 					pMaln = manager.getMalnutrition(s);
 				} catch (OHServiceException e) {

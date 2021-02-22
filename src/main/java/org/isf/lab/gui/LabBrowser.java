@@ -363,7 +363,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 								OHServiceExceptionUtil.showMessages(e);
 							}
 							
-							if (true == deleted) {
+							if (deleted) {
 								pLabs.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();

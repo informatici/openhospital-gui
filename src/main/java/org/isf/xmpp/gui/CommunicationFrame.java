@@ -349,7 +349,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 						newChat = new ChatPanel();
 						roster = interaction.getRoster();
 						Presence presence = roster.getPresence(((RosterEntry) buddyList.getModel().getElementAt(index)).getUser());
-						if (presence.isAvailable() == true) {
+						if (presence.isAvailable()) {
 							if (tabs.indexOfTab((String) user) == -1) {
 								tabs.addTab((String) user, newChat);
 								tabs.setSelectedIndex(tabs.indexOfTab((String) user));
@@ -482,7 +482,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				if (presence1.isAvailable() == presence2.isAvailable())
 					return r1_name.toLowerCase().compareTo(r2_name.toLowerCase());
 
-				if (presence1.isAvailable() && (presence2.isAvailable() == false))
+				if (presence1.isAvailable() && (!presence2.isAvailable()))
 					return -1;
 
 				else

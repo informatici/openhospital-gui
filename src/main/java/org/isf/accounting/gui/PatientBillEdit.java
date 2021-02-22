@@ -1250,8 +1250,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					            return;
 					        }
 					        
-						    if (true == isValidPaymentDate(datePay)) {
-					        	
+						    if (isValidPaymentDate(datePay)) {
 					        	addPayment(datePay, balance.doubleValue());
 					        }
 						} else {
@@ -1359,8 +1358,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				            return;
 				        }
 
-				        if (true == isValidPaymentDate(datePay)) {
-				        	
+				        if (isValidPaymentDate(datePay)) {
 				        	addPayment(datePay, amount.doubleValue());
 				        }
 					} else {
@@ -1461,7 +1459,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				            return;
 				        }
 
-				        if (true == isValidPaymentDate(datePay)) {
+				        if (isValidPaymentDate(datePay)) {
 				        	addPayment(datePay, amount.doubleValue());
 				        }
 					} else {

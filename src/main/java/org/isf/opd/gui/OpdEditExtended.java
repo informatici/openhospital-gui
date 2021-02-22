@@ -1178,7 +1178,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				String name = elem.getSearchString();
 				int a = 0;
 				for (int i = 0; i < s1.length; i++) {
-					if (name.contains(s1[i].toLowerCase()) == true) {
+					if (name.contains(s1[i].toLowerCase())) {
 						a++;
 					}
 				}

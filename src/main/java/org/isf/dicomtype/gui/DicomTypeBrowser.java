@@ -226,7 +226,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
                                 OHServiceExceptionUtil.showMessages(e);
                             }
 
-                            if (true == deleted) {
+                            if (deleted) {
                                 pDicomType.remove(jTable.getSelectedRow());
                                 model.fireTableDataChanged();
                                 jTable.updateUI();

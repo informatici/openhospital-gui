@@ -226,7 +226,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 								OHServiceExceptionUtil.showMessages(e);
 							}
 							
-							if (true == deleted) {
+							if (deleted) {
 								pOperationType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();
