@@ -205,7 +205,7 @@ public class ExamRowEdit extends JDialog {
 					
 					ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 					try {
-						if (true == manager.newExamRow(examRow)) {
+						if (manager.newExamRow(examRow)) {
 							fireExamRowInserted();
 							dispose();
 						}

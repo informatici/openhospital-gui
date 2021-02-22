@@ -272,7 +272,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 						OHServiceExceptionUtil.showMessages(e1);
 					}
 					
-					if (true == deleted) {
+					if (deleted) {
 						reloadTable();
 					}
 				}

@@ -209,7 +209,7 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 						deliveryresultType.setCode(codeTextField.getText());
 						
 						if (insert) {     // inserting
-							if (true == manager.newDeliveryResultType(deliveryresultType)) {
+							if (manager.newDeliveryResultType(deliveryresultType)) {
 								fireDeliveryResultInserted();
 								dispose();
 							} else 
@@ -219,7 +219,7 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 							if (descriptionTextField.getText().equals(lastdescription)){
 								dispose();	
 							} else {
-								if (true == manager.updateDeliveryResultType(deliveryresultType)) {
+								if (manager.updateDeliveryResultType(deliveryresultType)) {
 									fireDeliveryResultUpdated();
 									dispose();
 								} else 

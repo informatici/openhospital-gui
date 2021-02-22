@@ -189,7 +189,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 							try {
 								boolean deleted = manager.deleteExamRow(row);
 								
-								if (true == deleted) {
+								if (deleted) {
 									examRowDeleted();
 								}
 							} catch (OHServiceException e1) {

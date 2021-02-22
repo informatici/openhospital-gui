@@ -96,7 +96,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 
-				if (thumbnailViewEnabled && e.getValueIsAdjusting() == false) {
+				if (thumbnailViewEnabled && !e.getValueIsAdjusting()) {
 					DefaultListSelectionModel sel = (DefaultListSelectionModel) e.getSource();
 
 					if (sel.isSelectionEmpty())

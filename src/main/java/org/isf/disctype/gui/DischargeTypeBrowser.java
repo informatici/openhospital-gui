@@ -228,7 +228,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
                                 OHServiceExceptionUtil.showMessages(e);
                             }
 
-                            if (true == deleted) {
+                            if (deleted) {
                                 pDischargeType.remove(jTable.getSelectedRow());
                                 model.fireTableDataChanged();
                                 jTable.updateUI();

@@ -233,7 +233,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 								OHServiceExceptionUtil.showMessages(e);
 							}
 							
-							if (true == deleted) {
+							if (deleted) {
 								pExamType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();

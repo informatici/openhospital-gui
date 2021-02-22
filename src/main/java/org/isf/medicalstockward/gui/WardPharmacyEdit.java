@@ -453,7 +453,7 @@ public class WardPharmacyEdit extends JDialog {
 				s1 = key.split(" ");
 				int a = 0;
 				for (int i = 0; i < s1.length; i++) {
-					if (elem.getSearchString().contains(key.toLowerCase()) == true) {
+					if (elem.getSearchString().contains(key.toLowerCase())) {
 						a++;
 					}
 				}
@@ -604,7 +604,7 @@ public class WardPharmacyEdit extends JDialog {
 		for (MedicalWard elem : medList) {
 			if (key != null)
 			{
-				if (elem.toString().toLowerCase().contains(key.toLowerCase()) == true)
+				if (elem.toString().toLowerCase().contains(key.toLowerCase()))
 					jComboBoxDrugs.addItem(elem);
 			}
 			else jComboBoxDrugs.addItem(elem);

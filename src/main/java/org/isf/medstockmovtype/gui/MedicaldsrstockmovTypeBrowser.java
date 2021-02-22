@@ -227,7 +227,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 								OHServiceExceptionUtil.showMessages(e);
 							}
 							
-							if (true == deleted) {
+							if (deleted) {
 								pMedicaldsrstockmovType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();

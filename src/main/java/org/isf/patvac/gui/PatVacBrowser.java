@@ -306,7 +306,7 @@ public class PatVacBrowser extends ModalJFrame {
 								OHServiceExceptionUtil.showMessages(e);
 							}
 						
-							if (true == deleted) {
+							if (deleted) {
 								lPatVac.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();
