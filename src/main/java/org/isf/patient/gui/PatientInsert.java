@@ -54,6 +54,7 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.joda.time.DateTime;
 
 public class PatientInsert extends JDialog implements ActionListener{
 
@@ -269,16 +270,19 @@ public class PatientInsert extends JDialog implements ActionListener{
 			jOkButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					boolean ok = true;
+					DateTime bdate = new DateTime();
+					
 					if (insert) {
 						if (jFirstNameTextField.getText().equals("")) {
 							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertfirstname"));
 						} else {
 							if (jSecondNameTextField.getText().equals("")) {
 								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertsecondname"));
-							} else {	
+							} else {
 								if (age == -1) {
 									JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertvalidage"));
 								} else {
+									bdate = bdate.minusYears(age);
 									String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
 									try{
 										if (manager.isNamePresent(name)) {										
@@ -315,7 +319,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 										patient.setNote(jNoteTextArea.getText());
 										
 										//PatientExtended Compatibility
-										patient.setBirthDate(null);
+										patient.setBirthDate(bdate.toDate());
 										patient.setAgetype("");
 										patient.setMother_name("");
 										patient.setMother('U');
@@ -334,7 +338,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 											JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 										}
 									}
-									}
+								}
 							}
 						}
 					}else{//Update
