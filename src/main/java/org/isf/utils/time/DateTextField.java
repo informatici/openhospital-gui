@@ -81,7 +81,7 @@ public class DateTextField extends JPanel{
 	
 	public void initialize(){
 		day = new JTextField(2);
-		day.setDocument(new DocumentoLimitato(2));
+		day.setDocument(new DocumentLimit(2));
 		day.addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent e) {
 				if (day.getText().length() != 0) {
@@ -99,7 +99,7 @@ public class DateTextField extends JPanel{
 			}
 		});
 		month = new JTextField(2);
-		month.setDocument(new DocumentoLimitato(2));
+		month.setDocument(new DocumentLimit(2));
 		month.addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent e) {
 				if (month.getText().length() != 0) {
@@ -117,7 +117,7 @@ public class DateTextField extends JPanel{
 			}
 		});
 		year = new JTextField(4);
-		year.setDocument(new DocumentoLimitato(4));
+		year.setDocument(new DocumentLimit(4));
 		year.addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent e) {
 				if (year.getText().length() == 4) {
@@ -259,25 +259,22 @@ public class DateTextField extends JPanel{
 	 * This class extends DefaultStyledDocument and is needed to limit of each input field
 	 * @author someone (found on the web)
 	 */
-	public class DocumentoLimitato extends DefaultStyledDocument {
+	public class DocumentLimit extends DefaultStyledDocument {
 
 		private static final long serialVersionUID = 1L;
-		private final int NUMERO_MASSIMO_CARATTERI;
+		private int maximumNumberOfCharacters;
 
-		public DocumentoLimitato(int numeroMassimoCaratteri) {
-			NUMERO_MASSIMO_CARATTERI = numeroMassimoCaratteri;
+		public DocumentLimit(int maximumNumberOfCharacters) {
+			this.maximumNumberOfCharacters = maximumNumberOfCharacters;
 		}
 
-		public void insertString(int off, String text, AttributeSet att)
-				throws BadLocationException {
-			int numeroCaratteriNelDocumento = getLength();
-			int lunghezzaNuovoTesto = text.length();
-			if (numeroCaratteriNelDocumento + lunghezzaNuovoTesto > NUMERO_MASSIMO_CARATTERI) {
-				int numeroCaratteriInseribili = NUMERO_MASSIMO_CARATTERI
-						- numeroCaratteriNelDocumento;
-				if (numeroCaratteriInseribili > 0) {
-					String parteNuovoTesto = text.substring(0,
-							numeroCaratteriInseribili);
+		public void insertString(int off, String text, AttributeSet att) throws BadLocationException {
+			int numberOfCharactersInDocument = getLength();
+			int newTextLength = text.length();
+			if (numberOfCharactersInDocument + newTextLength > maximumNumberOfCharacters) {
+				int numberOfCharactersToInsert = maximumNumberOfCharacters - numberOfCharactersInDocument;
+				if (numberOfCharactersToInsert > 0) {
+					String parteNuovoTesto = text.substring(0, numberOfCharactersToInsert);
 					super.insertString(off, parteNuovoTesto, att);
 				}
 			} else {

@@ -170,8 +170,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private boolean isMale;
 	private double bmi;
 	
-	private final String PATH_FEMALE_GENDER = "rsc/images/sagoma-donna-132x300.jpg"; //$NON-NLS-1$
-	private final String PATH_MALE_GENDER = "rsc/images/sagoma-uomo-132x300.jpg"; //$NON-NLS-1$
+	private static final String PATH_FEMALE_GENDER = "rsc/images/sagoma-donna-132x300.jpg"; //$NON-NLS-1$
+	private static final String PATH_MALE_GENDER = "rsc/images/sagoma-uomo-132x300.jpg"; //$NON-NLS-1$
 	
 	private final String[] columnNames = { 
 			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
@@ -192,7 +192,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70};
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER};
 	
-	private final String DATE_FORMAT = "dd/MM/yy HH:mm";
+	private static final String DATE_FORMAT = "dd/MM/yy HH:mm";
 
 	private JTable jTableSummary;
 

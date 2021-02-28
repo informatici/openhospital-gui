@@ -40,7 +40,7 @@ public class HelpViewer extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private final String MANUAL_PDF_FILE = "doc/UserManual.pdf";
+	private static final String MANUAL_PDF_FILE = "doc/UserManual.pdf";
 
 	public HelpViewer() {
 		File file = new File(MANUAL_PDF_FILE);

@@ -41,8 +41,8 @@ import org.isf.generaldata.MessageBundle;
  */
 public class JFromDateToDateChooser extends JPanel {
 	
-	private final String DATE_TIME_FORMAT = "dd/MM/yyyy";
-	private static final int textSize = 12;
+	private static final String DATE_TIME_FORMAT = "dd/MM/yyyy";
+	private static final int TEXT_SIZE = 12;
 	
 	private CustomJDateChooser dateFromDateChooser;
 	private CustomJDateChooser dateToDateChooser;
@@ -80,7 +80,7 @@ public class JFromDateToDateChooser extends JPanel {
 			dateFromDateChooser.setDate(dateFrom);
 			dateFromDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateFromDateChooser.setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
-			dateFromDateChooser.setFont(new Font("Arial", Font.BOLD, textSize), false);
+			dateFromDateChooser.setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
 			dateFromDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
@@ -97,7 +97,7 @@ public class JFromDateToDateChooser extends JPanel {
 			dateToDateChooser.setDate(dateTo);
 			dateToDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateToDateChooser.setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
-			dateToDateChooser.setFont(new Font("Arial", Font.BOLD, textSize), false);
+			dateToDateChooser.setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
 			dateToDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {

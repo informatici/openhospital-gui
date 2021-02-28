@@ -40,31 +40,31 @@ import javax.swing.text.DefaultStyledDocument;
 public class VoDateTextField extends JTextField {
 
 	private static final long serialVersionUID = 1L;
-	private String TYPE;
+	private String type;
 	private String currentDate = "nothing";
 	
 	private void setType(String type) {
-		this.TYPE = type;
+		this.type = type;
 	}
 	
 	public class ManagedData extends DefaultStyledDocument {
 
 		private static final long serialVersionUID = 1L;
-		private int MAXCHARS = 0;
+		private int maxChars = 0;
 		
 		private ManagedData() {
-			if (TYPE.equals("dd/mm/yy") || TYPE.equals("mm/dd/yy"))
-				this.MAXCHARS = 8;
-			else if (TYPE.equals("dd/mm/yyyy") || TYPE.equals("mm/dd/yyyy") )
-				this.MAXCHARS = 10;
+			if (type.equals("dd/mm/yy") || type.equals("mm/dd/yy"))
+				this.maxChars = 8;
+			else if (type.equals("dd/mm/yyyy") || type.equals("mm/dd/yyyy") )
+				this.maxChars = 10;
 		}
 		
 		public void insertString(int off, String text2, AttributeSet att)
 		throws BadLocationException {
 			int charsInDocument = getLength();
 			int newLength = text2.length();
-			if (charsInDocument + newLength > MAXCHARS) {
-				int availableChars = MAXCHARS - charsInDocument;
+			if (charsInDocument + newLength > maxChars) {
+				int availableChars = maxChars - charsInDocument;
 				if (availableChars > 0) {
 					String parteNuovoTesto = text2.substring(0, availableChars);
 					super.insertString(off, parteNuovoTesto, att);
@@ -133,7 +133,7 @@ public class VoDateTextField extends JTextField {
 					//System.out.println("empty string");
 					return;
 				}
-				if (getText().length()!=TYPE.length()) {
+				if (getText().length() !=  type.length()) {
 					JOptionPane.showMessageDialog(				
 							null,
 							"\""+getText()+"\" is not a valid date",
@@ -150,17 +150,17 @@ public class VoDateTextField extends JTextField {
 					try {
 						GregorianCalendar gc = new GregorianCalendar();
 						gc.setLenient(false); //must do this
-						if (TYPE.equals("dd/mm/yy") || TYPE.equals("mm/dd/yy"))
+						if (type.equals("dd/mm/yy") || type.equals("mm/dd/yy"))
 							gc.set(GregorianCalendar.YEAR, Integer.parseInt(getText().substring(6,8)) + 2000);
-						else if (TYPE.equals("dd/mm/yyyy") || TYPE.equals("mm/dd/yyyy") )
+						else if (type.equals("dd/mm/yyyy") || type.equals("mm/dd/yyyy") )
 							gc.set(GregorianCalendar.YEAR, Integer.parseInt(getText().substring(6,10)));
 						
-						if (TYPE.equals("dd/mm/yy") || TYPE.equals("dd/mm/yyyy"))
+						if (type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy"))
 							gc.set(GregorianCalendar.MONTH, Integer.parseInt(getText().substring(3,5)) - 1);
 						else
 							gc.set(GregorianCalendar.MONTH, Integer.parseInt(getText().substring(0,2)) - 1);
 						
-						if (TYPE.equals("dd/mm/yy") || TYPE.equals("dd/mm/yyyy"))
+						if (type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy"))
 							gc.set(GregorianCalendar.DATE, Integer.parseInt(getText().substring(0,2)));
 						else
 							gc.set(GregorianCalendar.DATE, Integer.parseInt(getText().substring(3,5)));
@@ -196,13 +196,13 @@ public class VoDateTextField extends JTextField {
 	public GregorianCalendar getDate() {
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setLenient(false);
-		if (TYPE.equals("dd/mm/yyyy"))
+		if (type.equals("dd/mm/yyyy"))
 			calendar.set(Integer.parseInt(getText().substring(6,10)),Integer.parseInt(getText().substring(3,5))-1,Integer.parseInt(getText().substring(0,2)));
-		else if (TYPE.equals("mm/dd/yyyy"))
+		else if (type.equals("mm/dd/yyyy"))
 			calendar.set(Integer.parseInt(getText().substring(6,10)),Integer.parseInt(getText().substring(0,2)) - 1,Integer.parseInt(getText().substring(3,5)));
-		else if (TYPE.equals("dd/mm/yy"))
+		else if (type.equals("dd/mm/yy"))
 			calendar.set(Integer.parseInt(getText().substring(6,8)) + 2000,Integer.parseInt(getText().substring(3,5))-1,Integer.parseInt(getText().substring(0,2)));
-		else if (TYPE.equals("mm/dd/yy"))
+		else if (type.equals("mm/dd/yy"))
 			calendar.set(Integer.parseInt(getText().substring(6,8)) + 2000,Integer.parseInt(getText().substring(0,2)) - 1,Integer.parseInt(getText().substring(3,5)));
 		//System.out.println(calendar.get(Calendar.DAY_OF_MONTH)+ " " + calendar.get(Calendar.MONTH) + " " + calendar.get(Calendar.YEAR));
 		return calendar;

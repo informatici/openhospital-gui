@@ -46,6 +46,9 @@ import org.isf.generaldata.MessageBundle;
 public class JTimeTable extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final int DIMENSION = 25;
+
 	private int hour;
 	private int minute;
 
@@ -54,8 +57,6 @@ public class JTimeTable extends JPanel {
 
 	private JLabel hourLabel;
 	private JLabel minuteLabel;
-	
-	private final int DIMENSION = 25;
 
 	private JLabel selectedMinute;
 	private JLabel selectedHour;

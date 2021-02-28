@@ -90,7 +90,9 @@ public class MovStockMultipleCharging extends JDialog {
 	private static final String DATE_FORMAT_DD_MM_YYYY_HH_MM_SS = "dd/MM/yyyy HH:mm:ss"; //$NON-NLS-1$
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	private static final int CODE_COLUMN_WIDTH = 100;
-	
+	private static final int UNITS = 0;
+	private static final int PACKETS = 1;
+
 	private JPanel mainPanel;
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
@@ -125,8 +127,6 @@ public class MovStockMultipleCharging extends JDialog {
 			MessageBundle.getMessage("angal.medicalstock.multiplecharging.packets") //$NON-NLS-2$
 	};
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
-	private final int UNITS = 0;
-	private final int PACKETS = 1;
 	private int optionSelected = UNITS;
 	
 	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);

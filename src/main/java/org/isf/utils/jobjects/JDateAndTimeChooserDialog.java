@@ -47,8 +47,8 @@ public class JDateAndTimeChooserDialog extends JDialog {
 	/*
 	 * Constants
 	 */
-	private final String DATE_TIME_FORMAT = "EEEE, d MMMM yyyy - HH:mm";
-	private static final int textSize = 30;
+	private static final String DATE_TIME_FORMAT = "EEEE, d MMMM yyyy - HH:mm";
+	private static final int TEXT_SIZE = 30;
 
 	/*
 	 * Attributes
@@ -127,7 +127,7 @@ public class JDateAndTimeChooserDialog extends JDialog {
 			dateAndTimeChooser = new JDateAndTimeChooser();
 			dateAndTimeChooser.getDateChooser().setLocale(new Locale(GeneralData.LANGUAGE));
 			dateAndTimeChooser.getDateChooser().setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
-			dateAndTimeChooser.getDateChooser().setFont(new Font("Arial", Font.BOLD, textSize), false);
+			dateAndTimeChooser.getDateChooser().setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
 			if (date != null) dateAndTimeChooser.getDateChooser().setDate(date);
 		}
 		return dateAndTimeChooser;
