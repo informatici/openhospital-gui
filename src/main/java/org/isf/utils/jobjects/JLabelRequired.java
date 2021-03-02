@@ -21,7 +21,6 @@
  */
 package org.isf.utils.jobjects;
 
-import javax.swing.Icon;
 import javax.swing.JLabel;
 
 /**
@@ -31,50 +30,17 @@ import javax.swing.JLabel;
  */
 public class JLabelRequired extends JLabel {
 
-	private static final long serialVersionUID = 1519907071350395237L;
-	
-	private static String MARK = " *";
-
-	public JLabelRequired() {
-	}
+	private static final String REQUIRED_MARK = " *";
 
 	/**
-	 * @param text
+	 * Creates a <code>JLabelRequired</code> instance with the specified
+	 * text and as the <code>setText</code> method is overridden an " *"
+	 * is added after the specified text.
+	 *
+	 * @param text  The text to be displayed by the label.
 	 */
 	public JLabelRequired(String text) {
 		super(text);
-	}
-
-	/**
-	 * @param image
-	 */
-	public JLabelRequired(Icon image) {
-		super(image);
-	}
-
-	/**
-	 * @param text
-	 * @param horizontalAlignment
-	 */
-	public JLabelRequired(String text, int horizontalAlignment) {
-		super(text, horizontalAlignment);
-	}
-
-	/**
-	 * @param image
-	 * @param horizontalAlignment
-	 */
-	public JLabelRequired(Icon image, int horizontalAlignment) {
-		super(image, horizontalAlignment);
-	}
-
-	/**
-	 * @param text
-	 * @param icon
-	 * @param horizontalAlignment
-	 */
-	public JLabelRequired(String text, Icon icon, int horizontalAlignment) {
-		super(text, icon, horizontalAlignment);
 	}
 
 	/* (non-Javadoc)
@@ -82,6 +48,6 @@ public class JLabelRequired extends JLabel {
 	 */
 	@Override
 	public void setText(String text) {
-		super.setText(text + MARK);
+		super.setText(text + REQUIRED_MARK);
 	}
 }
