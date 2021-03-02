@@ -383,13 +383,13 @@ public class PatientSummary {
 		else if (patient.getMother() == 'D')
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisdead"));
 		// added
-			labelBfr.append((patient.getMother_name() == null || patient.getMother_name().compareTo("") == 0 ? "<BR>" : "(" + patient.getMother_name() + ")<BR>"));
+			labelBfr.append((patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : "(" + patient.getMotherName() + ")<BR>"));
 		if (patient.getFather() == 'A')
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisalive"));
 		else if (patient.getFather() == 'D')
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisdead"));
 		// added
-		labelBfr.append((patient.getFather_name() == null || patient.getFather_name().compareTo("") == 0 ? "<BR>" : "(" + patient.getFather_name() + ")<BR>"));
+		labelBfr.append((patient.getFatherName() == null || patient.getFatherName().compareTo("") == 0 ? "<BR>" : "(" + patient.getFatherName() + ")<BR>"));
 		if (patient.getParentTogether() == 'Y')
 			labelBfr.append(MessageBundle.getMessage("angal.admission.parentslivetoghether"));
 		else if (patient.getParentTogether() == 'N')

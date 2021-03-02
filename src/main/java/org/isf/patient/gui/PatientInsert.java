@@ -268,7 +268,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 			jOkButton.setText(MessageBundle.getMessage("angal.common.ok"));
 			jOkButton.setMnemonic(KeyEvent.VK_A+('O'-'A')); 
 			jOkButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+				public void actionPerformed(ActionEvent e) {
 					boolean ok = true;
 					DateTime bdate = new DateTime();
 					
@@ -321,9 +321,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 										//PatientExtended Compatibility
 										patient.setBirthDate(bdate.toDate());
 										patient.setAgetype("");
-										patient.setMother_name("");
+										patient.setMotherName("");
 										patient.setMother('U');
-										patient.setFather_name("");
+										patient.setFatherName("");
 										patient.setFather('U');
 										patient.setBloodType("");
 										patient.setHasInsurance('U');
