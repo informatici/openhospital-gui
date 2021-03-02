@@ -472,7 +472,7 @@ public class PatientInsertExtended extends JDialog {
 							patient.setCity(jCityTextField.getText().trim());
 							patient.setNextKin(jNextKinTextField.getText().trim());
 							patient.setTelephone(jTelephoneTextField.getText().replaceAll(" ", ""));
-							patient.setMother_name(jMotherNameTextField.getText().trim());
+							patient.setMotherName(jMotherNameTextField.getText().trim());
 							if (jMother_Alive.isSelected()) {
 								patient.setMother('A');
 							} else {
@@ -481,7 +481,7 @@ public class PatientInsertExtended extends JDialog {
 								} else
 									patient.setMother('U');
 							}
-							patient.setFather_name(jFatherNameTextField.getText().trim());
+							patient.setFatherName(jFatherNameTextField.getText().trim());
 							if (jFather_Alive.isSelected()) {
 								patient.setFather('A');
 							} else {
@@ -546,7 +546,7 @@ public class PatientInsertExtended extends JDialog {
 						patient.setCity(jCityTextField.getText().trim());
 						patient.setNextKin(jNextKinTextField.getText().trim());
 						patient.setTelephone(jTelephoneTextField.getText().replaceAll(" ", ""));
-						patient.setMother_name(jMotherNameTextField.getText().trim());
+						patient.setMotherName(jMotherNameTextField.getText().trim());
 
 						if (jMother_Alive.isSelected()) {
 							patient.setMother('A');
@@ -557,7 +557,7 @@ public class PatientInsertExtended extends JDialog {
 								patient.setMother('U');
 							}
 						}
-						patient.setFather_name(jFatherNameTextField.getText().trim());
+						patient.setFatherName(jFatherNameTextField.getText().trim());
 						if (jFather_Alive.isSelected()) {
 							patient.setFather('A');
 						} else {
@@ -2271,7 +2271,7 @@ public class PatientInsertExtended extends JDialog {
 		if (jFatherNameTextField == null) {
 			jFatherNameTextField = new JTextField(15);
 			if (!insert)
-				jFatherNameTextField.setText(patient.getFather_name());
+				jFatherNameTextField.setText(patient.getFatherName());
 		}
 		return jFatherNameTextField;
 	}
@@ -2285,7 +2285,7 @@ public class PatientInsertExtended extends JDialog {
 		if (jMotherNameTextField == null) {
 			jMotherNameTextField = new JTextField(15);
 			if (!insert)
-				jMotherNameTextField.setText(patient.getMother_name());
+				jMotherNameTextField.setText(patient.getMotherName());
 		}
 		return jMotherNameTextField;
 	}
