@@ -512,7 +512,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			dateFromPanel = new JPanel();
 			dateFromPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.datefrom")), null);
 			dayFrom = new JTextField(2);
-			dayFrom.setDocument(new DocumentoLimitato(2));
+			dayFrom.setDocument(new DocumentLimit(2));
 			dayFrom.addFocusListener(new FocusListener() {
 				public void focusLost(FocusEvent e) {
 					if (dayFrom.getText().length() != 0) {
@@ -529,7 +529,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				}
 			});
 			monthFrom = new JTextField(2);
-			monthFrom.setDocument(new DocumentoLimitato(2));
+			monthFrom.setDocument(new DocumentLimit(2));
 			monthFrom.addFocusListener(new FocusListener() {
 				public void focusLost(FocusEvent e) {
 					if (monthFrom.getText().length() != 0) {
@@ -546,7 +546,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				}
 			});
 			yearFrom = new JTextField(4);
-			yearFrom.setDocument(new DocumentoLimitato(4));
+			yearFrom.setDocument(new DocumentLimit(4));
 			yearFrom.addFocusListener(new FocusListener() {
 				public void focusLost(FocusEvent e) {
 					if (yearFrom.getText().length() == 4) {
@@ -574,26 +574,24 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		return dateFromPanel;
 	}
 	
-	public class DocumentoLimitato extends DefaultStyledDocument {
+	public class DocumentLimit extends DefaultStyledDocument {
 		
 		private static final long serialVersionUID = -5098766139884585921L;
 		
-		private final int NUMERO_MASSIMO_CARATTERI;
+		private final int maximumNumberOfCharacters;
 		
-		public DocumentoLimitato(int numeroMassimoCaratteri) {
-			NUMERO_MASSIMO_CARATTERI = numeroMassimoCaratteri;
+		public DocumentLimit(int numeroMassimoCaratteri) {
+			maximumNumberOfCharacters = numeroMassimoCaratteri;
 		}
 		
 		public void insertString(int off, String text, AttributeSet att)
 		throws BadLocationException {
-			int numeroCaratteriNelDocumento = getLength();
-			int lunghezzaNuovoTesto = text.length();
-			if (numeroCaratteriNelDocumento + lunghezzaNuovoTesto > NUMERO_MASSIMO_CARATTERI) {
-				int numeroCaratteriInseribili = NUMERO_MASSIMO_CARATTERI
-				- numeroCaratteriNelDocumento;
+			int numberOfCharactersInDocument = getLength();
+			int newTextLength = text.length();
+			if (numberOfCharactersInDocument + newTextLength > maximumNumberOfCharacters) {
+				int numeroCaratteriInseribili = maximumNumberOfCharacters - numberOfCharactersInDocument;
 				if (numeroCaratteriInseribili > 0) {
-					String parteNuovoTesto = text.substring(0,
-							numeroCaratteriInseribili);
+					String parteNuovoTesto = text.substring(0, numeroCaratteriInseribili);
 					super.insertString(off, parteNuovoTesto, att);
 				}
 			} else {
@@ -608,7 +606,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			dateToPanel = new JPanel();
 			dateToPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.dateto")), null);
 			dayTo = new JTextField(2);
-			dayTo.setDocument(new DocumentoLimitato(2));
+			dayTo.setDocument(new DocumentLimit(2));
 			dayTo.addFocusListener(new FocusListener() {
 				public void focusLost(FocusEvent e) {
 					if (dayTo.getText().length() != 0) {
@@ -625,7 +623,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				}
 			});
 			monthTo = new JTextField(2);
-			monthTo.setDocument(new DocumentoLimitato(2));
+			monthTo.setDocument(new DocumentLimit(2));
 			monthTo.addFocusListener(new FocusListener() {
 				public void focusLost(FocusEvent e) {
 					if (monthTo.getText().length() != 0) {
@@ -642,7 +640,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				}
 			});
 			yearTo = new JTextField(4);
-			yearTo.setDocument(new DocumentoLimitato(4));
+			yearTo.setDocument(new DocumentLimit(4));
 			yearTo.addFocusListener(new FocusListener() {
 				public void focusLost(FocusEvent e) {
 					if (yearTo.getText().length() == 4) {

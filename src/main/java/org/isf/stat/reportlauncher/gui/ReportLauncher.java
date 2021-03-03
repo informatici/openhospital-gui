@@ -62,6 +62,11 @@ import org.isf.xmpp.manager.Interaction;
 public class ReportLauncher extends ModalJFrame{
 
 	private static final long serialVersionUID = 1L;
+
+	private static final int BUNDLE = 0;
+	private static final int FILENAME = 1;
+	private static final int TYPE = 2;
+
 	private int pfrmExactWidth = 500;
 	private int pfrmExactHeight = 165;
 	private int pfrmBordX;
@@ -87,11 +92,7 @@ public class ReportLauncher extends ModalJFrame{
 	
 	private JLabel jRptLabel = null;
 	private JComboBox jRptComboBox = null;
-	
-	private final int BUNDLE = 0;
-	private final int FILENAME = 1;
-	private final int TYPE = 2;
-	
+
 	private String[][] reportMatrix = {
 		{"angal.stat.registeredpatient", 				"OH001_RegisteredPatients", 										"twodates"},
 		{"angal.stat.registeredpatientbyprovenance", 	"OH002_RegisteredPatientsByProvenance", 							"twodates"},

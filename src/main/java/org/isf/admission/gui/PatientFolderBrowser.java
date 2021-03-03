@@ -194,7 +194,9 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		
 		return patientData;
 	}
-	
+
+	private static final String DATE_FORMAT = "dd/MM/yy";
+
 	private ArrayList<Admission> admList;
 	private ArrayList<Laboratory> labList;	
 	private ArrayList<Disease> disease;
@@ -240,8 +242,6 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	private JScrollPane scrollPaneLab;
 	
 	private JPanel tablesPanel=null;
-	
-	final String DATE_FORMAT = "dd/MM/yy";
 
 	private MedicalsrMovPatList drugsList;
 		

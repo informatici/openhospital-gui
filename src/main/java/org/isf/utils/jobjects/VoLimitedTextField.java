@@ -38,22 +38,20 @@ public class VoLimitedTextField extends JTextField {
 	public class LimitedDimension extends DefaultStyledDocument {
 
 		private static final long serialVersionUID = 1L;
-		private final int MAXCHARS;
+		private final int maxChars;
 		
 		public LimitedDimension(int maxChars) {
-			this.MAXCHARS = maxChars;
+			this.maxChars = maxChars;
 		}
 		
 		public void insertString(int off, String text, AttributeSet att)
 		throws BadLocationException {
 			int charsInDocument = getLength();
 			int newLength = text.length();
-			if (charsInDocument + newLength > MAXCHARS) {
-				int availableChars = MAXCHARS
-				- charsInDocument;
+			if (charsInDocument + newLength > maxChars) {
+				int availableChars = maxChars - charsInDocument;
 				if (availableChars > 0) {
-					String newTextPart = text.substring(0,
-							availableChars);
+					String newTextPart = text.substring(0, availableChars);
 					super.insertString(off, newTextPart, att);
 				}
 			} else {

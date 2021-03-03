@@ -90,7 +90,9 @@ public class MovStockMultipleDischarging extends JDialog {
 	private static final String DATE_FORMAT_DD_MM_YYYY_HH_MM_SS = "dd/MM/yyyy HH:mm:ss"; //$NON-NLS-1$
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	private static final int CODE_COLUMN_WIDTH = 100;
-	
+	private static final int UNITS = 0;
+	private static final int PACKETS = 1;
+
 	private JPanel mainPanel;
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
@@ -122,8 +124,6 @@ public class MovStockMultipleDischarging extends JDialog {
 			MessageBundle.getMessage("angal.medicalstock.multipledischarging.units"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.medicalstock.multipledischarging.packets") //$NON-NLS-1$
 	}; 
-	private final int UNITS = 0;
-	private final int PACKETS = 1;
 	private int optionSelected = UNITS;
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
 	private JComboBox shareWith = null;
