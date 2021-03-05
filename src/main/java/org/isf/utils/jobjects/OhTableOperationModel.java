@@ -65,7 +65,7 @@ public class OhTableOperationModel<T> implements TableModel{
 				String strItem=price.getOperation().getCode()+price.getOpResult();
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if (strItem.indexOf(searchQuery)>=0){
+				if (strItem.contains(searchQuery)) {
 					filteredList.add((T) object);
 				}
 			}
@@ -76,7 +76,6 @@ public class OhTableOperationModel<T> implements TableModel{
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -144,7 +143,6 @@ public class OhTableOperationModel<T> implements TableModel{
 					catch (Exception ex){
 						value=opdObj.getOpDate().getTime().toString();
 					}
-					
 					break;
 				case 1:
                     Operation ope = null;
@@ -182,13 +180,11 @@ public class OhTableOperationModel<T> implements TableModel{
 	@Override
 	public void removeTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

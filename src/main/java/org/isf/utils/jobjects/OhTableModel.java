@@ -57,6 +57,7 @@ public class OhTableModel<T> implements TableModel{
 		}
 //		Collections.copy(this.filteredList, this.dataList);
 	}
+
 	public  OhTableModel(List<T> dataList, boolean allowSearchByCode) {
 		this.allowSearchByCode=allowSearchByCode;
 		this.dataList=dataList;
@@ -67,7 +68,6 @@ public class OhTableModel<T> implements TableModel{
 			this.filteredList.add(t);			
 		}
 	}
-	
 	
 	public T filter(String searchQuery) throws OHException{
 
@@ -87,7 +87,7 @@ public class OhTableModel<T> implements TableModel{
 				}
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if (strItem.indexOf(searchQuery)>=0){
+				if (strItem.contains(searchQuery)) {
 					filteredList.add((T) object);
 				}
 			}
@@ -105,7 +105,7 @@ public class OhTableModel<T> implements TableModel{
 				
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if (strItem.indexOf(searchQuery)>=0){
+				if (strItem.contains(searchQuery)) {
 					filteredList.add((T) object);
 				}
 			}
@@ -123,7 +123,7 @@ public class OhTableModel<T> implements TableModel{
 				
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if (strItem.indexOf(searchQuery)>=0){
+				if (strItem.contains(searchQuery)) {
 					filteredList.add((T) object);
 				}
 			}
@@ -141,7 +141,7 @@ public class OhTableModel<T> implements TableModel{
 				
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if (strItem.indexOf(searchQuery)>=0){
+				if (strItem.contains(searchQuery)) {
 					filteredList.add((T) object);
 				}
 			}
@@ -157,7 +157,6 @@ public class OhTableModel<T> implements TableModel{
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -180,7 +179,6 @@ public class OhTableModel<T> implements TableModel{
 		case 1:
 			columnLabel= MessageBundle.getMessage("angal.common.description");
 			break;
-
 		default:
 			break;
 		}
@@ -246,7 +244,6 @@ public class OhTableModel<T> implements TableModel{
 	public T getObjectAt(int rowIndex){
 		if (rowIndex>=0 && rowIndex<this.filteredList.size()){
 			return this.filteredList.get(rowIndex);
-			
 		}
 		return null;
 	}
@@ -260,13 +257,11 @@ public class OhTableModel<T> implements TableModel{
 	@Override
 	public void removeTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public String getSearchQuery() {

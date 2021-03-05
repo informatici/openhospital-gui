@@ -58,12 +58,11 @@ public class OhTableModelExam<T> implements TableModel{
 				String strItem = exam.getCode() + exam.getDescription();				
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if (strItem.indexOf(searchQuery)>=0){
+				if (strItem.contains(searchQuery)) {
 					filteredList.add((Exam) object);
 				}
 			}
-
-		}	
+		}
 		return filteredList.size();
 	}
 	
@@ -71,7 +70,6 @@ public class OhTableModelExam<T> implements TableModel{
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -94,7 +92,6 @@ public class OhTableModelExam<T> implements TableModel{
 		case 1:
 			columnLabel= MessageBundle.getMessage("angal.common.description");
 			break;
-
 		default:
 			break;
 		}
