@@ -123,8 +123,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 				public void actionPerformed(ActionEvent event) {
 					if (jTablePricesOthers.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.pricesothers.pleaseselectanitemtodelete")); //$NON-NLS-1$
-						return;									
-					}else {		
+					} else {
 						int selectedRow = jTablePricesOthers.getSelectedRow();
 						pOthers = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
 						if (pOthers.getId() == 1) {
@@ -173,8 +172,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 				public void actionPerformed(ActionEvent event) {
 					if (jTablePricesOthers.getSelectedRow() < 0) {
 						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.pricesothers.pleaseselectanitemtoedit")); //$NON-NLS-1$
-						return;									
-					}else {		
+					} else {
 						int selectedRow = jTablePricesOthers.getSelectedRow();
 						PricesOthers pOther = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
 						PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, false);	

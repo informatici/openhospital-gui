@@ -275,7 +275,6 @@ public class SmsBrowser extends ModalJFrame {
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), 
 								MessageBundle.getMessage("angal.hospital"), 
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						ArrayList<Sms> smsList = new ArrayList<Sms>();
 						int n = JOptionPane.showConfirmDialog(null, 

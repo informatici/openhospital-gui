@@ -432,12 +432,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 					Date date = schedDate.getDate();
 					
 					if (date != null) {
-						
 						jSchedDateChooser.setDate(date);
 						jSchedTimeTextField.setText(formatTime(date));
-						
-					} else {
-						return;
 					}
 				}
 			});

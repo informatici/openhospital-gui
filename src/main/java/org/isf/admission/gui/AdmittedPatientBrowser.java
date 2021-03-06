@@ -940,12 +940,10 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 							if (ok == JOptionPane.OK_OPTION) {
 								new PatientBillEdit(AdmittedPatientBrowser.this, pat);
 								//dispose();
-							} else return;
+							}
 						}
 					} 
-				} /*else {
-					//new OpdBrowser(true);
-				}*/
+				}
 			}
 		});
 		return buttonBill;

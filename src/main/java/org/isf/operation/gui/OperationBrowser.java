@@ -184,7 +184,6 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				if (table.getSelectedRow() < 0) {
 					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-					return;
 				} else {
 					selectedrow = table.getSelectedRow();
 					operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
@@ -203,7 +202,6 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				if (table.getSelectedRow() < 0) {
 					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-					return;
 				} else {
 					Operation m = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 					int n = JOptionPane.showConfirmDialog(

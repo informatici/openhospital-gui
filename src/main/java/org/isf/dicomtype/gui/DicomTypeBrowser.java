@@ -159,7 +159,6 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						dicomType = (DicomType) (model.getValueAt(selectedrow, -1));
@@ -208,7 +207,6 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						DicomType dicomType = (DicomType) (model.getValueAt(jTable.getSelectedRow(), -1));
                         int n = JOptionPane.showConfirmDialog(null,

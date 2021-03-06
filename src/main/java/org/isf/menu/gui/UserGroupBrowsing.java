@@ -114,9 +114,8 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	                        null,
 	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
 	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {		
+	                        JOptionPane.PLAIN_MESSAGE);
+				} else {
 					selectedrow = table.getSelectedRow();
 					group = (UserGroup)(((UserGroupBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
 					//GroupEdit editrecord = 
@@ -152,9 +151,8 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	                        null,
 	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
 	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {
+	                        JOptionPane.PLAIN_MESSAGE);
+				} else {
 					UserGroup m = (UserGroup)(((UserGroupBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 					new PrivilegeTree(myFrame, m);
 				}
@@ -171,9 +169,8 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	                        null,
 	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
 	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {
+	                        JOptionPane.PLAIN_MESSAGE);
+				} else {
 				UserGroup m = (UserGroup)(((UserGroupBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 				int n = JOptionPane.showConfirmDialog(
                         null,

@@ -160,7 +160,6 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						deliveryresultType = (DeliveryResultType) (model.getValueAt(selectedrow, -1));
@@ -209,7 +208,6 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						DeliveryResultType dis = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,

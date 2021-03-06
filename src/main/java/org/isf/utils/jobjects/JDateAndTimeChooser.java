@@ -127,8 +127,6 @@ public class JDateAndTimeChooser extends JPanel {
 		if (r == JOptionPane.OK_OPTION) {
 			date = dateTimeChooser.getDateTime();
 			System.out.println(date);
-        } else {
-            return;
         }
 	}
 }

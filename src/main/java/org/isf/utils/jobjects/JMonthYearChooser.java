@@ -99,8 +99,6 @@ public class JMonthYearChooser extends JPanel {
 		if (r == JOptionPane.OK_OPTION) {
 			date = monthChooser.getDate();
 			System.out.println(date);
-        } else {
-            return;
         }
 	}
 }

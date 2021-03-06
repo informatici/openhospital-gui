@@ -160,7 +160,6 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						medicaldsrstockmovType = (MovementType) (model.getValueAt(selectedrow, -1));
@@ -209,7 +208,6 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						MovementType dis = (MovementType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,

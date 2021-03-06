@@ -212,9 +212,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	                        null,
 	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
 	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {		
+	                        JOptionPane.PLAIN_MESSAGE);
+				} else {
 					selectedrow = table.getSelectedRow();
 					user = (User)(((UserBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
 					new	UserEdit(myFrame, user,false);
@@ -233,9 +232,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	                        null,
 	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
 	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {		
+	                        JOptionPane.PLAIN_MESSAGE);
+				} else {
 					selectedrow = table.getSelectedRow();
 					user = (User)(((UserBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 					
@@ -298,9 +296,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	                        null,
 	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
 	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {
+	                        JOptionPane.PLAIN_MESSAGE);
+				} else {
 				User m = (User)(((UserBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 				int n = JOptionPane.showConfirmDialog(
                         null,

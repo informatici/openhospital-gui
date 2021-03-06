@@ -220,8 +220,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
-					}else {
+					} else {
 						selectedrow = table.getSelectedRow();
 						vaccine = (Vaccine)(((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 						VaccineEdit editrecord = new VaccineEdit(VaccineBrowser.this, vaccine,false);
@@ -275,8 +274,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
-					}else {
+					} else {
 						VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 						Vaccine m = (Vaccine)(((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(

@@ -311,7 +311,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"), 
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 						exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
@@ -337,9 +336,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 								ExamBrowser.this,
 		                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
 		                        MessageBundle.getMessage("angal.hospital"),
-		                        JOptionPane.PLAIN_MESSAGE);				
-						return;									
-					}else {		
+		                        JOptionPane.PLAIN_MESSAGE);
+					} else {
 						selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 						exam = (Exam)(((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 						new ExamShow(myFrame, exam);

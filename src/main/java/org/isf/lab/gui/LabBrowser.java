@@ -345,7 +345,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
 						

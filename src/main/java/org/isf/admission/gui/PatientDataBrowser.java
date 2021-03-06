@@ -459,12 +459,10 @@ public class PatientDataBrowser extends ModalJFrame implements
 						else {
 							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.theselectedadmissionhasnoconcernwithmalnutrition"),
 									MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
-							return;
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.opdhasnoconcernwithmalnutrition"),
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
-						return;
 					}
 				}
 			});
@@ -474,10 +472,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	
 //Alex: nuovo AdmissionBrowserModel con OPD
 class AdmissionBrowserModel extends DefaultTableModel {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = -453243229156512947L;
 		private AdmissionBrowserManager manager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 		private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);

@@ -417,12 +417,8 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 				JOptionPane.showMessageDialog(OperationList.this,
 						MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
 						MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-				return;
 			}
-		} else {
-			return;
 		}
-
 	}
 
 	@Override

@@ -215,11 +215,9 @@ public class DicomTypeEdit extends JDialog{
                             else  dispose();
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
-							return;
 						}
                     }
-                    else 
-                    {				// updating
+                    else {				// updating
                     	if (descriptionTextField.getText().equals(lastdescription)){
     						dispose();	
     					}else{
@@ -232,8 +230,7 @@ public class DicomTypeEdit extends JDialog{
                                 else  dispose();
 							} catch (OHServiceException e1) {
 								OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
-								return;
-							}
+						    }
     					}
 					}
                 }

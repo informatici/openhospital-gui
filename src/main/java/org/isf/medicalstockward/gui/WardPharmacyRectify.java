@@ -436,8 +436,7 @@ public class WardPharmacyRectify extends JDialog {
 							if (result) {
 								fireMovementWardInserted();
 								dispose();
-							} else return;
-							
+							}
 						} catch (OHServiceException e1) {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);

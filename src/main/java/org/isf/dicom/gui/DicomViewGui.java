@@ -494,8 +494,7 @@ public class DicomViewGui extends JPanel {
 			} else if (fileType.equalsIgnoreCase("dcm")) {
 				getImageFromDicom(tmpDbFile);
 			}
-			else return;
-		}catch(OHServiceException ex){
+		} catch(OHServiceException ex){
 			if (ex.getMessages() != null){
 				for(OHExceptionMessage msg : ex.getMessages()){
 					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());

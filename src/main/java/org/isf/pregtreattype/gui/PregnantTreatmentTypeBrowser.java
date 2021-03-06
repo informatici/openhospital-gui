@@ -160,7 +160,6 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						pregnantTreatmentType = (PregnantTreatmentType) (model.getValueAt(selectedrow, -1));
@@ -210,7 +209,6 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						PregnantTreatmentType dis = (PregnantTreatmentType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,

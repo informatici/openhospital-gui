@@ -186,9 +186,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 								null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);				
-						return;									
-					}else {		
+								JOptionPane.PLAIN_MESSAGE);
+					} else {
 						selectedrow = table.getSelectedRow();
 						ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
 						WardEdit editrecord = new WardEdit(myFrame,ward,false);
@@ -241,9 +240,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 								WardBrowser.this,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);				
-						return;							
-					}else {
+								JOptionPane.PLAIN_MESSAGE);
+					} else {
 						WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 						Ward ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(

@@ -1077,9 +1077,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 									MessageBundle.getMessage("angal.newbill.invalidquantitypleasetryagain"), //$NON-NLS-1$
 									MessageBundle.getMessage("angal.newbill.invalidquantity"), //$NON-NLS-1$
 									JOptionPane.ERROR_MESSAGE);
-							return;
 						}
-					} else return;
+					}
 				}
 			});
 		}
@@ -1290,7 +1289,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							jButtonSave.doClick();
 						} else if (ok == JOptionPane.NO_OPTION) {
 							dispose();
-						} else return;
+						}
 					} else {
 						dispose();
 					}

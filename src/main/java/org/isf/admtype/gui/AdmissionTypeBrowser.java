@@ -161,7 +161,6 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						admissionType = (AdmissionType) (model.getValueAt(selectedrow, -1));
@@ -210,7 +209,6 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						AdmissionType dis = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
