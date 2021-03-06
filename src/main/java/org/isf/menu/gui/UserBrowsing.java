@@ -273,7 +273,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				    	return;
 				    }
 					if (newPassword != null && !newPassword.equals("") && newPassword.length() >= 6) {
-						String hashed = BCrypt.hashpw(new String(newPassword), BCrypt.gensalt());
+						String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 						user.setPasswd(hashed);
                         try {
                             if (manager.updatePassword(user))

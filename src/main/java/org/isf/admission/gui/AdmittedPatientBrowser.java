@@ -1319,7 +1319,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				return patient.getInformations();
 			} else if (c == 5) {
 				if (admission == null) {
-					return new String("");
+					return "";
 				} else {
 					for (int i = 0; i < wardList.size(); i++) {
 						if (wardList.get(i).getCode()
@@ -1327,7 +1327,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 							return wardList.get(i).getDescription();
 						}
 					}
-					return new String("?");
+					return "?";
 				}
 			}
 

@@ -306,7 +306,7 @@ public class PatientSummary {
 	// Panel for Blood Type
 	private JPanel getPatientBloodTypePanel() {
 		JLabel l = null;
-		String c = new String(patient.getBloodType());
+		String c = patient.getBloodType();
 		if (c == null || c.equalsIgnoreCase("Unknown")) {
 			l = new JLabel(MessageBundle.getMessage("angal.admission.bloodtypeisunknown"));
 			l = new JLabel(" ");
