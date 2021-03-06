@@ -79,6 +79,9 @@
 								<resource>
 									<directory>lib/native</directory>
 								</resource>
+								<resource>
+		                       		<directory>../openhospital-core/lib/native</directory>
+		                    	</resource>
 							</resources>
 						</configuration>
 					</execution>
@@ -129,9 +132,14 @@
 									<directory>${basedir}</directory>
 									<include>oh.ico</include>
 									<include>README.md</include>
-									<include>*.cmd</include>
-									<include>*.sh</include>
+									<include>startup.cmd</include>
+									<include>startup.sh</include>
 								</resource>
+								<resource>
+		                       		<directory>../openhospital-core</directory>
+		                       		<include>SetupGSM.cmd</include>
+									<include>SetupGSM.sh</include>
+		                    	</resource>
 							</resources>
 						</configuration>
 					</execution>
@@ -228,12 +236,6 @@
   			<groupId>org.isf</groupId>
   			<artifactId>OH-core</artifactId>
   			<version>1.10</version>
-  			<exclusions>
-  				<exclusion>
-  					<groupId>org.apache.poi</groupId>
-  					<artifactId>poi</artifactId>
-  				</exclusion>
-  			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.github.sarxos</groupId>
@@ -331,12 +333,6 @@
 			<artifactId>jgoodies-validation</artifactId>
 			<version>2.5.1</version>
 		</dependency>
-	  	<!-- <dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>poi-3.7</version>
-			<scope>provided</scope>
-		</dependency> -->
   </dependencies>
   <repositories>
         <repository>
