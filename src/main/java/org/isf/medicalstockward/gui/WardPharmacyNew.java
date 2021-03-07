@@ -446,15 +446,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			}
 
 		}
-		double usedQty = 0;
 		StringBuilder message = new StringBuilder();
-		message.append(med.toString()).append("\n") //$NON-NLS-1$
+		message.append(med).append('\n') //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty); // $NON-NLS-1$
 		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
 
 		if (prodCode != null && !prodCode.equals("")) { //$NON-NLS-1$
-			title.append(" ") //$NON-NLS-1$
+			title.append(' ') //$NON-NLS-1$
 					.append(MessageBundle.getMessage("angal.common.code")) //$NON-NLS-1$
 					.append(": ") //$NON-NLS-1$
 					.append(prodCode);
