@@ -407,10 +407,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 					if (r == JOptionPane.OK_OPTION) {
 						new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, false);
 						new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, true);
-						return;
-
-					} else {
-						return;
 					}
 				}
 			}
@@ -430,7 +426,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 							MessageBundle.getMessage("angal.common.pleaseselectarow"),
 							MessageBundle.getMessage("angal.hospital"),
 							JOptionPane.PLAIN_MESSAGE);
-					return;
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					Medical medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
@@ -446,7 +441,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 					if (!dataRange.isCancel()) {
 						new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom, dateTo, medical, null, toExcel);
-						return;
 					}
 				}
 			}
@@ -509,7 +503,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 							MessageBundle.getMessage("angal.common.pleaseselectarow"),
 							MessageBundle.getMessage("angal.hospital"),
 							JOptionPane.PLAIN_MESSAGE);
-					return;
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					Medical med = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
@@ -553,7 +546,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 							MessageBundle.getMessage("angal.common.pleaseselectarow"),
 							MessageBundle.getMessage("angal.hospital"),
 							JOptionPane.PLAIN_MESSAGE);
-					return;
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));

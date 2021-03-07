@@ -273,7 +273,6 @@ public class MovStockBrowser extends ModalJFrame {
 						return;
 					}
 					new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom, dateTo, medical, null, toExcel);
-					return;
 				}
 			}
 		});
@@ -294,7 +293,6 @@ public class MovStockBrowser extends ModalJFrame {
 
 				if (!stockCardDialog.isCancel()) {
 					new GenericReportPharmaceuticalStockCard("ProductLedger_multi", dateFrom, dateTo, null, null, false);
-					return;
 				}
 			}
 		});

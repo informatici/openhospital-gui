@@ -185,7 +185,6 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						patient = (Patient) (model.getValueAt(selectedrow, -1));
@@ -235,7 +234,6 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						Patient pat = (Patient) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,

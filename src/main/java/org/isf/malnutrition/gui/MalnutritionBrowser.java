@@ -168,7 +168,6 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 							MessageBundle.getMessage("angal.common.pleaseselectarow"),
 							MessageBundle.getMessage("angal.hospital"), 
 							JOptionPane.PLAIN_MESSAGE);
-					return;
 				} else {
 					selectedrow = table.getSelectedRow();
 					malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(selectedrow, -1));
@@ -192,7 +191,6 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 							MessageBundle.getMessage("angal.common.pleaseselectarow"),
 							MessageBundle.getMessage("angal.hospital"), 
 							JOptionPane.PLAIN_MESSAGE);
-					return;
 				} else {
 					Malnutrition m = (Malnutrition) (((MalnBrowsingModel) model)
 							.getValueAt(table.getSelectedRow(), -1));

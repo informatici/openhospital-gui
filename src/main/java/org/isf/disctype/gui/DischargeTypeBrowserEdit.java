@@ -215,13 +215,12 @@ public class DischargeTypeBrowserEdit extends JDialog{
                             else  dispose();
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
-							return;
 						}
                     }
                     else {                          // updating
                     	if (descriptionTextField.getText().equals(lastdescription)){
     						dispose();	
-    					}else{
+    					} else{
     						try {
 								result = manager.updateDischargeType(dischargeType);
                                 if (result) {
@@ -231,8 +230,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
                                 else  dispose();
 							} catch (OHServiceException e1) {
 								OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
-								return;
-							}
+						    }
     					}
 					}
                 }

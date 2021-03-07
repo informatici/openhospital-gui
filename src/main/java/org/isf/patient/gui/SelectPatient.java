@@ -422,7 +422,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 						patSearch.clear();
 						fireSelectedPatient(patient);
 						dispose();
-					} else return;
+					}
 				}				
 			});
 		}

@@ -332,7 +332,6 @@ public class WardPharmacy extends ModalJFrame implements
 
 					if (!stockCardDialog.isCancel()) {
 						new GenericReportPharmaceuticalStockCard("ProductLedgerWard", dateFrom, dateTo, medical, wardSelected, toExcel);
-						return;
 					}
 				}
 			});
@@ -354,7 +353,6 @@ public class WardPharmacy extends ModalJFrame implements
 					
 					if (!stockCardDialog.isCancel()) {
 						new GenericReportPharmaceuticalStockCard("ProductLedgerWard_multi", dateFrom, dateTo, null, wardSelected, false);
-						return;
 					}
 				}
 			});
@@ -1567,14 +1565,12 @@ public class WardPharmacy extends ModalJFrame implements
 							printManager.print("WardPharmacyOutcomes", wardManager.convertMovementWardForPrint(wardOutcomes), 0); //$NON-NLS-1$
 						} catch (OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e, WardPharmacy.this);
-							return;
 						}
 					} else if (jTabbedPaneWard.getSelectedIndex() == 1) {
 						try {
 							printManager.print("WardPharmacyIncomes", wardManager.convertMovementForPrint(wardIncomes), 0); //$NON-NLS-1$
 						} catch (OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e, WardPharmacy.this);
-							return;
 						}
 					} else if (jTabbedPaneWard.getSelectedIndex() == 2) {
 						ArrayList<String> options = new ArrayList<String>();
@@ -1614,10 +1610,6 @@ public class WardPharmacy extends ModalJFrame implements
 							if (r == JOptionPane.OK_OPTION) {
 
 								new GenericReportPharmaceuticalStockWard(dateChooser.getDate(), "PharmaceuticalStockWard", wardSelected); //$NON-NLS-1$
-								return;
-
-							} else {
-								return;
 							}
 						}
 					}

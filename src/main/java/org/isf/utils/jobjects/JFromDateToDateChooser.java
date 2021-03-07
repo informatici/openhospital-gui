@@ -180,9 +180,6 @@ public class JFromDateToDateChooser extends JPanel {
 			System.out.println(date);
 			date = fromDateToDateChooser.getDateTo();
 			System.out.println(date);
-        } else {
-            return;
         }
 	}
-
 }

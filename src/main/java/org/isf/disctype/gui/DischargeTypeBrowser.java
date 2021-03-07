@@ -161,7 +161,6 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						dischargeType = (DischargeType) (model.getValueAt(selectedrow, -1));
@@ -210,7 +209,6 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						DischargeType dis = (DischargeType) (model.getValueAt(jTable.getSelectedRow(), -1));
                         int n = JOptionPane.showConfirmDialog(null,

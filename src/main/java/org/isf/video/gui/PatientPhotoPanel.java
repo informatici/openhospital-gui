@@ -100,7 +100,6 @@ public class PatientPhotoPanel extends JPanel {
 						logger.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
 					} else {
 						logger.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
-						return;
 					}
 				}
 			});

@@ -353,7 +353,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						JOptionPane.showMessageDialog(OpdBrowser.this,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						Opd opd = (Opd)(model.getValueAt(selectedrow, -1));
@@ -408,7 +407,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						JOptionPane.showMessageDialog(OpdBrowser.this,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						Opd opd = (Opd) (model.getValueAt(jTable.getSelectedRow(), -1));
 						String dt="[not specified]";

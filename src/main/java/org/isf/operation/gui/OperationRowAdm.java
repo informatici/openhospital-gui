@@ -434,7 +434,6 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			JOptionPane.showMessageDialog(OperationRowAdm.this,
 					MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-			return;
 		} else {
 			operationRow = oprowData.get(idRow);
 			int yesOrNo = JOptionPane.showConfirmDialog(OperationRowAdm.this,
@@ -462,7 +461,6 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 						JOptionPane.showMessageDialog(OperationRowAdm.this,
 								MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-						return;
 					}
 				} else {
 					JOptionPane.showMessageDialog(OperationRowAdm.this,
@@ -474,8 +472,6 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 					tableData.repaint();
 					clearForm();
 				}
-			} else {
-				return;
 			}
 		}
 	}

@@ -177,9 +177,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 								null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);				
-						return;									
-					}else {		
+								JOptionPane.PLAIN_MESSAGE);
+					} else {
 						selectedrow = table.getSelectedRow();
 						supplier = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
 						SupplierEdit editrecord = new SupplierEdit(myFrame,supplier,false);
@@ -232,9 +231,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 								SupplierBrowser.this,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"),
 								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);				
-						return;							
-					}else {
+								JOptionPane.PLAIN_MESSAGE);
+					} else {
 						Supplier m = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 						if (m.getSupDeleted().equals('Y')) return;
 						int n = JOptionPane.showConfirmDialog(

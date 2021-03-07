@@ -167,7 +167,6 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						examType = (ExamType) (model.getValueAt(selectedrow, -1));
@@ -216,7 +215,6 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						ExamType dis = (ExamType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,

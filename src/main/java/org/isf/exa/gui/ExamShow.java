@@ -174,9 +174,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		                        null,
 		                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
 		                        MessageBundle.getMessage("angal.hospital"),
-		                        JOptionPane.PLAIN_MESSAGE);				
-						return;									
-					}else {
+		                        JOptionPane.PLAIN_MESSAGE);
+					} else {
 						ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 						ExamRow row = (ExamRow)(((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(

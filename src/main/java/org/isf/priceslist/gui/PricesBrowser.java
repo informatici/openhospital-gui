@@ -276,16 +276,10 @@ public class PricesBrowser extends ModalJFrame {
 						    jTreeTable.getTree().expandRow(1);
 							validate();
 							repaint();
-							return;
-							
 						} else JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.priceslist.listcouldnotbesaved")); //$NON-NLS-1$
-					
-					} else return;
+					}
 				}
-
-				
 			});
-
 		}
 		return jButtonSave;
 	}
@@ -449,9 +443,7 @@ public class PricesBrowser extends ModalJFrame {
 						validate();
 						repaint();
 					} else {
-						
 						jComboBoxLists.setSelectedItem(listSelected);
-						return;
 					}
 				}				
 			});	

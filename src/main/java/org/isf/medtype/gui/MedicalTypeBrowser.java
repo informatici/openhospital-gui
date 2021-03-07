@@ -155,7 +155,6 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 						JOptionPane.showMessageDialog(MedicalTypeBrowser.this,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						medicalType = (MedicalType) (model.getValueAt(selectedrow, -1));
@@ -206,7 +205,6 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), 
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						MedicalType dis = (MedicalType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,

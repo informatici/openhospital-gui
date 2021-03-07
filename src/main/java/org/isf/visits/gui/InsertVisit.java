@@ -415,11 +415,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 					Date date = schedDate.getDate();
 
 					if (date != null) {
-
 						visitDateChooser.setDate(date);
-
-					} else {
-						return;
 					}
 				}
 			});

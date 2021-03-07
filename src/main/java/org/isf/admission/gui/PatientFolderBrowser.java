@@ -480,7 +480,6 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					} else {
 						JOptionPane.showMessageDialog(PatientFolderBrowser.this, MessageBundle.getMessage("angal.admission.patientfolder.pleaseselectanopd"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-						return;
 					}
 				}
 			});
@@ -516,7 +515,6 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					} else {
 						JOptionPane.showMessageDialog(PatientFolderBrowser.this, MessageBundle.getMessage("angal.admission.patientfolder.pleaseselectanadmission"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-						return;
 					}
 				}
 			});
@@ -547,7 +545,6 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					} else {
 						JOptionPane.showMessageDialog(PatientFolderBrowser.this, MessageBundle.getMessage("angal.admission.patientfolder.pleaseselectanadmission"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-						return;
 					}
 				}
 			});

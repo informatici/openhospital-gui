@@ -1387,7 +1387,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 							JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
 							model.reloadData();
 						}
-					} else return;
+					}
 				}
 			});
 		}

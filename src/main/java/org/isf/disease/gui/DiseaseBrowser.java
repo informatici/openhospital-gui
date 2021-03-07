@@ -177,9 +177,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 							DiseaseBrowser.this,
 							MessageBundle.getMessage("angal.common.pleaseselectarow"),
 							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {		
+							JOptionPane.PLAIN_MESSAGE);
+				} else {
 					selectedrow = table.getSelectedRow();
 					disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));	
 					DiseaseEdit editrecord = new DiseaseEdit(myFrame,disease,false);
@@ -199,9 +198,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 							DiseaseBrowser.this,
 							MessageBundle.getMessage("angal.common.pleaseselectarow"),
 							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {
+							JOptionPane.PLAIN_MESSAGE);
+				} else {
 					selectedrow = table.getSelectedRow();
 					disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
 					int n = JOptionPane.showConfirmDialog(

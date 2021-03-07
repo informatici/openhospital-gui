@@ -427,7 +427,6 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			JOptionPane.showMessageDialog(OperationRowOpd.this,
 					MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-			return;
 		} else {
 			operationRow = oprowData.get(idRow);
 			int yesOrNo = JOptionPane.showConfirmDialog(OperationRowOpd.this,
@@ -455,7 +454,6 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 						JOptionPane.showMessageDialog(OperationRowOpd.this,
 								MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-						return;
 					}
 				} else {
 					JOptionPane.showMessageDialog(OperationRowOpd.this,
@@ -467,8 +465,6 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 					tableData.repaint();
 					clearForm();
 				}
-			} else {
-				return;
 			}
 		}
 	}

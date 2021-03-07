@@ -159,7 +159,6 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						operationType = (OperationType) (model.getValueAt(selectedrow, -1));
@@ -208,7 +207,6 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						OperationType dis = (OperationType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,

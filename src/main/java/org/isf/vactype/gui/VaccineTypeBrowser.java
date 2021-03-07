@@ -165,7 +165,6 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						vaccineType = (VaccineType) (model.getValueAt(selectedrow, -1));
@@ -214,7 +213,6 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						return;
 					} else {
 						VaccineType dis = (VaccineType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
