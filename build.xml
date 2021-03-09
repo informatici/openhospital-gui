@@ -113,7 +113,7 @@
 		</copy>
 		<copy
 			todir="${dist.dir}/OpenHospital_${app.version}/${mysql.dir}">
-			<fileset dir="${main.dir}/${mysql.dir}/db">
+			<fileset dir="${main.dir}/${mysql.dir}">
 			</fileset>
 		</copy>
 
