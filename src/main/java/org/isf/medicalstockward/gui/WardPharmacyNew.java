@@ -176,10 +176,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	//Medicals (in WARD)
 	//ArrayList<MedItem> medItems = new ArrayList<MedItem>();
-	private ArrayList<Medical> medArray = new ArrayList<Medical>();
-	private ArrayList<Double> qtyArray = new ArrayList<Double>(); 
+	private ArrayList<Medical> medArray = new ArrayList<>();
 	private ArrayList<MedicalWard> wardDrugs = null;
-	private ArrayList<MedicalWard> medItems = new ArrayList<MedicalWard>();
+	private ArrayList<MedicalWard> medItems = new ArrayList<>();
 	private JRadioButton jRadioUse;
 	private JTextField jTextFieldUse;
 	private JLabel jLabelUse;
@@ -203,7 +202,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		wardDrugs = drugs;
 		for (MedicalWard elem : wardDrugs) {
 			medArray.add(elem.getMedical());
-			qtyArray.add(elem.getQty());
 		}
 		wardSelected = ward;
 		initComponents();
@@ -559,7 +557,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			medItems.add(item);
 			
 //			medArray.add(med);
-			qtyArray.add((double) quantity);
 			jTableMedicals.updateUI();
 		}
 	}
@@ -568,7 +565,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (row != -1) {
 			medItems.remove(row);
 			medArray.remove(row);
-			qtyArray.remove(row);
 			jTableMedicals.updateUI();
 		}
 		
@@ -686,7 +682,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					//Lot aLot = new Lot("", newDate, newDate);
 					//String refNo = "";
                                         
-                    ArrayList<MovementWard> manyMovementWard = new ArrayList<MovementWard>();
+                    ArrayList<MovementWard> manyMovementWard = new ArrayList<>();
                     //MovStockInsertingManager movManager = new MovStockInsertingManager();
                     boolean result;
 					try {
@@ -1000,7 +996,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jComboBoxMedicals.setMaximumSize(new Dimension(300, 24));
 			jComboBoxMedicals.setPreferredSize(new Dimension(300, 24));
 		}
-		ArrayList<Object> med = new ArrayList<Object>();
+		ArrayList<Object> med = new ArrayList<>();
 		for (Medical aMedical : medArray) {
 			if (!med.contains(aMedical.getDescription())) { 
 				med.add(aMedical.getDescription());
@@ -1012,7 +1008,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
         
         private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {
             String query = s.trim();
-            ArrayList<Medical> results = new ArrayList<Medical>();
+            ArrayList<Medical> results = new ArrayList<>();
             for (Medical medoc : medicalsList) {
                 if (!query.equals("")) {
                     String[] patterns = query.split(" ");

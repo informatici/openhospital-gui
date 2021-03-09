@@ -275,9 +275,8 @@ public class OpdEditExtended extends ModalJFrame implements
 	private ArrayList<Disease> diseasesOPD;
 	private ArrayList<Disease> diseasesAll;
 	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private ArrayList<Opd> opdArray = new ArrayList<Opd>();
 	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	private ArrayList<Patient> pat = new ArrayList<Patient>();
+	private ArrayList<Patient> pat = new ArrayList<>();
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	
 	private Disease lastOPDDisease1;
@@ -573,7 +572,6 @@ public class OpdEditExtended extends ModalJFrame implements
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				pat.clear();
-				opdArray.clear();
 				diseasesAll.clear();
 				diseasesOPD.clear();
 				types.clear();
@@ -1776,7 +1774,6 @@ public class OpdEditExtended extends ModalJFrame implements
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					//to free Memory
 					pat.clear();
-					opdArray.clear();
 					diseasesAll.clear();
 					diseasesOPD.clear();
 					types.clear();

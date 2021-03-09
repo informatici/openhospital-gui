@@ -125,7 +125,6 @@ public class WardPharmacyRectify extends JDialog {
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	
 	private ArrayList<Medical> medicals; //list of all medicals available in the application
-	private HashMap<String, Medical> medicalMap; //map medicals by their prod_code
 	private HashMap<Integer, Double> wardMap; //map quantities by their medical_id
 	private JTextField jTextFieldLotNumber;
 	private JButton jButtonChooseLot;
@@ -175,19 +174,12 @@ public class WardPharmacyRectify extends JDialog {
 		}
 		wardMap = new HashMap<Integer, Double>();
 		for (MedicalWard medWard : wardDrugs) {
-			
+
 			if (wardMap.containsKey(medWard.getMedical().getCode())) {
 				Double quantity = wardMap.get(medWard.getMedical().getCode());
 				wardMap.put(medWard.getMedical().getCode(), quantity + medWard.getQty());
 			} else {
 				wardMap.put(medWard.getMedical().getCode(), medWard.getQty());
-			}
-			
-		}
-		medicalMap = new HashMap<String, Medical>();
-		if (null != medicals) {
-			for (Medical med : medicals) {
-				medicalMap.put(med.getProd_code(), med);
 			}
 		}
 		
@@ -211,15 +203,8 @@ public class WardPharmacyRectify extends JDialog {
 			} else {
 				wardMap.put(medWard.getMedical().getCode(), medWard.getQty());
 			}
-			
 		}
-		medicalMap = new HashMap<String, Medical>();
-		if (null != medicals) {
-			for (Medical med : medicals) {
-				medicalMap.put(med.getProd_code(), med);
-			}
-		}
-		
+
 		initMedicals();
 		initComponents();
 		jComboBoxMedical.setSelectedItem(medical);

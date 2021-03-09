@@ -137,7 +137,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private boolean visitModified = false;
 	private Therapy selectedTherapy;
 	private Visit selectedVisit;
-	private Hashtable<Integer, Therapy> hashTableTherapy;
 	private Hashtable<Integer, TherapyRow> hashTableThRow;
 	private Hashtable<Integer, Visit> hashTableVisits;
 
@@ -154,9 +153,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private ArrayList<Medical> medArray;
-	private ArrayList<Therapy> therapies = new ArrayList<Therapy>();
-	private ArrayList<TherapyRow> thRows = new ArrayList<TherapyRow>();
-	private ArrayList<Visit> visits = new ArrayList<Visit>();
+	private ArrayList<Therapy> therapies = new ArrayList<>();
+	private ArrayList<TherapyRow> thRows = new ArrayList<>();
+	private ArrayList<Visit> visits = new ArrayList<>();
 	private Ward ward;
 
 	public TherapyEdit(JFrame owner, Patient patient, boolean admitted) {
@@ -307,9 +306,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private void showTherapies() {
 		
-		hashTableTherapy = new Hashtable<Integer, Therapy>();
 		for (Therapy th : therapies) {
-			hashTableTherapy.put(th.getTherapyID(), th);
 			showTherapy(th);
 		}
 	}
@@ -1000,7 +997,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
 						therapies.add(thisTherapy); // FOR GUI
-						hashTableTherapy.put(thRow.getTherapyID(), thisTherapy);
 						hashTableThRow.put(thRow.getTherapyID(), thRow);
 						checked = false;
 						//therapyModified = true;
