@@ -1182,7 +1182,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	}
 
 	private boolean hasNewPayments() {
-		return (insert && payItems.size() > 0) || (payItems.size() - payItemsSaved) > 0;
+		return (insert && !payItems.isEmpty()) || (payItems.size() - payItemsSaved) > 0;
 	}
 
 	private JButton getJButtonPrintPayment() {
@@ -1373,7 +1373,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private boolean isValidPaymentDate(GregorianCalendar datePay) {
 		GregorianCalendar now = new GregorianCalendar();
 		GregorianCalendar lastPay = new GregorianCalendar();
-	    if (payItems.size() > 0) { 
+	    if (!payItems.isEmpty()) {
 	    	lastPay = payItems.get(payItems.size()-1).getDate();
 		} else {
 			lastPay = billDate;

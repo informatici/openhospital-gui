@@ -934,7 +934,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	protected void showMedOutOfStock(ArrayList<Medical> medOutStock) {
 
-		if (medOutStock.size() > 0) {
+		if (!medOutStock.isEmpty()) {
 			StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.therapy.followingdrugsarefewornotavailable")); //$NON-NLS-1$
 			for (Medical med : medOutStock) {
 				message.append("\n").append(med.toString());
