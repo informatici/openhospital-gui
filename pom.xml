@@ -43,7 +43,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/rsc</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/rsc</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/resources</directory>
@@ -59,7 +59,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/lib</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/lib</outputDirectory>
 							<resources>
 								<resource>
 									<directory>lib</directory>
@@ -74,7 +74,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/lib/native</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/lib/native</outputDirectory>
 							<resources>
 								<resource>
 									<directory>lib/native</directory>
@@ -92,7 +92,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/bundle</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/bundle</outputDirectory>
 							<resources>
 								<resource>
 									<directory>bundle</directory>
@@ -101,7 +101,7 @@
 						</configuration>
 					</execution>
 					<!-- <execution> <id>copy-doc</id> <phase>validate</phase> <goals> <goal>copy-resources</goal> 
-						</goals> <configuration> <outputDirectory>${basedir}/target/OpenHospital20/doc</outputDirectory> 
+						</goals> <configuration> <outputDirectory>${project.basedir}/target/OpenHospital20/doc</outputDirectory> 
 						<resources> <resource> <directory>doc</directory> </resource> </resources> 
 						</configuration> </execution> -->
 					<execution>
@@ -111,7 +111,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/rpt</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/rpt</outputDirectory>
 							<resources>
 								<resource>
 									<directory>rpt</directory>
@@ -126,10 +126,10 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}</directory>
+									<directory>${project.basedir}</directory>
 									<include>oh.ico</include>
 									<include>README.md</include>
 									<include>startup.cmd</include>
