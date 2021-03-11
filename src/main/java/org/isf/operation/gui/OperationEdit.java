@@ -290,7 +290,7 @@ public class OperationEdit extends JDialog {
 							}
 							OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 
-							if (manager.codeControl(key)) {
+							if (manager.isCodePresent(key)) {
 								JOptionPane.showMessageDialog(null,
 										MessageBundle.getMessage("angal.common.codealreadyinuse"), //$NON-NLS-1$
 										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
