@@ -1182,7 +1182,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	}
 
 	private boolean hasNewPayments() {
-		return (insert && payItems.size() > 0) || (payItems.size() - payItemsSaved) > 0;
+		return (insert && !payItems.isEmpty()) || (payItems.size() - payItemsSaved) > 0;
 	}
 
 	private JButton getJButtonPrintPayment() {
@@ -1369,34 +1369,34 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		}
 		return jButtonAddRefund;
 	}
-	
+
 	private boolean isValidPaymentDate(GregorianCalendar datePay) {
 		GregorianCalendar now = new GregorianCalendar();
 		GregorianCalendar lastPay = new GregorianCalendar();
-	    if (payItems.size() > 0) { 
-	    	lastPay = payItems.get(payItems.size()-1).getDate();
+		if (!payItems.isEmpty()) {
+			lastPay = payItems.get(payItems.size() - 1).getDate();
 		} else {
 			lastPay = billDate;
 		}
-	    if (datePay.before(billDate)) {
-	    	JOptionPane.showMessageDialog(PatientBillEdit.this, 
+		if (datePay.before(billDate)) {
+			JOptionPane.showMessageDialog(PatientBillEdit.this,
 					MessageBundle.getMessage("angal.newbill.paymentbeforebilldate"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.newbill.invaliddate"), //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
-	    	return false;
-	    } else if (datePay.before(lastPay)) {
-	    	JOptionPane.showMessageDialog(PatientBillEdit.this, 
+			return false;
+		} else if (datePay.before(lastPay)) {
+			JOptionPane.showMessageDialog(PatientBillEdit.this,
 					MessageBundle.getMessage("angal.newbill.datebeforelastpayment"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.newbill.invaliddate"), //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
-	    	return false;
-	    } else if (datePay.after(now)) {
-	    	JOptionPane.showMessageDialog(PatientBillEdit.this, 
+			return false;
+		} else if (datePay.after(now)) {
+			JOptionPane.showMessageDialog(PatientBillEdit.this,
 					MessageBundle.getMessage("angal.newbill.payementinthefuturenotallowed"), //$NON-NLS-1$
 					MessageBundle.getMessage("angal.newbill.invaliddate"), //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
-	    	return false;
-	    } 
+			return false;
+		}
 		return true;
 	}
 	
