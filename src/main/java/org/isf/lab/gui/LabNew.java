@@ -194,10 +194,10 @@ public class LabNew extends JDialog implements SelectionListener {
 	
 	//Results (ALL)
 	private ExamRowBrowsingManager examRowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-	
+
 	//Arrays for this Patient
 	private ArrayList<ArrayList<LaboratoryRow>> examResults = new ArrayList<>();
-    private ArrayList<Laboratory> examItems = new ArrayList<>();
+	private ArrayList<Laboratory> examItems = new ArrayList<>();
 	private ExamTableModel jTableModel;
 	private JButton printLabelButton;
 	private JTextField jTextFieldExamResult;
