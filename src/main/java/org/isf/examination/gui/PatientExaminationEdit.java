@@ -271,9 +271,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 		StringBuilder bmi = new StringBuilder();
 		bmi.append("<html><body>");
 		bmi.append("<strong>");
-		bmi.append(MessageBundle.getMessage("angal.examination.bmi") + ":");
+		bmi.append(MessageBundle.getMessage("angal.examination.bmi")).append(':');
 		bmi.append("<br />");
-		bmi.append("" + this.bmi);
+		bmi.append(this.bmi);
 		bmi.append("<br /><br />");
 		bmi.append("<font color=\"red\">");
 		bmi.append(examManager.getBMIdescription(this.bmi));
