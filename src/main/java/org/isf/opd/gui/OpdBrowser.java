@@ -677,7 +677,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (typed[0] < 48 || typed[0] > 57 || typed[1] < 48 || typed[1] > 57) {
 			return false;
 		}
-		int num = Integer.valueOf(day);
+		int num = Integer.parseInt(day);
 		if (num < 1 || num > 31)
 			return false;
 		return true;
@@ -688,7 +688,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (typed[0] < 48 || typed[0] > 57 || typed[1] < 48 || typed[1] > 57) {
 			return false;
 		}
-		int num = Integer.valueOf(month);
+		int num = Integer.parseInt(month);
 		if (num < 1 || num > 12)
 			return false;
 		return true;
@@ -705,15 +705,15 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	}
 	
 	private GregorianCalendar getDateFrom() {
-		return new GregorianCalendar(Integer.valueOf(yearFrom.getText()),
-									 Integer.valueOf(monthFrom.getText()) - 1, 
-									 Integer.valueOf(dayFrom.getText()));
+		return new GregorianCalendar(Integer.parseInt(yearFrom.getText()),
+									 Integer.parseInt(monthFrom.getText()) - 1,
+									 Integer.parseInt(dayFrom.getText()));
 	}
 	
 	private GregorianCalendar getDateTo() {
-		return new GregorianCalendar(Integer.valueOf(yearTo.getText()), 
-									 Integer.valueOf(monthTo.getText()) - 1, 
-									 Integer.valueOf(dayTo.getText()));
+		return new GregorianCalendar(Integer.parseInt(yearTo.getText()),
+									 Integer.parseInt(monthTo.getText()) - 1,
+									 Integer.parseInt(dayTo.getText()));
 	}
 
 

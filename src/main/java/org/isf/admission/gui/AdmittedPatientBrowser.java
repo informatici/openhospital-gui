@@ -1237,7 +1237,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				// lower age limit
 				String ageLimit = patientAgeFromTextField.getText();
 				if (ageLimit.matches("\\d+")) {
-					if (!(ap.getPatient().getAge() >= Integer.valueOf(ageLimit))) {
+					if (!(ap.getPatient().getAge() >= Integer.parseInt(ageLimit))) {
 						continue;
 					}
 				}
@@ -1245,7 +1245,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				// upper age limit
 				ageLimit = patientAgeToTextField.getText();
 				if (ageLimit.matches("\\d+")) {
-					if (!(ap.getPatient().getAge() <= Integer.valueOf(ageLimit))) {
+					if (!(ap.getPatient().getAge() <= Integer.parseInt(ageLimit))) {
 						continue;
 					}
 				}

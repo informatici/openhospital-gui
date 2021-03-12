@@ -1569,7 +1569,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				                    qty);
 							try {
 								if (quantity == null || quantity.equals("")) return;
-								qty = Integer.valueOf(quantity);
+								qty = Integer.parseInt(quantity);
 								addItem(oth, qty, isPrice);
 							} catch (Exception eee) {
 								JOptionPane.showMessageDialog(PatientBillEdit.this, 
@@ -1697,7 +1697,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			                    qty);
 						try {
 							if (quantity == null || quantity.equals("")) return;
-							qty = Integer.valueOf(quantity);
+							qty = Integer.parseInt(quantity);
 							addItem(med, qty, true);
 						} catch (Exception eee) {
 							JOptionPane.showMessageDialog(PatientBillEdit.this, 
