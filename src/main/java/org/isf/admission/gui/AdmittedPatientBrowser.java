@@ -157,7 +157,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private ArrayList<Ward> wardList = null;
 	private JLabel rowCounter = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.admission.count");
-	private ArrayList<AdmittedPatient> pPatient = new ArrayList<AdmittedPatient>();
+	private ArrayList<AdmittedPatient> pPatient = new ArrayList<>();
 	private StringBuilder informations = new StringBuilder(MessageBundle.getMessage("angal.admission.city"))
 			.append(" / ")
 			.append(MessageBundle.getMessage("angal.admission.addressm"))
@@ -433,11 +433,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			try {
 				wardWithBeds = wbm.getWards();
 			}catch(OHServiceException e){
-				wardWithBeds = new ArrayList<Ward>();
+				wardWithBeds = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			
-			wardList = new ArrayList<Ward>();
+			wardList = new ArrayList<>();
 			for (Ward elem : wardWithBeds) {
 				
 				if (elem.getBeds() > 0)
@@ -830,7 +830,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 							patientAdmissions = admissionManager.getAdmissions(pat);
 						}catch(OHServiceException ex){
 							OHServiceExceptionUtil.showMessages(ex);
-							patientAdmissions = new ArrayList<Admission>();
+							patientAdmissions = new ArrayList<>();
 						}
 
 						for (Admission elem : patientAdmissions){
@@ -921,7 +921,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					try {
 						patientPendingBills = billManager.getPendingBills(pat.getCode());
 					}catch(OHServiceException e){
-						patientPendingBills = new ArrayList<Bill>();
+						patientPendingBills = new ArrayList<>();
 						OHServiceExceptionUtil.showMessages(e);
 					}
 					if (patientPendingBills.isEmpty()) {
@@ -1199,7 +1199,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 		private static final long serialVersionUID = 1L;
 
-		ArrayList<AdmittedPatient> patientList = new ArrayList<AdmittedPatient>();
+		ArrayList<AdmittedPatient> patientList = new ArrayList<>();
 		
 		public AdmittedPatientBrowserModel(String key) {
 			for (AdmittedPatient ap : pPatient) {

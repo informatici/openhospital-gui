@@ -276,7 +276,7 @@ public class SmsBrowser extends ModalJFrame {
 								MessageBundle.getMessage("angal.hospital"), 
 								JOptionPane.PLAIN_MESSAGE);
 					} else {
-						ArrayList<Sms> smsList = new ArrayList<Sms>();
+						ArrayList<Sms> smsList = new ArrayList<>();
 						int n = JOptionPane.showConfirmDialog(null, 
 								MessageBundle.getMessage("angal.sms.deleteselectedsms") + " ?", 
 								MessageBundle.getMessage("angal.hospital"),

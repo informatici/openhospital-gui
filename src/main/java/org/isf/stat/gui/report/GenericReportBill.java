@@ -100,7 +100,7 @@ public class GenericReportBill {
 	//FIXME: refactor using jasperReportsManager as above.
 	public GenericReportBill(Integer billID, String jasperFileName, Patient patient, ArrayList<Integer> billListId, String dataFrom, String dateTo, boolean show, boolean askForPrint) {
 		try {
-			HashMap<String, Object> parameters = new HashMap<String, Object>();
+			HashMap<String, Object> parameters = new HashMap<>();
 			HospitalBrowsingManager hospManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 			Hospital hosp = hospManager.getHospital();
 

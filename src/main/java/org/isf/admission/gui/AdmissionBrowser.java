@@ -1009,7 +1009,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			try {
 				wardList = wbm.getWards();
 			}catch(OHServiceException e){
-				wardList = new ArrayList<Ward>();
+				wardList = new ArrayList<>();
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			for (Ward ward : wardList) {
@@ -2272,7 +2272,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
         String query = s.trim();
-        ArrayList<Disease> results = new ArrayList<Disease>();
+        ArrayList<Disease> results = new ArrayList<>();
         for (Disease disease : diseaseList) {
             if (!query.equals("")) {
 		String[] patterns = query.split(" ");
@@ -2298,7 +2298,7 @@ public class AdmissionBrowser extends ModalJFrame {
     @SuppressWarnings("deprecation")
 	public List<OHExceptionMessage> checkAllOperationRowDate(List<OperationRow> list, Admission admission){
     	DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));
-    	List<OHExceptionMessage> errors = new ArrayList<OHExceptionMessage>();
+    	List<OHExceptionMessage> errors = new ArrayList<>();
 		Date beginDate,endDate;
 		if (admission.getAdmDate()!=null)beginDate=admission.getAdmDate().getTime();else beginDate=null;
 		if (admission.getDisDate()!=null)endDate=admission.getDisDate().getTime();else endDate=null;

@@ -471,7 +471,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	public JList getBuddyList() {
 
 		logger.debug("==> roster : {}", roster);
-		List<RosterEntry> entries = new ArrayList<RosterEntry>(roster.getEntries());
+		List<RosterEntry> entries = new ArrayList<>(roster.getEntries());
 		Collections.sort(entries, new Comparator<RosterEntry>() {
 
 			public int compare(RosterEntry r1, RosterEntry r2) {

@@ -95,7 +95,7 @@ public class WardPharmacyEdit extends JDialog {
 	private float movSelectedWeight;
 	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
-	private ArrayList<Patient> pat = new ArrayList<Patient>();
+	private ArrayList<Patient> pat = new ArrayList<>();
 	private ArrayList<MedicalWard> medList = null;
 	
 //	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel"; //$NON-NLS-1$
@@ -201,7 +201,7 @@ public class WardPharmacyEdit extends JDialog {
 						pat = patBrowser.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 					}catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
-						pat = new ArrayList<Patient>();
+						pat = new ArrayList<>();
 					}
 					getJComboBoxPatients(jTextFieldSearchPatient.getText());
 				}

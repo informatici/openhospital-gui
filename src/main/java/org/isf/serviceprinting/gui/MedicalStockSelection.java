@@ -394,7 +394,7 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 		try {
 			wardList = wbm.getWards();
 		}catch(OHServiceException e){
-			wardList = new ArrayList<Ward>();
+			wardList = new ArrayList<>();
 			if (e.getMessages() != null){
 				for(OHExceptionMessage msg : e.getMessages()){
 					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
@@ -505,7 +505,7 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 		return okButton;
 	}
 	private ArrayList<Movement4Print> convertToPrint(ArrayList<Movement> movements){
-		ArrayList<Movement4Print> toPrint=new ArrayList<Movement4Print>();
+		ArrayList<Movement4Print> toPrint= new ArrayList<>();
 		for(Movement movement:movements){
 			toPrint.add(new Movement4Print(movement));
 		}

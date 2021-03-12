@@ -184,7 +184,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 			try {
 				pAgeType = manager.getAgeType();
 			}catch(OHServiceException e){
-				pAgeType = new ArrayList<AgeType>();
+				pAgeType = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}

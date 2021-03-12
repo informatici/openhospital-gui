@@ -232,7 +232,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		/*
 		 * HashTable of the rows
 		 */
-		hashTableThRow = new Hashtable<Integer, TherapyRow>();
+		hashTableThRow = new Hashtable<>();
 		if (!thRows.isEmpty()) {
 			for (TherapyRow thRow : thRows) {
 				hashTableThRow.put(thRow.getTherapyID(), thRow);
@@ -259,7 +259,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		/*
 		 * HashTable of the visits
 		 */
-		hashTableVisits = new Hashtable<Integer, Visit>();
+		hashTableVisits = new Hashtable<>();
 		if (!visits.isEmpty()) {
 			for (Visit visit : visits) {
 				hashTableVisits.put(visit.getVisitID(), visit);
@@ -322,7 +322,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		}
 	}
 	private void showVisits() {
-		hashTableVisits = new Hashtable<Integer, Visit>();
+		hashTableVisits = new Hashtable<>();
 		for (Visit vs : visits) {
 			hashTableVisits.put(vs.getVisitID(), vs);
 			showVisit(vs);

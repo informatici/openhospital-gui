@@ -221,7 +221,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 			OpdBrowserManager opdManager= Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
 				ArrayList<Admission> admissions = admManager.getAdmissions(myPatient);
-				oprowData = new ArrayList<OperationRow>();
+				oprowData = new ArrayList<>();
 				for (Admission adm : admissions) {
 					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
 				
@@ -269,7 +269,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 			}
 		});
 
-		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 		
 		JtableData.setModel(modelOhOpeRow);
 		
@@ -437,7 +437,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 		JtableData.setModel(modelOhOpeRow);
 		JtableData.repaint();
 	}

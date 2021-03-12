@@ -204,7 +204,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			model = new ExamBrowsingModel();
 			table = new JTable(model);
 			table.setAutoCreateColumnsFromModel(false);
-			sorter = new TableRowSorter<TableModel>(model);
+			sorter = new TableRowSorter<>(model);
 		    table.setRowSorter(sorter);
 			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
@@ -443,7 +443,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		} else {
 			try {
 				String[] tokens = s.split(" ");
-				ArrayList<RowFilter<Object, Object>> filters = new ArrayList<RowFilter<Object, Object>>();
+				ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
 
 				for (int j = 0; j < tokens.length; j++) {
 					String token = tokens[j].toLowerCase();

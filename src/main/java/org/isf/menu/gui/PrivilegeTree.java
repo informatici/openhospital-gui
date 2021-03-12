@@ -100,7 +100,7 @@ class PrivilegeTree extends JDialog {
 
 		
 		//a supporting structure
-		ArrayList<UserMenuItem> junkMenu = new ArrayList<UserMenuItem>();
+		ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 		
 		//cycle to process the whole rootMenu
 		while (!rootMenu.isEmpty()) {
@@ -128,7 +128,7 @@ class PrivilegeTree extends JDialog {
 				UserMenuItem umi = altIt.next();
 				rootMenu.remove(umi);
 			}
-			junkMenu = new ArrayList<UserMenuItem>();
+			junkMenu = new ArrayList<>();
 		}
 		
 		/*while (!myMenu.isEmpty()) {
@@ -213,7 +213,7 @@ class PrivilegeTree extends JDialog {
 		ActionListener addListener = new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				
-				ArrayList<UserMenuItem> newUserMenu = new ArrayList<UserMenuItem>();
+				ArrayList<UserMenuItem> newUserMenu = new ArrayList<>();
 				
 				Enumeration<?> e = root.breadthFirstEnumeration();
 				while (e.hasMoreElements()) {

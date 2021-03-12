@@ -337,7 +337,7 @@ public class ExamPicker extends javax.swing.JPanel {
     
     public ArrayList<Exam> getAllSelectedObject(){
     	OhTableModelExam<?> model=(OhTableModelExam<?>)jTableData.getModel();
-    	ArrayList<Exam> exams = new ArrayList<Exam>();
+    	ArrayList<Exam> exams = new ArrayList<>();
     	int[] selectedRows = this.jTableData.getSelectedRows();
          
     	for(int i = 0; i<selectedRows.length;i++){

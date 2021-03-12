@@ -39,7 +39,7 @@ public class OhTableModelExam<T> implements TableModel{
 	public  OhTableModelExam(ArrayList<Exam> dataList) {
 		this.dataListExam=dataList;
 		
-		this.filteredList=new ArrayList<Exam>();
+		this.filteredList= new ArrayList<>();
 		
 		for (Iterator<Exam> iterator = dataList.iterator(); iterator.hasNext();) {
 			Exam t = (Exam) iterator.next();
@@ -49,7 +49,7 @@ public class OhTableModelExam<T> implements TableModel{
 	}
 	
 	public int filter(String searchQuery){
-		this.filteredList=new ArrayList<Exam>();
+		this.filteredList= new ArrayList<>();
 		
 		for (Iterator<Exam> iterator = this.dataListExam.iterator(); iterator.hasNext();) {
 			Object object = (Object) iterator.next();	

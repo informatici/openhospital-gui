@@ -156,7 +156,7 @@ public class TherapyEntryForm extends JDialog {
 		try {
 			this.medArray = medBrowser.getMedicals();
 		} catch (OHServiceException e) {
-			this.medArray = new ArrayList<Medical>();
+			this.medArray = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
 		}
 		this.therapy = th;
@@ -418,7 +418,7 @@ public class TherapyEntryForm extends JDialog {
 
 	private ArrayList<JRadioButton> getRadioButtonSet(int frequencyInDayOptions) {
 
-		radioButtonSet = new ArrayList<JRadioButton>();
+		radioButtonSet = new ArrayList<>();
 		ButtonGroup buttonGroup = new ButtonGroup();
 
 		for (int i = 0; i < frequencyInDayOptions; i++) {

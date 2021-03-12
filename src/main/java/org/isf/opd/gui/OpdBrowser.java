@@ -897,7 +897,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	
 	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
 		String query = s.trim();
-		ArrayList<Disease> results = new ArrayList<Disease>();
+		ArrayList<Disease> results = new ArrayList<>();
 		for (Disease disease : diseaseList) {
 			if (!query.equals("")) {
 				String[] patterns = query.split(" ");

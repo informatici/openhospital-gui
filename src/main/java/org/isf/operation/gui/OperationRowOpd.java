@@ -83,7 +83,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 	private OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	private OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
 	private OhTableOperationModel<OperationRow> modelOhOpeRow;
-	private List<OperationRow> oprowData = new ArrayList<OperationRow>();
+	private List<OperationRow> oprowData = new ArrayList<>();
 	private Opd myOpd;
 	
 	private ArrayList<String> operationResults = opeManager.getResultDescriptionList();
@@ -278,7 +278,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		scrollPaneData.setViewportView(tableData);
 
 		if (myOpd != null) {
-			List<OperationRow> res = new ArrayList<OperationRow>();
+			List<OperationRow> res = new ArrayList<>();
 			try {
 				res = opeRowManager.getOperationRowByOpd(myOpd);
 			} catch (OHServiceException e1) {
@@ -286,7 +286,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			}
 			oprowData.addAll(res);
 		}
-		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 		tableData.setModel(modelOhOpeRow);
 
 	}
@@ -303,7 +303,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 	private JComboBox getOperationsBox() {
 		JComboBox comboOpe = new JComboBox();
-		ArrayList<Operation> opeList = new ArrayList<Operation>();
+		ArrayList<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(opeManager.getOperationOpd());
 		} catch (OHServiceException ex) {
@@ -357,7 +357,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		int index = tableData.getSelectedRow();
 		if (index < 0) {
 			oprowData.add(operationRow);
-			modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+			modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 			tableData.setModel(modelOhOpeRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
@@ -371,7 +371,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			opeInter.setPrescriber(MainMenu.getUser().getUserName());
 			opeInter.setRemarks(textAreaRemark.getText());
 			oprowData.set(index, opeInter);
-			modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+			modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 			tableData.setModel(modelOhOpeRow);
 		}
 		clearForm();
@@ -380,7 +380,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 	public void addToForm() {
 		OperationRow opeRow = oprowData.get(tableData.getSelectedRow());
 		/* ** for combo operation **** */
-		ArrayList<Operation> opeList = new ArrayList<Operation>();
+		ArrayList<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(opeManager.getOperationOpd());
 		} catch (OHServiceException ex) {
@@ -446,7 +446,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 						oprowData.remove(idRow);
-						modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+						modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 						tableData.setModel(modelOhOpeRow);
 						tableData.repaint();
 						clearForm();
@@ -460,7 +460,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 							MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 					oprowData.remove(idOpe);
-					modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+					modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 					tableData.setModel(modelOhOpeRow);
 					tableData.repaint();
 					clearForm();

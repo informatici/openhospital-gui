@@ -105,9 +105,9 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         this.allWebcams = Webcam.getWebcams();
         this.webcam = Webcam.getDefault();
 
-        this.supportedResolutions = new ArrayList<Dimension>();
+        this.supportedResolutions = new ArrayList<>();
         Collections.addAll(supportedResolutions, webcam.getDevice().getResolutions());
-        dimensionSelectionInList = new SelectionInList<Dimension>(supportedResolutions);
+        dimensionSelectionInList = new SelectionInList<>(supportedResolutions);
     }
 
     @Override

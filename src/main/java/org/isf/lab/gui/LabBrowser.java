@@ -586,7 +586,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			try {
 				pLabs = manager.getLaboratory(exam, dateFrom, dateTo);
 			} catch (OHServiceException e) {
-				pLabs = new ArrayList<Laboratory>();
+				pLabs = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
@@ -595,7 +595,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			try {
 				pLabs = manager.getLaboratory();
 			} catch (OHServiceException e) {
-				pLabs = new ArrayList<Laboratory>();
+				pLabs = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}

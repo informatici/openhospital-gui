@@ -227,11 +227,11 @@ public class WardPharmacy extends ModalJFrame implements
 	 */
 	private MovBrowserManager movManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
 	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
-	private ArrayList<Movement> listMovementCentral = new ArrayList<Movement>();
+	private ArrayList<Movement> listMovementCentral = new ArrayList<>();
 	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
-	private ArrayList<MovementWard> listMovementWardFromTo = new ArrayList<MovementWard>();
+	private ArrayList<MovementWard> listMovementWardFromTo = new ArrayList<>();
 	private ArrayList<MedicalWard> wardDrugs;
 	private ArrayList<MovementWard> wardOutcomes;
 	private ArrayList<Movement> wardIncomes;
@@ -582,7 +582,7 @@ public class WardPharmacy extends ModalJFrame implements
 	}
 
 	private MedicalWard showLotDetail(ArrayList<MedicalWard> drug, String me) {
-		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+		ArrayList<MedicalWard> dr = new ArrayList<>();
 		MedicalWard medWard = null;
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
@@ -1136,7 +1136,7 @@ public class WardPharmacy extends ModalJFrame implements
 			try {
 				wardList = wardManager.getWards();
 			} catch (OHServiceException e) {
-				wardList = new ArrayList<Ward>();
+				wardList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			jComboBoxWard.addItem(MessageBundle.getMessage("angal.medicalstockward.selectaward")); //$NON-NLS-1$
@@ -1210,7 +1210,7 @@ public class WardPharmacy extends ModalJFrame implements
 		//private ArrayList<Movement> wardIncomes; --> Global
 
 		public IncomesModel() {
-			wardIncomes = new ArrayList<Movement>();
+			wardIncomes = new ArrayList<>();
 			try {
 				listMovementCentral = movManager.getMovements(wardSelected.getCode(), dateFrom, dateTo);
 
@@ -1310,12 +1310,12 @@ public class WardPharmacy extends ModalJFrame implements
 		//private ArrayList<MovementWard> wardOutcomes; --> Global
 
 		public OutcomesModel() {
-			wardOutcomes = new ArrayList<MovementWard>();
+			wardOutcomes = new ArrayList<>();
 			try {
 				listMovementWardFromTo = wardManager.getMovementWard(wardSelected.getCode(), dateFrom, dateTo);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-				listMovementWardFromTo = new ArrayList<MovementWard>();
+				listMovementWardFromTo = new ArrayList<>();
 			}
 
 			Medical medicalSelected;
@@ -1462,8 +1462,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-				tableModel = new ArrayList<MedicalWard>();
-				wardDrugs = new ArrayList<MedicalWard>();
+				tableModel = new ArrayList<>();
+				wardDrugs = new ArrayList<>();
 			}
 		}
 
@@ -1573,7 +1573,7 @@ public class WardPharmacy extends ModalJFrame implements
 							OHServiceExceptionUtil.showMessages(e, WardPharmacy.this);
 						}
 					} else if (jTabbedPaneWard.getSelectedIndex() == 2) {
-						ArrayList<String> options = new ArrayList<String>();
+						ArrayList<String> options = new ArrayList<>();
 						options.add(MessageBundle.getMessage("angal.medicals.today")); //$NON-NLS-1$
 						options.add(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
 
@@ -1738,7 +1738,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {
 		String query = s.trim();
-		ArrayList<Medical> results = new ArrayList<Medical>();
+		ArrayList<Medical> results = new ArrayList<>();
 		for (Medical medoc : medicalsList) {
 			if (!query.equals("")) {
 				String[] patterns = query.split(" ");

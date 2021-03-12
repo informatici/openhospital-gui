@@ -42,7 +42,7 @@ public class OhDefaultCellRenderer extends DefaultTableCellRenderer{
 	Color lightGray=new Color(242, 242, 242);
 	int hoveredRow = -1;
 	
-	List<Integer> centeredColumns=new ArrayList<Integer>();
+	List<Integer> centeredColumns= new ArrayList<>();
 	
 	public OhDefaultCellRenderer(List<Integer> centeredColumns) {
 		super();

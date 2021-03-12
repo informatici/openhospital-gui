@@ -162,7 +162,7 @@ public class PriceModel extends AbstractTreeTableModel {
 class PriceNode {
 	
 	private Price    					price;
-	private ArrayList<PriceNode>		items = new ArrayList<PriceNode>();
+	private ArrayList<PriceNode>		items = new ArrayList<>();
 
 	
     public PriceNode(Price price) { 

@@ -1371,7 +1371,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					}
 					int ok = JOptionPane.showConfirmDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.doyouwanttoproceed"));
 					if (ok == JOptionPane.OK_OPTION) {
-						ArrayList<PatientExamination> patexList = new ArrayList<PatientExamination>();
+						ArrayList<PatientExamination> patexList = new ArrayList<>();
 						for (int i = 0; i < row.length; i++) {
 							patexList.add((PatientExamination) jTableSummary.getModel().getValueAt(row[i], -1));
 						}

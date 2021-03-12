@@ -192,7 +192,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	//Bills & Payments
 	private BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
 	private ArrayList<Bill> billPeriod;
-	private HashMap<Integer, Bill> mapBill = new HashMap<Integer, Bill>();
+	private HashMap<Integer, Bill> mapBill = new HashMap<>();
 	private ArrayList<BillPayments> paymentsPeriod;
 	private ArrayList<Bill> billFromPayments;
 	
@@ -344,7 +344,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 				public void actionPerformed(ActionEvent e) {
 					
-					ArrayList<String> options = new ArrayList<String>();
+					ArrayList<String> options = new ArrayList<>();
 					if (patientParent != null)
 						options.add(MessageBundle.getMessage("angal.billbrowser.patientstatement"));
 					options.add(MessageBundle.getMessage("angal.billbrowser.todayclosure"));
@@ -441,7 +441,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						return;
 					}
 
-					options = new ArrayList<String>();
+					options = new ArrayList<>();
 					options.add(MessageBundle.getMessage("angal.billbrowser.shortreportonlybaddebts"));
 					options.add(MessageBundle.getMessage("angal.billbrowser.fullreportallbills"));
 										
@@ -582,7 +582,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 								}
 								Bill billTemp = null;
 								int[] billIdIndex = jTableBills.getSelectedRows();
-								ArrayList<Integer> billsIdList = new ArrayList<Integer>();
+								ArrayList<Integer> billsIdList = new ArrayList<>();
 								
 								for (int i = 0; i < billIdIndex.length; i++) {
 									billTemp = (Bill)jTableBills.getValueAt(billIdIndex[i], -1);
@@ -620,7 +620,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 								}else if (GeneralData.ALLOWPRINTOPENEDBILL) {
 									Bill billTemp = null;
 									int[] billIdIndex = jTablePending.getSelectedRows();
-									ArrayList<Integer> billsIdList = new ArrayList<Integer>();
+									ArrayList<Integer> billsIdList = new ArrayList<>();
 								
 									for (int i = 0; i < billIdIndex.length; i++) {
 										billTemp = (Bill)jTablePending.getValueAt(billIdIndex[i], -1);
@@ -828,7 +828,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					Patient pat = selectPatient.getPatient();
 					
 					// get bill items
-					List<BillItems> itemsList = new ArrayList<BillItems>();
+					List<BillItems> itemsList = new ArrayList<>();
 
 					try {
 						// FIXME: why need to call getDistinctItems() here ?????
@@ -1232,7 +1232,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		userToday = new BigDecimal(0);
 		userPeriod = new BigDecimal(0);
 		
-		ArrayList<Integer> notDeletedBills = new ArrayList<Integer>();
+		ArrayList<Integer> notDeletedBills = new ArrayList<>();
 				
 		//Bills in range contribute for Not Paid (balance)
 		for (Bill bill : billPeriod) {
@@ -1294,12 +1294,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		private ArrayList<Bill> tableArray = new ArrayList<Bill>();
+		private ArrayList<Bill> tableArray = new ArrayList<>();
 		
 		/*
 		 * All Bills
 		 */
-		private ArrayList<Bill> billAll = new ArrayList<Bill>();
+		private ArrayList<Bill> billAll = new ArrayList<>();
 		
 		public BillTableModel(String status) {
 			loadData(status);

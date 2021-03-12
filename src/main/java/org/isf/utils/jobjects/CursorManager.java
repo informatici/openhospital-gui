@@ -34,7 +34,7 @@ class CursorManager {
   private boolean needsCleanup;
 
   public CursorManager(DelayTimer waitTimer) {
-    this.dispatchedEvents = new Stack<DispatchedEvent>();
+    this.dispatchedEvents = new Stack<>();
     this.waitTimer = waitTimer;
   }
   private void cleanUp() {
@@ -53,7 +53,7 @@ class CursorManager {
     }
   }
   private ArrayList<AWTEvent> gatherNonInputEvents(EventQueue systemQueue) {
-    ArrayList<AWTEvent> events = new ArrayList<AWTEvent>();
+    ArrayList<AWTEvent> events = new ArrayList<>();
     while (systemQueue.peekEvent() != null) {
       try {
         AWTEvent nextEvent = systemQueue.getNextEvent();

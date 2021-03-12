@@ -330,7 +330,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			try {
 				pWard = manager.getWards();
 			}catch(OHServiceException e){
-				pWard = new ArrayList<Ward>();
+				pWard = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}

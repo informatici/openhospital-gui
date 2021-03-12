@@ -654,7 +654,7 @@ public class LabEditExtended extends ModalJFrame {
 
 				public void actionPerformed(ActionEvent arg0) {					
 					try {
-						ArrayList<LaboratoryForPrint> labs = new ArrayList<LaboratoryForPrint>();
+						ArrayList<LaboratoryForPrint> labs = new ArrayList<>();
 						
 						labs.add(new LaboratoryForPrint(
 								lab.getCode(),
@@ -728,7 +728,7 @@ public class LabEditExtended extends ModalJFrame {
 						JOptionPane.showMessageDialog(LabEditExtended.this, MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"));
 							return;
 					}
-					ArrayList<String> labRow = new ArrayList<String>();
+					ArrayList<String> labRow = new ArrayList<>();
 					lab.setDate(new GregorianCalendar());
 					lab.setExamDate(gregDate);
 					RememberDates.setLastLabExamDate(gregDate);
@@ -844,7 +844,7 @@ public class LabEditExtended extends ModalJFrame {
 			try {
 				lRows = lRowManager.getLabRowByLabId(lab.getCode());
 			} catch (OHServiceException e) {
-				lRows = new ArrayList<LaboratoryRow>();
+				lRows = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			boolean find;
