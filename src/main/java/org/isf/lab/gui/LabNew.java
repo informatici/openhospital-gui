@@ -194,10 +194,10 @@ public class LabNew extends JDialog implements SelectionListener {
 	
 	//Results (ALL)
 	private ExamRowBrowsingManager examRowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-	
+
 	//Arrays for this Patient
-	private ArrayList<ArrayList<LaboratoryRow>> examResults = new ArrayList<ArrayList<LaboratoryRow>>();
-    private ArrayList<Laboratory> examItems = new ArrayList<Laboratory>();
+	private ArrayList<ArrayList<LaboratoryRow>> examResults = new ArrayList<>();
+	private ArrayList<Laboratory> examItems = new ArrayList<>();
 	private ExamTableModel jTableModel;
 	private JButton printLabelButton;
 	private JTextField jTextFieldExamResult;
@@ -793,7 +793,7 @@ public class LabNew extends JDialog implements SelectionListener {
 				public void actionPerformed(ActionEvent e) {
 					String mat = "";
 
-					OhTableModelExam<Price> modelOh = new OhTableModelExam<Price>(exaArray);
+					OhTableModelExam<Price> modelOh = new OhTableModelExam<>(exaArray);
 
 					ExamPicker examPicker = new ExamPicker(modelOh);
 
@@ -853,7 +853,7 @@ public class LabNew extends JDialog implements SelectionListener {
 
 	private void addItem(Laboratory lab) {
 		examItems.add(lab);
-		examResults.add(new ArrayList<LaboratoryRow>());
+		examResults.add(new ArrayList<>());
 		jTableExams.updateUI();
 		int index = examItems.size()-1;
 		jTableExams.setRowSelectionInterval(index, index);

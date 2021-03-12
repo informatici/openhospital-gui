@@ -40,7 +40,7 @@ public class OhTableDrugsModel <T> implements TableModel {
 	List<T> filteredList;
 
 	public  OhTableDrugsModel(List<T> dataList) {
-		this.filteredList = new ArrayList<T>();
+		this.filteredList = new ArrayList<>();
 
 		if (dataList != null) {
 			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {

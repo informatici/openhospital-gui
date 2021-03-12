@@ -88,7 +88,7 @@ public class JTextFieldSearchModel extends JPanel {
 
 	private void initializeMedical() {
 		ArrayList<Medical> medicals = null;
-		medicalMap = new HashMap<String, Medical>();
+		medicalMap = new HashMap<>();
 		try {
 			medicals = medMan.getMedicalsSortedByCode();
 		} catch (OHServiceException e) {
@@ -104,7 +104,7 @@ public class JTextFieldSearchModel extends JPanel {
 	}
 	
 	protected Medical chooseMedical(String text) {
-		ArrayList<Medical> medList = new ArrayList<Medical>();
+		ArrayList<Medical> medList = new ArrayList<>();
 		for (Medical aMed : medicalMap.values()) {
 			if (aMed.getProd_code().toLowerCase().contains(text) 
 					|| aMed.getDescription().toLowerCase().contains(text))

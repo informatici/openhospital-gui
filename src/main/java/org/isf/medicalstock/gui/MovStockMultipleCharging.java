@@ -171,7 +171,7 @@ public class MovStockMultipleCharging extends JDialog {
 			medicals = null;
 		}
 
-		medicalMap = new HashMap<String, Medical>();
+		medicalMap = new HashMap<>();
 		if (null != medicals) {
 			for (Medical med : medicals) {
 				String key = med.getProd_code();
@@ -179,7 +179,7 @@ public class MovStockMultipleCharging extends JDialog {
 				medicalMap.put(key, med);
 			}
 		}
-		units = new ArrayList<Integer>();
+		units = new ArrayList<>();
 	}
 	
 	private void initcomponents() {
@@ -633,7 +633,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	protected Medical chooseMedical(String text) {
-		ArrayList<Medical> medList = new ArrayList<Medical>();
+		ArrayList<Medical> medList = new ArrayList<>();
 		for (Medical aMed : medicalMap.values()) {
 			if (NormalizeString.normalizeContains(aMed.getDescription().toLowerCase(), text.toLowerCase()))
 				medList.add(aMed);
@@ -668,7 +668,7 @@ public class MovStockMultipleCharging extends JDialog {
 		try {
 			lots = movManager.getLotByMedical(med);
 		} catch (OHServiceException e) {
-			lots = new ArrayList<Lot>();
+			lots = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		Lot lot = null;
@@ -789,8 +789,8 @@ public class MovStockMultipleCharging extends JDialog {
 		private static final long serialVersionUID = 1L;
 
 		public JTableModel() {
-			movements = new ArrayList<Movement>();
-			newLots = new ArrayList<Boolean>();
+			movements = new ArrayList<>();
+			newLots = new ArrayList<>();
 		}
 		
 		public ArrayList<Movement> getMovements() {

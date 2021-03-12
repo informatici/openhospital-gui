@@ -305,7 +305,7 @@ public class MedicalPrintSelection extends JDialog implements ActionListener{
 		return closeButton;
 	}
 	private ArrayList<Medical4Print> convertToPrint(ArrayList<Medical> medicals){
-		ArrayList<Medical4Print> toPrint=new ArrayList<Medical4Print>();
+		ArrayList<Medical4Print> toPrint= new ArrayList<>();
 		for(Medical medical:medicals){
 			toPrint.add(new Medical4Print(medical));
 		}

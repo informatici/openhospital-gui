@@ -319,7 +319,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 			public void actionPerformed(ActionEvent event) {
 
-				ArrayList<String> dateOptions = new ArrayList<String>();
+				ArrayList<String> dateOptions = new ArrayList<>();
 				dateOptions.add(MessageBundle.getMessage("angal.medicals.today"));
 				dateOptions.add(MessageBundle.getMessage("angal.common.date"));
 
@@ -335,7 +335,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 				if (dateOption == null)
 					return;
 
-				ArrayList<String> lotOptions = new ArrayList<String>();
+				ArrayList<String> lotOptions = new ArrayList<>();
 				lotOptions.add(MessageBundle.getMessage("angal.medicals.onlyquantity"));
 				lotOptions.add(MessageBundle.getMessage("angal.medicals.withlot"));
 
@@ -608,7 +608,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 	protected void launchExpiringReport() {
 
-		ArrayList<String> options = new ArrayList<String>();
+		ArrayList<String> options = new ArrayList<>();
 		options.add(MessageBundle.getMessage("angal.medicals.today"));
 		options.add(MessageBundle.getMessage("angal.medicals.thismonth"));
 		options.add(MessageBundle.getMessage("angal.medicals.nextmonth"));
@@ -696,7 +696,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 		private static final long serialVersionUID = 1L;
 
-		ArrayList<Medical> medicalList = new ArrayList<Medical>();
+		ArrayList<Medical> medicalList = new ArrayList<>();
 
 		public MedicalBrowsingModel(String key, boolean isType) {
 			if (isType) {

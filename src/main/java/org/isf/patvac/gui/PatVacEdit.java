@@ -524,7 +524,7 @@ public class PatVacEdit extends JDialog {
 				pat = patBrowser.getPatientsByOneOfFieldsLike(regExp);
 			}catch(OHServiceException ex){
 				OHServiceExceptionUtil.showMessages(ex);
-				pat = new ArrayList<Patient>();
+				pat = new ArrayList<>();
 			}
 		}else{
 			try {

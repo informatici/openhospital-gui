@@ -69,7 +69,7 @@ public class OperationRowEdit extends JPanel {
 	
 	     // LISTENER INTERFACE
 		// --------------------------------------------------------
-			List<OperationList> operationRowListener = new ArrayList<OperationList>();
+			List<OperationList> operationRowListener = new ArrayList<>();
 
 			public interface OperationRowListener extends EventListener {
 				void operationRowInserted(AWTEvent aEvent);
@@ -359,7 +359,7 @@ public class OperationRowEdit extends JPanel {
 	private JComboBox getOperationsBox() {
 		
 		JComboBox comboOpe = new JComboBox();
-		ArrayList<Operation> opeList = new ArrayList<Operation>();
+		ArrayList<Operation> opeList = new ArrayList<>();
                             try {
                                 opeList = ope.getOperation();
                             } catch (OHServiceException ex) {

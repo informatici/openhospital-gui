@@ -183,7 +183,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 		public DicomThumbsModel() {
 
-			thumbnailList = new LinkedList<FileDicom>();
+			thumbnailList = new LinkedList<>();
 
 		}
 

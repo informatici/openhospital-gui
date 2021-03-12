@@ -1470,7 +1470,7 @@ public class PatientInsertExtended extends JDialog {
 			try {
 				ageList = ageTypeManager.getAgeType();
 			}catch(OHServiceException e){
-				ageList = new ArrayList<AgeType>();
+				ageList = new ArrayList<>();
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			jAgeDescComboBox.addItem("");

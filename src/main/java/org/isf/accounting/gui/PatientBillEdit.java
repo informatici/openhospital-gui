@@ -218,7 +218,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	public void patientSelected(Patient patient){
 		// patientSelected = patient;
 		setPatientSelected(patient);
-        ArrayList<Bill> patientPendingBills = new ArrayList<Bill>();
+        ArrayList<Bill> patientPendingBills = new ArrayList<>();
 		try {
 			patientPendingBills = billManager.getPendingBills(patient.getCode());
 		} catch (OHServiceException e) {
@@ -404,9 +404,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	
 	//Prices, Items and Payments for the tables
-	private ArrayList<BillItems> billItems = new ArrayList<BillItems>();
-	private ArrayList<BillPayments> payItems = new ArrayList<BillPayments>();
-	private ArrayList<Price> prcListArray = new ArrayList<Price>();
+	private ArrayList<BillItems> billItems = new ArrayList<>();
+	private ArrayList<BillPayments> payItems = new ArrayList<>();
+	private ArrayList<Price> prcListArray = new ArrayList<>();
 	private int billItemsSaved;
 	private int payItemsSaved;
 	
@@ -1506,12 +1506,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					
 					boolean isPrice = true;
 					
-					HashMap<Integer,PricesOthers> othersHashMap = new HashMap<Integer,PricesOthers>();
+					HashMap<Integer,PricesOthers> othersHashMap = new HashMap<>();
 					for (PricesOthers other : othPrices) {
 				    	othersHashMap.put(other.getId(), other);
 				    }
 					
-					ArrayList<Price> othArray = new ArrayList<Price>();
+					ArrayList<Price> othArray = new ArrayList<>();
 					for (Price price : prcListArray) {
 						
 						if (price.getGroup().equals("OTH")) //$NON-NLS-1$
@@ -1599,7 +1599,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				public void actionPerformed(ActionEvent e) {
 					
-					ArrayList<Price> exaArray = new ArrayList<Price>();
+					ArrayList<Price> exaArray = new ArrayList<>();
 					for (Price price : prcListArray) {
 						
 						if (price.getGroup().equals("EXA")) //$NON-NLS-1$
@@ -1634,7 +1634,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				public void actionPerformed(ActionEvent e) {
 					
-					ArrayList<Price> opeArray = new ArrayList<Price>();
+					ArrayList<Price> opeArray = new ArrayList<>();
 					for (Price price : prcListArray) {
 						
 						if (price.getGroup().equals("OPE")) //$NON-NLS-1$
@@ -1669,7 +1669,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				public void actionPerformed(ActionEvent e) {
 					
-					ArrayList<Price> medArray = new ArrayList<Price>();
+					ArrayList<Price> medArray = new ArrayList<>();
 					for (Price price : prcListArray) {
 						
 						if (price.getGroup().equals("MED")) //$NON-NLS-1$
@@ -1935,8 +1935,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		
 		public BillTableModel() {
 			
-			HashMap<String,Price> priceHashTable = new HashMap<String,Price>();
-			prcListArray = new ArrayList<Price>();
+			HashMap<String,Price> priceHashTable = new HashMap<>();
+			prcListArray = new ArrayList<>();
 			//billItems = new ArrayList<BillItems>();
 			
 			/*

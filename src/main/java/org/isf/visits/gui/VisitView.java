@@ -121,7 +121,7 @@ public class VisitView extends ModalJFrame {
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
-	private ArrayList<Visit> visits = new ArrayList<Visit>();
+	private ArrayList<Visit> visits = new ArrayList<>();
 	private Ward ward;
 	private JPanel wardPanel;
 	private JButton todayButton;
@@ -378,7 +378,7 @@ public class VisitView extends ModalJFrame {
 
 	private int[] visColumnsWidth = { 500, 350 };
 	private boolean[] visColumnsResizable = { false, true };
-	private ArrayList<Visit> visitfirst = new ArrayList<Visit>();
+	private ArrayList<Visit> visitfirst = new ArrayList<>();
 
 	private JScrollPane jScrollPaneSecondtday;
 
@@ -409,7 +409,7 @@ public class VisitView extends ModalJFrame {
 		return jScrollPaneSecondtday;
 	}
 
-	private ArrayList<Visit> visitSecond = new ArrayList<Visit>();
+	private ArrayList<Visit> visitSecond = new ArrayList<>();
 	private JTable jTableSecond;
 
 	private JTable visitSecondDayPanel() {
@@ -524,7 +524,7 @@ public class VisitView extends ModalJFrame {
 	}
 
 	private ArrayList<Visit> getVisitForDate(Date date) {
-		ArrayList<Visit> vis = new ArrayList<Visit>();
+		ArrayList<Visit> vis = new ArrayList<>();
 		for (int i = 0; i < visits.size(); i++) {
 			Visit visit = visits.get(i);
 
@@ -789,7 +789,7 @@ public class VisitView extends ModalJFrame {
 			try {
 				wardList = wbm.getWards();
 			} catch (OHServiceException e) {
-				wardList = new ArrayList<Ward>();
+				wardList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			for (Ward ward : wardList) {

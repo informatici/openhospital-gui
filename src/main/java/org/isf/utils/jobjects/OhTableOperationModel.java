@@ -45,7 +45,7 @@ public class OhTableOperationModel<T> implements TableModel{
 	
 	public  OhTableOperationModel(List<T> dataList) {
 		this.dataList = dataList;
-		this.filteredList = new ArrayList<T>();
+		this.filteredList = new ArrayList<>();
 		
 		if (dataList!=null){
 			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
@@ -56,7 +56,7 @@ public class OhTableOperationModel<T> implements TableModel{
 	}
 	
 	public int filter(String searchQuery){
-		this.filteredList=new ArrayList<T>();
+		this.filteredList= new ArrayList<>();
 		
 		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext();) {
 			Object object = (Object) iterator.next();

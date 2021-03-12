@@ -257,7 +257,7 @@ public class PricesBrowser extends ModalJFrame {
 
 					if (option == 0) {
 						
-						ArrayList<Price> updateList = new ArrayList<Price>();
+						ArrayList<Price> updateList = new ArrayList<>();
 						updateList = convertTreeToArray();
 						boolean updated = false;
 						try {
@@ -286,7 +286,7 @@ public class PricesBrowser extends ModalJFrame {
 
 	private ArrayList<Price> convertTreeToArray() {
 		
-		ArrayList<Price> listPrices = new ArrayList<Price>();
+		ArrayList<Price> listPrices = new ArrayList<>();
 		for (int i=0; i<examNodes.getItems().length; i++) {
 			
 			PriceNode newPriceNode = (PriceNode)examNodes.getItems()[i];
@@ -361,7 +361,7 @@ public class PricesBrowser extends ModalJFrame {
 
 	private PriceNode getTreeContent() {
 		
-		HashMap<String,Price> priceHashTable = new HashMap<String,Price>();
+		HashMap<String,Price> priceHashTable = new HashMap<>();
 	    for (Price price : priceArray) {
 	    	priceHashTable.put(price.getList().getId()+
 	    					  price.getGroup()+

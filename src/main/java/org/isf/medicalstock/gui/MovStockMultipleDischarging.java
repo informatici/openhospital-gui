@@ -128,7 +128,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
 	private JComboBox shareWith = null;
 	private Interaction share;
-	private ArrayList<Medical> pool = new ArrayList<Medical>();
+	private ArrayList<Medical> pool = new ArrayList<>();
 	
 	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
@@ -177,7 +177,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 
-		medicalMap = new HashMap<String, Medical>();
+		medicalMap = new HashMap<>();
 		if (null != medicals) {
 			for (Medical med : medicals) {
 				String key = med.getProd_code();
@@ -186,7 +186,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			}
 		}
 
-		units = new ArrayList<Integer>();
+		units = new ArrayList<>();
 	}
 	
 	private void initcomponents() {
@@ -548,7 +548,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	}
 
 	protected Medical chooseMedical(String text) {
-		ArrayList<Medical> medList = new ArrayList<Medical>();
+		ArrayList<Medical> medList = new ArrayList<>();
 		for (Medical aMed : medicalMap.values()) {
 			if (NormalizeString.normalizeContains(aMed.getDescription().toLowerCase(), text.toLowerCase()))
 				medList.add(aMed);
@@ -776,7 +776,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			try {
 				wards = wardMan.getWards();
 			}catch(OHServiceException e){
-				wards = new ArrayList<Ward>();
+				wards = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			for (Ward ward : wards) {
@@ -807,7 +807,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		private static final long serialVersionUID = 1L;
 
 		public JTableModel() {
-			movements = new ArrayList<Movement>();
+			movements = new ArrayList<>();
 		}
 		
 		public ArrayList<Movement> getMovements() {

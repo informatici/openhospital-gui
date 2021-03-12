@@ -85,7 +85,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
 	OhTableOperationModel<OperationRow> modelOhOpeRow;
-	private List<OperationRow> oprowData = new ArrayList<OperationRow>();
+	private List<OperationRow> oprowData = new ArrayList<>();
 	private Admission myAdmission;
 
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
@@ -288,7 +288,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 				ex.printStackTrace();
 			}
 		}
-		modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 		tableData.setModel(modelOhOpeRow);
 
 	}
@@ -305,7 +305,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	private JComboBox getOperationsBox() {
 		JComboBox comboOpe = new JComboBox();
-		ArrayList<Operation> opeList = new ArrayList<Operation>();
+		ArrayList<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(opeManager.getOperationAdm());
 		} catch (OHServiceException ex) {
@@ -364,7 +364,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		int index = tableData.getSelectedRow();
 		if (index < 0) {
 			oprowData.add(operationRow);
-			modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+			modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 			tableData.setModel(modelOhOpeRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
@@ -378,7 +378,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			opeInter.setPrescriber(MainMenu.getUser().getUserName());
 			opeInter.setRemarks(textAreaRemark.getText());
 			oprowData.set(index, opeInter);
-			modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+			modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 			tableData.setModel(modelOhOpeRow);
 		}
 		clearForm();
@@ -387,7 +387,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	public void addToForm() {
 		OperationRow opeRow = (OperationRow) oprowData.get(tableData.getSelectedRow());
 		/* ** for combo operation **** */
-		ArrayList<Operation> opeList = new ArrayList<Operation>();
+		ArrayList<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(opeManager.getOperationAdm());
 		} catch (OHServiceException ex) {
@@ -453,7 +453,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 						oprowData.remove(idRow);
-						modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+						modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 						tableData.setModel(modelOhOpeRow);
 						tableData.repaint();
 						clearForm();
@@ -467,7 +467,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 							MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
 							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
 					oprowData.remove(idOpe);
-					modelOhOpeRow = new OhTableOperationModel<OperationRow>(oprowData);
+					modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 					tableData.setModel(modelOhOpeRow);
 					tableData.repaint();
 					clearForm();

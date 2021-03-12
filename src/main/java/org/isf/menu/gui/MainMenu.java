@@ -201,7 +201,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		// if in singleUser mode remove "users" and "communication" menu
 		if (singleUser) {
-			ArrayList<UserMenuItem> junkMenu = new ArrayList<UserMenuItem>();
+			ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 			Iterator<UserMenuItem> it = myMenu.iterator();
 			while (it.hasNext()) {
 				UserMenuItem umi = it.next();
@@ -222,7 +222,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			}
 		} else { // remove only "communication" if flag_Xmpp = false
 			if (!flag_Xmpp) {
-				ArrayList<UserMenuItem> junkMenu = new ArrayList<UserMenuItem>();
+				ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 				Iterator<UserMenuItem> it = myMenu.iterator();
 				while (it.hasNext()) {
 					UserMenuItem umi = it.next();
@@ -239,7 +239,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		// if not internalPharmacies mode remove "medicalsward" menu
 		if (!internalPharmacies) {
-			ArrayList<UserMenuItem> junkMenu = new ArrayList<UserMenuItem>();
+			ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 			Iterator<UserMenuItem> it = myMenu.iterator();
 			while (it.hasNext()) {
 				UserMenuItem umi = it.next();
@@ -254,7 +254,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 
 		// remove disabled buttons
-		ArrayList<UserMenuItem> junkMenu = new ArrayList<UserMenuItem>();
+		ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 		Iterator<UserMenuItem> it = myMenu.iterator();
 		while (it.hasNext()) {
 			UserMenuItem umi = it.next();

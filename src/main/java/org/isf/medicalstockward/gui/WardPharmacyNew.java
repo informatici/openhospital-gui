@@ -388,7 +388,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	}
 	
 	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int quantity) {
-		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+		ArrayList<MedicalWard> dr = new ArrayList<>();
 		MedicalWard medWard =null;
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {

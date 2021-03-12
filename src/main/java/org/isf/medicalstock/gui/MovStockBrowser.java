@@ -176,7 +176,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JTextField searchTextField;
 	private JButton searchButton;
 
-	private HashMap<Integer, String> supMap = new HashMap<Integer, String>();
+	private HashMap<Integer, String> supMap = new HashMap<>();
 
 	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
@@ -498,7 +498,7 @@ public class MovStockBrowser extends ModalJFrame {
 		try {
 			wardList = wbm.getWards();
 		} catch (OHServiceException e) {
-			wardList = new ArrayList<Ward>();
+			wardList = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		for (org.isf.ward.model.Ward elem : wardList) {
@@ -1136,7 +1136,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {
 		String query = s.trim();
-		ArrayList<Medical> results = new ArrayList<Medical>();
+		ArrayList<Medical> results = new ArrayList<>();
 		for (Medical medoc : medicalsList) {
 			if (!query.equals("")) {
 				String[] patterns = query.split(" ");

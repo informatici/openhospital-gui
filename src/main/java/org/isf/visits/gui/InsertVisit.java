@@ -189,7 +189,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	private Ward saveWard = null;
 
-	private ArrayList<Ward> wardList = new ArrayList<Ward>();
+	private ArrayList<Ward> wardList = new ArrayList<>();
 
 	private JPanel servicePanel;
 

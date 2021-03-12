@@ -49,7 +49,7 @@ public class OhTableModel<T> implements TableModel{
 	
 	public  OhTableModel(List<T> dataList) {
 		this.dataList=dataList;
-		this.filteredList=new ArrayList<T>();
+		this.filteredList= new ArrayList<>();
 		
 		for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
 			T t = (T) iterator.next();
@@ -61,7 +61,7 @@ public class OhTableModel<T> implements TableModel{
 	public  OhTableModel(List<T> dataList, boolean allowSearchByCode) {
 		this.allowSearchByCode=allowSearchByCode;
 		this.dataList=dataList;
-		this.filteredList=new ArrayList<T>();
+		this.filteredList= new ArrayList<>();
 		
 		for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
 			T t = (T) iterator.next();
@@ -72,7 +72,7 @@ public class OhTableModel<T> implements TableModel{
 	public T filter(String searchQuery) throws OHException{
 
 		this.searchQuery=searchQuery;
-		this.filteredList=new ArrayList<T>();
+		this.filteredList= new ArrayList<>();
 		
 		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext();) { 
 			Object object = (Object) iterator.next();

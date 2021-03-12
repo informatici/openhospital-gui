@@ -878,7 +878,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				labList = lbm.getLaboratory(patient);
 				getOlderDate(labList, "examDate");
 			} catch (OHServiceException e) {
-				labList = new ArrayList<Laboratory>();
+				labList = new ArrayList<>();
                 OHServiceExceptionUtil.showMessages(e);
 			}
 		}

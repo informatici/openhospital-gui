@@ -123,8 +123,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private boolean[] patColumnsResizable = { false, true };
 
 	PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	ArrayList<Patient> patArray = new ArrayList<Patient>();
-	ArrayList<Patient> patSearch = new ArrayList<Patient>();
+	ArrayList<Patient> patArray = new ArrayList<>();
+	ArrayList<Patient> patSearch = new ArrayList<>();
 	private String lastKey = "";
 		
 	public SelectPatient(JFrame owner, Patient pat) {
@@ -138,7 +138,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
-				patArray = new ArrayList<Patient>();
+				patArray = new ArrayList<>();
 			}
 			patSearch = patArray;
 		}
@@ -171,7 +171,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
-				patArray = new ArrayList<Patient>();
+				patArray = new ArrayList<>();
 			}
 			patSearch = patArray;
 		}
@@ -204,7 +204,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
-				patArray = new ArrayList<Patient>();
+				patArray = new ArrayList<>();
 			}
 			patSearch = patArray;
 		}
@@ -366,7 +366,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		
 		//System.out.println(s);
 
-		patSearch = new ArrayList<Patient>();
+		patSearch = new ArrayList<>();
 		
 		for (Patient pat : patArray) {
 		
@@ -573,7 +573,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 								JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
 						}
-						patArray = new ArrayList<Patient>();
+						patArray = new ArrayList<>();
 					}
 					filterPatient();
 				}
@@ -677,7 +677,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	public void setButtonNew(JButton buttonNew) {
 		this.buttonNew = buttonNew;
 	}
-	List<BillBrowser> billBrowserListeners = new ArrayList<BillBrowser>();
+	List<BillBrowser> billBrowserListeners = new ArrayList<>();
 	public void addSelectionListener(BillBrowser l) {
 		billBrowserListeners.add(l);
 	}

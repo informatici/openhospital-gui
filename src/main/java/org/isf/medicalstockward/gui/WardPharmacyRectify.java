@@ -172,7 +172,7 @@ public class WardPharmacyRectify extends JDialog {
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		wardMap = new HashMap<Integer, Double>();
+		wardMap = new HashMap<>();
 		for (MedicalWard medWard : wardDrugs) {
 
 			if (wardMap.containsKey(medWard.getMedical().getCode())) {
@@ -194,7 +194,7 @@ public class WardPharmacyRectify extends JDialog {
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		wardMap = new HashMap<Integer, Double>();
+		wardMap = new HashMap<>();
 		for (MedicalWard medWard : wardDrugs) {
 			
 			if (wardMap.containsKey(medWard.getMedical().getCode())){
@@ -533,7 +533,7 @@ public class WardPharmacyRectify extends JDialog {
 	private MedicalWard chooseLot(Medical medical, boolean newLot) {
 		MedicalWard medWard = null;
 		
-		ArrayList<MedicalWard> drugChooseList = new ArrayList<MedicalWard>();
+		ArrayList<MedicalWard> drugChooseList = new ArrayList<>();
 		
 		for (MedicalWard elem : wardDrugs) {
 			if (elem.getMedical().getDescription().equals(medical.getDescription())) {
