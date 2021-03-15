@@ -494,6 +494,24 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}
 		return jButtonClose;
 	}
+	
+	private boolean isOnlyOneSelected(JTable table) {
+		int rowsSelected = table.getSelectedRowCount();
+		if (rowsSelected > 1) {
+			JOptionPane.showMessageDialog(BillBrowser.this,
+					MessageBundle.getMessage("angal.billbrowser.pleaseselectonebillonly"), //$NON-NLS-1$
+					MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
+					JOptionPane.PLAIN_MESSAGE);
+			return false;
+		} else if (rowsSelected == 0) {
+			JOptionPane.showMessageDialog(BillBrowser.this,
+					MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
+					MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
+					JOptionPane.PLAIN_MESSAGE);
+			return false;
+		}
+		return true;
+	}
 
 	private JButton getJButtonEdit() {
 		if (jButtonEdit == null) {
@@ -503,35 +521,31 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jButtonEdit.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					try {
-						if (jScrollPaneBills.isShowing()) {
-							int rowSelected = jTableBills.getSelectedRow();
-							Bill editBill = (Bill)jTableBills.getValueAt(rowSelected, -1);
-							if (user.equals("admin") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
-								PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
-								pbe.addPatientBillListener(BillBrowser.this);
-								pbe.setVisible(true);
-							} else {
-								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
-							}
-						}
-						if (jScrollPanePending.isShowing()) {
-							int rowSelected = jTablePending.getSelectedRow();
-							Bill editBill = (Bill)jTablePending.getValueAt(rowSelected, -1);
+					if (jScrollPaneBills.isShowing()) {
+						if (!isOnlyOneSelected(jTableBills)) return;
+						int rowSelected = jTableBills.getSelectedRow();
+						Bill editBill = (Bill)jTableBills.getValueAt(rowSelected, -1);
+						if (user.equals("admin") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
 							PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
 							pbe.addPatientBillListener(BillBrowser.this);
 							pbe.setVisible(true);
-						}
-						if (jScrollPaneClosed.isShowing()) {
-							int rowSelected = jTableClosed.getSelectedRow();
-							Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
+						} else {
 							new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
 						}
-					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(BillBrowser.this,
-								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-								JOptionPane.PLAIN_MESSAGE);
+					}
+					if (jScrollPanePending.isShowing()) {
+						if (!isOnlyOneSelected(jTablePending)) return;
+						int rowSelected = jTablePending.getSelectedRow();
+						Bill editBill = (Bill)jTablePending.getValueAt(rowSelected, -1);
+						PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
+						pbe.addPatientBillListener(BillBrowser.this);
+						pbe.setVisible(true);
+					}
+					if (jScrollPaneClosed.isShowing()) {
+						if (!isOnlyOneSelected(jTableClosed)) return;
+						int rowSelected = jTableClosed.getSelectedRow();
+						Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
+						new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
 					}
 				}
 			});
@@ -710,50 +724,45 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jButtonDelete.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					try {
-						Bill deleteBill = null;
-						int ok = JOptionPane.NO_OPTION;
-						if (jScrollPaneBills.isShowing()) {
-							int rowSelected = jTableBills.getSelectedRow();
-							deleteBill = (Bill)jTableBills.getValueAt(rowSelected, -1);
-							ok = JOptionPane.showConfirmDialog(null, 
-									MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
-									MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
-									JOptionPane.YES_NO_OPTION);
-							
-						}
-						if (jScrollPanePending != null && jScrollPanePending.isShowing()) {
-							int rowSelected = jTablePending.getSelectedRow();
-							deleteBill = (Bill)jTablePending.getValueAt(rowSelected, -1);
-							ok = JOptionPane.showConfirmDialog(null, 
-									MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
-									MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
-									JOptionPane.YES_NO_OPTION);
-						}
-						if (jScrollPaneClosed != null && jScrollPaneClosed.isShowing()) {
-							int rowSelected = jTableClosed.getSelectedRow();
-							deleteBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
-							ok = JOptionPane.showConfirmDialog(null, 
-									MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
-									MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
-									JOptionPane.YES_NO_OPTION);
-						}
-						if (ok == JOptionPane.YES_OPTION) {
-							try{
-								billManager.deleteBill(deleteBill);
-							}catch(OHServiceException ex){
-								if (ex.getMessages() != null){
-									for(OHExceptionMessage msg : ex.getMessages()){
-										JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-									}
+					Bill deleteBill = null;
+					int ok = JOptionPane.NO_OPTION;
+					if (jScrollPaneBills.isShowing()) {
+						if (!isOnlyOneSelected(jTableBills)) return;
+						int rowSelected = jTableBills.getSelectedRow();
+						deleteBill = (Bill)jTableBills.getValueAt(rowSelected, -1);
+						ok = JOptionPane.showConfirmDialog(null, 
+								MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
+								MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
+								JOptionPane.YES_NO_OPTION);
+					}
+					if (jScrollPanePending != null && jScrollPanePending.isShowing()) {
+						if (!isOnlyOneSelected(jTablePending)) return;
+						int rowSelected = jTablePending.getSelectedRow();
+						deleteBill = (Bill)jTablePending.getValueAt(rowSelected, -1);
+						ok = JOptionPane.showConfirmDialog(null, 
+								MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
+								MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
+								JOptionPane.YES_NO_OPTION);
+					}
+					if (jScrollPaneClosed != null && jScrollPaneClosed.isShowing()) {
+						if (!isOnlyOneSelected(jTableClosed)) return;
+						int rowSelected = jTableClosed.getSelectedRow();
+						deleteBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
+						ok = JOptionPane.showConfirmDialog(null, 
+								MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
+								MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
+								JOptionPane.YES_NO_OPTION);
+					}
+					if (ok == JOptionPane.YES_OPTION) {
+						try{
+							billManager.deleteBill(deleteBill);
+						}catch(OHServiceException ex){
+							if (ex.getMessages() != null){
+								for(OHExceptionMessage msg : ex.getMessages()){
+									JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 								}
 							}
 						}
-					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(BillBrowser.this,
-								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$
-								JOptionPane.PLAIN_MESSAGE);
 					}
 					billInserted(null);
 				}
