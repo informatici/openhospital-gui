@@ -575,7 +575,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							else if (rowsSelected>1){
 								if (patientParent==null){
 									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
+											MessageBundle.getMessage("angal.billbrowser.pleaseselectonebillonly"), //$NON-NLS-1$
 											MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
 											JOptionPane.PLAIN_MESSAGE);
 									return;
@@ -613,7 +613,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							}else if (rowsSelected > 1){
 								if (patientParent==null){
 									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
+											MessageBundle.getMessage("angal.billbrowser.pleaseselectonebillonly"), //$NON-NLS-1$
 											MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
 											JOptionPane.PLAIN_MESSAGE);
 									return;
@@ -642,9 +642,18 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							} else throw new Exception();
 						}
 						if (jScrollPaneClosed.isShowing()) {
-							int rowSelected = jTableClosed.getSelectedRow();
-							Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
-							new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
+							int rowsSelected = jTableClosed.getSelectedRowCount();					
+							if (rowsSelected == 1){
+								int rowSelected = jTableClosed.getSelectedRow();
+								Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
+								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
+							} else if (rowsSelected > 1) {
+								JOptionPane.showMessageDialog(BillBrowser.this,
+										MessageBundle.getMessage("angal.billbrowser.pleaseselectonebillonly"), //$NON-NLS-1$
+										MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
+										JOptionPane.PLAIN_MESSAGE);
+								return;
+							} else throw new Exception();
 						}
 					} catch (Exception ex) {
 						JOptionPane.showMessageDialog(BillBrowser.this,
