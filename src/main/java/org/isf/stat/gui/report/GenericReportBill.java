@@ -82,7 +82,8 @@ public class GenericReportBill {
 				JasperReportResultDto jasperReportTxtResultDto = jasperReportsManager.getGenericReportBillTxt(billID, jasperFileName, show, askForPrint);
 				int print = JOptionPane.OK_OPTION;
 				if (askForPrint) {
-					print = JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.genericreportbill.doyouwanttoprintreceipt"));
+					print = JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.genericreportbill.doyouwanttoprintreceipt"), 
+									MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
 				}
 				if (print != JOptionPane.OK_OPTION) return; //STOP
 				
@@ -164,7 +165,8 @@ public class GenericReportBill {
 				
 				int print = JOptionPane.OK_OPTION;
 				if (askForPrint) {
-					print = JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.genericreportbill.doyouwanttoprintreceipt"));
+					print = JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.genericreportbill.doyouwanttoprintreceipt"), 
+									MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
 				}
 				if (print == JOptionPane.OK_OPTION) {
 					new PrintReceipt(jasperPrint, TXTfile);
