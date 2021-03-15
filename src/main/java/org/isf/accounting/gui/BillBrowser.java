@@ -639,8 +639,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 											JOptionPane.CANCEL_OPTION);
 									return;
 								}
-							}
-						} else throw new Exception();
+							} else throw new Exception();
+						}
 						if (jScrollPaneClosed.isShowing()) {
 							int rowSelected = jTableClosed.getSelectedRow();
 							Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
