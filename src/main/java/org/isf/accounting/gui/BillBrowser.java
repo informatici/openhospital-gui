@@ -530,7 +530,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							pbe.addPatientBillListener(BillBrowser.this);
 							pbe.setVisible(true);
 						} else {
-							new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
+							JOptionPane.showMessageDialog(BillBrowser.this,
+									MessageBundle.getMessage("angal.billbrowser.youcannoteditaclosedbill"),  //$NON-NLS-1$
+									MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
+									JOptionPane.CANCEL_OPTION);
+							return;
 						}
 					}
 					if (jScrollPanePending.isShowing()) {
@@ -545,7 +549,17 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						if (!isOnlyOneSelected(jTableClosed)) return;
 						int rowSelected = jTableClosed.getSelectedRow();
 						Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
-						new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
+						if (user.equals("admin")) { //$NON-NLS-1$
+							PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
+							pbe.addPatientBillListener(BillBrowser.this);
+							pbe.setVisible(true);
+						} else {
+							JOptionPane.showMessageDialog(BillBrowser.this,
+									MessageBundle.getMessage("angal.billbrowser.youcannoteditaclosedbill"),  //$NON-NLS-1$
+									MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
+									JOptionPane.CANCEL_OPTION);
+							return;
+						}
 					}
 				}
 			});
