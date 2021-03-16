@@ -221,7 +221,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 		public void setValueAt(Object value, int row, int col) {
 			int number;
 			try {
-				number = Integer.valueOf((String) value);
+				number = Integer.parseInt((String) value);
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(AgeTypeBrowser.this, 
 						MessageBundle.getMessage("angal.agetype.insertvalidage"));

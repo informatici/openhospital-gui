@@ -1341,8 +1341,8 @@ public class WardPharmacy extends ModalJFrame implements
 				sex = 'F';
 			}
 
-			int ageFrom = Integer.valueOf(jAgeFromTextField.getText());
-			int ageTo = Integer.valueOf(jAgeToTextField.getText());
+			int ageFrom = Integer.parseInt(jAgeFromTextField.getText());
+			int ageTo = Integer.parseInt(jAgeToTextField.getText());
 
 			float weightFrom = Float.valueOf(jWeightFromTextField.getText());
 			float weightTo = Float.valueOf(jWeightToTextField.getText());

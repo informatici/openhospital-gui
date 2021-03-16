@@ -133,7 +133,7 @@ public class DateTextField extends JPanel{
 	 * @return int
 	 */
 	public int getDay(){
-		return Integer.valueOf(day.getText());
+		return Integer.parseInt(day.getText());
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class DateTextField extends JPanel{
 	 * @return int
 	 */
 	public int getMonth(){
-		return Integer.valueOf(month.getText());
+		return Integer.parseInt(month.getText());
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class DateTextField extends JPanel{
 	 * @return int
 	 */
 	public int getYear(){
-		return Integer.valueOf(year.getText());
+		return Integer.parseInt(year.getText());
 	}
 
 	/**
@@ -158,9 +158,9 @@ public class DateTextField extends JPanel{
 	 * @return toModify (GregorianCalendar)
 	 */
 	public GregorianCalendar getCompleteDate(GregorianCalendar toModify){
-		toModify.set(GregorianCalendar.DAY_OF_MONTH,Integer.valueOf(day.getText()));
-		toModify.set(GregorianCalendar.MONTH,Integer.valueOf(month.getText()));
-		toModify.set(GregorianCalendar.YEAR,Integer.valueOf(year.getText()));
+		toModify.set(GregorianCalendar.DAY_OF_MONTH,Integer.parseInt(day.getText()));
+		toModify.set(GregorianCalendar.MONTH,Integer.parseInt(month.getText()));
+		toModify.set(GregorianCalendar.YEAR,Integer.parseInt(year.getText()));
 		return toModify;
 	}
 
@@ -190,7 +190,7 @@ public class DateTextField extends JPanel{
 		if (day.charAt(0) < '0' || day.charAt(0) > '9' || day.charAt(1) < '0' || day.charAt(1) > '9') {
 			return false;
 		}
-		int num = Integer.valueOf(day);
+		int num = Integer.parseInt(day);
 		if (num < 1 || num > 31)
 			return false;
 		return true;
@@ -205,7 +205,7 @@ public class DateTextField extends JPanel{
 		if (month.charAt(0) < '0' ||month.charAt(0) > '9' || month.charAt(1) < '0' || month.charAt(1) > '9') {
 			return false;
 		}
-		int num = Integer.valueOf(month);
+		int num = Integer.parseInt(month);
 		if (num < 1 || num > 12)
 			return false;
 		return true;
