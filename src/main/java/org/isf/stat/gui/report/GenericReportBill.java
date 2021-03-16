@@ -98,48 +98,18 @@ public class GenericReportBill {
         }
 	}
 	
-	//FIXME: refactor using jasperReportsManager as above.
-	public GenericReportBill(Integer billID, String jasperFileName, Patient patient, ArrayList<Integer> billListId, String dataFrom, String dateTo, boolean show, boolean askForPrint) {
+	public GenericReportBill(Integer billID, String jasperFileName, Patient patient, ArrayList<Integer> billListId, String dateFrom, String dateTo, boolean show, boolean askForPrint) {
 		try {
-			HashMap<String, Object> parameters = new HashMap<>();
-			HospitalBrowsingManager hospManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
-			Hospital hosp = hospManager.getHospital();
-
-			parameters.put("Hospital", hosp.getDescription());
-			parameters.put("Address", hosp.getAddress());
-			parameters.put("City", hosp.getCity());
-			parameters.put("Email", hosp.getEmail());
-			parameters.put("Telephone", hosp.getTelephone());
-			parameters.put("billID", String.valueOf(billID)); // real param
-			parameters.put("collectionbillsId", billListId); // real param
-			//parameters.put("fromDate", dataFrom);
-			//parameters.put("toDate", dateTo);
-			parameters.put("REPORT_RESOURCE_BUNDLE", MessageBundle.getBundle());
-
-			StringBuilder sbFilename = new StringBuilder();
-			sbFilename.append("rpt");
-			sbFilename.append(File.separator);
-			sbFilename.append(jasperFileName);
-			sbFilename.append(".jasper");
-			// System.out.println("Jasper Report Name:"+sbFilename.toString());
-
-			File jasperFile = new File(sbFilename.toString());
-
-			//Connection conn = DbSingleConn.getConnection();
-			Connection conn = DbSingleJpaConn.getConnection();
-
-			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperFile);
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
-			String PDFfile = "rpt/PDF/" + jasperFileName + "_" + String.valueOf(billID) + ".pdf";
-			JasperExportManager.exportReportToPdfFile(jasperPrint, PDFfile);
-
+			
+			JasperReportResultDto jasperReportPDFResultDto = jasperReportsManager.getGenericReportBillGroupedPdf(billID, jasperFileName, patient, billListId, dateFrom, dateTo, show, askForPrint);
+			
 			if (show) {
 				if (GeneralData.INTERNALVIEWER) {	
-					JasperViewer.viewReport(jasperPrint, false, new Locale(GeneralData.LANGUAGE));
+					JasperViewer.viewReport(jasperReportPDFResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
 				} else {
 					try {
 						Runtime rt = Runtime.getRuntime();
-						rt.exec(GeneralData.VIEWER + " " + PDFfile);
+						rt.exec(GeneralData.VIEWER + " " + jasperReportPDFResultDto.getFilename());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -147,21 +117,7 @@ public class GenericReportBill {
 			}
 			
 			if (GeneralData.RECEIPTPRINTER) {				
-				sbFilename = new StringBuilder();
-				sbFilename.append("rpt");
-				sbFilename.append(File.separator);
-				sbFilename.append(jasperFileName);
-				sbFilename.append("Txt");
-				sbFilename.append(".jasper");
-				
-				//System.out.println("Jasper Report Name:"+sbFilename.toString());
-
-				jasperFile = new File(sbFilename.toString());
-				
-				jasperReport = (JasperReport) JRLoader.loadObject(jasperFile);
-				jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
-				
-				String TXTfile = "rpt/PDF/" + jasperFileName + "_" + String.valueOf(billID) + ".txt";
+				JasperReportResultDto jasperReportTxtResultDto = jasperReportsManager.getGenericReportBillGroupedTxt(billID, jasperFileName, patient, billListId, dateFrom, dateTo, show, askForPrint);
 				
 				int print = JOptionPane.OK_OPTION;
 				if (askForPrint) {
@@ -169,7 +125,7 @@ public class GenericReportBill {
 									MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
 				}
 				if (print == JOptionPane.OK_OPTION) {
-					new PrintReceipt(jasperPrint, TXTfile);
+					new PrintReceipt(jasperReportTxtResultDto.getJasperPrint(), jasperReportTxtResultDto.getFilename());
 				}
 			}
 		} catch (Exception e) {
