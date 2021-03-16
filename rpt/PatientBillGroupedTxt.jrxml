@@ -13,6 +13,7 @@
 	<parameter name="Address" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["Tinfem"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUBREPORT_RESOURCE_BUNDLE_1" class="java.util.ResourceBundle" isForPrompting="false"/>
 	<parameter name="City" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["Dschang"]]></defaultValueExpression>
 	</parameter>
@@ -270,7 +271,7 @@ LEFT JOIN (SELECT BLP_ID_BILL, BLP_USR_ID_A FROM BILLPAYMENTS WHERE BLP_ID_BILL 
 					<subreportParameterExpression><![CDATA[$P{billID}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
-					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_RESOURCE_BUNDLE_1}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_LOCALE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_LOCALE}]]></subreportParameterExpression>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillPaymentsSubTxt" pageWidth="555" pageHeight="150" orientation="Landscape" whenNoDataType="NoPages" columnWidth="515" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" resourceBundle="PatientBillPaymentsSubTxt" whenResourceMissingType="Key" isIgnorePagination="true" uuid="576f64cc-6ea5-464f-a247-bc9691f14d9d">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBillGroupedPaymentsTxt" pageWidth="555" pageHeight="150" orientation="Landscape" whenNoDataType="NoPages" columnWidth="515" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" resourceBundle="PatientBillGroupedPaymentsTxt" whenResourceMissingType="Key" isIgnorePagination="true" uuid="576f64cc-6ea5-464f-a247-bc9691f14d9d">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<import value="net.sf.jasperreports.engine.*"/>

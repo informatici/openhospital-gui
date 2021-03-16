@@ -16,6 +16,7 @@
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="SUBREPORT_RESOURCE_BUNDLE_1" class="java.util.ResourceBundle" isForPrompting="false"/>
 	<parameter name="billID" class="java.lang.String"/>
 	<parameter name="Hospital" class="java.lang.String"/>
 	<parameter name="Address" class="java.lang.String"/>
@@ -407,7 +408,7 @@ WHERE $X{IN ,BLL_ID, collectionbillsId }]]>
 					<subreportParameterExpression><![CDATA[$P{REPORT_LOCALE}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
-					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_RESOURCE_BUNDLE_1}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "PatientBillGroupedPayments.jasper"]]></subreportExpression>
