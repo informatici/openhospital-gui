@@ -552,7 +552,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		}
 		searchPanel.add(searchString, BorderLayout.CENTER);
 		if (GeneralData.ENHANCEDSEARCH)
-			searchPanel.add(getJSearchButton(), BorderLayout.EAST);
+			searchPanel.add(getButtonSearch(), BorderLayout.EAST);
 		searchPanel = setMyBorder(searchPanel, MessageBundle.getMessage("angal.admission.searchkey"));
 
 		JPanel mainPanel = new JPanel();
@@ -696,7 +696,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		if (MainMenu.checkUserGrants("btnadmedit")) buttonPanel.add(getButtonEdit());
 		if (MainMenu.checkUserGrants("btnadmdel")) buttonPanel.add(getButtonDel());
 		if (MainMenu.checkUserGrants("btnadmadm")) buttonPanel.add(getButtonAdmission());
-		if (MainMenu.checkUserGrants("btnadmexamination")) buttonPanel.add(getJButtonExamination());
+		if (MainMenu.checkUserGrants("btnadmexamination")) buttonPanel.add(getButtonExamination());
 		if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) buttonPanel.add(getButtonOpd());
 		if (MainMenu.checkUserGrants("btnadmbill")) buttonPanel.add(getButtonBill());
 		if (MainMenu.checkUserGrants("data")) buttonPanel.add(getButtonData());
@@ -707,7 +707,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		return buttonPanel;
 	}
 	
-	private JButton getJButtonExamination() {
+	private JButton getButtonExamination() {
 		if (jButtonExamination == null) {
 			jButtonExamination = new JButton(MessageBundle.getMessage("angal.admission.examination"));
 			jButtonExamination.setMnemonic(KeyEvent.VK_X);
@@ -1163,7 +1163,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		filterPatient(null);
 	}
 	
-	private JButton getJSearchButton() {
+	private JButton getButtonSearch() {
 		if (jSearchButton == null) {
 			jSearchButton = new JButton();
 			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
