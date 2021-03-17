@@ -34,7 +34,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.hospital.manager.HospitalBrowsingManager;
@@ -78,8 +77,8 @@ public class HospitalBrowser extends ModalJFrame{
 	private HospitalBrowsingManager manager;
 	private Hospital hospital = null;
 	private JButton EditJButton;
-	private JButton UpdateJButton;
-	private JButton ExitJButton;
+	private JButton updateJButton;
+	private JButton exitJButton;
 	
 	
 	public HospitalBrowser(){
@@ -261,13 +260,13 @@ public class HospitalBrowser extends ModalJFrame{
 			jButtonPanel= new JPanel();
 			EditJButton = new JButton(MessageBundle.getMessage("angal.common.edit"));
 			EditJButton.setMnemonic(KeyEvent.VK_E);
-			UpdateJButton = new JButton(MessageBundle.getMessage("angal.hospital.update"));
-			UpdateJButton.setMnemonic(KeyEvent.VK_U);
-			ExitJButton = new JButton(MessageBundle.getMessage("angal.common.close"));
-			ExitJButton.setMnemonic(KeyEvent.VK_C);
-			UpdateJButton.setEnabled(false);
+			updateJButton = new JButton(MessageBundle.getMessage("angal.hospital.update"));
+			updateJButton.setMnemonic(KeyEvent.VK_U);
+			exitJButton = new JButton(MessageBundle.getMessage("angal.common.close"));
+			exitJButton.setMnemonic(KeyEvent.VK_C);
+			updateJButton.setEnabled(false);
 			
-			ExitJButton.addActionListener(new ActionListener() {
+			exitJButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if (isModified())
 					{						
@@ -286,7 +285,7 @@ public class HospitalBrowser extends ModalJFrame{
 					faxJTextField.setEditable(true);
 					emailJTextField.setEditable(true);
 					currencyCodJTextField.setEditable(true);
-					UpdateJButton.setEnabled(true);
+					updateJButton.setEnabled(true);
 					EditJButton.setEnabled(false);
 //					SwingUtilities.invokeLater(new Runnable() { 
 //						public void run() { 
@@ -295,7 +294,7 @@ public class HospitalBrowser extends ModalJFrame{
 //					} );
 				}
 			});
-			UpdateJButton.addActionListener(new ActionListener() {
+			updateJButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					nameJTextField.setEditable(false);
 					addJTextField.setEditable(false);
@@ -314,14 +313,14 @@ public class HospitalBrowser extends ModalJFrame{
 					
 					updateHospital(manager, hospital);
 					
-					UpdateJButton.setEnabled(false);
+					updateJButton.setEnabled(false);
 					EditJButton.setEnabled(true);
 				}
 				
 			});
 			jButtonPanel.add(EditJButton);
-			jButtonPanel.add(UpdateJButton);
-			jButtonPanel.add(ExitJButton);
+			jButtonPanel.add(updateJButton);
+			jButtonPanel.add(exitJButton);
 		}
 		return jButtonPanel;
 	}
