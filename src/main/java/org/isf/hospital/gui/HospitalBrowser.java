@@ -288,11 +288,11 @@ public class HospitalBrowser extends ModalJFrame{
 					currencyCodJTextField.setEditable(true);
 					UpdateJButton.setEnabled(true);
 					EditJButton.setEnabled(false);
-					SwingUtilities.invokeLater(new Runnable() { 
-						public void run() { 
-							nameJTextField.requestFocus(); 
-						} 
-					} );
+//					SwingUtilities.invokeLater(new Runnable() { 
+//						public void run() { 
+//							nameJTextField.requestFocus(); 
+//						} 
+//					} );
 				}
 			});
 			UpdateJButton.addActionListener(new ActionListener() {
