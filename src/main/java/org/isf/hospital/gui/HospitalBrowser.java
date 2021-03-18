@@ -35,7 +35,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.hospital.manager.HospitalBrowsingManager;
@@ -219,21 +218,20 @@ public class HospitalBrowser extends ModalJFrame{
 		return jCurrencyCodPanel;
 	}
 	
-	private boolean isModified(){
-		
-		boolean change=false;
-		
-		if (!nameJTextField.getText().equalsIgnoreCase(hospital.getDescription()) ||
-				!addressJTextField.getText().equalsIgnoreCase(hospital.getAddress())||
-				!cityJTextField.getText().equalsIgnoreCase(hospital.getCity()) ||
-				!teleJTextField.getText().equalsIgnoreCase(hospital.getTelephone()==null? "" : hospital.getTelephone()) ||
-				!faxJTextField.getText().equalsIgnoreCase(hospital.getFax()==null? "" : hospital.getFax()) ||
-				!emailJTextField.getText().equalsIgnoreCase(hospital.getEmail()==null? "" : hospital.getEmail()) ||
-				!currencyCodJTextField.getText().equalsIgnoreCase(hospital.getCurrencyCod()==null? "" : hospital.getCurrencyCod()))
-		{
-			change=true;
+	private boolean isModified() {
+
+		boolean change = false;
+
+		if (!nameJTextField.getText().equalsIgnoreCase(hospital.getDescription()) 
+						|| !addressJTextField.getText().equalsIgnoreCase(hospital.getAddress())
+						|| !cityJTextField.getText().equalsIgnoreCase(hospital.getCity())
+						|| !teleJTextField.getText().equalsIgnoreCase(hospital.getTelephone() == null ? "" : hospital.getTelephone())
+						|| !faxJTextField.getText().equalsIgnoreCase(hospital.getFax() == null ? "" : hospital.getFax())
+						|| !emailJTextField.getText().equalsIgnoreCase(hospital.getEmail() == null ? "" : hospital.getEmail())
+						|| !currencyCodJTextField.getText().equalsIgnoreCase(hospital.getCurrencyCod() == null ? "" : hospital.getCurrencyCod())) {
+			change = true;
 		}
-		
+
 		return change;
 	}
 	
@@ -245,18 +243,10 @@ public class HospitalBrowser extends ModalJFrame{
 				JOptionPane.YES_NO_OPTION);
 		
 		if ((n == JOptionPane.YES_OPTION)){
-			hospital.setDescription(nameJTextField.getText());
-			hospital.setAddress(addressJTextField.getText());
-			hospital.setCity(cityJTextField.getText());
-			hospital.setTelephone(teleJTextField.getText());
-			hospital.setFax(faxJTextField.getText());
-			hospital.setEmail(emailJTextField.getText());
-			hospital.setCurrencyCod(currencyCodJTextField.getText());
-			
-			updateHospital(manager, hospital);
+			updateHospitalEntity();
 		}
 	}
-	
+
 	public JPanel getJButtonPanel() {
 		if (jButtonPanel==null){
 			jButtonPanel= new JPanel();
@@ -280,43 +270,13 @@ public class HospitalBrowser extends ModalJFrame{
 			});
 			editJButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					nameJTextField.setEditable(true);
-					addressJTextField.setEditable(true);
-					cityJTextField.setEditable(true);
-					teleJTextField.setEditable(true);
-					faxJTextField.setEditable(true);
-					emailJTextField.setEditable(true);
-					currencyCodJTextField.setEditable(true);
-					updateJButton.setEnabled(true);
-					SwingUtilities.invokeLater(new Runnable() { 
-						public void run() { 
-							editJButton.setEnabled(false);
-							nameJTextField.requestFocus(); 
-						} 
-					} );
+					setFieldsForEditing(true);
 				}
 			});
 			updateJButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					nameJTextField.setEditable(false);
-					addressJTextField.setEditable(false);
-					cityJTextField.setEditable(false);
-					teleJTextField.setEditable(false);
-					faxJTextField.setEditable(false);
-					emailJTextField.setEditable(false);
-					currencyCodJTextField.setEditable(false);
-					hospital.setDescription(nameJTextField.getText());
-					hospital.setAddress(addressJTextField.getText());
-					hospital.setCity(cityJTextField.getText());
-					hospital.setTelephone(teleJTextField.getText());
-					hospital.setFax(faxJTextField.getText());
-					hospital.setEmail(emailJTextField.getText());
-					hospital.setCurrencyCod(currencyCodJTextField.getText());
-					
-					updateHospital(manager, hospital);
-					
-					updateJButton.setEnabled(false);
-					editJButton.setEnabled(true);
+					setFieldsForEditing(false);
+					updateHospitalEntity();
 				}
 				
 			});
@@ -327,7 +287,31 @@ public class HospitalBrowser extends ModalJFrame{
 		return jButtonPanel;
 	}
 	
-	private void updateHospital(HospitalBrowsingManager manager, Hospital hospital) {
+	private void setFieldsForEditing(boolean enabled) {
+		nameJTextField.setEditable(enabled);
+		addressJTextField.setEditable(enabled);
+		cityJTextField.setEditable(enabled);
+		teleJTextField.setEditable(enabled);
+		faxJTextField.setEditable(enabled);
+		emailJTextField.setEditable(enabled);
+		currencyCodJTextField.setEditable(enabled);
+		updateJButton.setEnabled(enabled);
+		editJButton.setEnabled(!enabled);
+		nameJTextField.requestFocus(); 
+	}
+	
+	private void setHospitalEntity() {
+		hospital.setDescription(nameJTextField.getText());
+		hospital.setAddress(addressJTextField.getText());
+		hospital.setCity(cityJTextField.getText());
+		hospital.setTelephone(teleJTextField.getText().equals("") ? null : teleJTextField.getText());
+		hospital.setFax(faxJTextField.getText().equals("") ? null : faxJTextField.getText());
+		hospital.setEmail(emailJTextField.getText().equals("") ? null : emailJTextField.getText());
+		hospital.setCurrencyCod(currencyCodJTextField.getText().equals("") ? null : currencyCodJTextField.getText());
+	}
+	
+	private void updateHospitalEntity() {
+		setHospitalEntity();
 		try {
 			this.hospital = manager.updateHospital(hospital);
 		} catch (OHServiceException e) {
