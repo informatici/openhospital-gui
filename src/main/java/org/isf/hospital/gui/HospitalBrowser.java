@@ -223,30 +223,13 @@ public class HospitalBrowser extends ModalJFrame{
 		
 		boolean change=false;
 		
-		System.out.println(hospital.getDescription());
-		System.out.println(hospital.getAddress());
-		System.out.println(hospital.getCity());
-		System.out.println(hospital.getTelephone());
-		System.out.println(hospital.getFax());
-		System.out.println(hospital.getEmail());
-		System.out.println(hospital.getCurrencyCod());
-		
-		System.out.println(nameJTextField.getText());
-		System.out.println(addressJTextField.getText());
-		System.out.println(cityJTextField.getText());
-		System.out.println(teleJTextField.getText());
-		System.out.println(faxJTextField.getText());
-		System.out.println(emailJTextField.getText());
-		System.out.println(currencyCodJTextField.getText());
-		
-		
 		if (!nameJTextField.getText().equalsIgnoreCase(hospital.getDescription()) ||
 				!addressJTextField.getText().equalsIgnoreCase(hospital.getAddress())||
 				!cityJTextField.getText().equalsIgnoreCase(hospital.getCity()) ||
-				!teleJTextField.getText().equalsIgnoreCase(hospital.getTelephone()) ||
-				!faxJTextField.getText().equalsIgnoreCase(hospital.getFax()) ||
-				!emailJTextField.getText().equalsIgnoreCase(hospital.getEmail()) ||
-				!currencyCodJTextField.getText().equalsIgnoreCase(hospital.getCurrencyCod()))
+				!teleJTextField.getText().equalsIgnoreCase(hospital.getTelephone()==null? "" : hospital.getTelephone()) ||
+				!faxJTextField.getText().equalsIgnoreCase(hospital.getFax()==null? "" : hospital.getFax()) ||
+				!emailJTextField.getText().equalsIgnoreCase(hospital.getEmail()==null? "" : hospital.getEmail()) ||
+				!currencyCodJTextField.getText().equalsIgnoreCase(hospital.getCurrencyCod()==null? "" : hospital.getCurrencyCod()))
 		{
 			change=true;
 		}
