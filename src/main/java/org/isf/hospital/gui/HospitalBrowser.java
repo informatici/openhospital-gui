@@ -223,6 +223,14 @@ public class HospitalBrowser extends ModalJFrame{
 		
 		boolean change=false;
 		
+		System.out.println(hospital.getDescription());
+		System.out.println(hospital.getAddress());
+		System.out.println(hospital.getCity());
+		System.out.println(hospital.getTelephone());
+		System.out.println(hospital.getFax());
+		System.out.println(hospital.getEmail());
+		System.out.println(hospital.getCurrencyCod());
+		
 		System.out.println(nameJTextField.getText());
 		System.out.println(addressJTextField.getText());
 		System.out.println(cityJTextField.getText());
