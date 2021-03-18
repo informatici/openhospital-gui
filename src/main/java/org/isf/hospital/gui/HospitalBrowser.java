@@ -23,6 +23,7 @@ package org.isf.hospital.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,14 +63,14 @@ public class HospitalBrowser extends ModalJFrame{
 	private JPanel jButtonPanel=null;
 	private JPanel jDataPanel=null;
 	private JPanel jNamePanel=null;
-	private JPanel jAddPanel=null;
+	private JPanel jAddressPanel=null;
 	private JPanel jCityPanel=null;
 	private JPanel jTelePanel=null;
 	private JPanel jFaxPanel=null;
 	private JPanel jEmailPanel=null;	
 	private JPanel jCurrencyCodPanel=null;	
 	private JTextField nameJTextField;
-	private JTextField addJTextField;
+	private JTextField addressJTextField;
 	private JTextField cityJTextField;
 	private JTextField teleJTextField;
 	private JTextField faxJTextField;
@@ -121,7 +122,7 @@ public class HospitalBrowser extends ModalJFrame{
 			jDataPanel= new JPanel();
 			jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
 			jDataPanel.add(getJNamePanel());
-			jDataPanel.add(getJAddPanel());
+			jDataPanel.add(getJAddressPanel());
 			jDataPanel.add(getJCityPanel(),null);
 			jDataPanel.add(getJTelePanel(),null);
 			jDataPanel.add(getJFaxPanel(),null);
@@ -133,10 +134,10 @@ public class HospitalBrowser extends ModalJFrame{
 	
 	public JPanel getJNamePanel() {
 		if (jNamePanel==null){
-			jNamePanel= new JPanel();
-			JLabel nameJLabel = new JLabel("              "+MessageBundle.getMessage("angal.hospital.name")+": ");
+			jNamePanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel nameJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.name")+": ");
 			jNamePanel.add(nameJLabel);
-			nameJTextField = new JTextField(14);
+			nameJTextField = new JTextField(25);
 			nameJTextField.setEditable(false);			
 			jNamePanel.add(nameJTextField);
 			nameJTextField.setText(hospital.getDescription());			
@@ -144,25 +145,25 @@ public class HospitalBrowser extends ModalJFrame{
 		return jNamePanel;
 	}
 	
-	public JPanel getJAddPanel() {
-		if (jAddPanel==null){
-			jAddPanel= new JPanel();
-			JLabel addJLabel = new JLabel("          "+MessageBundle.getMessage("angal.hospital.address")+": ");
-			jAddPanel.add(addJLabel);
-			addJTextField = new JTextField(14);
-			addJTextField.setEditable(false);			
-			jAddPanel.add(addJTextField);
-			addJTextField.setText(hospital.getAddress());
+	public JPanel getJAddressPanel() {
+		if (jAddressPanel==null){
+			jAddressPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel addJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.address")+": ");
+			jAddressPanel.add(addJLabel);
+			addressJTextField = new JTextField(25);
+			addressJTextField.setEditable(false);
+			jAddressPanel.add(addressJTextField);
+			addressJTextField.setText(hospital.getAddress());
 		}
-		return jAddPanel;
+		return jAddressPanel;
 	}
 	
 	public JPanel getJCityPanel() {
 		if (jCityPanel==null){
-			jCityPanel= new JPanel();
-			JLabel cityJLabel = new JLabel("                  "+MessageBundle.getMessage("angal.hospital.city")+": ");
+			jCityPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel cityJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.city")+": ");
 			jCityPanel.add(cityJLabel);
-			cityJTextField = new JTextField(14);
+			cityJTextField = new JTextField(25);
 			cityJTextField.setEditable(false);
 			cityJTextField.setText(hospital.getCity());
 			jCityPanel.add(cityJTextField);
@@ -171,10 +172,10 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 	public JPanel getJTelePanel() {
 		if (jTelePanel==null){
-			jTelePanel= new JPanel();
-			JLabel teleJLabel = new JLabel("      "+ MessageBundle.getMessage("angal.hospital.telephone")+": ");
+			jTelePanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel teleJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.telephone")+": ");
 			jTelePanel.add(teleJLabel);
-			teleJTextField = new JTextField(14);
+			teleJTextField = new JTextField(25);
 			teleJTextField.setEditable(false);
 			teleJTextField.setText(hospital.getTelephone());
 			jTelePanel.add(teleJTextField);
@@ -183,10 +184,10 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 	public JPanel getJFaxPanel() {
 		if (jFaxPanel==null){
-			jFaxPanel= new JPanel();
-			JLabel faxJLabel = new JLabel("    "+MessageBundle.getMessage("angal.hospital.faxnumber")+": ");
+			jFaxPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel faxJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.faxnumber")+": ");
 			jFaxPanel.add(faxJLabel);
-			faxJTextField = new JTextField(14);
+			faxJTextField = new JTextField(25);
 			faxJTextField.setEditable(false);
 			faxJTextField.setText(hospital.getFax());
 			jFaxPanel.add(faxJTextField);
@@ -195,10 +196,10 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 	public JPanel getJEmailPanel() {
 		if (jEmailPanel==null){
-			jEmailPanel= new JPanel();
-			JLabel emailJLabel = new JLabel(""+ MessageBundle.getMessage("angal.hospital.emailaddress")+": ");
+			jEmailPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel emailJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.emailaddress")+": ");
 			jEmailPanel.add(emailJLabel);
-			emailJTextField = new JTextField(14);
+			emailJTextField = new JTextField(25);
 			emailJTextField.setEditable(false);
 			emailJTextField.setText(hospital.getEmail());
 			jEmailPanel.add(emailJTextField);
@@ -207,10 +208,10 @@ public class HospitalBrowser extends ModalJFrame{
 	}	
 	public JPanel getJCurrencyCodPanel() {
 		if (jCurrencyCodPanel==null){
-			jCurrencyCodPanel= new JPanel();
-			JLabel currencyCodJLabel = new JLabel(" "+ MessageBundle.getMessage("angal.hospital.currencycod")+": ");
+			jCurrencyCodPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel currencyCodJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.currencycod")+": ");
 			jCurrencyCodPanel.add(currencyCodJLabel);
-			currencyCodJTextField = new VoLimitedTextField(3,14);
+			currencyCodJTextField = new VoLimitedTextField(3,25);
 			currencyCodJTextField.setEditable(false);
 			currencyCodJTextField.setText(hospital.getCurrencyCod());
 			jCurrencyCodPanel.add(currencyCodJTextField);
@@ -223,7 +224,7 @@ public class HospitalBrowser extends ModalJFrame{
 		boolean change=false;
 		
 		if (!nameJTextField.getText().equalsIgnoreCase(hospital.getDescription()) ||
-				!addJTextField.getText().equalsIgnoreCase(hospital.getAddress())||
+				!addressJTextField.getText().equalsIgnoreCase(hospital.getAddress())||
 				!cityJTextField.getText().equalsIgnoreCase(hospital.getCity()) ||
 				!teleJTextField.getText().equalsIgnoreCase(hospital.getTelephone()) ||
 				!faxJTextField.getText().equalsIgnoreCase(hospital.getFax()) ||
@@ -245,7 +246,7 @@ public class HospitalBrowser extends ModalJFrame{
 		
 		if ((n == JOptionPane.YES_OPTION)){
 			hospital.setDescription(nameJTextField.getText());
-			hospital.setAddress(addJTextField.getText());
+			hospital.setAddress(addressJTextField.getText());
 			hospital.setCity(cityJTextField.getText());
 			hospital.setTelephone(teleJTextField.getText());
 			hospital.setFax(faxJTextField.getText());
@@ -280,7 +281,7 @@ public class HospitalBrowser extends ModalJFrame{
 			editJButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					nameJTextField.setEditable(true);
-					addJTextField.setEditable(true);
+					addressJTextField.setEditable(true);
 					cityJTextField.setEditable(true);
 					teleJTextField.setEditable(true);
 					faxJTextField.setEditable(true);
@@ -298,14 +299,14 @@ public class HospitalBrowser extends ModalJFrame{
 			updateJButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					nameJTextField.setEditable(false);
-					addJTextField.setEditable(false);
+					addressJTextField.setEditable(false);
 					cityJTextField.setEditable(false);
 					teleJTextField.setEditable(false);
 					faxJTextField.setEditable(false);
 					emailJTextField.setEditable(false);
 					currencyCodJTextField.setEditable(false);
 					hospital.setDescription(nameJTextField.getText());
-					hospital.setAddress(addJTextField.getText());
+					hospital.setAddress(addressJTextField.getText());
 					hospital.setCity(cityJTextField.getText());
 					hospital.setTelephone(teleJTextField.getText());
 					hospital.setFax(faxJTextField.getText());
