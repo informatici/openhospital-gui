@@ -223,6 +223,15 @@ public class HospitalBrowser extends ModalJFrame{
 		
 		boolean change=false;
 		
+		System.out.println(nameJTextField.getText());
+		System.out.println(addressJTextField.getText());
+		System.out.println(cityJTextField.getText());
+		System.out.println(teleJTextField.getText());
+		System.out.println(faxJTextField.getText());
+		System.out.println(emailJTextField.getText());
+		System.out.println(currencyCodJTextField.getText());
+		
+		
 		if (!nameJTextField.getText().equalsIgnoreCase(hospital.getDescription()) ||
 				!addressJTextField.getText().equalsIgnoreCase(hospital.getAddress())||
 				!cityJTextField.getText().equalsIgnoreCase(hospital.getCity()) ||
@@ -235,7 +244,7 @@ public class HospitalBrowser extends ModalJFrame{
 		}
 		
 		return change;
-	}	
+	}
 	
 	public void saveConfirm() {
 		int n = JOptionPane.showConfirmDialog(
