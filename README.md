@@ -31,6 +31,11 @@ For futher information, please refer to the Admin and User manuals in the [Doc p
 You can find the contribution guidelines in the [Open Hospital wiki][contribution-guide].  
 A list of open issues is available on [Jira][jira].
 
+## Community
+
+You can reach out to the community of contributors by joining 
+our [Slack workspace][slack] or by subscribing to our [mailing list][ml].
+
 ## Code style
 
 This project uses a consistent code style and provides definitions for use in both IntelliJ and Eclipse IDEs.
@@ -72,10 +77,6 @@ For Eclipse the process requires loading the formatting style and the import ord
  
 </details> 
 
-Please read the Open Hospital [Wiki](https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines)
-
-See the Open Issues on [Jira](https://openhospital.atlassian.net/jira/software/c/projects/OP/issues/?filter=allopenissues)
-
  [openhospital]: https://www.open-hospital.org/
  [openhospital-core]: https://github.com/informatici/openhospital-core
  [openhospital-ui]: https://github.com/informatici/openhospital-ui
@@ -83,3 +84,5 @@ See the Open Issues on [Jira](https://openhospital.atlassian.net/jira/software/c
  [contribution-guide]: https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines
  [jira]: https://openhospital.atlassian.net/jira/software/c/projects/OP/issues/
  [database.prop]: https://github.com/informatici/openhospital-core/blob/develop/src/test/resources/database.properties
+ [slack]: https://join.slack.com/t/openhospitalworkspace/shared_invite/enQtOTc1Nzc0MzE2NjQ0LWIyMzRlZTU5NmNlMjE2MDcwM2FhMjRkNmM4YzI0MTAzYTA0YTI3NjZiOTVhMDZlNWUwNWEzMjE5ZDgzNWQ1YzE
+ [ml]: https://sourceforge.net/projects/openhospital/lists/openhospital-devel
