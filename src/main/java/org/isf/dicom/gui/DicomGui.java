@@ -47,7 +47,6 @@ import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.admission.gui.PatientFolderBrowser;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
@@ -515,7 +514,6 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
 		GeneralData.getGeneralData();

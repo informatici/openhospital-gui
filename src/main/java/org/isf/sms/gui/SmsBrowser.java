@@ -414,7 +414,6 @@ public class SmsBrowser extends ModalJFrame {
 	public static void main(String[] args) {
 		GeneralData.getGeneralData();
 		MessageBundle.initialize();
-//		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath()); //$NON-NLS-1$
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
