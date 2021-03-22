@@ -33,7 +33,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -61,7 +60,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
@@ -139,7 +137,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath()); //$NON-NLS-1$
+//			PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath()); //$NON-NLS-1$
 			GeneralData.getGeneralData();
 			new MovStockMultipleDischarging(new JFrame());
 		} catch (Exception e) {

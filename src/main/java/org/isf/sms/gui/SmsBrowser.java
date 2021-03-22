@@ -33,7 +33,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +50,6 @@ import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
@@ -416,7 +414,7 @@ public class SmsBrowser extends ModalJFrame {
 	public static void main(String[] args) {
 		GeneralData.getGeneralData();
 		MessageBundle.initialize();
-		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath()); //$NON-NLS-1$
+//		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath()); //$NON-NLS-1$
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

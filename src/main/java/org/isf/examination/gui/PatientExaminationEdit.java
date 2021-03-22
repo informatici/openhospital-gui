@@ -42,7 +42,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,7 +76,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.text.JTextComponent;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
@@ -2111,7 +2109,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		final int INITIAL_HR = 60;
 		
 		
-		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
+//		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
 		GeneralData.getGeneralData();

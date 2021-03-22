@@ -27,7 +27,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +42,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
@@ -238,7 +236,7 @@ public class JTextFieldSearchModel extends JPanel {
 	 */
 	public static void main(String[] args) {
 		try {
-			PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
+//			PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
 			GeneralData.getGeneralData();
 			JDialog newDialog = new JDialog();
 			JTextFieldSearchModel textField = new JTextFieldSearchModel(new JDialog(), Medical.class);
