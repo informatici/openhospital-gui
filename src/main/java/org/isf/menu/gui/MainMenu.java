@@ -43,6 +43,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.isf.generaldata.GeneralData;
+import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
@@ -124,6 +125,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		myFrame = this;
 
 		GeneralData.getGeneralData();
+		MessageBundle.getBundle();
 		try {
 			singleUser = GeneralData.SINGLEUSER;
 			internalPharmacies = GeneralData.INTERNALPHARMACIES;
