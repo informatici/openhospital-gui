@@ -1109,28 +1109,28 @@ public class MovStockBrowser extends ModalJFrame {
 				&& !medicalBox.getSelectedItem().equals(
 				MessageBundle.getMessage("angal.medicalstock.all"))) {
 
-			filename.append("_").append(medicalBox.getSelectedItem());
+			filename.append('_').append(medicalBox.getSelectedItem());
 		}
 		if (medicalTypeBox.isEnabled()
 				&& !medicalTypeBox.getSelectedItem().equals(
 				MessageBundle.getMessage("angal.medicalstock.all"))) {
 
-			filename.append("_").append(medicalTypeBox.getSelectedItem());
+			filename.append('_').append(medicalTypeBox.getSelectedItem());
 		}
 		if (typeBox.isEnabled() &&
 				!typeBox.getSelectedItem().equals(
 						MessageBundle.getMessage("angal.medicalstock.all"))) {
 
-			filename.append("_").append(typeBox.getSelectedItem());
+			filename.append('_').append(typeBox.getSelectedItem());
 		}
 		if (wardBox.isEnabled() &&
 				!wardBox.getSelectedItem().equals(
 						MessageBundle.getMessage("angal.medicalstock.all"))) {
 
-			filename.append("_").append(wardBox.getSelectedItem());
+			filename.append('_').append(wardBox.getSelectedItem());
 		}
-		filename.append("_").append(TimeTools.formatDateTime(movDateFrom.getCompleteDate(), "yyyyMMdd"))
-				.append("_").append(TimeTools.formatDateTime(movDateTo.getCompleteDate(), "yyyyMMdd"));
+		filename.append('_').append(TimeTools.formatDateTime(movDateFrom.getCompleteDate(), "yyyyMMdd"))
+				.append('_').append(TimeTools.formatDateTime(movDateTo.getCompleteDate(), "yyyyMMdd"));
 		return filename.toString();
 	}
 
@@ -1247,7 +1247,7 @@ public class MovStockBrowser extends ModalJFrame {
 				return formatDate(lot.getDueDate());
 			} else if (c == ++col) {
 				Supplier origin = movement.getOrigin();
-				return origin != null ? supMap.get(new Integer(origin.getSupId())) : "";
+				return origin != null ? supMap.get(origin.getSupId()) : "";
 			} else if (c == ++col) {
 				return cost;
 			} else if (c == ++col && cost != null) {
