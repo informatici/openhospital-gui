@@ -790,13 +790,13 @@ public class MovStockMultipleDischarging extends JDialog {
 		}
 		return jComboBoxDestination;
 	}
-	
+
 	private int calcTotal(Movement mov, int option) {
 		Medical medical = mov.getMedical();
 		int qty = mov.getQuantity();
-		int ppp = medical.getPcsperpck().intValue() == 0 ? 1 : medical.getPcsperpck().intValue();
+		int ppp = medical.getPcsperpck() == 0 ? 1 : medical.getPcsperpck();
 		int total = option == UNITS ? qty : ppp * qty;
-		
+
 		return total;
 	}
 
@@ -864,7 +864,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			Lot lot = movement.getLot();
 			String lotName = lot.getCode();
 			int qty = movement.getQuantity();
-			int ppp = medical.getPcsperpck().intValue();
+			int ppp = medical.getPcsperpck();
 			int option = units.get(r);
 			int total = calcTotal(movement, option);
 			if (c == -1) {
@@ -884,11 +884,12 @@ public class MovStockMultipleDischarging extends JDialog {
 			} else if (c == 6) {
 				return lotName.equals("") ? "AUTO" : lotName; //$NON-NLS-1$ //$NON-NLS-2$
 			} else if (c == 7) {
-				if (lot.getDueDate() != null)
+				if (lot.getDueDate() != null) {
 					return TimeTools.formatDateTime(lot.getDueDate(), DATE_FORMAT_DD_MM_YYYY);
-				else 
+				} else {
 					return "AUTO"; //$NON-NLS-1$
-			} 
+				}
+			}
 			return null;
 		}
 

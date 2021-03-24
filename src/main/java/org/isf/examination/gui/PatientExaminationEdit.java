@@ -1971,13 +1971,13 @@ public class PatientExaminationEdit extends ModalJFrame {
 		public JTableModelSummary() {
 			reloadData();
 		}
-		
+
 		public void reloadData() {
 			try {
-				patexList = examManager.getLastNByPatID(patex.getPatient().getCode().intValue(), ExaminationParameters.LIST_SIZE);
-			}catch(OHServiceException e){
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
+				patexList = examManager.getLastNByPatID(patex.getPatient().getCode(), ExaminationParameters.LIST_SIZE);
+			} catch (OHServiceException e) {
+				if (e.getMessages() != null) {
+					for (OHExceptionMessage msg : e.getMessages()) {
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}

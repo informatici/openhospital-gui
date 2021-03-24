@@ -796,13 +796,13 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getWeightPanel() {
 		if (weightPanel == null) {
 			weightPanel = new JPanel();
-			
+
 			weightField = new VoLimitedTextField(5, 5);
 			if (editing && admission.getWeight() != null) {
-				weight = admission.getWeight().floatValue();
+				weight = admission.getWeight();
 				weightField.setText(String.valueOf(weight));
 			}
-			
+
 			weightPanel.add(weightField);
 			weightPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.weight")));
 		}
@@ -1052,7 +1052,7 @@ public class AdmissionBrowser extends ModalJFrame {
 							yProgTextField.setText("" + nextProg);
 
 							// get default selected warn default beds number
-							int nBeds = (((Ward) wardBox.getSelectedItem()).getBeds()).intValue();
+							int nBeds = ((Ward) wardBox.getSelectedItem()).getBeds();
 							int usedBeds = 0;
 							try {
 								usedBeds = admissionManager.getUsedWardBed(wardId);

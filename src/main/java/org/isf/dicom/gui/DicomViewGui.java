@@ -146,20 +146,20 @@ public class DicomViewGui extends JPanel {
 
 	public void notifyChanges(Patient patient, String serieNumber) {
 
-		this.patID = patient.getCode().intValue();
+		this.patID = patient.getCode();
 		this.ohPatient = patient;
 		this.serieNumber = serieNumber;
 		this.frameIndex = 0;
 
-//		if (serieNumber == null || serieNumber.trim().length() == 0)
-//			return;
+		// if (serieNumber == null || serieNumber.trim().length() == 0)
+		//    return;
 
-		if (patID >= 0){
+		if (patID >= 0) {
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
-			}catch(OHServiceException ex){
-				if (ex.getMessages() != null){
-					for(OHExceptionMessage msg : ex.getMessages()){
+			} catch (OHServiceException ex) {
+				if (ex.getMessages() != null) {
+					for (OHExceptionMessage msg : ex.getMessages()) {
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 					}
 				}
