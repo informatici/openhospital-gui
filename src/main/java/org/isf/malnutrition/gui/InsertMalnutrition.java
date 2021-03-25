@@ -177,12 +177,12 @@ public class InsertMalnutrition extends JDialog {
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					maln.setHeight(Float.valueOf(heightField.getText()));
+					maln.setHeight(Float.parseFloat(heightField.getText()));
 				} catch (NumberFormatException e) {
 					maln.setHeight(0);
 				}
 				try {
-					maln.setWeight(Float.valueOf(weightField.getText()));
+					maln.setWeight(Float.parseFloat(weightField.getText()));
 				} catch (NumberFormatException e) {
 					maln.setWeight(0);
 				}
