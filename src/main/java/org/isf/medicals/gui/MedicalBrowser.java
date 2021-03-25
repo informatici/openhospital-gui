@@ -820,7 +820,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 			cell.setForeground(Color.BLACK);
 			Medical med = pMedicals.get(row);
 			double actualQty = med.getInitialqty() + med.getInqty() - med.getOutqty();
-			if (((Boolean) table.getValueAt(row, 6)).booleanValue())
+			if ((Boolean) table.getValueAt(row, 6))
 				cell.setForeground(Color.GRAY); // out of stock
 			if (med.getMinqty() != 0 && actualQty <= med.getMinqty())
 				cell.setForeground(Color.RED); // under critical level

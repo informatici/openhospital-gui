@@ -832,8 +832,9 @@ public class MovStockMultipleCharging extends JDialog {
 
 		@Override
 		public boolean isCellEditable(int r, int c) {
-			if (c == 6 || c == 7 || c == 8)
-				return newLots.get(r).booleanValue();
+			if (c == 6 || c == 7 || c == 8) {
+				return newLots.get(r);
+			}
 			return columnEditable[c];
 		}
 
@@ -849,7 +850,7 @@ public class MovStockMultipleCharging extends JDialog {
 			Lot lot = movement.getLot();
 			String lotName = lot.getCode();
 			int qty = movement.getQuantity();
-			int ppp = medical.getPcsperpck().intValue() == 0 ? 1 : medical.getPcsperpck().intValue();
+			int ppp = medical.getPcsperpck() == 0 ? 1 : medical.getPcsperpck();
 			int option = units.get(r);
 			int total = option == UNITS ? qty : ppp * qty;
 			BigDecimal cost = lot.getCost();
@@ -951,13 +952,13 @@ public class MovStockMultipleCharging extends JDialog {
 		}
 		return ok;
 	}
-	
+
 	private int calcTotal(Movement mov, int option) {
 		Medical medical = mov.getMedical();
 		int qty = mov.getQuantity();
-		int ppp = medical.getPcsperpck().intValue() == 0 ? 1 : medical.getPcsperpck().intValue();
+		int ppp = medical.getPcsperpck() == 0 ? 1 : medical.getPcsperpck();
 		int total = option == UNITS ? qty : ppp * qty;
-		
+
 		return total;
 	}
 	

@@ -266,12 +266,13 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (jOkButton == null) {
 			jOkButton = new JButton();
 			jOkButton.setText(MessageBundle.getMessage("angal.common.ok"));
-			jOkButton.setMnemonic(KeyEvent.VK_A+('O'-'A')); 
+			jOkButton.setMnemonic(KeyEvent.VK_A + ('O' - 'A'));
 			jOkButton.addActionListener(new java.awt.event.ActionListener() {
+
 				public void actionPerformed(ActionEvent e) {
 					boolean ok = true;
 					DateTime bdate = new DateTime();
-					
+
 					if (insert) {
 						if (jFirstNameTextField.getText().equals("")) {
 							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertfirstname"));
@@ -284,32 +285,32 @@ public class PatientInsert extends JDialog implements ActionListener{
 								} else {
 									bdate = bdate.minusYears(age);
 									String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
-									try{
-										if (manager.isNamePresent(name)) {										
-											switch (JOptionPane.showConfirmDialog(null, 
+									try {
+										if (manager.isNamePresent(name)) {
+											switch (JOptionPane.showConfirmDialog(null,
 													MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" +
-															MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?", 
-															MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {
-															case JOptionPane.OK_OPTION:
-																ok=true;
-																break;
-															case JOptionPane.NO_OPTION:
-																ok=false;
-																break;									
+															MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?",
+													MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {
+												case JOptionPane.OK_OPTION:
+													ok = true;
+													break;
+												case JOptionPane.NO_OPTION:
+													ok = false;
+													break;
 											}
 										}
-									}catch(OHServiceException ex){
-                                        OHServiceExceptionUtil.showMessages(ex);
+									} catch (OHServiceException ex) {
+										OHServiceExceptionUtil.showMessages(ex);
 									}
 									if (ok) {
 										patient.setFirstName(jFirstNameTextField.getText());
 										patient.setSecondName(jSecondNameTextField.getText());
-										patient.setAge(age.intValue());
-									
+										patient.setAge(age);
+
 										if (sexSelect.equals(MessageBundle.getMessage("angal.patient.female"))) {
-											sex='F';
+											sex = 'F';
 										} else {
-											sex='M';
+											sex = 'M';
 										}
 										patient.setSex(sex);
 										patient.setAddress(jAddressTextField.getText());
@@ -317,7 +318,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 										patient.setNextKin(jNextKinTextField.getText());
 										patient.setTelephone(jTelephoneTextField.getText());
 										patient.setNote(jNoteTextArea.getText());
-										
+
 										//PatientExtended Compatibility
 										patient.setBirthDate(bdate.toDate());
 										patient.setAgetype("");
@@ -328,86 +329,85 @@ public class PatientInsert extends JDialog implements ActionListener{
 										patient.setBloodType("");
 										patient.setHasInsurance('U');
 										patient.setParentTogether('U');
-										
-										try{
+
+										try {
 											patient = manager.savePatient(patient);
 											firePatientInserted(patient);
 											dispose();
-										}catch(OHServiceException ex){
-                                            OHServiceExceptionUtil.showMessages(ex);
+										} catch (OHServiceException ex) {
+											OHServiceExceptionUtil.showMessages(ex);
 											JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
 										}
 									}
 								}
 							}
 						}
-					}else{//Update
-						String name= jFirstNameTextField.getText()+" "+jSecondNameTextField.getText();
-						if (!(patient.getName().equals(name))){
-							try{
-								if (manager.isNamePresent(name)){										
-									switch (JOptionPane.showConfirmDialog(null, 
+					} else {//Update
+						String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
+						if (!(patient.getName().equals(name))) {
+							try {
+								if (manager.isNamePresent(name)) {
+									switch (JOptionPane.showConfirmDialog(null,
 											MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" +
-													MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?", 
-													MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {
-													case JOptionPane.OK_OPTION:
-														ok=true;
-														break;
-													case JOptionPane.NO_OPTION:
-														ok=false;
-														break;									
+													MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?",
+											MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {
+										case JOptionPane.OK_OPTION:
+											ok = true;
+											break;
+										case JOptionPane.NO_OPTION:
+											ok = false;
+											break;
 									}
 								}
-							}catch(OHServiceException ex){
-                                OHServiceExceptionUtil.showMessages(ex);
+							} catch (OHServiceException ex) {
+								OHServiceExceptionUtil.showMessages(ex);
 							}
-						}else{
-							ok=true;
+						} else {
+							ok = true;
 						}
-						if (ok){
-						
-						patient.setFirstName(jFirstNameTextField.getText());
-						patient.setSecondName(jSecondNameTextField.getText());
-						patient.setAge(age.intValue());
-						if (sexSelect.equals(" ")) {
-							sex=patient.getSex();
-						}else if (sexSelect.equals(MessageBundle.getMessage("angal.patient.female"))) {
-							sex='F';
-						}else{
-							sex='M';
-						}
+						if (ok) {
+
+							patient.setFirstName(jFirstNameTextField.getText());
+							patient.setSecondName(jSecondNameTextField.getText());
+							patient.setAge(age);
+							if (sexSelect.equals(" ")) {
+								sex = patient.getSex();
+							} else if (sexSelect.equals(MessageBundle.getMessage("angal.patient.female"))) {
+								sex = 'F';
+							} else {
+								sex = 'M';
+							}
 							patient.setSex(sex);
-						patient.setAddress(jAddressTextField.getText());
-						patient.setCity(jCityTextField.getText());
-						patient.setNextKin(jNextKinTextField.getText());
-						patient.setTelephone(jTelephoneTextField.getText());
-						patient.setNote(jNoteTextArea.getText());
-						
-						//PatientExtended Compatibility: NO NEEDED on Edit
-						//patient.setBirthDate("");
-						//patient.setAgetype("");
-						//patient.setMother_name("");
-						//patient.setMother('U');
-						//patient.setFather_name("");
-						//patient.setFather('U');
-						//patient.setBloodType("");
-						//patient.setHasInsurance('U');
-						//patient.setParentTogether('U');*/
-						try{
-							patient = manager.savePatient(patient);
-							firePatientUpdated(patient);
-							dispose();
-						}catch(OHServiceException ex){
-                            OHServiceExceptionUtil.showMessages(ex);
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							patient.setAddress(jAddressTextField.getText());
+							patient.setCity(jCityTextField.getText());
+							patient.setNextKin(jNextKinTextField.getText());
+							patient.setTelephone(jTelephoneTextField.getText());
+							patient.setNote(jNoteTextArea.getText());
+
+							//PatientExtended Compatibility: NO NEEDED on Edit
+							//patient.setBirthDate("");
+							//patient.setAgetype("");
+							//patient.setMother_name("");
+							//patient.setMother('U');
+							//patient.setFather_name("");
+							//patient.setFather('U');
+							//patient.setBloodType("");
+							//patient.setHasInsurance('U');
+							//patient.setParentTogether('U');*/
+							try {
+								patient = manager.savePatient(patient);
+								firePatientUpdated(patient);
+								dispose();
+							} catch (OHServiceException ex) {
+								OHServiceExceptionUtil.showMessages(ex);
+								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							}
 						}
-					}
 					}
 
 				}
 			});
-			
-			
+
 		}
 		return jOkButton;
 	}
