@@ -236,7 +236,7 @@ public class JTextFieldSearchModel extends JPanel {
 	 */
 	public static void main(String[] args) {
 		try {
-			GeneralData.getGeneralData();
+			GeneralData.initialize();
 			JDialog newDialog = new JDialog();
 			JTextFieldSearchModel textField = new JTextFieldSearchModel(new JDialog(), Medical.class);
 			newDialog.add(textField, BorderLayout.NORTH);

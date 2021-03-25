@@ -137,7 +137,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			GeneralData.getGeneralData();
+			GeneralData.initialize();
 			new MovStockMultipleDischarging(new JFrame());
 		} catch (Exception e) {
 			e.printStackTrace();

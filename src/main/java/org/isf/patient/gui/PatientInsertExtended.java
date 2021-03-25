@@ -1027,7 +1027,7 @@ public class PatientInsertExtended extends JDialog {
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTelephoneTextField() {
-		SmsParameters.getSmsParameters();
+		SmsParameters.initialize();
 		if (jTelephoneTextField == null) {
 			jTelephoneTextField = new JTextField(15);
 			jTelephoneTextField.setText(SmsParameters.ICC);

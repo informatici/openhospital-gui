@@ -412,7 +412,7 @@ public class SmsBrowser extends ModalJFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		GeneralData.getGeneralData();
+		GeneralData.initialize();
 		MessageBundle.initialize();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

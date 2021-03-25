@@ -516,7 +516,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	public static void main(String[] args) {
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
-		GeneralData.getGeneralData();
+		GeneralData.initialize();
 		PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 		Patient patient = new Patient();
 		try {

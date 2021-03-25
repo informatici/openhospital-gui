@@ -201,6 +201,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	//Users
 	private String user = UserBrowsingManager.getCurrentUser();
 	private ArrayList<String> users;
+	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
+	
 	
 	public BillBrowser() {
 		try {
@@ -266,7 +268,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jPanelTotals.setLayout(new BoxLayout(jPanelTotals, BoxLayout.Y_AXIS));
 			jPanelTotals.add(getJTableToday());
 			jPanelTotals.add(getJTablePeriod());
-			if (!GeneralData.SINGLEUSER) jPanelTotals.add(getJTableUser());
+			if (!isSingleUser) jPanelTotals.add(getJTableUser());
 			updateTotals();
 		}
 		return jPanelTotals;
@@ -380,7 +382,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							String fromString = TimeTools.formatDateTimeReport(dateFrom);
 							String toString = TimeTools.formatDateTimeReport(dateTo);
 							String user;
-							if (GeneralData.SINGLEUSER) {
+							if (isSingleUser) {
 								user = "admin";
 							} else {
 								user = UserBrowsingManager.getCurrentUser();
@@ -815,7 +817,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JPanel getPanelSupRange() {
 		if (panelSupRange == null) {
 			panelSupRange = new JPanel();
-			if (!GeneralData.SINGLEUSER && user.equals("admin")) 
+			if (!isSingleUser && user.equals("admin")) 
 				panelSupRange.add(getJComboUsers());
 				panelSupRange.add(getJButtonToday());
 				panelSupRange.add(getJLabelFrom());
@@ -1283,7 +1285,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				
 				totalPeriod = totalPeriod.add(payAmount);
 					
-				if (!GeneralData.SINGLEUSER && payUser.equals(user))
+				if (!isSingleUser && payUser.equals(user))
 					userPeriod = userPeriod.add(payAmount);
 			}
 		}
@@ -1305,7 +1307,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
 					String payUser = payment.getUser();
 					totalToday = totalToday.add(payAmount);
-					if (!GeneralData.SINGLEUSER && payUser.equals(user))
+					if (!isSingleUser && payUser.equals(user))
 						userToday = userToday.add(payAmount);
 				}
 			}

@@ -230,7 +230,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private void initComponents() {
-		ExaminationParameters.getExaminationParameters();
+		ExaminationParameters.initialize();
 		getContentPane().add(getJPanelCenter(), BorderLayout.CENTER);
 		getContentPane().add(getJPanelButtons(), BorderLayout.SOUTH);
 		//updateSummary();
@@ -2111,7 +2111,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
-		GeneralData.getGeneralData();
+		GeneralData.initialize();
 		
 		try {
 			ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);

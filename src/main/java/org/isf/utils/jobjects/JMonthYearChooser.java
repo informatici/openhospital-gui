@@ -86,7 +86,7 @@ public class JMonthYearChooser extends JPanel {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GeneralData.getGeneralData();
+		GeneralData.initialize();
 		GregorianCalendar date;
 		JMonthYearChooser monthChooser = new JMonthYearChooser();
 		

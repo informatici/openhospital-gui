@@ -124,10 +124,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	public MainMenu() {
 		myFrame = this;
 
-		GeneralData.getGeneralData();
+		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
 		try {
-			singleUser = GeneralData.SINGLEUSER;
 			internalPharmacies = GeneralData.INTERNALPHARMACIES;
 			debug = GeneralData.DEBUG;
 			if (debug) {

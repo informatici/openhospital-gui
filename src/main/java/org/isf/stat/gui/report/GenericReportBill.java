@@ -64,7 +64,7 @@ public class GenericReportBill {
 
 	public GenericReportBill(Integer billID, String jasperFileName, boolean show, boolean askForPrint) {
 		
-		TxtPrinter.getTxtPrinter();
+		TxtPrinter.initialize();
 		
 		try {
             JasperReportResultDto jasperReportPDFResultDto = jasperReportsManager.getGenericReportBillPdf(billID, jasperFileName, show, askForPrint);
