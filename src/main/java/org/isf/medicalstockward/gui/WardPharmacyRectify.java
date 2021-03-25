@@ -542,20 +542,17 @@ public class WardPharmacyRectify extends JDialog {
 		}
 		if (newLot) {
 			Medical med = (Medical) jComboBoxMedical.getSelectedItem();
-//			int qty = askQuantity(med);
-//			if (qty == 0) {return null;};
-			int qty = 0;
 			Lot addLot = askLot();
 			if (addLot == null) {
 				return null;
 			}
 			
 			jTextFieldLotNumber.setText(addLot.getCode());
-			jSpinnerNewQty.setValue(Double.valueOf(qty));
-			jLabelLotQty.setText(String.valueOf(qty));
+			jSpinnerNewQty.setValue(0);
+			jLabelLotQty.setText("0");
 			jLabelInLot.setVisible(true);
 			if (GeneralData.LOTWITHCOST) {
-				BigDecimal cost = askCost(qty);
+				BigDecimal cost = askCost();
 				addLot.setCost(cost);
 			}
 			selectedLot = addLot;
@@ -651,7 +648,7 @@ public class WardPharmacyRectify extends JDialog {
 		return lot;
 
 	}
-	protected BigDecimal askCost(int qty) {
+	protected BigDecimal askCost() {
 		double cost = 0.;
 		do {
 			String input = JOptionPane.showInputDialog(WardPharmacyRectify.this, 
@@ -785,12 +782,14 @@ public class WardPharmacyRectify extends JDialog {
 						}
 						Integer code = med.getCode();
 						Double qty = wardMap.get(code);
-						if (qty == null) qty = new Double(0);
+						if (qty == null) {
+							qty = 0.0D;
+						}
 						jLabelStockQty.setText(qty.toString());
 						jSpinnerNewQty.setValue(qty);
 					} catch (ClassCastException ex) {
 						jLabelStockQty.setText(""); //$NON-NLS-1$
-						jSpinnerNewQty.setValue(new Double(0));
+						jSpinnerNewQty.setValue(0.0D);
 					}
 				}
 			});

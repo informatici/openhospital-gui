@@ -448,7 +448,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 			} else {
 				//Integer oldage = parseInt(patient.getAge());
 				ageField.setText(String.valueOf(patient.getAge()));
-				age = new Integer(patient.getAge());
+				age = patient.getAge();
 			}
 			ageField.setMinimumSize(new Dimension(100, 50));
 		}

@@ -346,7 +346,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		try {
 			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 		} catch (NumberFormatException e) {
-			operationRow.setTransUnit(new Float(0));
+			operationRow.setTransUnit(0.0F);
 		}
 		Operation op = (Operation) this.comboOperation.getSelectedItem();
 		operationRow.setOperation(op);
