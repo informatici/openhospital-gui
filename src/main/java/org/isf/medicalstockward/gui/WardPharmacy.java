@@ -1344,8 +1344,8 @@ public class WardPharmacy extends ModalJFrame implements
 			int ageFrom = Integer.parseInt(jAgeFromTextField.getText());
 			int ageTo = Integer.parseInt(jAgeToTextField.getText());
 
-			float weightFrom = Float.valueOf(jWeightFromTextField.getText());
-			float weightTo = Float.valueOf(jWeightToTextField.getText());
+			float weightFrom = Float.parseFloat(jWeightFromTextField.getText());
+			float weightTo = Float.parseFloat(jWeightToTextField.getText());
 
 			for (MovementWard mov : listMovementWardFromTo) {
 				boolean ok = true;

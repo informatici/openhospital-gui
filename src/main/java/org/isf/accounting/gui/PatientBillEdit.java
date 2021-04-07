@@ -1541,7 +1541,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 									"0"); //$NON-NLS-1$
 							try {
 								if (price == null) return;
-								double amount = Double.valueOf(price);
+								double amount = Double.parseDouble(price);
 								oth.setPrice(amount);
 								isPrice = false;
 							} catch (Exception eee) {
@@ -1746,7 +1746,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			                    null,
 								"0"); //$NON-NLS-1$
 						try {
-							amount = Double.valueOf(price);
+							amount = Double.parseDouble(price);
 						} catch (Exception eee) {
 							JOptionPane.showMessageDialog(PatientBillEdit.this, 
 									MessageBundle.getMessage("angal.newbill.invalidpricepleasetryagain"), //$NON-NLS-1$
