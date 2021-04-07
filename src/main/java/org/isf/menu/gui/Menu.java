@@ -23,6 +23,8 @@ package org.isf.menu.gui;
 
 import java.awt.Toolkit;
 import java.io.File;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 
@@ -39,7 +41,8 @@ public class Menu {
 
 	private static Logger logger = LoggerFactory.getLogger(Menu.class);
 
-	private static final float MIN_JAVA_VERSION = (float) 1.8;
+	private static final Pattern DELIMITER = Pattern.compile("[._\\-+]");
+	private static final String MIN_JAVA_VERSION = "1.8";
 
 	/**
 	 * Create the GUI and show it.
@@ -63,12 +66,40 @@ public class Menu {
 	public static void checkJavaVersion() {
 		String version = System.getProperty("java.version");
 		logger.info("Java version {}", version);
-		Float f = Float.valueOf(version.substring(0, 3));
-		if (f.floatValue() < MIN_JAVA_VERSION) {
+		if (!isAtLeastVersion(MIN_JAVA_VERSION)) {
 			logger.error("Java version {} or higher is required.", MIN_JAVA_VERSION);
 			logger.info("\n\n=====================\n Open Hospital closed \n=====================\n");
 			System.exit(1);
 		}
+	}
+
+	/**
+	 * A very optimistic test for ensuring we at least have a minimal required Java version. It will not fail when we
+	 * cannot determine the result. In essence, this method splits a version string using {@link
+	 * Menu#DELIMITER} and compares two version number by number.
+	 *
+	 * @param requiredVersion Should be in the form X.X.X_XXX where X are integers.
+	 * @return true if the numbers in version available for comparison are all greater-equals the currently running Java
+	 * version.
+	 */
+	public static boolean isAtLeastVersion(String requiredVersion) {
+		String runningVersion = System.getProperty("java.version");
+		if (runningVersion == null || requiredVersion == null) {
+			return true;
+		}
+		Scanner scannerRunningVersion = new Scanner(runningVersion);
+		Scanner scannerRequiredVersion = new Scanner(requiredVersion);
+		scannerRunningVersion.useDelimiter(DELIMITER);
+		scannerRequiredVersion.useDelimiter(DELIMITER);
+		while (scannerRunningVersion.hasNextInt() && scannerRequiredVersion.hasNextInt()) {
+			int running = scannerRunningVersion.nextInt();
+			int required = scannerRequiredVersion.nextInt();
+			if (running == required) {
+				continue;
+			}
+			return running >= required;
+		}
+		return true;
 	}
 
 	public static void main(String[] args) {
