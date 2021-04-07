@@ -475,7 +475,7 @@ public class MovStockMultipleCharging extends JDialog {
 						String refNo = jTextFieldReference.getText().trim();
 						
 						Movement movement = new Movement(med, (MovementType) jComboBoxChargeType.getSelectedItem(), null, lot, date, qty, new Supplier(), refNo);
-						model.addItem(movement, new Boolean(isNewLot));
+						model.addItem(movement, isNewLot);
 
 						units.add(PACKETS);
 

@@ -2079,7 +2079,7 @@ public class AdmissionBrowser extends ModalJFrame {
 								admission.setWeight(null);
 							} else {
                                 float f = Float.parseFloat(weightField.getText());
-                                admission.setWeight(new Float(f));
+                                admission.setWeight(f);
 							}
 						} catch (Exception ex) {
 							JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.pleaseinsertavalidweightvalue"));
