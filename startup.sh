@@ -73,7 +73,17 @@ do
   fi
 done
 
-DIRLIBS=${OPENHOSPITAL_HOME}/lib/*.zip
+DIRLIBS=${OPENHOSPITAL_HOME}/rsc/*.properties
+for i in ${DIRLIBS}
+do
+  if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then
+    OPENHOSPITAL_CLASSPATH=$i
+  else
+    OPENHOSPITAL_CLASSPATH="$i":$OPENHOSPITAL_CLASSPATH
+  fi
+done
+
+DIRLIBS=${OPENHOSPITAL_HOME}/rsc/SmsGateway/*.properties
 for i in ${DIRLIBS}
 do
   if [ -z "$OPENHOSPITAL_CLASSPATH" ] ; then

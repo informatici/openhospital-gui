@@ -1165,12 +1165,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					}
 					if (hasNewPayments()) {
 
-						TxtPrinter.getTxtPrinter();
+						TxtPrinter.initialize();
 						new GenericReportBill(thisBill.getId(), "PatientBillPayments", false, !TxtPrinter.PRINT_WITHOUT_ASK);
 					}
 					if (paid && GeneralData.RECEIPTPRINTER) {
 						
-						TxtPrinter.getTxtPrinter();
+						TxtPrinter.initialize();
 						if (TxtPrinter.PRINT_AS_PAID)
 							new GenericReportBill(billID, GeneralData.PATIENTBILL, false, !TxtPrinter.PRINT_WITHOUT_ASK);
 					}
@@ -1195,7 +1195,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonPrintPayment.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					TxtPrinter.getTxtPrinter();
+					TxtPrinter.initialize();
 					new GenericReportBill(thisBill.getId(), "PatientBillPayments", false, !TxtPrinter.PRINT_WITHOUT_ASK);
 				}
 			});

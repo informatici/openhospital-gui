@@ -38,6 +38,7 @@ set OH_BIN=%OH_HOME%bin
 set OH_LIB=%OH_HOME%lib
 set OH_BUNDLE=%OH_HOME%bundle
 set OH_REPORT=%OH_HOME%rpt
+set OH_RESOURCES=%OH_HOME%rsc
 
 set CLASSPATH=%OH_BIN%
 
@@ -47,6 +48,16 @@ FOR %%A IN (%OH_LIB%\*.jar) DO (
 	set CLASSPATH=!CLASSPATH!;%%A
 )
 
+FOR %%A IN (%OH_RESOURCES%\*.properties) DO (
+	set CLASSPATH=!CLASSPATH!;%%A
+)
+
+FOR %%A IN (%OH_RESOURCES%\SmsGateway\*.properties) DO (
+	set CLASSPATH=!CLASSPATH!;%%A
+)
+
+set CLASSPATH=%CLASSPATH%;%OH_LIB%
+set CLASSPATH=%CLASSPATH%;%OH_RESOURCES%
 set CLASSPATH=%CLASSPATH%;%OH_BUNDLE%
 set CLASSPATH=%CLASSPATH%;%OH_REPORT%
 set CLASSPATH=%CLASSPATH%;%OH_BIN%;%OH_BIN%\OH-gui.jar
@@ -58,4 +69,4 @@ cd /d %OH_HOME%\
 REM set JAVA=C:\PROGRA~2\Java\jdk1.6.0_29\bin\java.exe
 @echo on
 REM start /min %JAVA_HOME%\java -showversion -Dsun.java2d.dpiaware=false -Djava.library.path=%NATIVE_PATH% -classpath %CLASSPATH% org.isf.menu.gui.Menu
-start /min %JAVA% -showversion -Dsun.java2d.dpiaware=false -Djava.library.path=%NATIVE_PATH% -classpath %CLASSPATH% org.isf.menu.gui.Menu
+%JAVA% -showversion -Dsun.java2d.dpiaware=false -Djava.library.path=%NATIVE_PATH% -classpath %CLASSPATH% org.isf.menu.gui.Menu

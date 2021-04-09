@@ -115,7 +115,7 @@ public class JDateAndTimeChooser extends JPanel {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GeneralData.getGeneralData();
+		GeneralData.initialize();
 		Date date;
 		JDateAndTimeChooser dateTimeChooser = new JDateAndTimeChooser();
 		int r = JOptionPane.showConfirmDialog(null,

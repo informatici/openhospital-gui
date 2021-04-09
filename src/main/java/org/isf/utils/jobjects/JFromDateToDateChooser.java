@@ -165,7 +165,7 @@ public class JFromDateToDateChooser extends JPanel {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GeneralData.getGeneralData();
+		GeneralData.initialize();
 		Date date;
 		JFromDateToDateChooser fromDateToDateChooser = new JFromDateToDateChooser();
 		

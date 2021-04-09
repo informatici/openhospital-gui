@@ -95,7 +95,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		GeneralData.getGeneralData();
+		GeneralData.initialize();
 		try {
 			new SmsEdit(new JFrame());
 		} catch (Exception e) {

@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.generaldata.Version;
 import org.isf.menu.manager.Context;
 import org.isf.utils.jobjects.WaitCursorEventQueue;
@@ -59,7 +58,7 @@ public class Menu {
 	}
 
 	private static void checkOHVersion() {
-		Version.getVersion();
+		Version.initialize();
 		logger.info("Open Hospital version {}.{}.{}", Version.VER_MAJOR, Version.VER_MINOR, Version.VER_RELEASE);
 	}
 
@@ -103,7 +102,6 @@ public class Menu {
 	}
 
 	public static void main(String[] args) {
-		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
