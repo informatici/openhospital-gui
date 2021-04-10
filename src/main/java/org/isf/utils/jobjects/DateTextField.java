@@ -179,6 +179,8 @@ public class DateTextField extends JPanel{
 		date.set(Calendar.DAY_OF_MONTH,getDay());
 		date.set(Calendar.MONTH,getMonth()-1);
 		date.set(Calendar.YEAR,getYear());
+		// This is a temporary solution so the comparison is only on the "date" part of "date and time"
+		// See comments in OP-482: https://openhospital.atlassian.net/browse/OP-482
 		date.set(Calendar.HOUR_OF_DAY, 23);
 		date.set(Calendar.MINUTE, 59);
 		date.set(Calendar.SECOND, 59);
