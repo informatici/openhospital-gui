@@ -24,6 +24,7 @@ package org.isf.utils.jobjects;
 import java.awt.FlowLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.swing.JLabel;
@@ -175,9 +176,14 @@ public class DateTextField extends JPanel{
 			year.setText("");
 			return null;
 		}
-		date.set(GregorianCalendar.DAY_OF_MONTH,getDay());
-		date.set(GregorianCalendar.MONTH,getMonth()-1);
-		date.set(GregorianCalendar.YEAR,getYear());
+		date.set(Calendar.DAY_OF_MONTH,getDay());
+		date.set(Calendar.MONTH,getMonth()-1);
+		date.set(Calendar.YEAR,getYear());
+		// This is a temporary solution so the comparison is only on the "date" part of "date and time"
+		// See comments in OP-482: https://openhospital.atlassian.net/browse/OP-482
+		date.set(Calendar.HOUR_OF_DAY, 23);
+		date.set(Calendar.MINUTE, 59);
+		date.set(Calendar.SECOND, 59);
 		return date;
 	}
 
