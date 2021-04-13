@@ -120,7 +120,6 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton dischargeButton;
 	private JButton filterButton;
 	private JButton exportToExcel;
-	//	private JButton importFromExcel;
 	private JButton stockCardButton;
 	private JButton stockLedgerButton;
 	private JPanel filterPanel;
@@ -1040,36 +1039,6 @@ public class MovStockBrowser extends ModalJFrame {
 		});
 		return dischargeButton;
 	}
-
-	//	private JButton getImportFromExcelButton()
-	//	{
-	//		importFromExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.import"));
-	//		importFromExcel.setMnemonic(KeyEvent.VK_I);
-	//		importFromExcel.addActionListener(new ActionListener()
-	//		{
-	//			public void actionPerformed(ActionEvent e) {
-	//
-	//				JFileChooser fcExcel = new JFileChooser();
-	//				FileNameExtensionFilter excelFilter = new FileNameExtensionFilter("Excel (*.xls)","xls");
-	//				fcExcel.setFileFilter(excelFilter);
-	//
-	//				int iRetVal = fcExcel.showOpenDialog(MovStockBrowser.this);
-	//				if (iRetVal == JFileChooser.APPROVE_OPTION)
-	//				{
-	//					ExcelImporter xlsImport = new ExcelImporter();
-	//					try
-	//					{
-	//						xlsImport.OpenInTable(movTable, fcExcel.getSelectedFile());
-	//						movTable.updateUI();
-	//					} catch(IOException exc)
-	//					{
-	//						System.out.println("Import to excel error : "+exc.getMessage());
-	//					}
-	//				}
-	//			}
-	//		});
-	//		return importFromExcel;
-	//	}
 
 	private JButton getExportToExcelButton() {
 		exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.export"));
