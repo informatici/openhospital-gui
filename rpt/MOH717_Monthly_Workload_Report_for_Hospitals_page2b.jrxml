@@ -95,7 +95,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["B.2.1"]]></textFieldExpression>
 			</textField>
@@ -109,7 +109,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{VaginalDelivery} +"("+$R{IncludedsNormalAndAssistedDelivery}+")"]]></textFieldExpression>
 			</textField>
@@ -123,7 +123,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Number}]]></textFieldExpression>
 			</textField>
@@ -137,7 +137,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA["B.2 "+ $R{Maternity}]]></textFieldExpression>
 			</textField>
@@ -151,7 +151,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matVaginal}]]></textFieldExpression>
 			</textField>
@@ -165,7 +165,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["B.2.2"]]></textFieldExpression>
 			</textField>
@@ -179,7 +179,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{CaesarianSections}]]></textFieldExpression>
 			</textField>
@@ -193,7 +193,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matCaesarian}]]></textFieldExpression>
 			</textField>
@@ -207,7 +207,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["B.2.3"]]></textFieldExpression>
 			</textField>
@@ -221,7 +221,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{FreshStillBirth}]]></textFieldExpression>
 			</textField>
@@ -235,7 +235,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matFreshStillBirth}]]></textFieldExpression>
 			</textField>
@@ -249,7 +249,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["B.2.4"]]></textFieldExpression>
 			</textField>
@@ -263,7 +263,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{MaceratedStillBirth}]]></textFieldExpression>
 			</textField>
@@ -277,7 +277,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matMacerated}]]></textFieldExpression>
 			</textField>
@@ -291,7 +291,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["B.3.1"]]></textFieldExpression>
 			</textField>
@@ -305,7 +305,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{MinorSurgeriesExcludingCircumcision}]]></textFieldExpression>
 			</textField>
@@ -319,7 +319,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Number}]]></textFieldExpression>
 			</textField>
@@ -333,7 +333,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA["B.3 "+$R{Operations}]]></textFieldExpression>
 			</textField>
@@ -347,7 +347,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$F{opMinor}]]></textFieldExpression>
 			</textField>
@@ -361,7 +361,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["B.3.2"]]></textFieldExpression>
 			</textField>
@@ -375,7 +375,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Circumcision}]]></textFieldExpression>
 			</textField>
@@ -389,7 +389,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$F{opCircumcision}]]></textFieldExpression>
 			</textField>
@@ -403,7 +403,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["B.3.3"]]></textFieldExpression>
 			</textField>
@@ -417,7 +417,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{MajorSurgeries}]]></textFieldExpression>
 			</textField>
@@ -431,7 +431,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$F{opMajor}]]></textFieldExpression>
 			</textField>
@@ -445,7 +445,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["C.1"]]></textFieldExpression>
 			</textField>
@@ -459,7 +459,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{CommonDrugs}]]></textFieldExpression>
 			</textField>
@@ -473,7 +473,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
 			</textField>
@@ -487,7 +487,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{C.PharmacyNo.OfDosesDispensed}]]></textFieldExpression>
 			</textField>
@@ -501,7 +501,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -515,7 +515,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["C.2"]]></textFieldExpression>
 			</textField>
@@ -529,7 +529,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Antibiotics}]]></textFieldExpression>
 			</textField>
@@ -543,7 +543,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -557,7 +557,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["C.3"]]></textFieldExpression>
 			</textField>
@@ -571,7 +571,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{SpecialDrugs}]]></textFieldExpression>
 			</textField>
@@ -585,7 +585,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -599,7 +599,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA["< 5 "+$R{YRS}]]></textFieldExpression>
 			</textField>
@@ -613,7 +613,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -627,7 +627,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -641,7 +641,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -655,7 +655,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA["> 5 "+$R{YRS}]]></textFieldExpression>
 			</textField>
@@ -669,7 +669,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -683,7 +683,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -697,7 +697,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -711,7 +711,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["D.1"]]></textFieldExpression>
 			</textField>
@@ -725,7 +725,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{BodyDays}]]></textFieldExpression>
 			</textField>
@@ -739,7 +739,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Number}]]></textFieldExpression>
 			</textField>
@@ -753,7 +753,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{D.Mortuary}]]></textFieldExpression>
 			</textField>
@@ -767,7 +767,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -781,7 +781,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["D.2"]]></textFieldExpression>
 			</textField>
@@ -795,7 +795,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Embalment}]]></textFieldExpression>
 			</textField>
@@ -809,7 +809,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -823,7 +823,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["D.3"]]></textFieldExpression>
 			</textField>
@@ -837,7 +837,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{PostMortem}]]></textFieldExpression>
 			</textField>
@@ -851,7 +851,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -865,7 +865,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["D.4"]]></textFieldExpression>
 			</textField>
@@ -879,7 +879,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{UnclaimedBodyDays}]]></textFieldExpression>
 			</textField>
@@ -893,7 +893,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -907,7 +907,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["E.1"]]></textFieldExpression>
 			</textField>
@@ -921,7 +921,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{NewFiles}]]></textFieldExpression>
 			</textField>
@@ -935,7 +935,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
 			</textField>
@@ -949,7 +949,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{E.MedicalRecordsIssued}]]></textFieldExpression>
 			</textField>
@@ -963,7 +963,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -977,7 +977,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["E.2"]]></textFieldExpression>
 			</textField>
@@ -991,7 +991,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{OutpatientRecords}]]></textFieldExpression>
 			</textField>
@@ -1005,7 +1005,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="false" pdfFontName="Helvetica"/>
+					<font size="7" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1019,7 +1019,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{F.SpecialServices}]]></textFieldExpression>
 			</textField>
@@ -1033,7 +1033,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["F.1"]]></textFieldExpression>
 			</textField>
@@ -1047,7 +1047,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{LaboratoryNumberOfTests}]]></textFieldExpression>
 			</textField>
@@ -1061,7 +1061,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Routine}]]></textFieldExpression>
 			</textField>
@@ -1075,7 +1075,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1089,7 +1089,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{No.}]]></textFieldExpression>
 			</textField>
@@ -1103,7 +1103,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Special}]]></textFieldExpression>
 			</textField>
@@ -1117,7 +1117,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1131,7 +1131,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{No.}]]></textFieldExpression>
 			</textField>
@@ -1145,7 +1145,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1159,7 +1159,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="7" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1173,7 +1173,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
 			</textField>
@@ -1187,7 +1187,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{No.}]]></textFieldExpression>
 			</textField>
@@ -1201,7 +1201,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1215,7 +1215,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["F.2"]]></textFieldExpression>
 			</textField>
@@ -1229,7 +1229,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{XRayNumberOfExaminations}]]></textFieldExpression>
 			</textField>
@@ -1243,7 +1243,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{PlainWithoutEnhancement}]]></textFieldExpression>
 			</textField>
@@ -1257,7 +1257,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1271,7 +1271,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{EnhancementWithContrastMedia}]]></textFieldExpression>
 			</textField>
@@ -1285,7 +1285,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1299,7 +1299,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Ultrasound}]]></textFieldExpression>
 			</textField>
@@ -1313,7 +1313,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1327,7 +1327,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{SpecialWithMagneticProcess}]]></textFieldExpression>
 			</textField>
@@ -1341,7 +1341,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1355,7 +1355,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1369,7 +1369,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{TotalRadiologicalExaminations}]]></textFieldExpression>
 			</textField>
@@ -1383,7 +1383,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1397,7 +1397,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["F.3"]]></textFieldExpression>
 			</textField>
@@ -1411,7 +1411,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{PhysiotherapyNumberOfTratments}]]></textFieldExpression>
 			</textField>
@@ -1425,7 +1425,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Private}]]></textFieldExpression>
 			</textField>
@@ -1439,7 +1439,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1453,7 +1453,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{NonPrivate}]]></textFieldExpression>
 			</textField>
@@ -1467,7 +1467,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1481,7 +1481,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
 			</textField>
@@ -1495,7 +1495,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1509,7 +1509,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["F.4"]]></textFieldExpression>
 			</textField>
@@ -1523,7 +1523,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{OccupationalTherapyNumberOfTreatments}]]></textFieldExpression>
 			</textField>
@@ -1537,7 +1537,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Private}]]></textFieldExpression>
 			</textField>
@@ -1551,7 +1551,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1565,7 +1565,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{NonPrivate}]]></textFieldExpression>
 			</textField>
@@ -1579,7 +1579,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1593,7 +1593,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
 			</textField>
@@ -1607,7 +1607,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1621,7 +1621,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA["F.5"]]></textFieldExpression>
 			</textField>
@@ -1635,7 +1635,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{OrthopaedicTecnologyNoOfItems}]]></textFieldExpression>
 			</textField>
@@ -1649,7 +1649,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Private}]]></textFieldExpression>
 			</textField>
@@ -1663,7 +1663,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1677,7 +1677,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{NonPrivate}]]></textFieldExpression>
 			</textField>
@@ -1691,7 +1691,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
@@ -1705,7 +1705,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="6" isBold="false" pdfFontName="Helvetica"/>
+					<font size="6" isBold="false" />
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Total}]]></textFieldExpression>
 			</textField>
@@ -1719,7 +1719,7 @@ FROM (
 					<rightPen lineWidth="0.25"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font size="6" isBold="true" />
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
