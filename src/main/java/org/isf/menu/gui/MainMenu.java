@@ -34,6 +34,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -123,7 +124,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	public MainMenu() {
 		myFrame = this;
-
+		GeneralData.initialize();
+		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); //for all fixed options YES_NO_CANCEL in dialogs
 		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
 		try {
