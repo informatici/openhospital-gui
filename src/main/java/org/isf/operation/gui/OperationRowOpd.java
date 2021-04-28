@@ -37,8 +37,6 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -67,12 +65,17 @@ import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.toedter.calendar.JDateChooser;
 
 public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryListener{
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OperationRowOpd.class);
+
 	private JLabel labelDate;
 	private JTextField textFieldUnit;
 	private JDateChooser textDate;
@@ -307,7 +310,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		try {
 			opeList.addAll(opeManager.getOperationOpd());
 		} catch (OHServiceException ex) {
-			Logger.getLogger(OperationRowAdm.class.getName()).log(Level.SEVERE, null, ex);
+			LOGGER.error(ex.getMessage(), ex);
 		}
 		comboOpe.addItem(null);
 		for (org.isf.operation.model.Operation elem : opeList) {

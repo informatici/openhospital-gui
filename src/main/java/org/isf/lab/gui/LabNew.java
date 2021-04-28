@@ -35,8 +35,6 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -86,8 +84,12 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.OhTableModelExam;
 import org.isf.utils.time.RememberDates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LabNew extends JDialog implements SelectionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(LabNew.class);
 
 //LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList labListener = new EventListenerList();
@@ -422,7 +424,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
-					Logger.getLogger(LabNew.class.getName()).log(Level.SEVERE, null, ex);
+					LOGGER.error(ex.getMessage(), ex);
 				}
 				if (exaRowArray != null) {
 					for (ExamRow exaRow : exaRowArray) {
@@ -465,7 +467,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
-					Logger.getLogger(LabNew.class.getName()).log(Level.SEVERE, null, ex);
+	                LOGGER.error(ex.getMessage(), ex);
 				}
                 if (exaRowArray != null) {
 	                for (ExamRow exaRow : exaRowArray) {

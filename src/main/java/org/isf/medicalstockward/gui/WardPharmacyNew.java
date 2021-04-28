@@ -35,8 +35,6 @@ import java.util.Comparator;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -75,8 +73,12 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WardPharmacyNew extends JDialog implements SelectionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(WardPharmacyNew.class);
 
 //LISTENER INTERFACE --------------------------------------------------------
     private EventListenerList movementWardListeners = new EventListenerList();
@@ -939,7 +941,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
                         try {
                             wardList = wbm.getWards();
                         } catch (OHServiceException ex) {
-                            Logger.getLogger(WardPharmacyNew.class.getName()).log(Level.SEVERE, null, ex);
+	                        LOGGER.error(ex.getMessage(), ex);
                         }
 			wardBox.addItem("");
 			if (wardList != null) {
