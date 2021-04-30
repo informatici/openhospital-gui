@@ -405,11 +405,10 @@ public class WardPharmacyRectify extends JDialog {
 							if (ok != JOptionPane.OK_OPTION) return;
 						}
 						
-						boolean result;
 						try {
 							
 							movStockInsertingManager.storeLot(selectedLot.getCode(), selectedLot, med);
-							result = movWardBrowserManager.newMovementWard(new MovementWard(
+							movWardBrowserManager.newMovementWard(new MovementWard(
 									wardSelected, 
 									new GregorianCalendar(), 
 									false, null, 0, 0, 
@@ -418,12 +417,9 @@ public class WardPharmacyRectify extends JDialog {
 									movQuantity,
 									MessageBundle.getMessage("angal.medicalstockward.rectify.pieces"),
 									selectedLot));
-							if (result) {
-								fireMovementWardInserted();
-								dispose();
-							}
+							fireMovementWardInserted();
+							dispose();
 						} catch (OHServiceException e1) {
-							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 					}
