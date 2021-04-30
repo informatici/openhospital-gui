@@ -125,7 +125,7 @@ public class WardPharmacy extends ModalJFrame implements
 	
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = LoggerFactory.getLogger(WardPharmacy.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(WardPharmacy.class);
 
 	private JComboBox jComboBoxWard;
 	private JLabel jLabelWard;
@@ -1653,7 +1653,7 @@ public class WardPharmacy extends ModalJFrame implements
 									exc.getMessage(),
 									MessageBundle.getMessage("angal.hospital"),
 									JOptionPane.PLAIN_MESSAGE);
-							logger.info("Export to excel error : {}", exc.getMessage());
+							LOGGER.info("Export to excel error : {}", exc.getMessage());
 						}
 
 					}

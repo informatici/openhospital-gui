@@ -38,7 +38,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Menu {
 
-	private static Logger logger = LoggerFactory.getLogger(Menu.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Menu.class);
 
 	private static final Pattern DELIMITER = Pattern.compile("[._\\-+]");
 	private static final String MIN_JAVA_VERSION = "1.8";
@@ -47,8 +47,7 @@ public class Menu {
 	 * Create the GUI and show it.
 	 */
 	private static void createAndShowGUI() {
-		logger = LoggerFactory.getLogger(Menu.class);
-		logger.info("\n\n=====================\nStarting Open Hospital\n=====================\n");
+		LOGGER.info("\n\n=====================\nStarting Open Hospital\n=====================\n");
 		checkOHVersion();
 		checkJavaVersion();
 		JFrame.setDefaultLookAndFeelDecorated(false);
@@ -59,15 +58,15 @@ public class Menu {
 
 	private static void checkOHVersion() {
 		Version.initialize();
-		logger.info("Open Hospital version {}.{}.{}", Version.VER_MAJOR, Version.VER_MINOR, Version.VER_RELEASE);
+		LOGGER.info("Open Hospital version {}.{}.{}", Version.VER_MAJOR, Version.VER_MINOR, Version.VER_RELEASE);
 	}
 
 	public static void checkJavaVersion() {
 		String version = System.getProperty("java.version");
-		logger.info("Java version {}", version);
+		LOGGER.info("Java version {}", version);
 		if (!isAtLeastVersion(MIN_JAVA_VERSION)) {
-			logger.error("Java version {} or higher is required.", MIN_JAVA_VERSION);
-			logger.info("\n\n=====================\n Open Hospital closed \n=====================\n");
+			LOGGER.error("Java version {} or higher is required.", MIN_JAVA_VERSION);
+			LOGGER.info("\n\n=====================\n Open Hospital closed \n=====================\n");
 			System.exit(1);
 		}
 	}

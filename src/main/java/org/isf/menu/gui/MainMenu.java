@@ -67,14 +67,14 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private boolean flag_Xmpp = false;
 	private boolean flag_Sms = false;
 
-	private final Logger logger = LoggerFactory.getLogger(MainMenu.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
 
 	public void loginInserted(AWTEvent e) {
 		if (e.getSource() instanceof User) {
 			myUser = (User) e.getSource();
 			MDC.put("OHUser", myUser.getUserName());
 			MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
-			logger.info("Logging: \"{}\" user has logged the system.", myUser.getUserName());
+			LOGGER.info("Logging: \"{}\" user has logged the system.", myUser.getUserName());
 		}
 	}
 
@@ -132,7 +132,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			internalPharmacies = GeneralData.INTERNALPHARMACIES;
 			debug = GeneralData.DEBUG;
 			if (debug) {
-				logger.info("Debug: OpenHospital in debug mode.");
+				LOGGER.info("Debug: OpenHospital in debug mode.");
 			}
 			flag_Xmpp = GeneralData.XMPPMODULEENABLED;
 			flag_Sms = GeneralData.SMSENABLED;
@@ -148,13 +148,13 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 
 		if (singleUser) {
-			logger.info("Logging: Single User mode.");
+			LOGGER.info("Logging: Single User mode.");
 			myUser = new User("admin", new UserGroup("admin", ""), "admin", "");
 			MDC.put("OHUser", myUser.getUserName());
 			MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
 		} else {
 			// get an user
-			logger.info("Logging: Multi User mode.");
+			LOGGER.info("Logging: Multi User mode.");
 			new Login(this);
 
 			if (myUser == null) {
@@ -188,14 +188,14 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				String message = e.getMessage();
 				if (message.contains("SASL authentication DIGEST-MD5 failed")) {
 					if (myUser.getUserName().equals("admin")) {
-						logger.error("Cannot use \"admin\" user, please consider to create another user under the admin group");
+						LOGGER.error("Cannot use \"admin\" user, please consider to create another user under the admin group");
 					} else {
-						logger.error("Passwords not matching, please drop XMPP user and login OH again with the same user");
+						LOGGER.error("Passwords not matching, please drop XMPP user and login OH again with the same user");
 					}
 				} else if (message.contains("XMPPError connecting")) {
-					logger.error("No XMPP Server seems to be running: set XMPPMODULEENABLED = false");
+					LOGGER.error("No XMPP Server seems to be running: set XMPPMODULEENABLED = false");
 				} else {
-					logger.error("An error occurs: {}", e.getMessage());
+					LOGGER.error("An error occurs: {}", e.getMessage());
 				}
 				flag_Xmpp = GeneralData.XMPPMODULEENABLED = false;
 			}
@@ -212,7 +212,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 					junkMenu.add(umi);
 				if (umi.getCode().equalsIgnoreCase("communication")) {
 					if (flag_Xmpp) {
-						logger.info("Single user mode: set XMPPMODULEENABLED = false");
+						LOGGER.info("Single user mode: set XMPPMODULEENABLED = false");
 						flag_Xmpp = GeneralData.XMPPMODULEENABLED = false;
 					}
 					junkMenu.add(umi);
@@ -302,8 +302,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	private void actionExit(int status) {
 		if (status == 2)
-			logger.info("Login failed.");
-		logger.info("\n\n=====================\n Open Hospital closed \n=====================\n");
+			LOGGER.info("Login failed.");
+		LOGGER.info("\n\n=====================\n Open Hospital closed \n=====================\n");
 		System.exit(status);
 	}
 

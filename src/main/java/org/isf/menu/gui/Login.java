@@ -55,7 +55,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 	private static final long serialVersionUID = 76205822226035164L;
 
-	private final Logger logger = LoggerFactory.getLogger(Login.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Login.class);
 
 	private EventListenerList loginListeners = new EventListenerList();
 
@@ -158,7 +158,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		}
 		if (!found) {
 
-			logger.warn("Login failed: {}", message);
+			LOGGER.warn("Login failed: {}", message);
 			JOptionPane.showMessageDialog(this, message, "",
 					JOptionPane.PLAIN_MESSAGE);
 			pwd.setText("");
@@ -172,7 +172,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	public void actionPerformed(ActionEvent event) {
 		String command = event.getActionCommand();
 		if (command.equals(MessageBundle.getMessage("angal.common.cancel"))) {
-			logger.warn("Login cancelled.");
+			LOGGER.warn("Login cancelled.");
 			dispose();
 		} else if (command
 				.equals(MessageBundle.getMessage("angal.menu.submit"))) {
