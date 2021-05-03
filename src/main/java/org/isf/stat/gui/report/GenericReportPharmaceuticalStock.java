@@ -45,7 +45,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class GenericReportPharmaceuticalStock {
 	
-	private final Logger logger = LoggerFactory.getLogger(GenericReportPharmaceuticalStock.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPharmaceuticalStock.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportPharmaceuticalStock(Date date, String jasperFileName, String filter, String groupBy, String sortBy, boolean toExcel) {
@@ -74,7 +74,7 @@ public class GenericReportPharmaceuticalStock {
                 }
 			}
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
         }
 	}

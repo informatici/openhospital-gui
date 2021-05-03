@@ -49,7 +49,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class GenericReportPharmaceuticalStockCard {
 	
-	private static final Logger logger = LoggerFactory.getLogger(GenericReportPharmaceuticalStockCard.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPharmaceuticalStockCard.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportPharmaceuticalStockCard(String jasperFileName, Date dateFrom, Date dateTo, Medical medical, Ward ward, boolean toExcel) {
@@ -80,7 +80,7 @@ public class GenericReportPharmaceuticalStockCard {
                 }
 			}
         } catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
         }
 	}

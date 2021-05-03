@@ -109,7 +109,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = LoggerFactory.getLogger(MovStockBrowser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MovStockBrowser.class);
 
 	private final JFrame myFrame;
 	private JPanel contentPane;
@@ -1064,7 +1064,7 @@ public class MovStockBrowser extends ModalJFrame {
 								exc.getMessage(),
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						logger.info("Export to excel error : {}", exc.getMessage());
+						LOGGER.info("Export to excel error : {}", exc.getMessage());
 					}
 				}
 			}
