@@ -1001,7 +1001,7 @@ public class MovStockMultipleCharging extends JDialog {
 			// First format the cell value as required
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if (value != null)
-				value = formatter.format((Number) value);
+				value = formatter.format(value);
 			setHorizontalAlignment(columnAlignment[column]);
 			if (!table.isCellEditable(row, column)) {
 				cell.setBackground(Color.LIGHT_GRAY);
