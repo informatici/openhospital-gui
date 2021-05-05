@@ -388,7 +388,7 @@ public class WardPharmacyRectify extends JDialog {
 							return;
 						}
 					
-						double lotQty = selectedLot.getQuantity();
+						double lotQty = selectedLot.getWardsTotQuantity();
 						double newQty = (Double) jSpinnerNewQty.getValue();
 						double movQuantity = lotQty - newQty;
 
@@ -581,8 +581,6 @@ public class WardPharmacyRectify extends JDialog {
 					jLabelLotQty.setText(medWard.getQty().toString());
 					jLabelInLot.setVisible(true);
 					selectedLot = medWard.getLot();
-					selectedLot.setQuantity(medWard.getQty().intValue());
-					
 				}
 			} while (drugChooseList == null);
 		}
