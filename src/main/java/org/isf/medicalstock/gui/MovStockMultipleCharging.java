@@ -872,9 +872,9 @@ public class MovStockMultipleCharging extends JDialog {
 			} else if (c == 8) {
 				return cost;
 			} else if (c == 9) {
-				if (cost != null)
+				if (cost != null) {
 					return cost.multiply(new BigDecimal(total));
-				else return null;
+				}
 			}
 			return null;
 		}
@@ -1000,8 +1000,9 @@ public class MovStockMultipleCharging extends JDialog {
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			// First format the cell value as required
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			if (value != null)
+			if (value != null) {
 				value = formatter.format(value);
+			}
 			setHorizontalAlignment(columnAlignment[column]);
 			if (!table.isCellEditable(row, column)) {
 				cell.setBackground(Color.LIGHT_GRAY);

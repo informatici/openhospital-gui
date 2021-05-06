@@ -578,10 +578,12 @@ public class WardPharmacyRectify extends JDialog {
 
 			if (ok == JOptionPane.OK_OPTION) {
 				int row = lotTable.getSelectedRow();
-				if (row != -1) medWard = drugChooseList.get(row);
-					else return null;
-				
-				jTextFieldLotNumber.setText( medWard.getLot().getCode());
+				if (row != -1) {
+					medWard = drugChooseList.get(row);
+				} else {
+					return null;
+				}
+				jTextFieldLotNumber.setText(medWard.getLot().getCode());
 				jSpinnerNewQty.setValue(medWard.getQty());
 				jLabelLotQty.setText(medWard.getQty().toString());
 				jLabelInLot.setVisible(true);

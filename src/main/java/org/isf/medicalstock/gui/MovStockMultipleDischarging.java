@@ -625,10 +625,11 @@ public class MovStockMultipleDischarging extends JDialog {
 					if (aLot.getCode().equals(mov.getLot().getCode())) {
 						int aLotQty = aLot.getMainStoreQuantity();
 						int newQty = aLotQty - mov.getQuantity();
-						if (newQty == 0) 
+						if (newQty == 0) {
 							lotIterator.remove();
-						else 
+						} else {
 							lotIterator.set(aLot);
+						}
 					}
 				}
 			}
