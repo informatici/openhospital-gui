@@ -760,7 +760,7 @@ ORDER BY ORDERING_FIELD ASC, MOV_DATE ASC]]>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{INC_VALUE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ORDERING_FIELD}.equals( "3" ) ? $V{IN_OUT_QTY} : $V{INC_VALUE}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="false">
 				<reportElement key="textField-23" style="opening" x="463" y="2" width="53" height="16" forecolor="#000000" uuid="9f3ff4e1-9ae2-4307-a598-e158060f7892"/>
