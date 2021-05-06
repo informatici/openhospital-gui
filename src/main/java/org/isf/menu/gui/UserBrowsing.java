@@ -27,6 +27,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -40,6 +41,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -86,9 +88,9 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private JComboBox pbox;
 	private ArrayList<User> pUser;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.userbrowser.user.txt"),
-			MessageBundle.getMessage("angal.userbrowser.group.txt"),
-			MessageBundle.getMessage("angal.userbrowser.description.txt") };
+			MessageBundle.getMessage("angal.userbrowser.user.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.userbrowser.group.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.userbrowser.description.txt").toUpperCase() };
 	private int[] pColumnWidth = { 70, 70, 150 };
 	private User user;
 	private DefaultTableModel model;
