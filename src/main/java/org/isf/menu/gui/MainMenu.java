@@ -335,7 +335,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 							}
 						}
 					} catch (InstantiationException | ClassNotFoundException | IllegalAccessException ie) {
-						LOGGER.error("", ie);
+						LOGGER.error("Error instantiating menu item: '{}' with class '{}'.", u.getCode(), u.getMyClass());
 					}
 					break;
 				}
