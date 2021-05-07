@@ -23,11 +23,8 @@ package org.isf.menu.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -41,7 +38,6 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -79,10 +75,6 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		}
 	}
 
-	private static final int DEFAULT_WIDTH = 400;
-	private static final int DEFAULT_HEIGHT = 200;
-	private int pfrmWidth;
-	private int pfrmHeight;
 	private int selectedrow;
 	private JLabel selectlabel;
 	private JComboBox pbox;
@@ -106,13 +98,6 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		setTitle(MessageBundle.getMessage("angal.userbrowser.title"));
 		myFrame = this;
-
-		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		pfrmWidth = (screensize.width / 2) + 100;
-		pfrmHeight = screensize.height / 2;
-		setBounds(screensize.width / 4, screensize.height / 4, pfrmWidth, pfrmHeight);
 
 		model = new UserBrowserModel();
 		table = new JTable(model);
@@ -279,6 +264,9 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		buttonPanel.add(buttonClose);
 
 		add(buttonPanel, BorderLayout.SOUTH);
+
+		pack();
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
