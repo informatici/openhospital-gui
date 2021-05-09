@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 import net.sf.jasperreports.view.JasperViewer;
 
 public class WardVisitsReport {
-	   private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPatient.class);
+	   private static final Logger LOGGER = LoggerFactory.getLogger(WardVisitsReport.class);
 
 		public WardVisitsReport(String string, Date date, String jasperFileName) {
 			try{
