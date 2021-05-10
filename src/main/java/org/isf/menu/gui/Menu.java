@@ -47,7 +47,9 @@ public class Menu {
 	 * Create the GUI and show it.
 	 */
 	private static void createAndShowGUI() {
-		LOGGER.info("\n\n=====================\nStarting Open Hospital\n=====================\n");
+		String newLine = System.lineSeparator();
+		LOGGER.info("{}{}====================={}Starting Open Hospital{}====================={}", newLine, newLine, newLine, newLine, newLine);
+
 		checkOHVersion();
 		checkJavaVersion();
 		JFrame.setDefaultLookAndFeelDecorated(false);
@@ -66,7 +68,8 @@ public class Menu {
 		LOGGER.info("Java version {}", version);
 		if (!isAtLeastVersion(MIN_JAVA_VERSION)) {
 			LOGGER.error("Java version {} or higher is required.", MIN_JAVA_VERSION);
-			LOGGER.info("\n\n=====================\n Open Hospital closed \n=====================\n");
+			String newLine = System.lineSeparator();
+			LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine, newLine, newLine, newLine);
 			System.exit(1);
 		}
 	}
@@ -103,12 +106,6 @@ public class Menu {
 	public static void main(String[] args) {
 		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		Context.setApplicationContext(context);
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-
-			public void run() {
-				createAndShowGUI();
-			}
-		});
-
+		javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI());
 	}
 }
