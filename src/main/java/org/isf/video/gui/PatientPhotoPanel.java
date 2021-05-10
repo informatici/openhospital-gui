@@ -60,7 +60,7 @@ public class PatientPhotoPanel extends JPanel {
 
 	private static final long serialVersionUID = 9129641275344016618L;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(PatientInsertExtended.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
 
 	// Photo Components:
 	private JPanel jPhotoPanel = null;

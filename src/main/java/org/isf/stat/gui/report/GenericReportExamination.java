@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 import net.sf.jasperreports.view.JasperViewer;
 
 public class GenericReportExamination {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPatient.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportExamination.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext()
 			.getBean(JasperReportsManager.class);
 
