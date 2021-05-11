@@ -872,7 +872,9 @@ public class MovStockMultipleCharging extends JDialog {
 			} else if (c == 8) {
 				return cost;
 			} else if (c == 9) {
-				return cost.multiply(new BigDecimal(total));
+				if (cost != null) {
+					return cost.multiply(new BigDecimal(total));
+				}
 			}
 			return null;
 		}
@@ -998,7 +1000,9 @@ public class MovStockMultipleCharging extends JDialog {
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			// First format the cell value as required
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			value = formatter.format((Number) value);
+			if (value != null) {
+				value = formatter.format(value);
+			}
 			setHorizontalAlignment(columnAlignment[column]);
 			if (!table.isCellEditable(row, column)) {
 				cell.setBackground(Color.LIGHT_GRAY);
@@ -1065,7 +1069,7 @@ public class MovStockMultipleCharging extends JDialog {
 			} else if (c == 2) {
 				return TimeTools.formatDateTime(lot.getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			} else if (c == 3) {
-				return lot.getQuantity();
+				return lot.getMainStoreQuantity();
 			} else if (c == 4) {
 				return lot.getCost();
 			}

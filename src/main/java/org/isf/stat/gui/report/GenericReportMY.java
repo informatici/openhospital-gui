@@ -49,7 +49,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * -----------------------------------------------------------------*/
 public class GenericReportMY {
 
-    private final Logger logger = LoggerFactory.getLogger(GenericReportMY.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportMY.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportMY(Integer month, Integer year, String jasperFileName, String defaultName, boolean toExcel) {
@@ -78,7 +78,7 @@ public class GenericReportMY {
                 }
 			}
 		} catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
 		}
 	}

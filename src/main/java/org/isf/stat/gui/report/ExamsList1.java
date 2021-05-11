@@ -37,7 +37,7 @@ import net.sf.jasperreports.view.JasperViewer;
 
 public class ExamsList1 {
 
-	private final Logger logger = LoggerFactory.getLogger(ExamsList1.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExamsList1.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public ExamsList1() {
@@ -53,7 +53,7 @@ public class ExamsList1 {
 				rt.exec(GeneralData.VIEWER + " " + jasperReportResultDto.getFilename());
 			}
 		} catch (Exception e) {
-			logger.error("", e);
+			LOGGER.error("", e);
 			JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"),
 					MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
 		}

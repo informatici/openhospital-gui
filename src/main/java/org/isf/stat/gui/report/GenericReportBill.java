@@ -21,10 +21,7 @@
  */
 package org.isf.stat.gui.report;
 
-import java.io.File;
-import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
@@ -32,22 +29,14 @@ import javax.swing.JOptionPane;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.TxtPrinter;
-import org.isf.hospital.manager.HospitalBrowsingManager;
-import org.isf.hospital.model.Hospital;
 import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
 import org.isf.serviceprinting.manager.PrintReceipt;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
-import org.isf.utils.db.DbSingleJpaConn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 /*
@@ -55,7 +44,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class GenericReportBill {
 
-    private final Logger logger = LoggerFactory.getLogger(GenericReportBill.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportBill.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportBill(Integer billID, String jasperFileName) {
@@ -93,7 +82,7 @@ public class GenericReportBill {
 					new PrintReceipt(jasperReportTxtResultDto.getJasperPrint(), jasperReportTxtResultDto.getFilename());
 			}
 		} catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
         }
 	}
