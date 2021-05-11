@@ -415,7 +415,7 @@ public class WardPharmacyRectify extends JDialog {
 							
 							movStockInsertingManager.storeLot(selectedLot.getCode(), selectedLot, med);
 							movWardBrowserManager.newMovementWard(new MovementWard(
-									wardSelected, 
+									selectedWard, 
 									new GregorianCalendar(), 
 									false, null, 0, 0, 
 									reason, 
