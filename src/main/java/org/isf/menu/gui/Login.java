@@ -129,7 +129,6 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		LoginPanel panel = new LoginPanel(this);
 		add(panel);
 		pack();
-		pwd.requestFocusInWindow();
 
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
