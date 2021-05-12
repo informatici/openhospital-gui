@@ -57,8 +57,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
@@ -548,14 +546,10 @@ public class LabNew extends JDialog implements SelectionListener {
 			for (String elem : matList) {
 				jComboBoxMaterial.addItem(elem);
 			}
-			jComboBoxMaterial.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					selectedLab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
-					examItems.get(jTableExams.getSelectedRow()).setMaterial(selectedLab.getMaterial());
+			jComboBoxMaterial.addActionListener(e -> {
+				selectedLab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
+				examItems.get(jTableExams.getSelectedRow()).setMaterial(selectedLab.getMaterial());
 //					jTableExams.updateUI();
-				}
 			});
 			jComboBoxMaterial.setPreferredSize(new Dimension(EastWidth, ComponentHeight));
 			jComboBoxMaterial.setMaximumSize(new Dimension(EastWidth, ComponentHeight));
@@ -748,24 +742,20 @@ public class LabNew extends JDialog implements SelectionListener {
 			
 			jTableExams.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			ListSelectionModel listSelectionModel = jTableExams.getSelectionModel();
-			listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+			listSelectionModel.addListSelectionListener(e -> {
+			// Check that mouse has been released.
+			if (!e.getValueIsAdjusting()) {
+				int selectedRow = jTableExams.getSelectedRow();
 				
-				public void valueChanged(ListSelectionEvent e) {
-				// Check that mouse has been released.
-				if (!e.getValueIsAdjusting()) {
-					int selectedRow = jTableExams.getSelectedRow();
+				if (selectedRow > -1) {
+					selectedLab = (Laboratory)jTableExams.getValueAt(selectedRow, -1);
+					jComboBoxMaterial.setSelectedItem(labManager.getMaterialTranslated(selectedLab.getMaterial()));
+					jTextAreaNote.setText(selectedLab.getNote());
+					jPanelResults = getJPanelResults();
+					jComboBoxMaterial.setEnabled(true);
 					
-					if (selectedRow > -1) {
-						selectedLab = (Laboratory)jTableExams.getValueAt(selectedRow, -1);
-						jComboBoxMaterial.setSelectedItem(labManager.getMaterialTranslated(selectedLab.getMaterial()));
-						jTextAreaNote.setText(selectedLab.getNote());
-						jPanelResults = getJPanelResults();
-						jComboBoxMaterial.setEnabled(true);
-						
-						//modified = false;
-						validate();
-						repaint();
-						}
+					validate();
+					repaint();
 					}
 				}
 			});
