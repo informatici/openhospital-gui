@@ -52,6 +52,9 @@ import javax.swing.event.MouseInputAdapter;
 public class Cropping extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final int MAX_W = 2500;
+	private static final int MAX_H = 2500;
 	
 	BufferedImage image;
 	Dimension size;
@@ -70,11 +73,12 @@ public class Cropping extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		int x = 0;//(getWidth() - size.width) / 2;
-		int y = 0;//(getHeight() - size.height) / 2;
+		int x = 0;// (getWidth() - size.width) / 2;
+		int y = 0;// (getHeight() - size.height) / 2;
 		g2.drawImage(image, x, y, this);
-		if (clip == null)
+		if (clip == null) {
 			createClip();
+		}
 		g2.setPaint(Color.red);
 		g2.draw(clip);
 	}
@@ -88,7 +92,7 @@ public class Cropping extends JPanel {
 		clip.setLocation(x, y);
 		repaint();
 	}
-	
+
 	public void resizeClip(int x, int y) {
 		// keep clip within raster
 		int x0 = 100;
@@ -105,7 +109,9 @@ public class Cropping extends JPanel {
 
 	private void createClip() {
 		int min = Math.min(size.width, size.height);
-		if (min > 160) min = 160;
+		if (min > 160) {
+			min = 160;
+		}
 		clip = new Rectangle(min, min);
 		clip.x = (size.width - clip.width) / 2;
 		clip.y = (size.height - clip.height) / 2;
@@ -115,8 +121,16 @@ public class Cropping extends JPanel {
 		try {
 			int w = clip.width;
 			int h = clip.height;
-			int x0 = 0;//(getWidth() - size.width) / 2;
-			int y0 = 0;//(getHeight() - size.height) / 2;
+
+			// TODO ask for maximum photo size limit values -> currently we could store up to 16 mb for an image in DB
+			if (w > MAX_W) {
+				w = MAX_W;
+			}
+			if (h > MAX_H) {
+				h = MAX_H;
+			}
+			int x0 = 0;
+			int y0 = 0;
 			int x = clip.x - x0;
 			int y = clip.y - y0;
 			clipped = image.getSubimage(x, y, w, h);
@@ -130,6 +144,7 @@ public class Cropping extends JPanel {
 	public JPanel getUIPanel() {
 		JButton clip = new JButton("save");
 		clip.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				clipImage();
 			}
@@ -156,6 +171,7 @@ public class Cropping extends JPanel {
 }
 
 class ClipMover extends MouseInputAdapter {
+
 	Cropping cropping;
 	Point offset;
 	boolean dragging;
@@ -189,6 +205,7 @@ class ClipMover extends MouseInputAdapter {
 }
 
 class ClipMoverAndResizer extends MouseInputAdapter {
+
 	Cropping cropping;
 	Point offset;
 	boolean dragging;
@@ -204,8 +221,7 @@ class ClipMoverAndResizer extends MouseInputAdapter {
 
 	public void mouseMoved(MouseEvent e) {
 		Point p = e.getPoint();
-		if (Math.abs(cropping.clip.getMaxX() - p.getX()) <= precision &&
-				Math.abs(cropping.clip.getMaxY() - p.getY()) <= precision) {
+		if (Math.abs(cropping.clip.getMaxX() - p.getX()) <= precision && Math.abs(cropping.clip.getMaxY() - p.getY()) <= precision) {
 			cropping.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
 		} else if (cropping.clip.contains(p)) {
 			cropping.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
@@ -217,8 +233,7 @@ class ClipMoverAndResizer extends MouseInputAdapter {
 
 	public void mousePressed(MouseEvent e) {
 		Point p = e.getPoint();
-		if (Math.abs(cropping.clip.getMaxX() - p.getX()) <= precision &&
-				Math.abs(cropping.clip.getMaxY() - p.getY()) <= precision) {
+		if (Math.abs(cropping.clip.getMaxX() - p.getX()) <= precision && Math.abs(cropping.clip.getMaxY() - p.getY()) <= precision) {
 			cropping.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
 			resizing = true;
 		} else if (cropping.clip.contains(p)) {
@@ -242,8 +257,8 @@ class ClipMoverAndResizer extends MouseInputAdapter {
 			cropping.setClip(x, y);
 		} else if (resizing) {
 			int x = e.getX() - cropping.clip.x;
-			//int y = e.getY() - cropping.clip.y;
-			cropping.resizeClip(x, x); //square
+			// int y = e.getY() - cropping.clip.y;
+			cropping.resizeClip(x, x); // square
 		}
 	}
 }
