@@ -97,7 +97,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = LoggerFactory.getLogger(MedicalBrowser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalBrowser.class);
 
 	public void medicalInserted(Medical medical) {
 		pMedicals.add(0, medical);
@@ -472,7 +472,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 								exc.getMessage(),
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						logger.error("Export to excel error : {}", exc.getMessage());
+						LOGGER.error("Export to excel error : {}", exc.getMessage());
 					}
 				}
 			}

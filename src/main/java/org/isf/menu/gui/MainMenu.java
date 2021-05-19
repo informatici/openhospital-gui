@@ -24,7 +24,7 @@ package org.isf.menu.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagLayout;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,7 +33,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
@@ -42,6 +41,9 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -54,6 +56,7 @@ import org.isf.sms.service.SmsSender;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.layout.SpringUtilities;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.service.Server;
 import org.jivesoftware.smack.XMPPException;
@@ -64,20 +67,23 @@ import org.slf4j.MDC;
 public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener {
 
 	private static final long serialVersionUID = 7620582079916035164L;
-	private boolean flag_Xmpp = false;
-	private boolean flag_Sms = false;
+	public static final String ADMIN_STR = "admin";
+	private boolean flag_Xmpp;
+	private boolean flag_Sms;
 
-	private final Logger logger = LoggerFactory.getLogger(MainMenu.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
 
+	@Override
 	public void loginInserted(AWTEvent e) {
 		if (e.getSource() instanceof User) {
 			myUser = (User) e.getSource();
 			MDC.put("OHUser", myUser.getUserName());
 			MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
-			logger.info("Logging: \"{}\" user has logged the system.", myUser.getUserName());
+			LOGGER.info("Logging: \"{}\" user has logged into the system.", myUser.getUserName());
 		}
 	}
 
+	@Override
 	public void commandInserted(AWTEvent e) {
 		if (e.getSource() instanceof String) {
 			launchApp((String) e.getSource());
@@ -86,9 +92,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	public static boolean checkUserGrants(String code) {
 
-		Iterator<UserMenuItem> it = myMenu.iterator();
-		while (it.hasNext()) {
-			UserMenuItem umi = it.next();
+		for (UserMenuItem umi : myMenu) {
 			if (umi.getCode().equalsIgnoreCase(code)) {
 				return true;
 			}
@@ -96,7 +100,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		return false;
 	}
 
-	private int minButtonSize = 0;
+	private int minButtonSize;
 
 	public void setMinButtonSize(int value) {
 		minButtonSize = value;
@@ -106,18 +110,18 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		return minButtonSize;
 	}
 
-	private static User myUser = null;
-	private static ArrayList<UserMenuItem> myMenu = null;
+	private static User myUser;
+	private static ArrayList<UserMenuItem> myMenu;
 
 	final int menuXPosition = 10;
 	final int menuYDisplacement = 75;
 
 	// singleUser=true : one user
-	private boolean singleUser = false;
+	private boolean singleUser;
 	// internalPharmacies=false : no internalPharmacies
-	private boolean internalPharmacies = false;
+	private boolean internalPharmacies;
 	// debug mode
-	private boolean debug = false;
+	private boolean debug;
 	private MainMenu myFrame;
 
 	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
@@ -132,7 +136,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			internalPharmacies = GeneralData.INTERNALPHARMACIES;
 			debug = GeneralData.DEBUG;
 			if (debug) {
-				logger.info("Debug: OpenHospital in debug mode.");
+				LOGGER.info("Debug: OpenHospital in debug mode.");
 			}
 			flag_Xmpp = GeneralData.XMPPMODULEENABLED;
 			flag_Sms = GeneralData.SMSENABLED;
@@ -148,16 +152,16 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 
 		if (singleUser) {
-			logger.info("Logging: Single User mode.");
-			myUser = new User("admin", new UserGroup("admin", ""), "admin", "");
+			LOGGER.info("Logging: Single User mode.");
+			myUser = new User(ADMIN_STR, new UserGroup(ADMIN_STR, ""), ADMIN_STR, "");
 			MDC.put("OHUser", myUser.getUserName());
 			MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
 		} else {
 			// get an user
-			logger.info("Logging: Multi User mode.");
+			LOGGER.info("Logging: Multi User mode.");
 			new Login(this);
 
-			if (myUser == null) {
+			if (null == myUser) {
 				// Login failed
 				actionExit(2);
 			}
@@ -187,15 +191,15 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			} catch (XMPPException e) {
 				String message = e.getMessage();
 				if (message.contains("SASL authentication DIGEST-MD5 failed")) {
-					if (myUser.getUserName().equals("admin")) {
-						logger.error("Cannot use \"admin\" user, please consider to create another user under the admin group");
+					if (ADMIN_STR.equals(myUser.getUserName())) {
+						LOGGER.error("Cannot use \"admin\" user, please consider creating another user under the admin group.");
 					} else {
-						logger.error("Passwords not matching, please drop XMPP user and login OH again with the same user");
+						LOGGER.error("Passwords do not match, please drop the XMPP user and login to OH again with the same user.");
 					}
 				} else if (message.contains("XMPPError connecting")) {
-					logger.error("No XMPP Server seems to be running: set XMPPMODULEENABLED = false");
+					LOGGER.error("No XMPP Server seems to be running: set XMPPMODULEENABLED = false");
 				} else {
-					logger.error("An error occurs: {}", e.getMessage());
+					LOGGER.error("An error occurs: {}", e.getMessage());
 				}
 				flag_Xmpp = GeneralData.XMPPMODULEENABLED = false;
 			}
@@ -205,36 +209,30 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// if in singleUser mode remove "users" and "communication" menu
 		if (singleUser) {
 			ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
-			Iterator<UserMenuItem> it = myMenu.iterator();
-			while (it.hasNext()) {
-				UserMenuItem umi = it.next();
-				if (umi.getCode().equalsIgnoreCase("USERS") || umi.getMySubmenu().equalsIgnoreCase("USERS"))
+			for (UserMenuItem umi : myMenu) {
+				if ("USERS".equalsIgnoreCase(umi.getCode()) || "USERS".equalsIgnoreCase(umi.getMySubmenu())) {
 					junkMenu.add(umi);
-				if (umi.getCode().equalsIgnoreCase("communication")) {
+				}
+				if ("communication".equalsIgnoreCase(umi.getCode())) {
 					if (flag_Xmpp) {
-						logger.info("Single user mode: set XMPPMODULEENABLED = false");
+						LOGGER.info("Single user mode: set XMPPMODULEENABLED = false");
 						flag_Xmpp = GeneralData.XMPPMODULEENABLED = false;
 					}
 					junkMenu.add(umi);
 				}
 			}
-			Iterator<UserMenuItem> altIt = junkMenu.iterator();
-			while (altIt.hasNext()) {
-				UserMenuItem umi = altIt.next();
+			for (UserMenuItem umi : junkMenu) {
 				myMenu.remove(umi);
 			}
 		} else { // remove only "communication" if flag_Xmpp = false
 			if (!flag_Xmpp) {
 				ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
-				Iterator<UserMenuItem> it = myMenu.iterator();
-				while (it.hasNext()) {
-					UserMenuItem umi = it.next();
-					if (umi.getCode().equalsIgnoreCase("communication"))
+				for (UserMenuItem umi : myMenu) {
+					if ("communication".equalsIgnoreCase(umi.getCode())) {
 						junkMenu.add(umi);
+					}
 				}
-				Iterator<UserMenuItem> altIt = junkMenu.iterator();
-				while (altIt.hasNext()) {
-					UserMenuItem umi = altIt.next();
+				for (UserMenuItem umi : junkMenu) {
 					myMenu.remove(umi);
 				}
 			}
@@ -243,34 +241,28 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// if not internalPharmacies mode remove "medicalsward" menu
 		if (!internalPharmacies) {
 			ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
-			Iterator<UserMenuItem> it = myMenu.iterator();
-			while (it.hasNext()) {
-				UserMenuItem umi = it.next();
-				if (umi.getCode().equalsIgnoreCase("MEDICALSWARD") || umi.getMySubmenu().equalsIgnoreCase("MEDICALSWARD"))
+			for (UserMenuItem umi : myMenu) {
+				if ("MEDICALSWARD".equalsIgnoreCase(umi.getCode()) || "MEDICALSWARD".equalsIgnoreCase(umi.getMySubmenu())) {
 					junkMenu.add(umi);
+				}
 			}
-			Iterator<UserMenuItem> altIt = junkMenu.iterator();
-			while (altIt.hasNext()) {
-				UserMenuItem umi = altIt.next();
+			for (UserMenuItem umi : junkMenu) {
 				myMenu.remove(umi);
 			}
 		}
 
 		// remove disabled buttons
 		ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
-		Iterator<UserMenuItem> it = myMenu.iterator();
-		while (it.hasNext()) {
-			UserMenuItem umi = it.next();
-			if (!umi.isActive())
+		for (UserMenuItem umi : myMenu) {
+			if (!umi.isActive()) {
 				junkMenu.add(umi);
+			}
 		}
-		Iterator<UserMenuItem> altIt = junkMenu.iterator();
-		while (altIt.hasNext()) {
-			UserMenuItem umi = altIt.next();
+		for (UserMenuItem umi : junkMenu) {
 			myMenu.remove(umi);
 		}
 
-		setTitle(myUser.getUserName());
+		setTitle(MessageBundle.formatMessage("angal.mainmenu.fmt.title", myUser.getUserName()));
 		ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
 		setIconImage(img.getImage());
 		// add panel with buttons to frame
@@ -282,15 +274,13 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = kit.getScreenSize();
 		int screenHeight = screenSize.height;
-
 		int frameHeight = getSize().height;
-
 		setLocation(menuXPosition, screenHeight - frameHeight - menuYDisplacement);
 
 		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		myFrame.setAlwaysOnTop(GeneralData.MAINMENUALWAYSONTOP);
 		myFrame.addWindowListener(new WindowAdapter() {
-
+			@Override
 			public void windowClosing(WindowEvent e) {
 				actionExit(0);
 			}
@@ -301,12 +291,15 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	}
 
 	private void actionExit(int status) {
-		if (status == 2)
-			logger.info("Login failed.");
-		logger.info("\n\n=====================\n Open Hospital closed \n=====================\n");
+		if (2 == status) {
+			LOGGER.info("Login failed.");
+		}
+		String newLine = System.lineSeparator();
+		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine, newLine, newLine, newLine);
 		System.exit(status);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 		launchApp(command);
@@ -319,19 +312,19 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		for (UserMenuItem u : myMenu) {
 			if (u.getCode().equals(itemMenuCode)) {
-				if (u.getCode().equalsIgnoreCase("EXIT")) {
+				if ("EXIT".equalsIgnoreCase(u.getCode())) {
 					actionExit(0);
 				} else if (u.isASubMenu()) {
-					new SubMenu(this, u.getCode(), myMenu);
+					new SubMenu(this, u.getCode(), u.getButtonLabel(), myMenu);
 					break;
 				} else {
 					String app = u.getMyClass();
 					// an empty menu item
-					if (app.equalsIgnoreCase("none"))
+					if ("none".equalsIgnoreCase(app)) {
 						return;
+					}
 					try {
 						Object target = Class.forName(app).newInstance();
-						//Object target = Context.getApplicationContext().getBean(Class.forName(app));
 						try {
 							((ModalJFrame) target).showAsModal(this);
 						} catch (ClassCastException noModalJFrame) {
@@ -341,12 +334,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 								((JDialog) target).setEnabled(true);
 							}
 						}
-					} catch (InstantiationException ie) {
-						ie.printStackTrace();
-					} catch (IllegalAccessException iae) {
-						iae.printStackTrace();
-					} catch (ClassNotFoundException cnfe) {
-						cnfe.printStackTrace();
+					} catch (InstantiationException | ClassNotFoundException | IllegalAccessException ie) {
+						LOGGER.error("Error instantiating menu item: '{}' with class '{}'.", u.getCode(), u.getMyClass());
 					}
 					break;
 				}
@@ -359,71 +348,61 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		private static final long serialVersionUID = 4338749100837551874L;
 
 		private JButton[] button;
-		private MainMenu parentFrame = null;
+		private MainMenu parentFrame;
 
 		public MainPanel(MainMenu parentFrame) {
 			this.parentFrame = parentFrame;
 			int numItems = 0;
 
-			for (UserMenuItem u : myMenu)
-				if (u.getMySubmenu().equals("main"))
+			for (UserMenuItem u : myMenu) {
+				if (u.getMySubmenu().equals("main")) {
 					numItems++;
-
-			// System.out.println(numItems);
-
+				}
+			}
 			button = new JButton[numItems];
 
-			int k = 1;
-
-			for (UserMenuItem u : myMenu)
+			int k = 0;
+			for (UserMenuItem u : myMenu) {
 				if (u.getMySubmenu().equals("main")) {
-					button[k - 1] = new JButton(u.getButtonLabel());
+					button[k] = new JButton(u.getButtonLabel());
+					button[k].setMnemonic(KeyEvent.VK_A + (u.getShortcut() - 'A'));
 
-					button[k - 1].setMnemonic(KeyEvent.VK_A + (int) (u.getShortcut() - 'A'));
-
-					button[k - 1].addActionListener(parentFrame);
-					button[k - 1].setActionCommand(u.getCode());
+					button[k].addActionListener(parentFrame);
+					button[k].setActionCommand(u.getCode());
 					k++;
 				}
+			}
 
-			setButtonsSize(button);
-
-			// setBackground(java.awt.Color.WHITE);
 			JLabel fig = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "LogoMenu.jpg"));
 			add(fig, BorderLayout.WEST);
 
 			JPanel buttons = new JPanel();
-			GridBagLayout layout = new GridBagLayout();
-			buttons.setLayout(layout);
-
-			final int insetsValue = 6;
-
-			for (int i = 0; i < button.length; i++) {
-				buttons.add(button[i], new GBC(0, i).setInsets(insetsValue));
+			buttons.setLayout(new SpringLayout());
+			for (JButton jButton : button) {
+				buttons.add(jButton);
 			}
-
-			add(buttons, BorderLayout.CENTER);
+			SpringUtilities.makeCompactGrid(buttons, button.length, 1, 6, 6, 8, 10);
+			add(buttons, BorderLayout.EAST);
 		}
+	}
 
-		private void setButtonsSize(JButton[] button) {
-			int maxH = 0;
-			int maxMax = 0;
-			int maxMin = 0;
-			int maxPrf = 0;
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension dimension = super.getPreferredSize();
+		String title = this.getTitle();
+		if (title != null) {
+			Font defaultFont = UIManager.getDefaults().getFont("Label.font");
+			int titleStringWidth = SwingUtilities.computeStringWidth(new JLabel().getFontMetrics(defaultFont), title);
 
-			for (int i = 0; i < button.length; i++) {
-				maxH = Math.max(maxH, button[i].getMaximumSize().height);
-				maxMax = Math.max(maxMax, button[i].getMaximumSize().width);
-				maxMin = Math.max(maxMin, button[i].getMinimumSize().width);
-				maxPrf = Math.max(maxPrf, button[i].getPreferredSize().width);
+			// account for titlebar button widths. (estimated)
+			titleStringWidth += 120;
+
+			// +10 accounts for the three dots that are appended when the title is too long
+			if (dimension.getWidth() + 10 <= titleStringWidth) {
+				dimension = new Dimension(titleStringWidth, (int) dimension.getHeight());
 			}
-			for (int i = 0; i < button.length; i++) {
-				button[i].setMaximumSize(new Dimension(maxMax, maxH));
-				button[i].setMinimumSize(new Dimension(maxMin, maxH));
-				button[i].setPreferredSize(new Dimension(maxPrf, maxH));
-			}
-			parentFrame.setMinButtonSize(maxPrf);
 		}
+		return dimension;
 	}
 
 	public static User getUser() {

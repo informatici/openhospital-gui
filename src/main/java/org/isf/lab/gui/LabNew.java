@@ -57,8 +57,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
@@ -146,8 +144,8 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JLabel jLabelDate;
 	private CustomJDateChooser jCalendarDate;
 	private JPanel jPanelMaterial;
-	private JComboBox jComboBoxMaterial;
-	private JComboBox jComboBoxExamResults;
+	private JComboBox<String> jComboBoxMaterial;
+	private JComboBox<String> jComboBoxExamResults;
 	private JPanel jPanelResults;
 	private JPanel jPanelNote;
 	private JPanel jPanelButtons;
@@ -412,7 +410,7 @@ public class LabNew extends JDialog implements SelectionListener {
                        
 			if (selectedExam.getProcedure() == 1) {
 				txtResultValue = new JTextField();
-				jComboBoxExamResults = new JComboBox();
+				jComboBoxExamResults = new JComboBox<>();
 				jComboBoxExamResults.setMaximumSize(new Dimension(EastWidth, ComponentHeight));
 				jComboBoxExamResults.setMinimumSize(new Dimension(EastWidth, ComponentHeight));
 				jComboBoxExamResults.setPreferredSize(new Dimension(EastWidth, ComponentHeight));
@@ -542,20 +540,16 @@ public class LabNew extends JDialog implements SelectionListener {
 		}
 	}
 
-	private JComboBox getJComboBoxMaterial() {
+	private JComboBox<String> getJComboBoxMaterial() {
 		if (jComboBoxMaterial == null) {
-			jComboBoxMaterial = new JComboBox();
+			jComboBoxMaterial = new JComboBox<>();
 			for (String elem : matList) {
 				jComboBoxMaterial.addItem(elem);
 			}
-			jComboBoxMaterial.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					selectedLab.setMaterial(labManager.getMaterialKey((String)jComboBoxMaterial.getSelectedItem()));
-					examItems.get(jTableExams.getSelectedRow()).setMaterial(labManager.getMaterialKey((String)jComboBoxMaterial.getSelectedItem()));
-					jTableExams.updateUI();
-				}
+			jComboBoxMaterial.addActionListener(e -> {
+				selectedLab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
+				examItems.get(jTableExams.getSelectedRow()).setMaterial(selectedLab.getMaterial());
+//					jTableExams.updateUI();
 			});
 			jComboBoxMaterial.setPreferredSize(new Dimension(EastWidth, ComponentHeight));
 			jComboBoxMaterial.setMaximumSize(new Dimension(EastWidth, ComponentHeight));
@@ -748,24 +742,20 @@ public class LabNew extends JDialog implements SelectionListener {
 			
 			jTableExams.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			ListSelectionModel listSelectionModel = jTableExams.getSelectionModel();
-			listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+			listSelectionModel.addListSelectionListener(e -> {
+			// Check that mouse has been released.
+			if (!e.getValueIsAdjusting()) {
+				int selectedRow = jTableExams.getSelectedRow();
 				
-				public void valueChanged(ListSelectionEvent e) {
-					// Check that mouse has been released.
-					if (!e.getValueIsAdjusting()) {
-						int selectedRow = jTableExams.getSelectedRow();
-						
-						if (selectedRow > -1) {
-							selectedLab = (Laboratory)jTableExams.getValueAt(selectedRow, -1);
-							jComboBoxMaterial.setSelectedItem(labManager.getMaterialTranslated(selectedLab.getMaterial()));
-							jTextAreaNote.setText(selectedLab.getNote());
-							jPanelResults = getJPanelResults();
-							jComboBoxMaterial.setEnabled(true);
-							
-							//modified = false;
-							validate();
-							repaint();
-						}
+				if (selectedRow > -1) {
+					selectedLab = (Laboratory)jTableExams.getValueAt(selectedRow, -1);
+					jComboBoxMaterial.setSelectedItem(labManager.getMaterialTranslated(selectedLab.getMaterial()));
+					jTextAreaNote.setText(selectedLab.getNote());
+					jPanelResults = getJPanelResults();
+					jComboBoxMaterial.setEnabled(true);
+					
+					validate();
+					repaint();
 					}
 				}
 			});

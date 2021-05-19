@@ -53,7 +53,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 	public class GenericReportFromDateToDate {
 
-    private final Logger logger = LoggerFactory.getLogger(GenericReportFromDateToDate.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportFromDateToDate.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 		public  GenericReportFromDateToDate(String fromDate, String toDate, String jasperFileName, String defaultName, boolean toExcel) {
@@ -86,7 +86,7 @@ import net.sf.jasperreports.view.JasperViewer;
 			} catch (OHReportException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			} catch (Exception e) {
-                logger.error("", e);
+                LOGGER.error("", e);
                 JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
 			}
 		}

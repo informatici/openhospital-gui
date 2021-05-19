@@ -36,9 +36,7 @@ import org.slf4j.LoggerFactory;
 import net.sf.jasperreports.view.JasperViewer;
 
 public class GenericReportPatientVersion2 {
-
-
-    private final Logger logger = LoggerFactory.getLogger(GenericReportPatient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPatientVersion2.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportPatientVersion2(Integer patientID, String parametersString, Date dateFrom, Date dateTo, String jasperFileName) {
@@ -51,7 +49,7 @@ public class GenericReportPatientVersion2 {
 					rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
 			}
 		} catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
 		}
 	}

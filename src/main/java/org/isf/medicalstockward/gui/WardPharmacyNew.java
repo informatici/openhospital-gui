@@ -686,7 +686,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
                                         
                     ArrayList<MovementWard> manyMovementWard = new ArrayList<>();
                     //MovStockInsertingManager movManager = new MovStockInsertingManager();
-                    boolean result;
 					try {
 						// MovementType typeCharge = new
 						// MedicaldsrstockmovTypeBrowserManager().getMovementType("charge");
@@ -696,17 +695,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 									MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null,medItems.get(i).getLot()));
 						}
 
-						result = wardManager.newMovementWard(manyMovementWard);
+						wardManager.newMovementWard(manyMovementWard);
+						fireMovementWardInserted();
+						dispose();
 					} catch (OHServiceException ex) {
-                        result = false;
+						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
                     }
-					if (result) {
-                        fireMovementWardInserted();
-                        dispose();
-					} else {
-                        JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                    
-                    }	
 				}
 			});
 		}

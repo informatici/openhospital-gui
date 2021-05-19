@@ -59,8 +59,9 @@ import com.github.sarxos.webcam.Webcam;
 public class PatientPhotoPanel extends JPanel {
 
 	private static final long serialVersionUID = 9129641275344016618L;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
 
-	private final Logger logger = LoggerFactory.getLogger(PatientInsertExtended.class);
 
 	private static final int PWOTO_PREVIEW_W = 160;
 	private static final int PWOTO_PREVIEW_H = 160;
@@ -100,9 +101,9 @@ public class PatientPhotoPanel extends JPanel {
 						btnDeletePhoto.setVisible(false);
 						patientFrame.setPatientPhoto(null);
 						externalPanel.updatePhoto(nophoto);
-						logger.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
+						LOGGER.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
 					} else {
-						logger.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
+						LOGGER.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
 					}
 				}
 			});
