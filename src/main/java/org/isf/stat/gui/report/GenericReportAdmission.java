@@ -40,7 +40,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class GenericReportAdmission {
 
-    private final Logger logger = LoggerFactory.getLogger(GenericReportAdmission.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportAdmission.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportAdmission(int admID, int patID, String jasperFileName) {
@@ -54,7 +54,7 @@ public class GenericReportAdmission {
 					rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
 			}
 		} catch (Exception e) {
-            logger.error("", e);
+            LOGGER.error("", e);
             JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
         }
 	}

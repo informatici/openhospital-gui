@@ -60,7 +60,7 @@ public class PatientPhotoPanel extends JPanel {
 
 	private static final long serialVersionUID = 9129641275344016618L;
 	
-	private final Logger logger = LoggerFactory.getLogger(PatientInsertExtended.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
 
 	// Photo Components:
 	private JPanel jPhotoPanel = null;
@@ -97,9 +97,9 @@ public class PatientPhotoPanel extends JPanel {
 						btnDeletePhoto.setVisible(false);
 						patientFrame.setPatientPhoto(null);
 						externalPanel.updatePhoto(nophoto);
-						logger.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
+						LOGGER.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
 					} else {
-						logger.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
+						LOGGER.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
 					}
 				}
 			});

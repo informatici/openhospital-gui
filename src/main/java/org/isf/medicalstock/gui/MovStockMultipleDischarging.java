@@ -606,7 +606,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	}
 	
 	private boolean checkQuantityInLot(Lot lot, double qty) {
-		double lotQty = lot.getQuantity();
+		double lotQty = lot.getMainStoreQuantity();
 		if (qty > lotQty) {
 			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, 
 					MessageBundle.getMessage("angal.medicalstock.movementquantityisgreaterthanthequantityof")); //$NON-NLS-1$
@@ -623,11 +623,11 @@ public class MovStockMultipleDischarging extends JDialog {
 				Lot aLot = (Lot) lotIterator.next();
 				for (Movement mov : movements) {
 					if (aLot.getCode().equals(mov.getLot().getCode())) {
-						int aLotQty = aLot.getQuantity();
+						int aLotQty = aLot.getMainStoreQuantity();
 						int newQty = aLotQty - mov.getQuantity();
-						if (newQty == 0) lotIterator.remove();
-						else {
-							aLot.setQuantity(newQty);
+						if (newQty == 0) {
+							lotIterator.remove();
+						} else {
 							lotIterator.set(aLot);
 						}
 					}
@@ -1053,7 +1053,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			} else if (c == 2) {
 				return TimeTools.formatDateTime(lotList.get(r).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			} else if (c == 3) {
-				return lotList.get(r).getQuantity();
+				return lotList.get(r).getMainStoreQuantity();
 			}
 			return null;
 		}

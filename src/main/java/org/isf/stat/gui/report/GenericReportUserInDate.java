@@ -48,7 +48,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 	public class GenericReportUserInDate {
 
-    private final Logger logger = LoggerFactory.getLogger(GenericReportUserInDate.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportUserInDate.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 		public GenericReportUserInDate(String fromDate, String toDate, String aUser, String jasperFileName) {
@@ -78,7 +78,7 @@ import net.sf.jasperreports.view.JasperViewer;
 					new PrintReceipt(jasperReportTxtResultDto.getJasperPrint(), jasperReportTxtResultDto.getFilename());
 				}
 			} catch (Exception e) {
-                logger.error("", e);
+                LOGGER.error("", e);
                 JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
 			}
 		}

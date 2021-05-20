@@ -51,7 +51,7 @@ public class ChatMessages extends JTextPane {
 	private SimpleAttributeSet keyWord;
 	private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-	private final Logger logger = LoggerFactory.getLogger(ChatMessages.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChatMessages.class);
 
 	public ChatMessages() {
 		setEditable(false);
@@ -121,11 +121,11 @@ public class ChatMessages extends JTextPane {
 			i++;
 		}
 		fromDate = reports[1];
-		logger.debug("fromDate: {}", reports[1]);
+		LOGGER.debug("fromDate: {}", reports[1]);
 		toDate = reports[2];
-		logger.debug("toDate: {}", reports[2]);
+		LOGGER.debug("toDate: {}", reports[2]);
 		typeReport = reports[3];
-		logger.debug("typeReport: {}", reports[3]);
+		LOGGER.debug("typeReport: {}", reports[3]);
 		int position = doc.getEndPosition().getOffset();
 		StyleConstants.setForeground(keyWord, greenColor);
 

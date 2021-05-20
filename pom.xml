@@ -20,7 +20,7 @@
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.framework.version>4.3.28.RELEASE</spring.framework.version>
-		<license.maven.plugin.version>4.0</license.maven.plugin.version>
+		<license.maven.plugin.version>4.1</license.maven.plugin.version>
 	</properties>
 
 	<build>
@@ -247,7 +247,7 @@
 		<dependency>
 		    <groupId>net.sf.jasperreports</groupId>
 		    <artifactId>jasperreports</artifactId>
-		    <version>6.16.0</version>
+		    <version>6.17.0</version>
 		    <exclusions>
 		    	<exclusion>
 		    		<groupId>com.lowagie</groupId>
@@ -263,7 +263,7 @@
 		<dependency>
 		    <groupId>net.sf.jasperreports</groupId>
 		    <artifactId>jasperreports-fonts</artifactId>
-		    <version>6.16.0</version>
+		    <version>6.17.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.toedter</groupId>

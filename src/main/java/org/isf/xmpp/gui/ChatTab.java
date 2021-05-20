@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 public class ChatTab extends JTabbedPane {
 
-	private final Logger logger = LoggerFactory.getLogger(ChatTab.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChatTab.class);
 
 	private static final long serialVersionUID = 1L;
 	public TabButton tab;
@@ -48,7 +48,7 @@ public class ChatTab extends JTabbedPane {
 		super.addTab(title, component);
 		int index;
 		index = indexOfTab(title);
-		logger.debug("index: {}", indexOfTabComponent(this));
+		LOGGER.debug("index: {}", indexOfTabComponent(this));
 		tab = new TabButton(title, indexOfTabComponent(this), this);
 		setTabComponentAt(index, tab);
 
