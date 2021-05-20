@@ -101,6 +101,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ShadowBorder;
 import org.isf.utils.jobjects.VoLimitedTextField;
@@ -2260,7 +2261,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 
 					if (!result) {
-						JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+						MessageDialog.error(null, "angal.common.data.not.saved.msg");
 					} else {
 						dispose();
 					}

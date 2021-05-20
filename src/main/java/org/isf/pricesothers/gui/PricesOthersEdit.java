@@ -46,6 +46,7 @@ import org.isf.pricesothers.manager.PricesOthersManager;
 import org.isf.pricesothers.model.PricesOthers;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class PricesOthersEdit extends JDialog {
@@ -145,7 +146,7 @@ public class PricesOthersEdit extends JDialog {
 			jButtonOK.setText(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
 			jButtonOK.setMnemonic(KeyEvent.VK_O);
 			jButtonOK.addActionListener(new ActionListener() {
-				
+
 				public void actionPerformed(ActionEvent event) {
 
 					pOther.setCode(jTextFieldCode.getText());
@@ -155,32 +156,31 @@ public class PricesOthersEdit extends JDialog {
 					pOther.setDaily(jCheckBoxDaily.isSelected());
 					pOther.setDischarge(jCheckBoxDischarge.isSelected());
 					pOther.setUndefined(jCheckBoxUndefined.isSelected());
-					
+
 					PricesOthersManager pOtherManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 					boolean result = false;
-					try{
+					try {
 						if (insert) {      // inserting
 							result = pOtherManager.newOther(pOther);
 							if (result) {
 								fireOtherInserted();
 							}
-						}
-						else {             // updating
+						} else {             // updating
 							result = pOtherManager.updateOther(pOther);
 							if (result) {
 								fireOtherUpdated();
 							}
 						}
-					}catch(OHServiceException e){
+					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
 					if (!result) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved")); //$NON-NLS-1$
+						MessageDialog.error(null, "angal.common.data.not.saved.msg");
+						dispose();
+					} else {
 						dispose();
 					}
-					else  dispose();
-					
-					}				
+				}
 			});
 		}
 		return jButtonOK;

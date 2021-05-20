@@ -847,7 +847,9 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				} else if (r< opdList.size()+admList.size()){
 					int z = r - admList.size();
 					String status = "" + opdList.get(z).getNewPatient();
-					return (status.compareTo("R")==0?MessageBundle.getMessage("angal.opd.reattendance"):MessageBundle.getMessage("angal.opd.newattendance")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					return (status.compareTo("R") == 0
+							? MessageBundle.getMessage("angal.opd.reattendance.txt")
+							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
 				} else {
 					int f = r - (opdList.size()+admList.size());
 					String ret = "O2: "+(String.valueOf(examinationList.get(f).getPex_sat()));

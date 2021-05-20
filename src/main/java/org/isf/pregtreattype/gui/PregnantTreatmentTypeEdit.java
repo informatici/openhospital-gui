@@ -42,6 +42,7 @@ import org.isf.pregtreattype.manager.PregnantTreatmentTypeBrowserManager;
 import org.isf.pregtreattype.model.PregnantTreatmentType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class PregnantTreatmentTypeEdit extends JDialog{
@@ -215,23 +216,30 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 								if (result) {
 									firePregnantTreatmentInserted();
 								}
-								if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-								else  dispose();
+								if (!result) {
+									MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								}
+								else {
+									dispose();
+								}
 							}
 							else {                          // updating
-								if (descriptionTextField.getText().equals(lastdescription)){
+								if (descriptionTextField.getText().equals(lastdescription)) {
 									dispose();	
-								}else{
+								} else {
 									result = manager.updatePregnantTreatmentType(pregnantTreatmentType);
 									if (result) {
 										firePregnantTreatmentUpdated();
 									}
-									if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-									else  dispose();
+									if (!result) {
+										MessageDialog.error(null, "angal.common.data.not.saved.msg");
+									}
+									else {
+										dispose();
+									}
 								}
-
 							}
-					}catch(OHServiceException ex){
+					} catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
 					}
                 }

@@ -42,6 +42,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DicomTypeEdit extends JDialog{
@@ -211,8 +212,12 @@ public class DicomTypeEdit extends JDialog{
                             if (result) {
                                 fireDicomTypeInserted(dicomType);
                             }
-                            if (!result) JOptionPane.showMessageDialog(DicomTypeEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                            else  dispose();
+                            if (!result) {
+	                            MessageDialog.error(null, "angal.common.data.not.saved.msg");
+                            }
+                            else {
+                            	dispose();
+                            }
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
 						}
@@ -226,8 +231,12 @@ public class DicomTypeEdit extends JDialog{
                                 if (result) {
                                     fireDicomUpdated();
                                 }
-                                if (!result) JOptionPane.showMessageDialog(DicomTypeEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                                else  dispose();
+                                if (!result) {
+	                                MessageDialog.error(null, "angal.common.data.not.saved.msg");
+                                }
+                                else {
+                                	dispose();
+                                }
 							} catch (OHServiceException e1) {
 								OHServiceExceptionUtil.showMessages(e1, DicomTypeEdit.this);
 						    }

@@ -40,6 +40,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
@@ -226,9 +227,9 @@ public class VaccineTypeEdit extends JDialog{
 							if (result) {
 								fireVaccineInserted();
 								dispose();
-							} else
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							} else {
+								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+							}
 						} catch (OHServiceException e1) {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
@@ -242,9 +243,9 @@ public class VaccineTypeEdit extends JDialog{
 								if (result) {
 									fireVaccineUpdated();
 									dispose();
-								} else
-									JOptionPane.showMessageDialog(null,
-											MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+								} else {
+									MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								}
 							} catch (OHServiceException e1) {
 								result = false;
 								OHServiceExceptionUtil.showMessages(e1);

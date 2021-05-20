@@ -45,6 +45,7 @@ import org.isf.priceslist.manager.PriceListManager;
 import org.isf.priceslist.model.PriceList;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 public class ListBrowser extends ModalJFrame  implements ListListener{
@@ -263,10 +264,9 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 									jTablePriceLists.setModel(new ListBrowserModel());
 
 								} else {
-									JOptionPane.showMessageDialog(null,
-											MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+									MessageDialog.error(null, "angal.common.data.not.saved.msg");
 								}
-							}catch(OHServiceException e){
+							} catch(OHServiceException e) {
 								OHServiceExceptionUtil.showMessages(e);
 							}
 

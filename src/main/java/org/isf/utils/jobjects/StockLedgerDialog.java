@@ -102,9 +102,12 @@ public class StockLedgerDialog extends JDialog {
 
 				public void actionPerformed(ActionEvent arg0) {
 					int n = JOptionPane.showConfirmDialog(StockLedgerDialog.this,
-							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed"));
-					if (n != JOptionPane.OK_OPTION) 
+							MessageBundle.getMessage("angal.common.largeamountofdata.proceed.msg"),
+							MessageBundle.getMessage("common.questions.title"),
+							JOptionPane.OK_CANCEL_OPTION);
+					if (n != JOptionPane.OK_OPTION) {
 						cancel = true;
+					}
 					dateFrom = dateRange.getDateFrom();
 					dateTo = dateRange.getDateTo();
 					dispose();

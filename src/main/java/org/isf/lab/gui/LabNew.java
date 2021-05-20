@@ -80,6 +80,7 @@ import org.isf.serviceprinting.manager.PrintLabels;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhTableModelExam;
 import org.isf.utils.time.RememberDates;
 import org.slf4j.Logger;
@@ -368,10 +369,8 @@ public class LabNew extends JDialog implements SelectionListener {
 			
 				public void actionPerformed(ActionEvent arg0) {
 					
-					if (patientSelected==null) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.labnew.pleaseselectapatient"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+					if (patientSelected == null) {
+						MessageDialog.error(null, "angal.common.select.patient.msg");
 						return;
 					} 
 					

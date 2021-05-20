@@ -42,6 +42,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class AdmissionTypeBrowserEdit extends JDialog{
@@ -217,24 +218,30 @@ public class AdmissionTypeBrowserEdit extends JDialog{
                             if (result) {
                                 fireAdmissionInserted(admissionType);
                             }
-                            if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                            else  dispose();
-						}catch(OHServiceException ex){
+                            if (!result) {
+	                            MessageDialog.error(null, "angal.common.data.not.saved.msg");
+                            } else {
+                            	dispose();
+                            }
+						} catch(OHServiceException ex){
 							OHServiceExceptionUtil.showMessages(ex);
 						}
                     }
                     else {                          // updating
                     	if (descriptionTextField.getText().equals(lastdescription)){
     						dispose();	
-    					}else{
+    					} else {
     						try {
 								result = manager.updateAdmissionType(admissionType);
                                 if (result) {
                                     fireAdmissionUpdated();
                                 }
-                                if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                                else  dispose();
-    						}catch(OHServiceException ex){
+                                if (!result) {
+	                                MessageDialog.error(null, "angal.common.data.not.saved.msg");
+                                } else {
+                                	dispose();
+                                }
+    						} catch(OHServiceException ex){
     							OHServiceExceptionUtil.showMessages(ex);
     						}
     					}

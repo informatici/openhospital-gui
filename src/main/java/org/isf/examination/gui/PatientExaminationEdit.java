@@ -231,6 +231,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	
 	private void initComponents() {
 		ExaminationParameters.initialize();
+		setTitle(MessageBundle.getMessage("angal.examination.title"));
 		getContentPane().add(getJPanelCenter(), BorderLayout.CENTER);
 		getContentPane().add(getJPanelButtons(), BorderLayout.SOUTH);
 		//updateSummary();
@@ -1512,20 +1513,20 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 
 	private class SwingActionSavePatientExamination extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
+
 		public SwingActionSavePatientExamination() {
-			putValue(NAME, MessageBundle.getMessage("angal.common.savem"));
-			putValue(MNEMONIC_KEY, KeyEvent.VK_O);
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.savepatientexamination")); //$NON-NLS-1$
+			putValue(NAME, MessageBundle.getMessage("angal.common.save.btn"));
+			putValue(MNEMONIC_KEY, MessageBundle.getMnemonic("angal.common.save.btn.key"));
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.savepatientexamination"));
 		}
+
 		public void actionPerformed(ActionEvent e) {
 			
 			try {
 				examManager.saveOrUpdate(patex);
-			}catch(OHServiceException ex){
+			} catch(OHServiceException ex){
 				if (ex.getMessages() != null){
 					for(OHExceptionMessage msg : ex.getMessages()){
 						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
@@ -1702,9 +1703,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private class SwingActionToggleBowel extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleBowel() {
 			putValue(NAME, ""); //$NON-NLS-1$

@@ -54,6 +54,7 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.joda.time.DateTime;
 
 public class PatientInsert extends JDialog implements ActionListener{
@@ -336,13 +337,13 @@ public class PatientInsert extends JDialog implements ActionListener{
 											dispose();
 										} catch (OHServiceException ex) {
 											OHServiceExceptionUtil.showMessages(ex);
-											JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+											MessageDialog.error(null, "angal.common.data.not.saved.msg");
 										}
 									}
 								}
 							}
 						}
-					} else {//Update
+					} else { //Update
 						String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
 						if (!(patient.getName().equals(name))) {
 							try {
@@ -400,7 +401,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 								dispose();
 							} catch (OHServiceException ex) {
 								OHServiceExceptionUtil.showMessages(ex);
-								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+								MessageDialog.error(null, "angal.common.data.not.saved.msg");
 							}
 						}
 					}

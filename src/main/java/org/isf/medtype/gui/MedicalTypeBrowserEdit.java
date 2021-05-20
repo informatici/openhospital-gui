@@ -42,6 +42,7 @@ import org.isf.medtype.model.MedicalType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class MedicalTypeBrowserEdit extends JDialog{
@@ -216,10 +217,9 @@ public class MedicalTypeBrowserEdit extends JDialog{
 							if (result) {
 								fireMedicalInserted();
 								dispose();
-							} else
-								JOptionPane.showMessageDialog(MedicalTypeBrowserEdit.this,
-										MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-
+							} else {
+								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+							}
 						} catch (OHServiceException e1) {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
@@ -233,10 +233,9 @@ public class MedicalTypeBrowserEdit extends JDialog{
 								if (result) {
 									fireMedicalUpdated();
 									dispose();
-								} else
-									JOptionPane.showMessageDialog(MedicalTypeBrowserEdit.this,
-											MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-
+								} else {
+									MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								}
 							} catch (OHServiceException e1) {
 								result = false;
 								OHServiceExceptionUtil.showMessages(e1);

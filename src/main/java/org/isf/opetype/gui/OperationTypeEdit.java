@@ -42,6 +42,7 @@ import org.isf.opetype.manager.OperationTypeBrowserManager;
 import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class OperationTypeEdit extends JDialog{
@@ -199,12 +200,13 @@ public class OperationTypeEdit extends JDialog{
 			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
 			okButton.setMnemonic(KeyEvent.VK_O);
 			okButton.addActionListener(new java.awt.event.ActionListener() {
+
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String key = codeTextField.getText();
 					OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 
-					if (descriptionTextField.getText().equals(lastdescription)){
-						dispose();	
+					if (descriptionTextField.getText().equals(lastdescription)) {
+						dispose();
 					}
 					operationType.setDescription(descriptionTextField.getText());
 					operationType.setCode(codeTextField.getText());
@@ -217,31 +219,34 @@ public class OperationTypeEdit extends JDialog{
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 						if (result) {
-                           fireOperationInserted();
-                        }
-						if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-	                    else  dispose();
-                    }
-                    else {                          // updating
-                    	if (descriptionTextField.getText().equals(lastdescription)){
-    						dispose();	
-    					}else{
-    						try {
+							fireOperationInserted();
+						}
+						if (!result) {
+							MessageDialog.error(null, "angal.common.data.not.saved.msg");
+						} else {
+							dispose();
+						}
+					} else {                          // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
+							dispose();
+						} else {
+							try {
 								result = manager.updateOperationType(operationType);
 							} catch (OHServiceException e1) {
 								OHServiceExceptionUtil.showMessages(e1);
 								result = false;
 							}
-						if (result) {
-							fireOperationUpdated();
-                        }
-						if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                        else  dispose();
-    					}
-                    	
+							if (result) {
+								fireOperationUpdated();
+							}
+							if (!result) {
+								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+							} else {
+								dispose();
+							}
+						}
 					}
-					
-                }
+				}
 			});
 		}
 		return okButton;

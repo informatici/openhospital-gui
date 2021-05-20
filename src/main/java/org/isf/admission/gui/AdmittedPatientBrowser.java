@@ -88,6 +88,7 @@ import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.TimeTools;
@@ -715,8 +716,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				
 				public void actionPerformed(ActionEvent e) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectapatient"),
-								MessageBundle.getMessage("angal.admission.editpatient"), JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.select.patient.msg");
 						return;
 					}
 					patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
@@ -779,8 +779,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectapatient"),
-							MessageBundle.getMessage("angal.admission.editpatient"), JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -806,8 +805,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectapatient"),
-							MessageBundle.getMessage("angal.admission.deletepatient"), JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
 					return;
 				}
 				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
@@ -854,8 +852,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonAdmission.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectapatient"),
-							MessageBundle.getMessage("angal.admission.admission"), JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -883,8 +880,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonOpd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectapatient"),
-							MessageBundle.getMessage("angal.admission.opd"), JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -893,10 +889,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					Opd opd = new Opd(0,' ', -1, new Disease());
 					OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
 					newrecord.showAsModal(myFrame);
-					
-				} /*else {
-					//new OpdBrowser(true);
-				}*/
+				}
 			}
 		});
 		return buttonOpd;
@@ -908,8 +901,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonBill.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectapatient"),
-							MessageBundle.getMessage("angal.admission.bill"), JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -955,8 +947,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectapatient"),
-							MessageBundle.getMessage("angal.admission.data"), JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -975,8 +966,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonPatientFolderBrowser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectapatient"),
-							MessageBundle.getMessage("angal.admission.patientfolder"), JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -993,8 +983,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonTherapy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.common.pleaseselectapatient"),
-							MessageBundle.getMessage("angal.admission.therapy"), JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -1129,8 +1118,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				!searchString.getText().isEmpty();	
 		if (!isFilteredList) {
 			int ok = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this, 
-					MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed"),
-					MessageBundle.getMessage("angal.hospital"),
+					MessageBundle.getMessage("angal.common.largeamountofdata.proceed.msg"),
+					MessageBundle.getMessage("angal.common.question.title"),
 					JOptionPane.OK_CANCEL_OPTION);
 			if (ok != JOptionPane.OK_OPTION) return;
 		}

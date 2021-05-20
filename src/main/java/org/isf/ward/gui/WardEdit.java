@@ -45,6 +45,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -438,11 +439,12 @@ public class WardEdit extends JDialog {
 							fireWardUpdated();
 						}
 					}
-					if (!result)
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-					else
+					if (!result) {
+						MessageDialog.error(null, "angal.common.data.not.saved.msg");
+					}
+					else {
 						dispose();
+					}
 				}
 			});
 		}

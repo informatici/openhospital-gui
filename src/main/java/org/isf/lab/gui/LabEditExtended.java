@@ -70,6 +70,7 @@ import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
@@ -711,8 +712,7 @@ public class LabEditExtended extends ModalJFrame {
 					try {
 						labPat=(Patient)patientComboBox.getSelectedItem();
 					} catch (ClassCastException e2) {
-						JOptionPane.showMessageDialog(LabEditExtended.this,
-								MessageBundle.getMessage("angal.lab.pleaseselectapatient"));
+						MessageDialog.error(LabEditExtended.this,"angal.common.select.patient.msg");
 						return;
 					}
 					GregorianCalendar gregDate = new GregorianCalendar();
@@ -775,9 +775,9 @@ public class LabEditExtended extends ModalJFrame {
 							return;
 						}
 					}
-					if (!result)
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+					if (!result) {
+						MessageDialog.error(null, "angal.common.data.not.saved.msg");
+					}
 					else {
 						fireLabUpdated();
 						dispose();
