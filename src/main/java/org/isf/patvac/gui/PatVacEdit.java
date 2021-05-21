@@ -695,7 +695,7 @@ public class PatVacEdit extends JDialog {
 
 					// check on patient
 					if (selectedPatient == null) {
-						MessageDialog.error(null, "angal.common.select.patient.msg");
+						MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 						return;
 					}
 

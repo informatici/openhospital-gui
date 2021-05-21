@@ -264,7 +264,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 									jTablePriceLists.setModel(new ListBrowserModel());
 
 								} else {
-									MessageDialog.error(null, "angal.common.data.not.saved.msg");
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 								}
 							} catch(OHServiceException e) {
 								OHServiceExceptionUtil.showMessages(e);

@@ -222,7 +222,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 								fireMedicaldsrstockmovInserted(medicaldsrstockmovType);
 								dispose();
 							} else {
-								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						} catch (OHServiceException e1) {
 							result = false;
@@ -239,7 +239,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 									fireMedicaldsrstockmovUpdated();
 									dispose();
 								} else {
-									MessageDialog.error(null, "angal.common.data.not.saved.msg");
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 								}
 							} catch (OHServiceException e1) {
 								result = false;

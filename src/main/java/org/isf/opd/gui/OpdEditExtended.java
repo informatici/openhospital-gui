@@ -452,7 +452,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		jFieldLastOpdVisit.setText(lastOPDDisease.toString());
 		jLabelLastOpdNote.setText(LAST_NOTE_LABEL);
 		String note = lastOpd.getNote();
-		jFieldLastOpdNote.setText(note.equals("") ? MessageBundle.getMessage("angal.opd.nonote.txt") : note);
+		jFieldLastOpdNote.setText(note.equals("") ? MessageBundle.getMessage("angal.opd.none.txt") : note);
 		jNoteTextArea.setText(lastOpd.getNote());
 		
 		return true;		
@@ -516,7 +516,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				if (referralFrom == null) referralFrom="";
 				if (referralFrom.equals("R"))referralFromCheckBox.setSelected(true);
 			}
-			referralToCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.to.txt"));
+			referralToCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referralto.txt"));
 			jPanelNorth.add(referralToCheckBox);
 			if (!insert) {
 				referralTo = opd.getReferralTo();
@@ -968,7 +968,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JPanel getJNotePanel() {
 		if (jNotePanel == null) {
 			jNotePanel = new JPanel();
-			jNotePanel = setMyBorder(jNotePanel, MessageBundle.getMessage("angal.opd.note.symptom.txt"));
+			jNotePanel = setMyBorder(jNotePanel, MessageBundle.getMessage("angal.opd.notessymptom.txt"));
 			jNoteScrollPane = new JScrollPane(getJTextArea());
 			jNoteScrollPane.setVerticalScrollBar(new JScrollBar());
 			jNoteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -1151,7 +1151,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		
 		if (key == null || key.compareTo("") == 0) {
 			jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.selectapatient.txt"));
-			jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.newpatient.txt"));
+			jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.enteranewpatient.txt"));
 			jLabelLastOpdVisit.setText(" ");
 			jFieldLastOpdVisit.setText(" ");
 			jLabelLastOpdNote.setText(" ");
@@ -1218,13 +1218,13 @@ public class OpdEditExtended extends ModalJFrame implements
 				return jComboPatResult;
 			} else {
 				jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.selectapatient.txt"));
-				jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.newpatient.txt"));
+				jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.enteranewpatient.txt"));
 			}
 
 			jComboPatResult.addActionListener(arg0 -> {
 
 				if (jComboPatResult.getSelectedItem() != null) {
-					if (jComboPatResult.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.opd.newpatient.txt")) == 0) {
+					if (jComboPatResult.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.opd.enteranewpatient.txt")) == 0) {
 						if (GeneralData.PATIENTEXTENDED) {
 							PatientInsertExtended newrecord = new PatientInsertExtended(OpdEditExtended.this, new Patient(), true);
 							newrecord.addPatientListener(OpdEditExtended.this);
@@ -1340,7 +1340,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			setMyMatteBorder(jPanelPatient, MessageBundle.getMessage("angal.common.patient.txt"));
 			
 			jLabelfirstName = new JLabel();
-			jLabelfirstName.setText(MessageBundle.getMessage("angal.opd.first.name.txt") + "\t");
+			jLabelfirstName.setText(MessageBundle.getMessage("angal.opd.firstname.txt") + "\t");
 			GridBagConstraints gbc_jLabelfirstName = new GridBagConstraints();
 			gbc_jLabelfirstName.fill = GridBagConstraints.BOTH;
 			gbc_jLabelfirstName.insets = new Insets(5, 5, 5, 5);
@@ -1357,7 +1357,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jFieldFirstName.gridy = 0;
 			jPanelPatient.add(jFieldFirstName, gbc_jFieldFirstName);
 			jLabelsecondName = new JLabel();
-			jLabelsecondName.setText(MessageBundle.getMessage("angal.opd.second.name.txt") + "\t");
+			jLabelsecondName.setText(MessageBundle.getMessage("angal.opd.secondname.txt") + "\t");
 			GridBagConstraints gbc_jLabelsecondName = new GridBagConstraints();
 			gbc_jLabelsecondName.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelsecondName.fill = GridBagConstraints.BOTH;
@@ -1408,7 +1408,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jFieldCity.gridy = 3;
 			jPanelPatient.add(jFieldCity, gbc_jFieldCity);
 			jLabelnextKin = new JLabel();
-			jLabelnextKin.setText(MessageBundle.getMessage("angal.opd.nextkin.txt"));
+			jLabelnextKin.setText(MessageBundle.getMessage("angal.opd.nextofkin.txt"));
 			GridBagConstraints gbc_jLabelnextKin = new GridBagConstraints();
 			gbc_jLabelnextKin.fill = GridBagConstraints.BOTH;
 			gbc_jLabelnextKin.insets = new Insets(5, 5, 5, 5);
@@ -1532,7 +1532,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			
 			jButtonExamination.addActionListener(e -> {
 				if (opdPatient == null) {
-					MessageDialog.error(OpdEditExtended.this,"angal.common.select.patient.msg");
+					MessageDialog.error(OpdEditExtended.this,"angal.common.pleaseselectapatient.msg");
 					return;
 				}
 
@@ -1662,7 +1662,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				Date nextVisit = opdNextVisitDate.getDate(); // FIXME: despite the presentation dd/MM/yy the object has time when insert = true
 				if (nextVisit != null) {
 					if (nextVisit.compareTo(OpdDateFieldCal.getDate()) < 0) {
-						MessageDialog.error(OpdEditExtended.this, "angal.opd.notpasseddate.msg");
+						MessageDialog.error(OpdEditExtended.this, "angal.opd.cannotsetadateinthepastfornextvisit.msg");
 						return;
 					}
 					GregorianCalendar gregNextVisit = new GregorianCalendar();
@@ -1701,7 +1701,7 @@ public class OpdEditExtended extends ModalJFrame implements
 							dispose();
 						}
 						if (!result) {
-							MessageDialog.error(null, "angal.common.data.not.saved.msg");
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 					} else { // Update
 						Opd updatedOpd = opdManager.updateOpd(opd);
@@ -1727,7 +1727,7 @@ public class OpdEditExtended extends ModalJFrame implements
 							dispose();
 						}
 						if (updatedOpd == null) {
-							MessageDialog.error(null, "angal.common.data.not.saved.msg");
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 					}
 				} catch (OHServiceException ex) {

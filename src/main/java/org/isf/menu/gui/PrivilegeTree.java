@@ -88,7 +88,7 @@ class PrivilegeTree extends JDialog {
             OHServiceExceptionUtil.showMessages(e);
         }
 
-        UserMenuItem menuRoot = new UserMenuItem("main", "angal.groupsbrowser.menuitemmbrowser.root.txt", "angal.groupsbrowser.menuitemmbrowser.root.txt",
+        UserMenuItem menuRoot = new UserMenuItem("main", "angal.groupsbrowser.mainmenu.txt", "angal.groupsbrowser.mainmenu.txt",
 		        "", 'M', "", "", true, 1, true);
 		// the root 
 		root = new DefaultMutableTreeNode(menuRoot);

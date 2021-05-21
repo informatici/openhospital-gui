@@ -674,7 +674,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 //							fireMovementWardInserted();
 //							dispose();
 //						} else
-//							MessageDialog.error(null, "angal.common.data.not.saved.msg");
+//							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 //					} catch (OHServiceException e1) {
 //						result = false;
 //						OHServiceExceptionUtil.showMessages(e1);
@@ -700,7 +700,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						fireMovementWardInserted();
 						dispose();
 					} catch (OHServiceException ex) {
-						MessageDialog.error(null, "angal.common.data.not.saved.msg");
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                     }
 				}
 			});

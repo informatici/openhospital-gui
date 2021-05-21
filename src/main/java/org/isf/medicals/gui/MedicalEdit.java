@@ -329,7 +329,7 @@ public class MedicalEdit extends JDialog {
 						}
 					}
 					if (!result) {
-						MessageDialog.error(null, "angal.common.data.not.saved.msg");
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				}
 

@@ -108,8 +108,8 @@ public class UserEdit extends JDialog {
      * because we need to update them
 	 */
 	public UserEdit(UserBrowsing parent, User old, boolean inserting) {
-		super(parent, (inserting ? MessageBundle.getMessage("angal.userbrowser.newuserrecord.title")
-				: MessageBundle.getMessage("angal.userbrowser.editinguserrecord.title")), true);
+		super(parent, (inserting ? MessageBundle.getMessage("angal.userbrowser.addnewuser.title")
+				: MessageBundle.getMessage("angal.userbrowser.edituser.title")), true);
 		addUserListener(parent);
 		insert = inserting;
 		user = old;
@@ -217,7 +217,7 @@ public class UserEdit extends JDialog {
 			okButton.addActionListener(e -> {
 				String userName = nameTextField.getText().trim();
 				if (userName.isEmpty()) {
-					MessageDialog.error(null, "angal.userbrowser.insert.valid.username.msg");
+					MessageDialog.error(null, "angal.userbrowser.pleaseprovideavalidusername.msg");
 					return;
 				}
 				user.setUserName(userName);
@@ -228,15 +228,15 @@ public class UserEdit extends JDialog {
 					char[] repeatPassword = pwd2TextField.getPassword();
 
 					if (Arrays.equals(password, new char[0])) {
-						MessageDialog.error(null, "angal.userbrowser.insert.password.msg");
+						MessageDialog.error(null, "angal.userbrowser.pleaseprovideapassword.msg");
 						return;
 					}
 					if (Arrays.equals(repeatPassword, new char[0])) {
-						MessageDialog.error(null, "angal.userbrowser.retype.password.missing.msg");
+						MessageDialog.error(null, "angal.userbrowser.pleaseprovidetheretypepassword.msg");
 						return;
 					}
 					if (!Arrays.equals(password, repeatPassword)) {
-						MessageDialog.error(null, "angal.userbrowser.password.not.matching.msg");
+						MessageDialog.error(null, "angal.userbrowser.passwordsdonotmatchpleasecorrect.msg");
 						return;
 					}
 					String hashed = BCrypt.hashpw(new String(password), BCrypt.gensalt());
@@ -265,7 +265,7 @@ public class UserEdit extends JDialog {
 				}
 
 				if (!result) {
-					MessageDialog.info(null, "angal.common.data.not.saved.msg");
+					MessageDialog.info(null, "angal.common.datacouldnotbesaved.msg");
 				} else {
 					dispose();
 				}

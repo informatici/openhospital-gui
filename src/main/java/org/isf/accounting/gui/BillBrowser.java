@@ -441,7 +441,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						to.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
 					}
 					if (patientParent == null && options.indexOf(option) == ++i) {
-						MessageDialog.error(BillBrowser.this, "angal.common.select.patient.msg");
+						MessageDialog.error(BillBrowser.this, "angal.common.pleaseselectapatient.msg");
 						return;
 					}
 

@@ -225,7 +225,7 @@ public class ExamTypeEdit extends JDialog {
 	                           fireExamTypeInserted();
 	                           dispose();
 	                        } else
-								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 	                    }
 	                    else {            // updating
 	                    	if (descriptionTextField.getText().equals(lastdescription)){
@@ -235,7 +235,7 @@ public class ExamTypeEdit extends JDialog {
 									fireExamTypeUpdated();
 									dispose();
 		                        } else {
-									MessageDialog.error(null, "angal.common.data.not.saved.msg");
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 								}
 	    					}
 						}

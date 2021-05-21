@@ -324,7 +324,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(event -> {
 				if (jTable.getSelectedRow() < 0) {
-					MessageDialog.error(OpdBrowser.this, "angal.common.select.row.msg");
+					MessageDialog.error(OpdBrowser.this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
 				selectedrow = jTable.getSelectedRow();
@@ -369,7 +369,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(event -> {
 				if (jTable.getSelectedRow() < 0) {
-					MessageDialog.error(OpdBrowser.this, "angal.common.select.row.msg");
+					MessageDialog.error(OpdBrowser.this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
 				Opd opd = (Opd) (model.getValueAt(jTable.getSelectedRow(), -1));
@@ -892,7 +892,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						ageFrom = Integer.parseInt(jAgeFromTextField.getText());
 						if (ageFrom < 0 || ageFrom > 200) {
 							jAgeFromTextField.setText("");
-							MessageDialog.error(OpdBrowser.this, "angal.opd.insertvalidage.msg");
+							MessageDialog.error(OpdBrowser.this, "angal.opd.insertavalidage.msg");
 						}
 					} catch (NumberFormatException ex) {
 						jAgeFromTextField.setText("");
@@ -940,7 +940,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						ageTo = Integer.parseInt(jAgeToTextField.getText());
 						if (ageTo < 0 || ageTo > 200 ) {
 							jAgeToTextField.setText("");
-							MessageDialog.error(OpdBrowser.this, "angal.opd.insertvalidage.msg");
+							MessageDialog.error(OpdBrowser.this, "angal.opd.insertavalidage.msg");
 						}
 					} catch (NumberFormatException ex) {
 						jAgeToTextField.setText("");
@@ -1133,7 +1133,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				//TODO: to retrieve resultset size instead of assuming 1 year as limit for the warning
 				if (TimeTools.getDaysBetweenDates(dateFrom, dateTo, true) >= 360) {
 					int ok = JOptionPane.showConfirmDialog(OpdBrowser.this,
-							MessageBundle.getMessage("angal.common.largeamountofdata.proceed.msg"),
+							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
 							MessageBundle.getMessage("angal.common.question.title"),
 							JOptionPane.OK_CANCEL_OPTION);
 					if (ok != JOptionPane.OK_OPTION) return;

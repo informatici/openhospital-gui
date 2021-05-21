@@ -222,7 +222,7 @@ public class OperationTypeEdit extends JDialog{
 							fireOperationInserted();
 						}
 						if (!result) {
-							MessageDialog.error(null, "angal.common.data.not.saved.msg");
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						} else {
 							dispose();
 						}
@@ -240,7 +240,7 @@ public class OperationTypeEdit extends JDialog{
 								fireOperationUpdated();
 							}
 							if (!result) {
-								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							} else {
 								dispose();
 							}

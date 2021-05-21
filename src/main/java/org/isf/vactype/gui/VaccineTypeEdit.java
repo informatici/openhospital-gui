@@ -228,7 +228,7 @@ public class VaccineTypeEdit extends JDialog{
 								fireVaccineInserted();
 								dispose();
 							} else {
-								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						} catch (OHServiceException e1) {
 							result = false;
@@ -244,7 +244,7 @@ public class VaccineTypeEdit extends JDialog{
 									fireVaccineUpdated();
 									dispose();
 								} else {
-									MessageDialog.error(null, "angal.common.data.not.saved.msg");
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 								}
 							} catch (OHServiceException e1) {
 								result = false;

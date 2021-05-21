@@ -712,7 +712,7 @@ public class LabEditExtended extends ModalJFrame {
 					try {
 						labPat=(Patient)patientComboBox.getSelectedItem();
 					} catch (ClassCastException e2) {
-						MessageDialog.error(LabEditExtended.this,"angal.common.select.patient.msg");
+						MessageDialog.error(LabEditExtended.this,"angal.common.pleaseselectapatient.msg");
 						return;
 					}
 					GregorianCalendar gregDate = new GregorianCalendar();
@@ -776,7 +776,7 @@ public class LabEditExtended extends ModalJFrame {
 						}
 					}
 					if (!result) {
-						MessageDialog.error(null, "angal.common.data.not.saved.msg");
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 					else {
 						fireLabUpdated();

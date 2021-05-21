@@ -496,7 +496,7 @@ public class OpdEdit extends JDialog {
 						Date myDate = currentDateFormat.parse(d);
 						gregDate.setTime(myDate);
 					} catch (ParseException pe) {
-						MessageDialog.error(OpdEdit.this, "angal.opd.insertavalidattendancedate.msg");
+						MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertavalidattendancedate.msg");
 						return;
 					}
 				}
@@ -532,7 +532,7 @@ public class OpdEdit extends JDialog {
 							fireSurgeryInserted(opd);
 							dispose();
 						} else {
-							MessageDialog.error(null, "angal.common.data.not.saved.msg");
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 					}
 					else {    // Update
@@ -541,7 +541,7 @@ public class OpdEdit extends JDialog {
 							fireSurgeryUpdated(updatedOpd);
 							dispose();
 						} else {
-							MessageDialog.error(null, "angal.common.data.not.saved.msg");
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 					}
 				} catch(OHServiceException ex) {
@@ -594,7 +594,7 @@ public class OpdEdit extends JDialog {
 					age = Integer.parseInt(ageField.getText());
 					if (age < 0 || age > 200) {
 						ageField.setText("");
-						MessageDialog.error(OpdEdit.this, "angal.opd.insertvalidage.msg");
+						MessageDialog.error(OpdEdit.this, "angal.opd.insertavalidage.msg");
 					}
 				} catch (NumberFormatException ex) {
 					ageField.setText("");
@@ -864,7 +864,7 @@ public class OpdEdit extends JDialog {
 					referralFromCheckBox.setSelected(true);
 				}
 			}
-			referralToCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.to.txt"));
+			referralToCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referralto.txt"));
 			jNewPatientPanel.add(referralToCheckBox);
 			if (!insert) {
 				referralTo = opd.getReferralTo();

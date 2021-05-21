@@ -716,7 +716,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				
 				public void actionPerformed(ActionEvent e) {
 					if (table.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.select.patient.msg");
+						MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 						return;
 					}
 					patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
@@ -779,7 +779,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -805,7 +805,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
 				patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
@@ -852,7 +852,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonAdmission.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -880,7 +880,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonOpd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -901,7 +901,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonBill.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -947,7 +947,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -966,7 +966,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonPatientFolderBrowser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());
@@ -983,7 +983,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonTherapy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.select.patient.msg");
+					MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
 				patient = reloadSelectedPatient(table.getSelectedRow());

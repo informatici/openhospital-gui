@@ -218,7 +218,7 @@ public class DiseaseTypeBrowserEdit extends JDialog{
                                 fireDiseaseInserted();
                             }
                             if (!result) {
-	                            MessageDialog.error(null, "angal.common.data.not.saved.msg");
+	                            MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                             }
                             else {
                             	dispose();
@@ -233,7 +233,7 @@ public class DiseaseTypeBrowserEdit extends JDialog{
                                     fireDiseaseUpdated();
                                 }
                                 if (!result) {
-	                                MessageDialog.error(null, "angal.common.data.not.saved.msg");
+	                                MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                                 }
                                 else {
                                 	dispose();

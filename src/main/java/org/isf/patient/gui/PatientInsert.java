@@ -337,7 +337,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 											dispose();
 										} catch (OHServiceException ex) {
 											OHServiceExceptionUtil.showMessages(ex);
-											MessageDialog.error(null, "angal.common.data.not.saved.msg");
+											MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 										}
 									}
 								}
@@ -401,7 +401,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 								dispose();
 							} catch (OHServiceException ex) {
 								OHServiceExceptionUtil.showMessages(ex);
-								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						}
 					}

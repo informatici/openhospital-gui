@@ -213,7 +213,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
                                 fireDischargeInserted(dischargeType);
                             }
                             if (!result) {
-	                            MessageDialog.error(null, "angal.common.data.not.saved.msg");
+	                            MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                             }
                             else {
                             	dispose();
@@ -232,7 +232,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
                                     fireDischargeUpdated();
                                 }
                                 if (!result) {
-								    MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								    MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                                 }
                                 else {
                                 	dispose();

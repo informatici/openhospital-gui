@@ -102,7 +102,7 @@ public class StockLedgerDialog extends JDialog {
 
 				public void actionPerformed(ActionEvent arg0) {
 					int n = JOptionPane.showConfirmDialog(StockLedgerDialog.this,
-							MessageBundle.getMessage("angal.common.largeamountofdata.proceed.msg"),
+							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
 							MessageBundle.getMessage("common.questions.title"),
 							JOptionPane.OK_CANCEL_OPTION);
 					if (n != JOptionPane.OK_OPTION) {

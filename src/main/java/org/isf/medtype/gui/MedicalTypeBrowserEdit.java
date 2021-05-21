@@ -218,7 +218,7 @@ public class MedicalTypeBrowserEdit extends JDialog{
 								fireMedicalInserted();
 								dispose();
 							} else {
-								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						} catch (OHServiceException e1) {
 							result = false;
@@ -234,7 +234,7 @@ public class MedicalTypeBrowserEdit extends JDialog{
 									fireMedicalUpdated();
 									dispose();
 								} else {
-									MessageDialog.error(null, "angal.common.data.not.saved.msg");
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 								}
 							} catch (OHServiceException e1) {
 								result = false;

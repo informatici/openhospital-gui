@@ -527,7 +527,7 @@ public class PatientInsertExtended extends JDialog {
 							}catch(OHServiceException ex){
 								ex.printStackTrace();
 								OHServiceExceptionUtil.showMessages(ex);
-								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						}
 					} else {// Update
@@ -600,7 +600,7 @@ public class PatientInsertExtended extends JDialog {
 							dispose();
 						} catch(final OHServiceException ex){
                             OHServiceExceptionUtil.showMessages(ex);
-							MessageDialog.error(null, "angal.common.data.not.saved.msg");
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 					}
 				}

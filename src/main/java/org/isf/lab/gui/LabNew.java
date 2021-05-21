@@ -370,7 +370,7 @@ public class LabNew extends JDialog implements SelectionListener {
 				public void actionPerformed(ActionEvent arg0) {
 					
 					if (patientSelected == null) {
-						MessageDialog.error(null, "angal.common.select.patient.msg");
+						MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 						return;
 					} 
 					

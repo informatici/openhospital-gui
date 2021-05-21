@@ -150,7 +150,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(event -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(null, "angal.common.select.row.msg");
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
 				user = (User) model.getValueAt(table.getSelectedRow(), -1);
@@ -163,7 +163,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		buttonResetPassword.setMnemonic(MessageBundle.getMnemonic("angal.userbrowser.resetpassword.btn.key"));
 		buttonResetPassword.addActionListener(event -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(null, "angal.common.select.row.msg");
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
 				user = (User) model.getValueAt(table.getSelectedRow(), -1);
@@ -187,19 +187,19 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				});
 				String newPassword = "";
 				JPanel stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-				stepPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step1.insert.new.password.label")));
+				stepPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step1.pleaseinsertanew.password.label")));
 				stepPanel.add(pwd);
 
 				while (newPassword.isEmpty()) {
 					int action = JOptionPane
-							.showConfirmDialog(UserBrowsing.this, stepPanel, MessageBundle.getMessage("angal.userbrowser.reset.password.title"),
+							.showConfirmDialog(UserBrowsing.this, stepPanel, MessageBundle.getMessage("angal.userbrowser.resetpassword.title"),
 									JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 					if (JOptionPane.CANCEL_OPTION == action) {
 						return;
 					}
 					newPassword = new String(pwd.getPassword());
 					if (newPassword.isEmpty() || newPassword.length() < 6) {
-						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.password.too.short.msg");
+						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleast6characters.msg");
 						newPassword = "";
 						pwd.setText("");
 					}
@@ -208,10 +208,10 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				// 2. Retype new password
 				pwd.setText("");
 				stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-				stepPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step2.repeat.password.label")));
+				stepPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step2.pleaserepeatthenewpassword.label")));
 				stepPanel.add(pwd);
 				int action = JOptionPane
-						.showConfirmDialog(UserBrowsing.this, stepPanel, MessageBundle.getMessage("angal.userbrowser.reset.password.title"),
+						.showConfirmDialog(UserBrowsing.this, stepPanel, MessageBundle.getMessage("angal.userbrowser.resetpassword.title"),
 								JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 				if (JOptionPane.CANCEL_OPTION == action) {
 					return;
@@ -220,14 +220,14 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 				// 3. Check & Save
 				if (!newPassword.equals(newPassword2)) {
-					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwords.do.not.match.msg");
+					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
 					return;
 				}
 				String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 				user.setPasswd(hashed);
 				try {
 					if (manager.updatePassword(user)) {
-						MessageDialog.info(UserBrowsing.this, "angal.userbrowser.password.changed.msg");
+						MessageDialog.info(UserBrowsing.this, "angal.userbrowser.thepasswordhasbeenchanged.msg");
 					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
@@ -240,11 +240,11 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDelete.addActionListener(event -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(null, "angal.common.select.row.msg");
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				User selectedUser = (User) model.getValueAt(table.getSelectedRow(), -1);
-				int n = JOptionPane.showConfirmDialog(null, MessageBundle.formatMessage("angal.userbrowser.delete.user.fmt.label", selectedUser.getUserName()),
-						MessageBundle.getMessage("angal.userbrowser.delete.user.title"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				int n = JOptionPane.showConfirmDialog(null, MessageBundle.formatMessage("angal.userbrowser.deleteuser.fmt.label", selectedUser.getUserName()),
+						MessageBundle.getMessage("angal.userbrowser.deleteuser.title"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				try {
 					if ((JOptionPane.YES_OPTION == n) && manager.deleteUser(selectedUser)) {
 						pUser.remove(table.getSelectedRow());

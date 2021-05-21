@@ -213,7 +213,7 @@ public class DicomTypeEdit extends JDialog{
                                 fireDicomTypeInserted(dicomType);
                             }
                             if (!result) {
-	                            MessageDialog.error(null, "angal.common.data.not.saved.msg");
+	                            MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                             }
                             else {
                             	dispose();
@@ -232,7 +232,7 @@ public class DicomTypeEdit extends JDialog{
                                     fireDicomUpdated();
                                 }
                                 if (!result) {
-	                                MessageDialog.error(null, "angal.common.data.not.saved.msg");
+	                                MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                                 }
                                 else {
                                 	dispose();

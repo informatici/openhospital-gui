@@ -214,7 +214,7 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 								fireDeliveryResultInserted();
 								dispose();
 							} else
-								MessageDialog.error(null, "angal.common.data.not.saved.msg");
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 						else {            // updating
 							if (descriptionTextField.getText().equals(lastdescription)){
@@ -224,7 +224,7 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 									fireDeliveryResultUpdated();
 									dispose();
 								} else
-									MessageDialog.error(null, "angal.common.data.not.saved.msg");
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						}
 					}catch(OHServiceException ex){

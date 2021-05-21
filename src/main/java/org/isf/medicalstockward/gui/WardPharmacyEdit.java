@@ -345,7 +345,7 @@ public class WardPharmacyEdit extends JDialog {
 							movSelected.setAge(movSelectedAge);
 							movSelected.setWeight(movSelectedWeight);
 						} else {
-							MessageDialog.error(null, "angal.common.select.patient.msg");
+							MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 							return;
 						}
 					} else {
@@ -375,7 +375,7 @@ public class WardPharmacyEdit extends JDialog {
 						fireMovementWardUpdated();
 					}
 					if (!result) {
-						MessageDialog.error(null, "angal.common.data.not.saved.msg");
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 					else {
 						dispose();
