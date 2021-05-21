@@ -84,7 +84,9 @@ import org.isf.stat.gui.report.GenericReportUserInDate;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
 
@@ -439,7 +441,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						to.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
 					}
 					if (patientParent == null && options.indexOf(option) == ++i) {
-						JOptionPane.showMessageDialog(BillBrowser.this, MessageBundle.getMessage("angal.billbrowser.pleaseselectapatient"));
+						MessageDialog.error(BillBrowser.this, "angal.common.pleaseselectapatient.msg");
 						return;
 					}
 

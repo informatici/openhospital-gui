@@ -157,8 +157,8 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			}
 		}
 		if (!found) {
-			LOGGER.warn("Login failed: {}", MessageBundle.getMessage("angal.login.passwordincorrectretry.msg"));
-			MessageDialog.error(this, "angal.login.passwordincorrectretry.msg");
+			LOGGER.warn("Login failed: {}", MessageBundle.getMessage("angal.login.passwordiisncorrectpleaseretry.msg"));
+			MessageDialog.error(this, "angal.login.passwordiisncorrectpleaseretry.msg");
 			pwd.setText("");
 			pwd.grabFocus();
 		} else {

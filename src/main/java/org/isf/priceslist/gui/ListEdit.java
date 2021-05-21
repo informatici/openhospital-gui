@@ -44,6 +44,7 @@ import org.isf.priceslist.manager.PriceListManager;
 import org.isf.priceslist.model.PriceList;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class ListEdit extends JDialog {
@@ -151,11 +152,12 @@ public class ListEdit extends JDialog {
 					}catch(OHServiceException e){
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					if (!result) JOptionPane.showMessageDialog(
-											null,
-											MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved")); //$NON-NLS-1$
-					else  dispose();
-					
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
+						dispose();
+					}
 				}
 			});
 		}

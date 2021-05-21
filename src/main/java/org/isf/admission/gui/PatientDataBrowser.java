@@ -611,7 +611,9 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				} else {
 					int z = r - admList.size();
 					String status = "" + opdList.get(z).getNewPatient();
-					return (status.compareTo("R")==0?MessageBundle.getMessage("angal.opd.reattendance"):MessageBundle.getMessage("angal.opd.newattendance"));
+					return (status.compareTo("R") == 0
+							? MessageBundle.getMessage("angal.opd.reattendance.txt")
+							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
 				}
 			} 
 			

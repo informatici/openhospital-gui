@@ -107,7 +107,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(event -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(null, "angal.common.select.row.msg");
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
 				group = (UserGroup)(model.getValueAt(table.getSelectedRow(), -1));
@@ -128,7 +128,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		buttonPrivilege.setMnemonic(MessageBundle.getMnemonic("angal.groupsbrowser.groupmenu.btn.key"));
 		buttonPrivilege.addActionListener(event -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(null, "angal.common.select.row.msg");
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				UserGroup userGroup = (UserGroup)(model.getValueAt(table.getSelectedRow(), -1));
 				new PrivilegeTree(myFrame, userGroup);
@@ -140,11 +140,11 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDelete.addActionListener(event -> {
 			if (table.getSelectedRow() < 0) {
-				MessageDialog.error(null, "angal.common.select.row.msg");
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				UserGroup userGroup = (UserGroup) (model.getValueAt(table.getSelectedRow(), -1));
-				int n = JOptionPane.showConfirmDialog(null, MessageBundle.formatMessage("angal.groupsbrowser.delete.group.fmt.label", userGroup.getCode()),
-						MessageBundle.getMessage("angal.groupsbrowser.delete.group.title"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				int n = JOptionPane.showConfirmDialog(null, MessageBundle.formatMessage("angal.groupsbrowser.deletegroup.fmt.label", userGroup.getCode()),
+						MessageBundle.getMessage("angal.groupsbrowser.deletegroup.title"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				try {
 					if ((n == JOptionPane.YES_OPTION) && (manager.deleteGroup(userGroup))) {
 						pGroup.remove(table.getSelectedRow());

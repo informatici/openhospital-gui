@@ -42,6 +42,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DiseaseTypeBrowserEdit extends JDialog{
@@ -216,8 +217,12 @@ public class DiseaseTypeBrowserEdit extends JDialog{
                             if (result) {
                                 fireDiseaseInserted();
                             }
-                            if (!result) JOptionPane.showMessageDialog(null,  MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                            else  dispose();
+                            if (!result) {
+	                            MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+                            }
+                            else {
+                            	dispose();
+                            }
                         }
                         else {                          // updating
                             if (descriptionTextField.getText().equals(lastdescription)){
@@ -227,8 +232,12 @@ public class DiseaseTypeBrowserEdit extends JDialog{
                                 if (result) {
                                     fireDiseaseUpdated();
                                 }
-                                if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                                else  dispose();
+                                if (!result) {
+	                                MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+                                }
+                                else {
+                                	dispose();
+                                }
                             }
 
                         }

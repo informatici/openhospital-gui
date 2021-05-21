@@ -42,6 +42,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DischargeTypeBrowserEdit extends JDialog{
@@ -211,8 +212,12 @@ public class DischargeTypeBrowserEdit extends JDialog{
                             if (result) {
                                 fireDischargeInserted(dischargeType);
                             }
-                            if (!result) JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                            else  dispose();
+                            if (!result) {
+	                            MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+                            }
+                            else {
+                            	dispose();
+                            }
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
 						}
@@ -226,8 +231,12 @@ public class DischargeTypeBrowserEdit extends JDialog{
                                 if (result) {
                                     fireDischargeUpdated();
                                 }
-                                if (!result) JOptionPane.showMessageDialog(DischargeTypeBrowserEdit.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                                else  dispose();
+                                if (!result) {
+								    MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+                                }
+                                else {
+                                	dispose();
+                                }
 							} catch (OHServiceException e1) {
 								OHServiceExceptionUtil.showMessages(e1, DischargeTypeBrowserEdit.this);
 						    }

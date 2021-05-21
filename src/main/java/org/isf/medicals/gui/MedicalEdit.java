@@ -49,6 +49,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
@@ -327,9 +328,9 @@ public class MedicalEdit extends JDialog {
 							dispose();
 						}
 					}
-					if (!result)
-						JOptionPane.showMessageDialog(MedicalEdit.this,
-								MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
 				}
 
 				private int manageSimilarFoundWarning(OHExceptionMessage error) {

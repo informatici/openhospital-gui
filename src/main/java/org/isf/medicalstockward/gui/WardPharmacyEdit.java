@@ -59,6 +59,7 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class WardPharmacyEdit extends JDialog {
@@ -344,7 +345,7 @@ public class WardPharmacyEdit extends JDialog {
 							movSelected.setAge(movSelectedAge);
 							movSelected.setWeight(movSelectedWeight);
 						} else {
-							JOptionPane.showMessageDialog(null,	MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectapatient")); //$NON-NLS-1$
+							MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 							return;
 						}
 					} else {
@@ -373,10 +374,12 @@ public class WardPharmacyEdit extends JDialog {
 					if (result) {
 						fireMovementWardUpdated();
 					}
-					if (!result)
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved")); //$NON-NLS-1$
-					else
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
 						dispose();
+					}
 				}
 			});
 		}

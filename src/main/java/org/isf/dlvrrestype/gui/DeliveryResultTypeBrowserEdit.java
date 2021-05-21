@@ -42,6 +42,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DeliveryResultTypeBrowserEdit extends JDialog{
@@ -212,8 +213,8 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 							if (manager.newDeliveryResultType(deliveryresultType)) {
 								fireDeliveryResultInserted();
 								dispose();
-							} else 
-								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							} else
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 						else {            // updating
 							if (descriptionTextField.getText().equals(lastdescription)){
@@ -222,8 +223,8 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 								if (manager.updateDeliveryResultType(deliveryresultType)) {
 									fireDeliveryResultUpdated();
 									dispose();
-								} else 
-									JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+								} else
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						}
 					}catch(OHServiceException ex){
@@ -295,8 +296,7 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 	 */
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.dlvrrestype.codemaxchars"));
+			jCodeLabel = new JLabel(MessageBundle.getMessage("angal.dlvrrestype.codemaxchars"));
 		}
 		return jCodeLabel;
 	}
@@ -322,8 +322,7 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescriptionLabel = new JLabel();
-			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description"));
 			jDescriptionLabelPanel = new JPanel();
 			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}

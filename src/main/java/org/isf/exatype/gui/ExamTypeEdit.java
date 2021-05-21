@@ -42,6 +42,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
@@ -224,7 +225,7 @@ public class ExamTypeEdit extends JDialog {
 	                           fireExamTypeInserted();
 	                           dispose();
 	                        } else
-	                        	JOptionPane.showMessageDialog(null,  MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 	                    }
 	                    else {            // updating
 	                    	if (descriptionTextField.getText().equals(lastdescription)){
@@ -233,13 +234,14 @@ public class ExamTypeEdit extends JDialog {
 								if (manager.updateExamType(examType)) {
 									fireExamTypeUpdated();
 									dispose();
-		                        }else
-		                        	JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+		                        } else {
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+								}
 	    					}
 						}
 					} catch(OHServiceException ex){
 						if (ex.getMessages() != null){
-							for(OHExceptionMessage msg : ex.getMessages()){
+							for(OHExceptionMessage msg : ex.getMessages()) {
 								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 							}
 						}

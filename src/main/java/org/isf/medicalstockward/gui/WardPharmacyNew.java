@@ -70,6 +70,7 @@ import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -673,7 +674,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 //							fireMovementWardInserted();
 //							dispose();
 //						} else
-//							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+//							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 //					} catch (OHServiceException e1) {
 //						result = false;
 //						OHServiceExceptionUtil.showMessages(e1);
@@ -699,7 +700,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						fireMovementWardInserted();
 						dispose();
 					} catch (OHServiceException ex) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                     }
 				}
 			});

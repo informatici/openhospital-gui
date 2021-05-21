@@ -103,8 +103,8 @@ public class GroupEdit extends JDialog {
 	 */
 	public GroupEdit(UserGroupBrowsing parent, UserGroup old, boolean inserting) {
 		super(parent, inserting
-				? MessageBundle.getMessage("angal.groupsbrowser.new.title")
-				: MessageBundle.getMessage("angal.groupsbrowser.edit.title"),true);
+				? MessageBundle.getMessage("angal.groupsbrowser.newgroup.title")
+				: MessageBundle.getMessage("angal.groupsbrowser.editgroup.title"),true);
 		addGroupListener(parent);
 		insert = inserting;
 		group = old;		
@@ -199,7 +199,7 @@ public class GroupEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(e -> {
 				if (nameTextField.getText().isEmpty()) {
-					MessageDialog.error(null, MessageBundle.getMessage("angal.groupsbrowser.nousergroup.msg"));
+					MessageDialog.error(null, MessageBundle.getMessage("angal.groupsbrowser.pleaseinsertavalidusergroupname.msg"));
 					return;
 				}
 
@@ -227,7 +227,7 @@ public class GroupEdit extends JDialog {
 					}
 				}
 				if (!result) {
-					MessageDialog.error(null, "angal.common.data.not.saved.msg");
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 				}
 				else {
 					dispose();

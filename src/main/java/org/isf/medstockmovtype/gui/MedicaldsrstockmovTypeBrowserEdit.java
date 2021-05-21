@@ -43,6 +43,7 @@ import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
@@ -220,9 +221,9 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 							if (result) {
 								fireMedicaldsrstockmovInserted(medicaldsrstockmovType);
 								dispose();
-							} else
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							} else {
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							}
 						} catch (OHServiceException e1) {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
@@ -237,9 +238,9 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 								if (result) {
 									fireMedicaldsrstockmovUpdated();
 									dispose();
-								} else
-									JOptionPane.showMessageDialog(null,
-											MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+								} else {
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+								}
 							} catch (OHServiceException e1) {
 								result = false;
 								OHServiceExceptionUtil.showMessages(e1);

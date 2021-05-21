@@ -72,6 +72,7 @@ import org.isf.patient.model.PatientProfilePhoto;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.image.ImageUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.video.gui.PatientPhotoPanel;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -526,7 +527,7 @@ public class PatientInsertExtended extends JDialog {
 							}catch(OHServiceException ex){
 								ex.printStackTrace();
 								OHServiceExceptionUtil.showMessages(ex);
-								JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						}
 					} else {// Update
@@ -597,9 +598,9 @@ public class PatientInsertExtended extends JDialog {
 							patient = patientManager.savePatient(patient);
 							firePatientUpdated(patient);
 							dispose();
-						}catch(final OHServiceException ex){
+						} catch(final OHServiceException ex){
                             OHServiceExceptionUtil.showMessages(ex);
-							JOptionPane.showMessageDialog(PatientInsertExtended.this, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 					}
 				}

@@ -46,6 +46,7 @@ import org.isf.supplier.model.Supplier;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JLabelRequired;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
@@ -300,8 +301,12 @@ public class SupplierEdit extends JDialog {
 							fireSupplierUpdated();
 						}
 					}
-					if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-					else  dispose();
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
+						dispose();
+					}
 				}
 			});
 		}

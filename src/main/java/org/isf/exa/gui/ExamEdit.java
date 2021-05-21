@@ -47,6 +47,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
@@ -277,7 +278,9 @@ public class ExamEdit extends JDialog {
 									OHServiceExceptionUtil.showMessages(e1);
 								}
 							}
-							if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							if (!result) {
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							}
 							else  {
 								dispose();
 							}

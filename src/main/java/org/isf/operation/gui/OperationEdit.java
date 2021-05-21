@@ -50,6 +50,7 @@ import org.isf.opetype.manager.OperationTypeBrowserManager;
 import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
@@ -349,11 +350,12 @@ public class OperationEdit extends JDialog {
 								fireOperationUpdated();
 							}
 						}
-						if (!result)
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved")); //$NON-NLS-1$
-						else
+						if (!result) {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						}
+						else {
 							dispose();
+						}
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
