@@ -121,7 +121,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbc_jDateChooserDate.gridy = 0;
 			jPanelChooser.add(getJDateChooserDateFrom(), gbc_jDateChooserDate);
 			
-			JLabel jLabelDateto = new JLabel(MessageBundle.getMessage("angal.common.dateto")); //$NON-NLS-1$
+			JLabel jLabelDateto = new JLabel(MessageBundle.getMessage("angal.common.dateto.label"));
 			GridBagConstraints gbc_jLabelDateto = new GridBagConstraints();
 			gbc_jLabelDateto.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDateto.insets = new Insets(10, 5, 5, 5);
