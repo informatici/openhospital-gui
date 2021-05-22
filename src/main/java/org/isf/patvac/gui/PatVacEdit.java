@@ -73,7 +73,6 @@ import org.isf.vactype.model.VaccineType;
 public class PatVacEdit extends JDialog {
 
 	private static final long serialVersionUID = -4271389493861772053L;
-	private static final String VERSION = "v1.2";
 	private boolean insert = false;
 
 	private PatientVaccine patVac = null;
@@ -149,9 +148,9 @@ public class PatVacEdit extends JDialog {
 		this.setContentPane(getJContentPane());
 		this.setResizable(false);
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.patvac.newpatientvaccine") + "(" + VERSION + ")");
+			this.setTitle(MessageBundle.getMessage("angal.patvac.newpatientvaccine"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.patvac.edipatientvaccine") + "(" + VERSION + ")");
+			this.setTitle(MessageBundle.getMessage("angal.patvac.edipatientvaccine"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
