@@ -58,6 +58,7 @@ import org.isf.sms.model.Sms;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -269,10 +270,7 @@ public class SmsBrowser extends ModalJFrame {
 				public void actionPerformed(ActionEvent e) {
 					int[] indexes = jSmsTable.getSelectedRows();
 					if (indexes.length == 0) {
-						JOptionPane.showMessageDialog(null, 
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), 
-								MessageBundle.getMessage("angal.hospital"), 
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						ArrayList<Sms> smsList = new ArrayList<>();
 						int n = JOptionPane.showConfirmDialog(null, 

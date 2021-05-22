@@ -44,6 +44,7 @@ import org.isf.supplier.manager.SupplierBrowserManager;
 import org.isf.supplier.model.Supplier;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
@@ -173,11 +174,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 				
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-								null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						selectedrow = table.getSelectedRow();
 						supplier = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
@@ -227,11 +224,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-								SupplierBrowser.this,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						Supplier m = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 						if (m.getSupDeleted().equals('Y')) return;

@@ -47,6 +47,7 @@ import org.isf.malnutrition.model.Malnutrition;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 
 public class MalnutritionBrowser extends JDialog implements MalnutritionListener {
@@ -163,11 +164,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(
-							MalnutritionBrowser.this, 
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"), 
-							JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
 					malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(selectedrow, -1));
@@ -186,11 +183,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(
-							MalnutritionBrowser.this,
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"), 
-							JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					Malnutrition m = (Malnutrition) (((MalnBrowsingModel) model)
 							.getValueAt(table.getSelectedRow(), -1));
@@ -200,9 +193,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 					if (n == JOptionPane.YES_OPTION) {	
 						if (m==null){
-							JOptionPane.showMessageDialog(
-									MalnutritionBrowser.this,
-									MessageBundle.getMessage("angal.common.pleaseselectarow"));
+							MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
 						} else {
 							boolean deleted;
 							try {

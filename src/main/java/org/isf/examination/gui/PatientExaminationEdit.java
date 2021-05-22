@@ -87,6 +87,7 @@ import org.isf.stat.gui.report.GenericReportExamination;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ScaledJSlider;
 import org.isf.utils.jobjects.VoDoubleTextField;
@@ -1365,7 +1366,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				public void actionPerformed(ActionEvent e) {
 					int[] row = jTableSummary.getSelectedRows();
 					if (row.length == 0) {
-						JOptionPane.showMessageDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.pleaseselectarow"));
+						MessageDialog.error(PatientExaminationEdit.this, "angal.common.pleaseselectarow.msg");
 						return;
 					}
 					int ok = JOptionPane.showConfirmDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.doyouwanttoproceed"));

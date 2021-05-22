@@ -58,6 +58,7 @@ import org.isf.operation.model.OperationRow;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 
@@ -370,8 +371,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		int idRow = this.JtableData.getSelectedRow();
 		OperationRow operationRow = null;
 		if (idRow < 0) {
-			JOptionPane.showMessageDialog(OperationList.this, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationList.this, "angal.common.pleaseselectarow.msg");
 			return;
 		} else {
 			operationRow = oprowData.get(idRow);
@@ -392,8 +392,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		int idRow = this.JtableData.getSelectedRow();
 		OperationRow operationRow = null;
 		if (idRow < 0) {
-			JOptionPane.showMessageDialog(OperationList.this, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationList.this, "angal.common.pleaseselectarow.msg");
 			return;
 		} else {
 			operationRow = oprowData.get(idRow);

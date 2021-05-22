@@ -76,6 +76,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.JFromDateToDateChooserDialog;
 import org.isf.utils.jobjects.JMonthYearChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
@@ -421,11 +422,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(
-							MedicalBrowser.this,
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					Medical medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
@@ -498,11 +495,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(
-							MedicalBrowser.this,
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					Medical med = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
@@ -541,11 +534,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(
-							MedicalBrowser.this,
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
