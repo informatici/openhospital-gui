@@ -57,11 +57,8 @@ public class VaccineTypeEdit extends JDialog{
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2"; 
-
     private EventListenerList vaccineTypeListeners = new EventListenerList();
 
-        
     public interface VaccineTypeListener extends EventListener {
         void vaccineTypeUpdated(AWTEvent e);
         void vaccineTypeInserted(AWTEvent e);
@@ -133,9 +130,9 @@ public class VaccineTypeEdit extends JDialog{
 		
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.vactype.newvaccinetype")+"  ("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.vactype.newvaccinetype"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.vactype.editvaccinetype")+"  ("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.vactype.editvaccinetype"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();
