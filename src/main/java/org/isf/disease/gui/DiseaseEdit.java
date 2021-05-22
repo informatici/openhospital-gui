@@ -103,8 +103,6 @@ public class DiseaseEdit extends JDialog {
 			((DiseaseListener)listeners[i]).diseaseUpdated(event);
 	}
 	
-	private static final String VERSION="v1.2"; 
-
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -143,9 +141,9 @@ public class DiseaseEdit extends JDialog {
 	private void initialize() {
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.disease.newdisease")+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.disease.newdisease"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.disease.editdisease")+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.disease.editdisease"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();

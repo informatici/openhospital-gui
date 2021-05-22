@@ -64,8 +64,6 @@ public class ExamEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2";  
-	
 	private EventListenerList examListeners = new EventListenerList();
 
     public interface ExamListener extends EventListener {
@@ -145,9 +143,9 @@ public class ExamEdit extends JDialog {
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.exa.newexam")+" ("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.exa.newexam"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.exa.editexam")+" ("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.exa.editexam"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}

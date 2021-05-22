@@ -117,8 +117,6 @@ public class LabEdit extends ModalJFrame {
 	}
 	//---------------------------------------------------------------------------
 	
-	private static final String VERSION = "v1.1"; 
-	
 	private boolean insert = false;
 
 	private Laboratory lab = null;
@@ -188,9 +186,9 @@ public class LabEdit extends ModalJFrame {
 		this.setContentPane(getJContentPane());
 		this.setResizable(false);
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.lab.newlaboratoryexam")+"("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.lab.newlaboratoryexam"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.lab.editlaboratoryexam")+"("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.lab.editlaboratoryexam"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		//this.setVisible(true);

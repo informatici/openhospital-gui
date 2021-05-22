@@ -60,8 +60,6 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2"; 
-
 	private ArrayList<ExamType> pExamType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.codem"),
@@ -102,7 +100,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
         final int pfrmHeight = 4;
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle( MessageBundle.getMessage("angal.exatype.examtypebrowser")+"("+VERSION+")");
+		this.setTitle( MessageBundle.getMessage("angal.exatype.examtypebrowser"));
 		this.setContentPane(getJContainPanel());
 		//pack();	
 	}
