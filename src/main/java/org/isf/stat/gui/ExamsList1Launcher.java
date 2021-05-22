@@ -47,8 +47,6 @@ public class ExamsList1Launcher extends ModalJFrame{
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v 1.0"; 
-
 	private int pfrmExactWidth = 356;
 	private int pfrmExactHeight = 165;
 	private int pfrmBordX;
@@ -76,7 +74,7 @@ public class ExamsList1Launcher extends ModalJFrame{
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.stat.examsreport") + " ("+VERSION+")");
+		this.setTitle(MessageBundle.getMessage("angal.stat.examsreport"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
