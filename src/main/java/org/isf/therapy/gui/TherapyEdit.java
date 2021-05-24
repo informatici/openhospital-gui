@@ -269,9 +269,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
 		   
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
@@ -283,10 +280,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			return cell;
 	   }
 	}
-	public String[] visColums = {
-			MessageBundle.getMessage(getDate()),
-			
-	}; 
 	
 	private void showAll() {
 		jAgenda.removeAll();
@@ -303,9 +296,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		return dateFormat.format(date);
 	}
 
-
 	private void showTherapies() {
-		
 		for (Therapy th : therapies) {
 			showTherapy(th);
 		}
@@ -321,6 +312,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			}
 		}
 	}
+
 	private void showVisits() {
 		hashTableVisits = new Hashtable<>();
 		for (Visit vs : visits) {
@@ -350,7 +342,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			southPanel = new JPanel();
 			southPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.therapy.note"))); //$NON-NLS-1$
 			southPanel.add(getNote());
-
 		}
 		return southPanel;
 	}
