@@ -336,9 +336,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 		}
 		return editButton;	
 	}
-			
+
 	private JButton getDeleteButton() {
-		if (deleteButton == null) {			
+		if (deleteButton == null) {
 			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			deleteButton.addActionListener(e -> {
@@ -350,7 +350,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 				int selectedRow = admTable.getSelectedRow();
 				Object selectedObj = sorter.getValueAt(selectedRow, -1);
 
-				try{
+				try {
 					if (selectedObj instanceof Admission) {
 
 						Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
@@ -365,7 +365,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 							admModel.fireTableDataChanged();
 							admTable.updateUI();
 							sorter.sortByColumn(0, false);
-							if (adm.getAdmitted()==1) {
+							if (adm.getAdmitted() == 1) {
 								fireDeleteAdmissionUpdated(adm);
 							}
 							PatientDataBrowser.this.requestFocus();
@@ -387,14 +387,13 @@ public class PatientDataBrowser extends ModalJFrame implements
 							sorter.sortByColumn(0, false);
 						}
 					}
-				} catch(OHServiceException ex) {
-OHServiceExceptionUtil.showMessages(ex);
+				} catch (OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 		}
-		return deleteButton;	
+		return deleteButton;
 	}
-	
 	
 	private JButton getMalnutritionButton() {
 		if (malnutritionButton == null) {			

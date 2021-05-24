@@ -1044,8 +1044,8 @@ public class AdmissionBrowser extends ModalJFrame {
 						int nextProg = 1;
 						try {
 							nextProg = admissionManager.getNextYProg(wardId);
-						} catch(OHServiceException ex){
-OHServiceExceptionUtil.showMessages(ex);
+						} catch (OHServiceException ex) {
+							OHServiceExceptionUtil.showMessages(ex);
 						}
 						yProgTextField.setText("" + nextProg);
 
@@ -1054,7 +1054,7 @@ OHServiceExceptionUtil.showMessages(ex);
 						int usedBeds = 0;
 						try {
 							usedBeds = admissionManager.getUsedWardBed(wardId);
-						} catch(OHServiceException ex){
+						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
 						int freeBeds = nBeds - usedBeds;
