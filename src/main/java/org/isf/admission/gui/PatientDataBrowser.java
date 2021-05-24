@@ -27,7 +27,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +38,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -62,6 +62,7 @@ import org.isf.patient.gui.PatientSummary;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.table.TableSorter;
 import org.isf.ward.manager.WardBrowserManager;
@@ -84,8 +85,7 @@ import org.isf.ward.model.Ward;
  */
 public class PatientDataBrowser extends ModalJFrame implements 
 				PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener, OpdEditExtended.SurgeryListener {
-	
-	
+
 	private static final long serialVersionUID = 1L;
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
 
@@ -104,45 +104,48 @@ public class PatientDataBrowser extends ModalJFrame implements
     
     private void fireDeleteAdmissionUpdated(Admission admission) {
         AWTEvent event = new AWTEvent(admission , AWTEvent.RESERVED_ID_MAX + 1) {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;};
+		private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = deleteAdmissionListeners.getListeners(DeleteAdmissionListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((DeleteAdmissionListener)listeners[i]).deleteAdmissionUpdated(event);
+	    for (EventListener listener : listeners) {
+		    ((DeleteAdmissionListener) listener).deleteAdmissionUpdated(event);
+	    }
     }	
 	
 	//---------------------------------------------------------------------
 	
+	@Override
 	public void patientInserted(AWTEvent e) {
 	}
 
+	@Override
 	public void patientUpdated(AWTEvent e) {
 		jContentPane = null;
 		initialize();		
 	}
 	
+	@Override
 	public void surgeryInserted(AWTEvent e, Opd opd) {
 	}
 	
+	@Override
 	public void surgeryUpdated(AWTEvent e, Opd opd) {
 		jContentPane = null;
 		initialize();
 	}
 	
+	@Override
 	public void admissionInserted(AWTEvent e) {
 	}
 
+	@Override
 	public void admissionUpdated(AWTEvent e) {
 		jContentPane = null;
 		initialize();		
 	}
 
-	private Patient patient = null;
-	private JFrame admittedPatientWindow = null;
+	private Patient patient;
+	private JFrame admittedPatientWindow;
 	
 	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	
@@ -157,9 +160,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 		this.setContentPane(getJContentPane());
 
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-		setTitle(MessageBundle.getMessage("angal.admission.patientdata"));
+		setTitle(MessageBundle.getMessage("angal.admission.patientdata.title"));
 		
 		pack();
 		
@@ -191,15 +194,15 @@ public class PatientDataBrowser extends ModalJFrame implements
 	private JPanel patientData=null;
 	private boolean isMalnutrition = false;
 	
-	private JPanel getPatientDataPanel(){
+	private JPanel getPatientDataPanel() {
 		patientData = new JPanel();
 		patientData.setLayout(new BorderLayout());
 		
 		patientData.add(getTablesPanel(), BorderLayout.EAST);
 		
 		PatientSummary ps = new PatientSummary(patient);
-		for (Admission elem : admList){
-			if (elem.getType().equalsIgnoreCase("M")){
+		for (Admission elem : admList) {
+			if (elem.getType().equalsIgnoreCase("M")) {
 				isMalnutrition = true;
 				break;
 			}
@@ -236,7 +239,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	
 	private JPanel tablesPanel=null;
 	
-	private JPanel getTablesPanel(){
+	private JPanel getTablesPanel() {
 		tablesPanel = new JPanel(new BorderLayout());
 		
 		//Alex: added sorters, for Java6 only
@@ -250,7 +253,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 		//sorter.addMouseListenerToHeaderInTable(admTable); no needed
 		sorter.sortByColumn(0, false); //sort by first column, descending
 				
-		for (int i = 0; i< pColumns.length; i++){
+		for (int i = 0; i< pColumns.length; i++) {
 			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			if (i == 0 || i == 4) {
 				admTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
@@ -289,78 +292,44 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 	
 	private JButton closeButton=null;
-//	private JButton patientButton=null;
 	private JButton editButton=null;
 	private JButton deleteButton=null;
 	private JButton malnutritionButton=null;
 	
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton();
-			closeButton.setMnemonic(KeyEvent.VK_C);
-			closeButton.setText(MessageBundle.getMessage("angal.common.close"));  
-			closeButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			closeButton.addActionListener(e -> dispose());
 		}
 		return closeButton;
 	}
-
-//	private JButton getEditPatientButton() {
-//		if (patientButton == null) {			
-//			patientButton = new JButton();
-//			patientButton.setMnemonic(KeyEvent.VK_P);
-//			patientButton.setText(MessageBundle.getMessage("angal.admission.editpatient"));  
-//			patientButton.addActionListener(new java.awt.event.ActionListener() {
-//				public void actionPerformed(java.awt.event.ActionEvent e) {
-//					if (GeneralData.PATIENTEXTENDED){
-//						PatientInsertExtended editor = new PatientInsertExtended(PatientDataBrowser.this, patient, false);
-//						editor.addPatientListener(PatientDataBrowser.this);
-//						editor.setVisible(true);
-//					}
-//					else {
-//						PatientInsert editor = new PatientInsert(PatientDataBrowser.this, patient, false);
-//						editor.addPatientListener(PatientDataBrowser.this);
-//						editor.setVisible(true);
-//					}
-//				}
-//			});
-//		}
-//		return patientButton;
-//	}
 	
 	private JButton getEditButton() {
 		if (editButton == null) {			
-			editButton = new JButton();
-			editButton.setMnemonic(KeyEvent.VK_E);
-			editButton.setText(MessageBundle.getMessage("angal.common.editm"));  
-			editButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (admTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
-						return;
-					}
-					
-					int selectedRow = admTable.getSelectedRow();
-					Object selectedObj = sorter.getValueAt(selectedRow, -1);
+			editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			editButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+			editButton.addActionListener(e -> {
+				if (admTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+					return;
+				}
 
-					if (selectedObj instanceof Admission) {
-											
-						Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
-						new AdmissionBrowser(PatientDataBrowser.this,admittedPatientWindow, patient, ad);
+				int selectedRow = admTable.getSelectedRow();
+				Object selectedObj = sorter.getValueAt(selectedRow, -1);
+
+				if (selectedObj instanceof Admission) {
+					Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
+					new AdmissionBrowser(PatientDataBrowser.this,admittedPatientWindow, patient, ad);
+				} else {
+
+					Opd opd = (Opd)sorter.getValueAt(selectedRow, -1);
+					if (GeneralData.OPDEXTENDED) {
+						OpdEditExtended newrecord = new OpdEditExtended(PatientDataBrowser.this, opd, false);
+						newrecord.showAsModal(PatientDataBrowser.this);
 					} else {
-					
-						Opd opd = (Opd)sorter.getValueAt(selectedRow, -1);
-						if (GeneralData.OPDEXTENDED) {
-							OpdEditExtended newrecord = new OpdEditExtended(PatientDataBrowser.this, opd, false);
-							newrecord.showAsModal(PatientDataBrowser.this);
-						} else {
-							OpdEdit newrecord = new OpdEdit(PatientDataBrowser.this, opd, false);
-							newrecord.setVisible(true);
-						}
+						OpdEdit newrecord = new OpdEdit(PatientDataBrowser.this, opd, false);
+						newrecord.setVisible(true);
 					}
 				}
 			});
@@ -370,60 +339,56 @@ public class PatientDataBrowser extends ModalJFrame implements
 			
 	private JButton getDeleteButton() {
 		if (deleteButton == null) {			
-			deleteButton = new JButton();
-			deleteButton.setMnemonic(KeyEvent.VK_D);
-			deleteButton.setText(MessageBundle.getMessage("angal.common.deletem"));  
-			deleteButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (admTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
-						return;
-					}
-					
-					int selectedRow = admTable.getSelectedRow();
-					Object selectedObj = sorter.getValueAt(selectedRow, -1);
-					
-					try{
-						if (selectedObj instanceof Admission) {
+			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+			deleteButton.addActionListener(e -> {
+				if (admTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+					return;
+				}
 
-							Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
+				int selectedRow = admTable.getSelectedRow();
+				Object selectedObj = sorter.getValueAt(selectedRow, -1);
 
-							int n = JOptionPane.showConfirmDialog(
-									null,
-									MessageBundle.getMessage("angal.admission.deleteselectedadmission"),
-									MessageBundle.getMessage("angal.hospital"),
-									JOptionPane.YES_NO_OPTION);
-							if ((n == JOptionPane.YES_OPTION) && admissionManager.setDeleted(adm.getId())){
-								admList.remove(adm);
-								admModel.fireTableDataChanged();
-								admTable.updateUI();
-								sorter.sortByColumn(0, false);
-								if (adm.getAdmitted()==1){
-									fireDeleteAdmissionUpdated(adm);
-								}
-								PatientDataBrowser.this.requestFocus();
+				try{
+					if (selectedObj instanceof Admission) {
+
+						Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
+
+						int n = JOptionPane.showConfirmDialog(
+								null,
+								MessageBundle.getMessage("angal.admission.deleteselectedadmission"),
+								MessageBundle.getMessage("angal.hospital"),
+								JOptionPane.YES_NO_OPTION);
+						if ((n == JOptionPane.YES_OPTION) && admissionManager.setDeleted(adm.getId())) {
+							admList.remove(adm);
+							admModel.fireTableDataChanged();
+							admTable.updateUI();
+							sorter.sortByColumn(0, false);
+							if (adm.getAdmitted()==1) {
+								fireDeleteAdmissionUpdated(adm);
 							}
-						} else {
-							Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
-							OpdBrowserManager delOpd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-
-							int n = JOptionPane.showConfirmDialog(
-									null,
-									MessageBundle.getMessage("angal.admission.deleteselectedopd"),
-									MessageBundle.getMessage("angal.hospital"),
-									JOptionPane.YES_NO_OPTION);
-
-							if ((n == JOptionPane.YES_OPTION) && (delOpd.deleteOpd(opd))){
-								opdList.remove(opd);
-								admModel.fireTableDataChanged();
-								admTable.updateUI();
-								sorter.sortByColumn(0, false);
-							}	
+							PatientDataBrowser.this.requestFocus();
 						}
-					}catch(OHServiceException ex){
-                        OHServiceExceptionUtil.showMessages(ex);
+					} else {
+						Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
+						OpdBrowserManager delOpd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+
+						int n = JOptionPane.showConfirmDialog(
+								null,
+								MessageBundle.getMessage("angal.admission.deleteselectedopd"),
+								MessageBundle.getMessage("angal.hospital"),
+								JOptionPane.YES_NO_OPTION);
+
+						if ((n == JOptionPane.YES_OPTION) && (delOpd.deleteOpd(opd))) {
+							opdList.remove(opd);
+							admModel.fireTableDataChanged();
+							admTable.updateUI();
+							sorter.sortByColumn(0, false);
+						}
 					}
+				} catch(OHServiceException ex) {
+OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 		}
@@ -433,37 +398,28 @@ public class PatientDataBrowser extends ModalJFrame implements
 	
 	private JButton getMalnutritionButton() {
 		if (malnutritionButton == null) {			
-			malnutritionButton = new JButton();
-			malnutritionButton.setMnemonic(KeyEvent.VK_M);
-			malnutritionButton.setText(MessageBundle.getMessage("angal.admission.malnutritioncontrol"));  
-			malnutritionButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (admTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
-						return;
+			malnutritionButton = new JButton(MessageBundle.getMessage("angal.admission.malnutritioncontrol.btn"));
+			malnutritionButton.setMnemonic(MessageBundle.getMnemonic( "angal.admission.malnutritioncontrol.btn.key"));
+			malnutritionButton.addActionListener(e -> {
+				if (admTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+					return;
+				}
+				int selectedRow = admTable.getSelectedRow();
+				Object selectedObj = sorter.getValueAt(selectedRow, -1);
+
+				if (selectedObj instanceof Admission) {
+					Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
+					if (ad.getType().equalsIgnoreCase("M")) {
+						new MalnutritionBrowser(PatientDataBrowser.this, ad);
 					}
-					int selectedRow = admTable.getSelectedRow();
-					Object selectedObj = sorter.getValueAt(selectedRow, -1);
-					//String Selection = (String) admTable.getValueAt(selectedRow, 1);
-					//selectedRow = admTable.convertRowIndexToModel(selectedRow);
-					
-					if (selectedObj instanceof Admission) {
-						
-						Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
-						//Admission ad = (Admission) (((AdmissionBrowserModel) admModel)
-							//	.getValueAt(selectedRow, -1));
-						if (ad.getType().equalsIgnoreCase("M")){
-							new MalnutritionBrowser(PatientDataBrowser.this, ad);
-						}
-						else {
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.theselectedadmissionhasnoconcernwithmalnutrition"),
-									MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
-						}
-					} else {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.opdhasnoconcernwithmalnutrition"),
+					else {
+						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.theselectedadmissionhasnoconcernwithmalnutrition"),
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
 					}
+				} else {
+					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.opdhasnoconcernwithmalnutrition"),
+							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
 				}
 			});
 		}
@@ -482,27 +438,28 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			OpdBrowserManager opd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
 				opdList = opd.getOpdList(patient.getCode());
-			}catch(OHServiceException e){
+			} catch(OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
 				admList = manager.getAdmissions(patient);
-			}catch(OHServiceException e){
+			} catch(OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
 				ward = wbm.getWards();
-			}catch(OHServiceException e){
+			} catch(OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
 				disease = dbm.getDiseaseAll();
-			}catch(OHServiceException e){
+			} catch(OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 		
 		
+		@Override
 		public int getRowCount() {
 			int count = 0;
 			if (admList != null) {
@@ -514,37 +471,40 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			return count;
 		}
 
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}	
 		
 		
-		public Object getValueAt(int r, int c) {
-			if (c == -1) {
-				if (r < admList.size())	{
-					return admList.get(r);
+		@Override
+		public Object getValueAt(int row, int column) {
+			if (column == -1) {
+				if (row < admList.size())	{
+					return admList.get(row);
 				} else {
-					int z = r - admList.size();
+					int z = row - admList.size();
 					return opdList.get(z);
 				}
 			
-			} else if (c == 0) {
-				if (r < admList.size()) {
-					Date myDate = (admList.get(r)).getAdmDate().getTime();	
+			} else if (column == 0) {
+				if (row < admList.size()) {
+					Date myDate = (admList.get(row)).getAdmDate().getTime();
 					return myDate;
 				} else {
-					int z = r - admList.size();
+					int z = row - admList.size();
 					Date myDate = (opdList.get(z)).getVisitDate().getTime();
 					return myDate;
 				}
 				
-			} else if (c == 1) {				
-				if (r < admList.size()) {
-					String id = admList.get(r).getWard().getCode();
+			} else if (column == 1) {				
+				if (row < admList.size()) {
+					String id = admList.get(row).getWard().getCode();
 					for (Ward elem : ward) {
 						if (elem.getCode().equalsIgnoreCase(id))
 							return elem.getDescription();
@@ -553,39 +513,36 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					return "OPD";
 				}
 			}
-			else if (c == 2) {
-				String id = null;
-				if (r < admList.size()) {
-					id = admList.get(r).getDiseaseIn().getCode();
-					if (id == null){
-						id = "";
-					}	
+			else if (column == 2) {
+				String id;
+				if (row < admList.size()) {
+					id = admList.get(row).getDiseaseIn().getCode();
 				} else {
-					int z = r - admList.size();
+					int z = row - admList.size();
 					id = opdList.get(z).getDisease().getCode();
-					if (id == null){
-						id = "";
-					}
+				}
+				if (id == null) {
+					id = "";
 				}
 				for (Disease elem : disease) {
 					if (elem.getCode().equalsIgnoreCase(id))
 						return elem.getDescription();
-				}				
+				}
 				return MessageBundle.getMessage("angal.admission.nodisease");
-	
-			}else if (c == 3) {
-				String id = null;
-				if (r < admList.size()) {
-					id = admList.get(r).getDiseaseOut1() == null ? null :  admList.get(r).getDiseaseOut1().getCode();
-					if (id == null){
+
+			} else if (column == 3) {
+				String id;
+				if (row < admList.size()) {
+					id = admList.get(row).getDiseaseOut1() == null ? null :  admList.get(row).getDiseaseOut1().getCode();
+					if (id == null) {
 						id = "";
 					}
 				} else {
-					int z = r - admList.size();
+					int z = row - admList.size();
 					Disease dis = opdList.get(z).getDisease3();
-					if (dis == null){
+					if (dis == null) {
 						dis = opdList.get(z).getDisease2();
-						if (dis == null){
+						if (dis == null) {
 							id = opdList.get(z).getDisease().getCode();
 						} else {
 							id = dis.getCode();
@@ -600,16 +557,16 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				}				
 				return MessageBundle.getMessage("angal.admission.nodisease");
 				
-			}  else if (c == 4) {
-				if (r < admList.size()) {
-					if (admList.get(r).getDisDate()==null)
+			}  else if (column == 4) {
+				if (row < admList.size()) {
+					if (admList.get(row).getDisDate()==null)
 						return MessageBundle.getMessage("angal.admission.present");
 					else {
-						Date myDate = admList.get(r).getDisDate().getTime();
+						Date myDate = admList.get(row).getDisDate().getTime();
 						return myDate;
 					}
 				} else {
-					int z = r - admList.size();
+					int z = row - admList.size();
 					String status = "" + opdList.get(z).getNewPatient();
 					return (status.compareTo("R") == 0
 							? MessageBundle.getMessage("angal.opd.reattendance.txt")
@@ -628,24 +585,22 @@ class AdmissionBrowserModel extends DefaultTableModel {
 	}
 
 	public class DateCellRenderer extends DefaultTableCellRenderer {
-	/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 			
-			if ( value instanceof Date ){
+			if (value instanceof Date) {
 				// Use SimpleDateFormat class to get a formatted String from Date object.
 				String strDate = new SimpleDateFormat(DATE_FORMAT).format((Date)value);
 				
 				// Sorting algorithm will work with model value. So you dont need to worry
 				// about the renderer's display value. 
-				this.setText( strDate );
+				this.setText(strDate);
 			}
 			return this;
 		}
 	}
 	
-}// class
+}
