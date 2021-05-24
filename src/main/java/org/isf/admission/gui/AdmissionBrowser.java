@@ -31,14 +31,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -144,7 +140,6 @@ public class AdmissionBrowser extends ModalJFrame {
 
     	public interface AdmissionListener extends EventListener {
 		void admissionUpdated(AWTEvent e);
-
 		void admissionInserted(AWTEvent e);
 	}
 
@@ -162,8 +157,9 @@ public class AdmissionBrowser extends ModalJFrame {
 		};
 
 		EventListener[] listeners = admissionListeners.getListeners(AdmissionListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((AdmissionListener) listeners[i]).admissionInserted(event);
+		for (EventListener listener : listeners) {
+			((AdmissionListener) listener).admissionInserted(event);
+		}
 	}
 
 	private void fireAdmissionUpdated(Admission anAdmission) {
@@ -172,17 +168,18 @@ public class AdmissionBrowser extends ModalJFrame {
 		};
 
 		EventListener[] listeners = admissionListeners.getListeners(AdmissionListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((AdmissionListener) listeners[i]).admissionUpdated(event);
+		for (EventListener listener : listeners) {
+			((AdmissionListener) listener).admissionUpdated(event);
+		}
 	}
 
-	private Patient patient = null;
+	private Patient patient;
 
-	private boolean editing = false;
+	private boolean editing;
 
 	private Admission admission = null;
 
-	private PatientSummary ps = null;
+	private PatientSummary ps;
 	
 	private JTextArea textArea = null;
 
@@ -283,7 +280,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JPanel malnuPanel;
 	
-	private GregorianCalendar dateIn = null;
+	private GregorianCalendar dateIn;
 
 	private CustomJDateChooser dateInFieldCal = null;
 
@@ -399,12 +396,12 @@ public class AdmissionBrowser extends ModalJFrame {
 	 */
 	public AdmissionBrowser(JFrame parentFrame, AdmittedPatient admPatient, boolean editing) {
 		super();
-		setTitle(editing ? MessageBundle.getMessage("angal.admission.editadmissionrecord")
-						: MessageBundle.getMessage("angal.admission.newadmission"));
+		setTitle(editing ? MessageBundle.getMessage("angal.admission.editadmissionrecord.title")
+						: MessageBundle.getMessage("angal.admission.newadmission.title"));
 		addAdmissionListener((AdmissionListener) parentFrame);
 		this.editing = editing;
 		patient = admPatient.getPatient();
-		if (("" + patient.getSex()).equalsIgnoreCase("F")) {
+		if (Character.toUpperCase(patient.getSex()) == 'F') {
 			enablePregnancy = true;
 		}
 		ps = new PatientSummary(patient);
@@ -431,7 +428,6 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 			if (admission.getWard().getCode().equalsIgnoreCase("M")) {
 				viewingPregnancy = true;
-			} else {
 			}
 		} else {
 			admission = new Admission();
@@ -447,6 +443,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 		this.addWindowListener(new WindowAdapter() {
 
+			@Override
 			public void windowClosing(WindowEvent e) {
 				// to free memory
 				if (diseaseInList != null)
@@ -465,12 +462,12 @@ public class AdmissionBrowser extends ModalJFrame {
 	 */
 	public AdmissionBrowser(JFrame parentFrame, JFrame parentParentFrame, Patient aPatient, Admission anAdmission) {
 		super();
-		setTitle(MessageBundle.getMessage("angal.admission.editadmissionrecord"));
+		setTitle(MessageBundle.getMessage("angal.admission.editadmissionrecord.title"));
 		addAdmissionListener((AdmissionListener) parentParentFrame);
 		addAdmissionListener((AdmissionListener) parentFrame);
 		this.editing = true;
 		patient = aPatient;
-		if (("" + patient.getSex()).equalsIgnoreCase("F")) {
+		if (Character.toUpperCase(patient.getSex()) == 'F') {
 			enablePregnancy = true;
 		}
 		ps = new PatientSummary(patient);
@@ -480,17 +477,17 @@ public class AdmissionBrowser extends ModalJFrame {
                 
 		try {
 			diseaseOutList = dbm.getDiseaseIpdOut();
-		}catch(OHServiceException e){
+		} catch(OHServiceException e){
             OHServiceExceptionUtil.showMessages(e);
 		}
 		try {
 			diseaseInList = dbm.getDiseaseIpdIn();
-		}catch(OHServiceException e){
+		} catch(OHServiceException e){
             OHServiceExceptionUtil.showMessages(e);
 		}
 		try {
 			admission = admissionManager.getAdmission(anAdmission.getId());
-		}catch(OHServiceException e){
+		} catch(OHServiceException e){
             OHServiceExceptionUtil.showMessages(e);
 		}
 		if (admission.getWard().getCode().equalsIgnoreCase("M")) {
@@ -507,6 +504,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		
 		this.addWindowListener(new WindowAdapter(){
 			
+			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				if (diseaseInList != null) diseaseInList.clear();
@@ -515,7 +513,6 @@ public class AdmissionBrowser extends ModalJFrame {
 				dispose();
 			}			
 		});
-		
 	}
 
 	private void initialize(JFrame parent) {
@@ -554,12 +551,10 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JTabbedPane getJTabbedPaneAdmission() {
 		if (jTabbedPaneAdmission == null) {
 			jTabbedPaneAdmission = new JTabbedPane();
-			jTabbedPaneAdmission.addTab(MessageBundle.getMessage("angal.admission.admissionanddischarge"), getAdmissionTab());
-			jTabbedPaneAdmission.addTab(MessageBundle.getMessage("angal.admission.operation"), 
-                                //getOperationTab());
-                                getMultiOperationTab());
+			jTabbedPaneAdmission.addTab(MessageBundle.getMessage("angal.admission.admissionanddischarge.title"), getAdmissionTab());
+			jTabbedPaneAdmission.addTab(MessageBundle.getMessage("angal.admission.operation.title"), getMultiOperationTab());
 			if (enablePregnancy) {
-				jTabbedPaneAdmission.addTab(MessageBundle.getMessage("angal.admission.delivery"), getDeliveryTab());
+				jTabbedPaneAdmission.addTab(MessageBundle.getMessage("angal.admission.delivery.title"), getDeliveryTab());
 				pregnancyTabIndex = jTabbedPaneAdmission.getTabCount() - 1;
 				if (!viewingPregnancy) {
 					jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, false);
@@ -736,12 +731,15 @@ public class AdmissionBrowser extends ModalJFrame {
 				new ShadowBorder(5, Color.LIGHT_GRAY))); // internal
 		scrollPane.addAncestorListener(new AncestorListener() {
 
+			@Override
 			public void ancestorRemoved(AncestorEvent event) {
 			}
 
+			@Override
 			public void ancestorMoved(AncestorEvent event) {
 			}
 
+			@Override
 			public void ancestorAdded(AncestorEvent event) {
 				textArea.requestFocus();
 			}
@@ -774,7 +772,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			treatmTypeBox.addItem("");
 			try {
 				treatmTypeList = abm.getPregnantTreatmentType();
-			}catch(OHServiceException e){
+			} catch(OHServiceException e){
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			if (treatmTypeList != null){
@@ -789,7 +787,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 			
 			treatmentPanel.add(treatmTypeBox);
-			treatmentPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.treatmenttype")));
+			treatmentPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.treatmenttype.border")));
 		}
 		return treatmentPanel;
 	}
@@ -805,7 +803,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 
 			weightPanel.add(weightField);
-			weightPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.weight")));
+			weightPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.weight.border")));
 		}
 		return weightPanel;
 	}
@@ -826,7 +824,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			visitDateFieldCal.setDateFormatString("dd/MM/yy");
 	
 			visitDatePanel.add(visitDateFieldCal); // Calendar
-			visitDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.visitdate")));
+			visitDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.visitdate.border")));
 		}
 		return visitDatePanel;
 	}
@@ -840,7 +838,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			deliveryResultTypeBox.addItem("");
 			try {
 				deliveryResultTypeList = drtbm.getDeliveryResultType();
-			}catch(OHServiceException e){
+			} catch(OHServiceException e){
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			if (deliveryResultTypeList != null){
@@ -854,7 +852,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				}
 			}
 			deliveryResultTypePanel.add(deliveryResultTypeBox);
-			deliveryResultTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliveryresultype")));
+			deliveryResultTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliveryresultype.border")));
 		}
 		return deliveryResultTypePanel;
 	}
@@ -868,7 +866,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			deliveryTypeBox.addItem("");
             try{
                 deliveryTypeList = dtbm.getDeliveryType();
-            }catch(OHServiceException e){
+            } catch(OHServiceException e){
                 OHServiceExceptionUtil.showMessages(e);
             }
 			if (deliveryTypeList != null){
@@ -882,7 +880,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				}
 			}
 			deliveryTypePanel.add(deliveryTypeBox);
-			deliveryTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliverytype")));
+			deliveryTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliverytype.border")));
 		}
 		return deliveryTypePanel;
 	}
@@ -901,7 +899,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			deliveryDateFieldCal.setDateFormatString("dd/MM/yy");
 			
 			deliveryDatePanel.add(deliveryDateFieldCal);
-			deliveryDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliverydate")));
+			deliveryDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliverydate.border")));
 		}
 		return deliveryDatePanel;
 	}
@@ -919,7 +917,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			abortDateFieldCal.setDateFormatString("dd/MM/yy");
 	
 			abortDatePanel.add(abortDateFieldCal);
-			abortDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.abortdate")));
+			abortDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.abortdate.border")));
 		}
 		return abortDatePanel;
 	}
@@ -938,7 +936,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			ctrl1DateFieldCal.setDateFormatString("dd/MM/yy");
 
 			control1DatePanel.add(ctrl1DateFieldCal);
-			control1DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln1date")));
+			control1DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln1date.border")));
 		}
 		return control1DatePanel;
 	}
@@ -957,7 +955,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			ctrl2DateFieldCal.setDateFormatString("dd/MM/yy");
 
 			control2DatePanel.add(ctrl2DateFieldCal);
-			control2DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln2date")));
+			control2DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln2date.border")));
 		}
 		return control2DatePanel;
 	}
@@ -976,7 +974,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			yProgTextField.setColumns(11);
 			
 			yearProgPanel.add(yProgTextField);
-			yearProgPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.progressiveinyear")));
+			yearProgPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.progressiveinyear.border")));
 			
 		}
 		return yearProgPanel;
@@ -994,7 +992,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			FHUTextField.setColumns(20);
 			
 			fhuPanel.add(FHUTextField);
-			fhuPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.fromhealthunit")));
+			fhuPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.fromhealthunit.border")));
 			
 		}
 		return fhuPanel;
@@ -1009,7 +1007,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			wardBox.addItem("");
 			try {
 				wardList = wbm.getWards();
-			}catch(OHServiceException e){
+			} catch(OHServiceException e){
 				wardList = new ArrayList<>();
                 OHServiceExceptionUtil.showMessages(e);
 			}
@@ -1033,65 +1031,62 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 				}
 			}
-			wardBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					// set yProg
-					if (wardBox.getSelectedIndex() == 0) {
-						yProgTextField.setText("");
-						return;
+			wardBox.addActionListener(e -> {
+				// set yProg
+				if (wardBox.getSelectedIndex() == 0) {
+					yProgTextField.setText("");
+					return;
+				} else {
+					String wardId = ((Ward) wardBox.getSelectedItem()).getCode();
+					if (editing && wardId.equalsIgnoreCase(admission.getWard().getCode())) {
+						yProgTextField.setText("" + admission.getYProg());
 					} else {
-						String wardId = ((Ward) wardBox.getSelectedItem()).getCode();
-						if (editing && wardId.equalsIgnoreCase(admission.getWard().getCode())) {
-							yProgTextField.setText("" + admission.getYProg());
-						} else {
-							int nextProg = 1;
-							try {
-								nextProg = admissionManager.getNextYProg(wardId);
-							}catch(OHServiceException ex){
-                                OHServiceExceptionUtil.showMessages(ex);
-							}
-							yProgTextField.setText("" + nextProg);
-
-							// get default selected warn default beds number
-							int nBeds = ((Ward) wardBox.getSelectedItem()).getBeds();
-							int usedBeds = 0;
-							try {
-								usedBeds = admissionManager.getUsedWardBed(wardId);
-							}catch(OHServiceException ex){
-                                OHServiceExceptionUtil.showMessages(ex);
-							}
-							int freeBeds = nBeds - usedBeds;
-							if (freeBeds <= 0)
-								JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.wardwithnobedsavailable"));
+						int nextProg = 1;
+						try {
+							nextProg = admissionManager.getNextYProg(wardId);
+						} catch (OHServiceException ex) {
+							OHServiceExceptionUtil.showMessages(ex);
 						}
+						yProgTextField.setText("" + nextProg);
+
+						// get default selected warn default beds number
+						int nBeds = ((Ward) wardBox.getSelectedItem()).getBeds();
+						int usedBeds = 0;
+						try {
+							usedBeds = admissionManager.getUsedWardBed(wardId);
+						} catch (OHServiceException ex) {
+							OHServiceExceptionUtil.showMessages(ex);
+						}
+						int freeBeds = nBeds - usedBeds;
+						if (freeBeds <= 0)
+							JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.wardwithnobedsavailable"));
 					}
+				}
 
-					// switch panel
-					if (((Ward) wardBox.getSelectedItem()).getCode().equalsIgnoreCase("M")) {
-						if (!viewingPregnancy) {
-							saveWard = (Ward) wardBox.getSelectedItem();
-							saveYProg = yProgTextField.getText();
-							viewingPregnancy = true;
-							jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, true);
-							validate();
-							repaint();
-						}
-					} else {
-						if (viewingPregnancy) {
-							saveWard = (Ward) wardBox.getSelectedItem();
-							saveYProg = yProgTextField.getText();
-							viewingPregnancy = false;
-							jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, false);
-							validate();
-							repaint();
-						}
+				// switch panel
+				if (((Ward) wardBox.getSelectedItem()).getCode().equalsIgnoreCase("M")) {
+					if (!viewingPregnancy) {
+						saveWard = (Ward) wardBox.getSelectedItem();
+						saveYProg = yProgTextField.getText();
+						viewingPregnancy = true;
+						jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, true);
+						validate();
+						repaint();
 					}
-
+				} else {
+					if (viewingPregnancy) {
+						saveWard = (Ward) wardBox.getSelectedItem();
+						saveYProg = yProgTextField.getText();
+						viewingPregnancy = false;
+						jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, false);
+						validate();
+						repaint();
+					}
 				}
 			});
 			
 			wardPanel.add(wardBox);
-			wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.ward")));
+			wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.ward.border")));
 		}
 		return wardPanel;
 	}
@@ -1101,7 +1096,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			diseaseInPanel = new JPanel();
 			diseaseInPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			
-			diseaseInPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.diagnosisinstar")));
+			diseaseInPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.diagnosisinstar.border")));
 			diseaseInPanel.add(Box.createHorizontalStrut(50));
 			
 			diseaseInBox = new JComboBox();
@@ -1127,7 +1122,7 @@ public class AdmissionBrowser extends ModalJFrame {
                             //Not found: search among all diseases
                             try {
                                     if (diseaseAllList == null) diseaseAllList = dbm.getDiseaseAll();
-                            }catch(OHServiceException e){
+                            } catch(OHServiceException e){
                     OHServiceExceptionUtil.showMessages(e);
                             }
                             for (Disease elem : diseaseAllList) {
@@ -1140,7 +1135,8 @@ public class AdmissionBrowser extends ModalJFrame {
 
                             if (found == null) {
                                     //Still not found
-                                    diseaseInBox.addItem(MessageBundle.getMessage("angal.admission.no") + admission.getDiseaseIn().getDescription() + " " + MessageBundle.getMessage("angal.admission.notfoundasinpatientdisease"));
+                                    diseaseInBox.addItem(MessageBundle.getMessage("angal.admission.no") + admission.getDiseaseIn().getDescription() + " "
+		                                    + MessageBundle.getMessage("angal.admission.notfoundasinpatientdisease"));
                                     diseaseInBox.setSelectedIndex(diseaseInBox.getItemCount() - 1);
                             }
                     }
@@ -1149,34 +1145,35 @@ public class AdmissionBrowser extends ModalJFrame {
                     diseaseInPanel.add(searchDiseasetextField);
                     searchDiseasetextField.setColumns(10);
                     searchDiseasetextField.addKeyListener(new KeyListener() {
+                        @Override
                         public void keyPressed(KeyEvent e) {
                             int key = e.getKeyCode();
                             if (key == KeyEvent.VK_ENTER) {
                                 searchButton.doClick();
                             }
                         }
+                        @Override
                         public void keyReleased(KeyEvent e) {}
+                        @Override
                         public void keyTyped(KeyEvent e) {}
                     });
 
                     searchButton = new JButton("");
                     diseaseInPanel.add(searchButton);
-                    searchButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent arg0) {
-                            diseaseInBox.removeAllItems();
-                            diseaseInBox.addItem("");
-                            for(Disease disease: 
-                                    getSearchDiagnosisResults(searchDiseasetextField.getText(), diseaseInList)) {
-                                diseaseInBox.addItem(disease);
-                            }
-                            
-                            if (diseaseInBox.getItemCount() >= 2){
-                                diseaseInBox.setSelectedIndex(1);
-                            }
-                            diseaseInBox.requestFocus();
-                            if (diseaseInBox.getItemCount() > 2){
-                                diseaseInBox.showPopup();
-                            }
+                    searchButton.addActionListener(arg0 -> {
+                        diseaseInBox.removeAllItems();
+                        diseaseInBox.addItem("");
+                        for(Disease disease:
+                                getSearchDiagnosisResults(searchDiseasetextField.getText(), diseaseInList)) {
+                            diseaseInBox.addItem(disease);
+                        }
+
+                        if (diseaseInBox.getItemCount() >= 2){
+                            diseaseInBox.setSelectedIndex(1);
+                        }
+                        diseaseInBox.requestFocus();
+                        if (diseaseInBox.getItemCount() > 2){
+                            diseaseInBox.showPopup();
                         }
                     });
                     searchButton.setPreferredSize(new Dimension(20, 20));
@@ -1217,7 +1214,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			admTypeBox.addItem("");
 			try {
 				admTypeList = admissionManager.getAdmissionType();
-			}catch(OHServiceException e){
+			} catch(OHServiceException e){
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			for (AdmissionType elem : admTypeList) {
@@ -1230,7 +1227,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 			
 			admissionTypePanel.add(admTypeBox);
-			admissionTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.admissiontype")));
+			admissionTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.admissiontype.border")));
 				
 		}
 		return admissionTypePanel;
@@ -1251,27 +1248,24 @@ public class AdmissionBrowser extends ModalJFrame {
 			dateInFieldCal = new CustomJDateChooser(dateIn.getTime(), "dd/MM/yy"); // Calendar
 			dateInFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateInFieldCal.setDateFormatString("dd/MM/yy");
-			dateInFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
-				
-				public void propertyChange(PropertyChangeEvent evt) {
-					Date newValue = (Date) evt.getNewValue();
-					if (newValue.before(patient.getBirthDate())) {
-						JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.thepatientwasnotyetbornatselecteddate"));
-						dateInFieldCal.setDate((Date) evt.getOldValue());
-						return;
-					}
-					dateInFieldCal.setDate(newValue);
-					dateIn.setTime(newValue);
-					updateBedDays();
-					getDiseaseInPanel();
-					getDiseaseOut1Panel();
-					getDiseaseOut2Panel();
-					getDiseaseOut3Panel();
+			dateInFieldCal.addPropertyChangeListener("date", evt -> {
+				Date newValue = (Date) evt.getNewValue();
+				if (newValue.before(patient.getBirthDate())) {
+					JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.thepatientwasnotyetbornatselecteddate"));
+					dateInFieldCal.setDate((Date) evt.getOldValue());
+					return;
 				}
+				dateInFieldCal.setDate(newValue);
+				dateIn.setTime(newValue);
+				updateBedDays();
+				getDiseaseInPanel();
+				getDiseaseOut1Panel();
+				getDiseaseOut2Panel();
+				getDiseaseOut3Panel();
 			});
 			
 			admissionDatePanel.add(dateInFieldCal);
-			admissionDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.admissiondate")));
+			admissionDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.admissiondate.border")));
 		}
 		return admissionDatePanel;
 	}
@@ -1280,7 +1274,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (diseaseOutPanel == null) {
 			diseaseOutPanel = new JPanel();
 			diseaseOutPanel.setLayout(new BoxLayout(diseaseOutPanel, BoxLayout.Y_AXIS));
-			diseaseOutPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.diagnosisout")));
+			diseaseOutPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.diagnosisout.border")));
 			diseaseOutPanel.add(getDiseaseOut1Panel());
 			diseaseOutPanel.add(getDiseaseOut2Panel());
 			diseaseOutPanel.add(getDiseaseOut3Panel());
@@ -1349,34 +1343,35 @@ public class AdmissionBrowser extends ModalJFrame {
                     diseaseOut1Panel.add(searchDiseaseOut1textField);
                     searchDiseaseOut1textField.setColumns(10);
                     searchDiseaseOut1textField.addKeyListener(new KeyListener() {
+                        @Override
                         public void keyPressed(KeyEvent e) {
                             int key = e.getKeyCode();
                             if (key == KeyEvent.VK_ENTER) {
                                 searchDiseaseOut1Button.doClick();
                             }
                         }
+                        @Override
                         public void keyReleased(KeyEvent e) {}
+                        @Override
                         public void keyTyped(KeyEvent e) {}
                     });
 
                     searchDiseaseOut1Button = new JButton("");
                     diseaseOut1Panel.add(searchDiseaseOut1Button);
-                    searchDiseaseOut1Button.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent arg0) {
-                            diseaseOut1Box.removeAllItems();
-                            diseaseOut1Box.addItem("");
-                            for(Disease disease: 
-                                    getSearchDiagnosisResults(searchDiseaseOut1textField.getText(), diseaseOutList)) {
-                                diseaseOut1Box.addItem(disease);
-                            }
-                            
-                            if (diseaseOut1Box.getItemCount() >= 2){
-                                diseaseOut1Box.setSelectedIndex(1);
-                            }
-                            diseaseOut1Box.requestFocus();
-                            if (diseaseOut1Box.getItemCount() > 2){
-                                diseaseOut1Box.showPopup();
-                            }
+                    searchDiseaseOut1Button.addActionListener(arg0 -> {
+                        diseaseOut1Box.removeAllItems();
+                        diseaseOut1Box.addItem("");
+                        for(Disease disease:
+                                getSearchDiagnosisResults(searchDiseaseOut1textField.getText(), diseaseOutList)) {
+                            diseaseOut1Box.addItem(disease);
+                        }
+
+                        if (diseaseOut1Box.getItemCount() >= 2){
+                            diseaseOut1Box.setSelectedIndex(1);
+                        }
+                        diseaseOut1Box.requestFocus();
+                        if (diseaseOut1Box.getItemCount() > 2){
+                            diseaseOut1Box.showPopup();
                         }
                     });
                     searchDiseaseOut1Button.setPreferredSize(new Dimension(20, 20));
@@ -1447,34 +1442,35 @@ public class AdmissionBrowser extends ModalJFrame {
                     diseaseOut2Panel.add(searchDiseaseOut2textField);
                     searchDiseaseOut2textField.setColumns(10);
                     searchDiseaseOut2textField.addKeyListener(new KeyListener() {
+                        @Override
                         public void keyPressed(KeyEvent e) {
                             int key = e.getKeyCode();
                             if (key == KeyEvent.VK_ENTER) {
                                 searchDiseaseOut2Button.doClick();
                             }
                         }
+                        @Override
                         public void keyReleased(KeyEvent e) {}
+                        @Override
                         public void keyTyped(KeyEvent e) {}
                     });
 
                     searchDiseaseOut2Button = new JButton("");
                     diseaseOut2Panel.add(searchDiseaseOut2Button);
-                    searchDiseaseOut2Button.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent arg0) {
-                            diseaseOut2Box.removeAllItems();
-                            diseaseOut2Box.addItem("");
-                            for(Disease disease: 
-                                    getSearchDiagnosisResults(searchDiseaseOut2textField.getText(), diseaseOutList)) {
-                                diseaseOut2Box.addItem(disease);
-                            }
-                            
-                            if (diseaseOut2Box.getItemCount() >= 2){
-                                diseaseOut2Box.setSelectedIndex(1);
-                            }
-                            diseaseOut2Box.requestFocus();
-                            if (diseaseOut2Box.getItemCount() > 2){
-                                diseaseOut2Box.showPopup();
-                            }
+                    searchDiseaseOut2Button.addActionListener(arg0 -> {
+                        diseaseOut2Box.removeAllItems();
+                        diseaseOut2Box.addItem("");
+                        for(Disease disease:
+                                getSearchDiagnosisResults(searchDiseaseOut2textField.getText(), diseaseOutList)) {
+                            diseaseOut2Box.addItem(disease);
+                        }
+
+                        if (diseaseOut2Box.getItemCount() >= 2){
+                            diseaseOut2Box.setSelectedIndex(1);
+                        }
+                        diseaseOut2Box.requestFocus();
+                        if (diseaseOut2Box.getItemCount() > 2){
+                            diseaseOut2Box.showPopup();
                         }
                     });
                     searchDiseaseOut2Button.setPreferredSize(new Dimension(20, 20));
@@ -1545,34 +1541,35 @@ public class AdmissionBrowser extends ModalJFrame {
                     diseaseOut3Panel.add(searchDiseaseOut3textField);
                     searchDiseaseOut3textField.setColumns(10);
                     searchDiseaseOut3textField.addKeyListener(new KeyListener() {
+                        @Override
                         public void keyPressed(KeyEvent e) {
                             int key = e.getKeyCode();
                             if (key == KeyEvent.VK_ENTER) {
                                 searchDiseaseOut3Button.doClick();
                             }
                         }
+                        @Override
                         public void keyReleased(KeyEvent e) {}
+                        @Override
                         public void keyTyped(KeyEvent e) {}
                     });
 
                     searchDiseaseOut3Button = new JButton("");
                     diseaseOut3Panel.add(searchDiseaseOut3Button);
-                    searchDiseaseOut3Button.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent arg0) {
-                            diseaseOut3Box.removeAllItems();
-                            diseaseOut3Box.addItem("");
-                            for(Disease disease: 
-                                    getSearchDiagnosisResults(searchDiseaseOut3textField.getText(), diseaseOutList)) {
-                                diseaseOut3Box.addItem(disease);
-                            }
-                            
-                            if (diseaseOut3Box.getItemCount() >= 2){
-                                diseaseOut3Box.setSelectedIndex(1);
-                            }
-                            diseaseOut3Box.requestFocus();
-                            if (diseaseOut3Box.getItemCount() > 2){
-                                diseaseOut3Box.showPopup();
-                            }
+                    searchDiseaseOut3Button.addActionListener(arg0 -> {
+                        diseaseOut3Box.removeAllItems();
+                        diseaseOut3Box.addItem("");
+                        for(Disease disease:
+                                getSearchDiagnosisResults(searchDiseaseOut3textField.getText(), diseaseOutList)) {
+                            diseaseOut3Box.addItem(disease);
+                        }
+
+                        if (diseaseOut3Box.getItemCount() >= 2){
+                            diseaseOut3Box.setSelectedIndex(1);
+                        }
+                        diseaseOut3Box.requestFocus();
+                        if (diseaseOut3Box.getItemCount() > 2){
+                            diseaseOut3Box.showPopup();
                         }
                     });
                     searchDiseaseOut3Button.setPreferredSize(new Dimension(20, 20));
@@ -1584,152 +1581,6 @@ public class AdmissionBrowser extends ModalJFrame {
 		return diseaseOut3Panel;
 	}
 
-	/*
-	 * simply an utility
-	 */
-//	private JRadioButton getRadioButton(String label, char mn, boolean active) {
-//		JRadioButton rb = new JRadioButton(label);
-//		rb.setMnemonic(KeyEvent.VK_A + (mn - 'A'));
-//		rb.setSelected(active);
-//		rb.setName(label);
-//		return rb;
-//	}
-
-//	/*
-//	 * admission sheet: 5th row: insert select operation type and result
-//	 */
-//	private JPanel getOperationPanel() {
-//		if (operationPanel == null) {
-//			operationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-//                        operationPanel.setPreferredSize(new Dimension(250, 55));
-//			OperationBrowserManager obm = new OperationBrowserManager();
-//			operationBox = new JComboBox();
-//			operationBox.addItem("");
-//			try {
-//				operationList = obm.getOperation();
-//			}catch(OHServiceException e){
-//                OHServiceExceptionUtil.showMessages(e);
-//			}
-//			if (operationList != null){
-//				for (Operation elem : operationList) {
-//					operationBox.addItem(elem);
-//					if (editing) {
-//						if (admission.getOperation() != null && admission.getOperation().getCode().equalsIgnoreCase(elem.getCode())) {
-//							operationBox.setSelectedItem(elem);
-//						}
-//					}
-//				}
-//			}
-//			operationBox.addActionListener(new ActionListener() {
-//				public void actionPerformed(ActionEvent e) {
-//					if (operationBox.getSelectedIndex() == 0) {
-//						// operationDateField.setText("");
-//						operationDateFieldCal.setDate(null);
-//					} else {
-//						/*
-//						 * if (!operationDateField.getText().equals("")){ // leave
-//						 * old date value }
-//						 */
-//						if (operationDateFieldCal.getDate() != null) {
-//							// leave old date value
-//						}
-//	
-//						else {
-//							// set today date
-//							operationDateFieldCal.setDate((new GregorianCalendar()).getTime());
-//						}
-//					}
-//				}
-//			});
-//
-//			operationPanel.add(operationBox);
-//			operationPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.operationtype")));
-//		}
-//		return operationPanel;
-//	}
-
-//	/**
-//	 * @return
-//	 */
-//	private JPanel getOperationResultPanel() {
-//		if (resultPanel == null) {
-//			resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-//			
-//			operationResultRadioP = getRadioButton(MessageBundle.getMessage("angal.admission.positive"), 'P', false);
-//			operationResultRadioN = getRadioButton(MessageBundle.getMessage("angal.admission.negative"), 'N', false);
-//			operationResultRadioU = getRadioButton(MessageBundle.getMessage("angal.admission.unknown"), 'U', true);
-//			
-//			ButtonGroup resultGroup = new ButtonGroup();
-//			resultGroup.add(operationResultRadioP);
-//			resultGroup.add(operationResultRadioN);
-//			resultGroup.add(operationResultRadioU);
-//			
-//			if (editing) {
-//				if (admission.getOpResult() != null) {
-//					if (admission.getOpResult().equalsIgnoreCase("P"))
-//						operationResultRadioP.setSelected(true);
-//					else 
-//						operationResultRadioN.setSelected(true);
-//				}
-//			} 
-//	
-//			resultPanel.add(operationResultRadioP);
-//			resultPanel.add(operationResultRadioN);
-//			resultPanel.add(operationResultRadioU);
-//	
-//			resultPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.operationresult")));
-//		}
-//		return resultPanel;
-//	}
-
-//	/*
-//	 * admission sheet: 6th row: insert operation date and transusional unit
-//	 */
-//	private JPanel getOperationDatePanel() {
-//		if (operationDatePanel == null) {
-//			operationDatePanel = new JPanel();
-//			
-//			Date myDate = null;
-//			if (editing && admission.getOpDate() != null) {
-//				operationDate = admission.getOpDate();
-//				myDate = operationDate.getTime();
-//			}
-//			operationDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
-//			operationDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-//			operationDateFieldCal.setDateFormatString("dd/MM/yy");
-//			
-//			operationDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.operationdate")));
-//			operationDatePanel.add(operationDateFieldCal);
-//		}
-//		return operationDatePanel;
-//	}
-	
-//	/**
-//	 * @return
-//	 */
-//	private JPanel getTransfusionPanel() {
-//		if (transfusionPanel == null) {
-//			transfusionPanel = new JPanel();
-//			
-//			float start = 0;
-//			float min = 0;
-//			float step = (float) 0.5;
-//			
-//			SpinnerModel model = new SpinnerNumberModel(start, min, null, step);
-//			trsfUnitField = new JSpinner(model);
-//			trsfUnitField.setPreferredSize(new Dimension(preferredWidthTransfusionSpinner, preferredHeightLine));
-//			
-//			if (editing && admission.getTransUnit() != null) {
-//				trsfUnit = admission.getTransUnit().floatValue();
-//				trsfUnitField.setValue(trsfUnit);
-//			}
-//			
-//			transfusionPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.transfusionalunit")));
-//			transfusionPanel.add(trsfUnitField);
-//		}
-//		return transfusionPanel;
-//	}
-
 	private JPanel getDischargeTypePanel() {
 		if (dischargeTypePanel == null) {
 			dischargeTypePanel = new JPanel();
@@ -1739,7 +1590,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			disTypeBox.addItem("");
 			try {
 				disTypeList = admissionManager.getDischargeType();
-			}catch(OHServiceException e){
+			} catch(OHServiceException e){
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			for (DischargeType elem : disTypeList) {
@@ -1752,7 +1603,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 			
 			dischargeTypePanel.add(disTypeBox);
-			dischargeTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.dischargetype")));
+			dischargeTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.dischargetype.border")));
 		}
 		return dischargeTypePanel;
 	}
@@ -1765,7 +1616,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			bedDaysTextField.setEditable(false);
 			
 			bedDaysPanel.add(bedDaysTextField);
-			bedDaysPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.beddays")));
+			bedDaysPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.beddays.border")));
 		}
 		return bedDaysPanel;
 	}
@@ -1797,16 +1648,11 @@ public class AdmissionBrowser extends ModalJFrame {
 			dateOutFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			dateOutFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateOutFieldCal.setDateFormatString("dd/MM/yy");
-			dateOutFieldCal.addPropertyChangeListener("date", new PropertyChangeListener() {
-				
-				public void propertyChange(PropertyChangeEvent evt) {
-					updateBedDays();
-				}
-			});
+			dateOutFieldCal.addPropertyChangeListener("date", evt -> updateBedDays());
 			
 			
 			dischargeDatePanel.add(dateOutFieldCal);
-			dischargeDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.dischargedate")));
+			dischargeDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.dischargedate.border")));
 			
 		}
 		return dischargeDatePanel;
@@ -1835,36 +1681,33 @@ public class AdmissionBrowser extends ModalJFrame {
 	
 	private JButton getJButtonExamination() { 
 		if (jButtonExamination == null) {
-			jButtonExamination = new JButton(MessageBundle.getMessage("angal.admission.examination"));
-			jButtonExamination.setMnemonic(KeyEvent.VK_E);
+			jButtonExamination = new JButton(MessageBundle.getMessage("angal.admission.examination.btn"));
+			jButtonExamination.setMnemonic(MessageBundle.getMnemonic("angal.admission.examination.btn.key"));
 			
-			jButtonExamination.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e) {
-					
-					PatientExamination patex;
-					ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-					
-					PatientExamination lastPatex = null;
-					try {
-						lastPatex = examManager.getLastByPatID(patient.getCode());
-					}catch(OHServiceException ex){
-                        OHServiceExceptionUtil.showMessages(ex);
-					}
-					if (lastPatex != null) {
-						patex = examManager.getFromLastPatientExamination(lastPatex);
-					} else {
-						patex = examManager.getDefaultPatientExamination(patient);
-					}
-					
-					GenderPatientExamination gpatex = new GenderPatientExamination(patex, patient.getSex() == 'M');
-					
-					PatientExaminationEdit dialog = new PatientExaminationEdit(AdmissionBrowser.this, gpatex);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.pack();
-					dialog.setLocationRelativeTo(null);
-					dialog.showAsModal(AdmissionBrowser.this);
+			jButtonExamination.addActionListener(e -> {
+
+				PatientExamination patex;
+				ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+
+				PatientExamination lastPatex = null;
+				try {
+					lastPatex = examManager.getLastByPatID(patient.getCode());
+				} catch(OHServiceException ex){
+					OHServiceExceptionUtil.showMessages(ex);
 				}
+				if (lastPatex != null) {
+					patex = examManager.getFromLastPatientExamination(lastPatex);
+				} else {
+					patex = examManager.getDefaultPatientExamination(patient);
+				}
+
+				GenderPatientExamination gpatex = new GenderPatientExamination(patex, patient.getSex() == 'M');
+
+				PatientExaminationEdit dialog = new PatientExaminationEdit(AdmissionBrowser.this, gpatex);
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.pack();
+				dialog.setLocationRelativeTo(null);
+				dialog.showAsModal(AdmissionBrowser.this);
 			});
 		}
 		return jButtonExamination;
@@ -1883,13 +1726,9 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JButton getCloseButton() {
 		if (closeButton == null) {
 			closeButton = new JButton();
-			closeButton.setText(MessageBundle.getMessage("angal.common.close"));
-			closeButton.setMnemonic(KeyEvent.VK_C);
-			closeButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			closeButton.setText(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			closeButton.addActionListener(e -> dispose());
 		}
 		return closeButton;
 	}
@@ -1898,12 +1737,10 @@ public class AdmissionBrowser extends ModalJFrame {
 
 		if (saveButton == null) {
 			saveButton = new JButton();
-			saveButton.setText(MessageBundle.getMessage("angal.common.save"));
-			saveButton.setMnemonic(KeyEvent.VK_S);
-			saveButton.addActionListener(new ActionListener() {
+			saveButton.setText(MessageBundle.getMessage("angal.common.save.btn"));
+			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
+			saveButton.addActionListener(e -> {
 
-			public void actionPerformed(ActionEvent e) {
-				
 					/*
 					 * is it an admission update or a discharge? if we have a
 					 * valid discharge date isDischarge will be true
@@ -2062,15 +1899,6 @@ public class AdmissionBrowser extends ModalJFrame {
 						admission.setNote(textArea.getText());
 					}
 
-					// get transfusional unit (it can be null)
-//						try {
-//								float f = (Float) trsfUnitField.getValue();
-//								admission.setTransUnit(new Float(f));
-//						} catch (Exception ex) {
-//							JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.pleaseinsertavalidunitvalue"));
-//							return;
-//						}
-
 					// fields for pregnancy status
 					if (isPregnancy) {
 
@@ -2182,7 +2010,7 @@ public class AdmissionBrowser extends ModalJFrame {
 //                                                                            MessageBundle.getMessage("angal.admission.check.operationdate"), MessageBundle.getMessage("angal.hospital"),
 //										JOptionPane.PLAIN_MESSAGE);
 //				  		    return;
-//						}	
+//						}
 					    /* ******************************* */
 						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
 						if (!errors.isEmpty()) {
@@ -2191,7 +2019,7 @@ public class AdmissionBrowser extends ModalJFrame {
 							int newKey = -1;
 							try {
 								newKey = admissionManager.newAdmissionReturnKey(admission);
-							}catch(OHServiceException exc){
+							} catch(OHServiceException exc){
 	                            OHServiceExceptionUtil.showMessages(exc);
 							}
 							if (newKey > 0) {
@@ -2205,15 +2033,15 @@ public class AdmissionBrowser extends ModalJFrame {
 								dispose();
 							}
 						}
-						
+
 					} else if (!editing && isDischarge) {
                                                 /* *** operation date control *** */
 //						if (!checkAllOperationRowDate(operationad.getOprowData(), admission))
-//						{								
+//						{
 //					  		  JOptionPane.showMessageDialog(AdmissionBrowser.this,
 //                                                                                MessageBundle.getMessage("angal.admission.check.operationdate") , MessageBundle.getMessage("angal.hospital"),
 //											JOptionPane.PLAIN_MESSAGE);
-//					  		  return;						    
+//					  		  return;
 //						}
 						List<OHExceptionMessage> errors = checkAllOperationRowDate(operationad.getOprowData(), admission);
 						if (!errors.isEmpty()) {
@@ -2221,7 +2049,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						} else {
 							try {
 								result = admissionManager.newAdmission(admission);
-							}catch(OHServiceException ex){
+							} catch(OHServiceException ex){
 	                            OHServiceExceptionUtil.showMessages(ex);
 							}
 							if (result) {
@@ -2229,7 +2057,7 @@ public class AdmissionBrowser extends ModalJFrame {
 								dispose();
 							}
 						}
-						
+
 					} else {
                                                 /* *** operation date control *** */
 //						if (!checkAllOperationRowDate(operationad.getOprowData(), admission))
@@ -2245,7 +2073,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						} else {
 							try {
 								result = admissionManager.updateAdmission(admission);
-							}catch(OHServiceException ex){
+							} catch(OHServiceException ex){
 	                            OHServiceExceptionUtil.showMessages(ex);
 							}
 							if (result) {
@@ -2257,7 +2085,7 @@ public class AdmissionBrowser extends ModalJFrame {
 								dispose();
 							}
 						}
-						
+
 					}
 
 					if (!result) {
@@ -2265,8 +2093,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					} else {
 						dispose();
 					}
-				}
-			});
+				});
 		}
 		return saveButton;
 	}

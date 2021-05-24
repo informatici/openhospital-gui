@@ -32,7 +32,6 @@ public class MessageDialog {
 	private static final String ERROR_MESSAGE = MessageBundle.getMessage("angal.common.error.title");
 	private static final String WARNING_MESSAGE = MessageBundle.getMessage("angal.common.warning.title");
 	private static final String INFO_MESSAGE = MessageBundle.getMessage("angal.common.info.title");
-	private static final String QUESTION_MESSAGE = MessageBundle.getMessage("angal.common.question.title");
 	private static final String PLAIN_MESSAGE = MessageBundle.getMessage("angal.common.plain.title");
 
 	public static void error(Component parentComponent, String messageKey) {
@@ -57,14 +56,6 @@ public class MessageDialog {
 				MessageBundle.getMessage(messageKey),
 				INFO_MESSAGE,
 				JOptionPane.INFORMATION_MESSAGE);
-	}
-
-	public static void question(Component parentComponent, String messageKey) {
-		JOptionPane.showMessageDialog(
-				parentComponent,
-				MessageBundle.getMessage(messageKey),
-				QUESTION_MESSAGE,
-				JOptionPane.QUESTION_MESSAGE);
 	}
 
 	public static void plain(Component parentComponent, String messageKey) {

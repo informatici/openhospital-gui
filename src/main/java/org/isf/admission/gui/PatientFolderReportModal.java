@@ -28,9 +28,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -87,7 +84,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 	private void initialize() {
 		this.setLayout(new BorderLayout());
 		this.add(getJContentPane(), BorderLayout.CENTER);
-		this.setTitle(MessageBundle.getMessage("angal.medicals.report")); 
+		this.setTitle(MessageBundle.getMessage("angal.admission.report.title"));
 		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -165,12 +162,11 @@ public class PatientFolderReportModal extends ModalJFrame{
 	
 	private JButton getPrintButton() {
 		if (launchReportButton == null) {
-			launchReportButton = new JButton();
-			launchReportButton.setMnemonic(KeyEvent.VK_R);
-			launchReportButton.setText(MessageBundle.getMessage("angal.admission.patientfolder.launchreport")); //$NON-NLS-1$
+			launchReportButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.launchreport.btn"));
+			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.launchreport.btn.key"));
 			launchReportButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					// GenericReportMY rpt3 = new GenericReportMY(new Integer(6), new Integer(2008), "hmis108_adm_by_diagnosisIn");
 					new GenericReportPatientVersion2(patId, getParameterString(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEET);
 				}
 				
@@ -196,14 +192,9 @@ public class PatientFolderReportModal extends ModalJFrame{
 	
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton();
-			closeButton.setMnemonic(KeyEvent.VK_C);
-			closeButton.setText(MessageBundle.getMessage("angal.common.close"));   //$NON-NLS-1$
-			closeButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			closeButton.addActionListener(e -> dispose());
 		}
 		return closeButton;
 	}
@@ -250,15 +241,13 @@ public class PatientFolderReportModal extends ModalJFrame{
 			allCheck.setSelected(true);
 			allPanel.add(allCheck);
 			allPanel.add(new JLabel(MessageBundle.getMessage("angal.menu.all")), BorderLayout.CENTER);
-			allCheck.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					examinationCheck.setSelected(false);
-					admissionCheck.setSelected(false);
-					drugsCheck.setSelected(false);
-					opdCheck.setSelected(false);
-					operationCheck.setSelected(false);
-					laboratoryCheck.setSelected(false);
-				}
+			allCheck.addActionListener(e -> {
+				examinationCheck.setSelected(false);
+				admissionCheck.setSelected(false);
+				drugsCheck.setSelected(false);
+				opdCheck.setSelected(false);
+				operationCheck.setSelected(false);
+				laboratoryCheck.setSelected(false);
 			});
 			
 		}
@@ -273,12 +262,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			
 			examinationPanel.add(examinationCheck);
 			examinationPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.examination")), BorderLayout.CENTER);
-			examinationCheck.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					allCheck.setSelected(false);
-					
-				}
-			});
+			examinationCheck.addActionListener(e -> allCheck.setSelected(false));
 			
 		}
 		return examinationPanel;
@@ -293,12 +277,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			
 			operationsPanel.add(operationCheck);
 			operationsPanel.add(new JLabel(MessageBundle.getMessage("angal.menu.operation")), BorderLayout.CENTER);
-			operationCheck.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					allCheck.setSelected(false);
-					
-				}
-			});
+			operationCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return operationsPanel;
 	}
@@ -312,12 +291,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			
 			laboratoryPanel.add(laboratoryCheck);
 			laboratoryPanel.add(new JLabel(MessageBundle.getMessage("angal.menu.laboratory")), BorderLayout.CENTER);
-			laboratoryCheck.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					allCheck.setSelected(false);
-					
-				}
-			});
+			laboratoryCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return laboratoryPanel;
 	}
@@ -331,12 +305,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			
 			drugsPanel.add(drugsCheck);
 			drugsPanel.add(new JLabel(MessageBundle.getMessage("angal.patientfolder.tab.drugs")), BorderLayout.CENTER);
-			drugsCheck.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					allCheck.setSelected(false);
-					
-				}
-			});
+			drugsCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return drugsPanel;
 	}
@@ -350,12 +319,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			
 			opdPanel.add(opdCheck);
 			opdPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.opd")), BorderLayout.CENTER);
-			opdCheck.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					allCheck.setSelected(false);
-					
-				}
-			});
+			opdCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return opdPanel;
 	}
@@ -370,12 +334,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			
 			admissionPanel.add(admissionCheck);
 			admissionPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.admission")), BorderLayout.CENTER);
-			admissionCheck.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					allCheck.setSelected(false);
-					
-				}
-			});
+			admissionCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return admissionPanel;
 	}
@@ -411,13 +370,9 @@ public class PatientFolderReportModal extends ModalJFrame{
 			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE)); //$NON-NLS-1$
 			jDateChooserDateFrom.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
 			jDateChooserDateFrom.setDate(date.getTime());
-			jDateChooserDateFrom.addPropertyChangeListener("date", new PropertyChangeListener() {
-				
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					Date date = (Date) evt.getNewValue();
-					jDateChooserDateFrom.setDate(date);
-				}
+			jDateChooserDateFrom.addPropertyChangeListener("date", evt -> {
+				Date date = (Date) evt.getNewValue();
+				jDateChooserDateFrom.setDate(date);
 			});
 		}
 		return jDateChooserDateFrom;
@@ -431,13 +386,9 @@ public class PatientFolderReportModal extends ModalJFrame{
 			jDateChooserDateTo.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
 			jDateChooserDateTo.setDate(new Date());
 			
-			jDateChooserDateTo.addPropertyChangeListener("date", new PropertyChangeListener() {
-				
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					Date date = (Date) evt.getNewValue();
-					jDateChooserDateTo.setDate(date);	
-				}
+			jDateChooserDateTo.addPropertyChangeListener("date", evt -> {
+				Date date = (Date) evt.getNewValue();
+				jDateChooserDateTo.setDate(date);
 			});
 		}
 		return jDateChooserDateTo;
