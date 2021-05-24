@@ -2035,14 +2035,16 @@ public class AdmissionBrowser extends ModalJFrame {
 	    List<OHExceptionMessage> errors = new ArrayList<>();
 	    Date beginDate;
 	    Date endDate;
-	    if (admission.getAdmDate() != null)
+	    if (admission.getAdmDate() != null) {
 		    beginDate = admission.getAdmDate().getTime();
-	    else
+	    } else {
 		    beginDate = null;
-	    if (admission.getDisDate() != null)
+	    }
+	    if (admission.getDisDate() != null) {
 		    endDate = admission.getDisDate().getTime();
-	    else
+	    } else {
 		    endDate = null;
+	    }
 	    for (org.isf.operation.model.OperationRow opRow : list) {
 		    Date currentRowDate = opRow.getOpDate().getTime();
 		    /*
