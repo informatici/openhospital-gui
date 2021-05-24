@@ -866,22 +866,22 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		@Override
 		public int getColumnCount() {
 			return plColumns.length;
-		}	
-		
+		}
 		
 		@Override
 		public Object getValueAt(int row, int column) {
+			Laboratory laboratory = labList.get(row);
 			if (column == -1) {
-				return labList.get(row);
+				return laboratory;
 			} else if (column == 0) {
-				Date examDate = labList.get(row).getExamDate().getTime();
+				Date examDate = laboratory.getExamDate().getTime();
 				return examDate;
 			} else if (column == 1) {
-				return labList.get(row).getExam().getDescription();
+				return laboratory.getExam().getDescription();
 			}else if (column == 2) {
-				return labList.get(row).getCode();
+				return laboratory.getCode();
 			} else if (column == 3) {
-				return labList.get(row).getResult();
+				return laboratory.getResult();
 			}
 			return null;
 		}
