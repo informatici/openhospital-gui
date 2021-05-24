@@ -61,6 +61,7 @@ import org.isf.serviceprinting.manager.PrintLabels;
 import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoDateTextField;
 
@@ -271,9 +272,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				public void actionPerformed(ActionEvent event) {
 					selectedrow = jTable.getSelectedRow();
 					if (selectedrow < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 						return;
 					} 
 					laboratory = (Laboratory) (model.getValueAt(selectedrow, -1));
@@ -340,9 +339,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			buttonDelete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
 						

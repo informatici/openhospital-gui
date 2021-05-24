@@ -45,6 +45,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 
 /**
  * ------------------------------------------
@@ -170,11 +171,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 			deleteButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-		                        null,
-		                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
-		                        MessageBundle.getMessage("angal.hospital"),
-		                        JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 						ExamRow row = (ExamRow)(((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));

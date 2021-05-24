@@ -59,6 +59,7 @@ import org.isf.patvac.model.PatientVaccine;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.vaccine.manager.VaccineBrowserManager;
@@ -232,9 +233,7 @@ public class PatVacBrowser extends ModalJFrame {
 			buttonEdit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 						return;
 					} 
 					
@@ -278,9 +277,7 @@ public class PatVacBrowser extends ModalJFrame {
 			buttonDelete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 						return;
 					} 
 					selectedrow = jTable.getSelectedRow();

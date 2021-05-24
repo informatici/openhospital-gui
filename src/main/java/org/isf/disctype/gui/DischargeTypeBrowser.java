@@ -45,6 +45,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
@@ -158,9 +159,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 				
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						dischargeType = (DischargeType) (model.getValueAt(selectedrow, -1));
@@ -206,9 +205,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						DischargeType dis = (DischargeType) (model.getValueAt(jTable.getSelectedRow(), -1));
                         int n = JOptionPane.showConfirmDialog(null,

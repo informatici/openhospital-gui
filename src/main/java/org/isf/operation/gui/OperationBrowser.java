@@ -51,6 +51,7 @@ import org.isf.opetype.manager.OperationTypeBrowserManager;
 import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
@@ -182,8 +183,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
 					operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
@@ -200,8 +200,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					Operation m = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 					int n = JOptionPane.showConfirmDialog(

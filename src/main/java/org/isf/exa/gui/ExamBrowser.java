@@ -58,6 +58,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
@@ -235,11 +236,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		jButtonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(				
-							ExamBrowser.this,
-	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
-	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);				
+					MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
 					return;									
 				}
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
@@ -304,11 +301,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(
-								ExamBrowser.this,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"), 
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
 					} else {
 						selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 						exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
@@ -330,11 +323,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-								ExamBrowser.this,
-		                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
-		                        MessageBundle.getMessage("angal.hospital"),
-		                        JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
 					} else {
 						selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 						exam = (Exam)(((ExamBrowsingModel) model).getValueAt(selectedrow, -1));

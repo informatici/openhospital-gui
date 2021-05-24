@@ -45,6 +45,7 @@ import org.isf.medtype.model.MedicalType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
@@ -152,9 +153,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 				
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(MedicalTypeBrowser.this,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(MedicalTypeBrowser.this, "angal.common.pleaseselectarow.msg");
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						medicalType = (MedicalType) (model.getValueAt(selectedrow, -1));
@@ -200,11 +199,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(
-								MedicalTypeBrowser.this,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), 
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(MedicalTypeBrowser.this, "angal.common.pleaseselectarow.msg");
 					} else {
 						MedicalType dis = (MedicalType) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,

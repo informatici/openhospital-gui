@@ -77,6 +77,7 @@ import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
@@ -694,8 +695,7 @@ public class MovStockMultipleCharging extends JDialog {
 				if (ok == JOptionPane.YES_OPTION) {
 					row = lotTable.getSelectedRow();
 					if (row != -1) lot = lots.get(row);
-					else JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.common.pleaseselectarow")); //$NON-NLS-1$
+					else MessageDialog.error(MovStockMultipleCharging.this, "angal.common.pleaseselectarow.msg");
 				} else row = 0;
 				
 			} while (row == -1);

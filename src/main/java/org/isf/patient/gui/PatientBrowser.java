@@ -44,6 +44,7 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 public class PatientBrowser extends ModalJFrame implements PatientListener{
@@ -181,10 +182,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 				
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(PatientBrowser.this,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(PatientBrowser.this, "angal.common.pleaseselectarow.msg");
 					} else {
 						selectedrow = jTable.getSelectedRow();
 						patient = (Patient) (model.getValueAt(selectedrow, -1));
@@ -230,26 +228,20 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(PatientBrowser.this,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(PatientBrowser.this, "angal.common.pleaseselectarow.msg");
 					} else {
 						Patient pat = (Patient) (model.getValueAt(jTable.getSelectedRow(), -1));
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.patient.deletepatient") + " \" "+pat.getName() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
 						try{
-							if ((n == JOptionPane.YES_OPTION)
-									&& (manager.deletePatient(pat))) {
-								pPat.remove(pPat.size() - jTable.getSelectedRow()
-										- 1);
+							if ((n == JOptionPane.YES_OPTION) && (manager.deletePatient(pat))) {
+								pPat.remove(pPat.size() - jTable.getSelectedRow() - 1);
 								model.fireTableDataChanged();
 								jTable.updateUI();
-
 							}
 						}catch(OHServiceException e){
-							if (e.getMessages() != null){
+							if (e.getMessages() != null) {
 								for(OHExceptionMessage msg : e.getMessages()){
 									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
 								}
