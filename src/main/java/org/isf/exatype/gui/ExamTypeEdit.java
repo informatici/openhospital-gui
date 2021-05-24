@@ -58,8 +58,6 @@ public class ExamTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2"; 
-
     private EventListenerList examTypeListeners = new EventListenerList();
 
     public interface ExamTypeListener extends EventListener {
@@ -131,9 +129,9 @@ public class ExamTypeEdit extends JDialog {
 //		this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.exatype.newexamtype")+"  ("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.exatype.newexamtype"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.exatype.editexamtype")+"  ("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.exatype.editexamtype"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		

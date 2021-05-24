@@ -59,8 +59,6 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2"; 
-
 	private ArrayList<VaccineType> pVaccineType;
 	
 	private String[] pColumns = {
@@ -101,7 +99,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
         final int pfrmHeight = 4;
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle( MessageBundle.getMessage("angal.vactype.vaccinetypebrowser")+"("+VERSION+")");
+		this.setTitle( MessageBundle.getMessage("angal.vactype.vaccinetypebrowser"));
 		this.setContentPane(getJContainPanel());
 	}
 	

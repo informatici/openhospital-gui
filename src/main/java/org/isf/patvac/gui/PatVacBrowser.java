@@ -81,8 +81,6 @@ public class PatVacBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2";
-	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     	
 	private JPanel jContentPane = null;
@@ -147,7 +145,7 @@ public class PatVacBrowser extends ModalJFrame {
         		(screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase+50,
                 screensize.height * pfrmHeight / pfrmBase+20);
-        setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowsing")+" ("+VERSION+")");
+        setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowsing"));
 		this.setContentPane(getJContentPane());
 		updateRowCounter();
 		validate();

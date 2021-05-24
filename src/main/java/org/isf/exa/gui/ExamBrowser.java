@@ -75,8 +75,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2"; 
-	
 	private int selectedrow;
 	private JComboBox pbox;
 	private ArrayList<Exam> pExam;
@@ -106,7 +104,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	public ExamBrowser() {
 		myFrame=this;
-		setTitle(MessageBundle.getMessage("angal.exa.exambrowsing") +" ("+VERSION+")");
+		setTitle(MessageBundle.getMessage("angal.exa.exambrowsing"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
         final int pfrmBase = 20;

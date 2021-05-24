@@ -66,7 +66,6 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseListener {
 
 	private static final long serialVersionUID = 1L;
-	private static final String VERSION="v1.2"; 
 
 	public void diseaseInserted(AWTEvent e) {
 		pDisease.add(0,disease);
@@ -106,7 +105,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	
 	public DiseaseBrowser() {
 		
-		setTitle(MessageBundle.getMessage("angal.disease.diseasesbrowser")+VERSION+")");
+		setTitle(MessageBundle.getMessage("angal.disease.diseasesbrowser"));
 		myFrame = this;
 		model = new DiseaseBrowserModel();
 		table = new JTable(model);
