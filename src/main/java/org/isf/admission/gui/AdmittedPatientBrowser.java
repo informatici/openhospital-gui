@@ -47,7 +47,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -57,6 +56,7 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -135,18 +135,18 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private static final int PANEL_WITDH = 240;
 
 	private String[] patientClassItems = {
-			MessageBundle.getMessage("angal.admission.all"),
-			MessageBundle.getMessage("angal.admission.admitted"),
-			MessageBundle.getMessage("angal.admission.notadmitted")
+			MessageBundle.getMessage("angal.common.all.txt"),
+			MessageBundle.getMessage("angal.admission.admitted.txt"),
+			MessageBundle.getMessage("angal.admission.notadmitted.txt")
 	};
 	private JComboBox patientClassBox = new JComboBox(patientClassItems);
 	private CustomJDateChooser[] dateChoosers = new CustomJDateChooser[4];
 	private VoLimitedTextField patientAgeFromTextField = null;
 	private VoLimitedTextField patientAgeToTextField = null;
 	private String[] patientSexItems = { 
-			MessageBundle.getMessage("angal.admission.all"), 
-			MessageBundle.getMessage("angal.medicalstockward.male"), 
-			MessageBundle.getMessage("angal.medicalstockward.female") 
+			MessageBundle.getMessage("angal.common.all.txt"),
+			MessageBundle.getMessage("angal.common.male.txt"),
+			MessageBundle.getMessage("angal.common.female.txt")
 	};
 	private JComboBox patientSexBox = new JComboBox(patientSexItems);
 	private JCheckBox[] wardCheck = null;
@@ -449,7 +449,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		wardPanel = setMyBorder(wardPanel, MessageBundle.getMessage("angal.admission.ward.border"));
 		
 		rowCounter = new JLabel(MessageBundle.formatMessage("angal.admission.count.fmt.txt", 0));
-		rowCounter.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		rowCounter.setAlignmentX(Component.CENTER_ALIGNMENT);
 		wardPanel.add(rowCounter);
 		
 		JPanel calendarPanel = getAdmissionFilterPanel();
@@ -463,13 +463,13 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			}
 		};
 
-		JLabel ageFrom = new JLabel(MessageBundle.getMessage("angal.common.from") + ":");
+		JLabel ageFrom = new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ':');
 		patientAgeFromTextField = new VoLimitedTextField(3,3);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			patientAgeFromTextField.addKeyListener(ageKeyListener);
 		}
 
-		JLabel ageTo = new JLabel(MessageBundle.getMessage("angal.common.to") + ":");
+		JLabel ageTo = new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ':');
 		patientAgeToTextField = new VoLimitedTextField(3,3);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			patientAgeToTextField.addKeyListener(ageKeyListener);
@@ -601,7 +601,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		gbcDateLabel0.gridy = 1;
 		gbcDateLabel0.insets = new Insets(0,5,0,5);
 		gbcDateLabel0.weightx = 0.0;
-		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from") + ":"), gbcDateLabel0);
+		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ':'), gbcDateLabel0);
 		GridBagConstraints gbcDateDateChooser0 = new GridBagConstraints();
 		gbcDateDateChooser0.gridx = 1;
 		gbcDateDateChooser0.gridy = 1;
@@ -612,7 +612,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		gbcDateLabel1.gridy = 1;
 		gbcDateLabel1.insets = new Insets(0,5,0,5);
 		gbcDateLabel1.weightx = 0.0;
-		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to") + ":"), gbcDateLabel1);
+		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ':'), gbcDateLabel1);
 		GridBagConstraints gbcDateDateChooser1 = new GridBagConstraints();
 		gbcDateDateChooser1.gridx = 3;
 		gbcDateDateChooser1.gridy = 1;
@@ -631,7 +631,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		gbcDateLabel2.gridy = 3;
 		gbcDateLabel2.insets = new Insets(0,5,0,5);
 		gbcDateLabel2.weightx = 0.0;
-		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from") + ":"), gbcDateLabel2);
+		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ':'), gbcDateLabel2);
 		GridBagConstraints gbcDateDateChooser2 = new GridBagConstraints();
 		gbcDateDateChooser2.gridx = 1;
 		gbcDateDateChooser2.gridy = 3;
@@ -642,7 +642,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		gbcDateLabel3.gridy = 3;
 		gbcDateLabel3.insets = new Insets(0,5,0,5);
 		gbcDateLabel3.weightx = 0.0;
-		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to") + ":"), gbcDateLabel3);
+		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ':'), gbcDateLabel3);
 		GridBagConstraints gbcDateDateChooser3 = new GridBagConstraints();
 		gbcDateDateChooser3.gridx = 3;
 		gbcDateDateChooser3.gridy = 3;
@@ -724,7 +724,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				GenderPatientExamination gpatex = new GenderPatientExamination(patex, pat.getSex() == 'M');
 
 				PatientExaminationEdit dialog = new PatientExaminationEdit(AdmittedPatientBrowser.this, gpatex);
-				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.pack();
 				dialog.setLocationRelativeTo(null);
 				dialog.showAsModal(AdmittedPatientBrowser.this);
@@ -786,22 +786,19 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
 			Patient pat = patient.getPatient();
 
-			int n = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this,
-					MessageBundle.getMessage("angal.admission.deletepatient") + " " +pat.getName() + "?",
-					MessageBundle.getMessage("angal.admission.deletepatient"), JOptionPane.YES_NO_OPTION);
-
+			int n = MessageDialog.yesNo(AdmittedPatientBrowser.this, "angal.admission.deletepatient.fmt.msg", pat.getName());
 			if (n == JOptionPane.YES_OPTION){
 				boolean result = false;
 				try {
 					result = patientManager.deletePatient(pat);
-				}catch(OHServiceException e){
+				} catch(OHServiceException e){
 					OHServiceExceptionUtil.showMessages(e);
 				}
 				if (result){
 					ArrayList<Admission> patientAdmissions;
 					try {
 						patientAdmissions = admissionManager.getAdmissions(pat);
-					}catch(OHServiceException ex){
+					} catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
 						patientAdmissions = new ArrayList<>();
 					}
@@ -809,7 +806,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					for (Admission elem : patientAdmissions){
 						try {
 							admissionManager.setDeleted(elem.getId());
-						}catch(OHServiceException e){
+						} catch(OHServiceException e){
 							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
@@ -890,14 +887,13 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					//dispose();
 				} else {
 					if (patientPendingBills.size() == 1) {
-						JOptionPane.showMessageDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.admission.thispatienthasapendingbill"),
-								MessageBundle.getMessage("angal.admission.bill"), JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.warning(AdmittedPatientBrowser.this, "angal.admission.thispatienthasapendingbill.msg");
 						PatientBillEdit pbe = new PatientBillEdit(AdmittedPatientBrowser.this, patientPendingBills.get(0), false);
 						pbe.setVisible(true);
 						//dispose();
 					} else {
-						int ok = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this, MessageBundle.getMessage("angal.admission.thereismorethanonependingbillforthispatientcontinue"),
-								MessageBundle.getMessage("angal.admission.bill"), JOptionPane.WARNING_MESSAGE);
+						int ok = MessageDialog.okCancel(AdmittedPatientBrowser.this,
+								"angal.admission.thereismorethanonependingbillforthispatientcontinue.msg");
 						if (ok == JOptionPane.OK_OPTION) {
 							new PatientBillEdit(AdmittedPatientBrowser.this, pat);
 							//dispose();
@@ -984,35 +980,10 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			}
 
 			//ASK CONFIRMATION
-			StringBuilder confirmation = new StringBuilder(MessageBundle.getMessage("angal.admission.withthisoperationthepatient"))
-					.append("\n")
-					.append(MessageBundle.getMessage("angal.common.code"))
-					.append(": ")
-					.append(patient2.getCode())
-					.append(" ")
-					.append(patient2.getName())
-					.append(" ")
-					.append(patient2.getAge())
-					.append(" ")
-					.append(patient2.getAddress())
-					.append("\n")
-					.append(MessageBundle.getMessage("angal.admission.willbedeletedandhisherhistorytransferedtothepatient"))
-					.append("\n")
-					.append(MessageBundle.getMessage("angal.common.code"))
-					.append(": ")
-					.append(mergedPatient.getCode())
-					.append(" ")
-					.append(mergedPatient.getName())
-					.append(" ")
-					.append(mergedPatient.getAge())
-					.append(" ")
-					.append(mergedPatient.getAddress())
-					.append("\n")
-					.append(MessageBundle.getMessage("angal.admission.continue"));
-			int ok = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this,
-					confirmation.toString(),
-					MessageBundle.getMessage("angal.admission.merge"),
-					JOptionPane.YES_NO_OPTION);
+			int ok = MessageDialog.yesNo(AdmittedPatientBrowser.this,
+					"angal.admission.withthisoperationthepatientwillbedeletedandhisherhistorytransferedtothepatient.fmt.msg",
+					patient2.getCode(), patient2.getName(), patient2.getAge(), patient2.getAddress(),
+					mergedPatient.getCode(), mergedPatient.getName(), mergedPatient.getAge(), mergedPatient.getAddress());
 			if (ok != JOptionPane.YES_OPTION) {
 				return;
 			}
@@ -1020,13 +991,15 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			if (mergedPatient.getName().toUpperCase().compareTo(patient2.getName().toUpperCase()) != 0) {
 				String[] names = {mergedPatient.getName(), patient2.getName()};
 				String whichName = (String) JOptionPane.showInputDialog(null,
-						MessageBundle.getMessage("angal.admission.pleaseselectthefinalname"),
-						MessageBundle.getMessage("angal.admission.differentnames"),
-						JOptionPane.INFORMATION_MESSAGE,
+						MessageBundle.getMessage("angal.admission.pleaseselectthefinalname.msg"),
+						MessageDialog.QUESTION,
+						JOptionPane.QUESTION_MESSAGE,
 						null,
 						names,
 						null);
-				if (whichName == null) return;
+				if (whichName == null) {
+					return;
+				}
 				if (whichName.compareTo(names[1]) == 0) {
 					//patient2 name selected
 					mergedPatient.setFirstName(patient2.getFirstName());
@@ -1074,11 +1047,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				patientSexBox.getSelectedIndex() > 0 || //
 				!searchString.getText().isEmpty();	
 		if (!isFilteredList) {
-			int ok = JOptionPane.showConfirmDialog(AdmittedPatientBrowser.this, 
-					MessageBundle.getMessage("angal.common.angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
-					MessageBundle.getMessage("angal.common.question.title"),
-					JOptionPane.OK_CANCEL_OPTION);
-			if (ok != JOptionPane.OK_OPTION) return;
+			int ok = MessageDialog.okCancel(AdmittedPatientBrowser.this,
+					"angal.common.thiscouldretrievealargeamountofdataproceed.msg");
+			if (ok != JOptionPane.OK_OPTION) {
+				return;
+			}
 		}
 		
 		GregorianCalendar[] admissionRange = new GregorianCalendar[2];

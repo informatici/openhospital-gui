@@ -55,7 +55,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -995,8 +994,9 @@ public class AdmissionBrowser extends ModalJFrame {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
 						int freeBeds = nBeds - usedBeds;
-						if (freeBeds <= 0)
-							JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.wardwithnobedsavailable"));
+						if (freeBeds <= 0) {
+							MessageDialog.info(AdmissionBrowser.this, "angal.admission.wardwithnobedsavailable.msg");
+						}
 					}
 				}
 
@@ -1071,9 +1071,8 @@ public class AdmissionBrowser extends ModalJFrame {
 				}
 
 				if (found == null) {
-					//Still not found
-					diseaseInBox.addItem(MessageBundle.getMessage("angal.admission.no") + admission.getDiseaseIn().getDescription() + " "
-							+ MessageBundle.getMessage("angal.admission.notfoundasinpatientdisease"));
+					// Still not found
+					diseaseInBox.addItem(MessageBundle.formatMessage("angal.admission.notfoundasinpatientdisease.fmt.msg", admission.getDiseaseIn().getDescription()));
 					diseaseInBox.setSelectedIndex(diseaseInBox.getItemCount() - 1);
 				}
 			}
@@ -1141,7 +1140,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 			
 			malnuPanel.add(malnuCheck);
-			malnuPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.malnutrition")), BorderLayout.CENTER);
+			malnuPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.malnutrition.txt")), BorderLayout.CENTER);
 			
 		}
 		return malnuPanel;
@@ -1193,7 +1192,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			dateInFieldCal.addPropertyChangeListener("date", evt -> {
 				Date newValue = (Date) evt.getNewValue();
 				if (newValue.before(patient.getBirthDate())) {
-					JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.thepatientwasnotyetbornatselecteddate"));
+					MessageDialog.error(AdmissionBrowser.this, "angal.admission.thepatientwasnotyetbornatselecteddate.msg");
 					dateInFieldCal.setDate((Date) evt.getOldValue());
 					return;
 				}
@@ -1232,7 +1231,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			diseaseOut1Panel = new JPanel();
 			diseaseOut1Panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-			JLabel label = new JLabel(MessageBundle.getMessage("angal.admission.number1"), SwingConstants.RIGHT);
+			JLabel label = new JLabel(MessageBundle.getMessage("angal.admission.number1.txt"), SwingConstants.RIGHT);
 			label.setPreferredSize(new Dimension(50, 50));
 			label.setHorizontalTextPosition(SwingConstants.RIGHT);
 
@@ -1275,8 +1274,8 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				if (found == null) {
 					// Still not found
-					diseaseOut1Box.addItem(MessageBundle.getMessage("angal.admission.no") + admission.getDiseaseOut1().getDescription()
-							+ " " + MessageBundle.getMessage("angal.admission.notfoundasinpatientdisease"));
+					diseaseOut1Box.addItem(MessageBundle.formatMessage("angal.admission.notfoundasoutpatientdisease.fmt.msg",
+							admission.getDiseaseOut1().getDescription(), 1));
 					diseaseOut1Box.setSelectedIndex(diseaseOut1Box.getItemCount() - 1);
 				}
 			}
@@ -1309,8 +1308,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			searchDiseaseOut1Button.addActionListener(arg0 -> {
 				diseaseOut1Box.removeAllItems();
 				diseaseOut1Box.addItem("");
-				for (Disease disease :
-						getSearchDiagnosisResults(searchDiseaseOut1textField.getText(), diseaseOutList)) {
+				for (Disease disease : getSearchDiagnosisResults(searchDiseaseOut1textField.getText(), diseaseOutList)) {
 					diseaseOut1Box.addItem(disease);
 				}
 
@@ -1337,7 +1335,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			diseaseOut2Panel = new JPanel();
 			diseaseOut2Panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-			JLabel label = new JLabel(MessageBundle.getMessage("angal.admission.number2"), SwingConstants.RIGHT);
+			JLabel label = new JLabel(MessageBundle.getMessage("angal.admission.number2.txt"), SwingConstants.RIGHT);
 			label.setPreferredSize(new Dimension(50, 50));
 			label.setHorizontalTextPosition(SwingConstants.RIGHT);
 
@@ -1380,8 +1378,8 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				if (found == null) {
 					// Still not found
-					diseaseOut2Box.addItem(MessageBundle.getMessage("angal.admission.no") + admission.getDiseaseOut2().getDescription()
-							+ " " + MessageBundle.getMessage("angal.admission.notfoundasinpatientdisease"));
+					diseaseOut2Box.addItem(MessageBundle.formatMessage("angal.admission.notfoundasoutpatientdisease.fmt.msg",
+							admission.getDiseaseOut2().getDescription(), 2));
 					diseaseOut2Box.setSelectedIndex(diseaseOut2Box.getItemCount() - 1);
 				}
 			}
@@ -1442,7 +1440,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			diseaseOut3Panel = new JPanel();
 			diseaseOut3Panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-			JLabel label = new JLabel(MessageBundle.getMessage("angal.admission.number3"), SwingConstants.RIGHT);
+			JLabel label = new JLabel(MessageBundle.getMessage("angal.admission.number3.txt"), SwingConstants.RIGHT);
 			label.setPreferredSize(new Dimension(50, 50));
 
 			diseaseOut3Panel.add(label);
@@ -1484,8 +1482,8 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				if (found == null) {
 					// Still not found
-					diseaseOut3Box.addItem(MessageBundle.getMessage("angal.admission.no") + admission.getDiseaseOut3().getDescription()
-							+ " " + MessageBundle.getMessage("angal.admission.notfoundasinpatientdisease"));
+					diseaseOut3Box.addItem(MessageBundle.formatMessage("angal.admission.notfoundasoutpatientdisease.fmt.msg",
+							admission.getDiseaseOut2().getDescription(), 3));
 					diseaseOut3Box.setSelectedIndex(diseaseOut3Box.getItemCount() - 1);
 				}
 			}
@@ -1677,7 +1675,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	 */
 	private JLabel getJLabelRequiredFields() {
 		if (labelRequiredFields == null) {
-			labelRequiredFields = new JLabel(MessageBundle.getMessage("angal.admission.indicatesrequiredfields"));
+			labelRequiredFields = new JLabel(MessageBundle.getMessage("angal.admission.indicatesrequiredfields.txt"));
 		}
 		return labelRequiredFields;
 	}
@@ -1713,7 +1711,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				// get ward id (not null)
 				if (wardBox.getSelectedIndex() == 0) {
-					JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.pleaseselectavalidward"));
+					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavalidward.msg");
 					return;
 				} else {
 					admission.setWard((Ward) (wardBox.getSelectedItem()));
@@ -1724,7 +1722,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				// get disease in id ( it can be null)
 				if (diseaseInBox.getSelectedIndex() == 0) {
-					JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.pleaseselectavaliddiseasein"));
+					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavaliddiseasein.msg");
 					return;
 				} else {
 					try {
@@ -1788,7 +1786,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				// get admission type (not null)
 				if (admTypeBox.getSelectedIndex() == 0) {
-					JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.pleaseselectavalidadmissiondate"));
+					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavalidadmissiontype.msg");
 					return;
 				} else {
 					admission.setAdmType(admTypeList.get(admTypeBox.getSelectedIndex() - 1));
@@ -1809,14 +1807,14 @@ public class AdmissionBrowser extends ModalJFrame {
 				// if isDischarge, null value not allowed
 				if (disTypeBox.getSelectedIndex() == 0) {
 					if (isDischarge) {
-						JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.pleaseselectavaliddischargetype"));
+						MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavaliddischargetype.msg");
 						return;
 					} else {
 						admission.setDisType(null);
 					}
 				} else {
 					if (dateOut == null) {
-						JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.pleaseinsertadischargedate.msg"));
+						MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseinsertadischargedate.msg");
 						return;
 					}
 					if (isDischarge) {
@@ -1845,7 +1843,7 @@ public class AdmissionBrowser extends ModalJFrame {
 							admission.setWeight(f);
 						}
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(AdmissionBrowser.this, MessageBundle.getMessage("angal.admission.pleaseinsertavalidweightvalue.msg"));
+						MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseinsertavalidweightvalue.msg");
 						return;
 					}
 
@@ -2056,19 +2054,19 @@ public class AdmissionBrowser extends ModalJFrame {
 
 		    if ((beginDate != null) && (endDate != null)) {
 			    if ((currentRowDate.before(beginDate)) || (currentRowDate.after(endDate))) {
-				    errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"),
-						    MessageBundle.getMessage("angal.admission.invalidoperationdate") + " "
-								    + MessageBundle.getMessage("angal.admission.theoperationdatebetween") + " "
-								    + currentDateFormat.format(beginDate) + " " + MessageBundle.getMessage("angal.admission.and") + " "
-								    + currentDateFormat.format(endDate), OHSeverityLevel.ERROR));
+				    errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.common.error.title"),
+						    MessageBundle.formatMessage("angal.admission.invalidoperationdate.fmt.msg",
+								    currentDateFormat.format(beginDate),
+								    currentDateFormat.format(endDate)),
+						    OHSeverityLevel.ERROR));
 			    }
 		    }
 		    if ((beginDate != null) && (endDate == null)) {
 			    if (currentRowDate.before(beginDate)) {
-				    errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.hospital"),
-						    MessageBundle.getMessage("angal.admission.invalidoperationdate") + " "
-								    + MessageBundle.getMessage("angal.admission.theoperationdatenewerthan") + " "
-								    + currentDateFormat.format(beginDate), OHSeverityLevel.ERROR));
+				    errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.commom.error.title"),
+						    MessageBundle.formatMessage("angal.admission.theoperationdatenewerthan.fmt.msg",
+								    currentDateFormat.format(beginDate)),
+						    OHSeverityLevel.ERROR));
 			    }
 		    }
 	    }

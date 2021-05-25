@@ -216,21 +216,19 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 	private ArrayList<Admission> admList;
 	private ArrayList<Disease> disease;
-//	private ArrayList<Operation> operation;
 	private ArrayList<Ward> ward;
 	private ArrayList<Opd> opdList;
-	
-//	private String[] pColumns = {MessageBundle.getMessage("angal.admission.admissionm"),MessageBundle.getMessage("angal.admission.wards"), MessageBundle.getMessage("angal.admission.diagnosis"), MessageBundle.getMessage("angal.admission.operation"), MessageBundle.getMessage("angal.admission.result"), MessageBundle.getMessage("angal.admission.discharge") };
-//	private int[] pColumnWidth = {120, 150, 200, 200, 100, 120 };
 
-	//Alex: modified to include OPD
-	private String[] pColumns = {MessageBundle.getMessage("angal.common.datem"),MessageBundle.getMessage("angal.admission.wards"), MessageBundle.getMessage("angal.admission.diagnosisinm"), MessageBundle.getMessage("angal.admission.diagnosisoutm"), MessageBundle.getMessage("angal.admission.statusm") };
-	private int[] pColumnWidth = {120, 150, 200, 200, 120 };
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.ward.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.diagnosisin.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.diagnosisout.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.status.txt").toUpperCase()
+	};
+	private int[] pColumnWidth = {120, 150, 200, 200, 120};
 	
 	private DefaultTableModel admModel;
-
-	//Alex: added table sorter, for java6 only
-	//private TableRowSorter<AdmissionBrowserModel> adm_sorter;
 
 	private JTable admTable;
 	private TableSorter sorter;
@@ -242,11 +240,6 @@ public class PatientDataBrowser extends ModalJFrame implements
 	private JPanel getTablesPanel() {
 		tablesPanel = new JPanel(new BorderLayout());
 		
-		//Alex: added sorters, for Java6 only
-//		admModel = new AdmissionBrowserModel();
-//		admTable = new JTable(admModel);
-		
-		//Alex: Java5 compatible
 		admModel = new AdmissionBrowserModel();
 		sorter = new TableSorter(admModel);
 		admTable = new JTable(sorter);      
@@ -264,17 +257,6 @@ public class PatientDataBrowser extends ModalJFrame implements
 		scrollPane.setPreferredSize(new Dimension(500,440));
 		tablesPanel.add(scrollPane, BorderLayout.CENTER);
 		
-		//Alex: added sorter, for Java6 only
-//		adm_sorter = new TableRowSorter<AdmissionBrowserModel>((AdmissionBrowserModel) admTable.getModel());
-//		for(int i=0; i < admTable.getColumnCount(); i++)
-//			adm_sorter.setComparator(i, new TableSorter1());
-//		admTable.setRowSorter(adm_sorter);
-//		//Alex: perform auto sorting on date descending
-//		ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
-//		sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
-//		adm_sorter.setSortKeys(sortKeys);
-//		adm_sorter.sort();
-		
 		return tablesPanel;
 	}
 	
@@ -282,8 +264,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	private JPanel getButtonPanel() {
 		JPanel buttonPanel; 
 			buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,5,5));
-//			if (MainMenu.checkUserGrants("btndataeditpat")) buttonPanel.add(getEditPatientButton(), null);  
-			if (MainMenu.checkUserGrants("btndataedit")) buttonPanel.add(getEditButton(), null); 
+			if (MainMenu.checkUserGrants("btndataedit")) buttonPanel.add(getEditButton(), null);
 			if (MainMenu.checkUserGrants("btndatadel")) buttonPanel.add(getDeleteButton(), null);  
 			if (MainMenu.checkUserGrants("btndatamalnut")) buttonPanel.add(getMalnutritionButton(), null);  
 			buttonPanel.add(getCloseButton(), null);
@@ -355,11 +336,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 						Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 
-						int n = JOptionPane.showConfirmDialog(
-								null,
-								MessageBundle.getMessage("angal.admission.deleteselectedadmission"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
+						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedadmission.msg");
 						if ((n == JOptionPane.YES_OPTION) && admissionManager.setDeleted(adm.getId())) {
 							admList.remove(adm);
 							admModel.fireTableDataChanged();
@@ -374,12 +351,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 						Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 						OpdBrowserManager delOpd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 
-						int n = JOptionPane.showConfirmDialog(
-								null,
-								MessageBundle.getMessage("angal.admission.deleteselectedopd"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
-
+						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedopd.msg");
 						if ((n == JOptionPane.YES_OPTION) && (delOpd.deleteOpd(opd))) {
 							opdList.remove(opd);
 							admModel.fireTableDataChanged();
@@ -413,12 +385,10 @@ public class PatientDataBrowser extends ModalJFrame implements
 						new MalnutritionBrowser(PatientDataBrowser.this, ad);
 					}
 					else {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.theselectedadmissionhasnoconcernwithmalnutrition"),
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.info(null, "angal.admission.theselectedadmissionhasnoconcernwithmalnutrition.msg");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.opdhasnoconcernwithmalnutrition"),
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.info(null,"angal.admission.opdhasnoconcernwithmalnutrition.msg");
 				}
 			});
 		}
@@ -429,8 +399,8 @@ public class PatientDataBrowser extends ModalJFrame implements
 class AdmissionBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = -453243229156512947L;
-		private AdmissionBrowserManager manager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-		private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+		private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+		private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 		public AdmissionBrowserModel() {
 			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
@@ -441,7 +411,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				admList = manager.getAdmissions(patient);
+				admList = admissionBrowserManager.getAdmissions(patient);
 			} catch(OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -451,7 +421,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
                 OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				disease = dbm.getDiseaseAll();
+				disease = diseaseBrowserManager.getDiseaseAll();
 			} catch(OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
 			}
@@ -527,7 +497,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					if (elem.getCode().equalsIgnoreCase(id))
 						return elem.getDescription();
 				}
-				return MessageBundle.getMessage("angal.admission.nodisease");
+				return MessageBundle.getMessage("angal.admission.nodisease.txt");
 
 			} else if (column == 3) {
 				String id;
@@ -554,12 +524,12 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					if (elem.getCode().equalsIgnoreCase(id))
 						return elem.getDescription();
 				}				
-				return MessageBundle.getMessage("angal.admission.nodisease");
+				return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				
 			}  else if (column == 4) {
 				if (row < admList.size()) {
 					if (admList.get(row).getDisDate()==null)
-						return MessageBundle.getMessage("angal.admission.present");
+						return MessageBundle.getMessage("angal.admission.present.txt");
 					else {
 						Date myDate = admList.get(row).getDisDate().getTime();
 						return myDate;
@@ -578,7 +548,6 @@ class AdmissionBrowserModel extends DefaultTableModel {
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			// return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}

@@ -44,11 +44,16 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.stat.gui.report.GenericReportPatientVersion2;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.toedter.calendar.JDateChooser;
 
-public class PatientFolderReportModal extends ModalJFrame{
-	
+public class PatientFolderReportModal extends ModalJFrame {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientFolderReportModal.class);
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
+
 	private JFrame parent;
 	private Integer patId;
 	private JPanel jPanelChooser;
@@ -76,8 +81,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 	
 	public PatientFolderReportModal(JFrame parent, Integer code, GregorianCalendar olderDate) {
 		this.parent = parent;
-		this.patId=code;
-		this.date=olderDate;
+		this.patId = code;
+		this.date = olderDate;
 		initialize();
 	}
 	
@@ -103,7 +108,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 			jPanelChooser.setLayout(gbl_jPanelExamination);
 
-			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.datefrom")); //$NON-NLS-1$
+			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.datefrom.label"));
 			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
 			gbc_jLabelDate.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDate.insets = new Insets(10, 5, 5, 5);
@@ -154,10 +159,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 			gbc_jPrintButton.gridx = 1;
 			gbc_jPrintButton.gridy = 3;
 			jPanelChooser.add(getPrintButton(), gbc_jPrintButton);
-		
 		}
 		return jPanelChooser;
-	
 	}
 	
 	private JButton getPrintButton() {
@@ -214,9 +217,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 			choosePanel.add(getPanelOperations());
 			choosePanel.add(getPanelDrugs());
 			choosePanel.add(getPanelExamination());
-			
 		}
-
 		return choosePanel;
 	}
 	
@@ -224,14 +225,11 @@ public class PatientFolderReportModal extends ModalJFrame{
 		if (labelPanel == null) {
 			labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
 			labelPanel.setAlignmentY(LEFT_ALIGNMENT);
-			
-			
-			labelPanel.add(new JLabel(MessageBundle.getMessage("angal.patientfolder.reportfor") + ':'), BorderLayout.CENTER);
-			
-			
+			labelPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.reportfor.txt") + ':'), BorderLayout.CENTER);
 		}
 		return labelPanel;
 	}
+
 	private JPanel getPanelAll() {
 		if (allPanel == null) {
 			allPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
@@ -240,7 +238,7 @@ public class PatientFolderReportModal extends ModalJFrame{
 
 			allCheck.setSelected(true);
 			allPanel.add(allCheck);
-			allPanel.add(new JLabel(MessageBundle.getMessage("angal.menu.all")), BorderLayout.CENTER);
+			allPanel.add(new JLabel(MessageBundle.getMessage("angal.common.all.txt").toUpperCase()), BorderLayout.CENTER);
 			allCheck.addActionListener(e -> {
 				examinationCheck.setSelected(false);
 				admissionCheck.setSelected(false);
@@ -249,19 +247,18 @@ public class PatientFolderReportModal extends ModalJFrame{
 				operationCheck.setSelected(false);
 				laboratoryCheck.setSelected(false);
 			});
-			
 		}
 		return allPanel;
 	}
+
 	private JPanel getPanelExamination() {
 		if (examinationPanel == null) {
 			examinationPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
 			
 			examinationCheck = new JCheckBox();
 
-			
 			examinationPanel.add(examinationCheck);
-			examinationPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.examination")), BorderLayout.CENTER);
+			examinationPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.examination.txt")), BorderLayout.CENTER);
 			examinationCheck.addActionListener(e -> allCheck.setSelected(false));
 			
 		}
@@ -274,9 +271,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 			
 			operationCheck = new JCheckBox();
 
-			
 			operationsPanel.add(operationCheck);
-			operationsPanel.add(new JLabel(MessageBundle.getMessage("angal.menu.operation")), BorderLayout.CENTER);
+			operationsPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.operation.txt")), BorderLayout.CENTER);
 			operationCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return operationsPanel;
@@ -288,9 +284,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 			
 			laboratoryCheck = new JCheckBox();
 
-			
 			laboratoryPanel.add(laboratoryCheck);
-			laboratoryPanel.add(new JLabel(MessageBundle.getMessage("angal.menu.laboratory")), BorderLayout.CENTER);
+			laboratoryPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.laboratory.txt")), BorderLayout.CENTER);
 			laboratoryCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return laboratoryPanel;
@@ -302,9 +297,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 			
 			drugsCheck = new JCheckBox();
 
-			
 			drugsPanel.add(drugsCheck);
-			drugsPanel.add(new JLabel(MessageBundle.getMessage("angal.patientfolder.tab.drugs")), BorderLayout.CENTER);
+			drugsPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.drugs.txt")), BorderLayout.CENTER);
 			drugsCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return drugsPanel;
@@ -315,25 +309,22 @@ public class PatientFolderReportModal extends ModalJFrame{
 			opdPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
 			
 			opdCheck = new JCheckBox();
-			
-			
+
 			opdPanel.add(opdCheck);
-			opdPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.opd")), BorderLayout.CENTER);
+			opdPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.opd.txt")), BorderLayout.CENTER);
 			opdCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return opdPanel;
 	}
 
-	
 	private JPanel getPanelAdmission() {
 		if (admissionPanel == null) {
 			admissionPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
 			
 			admissionCheck = new JCheckBox();
 
-			
 			admissionPanel.add(admissionCheck);
-			admissionPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.admission")), BorderLayout.CENTER);
+			admissionPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.admission.txt")), BorderLayout.CENTER);
 			admissionCheck.addActionListener(e -> allCheck.setSelected(false));
 		}
 		return admissionPanel;
@@ -366,9 +357,8 @@ public class PatientFolderReportModal extends ModalJFrame{
 		if (jDateChooserDateFrom == null) {
 			jDateChooserDateFrom = new JDateChooser();
 			jDateChooserDateFrom.setPreferredSize(new Dimension(200, 40));
-			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE)); //$NON-NLS-1$
-			jDateChooserDateFrom.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
+			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
+			jDateChooserDateFrom.setDateFormatString(DATE_FORMAT);
 			jDateChooserDateFrom.setDate(date.getTime());
 			jDateChooserDateFrom.addPropertyChangeListener("date", evt -> {
 				Date date = (Date) evt.getNewValue();
@@ -376,14 +366,14 @@ public class PatientFolderReportModal extends ModalJFrame{
 			});
 		}
 		return jDateChooserDateFrom;
+	}
 
-}
 	private JDateChooser getJDateChooserDateTo() {
 		if (jDateChooserDateTo == null) {
 			jDateChooserDateTo = new JDateChooser();
 			jDateChooserDateTo.setPreferredSize(new Dimension(200, 40));
-			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE)); //$NON-NLS-1$
-			jDateChooserDateTo.setDateFormatString("dd/MM/yyyy"); //$NON-NLS-1$
+			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE));
+			jDateChooserDateTo.setDateFormatString(DATE_FORMAT);
 			jDateChooserDateTo.setDate(new Date());
 			
 			jDateChooserDateTo.addPropertyChangeListener("date", evt -> {
@@ -393,39 +383,37 @@ public class PatientFolderReportModal extends ModalJFrame{
 		}
 		return jDateChooserDateTo;
 	}
+
 	public Date getDateToValue() {
-		
+
 		Date date3 = jDateChooserDateTo.getDate();
-		if (date3!=null){
-		 return jDateChooserDateTo.getDate();
-		}else {	
-			String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+		if (date3 != null) {
+			return jDateChooserDateTo.getDate();
+		} else {
+			String date = new SimpleDateFormat(DATE_FORMAT).format(new Date());
 			Date date2 = null;
 			try {
-				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+				date2 = new SimpleDateFormat(DATE_FORMAT).parse(date);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOGGER.error(e.getMessage(), e);
 			}
 			jDateChooserDateTo.setDate(date2);
 			return jDateChooserDateTo.getDate();
 		}
 	}
-		
-	
+
 	public Date getDateFromValue() {
-		
+
 		Date date3 = jDateChooserDateFrom.getDate();
-		if (date3!=null){
-		return jDateChooserDateFrom.getDate();
-		}else {
+		if (date3 != null) {
+			return jDateChooserDateFrom.getDate();
+		} else {
 			String date = "01/01/2000";
 			Date date2 = null;
 			try {
-				date2 = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+				date2 = new SimpleDateFormat(DATE_FORMAT).parse(date);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOGGER.error(e.getMessage(), e);
 			}
 			jDateChooserDateFrom.setDate(date2);
 			return jDateChooserDateFrom.getDate();

@@ -29,10 +29,11 @@ import org.isf.generaldata.MessageBundle;
 
 public class MessageDialog {
 
-	private static final String ERROR_MESSAGE = MessageBundle.getMessage("angal.common.error.title");
-	private static final String WARNING_MESSAGE = MessageBundle.getMessage("angal.common.warning.title");
-	private static final String INFO_MESSAGE = MessageBundle.getMessage("angal.common.info.title");
-	private static final String PLAIN_MESSAGE = MessageBundle.getMessage("angal.common.plain.title");
+	public static final String ERROR_MESSAGE = MessageBundle.getMessage("angal.common.error.title");
+	public static final String WARNING_MESSAGE = MessageBundle.getMessage("angal.common.warning.title");
+	public static final String INFO_MESSAGE = MessageBundle.getMessage("angal.common.info.title");
+	public static final String PLAIN_MESSAGE = MessageBundle.getMessage("angal.common.plain.title");
+	public static final String QUESTION = MessageBundle.getMessage("angal.common.question.title");
 
 	public static void error(Component parentComponent, String messageKey) {
 		JOptionPane.showMessageDialog(
@@ -64,5 +65,34 @@ public class MessageDialog {
 				MessageBundle.getMessage(messageKey),
 				PLAIN_MESSAGE,
 				JOptionPane.PLAIN_MESSAGE);
+	}
+
+	public static int yesNo(Component parentComponent, String messageKey, Object... additionalArgs) {
+		return JOptionPane.showConfirmDialog(
+				parentComponent,
+				(additionalArgs.length == 0)
+						? MessageBundle.getMessage(messageKey)
+						: MessageBundle.formatMessage(messageKey, additionalArgs),
+				QUESTION,
+				JOptionPane.YES_NO_OPTION
+		);
+	}
+
+	public static int yesNoCancel(Component parentComponent, String messageKey) {
+		return JOptionPane.showConfirmDialog(
+				parentComponent,
+				MessageBundle.getMessage(messageKey),
+				QUESTION,
+				JOptionPane.YES_NO_CANCEL_OPTION
+		);
+	}
+
+	public static int okCancel(Component parentComponent, String messageKey) {
+		return JOptionPane.showConfirmDialog(
+				parentComponent,
+				MessageBundle.getMessage(messageKey),
+				QUESTION,
+				JOptionPane.OK_CANCEL_OPTION
+		);
 	}
 }
