@@ -120,101 +120,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		for (int i = 0; i < listeners.length; i++)
 			((PatientBillListener)listeners[i]).billInserted(event);
 	}
-//---------------------------------------------------------------------------
-	/* *
-	public void patientSelected(Patient patient) {
-		patientSelected = patient;
-		ArrayList<Bill> patientPendingBills;
-		try {
-			patientPendingBills = billManager.getPendingBills(patient.getCode());
-		} catch (OHServiceException e){
-			patientPendingBills = new ArrayList<Bill>();
-			if (e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
-		}
-		if (patientPendingBills.isEmpty()) {
-			//BILL
-			thisBill.setPatient(patientSelected);
-			thisBill.setPatient(true);
-			thisBill.setPatName(patientSelected.getName());
-		} else {
-			if (patientPendingBills.size() == 1) {
-				if (GeneralData.ALLOWMULTIPLEOPENEDBILL){
-					int response = JOptionPane.showConfirmDialog(PatientBillEdit.this,
-							MessageBundle.getMessage("angal.admission.thispatienthasapendingbillcreateanother"), 
-							MessageBundle.getMessage("angal.admission.bill"), 
-							JOptionPane.YES_NO_OPTION); 
-					if (response==JOptionPane.YES_OPTION){
-						insert = true;
-							//thisBill.setPatID(patientSelected.getCode());
-							thisBill.setPatient(patientSelected);
-							thisBill.setPatient(true);
-							thisBill.setPatName(patientSelected.getName());							
-					}else{
-						insert = false;
-						setBill(patientPendingBills.get(0));
-						
-						// ****** Check if it is same month **************
-						checkIfsameMonth();
-						// **********************************************
-					}
-				}
-				else{
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.thispatienthasapendingbill"),
-							MessageBundle.getMessage("angal.admission.bill"), JOptionPane.PLAIN_MESSAGE);					
-					insert = false;
-					setBill(patientPendingBills.get(0));
-					
-					// ******* Check if it is same month **************
-					checkIfsameMonth();
-					// ************************************************
-				}
-			} else {
 
-				if (GeneralData.ALLOWMULTIPLEOPENEDBILL){
-					int response = JOptionPane.showConfirmDialog(PatientBillEdit.this,
-							MessageBundle.getMessage("angal.admission.thereismorethanonependingbillforthispatientcontinuecreateanother"), 
-							MessageBundle.getMessage("angal.admission.bill"), 
-							JOptionPane.YES_NO_OPTION); 
-					
-					if (response==JOptionPane.YES_OPTION){
-						insert = true;
-							//thisBill.setPatID(patientSelected.getCode());
-							thisBill.setPatient(patientSelected);
-							thisBill.setPatient(true);
-							thisBill.setPatName(patientSelected.getName());						
-					}else if (response==JOptionPane.NO_OPTION) {
-						//il faut proposer quelque chose
-						int resp = JOptionPane.showConfirmDialog(PatientBillEdit.this,
-								MessageBundle.getMessage("angal.admission.thereismorethanonependingbillforthispatientopenlastopenenedbill"), 
-								MessageBundle.getMessage("angal.admission.bill"), 
-								JOptionPane.YES_NO_OPTION);
-						if (resp==JOptionPane.YES_OPTION){							
-							insert = false;
-							setBill(patientPendingBills.get(0));						
-							// ******* Check if it is same month **************
-							checkIfsameMonth();
-							// ************************************************
-						}
-					}else{
-						return;
-					}
-				}else{
-					JOptionPane.showConfirmDialog(null,MessageBundle.getMessage("angal.admission.thereismorethanonependingbillforthispatientcontinue"),
-							MessageBundle.getMessage("angal.admission.bill"), JOptionPane.WARNING_MESSAGE);
-					return;
-				}				
-			}
-		} 
-		updateUI();
-		//jTextFieldSearch.setEnabled(true);
-		//jTextFieldSearch.grabFocus();
-		checkIfsameMonth();
-	} * */
-	
 	public void patientSelected(Patient patient){
 		// patientSelected = patient;
 		setPatientSelected(patient);
@@ -252,7 +158,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					}
 				}
 				else{
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.admission.thispatienthasapendingbill"),
+					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.thispatienthasapendingbill"),
 							MessageBundle.getMessage("angal.admission.bill"), JOptionPane.PLAIN_MESSAGE);					
 					insert = false;
 					setBill(patientPendingBills.get(0));

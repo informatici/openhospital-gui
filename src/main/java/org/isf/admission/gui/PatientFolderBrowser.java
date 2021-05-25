@@ -42,13 +42,13 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -86,6 +86,8 @@ import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.table.TableSorter;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class shows patient data and the list of admissions and lab exams.
@@ -108,7 +110,9 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener  {
 
 	private static final long serialVersionUID = -3427327158197856822L;
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientFolderBrowser.class);
+
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
 
     public interface DeleteAdmissionListener extends EventListener {
@@ -158,7 +162,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	private void initialize() {
 
 		this.setContentPane(getJContentPane());
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.admission.patientdata.title"));
 
 		pack();
@@ -167,8 +171,6 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		setVisible(true);
 	}
 
-	
-	
 	private JPanel jContentPane = null;
 
 	private JPanel getJContentPane() {
@@ -205,21 +207,21 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	private ArrayList <PatientExamination> examinationList;
 	
     private OperationList opeList;
-        
+
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.admission.wards"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.admission.diagnosisinm"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.admission.diagnosisoutm"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.admission.statusm") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.ward.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.diagnosisin.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.diagnosisout.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.status.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {120, 150, 200, 200, 120 };
+	private int[] pColumnWidth = {120, 150, 200, 200, 120};
 	
 	private String[] plColumns = {
-			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.lab.examm"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.common.codem"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.lab.resultm") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.exam.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.result.txt").toUpperCase()
 	};
 	private int[] plColumnwidth = { 150, 200, 50, 200 };
 
@@ -228,39 +230,30 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	private TableSorter sorter;
 	private TableSorter sorterLab;
 	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	
+
 	private GregorianCalendar olderDate;
-	
-	//Alex: added sorters, for Java6 only
-//	private TableRowSorter<AdmissionBrowserModel> adm_sorter;
-//	private TableRowSorter<LabBrowserModel> lab_sorter;
 
 	private JTable admTable;
 	private JTable labTable;
 
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPaneLab;
-	
+
 	private JPanel tablesPanel=null;
 
 	private MedicalsrMovPatList drugsList;
-		
+
 	private JPanel getTablesPanel(){
 		tablesPanel = new JPanel(new BorderLayout());
 
-		//Alex: added sorters, for Java6 only
-//		admModel = new AdmissionBrowserModel();
-//		admTable = new JTable(admModel);
-	
-		//Alex: Java5 compatible
 		admModel = new AdmissionBrowserModel();
 		sorter = new TableSorter(admModel);
-		admTable = new JTable(sorter);   
-                
+		admTable = new JTable(sorter);
+
                 /* ** apply default oh cellRender **** */
 		admTable.setDefaultRenderer(Object.class, cellRenderer);
 		admTable.setDefaultRenderer(Double.class, cellRenderer);
-		admTable.addMouseMotionListener(new MouseMotionListener() {			
+		admTable.addMouseMotionListener(new MouseMotionListener() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				JTable aTable =  (JTable)e.getSource();
@@ -273,7 +266,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		        }
 		        aTable.repaint();
 			}
-			
+
 			@Override
 			public void mouseDragged(MouseEvent e) {}
 		});
@@ -283,33 +276,20 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				cellRenderer.setHoveredRow(-1);
 			}
 		});
-		//sorter.addMouseListenerToHeaderInTable(admTable); no needed
-		
-		
+
 		for (int i = 0; i< pColumns.length; i++){
 			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			if (i == 0 || i == 4) {
 				admTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
 			}
 		}
-		
+
 		scrollPane = new JScrollPane(admTable);
 		scrollPane.setPreferredSize(new Dimension(500,200));
 		tablesPanel.add(scrollPane, BorderLayout.NORTH);
 		sorter.sortByColumn(0, false); //sort by first column, descending
 		sorter.updateRowHeights(admTable);
-	
-		//Alex: added sorter, for Java6 only
-//		adm_sorter = new TableRowSorter<AdmissionBrowserModel>((AdmissionBrowserModel) admTable.getModel());
-//		for(int i=0; i < admTable.getColumnCount(); i++)
-//			adm_sorter.setComparator(i, new TableSorter1());
-//		admTable.setRowSorter(adm_sorter);
-//		//Alex: perform auto sorting on date descending
-//		ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
-//		sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
-//		adm_sorter.setSortKeys(sortKeys);
-//		adm_sorter.sort();
-		
+
 		labModel = new LabBrowserModel();
 		sorterLab = new TableSorter(labModel);
 		labTable = new JTable(sorterLab);
@@ -342,27 +322,27 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			}
 		});
 		sorterLab.sortByColumn(0, false);
-		
+
 		for (int i = 0; i< plColumns.length; i++){
 			labTable.getColumnModel().getColumn(i).setPreferredWidth(plColumnwidth[i]);
 			if (i==0){
 			labTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
 			}
 		}
-			
-        JTabbedPane tabbedPaneLabOpe = new JTabbedPane(JTabbedPane.TOP);
+
+        JTabbedPane tabbedPaneLabOpe = new JTabbedPane(SwingConstants.TOP);
 		tablesPanel.add(tabbedPaneLabOpe, BorderLayout.CENTER);
 		scrollPaneLab = new JScrollPane(labTable);
-		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.patientfolder.tab.exams"), null, scrollPaneLab, null);
-                	
+		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.admission.patientfolder.exams.title"), null, scrollPaneLab, null);
+
         opeList = new OperationList(patient);
         getOlderDate(opeList.getOprowData(), "opDate");
-		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.patientfolder.tab.operations"), null, opeList, null);
-                
+		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.admission.patientfolder.operations.title"), null, opeList, null);
+
 		drugsList = new MedicalsrMovPatList(patient);
 		getOlderDate(drugsList.getDrugsData(), "date");
-		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.patientfolder.tab.drugs"), null, drugsList, null);
-	                
+		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.admission.patientfolder.drugs.title"), null, drugsList, null);
+
 		ListSelectionModel listSelectionModel = admTable.getSelectionModel();
 		listSelectionModel.addListSelectionListener(e -> {
 
@@ -431,18 +411,18 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				}
 			}
 		});
-		
+
 		return tablesPanel;
 	}
 
 	private JPanel getButtonPanel() {
-		JPanel buttonPanel; 
+		JPanel buttonPanel;
 			buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,5,5));
-			if (MainMenu.checkUserGrants("btnpatfoldopdrpt")) buttonPanel.add(getOpdReportButton(), null); //$NON-NLS-1$
-			if (MainMenu.checkUserGrants("btnpatfoldadmrpt")) buttonPanel.add(getAdmReportButton(), null); //$NON-NLS-1$
-			if (MainMenu.checkUserGrants("btnpatfoldadmrpt")) buttonPanel.add(getDisReportButton(), null); //$NON-NLS-1$
-			if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) buttonPanel.add(getLaunchReportButton(), null); //$NON-NLS-1$
-            if (GeneralData.DICOMMODULEENABLED && MainMenu.checkUserGrants("btnpatfolddicom")) buttonPanel.add(getDICOMButton(), null); //$NON-NLS-1$
+			if (MainMenu.checkUserGrants("btnpatfoldopdrpt")) buttonPanel.add(getOpdReportButton(), null);
+			if (MainMenu.checkUserGrants("btnpatfoldadmrpt")) buttonPanel.add(getAdmReportButton(), null);
+			if (MainMenu.checkUserGrants("btnpatfoldadmrpt")) buttonPanel.add(getDisReportButton(), null);
+			if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) buttonPanel.add(getLaunchReportButton(), null);
+            if (GeneralData.DICOMMODULEENABLED && MainMenu.checkUserGrants("btnpatfolddicom")) buttonPanel.add(getDICOMButton(), null);
 			buttonPanel.add(getCloseButton(), null);
 		return buttonPanel;
 	}
@@ -468,18 +448,16 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				Object selectedObj = sorter.getValueAt(selectedRow, -1);
 
 				if (selectedObj instanceof Opd) {
-
 					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 					new GenericReportOpd(opd.getCode(), opd.getPatient().getCode(), GeneralData.OPDCHART);
 				} else {
-					JOptionPane.showMessageDialog(PatientFolderBrowser.this, MessageBundle.getMessage("angal.admission.patientfolder.pleaseselectanopd"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.pleaseselectanopd.msg");
 				}
 			});
 		}
 		return opdReportButton;
 	}
-	
+
 	private JButton getDisReportButton() {
 		if (disReportButton == null) {
 			disReportButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.dischart.btn"));
@@ -497,20 +475,18 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 					Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 					if (adm.getDisDate() == null) {
-						JOptionPane.showMessageDialog(PatientFolderBrowser.this, MessageBundle.getMessage("angal.admission.patientfolder.thepatientisnotyetdischarged"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.thepatientisnotyetdischarged.msg");
 						return;
 					}
 					new GenericReportDischarge(adm.getId(), adm.getPatient().getCode(), GeneralData.DISCHART);
 				} else {
-					JOptionPane.showMessageDialog(PatientFolderBrowser.this, MessageBundle.getMessage("angal.admission.patientfolder.pleaseselectanadmission"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
 				}
 			});
 		}
 		return disReportButton;
 	}
-	
+
 	private JButton getAdmReportButton() {
 		if (admReportButton == null) {
 			admReportButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.admchart.btn"));
@@ -529,22 +505,20 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 					new GenericReportAdmission(adm.getId(), adm.getPatient().getCode(), GeneralData.ADMCHART);
 				} else {
-					JOptionPane.showMessageDialog(PatientFolderBrowser.this, MessageBundle.getMessage("angal.admission.patientfolder.pleaseselectanadmission"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.pleaseselectanadmission.msg");
 				}
 			});
 		}
 		return admReportButton;
 	}
-	
+
 	private JButton getLaunchReportButton() {
 		if (launchReportButton == null) {
 			launchReportButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.launchreport.btn"));
 			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.launchreport.btn.key"));
 			launchReportButton.addActionListener(e -> {
 				if (olderDate == null) {
-					JOptionPane.showMessageDialog(PatientFolderBrowser.this,
-							MessageBundle.getMessage("angal.common.nodatatoshow")); //$NON-NLS-1$
+					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.nodatatoshow.msg");
 					return;
 				}
 				new PatientFolderReportModal(PatientFolderBrowser.this, patient.getCode(),olderDate);
@@ -554,7 +528,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	}
 
     DicomGui dg = null;
-    
+
     public void resetDicomViewer()
     {
         dg = null;
@@ -580,7 +554,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		}
 		return closeButton;
 	}
-	
+
 	private <T> void getOlderDate(List<T> list, String variableName) {
 		for (Object obj : list) {
 			GregorianCalendar otherDate = getDateFromObject(obj, variableName);
@@ -589,7 +563,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			}
 		}
 	}
-	
+
 	private GregorianCalendar getDateFromObject(Object obj, String variableName) {
 		GregorianCalendar date = null;
 		try {
@@ -597,20 +571,14 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			Method getter = pd.getReadMethod();
 			date = (GregorianCalendar) getter.invoke(obj);
 
-		} catch (IntrospectionException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+		} catch (IntrospectionException | InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
+			LOGGER.error(e.getMessage(), e);
 		}
 		return date;
 	}
-	
+
 	class AdmissionBrowserModel extends DefaultTableModel {
-		
+
 		private static final long serialVersionUID = -453243229156512947L;
 		private AdmissionBrowserManager manager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 		private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
@@ -619,7 +587,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		private ExaminationBrowserManager examin = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 
 		public AdmissionBrowserModel() {
-			
+
 			try {
 				admList = manager.getAdmissions(patient);
 				getOlderDate(admList, "admDate");
@@ -673,11 +641,11 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		@Override
 		public int getColumnCount() {
 			return pColumns.length;
-		}	
-		
+		}
+
 		@Override
 		public Object getValueAt(int row, int column) {
-			
+
 			if (column == -1) {
 				if (row < admList.size()) {
 					return admList.get(row);
@@ -688,35 +656,35 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					int f = row - (opdList.size()+admList.size());
 					return examinationList.get(f);
 				}
-			
+
 			} else if (column == 0) {
 				if (row < admList.size()) {
-					
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");  
+
+					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 					Date myDate = (admList.get(row)).getAdmDate().getTime();
-					String strDate = dateFormat.format(myDate);  
-					
+					String strDate = dateFormat.format(myDate);
+
 					return strDate;
-					
+
 				} else if (row < opdList.size()+admList.size()) {
 					int z = row - admList.size();
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");  
+					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 					Date myDate = (opdList.get(z)).getVisitDate().getTime();
-					String strDate = dateFormat.format(myDate);  
-					
+					String strDate = dateFormat.format(myDate);
+
 					return strDate;
-					
+
 				} else {
 					int f = row - (opdList.size()+admList.size());
 					GregorianCalendar cal = examinationList.get(f).getPex_date();
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");  
+					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 					Date myDate = cal.getTime();
-					String strDate = dateFormat.format(myDate);  
-					
+					String strDate = dateFormat.format(myDate);
+
 					return strDate;
-					
+
 				}
-				
+
 			} else if (column == 1) {
 				if (row < admList.size()) {
 					String id = admList.get(row).getWard().getCode();
@@ -725,9 +693,9 @@ public class PatientFolderBrowser extends ModalJFrame implements
 							return elem.getDescription();
 					}
 				} else if (row < opdList.size()+admList.size()){
-					return MessageBundle.getMessage("angal.admission.patientfolder.opd"); //$NON-NLS-1$
+					return MessageBundle.getMessage("angal.admission.patientfolder.opd.txt");
 				} else {
-					return "EXAMINATION"; //$NON-NLS-1$
+					return "EXAMINATION";
 				}
 			}
 			else if (column == 2) {
@@ -735,31 +703,31 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				if (row < admList.size()) {
 					id = admList.get(row).getDiseaseIn().getCode();
 					if (id == null){
-						id = ""; //$NON-NLS-1$
+						id = "";
 					}
 					for (Disease elem : disease) {
 						if (elem.getCode().equalsIgnoreCase(id))
 							return elem.getDescription();
-					}				
-					return MessageBundle.getMessage("angal.admission.nodisease"); //$NON-NLS-1$
+					}
+					return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				} else  if (row < opdList.size()+admList.size()){
 					 int z = row - admList.size();
 					id = opdList.get(z).getDisease().getCode();
 					if (id == null){
-						id = ""; //$NON-NLS-1$
+						id = "";
 					}
 					for (Disease elem : disease) {
 						if (elem.getCode().equalsIgnoreCase(id))
 							return elem.getDescription();
-					}				
-					return MessageBundle.getMessage("angal.admission.nodisease"); //$NON-NLS-1$
+					}
+					return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				} else {
 					int f = row - (opdList.size()+admList.size());
-					String ret = "<html>"+ //$NON-NLS-1$
-							MessageBundle.getMessage("angal.examination.weight")+": "+ (String.valueOf(examinationList.get(f).getPex_height())) //$NON-NLS-1$ $NON-NLS-2$
-							+ "<br>"+ //$NON-NLS-1$
-							MessageBundle.getMessage("angal.examination.height")+": "+ (String.valueOf(examinationList.get(f).getPex_weight())) //$NON-NLS-1$ $NON-NLS-2$
-							+"</html>"; //$NON-NLS-1$
+					String ret = "<html>" +
+							MessageBundle.getMessage("angal.common.weight.txt") + ": " + (examinationList.get(f).getPex_height())
+							+ "<br>" +
+							MessageBundle.getMessage("angal.common.height.txt") + ": " + (examinationList.get(f).getPex_weight())
+							+ "</html>";
 					return ret;
 				}
 
@@ -768,13 +736,13 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				if (row < admList.size()) {
 					id = admList.get(row).getDiseaseOut1() == null ? null :  admList.get(row).getDiseaseOut1().getCode();
 					if (id == null){
-						id = ""; //$NON-NLS-1$
+						id = "";
 					}
 					for (Disease elem : disease) {
 						if (elem.getCode().equalsIgnoreCase(id))
 							return elem.getDescription();
-					}				
-					return MessageBundle.getMessage("angal.admission.nodisease"); //$NON-NLS-1$
+					}
+					return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				} else  if (row < opdList.size()+admList.size()){
 					int z = row - admList.size();
 					Disease dis = opdList.get(z).getDisease3();
@@ -791,24 +759,24 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					for (Disease elem : disease) {
 						if (elem.getCode().equalsIgnoreCase(id))
 							return elem.getDescription();
-					}				
-					return MessageBundle.getMessage("angal.admission.nodisease"); //$NON-NLS-1$
+					}
+					return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				} else {
 					int f = row - (opdList.size()+admList.size());
-					String ret = "<html>"+ //$NON-NLS-1$
-							MessageBundle.getMessage("angal.examination.arterialpressureabbr")+": "+(String.valueOf(examinationList.get(f).getPex_ap_min())) //$NON-NLS-1$ $NON-NLS-2$
-							+ "/"+(String.valueOf(examinationList.get(f).getPex_ap_max())) //$NON-NLS-1$
-							+ "<br>" + //$NON-NLS-1$
-							MessageBundle.getMessage("angal.examination.temperatureabbr")+": "+(String.valueOf(examinationList.get(f).getPex_temp())) +  //$NON-NLS-1$ $NON-NLS-2$
-							"</html>"; //$NON-NLS-1$
-					return ret; //$NON-NLS-1$
+					String ret = "<html>" +
+							MessageBundle.getMessage("angal.common.arterialpressureabbr.txt") + ": " + (examinationList.get(f).getPex_ap_min())
+							+ '/' + (examinationList.get(f).getPex_ap_max())
+							+ "<br>" +
+							MessageBundle.getMessage("angal.common.temperatureabbr.txt") + ": " + (examinationList.get(f).getPex_temp()) +
+							"</html>";
+					return ret;
 				}
 
-				
+
 			}  else if (column == 4) {
 				if (row < admList.size()) {
 					if (admList.get(row).getDisDate()==null)
-						return MessageBundle.getMessage("angal.admission.present"); //$NON-NLS-1$
+						return MessageBundle.getMessage("angal.admission.present.txt");
 					else {
 						Date myDate = admList.get(row).getDisDate().getTime();
 						return myDate;
@@ -821,7 +789,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
 				} else {
 					int f = row - (opdList.size()+admList.size());
-					String ret = "O2: "+(String.valueOf(examinationList.get(f).getPex_sat()));
+					String ret = "O2: "+(examinationList.get(f).getPex_sat());
 					return ret;
 				}
 			} 
@@ -831,7 +799,6 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			// return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
@@ -888,15 +855,12 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			// return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 	
 	public class DateCellRenderer extends DefaultTableCellRenderer {
-		/**
-			 * 
-			 */
+
 			private static final long serialVersionUID = 1L;
 
 			@Override

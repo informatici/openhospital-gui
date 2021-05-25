@@ -93,19 +93,19 @@ public class OhTableOperationModel<T> implements TableModel{
 		String columnLabel="";
 		switch (columnIndex) {
 		case 0:
-			columnLabel= MessageBundle.getMessage("angal.operationrowlist.date");
+			columnLabel= MessageBundle.getMessage("angal.operationrowlist.date").toUpperCase();
 			//columnLabel= "Date";
 			break;
 		case 1:
-			columnLabel= MessageBundle.getMessage("angal.operationrowlist.natureop");
+			columnLabel= MessageBundle.getMessage("angal.operationrowlist.natureop").toUpperCase();
 			//columnLabel= "Nature Operation";
 			break;
 		case 2:
-			columnLabel= MessageBundle.getMessage("angal.operationrowedit.result");
+			columnLabel= MessageBundle.getMessage("angal.operationrowedit.result").toUpperCase();
 			//columnLabel= "Resultat";
 			break;
 		case 3:
-			columnLabel= MessageBundle.getMessage("angal.operationrowedit.unitetrans");
+			columnLabel= MessageBundle.getMessage("angal.operationrowedit.unitetrans").toUpperCase();
 			//columnLabel= "Unite Trans";
 			break;	
 		default:
