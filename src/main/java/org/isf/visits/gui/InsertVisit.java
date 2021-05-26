@@ -303,8 +303,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	private JButton getButtonCancel() {
 		if (buttonCancel == null) {
-			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			buttonCancel.setMnemonic(KeyEvent.VK_N);
+			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			buttonCancel.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
@@ -317,8 +317,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	private JButton getButtonOK() {
 		if (buttonOK == null) {
-			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			buttonOK.setMnemonic(KeyEvent.VK_O);
+			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(new ActionListener() {
 
 				private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);

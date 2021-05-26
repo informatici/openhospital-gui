@@ -26,7 +26,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -101,9 +100,8 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
-			jButtonClose = new JButton();
-			jButtonClose.setText(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonClose.setMnemonic(KeyEvent.VK_C);
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jButtonClose.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -116,9 +114,8 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonDelete() {
 		if (jButtonDelete == null) {
-			jButtonDelete = new JButton();
-			jButtonDelete.setText(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
-			jButtonDelete.setMnemonic(KeyEvent.VK_D);
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jButtonDelete.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -162,9 +159,8 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonEdit() {
 		if (jButtonEdit == null) {
-			jButtonEdit = new JButton();
-			jButtonEdit.setText(MessageBundle.getMessage("angal.common.edit")); //$NON-NLS-1$
-			jButtonEdit.setMnemonic(KeyEvent.VK_E);
+			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jButtonEdit.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -185,9 +181,8 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonNew() {
 		if (jButtonNew == null) {
-			jButtonNew = new JButton();
-			jButtonNew.setText(MessageBundle.getMessage("angal.common.new")); //$NON-NLS-1$
-			jButtonNew.setMnemonic(KeyEvent.VK_N);
+			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jButtonNew.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {

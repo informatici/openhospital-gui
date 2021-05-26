@@ -193,14 +193,14 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		});
 		panelButtons.add(deleteButton);
 
-		JButton cancelButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.close")); //$NON-NLS-1$
-		cancelButton.addMouseListener(new MouseAdapter() {
+		JButton closeButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.close")); //$NON-NLS-1$
+		closeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				cancelButtonMouseClicked(evt);
 			}
 		});
-		panelButtons.add(cancelButton);
+		panelButtons.add(closeButton);
 
 		/* *** getting data *** */
 		if (myOpd != null) {

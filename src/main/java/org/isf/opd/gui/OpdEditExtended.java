@@ -53,10 +53,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
@@ -1570,8 +1568,8 @@ public class OpdEditExtended extends ModalJFrame implements
 	//alex: modified method to take data from Patient Object instead from jTextFields
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton(MessageBundle.getMessage("angal.common.ok"));
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(e -> {
 				boolean opdNumExist = false;
 				if (!jOpdNumField.getText().equals("") || !jOpdNumField.getText().contains(" ")) {
@@ -1745,8 +1743,8 @@ public class OpdEditExtended extends ModalJFrame implements
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel"));
-            cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(e -> {
 				//to free Memory
 				pat.clear();

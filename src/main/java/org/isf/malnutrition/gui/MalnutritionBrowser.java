@@ -25,7 +25,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -144,8 +143,8 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	}
 
 	private JButton getNewButton() {
-		newButton = new JButton(MessageBundle.getMessage("angal.common.new"));
-		newButton.setMnemonic(KeyEvent.VK_N);
+		newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		newButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				malnutrition = new Malnutrition(0, null, null, adm, 0, 0);
@@ -159,8 +158,8 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	}
 
 	private JButton getEditButton() {
-		editButton = new JButton(MessageBundle.getMessage("angal.common.edit"));
-		editButton.setMnemonic(KeyEvent.VK_E);
+		editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+		editButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
@@ -178,8 +177,8 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	}
 
 	private JButton getDeleteButton() {
-		deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete"));
-		deleteButton.setMnemonic(KeyEvent.VK_D);
+		deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
@@ -218,8 +217,8 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	}
 
 	private JButton getCloseButton() {
-		closeButton = new JButton(MessageBundle.getMessage("angal.common.close"));
-		closeButton.setMnemonic(KeyEvent.VK_C);
+		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();

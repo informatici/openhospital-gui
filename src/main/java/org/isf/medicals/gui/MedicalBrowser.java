@@ -277,15 +277,15 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	}
 
 	private JButton getJButtonClose() {
-		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
-		buttonClose.setMnemonic(KeyEvent.VK_C);
-		buttonClose.addActionListener(new ActionListener() {
+		JButton closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+		closeButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 			}
 		});
-		return buttonClose;
+		return closeButton;
 	}
 
 	private JButton getJButtonExpiring() {
@@ -489,8 +489,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	}
 
 	private JButton getJButtonDelete() {
-		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete"));
-		buttonDelete.setMnemonic(KeyEvent.VK_D);
+		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDelete.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent event) {
@@ -528,8 +528,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	}
 
 	private JButton getJButtonEdit() {
-		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit"));
-		buttonEdit.setMnemonic(KeyEvent.VK_E);
+		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent event) {
@@ -548,8 +548,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	}
 
 	private JButton getJButtonNew() {
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new"));
-		buttonNew.setMnemonic(KeyEvent.VK_N);
+		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent event) {

@@ -44,7 +44,7 @@ public class StockCardDialog extends JDialog {
 	private JTextFieldSearchModel textField;
 	private JFromDateToDateChooser dateRange;
 	private JPanel buttonsPanel;
-	private JButton buttonPDF;
+	private JButton buttonOK;
 	private JButton buttonExcel;
 	private JButton buttonCancel;
 	private Date dateFrom;
@@ -102,8 +102,8 @@ public class StockCardDialog extends JDialog {
 
 	private JButton getButtonCancel() {
 		if (buttonCancel == null) {
-			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel"));
-			buttonCancel.setMnemonic(KeyEvent.VK_N);
+			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			buttonCancel.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
@@ -116,10 +116,10 @@ public class StockCardDialog extends JDialog {
 	}
 
 	private JButton getButtonOK() {
-		if (buttonPDF == null) {
-			buttonPDF = new JButton(MessageBundle.getMessage("angal.common.ok"));
-			buttonPDF.setMnemonic(KeyEvent.VK_P);
-			buttonPDF.addActionListener(new ActionListener() {
+		if (buttonOK == null) {
+			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			buttonOK.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
 					medical = (Medical) textField.getSelectedObject();
@@ -129,7 +129,7 @@ public class StockCardDialog extends JDialog {
 				}
 			});
 		}
-		return buttonPDF;
+		return buttonOK;
 	}
 
 	private JButton getButtonExcel() {

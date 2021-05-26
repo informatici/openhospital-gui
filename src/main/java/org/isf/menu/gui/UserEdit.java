@@ -196,8 +196,7 @@ public class UserEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(e -> dispose());
 		}
@@ -211,8 +210,7 @@ public class UserEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(e -> {
 				String userName = nameTextField.getText().trim();

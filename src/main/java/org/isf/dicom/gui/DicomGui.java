@@ -205,7 +205,8 @@ public class DicomGui extends JFrame implements WindowListener {
 		jButtonDeleteDicom.setName("jButtonDeleteDicom");
 		jButtonDeleteDicom.setEnabled(false);
 
-		jButtonExit.setText(MessageBundle.getMessage("angal.common.close"));
+		jButtonExit.setText(MessageBundle.getMessage("angal.common.close.btn"));
+		jButtonExit.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		jButtonExit.setName("jButtonExit");
 
 		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);

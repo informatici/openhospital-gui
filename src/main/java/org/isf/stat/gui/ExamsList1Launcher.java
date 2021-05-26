@@ -28,7 +28,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -121,9 +120,8 @@ public class ExamsList1Launcher extends ModalJFrame{
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();

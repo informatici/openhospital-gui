@@ -250,12 +250,12 @@ public class HospitalBrowser extends ModalJFrame{
 	public JPanel getJButtonPanel() {
 		if (jButtonPanel==null){
 			jButtonPanel= new JPanel();
-			editJButton = new JButton(MessageBundle.getMessage("angal.common.edit"));
-			editJButton.setMnemonic(KeyEvent.VK_E);
+			editJButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			editJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			updateJButton = new JButton(MessageBundle.getMessage("angal.hospital.update"));
 			updateJButton.setMnemonic(KeyEvent.VK_U);
-			exitJButton = new JButton(MessageBundle.getMessage("angal.common.close"));
-			exitJButton.setMnemonic(KeyEvent.VK_C);
+			exitJButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			exitJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			updateJButton.setEnabled(false);
 			
 			exitJButton.addActionListener(new ActionListener() {

@@ -363,9 +363,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JButton getJButtonNew() {
 		if (jButtonNew == null) {
-			jButtonNew = new JButton();
-			jButtonNew.setText(MessageBundle.getMessage("angal.common.new")); //$NON-NLS-1$
-			jButtonNew.setMnemonic(KeyEvent.VK_N);
+			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jButtonNew.setVisible(false);
 			jButtonNew.addActionListener(new ActionListener() {
 
@@ -381,9 +380,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JButton getJButtonEdit() {
 		if (jButtonEdit == null) {
-			jButtonEdit = new JButton();
-			jButtonEdit.setText(MessageBundle.getMessage("angal.common.edit")); //$NON-NLS-1$
-			jButtonEdit.setMnemonic(KeyEvent.VK_E);
+			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jButtonEdit.setVisible(false);
 			jButtonEdit.addActionListener(new ActionListener() {
 
@@ -405,9 +403,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
-			jButtonClose = new JButton();
-			jButtonClose.setText(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonClose.setMnemonic(KeyEvent.VK_C);
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jButtonClose.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {

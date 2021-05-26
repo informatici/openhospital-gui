@@ -27,7 +27,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -154,8 +153,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		});
 		buttonPanel.add(pbox);
 		
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new"));
-		buttonNew.setMnemonic(KeyEvent.VK_N);
+		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent event) {
@@ -167,8 +166,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		});
 		buttonPanel.add(buttonNew);
 		
-		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit"));
-		buttonEdit.setMnemonic(KeyEvent.VK_E);
+		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent event) {
@@ -185,8 +184,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		});
 		buttonPanel.add(buttonEdit);
 		
-		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete"));
-		buttonDelete.setMnemonic(KeyEvent.VK_D);
+		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
@@ -206,7 +205,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 							disease.setOpdInclude(false);
 							diseaseUpdated(null);
 						}
-					}catch(OHServiceException e){
+					} catch(OHServiceException e){
 						if (e.getMessages() != null){
 							for(OHExceptionMessage msg : e.getMessages()){
 								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
@@ -218,8 +217,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		});
 		buttonPanel.add(buttonDelete);
 		
-		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
-		buttonClose.setMnemonic(KeyEvent.VK_C);
+		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		buttonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();

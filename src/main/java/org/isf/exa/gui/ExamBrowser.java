@@ -231,8 +231,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	}
 
 	private JButton getJButtonDelete() {
-		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete"));
-		jButtonDelete.setMnemonic(KeyEvent.VK_D);
+		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		jButtonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
@@ -279,8 +279,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	private JButton getJButtonNew() {
             
 		if (jButtonNew == null) {
-			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new"));
-			jButtonNew.setMnemonic(KeyEvent.VK_N);
+			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jButtonNew.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					exam = new Exam("", "", new ExamType("", ""), 0, "");
@@ -295,8 +295,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 
 	private JButton getJButtonEdit() {
 		if (jButtonEdit == null) {
-			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit"));
-			jButtonEdit.setMnemonic(KeyEvent.VK_E);
+			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jButtonEdit.addActionListener(new ActionListener() {
 	
 				public void actionPerformed(ActionEvent event) {
@@ -337,8 +337,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
-			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
-			jButtonClose.setMnemonic(KeyEvent.VK_C);
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jButtonClose.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();

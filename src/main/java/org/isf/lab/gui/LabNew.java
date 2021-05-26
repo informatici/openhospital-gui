@@ -279,9 +279,8 @@ public class LabNew extends JDialog implements SelectionListener {
 
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel"));
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
 				
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -294,9 +293,8 @@ public class LabNew extends JDialog implements SelectionListener {
 
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
-			jButtonOK = new JButton();
-			jButtonOK.setText(MessageBundle.getMessage("angal.common.ok"));
-			jButtonOK.setMnemonic(KeyEvent.VK_O);
+			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jButtonOK.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {

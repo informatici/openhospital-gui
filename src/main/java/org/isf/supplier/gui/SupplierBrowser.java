@@ -27,7 +27,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -167,9 +166,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	 */
 	private JButton getJEditButton() {
 		if (jEditButton == null) {
-			jEditButton = new JButton();
-			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
-			jEditButton.setMnemonic(KeyEvent.VK_E);
+			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -195,9 +193,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	 */
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
-			jNewButton = new JButton();
-			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
-			jNewButton.setMnemonic(KeyEvent.VK_N);
+			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -218,9 +215,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	 */
 	private JButton getJDeleteButton() {
 		if (jDeleteButton == null) {
-			jDeleteButton = new JButton();
-			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
@@ -258,9 +254,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();

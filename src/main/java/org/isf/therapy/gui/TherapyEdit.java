@@ -813,19 +813,17 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			closeButton.setIcon(new ImageIcon("rsc/icons/close_button.png"));
-			closeButton.setMnemonic(KeyEvent.VK_X);
-			closeButton.setMaximumSize(new Dimension(ActionsButtonWidth,
-					AllButtonHeight));
+			closeButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			closeButton.setHorizontalAlignment(SwingConstants.LEFT);
 			closeButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					// to free memory
 					if (therapyModified || visitModified) {
-						int ok = JOptionPane
-								.showConfirmDialog(TherapyEdit.this,
+						int ok = JOptionPane.showConfirmDialog(TherapyEdit.this,
 										MessageBundle.getMessage("angal.common.save") + "?"); //$NON-NLS-1$
 						if (ok == JOptionPane.YES_OPTION) {
 							saveButton.doClick();

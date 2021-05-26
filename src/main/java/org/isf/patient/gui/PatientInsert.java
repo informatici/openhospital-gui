@@ -265,9 +265,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JButton getJOkButton() {
 		if (jOkButton == null) {
-			jOkButton = new JButton();
-			jOkButton.setText(MessageBundle.getMessage("angal.common.ok"));
-			jOkButton.setMnemonic(KeyEvent.VK_A + ('O' - 'A'));
+			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));;
 			jOkButton.addActionListener(new java.awt.event.ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -420,9 +419,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JButton getJCancelButton() {
 		if (jCancelButton == null) {
-			jCancelButton = new JButton();
-			jCancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));
-			jCancelButton.setMnemonic(KeyEvent.VK_A+('C'-'A')); 
+			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jCancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();

@@ -988,11 +988,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonSave() {
 		if (jButtonSave == null) {
-			jButtonSave = new JButton();
-			jButtonSave.setText(MessageBundle.getMessage("angal.common.save")); //$NON-NLS-1$
-			jButtonSave.setMnemonic(KeyEvent.VK_S);
+			jButtonSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			jButtonSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			jButtonSave.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
-			jButtonSave.setIcon(new ImageIcon("rsc/icons/save_button.png")); //$NON-NLS-1$
+			jButtonSave.setIcon(new ImageIcon("rsc/icons/save_button.png"));
 			jButtonSave.addActionListener(new ActionListener() {
 			
 				public void actionPerformed(ActionEvent e) {
@@ -1169,9 +1168,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
-			jButtonClose = new JButton();
-			jButtonClose.setText(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonClose.setMnemonic(KeyEvent.VK_C);
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jButtonClose.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
 			jButtonClose.setIcon(new ImageIcon("rsc/icons/close_button.png")); //$NON-NLS-1$
 			jButtonClose.addActionListener(new ActionListener() {

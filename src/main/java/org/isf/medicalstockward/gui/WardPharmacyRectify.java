@@ -352,7 +352,8 @@ public class WardPharmacyRectify extends JDialog {
 			jButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 			getContentPane().add(jButtonPanel, BorderLayout.SOUTH);
 			{
-				JButton jButtonOk = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
+				JButton jButtonOk = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+				jButtonOk.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 				jButtonOk.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						Object item;
@@ -432,7 +433,8 @@ public class WardPharmacyRectify extends JDialog {
 				jButtonPanel.add(jButtonOk);
 			}
 			{
-				JButton jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
+				JButton jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+				jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 				jButtonCancel.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();

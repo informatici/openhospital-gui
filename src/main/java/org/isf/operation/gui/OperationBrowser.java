@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -163,8 +162,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		});
 		buttonPanel.add(pbox);
 
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new")); //$NON-NLS-1$
-		buttonNew.setMnemonic(KeyEvent.VK_N);
+		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent event) {
@@ -177,8 +176,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		});
 		buttonPanel.add(buttonNew);
 
-		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit")); //$NON-NLS-1$
-		buttonEdit.setMnemonic(KeyEvent.VK_E);
+		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent event) {
@@ -195,8 +194,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		});
 		buttonPanel.add(buttonEdit);
 
-		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
-		buttonDelete.setMnemonic(KeyEvent.VK_D);
+		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
@@ -221,8 +220,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		});
 		buttonPanel.add(buttonDelete);
 
-		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-		buttonClose.setMnemonic(KeyEvent.VK_C);
+		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		buttonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();

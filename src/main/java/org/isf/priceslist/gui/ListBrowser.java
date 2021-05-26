@@ -102,9 +102,8 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
-			jButtonClose = new JButton();
-			jButtonClose.setText(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonClose.setMnemonic(KeyEvent.VK_C);
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jButtonClose.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -117,14 +116,13 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 	
 	private JButton getJButtonDelete() {
 		if (jButtonDelete == null) {
-			jButtonDelete = new JButton();
-			jButtonDelete.setText(MessageBundle.getMessage("angal.common.delete"));
-			jButtonDelete.setMnemonic(KeyEvent.VK_D);
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jButtonDelete.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
 					if (jTablePriceLists.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.priceslist.pleaseselectalisttodelete");
+						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.priceslist.pleaseselectalisttodelete"));				 //$NON-NLS-1$
 					} else {
 						if (jTablePriceLists.getRowCount() == 1) {
 							MessageDialog.error(null, "angal.priceslist.sorryatleastonelist");
@@ -262,9 +260,8 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 
 	private JButton getJButtonEdit() {
 		if (jButtonEdit == null) {
-			jButtonEdit = new JButton();
-			jButtonEdit.setText(MessageBundle.getMessage("angal.common.edit")); //$NON-NLS-1$
-			jButtonEdit.setMnemonic(KeyEvent.VK_E);
+			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jButtonEdit.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {

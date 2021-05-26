@@ -286,8 +286,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	
 	private JButton getJOkButton() {
 		if (jOkButton == null) {
-			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			jOkButton.setMnemonic(KeyEvent.VK_O);
+			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jOkButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
@@ -346,8 +346,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	
 	private JButton getJCancelButton() {
 		if (jCancelButton == null) {
-			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jCancelButton.setMnemonic(KeyEvent.VK_C);
+			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jCancelButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {

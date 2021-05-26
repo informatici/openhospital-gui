@@ -279,7 +279,8 @@ public class ExamPicker extends javax.swing.JPanel {
             }
         });
 
-        jButtonQuit.setText(MessageBundle.getMessage("angal.common.cancel"));
+	    jButtonQuit.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
+	    jButtonQuit.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
         jButtonQuit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButtonQuitMouseClicked(evt);
@@ -290,11 +291,7 @@ public class ExamPicker extends javax.swing.JPanel {
         jPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
         jPanel2.add(jButtonSelect);
         jPanel2.add(jButtonQuit);
-        
     }
-    
-    
-
     
     private void jTableDataMouseClicked(java.awt.event.MouseEvent evt) {
         

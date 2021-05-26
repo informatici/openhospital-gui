@@ -30,7 +30,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
@@ -737,8 +736,8 @@ public class TherapyEntryForm extends JDialog {
 	
 	private JButton getButtonCancel() {
 		if (buttonCancel == null) {
-			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			buttonCancel.setMnemonic(KeyEvent.VK_N);
+			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			buttonCancel.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent arg0) {
@@ -751,8 +750,8 @@ public class TherapyEntryForm extends JDialog {
 	
 	private JButton getButtonOK() {
 		if (buttonOK == null) {
-			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			buttonOK.setMnemonic(KeyEvent.VK_O);
+			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent arg0) {

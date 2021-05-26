@@ -46,6 +46,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.model.Movement;
@@ -409,8 +410,8 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 	}
 
 	private JButton getOkButton() {
-		okButton = new JButton("Ok");
-		okButton.setMnemonic(KeyEvent.VK_O);
+		okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+		okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Movement> pMovements=null;

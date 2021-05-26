@@ -26,7 +26,6 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -256,9 +255,8 @@ public class DiseaseEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();
@@ -275,9 +273,8 @@ public class DiseaseEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);

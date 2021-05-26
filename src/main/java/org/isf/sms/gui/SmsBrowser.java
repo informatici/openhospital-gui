@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
@@ -249,8 +248,8 @@ public class SmsBrowser extends ModalJFrame {
 	
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
-			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new")); //$NON-NLS-1$
-			jNewButton.setMnemonic(KeyEvent.VK_N);
+			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					new SmsEdit(SmsBrowser.this);
@@ -264,8 +263,8 @@ public class SmsBrowser extends ModalJFrame {
 	
 	private JButton getJDeleteButton() {
 		if (jDeleteButton == null) {
-			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
-			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int[] indexes = jSmsTable.getSelectedRows();
@@ -313,8 +312,8 @@ public class SmsBrowser extends ModalJFrame {
 
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();

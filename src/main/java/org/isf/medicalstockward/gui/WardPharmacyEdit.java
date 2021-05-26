@@ -311,9 +311,8 @@ public class WardPharmacyEdit extends JDialog {
 
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
