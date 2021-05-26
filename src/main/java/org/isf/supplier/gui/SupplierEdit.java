@@ -34,7 +34,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -262,11 +261,7 @@ public class SupplierEdit extends JDialog {
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (nameTextField.getText().trim().equals("")) {
-						JOptionPane.showMessageDialog(				
-								null,
-								MessageBundle.getMessage("angal.supplier.pleaseinsertaname"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.supplier.pleaseinsertaname");
 						return;
 					}
 

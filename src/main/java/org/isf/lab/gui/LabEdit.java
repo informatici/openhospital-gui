@@ -40,7 +40,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -576,7 +575,7 @@ public class LabEdit extends ModalJFrame {
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (examComboBox.getSelectedIndex() == 0) {
-						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.lab.pleaseselectanexam"));
+						MessageDialog.error(null, "angal.lab.pleaseselectanexam");
 						return;
 					}
 					String matSelected=(String)matComboBox.getSelectedItem();
@@ -587,13 +586,13 @@ public class LabEdit extends ModalJFrame {
 						patId=((Patient)(patientComboBox.getSelectedItem())).getCode();
 					String sex=sexTextField.getText().toUpperCase();
 					if (!(sex.equals("M") || sex.equals("F"))) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.lab.pleaseinsertmformaleorfforfemale"));
+						MessageDialog.error(null, "angal.lab.pleaseinsertmformaleorfforfemale");
 						return;
 					}
 						
 					if (examSelected.getProcedure() == 3 && examRowTextField.getText().isEmpty()) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"));
-							return;
+						MessageDialog.error(null, "angal.labnew.pleaseinsertavalidvalue");
+						return;
 					}
 					// exam date	
 					GregorianCalendar gregDate = new GregorianCalendar();
@@ -612,7 +611,7 @@ public class LabEdit extends ModalJFrame {
 					try {
 						tmpAge=Integer.parseInt(ageTextField.getText());
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(LabEdit.this, MessageBundle.getMessage("angal.lab.insertvalidage"));
+						MessageDialog.error(LabEdit.this, "angal.lab.insertvalidage");
 					}
 					lab.setSex(sexTextField.getText().toUpperCase());
 					

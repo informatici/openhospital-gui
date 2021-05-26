@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.isf.generaldata.GeneralData;
@@ -38,6 +37,7 @@ import org.isf.menu.manager.Context;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
 import org.isf.utils.excel.ExcelExporter;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +81,7 @@ public class GenericReportPharmaceuticalStockCard {
 			}
         } catch (Exception e) {
             LOGGER.error("", e);
-            JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
+			MessageDialog.error(null, "angal.stat.reporterror");
         }
 	}
 	

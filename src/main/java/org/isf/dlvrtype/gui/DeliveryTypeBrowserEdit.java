@@ -42,6 +42,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DeliveryTypeBrowserEdit extends JDialog{
@@ -215,7 +216,9 @@ public class DeliveryTypeBrowserEdit extends JDialog{
                             if (result) {
                                 fireDeliveryInserted();
                             }
-                            if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.dlvrtype.thdatacouldnotbesaved"));
+                            if (!result) {
+                                MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
+                            }
                             else  dispose();
                         }
                         else {                          // updating
@@ -226,7 +229,9 @@ public class DeliveryTypeBrowserEdit extends JDialog{
                                 if (result) {
                                     fireDeliveryUpdated();
                                 }
-                                if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.dlvrtype.thdatacouldnotbesaved"));
+                                if (!result) {
+                                    MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
+                                }
                                 else  dispose();
                             }
 

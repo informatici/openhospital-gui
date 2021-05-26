@@ -46,7 +46,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -306,8 +305,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					try {
 						newDate.setTime(jCalendarDate.getDate());
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(LabNew.this, 
-								MessageBundle.getMessage("angal.lab.pleaseinsertavalidexamdate"));
+						MessageDialog.error(LabNew.this, "angal.lab.pleaseinsertavalidexamdate");
 						return;
 					}
 					RememberDates.setLastLabExamDate(newDate);
@@ -319,10 +317,7 @@ public class LabNew extends JDialog implements SelectionListener {
                         lab.setInOutPatient(inOut);
                         lab.setPatient(patientSelected);
                         if (lab.getExam().getProcedure() == 3 && lab.getResult().isEmpty()) {
-    						JOptionPane.showMessageDialog(LabNew.this,
-    								MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"), //$NON-NLS-1$
-    								"Error", //$NON-NLS-1$
-    								JOptionPane.WARNING_MESSAGE);
+	                        MessageDialog.error(LabNew.this, "angal.labnew.pleaseinsertavalidvalue");
     						//select the first exam with the missing value
     						jTableExams.setRowSelectionInterval(examItems.indexOf(lab), examItems.indexOf(lab));
     						return;
@@ -817,9 +812,7 @@ public class LabNew extends JDialog implements SelectionListener {
 
 						for (Laboratory labItem : examItems) {
 							if (labItem.getExam() == exa) {
-								JOptionPane.showMessageDialog(LabNew.this,
-										MessageBundle.getMessage("angal.labnew.thisexamisalreadypresent"), "Error",
-										JOptionPane.WARNING_MESSAGE);
+								MessageDialog.error(LabNew.this, "angal.labnew.thisexamisalreadypresent");
 								alreadyIn = true;
 							}
 						}
@@ -861,11 +854,8 @@ public class LabNew extends JDialog implements SelectionListener {
 				public void actionPerformed(ActionEvent e) {
 					
 					int selectedRow = jTableExams.getSelectedRow();
-					if (selectedRow < 0) { 
-						JOptionPane.showMessageDialog(LabNew.this,
-								MessageBundle.getMessage("angal.labnew.pleaseselectanexam"), //$NON-NLS-1$
-								"Error", //$NON-NLS-1$
-								JOptionPane.WARNING_MESSAGE);
+					if (selectedRow < 0) {
+						MessageDialog.error(LabNew.this,"angal.labnew.pleaseselectanexam");
 					} else {
 						examItems.remove(selectedRow);
 						jPanelResults.removeAll();
@@ -875,11 +865,9 @@ public class LabNew extends JDialog implements SelectionListener {
 						jComboBoxMaterial.setEnabled(false);
 						//validate();
 						repaint();
-						
 					}
 				}
 			});
-
 		}
 		return jButtonRemoveItem;
 	}

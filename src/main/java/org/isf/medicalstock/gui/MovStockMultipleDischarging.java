@@ -74,6 +74,7 @@ import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
 import org.isf.utils.time.TimeTools;
@@ -608,8 +609,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private boolean checkQuantityInLot(Lot lot, double qty) {
 		double lotQty = lot.getMainStoreQuantity();
 		if (qty > lotQty) {
-			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, 
-					MessageBundle.getMessage("angal.medicalstock.movementquantityisgreaterthanthequantityof")); //$NON-NLS-1$
+			MessageDialog.error(MovStockMultipleDischarging.this, "angal.medicalstock.movementquantityisgreaterthanthequantityof");
 			return false;
 		} 
 		return true;
@@ -754,8 +754,7 @@ public class MovStockMultipleDischarging extends JDialog {
 						throw new NumberFormatException();
 					if (!checkQuantityAllMovements(med, qty)) qty = 0;
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, 
-							MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+					MessageDialog.error(MovStockMultipleDischarging.this, "angal.medicalstock.multipledischarging.pleaseinsertavalidvalue");
 					qty = 0;
 				}
 			} else return qty;
@@ -931,16 +930,14 @@ public class MovStockMultipleDischarging extends JDialog {
 		
 		ArrayList<Movement> movements = model.getMovements();
 		if (movements.isEmpty()) {
-			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, 
-					MessageBundle.getMessage("angal.medicalstock.multipledischarging.noelementtosave")); //$NON-NLS-1$
+			MessageDialog.error(MovStockMultipleDischarging.this, "angal.medicalstock.multipledischarging.noelementtosave");
 			return false;
 		}
 		
 		// Check destination
 		Object ward = jComboBoxDestination.getSelectedItem();
 		if (ward instanceof String) {
-			JOptionPane.showMessageDialog(MovStockMultipleDischarging.this, 
-					MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseselectaward")); //$NON-NLS-1$
+			MessageDialog.error(MovStockMultipleDischarging.this, "angal.medicalstock.multipledischarging.pleaseselectaward");
 			return false;
 		}
 		

@@ -532,8 +532,7 @@ public class MovStockMultipleCharging extends JDialog {
 						cost = total / qty;
 					}
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.medicalstock.multiplecharging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.pleaseinsertavalidvalue");
 				}
 			} else return new BigDecimal(cost);
 		} while (cost == 0.);
@@ -551,8 +550,7 @@ public class MovStockMultipleCharging extends JDialog {
 				if (total < 0)
 					throw new NumberFormatException();
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-						MessageBundle.getMessage("angal.medicalstock.multiplecharging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+				MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.pleaseinsertavalidvalue");
 			}
 		}
 		return total;
@@ -603,26 +601,17 @@ public class MovStockMultipleCharging extends JDialog {
 			if (ok == JOptionPane.OK_OPTION) {
 				String lotName = lotNameTextField.getText();
 				
-				if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) 
-				{
-					JOptionPane.showMessageDialog(
-							MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.medicalstock.multiplecharging.expirydatebeforepreparationdate")); //$NON-NLS-1$
+				if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) {
+					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expirydatebeforepreparationdate");
 				} 
-				else if (expireDateChooser.getDate().before(jDateChooser.getDate())) 
-				{
-					JOptionPane.showMessageDialog(
-							MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdateinthepastnotallowed")); //$NON-NLS-1$
-				} 
-				else 
-				{
+				else if (expireDateChooser.getDate().before(jDateChooser.getDate())) {
+					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expiringdateinthepastnotallowed");
+				} else {
 					expiringDate.setTime(expireDateChooser.getDate());
 					preparationDate.setTime(preparationDateChooser.getDate());
 					lot = new Lot(lotName, preparationDate, expiringDate);
 				}
 			} else {
-				
 				return null;
 			}
 		}
@@ -747,8 +736,7 @@ public class MovStockMultipleCharging extends JDialog {
 					if (qty < 0)
 						throw new NumberFormatException();
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.medicalstock.multiplecharging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.pleaseinsertavalidvalue");
 					qty = 0;
 				}
 			} else return qty;
@@ -923,15 +911,14 @@ public class MovStockMultipleCharging extends JDialog {
 
 		ArrayList<Movement> movements = model.getMovements();
 		if (movements.isEmpty()) {
-			JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-					MessageBundle.getMessage("angal.medicalstock.multiplecharging.noelementtosave")); //$NON-NLS-1$
+			MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.noelementtosave");
 			return false;
 		}
 		
 		// Check supplier
 		Object supplier = jComboBoxSupplier.getSelectedItem();
 		if (supplier == null || supplier instanceof String) {
-			JOptionPane.showMessageDialog(MovStockMultipleCharging.this, MessageBundle.getMessage("angal.medicalstock.multiplecharging.pleaseselectasupplier")); //$NON-NLS-1$
+			MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.pleaseselectasupplier");
 			return false;
 		}
 		

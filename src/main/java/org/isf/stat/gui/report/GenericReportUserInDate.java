@@ -31,6 +31,7 @@ import org.isf.menu.manager.Context;
 import org.isf.serviceprinting.manager.PrintReceipt;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
+import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +80,7 @@ import net.sf.jasperreports.view.JasperViewer;
 				}
 			} catch (Exception e) {
                 LOGGER.error("", e);
-                JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
+				MessageDialog.error(null, "angal.stat.reporterror");
 			}
 		}
 	}

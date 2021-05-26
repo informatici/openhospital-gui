@@ -42,7 +42,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -356,7 +355,7 @@ public class WardPharmacyEdit extends JDialog {
 					if (item instanceof Medical) {
 						movSelectedMedical = (Medical) item;
 					} else {
-						JOptionPane.showMessageDialog(null,	MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectadrug")); //$NON-NLS-1$
+						MessageDialog.error(null, "angal.medicalstockwardedit.pleaseselectadrug");
 						return;
 					}
 					
@@ -529,7 +528,7 @@ public class WardPharmacyEdit extends JDialog {
 					try {
 						movSelectedWeight = Float.parseFloat(jWeightTextField.getText());
 						if ((movSelectedWeight < 0)) {
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstockward.insertvalidweight"));
+							MessageDialog.error(null, "angal.medicalstockward.insertvalidweight");
 							movSelectedWeight = 0;
 						}
 					} catch (NumberFormatException ex) {
@@ -562,7 +561,7 @@ public class WardPharmacyEdit extends JDialog {
 					try {
 						movSelectedAge = Integer.parseInt(jAgeTextField.getText());
 						if ((movSelectedAge < 0) || (movSelectedAge > 200)) {
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstockwardedit.insertvalidage"));
+							MessageDialog.error(null, "angal.medicalstockwardedit.insertvalidage");
 							movSelectedAge = 0;
 						}
 					} catch (NumberFormatException ex) {

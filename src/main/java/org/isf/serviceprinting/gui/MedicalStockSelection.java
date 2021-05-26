@@ -421,9 +421,7 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 					JOptionPane.showMessageDialog(null, "Date/s not valid");
 					correctDate = false;
 				} else if (movTo.compareTo(movFrom) < 0) {
-					JOptionPane
-							.showMessageDialog(null,
-									"Date To cannot be chronologically before than Date From");
+					JOptionPane.showMessageDialog(null, "Date To cannot be chronologically before than Date From");
 					correctDate = false;
 				}
 				if (correctDate) {

@@ -57,6 +57,7 @@ import org.isf.pricesothers.model.PricesOthers;
 import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.treetable.JTreeTable;
 
@@ -140,10 +141,7 @@ public class PricesBrowser extends ModalJFrame {
 
 	private void checkLists() {
 		if (listArray.isEmpty()) {
-			JOptionPane.showMessageDialog(null, 
-						MessageBundle.getMessage("angal.priceslist.pleasecreatealistfirst"),
-						MessageBundle.getMessage("angal.priceslist.nolist"),
-						JOptionPane.OK_OPTION);
+			MessageDialog.error(null, "angal.priceslist.pleasecreatealistfirst");
 			ListBrowser browseList = new ListBrowser();
 			browseList.setVisible(true);
 			dispose();
@@ -267,7 +265,7 @@ public class PricesBrowser extends ModalJFrame {
 						}
 						
 						if (updated) {
-							JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.priceslist.listsaved")); //$NON-NLS-1$
+							MessageDialog.info(null, "angal.priceslist.listsaved");
 							updateFromDB();
 							PriceNode root = getTreeContent();
 							jTreeTable.setModel(new PriceModel(root));
@@ -276,7 +274,9 @@ public class PricesBrowser extends ModalJFrame {
 						    jTreeTable.getTree().expandRow(1);
 							validate();
 							repaint();
-						} else JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.priceslist.listcouldnotbesaved")); //$NON-NLS-1$
+						} else {
+							MessageDialog.error(null, "angal.priceslist.listcouldnotbesaved");
+						}
 					}
 				}
 			});

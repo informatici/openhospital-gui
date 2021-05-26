@@ -138,7 +138,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, WardPharmacyNew.this);
-			JOptionPane.showMessageDialog(WardPharmacyNew.this, MessageBundle.getMessage("angal.medicalstockwardedit.problemoccurredwhileretrievingweight"));
+			MessageDialog.error(WardPharmacyNew.this, "angal.medicalstockwardedit.problemoccurredwhileretrievingweight");
 		}
 	}
 	
@@ -342,8 +342,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private boolean checkQuantityInLot(MedicalWard medWard, double qty) {
 		double wardQty = medWard.getQty();
 		if (qty > wardQty) {
-			JOptionPane.showMessageDialog(WardPharmacyNew.this, 
-					MessageBundle.getMessage("angal.medicalstock.movementquantityisgreaterthanthequantityof")); //$NON-NLS-1$
+			MessageDialog.error(WardPharmacyNew.this, "angal.medicalstock.movementquantityisgreaterthanthequantityof");
 			return false;
 		} 
 		return true;
@@ -475,8 +474,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						throw new NumberFormatException();
 
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(WardPharmacyNew.this,
-							MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+					MessageDialog.error(WardPharmacyNew.this, "angal.medicalstock.multipledischarging.pleaseinsertavalidvalue");
 					qty = 0;
 				}
 			} else
@@ -539,11 +537,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonRemoveMedical.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					if (jTableMedicals.getSelectedRow() < 0) { 
-						JOptionPane.showMessageDialog(WardPharmacyNew.this,
-								MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectanitem"), //$NON-NLS-1$
-								"Error", //$NON-NLS-1$
-								JOptionPane.WARNING_MESSAGE);
+					if (jTableMedicals.getSelectedRow() < 0) {
+						MessageDialog.error(WardPharmacyNew.this, "angal.medicalstockwardedit.pleaseselectanitem");
 					} else {
 						removeItem(jTableMedicals.getSelectedRow());
 					}
@@ -623,9 +618,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						if (patientSelected != null) {
 							description = patientSelected.getName();
 							age = patientSelected.getAge();
-						}else {
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseselectpatient"));
+						} else {
+							MessageDialog.error(null, "angal.medicalstock.multipledischarging.pleaseselectpatient");
 							return;
 						}
 					} 
@@ -633,10 +627,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						Object selectedObj = wardBox.getSelectedItem();
 						if (selectedObj instanceof Ward){
 							wardTo = (Ward) selectedObj;
-						}
-						else{
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseselectaward"));
+						} else {
+							MessageDialog.error(null, "angal.medicalstock.multipledischarging.pleaseselectaward");
 							return;
 						}
                         description = wardTo.getDescription();

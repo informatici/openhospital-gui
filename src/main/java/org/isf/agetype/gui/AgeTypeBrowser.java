@@ -30,7 +30,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -42,6 +41,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
@@ -223,8 +223,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 			try {
 				number = Integer.parseInt((String) value);
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(AgeTypeBrowser.this, 
-						MessageBundle.getMessage("angal.agetype.insertvalidage"));
+				MessageDialog.error(AgeTypeBrowser.this, "angal.agetype.insertvalidage");
 				return;
 			}
 			

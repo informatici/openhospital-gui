@@ -86,7 +86,6 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
 
@@ -502,16 +501,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private boolean isOnlyOneSelected(JTable table) {
 		int rowsSelected = table.getSelectedRowCount();
 		if (rowsSelected > 1) {
-			JOptionPane.showMessageDialog(BillBrowser.this,
-					MessageBundle.getMessage("angal.billbrowser.pleaseselectonebillonly"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-					JOptionPane.PLAIN_MESSAGE);
+			MessageDialog.error(BillBrowser.this,"angal.billbrowser.pleaseselectonebillonly");
 			return false;
 		} else if (rowsSelected == 0) {
-			JOptionPane.showMessageDialog(BillBrowser.this,
-					MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-					JOptionPane.PLAIN_MESSAGE);
+			MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectabillfirst");
 			return false;
 		}
 		return true;
@@ -534,10 +527,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							pbe.addPatientBillListener(BillBrowser.this);
 							pbe.setVisible(true);
 						} else {
-							JOptionPane.showMessageDialog(BillBrowser.this,
-									MessageBundle.getMessage("angal.billbrowser.youcannoteditaclosedbill"),  //$NON-NLS-1$
-									MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
-									JOptionPane.CANCEL_OPTION);
+							MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill");
 							return;
 						}
 					}
@@ -558,10 +548,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							pbe.addPatientBillListener(BillBrowser.this);
 							pbe.setVisible(true);
 						} else {
-							JOptionPane.showMessageDialog(BillBrowser.this,
-									MessageBundle.getMessage("angal.billbrowser.youcannoteditaclosedbill"),  //$NON-NLS-1$
-									MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
-									JOptionPane.CANCEL_OPTION);
+							MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill");
 							return;
 						}
 					}
@@ -589,27 +576,18 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 									new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
 								} 
 								else if (editBill.getStatus().equals("D")) {
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.billdeleted"),  //$NON-NLS-1$
-											MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
-											JOptionPane.CANCEL_OPTION);
+									MessageDialog.error(BillBrowser.this, "angal.billbrowser.billdeleted");
 									return;
 								} else if (editBill.getStatus().equals("O") && GeneralData.ALLOWPRINTOPENEDBILL){
 									new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
 								} else {
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.billnotyetclosed"),  //$NON-NLS-1$
-											MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
-											JOptionPane.CANCEL_OPTION);
+									MessageDialog.error(BillBrowser.this,"angal.billbrowser.billnotyetclosed");
 									return;
 								}
 							}
 							else if (rowsSelected>1){
 								if (patientParent==null){
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.pleaseselectonebillonly"), //$NON-NLS-1$
-											MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-											JOptionPane.PLAIN_MESSAGE);
+									MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectonebillonly");
 									return;
 								}
 								Bill billTemp = null;
@@ -642,12 +620,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 									pbe.addPatientBillListener(BillBrowser.this);
 									pbe.setVisible(true);
 								}
-							}else if (rowsSelected > 1){
+							} else if (rowsSelected > 1){
 								if (patientParent==null){
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.pleaseselectonebillonly"), //$NON-NLS-1$
-											MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-											JOptionPane.PLAIN_MESSAGE);
+									MessageDialog.error(BillBrowser.this,"angal.billbrowser.pleaseselectonebillonly");
 									return;
 								}else if (GeneralData.ALLOWPRINTOPENEDBILL) {
 									Bill billTemp = null;
@@ -664,11 +639,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 									String fromDate = sdf.format(dateFrom.getTime());
 									String toDate = sdf.format(dateTo.getTime());
 									new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList,  fromDate, toDate, true, true);
-								}else {
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.billnotyetclosed"),  //$NON-NLS-1$
-											MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
-											JOptionPane.CANCEL_OPTION);
+								} else {
+									MessageDialog.error(BillBrowser.this, "angal.billbrowser.billnotyetclosed");
 									return;
 								}
 							} else throw new Exception();
@@ -680,18 +652,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 								Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
 								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
 							} else if (rowsSelected > 1) {
-								JOptionPane.showMessageDialog(BillBrowser.this,
-										MessageBundle.getMessage("angal.billbrowser.pleaseselectonebillonly"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-										JOptionPane.PLAIN_MESSAGE);
+								MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectonebillonly");
 								return;
 							} else throw new Exception();
 						}
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(BillBrowser.this,
-								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(BillBrowser.this,"angal.billbrowser.pleaseselectabillfirst");
 					}
 				}
 			});
