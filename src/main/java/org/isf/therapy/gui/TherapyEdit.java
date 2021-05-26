@@ -82,6 +82,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JAgenda;
 import org.isf.utils.jobjects.JAgenda.AgendaDayObject;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.visits.gui.VisitView;
@@ -610,15 +611,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				public void actionPerformed(ActionEvent e) {
 					String telephone = patient.getTelephone();
 					if (smsCheckBox.isSelected() && (telephone.equals("") || telephone.length() < 7)) {
-						JOptionPane.showMessageDialog(TherapyEdit.this, 
-								MessageBundle.getMessage("angal.therapy.theresnotelephonenumberassociatedwiththispatient"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.therapy.warning"), //$NON-NLS-1$
-								JOptionPane.WARNING_MESSAGE);
+						MessageDialog.warning(TherapyEdit.this,  "angal.therapy.theresnotelephonenumberassociatedwiththispatient");
 						int ok = JOptionPane.showConfirmDialog(
 								TherapyEdit.this,
 								MessageBundle.getMessage("angal.therapy.doyouwanttosetanumernowfor") + " " + patient.getName(),
 								MessageBundle.getMessage("angal.therapy.settelephonenumber"),
-								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
+								JOptionPane.CANCEL_OPTION);
 						if (ok == JOptionPane.YES_OPTION) {
 							
 							String number = JOptionPane.showInputDialog(
@@ -771,11 +769,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 								OHServiceExceptionUtil.showMessages(ex);
 							}
 							if (result) {
-								JOptionPane.showMessageDialog(TherapyEdit.this,
-										MessageBundle.getMessage("angal.therapy.patientvisitssaved")); //$NON-NLS-1$
+								MessageDialog.info(TherapyEdit.this, "angal.therapy.patientvisitssaved");
 							} else {
-								JOptionPane.showMessageDialog(TherapyEdit.this,
-										MessageBundle.getMessage("angal.therapy.patientvisitscouldnotbesaved")); //$NON-NLS-1$
+								MessageDialog.error(TherapyEdit.this, "angal.therapy.patientvisitscouldnotbesaved");
 							}
 						}
 					}
@@ -785,7 +781,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 								TherapyEdit.this,
 								MessageBundle.getMessage("angal.therapy.changenotifysettingsfor") + " " + patient.getName(),
 								MessageBundle.getMessage("angal.therapy.notifychanged"),
-								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
+								JOptionPane.CANCEL_OPTION);
 						if (ok == JOptionPane.YES_OPTION)
 							saveTherapies = true;
 						else
@@ -800,11 +796,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
 						if (result) {
-							JOptionPane.showMessageDialog(TherapyEdit.this,
-									MessageBundle.getMessage("angal.therapy.therapiesplansaved"));
+							MessageDialog.info(TherapyEdit.this, "angal.therapy.therapiesplansaved");
 						} else {
-							JOptionPane.showMessageDialog(TherapyEdit.this,
-									MessageBundle.getMessage("angal.therapy.therapiesplancouldnotbesaved"));
+							MessageDialog.error(TherapyEdit.this, "angal.therapy.therapiesplancouldnotbesaved");
 						}
 					}
 					

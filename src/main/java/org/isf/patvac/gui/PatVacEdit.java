@@ -38,7 +38,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -725,9 +724,9 @@ public class PatVacEdit extends JDialog {
 						}
 					}
 
-					if (!result)
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.thedatacouldnobesaved"));
-					else {
+					if (!result) {
+						MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
+					} else {
 						patVac = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(), new Vaccine("", "", new VaccineType("", "")), 0);
 						dispose();
 					}

@@ -408,14 +408,10 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 				return;
 			}
 			if (result) {
-				JOptionPane.showMessageDialog(OperationList.this,
-						MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-						MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+				MessageDialog.info(OperationList.this, "angal.operationrowlist.successdel");
 				refreshJtable();
 			} else {
-				JOptionPane.showMessageDialog(OperationList.this,
-						MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
-						MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+				MessageDialog.error(OperationList.this, "angal.operationrowlist.errosdel");
 			}
 		}
 	}

@@ -86,6 +86,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.RememberDates;
 
 /**
@@ -156,10 +157,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						//checkIfsameMonth();
 						/* *********************************************** */
 					}
-				}
-				else{
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.thispatienthasapendingbill"),
-							MessageBundle.getMessage("angal.admission.bill"), JOptionPane.PLAIN_MESSAGE);					
+				} else {
+					MessageDialog.error(null, "angal.patient.thispatienthasapendingbill");
 					insert = false;
 					setBill(patientPendingBills.get(0));
 					
@@ -442,7 +441,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				}
 				thisBill.setPriceList(list);
 				thisBill.setListName(list.getName());
-				
 			}
 		}
 				
@@ -979,10 +977,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 									JOptionPane.OK_OPTION,
 									icon);
 						} catch (Exception eee) {
-							JOptionPane.showMessageDialog(PatientBillEdit.this, 
-									MessageBundle.getMessage("angal.newbill.invalidquantitypleasetryagain"), //$NON-NLS-1$
-									MessageBundle.getMessage("angal.newbill.invalidquantity"), //$NON-NLS-1$
-									JOptionPane.ERROR_MESSAGE);
+							MessageDialog.error(PatientBillEdit.this, "angal.newbill.invalidquantitypleasetryagain");
 						}
 					}
 				}
@@ -1235,10 +1230,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							amount = new BigDecimal(quantity).negate();
 							if (amount.equals(new BigDecimal(0))) return;
 						} catch (Exception eee) {
-							JOptionPane.showMessageDialog(PatientBillEdit.this, 
-									MessageBundle.getMessage("angal.newbill.invalidquantitypleasetryagain"), //$NON-NLS-1$
-									MessageBundle.getMessage("angal.newbill.invalidquantity"), //$NON-NLS-1$
-									JOptionPane.ERROR_MESSAGE);
+							MessageDialog.error(PatientBillEdit.this, "angal.newbill.invalidquantitypleasetryagain");
 							return;
 						}
 					} else return;
@@ -1285,22 +1277,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			lastPay = billDate;
 		}
 		if (datePay.before(billDate)) {
-			JOptionPane.showMessageDialog(PatientBillEdit.this,
-					MessageBundle.getMessage("angal.newbill.paymentbeforebilldate"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.newbill.invaliddate"), //$NON-NLS-1$
-					JOptionPane.ERROR_MESSAGE);
+			MessageDialog.error(PatientBillEdit.this, "angal.newbill.paymentbeforebilldate");
 			return false;
 		} else if (datePay.before(lastPay)) {
-			JOptionPane.showMessageDialog(PatientBillEdit.this,
-					MessageBundle.getMessage("angal.newbill.datebeforelastpayment"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.newbill.invaliddate"), //$NON-NLS-1$
-					JOptionPane.ERROR_MESSAGE);
+			MessageDialog.error(PatientBillEdit.this, "angal.newbill.datebeforelastpayment");
 			return false;
 		} else if (datePay.after(now)) {
-			JOptionPane.showMessageDialog(PatientBillEdit.this,
-					MessageBundle.getMessage("angal.newbill.payementinthefuturenotallowed"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.newbill.invaliddate"), //$NON-NLS-1$
-					JOptionPane.ERROR_MESSAGE);
+			MessageDialog.error(PatientBillEdit.this, "angal.newbill.payementinthefuturenotallowed");
 			return false;
 		}
 		return true;
@@ -1336,10 +1319,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							amount = new BigDecimal(quantity);
 							if (amount.equals(new BigDecimal(0))) return;
 						} catch (Exception eee) {
-							JOptionPane.showMessageDialog(PatientBillEdit.this, 
-									MessageBundle.getMessage("angal.newbill.invalidquantitypleasetryagain"), //$NON-NLS-1$
-									MessageBundle.getMessage("angal.newbill.invalidquantity"), //$NON-NLS-1$
-									JOptionPane.ERROR_MESSAGE);
+							MessageDialog.error(PatientBillEdit.this, "angal.newbill.invalidquantitypleasetryagain");
 							return;
 						}
 					} else return;
@@ -1451,10 +1431,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 								oth.setPrice(amount);
 								isPrice = false;
 							} catch (Exception eee) {
-								JOptionPane.showMessageDialog(PatientBillEdit.this, 
-										MessageBundle.getMessage("angal.newbill.invalidpricepleasetryagain"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.newbill.invalidprice"), //$NON-NLS-1$
-										JOptionPane.ERROR_MESSAGE);
+								MessageDialog.error(PatientBillEdit.this, "angal.newbill.invalidpricepleasetryagain");
 								return;
 							}
 						}
@@ -1478,10 +1455,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 								qty = Integer.parseInt(quantity);
 								addItem(oth, qty, isPrice);
 							} catch (Exception eee) {
-								JOptionPane.showMessageDialog(PatientBillEdit.this, 
-										MessageBundle.getMessage("angal.newbill.invalidquantitypleasetryagain"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.newbill.invalidquantity"), //$NON-NLS-1$
-										JOptionPane.ERROR_MESSAGE);
+								MessageDialog.error(PatientBillEdit.this, "angal.newbill.invalidquantitypleasetryagain");
 							}
 						} else {
 							addItem(oth, 1, isPrice);
@@ -1606,10 +1580,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							qty = Integer.parseInt(quantity);
 							addItem(med, qty, true);
 						} catch (Exception eee) {
-							JOptionPane.showMessageDialog(PatientBillEdit.this, 
-									MessageBundle.getMessage("angal.newbill.invalidquantitypleasetryagain"), //$NON-NLS-1$
-									MessageBundle.getMessage("angal.newbill.invalidquantity"), //$NON-NLS-1$
-									JOptionPane.ERROR_MESSAGE);
+							MessageDialog.error(PatientBillEdit.this,  "angal.newbill.invalidquantitypleasetryagain");
 						}
 					}
 				}
@@ -1654,10 +1625,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						try {
 							amount = Double.parseDouble(price);
 						} catch (Exception eee) {
-							JOptionPane.showMessageDialog(PatientBillEdit.this, 
-									MessageBundle.getMessage("angal.newbill.invalidpricepleasetryagain"), //$NON-NLS-1$
-									MessageBundle.getMessage("angal.newbill.invalidprice"), //$NON-NLS-1$
-									JOptionPane.ERROR_MESSAGE);
+							MessageDialog.error(PatientBillEdit.this, "angal.newbill.invalidpricepleasetryagain");
 							return;
 						}
 						
@@ -1816,10 +1784,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jTableBill.clearSelection();
 			updateTotals();
 		} else {
-			JOptionPane.showMessageDialog(null,
-					MessageBundle.getMessage("angal.newbill.youcannotdeletealreadysaveditems"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.newbill.title"), //$NON-NLS-1$
-					JOptionPane.PLAIN_MESSAGE);
+			MessageDialog.error(null, "angal.newbill.youcannotdeletealreadysaveditems");
 		}
 	}
 	
@@ -1830,10 +1795,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jTablePayment.clearSelection();
 			updateTotals();
 		} else {
-			JOptionPane.showMessageDialog(null,
-					MessageBundle.getMessage("angal.newbill.youcannotdeletepastpayments"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.newbill.title"), //$NON-NLS-1$
-					JOptionPane.PLAIN_MESSAGE);
+			MessageDialog.error(null, "angal.newbill.youcannotdeletepastpayments");
 		}
 	}
 	

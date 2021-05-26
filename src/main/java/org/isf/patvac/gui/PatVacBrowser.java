@@ -535,7 +535,7 @@ public class PatVacBrowser extends ModalJFrame {
 						if ((ageFrom<0)||(ageFrom>200)) {
 							jAgeFromTextField.setText("0");
 							ageFrom = Integer.parseInt(jAgeFromTextField.getText());
-						    JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.insertvalidage"));
+							MessageDialog.error(null, "angal.patvac.insertvalidage");
 						}
 					} catch (NumberFormatException ex) {
 						jAgeFromTextField.setText("0");
@@ -569,11 +569,10 @@ public class PatVacBrowser extends ModalJFrame {
 						if ((ageTo<0)||(ageTo>200)) {
 							jAgeToTextField.setText("0");
 							ageTo = Integer.parseInt(jAgeToTextField.getText());
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.insertvalidage"));
-							
+							MessageDialog.error(null, "angal.patvac.insertvalidage");
 						}
 						if (ageFrom>ageTo){
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.agefrommustbelowerthanageto"));
+							MessageDialog.error(null, "angal.patvac.agefrommustbelowerthanageto");
 							jAgeFromTextField.setText(ageTo.toString());
 							ageFrom=ageTo;
 						}
@@ -581,7 +580,6 @@ public class PatVacBrowser extends ModalJFrame {
 						jAgeToTextField.setText("0");
 						ageTo = Integer.parseInt(jAgeToTextField.getText());
 					}
-					
 				}
 				
 				public void focusGained(FocusEvent e) {
@@ -733,12 +731,12 @@ public class PatVacBrowser extends ModalJFrame {
 					}
 			        		        
 			        if (dateFrom.getDate() == null ) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.pleaseinsertvaliddatefrom"));
+				        MessageDialog.error(null, "angal.patvac.pleaseinsertvaliddatefrom");
 						return;
 					}
 			        
 			        if (dateTo.getDate() == null){
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.pleaseinsertvaliddateto"));
+				        MessageDialog.error(null, "angal.patvac.pleaseinsertvaliddateto");
 						return;
 					}
 			        

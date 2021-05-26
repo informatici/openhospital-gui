@@ -379,22 +379,19 @@ public class WardEdit extends JDialog {
 					try {
 						beds = Integer.parseInt(bedsTextField.getText());
 					} catch (NumberFormatException f) {
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.ward.insertavalidbedsnumber"));
+						MessageDialog.error(WardEdit.this, "angal.ward.insertavalidbedsnumber");
 						return;
 					}
 					try {
 						nurs = Integer.parseInt(nursTextField.getText());
 					} catch (NumberFormatException f) {
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.ward.insertavalidnursesnumber"));
+						MessageDialog.error(WardEdit.this, "angal.ward.insertavalidnursesnumber");
 						return;
 					}
 					try {
 						docs = Integer.parseInt(docsTextField.getText());
 					} catch (NumberFormatException f) {
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.ward.insertavaliddoctorsnumber"));
+						MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddoctorsnumber");
 						return;
 					}
 

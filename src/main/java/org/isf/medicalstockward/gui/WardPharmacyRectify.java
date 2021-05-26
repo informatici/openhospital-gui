@@ -67,7 +67,6 @@ import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstock.model.Lot;
-import org.isf.medicalstock.service.LotIoOperationRepository;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
@@ -75,6 +74,7 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.model.Ward;
@@ -364,28 +364,27 @@ public class WardPharmacyRectify extends JDialog {
 						try {
 							item = jComboBoxMedical.getSelectedItem();
 						if (item instanceof Medical) {
-						
 							med = (Medical) jComboBoxMedical.getSelectedItem();
-						}else {
-							JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseselectadrug")); //$NON-NLS-1$
+						} else {
+							MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.pleaseselectadrug");
 							return;
 						}
 						} catch (ClassCastException e1) {
-							JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseselectadrug")); //$NON-NLS-1$
+							MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.pleaseselectadrug");
 							return;
 						}
 						
 						/*
 						 *  To override MovWardBrowserManager.validateMovementWard() behavior
 						 */
-						if (selectedLot == null) { //$NON-NLS-1$
-							JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstock.pleaseselectalot")); //$NON-NLS-1$
+						if (selectedLot == null) {
+							MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstock.pleaseselectalot");
 							return;
 						}
 						
 						String reason = jTextFieldReason.getText().trim();
-						if (reason.equals("")) { //$NON-NLS-1$
-							JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleasespecifythereason")); //$NON-NLS-1$
+						if (reason.equals("")) {
+							MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.pleasespecifythereason");
 							return;
 						}
 						
@@ -501,7 +500,7 @@ public class WardPharmacyRectify extends JDialog {
 					try {
 						medical = (Medical) jComboBoxMedical.getSelectedItem();
 					} catch (ClassCastException e1) {
-						JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseselectadrug")); //$NON-NLS-1$
+						MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.pleaseselectadrug");
 						return;
 					}
 					chooseLot(medical, true);
@@ -521,7 +520,7 @@ public class WardPharmacyRectify extends JDialog {
 					try {
 						medical = (Medical) jComboBoxMedical.getSelectedItem();
 					} catch (ClassCastException e1) {
-						JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseselectadrug")); //$NON-NLS-1$
+						MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.pleaseselectadrug");
 						return;
 					}
 					chooseLot(medical, false);
@@ -620,21 +619,17 @@ public class WardPharmacyRectify extends JDialog {
 			int ok = JOptionPane.showConfirmDialog(WardPharmacyRectify.this, panel,
 					MessageBundle.getMessage("angal.medicalstockward.rectify.lotinformations"), //$NON-NLS-1$
 					JOptionPane.OK_CANCEL_OPTION);
-
 			if (ok == JOptionPane.OK_OPTION) {
 				String lotName = lotNameTextField.getText();
 				if (lotName.isEmpty()) {
-					JOptionPane.showMessageDialog(WardPharmacyRectify.this,
-							MessageBundle.getMessage("angal.medicalstockward.rectify.lotnumberSelect")); //$NON-NLS-1$
+					MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.lotnumberSelect");
 					return null;
 				}
 				if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) {
-					JOptionPane.showMessageDialog(WardPharmacyRectify.this,
-							MessageBundle.getMessage("angal.medicalstockward.rectify.expirydatebeforepreparationdate"));
+					MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.expirydatebeforepreparationdate");
 
 				} else if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) {
-					JOptionPane.showMessageDialog(WardPharmacyRectify.this,
-							MessageBundle.getMessage("angal.medicalstockward.rectify.expirydatebeforepreparationdate"));
+					MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.expirydatebeforepreparationdate");
 
 				} else {
 					expiringDate.setTime(expireDateChooser.getDate());
@@ -646,8 +641,8 @@ public class WardPharmacyRectify extends JDialog {
 			}
 		} while (lot == null);
 		return lot;
-
 	}
+
 	protected BigDecimal askCost() {
 		double cost = 0.;
 		do {
@@ -660,10 +655,11 @@ public class WardPharmacyRectify extends JDialog {
 					if (cost < 0)
 						throw new NumberFormatException();
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(WardPharmacyRectify.this, 
-							MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseinsertavalidvalue")); //$NON-NLS-1$
+					MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.pleaseinsertavalidvalue");
 				}
-			} else return new BigDecimal(cost);
+			} else {
+				return new BigDecimal(cost);
+			}
 		} while (cost == 0.);
 		return new BigDecimal(cost);
 	}
@@ -692,8 +688,7 @@ public class WardPharmacyRectify extends JDialog {
 					if (qty < 0)
 						throw new NumberFormatException();
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(WardPharmacyRectify.this, 
-							MessageBundle.getMessage("angal.medicalstockward.invalidquantitypleasetryagain")); //$NON-NLS-1$
+					MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.invalidquantitypleasetryagain");
 					qty = 0;
 				}
 			} else return qty;

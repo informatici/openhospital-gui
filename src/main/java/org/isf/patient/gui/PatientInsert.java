@@ -276,13 +276,13 @@ public class PatientInsert extends JDialog implements ActionListener{
 
 					if (insert) {
 						if (jFirstNameTextField.getText().equals("")) {
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertfirstname"));
+							MessageDialog.error(null, "angal.patient.insertfirstname");
 						} else {
 							if (jSecondNameTextField.getText().equals("")) {
-								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertsecondname"));
+								MessageDialog.error(null, "angal.patient.insertsecondname");
 							} else {
 								if (age == -1) {
-									JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertvalidage"));
+									MessageDialog.error(null, "angal.patient.insertvalidage");
 								} else {
 									bdate = bdate.minusYears(age);
 									String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
@@ -460,13 +460,12 @@ public class PatientInsert extends JDialog implements ActionListener{
 					age = Integer.parseInt(ageField.getText());
 					if ((age < 0)||(age > 200)) {
 						ageField.setText("0");
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertvalidage"));
+						MessageDialog.error(null, "angal.patient.insertvalidage");
 					}
 				} catch (NumberFormatException ex) {
 					//ageField.setText("0");
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertvalidage"));
+					MessageDialog.error(null, "angal.patient.insertvalidage");
 				}
-				
 			}
 			
 			public void focusGained(FocusEvent e) {

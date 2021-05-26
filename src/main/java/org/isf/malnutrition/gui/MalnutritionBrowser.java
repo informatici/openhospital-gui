@@ -253,9 +253,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 					OHServiceExceptionUtil.showMessages(e);
 				}				
 			} else {
-				JOptionPane.showMessageDialog(
-						MalnutritionBrowser.this,
-						MessageBundle.getMessage("angal.malnutrition.nonameselected"));
+				MessageDialog.error(MalnutritionBrowser.this, "angal.malnutrition.nonameselected");
 			}
 		}
 

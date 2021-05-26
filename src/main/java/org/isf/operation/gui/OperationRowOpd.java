@@ -331,12 +331,9 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 	public void addToGrid() {
 		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
-			JOptionPane.showMessageDialog(OperationRowOpd.this,
-					MessageBundle.getMessage("angal.operationrowedit.warningdateope"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationRowOpd.this, "angal.operationrowedit.warningdateope");
 			return;
 		}
-		
 
 		OperationRow operationRow = new OperationRow();
 		GregorianCalendar dateop = new GregorianCalendar();
@@ -444,23 +441,17 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 						return;
 					}
 					if (result) {
-						JOptionPane.showMessageDialog(OperationRowOpd.this,
-								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						MessageDialog.info(OperationRowOpd.this, "angal.operationrowlist.successdel");
 						oprowData.remove(idRow);
 						modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 						tableData.setModel(modelOhOpeRow);
 						tableData.repaint();
 						clearForm();
 					} else {
-						JOptionPane.showMessageDialog(OperationRowOpd.this,
-								MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(OperationRowOpd.this, "angal.operationrowlist.errosdel");
 					}
 				} else {
-					JOptionPane.showMessageDialog(OperationRowOpd.this,
-							MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.info(OperationRowOpd.this, "angal.operationrowlist.successdel");
 					oprowData.remove(idOpe);
 					modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 					tableData.setModel(modelOhOpeRow);

@@ -96,6 +96,7 @@ import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.StockCardDialog;
 import org.isf.utils.jobjects.StockLedgerDialog;
@@ -389,10 +390,7 @@ public class WardPharmacy extends ModalJFrame implements
 				public void actionPerformed(ActionEvent e) {
 
 					if (jTableOutcomes.getSelectedRow() < 0 || !jScrollPaneOutcomes.isShowing()) {
-						JOptionPane.showMessageDialog(WardPharmacy.this,
-								MessageBundle.getMessage("angal.medicalstockward.pleaseselectanoutcomesmovementfirst"), //$NON-NLS-1$  
-								MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.pleaseselectanoutcomesmovementfirst");
 					} else {
 						movSelected = (MovementWard) ((jTableOutcomes.getModel()).getValueAt(jTableOutcomes.getSelectedRow(), -1));
 						WardPharmacyEdit editor = new WardPharmacyEdit(WardPharmacy.this, movSelected, wardDrugs);
@@ -725,15 +723,13 @@ public class WardPharmacy extends ModalJFrame implements
 
 				public void actionPerformed(ActionEvent e) {
 					if (ageFrom > ageTo) {
-						JOptionPane.showMessageDialog(WardPharmacy.this,
-								MessageBundle.getMessage("angal.medicalstockward.agefrommustbelowerthanageto")); //$NON-NLS-1$
+						MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.agefrommustbelowerthanageto");
 						jAgeFromTextField.setText(String.valueOf(ageTo));
 						ageFrom = ageTo;
 						return;
 					}
 					if (weightFrom > weightTo) {
-						JOptionPane.showMessageDialog(WardPharmacy.this,
-								MessageBundle.getMessage("angal.medicalstockward.weightfrommustbelowerthanweightto")); //$NON-NLS-1$
+						MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.weightfrommustbelowerthanweightto");
 						jWeightFromTextField.setText(String.valueOf(weightTo));
 						weightFrom = weightTo;
 						return;
@@ -741,7 +737,6 @@ public class WardPharmacy extends ModalJFrame implements
 					jTableOutcomes.setModel(new OutcomesModel());
 					rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
 				}
-
 			});
 		}
 		return filterButton;
@@ -888,11 +883,11 @@ public class WardPharmacy extends ModalJFrame implements
 						ageTo = Integer.parseInt(jAgeToTextField.getText());
 						ageFrom = Integer.parseInt(jAgeFromTextField.getText());
 						if ((ageTo < 0) || (ageTo > 200)) {
-							jAgeToTextField.setText(""); //$NON-NLS-1$
-							JOptionPane.showMessageDialog(WardPharmacy.this, MessageBundle.getMessage("angal.medicalstockward.insertvalidage")); //$NON-NLS-1$
+							jAgeToTextField.setText("");
+							MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.insertvalidage");
 						}
 					} catch (NumberFormatException ex) {
-						jAgeToTextField.setText("0"); //$NON-NLS-1$
+						jAgeToTextField.setText("0");
 					}
 				}
 
@@ -920,11 +915,11 @@ public class WardPharmacy extends ModalJFrame implements
 						ageFrom = Integer.parseInt(jAgeFromTextField.getText());
 						ageTo = Integer.parseInt(jAgeToTextField.getText());
 						if ((ageFrom < 0) || (ageFrom > 200)) {
-							jAgeFromTextField.setText(""); //$NON-NLS-1$
-							JOptionPane.showMessageDialog(WardPharmacy.this, MessageBundle.getMessage("angal.medicalstockward.insertvalidage")); //$NON-NLS-1$
+							jAgeFromTextField.setText("");
+							MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.insertvalidage");
 						}
 					} catch (NumberFormatException ex) {
-						jAgeFromTextField.setText("0"); //$NON-NLS-1$
+						jAgeFromTextField.setText("0");
 					}
 				}
 

@@ -333,15 +333,11 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	public void addToGrid() {
 		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
-			JOptionPane.showMessageDialog(OperationRowAdm.this,
-					MessageBundle.getMessage("angal.operationrowedit.warningdateope"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateope");
 			return;
 		}
 		if ((myAdmission != null) && (myAdmission.getAdmDate().after(this.textDate.getDate()))) {
-			JOptionPane.showMessageDialog(OperationRowAdm.this,
-					MessageBundle.getMessage("angal.operationrowedit.warningdateafter"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateafter");
 			return;
 		}
 
@@ -451,23 +447,17 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 						return;
 					}
 					if (result) {
-						JOptionPane.showMessageDialog(OperationRowAdm.this,
-								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						MessageDialog.info(OperationRowAdm.this, "angal.operationrowlist.successdel");
 						oprowData.remove(idRow);
 						modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 						tableData.setModel(modelOhOpeRow);
 						tableData.repaint();
 						clearForm();
 					} else {
-						JOptionPane.showMessageDialog(OperationRowAdm.this,
-								MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(OperationRowAdm.this, "angal.operationrowlist.errosdel");
 					}
 				} else {
-					JOptionPane.showMessageDialog(OperationRowAdm.this,
-							MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.info(OperationRowAdm.this, "angal.operationrowlist.successdel");
 					oprowData.remove(idOpe);
 					modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 					tableData.setModel(modelOhOpeRow);

@@ -41,7 +41,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -700,8 +699,7 @@ public class LabEditExtended extends ModalJFrame {
 
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (examComboBox.getSelectedIndex() == 0) {
-						JOptionPane.showMessageDialog(LabEditExtended.this,
-								MessageBundle.getMessage("angal.lab.pleaseselectanexam"));
+						MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseselectanexam");
 						return;
 					}
 					String matSelected=(String)matComboBox.getSelectedItem();
@@ -716,14 +714,12 @@ public class LabEditExtended extends ModalJFrame {
 					try {
 						gregDate.setTime(examDateFieldCal.getDate());
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(LabEditExtended.this, 
-								MessageBundle.getMessage("angal.lab.pleaseinsertavalidexamdate"));
+						MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseinsertavalidexamdate");
 						return;
 					}
 					if (examSelected.getProcedure() == 3 && examTextField.getText().isEmpty()) {
-
-						JOptionPane.showMessageDialog(LabEditExtended.this, MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"));
-							return;
+						MessageDialog.error(LabEditExtended.this, "angal.labnew.pleaseinsertavalidvalue");
+						return;
 					}
 					ArrayList<String> labRow = new ArrayList<>();
 					lab.setDate(new GregorianCalendar());

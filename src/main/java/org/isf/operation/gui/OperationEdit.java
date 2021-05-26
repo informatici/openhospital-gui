@@ -36,7 +36,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -276,42 +275,23 @@ public class OperationEdit extends JDialog {
 					try {
 						if (insert) {
 							String key = codeTextField.getText().trim();
-							if (key.equals("")) { //$NON-NLS-1$
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.operation.pleaseinsertacode"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+							if (key.equals("")) {
+								MessageDialog.error(null, "angal.operation.pleaseinsertacode");
 								return;
 							}
 							if (key.length() > 10) {
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.common.codetoolongmaxchars"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-
+								MessageDialog.error(null, "angal.common.codetoolongmaxchars");
 								return;
 							}
 							OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 
 							if (manager.isCodePresent(key)) {
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.common.codealreadyinuse"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-
+								MessageDialog.error(null, "angal.common.codealreadyinuse");
 								return;
 							}
-
-							/*
-							 * if (manager.descriptionControl(descriptionTextField.getText(),
-							 * ((OperationType)typeComboBox.getSelectedItem()).getCode())){
-							 * JOptionPane.showMessageDialog( null, "Operation already present",
-							 * "St Luke Hospital", JOptionPane.PLAIN_MESSAGE);
-							 * 
-							 * return; }
-							 */
 						}
-						if (descriptionTextField.getText().equals("")) { //$NON-NLS-1$
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.operation.pleaseinsertavaliddescription"), //$NON-NLS-1$
-									MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						if (descriptionTextField.getText().equals("")) {
+							MessageDialog.error(null, "angal.operation.pleaseinsertavaliddescription");
 							return;
 						}
 						OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
@@ -320,10 +300,7 @@ public class OperationEdit extends JDialog {
 
 							if (manager.descriptionControl(descriptionTextField.getText(),
 									((OperationType) typeComboBox.getSelectedItem()).getCode())) {
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.operation.operationalreadypresent"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-
+								MessageDialog.error(null, "angal.operation.operationalreadypresent");
 								return;
 							}
 						}

@@ -44,6 +44,7 @@ import org.isf.pricesothers.manager.PricesOthersManager;
 import org.isf.pricesothers.model.PricesOthers;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 public class PricesOthersBrowser extends ModalJFrame implements PricesOthersListener {
@@ -122,12 +123,12 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 				
 				public void actionPerformed(ActionEvent event) {
 					if (jTablePricesOthers.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.pricesothers.pleaseselectanitemtodelete")); //$NON-NLS-1$
+						MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtodelete");
 					} else {
 						int selectedRow = jTablePricesOthers.getSelectedRow();
 						pOthers = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
 						if (pOthers.getId() == 1) {
-							JOptionPane.showMessageDialog(null,	MessageBundle.getMessage("angal.sql.operationnotpermittedprotectedelement"));
+							MessageDialog.error(null, "angal.sql.operationnotpermittedprotectedelement");
 							return;
 						}
 						int ok = JOptionPane.showConfirmDialog(
@@ -147,12 +148,9 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 							}
 							
 							if (result) {
-								
 								jTablePricesOthers.setModel(new PricesOthersBrowserModel());
 							} else {
-								JOptionPane.showMessageDialog(
-										null,
-										MessageBundle.getMessage("angal.pricesothers.thedatacouldnotbedeleted")); //$NON-NLS-1$
+								MessageDialog.error(null, "angal.pricesothers.thedatacouldnotbedeleted");
 							}
 						}
 					}
@@ -171,7 +169,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 				
 				public void actionPerformed(ActionEvent event) {
 					if (jTablePricesOthers.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.pricesothers.pleaseselectanitemtoedit")); //$NON-NLS-1$
+						MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtoedit");
 					} else {
 						int selectedRow = jTablePricesOthers.getSelectedRow();
 						PricesOthers pOther = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);

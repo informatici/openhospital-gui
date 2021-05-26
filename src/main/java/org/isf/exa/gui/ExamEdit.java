@@ -35,7 +35,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -240,7 +239,7 @@ public class ExamEdit extends JDialog {
 				okButton.addActionListener(new java.awt.event.ActionListener() {
 					public void actionPerformed(java.awt.event.ActionEvent e) {
 						if ((codeTextField.getText().trim().equals(""))||(descriptionTextField.getText().trim().equals(""))){
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.exa.pleaseinsertcodeoranddescription"));
+							MessageDialog.error(null, "angal.exa.pleaseinsertcodeoranddescription");
 						}
 						else{
 							int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
@@ -256,7 +255,7 @@ public class ExamEdit extends JDialog {
 							if (insert) {
 								try {
 									if (manager.isKeyPresent(exam)) {
-										JOptionPane.showMessageDialog(ExamEdit.this, MessageBundle.getMessage("angal.exa.changethecodebecauseisalreadyinuse"));
+										MessageDialog.error(ExamEdit.this, "angal.exa.changethecodebecauseisalreadyinuse");
 										return;
 									}
 								} catch (OHServiceException e1) {

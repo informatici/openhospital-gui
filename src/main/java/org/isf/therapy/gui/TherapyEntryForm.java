@@ -48,7 +48,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -73,6 +72,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.IconButton;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -764,12 +764,12 @@ public class TherapyEntryForm extends JDialog {
 					GregorianCalendar endDate = therapyEndDate;
 					Medical medical = (Medical) medicalsList.getSelectedValue();
 					if (medical == null) {
-						JOptionPane.showMessageDialog(TherapyEntryForm.this, MessageBundle.getMessage("angal.therapy.selectapharmaceutical"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+						MessageDialog.error(TherapyEntryForm.this, "angal.therapy.selectapharmaceutical");
 						return;
 					}
 					Double qty = (Double) jSpinnerQty.getValue();
 					if (qty == 0.) {
-						JOptionPane.showMessageDialog(TherapyEntryForm.this, MessageBundle.getMessage("angal.therapy.pleaseinsertaquantitygreaterthanzero"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+						MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero");
 						return;
 					}
 					int therapyID = 0;

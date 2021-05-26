@@ -84,6 +84,7 @@ import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.DateTextField;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.StockCardDialog;
 import org.isf.utils.jobjects.StockLedgerDialog;
@@ -267,8 +268,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 				if (!stockCardDialog.isCancel()) {
 					if (medical == null) {
-						JOptionPane.showMessageDialog(MovStockBrowser.this,
-								MessageBundle.getMessage("angal.medicalstock.chooseamedical"));
+						MessageDialog.error(MovStockBrowser.this, "angal.medicalstock.chooseamedical");
 						return;
 					}
 					new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom, dateTo, medical, null, toExcel);
@@ -824,14 +824,11 @@ public class MovStockBrowser extends ModalJFrame {
 				GregorianCalendar movTo = movDateTo.getCompleteDate();
 				if ((movFrom == null) || (movTo == null)) {
 					if (!((movFrom == null) && (movTo == null))) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstock.chooseavalidmovementdate"));
+						MessageDialog.error(null, "angal.medicalstock.chooseavalidmovementdate");
 						dateOk = false;
 					}
-				} else if (movFrom.compareTo(
-						movTo) > 0) {
-					JOptionPane
-							.showMessageDialog(null,
-									MessageBundle.getMessage("angal.medicalstock.movementdatefromcannotbelaterthanmovementdateto"));
+				} else if (movFrom.compareTo(movTo) > 0) {
+					MessageDialog.error(null, "angal.medicalstock.movementdatefromcannotbelaterthanmovementdateto");
 					dateOk = false;
 				}
 
@@ -840,13 +837,11 @@ public class MovStockBrowser extends ModalJFrame {
 					GregorianCalendar prepTo = lotPrepTo.getCompleteDate();
 					if ((prepFrom == null) || (prepTo == null)) {
 						if (!((prepFrom == null) && (prepTo == null))) {
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstock.chooseavalidpreparationdate"));
+							MessageDialog.error(null, "angal.medicalstock.chooseavalidpreparationdate");
 							dateOk = false;
 						}
-					} else if (prepFrom.compareTo(
-							prepTo) > 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.medicalstock.preparationdatefromcannotbelaterpreparationdateto"));
+					} else if (prepFrom.compareTo(prepTo) > 0) {
+						MessageDialog.error(null, "angal.medicalstock.preparationdatefromcannotbelaterpreparationdateto");
 						dateOk = false;
 					}
 				}
@@ -855,13 +850,11 @@ public class MovStockBrowser extends ModalJFrame {
 				GregorianCalendar dueTo = lotDueTo.getCompleteDate();
 				if ((dueFrom == null) || (dueTo == null)) {
 					if (!((dueFrom == null) && (dueTo == null))) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstock.chooseavalidduedate"));
+						MessageDialog.error(null, "angal.medicalstock.chooseavalidduedate");
 						dateOk = false;
 					}
-				} else if (dueFrom.compareTo(
-						dueTo) > 0) {
-					JOptionPane.showMessageDialog(null,
-							MessageBundle.getMessage("angal.medicalstock.duedatefromcannotbelaterthanduedateto"));
+				} else if (dueFrom.compareTo(dueTo) > 0) {
+					MessageDialog.error(null, "angal.medicalstock.duedatefromcannotbelaterthanduedateto");
 					dateOk = false;
 				}
 
