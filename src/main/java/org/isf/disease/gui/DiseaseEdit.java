@@ -35,7 +35,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -49,7 +48,6 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
@@ -390,7 +388,7 @@ public class DiseaseEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox();
 			typeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
-			try{
+			try {
 				if (insert) {
 					ArrayList<DiseaseType> types = manager.getDiseaseType();
 					for (DiseaseType elem : types) {
@@ -409,12 +407,8 @@ public class DiseaseEdit extends JDialog {
 						typeComboBox.setSelectedItem(selectedDiseaseType);
 					//typeComboBox.setEnabled(false);
 				}
-			}catch(OHServiceException e){
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 			
 		}

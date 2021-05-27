@@ -59,8 +59,8 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.file.FileTools;
+import org.isf.utils.jobjects.MessageDialog;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -375,13 +375,8 @@ public class DicomGui extends JFrame implements WindowListener {
 				if (n == 0) {
 					try {
 						DicomManagerFactory.getManager().deleteSerie(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
-					} catch (OHServiceException ex) {
-						if (ex.getMessages() != null) {
-							for (OHExceptionMessage msg : ex.getMessages()) {
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(),
-										msg.getLevel().getSwingSeverity());
-							}
-						}
+					} catch (OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
 				thumbnail.initialize();

@@ -43,7 +43,6 @@ import org.isf.dlvrrestype.model.DeliveryResultType;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
@@ -205,19 +204,15 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.dlvrrestype.deletedeliveryresulttype") + "\" " + dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						try{
+						try {
 							if ((n == JOptionPane.YES_OPTION)
 									&& (manager.deleteDeliveryResultType(dis))) {
 								pDeliveryResultType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();
 							}
-						}catch(OHServiceException e){
-							if (e.getMessages() != null){
-								for(OHExceptionMessage msg : e.getMessages()){
-									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-								}
-							}
+						} catch(OHServiceException ohServiceException) {
+							MessageDialog.showExceptions(ohServiceException);
 						}
 					}
 				}
@@ -249,12 +244,8 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 		public DeliveryResultTypeBrowserModel() {
 			try {
 				pDeliveryResultType = manager.getDeliveryResultType();
-			}catch(OHServiceException e){
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 		

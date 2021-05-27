@@ -45,7 +45,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
@@ -66,6 +65,7 @@ import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
+import org.isf.utils.jobjects.MessageDialog;
 
 /**
  * Detail for DICOM image
@@ -126,12 +126,8 @@ public class DicomViewGui extends JPanel {
 		if (patID >= 0){
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
-			}catch(OHServiceException ex){
-				if (ex.getMessages() != null){
-					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 
@@ -151,18 +147,11 @@ public class DicomViewGui extends JPanel {
 		this.serieNumber = serieNumber;
 		this.frameIndex = 0;
 
-		// if (serieNumber == null || serieNumber.trim().length() == 0)
-		//    return;
-
 		if (patID >= 0) {
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
-			} catch (OHServiceException ex) {
-				if (ex.getMessages() != null) {
-					for (OHExceptionMessage msg : ex.getMessages()) {
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch (OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 
@@ -175,7 +164,6 @@ public class DicomViewGui extends JPanel {
 			refreshFrame();
 
 		reInitComponent();
-
 	}
 
 	/**
@@ -494,12 +482,8 @@ public class DicomViewGui extends JPanel {
 			} else if (fileType.equalsIgnoreCase("dcm")) {
 				getImageFromDicom(tmpDbFile);
 			}
-		} catch(OHServiceException ex){
-			if (ex.getMessages() != null){
-				for(OHExceptionMessage msg : ex.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
 	}
 	

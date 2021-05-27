@@ -85,7 +85,6 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.stat.gui.report.GenericReportExamination;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -1376,12 +1375,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 						}
 						try {
 							examManager.remove(patexList);
-						}catch(OHServiceException ex){
-							if (ex.getMessages() != null){
-								for(OHExceptionMessage msg : ex.getMessages()){
-									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-								}
-							}
+						} catch(OHServiceException ohServiceException) {
+							MessageDialog.showExceptions(ohServiceException);
 						} finally {
 							JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
 							model.reloadData();
@@ -1526,12 +1521,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 			
 			try {
 				examManager.saveOrUpdate(patex);
-			} catch(OHServiceException ex){
-				if (ex.getMessages() != null){
-					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 			JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
 			model.reloadData();
@@ -1972,12 +1963,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 		public void reloadData() {
 			try {
 				patexList = examManager.getLastNByPatID(patex.getPatient().getCode(), ExaminationParameters.LIST_SIZE);
-			} catch (OHServiceException e) {
-				if (e.getMessages() != null) {
-					for (OHExceptionMessage msg : e.getMessages()) {
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch (OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 			fireTableDataChanged();
 		}

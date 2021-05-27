@@ -74,7 +74,6 @@ import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
@@ -397,13 +396,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						model.fireTableDataChanged();
 						jTable.updateUI();
 					}
-				} catch (OHServiceException e) {
-					if (e.getMessages() != null) {
-						for (OHExceptionMessage msg : e.getMessages()) {
-							JOptionPane
-									.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-						}
-					}
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
 				}
 			});
 		}
@@ -673,12 +667,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			ArrayList<DiseaseType> types = null;
 			try {
 				types = diseaseTypeManager.getDiseaseType();
-			} catch(OHServiceException e){
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 			
 			jDiseaseTypeBox.addItem(allType);
@@ -708,18 +698,14 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDiseaseBox.setMaximumSize(new Dimension(300, 50));
 			
 		}
-		try{
+		try {
 			if (((DiseaseType)jDiseaseTypeBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.common.alltypes.txt"))){
 				diseases = diseaseManager.getDiseaseOpd();
-			}else{
+			} else {
 				diseases = diseaseManager.getDiseaseOpd(((DiseaseType)jDiseaseTypeBox.getSelectedItem()).getCode());
 			}
-		}catch(OHServiceException e){
-			if (e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
 		Disease allDisease = new Disease(MessageBundle.getMessage("angal.opd.alldiseases.txt"), MessageBundle.getMessage("angal.opd.alldiseases.txt"), allType);
 		jDiseaseBox.addItem(allDisease);
@@ -978,24 +964,16 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				char sex, char newPatient) {
 			try {
 				pSur = manager.getOpd(diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient);
-			} catch (OHServiceException e) {
-				if (e.getMessages() != null) {
-					for (OHExceptionMessage msg : e.getMessages()) {
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch (OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 
 		public OpdBrowsingModel() {
 			try {
 				pSur = manager.getOpd(!GeneralData.ENHANCEDSEARCH);
-			} catch (OHServiceException e) {
-				if (e.getMessages() != null) {
-					for (OHExceptionMessage msg : e.getMessages()) {
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch (OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 

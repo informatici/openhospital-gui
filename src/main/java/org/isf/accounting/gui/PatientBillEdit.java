@@ -84,7 +84,6 @@ import org.isf.pricesothers.model.PricesOthers;
 import org.isf.stat.gui.report.GenericReportBill;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.RememberDates;
@@ -449,12 +448,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			Patient patient = null;
 			try {
 				patient = patManager.getPatientById(thisBill.getBillPatient().getCode());
-			} catch (OHServiceException e) {
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch (OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 			if (patient != null) {
 				patientSelected = patient;
@@ -1638,12 +1633,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 								amount,
 								1);
 						addItem(newItem);
-					} catch (OHServiceException ex){
-						if (ex.getMessages() != null){
-							for(OHExceptionMessage msg : ex.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
-						}
+					} catch (OHServiceException ohServiceException){
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
 			});

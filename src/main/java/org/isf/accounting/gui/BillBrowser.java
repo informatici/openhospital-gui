@@ -82,7 +82,6 @@ import org.isf.stat.gui.report.GenericReportFromDateToDate;
 import org.isf.stat.gui.report.GenericReportPatient;
 import org.isf.stat.gui.report.GenericReportUserInDate;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -208,23 +207,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	public BillBrowser() {
 		try {
 			this.currencyCod = Context.getApplicationContext().getBean(HospitalBrowsingManager.class).getHospitalCurrencyCod();
-		} catch (OHServiceException e1) {
+		} catch (OHServiceException ohServiceException) {
 			this.currencyCod = null;
-			if (e1.getMessages() != null){
-				for(OHExceptionMessage msg : e1.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+			MessageDialog.showExceptions(ohServiceException);
 		}
 		
 		try {
 			users = billManager.getUsers();
-		}catch(OHServiceException e){
-			if (e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
 		updateDataSet();
 		initComponents();
@@ -739,12 +730,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					if (ok == JOptionPane.YES_OPTION) {
 						try{
 							billManager.deleteBill(deleteBill);
-						}catch(OHServiceException ex){
-							if (ex.getMessages() != null){
-								for(OHExceptionMessage msg : ex.getMessages()){
-									JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-								}
-							}
+						} catch(OHServiceException ohServiceException) {
+							MessageDialog.showExceptions(ohServiceException);
 						}
 					}
 					billInserted(null);
@@ -836,14 +823,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						itemsList = billManager.getDistinctItems();
 
 						patientSelected(pat);
-					} catch (OHServiceException e1) {
-						if (e1.getMessages() != null){
-							for(OHExceptionMessage msg : e1.getMessages()){
-								JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
-						}
+					} catch (OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
-					
+
 	        }
 		});
 		
@@ -1174,36 +1157,26 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			 * Bills in the period
 			 */
 			billPeriod = billManager.getBills(dateFrom, dateTo);
-		}catch(OHServiceException e){
-			if (e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
+
 		try {
 			/*
 			 * Payments in the period
 			 */
 			paymentsPeriod = billManager.getPayments(dateFrom, dateTo);
-		}catch(OHServiceException e){
-			if (e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
+
 		try {
 			/*
 			 * Bills not in the period but with payments in the period
 			 */
 			billFromPayments = billManager.getBills(paymentsPeriod);
-		}catch(OHServiceException e){
-			if (e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
 	}
 	
@@ -1214,12 +1187,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			try {
 				billToday = billManager.getBills(dateToday0, dateToday24);
 				paymentsToday = billManager.getPayments(dateToday0, dateToday24);
-			}catch(OHServiceException e){
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		} else {
 			billToday = billPeriod;
@@ -1337,12 +1306,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				if (patientParent != null) {
 					try {
 						tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
-					} catch (OHServiceException e) {
-						if (e.getMessages() != null){
-							for(OHExceptionMessage msg : e.getMessages()){
-								JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
-						}
+					} catch (OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				} else {
 					if (status.equals("O")) {
@@ -1355,16 +1320,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				}
 			}
 			else if (status.equals("ALL")) {
-				
 				Collections.sort(billAll);
 				tableArray = billAll;
-
-			} 
+			}
 			else if (status.equals("C")) {
-				
 				for (Bill bill : billPeriod) {
-					
-					if (bill.getStatus().equals(status)) 
+					if (bill.getStatus().equals(status))
 						tableArray.add(bill);
 				}
 			}

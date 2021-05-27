@@ -37,7 +37,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
@@ -51,7 +50,7 @@ import org.isf.dicom.model.FileDicom;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 
 /**
@@ -159,12 +158,8 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		FileDicom[] fdb = null;
 		try {
 			fdb = DicomManagerFactory.getManager().loadPatientFiles(patID);
-		}catch(OHServiceException ex){
-			if (ex.getMessages() != null){
-				for(OHExceptionMessage msg : ex.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
 		if (fdb == null)
 			fdb = new FileDicom[0];

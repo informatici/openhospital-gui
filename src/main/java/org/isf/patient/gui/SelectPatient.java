@@ -44,7 +44,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -64,7 +63,7 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class SelectPatient extends JDialog implements PatientListener {
@@ -126,12 +125,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (!GeneralData.ENHANCEDSEARCH) {
 			try {
 				patArray = patManager.getPatientsByOneOfFieldsLike(null);
-			} catch(OHServiceException ex){
-				if (ex.getMessages() != null){
-					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 				patArray = new ArrayList<>();
 			}
 			patSearch = patArray;
@@ -160,12 +155,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (!GeneralData.ENHANCEDSEARCH) {
 			try {
 				patArray = patManager.getPatientsByOneOfFieldsLike(null);
-			}catch(OHServiceException ex){
-				if (ex.getMessages() != null){
-					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 				patArray = new ArrayList<>();
 			}
 			patSearch = patArray;
@@ -194,12 +185,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (!GeneralData.ENHANCEDSEARCH) {
 			try {
 				patArray = patManager.getPatientsByOneOfFieldsLike(null);
-			}catch(OHServiceException ex){
-				if (ex.getMessages() != null){
-					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 				patArray = new ArrayList<>();
 			}
 			patSearch = patArray;
@@ -229,22 +216,14 @@ public class SelectPatient extends JDialog implements PatientListener {
 			if (!full)
 				try {
 					patArray = patManager.getPatientsByOneOfFieldsLike(null);
-				} catch (OHServiceException e2) {
-					if (e2.getMessages() != null){
-						for(OHExceptionMessage msg : e2.getMessages()){
-							JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-						}
-					}
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
 				}
 			else
 				try {
 					patArray = patManager.getPatient();
-				} catch (OHServiceException e1) {
-					if (e1.getMessages() != null){
-						for(OHExceptionMessage msg : e1.getMessages()){
-							JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-						}
-					}
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
 				}
 			patSearch = patArray;
 		}
@@ -565,12 +544,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 			jSearchButton.addActionListener(e -> {
 				try {
 					patArray = patManager.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
-				}catch(OHServiceException ex){
-					if (ex.getMessages() != null){
-						for(OHExceptionMessage msg : ex.getMessages()){
-							JOptionPane.showMessageDialog(SelectPatient.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-						}
-					}
+				} catch(OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
 					patArray = new ArrayList<>();
 				}
 				filterPatient();
