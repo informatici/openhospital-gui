@@ -26,7 +26,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -105,24 +104,22 @@ public class AgeTypeBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * This method initializes jEditButton
+	 * This method initializes jEditSaveButton
 	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJEditSaveButton() {
 		if (jEditSaveButton == null) {
-			jEditSaveButton = new JButton();
-			jEditSaveButton.setText(MessageBundle.getMessage("angal.common.edit"));
-			jEditSaveButton.setMnemonic(KeyEvent.VK_E);
+			jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditSaveButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
 					if (!edit) {
 						edit = true;
-						jEditSaveButton.setText(MessageBundle.getMessage("angal.common.save"));
-						jEditSaveButton.setMnemonic(KeyEvent.VK_S);
+						jEditSaveButton.setText(MessageBundle.getMessage("angal.common.save.btn"));
+						jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 						jTable.updateUI();
-
 					} else {
 					    if (jTable.isEditing()){
                             jTable.getCellEditor().stopCellEditing();
@@ -135,8 +132,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 						}
 						edit = false;
 						jTable.updateUI();
-						jEditSaveButton.setText(MessageBundle.getMessage("angal.common.edit"));
-						jEditSaveButton.setMnemonic(KeyEvent.VK_E);
+						jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+						jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 					}
 				}
 			});
@@ -151,9 +148,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();

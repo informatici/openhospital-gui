@@ -916,8 +916,8 @@ public class MovStockBrowser extends ModalJFrame {
 	 * @return
 	 */
 	private JButton getCloseButton() {
-		closeButton = new JButton(MessageBundle.getMessage("angal.common.close"));
-		closeButton.setMnemonic(KeyEvent.VK_C);
+		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		closeButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {

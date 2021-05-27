@@ -82,7 +82,7 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private JButton jButtonLoadDicom;
 	private JButton jButtonDeleteDicom;
-	private JButton jButtonExit;
+	private JButton jButtonCloseDicom;
 	private JPanel jPanel1;
 	private JPanel jPanelDetail;
 	private JPanel jPanelButton;
@@ -190,7 +190,7 @@ public class DicomGui extends JFrame implements WindowListener {
 		jPanel1 = new JPanel();
 		jButtonLoadDicom = new JButton();
 		jButtonDeleteDicom = new JButton();
-		jButtonExit = new JButton();
+		jButtonCloseDicom = new JButton();
 		jPanelDetail = new DicomViewGui(null, null);
 		jPanelDetail.setName("jPanelDetail");
 		jPanelButton = new JPanel();
@@ -205,8 +205,9 @@ public class DicomGui extends JFrame implements WindowListener {
 		jButtonDeleteDicom.setName("jButtonDeleteDicom");
 		jButtonDeleteDicom.setEnabled(false);
 
-		jButtonExit.setText(MessageBundle.getMessage("angal.common.close"));
-		jButtonExit.setName("jButtonExit");
+		jButtonCloseDicom.setText(MessageBundle.getMessage("angal.common.close.btn"));
+		jButtonCloseDicom.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+		jButtonCloseDicom.setName("jButtonCloseDicom");
 
 		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
 		jPanel1Layout.setAutoCreateContainerGaps(true);
@@ -265,7 +266,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	private void addEventListener() {
 		actionListenerJButtonLoadDicom();
 		actionListenerJButtonDeleteDicom();
-		actionListenerJButtonExit();
+		actionListenerjButtonCloseDicom();
 	}
 
 	private void actionListenerJButtonLoadDicom() {
@@ -391,8 +392,8 @@ public class DicomGui extends JFrame implements WindowListener {
 		});
 	}
 
-	private void actionListenerJButtonExit() {
-		jButtonExit.addActionListener(new ActionListener() {
+	private void actionListenerjButtonCloseDicom() {
+		jButtonCloseDicom.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				System.exit(100);

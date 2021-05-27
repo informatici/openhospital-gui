@@ -721,9 +721,9 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			closeButton.setIcon(new ImageIcon("rsc/icons/close_button.png"));
-			closeButton.setMnemonic(KeyEvent.VK_X);
 			closeButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			closeButton.setHorizontalAlignment(SwingConstants.LEFT);
 			closeButton.addActionListener(new ActionListener() {

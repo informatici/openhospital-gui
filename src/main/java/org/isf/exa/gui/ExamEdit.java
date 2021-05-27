@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -213,9 +212,8 @@ public class ExamEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
             if (cancelButton == null) {
-                cancelButton = new JButton();
-                cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-                cancelButton.setMnemonic(KeyEvent.VK_C);
+	            cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+	            cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
                 cancelButton.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
                         dispose();
@@ -233,9 +231,8 @@ public class ExamEdit extends JDialog {
 	private JButton getOkButton() {
 		if (okButton == null) {
 			if (okButton == null) {
-				okButton = new JButton();
-				okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-	            okButton.setMnemonic(KeyEvent.VK_O);
+				okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+				okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 				okButton.addActionListener(new java.awt.event.ActionListener() {
 					public void actionPerformed(java.awt.event.ActionEvent e) {
 						if ((codeTextField.getText().trim().equals(""))||(descriptionTextField.getText().trim().equals(""))){

@@ -193,14 +193,14 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		});
 		panelButtons.add(deleteButton);
 
-		JButton cancelButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.close")); //$NON-NLS-1$
-		cancelButton.addMouseListener(new MouseAdapter() {
+		JButton closeButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.close")); //$NON-NLS-1$
+		closeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
-				cancelButtonMouseClicked(evt);
+				closeButtonMouseClicked(evt);
 			}
 		});
-		panelButtons.add(cancelButton);
+		panelButtons.add(closeButton);
 
 		/* *** getting data *** */
 		if (myOpd != null) {
@@ -347,12 +347,12 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	}
 
 	/* ***** functions events **** */
-	private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		this.setVisible(false);
 		this.parentContainer.dispose();
 	}
 
-	private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		int idRow = this.JtableData.getSelectedRow();
 		OperationRow operationRow = null;
 		opeRowEdit = new OperationRowEdit(operationRow);

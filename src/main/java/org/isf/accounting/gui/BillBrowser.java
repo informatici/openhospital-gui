@@ -481,9 +481,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
-			jButtonClose = new JButton();
-			jButtonClose.setText(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonClose.setMnemonic(KeyEvent.VK_C);
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jButtonClose.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {

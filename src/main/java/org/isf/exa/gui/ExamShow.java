@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -134,9 +133,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	
 	private JButton getNewButton(){
 		if (newButton == null){
-			newButton = new JButton();
-			newButton.setText(MessageBundle.getMessage("angal.common.new"));  // Generated
-            newButton.setMnemonic(KeyEvent.VK_N);
+			newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			newButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					examRow = new ExamRow();
@@ -151,9 +149,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton();
-			closeButton.setText(MessageBundle.getMessage("angal.common.close"));  // Generated
-            closeButton.setMnemonic(KeyEvent.VK_C);
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			closeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				dispose();
@@ -165,9 +162,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	
 	private JButton getDeleteButton() {
 		if (deleteButton == null) {
-			deleteButton = new JButton();
-			deleteButton.setText(MessageBundle.getMessage("angal.common.delete"));  // Generated
-            deleteButton.setMnemonic(KeyEvent.VK_D);
+			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			deleteButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (table.getSelectedRow() < 0) {

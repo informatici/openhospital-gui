@@ -1682,8 +1682,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton();
-			closeButton.setText(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			closeButton.addActionListener(e -> dispose());
 		}
@@ -1693,8 +1692,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JButton getSaveButton() {
 
 		if (saveButton == null) {
-			saveButton = new JButton();
-			saveButton.setText(MessageBundle.getMessage("angal.common.save.btn"));
+			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			saveButton.addActionListener(e -> {
 

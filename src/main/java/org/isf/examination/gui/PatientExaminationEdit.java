@@ -1357,9 +1357,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 	
 	private JButton getJButtonDelete() {
 		if (jButtonDelete == null) {
-			jButtonDelete = new JButton();
-			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
-			jButtonDelete.setMnemonic(KeyEvent.VK_D);
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jButtonDelete.addActionListener(new ActionListener() {
 				
 				@Override
@@ -1396,8 +1395,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 	
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new ActionListener() {
 				
 				@Override

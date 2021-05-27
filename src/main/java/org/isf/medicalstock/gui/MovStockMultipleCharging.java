@@ -277,7 +277,8 @@ public class MovStockMultipleCharging extends JDialog {
 		JPanel buttonPane = new JPanel();
 		//buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		{
-			JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete"));
+			JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			deleteButton.addActionListener(new ActionListener() {
 				
 				@Override
@@ -289,7 +290,8 @@ public class MovStockMultipleCharging extends JDialog {
 			buttonPane.add(deleteButton);
 		}
 		{
-			JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save")); //$NON-NLS-1$
+			JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			saveButton.addActionListener(new ActionListener() {
 				
 				@Override
@@ -306,7 +308,8 @@ public class MovStockMultipleCharging extends JDialog {
 			buttonPane.add(saveButton);
 		}
 		{
-			JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
+			JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new ActionListener() {
 				
 				@Override

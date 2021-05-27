@@ -317,8 +317,9 @@ public class OperationRowEdit extends JPanel {
 			}
 		});
 		panelButtons.add(btnSaveButton);
-		
-		btnCancelButton = new JButton(MessageBundle.getMessage("angal.operationrowedit.cancel")); //$NON-NLS-1$
+
+		btnCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		btnCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		btnCancelButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {

@@ -28,7 +28,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -75,7 +74,7 @@ public class ReportLauncher extends ModalJFrame{
 	private JPanel jButtonPanel = null;
 	private JButton jCloseButton = null;
 	private JPanel jContentPanel = null;
-	private JButton jOkButton = null;
+	private JButton jLaunchReport = null;
 	private JButton jCSVButton = null;
 	private JPanel jMonthPanel = null;
 	private JLabel jMonthLabel = null;
@@ -183,7 +182,7 @@ public class ReportLauncher extends ModalJFrame{
 			jButtonPanel.setLayout(new FlowLayout());
 			if (GeneralData.XMPPMODULEENABLED)
 				jButtonPanel.add(getComboShareReport(),null);
-			jButtonPanel.add(getJOkButton(), null);
+			jButtonPanel.add(getJLaunchReportButton(), null);
 			jButtonPanel.add(getJCSVButton(), null);
 			//jButtonPanel.add(getJShareButton(),null);
 			jButtonPanel.add(getJCloseButton(), null);
@@ -208,9 +207,8 @@ public class ReportLauncher extends ModalJFrame{
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();
@@ -376,18 +374,18 @@ public class ReportLauncher extends ModalJFrame{
 		}
 	}
 
-	private JButton getJOkButton() {
-		if (jOkButton == null) {
-			jOkButton = new JButton();
-			jOkButton.setBounds(new Rectangle(15, 15, 91, 31));
-			jOkButton.setText(MessageBundle.getMessage("angal.stat.launchreport"));
-			jOkButton.addActionListener(new ActionListener() {   
+	private JButton getJLaunchReportButton() {
+		if (jLaunchReport == null) {
+			jLaunchReport = new JButton();
+			jLaunchReport.setBounds(new Rectangle(15, 15, 91, 31));
+			jLaunchReport.setText(MessageBundle.getMessage("angal.stat.launchreport"));
+			jLaunchReport.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					generateReport(false);
 				}
 			});
 		}
-		return jOkButton;
+		return jLaunchReport;
 	}
 	
 	private JButton getJCSVButton() {

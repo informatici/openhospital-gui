@@ -79,7 +79,7 @@ public class HospitalBrowser extends ModalJFrame{
 	private Hospital hospital = null;
 	private JButton editJButton;
 	private JButton updateJButton;
-	private JButton exitJButton;
+	private JButton closeJButton;
 	
 	
 	public HospitalBrowser(){
@@ -250,15 +250,15 @@ public class HospitalBrowser extends ModalJFrame{
 	public JPanel getJButtonPanel() {
 		if (jButtonPanel==null){
 			jButtonPanel= new JPanel();
-			editJButton = new JButton(MessageBundle.getMessage("angal.common.edit"));
-			editJButton.setMnemonic(KeyEvent.VK_E);
+			editJButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			editJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			updateJButton = new JButton(MessageBundle.getMessage("angal.hospital.update"));
 			updateJButton.setMnemonic(KeyEvent.VK_U);
-			exitJButton = new JButton(MessageBundle.getMessage("angal.common.close"));
-			exitJButton.setMnemonic(KeyEvent.VK_C);
+			closeJButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			updateJButton.setEnabled(false);
 			
-			exitJButton.addActionListener(new ActionListener() {
+			closeJButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if (isModified())
 					{						
@@ -282,7 +282,7 @@ public class HospitalBrowser extends ModalJFrame{
 			});
 			jButtonPanel.add(editJButton);
 			jButtonPanel.add(updateJButton);
-			jButtonPanel.add(exitJButton);
+			jButtonPanel.add(closeJButton);
 		}
 		return jButtonPanel;
 	}

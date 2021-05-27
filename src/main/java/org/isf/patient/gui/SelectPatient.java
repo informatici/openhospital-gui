@@ -433,9 +433,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel"));
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(e -> {
 				//to free memory
 				patArray.clear();

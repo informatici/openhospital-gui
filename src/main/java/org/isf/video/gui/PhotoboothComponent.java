@@ -28,6 +28,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.isf.generaldata.MessageBundle;
 import org.isf.gui.BaseComponent;
 
 import com.jgoodies.forms.factories.CC;
@@ -151,11 +152,13 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 					"default"));
 
 				//---- okButton ----
-				okButton.setText("OK");
+				okButton.setText(MessageBundle.getMessage("angal.common.ok.btn"));
+				okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 				buttonContainer.add(okButton, CC.xy(1, 1));
 
 				//---- cancelButton ----
-				cancelButton.setText("Cancel");
+				cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+				cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 				buttonContainer.add(cancelButton, CC.xy(3, 1));
 			}
 			photoBoothPanel.add(buttonContainer, CC.xy(3, 7, CC.RIGHT, CC.DEFAULT));

@@ -26,7 +26,6 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -35,7 +34,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -127,9 +125,8 @@ public class PricesOthersEdit extends JDialog {
 
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -142,9 +139,8 @@ public class PricesOthersEdit extends JDialog {
 
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
-			jButtonOK = new JButton();
-			jButtonOK.setText(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			jButtonOK.setMnemonic(KeyEvent.VK_O);
+			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jButtonOK.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {

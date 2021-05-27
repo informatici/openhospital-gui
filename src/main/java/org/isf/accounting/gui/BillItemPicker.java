@@ -281,7 +281,8 @@ public class BillItemPicker extends javax.swing.JPanel {
 			}
 		});
 
-		jButtonQuit.setText(MessageBundle.getMessage("angal.common.cancel"));
+		jButtonQuit.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
+		jButtonQuit.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		jButtonQuit.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				jButtonQuitMouseClicked(evt);
