@@ -197,7 +197,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		closeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
-				cancelButtonMouseClicked(evt);
+				closeButtonMouseClicked(evt);
 			}
 		});
 		panelButtons.add(closeButton);
@@ -347,12 +347,12 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	}
 
 	/* ***** functions events **** */
-	private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		this.setVisible(false);
 		this.parentContainer.dispose();
 	}
 
-	private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		int idRow = this.JtableData.getSelectedRow();
 		OperationRow operationRow = null;
 		opeRowEdit = new OperationRowEdit(operationRow);

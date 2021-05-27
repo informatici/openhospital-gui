@@ -263,7 +263,7 @@ public class ExamPicker extends javax.swing.JPanel {
         
         jPanel2 = new javax.swing.JPanel();
         jButtonSelect = new javax.swing.JButton();
-        jButtonQuit = new javax.swing.JButton();
+        jButtonCancel = new javax.swing.JButton();
         
         jPanel2.setBackground(new java.awt.Color(240, 240, 240));
 
@@ -279,9 +279,9 @@ public class ExamPicker extends javax.swing.JPanel {
             }
         });
 
-	    jButtonQuit.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
-	    jButtonQuit.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-        jButtonQuit.addMouseListener(new java.awt.event.MouseAdapter() {
+	    jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
+	    jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+        jButtonCancel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButtonQuitMouseClicked(evt);
             }
@@ -290,7 +290,7 @@ public class ExamPicker extends javax.swing.JPanel {
         add(jPanel2, BorderLayout.SOUTH);
         jPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
         jPanel2.add(jButtonSelect);
-        jPanel2.add(jButtonQuit);
+        jPanel2.add(jButtonCancel);
     }
     
     private void jTableDataMouseClicked(java.awt.event.MouseEvent evt) {
@@ -360,7 +360,7 @@ public class ExamPicker extends javax.swing.JPanel {
 
 
     private javax.swing.JButton jButtonSelect;
-    private javax.swing.JButton jButtonQuit;
+    private javax.swing.JButton jButtonCancel;
     private javax.swing.JLabel jLabelImage;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
