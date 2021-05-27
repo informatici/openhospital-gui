@@ -26,6 +26,9 @@ import java.awt.Component;
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.exception.model.OHSeverityLevel;
 
 public class MessageDialog {
 
@@ -35,34 +38,42 @@ public class MessageDialog {
 	public static final String PLAIN_MESSAGE = MessageBundle.getMessage("angal.common.plain.title");
 	public static final String QUESTION = MessageBundle.getMessage("angal.common.question.title");
 
-	public static void error(Component parentComponent, String messageKey) {
+	public static void error(Component parentComponent, String messageKey, Object... additionalArgs) {
 		JOptionPane.showMessageDialog(
 				parentComponent,
-				MessageBundle.getMessage(messageKey),
+				(additionalArgs.length == 0)
+						? MessageBundle.getMessage(messageKey)
+						: MessageBundle.formatMessage(messageKey, additionalArgs),
 				ERROR_MESSAGE,
 				JOptionPane.ERROR_MESSAGE);
 	}
 
-	public static void warning(Component parentComponent, String messageKey) {
+	public static void warning(Component parentComponent, String messageKey, Object... additionalArgs) {
 		JOptionPane.showMessageDialog(
 				parentComponent,
-				MessageBundle.getMessage(messageKey),
+				(additionalArgs.length == 0)
+						? MessageBundle.getMessage(messageKey)
+						: MessageBundle.formatMessage(messageKey, additionalArgs),
 				WARNING_MESSAGE,
 				JOptionPane.WARNING_MESSAGE);
 	}
 
-	public static void info(Component parentComponent, String messageKey) {
+	public static void info(Component parentComponent, String messageKey, Object... additionalArgs) {
 		JOptionPane.showMessageDialog(
 				parentComponent,
-				MessageBundle.getMessage(messageKey),
+				(additionalArgs.length == 0)
+						? MessageBundle.getMessage(messageKey)
+						: MessageBundle.formatMessage(messageKey, additionalArgs),
 				INFO_MESSAGE,
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	public static void plain(Component parentComponent, String messageKey) {
+	public static void plain(Component parentComponent, String messageKey, Object... additionalArgs) {
 		JOptionPane.showMessageDialog(
 				parentComponent,
-				MessageBundle.getMessage(messageKey),
+				(additionalArgs.length == 0)
+						? MessageBundle.getMessage(messageKey)
+						: MessageBundle.formatMessage(messageKey, additionalArgs),
 				PLAIN_MESSAGE,
 				JOptionPane.PLAIN_MESSAGE);
 	}
@@ -78,21 +89,43 @@ public class MessageDialog {
 		);
 	}
 
-	public static int yesNoCancel(Component parentComponent, String messageKey) {
+	public static int yesNoCancel(Component parentComponent, String messageKey, Object... additionalArgs) {
 		return JOptionPane.showConfirmDialog(
 				parentComponent,
-				MessageBundle.getMessage(messageKey),
+				(additionalArgs.length == 0)
+						? MessageBundle.getMessage(messageKey)
+						: MessageBundle.formatMessage(messageKey, additionalArgs),
 				QUESTION,
 				JOptionPane.YES_NO_CANCEL_OPTION
 		);
 	}
 
-	public static int okCancel(Component parentComponent, String messageKey) {
+	public static int okCancel(Component parentComponent, String messageKey, Object... additionalArgs) {
 		return JOptionPane.showConfirmDialog(
 				parentComponent,
-				MessageBundle.getMessage(messageKey),
+				(additionalArgs.length == 0)
+						? MessageBundle.getMessage(messageKey)
+						: MessageBundle.formatMessage(messageKey, additionalArgs),
 				QUESTION,
 				JOptionPane.OK_CANCEL_OPTION
 		);
+	}
+
+	public static void showExceptions(OHServiceException ohServiceException) {
+		if (ohServiceException.getMessages() == null) {
+			return;
+		}
+		for (OHExceptionMessage ohExceptionMessage : ohServiceException.getMessages()) {
+			OHSeverityLevel serverity = ohExceptionMessage.getLevel();
+			if (OHSeverityLevel.ERROR == serverity) {
+				error(null, ohExceptionMessage.getMessage());
+			} else if (OHSeverityLevel.WARNING == serverity) {
+				warning(null, ohExceptionMessage.getMessage());
+			} else if (OHSeverityLevel.INFO == serverity) {
+				info(null, ohExceptionMessage.getMessage());
+			} else {
+				plain(null, ohExceptionMessage.getMessage());
+			}
+		}
 	}
 }
