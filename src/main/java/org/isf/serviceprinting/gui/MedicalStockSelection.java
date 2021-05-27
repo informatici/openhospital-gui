@@ -60,8 +60,8 @@ import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.serviceprinting.print.Movement4Print;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.DateTextField;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
@@ -394,13 +394,9 @@ public class MedicalStockSelection extends JDialog implements ActionListener{
 		ArrayList<Ward> wardList;
 		try {
 			wardList = wbm.getWards();
-		}catch(OHServiceException e){
+		} catch(OHServiceException ohServiceException) {
 			wardList = new ArrayList<>();
-			if (e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+			MessageDialog.showExceptions(ohServiceException);
 		}
 		for (org.isf.ward.model.Ward elem : wardList) {
 			wardBox.addItem(elem);

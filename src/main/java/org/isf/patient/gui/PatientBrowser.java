@@ -42,7 +42,6 @@ import org.isf.patient.gui.PatientInsert.PatientListener;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
@@ -229,18 +228,14 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.patient.deletepatient") + " \" "+pat.getName() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						try{
+						try {
 							if ((n == JOptionPane.YES_OPTION) && (manager.deletePatient(pat))) {
 								pPat.remove(pPat.size() - jTable.getSelectedRow() - 1);
 								model.fireTableDataChanged();
 								jTable.updateUI();
 							}
-						}catch(OHServiceException e){
-							if (e.getMessages() != null) {
-								for(OHExceptionMessage msg : e.getMessages()){
-									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-								}
-							}
+						} catch(OHServiceException ohServiceException) {
+							MessageDialog.showExceptions(ohServiceException);
 						}
 					}
 				}
@@ -258,15 +253,11 @@ class PatientBrowserModel extends DefaultTableModel {
 			PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 			try {
 				pPat = manager.getPatient();
-			} catch (OHServiceException e) {
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch (OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
-			
 		}
+
 		public int getRowCount() {
 			if (pPat == null)
 				return 0;

@@ -30,7 +30,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -40,7 +39,6 @@ import org.isf.distype.model.DiseaseType;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
@@ -236,14 +234,9 @@ public class DiseaseTypeBrowserEdit extends JDialog{
                                 	dispose();
                                 }
                             }
-
                         }
-                    } catch (OHServiceException ex) {
-                        if (ex.getMessages() != null){
-                            for(OHExceptionMessage msg : ex.getMessages()){
-                                JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-                            }
-                        }
+                    } catch (OHServiceException ohServiceException) {
+	                    MessageDialog.showExceptions(ohServiceException);
                     }
 				}
 			});

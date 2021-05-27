@@ -43,7 +43,6 @@ import org.isf.dlvrtype.model.DeliveryType;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
@@ -205,19 +204,15 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 						int n = JOptionPane.showConfirmDialog(null,
 								MessageBundle.getMessage("angal.dlvrtype.deletedeliverytype") + " \" "+dis.getDescription() + "\" ?",
 								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-                        try{
+                        try {
                             if ((n == JOptionPane.YES_OPTION)
                                     && (manager.deleteDeliveryType(dis))) {
                                 pDeliveryType.remove(jTable.getSelectedRow());
                                 model.fireTableDataChanged();
                                 jTable.updateUI();
                             }
-                        }catch(OHServiceException e){
-                            if (e.getMessages() != null){
-                                for(OHExceptionMessage msg : e.getMessages()){
-                                    JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-                                }
-                            }
+                        } catch(OHServiceException ohServiceException) {
+	                        MessageDialog.showExceptions(ohServiceException);
                         }
 					}
 				}
@@ -247,14 +242,10 @@ class DeliveryTypeBrowserModel extends DefaultTableModel {
 	private DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
 		public DeliveryTypeBrowserModel() {
-            try{
+            try {
                 pDeliveryType = manager.getDeliveryType();
-            }catch(OHServiceException e){
-                if (e.getMessages() != null){
-                    for(OHExceptionMessage msg : e.getMessages()){
-                        JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-                    }
-                }
+            } catch(OHServiceException ohServiceException) {
+	            MessageDialog.showExceptions(ohServiceException);
             }
 		}
 		

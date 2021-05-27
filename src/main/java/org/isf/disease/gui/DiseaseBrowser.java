@@ -48,7 +48,6 @@ import org.isf.distype.model.DiseaseType;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
@@ -127,14 +126,10 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		ArrayList<DiseaseType> type = null;
 		try {
 			type = disTypeManager.getDiseaseType();
-		}catch(OHServiceException e){
-			if (e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
-		//for efficiency in the sequent for
+		// for efficiency in the sequent for
 		if (type != null){
 			for (DiseaseType elem : type) {
 				pbox.addItem(elem);
@@ -198,19 +193,15 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 							MessageBundle.getMessage("angal.disease.deletedisease") + " \""+disease.getDescription()+"\" ?",
 							MessageBundle.getMessage("angal.hospital"),
 							JOptionPane.YES_NO_OPTION);
-					try{
+					try {
 						if ((n == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))){
 							disease.setIpdInInclude(false);
 							disease.setIpdOutInclude(false);
 							disease.setOpdInclude(false);
 							diseaseUpdated(null);
 						}
-					} catch(OHServiceException e){
-						if (e.getMessages() != null){
-							for(OHExceptionMessage msg : e.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
-						}
+					} catch(OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
 			}
@@ -240,23 +231,15 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		public DiseaseBrowserModel(String s) {
 			try {
 				pDisease = manager.getDisease(s);
-			}catch(OHServiceException e){
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 		public DiseaseBrowserModel() {
 			try {
 				pDisease = manager.getDiseaseAll();
-			}catch(OHServiceException e){
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 		public int getRowCount() {
