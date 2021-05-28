@@ -104,7 +104,12 @@ public class InsertMalnutrition extends JDialog {
 		super(owner, true);
 		maln = malnutrition;
 		inserting = insert;
-		setTitle(MessageBundle.getMessage("angal.malnutrition.malnutrition"));
+		if (inserting) {
+			setTitle(MessageBundle.getMessage("angal.malnutrition.newmalnutrition.title"));
+		}
+		else {
+			setTitle(MessageBundle.getMessage("angal.malnutrition.editmalnutrition.title"));
+		}
 		add(getJContentPane());
 		pack();
 		setLocationRelativeTo(null);

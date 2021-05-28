@@ -145,9 +145,9 @@ public class WardEdit extends JDialog {
 	private void initialize() {
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.ward.newwardrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.ward.newward.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.ward.editingwardrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.ward.editward.title"));
 		}
 		pack();
 		setLocationRelativeTo(null);

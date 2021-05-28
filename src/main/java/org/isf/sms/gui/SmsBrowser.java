@@ -117,7 +117,7 @@ public class SmsBrowser extends ModalJFrame {
 	}
 
 	private void initComponents() {
-		setTitle(MessageBundle.getMessage("angal.sms.title"));
+		setTitle(MessageBundle.getMessage("angal.sms.smsmanager.title"));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().add(getJButtonPanel(), BorderLayout.SOUTH);
 		JScrollPane scrollPane = new JScrollPane(getJSmsTable());

@@ -146,7 +146,7 @@ public class PatVacBrowser extends ModalJFrame {
         		(screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase+50,
                 screensize.height * pfrmHeight / pfrmBase+20);
-        setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowsing"));
+        setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowser.title"));
 		this.setContentPane(getJContentPane());
 		updateRowCounter();
 		validate();

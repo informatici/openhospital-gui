@@ -127,7 +127,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.ward.wardsbrowser"));
+		this.setTitle(MessageBundle.getMessage("angal.ward.wardbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;

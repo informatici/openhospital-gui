@@ -188,7 +188,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	}
 	
 	private void initcomponents() {
-		setTitle(MessageBundle.getMessage("angal.medicalstock.stockmovementinserting")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.medicalstock.stockmovement.title"));
 		add(getJPanelHeader(), BorderLayout.NORTH);
 		add(getJMainPanel(), BorderLayout.CENTER);
 		add(getJButtonPane(), BorderLayout.SOUTH);

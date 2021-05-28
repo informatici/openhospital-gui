@@ -96,7 +96,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 	private void initComponents() {
 		add(getJScrollPaneTable(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
-		setTitle(MessageBundle.getMessage("angal.priceslist.listbrowser"));
+		setTitle(MessageBundle.getMessage("angal.priceslist.listbrowser.title"));
 		setSize(500, 274);
 	}
 

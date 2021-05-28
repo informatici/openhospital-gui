@@ -110,7 +110,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		super(owner, true);
 		adm = aAdm;
 		admId = String.valueOf(adm.getId());
-		setTitle(MessageBundle.getMessage("angal.malnutrition.malnutritionbrowser"));
+		setTitle(MessageBundle.getMessage("angal.malnutrition.malnutritionbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		final int pfrmBase = 10;

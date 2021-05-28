@@ -105,7 +105,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	public ExamBrowser() {
 		myFrame=this;
-		setTitle(MessageBundle.getMessage("angal.exa.exambrowsing"));
+		setTitle(MessageBundle.getMessage("angal.exa.exambrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
         final int pfrmBase = 20;

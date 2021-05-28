@@ -104,7 +104,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	
 	public DiseaseBrowser() {
 		
-		setTitle(MessageBundle.getMessage("angal.disease.diseasesbrowser"));
+		setTitle(MessageBundle.getMessage("angal.disease.diseasesbrowser.title"));
 		myFrame = this;
 		model = new DiseaseBrowserModel();
 		table = new JTable(model);

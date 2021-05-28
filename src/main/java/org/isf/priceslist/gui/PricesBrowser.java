@@ -135,7 +135,7 @@ public class PricesBrowser extends ModalJFrame {
 		add(getJPanelNorth(), BorderLayout.NORTH);
 		add(getJScrollPaneList(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
-		setTitle(MessageBundle.getMessage("angal.priceslist.pricesbrowser"));
+		setTitle(MessageBundle.getMessage("angal.priceslist.pricebrowser.title"));
 		setSize(647, 440);
 	}
 

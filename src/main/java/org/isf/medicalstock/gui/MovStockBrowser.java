@@ -188,7 +188,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 	public MovStockBrowser() {
 		myFrame = this;
-		setTitle(MessageBundle.getMessage("angal.medicalstock.stockmovementbrowser"));
+		setTitle(MessageBundle.getMessage("angal.medicalstock.stockmovementbrowser.title"));
 		try {
 			supMap = supplierBrowserManager.getHashMap(true);
 		} catch (OHServiceException e) {

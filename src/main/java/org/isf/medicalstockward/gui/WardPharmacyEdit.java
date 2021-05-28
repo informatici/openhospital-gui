@@ -133,7 +133,7 @@ public class WardPharmacyEdit extends JDialog {
 		initComponents();
 		if (movSelected.isPatient()) jComboBoxPatients.setSelectedItem(movWard.getPatient());
 		jComboBoxDrugs.setSelectedItem(movWard.getMedical());
-		setTitle(MessageBundle.getMessage("angal.common.edit")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.medicalstock.editwardpharmacy.title"));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);

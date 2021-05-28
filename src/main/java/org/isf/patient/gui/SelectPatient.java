@@ -280,7 +280,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		add(getJPanelTop(), BorderLayout.NORTH);
 		add(getJPanelCenter(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
-		setTitle(MessageBundle.getMessage("angal.patient.patientselection"));
+		setTitle(MessageBundle.getMessage("angal.patient.patientselection.title"));
 		pack();
 	}
 

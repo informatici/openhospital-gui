@@ -112,7 +112,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	
 	public OperationBrowser() {
 
-		setTitle(MessageBundle.getMessage("angal.operation.operationsbrowser")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.operation.operationsbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
