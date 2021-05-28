@@ -145,7 +145,7 @@ public class ReportLauncher extends ModalJFrame{
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.stat.reportlauncher"));
+		this.setTitle(MessageBundle.getMessage("angal.stat.reportlauncher.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);

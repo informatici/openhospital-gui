@@ -117,7 +117,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	}
 
 	private void initComponents() {
-		setTitle(MessageBundle.getMessage("angal.sms.edit.title"));
+		setTitle(MessageBundle.getMessage("angal.sms.newsms.title"));
 		setResizable(false);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		add(getJNorthPanel(), BorderLayout.NORTH);

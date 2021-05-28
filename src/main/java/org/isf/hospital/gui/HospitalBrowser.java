@@ -97,7 +97,7 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 	
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.hospital.hospitalinformations"));
+		this.setTitle(MessageBundle.getMessage("angal.hospital.hospitalinformation.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;

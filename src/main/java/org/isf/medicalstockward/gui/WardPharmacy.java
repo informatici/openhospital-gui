@@ -274,7 +274,7 @@ public class WardPharmacy extends ModalJFrame implements
 		add(getJPanelWardAndRange(), BorderLayout.NORTH);
 		// add(getJTabbedPaneWard(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
-		setTitle(MessageBundle.getMessage("angal.medicalstockward.title")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.medicalstock.wardpharmacy.title"));
 		setSize(800, 450);
 	}
 

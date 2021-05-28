@@ -141,9 +141,9 @@ public class ExamEdit extends JDialog {
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.exa.newexam"));
+			this.setTitle(MessageBundle.getMessage("angal.exa.newexam.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.exa.editexam"));
+			this.setTitle(MessageBundle.getMessage("angal.exa.editexam.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}

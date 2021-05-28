@@ -126,9 +126,9 @@ public class ExamTypeEdit extends JDialog {
 //		this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.exatype.newexamtype"));
+			this.setTitle(MessageBundle.getMessage("angal.exatype.newexamtype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.exatype.editexamtype"));
+			this.setTitle(MessageBundle.getMessage("angal.exatype.editexamtype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		

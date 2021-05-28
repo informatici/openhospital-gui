@@ -149,9 +149,9 @@ public class OperationEdit extends JDialog {
 		// pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.operation.newoperationrecord")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.operation.newoperation.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.operation.editingoperationrecord")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.operation.editoperation.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		pack();

@@ -112,9 +112,9 @@ public class ListEdit extends JDialog {
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		setSize(400, 200);
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.priceslist.newlist")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.priceslist.newlist.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.priceslist.editlist")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.priceslist.editlist.title"));
 		}
 	}
 

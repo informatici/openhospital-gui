@@ -116,9 +116,9 @@ public class OperationTypeEdit extends JDialog{
 		//this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.opetype.newoperationtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.opetype.newoperationtype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.opetype.editingoperationtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.opetype.editoperationtype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();

@@ -116,9 +116,9 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 //		this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.dlvrrestype.newdeliveryresulttyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.dlvrrestype.newdeliveryresulttype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.dlvrrestype.editingdeliveryresulttyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.dlvrrestype.editdeliveryresulttype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		

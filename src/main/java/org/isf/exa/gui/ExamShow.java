@@ -93,7 +93,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
-		this.setTitle(exam.getDescription() + " " + MessageBundle.getMessage("angal.exa.results"));
+		this.setTitle(MessageBundle.formatMessage("angal.exa.results.fmt.title", exam.getDescription()));
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}

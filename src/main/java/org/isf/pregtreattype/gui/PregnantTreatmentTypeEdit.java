@@ -116,9 +116,9 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 		
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.preagtreattype.newpregnanttreatmenttyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.preagtreattype.newpregnanttreatmenttype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.preagtreattype.editingpregnanttreatmenttyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.preagtreattype.editpregnanttreatmenttype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();

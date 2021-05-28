@@ -175,9 +175,9 @@ public class TherapyEntryForm extends JDialog {
 
 	private void initComponents() {
 		if (therapy == null) {
-			setTitle(MessageBundle.getMessage("angal.therapy.titlenew")); //$NON-NLS-1$
+			setTitle(MessageBundle.getMessage("angal.therapy.newtherapyentryform.title"));
 		} else {
-			setTitle(MessageBundle.getMessage("angal.therapy.titleedit")); //$NON-NLS-1$
+			setTitle(MessageBundle.getMessage("angal.therapy.edittherapyentryform.title"));
 			getContentPane().setBackground(Color.RED);
 		}
 		setSize(new Dimension(740, 400));

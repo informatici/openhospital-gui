@@ -93,7 +93,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
         final int pfrmHeight =4;
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle(MessageBundle.getMessage("angal.distype.diseasetypebrowsing"));
+		this.setTitle(MessageBundle.getMessage("angal.distype.diseasetypebrowser.title"));
 		this.setContentPane(getJContainPanel());
 		//pack();	
 	}

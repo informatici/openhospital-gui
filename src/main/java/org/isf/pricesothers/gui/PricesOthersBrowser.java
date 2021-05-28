@@ -90,7 +90,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	}
 
 	private void initComponents() {
-		setTitle(MessageBundle.getMessage("angal.pricesothers.titlebrowser")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.pricesothers.otherpricesbrowser.title"));
 		add(getJScrollPaneTable(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		//setSize(550, 240);

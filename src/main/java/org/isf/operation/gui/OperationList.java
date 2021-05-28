@@ -360,14 +360,14 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		opeRowEdit.addOperationListener(OperationList.this);
 		dialogOpe.setContentPane(opeRowEdit);
 		dialogOpe.setIconImage(ico);
-		dialogOpe.setTitle(MessageBundle.getMessage("angal.operationrowlist.addnew")); //$NON-NLS-1$
+		dialogOpe.setTitle(MessageBundle.getMessage("angal.operationrowlist.newoperation.title"));
 		opeRowEdit.setMyParent(dialogOpe);
-		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.addnew")); //$NON-NLS-1$
+		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.newoperation.title"));
 		dialogOpe.setVisible(true);
 		dialogOpe.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	}
 
-	private void updateButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void updateButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		int idRow = this.JtableData.getSelectedRow();
 		OperationRow operationRow = null;
 		if (idRow < 0) {
@@ -381,14 +381,14 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		opeRowEdit.addOperationRowListener(OperationList.this);
 		dialogOpe.setContentPane(opeRowEdit);
 		dialogOpe.setIconImage(ico);
-		dialogOpe.setTitle(MessageBundle.getMessage("angal.operationrowlist.updateop")); //$NON-NLS-1$
+		dialogOpe.setTitle(MessageBundle.getMessage("angal.operationrowlist.editoperation.title"));
 		opeRowEdit.setMyParent(dialogOpe);
-		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.updateop")); //$NON-NLS-1$
+		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.editoperation.title"));
 		dialogOpe.setVisible(true);
 		dialogOpe.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	}
 
-	private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		int idRow = this.JtableData.getSelectedRow();
 		OperationRow operationRow = null;
 		if (idRow < 0) {

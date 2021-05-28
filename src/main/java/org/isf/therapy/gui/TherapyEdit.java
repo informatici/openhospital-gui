@@ -192,7 +192,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		});
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// setResizable(false);
-		setTitle(MessageBundle.getMessage("angal.therapy.therapy"));
+		setTitle(MessageBundle.getMessage("angal.therapy.therapy.title"));
 		setSize(new Dimension(screenSize.width - 20, screenSize.height - 100));
 
 	}

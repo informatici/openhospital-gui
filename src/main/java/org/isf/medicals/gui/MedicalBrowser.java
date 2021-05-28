@@ -161,7 +161,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 	public MedicalBrowser() {
 		me = this;
-		setTitle(MessageBundle.getMessage("angal.medicals.pharmaceuticalbrowsing"));
+		setTitle(MessageBundle.getMessage("angal.medicals.pharmaceuticalbrowser.title"));
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();

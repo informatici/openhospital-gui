@@ -94,7 +94,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
         final int pfrmHeight = 4;
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle(MessageBundle.getMessage("angal.dlvrrestype.deliveryresulttypebrowsing"));
+		this.setTitle(MessageBundle.getMessage("angal.dlvrrestype.deliveryresulttypebrowser.title"));
 		this.setContentPane(getJContainPanel());
 		//pack();	
 	}

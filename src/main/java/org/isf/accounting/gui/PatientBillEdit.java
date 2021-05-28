@@ -398,9 +398,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		add(getJPanelData(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.EAST);
 		if (insert) {
-			setTitle(MessageBundle.getMessage("angal.newbill.title"));  //$NON-NLS-1$
+			setTitle(MessageBundle.getMessage("angal.patientbill.newpatientbill.title"));
 		} else {
-			setTitle(MessageBundle.getMessage("angal.newbill.title") + " " + thisBill.getId());  //$NON-NLS-1$
+			setTitle(MessageBundle.formatMessage("angal.patientbill.editpatientbill.fmt.title", thisBill.getId()));
 		}
 		pack();
 	}

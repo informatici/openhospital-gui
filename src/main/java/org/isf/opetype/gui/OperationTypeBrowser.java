@@ -94,7 +94,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
         final int pfrmHeight =4;
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle(MessageBundle.getMessage("angal.opetype.operationtypebrowsing"));
+		this.setTitle(MessageBundle.getMessage("angal.opetype.operationtypebrowser.title"));
 		this.setContentPane(getJContainPanel());
 		//pack();	
 	}

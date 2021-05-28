@@ -119,9 +119,9 @@ public class MedicalTypeBrowserEdit extends JDialog{
 //		this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.medtype.newmedicaltyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medtype.newmedicaltype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.medtype.editingmedicaltyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medtype.editmedicaltype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		

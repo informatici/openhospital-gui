@@ -147,9 +147,9 @@ public class PatVacEdit extends JDialog {
 		this.setContentPane(getJContentPane());
 		this.setResizable(false);
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.patvac.newpatientvaccine"));
+			this.setTitle(MessageBundle.getMessage("angal.patvac.newpatientvaccine.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.patvac.edipatientvaccine"));
+			this.setTitle(MessageBundle.getMessage("angal.patvac.edipatientvaccine.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);

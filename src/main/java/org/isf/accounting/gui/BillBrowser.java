@@ -229,7 +229,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		add(getJPanelRange(), BorderLayout.NORTH);
 		add(getJTabbedPaneBills(), BorderLayout.CENTER);
 		add(getJPanelSouth(), BorderLayout.SOUTH);
-		setTitle(MessageBundle.getMessage("angal.billbrowser.title")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.billbrowser.patientbillmanagment.title"));
 		setMinimumSize(new Dimension(900,600));
 		addWindowListener(new WindowAdapter(){
 			

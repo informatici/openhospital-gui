@@ -92,7 +92,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
         final int pfrmHeight =4;
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle(MessageBundle.getMessage("angal.medtype.medicaltypebrowsing"));
+		this.setTitle(MessageBundle.getMessage("angal.medtype.medicaltypebrowser.title"));
 		this.setContentPane(getJContainPanel());
 		//pack();	
 	}
