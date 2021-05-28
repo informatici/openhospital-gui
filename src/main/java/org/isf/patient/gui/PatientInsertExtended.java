@@ -355,9 +355,9 @@ public class PatientInsertExtended extends JDialog {
 
 		this.setContentPane(getJContainPanel());
 		if (insert)
-			this.setTitle(MessageBundle.getMessage("angal.patient.title"));
+			this.setTitle(MessageBundle.getMessage("angal.patient.newpatient.title"));
 		else
-			this.setTitle(MessageBundle.getMessage("angal.patient.titleedit"));
+			this.setTitle(MessageBundle.getMessage("angal.patient.editpatient.title"));
 		this.setSize(new Dimension(604, 445));
 		pack();
 		setResizable(false);

@@ -96,7 +96,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
         final int pfrmHeight = 4;
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle(MessageBundle.getMessage("angal.disctype.dischargetypebrowsing"));
+		this.setTitle(MessageBundle.getMessage("angal.disctype.dischargetypebrowser.title"));
 		this.setContentPane(getJContainPanel());
 		//pack();	
 	}

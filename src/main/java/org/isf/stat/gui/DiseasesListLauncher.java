@@ -73,7 +73,7 @@ public class DiseasesListLauncher extends ModalJFrame{
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.stat.diseasereport"));
+		this.setTitle(MessageBundle.getMessage("angal.stat.diseasereport.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);

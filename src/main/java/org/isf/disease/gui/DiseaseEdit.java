@@ -138,9 +138,9 @@ public class DiseaseEdit extends JDialog {
 	private void initialize() {
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.disease.newdisease"));
+			this.setTitle(MessageBundle.getMessage("angal.disease.newdisease.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.disease.editdisease"));
+			this.setTitle(MessageBundle.getMessage("angal.disease.editdisease.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();

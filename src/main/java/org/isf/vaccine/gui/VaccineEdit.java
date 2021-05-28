@@ -138,9 +138,9 @@ public class VaccineEdit extends JDialog {
 		this.setBounds(pfrmBordX,pfrmBordY,pfrmWidth,pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.vaccine.newvaccinerecord"));
+			this.setTitle(MessageBundle.getMessage("angal.vaccine.newvaccine.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.vaccine.editingvaccinerecord"));
+			this.setTitle(MessageBundle.getMessage("angal.vaccine.editvaccine.title"));
 		}
 	}
 

@@ -73,7 +73,7 @@ public class ExamsList1Launcher extends ModalJFrame{
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.stat.examsreport"));
+		this.setTitle(MessageBundle.getMessage("angal.stat.examsreport.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);

@@ -157,7 +157,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				* pfrmHeight / pfrmBase) / 2, screensize.width * pfrmWidth
 				/ pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
-		this.setTitle(MessageBundle.getMessage("angal.lab.laboratorybrowsing"));
+		this.setTitle(MessageBundle.getMessage("angal.lab.laboratorybrowser.title"));
 	}
 
 	/**

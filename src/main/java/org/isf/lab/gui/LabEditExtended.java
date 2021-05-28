@@ -186,9 +186,9 @@ public class LabEditExtended extends ModalJFrame {
 		this.setContentPane(getJContentPane());
 		this.setResizable(false);
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.lab.newlaboratoryexam"));
+			this.setTitle(MessageBundle.getMessage("angal.lab.newlaboratoryexam.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.lab.editlaboratoryexam"));
+			this.setTitle(MessageBundle.getMessage("angal.lab.editlaboratoryexam.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);

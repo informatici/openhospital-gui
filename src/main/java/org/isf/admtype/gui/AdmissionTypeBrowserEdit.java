@@ -118,9 +118,9 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 		//this.setBounds(400,400,350,170);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.admtype.newadmissiontyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.admtype.newadmissiontype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.admtype.editingadmissiontyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.admtype.editadmissiontype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();

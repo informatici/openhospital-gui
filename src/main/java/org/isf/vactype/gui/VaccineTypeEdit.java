@@ -128,9 +128,9 @@ public class VaccineTypeEdit extends JDialog{
 		
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.vactype.newvaccinetype"));
+			this.setTitle(MessageBundle.getMessage("angal.vactype.newvaccinetype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.vactype.editvaccinetype"));
+			this.setTitle(MessageBundle.getMessage("angal.vactype.editvaccinetype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();

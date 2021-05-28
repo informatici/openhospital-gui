@@ -115,7 +115,7 @@ public class ExamRowEdit extends JDialog {
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
-		this.setTitle(MessageBundle.getMessage("angal.exa.neweditresult"));
+		this.setTitle(MessageBundle.getMessage("angal.exa.neweditresult.title"));
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 

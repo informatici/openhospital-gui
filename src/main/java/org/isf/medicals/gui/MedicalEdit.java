@@ -146,9 +146,9 @@ public class MedicalEdit extends JDialog {
 		//this.setBounds(300, 300, 350, 240);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.medicals.newmedicalrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medicals.newmedical.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.medicals.editingmedicalrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medicals.editmedical.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();

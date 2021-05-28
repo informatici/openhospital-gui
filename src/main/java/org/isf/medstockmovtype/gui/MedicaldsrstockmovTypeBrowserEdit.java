@@ -123,9 +123,9 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 		//this.setBounds(300,300,330,210);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.newmedicalsstockmovementtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.newmedicalstockmovementtype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.editingmedicalsstockmovementtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.editmedicalstockmovementtype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();

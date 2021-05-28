@@ -100,7 +100,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
         final int pfrmHeight = 4;
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle( MessageBundle.getMessage("angal.exatype.examtypebrowser"));
+		this.setTitle( MessageBundle.getMessage("angal.exatype.examtypebrowser.title"));
 		this.setContentPane(getJContainPanel());
 		//pack();	
 	}

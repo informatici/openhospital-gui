@@ -116,9 +116,9 @@ public class DischargeTypeBrowserEdit extends JDialog{
 		
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.disctype.newdischargetyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.disctype.newdischargetype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.disctype.editingdischargetyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.disctype.editdischargetype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();

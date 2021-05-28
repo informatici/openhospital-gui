@@ -148,9 +148,9 @@ public class SupplierEdit extends JDialog {
 		this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase * pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.supplier.newsupplier"));
+			this.setTitle(MessageBundle.getMessage("angal.supplier.newsupplier.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.supplier.editsupplier"));
+			this.setTitle(MessageBundle.getMessage("angal.supplier.editsupplier.title"));
 		}
 	}
 	

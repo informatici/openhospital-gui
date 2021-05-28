@@ -178,7 +178,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	private void initialize() {
 		loadWindowSettings();
 
-		this.setTitle(MessageBundle.getMessage("angal.dicom.title"));
+		this.setTitle(MessageBundle.getMessage("angal.dicomviewer.title"));
 
 		initComponents();
 

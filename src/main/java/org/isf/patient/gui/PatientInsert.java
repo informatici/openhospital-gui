@@ -205,7 +205,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 		this.setBounds(pfrmBordX+10,pfrmBordY+10,screensize.width / pfrmBase * 
 		pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContainPanel());
-		this.setTitle(MessageBundle.getMessage("angal.patient.newpatient"));
+		this.setTitle(MessageBundle.getMessage("angal.patient.newpatient.title"));
 		this.setSize(new java.awt.Dimension(604,445));
 		setSize(screensize.width / pfrmBase * pfrmWidth,
 				screensize.height / pfrmBase * pfrmHeight);
