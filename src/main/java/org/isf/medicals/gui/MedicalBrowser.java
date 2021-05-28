@@ -355,7 +355,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 				String filter = "%" + searchString.getText() + "%";
 				if (pbox.getSelectedItem() instanceof MedicalType)
 					groupBy = ((MedicalType) pbox.getSelectedItem()).getDescription();
-				//System.out.println("==> GROUPING : " + groupBy);
 				List<?> sortedKeys = table.getRowSorter().getSortKeys();
 				if (!sortedKeys.isEmpty()) {
 					int sortedColumn = ((SortKey) sortedKeys.get(0)).getColumn();

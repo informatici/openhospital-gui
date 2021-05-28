@@ -75,8 +75,6 @@ public class DateTextField extends JPanel{
 			month.setText("0"+String.valueOf(time.get(GregorianCalendar.MONTH)+1));
 		else month.setText(String.valueOf(time.get(GregorianCalendar.MONTH)+1));
 		year.setText(String.valueOf(time.get(GregorianCalendar.YEAR)));
-		//System.out.println(year);
-
 	}
 	
 	public void initialize(){

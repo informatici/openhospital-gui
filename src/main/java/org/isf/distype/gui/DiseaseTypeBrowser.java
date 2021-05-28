@@ -277,12 +277,8 @@ class DiseaseTypeBrowserModel extends DefaultTableModel {
 		}
 	}
 
-
-
-
 public void diseaseTypeUpdated(AWTEvent e) {
 	pDiseaseType.set(selectedrow, diseaseType);
-	//System.out.println("line -> " + selectedrow);
 	((DiseaseTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 	jTable.updateUI();
 	if ((jTable.getRowCount() > 0) && selectedrow > -1)

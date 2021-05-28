@@ -1145,10 +1145,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 	
 	private void updateDataSet() {
-//		System.out.println(formatDateTime(new DateTime().minusMonths(5).toDateMidnight().toGregorianCalendar()));
-//		System.out.println(formatDateTime(new DateTime().toDateMidnight().plusDays(1).toGregorianCalendar()));
 		updateDataSet(new DateTime().toDateMidnight().toGregorianCalendar(), new DateTime().toDateMidnight().plusDays(1).toGregorianCalendar());
-		
 	}
 	
 	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo){

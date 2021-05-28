@@ -347,8 +347,6 @@ public class SelectPatient extends JDialog implements PatientListener {
 		String s = jTextFieldSearchPatient.getText() + lastKey;
 		s = s.trim();
 		String[] s1 = s.split(" ");
-		
-		//System.out.println(s);
 
 		patSearch = new ArrayList<>();
 		

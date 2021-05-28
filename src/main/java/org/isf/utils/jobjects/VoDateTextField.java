@@ -130,7 +130,6 @@ public class VoDateTextField extends JTextField {
 			public void focusLost(FocusEvent e) throws IllegalArgumentException {
 				// if date field is not mandatory, can be left empty
 				if (getText().length()==0) {
-					//System.out.println("empty string");
 					return;
 				}
 				if (getText().length() !=  type.length()) {
@@ -204,7 +203,6 @@ public class VoDateTextField extends JTextField {
 			calendar.set(Integer.parseInt(getText().substring(6,8)) + 2000,Integer.parseInt(getText().substring(3,5))-1,Integer.parseInt(getText().substring(0,2)));
 		else if (type.equals("mm/dd/yy"))
 			calendar.set(Integer.parseInt(getText().substring(6,8)) + 2000,Integer.parseInt(getText().substring(0,2)) - 1,Integer.parseInt(getText().substring(3,5)));
-		//System.out.println(calendar.get(Calendar.DAY_OF_MONTH)+ " " + calendar.get(Calendar.MONTH) + " " + calendar.get(Calendar.YEAR));
 		return calendar;
 	}
 	

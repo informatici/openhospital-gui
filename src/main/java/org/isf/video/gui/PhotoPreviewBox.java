@@ -33,12 +33,14 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PhotoPreviewBox extends Box {
 
-	//private static ArrayList<JButton> lstPhotoPreviewsButton = new ArrayList<JButton>();
-	//private static ArrayList<String> lstPhotoPaths = new ArrayList<String>();
-
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(PhotoPreviewBox.class);
+
 	public JButton photoButton;
 	private ImageIcon previewIcon;
 	
@@ -68,12 +70,11 @@ public class PhotoPreviewBox extends Box {
 			photoButton.setPreferredSize(new Dimension(90,90));			
 		}
 		catch (IOException ioe)	{
-			System.out.println("Path: " + path);
-			ioe.printStackTrace();
+			LOGGER.error("Path: {}", path);
+			LOGGER.error(ioe.getMessage(), ioe);
 		}
 		
 		this.add(photoButton);
-		
-		//lstPhotoPreviewsButton.add(photoButton);
+
 	}
 }

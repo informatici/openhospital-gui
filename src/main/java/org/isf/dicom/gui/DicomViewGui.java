@@ -186,7 +186,6 @@ public class DicomViewGui extends JPanel {
 			jSliderFrame.setEnabled(false);
 			jSliderZoom.setEnabled(false);
 		} else {
-			// System.out.println("init per "+patID+" frames "+frames.length);
 			jSliderZoom.setEnabled(true);
 			jSliderZoom.setPaintTicks(true);
 			jSliderZoom.setMajorTickSpacing(10);
@@ -204,11 +203,9 @@ public class DicomViewGui extends JPanel {
 
 			jPanelCenter = new JPanel();
 
-			// System.out.println(this.getWidth()+" "+this.getHeight());
 			// center.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
 
 			jPanelCenter.add(composeCenter(jPanelCenter.getWidth(), jPanelCenter.getHeight(), true));
-
 		}
 
 		// center.getViewport().setBackground(Color.BLACK);
@@ -246,8 +243,6 @@ public class DicomViewGui extends JPanel {
 			jSliderFrame.setEnabled(false);
 			jSliderZoom.setEnabled(false);
 		} else {
-			// System.out.println("reInitComponent per "+idPaziente+" immagini "+immagini.length);
-
 			// reset mouse relative position
 			resetMouseRelativePosition();
 
@@ -269,11 +264,8 @@ public class DicomViewGui extends JPanel {
 //			float value = (float) tmpImg.getWidth() * (float) perc / 100f;
 //			BufferedImage immagineResized = Scalr.resize(tmpImg, Math.round(value));
 
-			// System.out.println("reinitComponent x "+x+"y "+y);
-
 			jPanelCenter.add(composeCenter(jPanelCenter.getWidth(), jPanelCenter.getHeight(), true));
 			validate();
-
 		}
 		jSliderFrame.setValue(0);
 		jSliderZoom.setValue(100);
@@ -503,8 +495,6 @@ public class DicomViewGui extends JPanel {
 
 			try {
 				tmpImg = reader.read(0);//, param);
-				// System.out.println("Read image dim : "+tmpImg.getHeight()+" "+tmpImg.getWidth());
-
 			} catch (DicomCodingException dce) {
 				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
 						MessageBundle.getMessage("angal.dicom.load.err") + " : " + dett.getFileName(), OHSeverityLevel.ERROR));
@@ -534,8 +524,6 @@ public class DicomViewGui extends JPanel {
 
 			try {
 				tmpImg = reader.read(0, param);
-				// System.out.println("Read image dim : "+tmpImg.getHeight()+" "+tmpImg.getWidth());
-
 			} catch (DicomCodingException dce) {
 				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
 						MessageBundle.getMessage("angal.dicom.load.err") + " : " + dett.getFileName(), OHSeverityLevel.ERROR));
@@ -684,7 +672,6 @@ public class DicomViewGui extends JPanel {
 		 * click position
 		 */
 		public void mousePressed(MouseEvent e) {
-			// System.out.println("mp["+e.getXOnScreen()+","+e.getYOnScreen()+"]");
 			p1x = e.getXOnScreen();
 			p1y = e.getYOnScreen();
 		}
@@ -697,7 +684,6 @@ public class DicomViewGui extends JPanel {
 			x = totX;
 
 			y = totY;
-
 		}
 
 		/**

@@ -44,6 +44,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Cropping.java - 27/gen/2014
  *
@@ -52,7 +55,8 @@ import javax.swing.event.MouseInputAdapter;
 public class Cropping extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Cropping.class);
+
 	BufferedImage image;
 	Dimension size;
 	Rectangle clip;
@@ -122,7 +126,7 @@ public class Cropping extends JPanel {
 			clipped = image.getSubimage(x, y, w, h);
 			return clipped;
 		} catch (RasterFormatException rfe) {
-			System.out.println("raster format error: " + rfe.getMessage());
+			LOGGER.error("raster format error: " + rfe.getMessage());
 			return null;
 		}
 	}
