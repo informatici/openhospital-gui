@@ -60,6 +60,8 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ------------------------------------------
@@ -75,6 +77,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class ExamBrowser extends ModalJFrame implements ExamListener{
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExamBrowser.class);
 
 	private int selectedrow;
 	private JComboBox pbox;
@@ -441,7 +444,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 
 				sorter.setRowFilter(RowFilter.andFilter(filters));
 			} catch (PatternSyntaxException pse) {
-				System.out.println("Bad regex pattern");
+				LOGGER.error("Bad regex pattern");
 			}
 		}
 	}

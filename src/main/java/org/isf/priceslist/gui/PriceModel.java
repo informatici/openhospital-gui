@@ -142,21 +142,13 @@ public class PriceModel extends AbstractTreeTableModel {
     }
 
 	public Object getChild(Object node, int i) {
-		//System.out.println("in getChild di " + ((PriceNode)node).getPrice().getDesc());
 		return getChildren(node)[i];
 	}
 
 	public int getChildCount(Object node) {
 		Object[] items = getChildren(node);
-		//System.out.println("in getChildCount di " + ((PriceNode)node).getPrice().getDesc() + ": " + items.length);
 		return (items == null) ? 0 : items.length;
 	}
-	/*
-	public boolean isLeaf(Object node) { 
-		System.out.println("in isLeaf:" + ((PriceNode)node).isPrice() +  ":" + ((PriceNode)node).getPrice().getDesc());
-		return ((PriceNode)node).isPrice(); 
-		}
-	*/
 }
 
 class PriceNode {

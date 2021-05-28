@@ -1448,10 +1448,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 		public DrugsModel() {
 			try {
-				//System.out.println("WardPharmacy: Looking for drugs ");
 				tableModel = wardManager.getMedicalsWardTotalQuantity(wardSelected.getCode().charAt(0));
 				wardDrugs = wardManager.getMedicalsWard(wardSelected.getCode().charAt(0), true);
-
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 				tableModel = new ArrayList<>();

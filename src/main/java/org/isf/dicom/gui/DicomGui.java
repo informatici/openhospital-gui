@@ -403,7 +403,6 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Invoked the first time a window is made visible.
 	 */
 	public void windowOpened(WindowEvent e) {
-		// System.out.println("windowOpened");
 	}
 
 	/**

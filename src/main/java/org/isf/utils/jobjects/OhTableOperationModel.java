@@ -147,7 +147,6 @@ public class OhTableOperationModel<T> implements TableModel{
 				case 1:
                     Operation ope = null;
                     try {
-                        //System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
                         ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
                     } catch (OHServiceException ex) {
                         ex.printStackTrace();

@@ -120,7 +120,6 @@ public class OhTableDrugsModel <T> implements TableModel {
 					break;
 				case 1:
 					Medical drugsname = null;
-					//System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
 					drugsname = drugObj.getMedical();
 					if (drugsname != null)
 						value = drugsname.getDescription();

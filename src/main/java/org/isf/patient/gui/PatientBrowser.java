@@ -303,10 +303,6 @@ class PatientBrowserModel extends DefaultTableModel {
 
 
 public void patientUpdated(AWTEvent e) {
-	/*pPat.set(selectedrow, patient);
-	System.out.println("riga->" + selectedrow);
-	((PatientBrowserModel) jTable.getModel()).fireTableDataChanged();
-	jTable.updateUI();*/
 	model= new PatientBrowserModel();
 	model.fireTableDataChanged();
 	jTable.updateUI();

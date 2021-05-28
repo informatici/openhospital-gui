@@ -260,8 +260,6 @@ public class ReportLauncher extends ModalJFrame{
 			Integer month=gc.get(Calendar.MONTH);
 			Integer year = gc.get(Calendar.YEAR);
 
-			//System.out.println("m="+month +",y="+ year);
-			
 			jRptLabel = new JLabel();
 			jRptLabel.setText(MessageBundle.getMessage("angal.stat.report"));
 			

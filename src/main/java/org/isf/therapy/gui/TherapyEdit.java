@@ -426,8 +426,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				public void actionPerformed(ActionEvent e) {
 					if (selectedVisit == null)
 						return;
-					//System.out.println("==> SelectedVisit : " + selectedVisit.getVisitID());
-					//System.out.println("==> hashTableThRow : " + hashTableVisits.get(selectedVisit.getVisitID()));
 					visits.remove(selectedVisit);
 					
 					visitModified = true;
@@ -1062,8 +1060,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				public void actionPerformed(ActionEvent e) {
 					if (selectedTherapy == null)
 						return;
-					//System.out.println("==> SelectedTherapy : " + selectedTherapy.getTherapyID());
-					//System.out.println("==> hashTableThRow : " + hashTableThRow.get(selectedTherapy.getTherapyID()));
 					thRows.remove(hashTableThRow.get(selectedTherapy.getTherapyID()));
 					therapies.remove(selectedTherapy);
 					//thRows.remove(selectedTherapy.getNumTherapy() - 1);

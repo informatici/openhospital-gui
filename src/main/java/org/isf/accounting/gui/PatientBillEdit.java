@@ -1959,7 +1959,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	public void checkIfsameMonth(){
 		if (!insert) {
-			//System.out.println("la date de la facture: "+thisBill.getDate().getTime().toString());
 			//GregorianCalendar thisday = TimeTools.getServerDateTime();
 			GregorianCalendar thisday = new GregorianCalendar();
 			GregorianCalendar billDate = thisBill.getDate();
