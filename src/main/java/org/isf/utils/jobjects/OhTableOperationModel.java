@@ -36,8 +36,12 @@ import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OhTableOperationModel<T> implements TableModel{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OhTableOperationModel.class);
 
 	List<T> dataList;	
 	List<T> filteredList;
@@ -148,8 +152,8 @@ public class OhTableOperationModel<T> implements TableModel{
                     Operation ope = null;
                     try {
                         ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
-                    } catch (OHServiceException ex) {
-                        ex.printStackTrace();
+                    } catch (OHServiceException ohServiceException) {
+                        LOGGER.error(ohServiceException.getMessage(), ohServiceException);
                     }
 					if (ope != null)
 						value = ope.getDescription();

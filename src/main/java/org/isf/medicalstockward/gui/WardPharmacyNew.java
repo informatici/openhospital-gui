@@ -654,7 +654,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 //									MessageBundle.getMessage("angal.medicalstockwardedit.pieces"),
 //                                                                        wardTo));
 //						} catch (OHException e1) {
-//							e1.printStackTrace();
+//							LOGGER.error(e1.getMessage(), e1)
 //						}
 //					}
 //					MovWardBrowserManager wardManager = new MovWardBrowserManager();

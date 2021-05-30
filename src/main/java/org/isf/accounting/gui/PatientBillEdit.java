@@ -87,6 +87,8 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.RememberDates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Create a single Patient Bill
@@ -95,6 +97,8 @@ import org.isf.utils.time.RememberDates;
  * @author Mwithi
  */
 public class PatientBillEdit extends JDialog implements SelectionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientBillEdit.class);
 
 //LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList patientBillListener = new EventListenerList();
@@ -127,8 +131,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
         ArrayList<Bill> patientPendingBills = new ArrayList<>();
 		try {
 			patientPendingBills = billManager.getPendingBills(patient.getCode());
-		} catch (OHServiceException e) {
-			e.printStackTrace();
+		} catch (OHServiceException ohServiceException) {
+			LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 		}
 		if (patientPendingBills.isEmpty()){
 			// BILL

@@ -64,9 +64,13 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoFloatTextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OperationRowEdit extends JPanel {
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OperationRowEdit.class);
+
 	     // LISTENER INTERFACE
 		// --------------------------------------------------------
 			List<OperationList> operationRowListener = new ArrayList<>();
@@ -356,35 +360,33 @@ public class OperationRowEdit extends JPanel {
 		}			
 		return jCalendarDate;
 	}
-	
+
 	private JComboBox getOperationsBox() {
-		
+
 		JComboBox comboOpe = new JComboBox();
 		ArrayList<Operation> opeList = new ArrayList<>();
-                            try {
-                                opeList = ope.getOperation();
-                            } catch (OHServiceException ex) {
-                                ex.printStackTrace();
-                            }
-		if (opeRow != null){
+		try {
+			opeList = ope.getOperation();
+		} catch (OHServiceException ohServiceException) {
+			LOGGER.error(ohServiceException.getMessage(), ohServiceException);
+		}
+		if (opeRow != null) {
 			boolean found = false;
 			for (org.isf.operation.model.Operation elem : opeList) {
-				if (opeRow.getOperation().getCode().equals(elem.getCode())){
+				if (opeRow.getOperation().getCode().equals(elem.getCode())) {
 					found = true;
 					comboOpe.addItem(elem);
-					break;	
-				}					
+					break;
+				}
 			}
-			if (!found){
+			if (!found) {
 				//comboOpe.addItem("");
 				comboOpe.addItem(null);
 			}
 			for (org.isf.operation.model.Operation elem : opeList) {
-				
 				comboOpe.addItem(elem);
 			}
-		}
-		else{
+		} else {
 			//comboOpe.addItem("");
 			comboOpe.addItem(null);
 			for (org.isf.operation.model.Operation elem : opeList) {
@@ -394,6 +396,7 @@ public class OperationRowEdit extends JPanel {
 		comboOpe.setEnabled(true);
 		return comboOpe;
 	}
+
 	private JComboBox getComboResultBox() {
 		JComboBox comboResult = new JComboBox();
 			for (String description : operationResults) {

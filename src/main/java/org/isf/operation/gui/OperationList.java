@@ -61,10 +61,14 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OperationList extends JPanel implements OperationRowListener, OperationRowEditListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(OperationList.class);
+
 	private JTable JtableData;
 	private JLabel TypeSourceLabelValue;
 	private JLabel CodeSourceLabelValue;
@@ -213,8 +217,8 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		if (myAdmission != null) {
 			try {
 				oprowData = opeRowManager.getOperationRowByAdmission(myAdmission);
-			} catch (OHServiceException ex) {
-				ex.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
 		}
 		if (myPatient != null) {
@@ -225,15 +229,13 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 				oprowData = new ArrayList<>();
 				for (Admission adm : admissions) {
 					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
-				
 				}
 				ArrayList<Opd> opds =  opdManager.getOpdList(myPatient.getCode());
 				for (Opd op : opds) {
 					oprowData.addAll(opeRowManager.getOperationRowByOpd(op));
-				
 				}
-			} catch (OHServiceException ex) {
-				ex.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
 			panelHeader.setVisible(false);
 			panelButtons.setVisible(false);

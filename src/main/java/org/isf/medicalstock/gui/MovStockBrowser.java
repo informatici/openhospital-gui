@@ -953,11 +953,11 @@ public class MovStockBrowser extends ModalJFrame {
 					} catch (IOException err) {
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.sql.problemsoccurredwithserverconnection"));
-						err.printStackTrace();
+						LOGGER.error(err.getMessage(), err);
 					} catch (SQLException err) {
 						JOptionPane.showMessageDialog(null,
 								MessageBundle.getMessage("angal.medicalstock.problemsoccurredwithsqlistruction"));
-						err.printStackTrace();
+						LOGGER.error(err.getMessage(), err)
 					}
 				}
 				filterButton.doClick();

@@ -79,15 +79,11 @@ public class ChatTab extends JTabbedPane {
 			user = new JLabel(label);
 			add(user);
 			try {
-
 				// load firefox buttons
 				reg = new ImageIcon("rsc/icons/regular_close_tab.JPG");
 				over = new ImageIcon("rsc/icons/hoverOver_close_tab.JPG");
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
-
+			} catch (Exception exception) {
+				LOGGER.error(exception.getMessage(), exception);
 			}
 			setOpaque(false);
 			final JButton button = new JButton(reg);

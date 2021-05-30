@@ -100,8 +100,8 @@ public class GenericReportBill {
 					try {
 						Runtime rt = Runtime.getRuntime();
 						rt.exec(GeneralData.VIEWER + " " + jasperReportPDFResultDto.getFilename());
-					} catch (Exception e) {
-						e.printStackTrace();
+					} catch (Exception exception) {
+						LOGGER.error(exception.getMessage(), exception);
 					}
 				}
 			}
@@ -118,8 +118,8 @@ public class GenericReportBill {
 					new PrintReceipt(jasperReportTxtResultDto.getJasperPrint(), jasperReportTxtResultDto.getFilename());
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception exception) {
+			LOGGER.error(exception.getMessage(), exception);
 		}
 	}	
 }

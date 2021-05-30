@@ -288,13 +288,12 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			try {
 				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
 				oprowData.addAll(res);
-			} catch (OHServiceException ex) {
-				ex.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
 		}
 		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 		tableData.setModel(modelOhOpeRow);
-
 	}
 
 	private CustomJDateChooser getJCalendarDate() {
