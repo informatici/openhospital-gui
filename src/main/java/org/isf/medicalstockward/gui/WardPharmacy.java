@@ -1231,9 +1231,9 @@ public class WardPharmacy extends ModalJFrame implements
 						}
 					}
 				}
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-				e.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				OHServiceExceptionUtil.showMessages(ohServiceException);
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
 		}
 

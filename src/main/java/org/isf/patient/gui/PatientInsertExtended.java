@@ -77,6 +77,8 @@ import org.isf.video.gui.PatientPhotoPanel;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -98,6 +100,8 @@ import com.toedter.calendar.JDateChooser;
 public class PatientInsertExtended extends JDialog {
 
 	private static final long serialVersionUID = -827831581202765055L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientInsertExtended.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
 	
@@ -523,10 +527,10 @@ public class PatientInsertExtended extends JDialog {
 								} else {
 									dispose();
 								}
-							}catch(OHServiceException ex){
-								ex.printStackTrace();
-								OHServiceExceptionUtil.showMessages(ex);
+							} catch(OHServiceException ohServiceException) {
+								OHServiceExceptionUtil.showMessages(ohServiceException);
 								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+								LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 							}
 						}
 					} else {// Update
@@ -2236,8 +2240,8 @@ public class PatientInsertExtended extends JDialog {
 			try {
 				final Image image = patient.getPatientProfilePhoto() != null ? patient.getPatientProfilePhoto().getPhotoAsImage() : null;
 				photoPanel = new PatientPhotoPanel(this, patient.getCode(), image);
-			} catch (final IOException e) {
-				e.printStackTrace();
+			} catch (IOException ioException) {
+				LOGGER.error(ioException.getMessage(), ioException);
 			}
 			if (photoPanel != null) {
 				jRightPanel.add(photoPanel, BorderLayout.NORTH);

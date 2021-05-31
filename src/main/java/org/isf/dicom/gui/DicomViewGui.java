@@ -66,6 +66,8 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.MessageDialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Detail for DICOM image
@@ -78,6 +80,8 @@ import org.isf.utils.jobjects.MessageDialog;
 public class DicomViewGui extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DicomViewGuiMouseListener.class);
 
 	// status of fremereader
 	private int patID = -1;
@@ -502,9 +506,8 @@ public class DicomViewGui extends JPanel {
 
 			imageInputStream.close();
 			this.tmpDicom = null;
-
-		} catch (Exception ecc) {
-			ecc.printStackTrace();
+		} catch (Exception exception) {
+			LOGGER.error(exception.getMessage(), exception);
 		}
 	}
 	
@@ -532,9 +535,8 @@ public class DicomViewGui extends JPanel {
 			imageInputStream.close();
 			DicomStreamMetaData dsmd = (DicomStreamMetaData) reader.getStreamMetadata();
 			this.tmpDicom = dsmd.getDicomObject();
-
-		} catch (Exception ecc) {
-			ecc.printStackTrace();
+		} catch (Exception exception) {
+			LOGGER.error(exception.getMessage(), exception);
 		}
 	}
 

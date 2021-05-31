@@ -200,9 +200,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				if (index != -1) {
 					area = getArea(user_name, true);
 					try {
-						area.printNotification(sb.toString()); //$NON-NLS-1$
-					} catch (BadLocationException e) {
-						e.printStackTrace();
+						area.printNotification(sb.toString());
+					} catch (BadLocationException badLocationException) {
+						LOGGER.error(badLocationException.getMessage(), badLocationException);
 					}
 				}
 				refreshBuddyList();
@@ -450,10 +450,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			} else {
 				area.printMessage(user, text, visualize);
 			}
-		} catch (BadLocationException e) {
-			e.printStackTrace();
+		} catch (BadLocationException badLocationException) {
+			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
-
 	}
 
 	public void printNotification(ChatMessages area, String user, String file_transfer, JButton accept, JButton reject) {
@@ -463,8 +462,8 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	public void printNotification(ChatMessages area, String text) {
 		try {
 			area.printNotification(text);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
+		} catch (BadLocationException badLocationException) {
+			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
 	}
 
@@ -576,8 +575,8 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				File file = new File(path);
 				try {
 					transfer.recieveFile(file);
-				} catch (XMPPException k) {
-					k.printStackTrace();
+				} catch (XMPPException xmppException) {
+					LOGGER.error(xmppException.getMessage(), xmppException);
 				}
 
 				printNotification((getArea(user, true)), "the file transfer of: " + request.getFileName() + " between you and " + user + " ended successfully");

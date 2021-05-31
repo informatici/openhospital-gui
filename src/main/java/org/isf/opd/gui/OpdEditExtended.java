@@ -99,6 +99,8 @@ import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -141,6 +143,8 @@ public class OpdEditExtended extends ModalJFrame implements
         PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener{
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpdEditExtended.class);
 
 	@Override
 	public void patientInserted(AWTEvent e) {
@@ -920,8 +924,8 @@ public class OpdEditExtended extends ModalJFrame implements
 				OpdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 				OpdDateFieldCal.setDateFormatString("dd/MM/yy");
 				OpdDateFieldCal.addPropertyChangeListener("date", evt -> jOpdNumField.setText(getOpdNum()));
-			} catch (ParseException e) {
-				e.printStackTrace();
+			} catch (ParseException parseException) {
+				LOGGER.error(parseException.getMessage(), parseException);
 			}
 		}
 		return OpdDateFieldCal;
@@ -1900,8 +1904,8 @@ public class OpdEditExtended extends ModalJFrame implements
 					opdNextVisitDate = new JDateChooser();
 				opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
 				opdNextVisitDate.setDateFormatString("dd/MM/yy");
-			} catch (ParseException e) {
-				e.printStackTrace();
+			} catch (ParseException parseException) {
+				LOGGER.error(parseException.getMessage(), parseException);
 			}
 			if (opd.getPatient() == null) opdNextVisitDate.setEnabled(false);
 		}

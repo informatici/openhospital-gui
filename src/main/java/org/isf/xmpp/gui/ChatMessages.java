@@ -75,8 +75,8 @@ public class ChatMessages extends JTextPane {
 		StyleConstants.setForeground(keyWord, greenColor);
 		try {
 			doc.insertString(position, "\n*** " + file_transfer + "\n", keyWord);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
+		} catch (BadLocationException badLocationException) {
+			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
 		position = doc.getEndPosition().getOffset();
 		select(position, position);
@@ -131,8 +131,8 @@ public class ChatMessages extends JTextPane {
 
 		try {
 			doc.insertString(position, "\n*** " + name + " wants to share with you this report:" + typeReport + "\n", keyWord);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
+		} catch (BadLocationException badLocationException) {
+			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
 		position = doc.getEndPosition().getOffset();
 		select(position, position);

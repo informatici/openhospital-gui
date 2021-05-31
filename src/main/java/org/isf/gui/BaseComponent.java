@@ -21,9 +21,15 @@
  */
 package org.isf.gui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jgoodies.binding.PresentationModel;
 
 public abstract class BaseComponent<PM extends PresentationModel> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseComponent.class);
+
     PM model;
 
     /**
@@ -42,9 +48,9 @@ public abstract class BaseComponent<PM extends PresentationModel> {
             bind();
             initEventHandling();
             initGUIState();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Unable to construct " + getClass().getName(), e);
+        } catch (Exception exception) {
+            LOGGER.error(exception.getMessage(), exception);
+            throw new RuntimeException("Unable to construct " + getClass().getName(), exception);
         }
     }
 

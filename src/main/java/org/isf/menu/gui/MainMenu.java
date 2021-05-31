@@ -180,8 +180,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				Server.getInstance().login(myUser.getUserName(), myUser.getPasswd());
 				try {
 					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				} catch (InterruptedException interruptedException) {
+					LOGGER.error(interruptedException.getMessage(), interruptedException);
 				}
 				new CommunicationFrame();
 				/*

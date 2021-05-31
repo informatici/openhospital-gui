@@ -87,6 +87,8 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
@@ -98,15 +100,16 @@ import com.toedter.calendar.JYearChooser;
  */
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(BillBrowser.class);
+
 	public void billInserted(AWTEvent event){
-		if (patientParent!=null){
+		if (patientParent!=null) {
 			try {
 				updateDataSet(dateFrom, dateTo, patientParent);
-			} catch (OHServiceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
-		}else{
+		} else{
 			updateDataSet(dateFrom, dateTo);
 		}
 		updateTables();

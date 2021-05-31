@@ -222,7 +222,9 @@ public class PatientPhotoPanel extends JPanel {
 class CroppingDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CroppingDialog.class);
+
 	/*
 	 * Attributes
 	 */
@@ -240,7 +242,6 @@ class CroppingDialog extends JDialog {
 		super(owner, true);
 		this.image = image;
 		initComponents();
-		
 	}
 
 	private void initComponents() {
@@ -248,10 +249,9 @@ class CroppingDialog extends JDialog {
 			crop = new Cropping(ImageIO.read(image));
 			getContentPane().add(crop, BorderLayout.CENTER);
 			getContentPane().add(getSaveButton(), BorderLayout.SOUTH);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioException) {
+			LOGGER.error(ioException.getMessage(), ioException);
 		}
-		
 	}
 
 	private JButton getSaveButton() {

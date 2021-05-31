@@ -37,8 +37,13 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableDrugsModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MedicalsrMovPatList extends JPanel {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalsrMovPatList.class);
+
 	private Patient myPatient;
 	private ArrayList<MovementWard> drugsData;
 	private JDialog dialogDrug;
@@ -68,8 +73,8 @@ public class MedicalsrMovPatList extends JPanel {
 				for (MovementWard mov : movPat) {
 					drugsData.add(mov);
 				}
-			} catch (OHServiceException ex) {
-				ex.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			} 
 			
 		}

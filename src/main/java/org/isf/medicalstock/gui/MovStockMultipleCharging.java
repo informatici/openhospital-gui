@@ -82,10 +82,14 @@ import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
 import org.isf.utils.time.TimeTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MovStockMultipleCharging extends JDialog {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(MovStockMultipleCharging.class);
+
 	private static final String DATE_FORMAT_DD_MM_YYYY_HH_MM_SS = "dd/MM/yyyy HH:mm:ss"; //$NON-NLS-1$
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	private static final int CODE_COLUMN_WIDTH = 100;
@@ -898,8 +902,8 @@ public class MovStockMultipleCharging extends JDialog {
 				try {
 					GregorianCalendar date = TimeTools.parseDate((String) value, DATE_FORMAT_DD_MM_YYYY, true);
 					lot.setDueDate(date);
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (Exception exception) {
+					LOGGER.error(exception.getMessage(), exception);
 				}
 			} else if (c == 8) {
 				lot.setCost((BigDecimal) value);

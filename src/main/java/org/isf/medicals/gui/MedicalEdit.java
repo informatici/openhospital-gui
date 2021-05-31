@@ -52,6 +52,8 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 18-ago-2008
@@ -62,7 +64,9 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 public class MedicalEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalEdit.class);
+
 	private EventListenerList medicalListeners = new EventListenerList();
 	
 	public interface MedicalListener extends EventListener {
@@ -131,8 +135,8 @@ public class MedicalEdit extends JDialog {
 		insert = inserting;
 		try {
 			oldMedical = (Medical) old.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+		} catch (CloneNotSupportedException cloneNotSupportedException) {
+			LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
 		}
 		medical = old; // medical will be used for every operation
 		initialize();
@@ -261,8 +265,8 @@ public class MedicalEdit extends JDialog {
 						newMedical.setProd_code(codeTextField.getText());
 						newMedical.setPcsperpck(pcsperpckField.getValue());
 						newMedical.setMinqty(minQtiField.getValue());
-					} catch (CloneNotSupportedException ex) {
-						ex.printStackTrace();
+					} catch (CloneNotSupportedException cloneNotSupportedException) {
+						LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
 					}
 					boolean result = false;
 					if (insert) { // inserting

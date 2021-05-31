@@ -63,6 +63,8 @@ import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -72,6 +74,8 @@ import com.toedter.calendar.JDateChooser;
 public class InsertVisit extends JDialog implements SelectionListener {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(InsertVisit.class);
 
 	/*
 	 * Constants
@@ -355,12 +359,10 @@ public class InsertVisit extends JDialog implements SelectionListener {
 						return;
 					}
 					try {
-
 						visit = visitManager.newVisit(visitID, date, patientSelected, note, sms, saveWard, duration, service);
 						visitID = visit.getVisitID();
-					} catch (OHServiceException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					} catch (OHServiceException ohServiceException) {
+						LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 					}
 					if (visitID > 0) {
 						visit.setVisitID(visitID);
