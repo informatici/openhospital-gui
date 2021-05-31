@@ -629,10 +629,6 @@ public class WardPharmacyRectify extends JDialog {
 				}
 				if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) {
 					MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.expirydatebeforepreparationdate");
-
-				} else if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) {
-					MessageDialog.error(WardPharmacyRectify.this, "angal.medicalstockward.rectify.expirydatebeforepreparationdate");
-
 				} else {
 					expiringDate.setTime(expireDateChooser.getDate());
 					preparationDate.setTime(preparationDateChooser.getDate());
