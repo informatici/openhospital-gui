@@ -165,8 +165,8 @@ public class PatientFolderReportModal extends ModalJFrame {
 	
 	private JButton getPrintButton() {
 		if (launchReportButton == null) {
-			launchReportButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.launchreport.btn"));
-			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.launchreport.btn.key"));
+			launchReportButton = new JButton(MessageBundle.getMessage("angal.common.launchreport.btn"));
+			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
 			launchReportButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {

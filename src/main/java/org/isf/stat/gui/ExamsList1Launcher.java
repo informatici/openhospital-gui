@@ -158,10 +158,10 @@ public class ExamsList1Launcher extends ModalJFrame{
 	 */
 	private JButton getJReport1Button() {
 		if (jReport1Button == null) {
-			jReport1Button = new JButton();
+			jReport1Button = new JButton(MessageBundle.getMessage("angal.stat.runexamslistreportbytype.btn"));
+			jReport1Button.setMnemonic(MessageBundle.getMnemonic("angal.stat.runexamslistreportbytype.btn.key"));
 			jReport1Button.setBounds(new Rectangle(15, 15, 120, 31));
-			jReport1Button.setText(MessageBundle.getMessage("angal.stat.runexamslistreportbytype"));
-			jReport1Button.addActionListener(new ActionListener() {   
+			jReport1Button.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {   
 					new ExamsList1();
 				}

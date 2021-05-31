@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -162,9 +161,8 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 
 	private JButton getJButtonCopy() {
 		if (jButtonCopy == null) {
-			jButtonCopy = new JButton();
-			jButtonCopy.setText(MessageBundle.getMessage("angal.priceslist.copy"));
-			jButtonCopy.setMnemonic(KeyEvent.VK_P);
+			jButtonCopy = new JButton(MessageBundle.getMessage("angal.priceslist.copy.btn"));
+			jButtonCopy.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.copy.btn.key"));
 			jButtonCopy.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -283,9 +281,8 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 	
 	private JButton getJButtonNew() {
 		if (jButtonNew == null) {
-			jButtonNew = new JButton();
-			jButtonNew.setText(MessageBundle.getMessage("angal.common.new")); //$NON-NLS-1$
-			jButtonNew.setMnemonic(KeyEvent.VK_N);
+			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jButtonNew.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {

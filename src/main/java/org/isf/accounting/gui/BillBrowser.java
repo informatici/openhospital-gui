@@ -30,7 +30,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -334,9 +333,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonReport() {
 		if (jButtonReport == null) {
-			jButtonReport = new JButton();
-			jButtonReport.setMnemonic(KeyEvent.VK_R);
-			jButtonReport.setText(MessageBundle.getMessage("angal.billbrowser.report")); //$NON-NLS-1$
+			jButtonReport = new JButton(MessageBundle.getMessage("angal.billbrowser.report.btn"));
+			jButtonReport.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.report.btn.key"));
 			jButtonReport.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -505,9 +503,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private JButton getJButtonEdit() {
 		if (jButtonEdit == null) {
-			jButtonEdit = new JButton();
-			jButtonEdit.setText(MessageBundle.getMessage("angal.billbrowser.editbill")); //$NON-NLS-1$
-			jButtonEdit.setMnemonic(KeyEvent.VK_E);
+			jButtonEdit = new JButton(MessageBundle.getMessage("angal.billbrowser.editbill.btn"));
+			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.editbill.btn.key"));
 			jButtonEdit.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -553,9 +550,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonPrintReceipt() {
 		if (jButtonPrintReceipt == null) {
-			jButtonPrintReceipt = new JButton();
-			jButtonPrintReceipt.setText(MessageBundle.getMessage("angal.billbrowser.receipt")); //$NON-NLS-1$
-			jButtonPrintReceipt.setMnemonic(KeyEvent.VK_R);
+			jButtonPrintReceipt = new JButton(MessageBundle.getMessage("angal.billbrowser.receipt.btn"));
+			jButtonPrintReceipt.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.receipt.btn.key"));
 			jButtonPrintReceipt.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -677,9 +673,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonNew() {
 		if (jButtonNew == null) {
-			jButtonNew = new JButton();
-			jButtonNew.setText(MessageBundle.getMessage("angal.billbrowser.newbill")); //$NON-NLS-1$
-			jButtonNew.setMnemonic(KeyEvent.VK_N);
+			jButtonNew = new JButton(MessageBundle.getMessage("angal.billbrowser.newbill.btn"));
+			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.newbill.btn.key"));
 			jButtonNew.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -695,9 +690,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonDelete() {
 		if (jButtonDelete == null) {
-			jButtonDelete = new JButton();
-			jButtonDelete.setText(MessageBundle.getMessage("angal.billbrowser.deletebill")); //$NON-NLS-1$
-			jButtonDelete.setMnemonic(KeyEvent.VK_D);
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.billbrowser.deletebill.btn"));
+			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.deletebill.btn.key"));
 			jButtonDelete.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -890,9 +884,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonToday() {
 		if (jButtonToday == null) {
-			jButtonToday = new JButton();
-			jButtonToday.setText(MessageBundle.getMessage("angal.billbrowser.today")); //$NON-NLS-1$
-			jButtonToday.setMnemonic(KeyEvent.VK_T);
+			jButtonToday = new JButton(MessageBundle.getMessage("angal.billbrowser.today.btn"));
+			jButtonToday.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.today.btn.key"));
 			jButtonToday.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {

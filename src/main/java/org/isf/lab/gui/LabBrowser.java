@@ -26,7 +26,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -200,8 +199,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	private JButton getPrintTableButton() {
 		if (printTableButton == null) {
-			printTableButton = new JButton(MessageBundle.getMessage("angal.lab.printtable"));
-			printTableButton.setMnemonic(KeyEvent.VK_P);
+			printTableButton = new JButton(MessageBundle.getMessage("angal.lab.printtable.btn"));
+			printTableButton.setMnemonic(MessageBundle.getMnemonic("angal.lab.printtable.btn.key"));
 			printTableButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
@@ -230,8 +229,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	
 	private JButton getPrintLabelButton(){
 		if (printLabelButton==null){
-			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel"));
-			printLabelButton.setMnemonic(KeyEvent.VK_O);
+			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel.btn"));
+			printLabelButton.setMnemonic(MessageBundle.getMnemonic("angal.labnew.printlabel.btn.key"));
 			printLabelButton.addActionListener(new ActionListener() {
 			
 				public void actionPerformed(ActionEvent arg0) {
@@ -549,8 +548,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	 */
 	private JButton getFilterButton() {
 		if (filterButton == null) {
-			filterButton = new JButton(MessageBundle.getMessage("angal.lab.search"));
-			filterButton.setMnemonic(KeyEvent.VK_S);
+			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
+			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
 			filterButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {

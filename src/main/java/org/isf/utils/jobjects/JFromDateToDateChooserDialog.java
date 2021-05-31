@@ -24,7 +24,6 @@ package org.isf.utils.jobjects;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -125,8 +124,8 @@ public class JFromDateToDateChooserDialog extends JDialog {
 	
 	private JButton getButtonExcel() {
 		if (buttonExcel == null) {
-			buttonExcel = new JButton(MessageBundle.getMessage("angal.common.excel"));
-			buttonExcel.setMnemonic(KeyEvent.VK_E);
+			buttonExcel = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
+			buttonExcel.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
 			buttonExcel.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {

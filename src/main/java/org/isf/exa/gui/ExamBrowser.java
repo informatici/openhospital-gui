@@ -27,7 +27,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
@@ -320,8 +319,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	private JButton getJButtonShow() {
 		if (jButtonShow == null) {
-			jButtonShow = new JButton(MessageBundle.getMessage("angal.exa.results"));
-			jButtonShow.setMnemonic(KeyEvent.VK_S);
+			jButtonShow = new JButton(MessageBundle.getMessage("angal.exa.results.btn"));
+			jButtonShow.setMnemonic(MessageBundle.getMnemonic("angal.exa.results.btn.key"));
 			jButtonShow.addActionListener(new ActionListener() {
 	
 				public void actionPerformed(ActionEvent event) {

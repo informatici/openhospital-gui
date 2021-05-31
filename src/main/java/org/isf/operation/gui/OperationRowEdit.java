@@ -313,7 +313,8 @@ public class OperationRowEdit extends JPanel {
 		add(panelButtons, BorderLayout.SOUTH);
 		panelButtons.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
-		JButton btnSaveButton = new JButton(MessageBundle.getMessage("angal.operationrowedit.save")); //$NON-NLS-1$
+		JButton btnSaveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		btnSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		btnSaveButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {

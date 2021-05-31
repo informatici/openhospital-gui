@@ -510,9 +510,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	}
 	private JButton getJButtonAddMedical() {
 		if (jButtonAddMedical == null) {
-			jButtonAddMedical = new JButton();
-			jButtonAddMedical.setText(MessageBundle.getMessage("angal.medicalstockwardedit.medical")); //$NON-NLS-1$
-			jButtonAddMedical.setMnemonic(KeyEvent.VK_M);
+			jButtonAddMedical = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.medical.btn"));
+			jButtonAddMedical.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.medical.btn.key"));
 			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
 			jButtonAddMedical.addActionListener(new ActionListener() {
 
@@ -531,8 +530,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	
 	private JButton getJButtonRemoveMedical() {
 		if (jButtonRemoveMedical == null) {
-			jButtonRemoveMedical = new JButton();
-			jButtonRemoveMedical.setText(MessageBundle.getMessage("angal.medicalstockwardedit.removeitem")); //$NON-NLS-1$
+			jButtonRemoveMedical = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.removeitem.btn"));
+			jButtonRemoveMedical.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.removeitem.btn.key"));
 			jButtonRemoveMedical.setIcon(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
 			jButtonRemoveMedical.addActionListener(new ActionListener() {
 
@@ -790,9 +789,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
-			jButtonPickPatient = new JButton();
-			jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.pickpatient"));
-			jButtonPickPatient.setMnemonic(KeyEvent.VK_P);
+			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.pickpatient.btn"));
+			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.pickpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
 			jButtonPickPatient.addActionListener(new ActionListener() {

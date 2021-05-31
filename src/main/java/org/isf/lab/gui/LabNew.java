@@ -356,8 +356,8 @@ public class LabNew extends JDialog implements SelectionListener {
 	}
 	private JButton getPrintLabelButton(){
 		if (printLabelButton==null){
-			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel"));
-			printLabelButton.setMnemonic(KeyEvent.VK_O);
+			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel.btn"));
+			printLabelButton.setMnemonic(MessageBundle.getMnemonic("angal.labnew.printlabel.btn.key"));
 			printLabelButton.addActionListener(new ActionListener() {
 			
 				public void actionPerformed(ActionEvent arg0) {
@@ -615,9 +615,8 @@ public class LabNew extends JDialog implements SelectionListener {
 
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
-			jButtonPickPatient = new JButton();
-			jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.pickpatient"));  //$NON-NLS-1$
-			jButtonPickPatient.setMnemonic(KeyEvent.VK_P);
+			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.labnew.findpatient.btn"));
+			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.labnew.findpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.associateapatientwiththisexam"));  //$NON-NLS-1$
 			jButtonPickPatient.addActionListener(new ActionListener() {
@@ -768,9 +767,8 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JButton getJButtonAddExam() {
 
 		if (jButtonAddExam == null) {
-			jButtonAddExam = new JButton();
-			jButtonAddExam.setText(MessageBundle.getMessage("angal.labnew.exam")); //$NON-NLS-1$
-			jButtonAddExam.setMnemonic(KeyEvent.VK_E);
+			jButtonAddExam = new JButton(MessageBundle.getMessage("angal.labnew.exam.btn"));
+			jButtonAddExam.setMnemonic(MessageBundle.getMnemonic("angal.labnew.exam.btn.key"));
 			jButtonAddExam.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
 			jButtonAddExam.addActionListener(new ActionListener() {
 
@@ -844,8 +842,8 @@ public class LabNew extends JDialog implements SelectionListener {
 
 	private JButton getJButtonRemoveItem() {
 		if (jButtonRemoveItem == null) {
-			jButtonRemoveItem = new JButton();
-			jButtonRemoveItem.setText(MessageBundle.getMessage("angal.labnew.remove")); //$NON-NLS-1$
+			jButtonRemoveItem = new JButton(MessageBundle.getMessage("angal.labnew.remove.btn"));
+			jButtonRemoveItem.setMnemonic(MessageBundle.getMnemonic("angal.labnew.remove.btn.key"));
 			jButtonRemoveItem.setIcon(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
 			jButtonRemoveItem.addActionListener(new ActionListener(){
 

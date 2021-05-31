@@ -374,9 +374,9 @@ public class ReportLauncher extends ModalJFrame{
 
 	private JButton getJLaunchReportButton() {
 		if (jLaunchReport == null) {
-			jLaunchReport = new JButton();
+			jLaunchReport = new JButton(MessageBundle.getMessage("angal.common.launchreport.btn"));
+			jLaunchReport.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
 			jLaunchReport.setBounds(new Rectangle(15, 15, 91, 31));
-			jLaunchReport.setText(MessageBundle.getMessage("angal.stat.launchreport"));
 			jLaunchReport.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					generateReport(false);
@@ -388,10 +388,10 @@ public class ReportLauncher extends ModalJFrame{
 	
 	private JButton getJCSVButton() {
 		if (jCSVButton == null) {
-			jCSVButton = new JButton();
+			jCSVButton = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
+			jCSVButton.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
 			jCSVButton.setBounds(new Rectangle(15, 15, 91, 31));
-			jCSVButton.setText("Excel");
-			jCSVButton.addActionListener(new ActionListener() {   
+			jCSVButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					generateReport(true);

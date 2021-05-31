@@ -39,7 +39,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
@@ -142,7 +141,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JComboBox jComboBoxDiuresisType;
 	private JComboBox jComboBoxBowel;
 	private JComboBox jComboBoxAuscultation;
-	private JButton jButtonOK;
+	private JButton jButtonSave;
 	private JButton jButtonDelete;
 	private JButton jButtonCancel;
 	private JButton jButtonPrint;
@@ -256,7 +255,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JPanel getJPanelButtons() {
 		if (jPanelButtons == null) {
 			jPanelButtons = new JPanel();
-			jPanelButtons.add(getJButtonOK());
+			jPanelButtons.add(getJButtonSave());
 			jPanelButtons.add(getJButtonDelete());
 			jPanelButtons.add(getJButtonCancel());
 			jPanelButtons.add(getJButtonPrint());
@@ -1345,13 +1344,12 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return jSliderRR;
 	}
 
-	private JButton getJButtonOK() {
-		if (jButtonOK == null) {
-			jButtonOK = new JButton();
-			jButtonOK.setMnemonic(KeyEvent.VK_O);
-			jButtonOK.setAction(getActionSavePatientExamination());
+	private JButton getJButtonSave() {
+		if (jButtonSave == null) {
+			jButtonSave = new JButton();
+			jButtonSave.setAction(getActionSavePatientExamination());
 		}
-		return jButtonOK;
+		return jButtonSave;
 	}
 	
 	private JButton getJButtonDelete() {
@@ -1405,8 +1403,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 	
 	private JButton getJButtonPrint() {
 		if (jButtonPrint == null) {
-			jButtonPrint = new JButton(MessageBundle.getMessage("angal.common.print")); //$NON-NLS-1$
-			jButtonPrint.setMnemonic(KeyEvent.VK_C);
+			jButtonPrint = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
+			jButtonPrint.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
 			jButtonPrint.addActionListener(new ActionListener() {
 				
 				@Override

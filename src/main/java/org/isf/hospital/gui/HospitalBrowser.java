@@ -27,7 +27,6 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -252,8 +251,8 @@ public class HospitalBrowser extends ModalJFrame{
 			jButtonPanel= new JPanel();
 			editJButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			editJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			updateJButton = new JButton(MessageBundle.getMessage("angal.hospital.update"));
-			updateJButton.setMnemonic(KeyEvent.VK_U);
+			updateJButton = new JButton(MessageBundle.getMessage("angal.common.update.btn"));
+			updateJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.update.btn.key"));
 			closeJButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			updateJButton.setEnabled(false);

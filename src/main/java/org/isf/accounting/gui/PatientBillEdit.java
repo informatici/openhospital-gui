@@ -115,9 +115,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private void fireBillInserted(Bill aBill) {
 		AWTEvent event = new AWTEvent(aBill, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = patientBillListener.getListeners(PatientBillListener.class);
@@ -208,11 +205,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				}				
 			}
 		}
-		//jTextFieldSearch.setEnabled(true);
-		//jTextFieldSearch.grabFocus();
-		//checkIfsameMonth();
-		//jTableBill.setModel(new BillTableModel());
-		//updateTotals();
 		updateUI();
 	}
 	
@@ -263,10 +255,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private static final Dimension PatientDimension = new Dimension(300,20);
 	private static final Dimension LabelsDimension = new Dimension(60,20);
 	private static final int PanelWidth = 450;
-	private static final int ButtonWidth = 160;
-	private static final int ButtonWidthBill = 160;
-	private static final int ButtonWidthPayment = 160;
-	private static final int PriceWidth = 150;
+	private static final int ButtonWidth = 190;
+	private static final int ButtonWidthBill = 190;
+	private static final int ButtonWidthPayment = 190;
+	private static final int PriceWidth = 190;
 	private static final int CurrencyCodWidth = 40;
 	private static final int QuantityWidth = 40;
 	private static final int BillHeight = 200;
@@ -274,7 +266,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private static final int BigTotalHeight = 20;
 	private static final int PaymentHeight = 150;
 	private static final int BalanceHeight = 20;
-	//private static final int ActionHeight = 100;
 	private static final int ButtonHeight = 25;
 	
 	private BigDecimal total = new BigDecimal(0);
@@ -347,7 +338,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			prcArray = prcManager.getPrices();
 			lstArray = prcManager.getLists();
 			othPrices = othManager.getOthers();
-		} catch (OHServiceException e){
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
 		}
 	}
@@ -636,8 +627,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonTrashPatient = new JButton();
 			jButtonTrashPatient.setMnemonic(KeyEvent.VK_R);
 			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
-			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
-			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.tooltip.removepatientassociationwiththisbill")); //$NON-NLS-1$
+			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
+			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.removepatientassociatedwiththisbill.tooltip"));
 			jButtonTrashPatient.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -648,10 +639,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					thisBill.getBillPatient().setCode(0);
 					thisBill.setPatName(""); //$NON-NLS-1$
 					//INTERFACE
-					jTextFieldPatient.setText(""); //$NON-NLS-1$
+					jTextFieldPatient.setText("");
 					jTextFieldPatient.setEditable(false);
-					jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.pickpatient"));
-					jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.tooltip.associateapatientwiththisbill")); //$NON-NLS-1$
+					jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.findpatient.btn"));
+					jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.associateapatientwiththisbill.tooltip"));
 					jButtonTrashPatient.setEnabled(false);
 				}
 			});
@@ -664,11 +655,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
-			jButtonPickPatient = new JButton();
-			jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.pickpatient")); //$NON-NLS-1$
-			jButtonPickPatient.setMnemonic(KeyEvent.VK_P);
-			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
-			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.tooltip.associateapatientwiththisbill")); //$NON-NLS-1$
+			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.newbill.findpatient.btn"));
+			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.newbill.findpatient.btn.key"));
+			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
+			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.associateapatientwiththisbill.tooltip"));
 			jButtonPickPatient.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -681,8 +671,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				}
 			});
 			if (thisBill.isPatient()) {
-				jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.changepatient")); //$NON-NLS-1$
-				jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.tooltip.changethepatientassociatedwiththisbill")); //$NON-NLS-1$
+				jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.changepatient.btn"));
+				jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.newbill.changepatient.btn.key"));
+				jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.changethepatientassociatedwiththisbill.tooltip"));
 			}
 		}
 		return jButtonPickPatient;
@@ -917,12 +908,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jPanelButtonsPayment.setLayout(new BoxLayout(jPanelButtonsPayment, BoxLayout.Y_AXIS));
 			jPanelButtonsPayment.add(getJButtonAddPayment());
 			jPanelButtonsPayment.add(getJButtonAddRefund());
-			if (GeneralData.RECEIPTPRINTER) jPanelButtonsPayment.add(getJButtonPrintPayment());
+			if (GeneralData.RECEIPTPRINTER) {
+				jPanelButtonsPayment.add(getJButtonPrintPayment());
+			}
 			jPanelButtonsPayment.add(getJButtonRemovePayment());
 			jPanelButtonsPayment.setMinimumSize(new Dimension(ButtonWidth, PaymentHeight));
 			jPanelButtonsPayment.setMaximumSize(new Dimension(ButtonWidth, PaymentHeight));
 			//jPanelButtonsPayment.setPreferredSize(new Dimension(ButtonWidth, PaymentHeight));
-
 		}
 		return jPanelButtonsPayment;
 	}
@@ -935,25 +927,25 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jPanelButtonsActions.add(getJButtonSave());
 			jPanelButtonsActions.add(getJButtonPaid());
 			jPanelButtonsActions.add(getJButtonClose());
-			//jPanelButtonsActions.setMinimumSize(new Dimension(ButtonWidth, ActionHeight));
-			//jPanelButtonsActions.setMaximumSize(new Dimension(ButtonWidth, ActionHeight));
-	}
-	return jPanelButtonsActions;
+		}
+		return jPanelButtonsActions;
 	}
 
 	private JButton getJButtonBalance() {
 		if (jButtonBalance == null) {
-			jButtonBalance = new JButton();
-			jButtonBalance.setText(MessageBundle.getMessage("angal.newbill.givechange") + "..."); //$NON-NLS-1$
-			jButtonBalance.setMnemonic(KeyEvent.VK_B);
+			jButtonBalance = new JButton(MessageBundle.getMessage("angal.newbill.givechange.btn"));
+			jButtonBalance.setMnemonic(MessageBundle.getMnemonic("angal.newbill.givechange.btn.key"));
 			jButtonBalance.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
-			jButtonBalance.setIcon(new ImageIcon("rsc/icons/money_button.png")); //$NON-NLS-1$
-			if (insert) jButtonBalance.setEnabled(false);
+			jButtonBalance.setIcon(new ImageIcon("rsc/icons/money_button.png"));
+			jButtonBalance.setHorizontalAlignment(SwingConstants.LEFT);
+			if (insert)  {
+				jButtonBalance.setEnabled(false);
+			}
 			jButtonBalance.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
 					
-					Icon icon = new ImageIcon("rsc/icons/money_dialog.png"); //$NON-NLS-1$
+					Icon icon = new ImageIcon("rsc/icons/money_dialog.png");
 					BigDecimal amount = new BigDecimal(0);
 					
 					String quantity = (String) JOptionPane.showInputDialog(PatientBillEdit.this, 
@@ -991,6 +983,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			jButtonSave.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
 			jButtonSave.setIcon(new ImageIcon("rsc/icons/save_button.png"));
+			jButtonSave.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonSave.addActionListener(new ActionListener() {
 			
 				public void actionPerformed(ActionEvent e) {
@@ -1086,11 +1079,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonPrintPayment() {
 		if (jButtonPrintPayment == null) {
-			jButtonPrintPayment = new JButton();
-			jButtonPrintPayment.setText(MessageBundle.getMessage("angal.newbill.paymentreceipt")); //$NON-NLS-1$
+			jButtonPrintPayment = new JButton(MessageBundle.getMessage("angal.newbill.paymentreceipt.btn"));
+			jButtonPrintPayment.setMnemonic(MessageBundle.getMnemonic("angal.newbill.paymentreceipt.btn.key"));
 			jButtonPrintPayment.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			jButtonPrintPayment.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonPrintPayment.setIcon(new ImageIcon("rsc/icons/receipt_button.png")); //$NON-NLS-1$
+			jButtonPrintPayment.setIcon(new ImageIcon("rsc/icons/receipt_button.png"));
 			jButtonPrintPayment.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1099,18 +1092,22 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				}
 			});
 		}
-		if (insert) jButtonPrintPayment.setEnabled(false);
+		if (insert) {
+			jButtonPrintPayment.setEnabled(false);
+		}
 		return jButtonPrintPayment;
 	}
 	
 	private JButton getJButtonPaid() {
 		if (jButtonPaid == null) {
-			jButtonPaid = new JButton();
-			jButtonPaid.setText(MessageBundle.getMessage("angal.newbill.paid")); //$NON-NLS-1$
-			jButtonPaid.setMnemonic(KeyEvent.VK_A);
+			jButtonPaid = new JButton(MessageBundle.getMessage("angal.newbill.paid.btn"));
+			jButtonPaid.setMnemonic(MessageBundle.getMnemonic("angal.newbill.paid.btn.key"));
 			jButtonPaid.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
-			jButtonPaid.setIcon(new ImageIcon("rsc/icons/ok_button.png")); //$NON-NLS-1$
-			if (insert) jButtonPaid.setEnabled(false);
+			jButtonPaid.setIcon(new ImageIcon("rsc/icons/ok_button.png"));
+			jButtonPaid.setHorizontalAlignment(SwingConstants.LEFT);
+			if (insert) {
+				jButtonPaid.setEnabled(false);
+			}
 			jButtonPaid.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1170,7 +1167,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jButtonClose.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
-			jButtonClose.setIcon(new ImageIcon("rsc/icons/close_button.png")); //$NON-NLS-1$
+			jButtonClose.setIcon(new ImageIcon("rsc/icons/close_button.png"));
+			jButtonClose.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonClose.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1199,11 +1197,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonAddRefund() {
 		if (jButtonAddRefund == null) {
-			jButtonAddRefund = new JButton();
-			jButtonAddRefund.setText(MessageBundle.getMessage("angal.newbill.refund")); //$NON-NLS-1$
+			jButtonAddRefund = new JButton(MessageBundle.getMessage("angal.newbill.refund.btn"));
+			jButtonAddRefund.setMnemonic(MessageBundle.getMnemonic("angal.newbill.refund.btn.key"));
 			jButtonAddRefund.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			jButtonAddRefund.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonAddRefund.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
+			jButtonAddRefund.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddRefund.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1288,12 +1286,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	private JButton getJButtonAddPayment() {
 		if (jButtonAddPayment == null) {
-			jButtonAddPayment = new JButton();
-			jButtonAddPayment.setText(MessageBundle.getMessage("angal.newbill.payment")); //$NON-NLS-1$
-			jButtonAddPayment.setMnemonic(KeyEvent.VK_Y);
+			jButtonAddPayment = new JButton(MessageBundle.getMessage("angal.newbill.payment.btn"));
+			jButtonAddPayment.setMnemonic(MessageBundle.getMnemonic("angal.newbill.payment.btn.key"));
 			jButtonAddPayment.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			jButtonAddPayment.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonAddPayment.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
+			jButtonAddPayment.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddPayment.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1356,12 +1353,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonRemovePayment() {
 		if (jButtonRemovePayment == null) {
-			jButtonRemovePayment = new JButton();
-			jButtonRemovePayment.setText(MessageBundle.getMessage("angal.newbill.removepayment")); //$NON-NLS-1$
-			//jButtonRemovePayment.setMnemonic(KeyEvent.VK_Y);
+			jButtonRemovePayment = new JButton(MessageBundle.getMessage("angal.newbill.removepayment.btn"));
+			jButtonRemovePayment.setMnemonic(MessageBundle.getMnemonic("angal.newbill.removepayment.btn.key"));
 			jButtonRemovePayment.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			jButtonRemovePayment.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonRemovePayment.setIcon(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
+			jButtonRemovePayment.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
 			jButtonRemovePayment.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1377,12 +1373,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	private JButton getJButtonAddOther() {
 		if (jButtonAddOther == null) {
-			jButtonAddOther = new JButton();
-			jButtonAddOther.setText(MessageBundle.getMessage("angal.newbill.other")); //$NON-NLS-1$
-			jButtonAddOther.setMnemonic(KeyEvent.VK_T);
+			jButtonAddOther = new JButton(MessageBundle.getMessage("angal.newbill.other.btn"));
+			jButtonAddOther.setMnemonic(MessageBundle.getMnemonic("angal.newbill.other.btn.key"));
 			jButtonAddOther.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonAddOther.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonAddOther.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
+			jButtonAddOther.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddOther.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1466,12 +1461,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonAddExam() {
 		if (jButtonAddExam == null) {
-			jButtonAddExam = new JButton();
-			jButtonAddExam.setText(MessageBundle.getMessage("angal.newbill.exam")); //$NON-NLS-1$
-			jButtonAddExam.setMnemonic(KeyEvent.VK_E);
+			jButtonAddExam = new JButton(MessageBundle.getMessage("angal.newbill.exam.btn"));
+			jButtonAddExam.setMnemonic(MessageBundle.getMnemonic("angal.newbill.exam.btn.key"));
 			jButtonAddExam.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonAddExam.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonAddExam.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
+			jButtonAddExam.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddExam.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1501,12 +1495,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonAddOperation() {
 		if (jButtonAddOperation == null) {
-			jButtonAddOperation = new JButton();
-			jButtonAddOperation.setText(MessageBundle.getMessage("angal.newbill.operation")); //$NON-NLS-1$
-			jButtonAddOperation.setMnemonic(KeyEvent.VK_O);
+			jButtonAddOperation = new JButton(MessageBundle.getMessage("angal.newbill.operation.btn"));
+			jButtonAddOperation.setMnemonic(MessageBundle.getMnemonic("angal.newbill.operation.btn.key"));
 			jButtonAddOperation.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonAddOperation.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonAddOperation.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
+			jButtonAddOperation.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddOperation.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1536,12 +1529,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonAddMedical() {
 		if (jButtonAddMedical == null) {
-			jButtonAddMedical = new JButton();
-			jButtonAddMedical.setText(MessageBundle.getMessage("angal.newbill.medical")); //$NON-NLS-1$
-			jButtonAddMedical.setMnemonic(KeyEvent.VK_M);
+			jButtonAddMedical = new JButton(MessageBundle.getMessage("angal.newbill.medical.btn"));
+			jButtonAddMedical.setMnemonic(MessageBundle.getMnemonic("angal.newbill.medical.btn"));
 			jButtonAddMedical.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonAddMedical.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
+			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddMedical.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1588,12 +1580,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	private JButton getJButtonAddCustom() {
 		if (jButtonCustom == null) {
-			jButtonCustom = new JButton();
-			jButtonCustom.setText(MessageBundle.getMessage("angal.newbill.custom")); //$NON-NLS-1$
-			jButtonCustom.setMnemonic(KeyEvent.VK_U);
+			jButtonCustom = new JButton(MessageBundle.getMessage("angal.newbill.custom.btn"));
+			jButtonCustom.setMnemonic(MessageBundle.getMnemonic("angal.newbill.custom.btn.key"));
 			jButtonCustom.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonCustom.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonCustom.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
+			jButtonCustom.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonCustom.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -1648,12 +1639,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	private JButton getJButtonRemoveItem() {
 		if (jButtonRemoveItem == null) {
-			jButtonRemoveItem = new JButton();
-			jButtonRemoveItem.setText(MessageBundle.getMessage("angal.newbill.removeitem")); //$NON-NLS-1$
-			//jButtonRemoveItem.setMnemonic(KeyEvent.VK_R);
+			jButtonRemoveItem = new JButton(MessageBundle.getMessage("angal.newbill.removeitem.btn"));
+			jButtonRemoveItem.setMnemonic(MessageBundle.getMnemonic("angal.newbill.removeitem.btn.key"));
 			jButtonRemoveItem.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonRemoveItem.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonRemoveItem.setIcon(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
+			jButtonRemoveItem.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
 			jButtonRemoveItem.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {

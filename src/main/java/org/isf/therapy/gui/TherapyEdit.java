@@ -34,7 +34,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -413,9 +412,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JButton getRemoveVisitButton() {
 		if (removeVisit == null) {
-			removeVisit = new JButton(MessageBundle.getMessage("angal.therapy.removevisit")); //$NON-NLS-1$
+			removeVisit = new JButton(MessageBundle.getMessage("angal.therapy.removevisit.btn"));
+			removeVisit.setMnemonic(MessageBundle.getMnemonic("angal.therapy.removevisit.btn.key"));
 			removeVisit.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
-			removeVisit.setMnemonic(KeyEvent.VK_W);
 			if (admitted) {
 				removeVisit.setEnabled(false);
 			}
@@ -443,12 +442,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JButton getWorkSheetButton() {
 		if (worksheetButton == null) {
-			worksheetButton = new JButton(MessageBundle.getMessage("angal.menu.worksheet")); //$NON-NLS-1$
+			worksheetButton = new JButton(MessageBundle.getMessage("angal.therapy.worksheet.btn"));
+			worksheetButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.worksheet.btn.key"));
 			worksheetButton.setIcon(new ImageIcon("rsc/icons/worksheet_button.png"));
 //			if (admitted) {
 //				worksheetButton.setEnabled(false);
 //			}
-			worksheetButton.setMnemonic(KeyEvent.VK_V);
 			worksheetButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			worksheetButton.setHorizontalAlignment(SwingConstants.LEFT);
 
@@ -467,9 +466,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	
 	private JButton getAddVisitButton() {
 		if (addVisit == null) {
-			addVisit = new JButton(MessageBundle.getMessage("angal.therapy.addvisit")); //$NON-NLS-1$
+			addVisit = new JButton(MessageBundle.getMessage("angal.therapy.addvisit.btn"));
+			addVisit.setMnemonic(MessageBundle.getMnemonic("angal.therapy.addvisit.btn.key"));
 			addVisit.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
-			addVisit.setMnemonic(KeyEvent.VK_V);
 			addVisit.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			addVisit.setHorizontalAlignment(SwingConstants.LEFT);
 			if (admitted) {
@@ -681,9 +680,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JButton getSaveButton() {
 		if (saveButton == null) {
-			saveButton = new JButton(MessageBundle.getMessage("angal.common.savem")); //$NON-NLS-1$
+			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			saveButton.setIcon(new ImageIcon("rsc/icons/save_button.png"));
-			saveButton.setMnemonic(KeyEvent.VK_S);
 			saveButton.setEnabled(false);
 			saveButton.setMaximumSize(new Dimension(ActionsButtonWidth,
 					AllButtonHeight));
@@ -874,9 +873,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JButton getCheckTherapyButton() {
 		if (checkTherapy == null) {
-			checkTherapy = new JButton(MessageBundle.getMessage("angal.therapy.checkavailability")); //$NON-NLS-1$
+			checkTherapy = new JButton(MessageBundle.getMessage("angal.therapy.checkavailability.btn"));
+			checkTherapy.setMnemonic(MessageBundle.getMnemonic("angal.therapy.checkavailability.btn.key"));
 			checkTherapy.setIcon(new ImageIcon("rsc/icons/flag_button.png"));
-			checkTherapy.setMnemonic(KeyEvent.VK_C);
 			checkTherapy.setMaximumSize(new Dimension(TherapyButtonWidth,
 					AllButtonHeight));
 			checkTherapy.setHorizontalAlignment(SwingConstants.LEFT);
@@ -952,11 +951,10 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	 */
 	private JButton getAddTherapyButton() {
 		if (addTherapy == null) {
-			addTherapy = new JButton(MessageBundle.getMessage("angal.therapy.addtherapy")); //$NON-NLS-1$
+			addTherapy = new JButton(MessageBundle.getMessage("angal.therapy.addtherapy.btn"));
+			addTherapy.setMnemonic(MessageBundle.getMnemonic("angal.therapy.addtherapy.btn.key"));
 			addTherapy.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
-			addTherapy.setMnemonic(KeyEvent.VK_A);
-			addTherapy.setMaximumSize(new Dimension(TherapyButtonWidth,
-					AllButtonHeight));
+			addTherapy.setMaximumSize(new Dimension(TherapyButtonWidth,	AllButtonHeight));
 			addTherapy.setHorizontalAlignment(SwingConstants.LEFT);
 			addTherapy.addActionListener(new ActionListener() {
 
@@ -1001,9 +999,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	 */
 	private JButton getEditTherapyButton() {
 		if (editTherapy == null) {
-			editTherapy = new JButton(MessageBundle.getMessage("angal.therapy.edittherapy")); //$NON-NLS-1$
+			editTherapy = new JButton(MessageBundle.getMessage("angal.therapy.edittherapy.btn"));
+			editTherapy.setMnemonic(MessageBundle.getMnemonic("angal.therapy.edittherapy.btn.key"));
 			editTherapy.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
-			editTherapy.setMnemonic(KeyEvent.VK_E);
 			editTherapy.setMaximumSize(new Dimension(TherapyButtonWidth,
 					AllButtonHeight));
 			editTherapy.setHorizontalAlignment(SwingConstants.LEFT);
@@ -1051,7 +1049,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	
 	private JButton getRemoveTherapyButton() {
 		if (removeTherapy == null) {
-			removeTherapy = new JButton(MessageBundle.getMessage("angal.therapy.removetherapy")); //$NON-NLS-1$
+			removeTherapy = new JButton(MessageBundle.getMessage("angal.therapy.removetherapy.btn"));
+			removeTherapy.setMnemonic(MessageBundle.getMnemonic("angal.therapy.removetherapy.btn.key"));
 			removeTherapy.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
 			removeTherapy.setMaximumSize(new Dimension(TherapyButtonWidth, AllButtonHeight));
 			removeTherapy.setHorizontalAlignment(SwingConstants.LEFT);

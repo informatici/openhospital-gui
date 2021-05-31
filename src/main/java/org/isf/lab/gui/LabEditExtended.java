@@ -645,8 +645,8 @@ public class LabEditExtended extends ModalJFrame {
 	
 	private JButton getPrintButton() {
 		if (printButton == null) {
-			printButton = new JButton(MessageBundle.getMessage("angal.lab.print"));
-			printButton.setMnemonic(KeyEvent.VK_P);
+			printButton = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
+			printButton.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
 			printButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {					

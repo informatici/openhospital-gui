@@ -44,6 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
 
+import org.isf.generaldata.MessageBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,7 +133,8 @@ public class Cropping extends JPanel {
 	}
 
 	public JPanel getUIPanel() {
-		JButton clip = new JButton("save");
+		JButton clip = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		clip.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		clip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clipImage();
