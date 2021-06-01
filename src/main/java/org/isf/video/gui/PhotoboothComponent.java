@@ -140,7 +140,8 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 				resolutionPanel.add(resolutionComboBox, CC.xy(13, 1));
 
 				//---- captureButton ----
-				captureButton.setText("Capture");
+				captureButton.setText(MessageBundle.getMessage("angal.photoboothcomponent.capture.btn"));
+				cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.photoboothcomponent.capture.btn.key"));
 				resolutionPanel.add(captureButton, CC.xy(15, 1));
 			}
 			photoBoothPanel.add(resolutionPanel, CC.xy(3, 5, CC.CENTER, CC.DEFAULT));
@@ -157,7 +158,7 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 				buttonContainer.add(okButton, CC.xy(1, 1));
 
 				//---- cancelButton ----
-				cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+				cancelButton.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
 				cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 				buttonContainer.add(cancelButton, CC.xy(3, 1));
 			}

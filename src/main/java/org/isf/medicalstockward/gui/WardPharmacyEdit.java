@@ -325,9 +325,8 @@ public class WardPharmacyEdit extends JDialog {
 
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
-			jButtonOK = new JButton();
-			jButtonOK.setText(MessageBundle.getMessage("angal.common.savem")); //$NON-NLS-1$
-			jButtonOK.setMnemonic(KeyEvent.VK_O);
+			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			jButtonOK.addActionListener(new ActionListener() {
 
 				

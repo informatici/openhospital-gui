@@ -1529,8 +1529,8 @@ public class OpdEditExtended extends ModalJFrame implements
 	
 	private JButton getJButtonExamination() {
 		if (jButtonExamination == null) {
-			jButtonExamination = new JButton(MessageBundle.getMessage("angal.opd.examination"));
-			jButtonExamination.setMnemonic(KeyEvent.VK_E);
+			jButtonExamination = new JButton(MessageBundle.getMessage("angal.opd.examination.btn"));
+			jButtonExamination.setMnemonic(MessageBundle.getMnemonic("angal.opd.examination.btn.key"));
 			
 			jButtonExamination.addActionListener(e -> {
 				if (opdPatient == null) {

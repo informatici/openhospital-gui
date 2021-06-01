@@ -514,8 +514,8 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 	private JButton getLaunchReportButton() {
 		if (launchReportButton == null) {
-			launchReportButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.launchreport.btn"));
-			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.launchreport.btn.key"));
+			launchReportButton = new JButton(MessageBundle.getMessage("angal.common.launchreport.btn"));
+			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
 			launchReportButton.addActionListener(e -> {
 				if (olderDate == null) {
 					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.nodatatoshow.msg");

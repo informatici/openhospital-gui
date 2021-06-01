@@ -188,9 +188,19 @@ public class DicomGui extends JFrame implements WindowListener {
 
 		jPanelMain = new JPanel();
 		jPanel1 = new JPanel();
-		jButtonLoadDicom = new JButton();
-		jButtonDeleteDicom = new JButton();
-		jButtonCloseDicom = new JButton();
+		jButtonLoadDicom = new JButton(MessageBundle.getMessage("angal.dicom.load.btn"));
+		jButtonLoadDicom.setMnemonic(MessageBundle.getMnemonic("angal.dicom.load.btn.key"));
+		jButtonLoadDicom.setName("jButtonLoadDicom");
+
+		jButtonDeleteDicom = new JButton(MessageBundle.getMessage("angal.dicom.delete.btn"));
+		jButtonDeleteDicom.setMnemonic(MessageBundle.getMnemonic("angal.dicom.delete.btn.key"));
+		jButtonDeleteDicom.setName("jButtonDeleteDicom");
+		jButtonDeleteDicom.setEnabled(false);
+
+		jButtonCloseDicom = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		jButtonCloseDicom.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+		jButtonCloseDicom.setName("jButtonCloseDicom");
+
 		jPanelDetail = new DicomViewGui(null, null);
 		jPanelDetail.setName("jPanelDetail");
 		jPanelButton = new JPanel();
@@ -198,16 +208,6 @@ public class DicomGui extends JFrame implements WindowListener {
 		jPanelButton.add(jButtonDeleteDicom);
 		jPanelMain.setName("mainPanel");
 		jPanel1.setName("jPanel1");
-		jButtonLoadDicom.setText(MessageBundle.getMessage("angal.dicom.load.txt"));
-		jButtonLoadDicom.setName("jButtonLoadDicom");
-
-		jButtonDeleteDicom.setText(MessageBundle.getMessage("angal.dicom.delete.txt"));
-		jButtonDeleteDicom.setName("jButtonDeleteDicom");
-		jButtonDeleteDicom.setEnabled(false);
-
-		jButtonCloseDicom.setText(MessageBundle.getMessage("angal.common.close.btn"));
-		jButtonCloseDicom.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		jButtonCloseDicom.setName("jButtonCloseDicom");
 
 		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
 		jPanel1Layout.setAutoCreateContainerGaps(true);

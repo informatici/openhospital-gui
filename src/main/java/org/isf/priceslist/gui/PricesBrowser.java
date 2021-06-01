@@ -27,7 +27,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -150,8 +149,8 @@ public class PricesBrowser extends ModalJFrame {
 	
 	private JButton getPrintTableButton() {
 		if (jPrintTableButton == null) {
-			jPrintTableButton = new JButton(MessageBundle.getMessage("angal.priceslist.printing"));
-			jPrintTableButton.setMnemonic(KeyEvent.VK_P);
+			jPrintTableButton = new JButton(MessageBundle.getMessage("angal.priceslist.printing.btn"));
+			jPrintTableButton.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.printing.btn.key"));
 			jPrintTableButton.setVisible(true);
 			jPrintTableButton.addActionListener(new ActionListener() {
 
@@ -170,9 +169,8 @@ public class PricesBrowser extends ModalJFrame {
 
 	private JButton getJButtonManage() {
 		if (jButtonManage == null) {
-			jButtonManage = new JButton();
-			jButtonManage.setText(MessageBundle.getMessage("angal.priceslist.managelists")); //$NON-NLS-1$
-			jButtonManage.setMnemonic(KeyEvent.VK_U);
+			jButtonManage = new JButton(MessageBundle.getMessage("angal.priceslist.managelists.btn"));
+			jButtonManage.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.managelists.btn.key"));
 			//jButtonManage.setEnabled(false);
 			jButtonManage.addActionListener(new ActionListener() {
 				
@@ -241,9 +239,8 @@ public class PricesBrowser extends ModalJFrame {
 
 	private JButton getJButtonSave() {
 		if (jButtonSave == null) {
-			jButtonSave = new JButton();
-			jButtonSave.setText(MessageBundle.getMessage("angal.common.savem")); //$NON-NLS-1$
-			jButtonSave.setMnemonic(KeyEvent.VK_S);
+			jButtonSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			jButtonSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			jButtonSave.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {

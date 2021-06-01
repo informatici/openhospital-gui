@@ -137,7 +137,8 @@ public class PatientPhotoPanel extends JPanel {
 			
 			final Box buttonBox1 = Box.createHorizontalBox();
 
-			jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patient.file"));
+			jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.file.btn"));
+			jAttachPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.file.btn.key"));
 			jAttachPhotoButton.setMinimumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.addActionListener(new ActionListener() {
@@ -169,7 +170,8 @@ public class PatientPhotoPanel extends JPanel {
 			final Webcam webcam = Webcam.getDefault();
 
 			if (GeneralData.VIDEOMODULEENABLED && webcam != null) {
-				jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patient.newphoto")); //$NON-NLS-1$
+				jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.newphoto.btn"));
+				jGetPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.newphoto.btn.key"));
 				jGetPhotoButton.setMinimumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 				jGetPhotoButton.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 
@@ -256,7 +258,8 @@ class CroppingDialog extends JDialog {
 
 	private JButton getSaveButton() {
 		if (saveButton == null) {
-			saveButton = new JButton("save");
+			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			saveButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {

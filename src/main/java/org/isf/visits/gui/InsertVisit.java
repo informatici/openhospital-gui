@@ -30,7 +30,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -104,6 +103,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	public InsertVisit(JFrame owner, Ward ward, Patient patient) {
 		super(owner, true);
+		setTitle(MessageBundle.getMessage("angal.visit.addvisit.title"));
 		this.patientSelected = patient;
 		this.ward = ward;
 		initComponents();
@@ -427,9 +427,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
-			jButtonPickPatient = new JButton();
-			jButtonPickPatient.setText(MessageBundle.getMessage("angal.visit.pickpatient")); //$NON-NLS-1$
-			jButtonPickPatient.setMnemonic(KeyEvent.VK_P);
+			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.visit.findpatient.btn"));
+			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.visit.findpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.addActionListener(new ActionListener() {
 

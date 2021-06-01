@@ -493,8 +493,8 @@ public class WardPharmacyRectify extends JDialog {
 
 	private JButton getJButtonNewLot() {
 		if (jButtonNewLot == null) {
-			jButtonNewLot = new JButton();
-			jButtonNewLot.setText(MessageBundle.getMessage("angal.medicalstockward.newlot")); //$NON-NLS-1$
+			jButtonNewLot = new JButton(MessageBundle.getMessage("angal.medicalstockward.newlot.btn"));
+			jButtonNewLot.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.newlot.btn.key"));
 			jButtonNewLot.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -513,8 +513,8 @@ public class WardPharmacyRectify extends JDialog {
 	}
 	private JButton getJButtonChooseLot() {
 		if (jButtonChooseLot == null) {
-			jButtonChooseLot = new JButton();
-			jButtonChooseLot.setText(MessageBundle.getMessage("angal.medicalstockward.chooselot")); //$NON-NLS-1$
+			jButtonChooseLot = new JButton(MessageBundle.getMessage("angal.medicalstockward.chooselot.btn"));
+			jButtonChooseLot.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.chooselot.btn.key"));
 			jButtonChooseLot.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {

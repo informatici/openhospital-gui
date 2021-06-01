@@ -246,8 +246,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JButton getStockCardButton() {
-		stockCardButton = new JButton(MessageBundle.getMessage("angal.medicalstock.stockcard"));
-		stockCardButton.setMnemonic(KeyEvent.VK_K);
+		stockCardButton = new JButton(MessageBundle.getMessage("angal.common.stockcard.btn"));
+		stockCardButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockcard.btn.key"));
 		stockCardButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -279,8 +279,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JButton getStockLedgerButton() {
-		stockLedgerButton = new JButton(MessageBundle.getMessage("angal.medicalstock.stockledger"));
-		stockLedgerButton.setMnemonic(KeyEvent.VK_L);
+		stockLedgerButton = new JButton(MessageBundle.getMessage("angal.common.stockledger.btn"));
+		stockLedgerButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockledger.btn.key"));
 		stockLedgerButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -809,8 +809,8 @@ public class MovStockBrowser extends ModalJFrame {
 	 * @return
 	 */
 	private JButton getFilterButton() {
-		filterButton = new JButton(MessageBundle.getMessage("angal.medicalstock.filter"));
-		filterButton.setMnemonic(KeyEvent.VK_F);
+		filterButton = new JButton(MessageBundle.getMessage("angal.common.filter.btn"));
+		filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.filter.btn.key"));
 		filterButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -993,8 +993,8 @@ public class MovStockBrowser extends ModalJFrame {
 	 * @return
 	 */
 	private JButton getChargeButton() {
-		chargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.charge"));
-		chargeButton.setMnemonic(KeyEvent.VK_C);
+		chargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.charge.btn"));
+		chargeButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.charge.btn.key"));
 		chargeButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1016,8 +1016,8 @@ public class MovStockBrowser extends ModalJFrame {
 	 * @return
 	 */
 	private JButton getDischargeButton() {
-		dischargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.discharge"));
-		dischargeButton.setMnemonic(KeyEvent.VK_D);
+		dischargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.discharge.btn"));
+		dischargeButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.discharge.btn.key"));
 		dischargeButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1034,8 +1034,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JButton getExportToExcelButton() {
-		exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.export"));
-		exportToExcel.setMnemonic(KeyEvent.VK_E);
+		exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
+		exportToExcel.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.exporttoexcel.btn.key"));
 		exportToExcel.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {

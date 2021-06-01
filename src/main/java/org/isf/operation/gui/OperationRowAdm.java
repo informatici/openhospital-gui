@@ -211,14 +211,16 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		panelListData.add(panelActions, BorderLayout.NORTH);
 
-		JButton btnSave = new JButton(MessageBundle.getMessage("angal.operationrowedit.save")); //$NON-NLS-1$
+		JButton btnSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		btnSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				addToGrid();
 			}
 		});
 
-		JButton btnNew = new JButton(MessageBundle.getMessage("angal.operationrowedit.new")); //$NON-NLS-1$
+		JButton btnNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		btnNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		btnNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				clearForm();
@@ -227,7 +229,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		panelActions.add(btnNew);
 		panelActions.add(btnSave);
 
-		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.operationrowlist.delete")); //$NON-NLS-1$
+		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		btnDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = tableData.getSelectedRow();

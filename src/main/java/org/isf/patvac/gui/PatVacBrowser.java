@@ -29,7 +29,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -706,8 +705,8 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private JButton getFilterButton() {
 		if (filterButton == null) {
-			filterButton = new JButton(MessageBundle.getMessage("angal.patvac.search"));
-			filterButton.setMnemonic(KeyEvent.VK_S);
+			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
+			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
 			filterButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					

@@ -170,15 +170,17 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		add(panelButtons, BorderLayout.SOUTH);
 
-		JButton UpdateButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.update")); //$NON-NLS-1$
-		UpdateButton.addMouseListener(new MouseAdapter() {
+		JButton updateButton = new JButton(MessageBundle.getMessage("angal.common.update.btn"));
+		updateButton.setMnemonic(MessageBundle.getMnemonic("angal.common.update.btn.key"));
+		updateButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				updateButtonMouseClicked(e);
 			}
 		});
 
-		JButton addButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.add")); //$NON-NLS-1$
+		JButton addButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.add.btn"));
+		addButton.setMnemonic(MessageBundle.getMnemonic("angal.operationrowlist.add.btn.key"));
 		addButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
@@ -186,9 +188,10 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 			}
 		});
 		panelButtons.add(addButton);
-		panelButtons.add(UpdateButton);
+		panelButtons.add(updateButton);
 
-		JButton deleteButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.delete")); //$NON-NLS-1$
+		JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		deleteButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -197,14 +200,15 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		});
 		panelButtons.add(deleteButton);
 
-		JButton closeButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.close")); //$NON-NLS-1$
-		closeButton.addMouseListener(new MouseAdapter() {
+		JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+		cancelButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				closeButtonMouseClicked(evt);
 			}
 		});
-		panelButtons.add(closeButton);
+		panelButtons.add(cancelButton);
 
 		/* *** getting data *** */
 		if (myOpd != null) {

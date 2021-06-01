@@ -391,9 +391,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 	private JButton getJButtonSelect() {
 		if (jButtonSelect == null) {
-			jButtonSelect = new JButton();
-			jButtonSelect.setMnemonic(KeyEvent.VK_S);
-			jButtonSelect.setText(MessageBundle.getMessage("angal.patient.select"));
+			jButtonSelect = new JButton(MessageBundle.getMessage("angal.common.select.btn"));
+			jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
 			jButtonSelect.addActionListener(arg0 -> {
 
 				if (patient != null) {

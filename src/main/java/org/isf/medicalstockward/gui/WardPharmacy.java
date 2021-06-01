@@ -300,8 +300,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JButton getJButtonStockCard() {
 		if (jButtonStockCard == null) {
-			jButtonStockCard = new JButton(MessageBundle.getMessage("angal.medicalstockward.stockcard"));
-			jButtonStockCard.setMnemonic(KeyEvent.VK_K);
+			jButtonStockCard = new JButton(MessageBundle.getMessage("angal.common.stockcard.btn"));
+			jButtonStockCard.setMnemonic(MessageBundle.getMnemonic("angal.common.stockcard.btn.key"));
 			jButtonStockCard.setVisible(false);
 			jButtonStockCard.addActionListener(new ActionListener() {
 
@@ -342,8 +342,8 @@ public class WardPharmacy extends ModalJFrame implements
 	
 	private JButton getJButtonStockLedger() {
 		if (jButtonStockLedger == null) {
-			jButtonStockLedger = new JButton(MessageBundle.getMessage("angal.medicalstockward.stockledger"));
-			jButtonStockLedger.setMnemonic(KeyEvent.VK_L);
+			jButtonStockLedger = new JButton(MessageBundle.getMessage("angal.common.stockledger.btn"));
+			jButtonStockLedger.setMnemonic(MessageBundle.getMnemonic("angal.common.stockledger.btn.key"));
 			jButtonStockLedger.setVisible(false);
 			jButtonStockLedger.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent event){
@@ -713,8 +713,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JButton getFilterButton() {
 		if (filterButton == null) {
-			filterButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.filter")); //$NON-NLS-1$
-			filterButton.setMnemonic(KeyEvent.VK_F);
+			filterButton = new JButton(MessageBundle.getMessage("angal.common.filter.btn"));
+			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.filter.btn.key"));
 			filterButton.setAlignmentX(Box.CENTER_ALIGNMENT);
 			filterButton.addActionListener(new ActionListener() {
 
@@ -741,8 +741,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JButton getResetButton() {
 		if (resetButton == null) {
-			resetButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.reset")); //$NON-NLS-1$
-			resetButton.setMnemonic(KeyEvent.VK_R);
+			resetButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.reset.btn"));
+			resetButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.reset.btn.key"));
 			resetButton.setAlignmentX(Box.CENTER_ALIGNMENT);
 			resetButton.addActionListener(new ActionListener() {
 
@@ -1479,7 +1479,8 @@ public class WardPharmacy extends ModalJFrame implements
 				return MessageBundle.getMessage("angal.medicalstockward.pieces"); //$NON-NLS-1$
 			}
 			if (c == 3) {
-				final JButton button = new JButton(MessageBundle.getMessage("angal.medicalstockward.rectify"));
+				final JButton button = new JButton(MessageBundle.getMessage("angal.medicalstockward.rectify.btn"));
+				button.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.rectify.btn.key"));
 				button.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent arg0) {
@@ -1513,8 +1514,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JButton getJRectifyButton() {
 		if (jRectifyButton == null) {
-			jRectifyButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.rectify")); //$NON-NLS-1$
-			jRectifyButton.setMnemonic(KeyEvent.VK_R);
+			jRectifyButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.rectify.btn"));
+			jRectifyButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.rectify.btn.key"));
 			jRectifyButton.setBackground(Color.PINK);
 			jRectifyButton.setVisible(false);
 			jRectifyButton.addActionListener(new ActionListener() {
@@ -1543,8 +1544,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JButton getPrintTableButton() {
 		if (jPrintTableButton == null) {
-			jPrintTableButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.report")); //$NON-NLS-1$
-			jPrintTableButton.setMnemonic(KeyEvent.VK_P);
+			jPrintTableButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.report.btn"));
+			jPrintTableButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.report.btn.key"));
 			jPrintTableButton.setVisible(false);
 			jPrintTableButton.addActionListener(new ActionListener() {
 
@@ -1611,8 +1612,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JButton getExportToExcelButton() {
 		if (jExportToExcelButton == null) {
-			jExportToExcelButton = new JButton("Excel"); //$NON-NLS-1$
-			jExportToExcelButton.setMnemonic(KeyEvent.VK_E);
+			jExportToExcelButton = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
+			jExportToExcelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
 			jExportToExcelButton.setVisible(false);
 			jExportToExcelButton.addActionListener(new ActionListener() {
 
