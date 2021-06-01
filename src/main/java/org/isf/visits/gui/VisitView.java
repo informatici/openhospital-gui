@@ -31,7 +31,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -127,7 +126,7 @@ public class VisitView extends ModalJFrame {
 	private JButton todayButton;
 	private JButton tomorrowButton;
 	private JPanel dateViPanel;
-	private JButton dateAdm;
+	private JButton gotoDateButton;
 
 	private JTable jTableFirst;
 
@@ -436,9 +435,9 @@ public class VisitView extends ModalJFrame {
 
 			dateViPanel = new JPanel();
 
-			dateAdm = new JButton(MessageBundle.getMessage("angal.visit.gotodate.btn"));
-			dateAdm.setMnemonic(MessageBundle.getMnemonic("angal.visit.gotodate.btn.key"));
-			dateAdm.addActionListener(new ActionListener() {
+			gotoDateButton = new JButton(MessageBundle.getMessage("angal.visit.gotodate.btn"));
+			gotoDateButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.gotodate.btn.key"));
+			gotoDateButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					if (visitDateChooser.getDate() != null) {
@@ -450,7 +449,7 @@ public class VisitView extends ModalJFrame {
 				}
 			});
 
-			dateViPanel.add(dateAdm);
+			dateViPanel.add(gotoDateButton);
 			dateViPanel.add(getVisitDateChooser());
 
 		}

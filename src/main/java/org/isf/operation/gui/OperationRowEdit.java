@@ -131,7 +131,7 @@ public class OperationRowEdit extends JPanel {
 	
 	private OperationRow opeRow;
 	private JTextField DateTextField;
-	private JButton btnCancelButton;
+	private JButton btnCancel;
 	private JDialog myParent;
 	OperationBrowserManager ope ;
 	OperationRowBrowserManager opeManageRow;
@@ -313,25 +313,25 @@ public class OperationRowEdit extends JPanel {
 		add(panelButtons, BorderLayout.SOUTH);
 		panelButtons.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
-		JButton btnSaveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
-		btnSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-		btnSaveButton.addMouseListener(new MouseAdapter() {
+		JButton btnSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		btnSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
+		btnSave.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				saveButtonMouseClicked(evt) ;
 			}
 		});
-		panelButtons.add(btnSaveButton);
+		panelButtons.add(btnSave);
 
-		btnCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
-		btnCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-		btnCancelButton.addMouseListener(new MouseAdapter() {
+		btnCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		btnCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+		btnCancel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				cancelButtonMouseClicked(evt);
 			}
 		});
-		panelButtons.add(btnCancelButton);
+		panelButtons.add(btnCancel);
 	}
 
 	public OperationRow getOpeRow() {

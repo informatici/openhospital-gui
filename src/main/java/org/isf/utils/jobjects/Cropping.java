@@ -133,15 +133,15 @@ public class Cropping extends JPanel {
 	}
 
 	public JPanel getUIPanel() {
-		JButton clip = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
-		clip.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-		clip.addActionListener(new ActionListener() {
+		JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
+		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clipImage();
 			}
 		});
 		JPanel panel = new JPanel();
-		panel.add(clip);
+		panel.add(saveButton);
 		return panel;
 	}
 
