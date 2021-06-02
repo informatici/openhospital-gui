@@ -268,7 +268,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 				if (!stockCardDialog.isCancel()) {
 					if (medical == null) {
-						MessageDialog.error(MovStockBrowser.this, "angal.medicalstock.chooseamedical");
+						MessageDialog.error(MovStockBrowser.this, "angal.medicalstock.chooseamedical.msg");
 						return;
 					}
 					new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom, dateTo, medical, null, toExcel);
@@ -824,7 +824,7 @@ public class MovStockBrowser extends ModalJFrame {
 				GregorianCalendar movTo = movDateTo.getCompleteDate();
 				if ((movFrom == null) || (movTo == null)) {
 					if (!((movFrom == null) && (movTo == null))) {
-						MessageDialog.error(null, "angal.medicalstock.chooseavalidmovementdate");
+						MessageDialog.error(null, "angal.medicalstock.chooseavalidmovementdate.msg");
 						dateOk = false;
 					}
 				} else if (movFrom.compareTo(movTo) > 0) {
@@ -850,7 +850,7 @@ public class MovStockBrowser extends ModalJFrame {
 				GregorianCalendar dueTo = lotDueTo.getCompleteDate();
 				if ((dueFrom == null) || (dueTo == null)) {
 					if (!((dueFrom == null) && (dueTo == null))) {
-						MessageDialog.error(null, "angal.medicalstock.chooseavalidduedate");
+						MessageDialog.error(null, "angal.medicalstock.chooseavalidduedate.msg");
 						dateOk = false;
 					}
 				} else if (dueFrom.compareTo(dueTo) > 0) {
@@ -952,11 +952,11 @@ public class MovStockBrowser extends ModalJFrame {
 						query.setData(s, true);
 					} catch (IOException err) {
 						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.sql.problemsoccurredwithserverconnection"));
+								MessageBundle.getMessage("angal.sql.problemsoccurredwithserverconnection.msg"));
 						LOGGER.error(err.getMessage(), err);
 					} catch (SQLException err) {
 						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.medicalstock.problemsoccurredwithsqlistruction"));
+								MessageBundle.getMessage("angal.sql.problemsoccurredwiththesqlinstruction.msg"));
 						LOGGER.error(err.getMessage(), err)
 					}
 				}

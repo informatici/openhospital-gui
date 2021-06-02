@@ -275,13 +275,13 @@ public class PatientInsert extends JDialog implements ActionListener{
 
 					if (insert) {
 						if (jFirstNameTextField.getText().equals("")) {
-							MessageDialog.error(null, "angal.patient.insertfirstname");
+							MessageDialog.error(null, "angal.patient.insertfirstname.msg");
 						} else {
 							if (jSecondNameTextField.getText().equals("")) {
-								MessageDialog.error(null, "angal.patient.insertsecondname");
+								MessageDialog.error(null, "angal.patient.insertsecondname.msg");
 							} else {
 								if (age == -1) {
-									MessageDialog.error(null, "angal.patient.insertvalidage");
+									MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 								} else {
 									bdate = bdate.minusYears(age);
 									String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
@@ -458,11 +458,11 @@ public class PatientInsert extends JDialog implements ActionListener{
 					age = Integer.parseInt(ageField.getText());
 					if ((age < 0)||(age > 200)) {
 						ageField.setText("0");
-						MessageDialog.error(null, "angal.patient.insertvalidage");
+						MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 					}
 				} catch (NumberFormatException ex) {
 					//ageField.setText("0");
-					MessageDialog.error(null, "angal.patient.insertvalidage");
+					MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 				}
 			}
 			

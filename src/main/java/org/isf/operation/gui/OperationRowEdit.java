@@ -162,8 +162,7 @@ public class OperationRowEdit extends JPanel {
 		gbl_panelHeader.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panelHeader.setLayout(gbl_panelHeader);
 		
-		titleLabel = new JLabel(MessageBundle.getMessage("angal.operationrowlist.add") + "/" +  //$NON-NLS-1$ //$NON-NLS-2$
-                        MessageBundle.getMessage("angal.operationrowlist.update")); //$NON-NLS-1$
+		titleLabel = new JLabel(MessageBundle.getMessage("angal.operationrowlist.addupdate"));
 		titleLabel.setFont(new Font("Tahoma", Font.PLAIN, 15)); //$NON-NLS-1$
 		GridBagConstraints gbc_titleLabel = new GridBagConstraints();
 		gbc_titleLabel.anchor = GridBagConstraints.NORTH;

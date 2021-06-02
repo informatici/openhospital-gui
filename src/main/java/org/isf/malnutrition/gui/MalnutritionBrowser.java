@@ -295,7 +295,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 	private String getConvertedString(GregorianCalendar time) {
 		if (time == null)
-			return MessageBundle.getMessage("angal.malnutrition.nodate");
+			return MessageBundle.getMessage("angal.malnutrition.nodate.msg");
 		return TimeTools.formatDateTime(time.getTime(), "dd/MM/yyyy");
 	}
 }

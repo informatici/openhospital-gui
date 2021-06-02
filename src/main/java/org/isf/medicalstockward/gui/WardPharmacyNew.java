@@ -342,7 +342,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private boolean checkQuantityInLot(MedicalWard medWard, double qty) {
 		double wardQty = medWard.getQty();
 		if (qty > wardQty) {
-			MessageDialog.error(WardPharmacyNew.this, "angal.medicalstock.movementquantityisgreaterthanthequantityof");
+			MessageDialog.error(WardPharmacyNew.this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.msg");
 			return false;
 		} 
 		return true;
@@ -626,7 +626,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						if (selectedObj instanceof Ward){
 							wardTo = (Ward) selectedObj;
 						} else {
-							MessageDialog.error(null, "angal.medicalstock.multipledischarging.pleaseselectaward");
+							MessageDialog.error(null, "angal.medicalstock.multipledischarging.pleaseselectaward.msg");
 							return;
 						}
                         description = wardTo.getDescription();

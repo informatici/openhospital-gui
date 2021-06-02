@@ -274,22 +274,22 @@ public class OperationEdit extends JDialog {
 						if (insert) {
 							String key = codeTextField.getText().trim();
 							if (key.equals("")) {
-								MessageDialog.error(null, "angal.operation.pleaseinsertacode");
+								MessageDialog.error(null, "angal.common.pleaseinsertacode.msg");
 								return;
 							}
 							if (key.length() > 10) {
-								MessageDialog.error(null, "angal.common.codetoolongmaxchars");
+								MessageDialog.error(null, "angal.common.thecodeistoolongmax10chars.msg");
 								return;
 							}
 							OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 
 							if (manager.isCodePresent(key)) {
-								MessageDialog.error(null, "angal.common.codealreadyinuse");
+								MessageDialog.error(null, "angal.common.thecodeisalreadyinuse.msg");
 								return;
 							}
 						}
 						if (descriptionTextField.getText().equals("")) {
-							MessageDialog.error(null, "angal.operation.pleaseinsertavaliddescription");
+							MessageDialog.error(null, "angal.common.pleaseinsertavaliddescription.msg");
 							return;
 						}
 						OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);

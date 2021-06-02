@@ -120,7 +120,7 @@ public class JTextFieldSearchModel extends JPanel {
 			
 			int ok = JOptionPane.showConfirmDialog(owner,
 					panel, 
-					MessageBundle.getMessage("angal.medicalstock.chooseamedical"), 
+					MessageBundle.getMessage("angal.medicalstock.chooseamedical.msg"),
 					JOptionPane.YES_NO_OPTION);
 			
 			if (ok == JOptionPane.OK_OPTION) {
