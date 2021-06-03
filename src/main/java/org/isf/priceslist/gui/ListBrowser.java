@@ -73,10 +73,10 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 	private JButton jButtonClose;
 	private JButton jButtonDelete;
 	private String[] columnNames = {
-			MessageBundle.getMessage("angal.priceslist.idm"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.priceslist.name"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.common.description"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.priceslist.currency") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.priceslist.currency.col").toUpperCase()
 	};
 	private int[] columnWidth = {100, 100, 200, 100};
 	private boolean[] columnResizable = {false, false, true, false};

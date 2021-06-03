@@ -65,13 +65,14 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	private JButton jButtonDelete;
 	private JButton jButtonClose;
 	private String[] columnNames = {
-			MessageBundle.getMessage("angal.common.code"), 
-			MessageBundle.getMessage("angal.common.description"), 
-			MessageBundle.getMessage("angal.pricesothers.opdm"), 
-			MessageBundle.getMessage("angal.pricesothers.ipdm"), 
-			MessageBundle.getMessage("angal.pricesothers.daily"),
-			MessageBundle.getMessage("angal.pricesothers.discharge"),
-			MessageBundle.getMessage("angal.pricesothers.undefined")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.pricesothers.opd.col").toUpperCase(),
+			MessageBundle.getMessage("angal.pricesothers.ipd.col").toUpperCase(),
+			MessageBundle.getMessage("angal.pricesothers.daily.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.discharge.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.undefined.txt").toUpperCase()
+	};
 	private int[] columnWidth = {100, 100, 50, 50, 50, 100, 100};
 	private boolean[] columnResizable = {false, true, false, false, false, false, false};
 	

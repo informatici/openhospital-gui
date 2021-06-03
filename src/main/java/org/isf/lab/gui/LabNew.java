@@ -170,7 +170,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	
 	private Object[] examClasses = {Exam.class, String.class};
 	private String[] examColumnNames = {
-            MessageBundle.getMessage("angal.commmon.exam.txt").toUpperCase(),
+            MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
             MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
         };
 	private int[] examColumnWidth = {200, 150};

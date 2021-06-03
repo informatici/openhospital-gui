@@ -177,34 +177,34 @@ public class WardPharmacy extends ModalJFrame implements
 	private MovementWard movSelected;
 	private boolean added = false;
 	private String[] columnsIncomes = {
-			MessageBundle.getMessage("angal.common.date"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.common.from"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstock.lotduedate") //$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.from.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.medical.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.units.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.lotnumber.col").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.lotduedate.col").toUpperCase()
 	};
 	private boolean[] columnsResizableIncomes = { true, true, true, true, true, true, true };
 	private int[] columnWidthIncomes = { 80, 50, 50, 50, 50, 50, 50 };
 	private String[] columnsOutcomes = {
-			MessageBundle.getMessage("angal.common.date"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.purpose"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.age"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.sex"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.weight"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units"),
-			MessageBundle.getMessage("angal.medicalstockward.lotnumberabb"),
-			MessageBundle.getMessage("angal.medicalstock.lotduedate")//$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.purpose.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.sex.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.weight.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.medical.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.units.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.lotnumber.col").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.lotduedate.col").toUpperCase()
 	};
 	private boolean[] columnsResizableOutcomes = { false, true, false, false, false, true, false, false, true };
 	private int[] columnWidthOutcomes = { 150, 150, 50, 50, 50, 170, 50, 50, 50 };
 	private String[] columnsDrugs = {
-			MessageBundle.getMessage("angal.medicalstockward.medical"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.common.quantity"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.medicalstockward.units"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.wardpharmacy.medical.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.units.txt").toUpperCase(),
 			"" //$NON-NLS-1$
 	};
 	private boolean[] columnsResizableDrugs = { true, true, true, true };

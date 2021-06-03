@@ -1416,7 +1416,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							String price = (String)JOptionPane.showInputDialog(
 				                    PatientBillEdit.this,
 				                    MessageBundle.getMessage("angal.newbill.howmuchisit"), //$NON-NLS-1$
-				                    MessageBundle.getMessage("angal.newbill.undefined"), //$NON-NLS-1$
+				                    MessageBundle.getMessage("angal.common.undefined.txt"), //$NON-NLS-1$
 				                    JOptionPane.PLAIN_MESSAGE,
 				                    icon,
 				                    null,
