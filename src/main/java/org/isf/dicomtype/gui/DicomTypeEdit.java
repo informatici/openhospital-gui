@@ -302,7 +302,7 @@ public class DicomTypeEdit extends JDialog{
 	 */
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel(MessageBundle.getMessage("angal.dicomtype.codemaxchars"));
+			jCodeLabel = new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 3));
 		}
 		return jCodeLabel;
 	}

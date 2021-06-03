@@ -307,7 +307,7 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
 			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.admtype.codemaxchars"));
+			jCodeLabel.setText(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 10));
 		}
 		return jCodeLabel;
 	}

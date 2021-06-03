@@ -928,65 +928,6 @@ public class MovStockBrowser extends ModalJFrame {
 		return closeButton;
 	}
 
-//	/**
-//	 * This method creates the button that deletes all the records in
-//	 * medicaldsrstockmov and lot it is for training pourposes only to be
-//	 * deleted in production environment
-//	 *
-//	 * @return
-//	 */
-	/*private JButton getdeleteAllButton() {
-		deleteAllButton = new JButton(MessageBundle.getMessage("angal.medicalstock.deleteall"));
-		deleteAllButton.setMnemonic(KeyEvent.VK_D);
-		deleteAllButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int n = JOptionPane.showConfirmDialog(null,
-						MessageBundle.getMessage("angal.medicalstock.reallywanttodeleteallstockmovementsandlot"),
-						MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-				if ((n == JOptionPane.YES_OPTION)) {
-					try {
-						DbQuery query = new DbQuery();
-						String s = "delete from MEDICALDSRSTOCKMOV";
-						query.setData(s, true);
-						s = "delete from MEDICALDSRLOT;";
-						query.setData(s, true);
-					} catch (IOException err) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.sql.problemsoccurredwithserverconnection.msg"));
-						LOGGER.error(err.getMessage(), err);
-					} catch (SQLException err) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.sql.problemsoccurredwiththesqlinstruction.msg"));
-						LOGGER.error(err.getMessage(), err)
-					}
-				}
-				filterButton.doClick();
-			}
-		});
-		return deleteAllButton;
-	}*/
-
-	//	/**
-	//	 * This method creates the button that load the insert movement mask
-	//	 *
-	//	 * @return
-	//	 */
-	//	private JButton getInsertButton() {
-	//		insertButton = new JButton(MessageBundle.getMessage("angal.medicalstock.insert"));
-	//		insertButton.setMnemonic(KeyEvent.VK_I);
-	//		insertButton.addActionListener(new ActionListener() {
-	//
-	//			public void actionPerformed(ActionEvent e) {
-	//				new MovStockInserting(myFrame);
-	//				model = new MovBrowserModel();
-	//				//model.fireTableDataChanged();
-	//				movTable.updateUI();
-	//				if (jCheckBoxKeepFilter.isSelected()) filterButton.doClick();
-	//			}
-	//		});
-	//		return insertButton;
-	//	}
-
 	/**
 	 * This method creates the button that load the charging movement mask
 	 *
