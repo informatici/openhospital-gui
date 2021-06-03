@@ -166,14 +166,16 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private JButton jButtonToday;
 	
-	private String[] columnNames = {MessageBundle.getMessage("angal.billbrowser.id"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.common.date"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.patientID"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.patient"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.amount"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.lastpayment"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.status"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.balance")};  //$NON-NLS-1$
+	private String[] columnNames = {
+			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.billbrowser.patientID.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.patient.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.amount.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.billbrowser.lastpayment.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.status.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.billbrowser.balance.col").toUpperCase()
+	};
 	private int[] columnWidths = {50, 150, 50, 50, 100, 150, 50, 100};
 	private int[] maxWidth = {150, 150, 150, 200, 100, 150, 50, 100};
 	private boolean[] columnsResizable = {false, false, false, true, false, false, false, false};
@@ -271,7 +273,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JLabel getJLabelTo() {
 		if (jLabelTo == null) {
 			jLabelTo = new JLabel();
-			jLabelTo.setText(MessageBundle.getMessage("angal.common.to")); //$NON-NLS-1$
+			jLabelTo.setText(MessageBundle.getMessage("angal.common.to"));
 		}
 		return jLabelTo;
 	}

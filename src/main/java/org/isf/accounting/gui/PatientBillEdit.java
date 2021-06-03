@@ -284,7 +284,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private GregorianCalendar today = new GregorianCalendar();
 	
 	private Object[] billClasses = {Price.class, Integer.class, Double.class};
-	private String[] billColumnNames = {MessageBundle.getMessage("angal.newbill.item"), MessageBundle.getMessage("angal.newbill.qty"), MessageBundle.getMessage("angal.newbill.amount")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private String[] billColumnNames = {
+			MessageBundle.getMessage("angal.newbill.item.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.amount.txt").toUpperCase()
+	};
 	private Object[] paymentClasses = {Date.class, Double.class};
 	
 	private String currencyCod;

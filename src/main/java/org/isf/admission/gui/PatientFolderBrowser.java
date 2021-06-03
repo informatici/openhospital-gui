@@ -213,7 +213,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.admission.diagnosisin.col").toUpperCase(),
 			MessageBundle.getMessage("angal.admission.diagnosisout.col").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.status.col").toUpperCase()
+			MessageBundle.getMessage("angal.common.status.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {120, 150, 200, 200, 120};
 	
