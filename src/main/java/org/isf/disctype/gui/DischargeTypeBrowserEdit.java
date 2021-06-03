@@ -302,8 +302,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
 	 */
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.common.codemaxchars"));
+			jCodeLabel = new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 10));
 		}
 		return jCodeLabel;
 	}

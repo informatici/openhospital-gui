@@ -1714,7 +1714,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		jCalendarDate.setDate(thisBill.getDate().getTime());
 		jTextFieldPatient.setText(patientSelected.getName());
 		jTextFieldPatient.setEditable(false);
-		jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.changepatient")); //$NON-NLS-1$
+		jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.changepatient.btn"));
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.changethepatientassociatedwiththisbill")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
 		jTableBill.updateUI();

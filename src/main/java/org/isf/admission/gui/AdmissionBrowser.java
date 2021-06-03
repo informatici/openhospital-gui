@@ -2061,7 +2061,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		    }
 		    if ((beginDate != null) && (endDate == null)) {
 			    if (currentRowDate.before(beginDate)) {
-				    errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.commom.error.title"),
+				    errors.add(new OHExceptionMessage(MessageBundle.getMessage("angal.common.error.title"),
 						    MessageBundle.formatMessage("angal.admission.theoperationdatenewerthan.fmt.msg",
 								    currentDateFormat.format(beginDate)),
 						    OHSeverityLevel.ERROR));

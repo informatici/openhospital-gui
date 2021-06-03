@@ -583,7 +583,7 @@ public class LabEdit extends ModalJFrame {
 						patId=((Patient)(patientComboBox.getSelectedItem())).getCode();
 					String sex=sexTextField.getText().toUpperCase();
 					if (!(sex.equals("M") || sex.equals("F"))) {
-						MessageDialog.error(null, "angal.lab.pleaseinsertmformaleorfforfemale");
+						MessageDialog.error(null, "angal.lab.pleaseinsertmformaleorfforfemale.msg");
 						return;
 					}
 						
@@ -608,14 +608,14 @@ public class LabEdit extends ModalJFrame {
 					try {
 						tmpAge=Integer.parseInt(ageTextField.getText());
 					} catch (Exception ex) {
-						MessageDialog.error(LabEdit.this, "angal.lab.insertvalidage");
+						MessageDialog.error(LabEdit.this, "angal.lab.insertvalidage.msg");
 					}
 					lab.setSex(sexTextField.getText().toUpperCase());
 					
 					if (examSelected.getProcedure() == 1)
 						lab.setResult(examRowComboBox.getSelectedItem().toString());
 					else if (examSelected.getProcedure() == 2) {
-						lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults"));
+						lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults.txt"));
 						for (int i = 0; i < resultPanel.getComponentCount(); i++) {
 							if (((SubPanel) resultPanel.getComponent(i))
 									.getSelectedResult().equalsIgnoreCase("P")) {

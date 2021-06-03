@@ -697,7 +697,7 @@ public class LabEditExtended extends ModalJFrame {
 
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (examComboBox.getSelectedIndex() == 0) {
-						MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseselectanexam");
+						MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseselectanexam.msg");
 						return;
 					}
 					String matSelected=(String)matComboBox.getSelectedItem();
@@ -712,7 +712,7 @@ public class LabEditExtended extends ModalJFrame {
 					try {
 						gregDate.setTime(examDateFieldCal.getDate());
 					} catch (Exception e1) {
-						MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseinsertavalidexamdate");
+						MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseinsertavalidexamdate.msg");
 						return;
 					}
 					if (examSelected.getProcedure() == 3 && examTextField.getText().isEmpty()) {
@@ -735,7 +735,7 @@ public class LabEditExtended extends ModalJFrame {
 						lab.setResult(examRowComboBox.getSelectedItem()
 								.toString());
 					else if (examSelected.getProcedure() == 2) {
-						lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults"));
+						lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults.txt"));
 						for (int i = 0; i < resultPanel.getComponentCount(); i++) {
 							if (((SubPanel) resultPanel.getComponent(i))
 									.getSelectedResult().equalsIgnoreCase("P")) {

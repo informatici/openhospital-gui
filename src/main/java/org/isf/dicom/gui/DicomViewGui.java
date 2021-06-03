@@ -501,7 +501,8 @@ public class DicomViewGui extends JPanel {
 				tmpImg = reader.read(0);//, param);
 			} catch (DicomCodingException dce) {
 				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
-						MessageBundle.getMessage("angal.dicom.load.err") + " : " + dett.getFileName(), OHSeverityLevel.ERROR));
+						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
+						OHSeverityLevel.ERROR));
 			}
 
 			imageInputStream.close();
@@ -529,7 +530,8 @@ public class DicomViewGui extends JPanel {
 				tmpImg = reader.read(0, param);
 			} catch (DicomCodingException dce) {
 				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
-						MessageBundle.getMessage("angal.dicom.load.err") + " : " + dett.getFileName(), OHSeverityLevel.ERROR));
+						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
+						OHSeverityLevel.ERROR));
 			}
 
 			imageInputStream.close();

@@ -297,8 +297,7 @@ public class ExamTypeEdit extends JDialog {
 	 */
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.exatype.codemaxchars"));
+			jCodeLabel = new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt, 2"));
 		}
 		return jCodeLabel;
 	}

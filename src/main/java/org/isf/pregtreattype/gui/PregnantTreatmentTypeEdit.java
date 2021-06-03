@@ -300,8 +300,7 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 	 */
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.preagtreattype.codemaxlength"));
+			jCodeLabel = new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 10));
 		}
 		return jCodeLabel;
 	}
@@ -327,8 +326,7 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescriptionLabel = new JLabel();
-			jDescriptionLabel.setText(MessageBundle.getMessage("angal.preagtreattype.description2"));
+			jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			jDescriptionLabelPanel = new JPanel();
 			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}

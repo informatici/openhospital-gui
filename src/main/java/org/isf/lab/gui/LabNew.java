@@ -303,7 +303,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					try {
 						newDate.setTime(jCalendarDate.getDate());
 					} catch (Exception e1) {
-						MessageDialog.error(LabNew.this, "angal.lab.pleaseinsertavalidexamdate");
+						MessageDialog.error(LabNew.this, "angal.lab.pleaseinsertavalidexamdate.msg");
 						return;
 					}
 					RememberDates.setLastLabExamDate(newDate);
@@ -604,7 +604,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					//INTERFACE
 					jTextFieldPatient.setText(""); //$NON-NLS-1$
 					jTextFieldPatient.setEditable(false);
-					jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.pickpatient"));
+					jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.findpatient.btn"));
 					jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.associateapatientwiththisexam")); //$NON-NLS-1$
 					jButtonTrashPatient.setEnabled(false);
 				}

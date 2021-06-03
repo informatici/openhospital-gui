@@ -430,11 +430,11 @@ public class PatientInsertExtended extends JDialog {
 					String secondName = jSecondNameTextField.getText().trim();
 					
 					if (firstName.equals("")) {
-						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertfirstname");
+						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertfirstname.msg");
 						return;
 					}
 					if (secondName.equals("")) {
-						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertsecondname");
+						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertsecondname.msg");
 						return;
 					}
 					if (!checkAge()) {
@@ -629,7 +629,7 @@ public class PatientInsertExtended extends JDialog {
 				bdate = bdate.minusYears(years).minusMonths(months).minusDays(days);
 
 			} catch (NumberFormatException ex1) {
-				MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertvalidage");
+				MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertvalidage.msg");
 				return false;
 			}
 			if (years < 0 || years > 200)

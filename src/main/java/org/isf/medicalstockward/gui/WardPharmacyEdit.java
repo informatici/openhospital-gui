@@ -526,7 +526,7 @@ public class WardPharmacyEdit extends JDialog {
 					try {
 						movSelectedWeight = Float.parseFloat(jWeightTextField.getText());
 						if ((movSelectedWeight < 0)) {
-							MessageDialog.error(null, "angal.medicalstockward.insertvalidweight");
+							MessageDialog.error(null, "angal.medicalstockward.insertavalidweight");
 							movSelectedWeight = 0;
 						}
 					} catch (NumberFormatException ex) {

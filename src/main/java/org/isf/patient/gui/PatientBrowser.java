@@ -48,12 +48,14 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class PatientBrowser extends ModalJFrame implements PatientListener{
 	
 	private static final long serialVersionUID = 1L;
-	private String[] pColumns = { MessageBundle.getMessage("angal.patient.namem"),
-			MessageBundle.getMessage("angal.patient.agem"),
-			MessageBundle.getMessage("angal.patient.sexm"),
-			MessageBundle.getMessage("angal.patient.addressm"),
-			MessageBundle.getMessage("angal.patient.citym"),
-			MessageBundle.getMessage("angal.patient.telephonem") };
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.sex.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.address.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.city.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.telephone.txt").toUpperCase()
+	};
 	private JPanel jButtonPanel = null;
 	private JPanel jContainPanel = null;
 	private JButton jNewButton = null;
