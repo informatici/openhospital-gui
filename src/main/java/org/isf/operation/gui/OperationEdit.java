@@ -278,7 +278,7 @@ public class OperationEdit extends JDialog {
 								return;
 							}
 							if (key.length() > 10) {
-								MessageDialog.error(null, "angal.common.thecodeistoolongmax10chars.msg");
+								MessageDialog.error(null, "angal.common.thecodeistoolongmaxchars.fmt.msg", 10);
 								return;
 							}
 							OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
