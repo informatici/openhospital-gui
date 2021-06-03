@@ -140,15 +140,15 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			MessageBundle.getMessage("angal.common.alltypes.txt"));
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.opd.opdnumber.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.opd.opdnumber.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.opd.patientid.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.opd.fullname.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.opd.patientid.col").toUpperCase(),
+			MessageBundle.getMessage("angal.opd.fullname.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.sex.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.opd.disease.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.opd.diseasetype.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.opd.patientstatus.txt").toUpperCase()
+			MessageBundle.getMessage("angal.opd.disease.col").toUpperCase(),
+			MessageBundle.getMessage("angal.opd.diseasetype.col").toUpperCase(),
+			MessageBundle.getMessage("angal.opd.patientstatus.col").toUpperCase()
 	};
 	private ArrayList<Opd> pSur;
 	private JTable jTable = null;

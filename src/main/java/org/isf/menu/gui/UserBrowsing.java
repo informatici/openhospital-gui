@@ -80,10 +80,10 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private JComboBox pbox;
 	private ArrayList<User> pUser;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.userbrowser.user.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.userbrowser.group.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.userbrowser.description.txt").toUpperCase() };
-	private int[] pColumnWidth = { 70, 70, 150 };
+			MessageBundle.getMessage("angal.userbrowser.user.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase() };
+	private int[] pColumnWidth = {70, 70, 150};
 	private User user;
 	private DefaultTableModel model;
 	private JTable table;

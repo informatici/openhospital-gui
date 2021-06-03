@@ -67,8 +67,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private JButton newButton = null;
 	private JButton deleteButton = null;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.codem"),
-			MessageBundle.getMessage("angal.common.descriptionm")
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {50,250};
 	private DefaultTableModel model ;

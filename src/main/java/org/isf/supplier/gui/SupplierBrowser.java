@@ -87,15 +87,17 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	private JScrollPane jScrollPane = null;
 	private JTable table = null;
 	private DefaultTableModel model = null;
-	private String[] pColumns = { MessageBundle.getMessage("angal.supplier.id"),
-			MessageBundle.getMessage("angal.supplier.namem"),
-			MessageBundle.getMessage("angal.supplier.addressm"),
-			MessageBundle.getMessage("angal.supplier.taxcode"),
-			MessageBundle.getMessage("angal.supplier.telephone"),
-			MessageBundle.getMessage("angal.supplier.faxm"),
-			MessageBundle.getMessage("angal.supplier.emailm"),
-			MessageBundle.getMessage("angal.supplier.note"),
-			MessageBundle.getMessage("angal.supplier.deletedm")};
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.address.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.supplier.taxcode.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.telephone.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.fax.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.email.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.note.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.supplier.deleted.col").toUpperCase()
+	};
 	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30};
 	private int selectedrow;
 	private List<Supplier> pSupplier;

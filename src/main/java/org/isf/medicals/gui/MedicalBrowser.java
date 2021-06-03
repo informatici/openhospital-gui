@@ -127,13 +127,13 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	private JComboBox pbox;
 	private ArrayList<Medical> pMedicals;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.medicals.typem"),
-			MessageBundle.getMessage("angal.common.codem"),
-			MessageBundle.getMessage("angal.common.descriptionm"),
-			MessageBundle.getMessage("angal.medicals.pcsperpckm"),
-			MessageBundle.getMessage("angal.medicals.stockm"),
-			MessageBundle.getMessage("angal.medicals.critlevelm"),
-			MessageBundle.getMessage("angal.medicals.outofstockm")
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.medicals.pcsperpck.col"),      // not uppercased so column reads better
+			MessageBundle.getMessage("angal.medicals.stock.col").toUpperCase(),
+			MessageBundle.getMessage("angal.medicals.critlevel.col").toUpperCase(),
+			MessageBundle.getMessage("angal.medicals.outofstock.col").toUpperCase()
 	};
 	private String[] pColumnsSorter = { "MDSRT_DESC", "MDSR_CODE", "MDSR_DESC", null, "STOCK", "MDSR_MIN_STOCK_QTI", "STOCK" };
 	private boolean[] pColumnsNormalSorting = { true, true, true, true, true, true, false };

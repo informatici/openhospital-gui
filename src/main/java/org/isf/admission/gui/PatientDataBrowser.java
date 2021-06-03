@@ -221,10 +221,10 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.ward.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.diagnosisin.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.diagnosisout.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.status.txt").toUpperCase()
+			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.diagnosisin.col").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.diagnosisout.col").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.status.col").toUpperCase()
 	};
 	private int[] pColumnWidth = {120, 150, 200, 200, 120};
 	

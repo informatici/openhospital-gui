@@ -53,12 +53,12 @@ public class AgeTypeBrowser extends ModalJFrame {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<AgeType> pAgeType;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.code"),
-			MessageBundle.getMessage("angal.agetype.from"),
-			MessageBundle.getMessage("angal.agetype.to"),
-			MessageBundle.getMessage("angal.common.description")
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.from.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.to.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = { 80, 80, 80, 200 };
+	private int[] pColumnWidth = {80, 80, 80, 200};
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jEditSaveButton = null;

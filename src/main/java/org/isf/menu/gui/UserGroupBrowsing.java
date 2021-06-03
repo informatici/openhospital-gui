@@ -72,11 +72,12 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	private int selectedrow;
 	private ArrayList<UserGroup> pGroup;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.groupsbrowser.group.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.groupsbrowser.description.txt").toUpperCase() };
-	private int[] pColumnWidth = {70,  100 };
+			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
+	};
+	private int[] pColumnWidth = {70,  100};
 	private UserGroup group;
-	private DefaultTableModel model ;
+	private DefaultTableModel model;
 	private JTable table;
 	
 	private UserGroupBrowsing myFrame;

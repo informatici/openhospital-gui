@@ -89,10 +89,12 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 	private JTable table;
 
-	private String[] pColumns = { MessageBundle.getMessage("angal.malnutrition.datesuppm"),
-			MessageBundle.getMessage("angal.malnutrition.dateconfm"),
-			MessageBundle.getMessage("angal.malnutrition.heightm"),
-			MessageBundle.getMessage("angal.malnutrition.weightm") };
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.malnutrition.datesupp.col").toUpperCase(),
+			MessageBundle.getMessage("angal.malnutrition.dateconf.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.height.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.weight.txt").toUpperCase()
+	};
 
 	private int[] pColumnWidth = { 200, 200, 150, 150 };
 
