@@ -219,9 +219,9 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	
 	private String[] plColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.exam.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.result.txt").toUpperCase()
+			MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
 	};
 	private int[] plColumnwidth = {150, 200, 50, 200};
 
