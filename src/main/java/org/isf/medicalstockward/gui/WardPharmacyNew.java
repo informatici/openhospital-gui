@@ -167,9 +167,11 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private float patientWeight;
 	private Ward wardSelected;
 	private Object[] medClasses = {Medical.class, Integer.class, String.class};
-	private String[] medColumnNames = {MessageBundle.getMessage("angal.medicalstockward.medical"), 
-									   MessageBundle.getMessage("angal.common.quantity"),
-									   MessageBundle.getMessage("angal.medicalstockward.lotnumberabb") };
+	private String[] medColumnNames = {
+			MessageBundle.getMessage("angal.wardpharmacy.medical.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.lotnumber.col").toUpperCase()
+	};
 	private Integer[] medWidth = {150, 150, 50};
 	private boolean[] medResizable = {true, false, false};
 	

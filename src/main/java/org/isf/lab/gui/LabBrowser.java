@@ -106,13 +106,13 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private int pfrmHeight;
 	private ArrayList<Laboratory> pLabs;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.datem"), 
-			MessageBundle.getMessage("angal.lab.patient"), 
-			MessageBundle.getMessage("angal.lab.examm"), 
-			MessageBundle.getMessage("angal.lab.resultm") 
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.patient.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
 	};
 	private boolean[] columnsResizable = {false, true, true, false};
-	private int[] pColumnWidth = { 100, 200, 200, 200 };
+	private int[] pColumnWidth = {100, 200, 200, 200};
 	private int[] maxWidth = {150, 200, 200, 200};
 	private boolean[] columnsVisible = { true, GeneralData.LABEXTENDED, true, true};
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);

@@ -88,11 +88,11 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	private JComboBox pbox;
 	private ArrayList<Disease> pDisease;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.codem"),
-			MessageBundle.getMessage("angal.disease.typem"),
-			MessageBundle.getMessage("angal.disease.namem")
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {50, 180, 200 };
+	private int[] pColumnWidth = {50, 180, 200};
 	private Disease disease;
 	private DefaultTableModel model ;
 	private JTable table;

@@ -113,9 +113,16 @@ public class PatVacBrowser extends ModalJFrame {
 	private ArrayList<PatientVaccine> lPatVac;
 	
 		
-	private String[] pColumns = { MessageBundle.getMessage("angal.common.datem"), MessageBundle.getMessage("angal.patvac.patientm"), MessageBundle.getMessage("angal.patvac.sexm"),MessageBundle.getMessage("angal.patvac.agem"), MessageBundle.getMessage("angal.patvac.vaccinem"), MessageBundle.getMessage("angal.patvac.vaccinetypem")};
-	private int[] pColumnWidth = { 100, 150, 50, 50, 150, 150};
-	private boolean[] columnsVisible = { true, GeneralData.PATIENTVACCINEEXTENDED, true, true, true, true};
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.patient.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.sex.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.patvac.vaccine.col").toUpperCase(),
+			MessageBundle.getMessage("angal.patvac.vaccinetype.col").toUpperCase()
+	};
+	private int[] pColumnWidth = {100, 150, 50, 50, 150, 150};
+	private boolean[] columnsVisible = {true, GeneralData.PATIENTVACCINEEXTENDED, true, true, true, true};
 	private PatVacManager manager;
 	private PatVacBrowsingModel model;
 	private PatientVaccine patientVaccine;

@@ -57,10 +57,10 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 	private static final long serialVersionUID = 1L;
 	private ArrayList<OperationType> pOperationType;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.codem"),
-			MessageBundle.getMessage("angal.common.descriptionm")
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {80, 200 };
+	private int[] pColumnWidth = {80, 200};
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;

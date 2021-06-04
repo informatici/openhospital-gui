@@ -95,10 +95,10 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private JComboBox pbox;
 	private ArrayList<Operation> pOperation;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.operation.idm"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.operation.typem"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.operation.namem"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.operation.operationcontext").toUpperCase() //$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.operation.operationcontext.col").toUpperCase()
 	};
 	private int[] pColumnWidth = { 50, 180, 200, 100 };
 	private Operation operation;

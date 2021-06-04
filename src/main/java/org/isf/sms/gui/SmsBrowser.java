@@ -75,7 +75,13 @@ public class SmsBrowser extends ModalJFrame {
 	private JButton jDeleteButton;
 	private JButton jNewButton;
 	
-	private String[] columnNames = {MessageBundle.getMessage("angal.common.date"), MessageBundle.getMessage("angal.sms.scheduleddatetitle"), MessageBundle.getMessage("angal.sms.telephone"), MessageBundle.getMessage("angal.sms.sms"), MessageBundle.getMessage("angal.sms.sent")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+	private String[] columnNames = {
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.sms.scheduleddate.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.telephone.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.sms.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.sms.sent.col").toUpperCase()
+	};
 	private Object[] columnClasses = {Date.class, Date.class, String.class, String.class, Date.class};
 	private int[] columnPreferredSize = {110, 110, 150, 100, 110};
 	private boolean[] columnResizable = {false, false, false, true, false};

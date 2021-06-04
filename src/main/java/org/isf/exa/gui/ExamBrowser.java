@@ -82,11 +82,11 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	private JComboBox pbox;
 	private ArrayList<Exam> pExam;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.codem"),
-			MessageBundle.getMessage("angal.exa.typem"),
-			MessageBundle.getMessage("angal.common.descriptionm"),
-			MessageBundle.getMessage("angal.exa.procm"),
-			MessageBundle.getMessage("angal.exa.defaultm")
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.exa.proc.col").toUpperCase(),
+			MessageBundle.getMessage("angal.exa.default.col").toUpperCase()
 	};
 	private int[] pColumnWidth = {60,330,160,60,130};
 	private Exam exam;

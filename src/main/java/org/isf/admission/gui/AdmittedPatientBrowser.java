@@ -162,10 +162,10 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.sex.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.cityaddresstelephonenote.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.ward.txt").toUpperCase()
+			MessageBundle.getMessage("angal.admission.cityaddresstelephonenote.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = { 100, 200, 80, 50, 150, 100 };
+	private int[] pColumnWidth = {100, 200, 80, 50, 150, 100};
 	private boolean[] pColumnResizable = {false, false, false, false, true, false};
 	private AdmittedPatient patient;
 	private JTable table;

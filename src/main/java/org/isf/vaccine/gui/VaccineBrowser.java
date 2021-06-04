@@ -90,9 +90,9 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	private JTable table = null;
 	private DefaultTableModel model = null;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.code"),
-			MessageBundle.getMessage("angal.vaccine.vaccinetype"),
-			MessageBundle.getMessage("angal.common.description")
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {100, 50, 120};
 	private int selectedrow;

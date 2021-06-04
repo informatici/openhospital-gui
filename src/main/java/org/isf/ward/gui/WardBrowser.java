@@ -88,17 +88,18 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	private JTable table = null;
 	private DefaultTableModel model = null;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.code"),
-			MessageBundle.getMessage("angal.ward.name"),
-			MessageBundle.getMessage("angal.ward.telephone"),
-			MessageBundle.getMessage("angal.ward.fax"),
-			MessageBundle.getMessage("angal.ward.email"),
-			MessageBundle.getMessage("angal.ward.beds"),
-			MessageBundle.getMessage("angal.ward.nurses"),
-			MessageBundle.getMessage("angal.ward.doctors"),
-			MessageBundle.getMessage("angal.ward.haspharmacy"),
-			MessageBundle.getMessage("angal.ward.ismale"),
-			MessageBundle.getMessage("angal.ward.isfemale")};
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.telephone.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.fax.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.email.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.beds.col").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.nurses.col").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.doctors.col").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.haspharmacy.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.male.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.female.txt").toUpperCase()
+	};
 	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30};
 	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class};
 	private int selectedrow;

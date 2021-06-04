@@ -210,20 +210,20 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.ward.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.diagnosisin.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.diagnosisout.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.status.txt").toUpperCase()
+			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.diagnosisin.col").toUpperCase(),
+			MessageBundle.getMessage("angal.admission.diagnosisout.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.status.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {120, 150, 200, 200, 120};
 	
 	private String[] plColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.exam.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.admission.result.txt").toUpperCase()
+			MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
 	};
-	private int[] plColumnwidth = { 150, 200, 50, 200 };
+	private int[] plColumnwidth = {150, 200, 50, 200};
 
 	private DefaultTableModel admModel;
 	private DefaultTableModel labModel;

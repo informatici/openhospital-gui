@@ -142,19 +142,19 @@ public class MovStockBrowser extends ModalJFrame {
 	private MovBrowserModel model;
 	private ArrayList<Movement> moves;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.medicalstock.refno"),
-			MessageBundle.getMessage("angal.common.datem"),                //1
-			MessageBundle.getMessage("angal.medicalstock.typem"),            //2
-			MessageBundle.getMessage("angal.medicalstock.wardm"),            //3
-			MessageBundle.getMessage("angal.medicalstock.qtym"),            //4
-			MessageBundle.getMessage("angal.medicalstock.pharmaceuticalm"),    //5
-			MessageBundle.getMessage("angal.medicalstock.medtypem"),        //6
-			MessageBundle.getMessage("angal.medicalstock.lotm"),            //7
-			MessageBundle.getMessage("angal.medicalstock.prepdatem"),        //8
-			MessageBundle.getMessage("angal.medicalstock.duedatem"),        //9
-			MessageBundle.getMessage("angal.medicalstock.originm"),            //10
-			MessageBundle.getMessage("angal.medicalstock.costm"),            //11
-			MessageBundle.getMessage("angal.medicalstock.totalm")            //12
+			MessageBundle.getMessage("angal.medicalstock.refno.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),        //1
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),       //2
+			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(),            //3
+			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(),            //4
+			MessageBundle.getMessage("angal.medicalstock.pharmaceutical.col").toUpperCase(),    //5
+			MessageBundle.getMessage("angal.medicalstock.medtype.col").toUpperCase(),        //6
+			MessageBundle.getMessage("angal.medicalstock.lot.col").toUpperCase(),            //7
+			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(),        //8
+			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),        //9
+			MessageBundle.getMessage("angal.medicalstock.origin.col").toUpperCase(),            //10
+			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(),            //11
+			MessageBundle.getMessage("angal.common.total.txt").toUpperCase()            //12
 	};
 	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
