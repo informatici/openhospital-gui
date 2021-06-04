@@ -353,7 +353,7 @@ public class WardPharmacyEdit extends JDialog {
 					if (item instanceof Medical) {
 						movSelectedMedical = (Medical) item;
 					} else {
-						MessageDialog.error(null, "angal.medicalstockwardedit.pleaseselectadrug");
+						MessageDialog.error(null, "angal.medicalstockwardedit.pleaseselectadrug.msg");
 						return;
 					}
 					

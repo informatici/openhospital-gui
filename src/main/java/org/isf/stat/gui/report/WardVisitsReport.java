@@ -48,7 +48,7 @@ public class WardVisitsReport {
 				}
 			} catch (Exception e) {
 	            LOGGER.error("", e);
-				MessageDialog.error(null, "angal.stat.reporterror");
+				MessageDialog.error(null, "angal.stat.reporterror.msg");
 			}
 		}
 }
