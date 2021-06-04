@@ -572,7 +572,7 @@ public class LabEdit extends ModalJFrame {
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (examComboBox.getSelectedIndex() == 0) {
-						MessageDialog.error(null, "angal.lab.pleaseselectanexam.msg");
+						MessageDialog.error(null, "angal.lab.pleaseselectanexam");
 						return;
 					}
 					String matSelected=(String)matComboBox.getSelectedItem();

@@ -53,7 +53,7 @@ public class GenericReportAdmission {
 			}
 		} catch (Exception e) {
             LOGGER.error("", e);
-			MessageDialog.error(null, "angal.stat.reporterror.msg");
+			MessageDialog.error(null, "angal.stat.reporterror");
         }
 	}
 	

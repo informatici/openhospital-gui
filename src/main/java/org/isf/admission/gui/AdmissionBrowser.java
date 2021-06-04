@@ -1991,7 +1991,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				}
 
 				if (!result) {
-					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					MessageDialog.error(null, "angal.common.data.not.saved.msg");
 				} else {
 					dispose();
 				}

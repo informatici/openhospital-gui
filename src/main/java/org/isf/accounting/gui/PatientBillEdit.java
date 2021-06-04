@@ -1282,7 +1282,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			MessageDialog.error(PatientBillEdit.this, "angal.newbill.datebeforelastpayment");
 			return false;
 		} else if (datePay.after(now)) {
-			MessageDialog.error(PatientBillEdit.this, "angal.newbill.payementsinthefuturearenotallowed.msg");
+			MessageDialog.error(PatientBillEdit.this, "angal.newbill.payementinthefuturenotallowed");
 			return false;
 		}
 		return true;

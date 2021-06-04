@@ -1066,7 +1066,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JButton getFilterButton() {
 		if (filterButton == null) {
 			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
-            filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
+            filterButton.setMnemonic(MessageBundle.getMnemonic("angal.commom.search.btn.key"));
 			filterButton.addActionListener(e -> {
 				String disease = ((Disease)jDiseaseBox.getSelectedItem()).getCode();
 				String diseasetype = ((DiseaseType)jDiseaseTypeBox.getSelectedItem()).getCode();
