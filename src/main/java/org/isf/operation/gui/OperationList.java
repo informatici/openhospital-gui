@@ -403,9 +403,8 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		} else {
 			operationRow = oprowData.get(idRow);
 		}
-		int yesOrNo = JOptionPane.showConfirmDialog(OperationList.this,
-				MessageBundle.getMessage("angal.operationrowlist.confirmdelete"), null, JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
-		if (yesOrNo == JOptionPane.YES_OPTION) {
+		int answer = MessageDialog.yesNo(OperationList.this, "angal.operationrowlist.delete.operation.msg");
+		if (answer == JOptionPane.YES_OPTION) {
 			boolean result = false;
 			try {
 				result = opeRowManager.deleteOperationRow(operationRow);

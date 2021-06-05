@@ -200,17 +200,14 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
-						OperationType dis = (OperationType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.opetype.deleteoperationtype")+" \" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						
-						if (n == JOptionPane.YES_OPTION) {
+						OperationType opType = (OperationType) (model.getValueAt(jTable.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null, "angal.opetype.deleteoperationtype.fmt.msg", opType.getDescription());
+						if (answer == JOptionPane.YES_OPTION) {
 							
 							boolean deleted;
 							
 							try {
-								deleted = manager.deleteOperationType(dis);
+								deleted = manager.deleteOperationType(opType);
 							} catch (OHServiceException e) {
 								deleted = false;
 								OHServiceExceptionUtil.showMessages(e);

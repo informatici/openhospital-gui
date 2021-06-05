@@ -288,15 +288,12 @@ public class PatVacBrowser extends ModalJFrame {
 					} 
 					selectedrow = jTable.getSelectedRow();
 					patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
-                    int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.patvac.deleteselectedpatientvaccinerow") +
-								"\n"+ MessageBundle.getMessage("angal.patvac.vaccinedate")+" = " +  dateFormat.format( patientVaccine.getVaccineDate().getTime()) +
-								"\n "+ MessageBundle.getMessage("angal.patvac.vaccine")+" = " + patientVaccine.getVaccine().getDescription() + 
-								"\n "+ MessageBundle.getMessage("angal.patvac.patient")+" =" + patientVaccine.getPatName() + 
-								"\n ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+					int answer = MessageDialog.yesNo(null,"angal.patvac.deletepatientvaccine.fmt.msg",
+							dateFormat.format(patientVaccine.getVaccineDate().getTime()),
+							patientVaccine.getVaccine().getDescription(),
+							patientVaccine.getPatName());
 
-					if (n == JOptionPane.YES_OPTION) {
+					if (answer == JOptionPane.YES_OPTION) {
 						
 							boolean deleted;
 							

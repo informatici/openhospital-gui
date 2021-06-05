@@ -224,14 +224,11 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						Supplier m = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-						if (m.getSupDeleted().equals('Y')) return;
-						int n = JOptionPane.showConfirmDialog(
-								SupplierBrowser.this,
-								MessageBundle.getMessage("angal.supplier.deletesupplier") + " " + m.getSupName() + "?",
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
-						
-						if (n == JOptionPane.YES_OPTION) {
+						if (m.getSupDeleted().equals('Y')) {
+							return;
+						}
+						int answer = MessageDialog.yesNo(null, "angal.supplier.deletesupplier.fmt.msg", m.getSupName());
+						if (answer == JOptionPane.YES_OPTION) {
 							m.setSupDeleted('Y');
 							try {
 								supplierBrowserManager.saveOrUpdate(m);

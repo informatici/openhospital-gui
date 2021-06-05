@@ -243,23 +243,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				}
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 				Exam examToDelete = (Exam)(((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
-				StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.exa.deletefolowingexam"))
-						.append(" :")
-						.append("\n")
-						.append(MessageBundle.getMessage("angal.common.code"))
-						.append("= ")
-						.append(examToDelete.getCode())
-						.append("\n")
-						.append(MessageBundle.getMessage("angal.common.description"))
-						.append("= ")
-						.append(examToDelete.getDescription())
-						.append("\n?");
-				int n = JOptionPane.showConfirmDialog(
-                        null,
-                        message.toString(),
-                        MessageBundle.getMessage("angal.hospital"),
-                        JOptionPane.YES_NO_OPTION);
-				if ((n == JOptionPane.YES_OPTION)){
+				int answer = MessageDialog.yesNo(null, "angal.exa.deleteexam.fmt.msg", examToDelete.getCode(), examToDelete.getDescription());
+				if ((answer == JOptionPane.YES_OPTION)){
 					boolean deleted;
 					
 					try {

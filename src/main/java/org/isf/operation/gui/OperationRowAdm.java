@@ -436,9 +436,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			MessageDialog.error(OperationRowAdm.this, "angal.common.pleaseselectarow.msg");
 		} else {
 			operationRow = oprowData.get(idRow);
-			int yesOrNo = JOptionPane.showConfirmDialog(OperationRowAdm.this,
-					MessageBundle.getMessage("angal.operationrowlist.confirmdelete"), null, JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
-			if (yesOrNo == JOptionPane.YES_OPTION) {
+			int answer = MessageDialog.yesNo(OperationRowAdm.this, "angal.operationrowlist.delete.operation.msg");
+			if (answer == JOptionPane.YES_OPTION) {
 				int idOpe = operationRow.getId();
 				if (idOpe > 0) {
 					boolean result = false;

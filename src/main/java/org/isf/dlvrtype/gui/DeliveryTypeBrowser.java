@@ -200,13 +200,10 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
-						DeliveryType dis = (DeliveryType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.dlvrtype.deletedeliverytype") + " \" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+						DeliveryType delType = (DeliveryType) (model.getValueAt(jTable.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null, "angal.dlvrtype.deletedeliverytype.fmt.msg", delType.getDescription());
                         try {
-                            if ((n == JOptionPane.YES_OPTION)
-                                    && (manager.deleteDeliveryType(dis))) {
+                            if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryType(delType))) {
                                 pDeliveryType.remove(jTable.getSelectedRow());
                                 model.fireTableDataChanged();
                                 jTable.updateUI();

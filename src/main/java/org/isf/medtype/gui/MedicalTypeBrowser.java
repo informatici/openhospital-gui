@@ -196,14 +196,10 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(MedicalTypeBrowser.this, "angal.common.pleaseselectarow.msg");
 					} else {
-						MedicalType dis = (MedicalType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.medtype.deletemedicaltype")+" \" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						
+						MedicalType medType = (MedicalType) (model.getValueAt(jTable.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null, "angal.medtype.deletemedicaltype.fmt.msg", medType.getDescription());
 						try {
-							if ((n == JOptionPane.YES_OPTION)
-									&& (manager.deleteMedicalType(dis))) {
+							if ((answer == JOptionPane.YES_OPTION) && (manager.deleteMedicalType(medType))) {
 								pMedicalType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();

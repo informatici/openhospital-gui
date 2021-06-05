@@ -703,31 +703,22 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						if (!isOnlyOneSelected(jTableBills)) return;
 						int rowSelected = jTableBills.getSelectedRow();
 						deleteBill = (Bill)jTableBills.getValueAt(rowSelected, -1);
-						ok = JOptionPane.showConfirmDialog(null, 
-								MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
-								MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
-								JOptionPane.YES_NO_OPTION);
+						ok = MessageDialog.yesNo(null, "angal.billbrowser.deletetheselectedbill.msg");
 					}
 					if (jScrollPanePending != null && jScrollPanePending.isShowing()) {
 						if (!isOnlyOneSelected(jTablePending)) return;
 						int rowSelected = jTablePending.getSelectedRow();
 						deleteBill = (Bill)jTablePending.getValueAt(rowSelected, -1);
-						ok = JOptionPane.showConfirmDialog(null, 
-								MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
-								MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
-								JOptionPane.YES_NO_OPTION);
+						ok = MessageDialog.yesNo(null, "angal.billbrowser.deletetheselectedbill.msg");
 					}
 					if (jScrollPaneClosed != null && jScrollPaneClosed.isShowing()) {
 						if (!isOnlyOneSelected(jTableClosed)) return;
 						int rowSelected = jTableClosed.getSelectedRow();
 						deleteBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
-						ok = JOptionPane.showConfirmDialog(null, 
-								MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
-								MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
-								JOptionPane.YES_NO_OPTION);
+						ok = MessageDialog.yesNo(null, "angal.billbrowser.deletetheselectedbill.msg");
 					}
 					if (ok == JOptionPane.YES_OPTION) {
-						try{
+						try {
 							billManager.deleteBill(deleteBill);
 						} catch(OHServiceException ohServiceException) {
 							MessageDialog.showExceptions(ohServiceException);

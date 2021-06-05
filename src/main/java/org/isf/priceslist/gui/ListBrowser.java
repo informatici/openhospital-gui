@@ -130,14 +130,9 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 						int selectedRow = jTablePriceLists.getSelectedRow();
 						list = (PriceList)jTablePriceLists.getModel().getValueAt(selectedRow, -1);
 						
-						int ok = JOptionPane.showConfirmDialog(
-								null,
-								MessageBundle.getMessage("angal.priceslist.doyoureallywanttodeletethislistandallitsprices"),
-								list.getName(),
-								JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE);
-						try{
-							if (ok == JOptionPane.OK_OPTION) {
+						int answer = MessageDialog.yesNo(null, "angal.priceslist.deletethislistandallitsprices.fmt.msg", list.getName());
+						try {
+							if (answer == JOptionPane.OK_OPTION) {
 
 								boolean result = false;
 								result = listManager.deleteList(list);
@@ -149,7 +144,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 									MessageDialog.error(null, "angal.priceslist.thedatacouldnotbedeleted");
 								}
 							}
-						}catch(OHServiceException e){
+						} catch(OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e);
 						}
 					}

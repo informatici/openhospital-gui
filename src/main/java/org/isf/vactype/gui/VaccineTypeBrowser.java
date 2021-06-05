@@ -204,14 +204,10 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
-						VaccineType dis = (VaccineType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.vactype.deletevaccinetype")+"\" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						
+						VaccineType vacType = (VaccineType) (model.getValueAt(jTable.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null, "angal.vactype.deletevaccinetype.fmt.msg", vacType.getDescription());
 						try {
-							if ((n == JOptionPane.YES_OPTION)
-									&& (manager.deleteVaccineType(dis))) {
+							if ((answer == JOptionPane.YES_OPTION) && (manager.deleteVaccineType(vacType))) {
 								pVaccineType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();
@@ -221,7 +217,6 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 						}
 					}
 				}
-				
 			});
 		}
 		return jDeleteButton;

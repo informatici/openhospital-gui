@@ -188,13 +188,9 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				} else {
 					selectedrow = table.getSelectedRow();
 					disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
-					int n = JOptionPane.showConfirmDialog(
-							DiseaseBrowser.this,
-							MessageBundle.getMessage("angal.disease.deletedisease") + " \""+disease.getDescription()+"\" ?",
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.YES_NO_OPTION);
+					int answer = MessageDialog.yesNo(DiseaseBrowser.this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
 					try {
-						if ((n == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))){
+						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))){
 							disease.setIpdInInclude(false);
 							disease.setIpdOutInclude(false);
 							disease.setOpdInclude(false);

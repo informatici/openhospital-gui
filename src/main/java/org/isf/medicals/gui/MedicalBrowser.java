@@ -498,16 +498,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 				} else {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					Medical med = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
-					StringBuilder deleteMessage = new StringBuilder()
-							.append(MessageBundle.getMessage("angal.medicals.deletemedical"))
-							.append(" \"")
-							.append(med.getDescription())
-							.append("\" ?");
-					int n = JOptionPane.showConfirmDialog(
-							MedicalBrowser.this,
-							deleteMessage.toString(),
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.YES_NO_OPTION);
+					int answer = MessageDialog.yesNo(MedicalBrowser.this, "angal.medicals.deletemedical.fmt.msg", med.getDescription());
 					boolean deleted;
 					try {
 						deleted = medicalBrowsingManager.deleteMedical(med);
@@ -515,7 +506,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 						deleted = false;
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					if ((n == JOptionPane.YES_OPTION) && deleted) {
+					if ((answer == JOptionPane.YES_OPTION) && deleted) {
 						pMedicals.remove(selectedrow);
 						model.fireTableDataChanged();
 						table.updateUI();

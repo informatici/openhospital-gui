@@ -278,12 +278,8 @@ public class SmsBrowser extends ModalJFrame {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						ArrayList<Sms> smsList = new ArrayList<>();
-						int n = JOptionPane.showConfirmDialog(null, 
-								MessageBundle.getMessage("angal.sms.deleteselectedsms") + " ?", 
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
-						
-						if (n == JOptionPane.YES_OPTION) {
+						int answer = MessageDialog.yesNo(null, "angal.sms.deletetheselectedsms.msg");
+						if (answer == JOptionPane.YES_OPTION) {
 							for (int i : indexes) {
 								Sms sms = (Sms) jSmsTable.getValueAt(i, -1);
 								smsList.add(sms);
