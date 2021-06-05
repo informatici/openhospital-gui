@@ -144,10 +144,9 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				UserGroup userGroup = (UserGroup) (model.getValueAt(table.getSelectedRow(), -1));
-				int n = JOptionPane.showConfirmDialog(null, MessageBundle.formatMessage("angal.groupsbrowser.deletegroup.fmt.label", userGroup.getCode()),
-						MessageBundle.getMessage("angal.groupsbrowser.deletegroup.title"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				int answer = MessageDialog.yesNo(null, "angal.groupsbrowser.deletegroup.fmt.msg", userGroup.getCode());
 				try {
-					if ((n == JOptionPane.YES_OPTION) && (manager.deleteGroup(userGroup))) {
+					if ((answer == JOptionPane.YES_OPTION) && (manager.deleteGroup(userGroup))) {
 						pGroup.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();

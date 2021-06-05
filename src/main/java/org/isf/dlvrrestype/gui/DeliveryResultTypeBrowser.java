@@ -200,13 +200,10 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
-						DeliveryResultType dis = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.dlvrrestype.deletedeliveryresulttype") + "\" " + dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+						DeliveryResultType resultType = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg",resultType.getDescription());
 						try {
-							if ((n == JOptionPane.YES_OPTION)
-									&& (manager.deleteDeliveryResultType(dis))) {
+							if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryResultType(resultType))) {
 								pDeliveryResultType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();

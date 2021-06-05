@@ -201,11 +201,8 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						DicomType dicomType = (DicomType) (model.getValueAt(jTable.getSelectedRow(), -1));
-                        int n = JOptionPane.showConfirmDialog(null,
-                                MessageBundle.getMessage("angal.dicomtype.deleterow") + " \" "+dicomType.getDicomTypeDescription() + "\" ?",
-                                MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-
-                        if ((n == JOptionPane.YES_OPTION)) {
+                        int answer = MessageDialog.yesNo(null, "angal.dicomtype.delete.fmt.msg", dicomType.getDicomTypeDescription());
+                        if ((answer == JOptionPane.YES_OPTION)) {
 
                             boolean deleted;
 

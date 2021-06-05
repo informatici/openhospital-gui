@@ -171,13 +171,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 					} else {
 						ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 						ExamRow row = (ExamRow)(((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(
-	                        null,
-	                        MessageBundle.getMessage("angal.exa.deleteexamresult")+" \""+row.getDescription()+"\" ?",
-	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.YES_NO_OPTION);
-
-						if ((n == JOptionPane.YES_OPTION)){
+						int answer = MessageDialog.yesNo(null,"angal.exa.deleteexamresult.fmt.msg", row.getDescription());
+						if ((answer == JOptionPane.YES_OPTION)){
 							try {
 								boolean deleted = manager.deleteExamRow(row);
 								

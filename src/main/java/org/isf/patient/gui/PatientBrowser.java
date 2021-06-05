@@ -227,11 +227,9 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 						MessageDialog.error(PatientBrowser.this, "angal.common.pleaseselectarow.msg");
 					} else {
 						Patient pat = (Patient) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.patient.deletepatient") + " \" "+pat.getName() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+						int answer = MessageDialog.yesNo(null, "angal.patient.deletepatient.fmt.msg",pat.getName());
 						try {
-							if ((n == JOptionPane.YES_OPTION) && (manager.deletePatient(pat))) {
+							if ((answer == JOptionPane.YES_OPTION) && (manager.deletePatient(pat))) {
 								pPat.remove(pPat.size() - jTable.getSelectedRow() - 1);
 								model.fireTableDataChanged();
 								jTable.updateUI();
@@ -241,7 +239,6 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 						}
 					}
 				}
-				
 			});
 		}
 		return jDeleteButton;

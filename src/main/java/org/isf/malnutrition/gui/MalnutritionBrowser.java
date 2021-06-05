@@ -186,19 +186,15 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
-					Malnutrition m = (Malnutrition) (((MalnBrowsingModel) model)
-							.getValueAt(table.getSelectedRow(), -1));
-					int n = JOptionPane.showConfirmDialog(null,
-							MessageBundle.getMessage("angal.common.delete")+"?", MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.YES_NO_OPTION);
-
-					if (n == JOptionPane.YES_OPTION) {	
-						if (m==null){
+					Malnutrition malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.malnutrition.delete.msg");
+					if (answer == JOptionPane.YES_OPTION) {
+						if (malnutrition == null) {
 							MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
 						} else {
 							boolean deleted;
 							try {
-								deleted = manager.deleteMalnutrition(m);
+								deleted = manager.deleteMalnutrition(malnutrition);
 							} catch (OHServiceException e) {
 								deleted = false;
 								OHServiceExceptionUtil.showMessages(e);

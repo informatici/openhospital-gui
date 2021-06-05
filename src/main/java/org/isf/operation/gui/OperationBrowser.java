@@ -201,13 +201,10 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					Operation m = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-					int n = JOptionPane.showConfirmDialog(
-							null, MessageBundle.getMessage("angal.operation.deleteoperation") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
-									+ m.getDescription() + "\" ?", //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
+					Operation operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg",operation.getDescription());
 					try {
-						if ((n == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(m))) {
+						if ((answer == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(operation))) {
 							pOperation.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();

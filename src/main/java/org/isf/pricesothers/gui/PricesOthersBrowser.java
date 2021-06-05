@@ -129,14 +129,8 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 							MessageDialog.error(null, "angal.sql.operationnotpermittedprotectedelement");
 							return;
 						}
-						int ok = JOptionPane.showConfirmDialog(
-								null,
-								MessageBundle.getMessage("angal.pricesothers.doyoureallywanttodeletethisitem"), //$NON-NLS-1$
-								pOthers.getDescription(),
-								JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE);
-						
-						if (ok == JOptionPane.OK_OPTION) {
+						int answer = MessageDialog.yesNo(null,"angal.pricesothers.deletethisitem.fmt.msg", pOthers.getDescription());
+						if (answer == JOptionPane.OK_OPTION) {
 							
 							boolean result = false;
 							try {

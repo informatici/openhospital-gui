@@ -202,17 +202,14 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
-						DischargeType dis = (DischargeType) (model.getValueAt(jTable.getSelectedRow(), -1));
-                        int n = JOptionPane.showConfirmDialog(null,
-                                MessageBundle.getMessage("angal.disctype.deleterow") + " \" "+dis.getDescription() + "\" ?",
-                                MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-
-                        if ((n == JOptionPane.YES_OPTION)) {
+						DischargeType disType = (DischargeType) (model.getValueAt(jTable.getSelectedRow(), -1));
+                        int answer = MessageDialog.yesNo(null, "angal.disctype.deleterow.fmt.msg", disType.getDescription());
+                        if (answer == JOptionPane.YES_OPTION) {
 
                             boolean deleted;
 
                             try {
-                                deleted = manager.deleteDischargeType(dis);
+                                deleted = manager.deleteDischargeType(disType);
                             } catch (OHServiceException e) {
                                 deleted = false;
                                 OHServiceExceptionUtil.showMessages(e);

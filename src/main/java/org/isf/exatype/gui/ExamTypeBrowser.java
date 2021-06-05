@@ -206,16 +206,13 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
-						ExamType dis = (ExamType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.exatype.deleteexamtype")+"\" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						
-						if (n == JOptionPane.YES_OPTION) {
+						ExamType examType = (ExamType) (model.getValueAt(jTable.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null,"angal.exatype.deleteexamtype.fmt.msg", examType.getDescription());
+						if (answer == JOptionPane.YES_OPTION) {
 							
 							boolean deleted;
 							try {
-								deleted = manager.deleteExamType(dis);
+								deleted = manager.deleteExamType(examType);
 							} catch (OHServiceException e) {
 								deleted = false;
 								OHServiceExceptionUtil.showMessages(e);

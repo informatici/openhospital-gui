@@ -238,13 +238,14 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 					if (GeneralData.LABEXTENDED) {
 						selectedrow = jTable.getSelectedRow();
 						if (selectedrow < 0) {
-							
 							int ok = JOptionPane.showConfirmDialog(LabBrowser.this, 
 											MessageBundle.getMessage("angal.lab.nopatientselectedprintempylabel"), 
 											MessageBundle.getMessage("angal.hospital"), 
 											JOptionPane.YES_NO_CANCEL_OPTION);
 							
-							if (ok != JOptionPane.YES_OPTION) return;
+							if (ok != JOptionPane.YES_OPTION) {
+								return;
+							}
 						} else {
 							laboratory = (Laboratory) (model.getValueAt(selectedrow, -1));
 							labId = laboratory.getCode();
@@ -341,12 +342,14 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
-						
-						int n = JOptionPane.showConfirmDialog(LabBrowser.this,
-								getLabMessage(lab),
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+						int answer = MessageDialog.yesNo(LabBrowser.this, "angal.lab.deletelabexam.fmt.msg",
+								dateFormat.format(lab.getDate().getTime()),
+								dateTimeFormat.format(lab.getExamDate().getTime()),
+								lab.getExam(),
+								lab.getPatName(),
+								lab.getResult());
 
-						if (n == JOptionPane.YES_OPTION) {
+						if (answer == JOptionPane.YES_OPTION) {
 							boolean deleted;
 							
 							try {
@@ -368,22 +371,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			});
 		}
 		return buttonDelete;
-	}
-
-	protected String getLabMessage(Laboratory lab) {
-		StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.lab.deletefollowinglabexam"))
-				.append(";\n")
-				.append(MessageBundle.getMessage("angal.lab.registationdate")).append("=").append(dateFormat.format(lab.getDate().getTime()))
-				.append("\n")
-				.append(MessageBundle.getMessage("angal.lab.examdate")).append("=").append(dateTimeFormat.format(lab.getExamDate().getTime()))
-				.append("\n")
-				.append(MessageBundle.getMessage("angal.lab.exam")).append("=").append(lab.getExam())
-				.append("\n")
-				.append(MessageBundle.getMessage("angal.lab.patient")).append("=").append(lab.getPatName())
-				.append("\n")
-				.append(MessageBundle.getMessage("angal.lab.result")).append("=").append(lab.getResult())
-				.append("\n ?");
-		return message.toString();
 	}
 
 	/**

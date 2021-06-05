@@ -202,18 +202,15 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
-						AdmissionType dis = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.admtype.deleterow")+ " \""+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						try{
-							if ((n == JOptionPane.YES_OPTION)
-									&& (admissionTypeManager.deleteAdmissionType(dis))) {
+						AdmissionType admType = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null, "angal.admtype.delete.fmt.msg",admType.getDescription());
+						try {
+							if ((answer == JOptionPane.YES_OPTION) && (admissionTypeManager.deleteAdmissionType(admType))) {
 								pAdmissionType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();
 							}
-						}catch(OHServiceException e){
+						} catch(OHServiceException e){
                             OHServiceExceptionUtil.showMessages(e);
 						}
 					}

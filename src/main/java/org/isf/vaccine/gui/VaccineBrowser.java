@@ -264,14 +264,10 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
-						Vaccine m = (Vaccine)(((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(
-								null,
-								MessageBundle.getMessage("angal.vaccine.deletevaccine") + " \""+m.getDescription()+"\" ?",
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
-                        try{
-                            if ((n == JOptionPane.YES_OPTION) && (manager.deleteVaccine(m))){
+						Vaccine vaccine = (Vaccine)(((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null, "angal.vaccine.deletevaccine.fmt.msg", vaccine.getDescription());
+                        try {
+                            if ((answer == JOptionPane.YES_OPTION) && (manager.deleteVaccine(vaccine))){
                                 pVaccine.remove(table.getSelectedRow());
                                 model.fireTableDataChanged();
                                 table.updateUI();

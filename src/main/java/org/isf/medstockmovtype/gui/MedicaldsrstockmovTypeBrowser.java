@@ -201,17 +201,14 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
-						MovementType dis = (MovementType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.medstockmovtype.deletemovementtype")+" \" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						
-						if ((n == JOptionPane.YES_OPTION)) {
+						MovementType movType = (MovementType) (model.getValueAt(jTable.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null, "angal.medstockmovtype.deletemovementtype.fmt.msg", movType.getDescription());
+						if ((answer == JOptionPane.YES_OPTION)) {
 							
 							boolean deleted;
 							
 							try {
-								deleted = manager.deleteMedicaldsrstockmovType(dis);
+								deleted = manager.deleteMedicaldsrstockmovType(movType);
 							} catch (OHServiceException e) {
 								deleted = false;
 								OHServiceExceptionUtil.showMessages(e);

@@ -234,18 +234,14 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 					} else {
 						WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 						Ward ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(
-								WardBrowser.this,
-								MessageBundle.getMessage("angal.ward.deleteward") + " \""+ward.getDescription()+"\" ?",
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
-						try{
-							if ((n == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))){
+						int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
+						try {
+							if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))){
 								pWard.remove(table.getSelectedRow());
 								model.fireTableDataChanged();
 								table.updateUI();
 							}
-						}catch(OHServiceException e){
+						} catch(OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
