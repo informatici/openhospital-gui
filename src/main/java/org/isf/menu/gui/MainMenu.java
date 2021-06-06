@@ -125,7 +125,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	public MainMenu() {
 		myFrame = this;
 		GeneralData.initialize();
-		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); //for all fixed options YES_NO_CANCEL in dialogs
+		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); // for all fixed options YES_NO_CANCEL in dialogs
 		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
 		try {
@@ -147,11 +147,14 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			debug = false; // default for property not found
 		}
 
+		System.err.println("SingleUser: " + singleUser);
+
 		if (singleUser) {
 			logger.info("Logging: Single User mode.");
 			myUser = new User("admin", new UserGroup("admin", ""), "admin", "");
 			MDC.put("OHUser", myUser.getUserName());
 			MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
+			System.err.println("SMS_USER 1: " + UserBrowsingManager.getCurrentUser());
 		} else {
 			// get an user
 			logger.info("Logging: Multi User mode.");
@@ -181,8 +184,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				}
 				new CommunicationFrame();
 				/*
-				 * Interaction communication= new Interaction();
-				 * communication.incomingChat(); communication.receiveFile();
+				 * Interaction communication= new Interaction(); communication.incomingChat(); communication.receiveFile();
 				 */
 			} catch (XMPPException e) {
 				String message = e.getMessage();
@@ -331,7 +333,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 						return;
 					try {
 						Object target = Class.forName(app).newInstance();
-						//Object target = Context.getApplicationContext().getBean(Class.forName(app));
+						// Object target = Context.getApplicationContext().getBean(Class.forName(app));
 						try {
 							((ModalJFrame) target).showAsModal(this);
 						} catch (ClassCastException noModalJFrame) {
