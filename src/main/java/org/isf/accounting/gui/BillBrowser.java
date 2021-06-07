@@ -509,7 +509,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						pbe.addPatientBillListener(BillBrowser.this);
 						pbe.setVisible(true);
 					} else {
-						MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill");
+						MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill.msg");
 						return;
 					}
 				}
@@ -534,7 +534,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						pbe.addPatientBillListener(BillBrowser.this);
 						pbe.setVisible(true);
 					} else {
-						MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill");
+						MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill.msg");
 					}
 				}
 			});
