@@ -198,8 +198,7 @@ public class DiseaseEdit extends JDialog {
 			gbc_codeLabel.gridx = 0;
 			gbc_codeLabel.gridy = 1;
 			dataPanel.add(codeLabel, gbc_codeLabel);  // Generated
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.common.description"));  // Generated
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			GridBagConstraints gbc_descLabel = new GridBagConstraints();
 			gbc_descLabel.fill = GridBagConstraints.BOTH;
 			gbc_descLabel.insets = new Insets(5, 5, 5, 5);

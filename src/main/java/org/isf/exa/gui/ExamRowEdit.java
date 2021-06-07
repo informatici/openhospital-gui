@@ -141,8 +141,7 @@ public class ExamRowEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {		
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			dataPanel = new JPanel();
 			dataPanel.add(descLabel); 
 			dataPanel.add(getDescriptionTextField());  

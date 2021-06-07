@@ -190,8 +190,7 @@ public class MedicalEdit extends JDialog {
 			codeLabel = new JLabel();
 			codeLabel.setText(MessageBundle.getMessage("angal.common.code")); // Generated
 			codeLabel.setAlignmentX(CENTER_ALIGNMENT);
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.common.description")); // Generated
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			descLabel.setAlignmentX(CENTER_ALIGNMENT);
 			pcsperpckLabel = new JLabel();
 			pcsperpckLabel.setText(MessageBundle.getMessage("angal.medicals.pcsperpckExt")); // Generated

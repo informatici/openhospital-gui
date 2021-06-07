@@ -328,8 +328,7 @@ public class DicomTypeEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescriptionLabel = new JLabel();
-			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			jDescriptionLabelPanel = new JPanel();
 			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}
