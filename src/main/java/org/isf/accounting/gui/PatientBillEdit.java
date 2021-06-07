@@ -955,31 +955,26 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				}
 
 				if (insert) {
-					RememberDates.setLastBillDate(billDate);			//to remember for next INSERT
-					Bill newBill = new Bill(0,							//Bill ID
-							billDate,			 						//from calendar
-							billDate,									//most recent payment
-							true,										//is a List?
-							listSelected,								//List
-							listSelected.getName(),						//List name
-							thisBill.isPatient(),						//is a Patient?
+					RememberDates.setLastBillDate(billDate);             //to remember for next INSERT
+					Bill newBill = new Bill(0,                        //Bill ID
+							billDate,                                    //from calendar
+							billDate,                                    //most recent payment
+							true,                                   //is a List?
+							listSelected,                                //List
+							listSelected.getName(),                      //List name
+							thisBill.isPatient(),                        //is a Patient?
 							thisBill.isPatient() ?
-								thisBill.getBillPatient() : null,			//Patient ID
+									thisBill.getBillPatient() : null,    //Patient ID
 							thisBill.isPatient() ?
-								patientSelected.getName() :
-								jTextFieldPatient.getText(),			//Patient Name
-							paid ? "C" : "O",							//CLOSED or OPEN
-							total.doubleValue(),						//Total
-							balance.doubleValue(),						//Balance
-							user);										//User
-
-
+									patientSelected.getName() :
+									jTextFieldPatient.getText(),         //Patient Name
+							paid ? "C" : "O",                            //CLOSED or OPEN
+							total.doubleValue(),                         //Total
+							balance.doubleValue(),                       //Balance
+							user);                                       //User
 					try {
-
 						billManager.newBill(newBill, billItems, payItems);
-
 					} catch(OHServiceException ex) {
-
 						OHServiceExceptionUtil.showMessages(ex, PatientBillEdit.this);
 						return;
 					}
@@ -987,43 +982,37 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					dispose();
 
 				} else {
-					Bill updateBill = new Bill(thisBill.getId(),		//Bill ID
-							billDate,									//from calendar
-							null,										//most recent payment
-							true,										//is a List?
-							listSelected,								//List
-							listSelected.getName(),						//List name
-							thisBill.isPatient(),						//is a Patient?
+					Bill updateBill = new Bill(thisBill.getId(),         //Bill ID
+							billDate,                                    //from calendar
+							null,                                 //most recent payment
+							true,                                  //is a List?
+							listSelected,                                //List
+							listSelected.getName(),                      //List name
+							thisBill.isPatient(),                        //is a Patient?
 							thisBill.isPatient() ?
-								thisBill.getBillPatient() : null,			//Patient ID
+									thisBill.getBillPatient() : null,    //Patient ID
 							thisBill.isPatient() ?
-								thisBill.getPatName() :
-								jTextFieldPatient.getText(),			//Patient Name
-							paid ? "C" : "O",							//CLOSED or OPEN
-							total.doubleValue(),						//Total
-							balance.doubleValue(),						//Balance
-							user);										//User
+									thisBill.getPatName() :
+									jTextFieldPatient.getText(),         //Patient Name
+							paid ? "C" : "O",                            //CLOSED or OPEN
+							total.doubleValue(),                         //Total
+							balance.doubleValue(),                       //Balance
+							user);                                       //User
 
-					try{
-
+					try {
 						BillBrowserManager billManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
 						billManager.updateBill(updateBill, billItems, payItems);
-
 					} catch (OHServiceException ex) {
-
 						OHServiceExceptionUtil.showMessages(ex, PatientBillEdit.this);
 						return;
 					}
 					fireBillInserted(updateBill);
-
 				}
 				if (hasNewPayments()) {
-
 					TxtPrinter.initialize();
 					new GenericReportBill(thisBill.getId(), "PatientBillPayments", false, !TxtPrinter.PRINT_WITHOUT_ASK);
 				}
 				if (paid && GeneralData.RECEIPTPRINTER) {
-
 					TxtPrinter.initialize();
 					if (TxtPrinter.PRINT_AS_PAID)
 						new GenericReportBill(billID, GeneralData.PATIENTBILL, false, !TxtPrinter.PRINT_WITHOUT_ASK);
