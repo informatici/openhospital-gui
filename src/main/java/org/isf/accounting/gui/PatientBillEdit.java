@@ -51,6 +51,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
@@ -683,7 +684,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jScrollPaneBigTotal == null) {
 			jScrollPaneBigTotal = new JScrollPane();
 			jScrollPaneBigTotal.setViewportView(getJTableBigTotal());
-			jScrollPaneBigTotal.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+			jScrollPaneBigTotal.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 			jScrollPaneBigTotal.setMaximumSize(new Dimension(PanelWidth, BigTotalHeight));
 			jScrollPaneBigTotal.setMinimumSize(new Dimension(PanelWidth, BigTotalHeight));
 			jScrollPaneBigTotal.setPreferredSize(new Dimension(PanelWidth, BigTotalHeight));
@@ -695,7 +696,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jScrollPaneTotal == null) {
 			jScrollPaneTotal = new JScrollPane();
 			jScrollPaneTotal.setViewportView(getJTableTotal());
-			jScrollPaneTotal.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+			jScrollPaneTotal.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 			jScrollPaneTotal.setMaximumSize(new Dimension(PanelWidth, TotalHeight));
 			jScrollPaneTotal.setMinimumSize(new Dimension(PanelWidth, TotalHeight));
 			jScrollPaneTotal.setPreferredSize(new Dimension(PanelWidth, TotalHeight));
@@ -796,7 +797,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jScrollPaneBalance == null) {
 			jScrollPaneBalance = new JScrollPane();
 			jScrollPaneBalance.setViewportView(getJTableBalance());
-			jScrollPaneBalance.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+			jScrollPaneBalance.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 			jScrollPaneBalance.setMaximumSize(new Dimension(PanelWidth, BalanceHeight));
 			jScrollPaneBalance.setMinimumSize(new Dimension(PanelWidth, BalanceHeight));
 			jScrollPaneBalance.setPreferredSize(new Dimension(PanelWidth, BalanceHeight));
@@ -1173,8 +1174,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
 
-					icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
-
 					CustomJDateChooser datePayChooser = new CustomJDateChooser(new Date());
 					datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 					datePayChooser.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
@@ -1205,7 +1204,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private boolean isValidPaymentDate(GregorianCalendar datePay) {
 		GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar lastPay = new GregorianCalendar();
+		GregorianCalendar lastPay;
 		if (!payItems.isEmpty()) {
 			lastPay = payItems.get(payItems.size() - 1).getDate();
 		} else {
@@ -1257,8 +1256,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				} else return;
 
 				if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
-
-					icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 
 					CustomJDateChooser datePayChooser = new CustomJDateChooser(new Date());
 					datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
@@ -1888,10 +1885,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			//GregorianCalendar thisday = TimeTools.getServerDateTime();
 			GregorianCalendar thisday = new GregorianCalendar();
 			GregorianCalendar billDate = thisBill.getDate();
-			int thisMonth = thisday.get(GregorianCalendar.MONTH);
-			int billMonth = billDate.get(GregorianCalendar.MONTH);
-			int thisYear = thisday.get(GregorianCalendar.YEAR);
-			int billBillYear = billDate.get(GregorianCalendar.YEAR);
+			int thisMonth = thisday.get(Calendar.MONTH);
+			int billMonth = billDate.get(Calendar.MONTH);
+			int thisYear = thisday.get(Calendar.YEAR);
+			int billBillYear = billDate.get(Calendar.YEAR);
 			if (thisYear>billBillYear || thisMonth>billMonth) {
 				jButtonAddMedical.setEnabled(false);
 				jButtonAddOperation.setEnabled(false);
