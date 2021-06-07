@@ -24,6 +24,7 @@ package org.isf.utils.jobjects;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -177,7 +178,7 @@ public class OhTableModel<T> implements TableModel{
 			columnLabel= MessageBundle.getMessage("angal.disctype.codem");
 			break;
 		case 1:
-			columnLabel= MessageBundle.getMessage("angal.common.description");
+			columnLabel= MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
 			break;
 		default:
 			break;

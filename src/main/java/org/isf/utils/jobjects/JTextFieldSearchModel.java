@@ -197,7 +197,7 @@ public class JTextFieldSearchModel extends JPanel {
 				return MessageBundle.getMessage("angal.common.code");
 			}
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.common.description");
+				return MessageBundle.getMessage("angal.common.description.txt");
 			}
 			return "";
 		}

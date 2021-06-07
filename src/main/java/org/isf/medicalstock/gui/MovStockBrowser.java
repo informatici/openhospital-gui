@@ -396,7 +396,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.medicalstock.pharmaceutical")));
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.description")));
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt")));
 		medicalPanel.add(label1Panel);
 		medicalPanel.add(getMedicalSearchPanel());
 		JPanel medicalDescPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

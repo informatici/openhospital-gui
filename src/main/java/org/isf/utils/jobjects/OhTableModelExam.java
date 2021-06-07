@@ -90,7 +90,7 @@ public class OhTableModelExam<T> implements TableModel{
 			columnLabel= MessageBundle.getMessage("angal.common.codem");
 			break;
 		case 1:
-			columnLabel= MessageBundle.getMessage("angal.common.description");
+			columnLabel= MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
 			break;
 		default:
 			break;

@@ -1096,7 +1096,7 @@ public class MovStockMultipleCharging extends JDialog {
 				return MessageBundle.getMessage("angal.common.code"); //$NON-NLS-1$
 			}
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.common.description"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.description.txt");
 			}
 			return ""; //$NON-NLS-1$
 		}
