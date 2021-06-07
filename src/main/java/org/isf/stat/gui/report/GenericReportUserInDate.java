@@ -72,10 +72,11 @@ import net.sf.jasperreports.view.JasperViewer;
                     JasperReportResultDto jasperReportTxtResultDto = jasperReportsManager.getGenericReportUserInDateTxt(fromDate, toDate, aUser, jasperFileName);
 					int print = JOptionPane.OK_OPTION;
 					if (askForPrint) {
-						print = JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.genericreportbill.doyouwanttoprintreceipt"));
+						print = MessageDialog.yesNo(null, "angal.genericreportbill.doyouwanttoprintreceipt.msg");
 					}
-					if (print != JOptionPane.OK_OPTION) return; //STOP
-						
+					if (print != JOptionPane.OK_OPTION) {
+						return; //STOP
+					}
 					new PrintReceipt(jasperReportTxtResultDto.getJasperPrint(), jasperReportTxtResultDto.getFilename());
 				}
 			} catch (Exception e) {

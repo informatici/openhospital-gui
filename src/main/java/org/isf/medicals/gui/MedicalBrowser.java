@@ -646,7 +646,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 			JMonthYearChooser monthYearChooser = new JMonthYearChooser();
 			int r = JOptionPane.showConfirmDialog(MedicalBrowser.this,
 					monthYearChooser,
-					MessageBundle.getMessage("angal.billbrowser.month"),
+					MessageBundle.getMessage("angal.billbrowser.month.txt"),
 					JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.PLAIN_MESSAGE,
 					icon);

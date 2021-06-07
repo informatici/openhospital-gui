@@ -124,10 +124,12 @@ public class BillItemPicker extends javax.swing.JPanel {
 		jTableData.getColumnModel().getColumn(1).setMinWidth(500);
 		
 		jTableData.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				jTableDataMouseClicked(evt);
 			}
 
+			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
 					validateSelection();
@@ -164,7 +166,7 @@ public class BillItemPicker extends javax.swing.JPanel {
 
 		jLabelImage.setIcon(new javax.swing.ImageIcon("rsc/icons/operation_dialog.png"));
 
-		jLabelImage.setText(MessageBundle.getMessage("angal.patientbill.find"));
+		jLabelImage.setText(MessageBundle.getMessage("angal.billitempicker.find.txt"));
 		GridBagConstraints gbc_jLabelImage = new GridBagConstraints();
 		gbc_jLabelImage.anchor = GridBagConstraints.WEST;
 		gbc_jLabelImage.insets = new Insets(0, 15, 0, 5);
@@ -264,26 +266,22 @@ public class BillItemPicker extends javax.swing.JPanel {
 		});
 
 		jPanel2 = new javax.swing.JPanel();
-		jButtonSelect = new javax.swing.JButton();
-		jButtonQuit = new javax.swing.JButton();
-
+		jButtonSelect = new javax.swing.JButton(MessageBundle.getMessage("angal.common.select.btn"));
+		jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
+		jButtonQuit = new javax.swing.JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		jButtonQuit.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		jPanel2.setBackground(new java.awt.Color(240, 240, 240));
 
-		jButtonSelect.setText(MessageBundle.getMessage("angal.ward.select"));
 		jButtonSelect.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				jButtonSelectMouseClicked(evt);
 			}
 		});
-		jButtonSelect.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButtonSelectActionPerformed(evt);
-			}
-		});
+		jButtonSelect.addActionListener(evt -> jButtonSelectActionPerformed(evt));
 
-		jButtonQuit.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
-		jButtonQuit.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		jButtonQuit.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				jButtonQuitMouseClicked(evt);
 			}
@@ -292,7 +290,6 @@ public class BillItemPicker extends javax.swing.JPanel {
 		jPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		jPanel2.add(jButtonSelect);
 		jPanel2.add(jButtonQuit);
-
 	}
 
 	private void jTableDataMouseClicked(java.awt.event.MouseEvent evt) {
@@ -303,7 +300,6 @@ public class BillItemPicker extends javax.swing.JPanel {
 		this.setSelectedRow(this.jTableData.getSelectedRow());
 		this.setVisible(false);
 		this.getParentFrame().dispose();
-
 	}
 
 	private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {
