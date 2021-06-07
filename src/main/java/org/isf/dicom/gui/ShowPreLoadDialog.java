@@ -90,7 +90,7 @@ class ShowPreLoadDialog extends JDialog {
 
 		public ShowPreLoadDialog(JFrame owner, int numfiles, FileDicom fileDicom, List<Date> dates) {
 			super(owner, true);
-			if (numfiles > 0) 
+			if (numfiles > 1)
 				setTitle("Loading multiple images: " + numfiles);
 			else
 				setTitle("Load image");
