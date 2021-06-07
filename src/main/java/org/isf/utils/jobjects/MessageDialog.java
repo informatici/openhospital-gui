@@ -118,13 +118,29 @@ public class MessageDialog {
 		for (OHExceptionMessage ohExceptionMessage : ohServiceException.getMessages()) {
 			OHSeverityLevel serverity = ohExceptionMessage.getLevel();
 			if (OHSeverityLevel.ERROR == serverity) {
-				error(null, ohExceptionMessage.getMessage());
+				JOptionPane.showMessageDialog(
+						null,
+						ohExceptionMessage.getMessage(),
+						ERROR_MESSAGE,
+						JOptionPane.ERROR_MESSAGE);
 			} else if (OHSeverityLevel.WARNING == serverity) {
-				warning(null, ohExceptionMessage.getMessage());
+				JOptionPane.showMessageDialog(
+						null,
+						ohExceptionMessage.getMessage(),
+						WARNING_MESSAGE,
+						JOptionPane.WARNING_MESSAGE);
 			} else if (OHSeverityLevel.INFO == serverity) {
-				info(null, ohExceptionMessage.getMessage());
+				JOptionPane.showMessageDialog(
+						null,
+						ohExceptionMessage.getMessage(),
+						INFO_MESSAGE,
+						JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				plain(null, ohExceptionMessage.getMessage());
+				JOptionPane.showMessageDialog(
+						null,
+						ohExceptionMessage.getMessage(),
+						PLAIN_MESSAGE,
+						JOptionPane.PLAIN_MESSAGE);
 			}
 		}
 	}
