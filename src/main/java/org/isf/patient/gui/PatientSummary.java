@@ -137,7 +137,7 @@ public class PatientSummary {
 	private JPanel getPatientTitlePanel() {
 		StringBuilder label = new StringBuilder(MessageBundle.getMessage("angal.admission.patientsummary"))
 				.append(" (")
-				.append(MessageBundle.getMessage("angal.common.code"))
+				.append(MessageBundle.getMessage("angal.common.code.txt"))
 				.append(": ")
 				.append(patient.getCode())
 				.append(")");
@@ -176,13 +176,13 @@ public class PatientSummary {
 		Integer code = patient.getCode();
 		JLabel patientCode = null;
 		if (code != null) {
-			patientCode = new JLabel(MessageBundle.getMessage("angal.common.code") + ": " + code.toString());
+			patientCode = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ": " + code.toString());
 		} else {
 			patientCode = new JLabel(" ");
 		}
-		JLabel patientName = new JLabel(MessageBundle.getMessage("angal.patient.name") + ": " + filtra(patient.getName()));
+		JLabel patientName = new JLabel(MessageBundle.getMessage("angal.common.name.txt") + ": " + filtra(patient.getName()));
 		JLabel patientAge = new JLabel(MessageBundle.getMessage("angal.patient.age") + ": " + TimeTools.getFormattedAge(patient.getBirthDate()));
-		JLabel patientSex = new JLabel(MessageBundle.getMessage("angal.patient.sex") + ": " + patient.getSex());
+		JLabel patientSex = new JLabel(MessageBundle.getMessage("angal.common.sex.txt") + ": " + patient.getSex());
 		JLabel patientTOB = new JLabel(MessageBundle.getMessage("angal.patient.tobm") + ": " + filtra(patient.getBloodType()));
 		
 		JLabel patientPhoto = new JLabel();
@@ -343,8 +343,8 @@ public class PatientSummary {
 
 	private JPanel getPatientSexPanel() {
 		JLabel l = new JLabel((patient.getSex() == 'F'
-				? MessageBundle.getMessage("angal.admission.female")
-				: MessageBundle.getMessage("angal.admission.male")));
+				? MessageBundle.getMessage("angal.common.female.txt")
+				: MessageBundle.getMessage("angal.common.male.txt")));
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
 		return lP;

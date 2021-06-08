@@ -159,8 +159,8 @@ public class InsertMalnutrition extends JDialog {
 			weightField.setText(String.valueOf(maln.getWeight()));
 			heightField.setText(String.valueOf(maln.getHeight()));
 		}
-		JLabel weightLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.weight"));
-		JLabel heightLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.height"));
+		JLabel weightLabel = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
+		JLabel heightLabel = new JLabel(MessageBundle.getMessage("angal.common.height.txt"));
 		fieldPanel.add(weightLabel);
 		fieldPanel.add(weightField);
 		fieldPanel.add(heightLabel);

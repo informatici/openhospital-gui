@@ -631,7 +631,7 @@ public class WardPharmacy extends ModalJFrame implements
 				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
 			}
 			if (c == 2) {
-				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.quantity.txt");
 			}
 			return ""; //$NON-NLS-1$
 		}
@@ -764,13 +764,13 @@ public class WardPharmacy extends ModalJFrame implements
 	private JPanel getJPanelWeight() {
 		if (jWeightPanel == null) {
 			jWeightPanel = new JPanel();
-			jWeightPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.medicalstockward.weight"))); //$NON-NLS-1$
+			jWeightPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.weight.txt")));
 
-			JLabel jLabelWeightFrom = new JLabel(MessageBundle.getMessage("angal.medicalstockward.weightfrom")); //$NON-NLS-1$
+			JLabel jLabelWeightFrom = new JLabel(MessageBundle.getMessage("angal.common.from.txt"));
 			jWeightPanel.add(jLabelWeightFrom, null);
 			jWeightPanel.add(getJWeightFromTextField(), null);
 
-			JLabel jLabelWeightTo = new JLabel(MessageBundle.getMessage("angal.medicalstockward.weightto")); //$NON-NLS-1$
+			JLabel jLabelWeightTo = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			jWeightPanel.add(jLabelWeightTo, null);
 			jWeightPanel.add(getJWeightToTextField(), null);
 		}
@@ -835,11 +835,11 @@ public class WardPharmacy extends ModalJFrame implements
 	public JPanel getSexPanel() {
 		if (sexPanel == null) {
 			sexPanel = new JPanel();
-			sexPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.medicalstockward.sex"))); //$NON-NLS-1$
+			sexPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.sex.txt")));
 			ButtonGroup group = new ButtonGroup();
-			radiom = new JRadioButton(MessageBundle.getMessage("angal.medicalstockward.male")); //$NON-NLS-1$
-			radiof = new JRadioButton(MessageBundle.getMessage("angal.medicalstockward.female")); //$NON-NLS-1$
-			radioa = new JRadioButton(MessageBundle.getMessage("angal.medicalstockward.all")); //$NON-NLS-1$
+			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
+			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
+			radioa = new JRadioButton(MessageBundle.getMessage("angal.common.all.txt"));
 			radioa.setSelected(true);
 			group.add(radiom);
 			group.add(radiof);
@@ -933,7 +933,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jComboBoxTypes.setPreferredSize(new Dimension(filterWidth, 24));
 			ArrayList<MedicalType> medicalTypes;
 
-			jComboBoxTypes.addItem(MessageBundle.getMessage("angal.medicalstockward.alltypes")); //$NON-NLS-1$
+			jComboBoxTypes.addItem(MessageBundle.getMessage("angal.common.alltypes.txt"));
 
 			try {
 				medicalTypes = medicalTypeBrowserManager.getMedicalType();
@@ -1096,7 +1096,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private JLabel getJLabelTo() {
 		if (jLabelTo == null) {
 			jLabelTo = new JLabel();
-			jLabelTo.setText(MessageBundle.getMessage("angal.common.to")); //$NON-NLS-1$
+			jLabelTo.setText(MessageBundle.getMessage("angal.common.to.txt"));
 			jLabelTo.setBounds(509, 15, 45, 15);
 		}
 		return jLabelTo;
@@ -1105,7 +1105,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private JLabel getJLabelFrom() {
 		if (jLabelFrom == null) {
 			jLabelFrom = new JLabel();
-			jLabelFrom.setText(MessageBundle.getMessage("angal.common.from")); //$NON-NLS-1$
+			jLabelFrom.setText(MessageBundle.getMessage("angal.common.from.txt")); //$NON-NLS-1$
 			jLabelFrom.setBounds(365, 14, 45, 15);
 		}
 		return jLabelFrom;
@@ -1393,19 +1393,19 @@ public class WardPharmacy extends ModalJFrame implements
 				if (mov.isPatient())
 					return mov.getAge();
 				else
-					return MessageBundle.getMessage("angal.common.notapplicable"); //$NON-NLS-1$
+					return MessageBundle.getMessage("angal.common.notapplicable.txt");
 			}
 			if (c == 3) {
 				if (mov.isPatient())
 					return mov.getPatient().getSex();
-				return MessageBundle.getMessage("angal.common.notapplicable"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.notapplicable.txt");
 			}
 			if (c == 4) {
 				if (mov.isPatient()) {
 					float weight = mov.getWeight();
-					return weight == 0 ? MessageBundle.getMessage("angal.common.notdefined") : weight; //$NON-NLS-1$
+					return weight == 0 ? MessageBundle.getMessage("angal.common.notdefined.txt") : weight;
 				} else
-					return MessageBundle.getMessage("angal.common.notapplicable"); //$NON-NLS-1$
+					return MessageBundle.getMessage("angal.common.notapplicable.txt");
 			}
 			if (c == 5) {
 				return mov.getMedical().getDescription();
@@ -1565,7 +1565,7 @@ public class WardPharmacy extends ModalJFrame implements
 					} else if (jTabbedPaneWard.getSelectedIndex() == 2) {
 						ArrayList<String> options = new ArrayList<>();
 						options.add(MessageBundle.getMessage("angal.medicals.today")); //$NON-NLS-1$
-						options.add(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
+						options.add(MessageBundle.getMessage("angal.common.date.txt"));
 
 						Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 						String option = (String) JOptionPane.showInputDialog(WardPharmacy.this,
@@ -1592,7 +1592,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 							int r = JOptionPane.showConfirmDialog(WardPharmacy.this,
 									dateChooser,
-									MessageBundle.getMessage("angal.common.date"),  //$NON-NLS-1$
+									MessageBundle.getMessage("angal.common.date.txt"),
 									JOptionPane.OK_CANCEL_OPTION,
 									JOptionPane.PLAIN_MESSAGE,
 									icon);
@@ -1666,7 +1666,7 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 		if (jComboBoxTypes.isEnabled()
 				&& !jComboBoxTypes.getSelectedItem().equals(
-				MessageBundle.getMessage("angal.medicalstockward.alltypes"))) {
+				MessageBundle.getMessage("angal.common.alltypes.txt"))) {
 
 			filename.append("_").append(jComboBoxTypes.getSelectedItem());
 		}

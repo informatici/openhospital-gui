@@ -311,7 +311,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
 			}
 			if (c == 2) {
-				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.quantity.txt");
 			}
 			return ""; //$NON-NLS-1$
 		}
@@ -452,11 +452,11 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		message.append(med).append('\n') //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty); // $NON-NLS-1$
-		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
 
 		if (prodCode != null && !prodCode.equals("")) { //$NON-NLS-1$
 			title.append(' ') //$NON-NLS-1$
-					.append(MessageBundle.getMessage("angal.common.code")) //$NON-NLS-1$
+					.append(MessageBundle.getMessage("angal.common.code.txt"))
 					.append(": ") //$NON-NLS-1$
 					.append(prodCode);
 		} else {

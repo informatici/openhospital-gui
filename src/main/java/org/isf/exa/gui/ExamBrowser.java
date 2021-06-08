@@ -77,6 +77,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExamBrowser.class);
+	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
 	private int selectedrow;
 	private JComboBox pbox;
@@ -177,7 +178,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	private JComboBox getJComboBoxExamType() {
 		if (pbox == null) {
 			pbox = new JComboBox();
-			pbox.addItem(MessageBundle.getMessage("angal.exa.all"));
+			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
 			ArrayList<ExamType> type;
 			try {
 				type = manager.getExamType();	//for efficiency in the sequent for
@@ -435,7 +436,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	private void reloadTable() {
 		pSelection=pbox.getSelectedItem().toString();
-		if (pSelection.compareTo(MessageBundle.getMessage("angal.exa.all")) == 0)
+		if (pSelection.compareTo(STR_ALL) == 0)
 			model = new ExamBrowsingModel();
 		else
 			model = new ExamBrowsingModel(pSelection);

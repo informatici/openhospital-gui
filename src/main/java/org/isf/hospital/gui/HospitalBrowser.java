@@ -41,6 +41,7 @@ import org.isf.hospital.model.Hospital;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
@@ -133,7 +134,7 @@ public class HospitalBrowser extends ModalJFrame{
 	public JPanel getJNamePanel() {
 		if (jNamePanel==null){
 			jNamePanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel nameJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.name")+": ");
+			JLabel nameJLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt") + ": ");
 			jNamePanel.add(nameJLabel);
 			nameJTextField = new JTextField(25);
 			nameJTextField.setEditable(false);			
@@ -146,7 +147,7 @@ public class HospitalBrowser extends ModalJFrame{
 	public JPanel getJAddressPanel() {
 		if (jAddressPanel==null){
 			jAddressPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel addJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.address")+": ");
+			JLabel addJLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt")+": ");
 			jAddressPanel.add(addJLabel);
 			addressJTextField = new JTextField(25);
 			addressJTextField.setEditable(false);
@@ -157,9 +158,9 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 	
 	public JPanel getJCityPanel() {
-		if (jCityPanel==null){
-			jCityPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel cityJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.city")+": ");
+		if (jCityPanel == null){
+			jCityPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel cityJLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt")+": ");
 			jCityPanel.add(cityJLabel);
 			cityJTextField = new JTextField(25);
 			cityJTextField.setEditable(false);
@@ -171,7 +172,7 @@ public class HospitalBrowser extends ModalJFrame{
 	public JPanel getJTelePanel() {
 		if (jTelePanel==null){
 			jTelePanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel teleJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.telephone")+": ");
+			JLabel teleJLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt")+": ");
 			jTelePanel.add(teleJLabel);
 			teleJTextField = new JTextField(25);
 			teleJTextField.setEditable(false);
@@ -235,13 +236,8 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 	
 	public void saveConfirm() {
-		int n = JOptionPane.showConfirmDialog(
-				null,
-				MessageBundle.getMessage("angal.hospital.savechanges")+" ?",
-				hospital.getDescription(),
-				JOptionPane.YES_NO_OPTION);
-		
-		if ((n == JOptionPane.YES_OPTION)){
+		int response = MessageDialog.yesNo(null, "angal.hospital.savethechanges.msg");
+		if (response == JOptionPane.YES_OPTION) {
 			updateHospitalEntity();
 		}
 	}
@@ -259,8 +255,7 @@ public class HospitalBrowser extends ModalJFrame{
 			
 			closeJButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					if (isModified())
-					{						
+					if (isModified()) {
 						//open confirm save window
 						saveConfirm();
 					}

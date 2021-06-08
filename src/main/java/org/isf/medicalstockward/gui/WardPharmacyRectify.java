@@ -663,11 +663,11 @@ public class WardPharmacyRectify extends JDialog {
 	}
 	
 	protected int askQuantity(Medical med) {
-		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
 		StringBuilder message = new StringBuilder(med.toString());
 		String prodCode = med.getProd_code();
 		if (prodCode != null && !prodCode.equals("")) {
-			title.append(" ").append(MessageBundle.getMessage("angal.common.code")); //$NON-NLS-1$ //$NON-NLS-2$
+			title.append(" ").append(MessageBundle.getMessage("angal.common.code.txt")); //$NON-NLS-1$ //$NON-NLS-2$
 			title.append(": ").append(prodCode); //$NON-NLS-1$
 		} else { 
 			title.append(": "); //$NON-NLS-1$
@@ -816,7 +816,7 @@ public class WardPharmacyRectify extends JDialog {
 				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
 			}
 			if (c == 2) {
-				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.quantity.txt");
 			}
 			return ""; //$NON-NLS-1$
 		}

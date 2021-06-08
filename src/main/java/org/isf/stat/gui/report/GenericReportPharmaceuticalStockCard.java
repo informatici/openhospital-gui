@@ -94,9 +94,9 @@ public class GenericReportPharmaceuticalStockCard {
 	    if (medical != null) {
 	    	fileName.append("_").append(medical.getCode());
 	    }
-	    fileName.append("_").append(MessageBundle.getMessage("angal.common.from"))
+	    fileName.append("_").append(MessageBundle.getMessage("angal.common.from.txt"))
 	    		.append("_").append(formatter.format(dateFrom))
-	    		.append("_").append(MessageBundle.getMessage("angal.common.to"))
+	    		.append("_").append(MessageBundle.getMessage("angal.common.to.txt"))
 	    		.append("_").append(formatter.format(dateTo));
         return  fileName.toString();
     }

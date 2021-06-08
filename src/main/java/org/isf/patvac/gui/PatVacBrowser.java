@@ -101,7 +101,7 @@ public class PatVacBrowser extends ModalJFrame {
 	private JRadioButton radiom;
 	private JRadioButton radiof;
 	private JRadioButton radioa;
-	private String sexSelect = MessageBundle.getMessage("angal.patvac.all");
+	private String sexSelect = MessageBundle.getMessage("angal.common.all.txt");
 	private JLabel rowCounter = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.patvac.count") + ": ";
 	
@@ -414,14 +414,14 @@ public class PatVacBrowser extends ModalJFrame {
 		datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.Y_AXIS));
 
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date") +": "+ MessageBundle.getMessage("angal.common.from")), null);
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") +": "+ MessageBundle.getMessage("angal.common.from.txt")), null);
 		datePanel.add(label1Panel);
 		
 		label1Panel.add(getDateFromPanel());
 		datePanel.add(label1Panel,null);
 		
 		label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date") +": "+MessageBundle.getMessage("angal.common.to") +"     "), null);
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") +": "+MessageBundle.getMessage("angal.common.to.txt") +"     "), null);
 		datePanel.add(label1Panel);
 		
 		label1Panel.add(getDateToPanel());
@@ -465,14 +465,14 @@ public class PatVacBrowser extends ModalJFrame {
 			sexPanel = new JPanel();
 			sexPanel.setLayout(new BoxLayout(sexPanel, BoxLayout.Y_AXIS));
 			JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.patvac.selectsex")), null);
+			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.selectsex.txt")), null);
 			sexPanel.add(label1Panel);
 			
 			label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			group=new ButtonGroup();
-			radiom= new JRadioButton(MessageBundle.getMessage("angal.patvac.male"));
-			radiof= new JRadioButton(MessageBundle.getMessage("angal.patvac.female"));
-			radioa= new JRadioButton(MessageBundle.getMessage("angal.patvac.all"));
+			radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
+			radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
+			radioa= new JRadioButton(MessageBundle.getMessage("angal.common.all.txt"));
 			radioa.setSelected(true);
 			group.add(radiom);
 			group.add(radiof);

@@ -176,11 +176,11 @@ public class SupplierEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			idLabel = new JLabel(MessageBundle.getMessage("angal.supplier.id"));
-			nameLabel = new JLabelRequired(MessageBundle.getMessage("angal.supplier.name"));
-			addressLabel = new JLabel(MessageBundle.getMessage("angal.supplier.address"));
+			idLabel = new JLabel(MessageBundle.getMessage("angal.common.id.txt"));
+			nameLabel = new JLabelRequired(MessageBundle.getMessage("angal.common.name.txt"));
+			addressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
 			taxcodeLabel = new JLabel(MessageBundle.getMessage("angal.supplier.taxcode"));
-			phoneLabel = new JLabel(MessageBundle.getMessage("angal.supplier.telephone"));
+			phoneLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			faxLabel = new JLabel(MessageBundle.getMessage("angal.supplier.faxnumber"));
 			emailLabel = new JLabel(MessageBundle.getMessage("angal.supplier.email"));
 			noteLabel = new JLabel(MessageBundle.getMessage("angal.supplier.note"));

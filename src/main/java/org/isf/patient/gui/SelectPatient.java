@@ -109,8 +109,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private JButton buttonNew;
 	private PatientSummary ps;
 	private String[] patColumns = {
-			MessageBundle.getMessage("angal.common.code").toUpperCase(),
-			MessageBundle.getMessage("angal.patient.name").toUpperCase()
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase()
 	}; 
 	private int[] patColumnsWidth = { 100, 250 };
 	private boolean[] patColumnsResizable = { false, true };

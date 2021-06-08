@@ -51,6 +51,7 @@ import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.jobjects.Cropping;
 import org.isf.utils.jobjects.IconButton;
+import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,12 +89,8 @@ public class PatientPhotoPanel extends JPanel {
 			btnDeletePhoto.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-					int n = JOptionPane.showConfirmDialog(owner, 
-							MessageBundle.getMessage("angal.patient.doyoureallywanttodeletepatientsphoto"),  //$NON-NLS-1$
-							MessageBundle.getMessage("angal.patient.confirmdeletion"),  //$NON-NLS-1$
-							JOptionPane.YES_NO_OPTION);
-
-					if (n == JOptionPane.YES_OPTION) {
+					int answer = MessageDialog.yesNo(owner, "angal.patient.doyouwanttodeletethepatientsphoto.msg");
+					if (answer == JOptionPane.YES_OPTION) {
 						btnDeletePhoto.setVisible(false);
 						patientFrame.setPatientPhoto(null);
 						externalPanel.updatePhoto(nophoto);

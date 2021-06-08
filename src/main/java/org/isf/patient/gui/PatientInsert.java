@@ -287,10 +287,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 									String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
 									try {
 										if (manager.isNamePresent(name)) {
-											switch (JOptionPane.showConfirmDialog(null,
-													MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" +
-															MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?",
-													MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {
+											switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
 												case JOptionPane.OK_OPTION:
 													ok = true;
 													break;
@@ -307,7 +304,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 										patient.setSecondName(jSecondNameTextField.getText());
 										patient.setAge(age);
 
-										if (sexSelect.equals(MessageBundle.getMessage("angal.patient.female"))) {
+										if (sexSelect.equals(MessageBundle.getMessage("angal.common.female.txt"))) {
 											sex = 'F';
 										} else {
 											sex = 'M';
@@ -347,10 +344,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 						if (!(patient.getName().equals(name))) {
 							try {
 								if (manager.isNamePresent(name)) {
-									switch (JOptionPane.showConfirmDialog(null,
-											MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" +
-													MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?",
-											MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {
+									switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
 										case JOptionPane.OK_OPTION:
 											ok = true;
 											break;
@@ -372,7 +366,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 							patient.setAge(age);
 							if (sexSelect.equals(" ")) {
 								sex = patient.getSex();
-							} else if (sexSelect.equals(MessageBundle.getMessage("angal.patient.female"))) {
+							} else if (sexSelect.equals(MessageBundle.getMessage("angal.common.female.txt"))) {
 								sex = 'F';
 							} else {
 								sex = 'M';
@@ -534,8 +528,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (sexPanel == null) {			
 			sexPanel = new JPanel();
 			sexGroup=new ButtonGroup();
-			JRadioButton radiom= new JRadioButton(MessageBundle.getMessage("angal.patient.male"));
-			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.patient.female"));
+			JRadioButton radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
+			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
 			radiom.setMnemonic(KeyEvent.VK_A+('M'-'A')); 
 			radiof.setMnemonic(KeyEvent.VK_A+('F'-'A')); 
 			sexPanel.add(getJSexLabelPanel(), null);
@@ -565,8 +559,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JPanel getJAddressPanel() {
 		if (jAddressPanel == null) {
-			jAddressLabel = new JLabel();
-			jAddressLabel.setText(MessageBundle.getMessage("angal.patient.address"));
+			jAddressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
 			jAddressPanel = new JPanel();
 			jAddressPanel.add(jAddressLabel, BorderLayout.EAST);
 		}
@@ -593,8 +586,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JPanel getJCityPanel() {
 		if (jCityPanel == null) {
-			jCityLabel = new JLabel();
-			jCityLabel.setText(MessageBundle.getMessage("angal.patient.city"));
+			jCityLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt"));
 			jCityPanel = new JPanel();		
 			jCityPanel.add(jCityLabel, BorderLayout.EAST);
 		}
@@ -621,8 +613,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JPanel getJTelPanel() {
 		if (jTelPanel == null) {
-			jTelLabel = new JLabel();
-			jTelLabel.setText(MessageBundle.getMessage("angal.patient.telephone"));
+			jTelLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			jTelPanel = new JPanel();				
 			jTelPanel.add(jTelLabel,  BorderLayout.EAST);
 		}

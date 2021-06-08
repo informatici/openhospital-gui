@@ -443,11 +443,9 @@ public class PatientInsertExtended extends JDialog {
 					}
 					if (insert) {
 						String name = firstName + " " + secondName;
-						try{
+						try {
 							if (patientManager.isNamePresent(name)) {
-								switch (JOptionPane.showConfirmDialog(null,
-										MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" + MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?",
-										MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {
+								switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
 										case JOptionPane.OK_OPTION:
 											ok = true;
 											break;
@@ -456,7 +454,7 @@ public class PatientInsertExtended extends JDialog {
 											break;
 								}
 							}
-						}catch(OHServiceException ex){
+						} catch(OHServiceException ex) {
                             OHServiceExceptionUtil.showMessages(ex);
 						}
 						if (ok) {
@@ -635,8 +633,7 @@ public class PatientInsertExtended extends JDialog {
 			if (years < 0 || years > 200)
 				return false;
 			if (years > 100) {
-				if (JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.patient.confirmage"), MessageBundle.getMessage("angal.patient.veryoldpatient"),
-						JOptionPane.YES_NO_OPTION) == 1) {
+				if (MessageDialog.yesNo(null, "angal.patient.confirmage.msg") == 1) {
 					return false;
 				}
 			}
@@ -902,8 +899,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jSexPanel == null) {
 			jSexPanel = new JPanel();
 			sexGroup = new ButtonGroup();
-			radiom = new JRadioButton(MessageBundle.getMessage("angal.patient.male"));
-			radiof = new JRadioButton(MessageBundle.getMessage("angal.patient.female"));
+			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
+			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
 			radiom.setMnemonic(KeyEvent.VK_A + ('M' - 'A'));
 			radiof.setMnemonic(KeyEvent.VK_A + ('F' - 'A'));
 			jSexPanel.add(getJSexLabelPanel(), null);
@@ -929,8 +926,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JPanel getJAddressLabelPanel() {
 		if (jAddressLabelPanel == null) {
-			jAddressLabel = new JLabel();
-			jAddressLabel.setText(MessageBundle.getMessage("angal.patient.address"));
+			jAddressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
 			jAddressLabelPanel = new JPanel();
 			jAddressLabelPanel.add(jAddressLabel, BorderLayout.EAST);
 		}
@@ -987,8 +983,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JPanel getJCityLabelPanel() {
 		if (jCityLabelPanel == null) {
-			jCityLabel = new JLabel();
-			jCityLabel.setText(MessageBundle.getMessage("angal.patient.city"));
+			jCityLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt"));
 			jCityLabelPanel = new JPanel();
 			jCityLabelPanel.add(jCityLabel, BorderLayout.EAST);
 		}
@@ -1016,8 +1011,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JPanel getJTelPanel() {
 		if (jTelephoneLabelPanel == null) {
-			jTelephoneLabel = new JLabel();
-			jTelephoneLabel.setText(MessageBundle.getMessage("angal.patient.telephone"));
+			jTelephoneLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			jTelephoneLabelPanel = new JPanel();
 			jTelephoneLabelPanel.add(jTelephoneLabel, BorderLayout.EAST);
 		}
@@ -1487,12 +1481,10 @@ public class PatientInsertExtended extends JDialog {
 
 			jAgeDescComboBox.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if (jAgeDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn")) == 0) {
+					if (jAgeDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn.txt")) == 0) {
 						jAgeMonthsComboBox.setEnabled(true);
-
 					} else {
 						jAgeMonthsComboBox.setEnabled(false);
-
 					}
 				}
 			});
@@ -1746,7 +1738,7 @@ public class PatientInsertExtended extends JDialog {
 			if (!insert) {
 				StringBuilder title = new StringBuilder(patient.getName())
 						.append(" (")
-						.append(MessageBundle.getMessage("angal.common.code"))
+						.append(MessageBundle.getMessage("angal.common.code.txt"))
 						.append(": ")
 						.append(patient.getCode())
 						.append(")");

@@ -171,7 +171,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private static final String PATH_MALE_GENDER = "rsc/images/sagoma-uomo-132x300.jpg"; //$NON-NLS-1$
 	
 	private final String[] columnNames = { 
-			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.examination.heightabbr"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.examination.weightabbr"), //$NON-NLS-1$
 			MessageBundle.getMessage("angal.examination.arterialpressureabbr"), //$NON-NLS-1$
@@ -327,7 +327,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 			jPanelExamination.setLayout(gbl_jPanelExamination);
 
-			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
+			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
 			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
 			gbc_jLabelDate.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDate.insets = new Insets(10, 5, 5, 5);
@@ -350,7 +350,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				gbc_lblh.gridy = 1;
 				jPanelExamination.add(jLabelHeightAbb, gbc_lblh);
 	
-				JLabel jLabelHeight = new JLabel(MessageBundle.getMessage("angal.examination.height")); //$NON-NLS-1$
+				JLabel jLabelHeight = new JLabel(MessageBundle.getMessage("angal.common.height.txt"));
 				GridBagConstraints gbc_jLabelHeight = new GridBagConstraints();
 				gbc_jLabelHeight.anchor = GridBagConstraints.WEST;
 				gbc_jLabelHeight.insets = new Insets(5, 5, 5, 5);
@@ -388,7 +388,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				gbc_lblw.gridy = 2;
 				jPanelExamination.add(jLabelWeightAbb, gbc_lblw);
 	
-				JLabel jLabelWeight = new JLabel(MessageBundle.getMessage("angal.examination.weight")); //$NON-NLS-1$
+				JLabel jLabelWeight = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
 				GridBagConstraints gbc_jLabelWeight = new GridBagConstraints();
 				gbc_jLabelWeight.anchor = GridBagConstraints.WEST;
 				gbc_jLabelWeight.insets = new Insets(5, 5, 5, 5);

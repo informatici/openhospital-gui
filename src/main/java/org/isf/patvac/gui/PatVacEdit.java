@@ -186,7 +186,7 @@ public class PatVacEdit extends JDialog {
 			dataPanel.setBounds(0, 0, panelWidth, dataPanelHeight);
 
 			// vaccine date
-			vaccineDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date"));
+			vaccineDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
 			vaccineDateLabel.setBounds(5, 10, labelWidth, 20);
 			vaccineDateFieldCal = getVaccineDateFieldCal();
 			vaccineDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
@@ -579,7 +579,7 @@ public class PatVacEdit extends JDialog {
 			dataPatient.setLayout(null);
 			dataPatient.setBounds(0, dataPanelHeight, panelWidth, dataPatientHeight);
 			dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.patvac.datapatient")));
-			nameLabel = new JLabel(MessageBundle.getMessage("angal.patvac.name"));
+			nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
 			nameLabel.setBounds(10, DeltaBetweenLabels, labelWidth, 20);
 			patTextField = getPatientTextField();
 			patTextField.setBounds(labelWidth + 5, DeltaBetweenLabels, 180, 20);

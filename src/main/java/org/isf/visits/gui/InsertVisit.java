@@ -241,7 +241,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		}
 
 		wardPanel.add(wardBox);
-		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.ward"))); //$NON-NLS-1$
+		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.ward.txt")));
 
 		return wardPanel;
 	}
@@ -381,7 +381,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			dateViPanel = new JPanel();
 
 			dateAdm = new JLabel();
-			dateAdm.setText(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
+			dateAdm.setText(MessageBundle.getMessage("angal.common.date.txt"));
 
 			dateViPanel.add(dateAdm);
 			dateViPanel.add(getVisitDateField());
@@ -448,7 +448,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private JPanel getPanelChoosePatient() {
 		JPanel choosePatientPanel = new JPanel();
 		choosePatientPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		choosePatientPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.pleaseselectapatient"))); //$NON-NLS-1$
+		choosePatientPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.visit.pleaseselectapatient.border")));
 
 		patientTextField = new JTextField(14);
 		patientTextField.setEditable(false);

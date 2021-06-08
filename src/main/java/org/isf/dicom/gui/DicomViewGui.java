@@ -359,13 +359,13 @@ public class DicomViewGui extends JPanel {
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.oh"), 10, hi);
 		hi += VGAP;
 		txt = ohPatient.getName();
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.name") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.name.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = "" + ohPatient.getAge();
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.age") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = "" + ohPatient.getSex();
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.sex") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.sex.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		hi += VGAP;
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.dicom"), 10, hi);
@@ -373,12 +373,12 @@ public class DicomViewGui extends JPanel {
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientName) : tmpDbFile.getDicomPatientName();
 		if (txt == null)
 			txt = "";
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.name") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.name.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientSex) : tmpDbFile.getDicomPatientSex();
 		if (txt == null)
 			txt = "";
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.sex") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.sex.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientAge) :  tmpDbFile.getDicomPatientAge();
 		if (txt == null)
@@ -443,7 +443,7 @@ public class DicomViewGui extends JPanel {
 			txt = df.format(d);
 		else
 			txt = "";
-		canvas.drawString(MessageBundle.getMessage("angal.common.date") + " : " + txt, ws, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.date.txt") + " : " + txt, ws, hi);
 		canvas.setColor(orig);
 	}
 

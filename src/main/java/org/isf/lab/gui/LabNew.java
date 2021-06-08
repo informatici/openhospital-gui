@@ -394,7 +394,7 @@ public class LabNew extends JDialog implements SelectionListener {
 			jPanelResults = new JPanel();
 			jPanelResults.setPreferredSize(new Dimension(EastWidth, ResultHeight));
 			jPanelResults.setBorder(BorderFactory.createTitledBorder(
-					BorderFactory.createLineBorder(Color.LIGHT_GRAY), MessageBundle.getMessage("angal.labnew.result")));
+					BorderFactory.createLineBorder(Color.LIGHT_GRAY), MessageBundle.getMessage("angal.common.result.txt")));
 		} else {
 			jPanelResults.removeAll();
 			int selectedRow = jTableExams.getSelectedRow();

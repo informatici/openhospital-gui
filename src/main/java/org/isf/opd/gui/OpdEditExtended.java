@@ -1375,8 +1375,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jFieldSecondName.gridx = 1;
 			gbc_jFieldSecondName.gridy = 1;
 			jPanelPatient.add(jFieldSecondName, gbc_jFieldSecondName);
-			jLabeladdress  = new JLabel();
-			jLabeladdress.setText(MessageBundle.getMessage("angal.opd.address.txt"));
+			jLabeladdress  = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
 			GridBagConstraints gbc_jLabeladdress = new GridBagConstraints();
 			gbc_jLabeladdress.fill = GridBagConstraints.BOTH;
 			gbc_jLabeladdress.insets = new Insets(5, 5, 5, 5);
@@ -1393,7 +1392,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jFieldAddress.gridy = 2;
 			jPanelPatient.add(jFieldAddress, gbc_jFieldAddress);
 			jLabelcity = new JLabel();
-			jLabelcity.setText(MessageBundle.getMessage("angal.opd.city.txt"));
+			jLabelcity.setText(MessageBundle.getMessage("angal.common.city.txt"));
 			GridBagConstraints gbc_jLabelcity = new GridBagConstraints();
 			gbc_jLabelcity.fill = GridBagConstraints.BOTH;
 			gbc_jLabelcity.insets = new Insets(5, 5, 5, 5);

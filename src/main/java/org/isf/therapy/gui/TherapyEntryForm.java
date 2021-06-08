@@ -436,7 +436,7 @@ public class TherapyEntryForm extends JDialog {
 			quantityPanel.setLayout(new BoxLayout(quantityPanel,
 					BoxLayout.X_AXIS));
 
-			JLabel quantityLabel = new JLabel(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+			JLabel quantityLabel = new JLabel(MessageBundle.getMessage("angal.common.quantity.txt"));
 			quantityPanel.add(quantityLabel);
 			quantityPanel.add(getSpinnerQty());
 			quantityPanel.add(getQuantitySlider());

@@ -335,7 +335,7 @@ public class MovStockBrowser extends ModalJFrame {
 		totalAmount = new BigDecimal(0);
 
 		// quantity
-		if (!medicalBox.getSelectedItem().equals(MessageBundle.getMessage("angal.medicalstock.all"))) {
+		if (!medicalBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
 			for (Movement mov : moves) {
 				if (mov.getType().getType().contains("+")) {
 					totalQti += mov.getQuantity();
@@ -345,7 +345,7 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 			jTableTotal.getModel().setValueAt(totalQti, 0, 4);
 		} else {
-			jTableTotal.getModel().setValueAt(MessageBundle.getMessage("angal.common.notapplicable"), 0, 4);
+			jTableTotal.getModel().setValueAt(MessageBundle.getMessage("angal.common.notapplicable.txt"), 0, 4);
 		}
 
 		// amount
@@ -431,17 +431,17 @@ public class MovStockBrowser extends ModalJFrame {
 		movementPanel.add(wardPanel);
 
 		JPanel label4Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label4Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date")));
+		label4Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt")));
 		movementPanel.add(label4Panel);
 
 		JPanel moveFromPanel = new JPanel(new BorderLayout());
-		JLabel label = new JLabel(MessageBundle.getMessage("angal.common.from"));
+		JLabel label = new JLabel(MessageBundle.getMessage("angal.common.from.txt"));
 		label.setVerticalAlignment(SwingConstants.TOP);
 		moveFromPanel.add(label, BorderLayout.WEST);
 		moveFromPanel.add(getMovDateFrom(), BorderLayout.EAST);
 		movementPanel.add(moveFromPanel);
 		JPanel moveToPanel = new JPanel(new BorderLayout());
-		JLabel label_1 = new JLabel(MessageBundle.getMessage("angal.common.to"));
+		JLabel label_1 = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
 		label_1.setVerticalAlignment(SwingConstants.TOP);
 		moveToPanel.add(label_1, BorderLayout.WEST);
 		moveToPanel.add(getMovDateTo(), BorderLayout.EAST);
@@ -458,11 +458,11 @@ public class MovStockBrowser extends ModalJFrame {
 				MessageBundle.getMessage("angal.medicalstock.lotpreparationdate")));
 
 		JPanel lotPrepFromPanel = new JPanel(new BorderLayout());
-		lotPrepFromPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from")), BorderLayout.WEST);
+		lotPrepFromPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt")), BorderLayout.WEST);
 		lotPrepFromPanel.add(getLotPrepFrom(), BorderLayout.EAST);
 		lotPreparationDatePanel.add(lotPrepFromPanel);
 		JPanel lotPrepToPanel = new JPanel(new BorderLayout());
-		lotPrepToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to")), BorderLayout.WEST);
+		lotPrepToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt")), BorderLayout.WEST);
 		lotPrepToPanel.add(getLotPrepTo(), BorderLayout.EAST);
 		lotPreparationDatePanel.add(lotPrepToPanel);
 
@@ -477,11 +477,11 @@ public class MovStockBrowser extends ModalJFrame {
 				BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.medicalstock.lotduedate")));
 
 		JPanel lotDueFromPanel = new JPanel(new BorderLayout());
-		lotDueFromPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from")), BorderLayout.WEST);
+		lotDueFromPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt")), BorderLayout.WEST);
 		lotDueFromPanel.add(getLotDueFrom(), BorderLayout.EAST);
 		lotDueDatePanel.add(lotDueFromPanel);
 		JPanel lotDueToPanel = new JPanel(new BorderLayout());
-		lotDueToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to")), BorderLayout.WEST);
+		lotDueToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt")), BorderLayout.WEST);
 		lotDueToPanel.add(getLotDueTo(), BorderLayout.EAST);
 		lotDueDatePanel.add(lotDueToPanel);
 
@@ -492,7 +492,7 @@ public class MovStockBrowser extends ModalJFrame {
 		WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 		wardBox = new JComboBox();
 		wardBox.setPreferredSize(new Dimension(130, 25));
-		wardBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+		wardBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 		ArrayList<Ward> wardList;
 		try {
 			wardList = wbm.getWards();
@@ -528,7 +528,7 @@ public class MovStockBrowser extends ModalJFrame {
 					int originalSize = medicals.size();
 					int resultsSize = results.size();
 					if (originalSize == resultsSize) {
-						medicalBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+						medicalBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 					}
 					for (Medical aMedical : results) {
 						medicalBox.addItem(aMedical);
@@ -579,7 +579,7 @@ public class MovStockBrowser extends ModalJFrame {
 			medical = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
-		medicalBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+		medicalBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 		if (null != medical) {
 			for (Medical aMedical : medical) {
 				medicalBox.addItem(aMedical);
@@ -614,7 +614,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalTypeBox.setPreferredSize(new Dimension(130, 25));
 		ArrayList<MedicalType> medical;
 
-		medicalTypeBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+		medicalTypeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 
 		try {
 			medical = medicalTypeBrowserManager.getMedicalType();
@@ -660,7 +660,7 @@ public class MovStockBrowser extends ModalJFrame {
 			type = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
-		typeBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+		typeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 		if (null != type) {
 			for (MovementType movementType : type) {
 				typeBox.addItem(movementType);
@@ -1010,25 +1010,25 @@ public class MovStockBrowser extends ModalJFrame {
 		StringBuilder filename = new StringBuilder("Stock Ledger");
 		if (medicalBox.isEnabled()
 				&& !medicalBox.getSelectedItem().equals(
-				MessageBundle.getMessage("angal.medicalstock.all"))) {
+				MessageBundle.getMessage("angal.common.all.txt"))) {
 
 			filename.append('_').append(medicalBox.getSelectedItem());
 		}
 		if (medicalTypeBox.isEnabled()
 				&& !medicalTypeBox.getSelectedItem().equals(
-				MessageBundle.getMessage("angal.medicalstock.all"))) {
+				MessageBundle.getMessage("angal.common.all.txt"))) {
 
 			filename.append('_').append(medicalTypeBox.getSelectedItem());
 		}
 		if (typeBox.isEnabled() &&
 				!typeBox.getSelectedItem().equals(
-						MessageBundle.getMessage("angal.medicalstock.all"))) {
+						MessageBundle.getMessage("angal.common.all.txt"))) {
 
 			filename.append('_').append(typeBox.getSelectedItem());
 		}
 		if (wardBox.isEnabled() &&
 				!wardBox.getSelectedItem().equals(
-						MessageBundle.getMessage("angal.medicalstock.all"))) {
+						MessageBundle.getMessage("angal.common.all.txt"))) {
 
 			filename.append('_').append(wardBox.getSelectedItem());
 		}

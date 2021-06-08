@@ -68,9 +68,9 @@ public class JFromDateToDateChooser extends JPanel {
 	}
 	
 	private void initComponents() {
-		this.add(new JLabel(MessageBundle.getMessage("angal.common.from")+":"));
+		this.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt")+":"));
 		this.add(getCustomJDateFrom(this.dateTimeFrom));
-		this.add(new JLabel(MessageBundle.getMessage("angal.common.to")+":"));
+		this.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt")+":"));
 		this.add(getCustomJDateTo(this.dateTimeTo));
 	}
 	
