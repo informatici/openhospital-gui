@@ -63,6 +63,7 @@ package org.isf.priceslist.gui;
 
 import java.util.ArrayList;
 
+import org.isf.generaldata.MessageBundle;
 import org.isf.priceslist.model.Price;
 import org.isf.utils.treetable.AbstractTreeTableModel;
 import org.isf.utils.treetable.TreeTableModel;
@@ -78,8 +79,11 @@ import org.isf.utils.treetable.TreeTableModel;
  */
 public class PriceModel extends AbstractTreeTableModel {
 
-     // Names of the columns.
-     protected static String[] cNames = {"Name", "Prices"};
+	// Names of the columns.
+	protected static String[] cNames = {
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.priceslist.prices.txt").toUpperCase()
+	};
 
     // Types of the columns.
     protected static Class<?>[] cTypes = {TreeTableModel.class, Double.class};
@@ -111,7 +115,7 @@ public class PriceModel extends AbstractTreeTableModel {
 	public Object getValueAt(Object node, int column) {
 		
 		Price price = getPrice(node);
-		Object display_value = "Failed";
+		Object display_value = MessageBundle.getMessage("angal.priceslist.failed.txt");
 		switch (column) {
 		case 0:
 			display_value = price.getDesc();

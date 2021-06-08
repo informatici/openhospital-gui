@@ -21,6 +21,7 @@
  */
 package org.isf.utils.jobjects;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -154,7 +155,7 @@ public class Cropping extends JPanel {
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.getContentPane().add(new JScrollPane(test));
-		f.getContentPane().add(test.getUIPanel(), "South");
+		f.getContentPane().add(test.getUIPanel(), BorderLayout.SOUTH);
 		f.setSize(400, 400);
 		f.setLocation(200, 200);
 		f.setVisible(true);
