@@ -789,7 +789,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
 				} else {
 					int f = row - (opdList.size()+admList.size());
-					String ret = "O2: "+(examinationList.get(f).getPex_sat());
+					String ret = MessageBundle.getMessage("angal.admission.o2.txt") + ": " + (examinationList.get(f).getPex_sat());
 					return ret;
 				}
 			} 

@@ -709,7 +709,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jTableBigTotal = new JTable();
 			jTableBigTotal.setModel(new DefaultTableModel(new Object[][] {
 					{
-						"<html><b>"+"TO PAY"+"</b></html>", 
+						"<html><b>" + MessageBundle.getMessage("angal.newbill.topay.txt") + "</b></html>",
 						currencyCod,
 						bigTotal}
 					}, new String[] {"","", ""}) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

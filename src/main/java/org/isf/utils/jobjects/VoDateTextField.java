@@ -32,6 +32,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
+import org.isf.generaldata.MessageBundle;
+
 /**
  * Returns a JTextField for date it can manage dates in format dd/mm/yyyy, dd/mm/yy, mm/dd/yyyy or mm/dd/yy
  *
@@ -132,17 +134,13 @@ public class VoDateTextField extends JTextField {
 				if (getText().length()==0) {
 					return;
 				}
-				if (getText().length() !=  type.length()) {
-					JOptionPane.showMessageDialog(				
-							null,
-							"\""+getText()+"\" is not a valid date",
-							"St Luke Hospital",
-							JOptionPane.PLAIN_MESSAGE);
-						if (currentDate.equals("nothing"))
-							setText("");
-						else
-							setText(currentDate);
-						return;
+				if (getText().length() != type.length()) {
+					MessageDialog.error(null, MessageBundle.formatMessage("angal.vodatetext.isnotavaliddate.fmt.msg", getText()));
+					if (currentDate.equals("nothing"))
+						setText("");
+					else
+						setText(currentDate);
+					return;
 				}
 				char separator = getText().charAt(2);
 				if (((separator=='/')||(separator=='-'))&&(getText().charAt(5)==separator)) {
@@ -167,23 +165,14 @@ public class VoDateTextField extends JTextField {
 						currentDate = getText();
 					}
 					catch (Exception e1) {
-						JOptionPane.showMessageDialog(				
-							null,
-							"\""+getText()+"\" is not a valid date",
-							"St Luke Hospital",
-							JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, MessageBundle.formatMessage("angal.vodatetext.isnotavaliddate.fmt.msg", getText()));
 						if (currentDate.equals("nothing"))
 							setText("");
 						else
 							setText(currentDate);
 					}
 				} else {
-					JOptionPane.showMessageDialog(				
-							null,
-							"\""+getText()+"\" is not a valid date\n" +
-							"Please use / or - to separate",
-							"St Luke Hospital",
-							JOptionPane.PLAIN_MESSAGE);
+					MessageDialog.error(null, MessageBundle.formatMessage("angal.vodatetext.isnotavaliddatepleaseuseortoseparate.fmt.msg", getText()));
 				}
 			}
 		});

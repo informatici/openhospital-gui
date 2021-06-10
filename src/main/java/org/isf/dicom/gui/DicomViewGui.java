@@ -362,7 +362,7 @@ public class DicomViewGui extends JPanel {
 		canvas.drawString(MessageBundle.getMessage("angal.common.name.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = "" + ohPatient.getAge();
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.age") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.age.txt") + txt, 10, hi);
 		hi += VGAP;
 		txt = "" + ohPatient.getSex();
 		canvas.drawString(MessageBundle.getMessage("angal.common.sex.txt") + " : " + txt, 10, hi);
@@ -383,7 +383,7 @@ public class DicomViewGui extends JPanel {
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientAge) :  tmpDbFile.getDicomPatientAge();
 		if (txt == null)
 			txt = "";
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.age") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.age.txt") + " : " + txt, 10, hi);
 
 		if (ohPatient.getPatientProfilePhoto() != null) {
 			final Image photoAsImage = ohPatient.getPatientProfilePhoto().getPhotoAsImage();

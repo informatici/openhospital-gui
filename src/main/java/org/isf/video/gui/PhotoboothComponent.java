@@ -130,12 +130,12 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 					"default"));
 
 				//---- webcamLabel ----
-				webcamLabel.setText("Webcam");
+				webcamLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.webcam.txt"));
 				resolutionPanel.add(webcamLabel, CC.xy(1, 1));
 				resolutionPanel.add(webcamComboBox, CC.xy(5, 1));
 
 				//---- resolutionLabel ----
-				resolutionLabel.setText("Resolution");
+				resolutionLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.resolution.txt"));
 				resolutionPanel.add(resolutionLabel, CC.xy(9, 1));
 				resolutionPanel.add(resolutionComboBox, CC.xy(13, 1));
 

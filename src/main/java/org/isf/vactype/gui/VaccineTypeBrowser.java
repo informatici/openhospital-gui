@@ -153,7 +153,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 	private JButton getJEditButton() {
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
-			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));;
+			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {

@@ -466,7 +466,7 @@ public class PatientInsertExtended extends JDialog {
 							} else if (radiom.isSelected()) {
 								patient.setSex('M');
 							} else {
-								JOptionPane.showMessageDialog(PatientInsertExtended.this, "Please select a sex");
+								MessageDialog.info(PatientInsertExtended.this, "angal.patient.pleaseselectasex.msg");
 								return;
 							}
 							patient.setTaxCode(jTaxCodeTextField.getText().trim());
@@ -540,7 +540,7 @@ public class PatientInsertExtended extends JDialog {
 						} else if (radiom.isSelected()) {
 							patient.setSex('M');
 						} else {
-							JOptionPane.showMessageDialog(PatientInsertExtended.this, "Please select a sex");
+							MessageDialog.info(PatientInsertExtended.this, "angal.patient.pleaseselectasex.msg");
 							return;
 						}
 						patient.setTaxCode(jTaxCodeTextField.getText().trim());
@@ -733,7 +733,7 @@ public class PatientInsertExtended extends JDialog {
 	}
 	
 	private String formatYearsMonthsDays(int years, int months, int days) {
-		return years+"y "+months+"m "+days+"d";
+		return MessageBundle.formatMessage("angal.patient.ymd.fmt.msg", years, months, days);
 	}
 
 	/**
@@ -1435,7 +1435,7 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel getJAgeMonthsPanel() {
 		if (jAgeMonthsPanel == null) {
 			jAgeMonthsPanel = new JPanel();
-			jAgeMonthsLabel = new JLabel("months");
+			jAgeMonthsLabel = new JLabel(MessageBundle.getMessage("angal.common.months.txt"));
 
 			String[] months = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
 			jAgeMonthsComboBox = new JComboBox(months);
@@ -1512,11 +1512,11 @@ public class PatientInsertExtended extends JDialog {
 	private JPanel getJAge() {
 		if (jAge == null) {
 			jAge = new JPanel();
-			jAge.add(new JLabel("Years"));
+			jAge.add(new JLabel(MessageBundle.getMessage("angal.common.years.txt")));
 			jAge.add(getJAgeFieldYears());
-			jAge.add(new JLabel("Months"));
+			jAge.add(new JLabel(MessageBundle.getMessage("angal.common.months.txt")));
 			jAge.add(getJAgeFieldMonths());
-			jAge.add(new JLabel("Days"));
+			jAge.add(new JLabel(MessageBundle.getMessage("angal.common.days.txt")));
 			jAge.add(getJAgeFieldDays());
 		}
 		return jAge;

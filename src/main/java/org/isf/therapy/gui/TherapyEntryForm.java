@@ -323,7 +323,7 @@ public class TherapyEntryForm extends JDialog {
 		JPanel daysPanel = new JPanel();
 		BoxLayout daysLayout = new BoxLayout(daysPanel, BoxLayout.Y_AXIS);
 		daysPanel.setLayout(daysLayout);
-		JLabel labelDays = new JLabel(MessageBundle.getMessage("angal.therapy.days")); //$NON-NLS-1$
+		JLabel labelDays = new JLabel(MessageBundle.getMessage("angal.common.days.txt"));
 		labelDays.setAlignmentX(CENTER_ALIGNMENT);
 		jSpinnerDays.addChangeListener(new ChangeListener() {
 
@@ -361,7 +361,7 @@ public class TherapyEntryForm extends JDialog {
 		JPanel monthsPanel = new JPanel();
 		BoxLayout monthsLayout = new BoxLayout(monthsPanel, BoxLayout.Y_AXIS);
 		monthsPanel.setLayout(monthsLayout);
-		JLabel labelMonths = new JLabel(MessageBundle.getMessage("angal.therapy.months")); //$NON-NLS-1$
+		JLabel labelMonths = new JLabel(MessageBundle.getMessage("angal.common.months.txt"));
 		labelMonths.setAlignmentX(CENTER_ALIGNMENT);
 
 		jSpinnerMonths.addChangeListener(new ChangeListener() {
