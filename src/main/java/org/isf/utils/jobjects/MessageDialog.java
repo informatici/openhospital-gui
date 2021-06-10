@@ -23,6 +23,7 @@ package org.isf.utils.jobjects;
 
 import java.awt.Component;
 
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.MessageBundle;
@@ -79,13 +80,19 @@ public class MessageDialog {
 	}
 
 	public static int yesNo(Component parentComponent, String messageKey, Object... additionalArgs) {
+		return yesNo(parentComponent, null, messageKey, additionalArgs);
+	}
+
+	public static int yesNo(Component parentComponent, Icon icon, String messageKey, Object... additionalArgs) {
 		return JOptionPane.showConfirmDialog(
 				parentComponent,
 				(additionalArgs.length == 0)
 						? MessageBundle.getMessage(messageKey)
 						: MessageBundle.formatMessage(messageKey, additionalArgs),
 				QUESTION,
-				JOptionPane.YES_NO_OPTION
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				icon
 		);
 	}
 

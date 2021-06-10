@@ -62,6 +62,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class OperationBrowser extends ModalJFrame implements OperationEdit.OperationListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
 	public void operationInserted(AWTEvent e) {
 		pOperation.add(0, operation);
@@ -81,8 +82,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	}
 	
 	//TODO: replace with mapping mnemonic / translation in OperationBrowserManager
-	public static String OPD = MessageBundle.getMessage("angal.admission.opd").toUpperCase();
-	public static String ADMISSION = MessageBundle.getMessage("angal.admission.admission").toUpperCase();
+	public static String OPD = MessageBundle.getMessage("angal.admission.opd.txt").toUpperCase();
+	public static String ADMISSION = MessageBundle.getMessage("angal.admission.admission.txt").toUpperCase();
 	public static String OPD_ADMISSION = OPD + " / " + ADMISSION;
 
 	private int pfrmBase = 8;
@@ -137,7 +138,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		buttonPanel.add(selectlabel);
 
 		pbox = new JComboBox();
-		pbox.addItem(MessageBundle.getMessage("angal.operation.allm")); //$NON-NLS-1$
+		pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
 		ArrayList<OperationType> type;
 		try {
 			type = operationTypeManager.getOperationType();
@@ -152,7 +153,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		pbox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				pSelection = pbox.getSelectedItem().toString();
-				if (pSelection.compareTo(MessageBundle.getMessage("angal.operation.allm")) == 0) //$NON-NLS-1$
+				if (pSelection.compareTo(STR_ALL) == 0)
 					model = new OperationBrowserModel();
 				else
 					model = new OperationBrowserModel(pSelection);
@@ -286,7 +287,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 						return OPD;
 					}
 				} else {
-					return MessageBundle.getMessage("angal.common.notdefined");
+					return MessageBundle.getMessage("angal.common.notdefined.txt");
 				}
 			}
 			return null;

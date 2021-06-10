@@ -1060,13 +1060,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				GregorianCalendar datePay = new GregorianCalendar();
 
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png"); //$NON-NLS-1$
-				int ok = JOptionPane.showConfirmDialog(PatientBillEdit.this,
-						MessageBundle.getMessage("angal.newbill.doyouwanttosetthecurrentbillaspaid.msg"),
-						MessageBundle.getMessage("angal.newbill.paid.title"),
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE,
-						icon);
-				if (ok == JOptionPane.NO_OPTION) return;
+				int ok = MessageDialog.yesNo(PatientBillEdit.this, icon,
+						"angal.newbill.doyouwanttosetthecurrentbillaspaid.msg");
+				if (ok == JOptionPane.NO_OPTION) {
+					return;
+				}
 
 				if (balance.compareTo(new BigDecimal(0)) > 0) {
 					if (billDate.before(today)) { //if Bill is in the past the user will be asked for PAID date

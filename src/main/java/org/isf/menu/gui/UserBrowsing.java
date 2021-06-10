@@ -52,7 +52,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 	private static final long serialVersionUID = 1L;
-	private static final String ALL_STR = MessageBundle.getMessage("angal.userbrowser.all.txt");
+	private static final String ALL_STR = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
 	@Override
 	public void userInserted(AWTEvent e) {

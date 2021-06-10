@@ -214,7 +214,7 @@ public class LabEditExtended extends ModalJFrame {
 					resultPanel = getThirdPanel();
 			}
 			resultPanel.setBorder(BorderFactory.createTitledBorder(
-					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.lab.result")));
+					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.common.result.txt")));
 			jContentPane.add(resultPanel);
 			jContentPane.add(getButtonPanel()); // Generated
 		}
@@ -228,7 +228,7 @@ public class LabEditExtended extends ModalJFrame {
 			dataPanel.setLayout(null);
 			dataPanel.setBounds(0, 0, panelWidth, dataPanelHeight);
 			//exam date
-			examDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date"));
+			examDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
 			examDateLabel.setBounds(5, 10, labelWidth, 20);
 			//examDateField=getExamDateField();
 			//examDateField.setBounds(labelWidth+5, 10, 70, 20);
@@ -324,7 +324,7 @@ public class LabEditExtended extends ModalJFrame {
 			dataPatient.setBorder(BorderFactory.createTitledBorder(
 					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.lab.datapatient")));
 			
-			nameLabel = new JLabel(MessageBundle.getMessage("angal.lab.name"));
+			nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
 			nameLabel.setBounds(10, 20, labelWidth, 20);
 			patTextField=getPatientTextField();
 			patTextField.setBounds(labelWidth+5, 20, 180, 20);

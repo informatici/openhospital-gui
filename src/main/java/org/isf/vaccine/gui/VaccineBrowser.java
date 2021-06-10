@@ -61,6 +61,7 @@ import org.isf.vactype.model.VaccineType;
 public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
 	public void vaccineInserted(AWTEvent e) {
 		pVaccine.add(0,vaccine);
@@ -175,7 +176,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 				OHServiceExceptionUtil.showMessages(e1);
 			}
 			jSelectionCombo
-					.addItem(new Vaccine("", MessageBundle.getMessage("angal.vaccine.all"), new VaccineType("", "")));
+					.addItem(new Vaccine("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase(), new VaccineType("", "")));
 			if (allVacType != null) {
 				for (VaccineType elem : allVacType) {
 					jSelectionCombo.addItem(elem);
@@ -184,7 +185,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 			jSelectionCombo.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					String pSelectionVaccineType = jSelectionCombo.getSelectedItem().toString();
-					if (pSelectionVaccineType.equals(MessageBundle.getMessage("angal.vaccine.all")))
+					if (pSelectionVaccineType.equals(STR_ALL))
 						model = new VaccineBrowserModel();
 					else
 						model = new VaccineBrowserModel(((VaccineType) jSelectionCombo.getSelectedItem()).getCode());

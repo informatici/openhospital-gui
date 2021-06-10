@@ -106,14 +106,15 @@ public class MovStockMultipleCharging extends JDialog {
 	private final String[] columnNames = {
       	MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 		MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.qtypacket"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.qty"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.unitpack"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.total"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotnumberabb"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.cost"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.total") }; //$NON-NLS-1$
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.qtypacket").toUpperCase(),
+		MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.unitpack").toUpperCase(),
+		MessageBundle.getMessage("angal.common.total.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotnumberabb").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.cost").toUpperCase(),
+		MessageBundle.getMessage("angal.common.total.txt").toUpperCase()
+	};
 	private final Class[] columnClasses = { String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, String.class, String.class, Double.class, Double.class };
 	private boolean[] columnEditable = { true, false, false, true, true, false, !GeneralData.AUTOMATICLOT_IN, true, true, false };
  	private int[] columnWidth = { 50, 100, 70, 50, 70, 50, 50, 80, 50, 80 };
@@ -204,7 +205,7 @@ public class MovStockMultipleCharging extends JDialog {
 		gbl_headerPanel.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		headerPanel.setLayout(gbl_headerPanel);
 		{
-			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date")+":"); //$NON-NLS-1$
+			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date.txt")+":");
 			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
 			gbc_jLabelDate.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDate.insets = new Insets(5, 5, 5, 5);
@@ -720,11 +721,11 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 
 	protected int askQuantity(Medical med) {
-		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
 		StringBuilder message = new StringBuilder(med.toString());
 		String prodCode = med.getProd_code();
 		if (prodCode != null && !prodCode.equals("")) {
-			title.append(" ").append(MessageBundle.getMessage("angal.common.code")); //$NON-NLS-1$ //$NON-NLS-2$
+			title.append(" ").append(MessageBundle.getMessage("angal.common.code.txt")); //$NON-NLS-1$ //$NON-NLS-2$
 			title.append(": ").append(prodCode); //$NON-NLS-1$
 		} else { 
 			title.append(": "); //$NON-NLS-1$
@@ -1037,7 +1038,7 @@ public class MovStockMultipleCharging extends JDialog {
 				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
 			}
 			if (c == 3) {
-				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.quantity.txt");
 			}
 			if (GeneralData.LOTWITHCOST) {
 				if (c == 4) {
@@ -1093,7 +1094,7 @@ public class MovStockMultipleCharging extends JDialog {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.common.code"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.code.txt");
 			}
 			if (c == 1) {
 				return MessageBundle.getMessage("angal.common.description.txt");

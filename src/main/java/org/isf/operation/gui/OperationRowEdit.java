@@ -239,7 +239,7 @@ public class OperationRowEdit extends JPanel {
 		
 		resultComboBox = getComboResultBox();
 		
-		lblResultat = new JLabel(MessageBundle.getMessage("angal.operationrowedit.result")); //$NON-NLS-1$
+		lblResultat = new JLabel(MessageBundle.getMessage("angal.common.result.txt"));
 		lblResultat.setBorder(new EmptyBorder(0, 0, 0, 4));
 		lblResultat.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblResultat = new GridBagConstraints();

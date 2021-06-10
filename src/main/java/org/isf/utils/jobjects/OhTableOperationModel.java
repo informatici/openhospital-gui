@@ -105,7 +105,7 @@ public class OhTableOperationModel<T> implements TableModel{
 			//columnLabel= "Nature Operation";
 			break;
 		case 2:
-			columnLabel= MessageBundle.getMessage("angal.operationrowedit.result").toUpperCase();
+			columnLabel= MessageBundle.getMessage("angal.common.result.txt").toUpperCase();
 			//columnLabel= "Resultat";
 			break;
 		case 3:

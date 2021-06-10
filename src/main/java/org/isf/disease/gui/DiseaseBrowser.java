@@ -28,6 +28,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -122,7 +123,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		buttonPanel.add(selectlabel);
 		
 		pbox = new JComboBox();
-		pbox.addItem(new DiseaseType("0", MessageBundle.getMessage("angal.disease.allm")));
+		pbox.addItem(new DiseaseType("0", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
 		ArrayList<DiseaseType> type = null;
 		try {
 			type = disTypeManager.getDiseaseType();
@@ -138,7 +139,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		pbox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				pSelection = (DiseaseType) pbox.getSelectedItem();
-				if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.disease.allm")) == 0)
+				if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.common.all.txt").toLowerCase()) == 0)
 					model = new DiseaseBrowserModel();
 				else
 					model = new DiseaseBrowserModel(pSelection.getCode());

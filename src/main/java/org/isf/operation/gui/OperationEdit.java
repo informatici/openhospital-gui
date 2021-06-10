@@ -186,7 +186,7 @@ public class OperationEdit extends JDialog {
 			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.code")); //$NON-NLS-1$
+			codeLabel.setText(MessageBundle.getMessage("angal.common.code.txt"));
 			codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			operForLabel = new JLabel();
 			operForLabel.setText(MessageBundle.getMessage("angal.operation.operationcontext")); //$NON-NLS-1$

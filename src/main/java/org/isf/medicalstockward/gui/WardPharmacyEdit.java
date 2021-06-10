@@ -420,7 +420,7 @@ public class WardPharmacyEdit extends JDialog {
 
 	private JLabel getJLabelQty() {
 		JLabel jLabelQty= new JLabel();
-		jLabelQty.setText(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+		jLabelQty.setText(MessageBundle.getMessage("angal.common.quantity.txt"));
 		return jLabelQty;
 	}
 
@@ -510,8 +510,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelWeight() {
-		JLabel jLabelWeight = new JLabel();
-		jLabelWeight.setText(MessageBundle.getMessage("angal.medicalstockwardedit.weight")); //$NON-NLS-1$
+		JLabel jLabelWeight = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
 		return jLabelWeight;
 	}
 	

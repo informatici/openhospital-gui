@@ -214,16 +214,14 @@ public class WardEdit extends JDialog {
 			gbc_telTextField.gridx = 1;
 			gbc_telTextField.gridy = 2;
 			dataPanel.add(getTelTextField(), gbc_telTextField);
-			telLabel = new JLabel();
-			telLabel.setText(MessageBundle.getMessage("angal.ward.telephoneedit"));
+			telLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			GridBagConstraints gbc_telLabel = new GridBagConstraints();
 			gbc_telLabel.anchor = GridBagConstraints.WEST;
 			gbc_telLabel.insets = new Insets(0, 0, 5, 5);
 			gbc_telLabel.gridx = 0;
 			gbc_telLabel.gridy = 2;
 			dataPanel.add(telLabel, gbc_telLabel);
-			faxLabel = new JLabel();
-			faxLabel.setText(MessageBundle.getMessage("angal.ward.faxedit"));
+			faxLabel = new JLabel(MessageBundle.getMessage("angal.common.fax.txt"));
 			GridBagConstraints gbc_faxLabel = new GridBagConstraints();
 			gbc_faxLabel.anchor = GridBagConstraints.WEST;
 			gbc_faxLabel.insets = new Insets(0, 0, 5, 5);

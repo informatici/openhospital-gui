@@ -205,7 +205,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 				public void actionPerformed(ActionEvent arg0) {
 					typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
-					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all"))) {
+					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 						typeSelected = null;
 					}
 					
@@ -238,11 +238,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 					if (GeneralData.LABEXTENDED) {
 						selectedrow = jTable.getSelectedRow();
 						if (selectedrow < 0) {
-							int ok = JOptionPane.showConfirmDialog(LabBrowser.this, 
-											MessageBundle.getMessage("angal.lab.nopatientselectedprintempylabel"), 
-											MessageBundle.getMessage("angal.hospital"), 
-											JOptionPane.YES_NO_CANCEL_OPTION);
-							
+							int ok = MessageDialog.yesNoCancel(LabBrowser.this, "angal.lab.nopatientselectedprintempylabel.msg");
 							if (ok != JOptionPane.YES_OPTION) {
 								return;
 							}
@@ -445,7 +441,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (comboExams == null) {
 			comboExams = new JComboBox();
 			comboExams.setPreferredSize(new Dimension(200, 30));
-			comboExams.addItem(new Exam("", MessageBundle.getMessage("angal.lab.all"), new ExamType("", ""), 0, ""));
+			comboExams.addItem(new Exam("", MessageBundle.getMessage("angal.common.all.txt"), new ExamType("", ""), 0, ""));
 			ArrayList<Exam> type;
 			try {
 				type = managerExams.getExams();
@@ -466,7 +462,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				public void actionPerformed(ActionEvent e) {
 					typeSelected = ((Exam) comboExams.getSelectedItem())
 							.toString();
-					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
+					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt")))
 						typeSelected = null;
 
 				}
@@ -541,7 +537,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 				public void actionPerformed(ActionEvent e) {
 					typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
-					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
+					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt")))
 						typeSelected = null;
 					model = new LabBrowsingModel(typeSelected, dateFrom.getDate(), dateTo.getDate());
 					model.fireTableDataChanged();

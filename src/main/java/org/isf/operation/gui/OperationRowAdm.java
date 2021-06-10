@@ -151,7 +151,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		panelForm.add(textDate, gbc_textDate);
 		// textDate.setColumns(10);
 
-		JLabel labelResultat = new JLabel(MessageBundle.getMessage("angal.operationrowedit.result")); //$NON-NLS-1$
+		JLabel labelResultat = new JLabel(MessageBundle.getMessage("angal.common.result.txt"));
 		GridBagConstraints gbc_labelResultat = new GridBagConstraints();
 		gbc_labelResultat.anchor = GridBagConstraints.EAST;
 		gbc_labelResultat.insets = new Insets(0, 0, 5, 5);

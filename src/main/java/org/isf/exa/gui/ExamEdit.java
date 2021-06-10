@@ -172,7 +172,7 @@ public class ExamEdit extends JDialog {
 		if (dataPanel == null) {
 			typeLabel = new JLabel(MessageBundle.getMessage("angal.exa.type"));
 			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code"));
+			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
 			procLabel = new JLabel(MessageBundle.getMessage("angal.exa.procedure"));
 			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default"));
 			dataPanel = new JPanel();

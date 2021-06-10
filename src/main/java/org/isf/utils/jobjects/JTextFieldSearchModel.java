@@ -194,7 +194,7 @@ public class JTextFieldSearchModel extends JPanel {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.common.code");
+				return MessageBundle.getMessage("angal.common.code.txt");
 			}
 			if (c == 1) {
 				return MessageBundle.getMessage("angal.common.description.txt");

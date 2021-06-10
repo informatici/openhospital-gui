@@ -102,12 +102,13 @@ public class MovStockMultipleDischarging extends JDialog {
 	private final String[] columnNames = {
 		MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 		MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
-		MessageBundle.getMessage("angal.medicalstock.multipledischarging.unitpack"), //$NON-NLS-1$ 
-		MessageBundle.getMessage("angal.medicalstock.multipledischarging.qty"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multipledischarging.unitpack"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multipledischarging.total"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotnumberabb"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multipledischarging.expiringdate")}; //$NON-NLS-1$
+		MessageBundle.getMessage("angal.medicalstock.multipledischarging.unitpack").toUpperCase(),
+		MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multipledischarging.unitpack").toUpperCase(),
+		MessageBundle.getMessage("angal.common.total.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotnumberabb").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multipledischarging.expiringdate").toUpperCase()
+	};
 	private final Class[] columnClasses = { String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, String.class, String.class};
 	private boolean[] columnEditable = { false, false, false, false, true, false, false, false};
 	private int[] columnWidth = { 50, 100, 70, 50, 70, 50, 100, 80};
@@ -435,7 +436,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		gbl_headerPanel.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		headerPanel.setLayout(gbl_headerPanel);
 		{
-			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
+			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
 			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
 			gbc_jLabelDate.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDate.insets = new Insets(5, 5, 5, 5);
@@ -732,11 +733,11 @@ public class MovStockMultipleDischarging extends JDialog {
 			.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 			.append(totalQty); //$NON-NLS-1$
 		
-		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
 		String prodCode = med.getProd_code();
 		if (prodCode != null && !prodCode.equals("")) { //$NON-NLS-1$
 			title.append(" ") //$NON-NLS-1$
-			.append(MessageBundle.getMessage("angal.common.code")) //$NON-NLS-1$
+			.append(MessageBundle.getMessage("angal.common.code.txt"))
 			.append(": ") //$NON-NLS-1$
 			.append(prodCode);
 		} else { 
@@ -1034,7 +1035,7 @@ public class MovStockMultipleDischarging extends JDialog {
 				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
 			}
 			if (c == 3) {
-				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.quantity.txt");
 			}
 			return ""; //$NON-NLS-1$
 		}
@@ -1081,7 +1082,7 @@ public class MovStockMultipleDischarging extends JDialog {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.common.code"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.code.txt");
 			}
 			if (c == 1) {
 				return MessageBundle.getMessage("angal.common.description.txt");

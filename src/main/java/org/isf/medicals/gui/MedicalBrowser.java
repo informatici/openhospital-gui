@@ -94,11 +94,12 @@ import org.slf4j.LoggerFactory;
  * - product code
  * - pieces per packet
  */
-public class MedicalBrowser extends ModalJFrame implements MedicalListener { // implements RowSorterListener{
-	
+public class MedicalBrowser extends ModalJFrame implements MedicalListener {
+
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalBrowser.class);
+	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
 	public void medicalInserted(Medical medical) {
 		pMedicals.add(0, medical);
@@ -322,7 +323,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 				ArrayList<String> dateOptions = new ArrayList<>();
 				dateOptions.add(MessageBundle.getMessage("angal.medicals.today"));
-				dateOptions.add(MessageBundle.getMessage("angal.common.date"));
+				dateOptions.add(MessageBundle.getMessage("angal.common.date.txt"));
 
 				Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 				String dateOption = (String) JOptionPane.showInputDialog(MedicalBrowser.this,
@@ -399,7 +400,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 					int r = JOptionPane.showConfirmDialog(MedicalBrowser.this,
 							dateChooser,
-							MessageBundle.getMessage("angal.common.date"),
+							MessageBundle.getMessage("angal.common.date.txt"),
 							JOptionPane.OK_CANCEL_OPTION,
 							JOptionPane.PLAIN_MESSAGE,
 							icon);
@@ -480,7 +481,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 		StringBuilder filename = new StringBuilder("Stock");
 		if (pbox.isEnabled()
 				&& !pbox.getSelectedItem().equals(
-				MessageBundle.getMessage("angal.medicals.allm"))) {
+				MessageBundle.getMessage("angal.common.all.txt").toUpperCase())) {
 
 			filename.append("_").append(pbox.getSelectedItem());
 		}
@@ -556,7 +557,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 	private JComboBox getComboBoxMedicalType() {
 		if (pbox == null) {
 			pbox = new JComboBox();
-			pbox.addItem(MessageBundle.getMessage("angal.medicals.allm"));
+			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
 			ArrayList<MedicalType> type;
 			try {
 				type = medicalTypeManager.getMedicalType();
@@ -571,7 +572,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener { // 
 
 			public void actionPerformed(ActionEvent arg0) {
 				pSelection = pbox.getSelectedItem().toString();
-				if (pSelection.compareTo(MessageBundle.getMessage("angal.medicals.allm")) == 0) {
+				if (pSelection.compareTo(STR_ALL) == 0) {
 					model = new MedicalBrowsingModel();
 					table.setModel(model);
 				} else {
