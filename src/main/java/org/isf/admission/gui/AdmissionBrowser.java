@@ -531,7 +531,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, false);
 				}
 			}
-			jTabbedPaneAdmission.addTab(MessageBundle.getMessage("angal.common.plain.title"), getJPanelNote());
+			jTabbedPaneAdmission.addTab(MessageBundle.getMessage("angal.common.note.title"), getJPanelNote());
 		}
 		return jTabbedPaneAdmission;
 	}

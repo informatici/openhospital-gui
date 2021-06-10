@@ -36,7 +36,7 @@ public class MessageDialog {
 	public static final String ERROR_MESSAGE = MessageBundle.getMessage("angal.common.error.title");
 	public static final String WARNING_MESSAGE = MessageBundle.getMessage("angal.common.warning.title");
 	public static final String INFO_MESSAGE = MessageBundle.getMessage("angal.common.info.title");
-	public static final String PLAIN_MESSAGE = MessageBundle.getMessage("angal.common.plain.title");
+	public static final String PLAIN_MESSAGE = MessageBundle.getMessage("angal.common.note.title");
 	public static final String QUESTION = MessageBundle.getMessage("angal.common.question.title");
 
 	public static void error(Component parentComponent, String messageKey, Object... additionalArgs) {
