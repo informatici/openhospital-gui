@@ -899,10 +899,10 @@ public class PatientInsertExtended extends JDialog {
 		if (jSexPanel == null) {
 			jSexPanel = new JPanel();
 			sexGroup = new ButtonGroup();
-			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
-			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
-			radiom.setMnemonic(KeyEvent.VK_A + ('M' - 'A'));
-			radiof.setMnemonic(KeyEvent.VK_A + ('F' - 'A'));
+			JRadioButton radiom = new JRadioButton(MessageBundle.getMessage("angal.patient.male.btn"));
+			radiom.setMnemonic(MessageBundle.getMnemonic("angal.patient.male.btn.key"));
+			JRadioButton radiof = new JRadioButton(MessageBundle.getMessage("angal.patient.female.btn"));
+			radiof.setMnemonic(MessageBundle.getMnemonic("angal.patient.female.btn.key"));
 			jSexPanel.add(getJSexLabelPanel(), null);
 			jSexPanel.add(radiom, radiom.getName());
 			if (!insert) {

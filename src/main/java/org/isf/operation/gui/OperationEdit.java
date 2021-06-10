@@ -366,8 +366,8 @@ public class OperationEdit extends JDialog {
 			radioButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			if (major == null) {
 
-				major = getRadioButton(MessageBundle.getMessage("angal.operation.major"), 'a', true); //$NON-NLS-1$
-				minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), 'm', true); //$NON-NLS-1$
+				major = getRadioButton("angal.operation.major.btn", "angal.operation.major.btn.key", true);
+				minor = getRadioButton("angal.operation.minor.btn", "angal.operation.minor.btn.key", true);
 
 				ButtonGroup radioGroup = new ButtonGroup();
 
@@ -392,9 +392,10 @@ public class OperationEdit extends JDialog {
 		return radioButtonPanel;
 	}
 
-	private JRadioButton getRadioButton(String label, char mn, boolean active) {
+	private JRadioButton getRadioButton(String text, String key, boolean active) {
+		String label = MessageBundle.getMessage(text);
 		JRadioButton rb = new JRadioButton(label);
-		rb.setMnemonic(KeyEvent.VK_A + (mn - 'A'));
+		rb.setMnemonic(MessageBundle.getMnemonic(key));
 		rb.setSelected(active);
 		rb.setName(label);
 		return rb;

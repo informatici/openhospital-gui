@@ -525,29 +525,29 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getSexPanel() {
-		if (sexPanel == null) {			
+		if (sexPanel == null) {
 			sexPanel = new JPanel();
-			sexGroup=new ButtonGroup();
-			JRadioButton radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
-			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
-			radiom.setMnemonic(KeyEvent.VK_A+('M'-'A')); 
-			radiof.setMnemonic(KeyEvent.VK_A+('F'-'A')); 
+			sexGroup = new ButtonGroup();
+			JRadioButton radiom = new JRadioButton(MessageBundle.getMessage("angal.patient.male.btn"));
+			radiom.setMnemonic(MessageBundle.getMnemonic("angal.patient.male.btn.key"));
+			JRadioButton radiof = new JRadioButton(MessageBundle.getMessage("angal.patient.female.btn"));
+			radiof.setMnemonic(MessageBundle.getMnemonic("angal.patient.female.btn.key"));
 			sexPanel.add(getJSexLabelPanel(), null);
 			sexPanel.add(radiom, radiom.getName());
-			if (insert){
+			if (insert) {
 				radiom.setSelected(true);
-			}
-			else{
-				if (patient.getSex()=='F')
+			} else {
+				if (patient.getSex() == 'F') {
 					radiof.setSelected(true);
-				else radiom.setSelected(true);
-			}			
+				} else {
+					radiom.setSelected(true);
+				}
+			}
 			radiom.addActionListener(this);
 			radiof.addActionListener(this);
 			sexGroup.add(radiom);
 			sexGroup.add(radiof);
 			sexPanel.add(radiof);
-			
 		}
 		return sexPanel;
 	}
