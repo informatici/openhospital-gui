@@ -389,7 +389,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						dt);
 
 				int n = JOptionPane.showConfirmDialog(null, message,
-						MessageBundle.getMessage("angal.common.question.title"), JOptionPane.YES_NO_OPTION);
+						MessageBundle.getMessage("angal.messagedialog.question.title"), JOptionPane.YES_NO_OPTION);
 				try {
 					if ((n == JOptionPane.YES_OPTION) && (manager.deleteOpd(opd))) {
 						pSur.remove(pSur.size() - jTable.getSelectedRow() - 1);
@@ -1112,7 +1112,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				if (TimeTools.getDaysBetweenDates(dateFrom, dateTo, true) >= 360) {
 					int ok = JOptionPane.showConfirmDialog(OpdBrowser.this,
 							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
-							MessageBundle.getMessage("angal.common.question.title"),
+							MessageBundle.getMessage("angal.messagedialog.question.title"),
 							JOptionPane.OK_CANCEL_OPTION);
 					if (ok != JOptionPane.OK_OPTION) return;
 				}

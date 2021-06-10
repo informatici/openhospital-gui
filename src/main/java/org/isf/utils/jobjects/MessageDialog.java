@@ -33,11 +33,11 @@ import org.isf.utils.exception.model.OHSeverityLevel;
 
 public class MessageDialog {
 
-	public static final String ERROR_MESSAGE = MessageBundle.getMessage("angal.common.error.title");
-	public static final String WARNING_MESSAGE = MessageBundle.getMessage("angal.common.warning.title");
-	public static final String INFO_MESSAGE = MessageBundle.getMessage("angal.common.info.title");
-	public static final String PLAIN_MESSAGE = MessageBundle.getMessage("angal.common.note.title");
-	public static final String QUESTION = MessageBundle.getMessage("angal.common.question.title");
+	public static final String ERROR_MESSAGE = MessageBundle.getMessage("angal.messagedialog.error.title");
+	public static final String WARNING_MESSAGE = MessageBundle.getMessage("angal.messagedialog.warning.title");
+	public static final String INFO_MESSAGE = MessageBundle.getMessage("angal.messagedialog.info.title");
+	public static final String PLAIN_MESSAGE = MessageBundle.getMessage("angal.messagedialog.note.title");
+	public static final String QUESTION = MessageBundle.getMessage("angal.messagedialog.question.title");
 
 	public static void error(Component parentComponent, String messageKey, Object... additionalArgs) {
 		JOptionPane.showMessageDialog(
