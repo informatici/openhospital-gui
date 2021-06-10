@@ -167,13 +167,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		});
 		setSize(600, 450);
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(MessageBundle.getMessage("angal.xmpp.communication")).append(" - ").append(UserBrowsingManager.getCurrentUser());
-
-		setTitle(sb.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+		setTitle(MessageBundle.formatMessage("angal.xmpp.communication.fmt.title", UserBrowsingManager.getCurrentUser()));
 		setResizable(false);
 		setLocationRelativeTo(null);
-
 	}
 
 	public void activateListeners() {
