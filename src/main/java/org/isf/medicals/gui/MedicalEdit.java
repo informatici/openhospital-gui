@@ -338,12 +338,7 @@ public class MedicalEdit extends JDialog {
 					int messageType = error.getLevel().getSwingSeverity();
 					JOptionPane.showMessageDialog(MedicalEdit.this, error.getMessage(),
 							error.getTitle(), messageType);*/
-
-					int ok = JOptionPane.showConfirmDialog(MedicalEdit.this,
-							MessageBundle.getMessage("angal.common.doyouwanttoproceed"),
-							MessageBundle.getMessage("angal.common.doyouwanttoproceed"),
-							JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-					return ok;
+					return MessageDialog.yesNoCancel(MedicalEdit.this, "angal.common.doyouwanttoproceed.msg");
 				}
 			});
 		}

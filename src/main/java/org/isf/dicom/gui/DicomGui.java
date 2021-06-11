@@ -312,10 +312,7 @@ public class DicomGui extends JFrame implements WindowListener {
 					} else {
 						try {
 							if (!SourceFiles.checkSize(file)) {
-								JOptionPane.showMessageDialog(DicomGui.this,
-										MessageBundle.getMessage("angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty") +
-												" (" + DicomManagerFactory.getMaxDicomSize() + ")",
-										"DICOM", JOptionPane.ERROR_MESSAGE);
+								MessageDialog.error(DicomGui.this, "angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty.fmt.msg", DicomManagerFactory.getMaxDicomSize());
 								return;
 							}
 						} catch (OHDicomException e1) {
