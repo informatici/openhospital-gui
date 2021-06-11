@@ -564,7 +564,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JLabel getJLabelDate() {
 		if (jLabelDate == null) {
 			jLabelDate = new JLabel();
-			jLabelDate.setText("Date");
+			jLabelDate.setText(MessageBundle.getMessage("angal.common.date.txt"));
 			jLabelDate.setPreferredSize(LabelDimension);
 		}
 		return jLabelDate;
@@ -645,7 +645,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JLabel getJLabelPatient() {
 		if (jLabelPatient == null) {
 			jLabelPatient = new JLabel();
-			jLabelPatient.setText("Patient");
+			jLabelPatient.setText(MessageBundle.getMessage("angal.common.patient.txt"));
 			jLabelPatient.setPreferredSize(LabelDimension);
 		}
 		return jLabelPatient;

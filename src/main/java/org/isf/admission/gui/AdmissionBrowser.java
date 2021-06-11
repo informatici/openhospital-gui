@@ -531,7 +531,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					jTabbedPaneAdmission.setEnabledAt(pregnancyTabIndex, false);
 				}
 			}
-			jTabbedPaneAdmission.addTab("Note", getJPanelNote());
+			jTabbedPaneAdmission.addTab(MessageBundle.getMessage("angal.common.note.title"), getJPanelNote());
 		}
 		return jTabbedPaneAdmission;
 	}
@@ -1623,14 +1623,15 @@ public class AdmissionBrowser extends ModalJFrame {
 			buttonPanel.add(getSaveButton());
 			if (MainMenu.checkUserGrants("btnadmadmexamination")) buttonPanel.add(getJButtonExamination());
 			buttonPanel.add(getCloseButton());
-			
-			if (GeneralData.XMPPMODULEENABLED){
-			Interaction share= new Interaction();
-			Collection<String> contacts = share.getContactOnline();
-			contacts.add("-- Share alert with: nobody --");
-			shareWith = new JComboBox(contacts.toArray());
-			shareWith.setSelectedItem("-- Share alert with: nobody --");
-			buttonPanel.add(shareWith);
+
+			if (GeneralData.XMPPMODULEENABLED) {
+				Interaction share = new Interaction();
+				Collection<String> contacts = share.getContactOnline();
+				String note = MessageBundle.getMessage("angal.admission.sharealertwithnobody.txt");
+				contacts.add(note);
+				shareWith = new JComboBox(contacts.toArray());
+				shareWith.setSelectedItem(note);
+				buttonPanel.add(shareWith);
 			}
 		}
 		return buttonPanel;
@@ -1944,7 +1945,8 @@ public class AdmissionBrowser extends ModalJFrame {
 							fireAdmissionInserted(admission);
 							if (GeneralData.XMPPMODULEENABLED) {
 								CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-								frame.sendMessage("new patient admission: " + patient.getName() + " in " + ((Ward) wardBox.getSelectedItem()).getDescription(),
+								frame.sendMessage(MessageBundle.formatMessage("angal.admission.newpatientadmissionin.fmt.msg", patient.getName(),
+										((Ward) wardBox.getSelectedItem()).getDescription()),
 										(String) shareWith.getSelectedItem(), false);
 							}
 							dispose();
@@ -1981,8 +1983,8 @@ public class AdmissionBrowser extends ModalJFrame {
 							fireAdmissionUpdated(admission);
 							if (GeneralData.XMPPMODULEENABLED) {
 								CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-								frame.sendMessage(
-										"discharged patient: " + patient.getName() + " for " + ((DischargeType) disTypeBox.getSelectedItem()).getDescription(),
+								frame.sendMessage(MessageBundle.formatMessage("angal.admisssion.discharedpatientfor.fmt.msg",
+										patient.getName(), ((DischargeType) disTypeBox.getSelectedItem()).getDescription()),
 										(String) shareWith.getSelectedItem(), false);
 							}
 							dispose();

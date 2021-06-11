@@ -220,8 +220,8 @@ public class DicomViewGui extends JPanel {
 		JPanel fp2 = new JPanel();
 		fp1.setLayout(new BoxLayout(fp1, BoxLayout.Y_AXIS));
 		fp2.setLayout(new BoxLayout(fp2, BoxLayout.Y_AXIS));
-		fp1.setBorder(new TitledBorder("Zoom"));
-		fp2.setBorder(new TitledBorder("Frames"));
+		fp1.setBorder(new TitledBorder(MessageBundle.getMessage("angal.dicomview.zoom.title")));
+		fp2.setBorder(new TitledBorder(MessageBundle.getMessage("angal.dicomview.frames.title")));
 		jPanelFooter.setLayout(new GridLayout(1, 2));
 		fp1.add(Box.createRigidArea(new Dimension(5, 5)));
 		fp1.add(jSliderZoom);

@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
 public class PatientSummary {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientSummary.class);
+	private static final String UNKNOWN = MessageBundle.getMessage("angal.common.unknown.txt");
 
 	private Patient patient;
 	
@@ -212,8 +213,12 @@ public class PatientSummary {
 	}
 
 	private String filtra(String string) {
-		if (string == null) return " ";
-		if (string.equalsIgnoreCase("Unknown")) return " ";
+		if (string == null) {
+			return " ";
+		}
+		if (string.equalsIgnoreCase(UNKNOWN)) {
+			return " ";
+		}
 		return string;
 	}
 	
@@ -285,7 +290,7 @@ public class PatientSummary {
 	private JPanel getPatientBloodTypePanel() {
 		JLabel l = null;
 		String c = patient.getBloodType();
-		if (c == null || c.equalsIgnoreCase("Unknown")) {
+		if (c == null || c.equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt"))) {
 			l = new JLabel(" ");
 		} else {
 			l = new JLabel(c); // Added - Bundle is not necessary here
@@ -312,7 +317,7 @@ public class PatientSummary {
 
 	private JPanel getPatientMaritalStatusPanel() {
 		JLabel l = null;
-		if (patient.getMaritalStatus().equalsIgnoreCase("unknown") || patient.getMaritalStatus().equalsIgnoreCase("")) {
+		if (patient.getMaritalStatus().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getMaritalStatus().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
 			l = new JLabel(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
@@ -324,7 +329,7 @@ public class PatientSummary {
 
 	private JPanel getPatientProfessionPanel() {
 		JLabel l = null;
-		if (patient.getProfession().equalsIgnoreCase("unknown") || patient.getProfession().equalsIgnoreCase("")) {
+		if (patient.getProfession().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getProfession().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
 			l = new JLabel(patientManager.getProfessionTranslated(patient.getProfession()));

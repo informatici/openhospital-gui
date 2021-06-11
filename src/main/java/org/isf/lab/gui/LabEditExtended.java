@@ -661,15 +661,12 @@ public class LabEditExtended extends ModalJFrame {
 							)
 						);
 						if (!labs.isEmpty()) {
-							
-							printManager.print("Laboratory",labs,0);
+							printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 						}
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					
 				}
-
 			});
 		}
 		return printButton;

@@ -1654,7 +1654,7 @@ public class WardPharmacy extends ModalJFrame implements
 	}
 
 	private String compileFileName() {
-		StringBuilder filename = new StringBuilder("StockWard Ledger");
+		StringBuilder filename = new StringBuilder(MessageBundle.getMessage("angal.wardpharmacy.stockwardledger.txt"));
 		filename.append("_").append(jComboBoxWard.getSelectedItem());
 		int index = jTabbedPaneWard.getSelectedIndex();
 		if (index == 0) {

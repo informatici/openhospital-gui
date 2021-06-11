@@ -732,7 +732,8 @@ public class MovStockBrowser extends ModalJFrame {
 
 			jTableTotal.setModel(new DefaultTableModel(
 					new Object[][] {
-							{ "", "", "", "<html><b>Total Qty: </b></html>", totalQti, "", "", "", "", "", "<html><b>Total: </b></html>", currencyCod,
+							{ "", "", "", "<html><b>Total Qty: </b></html>", totalQti, "", "", "", "", "", "<html><b>"
+									+ MessageBundle.getMessage("angal.common.total.txt") + ": </b></html>", currencyCod,
 									totalAmount }
 					}, new String[pColumns.length]) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
