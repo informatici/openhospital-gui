@@ -37,6 +37,7 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+import org.isf.generaldata.MessageBundle;
 import org.isf.stat.gui.report.GenericReportFromDateToDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +131,7 @@ public class ChatMessages extends JTextPane {
 		StyleConstants.setForeground(keyWord, greenColor);
 
 		try {
-			doc.insertString(position, "\n*** " + name + " wants to share with you this report:" + typeReport + "\n", keyWord);
+			doc.insertString(position, MessageBundle.formatMessage("angal.xmpp.wantstosharewithyouthisreport.fmt.msg",name, typeReport), keyWord);
 		} catch (BadLocationException badLocationException) {
 			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
