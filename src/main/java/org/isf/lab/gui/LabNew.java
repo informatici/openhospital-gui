@@ -574,8 +574,8 @@ public class LabNew extends JDialog implements SelectionListener {
 		if (jOpdIpdPanel == null) {
 			jOpdIpdPanel = new JPanel();
 			
-			jRadioButtonOPD = new JRadioButton("OPD");
-			jRadioButtonIPD = new JRadioButton("IP");
+			jRadioButtonOPD = new JRadioButton(MessageBundle.getMessage("angal.labnew.opd.btn"));
+			jRadioButtonIPD = new JRadioButton(MessageBundle.getMessage("angal.labnew.ip.btn"));
 			
 			radioGroup = new ButtonGroup();
 			radioGroup.add(jRadioButtonOPD);
@@ -592,7 +592,6 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JButton getJButtonTrashPatient() {
 		if (jButtonTrashPatient == null) {
 			jButtonTrashPatient = new JButton();
-			jButtonTrashPatient.setMnemonic(KeyEvent.VK_R);
 			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.removepatientassociationwiththisexam")); //$NON-NLS-1$

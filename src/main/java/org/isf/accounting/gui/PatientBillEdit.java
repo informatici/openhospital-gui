@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -592,7 +591,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JButton getJButtonTrashPatient() {
 		if (jButtonTrashPatient == null) {
 			jButtonTrashPatient = new JButton();
-			jButtonTrashPatient.setMnemonic(KeyEvent.VK_R);
 			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.removethepatientassociatedwiththisbill.tooltip"));

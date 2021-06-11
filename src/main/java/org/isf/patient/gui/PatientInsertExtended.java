@@ -32,7 +32,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
@@ -899,10 +898,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jSexPanel == null) {
 			jSexPanel = new JPanel();
 			sexGroup = new ButtonGroup();
-			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
-			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
-			radiom.setMnemonic(KeyEvent.VK_A + ('M' - 'A'));
-			radiof.setMnemonic(KeyEvent.VK_A + ('F' - 'A'));
+			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			jSexPanel.add(getJSexLabelPanel(), null);
 			jSexPanel.add(radiom, radiom.getName());
 			if (!insert) {
@@ -1362,9 +1359,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJAgeType_Age() {
 		if (jAgeType_Age == null) {
-			jAgeType_Age = new JRadioButton();
-			jAgeType_Age.setMnemonic(KeyEvent.VK_A + ('D' - 'A'));
-			jAgeType_Age.setText(MessageBundle.getMessage("angal.patient.modeage"));
+			jAgeType_Age = new JRadioButton(MessageBundle.getMessage("angal.patient.modeage.btn"));
 			jAgeType_Age.setFocusable(false);
 		}
 		return jAgeType_Age;
@@ -1377,9 +1372,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJAgeType_BirthDate() {
 		if (jAgeType_BirthDate == null) {
-			jAgeType_BirthDate = new JRadioButton();
-			jAgeType_BirthDate.setMnemonic(KeyEvent.VK_A + ('D' - 'A'));
-			jAgeType_BirthDate.setText(MessageBundle.getMessage("angal.patient.modebdate"));
+			jAgeType_BirthDate = new JRadioButton(MessageBundle.getMessage("angal.patient.modebdate.btn"));
 			jAgeType_BirthDate.setFocusable(false);
 		}
 		return jAgeType_BirthDate;
@@ -1392,9 +1385,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJAgeType_Description() {
 		if (jAgeType_Description == null) {
-			jAgeType_Description = new JRadioButton();
-			jAgeType_Description.setMnemonic(KeyEvent.VK_A + ('D' - 'A'));
-			jAgeType_Description.setText(MessageBundle.getMessage("angal.patient.modedescription"));
+			jAgeType_Description = new JRadioButton(MessageBundle.getMessage("angal.patient.modedescription.btn"));
 			jAgeType_Description.setFocusable(false);
 		}
 		return jAgeType_Description;
@@ -1825,9 +1816,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJFather_Dead() {
 		if (jFather_Dead == null) {
-			jFather_Dead = new JRadioButton();
-			jFather_Dead.setMnemonic(KeyEvent.VK_A + ('D' - 'A'));
-			jFather_Dead.setText(MessageBundle.getMessage("angal.patient.dead"));
+			jFather_Dead = new JRadioButton(MessageBundle.getMessage("angal.patient.dead.btn"));
 		}
 		return jFather_Dead;
 	}
@@ -1839,9 +1828,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJFather_Alive() {
 		if (jFather_Alive == null) {
-			jFather_Alive = new JRadioButton();
-			jFather_Alive.setMnemonic(KeyEvent.VK_A + ('A' - 'A'));
-			jFather_Alive.setText(MessageBundle.getMessage("angal.patient.alive"));
+			jFather_Alive = new JRadioButton(MessageBundle.getMessage("angal.patient.alive.btn"));
 		}
 		return jFather_Alive;
 	}
@@ -1853,9 +1840,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJFather_Unknown() {
 		if (jFather_Unknown == null) {
-			jFather_Unknown = new JRadioButton();
-			jFather_Unknown.setMnemonic(KeyEvent.VK_A + ('U' - 'A'));
-			jFather_Unknown.setText(MessageBundle.getMessage("angal.patient.unknown"));
+			jFather_Unknown = new JRadioButton(MessageBundle.getMessage("angal.patient.unknown.btn"));
 			jFather_Unknown.setSelected(true);
 		}
 		return jFather_Unknown;
@@ -1913,9 +1898,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJMother_Dead() {
 		if (jMother_Dead == null) {
-			jMother_Dead = new JRadioButton();
-			jMother_Dead.setMnemonic(KeyEvent.VK_A + ('D' - 'A'));
-			jMother_Dead.setText(MessageBundle.getMessage("angal.patient.dead"));
+			jMother_Dead = new JRadioButton(MessageBundle.getMessage("angal.patient.dead.btn"));
 		}
 		return jMother_Dead;
 	}
@@ -1927,9 +1910,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJMother_Alive() {
 		if (jMother_Alive == null) {
-			jMother_Alive = new JRadioButton();
-			jMother_Alive.setMnemonic(KeyEvent.VK_A + ('A' - 'A'));
-			jMother_Alive.setText(MessageBundle.getMessage("angal.patient.alive"));
+			jMother_Alive = new JRadioButton(MessageBundle.getMessage("angal.patient.alive.btn"));
 		}
 		return jMother_Alive;
 	}
@@ -1941,9 +1922,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJMother_Unknown() {
 		if (jMother_Unknown == null) {
-			jMother_Unknown = new JRadioButton();
-			jMother_Unknown.setMnemonic(KeyEvent.VK_A + ('U' - 'A'));
-			jMother_Unknown.setText(MessageBundle.getMessage("angal.patient.unknown"));
+			jMother_Unknown = new JRadioButton(MessageBundle.getMessage("angal.patient.unknown.btn"));
 			jMother_Unknown.setSelected(true);
 		}
 		return jMother_Unknown;
@@ -1992,9 +1971,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJInsurance_Yes() {
 		if (jInsurance_Yes == null) {
-			jInsurance_Yes = new JRadioButton();
-			jInsurance_Yes.setMnemonic(KeyEvent.VK_A + ('R' - 'A'));
-			jInsurance_Yes.setText(MessageBundle.getMessage("angal.patient.hasinsuranceyes"));
+			jInsurance_Yes = new JRadioButton(MessageBundle.getMessage("angal.patient.hasinsuranceyes.btn"));
 		}
 		return jInsurance_Yes;
 	}
@@ -2006,9 +1983,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJInsurance_No() {
 		if (jInsurance_No == null) {
-			jInsurance_No = new JRadioButton();
-			jInsurance_No.setMnemonic(KeyEvent.VK_A + ('P' - 'A'));
-			jInsurance_No.setText(MessageBundle.getMessage("angal.patient.hasinsuranceno"));
+			jInsurance_No = new JRadioButton(MessageBundle.getMessage("angal.patient.hasinsuranceno.btn"));
 		}
 		return jInsurance_No;
 	}
@@ -2020,9 +1995,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJInsurance_Unknown() {
 		if (jInsurance_Unknown == null) {
-			jInsurance_Unknown = new JRadioButton();
-			jInsurance_Unknown.setText(MessageBundle.getMessage("angal.patient.unknown"));
-			jInsurance_Unknown.setMnemonic(KeyEvent.VK_A + ('U' - 'A'));
+			jInsurance_Unknown = new JRadioButton(MessageBundle.getMessage("angal.patient.unknown.btn"));
 			jInsurance_Unknown.setSelected(true);
 		}
 		return jInsurance_Unknown;
@@ -2067,9 +2040,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJParent_Yes() {
 		if (jParent_Yes == null) {
-			jParent_Yes = new JRadioButton();
-			jParent_Yes.setMnemonic(KeyEvent.VK_A + ('Y' - 'A'));
-			jParent_Yes.setText(MessageBundle.getMessage("angal.patient.yes"));
+			jParent_Yes = new JRadioButton(MessageBundle.getMessage("angal.patient.yes.btn"));
 		}
 		return jParent_Yes;
 	}
@@ -2081,9 +2052,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJParent_No() {
 		if (jParent_No == null) {
-			jParent_No = new JRadioButton();
-			jParent_No.setMnemonic(KeyEvent.VK_A + ('N' - 'A'));
-			jParent_No.setText(MessageBundle.getMessage("angal.patient.no"));
+			jParent_No = new JRadioButton(MessageBundle.getMessage("angal.patient.no.btn"));
 		}
 		return jParent_No;
 	}
@@ -2095,9 +2064,7 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JRadioButton getJParent_Unknown() {
 		if (jParent_Unknown == null) {
-			jParent_Unknown = new JRadioButton();
-			jParent_Unknown.setText(MessageBundle.getMessage("angal.patient.unknown"));
-			jParent_Unknown.setMnemonic(KeyEvent.VK_A + ('U' - 'A'));
+			jParent_Unknown = new JRadioButton(MessageBundle.getMessage("angal.patient.unknown.btn"));
 			jParent_Unknown.setSelected(true);
 		}
 		return jParent_Unknown;

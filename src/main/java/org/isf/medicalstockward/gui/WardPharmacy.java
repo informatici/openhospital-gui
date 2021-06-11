@@ -837,9 +837,9 @@ public class WardPharmacy extends ModalJFrame implements
 			sexPanel = new JPanel();
 			sexPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.sex.txt")));
 			ButtonGroup group = new ButtonGroup();
-			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
-			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
-			radioa = new JRadioButton(MessageBundle.getMessage("angal.common.all.txt"));
+			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
+			radioa = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
 			radioa.setSelected(true);
 			group.add(radiom);
 			group.add(radiof);

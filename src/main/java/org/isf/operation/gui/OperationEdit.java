@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -366,8 +365,8 @@ public class OperationEdit extends JDialog {
 			radioButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			if (major == null) {
 
-				major = getRadioButton(MessageBundle.getMessage("angal.operation.major"), 'a', true); //$NON-NLS-1$
-				minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), 'm', true); //$NON-NLS-1$
+				major = getRadioButton(MessageBundle.getMessage("angal.operation.major"), true);
+				minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), true);
 
 				ButtonGroup radioGroup = new ButtonGroup();
 
@@ -392,9 +391,8 @@ public class OperationEdit extends JDialog {
 		return radioButtonPanel;
 	}
 
-	private JRadioButton getRadioButton(String label, char mn, boolean active) {
+	private JRadioButton getRadioButton(String label, boolean active) {
 		JRadioButton rb = new JRadioButton(label);
-		rb.setMnemonic(KeyEvent.VK_A + (mn - 'A'));
 		rb.setSelected(active);
 		rb.setName(label);
 		return rb;

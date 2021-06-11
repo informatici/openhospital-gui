@@ -470,9 +470,9 @@ public class PatVacBrowser extends ModalJFrame {
 			
 			label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			group=new ButtonGroup();
-			radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
-			radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
-			radioa= new JRadioButton(MessageBundle.getMessage("angal.common.all.txt"));
+			radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
+			radioa= new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
 			radioa.setSelected(true);
 			group.add(radiom);
 			group.add(radiof);

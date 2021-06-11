@@ -617,8 +617,8 @@ public class OpdEdit extends JDialog {
 		if (sexPanel == null) {
 			sexPanel = new JPanel();
 			ButtonGroup group = new ButtonGroup();
-			JRadioButton radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
-			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
+			JRadioButton radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			if (insert) {
 				radiom.setSelected(true);
 			}

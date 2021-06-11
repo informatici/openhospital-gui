@@ -893,24 +893,26 @@ public class LabEditExtended extends ModalJFrame {
 			this.add(label);
 
 			group = new ButtonGroup();
-			radioPos = new JRadioButton(MessageBundle.getMessage("angal.lab.p"));
-			radioNeg = new JRadioButton(MessageBundle.getMessage("angal.lab.n"));
+			radioPos = new JRadioButton(MessageBundle.getMessage("angal.lab.p.btn"));
+			radioNeg = new JRadioButton(MessageBundle.getMessage("angal.lab.n.btn"));
 			group.add(radioPos);
 			group.add(radioNeg);
 
 			this.add(radioPos);
 			this.add(radioNeg);
-			if (result.equals(MessageBundle.getMessage("angal.lab.p")))
+			if (result.equals(MessageBundle.getMessage("angal.lab.p.btn"))) {
 				radioPos.setSelected(true);
-			else
+			} else {
 				radioNeg.setSelected(true);
+			}
 		}
 
 		public String getSelectedResult() {
-			if (radioPos.isSelected())
-				return MessageBundle.getMessage("angal.lab.p");
-			else
-				return MessageBundle.getMessage("angal.lab.n");
+			if (radioPos.isSelected()) {
+				return MessageBundle.getMessage("angal.lab.p.btn");
+			} else {
+				return MessageBundle.getMessage("angal.lab.n.btn");
+			}
 		}
 
 	}
