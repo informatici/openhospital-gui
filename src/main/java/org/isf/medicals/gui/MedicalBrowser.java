@@ -478,7 +478,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	}
 
 	private String compileFileName() {
-		StringBuilder filename = new StringBuilder("Stock");
+		StringBuilder filename = new StringBuilder(MessageBundle.getMessage("angal.medicals.stock.txt"));
 		if (pbox.isEnabled()
 				&& !pbox.getSelectedItem().equals(
 				MessageBundle.getMessage("angal.common.all.txt").toUpperCase())) {

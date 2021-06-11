@@ -193,8 +193,7 @@ public class PricesOthersEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxUndefined() {
 		if (jCheckBoxUndefined == null) {
-			jCheckBoxUndefined = new JCheckBox();
-			jCheckBoxUndefined.setText("Undefined");
+			jCheckBoxUndefined = new JCheckBox(MessageBundle.getMessage("angal.common.undefined.txt"));
 			jCheckBoxUndefined.setSelected(insert? false : pOther.isUndefined());
 		}
 		return jCheckBoxUndefined;
@@ -202,8 +201,7 @@ public class PricesOthersEdit extends JDialog {
 	
 	private JCheckBox getJCheckBoxDischarge() {
 		if (jCheckBoxDischarge == null) {
-			jCheckBoxDischarge = new JCheckBox();
-			jCheckBoxDischarge.setText("Discharge");
+			jCheckBoxDischarge = new JCheckBox(MessageBundle.getMessage("angal.common.discharge.txt"));
 			jCheckBoxDischarge.setSelected(insert? false : pOther.isDischarge());
 		}
 		return jCheckBoxDischarge;
@@ -211,8 +209,7 @@ public class PricesOthersEdit extends JDialog {
 	
 	private JCheckBox getJCheckBoxDaily() {
 		if (jCheckBoxDaily == null) {
-			jCheckBoxDaily = new JCheckBox();
-			jCheckBoxDaily.setText("Daily");
+			jCheckBoxDaily = new JCheckBox(MessageBundle.getMessage("angal.pricesothers.daily.txt"));
 			jCheckBoxDaily.setSelected(insert? false : pOther.isDaily());
 		}
 		return jCheckBoxDaily;
@@ -260,8 +257,7 @@ public class PricesOthersEdit extends JDialog {
 
 	private JLabel getJLabelDescription() {
 		if (jLabelDescription == null) {
-			jLabelDescription = new JLabel();
-			jLabelDescription.setText("Description");
+			jLabelDescription = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			jLabelDescription.setSize(50, 10);
 		}
 		return jLabelDescription;
@@ -287,8 +283,7 @@ public class PricesOthersEdit extends JDialog {
 
 	private JLabel getJLabelCode() {
 		if (jLabelCode == null) {
-			jLabelCode = new JLabel();
-			jLabelCode.setText("Code");
+			jLabelCode = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
 			jLabelCode.setSize(50, 10);
 		}
 		return jLabelCode;

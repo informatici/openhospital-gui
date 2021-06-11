@@ -266,7 +266,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JButton getJOkButton() {
 		if (jOkButton == null) {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
-			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));;
+			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jOkButton.addActionListener(new java.awt.event.ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -698,8 +698,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JLabel getJAgeLabel() {
 		if (jAgeLabel == null) {
-			jAgeLabel = new JLabel();
-			jAgeLabel.setText(MessageBundle.getMessage("angal.patient.age") + " *");
+			jAgeLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt") + " *");
 		}
 		return jAgeLabel;
 	}

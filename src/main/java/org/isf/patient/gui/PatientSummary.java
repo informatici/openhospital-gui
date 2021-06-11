@@ -182,7 +182,7 @@ public class PatientSummary {
 			patientCode = new JLabel(" ");
 		}
 		JLabel patientName = new JLabel(MessageBundle.getMessage("angal.common.name.txt") + ": " + filtra(patient.getName()));
-		JLabel patientAge = new JLabel(MessageBundle.getMessage("angal.patient.age") + ": " + TimeTools.getFormattedAge(patient.getBirthDate()));
+		JLabel patientAge = new JLabel(MessageBundle.getMessage("angal.common.age.txt") + ": " + TimeTools.getFormattedAge(patient.getBirthDate()));
 		JLabel patientSex = new JLabel(MessageBundle.getMessage("angal.common.sex.txt") + ": " + patient.getSex());
 		JLabel patientTOB = new JLabel(MessageBundle.getMessage("angal.patient.tobm") + ": " + filtra(patient.getBloodType()));
 		

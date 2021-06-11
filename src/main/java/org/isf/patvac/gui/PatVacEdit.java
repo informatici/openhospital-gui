@@ -583,7 +583,7 @@ public class PatVacEdit extends JDialog {
 			nameLabel.setBounds(10, DeltaBetweenLabels, labelWidth, 20);
 			patTextField = getPatientTextField();
 			patTextField.setBounds(labelWidth + 5, DeltaBetweenLabels, 180, 20);
-			ageLabel = new JLabel(MessageBundle.getMessage("angal.patvac.age"));
+			ageLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
 			ageLabel.setBounds(255, DeltaBetweenLabels, 35, 20);
 			ageTextField = getAgeTextField();
 			ageTextField.setBounds(295, DeltaBetweenLabels, 50, 20);

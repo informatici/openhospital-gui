@@ -144,7 +144,7 @@ public class PatientPhotoPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					JFileChooser fc = new JFileChooser();
 					String[] extensions = {"tif","tiff","jpg","jpeg","bmp","png","gif"};
-					FileFilter imageFilter = new FileNameExtensionFilter("Image files", extensions); //ImageIO.getReaderFileSuffixes());
+					FileFilter imageFilter = new FileNameExtensionFilter(MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
 					fc.setFileFilter(imageFilter);
 					fc.setAcceptAllFileFilterUsed(false);
 					int returnVal = fc.showOpenDialog(patientFrame);

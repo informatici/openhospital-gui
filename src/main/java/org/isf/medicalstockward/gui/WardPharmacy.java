@@ -854,13 +854,13 @@ public class WardPharmacy extends ModalJFrame implements
 	private JPanel getJPanelAge() {
 		if (jAgePanel == null) {
 			jAgePanel = new JPanel();
-			jAgePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.medicalstockward.age"))); //$NON-NLS-1$
+			jAgePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.age.txt")));
 
-			JLabel jLabelAgeFrom = new JLabel(MessageBundle.getMessage("angal.medicalstockward.agefrom")); //$NON-NLS-1$
+			JLabel jLabelAgeFrom = new JLabel(MessageBundle.getMessage("angal.common.agefrom.label"));
 			jAgePanel.add(jLabelAgeFrom);
 			jAgePanel.add(getJAgeFromTextField());
 
-			JLabel jLabelAgeTo = new JLabel(MessageBundle.getMessage("angal.medicalstockward.ageto")); //$NON-NLS-1$
+			JLabel jLabelAgeTo = new JLabel(MessageBundle.getMessage("angal.common.ageto.label"));
 			jAgePanel.add(jLabelAgeTo);
 			jAgePanel.add(getJAgeToTextField());
 		}

@@ -194,9 +194,10 @@ public class ReportLauncher extends ModalJFrame{
 	private JComboBox getComboShareReport() {
 		userOh= new Interaction();
 		Collection<String> contacts = userOh.getContactOnline();
-		contacts.add("-- Share report with : Nobody --");
+		String shareReport = MessageBundle.getMessage("angal.stat.sharereportwithnobody.txt");
+		contacts.add(shareReport);
 		shareWith = new JComboBox(contacts.toArray());
-		shareWith.setSelectedItem("-- Share report with : Nobody --");
+		shareWith.setSelectedItem(shareReport);
 		return shareWith;
 	}
 

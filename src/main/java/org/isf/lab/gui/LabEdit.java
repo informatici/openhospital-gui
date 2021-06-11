@@ -257,7 +257,7 @@ public class LabEdit extends ModalJFrame {
 			nameLabel.setBounds(5, 85, labelWidth, 20);
 			patTextField=getPatientTextField();
 			patTextField.setBounds(labelWidth+5, 85, 180, 20);
-			ageLabel = new JLabel(MessageBundle.getMessage("angal.lab.age"));
+			ageLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
 			ageLabel.setBounds(250, 85, 35, 20);
 			ageTextField=getAgeTextField();
 			ageTextField.setBounds(290, 85, 50, 20);

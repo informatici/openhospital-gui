@@ -441,13 +441,13 @@ public class PatVacBrowser extends ModalJFrame {
 			jAgePanel.setLayout(new BoxLayout(getAgePanel(),BoxLayout.Y_AXIS));
 			
 			JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.patvac.agefrom")), null);
+			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.agefrom.label")), null);
 			jAgePanel.add(label1Panel);
 			label1Panel.add(getJAgeFromTextField(), null);
 			jAgePanel.add(label1Panel);
 			
 			label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.patvac.ageto")), null);
+			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.ageto.label")), null);
 			jAgePanel.add(label1Panel);
 			label1Panel.add(getJAgeToTextField(), null);
 			jAgePanel.add(label1Panel);

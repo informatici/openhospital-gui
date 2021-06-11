@@ -542,8 +542,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelAge() {
-		JLabel jLabelAge = new JLabel();
-		jLabelAge.setText(MessageBundle.getMessage("angal.medicalstockwardedit.age")); //$NON-NLS-1$
+		JLabel jLabelAge = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
 		return jLabelAge;
 	}
 	
