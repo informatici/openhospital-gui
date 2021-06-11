@@ -52,7 +52,6 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.VoLimitedTextField;
-import org.jivesoftware.smackx.workgroup.ext.macros.MacroGroup;
 
 import com.toedter.calendar.JDateChooser;
 
