@@ -576,33 +576,28 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 	}
 
-	private MedicalWard showLotDetail(ArrayList<MedicalWard> drug, String me) {
-		ArrayList<MedicalWard> dr = new ArrayList<>();
-		MedicalWard medWard = null;
+	private void showLotDetail(ArrayList<MedicalWard> drug, String me) {
+		ArrayList<MedicalWard> medicalWardList = new ArrayList<>();
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
 				if (elem.getQty() != 0.0) {
 					MedicalWard e = elem;
-					dr.add(e);
+					medicalWardList.add(e);
 				}
 			}
-
 		}
-
-		JTable lotTable = new JTable(new StockMovModel(dr));
+		if (medicalWardList.isEmpty()) {
+			return;
+		}
+		JTable lotTable = new JTable(new StockMovModel(medicalWardList));
 		lotTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
 
-		do {
-			int ok = JOptionPane.showConfirmDialog(WardPharmacy.this,
-					panel,
-					MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$ 
-					JOptionPane.CLOSED_OPTION);
-
-		} while (dr == null);
-
-		return medWard;
+		JOptionPane.showMessageDialog(WardPharmacy.this,
+				panel,
+				MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
