@@ -58,6 +58,8 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
+import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.manager.WardBrowserManager;
@@ -329,8 +331,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 				public void actionPerformed(ActionEvent arg0) {
 					if (visitDateChooser.getDate() == null) {
-						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseadate.msg");
 						return;
 					}
 					GregorianCalendar date = new GregorianCalendar();
@@ -345,17 +346,14 @@ public class InsertVisit extends JDialog implements SelectionListener {
 					Object ward = wardBox.getSelectedItem();
 					if (ward instanceof Ward) {
 						saveWard = getWard();
-
 					} else {
-						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseaward.msg");
 						return;
 					}
 
 					boolean sms = false;
 					if (patientSelected == null) {
-						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseapatient.msg");
 						return;
 					}
 					try {
@@ -448,7 +446,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private JPanel getPanelChoosePatient() {
 		JPanel choosePatientPanel = new JPanel();
 		choosePatientPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		choosePatientPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.visit.pleaseselectapatient.border")));
+		choosePatientPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.visit.pleaseselectapatient.title")));
 
 		patientTextField = new JTextField(14);
 		patientTextField.setEditable(false);

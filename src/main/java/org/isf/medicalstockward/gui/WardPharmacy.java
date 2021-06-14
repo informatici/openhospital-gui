@@ -1568,13 +1568,11 @@ public class WardPharmacy extends ModalJFrame implements
 						options.add(MessageBundle.getMessage("angal.common.date.txt"));
 
 						Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
-						String option = (String) JOptionPane.showInputDialog(WardPharmacy.this,
-								MessageBundle.getMessage("angal.medicals.pleaseselectareport"),  //$NON-NLS-1$
-								MessageBundle.getMessage("angal.medicals.report"),  //$NON-NLS-1$
-								JOptionPane.INFORMATION_MESSAGE,
+						String option = (String) MessageDialog.inputDialog(WardPharmacy.this,
 								icon,
 								options.toArray(),
-								options.get(0));
+								options.get(0),
+								"angal.medicals.pleaseselectareport.msg");
 
 						if (option == null)
 							return;

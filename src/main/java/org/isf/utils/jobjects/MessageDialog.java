@@ -118,6 +118,19 @@ public class MessageDialog {
 		);
 	}
 
+	public static Object inputDialog(Component parentComponent, Icon icon, Object[] selectionValues, Object initSelection, String messageKey, Object... additionalArgs) {
+		return JOptionPane.showInputDialog(
+				parentComponent,
+				(additionalArgs.length == 0)
+						? MessageBundle.getMessage(messageKey)
+						: MessageBundle.formatMessage(messageKey, additionalArgs),
+				INFO_MESSAGE,
+				JOptionPane.INFORMATION_MESSAGE,
+				icon,
+				selectionValues,
+				initSelection);
+	}
+
 	public static void showExceptions(OHServiceException ohServiceException) {
 		if (ohServiceException.getMessages() == null) {
 			return;

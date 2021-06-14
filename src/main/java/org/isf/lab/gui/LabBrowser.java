@@ -488,7 +488,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel getDateFromPanel() {
 		if (jPanelDateFrom == null) {
 			jPanelDateFrom = new JPanel();
-			jPanelDateFrom.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom")), null);
+			jPanelDateFrom.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")), null);
 			jPanelDateFrom.add(getDateFieldFromPanel());
 			
 		}

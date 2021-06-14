@@ -920,7 +920,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				message.append("\n").append(med.toString());
 			}
 			JOptionPane.showMessageDialog(TherapyEdit.this, message.toString(),
-					MessageBundle.getMessage("angal.therapy.therapynotavailable"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+					MessageBundle.getMessage("angal.therapy.therapynotavailable.title"), JOptionPane.WARNING_MESSAGE);
 		}
 	}
 

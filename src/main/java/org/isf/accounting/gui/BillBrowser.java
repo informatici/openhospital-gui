@@ -344,14 +344,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					options.add(MessageBundle.getMessage("angal.billbrowser.patientstatement.txt"));
 				}
 				Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png");
-				String option = (String) JOptionPane.showInputDialog(BillBrowser.this,
-						MessageBundle.getMessage("angal.billbrowser.pleaseselectareport.msg"),
-						MessageBundle.getMessage("angal.billbrowser.report.title"),
-						JOptionPane.INFORMATION_MESSAGE,
+				String option = (String) MessageDialog.inputDialog(BillBrowser.this,
 						icon,
 						options.toArray(),
-						options.get(0));
-
+						options.get(0),
+						"angal.billbrowser.pleaseselectareport.msg");
 				if (option == null) {
 					return;
 				}
@@ -436,14 +433,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				options.add(MessageBundle.getMessage("angal.billbrowser.fullreportallbills.txt"));
 
 				icon = new ImageIcon("rsc/icons/list_dialog.png");
-				option = (String) JOptionPane.showInputDialog(BillBrowser.this,
-						MessageBundle.getMessage("angal.billbrowser.pleaseselectareport.msg"),
-						MessageBundle.getMessage("angal.billbrowser.report.title"),
-						JOptionPane.INFORMATION_MESSAGE,
+				option = (String) MessageDialog.inputDialog(BillBrowser.this,
 						icon,
 						options.toArray(),
-						options.get(0));
-
+						options.get(0),
+						"angal.billbrowser.pleaseselectareport.msg");
 				if (option == null)
 					return;
 
