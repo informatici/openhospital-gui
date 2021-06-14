@@ -577,19 +577,19 @@ public class WardPharmacy extends ModalJFrame implements
 	}
 
 	private void showLotDetail(ArrayList<MedicalWard> drug, String me) {
-		ArrayList<MedicalWard> dr = new ArrayList<>();
+		ArrayList<MedicalWard> medicalWardList = new ArrayList<>();
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
 				if (elem.getQty() != 0.0) {
 					MedicalWard e = elem;
-					dr.add(e);
+					medicalWardList.add(e);
 				}
 			}
 		}
-		if (dr.isEmpty()) {
+		if (medicalWardList.isEmpty()) {
 			return;
 		}
-		JTable lotTable = new JTable(new StockMovModel(dr));
+		JTable lotTable = new JTable(new StockMovModel(medicalWardList));
 		lotTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
