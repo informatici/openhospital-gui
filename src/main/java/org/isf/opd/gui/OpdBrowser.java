@@ -726,9 +726,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (sexPanel == null) {
 			sexPanel = new JPanel();
 			ButtonGroup group = new ButtonGroup();
-			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
-			JRadioButton radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
-			radioa = new JRadioButton(MessageBundle.getMessage("angal.common.all.txt"));
+			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			JRadioButton radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
+			radioa = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
 			radioa.setSelected(true);
 			group.add(radiom);
 			group.add(radiof);
@@ -744,9 +744,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (newPatientPanel == null) {
 			newPatientPanel = new JPanel();
 			ButtonGroup groupNewPatient = new ButtonGroup();
-			radioNew= new JRadioButton(MessageBundle.getMessage("angal.common.new.txt"));
-			JRadioButton radioRea= new JRadioButton(MessageBundle.getMessage("angal.opd.reattendance.txt"));
-			radioAll= new JRadioButton(MessageBundle.getMessage("angal.common.all.txt"));
+			radioNew= new JRadioButton(MessageBundle.getMessage("angal.opd.new.btn"));
+			JRadioButton radioRea= new JRadioButton(MessageBundle.getMessage("angal.opd.reattendance.btn"));
+			radioAll= new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
 			radioAll.setSelected(true);
 			groupNewPatient.add(radioAll);
 			groupNewPatient.add(radioNew);
@@ -1027,9 +1027,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			} else if (c == 9) {
 				String patientStatus;
 				if (opd.getNewPatient() == 'N') {
-					patientStatus = MessageBundle.getMessage("angal.common.new.txt");
+					patientStatus = MessageBundle.getMessage("angal.opd.new.btn");
 				} else {
-					patientStatus = MessageBundle.getMessage("angal.opd.reattendance.txt");
+					patientStatus = MessageBundle.getMessage("angal.opd.reattendance.btn");
 				}
 				return patientStatus;
 			}

@@ -768,7 +768,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JButton getJButtonTrashPatient() {
 		if (jButtonTrashPatient == null) {
 			jButtonTrashPatient = new JButton();
-			jButtonTrashPatient.setMnemonic(KeyEvent.VK_R);
 			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.removepatientassociationwiththismovement")); //$NON-NLS-1$
@@ -901,7 +900,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	private JRadioButton getJRadioWard() {
 		if (jRadioWard == null) {
-			jRadioWard = new JRadioButton(MessageBundle.getMessage("angal.wardpharmacynew.ward"));
+			jRadioWard = new JRadioButton(MessageBundle.getMessage("angal.wardpharmacynew.ward.btn"));
 			jRadioWard.setSelected(false);
 			jRadioWard.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {

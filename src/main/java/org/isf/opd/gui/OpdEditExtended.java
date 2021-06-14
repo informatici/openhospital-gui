@@ -1450,8 +1450,8 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelSex.gridx = 0;
 			gbc_jLabelSex.gridy = 6;
 			jPanelPatient.add(jLabelSex, gbc_jLabelSex);
-			radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
-			radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
+			radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			jPanelSex = new JPanel();
 			jPanelSex.add(radiom);
 			jPanelSex.add(radiof);

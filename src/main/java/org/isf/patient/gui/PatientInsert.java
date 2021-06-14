@@ -30,7 +30,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.BorderFactory;
@@ -528,10 +527,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (sexPanel == null) {			
 			sexPanel = new JPanel();
 			sexGroup=new ButtonGroup();
-			JRadioButton radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.txt"));
-			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.txt"));
-			radiom.setMnemonic(KeyEvent.VK_A+('M'-'A')); 
-			radiof.setMnemonic(KeyEvent.VK_A+('F'-'A')); 
+			JRadioButton radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			sexPanel.add(getJSexLabelPanel(), null);
 			sexPanel.add(radiom, radiom.getName());
 			if (insert){
