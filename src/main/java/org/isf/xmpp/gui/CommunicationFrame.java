@@ -188,9 +188,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				String user_name = interaction.userFromAddress(presence.getFrom());
 				StringBuilder sb = new StringBuilder();
 				if (!presence.isAvailable()) {
-					sb.append(user_name).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowoffline"));
+					sb.append(user_name).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowoffline.txt"));
 				} else if (presence.isAvailable()) {
-					sb.append(user_name).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowonline"));
+					sb.append(user_name).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowonline.txt"));
 				}
 				int index = tabs.indexOfTab(user_name);
 				if (index != -1) {
@@ -263,9 +263,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 		buddyList = getBuddyList();
 		final JPopupMenu popUpMenu = new JPopupMenu();
-		popUpMenu.add(sendFile = new JMenuItem(MessageBundle.getMessage("angal.xmpp.sendfile"))); //$NON-NLS-1$
+		popUpMenu.add(sendFile = new JMenuItem(MessageBundle.getMessage("angal.xmpp.sendfile.txt")));
 		popUpMenu.add(new JPopupMenu.Separator());
-		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo"))); //$NON-NLS-1$
+		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo.txt")));
 		final JFileChooser fileChooser = new JFileChooser();
 		sendFile.addActionListener(new ActionListener() {
 
@@ -293,16 +293,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 					OHServiceExceptionUtil.showMessages(e);
 				}
 
-				StringBuilder sb = new StringBuilder();
-				sb.append(MessageBundle.getMessage("angal.xmpp.user")).append(": ");
-				sb.append(user_name).append("\n");
-				sb.append(MessageBundle.getMessage("angal.xmpp.info")).append(": ");
-				sb.append(info);
-
-				userInfo.setText(sb.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+				userInfo.setText(MessageBundle.formatMessage("angal.xmpp.userinfo.fmt.txt", user_name, info));
 				validate();
 				repaint();
-
 			}
 		});
 
@@ -373,7 +366,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		userInfo.setMinimumSize(size);
 		userInfo.setMaximumSize(size);
 		userInfo.setSize(size);
-		userInfo.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.xmpp.usersinfo"))); //$NON-NLS-1$
+		userInfo.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.xmpp.usersinfo.border")));
 		userInfo.setEditable(false);
 
 		return userInfo;
@@ -386,7 +379,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 		leftpanel.setLayout(new BoxLayout(leftpanel, BoxLayout.Y_AXIS));
 		buddy = createBuddyList();
-		buddy.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.xmpp.contacts"))); //$NON-NLS-1$
+		buddy.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.xmpp.contacts.border")));
 		buddy.setPreferredSize(size);
 		buddy.setMaximumSize(size);
 		leftpanel.setMaximumSize(size);
@@ -498,7 +491,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 		interaction.sendMessage(CommunicationFrame.this, text_message, to, visualize);
 		if (visualize) {
-			printMessage(getArea(getSelectedUser(), false), "me", text_message, visualize);
+			printMessage(getArea(getSelectedUser(), false), MessageBundle.getMessage("angal.xmpp.me.txt"), text_message, visualize);
 		}
 	}
 
@@ -531,7 +524,8 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		ImageIcon acceptIcon;
 		ImageIcon rejectIcon;
 
-		String file_transfer = ((interaction.userFromAddress(request.getRequestor()) + " would like to send: \n" + request.getFileName()));
+		String file_transfer = MessageBundle.formatMessage("angal.xmpp.wouldliketosend.fmt.msg",
+				interaction.userFromAddress(request.getRequestor()), request.getFileName());
 		acceptIcon = new ImageIcon("rsc/icons/ok_button.png");
 		rejectIcon = new ImageIcon("rsc/icons/delete_button.png");
 		final JButton accept = new JButton(acceptIcon);
@@ -575,8 +569,10 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 					LOGGER.error(xmppException.getMessage(), xmppException);
 				}
 
-				printNotification((getArea(user, true)), "the file transfer of: " + request.getFileName() + " between you and " + user + " ended successfully");
-				sendMessage("0101010001000001 $File transfer of: " + request.getFileName() + " has been accepted", request.getRequestor(), false);
+				printNotification((getArea(user, true)), MessageBundle.formatMessage("angal.xmpp.thefiletransferofbetweenyouandendedsuccesfully.fmt.msg",
+						request.getFileName(), user));
+				sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenaccepted.fmt.msg", request.getFileName()),
+						request.getRequestor(), false);
 			}
 		});
 		reject.addActionListener(new ActionListener() {
@@ -587,8 +583,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				reject.setEnabled(false);
 				request.reject();
 
-				printNotification((getArea(user, false)), " you have rejected the file transfer");
-				sendMessage("0101010001010010 $File transfer of: " + request.getFileName() + " has been rejected", request.getRequestor(), false);
+				printNotification((getArea(user, false)), MessageBundle.getMessage("angal.xmpp.youhaverejectedthefiletransfer.txt"));
+				sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenrejected.fmt.msg",request.getFileName()),
+						request.getRequestor(), false);
 			}
 		});
 	}
