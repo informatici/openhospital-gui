@@ -128,7 +128,7 @@ public class Cropping extends JPanel {
 			clipped = image.getSubimage(x, y, w, h);
 			return clipped;
 		} catch (RasterFormatException rfe) {
-			LOGGER.error("raster format error: " + rfe.getMessage());
+			LOGGER.error("raster format error: {0}", rfe.getMessage());
 			return null;
 		}
 	}
