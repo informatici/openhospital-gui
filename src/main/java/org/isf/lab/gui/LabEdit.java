@@ -356,7 +356,7 @@ public class LabEdit extends ModalJFrame {
 			if (pat != null){
 				for (Patient elem : pat) {
 					if (lab.getPatient() != null && !insert) {
-						if (elem.getCode() == lab.getPatient().getCode()) {
+						if (elem.getCode().equals(lab.getPatient().getCode())) {
 							patSelected=elem;
 						}
 					}
