@@ -26,11 +26,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -42,6 +40,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
@@ -54,12 +53,12 @@ public class AgeTypeBrowser extends ModalJFrame {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<AgeType> pAgeType;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.code"),
-			MessageBundle.getMessage("angal.agetype.from"),
-			MessageBundle.getMessage("angal.agetype.to"),
-			MessageBundle.getMessage("angal.common.description")
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.from.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.to.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = { 80, 80, 80, 200 };
+	private int[] pColumnWidth = {80, 80, 80, 200};
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jEditSaveButton = null;
@@ -78,7 +77,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 	}
 
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.agetype.agetypebrowsing"));
+		this.setTitle(MessageBundle.getMessage("angal.agetype.agetypebrowser.title"));
 		this.setContentPane(getJContainPanel());
 		this.pack();
 		this.setLocationRelativeTo(null);
@@ -105,24 +104,22 @@ public class AgeTypeBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * This method initializes jEditButton
+	 * This method initializes jEditSaveButton
 	 * 
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJEditSaveButton() {
 		if (jEditSaveButton == null) {
-			jEditSaveButton = new JButton();
-			jEditSaveButton.setText(MessageBundle.getMessage("angal.common.edit"));
-			jEditSaveButton.setMnemonic(KeyEvent.VK_E);
+			jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditSaveButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
 					if (!edit) {
 						edit = true;
-						jEditSaveButton.setText(MessageBundle.getMessage("angal.common.save"));
-						jEditSaveButton.setMnemonic(KeyEvent.VK_S);
+						jEditSaveButton.setText(MessageBundle.getMessage("angal.common.save.btn"));
+						jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 						jTable.updateUI();
-
 					} else {
 					    if (jTable.isEditing()){
                             jTable.getCellEditor().stopCellEditing();
@@ -135,8 +132,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 						}
 						edit = false;
 						jTable.updateUI();
-						jEditSaveButton.setText(MessageBundle.getMessage("angal.common.edit"));
-						jEditSaveButton.setMnemonic(KeyEvent.VK_E);
+						jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+						jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 					}
 				}
 			});
@@ -151,9 +148,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();
@@ -223,8 +219,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 			try {
 				number = Integer.parseInt((String) value);
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(AgeTypeBrowser.this, 
-						MessageBundle.getMessage("angal.agetype.insertvalidage"));
+				MessageDialog.error(AgeTypeBrowser.this, "angal.agetype.insertvalidage");
 				return;
 			}
 			

@@ -120,7 +120,7 @@ public class JTextFieldSearchModel extends JPanel {
 			
 			int ok = JOptionPane.showConfirmDialog(owner,
 					panel, 
-					MessageBundle.getMessage("angal.medicalstock.chooseamedical"), 
+					MessageBundle.getMessage("angal.medicalstock.chooseamedical.msg"),
 					JOptionPane.YES_NO_OPTION);
 			
 			if (ok == JOptionPane.OK_OPTION) {
@@ -194,10 +194,10 @@ public class JTextFieldSearchModel extends JPanel {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.common.code");
+				return MessageBundle.getMessage("angal.common.code.txt");
 			}
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.common.description");
+				return MessageBundle.getMessage("angal.common.description.txt");
 			}
 			return "";
 		}

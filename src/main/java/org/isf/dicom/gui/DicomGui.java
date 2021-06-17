@@ -59,8 +59,8 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.file.FileTools;
+import org.isf.utils.jobjects.MessageDialog;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -82,7 +82,7 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private JButton jButtonLoadDicom;
 	private JButton jButtonDeleteDicom;
-	private JButton jButtonExit;
+	private JButton jButtonCloseDicom;
 	private JPanel jPanel1;
 	private JPanel jPanelDetail;
 	private JPanel jPanelButton;
@@ -178,7 +178,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	private void initialize() {
 		loadWindowSettings();
 
-		this.setTitle(MessageBundle.getMessage("angal.dicom.title"));
+		this.setTitle(MessageBundle.getMessage("angal.dicomviewer.title"));
 
 		initComponents();
 
@@ -188,9 +188,19 @@ public class DicomGui extends JFrame implements WindowListener {
 
 		jPanelMain = new JPanel();
 		jPanel1 = new JPanel();
-		jButtonLoadDicom = new JButton();
-		jButtonDeleteDicom = new JButton();
-		jButtonExit = new JButton();
+		jButtonLoadDicom = new JButton(MessageBundle.getMessage("angal.dicom.load.btn"));
+		jButtonLoadDicom.setMnemonic(MessageBundle.getMnemonic("angal.dicom.load.btn.key"));
+		jButtonLoadDicom.setName("jButtonLoadDicom");
+
+		jButtonDeleteDicom = new JButton(MessageBundle.getMessage("angal.dicom.delete.btn"));
+		jButtonDeleteDicom.setMnemonic(MessageBundle.getMnemonic("angal.dicom.delete.btn.key"));
+		jButtonDeleteDicom.setName("jButtonDeleteDicom");
+		jButtonDeleteDicom.setEnabled(false);
+
+		jButtonCloseDicom = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		jButtonCloseDicom.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+		jButtonCloseDicom.setName("jButtonCloseDicom");
+
 		jPanelDetail = new DicomViewGui(null, null);
 		jPanelDetail.setName("jPanelDetail");
 		jPanelButton = new JPanel();
@@ -198,15 +208,6 @@ public class DicomGui extends JFrame implements WindowListener {
 		jPanelButton.add(jButtonDeleteDicom);
 		jPanelMain.setName("mainPanel");
 		jPanel1.setName("jPanel1");
-		jButtonLoadDicom.setText(MessageBundle.getMessage("angal.dicom.load.txt"));
-		jButtonLoadDicom.setName("jButtonLoadDicom");
-
-		jButtonDeleteDicom.setText(MessageBundle.getMessage("angal.dicom.delete.txt"));
-		jButtonDeleteDicom.setName("jButtonDeleteDicom");
-		jButtonDeleteDicom.setEnabled(false);
-
-		jButtonExit.setText(MessageBundle.getMessage("angal.common.close"));
-		jButtonExit.setName("jButtonExit");
 
 		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
 		jPanel1Layout.setAutoCreateContainerGaps(true);
@@ -265,7 +266,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	private void addEventListener() {
 		actionListenerJButtonLoadDicom();
 		actionListenerJButtonDeleteDicom();
-		actionListenerJButtonExit();
+		actionListenerjButtonCloseDicom();
 	}
 
 	private void actionListenerJButtonLoadDicom() {
@@ -311,10 +312,7 @@ public class DicomGui extends JFrame implements WindowListener {
 					} else {
 						try {
 							if (!SourceFiles.checkSize(file)) {
-								JOptionPane.showMessageDialog(DicomGui.this,
-										MessageBundle.getMessage("angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty") +
-												" (" + DicomManagerFactory.getMaxDicomSize() + ")",
-										"DICOM", JOptionPane.ERROR_MESSAGE);
+								MessageDialog.error(DicomGui.this, "angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty.fmt.msg", DicomManagerFactory.getMaxDicomSize());
 								return;
 							}
 						} catch (OHDicomException e1) {
@@ -374,13 +372,8 @@ public class DicomGui extends JFrame implements WindowListener {
 				if (n == 0) {
 					try {
 						DicomManagerFactory.getManager().deleteSerie(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
-					} catch (OHServiceException ex) {
-						if (ex.getMessages() != null) {
-							for (OHExceptionMessage msg : ex.getMessages()) {
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(),
-										msg.getLevel().getSwingSeverity());
-							}
-						}
+					} catch (OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
 				thumbnail.initialize();
@@ -391,8 +384,8 @@ public class DicomGui extends JFrame implements WindowListener {
 		});
 	}
 
-	private void actionListenerJButtonExit() {
-		jButtonExit.addActionListener(new ActionListener() {
+	private void actionListenerjButtonCloseDicom() {
+		jButtonCloseDicom.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				System.exit(100);
@@ -407,7 +400,6 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Invoked the first time a window is made visible.
 	 */
 	public void windowOpened(WindowEvent e) {
-		// System.out.println("windowOpened");
 	}
 
 	/**

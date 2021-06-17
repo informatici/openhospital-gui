@@ -69,20 +69,16 @@ public class OhTableDrugsModel <T> implements TableModel {
 		String columnLabel = "";
 		switch (columnIndex) {
 		case 0:
-			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.date");
-			//columnLabel= "Date";
+			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.date.col").toUpperCase();
 			break;
 		case 1:
-			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.decription");
-			//columnLabel= "Nature Operation";
+			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.drug.col").toUpperCase();
 			break;
 		case 2:
-			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.quantity");
-			//columnLabel= "Resultat";
+			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.quantity.col").toUpperCase();
 			break;
 		case 3:
-			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.units");
-			//columnLabel= "Unite Trans";
+			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.units.col").toUpperCase();
 			break;
 		default:
 			break;
@@ -120,7 +116,6 @@ public class OhTableDrugsModel <T> implements TableModel {
 					break;
 				case 1:
 					Medical drugsname = null;
-					//System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
 					drugsname = drugObj.getMedical();
 					if (drugsname != null)
 						value = drugsname.getDescription();

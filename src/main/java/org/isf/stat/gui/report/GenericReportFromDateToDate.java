@@ -25,17 +25,16 @@ import java.io.File;
 import java.util.Locale;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.isf.generaldata.GeneralData;
-import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
 import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHReportException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +52,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 	public class GenericReportFromDateToDate {
 
-    private final Logger logger = LoggerFactory.getLogger(GenericReportFromDateToDate.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportFromDateToDate.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 		public  GenericReportFromDateToDate(String fromDate, String toDate, String jasperFileName, String defaultName, boolean toExcel) {
@@ -86,8 +85,8 @@ import net.sf.jasperreports.view.JasperViewer;
 			} catch (OHReportException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			} catch (Exception e) {
-                logger.error("", e);
-                JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
+                LOGGER.error("", e);
+				MessageDialog.error(null, "angal.stat.reporterror.msg");
 			}
 		}
 		

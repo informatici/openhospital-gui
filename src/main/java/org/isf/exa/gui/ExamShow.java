@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -45,6 +44,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 
 /**
  * ------------------------------------------
@@ -67,8 +67,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private JButton newButton = null;
 	private JButton deleteButton = null;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.codem"),
-			MessageBundle.getMessage("angal.common.descriptionm")
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {50,250};
 	private DefaultTableModel model ;
@@ -93,7 +93,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
-		this.setTitle(exam.getDescription() + " " + MessageBundle.getMessage("angal.exa.results"));
+		this.setTitle(MessageBundle.formatMessage("angal.exa.results.fmt.title", exam.getDescription()));
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}
@@ -133,9 +133,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	
 	private JButton getNewButton(){
 		if (newButton == null){
-			newButton = new JButton();
-			newButton.setText(MessageBundle.getMessage("angal.common.new"));  // Generated
-            newButton.setMnemonic(KeyEvent.VK_N);
+			newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			newButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					examRow = new ExamRow();
@@ -150,9 +149,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton();
-			closeButton.setText(MessageBundle.getMessage("angal.common.close"));  // Generated
-            closeButton.setMnemonic(KeyEvent.VK_C);
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			closeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				dispose();
@@ -164,27 +162,17 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	
 	private JButton getDeleteButton() {
 		if (deleteButton == null) {
-			deleteButton = new JButton();
-			deleteButton.setText(MessageBundle.getMessage("angal.common.delete"));  // Generated
-            deleteButton.setMnemonic(KeyEvent.VK_D);
+			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			deleteButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-		                        null,
-		                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
-		                        MessageBundle.getMessage("angal.hospital"),
-		                        JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 						ExamRow row = (ExamRow)(((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(
-	                        null,
-	                        MessageBundle.getMessage("angal.exa.deleteexamresult")+" \""+row.getDescription()+"\" ?",
-	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.YES_NO_OPTION);
-
-						if ((n == JOptionPane.YES_OPTION)){
+						int answer = MessageDialog.yesNo(null,"angal.exa.deleteexamresult.fmt.msg", row.getDescription());
+						if ((answer == JOptionPane.YES_OPTION)){
 							try {
 								boolean deleted = manager.deleteExamRow(row);
 								

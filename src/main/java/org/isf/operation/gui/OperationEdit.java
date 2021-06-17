@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -36,7 +35,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -50,6 +48,7 @@ import org.isf.opetype.manager.OperationTypeBrowserManager;
 import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
@@ -149,9 +148,9 @@ public class OperationEdit extends JDialog {
 		// pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.operation.newoperationrecord")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.operation.newoperation.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.operation.editingoperationrecord")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.operation.editoperation.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		pack();
@@ -183,11 +182,10 @@ public class OperationEdit extends JDialog {
 			typeLabel = new JLabel();
 			typeLabel.setText(MessageBundle.getMessage("angal.operation.type")); // Generated //$NON-NLS-1$
 			typeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.common.description")); // Generated //$NON-NLS-1$
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.code")); //$NON-NLS-1$
+			codeLabel.setText(MessageBundle.getMessage("angal.common.code.txt"));
 			codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			operForLabel = new JLabel();
 			operForLabel.setText(MessageBundle.getMessage("angal.operation.operationcontext")); //$NON-NLS-1$
@@ -248,9 +246,8 @@ public class OperationEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel")); // Generated //$NON-NLS-1$
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();
@@ -267,50 +264,30 @@ public class OperationEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok")); // Generated //$NON-NLS-1$
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					try {
 						if (insert) {
 							String key = codeTextField.getText().trim();
-							if (key.equals("")) { //$NON-NLS-1$
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.operation.pleaseinsertacode"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+							if (key.equals("")) {
+								MessageDialog.error(null, "angal.common.pleaseinsertacode.msg");
 								return;
 							}
 							if (key.length() > 10) {
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.common.codetoolongmaxchars"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-
+								MessageDialog.error(null, "angal.common.thecodeistoolongmaxchars.fmt.msg", 10);
 								return;
 							}
 							OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 
 							if (manager.isCodePresent(key)) {
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.common.codealreadyinuse"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-
+								MessageDialog.error(null, "angal.common.thecodeisalreadyinuse.msg");
 								return;
 							}
-
-							/*
-							 * if (manager.descriptionControl(descriptionTextField.getText(),
-							 * ((OperationType)typeComboBox.getSelectedItem()).getCode())){
-							 * JOptionPane.showMessageDialog( null, "Operation already present",
-							 * "St Luke Hospital", JOptionPane.PLAIN_MESSAGE);
-							 * 
-							 * return; }
-							 */
 						}
-						if (descriptionTextField.getText().equals("")) { //$NON-NLS-1$
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.operation.pleaseinsertavaliddescription"), //$NON-NLS-1$
-									MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						if (descriptionTextField.getText().equals("")) {
+							MessageDialog.error(null, "angal.common.pleaseinsertavaliddescription.msg");
 							return;
 						}
 						OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
@@ -319,10 +296,7 @@ public class OperationEdit extends JDialog {
 
 							if (manager.descriptionControl(descriptionTextField.getText(),
 									((OperationType) typeComboBox.getSelectedItem()).getCode())) {
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.operation.operationalreadypresent"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-
+								MessageDialog.error(null, "angal.operation.operationalreadypresent");
 								return;
 							}
 						}
@@ -349,11 +323,12 @@ public class OperationEdit extends JDialog {
 								fireOperationUpdated();
 							}
 						}
-						if (!result)
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved")); //$NON-NLS-1$
-						else
+						if (!result) {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						}
+						else {
 							dispose();
+						}
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -390,8 +365,8 @@ public class OperationEdit extends JDialog {
 			radioButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			if (major == null) {
 
-				major = getRadioButton(MessageBundle.getMessage("angal.operation.major"), 'a', true); //$NON-NLS-1$
-				minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), 'm', true); //$NON-NLS-1$
+				major = getRadioButton(MessageBundle.getMessage("angal.operation.major"), true);
+				minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), true);
 
 				ButtonGroup radioGroup = new ButtonGroup();
 
@@ -416,9 +391,8 @@ public class OperationEdit extends JDialog {
 		return radioButtonPanel;
 	}
 
-	private JRadioButton getRadioButton(String label, char mn, boolean active) {
+	private JRadioButton getRadioButton(String label, boolean active) {
 		JRadioButton rb = new JRadioButton(label);
-		rb.setMnemonic(KeyEvent.VK_A + (mn - 'A'));
 		rb.setSelected(active);
 		rb.setName(label);
 		return rb;

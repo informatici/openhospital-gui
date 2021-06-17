@@ -30,9 +30,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PhotoPreviewPanel extends JPanel	{
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(PhotoPreviewPanel.class);
+
 	private Image img;
 	
 	public PhotoPreviewPanel(String path)	{
@@ -40,8 +45,8 @@ public class PhotoPreviewPanel extends JPanel	{
 			img = ImageIO.read(new File(path));
 		}
 		catch (IOException ioe)	{
-			System.out.println("Path: " + path);
-			ioe.printStackTrace();
+			LOGGER.error("Path: {}", path);
+			LOGGER.error(ioe.getMessage(), ioe);
 		}
 		
 		setPreferredSize(new Dimension(img.getWidth(null), img.getHeight(null)));

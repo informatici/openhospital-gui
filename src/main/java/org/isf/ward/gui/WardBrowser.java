@@ -27,7 +27,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -42,6 +41,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -88,17 +88,18 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	private JTable table = null;
 	private DefaultTableModel model = null;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.code"),
-			MessageBundle.getMessage("angal.ward.name"),
-			MessageBundle.getMessage("angal.ward.telephone"),
-			MessageBundle.getMessage("angal.ward.fax"),
-			MessageBundle.getMessage("angal.ward.email"),
-			MessageBundle.getMessage("angal.ward.beds"),
-			MessageBundle.getMessage("angal.ward.nurses"),
-			MessageBundle.getMessage("angal.ward.doctors"),
-			MessageBundle.getMessage("angal.ward.haspharmacy"),
-			MessageBundle.getMessage("angal.ward.ismale"),
-			MessageBundle.getMessage("angal.ward.isfemale")};
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.telephone.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.fax.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.email.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.beds.col").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.nurses.col").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.doctors.col").toUpperCase(),
+			MessageBundle.getMessage("angal.ward.haspharmacy.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.male.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.female.txt").toUpperCase()
+	};
 	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30};
 	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class};
 	private int selectedrow;
@@ -127,7 +128,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.ward.wardsbrowser"));
+		this.setTitle(MessageBundle.getMessage("angal.ward.wardbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
@@ -175,18 +176,13 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	 */
 	private JButton getJEditButton() {
 		if (jEditButton == null) {
-			jEditButton = new JButton();
-			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
-			jEditButton.setMnemonic(KeyEvent.VK_E);
+			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-								null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						selectedrow = table.getSelectedRow();
 						ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
@@ -207,9 +203,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	 */
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
-			jNewButton = new JButton();
-			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
-			jNewButton.setMnemonic(KeyEvent.VK_N);
+			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -230,32 +225,23 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	 */
 	private JButton getJDeleteButton() {
 		if (jDeleteButton == null) {
-			jDeleteButton = new JButton();
-			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-								WardBrowser.this,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
 					} else {
 						WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 						Ward ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(
-								WardBrowser.this,
-								MessageBundle.getMessage("angal.ward.deleteward") + " \""+ward.getDescription()+"\" ?",
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
-						try{
-							if ((n == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))){
+						int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
+						try {
+							if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))){
 								pWard.remove(table.getSelectedRow());
 								model.fireTableDataChanged();
 								table.updateUI();
 							}
-						}catch(OHServiceException e){
+						} catch(OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
@@ -272,9 +258,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();

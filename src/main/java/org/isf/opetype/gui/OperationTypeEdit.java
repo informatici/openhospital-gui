@@ -23,7 +23,6 @@ package org.isf.opetype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -31,7 +30,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -42,6 +40,7 @@ import org.isf.opetype.manager.OperationTypeBrowserManager;
 import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class OperationTypeEdit extends JDialog{
@@ -117,9 +116,9 @@ public class OperationTypeEdit extends JDialog{
 		//this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.opetype.newoperationtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.opetype.newoperationtype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.opetype.editingoperationtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.opetype.editoperationtype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();
@@ -176,9 +175,8 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				dispose();
@@ -195,16 +193,16 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
+
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					String key = codeTextField.getText();
 					OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 
-					if (descriptionTextField.getText().equals(lastdescription)){
-						dispose();	
+					if (descriptionTextField.getText().equals(lastdescription)) {
+						dispose();
 					}
 					operationType.setDescription(descriptionTextField.getText());
 					operationType.setCode(codeTextField.getText());
@@ -217,31 +215,34 @@ public class OperationTypeEdit extends JDialog{
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 						if (result) {
-                           fireOperationInserted();
-                        }
-						if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-	                    else  dispose();
-                    }
-                    else {                          // updating
-                    	if (descriptionTextField.getText().equals(lastdescription)){
-    						dispose();	
-    					}else{
-    						try {
+							fireOperationInserted();
+						}
+						if (!result) {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						} else {
+							dispose();
+						}
+					} else {                          // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
+							dispose();
+						} else {
+							try {
 								result = manager.updateOperationType(operationType);
 							} catch (OHServiceException e1) {
 								OHServiceExceptionUtil.showMessages(e1);
 								result = false;
 							}
-						if (result) {
-							fireOperationUpdated();
-                        }
-						if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                        else  dispose();
-    					}
-                    	
+							if (result) {
+								fireOperationUpdated();
+							}
+							if (!result) {
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							} else {
+								dispose();
+							}
+						}
 					}
-					
-                }
+				}
 			});
 		}
 		return okButton;
@@ -303,8 +304,7 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.opetype.codemaxchars"));
+			jCodeLabel = new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 2));
 		}
 		return jCodeLabel;
 	}
@@ -330,8 +330,7 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescriptionLabel = new JLabel();
-			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			jDescriptionLabelPanel = new JPanel();
 			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}

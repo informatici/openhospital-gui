@@ -28,7 +28,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -46,8 +45,6 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class DiseasesListLauncher extends ModalJFrame{
 
 	private static final long serialVersionUID = 1L;
-
-	private static final String VERSION="v 1.0"; 
 
 	private int pfrmExactWidth = 356;
 	private int pfrmExactHeight = 165;
@@ -76,7 +73,7 @@ public class DiseasesListLauncher extends ModalJFrame{
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.stat.diseasereport") + " ("+VERSION+")");
+		this.setTitle(MessageBundle.getMessage("angal.stat.diseasereport.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
@@ -123,9 +120,8 @@ public class DiseasesListLauncher extends ModalJFrame{
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();
@@ -162,10 +158,10 @@ public class DiseasesListLauncher extends ModalJFrame{
 	 */
 	private JButton getJReport1Button() {
 		if (jReport1Button == null) {
-			jReport1Button = new JButton();
+			jReport1Button = new JButton(MessageBundle.getMessage("angal.stat.rundiseaseslistbytype.btn"));
+			jReport1Button.setMnemonic(MessageBundle.getMnemonic("angal.stat.rundiseaseslistbytype.btn.key"));
 			jReport1Button.setBounds(new Rectangle(15, 15, 120, 31));
-			jReport1Button.setText(MessageBundle.getMessage("angal.stat.rundiseaseslistbytype"));
-			jReport1Button.addActionListener(new ActionListener() {   
+			jReport1Button.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {   
 					new DiseasesList();
 				}

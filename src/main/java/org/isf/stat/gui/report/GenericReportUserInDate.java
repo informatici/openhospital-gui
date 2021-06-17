@@ -31,6 +31,7 @@ import org.isf.menu.manager.Context;
 import org.isf.serviceprinting.manager.PrintReceipt;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
+import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 	public class GenericReportUserInDate {
 
-    private final Logger logger = LoggerFactory.getLogger(GenericReportUserInDate.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportUserInDate.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 		public GenericReportUserInDate(String fromDate, String toDate, String aUser, String jasperFileName) {
@@ -71,15 +72,16 @@ import net.sf.jasperreports.view.JasperViewer;
                     JasperReportResultDto jasperReportTxtResultDto = jasperReportsManager.getGenericReportUserInDateTxt(fromDate, toDate, aUser, jasperFileName);
 					int print = JOptionPane.OK_OPTION;
 					if (askForPrint) {
-						print = JOptionPane.showConfirmDialog(null, MessageBundle.getMessage("angal.genericreportbill.doyouwanttoprintreceipt"));
+						print = MessageDialog.yesNo(null, "angal.genericreportbill.doyouwanttoprintreceipt.msg");
 					}
-					if (print != JOptionPane.OK_OPTION) return; //STOP
-						
+					if (print != JOptionPane.OK_OPTION) {
+						return; //STOP
+					}
 					new PrintReceipt(jasperReportTxtResultDto.getJasperPrint(), jasperReportTxtResultDto.getFilename());
 				}
 			} catch (Exception e) {
-                logger.error("", e);
-                JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.stat.reporterror"), MessageBundle.getMessage("angal.hospital"), JOptionPane.ERROR_MESSAGE);
+                LOGGER.error("", e);
+				MessageDialog.error(null, "angal.stat.reporterror.msg");
 			}
 		}
 	}

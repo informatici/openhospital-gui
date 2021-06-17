@@ -26,7 +26,6 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -35,7 +34,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -46,6 +44,7 @@ import org.isf.pricesothers.manager.PricesOthersManager;
 import org.isf.pricesothers.model.PricesOthers;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class PricesOthersEdit extends JDialog {
@@ -118,17 +117,16 @@ public class PricesOthersEdit extends JDialog {
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		setSize(400, 180);
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.pricesothers.newprice")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.pricesothers.newprice.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.pricesothers.editprice")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.pricesothers.editprice.title"));
 		}
 	}
 
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -141,11 +139,10 @@ public class PricesOthersEdit extends JDialog {
 
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
-			jButtonOK = new JButton();
-			jButtonOK.setText(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			jButtonOK.setMnemonic(KeyEvent.VK_O);
+			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jButtonOK.addActionListener(new ActionListener() {
-				
+
 				public void actionPerformed(ActionEvent event) {
 
 					pOther.setCode(jTextFieldCode.getText());
@@ -155,32 +152,31 @@ public class PricesOthersEdit extends JDialog {
 					pOther.setDaily(jCheckBoxDaily.isSelected());
 					pOther.setDischarge(jCheckBoxDischarge.isSelected());
 					pOther.setUndefined(jCheckBoxUndefined.isSelected());
-					
+
 					PricesOthersManager pOtherManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 					boolean result = false;
-					try{
+					try {
 						if (insert) {      // inserting
 							result = pOtherManager.newOther(pOther);
 							if (result) {
 								fireOtherInserted();
 							}
-						}
-						else {             // updating
+						} else {             // updating
 							result = pOtherManager.updateOther(pOther);
 							if (result) {
 								fireOtherUpdated();
 							}
 						}
-					}catch(OHServiceException e){
+					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
 					if (!result) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved")); //$NON-NLS-1$
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						dispose();
+					} else {
 						dispose();
 					}
-					else  dispose();
-					
-					}				
+				}
 			});
 		}
 		return jButtonOK;
@@ -197,8 +193,7 @@ public class PricesOthersEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxUndefined() {
 		if (jCheckBoxUndefined == null) {
-			jCheckBoxUndefined = new JCheckBox();
-			jCheckBoxUndefined.setText("Undefined");
+			jCheckBoxUndefined = new JCheckBox(MessageBundle.getMessage("angal.common.undefined.txt"));
 			jCheckBoxUndefined.setSelected(insert? false : pOther.isUndefined());
 		}
 		return jCheckBoxUndefined;
@@ -206,8 +201,7 @@ public class PricesOthersEdit extends JDialog {
 	
 	private JCheckBox getJCheckBoxDischarge() {
 		if (jCheckBoxDischarge == null) {
-			jCheckBoxDischarge = new JCheckBox();
-			jCheckBoxDischarge.setText("Discharge");
+			jCheckBoxDischarge = new JCheckBox(MessageBundle.getMessage("angal.common.discharge.txt"));
 			jCheckBoxDischarge.setSelected(insert? false : pOther.isDischarge());
 		}
 		return jCheckBoxDischarge;
@@ -215,8 +209,7 @@ public class PricesOthersEdit extends JDialog {
 	
 	private JCheckBox getJCheckBoxDaily() {
 		if (jCheckBoxDaily == null) {
-			jCheckBoxDaily = new JCheckBox();
-			jCheckBoxDaily.setText("Daily");
+			jCheckBoxDaily = new JCheckBox(MessageBundle.getMessage("angal.pricesothers.daily.txt"));
 			jCheckBoxDaily.setSelected(insert? false : pOther.isDaily());
 		}
 		return jCheckBoxDaily;
@@ -264,8 +257,7 @@ public class PricesOthersEdit extends JDialog {
 
 	private JLabel getJLabelDescription() {
 		if (jLabelDescription == null) {
-			jLabelDescription = new JLabel();
-			jLabelDescription.setText("Description");
+			jLabelDescription = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			jLabelDescription.setSize(50, 10);
 		}
 		return jLabelDescription;
@@ -291,8 +283,7 @@ public class PricesOthersEdit extends JDialog {
 
 	private JLabel getJLabelCode() {
 		if (jLabelCode == null) {
-			jLabelCode = new JLabel();
-			jLabelCode.setText("Code");
+			jLabelCode = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
 			jLabelCode.setSize(50, 10);
 		}
 		return jLabelCode;

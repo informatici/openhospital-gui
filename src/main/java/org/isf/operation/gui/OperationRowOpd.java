@@ -61,6 +61,7 @@ import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
@@ -147,7 +148,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		panelForm.add(textDate, gbc_textDate);
 		// textDate.setColumns(10);
 
-		JLabel labelResultat = new JLabel(MessageBundle.getMessage("angal.operationrowedit.result")); //$NON-NLS-1$
+		JLabel labelResultat = new JLabel(MessageBundle.getMessage("angal.common.result.txt"));
 		GridBagConstraints gbc_labelResultat = new GridBagConstraints();
 		gbc_labelResultat.anchor = GridBagConstraints.EAST;
 		gbc_labelResultat.insets = new Insets(0, 0, 5, 5);
@@ -211,14 +212,16 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		panelListData.add(panelActions, BorderLayout.NORTH);
 
-		JButton btnSave = new JButton(MessageBundle.getMessage("angal.operationrowedit.save")); //$NON-NLS-1$
+		JButton btnSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		btnSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				addToGrid();
 			}
 		});
 
-		JButton btnNew = new JButton(MessageBundle.getMessage("angal.operationrowedit.new")); //$NON-NLS-1$
+		JButton btnNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		btnNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		btnNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				clearForm();
@@ -227,7 +230,8 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		panelActions.add(btnNew);
 		panelActions.add(btnSave);
 
-		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.operationrowlist.delete")); //$NON-NLS-1$
+		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		btnDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = tableData.getSelectedRow();
@@ -330,12 +334,9 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 	public void addToGrid() {
 		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
-			JOptionPane.showMessageDialog(OperationRowOpd.this,
-					MessageBundle.getMessage("angal.operationrowedit.warningdateope"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationRowOpd.this, "angal.operationrowedit.warningdateope");
 			return;
 		}
-		
 
 		OperationRow operationRow = new OperationRow();
 		GregorianCalendar dateop = new GregorianCalendar();
@@ -427,14 +428,11 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		// int idRow = this.tableData.getSelectedRow();
 		OperationRow operationRow = null;
 		if (idRow < 0) {
-			JOptionPane.showMessageDialog(OperationRowOpd.this,
-					MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationRowOpd.this, "angal.common.pleaseselectarow.msg");
 		} else {
 			operationRow = oprowData.get(idRow);
-			int yesOrNo = JOptionPane.showConfirmDialog(OperationRowOpd.this,
-					MessageBundle.getMessage("angal.operationrowlist.confirmdelete"), null, JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
-			if (yesOrNo == JOptionPane.YES_OPTION) {
+			int answer = MessageDialog.yesNo(OperationRowOpd.this, "angal.operationrowlist.delete.operation.msg");
+			if (answer == JOptionPane.YES_OPTION) {
 				int idOpe = operationRow.getId();
 				if (idOpe > 0) {
 					boolean result;
@@ -445,23 +443,17 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 						return;
 					}
 					if (result) {
-						JOptionPane.showMessageDialog(OperationRowOpd.this,
-								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						MessageDialog.info(OperationRowOpd.this, "angal.operationrowlist.successdel");
 						oprowData.remove(idRow);
 						modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 						tableData.setModel(modelOhOpeRow);
 						tableData.repaint();
 						clearForm();
 					} else {
-						JOptionPane.showMessageDialog(OperationRowOpd.this,
-								MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(OperationRowOpd.this, "angal.operationrowlist.errosdel");
 					}
 				} else {
-					JOptionPane.showMessageDialog(OperationRowOpd.this,
-							MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.info(OperationRowOpd.this, "angal.operationrowlist.successdel");
 					oprowData.remove(idOpe);
 					modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 					tableData.setModel(modelOhOpeRow);

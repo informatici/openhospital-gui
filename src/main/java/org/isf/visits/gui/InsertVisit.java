@@ -30,7 +30,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -59,10 +58,14 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
+import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -72,6 +75,8 @@ import com.toedter.calendar.JDateChooser;
 public class InsertVisit extends JDialog implements SelectionListener {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(InsertVisit.class);
 
 	/*
 	 * Constants
@@ -100,6 +105,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	public InsertVisit(JFrame owner, Ward ward, Patient patient) {
 		super(owner, true);
+		setTitle(MessageBundle.getMessage("angal.visit.addvisit.title"));
 		this.patientSelected = patient;
 		this.ward = ward;
 		initComponents();
@@ -237,7 +243,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		}
 
 		wardPanel.add(wardBox);
-		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.ward"))); //$NON-NLS-1$
+		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.ward.txt")));
 
 		return wardPanel;
 	}
@@ -303,8 +309,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	private JButton getButtonCancel() {
 		if (buttonCancel == null) {
-			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			buttonCancel.setMnemonic(KeyEvent.VK_N);
+			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			buttonCancel.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
@@ -317,16 +323,15 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	private JButton getButtonOK() {
 		if (buttonOK == null) {
-			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			buttonOK.setMnemonic(KeyEvent.VK_O);
+			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(new ActionListener() {
 
 				private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 
 				public void actionPerformed(ActionEvent arg0) {
 					if (visitDateChooser.getDate() == null) {
-						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseadate.msg");
 						return;
 					}
 					GregorianCalendar date = new GregorianCalendar();
@@ -341,26 +346,21 @@ public class InsertVisit extends JDialog implements SelectionListener {
 					Object ward = wardBox.getSelectedItem();
 					if (ward instanceof Ward) {
 						saveWard = getWard();
-
 					} else {
-						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseaward.msg");
 						return;
 					}
 
 					boolean sms = false;
 					if (patientSelected == null) {
-						JOptionPane.showMessageDialog(InsertVisit.this, "", //$NON-NLS-1$
-										"", JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseapatient.msg");
 						return;
 					}
 					try {
-
 						visit = visitManager.newVisit(visitID, date, patientSelected, note, sms, saveWard, duration, service);
 						visitID = visit.getVisitID();
-					} catch (OHServiceException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					} catch (OHServiceException ohServiceException) {
+						LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 					}
 					if (visitID > 0) {
 						visit.setVisitID(visitID);
@@ -379,7 +379,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			dateViPanel = new JPanel();
 
 			dateAdm = new JLabel();
-			dateAdm.setText(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
+			dateAdm.setText(MessageBundle.getMessage("angal.common.date.txt"));
 
 			dateViPanel.add(dateAdm);
 			dateViPanel.add(getVisitDateField());
@@ -425,9 +425,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
-			jButtonPickPatient = new JButton();
-			jButtonPickPatient.setText(MessageBundle.getMessage("angal.visit.pickpatient")); //$NON-NLS-1$
-			jButtonPickPatient.setMnemonic(KeyEvent.VK_P);
+			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.visit.findpatient.btn"));
+			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.visit.findpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.addActionListener(new ActionListener() {
 
@@ -447,7 +446,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private JPanel getPanelChoosePatient() {
 		JPanel choosePatientPanel = new JPanel();
 		choosePatientPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		choosePatientPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.pleaseselectapatient"))); //$NON-NLS-1$
+		choosePatientPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.visit.pleaseselectapatient.title")));
 
 		patientTextField = new JTextField(14);
 		patientTextField.setEditable(false);

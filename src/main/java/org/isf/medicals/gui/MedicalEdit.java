@@ -23,7 +23,6 @@ package org.isf.medicals.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -49,9 +48,12 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 18-ago-2008
@@ -62,7 +64,9 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 public class MedicalEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalEdit.class);
+
 	private EventListenerList medicalListeners = new EventListenerList();
 	
 	public interface MedicalListener extends EventListener {
@@ -131,8 +135,8 @@ public class MedicalEdit extends JDialog {
 		insert = inserting;
 		try {
 			oldMedical = (Medical) old.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+		} catch (CloneNotSupportedException cloneNotSupportedException) {
+			LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
 		}
 		medical = old; // medical will be used for every operation
 		initialize();
@@ -146,9 +150,9 @@ public class MedicalEdit extends JDialog {
 		//this.setBounds(300, 300, 350, 240);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.medicals.newmedicalrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medicals.newmedical.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.medicals.editingmedicalrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medicals.editmedical.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();
@@ -184,10 +188,9 @@ public class MedicalEdit extends JDialog {
 			typeLabel.setText(MessageBundle.getMessage("angal.medicals.type")); // Generated
 			typeLabel.setAlignmentX(CENTER_ALIGNMENT);
 			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.code")); // Generated
+			codeLabel.setText(MessageBundle.getMessage("angal.common.code.txt"));
 			codeLabel.setAlignmentX(CENTER_ALIGNMENT);
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.common.description")); // Generated
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			descLabel.setAlignmentX(CENTER_ALIGNMENT);
 			pcsperpckLabel = new JLabel();
 			pcsperpckLabel.setText(MessageBundle.getMessage("angal.medicals.pcsperpckExt")); // Generated
@@ -231,9 +234,8 @@ public class MedicalEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel")); // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();
@@ -250,9 +252,8 @@ public class MedicalEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok")); // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					Medical newMedical = null;
@@ -263,8 +264,8 @@ public class MedicalEdit extends JDialog {
 						newMedical.setProd_code(codeTextField.getText());
 						newMedical.setPcsperpck(pcsperpckField.getValue());
 						newMedical.setMinqty(minQtiField.getValue());
-					} catch (CloneNotSupportedException ex) {
-						ex.printStackTrace();
+					} catch (CloneNotSupportedException cloneNotSupportedException) {
+						LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
 					}
 					boolean result = false;
 					if (insert) { // inserting
@@ -327,9 +328,9 @@ public class MedicalEdit extends JDialog {
 							dispose();
 						}
 					}
-					if (!result)
-						JOptionPane.showMessageDialog(MedicalEdit.this,
-								MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
 				}
 
 				private int manageSimilarFoundWarning(OHExceptionMessage error) {
@@ -337,12 +338,7 @@ public class MedicalEdit extends JDialog {
 					int messageType = error.getLevel().getSwingSeverity();
 					JOptionPane.showMessageDialog(MedicalEdit.this, error.getMessage(),
 							error.getTitle(), messageType);*/
-
-					int ok = JOptionPane.showConfirmDialog(MedicalEdit.this,
-							MessageBundle.getMessage("angal.common.doyouwanttoproceed"),
-							MessageBundle.getMessage("angal.common.doyouwanttoproceed"),
-							JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-					return ok;
+					return MessageDialog.yesNoCancel(MedicalEdit.this, "angal.common.doyouwanttoproceed.msg");
 				}
 			});
 		}

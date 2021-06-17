@@ -34,6 +34,7 @@ import java.awt.event.KeyListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -49,7 +50,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -66,6 +66,7 @@ import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
@@ -107,31 +108,27 @@ public class OpdEdit extends JDialog {
 	
 	private void fireSurgeryInserted(Opd opd) {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-
 			private static final long serialVersionUID = -2831804524718368850L;
-			
 		};
 		
 		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((SurgeryListener)listeners[i]).surgeryInserted(event, opd);
+		for (EventListener listener : listeners) {
+			((SurgeryListener) listener).surgeryInserted(event, opd);
+		}
 	}
+
 	private void fireSurgeryUpdated(Opd opd) {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-
 			private static final long serialVersionUID = -1073238832996429931L;
-			
 		};
 		
 		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((SurgeryListener)listeners[i]).surgeryUpdated(event, opd);
+		for (EventListener listener : listeners) {
+			((SurgeryListener) listener).surgeryUpdated(event, opd);
+		}
 	}
 	
-	private static final String VERSION="v1.2"; 
-
 	private JPanel insertPanel = null;
-	private JLabel jLabel = null;
 	private JPanel principalPanel = null;
 	private JPanel jAgePanel = null;
 	private JPanel jSexPanel = null;
@@ -142,17 +139,11 @@ public class OpdEdit extends JDialog {
 	private JPanel jDiseasePanel3 = null;
 	private JPanel jDiseaseTypePanel = null;
 	private JComboBox diseaseTypeBox = null;
-	private JLabel jLabel1 = null;
-	private JLabel jLabelDis2 = null;
-	private JLabel jLabelDis3 = null;
 	private JComboBox diseaseBox = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
-	private JLabel jLabel2 = null;
-	private JLabel jLabel3 = null;
-	private GregorianCalendar dateIn = null;
 	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
-	private VoDateTextField OpdDateField = null;
+	private VoDateTextField opdDateField = null;
 	private JPanel jPanel2 = null;
 	private JButton okButton = null;
 	private JButton cancelButton = null;
@@ -161,17 +152,15 @@ public class OpdEdit extends JDialog {
 	private JCheckBox referralFromCheckBox = null;
 	private VoLimitedTextField ageField = null;
 	private JPanel sexPanel = null;
-	private JRadioButton radiom;
 	private JRadioButton radiof;
-	private ButtonGroup group=null;
 	private Integer age = null;
 	private Opd opd;
 	private boolean insert;
 	private char sex;
 	private int oldAge;
 	private DiseaseType allType = new DiseaseType(
-			MessageBundle.getMessage("angal.opd.alltype"),
-			MessageBundle.getMessage("angal.opd.alltype")
+			MessageBundle.getMessage("angal.common.alltypes.txt"),
+			MessageBundle.getMessage("angal.common.alltypes.txt")
 	);
 	
 	/*
@@ -196,19 +185,21 @@ public class OpdEdit extends JDialog {
 	/**
 	 * This method initializes
 	 */
-	public OpdEdit(JFrame owner,Opd old,boolean inserting) {
+	public OpdEdit(JFrame owner, Opd old, boolean inserting) {
 		super(owner, true);
 		opd = old;
 		insert = inserting;
-		try{
+		try {
 			types = typeManager.getDiseaseType();
 			diseasesAll = diseaseManager.getDiseaseAll();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		if (!insert)
+		if (!insert) {
 			oldAge = opd.getAge();
+		}
 		initialize();
+		pack();
 	}
 	
 	/**
@@ -218,16 +209,15 @@ public class OpdEdit extends JDialog {
 		this.setBounds(100, 50, 450, 500);
 		this.setContentPane(getPrincipalPanel());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.opd.newopdregistration")+"("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.opd.newopdregistration.title"));
 		}
 		else {
-			this.setTitle(MessageBundle.getMessage("angal.opd.editopdregistration")+"("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.opd.editopdregistration.title"));
 		}
-		
 	}
 
 	/**
-	 * This method initializes jPanel1	
+	 * This method initializes principalPanel	
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
@@ -243,7 +233,7 @@ public class OpdEdit extends JDialog {
 
 	
 	/**
-	 * This method initializes jPanel	
+	 * This method initializes insertPanel	
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
@@ -262,17 +252,14 @@ public class OpdEdit extends JDialog {
 			insertPanel.add(getJDiseasePanel3(), null);
 			insertPanel.add(getDiseaseBox3(), null);
 			insertPanel.add(getJAgePanel(), null);
-			insertPanel.add(getAgeField(), null);
 			insertPanel.add(getJSexPanel(), null);
-			insertPanel.add(getSexPanel(), null);
-			
 		}
 		return insertPanel;
 	}
 	
 	
 	/**
-	 * This method initializes jComboBox	
+	 * This method initializes diseaseTypeBox	
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
@@ -282,7 +269,7 @@ public class OpdEdit extends JDialog {
 			DiseaseType elem2 = null;
 			diseaseTypeBox.setMaximumSize(new Dimension(400,50));
 			diseaseTypeBox.addItem(allType);
-			if (types != null){
+			if (types != null) {
 				for (DiseaseType elem : types) {
 					if (!insert && opd.getDisease().getType() != null) {
 						if (opd.getDisease().getType().getCode().equals(elem.getCode())) {
@@ -291,24 +278,21 @@ public class OpdEdit extends JDialog {
 					diseaseTypeBox.addItem(elem);
 				}
 			}
-			if (elem2!=null) { 
+			if (elem2 != null) { 
 				diseaseTypeBox.setSelectedItem(elem2);
 			} else {
 				diseaseTypeBox.setSelectedIndex(0);
 			}
-			
-			diseaseTypeBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					diseaseBox.removeAllItems();
-					getDiseaseBox1();					
-				}
+			diseaseTypeBox.addActionListener(e -> {
+				diseaseBox.removeAllItems();
+				getDiseaseBox1();
 			});
 		}
 		return diseaseTypeBox;
 	}
 	
 	/**
-	 * This method initializes jComboBox1	
+	 * This method initializes diseaseBox
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
@@ -322,15 +306,15 @@ public class OpdEdit extends JDialog {
 		try {
 			if (diseaseTypeBox.getSelectedIndex() == 0) {
 				diseases = diseaseManager.getDiseaseOpd();
-			}else{
+			} else {
 				String code = ((DiseaseType)diseaseTypeBox.getSelectedItem()).getCode();
 				diseases = diseaseManager.getDiseaseOpd(code);
 			}
-		}catch(OHServiceException e){
+		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		diseaseBox.addItem("");
-		if (diseases != null){
+		if (diseases != null) {
 			for (Disease elem : diseases) {
 				diseaseBox.addItem(elem);
 				if (!insert && opd.getDisease() != null) {
@@ -346,7 +330,7 @@ public class OpdEdit extends JDialog {
 				if (opd.getDisease() != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease().getCode().equals(elem.getCode())) {
-							JOptionPane.showMessageDialog(OpdEdit.this,MessageBundle.getMessage("angal.opd.disease1mayhavebeencancelled"));
+							MessageDialog.warning(OpdEdit.this,"angal.opd.disease1mayhavebeencancelled.msg");
 							diseaseBox.addItem(elem);
 							diseaseBox.setSelectedItem(elem);
 						}
@@ -354,7 +338,6 @@ public class OpdEdit extends JDialog {
 				}
 			}
 		}
-				
 		return diseaseBox;
 	}
 	
@@ -367,14 +350,14 @@ public class OpdEdit extends JDialog {
 		ArrayList<Disease> diseases = null;
 		try {
 			diseases = diseaseManager.getDiseaseOpd();
-		}catch(OHServiceException e){
+		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		diseaseBox2.addItem("");
-		if (diseases != null){
+		if (diseases != null) {
 			for (Disease elem : diseases) {
 				diseaseBox2.addItem(elem);
-				if (!insert && opd.getDisease2()!=null){
+				if (!insert && opd.getDisease2()!=null) {
 					if (opd.getDisease2().getCode().equals(elem.getCode())) {
 						elem2 = elem;}
 				}
@@ -383,11 +366,11 @@ public class OpdEdit extends JDialog {
 		if (elem2!= null) {
 			diseaseBox2.setSelectedItem(elem2);
 		} else { //try in the cancelled diseases
-			if (opd.getDisease2()!=null) {
-				if (diseasesAll != null){
+			if (opd.getDisease2() != null) {
+				if (diseasesAll != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease2().getCode().equals(elem.getCode())) {
-							JOptionPane.showMessageDialog(OpdEdit.this,MessageBundle.getMessage("angal.opd.disease2mayhavebeencancelled"));
+							MessageDialog.warning(OpdEdit.this, "angal.opd.disease2mayhavebeencancelled.msg");
 							diseaseBox2.addItem(elem);
 							diseaseBox2.setSelectedItem(elem);
 						}
@@ -407,27 +390,27 @@ public class OpdEdit extends JDialog {
 		ArrayList<Disease> diseases = null;
 		try {
 			diseases = diseaseManager.getDiseaseOpd();
-		}catch(OHServiceException e){
+		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		diseaseBox3.addItem("");
-		if (diseases != null){
+		if (diseases != null) {
 			for (Disease elem : diseases) {
 				diseaseBox3.addItem(elem);
-				if (!insert && opd.getDisease3()!=null){
+				if (!insert && opd.getDisease3() != null) {
 					if (opd.getDisease3().getCode().equals(elem.getCode())) {
 						elem2 = elem;}
 				}
 			}
 		}
-		if (elem2!= null) {
+		if (elem2 != null) {
 			diseaseBox3.setSelectedItem(elem2);
 		} else { //try in the cancelled diseases
-			if (opd.getDisease3()!=null) {
-				if (diseasesAll != null){
+			if (opd.getDisease3() != null) {
+				if (diseasesAll != null) {
 					for (Disease elem : diseasesAll) {
 						if (opd.getDisease3().getCode().equals(elem.getCode())) {
-							JOptionPane.showMessageDialog(OpdEdit.this,MessageBundle.getMessage("angal.opd.disease3mayhavebeencancelled"));
+							MessageDialog.warning(OpdEdit.this, "angal.opd.disease3mayhavebeencancelled.msg");
 							diseaseBox3.addItem(elem);
 							diseaseBox3.setSelectedItem(elem);
 						}
@@ -437,7 +420,6 @@ public class OpdEdit extends JDialog {
 		}
 		return diseaseBox3;
 	}
-	
 	
 	/**
 	 * This method initializes jPanel2	
@@ -449,153 +431,144 @@ public class OpdEdit extends JDialog {
 			jPanel2 = new JPanel();
 			jPanel2.add(getOkButton(), null);
 			jPanel2.add(getCancelButton(), null);
-			//jPanel.setLayout(new BoxLayout(getJPanel(),BoxLayout.X_AXIS));
 		}
 		return jPanel2;
 	}
 	
 	/**
-	 * This method initializes jButton	
+	 * This method initializes okButton	
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton(MessageBundle.getMessage("angal.common.ok"));
-            okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					boolean result = false;
-					GregorianCalendar gregDate = new GregorianCalendar();
-					char newPatient=' ';
-					String referralTo="";
-					String referralFrom="";
-					Disease disease=null;
-					Disease disease2=null;
-					Disease disease3=null;
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+            okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			okButton.addActionListener(e -> {
+				boolean result;
+				GregorianCalendar gregDate = new GregorianCalendar();
+				char newPatient;
+				String referralTo;
+				String referralFrom;
+				Disease disease = null;
+				Disease disease2 = null;
+				Disease disease3 = null;
 
-					if (newPatientCheckBox.isSelected()) {
-						newPatient = 'N';
-					} else {
-						newPatient = 'R';
-					}
+				if (newPatientCheckBox.isSelected()) {
+					newPatient = 'N';
+				} else {
+					newPatient = 'R';
+				}
 
-					if (referralToCheckBox.isSelected()){
-						referralTo = "R";
-					} else {
-						referralTo = "";
-					}
+				if (referralToCheckBox.isSelected()) {
+					referralTo = "R";
+				} else {
+					referralTo = "";
+				}
 
-					if (referralFromCheckBox.isSelected()){
-						referralFrom = "R";
-					} else {
-						referralFrom = "";
-					}
-					
-					//disease
-					if (diseaseBox.getSelectedIndex()>0) {
-						disease=((Disease)diseaseBox.getSelectedItem());					
-					}
-					//disease2
-					if (diseaseBox2.getSelectedIndex()>0) {
-						disease2=((Disease)diseaseBox2.getSelectedItem());					
-					}
-					//disease3
-					if (diseaseBox3.getSelectedIndex()>0) {
-						disease3=((Disease)diseaseBox3.getSelectedItem());					
-					}
-					// visit date	
-					String d = OpdDateField.getText().trim();
-					if (d.equals("")) {
-						JOptionPane.showMessageDialog(OpdEdit.this, MessageBundle.getMessage("angal.opd.pleaseinsertattendancedate"));
+				if (referralFromCheckBox.isSelected()) {
+					referralFrom = "R";
+				} else {
+					referralFrom = "";
+				}
+
+				// disease
+				if (diseaseBox.getSelectedIndex() > 0) {
+					disease = ((Disease)diseaseBox.getSelectedItem());
+				}
+				// disease2
+				if (diseaseBox2.getSelectedIndex() > 0) {
+					disease2 = ((Disease)diseaseBox2.getSelectedItem());
+				}
+				// disease3
+				if (diseaseBox3.getSelectedIndex() > 0) {
+					disease3 = ((Disease)diseaseBox3.getSelectedItem());
+				}
+				// visit date
+				String d = opdDateField.getText().trim();
+				if (d.equals("")) {
+					MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertattendancedate.msg");
+					return;
+				}
+				else {
+					try {
+						currentDateFormat.setLenient(false);
+						Date myDate = currentDateFormat.parse(d);
+						gregDate.setTime(myDate);
+					} catch (ParseException pe) {
+						MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertavalidattendancedate.msg");
 						return;
 					}
-					else {
-						try {
-							currentDateFormat.setLenient(false);
-							Date myDate = currentDateFormat.parse(d);
-							gregDate.setTime(myDate);
-						} catch (ParseException pe) {
-							JOptionPane.showMessageDialog(OpdEdit.this,
-									MessageBundle.getMessage("angal.opd.pleaseinsertavalidattendancedate"));
-							return;
-						}
-					}
-					
-					if (radiof.isSelected()) {
-						sex='F';
-					} else {
-						sex='M';
-					}
-					
-					opd.setNewPatient(newPatient);
-					opd.setReferralFrom(referralFrom);
-					opd.setReferralTo(referralTo);
-					opd.setAge(age);
-					opd.setSex(sex);
-					opd.setDisease(disease);				
-					opd.setDisease2(disease2);
-					opd.setDisease3(disease3);
-					opd.setVisitDate(gregDate);
-					opd.setNote("");
-					opd.setUserID(UserBrowsingManager.getCurrentUser());
-					
-					try {
-						if (insert){    //Insert
-							GregorianCalendar date = new GregorianCalendar();
-							opd.setProgYear(opdManager.getProgYear(date.get(GregorianCalendar.YEAR))+1);
-
-							//remember for later use
-							RememberDates.setLastOpdVisitDate(gregDate);
-							
-							result = opdManager.newOpd(opd);
-							if (result) {
-								fireSurgeryInserted(opd);
-								dispose();
-							} else 
-								JOptionPane.showMessageDialog(OpdEdit.this, 
-									MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-						}
-						else {    //Update
-
-							Opd updatedOpd = opdManager.updateOpd(opd);
-							if (updatedOpd != null) {
-								fireSurgeryUpdated(updatedOpd);
-								dispose();
-							} else 
-								JOptionPane.showMessageDialog(OpdEdit.this, 
-									MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-						}
-					} catch(OHServiceException ex){
-						OHServiceExceptionUtil.showMessages(ex);
-					}
 				}
-              }
-			);	
+
+				if (radiof.isSelected()) {
+					sex = 'F';
+				} else {
+					sex = 'M';
+				}
+
+				opd.setNewPatient(newPatient);
+				opd.setReferralFrom(referralFrom);
+				opd.setReferralTo(referralTo);
+				opd.setAge(age);
+				opd.setSex(sex);
+				opd.setDisease(disease);
+				opd.setDisease2(disease2);
+				opd.setDisease3(disease3);
+				opd.setVisitDate(gregDate);
+				opd.setNote("");
+				opd.setUserID(UserBrowsingManager.getCurrentUser());
+
+				try {
+					if (insert) {    // Insert
+						GregorianCalendar date = new GregorianCalendar();
+						opd.setProgYear(opdManager.getProgYear(date.get(Calendar.YEAR))+1);
+
+						// remember for later use
+						RememberDates.setLastOpdVisitDate(gregDate);
+
+						result = opdManager.newOpd(opd);
+						if (result) {
+							fireSurgeryInserted(opd);
+							dispose();
+						} else {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						}
+					}
+					else {    // Update
+						Opd updatedOpd = opdManager.updateOpd(opd);
+						if (updatedOpd != null) {
+							fireSurgeryUpdated(updatedOpd);
+							dispose();
+						} else {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						}
+					}
+				} catch(OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
+				}
+			}
+			);
 		}
 		return okButton;
 	}
 	
 	/**
-	 * This method initializes jButton1	
+	 * This method initializes cancelButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel"));
-            cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+            cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
 	
 	/**
-	 * This method initializes jTextField	
+	 * This method initializes ageField
 	 * 	
 	 * @return javax.swing.JTextField	
 	 */
@@ -605,30 +578,30 @@ public class OpdEdit extends JDialog {
 			ageField.setText("0");
 			ageField.setMaximumSize(new Dimension(50, 50));
 			if (insert) {
-				age=-1;
+				age = -1;
 				ageField.setText("");
 			} else {
-				Integer oldage = opd.getAge();
-				ageField.setText(oldage.toString());
-				age=oldAge;
+				int oldage = opd.getAge();
+				ageField.setText(String.valueOf(oldage));
+				age = oldAge;
 			}
 			ageField.setMinimumSize(new Dimension(100, 50));
 		}
 		ageField.addFocusListener(new FocusListener() {
-			public void focusLost(FocusEvent e) {				
+			@Override
+			public void focusLost(FocusEvent e) {
 				try {				
-					//ageField.setText(new StringTokenizer(ageField.getText()).nextToken());
 					age = Integer.parseInt(ageField.getText());
 					if (age < 0 || age > 200) {
-						ageField.setText("0");
-						JOptionPane.showMessageDialog(OpdEdit.this, MessageBundle.getMessage("angal.opd.insertvalidage"));
+						ageField.setText("");
+						MessageDialog.error(OpdEdit.this, "angal.opd.insertavalidage.msg");
 					}
 				} catch (NumberFormatException ex) {
-					ageField.setText("0");
+					ageField.setText("");
 				}
-				
 			}
 			
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 		});
@@ -643,65 +616,66 @@ public class OpdEdit extends JDialog {
 	public JPanel getSexPanel() {
 		if (sexPanel == null) {
 			sexPanel = new JPanel();
-			group=new ButtonGroup();
-			radiom = new JRadioButton(MessageBundle.getMessage("angal.opd.male"));
-			radiof = new JRadioButton(MessageBundle.getMessage("angal.opd.female"));
-			if (insert)radiom.setSelected(true);
-			else{
-				if (opd.getSex()=='F')
+			ButtonGroup group = new ButtonGroup();
+			JRadioButton radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
+			if (insert) {
+				radiom.setSelected(true);
+			}
+			else {
+				if (opd.getSex() == 'F') {
 					radiof.setSelected(true);
-				else radiom.setSelected(true);
+				} else {
+					radiom.setSelected(true);
+				}
 			}			
-			//radiom.addActionListener(this);
-			//radiof.addActionListener(this);
 			group.add(radiom);
 			group.add(radiof);
 			sexPanel.add(radiom);
 			sexPanel.add(radiof);
-			
 		}
 		return sexPanel;
 	}
 
 	public JPanel getJAgePanel() {
-		if (jAgePanel == null){
+		if (jAgePanel == null) {
 			jAgePanel = new JPanel();
-			jLabel2 = new JLabel();
-			jLabel2.setText(MessageBundle.getMessage("angal.opd.age"));
-			jAgePanel.add(jLabel2);
+			jAgePanel.add(new JLabel(MessageBundle.getMessage("angal.common.age.label")));
+			jAgePanel.add(getAgeField());
 		}
 		return jAgePanel;
 	}
 
 	public JPanel getJDiseasePanel() {
-		if (jDiseasePanel == null){
+		if (jDiseasePanel == null) {
 			jDiseasePanel = new JPanel();
             jDiseasePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-			jLabel1 = new JLabel();
-			jLabel1.setText(MessageBundle.getMessage("angal.opd.diagnosis"));
-			jDiseasePanel.add(jLabel1);
+			jDiseasePanel.add(new JLabel(MessageBundle.getMessage("angal.opd.diagnosis.txt")));
                         
             searchDiseaseTextField = new JTextField();
             jDiseasePanel.add(searchDiseaseTextField);
             searchDiseaseTextField.setColumns(10);
             searchDiseaseTextField.addKeyListener(new KeyListener() {
+                @Override
                 public void keyPressed(KeyEvent e) {
                     int key = e.getKeyCode();
                     if (key == KeyEvent.VK_ENTER) {
                         searchDiseaseButton.doClick();
                     }
                 }
+                @Override
                 public void keyReleased(KeyEvent e) {}
+                @Override
                 public void keyTyped(KeyEvent e) {}
             });
-            //...
-            
+
             searchDiseaseButton = new JButton("");
             jDiseasePanel.add(searchDiseaseButton);
             searchDiseaseButton.setPreferredSize(new Dimension(20, 20));
             searchDiseaseButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
             searchDiseaseButton.addActionListener(new ActionListener() {
                 ArrayList<Disease> diseasesOPD = null;
+                @Override
                 public void actionPerformed(ActionEvent arg0) {
                     try {
                         diseasesOPD = diseaseManager.getDiseaseOpd();
@@ -710,17 +684,16 @@ public class OpdEdit extends JDialog {
                     }
                     diseaseBox.removeAllItems();
                     diseaseBox.addItem("");
-                    for(Disease disease: 
-                            getSearchDiagnosisResults(searchDiseaseTextField.getText(), 
+                    for(Disease disease: getSearchDiagnosisResults(searchDiseaseTextField.getText(),
                                     diseasesOPD == null? diseasesAll : diseasesOPD)) {
                         diseaseBox.addItem(disease);
                     }
 
-                    if (diseaseBox.getItemCount() >= 2){
+                    if (diseaseBox.getItemCount() >= 2) {
                         diseaseBox.setSelectedIndex(1);
                     }
                     diseaseBox.requestFocus();
-                    if (diseaseBox.getItemCount() > 2){
+                    if (diseaseBox.getItemCount() > 2) {
                         diseaseBox.showPopup();
                     }
                 }
@@ -729,90 +702,100 @@ public class OpdEdit extends JDialog {
 		}
 		return jDiseasePanel;
 	}
+
 	public JPanel getJDiseasePanel2() {
-        if (jDiseasePanel2 == null){
+		if (jDiseasePanel2 == null) {
 			jDiseasePanel2 = new JPanel();
-	                jDiseasePanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-			jLabelDis2 = new JLabel();
-			jLabelDis2.setText(MessageBundle.getMessage("angal.opd.diagnosisnfulllist"));
-			jDiseasePanel2.add(jLabelDis2);
-	                
-	                searchDiseaseTextField2 = new JTextField();
-	                        jDiseasePanel2.add(searchDiseaseTextField2);
-	                        searchDiseaseTextField2.setColumns(10);
-	                        searchDiseaseTextField2.addKeyListener(new KeyListener() {
-	                            public void keyPressed(KeyEvent e) {
-	                                int key = e.getKeyCode();
-	                                if (key == KeyEvent.VK_ENTER) {
-	                                    searchDiseaseButton2.doClick();
-	                                }
-	                            }
-	                            public void keyReleased(KeyEvent e) {}
-	                            public void keyTyped(KeyEvent e) {}
-	                        });
-	                        //...
-	                        
-	                        searchDiseaseButton2 = new JButton("");
-	                        jDiseasePanel2.add(searchDiseaseButton2);
-	                        searchDiseaseButton2.setPreferredSize(new Dimension(20, 20));
-	                        searchDiseaseButton2.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-	                        searchDiseaseButton2.addActionListener(new ActionListener() {
-	                            ArrayList<Disease> diseasesOPD = null;
-	                            public void actionPerformed(ActionEvent arg0) {
-	                                try {
-	                                    diseasesOPD = diseaseManager.getDiseaseOpd();
-	                                } catch (OHServiceException ex) {
-	                                    OHServiceExceptionUtil.showMessages(ex);
-	                                }
-	                                diseaseBox2.removeAllItems();
-	                                diseaseBox2.addItem("");
-	                                for(Disease disease: 
-	                                        getSearchDiagnosisResults(searchDiseaseTextField2.getText(), 
-	                                                diseasesOPD == null? diseasesAll : diseasesOPD)) {
-	                                    diseaseBox2.addItem(disease);
-	                                }
-	
-	                                if (diseaseBox2.getItemCount() >= 2){
-	                                    diseaseBox2.setSelectedIndex(1);
-	                                }
-	                                diseaseBox2.requestFocus();
-	                                if (diseaseBox2.getItemCount() > 2){
-	                                    diseaseBox2.showPopup();
-	                                }
-	                            }
-	                        });
-            }
-        return jDiseasePanel2;
+			jDiseasePanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+			jDiseasePanel2.add(new JLabel(MessageBundle.getMessage("angal.opd.diagnosisnfulllist2.txt")));
+
+			searchDiseaseTextField2 = new JTextField();
+			jDiseasePanel2.add(searchDiseaseTextField2);
+			searchDiseaseTextField2.setColumns(10);
+			searchDiseaseTextField2.addKeyListener(new KeyListener() {
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					int key = e.getKeyCode();
+					if (key == KeyEvent.VK_ENTER) {
+						searchDiseaseButton2.doClick();
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+				}
+			});
+
+			searchDiseaseButton2 = new JButton("");
+			jDiseasePanel2.add(searchDiseaseButton2);
+			searchDiseaseButton2.setPreferredSize(new Dimension(20, 20));
+			searchDiseaseButton2.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+			searchDiseaseButton2.addActionListener(new ActionListener() {
+
+				ArrayList<Disease> diseasesOPD = null;
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						diseasesOPD = diseaseManager.getDiseaseOpd();
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
+					}
+					diseaseBox2.removeAllItems();
+					diseaseBox2.addItem("");
+					for (Disease disease : getSearchDiagnosisResults(searchDiseaseTextField2.getText(),
+									diseasesOPD == null ? diseasesAll : diseasesOPD)) {
+						diseaseBox2.addItem(disease);
+					}
+
+					if (diseaseBox2.getItemCount() >= 2) {
+						diseaseBox2.setSelectedIndex(1);
+					}
+					diseaseBox2.requestFocus();
+					if (diseaseBox2.getItemCount() > 2) {
+						diseaseBox2.showPopup();
+					}
+				}
+			});
+		}
+		return jDiseasePanel2;
 	}
+
 	public JPanel getJDiseasePanel3() {
-		if (jDiseasePanel3 == null){
+		if (jDiseasePanel3 == null) {
 			jDiseasePanel3 = new JPanel();
 			jDiseasePanel3.setLayout(new FlowLayout(FlowLayout.LEFT));
-			jLabelDis3 = new JLabel();
-			jLabelDis3.setText(MessageBundle.getMessage("angal.opd.diagnosisnfulllist3"));
-			jDiseasePanel3.add(jLabelDis3);
+			jDiseasePanel3.add(new JLabel(MessageBundle.getMessage("angal.opd.diagnosisnfulllist3.txt")));
                         
             searchDiseaseTextField3 = new JTextField();
             jDiseasePanel3.add(searchDiseaseTextField3);
             searchDiseaseTextField3.setColumns(10);
             searchDiseaseTextField3.addKeyListener(new KeyListener() {
+                @Override
                 public void keyPressed(KeyEvent e) {
                     int key = e.getKeyCode();
                     if (key == KeyEvent.VK_ENTER) {
                         searchDiseaseButton3.doClick();
                     }
                 }
+                @Override
                 public void keyReleased(KeyEvent e) {}
+                @Override
                 public void keyTyped(KeyEvent e) {}
             });
-            //...
-            
+
             searchDiseaseButton3 = new JButton("");
             jDiseasePanel3.add(searchDiseaseButton3);
             searchDiseaseButton3.setPreferredSize(new Dimension(20, 20));
             searchDiseaseButton3.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
             searchDiseaseButton3.addActionListener(new ActionListener() {
                 ArrayList<Disease> diseasesOPD = null;
+                @Override
                 public void actionPerformed(ActionEvent arg0) {
                     try {
                         diseasesOPD = diseaseManager.getDiseaseOpd();
@@ -821,17 +804,16 @@ public class OpdEdit extends JDialog {
                     }
                     diseaseBox3.removeAllItems();
                     diseaseBox3.addItem("");
-                    for(Disease disease: 
-                            getSearchDiagnosisResults(searchDiseaseTextField3.getText(), 
+                    for (Disease disease:getSearchDiagnosisResults(searchDiseaseTextField3.getText(),
                                     diseasesOPD == null? diseasesAll : diseasesOPD)) {
                         diseaseBox3.addItem(disease);
                     }
 
-                    if (diseaseBox3.getItemCount() >= 2){
+                    if (diseaseBox3.getItemCount() >= 2) {
                         diseaseBox3.setSelectedIndex(1);
                     }
                     diseaseBox3.requestFocus();
-                    if (diseaseBox3.getItemCount() > 2){
+                    if (diseaseBox3.getItemCount() > 2) {
                         diseaseBox3.showPopup();
                     }
                 }
@@ -841,50 +823,57 @@ public class OpdEdit extends JDialog {
 	}
 
 	public JPanel getJDiseaseTypePanel() {
-		if (jDiseaseTypePanel == null){
+		if (jDiseaseTypePanel == null) {
 			jDiseaseTypePanel = new JPanel();
 			jDiseaseTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-			jLabel = new JLabel();
-			jLabel.setText(MessageBundle.getMessage("angal.opd.diseasetype"));
-			jDiseaseTypePanel.add(jLabel);
+			jDiseaseTypePanel.add(new JLabel(MessageBundle.getMessage("angal.opd.diseasetype.txt")));
 		}
 		return jDiseaseTypePanel;
 	}
 
 	public JPanel getJSexPanel() {
-		if (jSexPanel == null){
+		if (jSexPanel == null) {
 			jSexPanel = new JPanel();
-			jLabel3 = new JLabel();
-			jLabel3.setText(MessageBundle.getMessage("angal.opd.sex"));
-			jSexPanel.add(jLabel3);
+			jSexPanel.add(new JLabel(MessageBundle.getMessage("angal.common.sex.label")));
+			jSexPanel.add(getSexPanel());
 		}
 		return jSexPanel;
 	}
 	
 	public JPanel getJNewPatientPanel() {
-		String referralTo="";
-		String referralFrom="";
+		String referralTo;
+		String referralFrom;
 
-		if (jNewPatientPanel == null){
+		if (jNewPatientPanel == null) {
 			jNewPatientPanel = new JPanel();
-			newPatientCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.newattendance"));
+			newPatientCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.newattendance.txt"));
 			jNewPatientPanel.add(newPatientCheckBox);
-			if (!insert){
-				if (opd.getNewPatient() == 'N')newPatientCheckBox.setSelected(true);
+			if (!insert) {
+				if (opd.getNewPatient() == 'N') {
+					newPatientCheckBox.setSelected(true);
+				}
 			}
-			referralFromCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.from"));
+			referralFromCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.txt"));
 			jNewPatientPanel.add(referralFromCheckBox);
-			if (!insert){
+			if (!insert) {
 				referralFrom = opd.getReferralFrom();
-				if (referralFrom == null) referralFrom="";
-				if (referralFrom.equals("R"))referralFromCheckBox.setSelected(true);
+				if (referralFrom == null) {
+					referralFrom="";
+				}
+				if (referralFrom.equals("R")) {
+					referralFromCheckBox.setSelected(true);
+				}
 			}
-			referralToCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.to"));
+			referralToCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referralto.txt"));
 			jNewPatientPanel.add(referralToCheckBox);
-			if (!insert){
+			if (!insert) {
 				referralTo = opd.getReferralTo();
-				if (referralTo == null) referralTo="";
-				if (referralTo.equals("R"))referralToCheckBox.setSelected(true);
+				if (referralTo == null) {
+					referralTo="";
+				}
+				if (referralTo.equals("R")) {
+					referralToCheckBox.setSelected(true);
+				}
 			}
 		}
 		return jNewPatientPanel;
@@ -893,8 +882,9 @@ public class OpdEdit extends JDialog {
 	public JPanel getJDatePanel() {
 		if (jDatePanel == null) {
 			jDatePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 3, 3));
-			String d = "";
-			Date myDate = null;
+			String d;
+			Date myDate;
+			GregorianCalendar dateIn;
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDateGregorian() == null) {
 					dateIn = new GregorianCalendar();
@@ -908,18 +898,17 @@ public class OpdEdit extends JDialog {
 			myDate = dateIn.getTime();
 			d = currentDateFormat.format(myDate);
 			
-			OpdDateField = new VoDateTextField("dd/mm/yy", d, 15);
+			opdDateField = new VoDateTextField("dd/mm/yy", d, 15);
 
-			jDatePanel.add(OpdDateField);
-			jDatePanel = setMyBorder(jDatePanel, MessageBundle.getMessage("angal.opd.attendancedate"));
+			jDatePanel.add(opdDateField);
+			jDatePanel = setMyBorder(jDatePanel, MessageBundle.getMessage("angal.opd.attendancedate.txt"));
 		}
-		
 		return jDatePanel;
 	}
 
 	
 	/*
-	 * set a specific border+title to a panel
+	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
@@ -929,30 +918,29 @@ public class OpdEdit extends JDialog {
 		return c;
 	}
 
-	
-    private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
-        String query = s.trim();
-        ArrayList<Disease> results = new ArrayList<>();
-        for (Disease disease : diseaseList) {
-            if (!query.equals("")) {
-		String[] patterns = query.split(" ");
-		String name = disease.getDescription().toLowerCase();
-		boolean patternFound = false;
-                for (String pattern : patterns) {
-                    if (name.contains(pattern.toLowerCase())) {
-                        patternFound = true;
-                        //It is sufficient that only one pattern matches the query
-                        break;
-                    }
-                }
-		if (patternFound){
-                    results.add(disease);
-                }
-            } else {
-                results.add(disease);
-            }
-        }		
-        return results;
-    }    
+	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
+		String query = s.trim();
+		ArrayList<Disease> results = new ArrayList<>();
+		for (Disease disease : diseaseList) {
+			if (!query.equals("")) {
+				String[] patterns = query.split(" ");
+				String name = disease.getDescription().toLowerCase();
+				boolean patternFound = false;
+				for (String pattern : patterns) {
+					if (name.contains(pattern.toLowerCase())) {
+						patternFound = true;
+						//It is sufficient that only one pattern matches the query
+						break;
+					}
+				}
+				if (patternFound) {
+					results.add(disease);
+				}
+			} else {
+				results.add(disease);
+			}
+		}
+		return results;
+	}
 	
 }

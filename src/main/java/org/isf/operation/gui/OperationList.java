@@ -58,12 +58,17 @@ import org.isf.operation.model.OperationRow;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OperationList extends JPanel implements OperationRowListener, OperationRowEditListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(OperationList.class);
+
 	private JTable JtableData;
 	private JLabel TypeSourceLabelValue;
 	private JLabel CodeSourceLabelValue;
@@ -165,15 +170,17 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		add(panelButtons, BorderLayout.SOUTH);
 
-		JButton UpdateButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.update")); //$NON-NLS-1$
-		UpdateButton.addMouseListener(new MouseAdapter() {
+		JButton updateButton = new JButton(MessageBundle.getMessage("angal.common.update.btn"));
+		updateButton.setMnemonic(MessageBundle.getMnemonic("angal.common.update.btn.key"));
+		updateButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				updateButtonMouseClicked(e);
 			}
 		});
 
-		JButton addButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.add")); //$NON-NLS-1$
+		JButton addButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.add.btn"));
+		addButton.setMnemonic(MessageBundle.getMnemonic("angal.operationrowlist.add.btn.key"));
 		addButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
@@ -181,9 +188,10 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 			}
 		});
 		panelButtons.add(addButton);
-		panelButtons.add(UpdateButton);
+		panelButtons.add(updateButton);
 
-		JButton deleteButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.delete")); //$NON-NLS-1$
+		JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		deleteButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -192,11 +200,12 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		});
 		panelButtons.add(deleteButton);
 
-		JButton cancelButton = new JButton(MessageBundle.getMessage("angal.operationrowlist.close")); //$NON-NLS-1$
+		JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		cancelButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
-				cancelButtonMouseClicked(evt);
+				closeButtonMouseClicked(evt);
 			}
 		});
 		panelButtons.add(cancelButton);
@@ -212,8 +221,8 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		if (myAdmission != null) {
 			try {
 				oprowData = opeRowManager.getOperationRowByAdmission(myAdmission);
-			} catch (OHServiceException ex) {
-				ex.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
 		}
 		if (myPatient != null) {
@@ -224,15 +233,13 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 				oprowData = new ArrayList<>();
 				for (Admission adm : admissions) {
 					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
-				
 				}
 				ArrayList<Opd> opds =  opdManager.getOpdList(myPatient.getCode());
 				for (Opd op : opds) {
 					oprowData.addAll(opeRowManager.getOperationRowByOpd(op));
-				
 				}
-			} catch (OHServiceException ex) {
-				ex.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
 			panelHeader.setVisible(false);
 			panelButtons.setVisible(false);
@@ -346,12 +353,12 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	}
 
 	/* ***** functions events **** */
-	private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		this.setVisible(false);
 		this.parentContainer.dispose();
 	}
 
-	private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		int idRow = this.JtableData.getSelectedRow();
 		OperationRow operationRow = null;
 		opeRowEdit = new OperationRowEdit(operationRow);
@@ -359,19 +366,18 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		opeRowEdit.addOperationListener(OperationList.this);
 		dialogOpe.setContentPane(opeRowEdit);
 		dialogOpe.setIconImage(ico);
-		dialogOpe.setTitle(MessageBundle.getMessage("angal.operationrowlist.addnew")); //$NON-NLS-1$
+		dialogOpe.setTitle(MessageBundle.getMessage("angal.operationrowlist.newoperation.title"));
 		opeRowEdit.setMyParent(dialogOpe);
-		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.addnew")); //$NON-NLS-1$
+		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.newoperation.title"));
 		dialogOpe.setVisible(true);
 		dialogOpe.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	}
 
-	private void updateButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void updateButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		int idRow = this.JtableData.getSelectedRow();
 		OperationRow operationRow = null;
 		if (idRow < 0) {
-			JOptionPane.showMessageDialog(OperationList.this, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationList.this, "angal.common.pleaseselectarow.msg");
 			return;
 		} else {
 			operationRow = oprowData.get(idRow);
@@ -381,26 +387,24 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		opeRowEdit.addOperationRowListener(OperationList.this);
 		dialogOpe.setContentPane(opeRowEdit);
 		dialogOpe.setIconImage(ico);
-		dialogOpe.setTitle(MessageBundle.getMessage("angal.operationrowlist.updateop")); //$NON-NLS-1$
+		dialogOpe.setTitle(MessageBundle.getMessage("angal.operationrowlist.editoperation.title"));
 		opeRowEdit.setMyParent(dialogOpe);
-		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.updateop")); //$NON-NLS-1$
+		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.editoperation.title"));
 		dialogOpe.setVisible(true);
 		dialogOpe.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	}
 
-	private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTableDataMouseClicked
+	private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {
 		int idRow = this.JtableData.getSelectedRow();
 		OperationRow operationRow = null;
 		if (idRow < 0) {
-			JOptionPane.showMessageDialog(OperationList.this, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationList.this, "angal.common.pleaseselectarow.msg");
 			return;
 		} else {
 			operationRow = oprowData.get(idRow);
 		}
-		int yesOrNo = JOptionPane.showConfirmDialog(OperationList.this,
-				MessageBundle.getMessage("angal.operationrowlist.confirmdelete"), null, JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
-		if (yesOrNo == JOptionPane.YES_OPTION) {
+		int answer = MessageDialog.yesNo(OperationList.this, "angal.operationrowlist.delete.operation.msg");
+		if (answer == JOptionPane.YES_OPTION) {
 			boolean result = false;
 			try {
 				result = opeRowManager.deleteOperationRow(operationRow);
@@ -409,14 +413,10 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 				return;
 			}
 			if (result) {
-				JOptionPane.showMessageDialog(OperationList.this,
-						MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-						MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+				MessageDialog.info(OperationList.this, "angal.operationrowlist.successdel");
 				refreshJtable();
 			} else {
-				JOptionPane.showMessageDialog(OperationList.this,
-						MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
-						MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+				MessageDialog.error(OperationList.this, "angal.operationrowlist.errosdel");
 			}
 		}
 	}

@@ -26,7 +26,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -44,6 +43,7 @@ import org.isf.pricesothers.manager.PricesOthersManager;
 import org.isf.pricesothers.model.PricesOthers;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 public class PricesOthersBrowser extends ModalJFrame implements PricesOthersListener {
@@ -65,13 +65,14 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	private JButton jButtonDelete;
 	private JButton jButtonClose;
 	private String[] columnNames = {
-			MessageBundle.getMessage("angal.common.code"), 
-			MessageBundle.getMessage("angal.common.description"), 
-			MessageBundle.getMessage("angal.pricesothers.opdm"), 
-			MessageBundle.getMessage("angal.pricesothers.ipdm"), 
-			MessageBundle.getMessage("angal.pricesothers.daily"),
-			MessageBundle.getMessage("angal.pricesothers.discharge"),
-			MessageBundle.getMessage("angal.pricesothers.undefined")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.pricesothers.opd.col").toUpperCase(),
+			MessageBundle.getMessage("angal.pricesothers.ipd.col").toUpperCase(),
+			MessageBundle.getMessage("angal.pricesothers.daily.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.discharge.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.undefined.txt").toUpperCase()
+	};
 	private int[] columnWidth = {100, 100, 50, 50, 50, 100, 100};
 	private boolean[] columnResizable = {false, true, false, false, false, false, false};
 	
@@ -90,7 +91,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	}
 
 	private void initComponents() {
-		setTitle(MessageBundle.getMessage("angal.pricesothers.titlebrowser")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.pricesothers.otherpricesbrowser.title"));
 		add(getJScrollPaneTable(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		//setSize(550, 240);
@@ -100,9 +101,8 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
-			jButtonClose = new JButton();
-			jButtonClose.setText(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonClose.setMnemonic(KeyEvent.VK_C);
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jButtonClose.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -115,29 +115,22 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonDelete() {
 		if (jButtonDelete == null) {
-			jButtonDelete = new JButton();
-			jButtonDelete.setText(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
-			jButtonDelete.setMnemonic(KeyEvent.VK_D);
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jButtonDelete.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
 					if (jTablePricesOthers.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.pricesothers.pleaseselectanitemtodelete")); //$NON-NLS-1$
+						MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtodelete");
 					} else {
 						int selectedRow = jTablePricesOthers.getSelectedRow();
 						pOthers = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
 						if (pOthers.getId() == 1) {
-							JOptionPane.showMessageDialog(null,	MessageBundle.getMessage("angal.sql.operationnotpermittedprotectedelement"));
+							MessageDialog.error(null, "angal.sql.operationnotpermittedprotectedelement");
 							return;
 						}
-						int ok = JOptionPane.showConfirmDialog(
-								null,
-								MessageBundle.getMessage("angal.pricesothers.doyoureallywanttodeletethisitem"), //$NON-NLS-1$
-								pOthers.getDescription(),
-								JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE);
-						
-						if (ok == JOptionPane.OK_OPTION) {
+						int answer = MessageDialog.yesNo(null,"angal.pricesothers.deletethisitem.fmt.msg", pOthers.getDescription());
+						if (answer == JOptionPane.OK_OPTION) {
 							
 							boolean result = false;
 							try {
@@ -147,12 +140,9 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 							}
 							
 							if (result) {
-								
 								jTablePricesOthers.setModel(new PricesOthersBrowserModel());
 							} else {
-								JOptionPane.showMessageDialog(
-										null,
-										MessageBundle.getMessage("angal.pricesothers.thedatacouldnotbedeleted")); //$NON-NLS-1$
+								MessageDialog.error(null, "angal.pricesothers.thedatacouldnotbedeleted");
 							}
 						}
 					}
@@ -164,14 +154,13 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonEdit() {
 		if (jButtonEdit == null) {
-			jButtonEdit = new JButton();
-			jButtonEdit.setText(MessageBundle.getMessage("angal.common.edit")); //$NON-NLS-1$
-			jButtonEdit.setMnemonic(KeyEvent.VK_E);
+			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jButtonEdit.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
 					if (jTablePricesOthers.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.pricesothers.pleaseselectanitemtoedit")); //$NON-NLS-1$
+						MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtoedit");
 					} else {
 						int selectedRow = jTablePricesOthers.getSelectedRow();
 						PricesOthers pOther = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
@@ -187,9 +176,8 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonNew() {
 		if (jButtonNew == null) {
-			jButtonNew = new JButton();
-			jButtonNew.setText(MessageBundle.getMessage("angal.common.new")); //$NON-NLS-1$
-			jButtonNew.setMnemonic(KeyEvent.VK_N);
+			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jButtonNew.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {

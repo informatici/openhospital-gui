@@ -28,12 +28,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.isf.generaldata.MessageBundle;
+
 public class PhotoFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 
 	public PhotoFrame(String path, String resolution)	{
-		super("Photo preview");
+		super(MessageBundle.getMessage("angal.photoframe.photopreview.title"));
 		
 		Container contentPane = getContentPane();
 		
@@ -44,9 +46,9 @@ public class PhotoFrame extends JFrame{
 		centerPanel.add(imgPanel);
 		
 		contentPane.add(centerPanel, BorderLayout.CENTER);
-		
+
 		JLabel photoInfo = new JLabel("<html><center> "
-									+ "<br><br>Original picture resolution: " + resolution 
+									+ "<br><br>" + MessageBundle.formatMessage("angal.photoframe.originalpicitureresoultion.fmt.txt", resolution)
 									+ "<br><br></center></html>");		
 		
 		contentPane.add(photoInfo, BorderLayout.SOUTH);

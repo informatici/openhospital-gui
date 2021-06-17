@@ -27,7 +27,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -57,6 +56,7 @@ import org.isf.pricesothers.model.PricesOthers;
 import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.treetable.JTreeTable;
 
@@ -134,16 +134,13 @@ public class PricesBrowser extends ModalJFrame {
 		add(getJPanelNorth(), BorderLayout.NORTH);
 		add(getJScrollPaneList(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
-		setTitle(MessageBundle.getMessage("angal.priceslist.pricesbrowser"));
+		setTitle(MessageBundle.getMessage("angal.priceslist.pricebrowser.title"));
 		setSize(647, 440);
 	}
 
 	private void checkLists() {
 		if (listArray.isEmpty()) {
-			JOptionPane.showMessageDialog(null, 
-						MessageBundle.getMessage("angal.priceslist.pleasecreatealistfirst"),
-						MessageBundle.getMessage("angal.priceslist.nolist"),
-						JOptionPane.OK_OPTION);
+			MessageDialog.error(null, "angal.priceslist.pleasecreatealistfirst");
 			ListBrowser browseList = new ListBrowser();
 			browseList.setVisible(true);
 			dispose();
@@ -152,8 +149,8 @@ public class PricesBrowser extends ModalJFrame {
 	
 	private JButton getPrintTableButton() {
 		if (jPrintTableButton == null) {
-			jPrintTableButton = new JButton(MessageBundle.getMessage("angal.priceslist.printing"));
-			jPrintTableButton.setMnemonic(KeyEvent.VK_P);
+			jPrintTableButton = new JButton(MessageBundle.getMessage("angal.priceslist.printing.btn"));
+			jPrintTableButton.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.printing.btn.key"));
 			jPrintTableButton.setVisible(true);
 			jPrintTableButton.addActionListener(new ActionListener() {
 
@@ -172,9 +169,8 @@ public class PricesBrowser extends ModalJFrame {
 
 	private JButton getJButtonManage() {
 		if (jButtonManage == null) {
-			jButtonManage = new JButton();
-			jButtonManage.setText(MessageBundle.getMessage("angal.priceslist.managelists")); //$NON-NLS-1$
-			jButtonManage.setMnemonic(KeyEvent.VK_U);
+			jButtonManage = new JButton(MessageBundle.getMessage("angal.priceslist.managelists.btn"));
+			jButtonManage.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.managelists.btn.key"));
 			//jButtonManage.setEnabled(false);
 			jButtonManage.addActionListener(new ActionListener() {
 				
@@ -229,9 +225,8 @@ public class PricesBrowser extends ModalJFrame {
 
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new ActionListener() {
 	
 				public void actionPerformed(ActionEvent event) {
@@ -244,9 +239,8 @@ public class PricesBrowser extends ModalJFrame {
 
 	private JButton getJButtonSave() {
 		if (jButtonSave == null) {
-			jButtonSave = new JButton();
-			jButtonSave.setText(MessageBundle.getMessage("angal.common.savem")); //$NON-NLS-1$
-			jButtonSave.setMnemonic(KeyEvent.VK_S);
+			jButtonSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			jButtonSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			jButtonSave.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -267,7 +261,7 @@ public class PricesBrowser extends ModalJFrame {
 						}
 						
 						if (updated) {
-							JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.priceslist.listsaved")); //$NON-NLS-1$
+							MessageDialog.info(null, "angal.priceslist.listsaved");
 							updateFromDB();
 							PriceNode root = getTreeContent();
 							jTreeTable.setModel(new PriceModel(root));
@@ -276,7 +270,9 @@ public class PricesBrowser extends ModalJFrame {
 						    jTreeTable.getTree().expandRow(1);
 							validate();
 							repaint();
-						} else JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.priceslist.listcouldnotbesaved")); //$NON-NLS-1$
+						} else {
+							MessageDialog.error(null, "angal.priceslist.listcouldnotbesaved");
+						}
 					}
 				}
 			});

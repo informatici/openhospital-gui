@@ -30,7 +30,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
@@ -48,7 +47,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -73,6 +71,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.IconButton;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -176,9 +175,9 @@ public class TherapyEntryForm extends JDialog {
 
 	private void initComponents() {
 		if (therapy == null) {
-			setTitle(MessageBundle.getMessage("angal.therapy.titlenew")); //$NON-NLS-1$
+			setTitle(MessageBundle.getMessage("angal.therapy.newtherapyentryform.title"));
 		} else {
-			setTitle(MessageBundle.getMessage("angal.therapy.titleedit")); //$NON-NLS-1$
+			setTitle(MessageBundle.getMessage("angal.therapy.edittherapyentryform.title"));
 			getContentPane().setBackground(Color.RED);
 		}
 		setSize(new Dimension(740, 400));
@@ -324,7 +323,7 @@ public class TherapyEntryForm extends JDialog {
 		JPanel daysPanel = new JPanel();
 		BoxLayout daysLayout = new BoxLayout(daysPanel, BoxLayout.Y_AXIS);
 		daysPanel.setLayout(daysLayout);
-		JLabel labelDays = new JLabel(MessageBundle.getMessage("angal.therapy.days")); //$NON-NLS-1$
+		JLabel labelDays = new JLabel(MessageBundle.getMessage("angal.common.days.txt"));
 		labelDays.setAlignmentX(CENTER_ALIGNMENT);
 		jSpinnerDays.addChangeListener(new ChangeListener() {
 
@@ -362,7 +361,7 @@ public class TherapyEntryForm extends JDialog {
 		JPanel monthsPanel = new JPanel();
 		BoxLayout monthsLayout = new BoxLayout(monthsPanel, BoxLayout.Y_AXIS);
 		monthsPanel.setLayout(monthsLayout);
-		JLabel labelMonths = new JLabel(MessageBundle.getMessage("angal.therapy.months")); //$NON-NLS-1$
+		JLabel labelMonths = new JLabel(MessageBundle.getMessage("angal.common.months.txt"));
 		labelMonths.setAlignmentX(CENTER_ALIGNMENT);
 
 		jSpinnerMonths.addChangeListener(new ChangeListener() {
@@ -437,7 +436,7 @@ public class TherapyEntryForm extends JDialog {
 			quantityPanel.setLayout(new BoxLayout(quantityPanel,
 					BoxLayout.X_AXIS));
 
-			JLabel quantityLabel = new JLabel(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+			JLabel quantityLabel = new JLabel(MessageBundle.getMessage("angal.common.quantity.txt"));
 			quantityPanel.add(quantityLabel);
 			quantityPanel.add(getSpinnerQty());
 			quantityPanel.add(getQuantitySlider());
@@ -737,8 +736,8 @@ public class TherapyEntryForm extends JDialog {
 	
 	private JButton getButtonCancel() {
 		if (buttonCancel == null) {
-			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			buttonCancel.setMnemonic(KeyEvent.VK_N);
+			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			buttonCancel.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent arg0) {
@@ -751,8 +750,8 @@ public class TherapyEntryForm extends JDialog {
 	
 	private JButton getButtonOK() {
 		if (buttonOK == null) {
-			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			buttonOK.setMnemonic(KeyEvent.VK_O);
+			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent arg0) {
@@ -764,12 +763,12 @@ public class TherapyEntryForm extends JDialog {
 					GregorianCalendar endDate = therapyEndDate;
 					Medical medical = (Medical) medicalsList.getSelectedValue();
 					if (medical == null) {
-						JOptionPane.showMessageDialog(TherapyEntryForm.this, MessageBundle.getMessage("angal.therapy.selectapharmaceutical"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+						MessageDialog.error(TherapyEntryForm.this, "angal.therapy.selectapharmaceutical");
 						return;
 					}
 					Double qty = (Double) jSpinnerQty.getValue();
 					if (qty == 0.) {
-						JOptionPane.showMessageDialog(TherapyEntryForm.this, MessageBundle.getMessage("angal.therapy.pleaseinsertaquantitygreaterthanzero"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+						MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero");
 						return;
 					}
 					int therapyID = 0;

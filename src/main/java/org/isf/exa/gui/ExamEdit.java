@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -35,7 +34,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -47,6 +45,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
@@ -63,8 +62,6 @@ public class ExamEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION="v1.2";  
-	
 	private EventListenerList examListeners = new EventListenerList();
 
     public interface ExamListener extends EventListener {
@@ -144,9 +141,9 @@ public class ExamEdit extends JDialog {
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.exa.newexam")+" ("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.exa.newexam.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.exa.editexam")+" ("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.exa.editexam.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
@@ -174,8 +171,8 @@ public class ExamEdit extends JDialog {
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			typeLabel = new JLabel(MessageBundle.getMessage("angal.exa.type"));
-			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description"));			
-			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code"));
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
+			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
 			procLabel = new JLabel(MessageBundle.getMessage("angal.exa.procedure"));
 			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default"));
 			dataPanel = new JPanel();
@@ -215,9 +212,8 @@ public class ExamEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
             if (cancelButton == null) {
-                cancelButton = new JButton();
-                cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-                cancelButton.setMnemonic(KeyEvent.VK_C);
+	            cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+	            cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
                 cancelButton.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent e) {
                         dispose();
@@ -235,13 +231,12 @@ public class ExamEdit extends JDialog {
 	private JButton getOkButton() {
 		if (okButton == null) {
 			if (okButton == null) {
-				okButton = new JButton();
-				okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-	            okButton.setMnemonic(KeyEvent.VK_O);
+				okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+				okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 				okButton.addActionListener(new java.awt.event.ActionListener() {
 					public void actionPerformed(java.awt.event.ActionEvent e) {
 						if ((codeTextField.getText().trim().equals(""))||(descriptionTextField.getText().trim().equals(""))){
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.exa.pleaseinsertcodeoranddescription"));
+							MessageDialog.error(null, "angal.exa.pleaseinsertcodeoranddescription");
 						}
 						else{
 							int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
@@ -257,7 +252,7 @@ public class ExamEdit extends JDialog {
 							if (insert) {
 								try {
 									if (manager.isKeyPresent(exam)) {
-										JOptionPane.showMessageDialog(ExamEdit.this, MessageBundle.getMessage("angal.exa.changethecodebecauseisalreadyinuse"));
+										MessageDialog.error(ExamEdit.this, "angal.exa.changethecodebecauseisalreadyinuse");
 										return;
 									}
 								} catch (OHServiceException e1) {
@@ -277,7 +272,9 @@ public class ExamEdit extends JDialog {
 									OHServiceExceptionUtil.showMessages(e1);
 								}
 							}
-							if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							if (!result) {
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							}
 							else  {
 								dispose();
 							}

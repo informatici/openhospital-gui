@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -51,6 +50,7 @@ import org.isf.opetype.manager.OperationTypeBrowserManager;
 import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
@@ -62,6 +62,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class OperationBrowser extends ModalJFrame implements OperationEdit.OperationListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
 	public void operationInserted(AWTEvent e) {
 		pOperation.add(0, operation);
@@ -81,8 +82,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	}
 	
 	//TODO: replace with mapping mnemonic / translation in OperationBrowserManager
-	public static String OPD = MessageBundle.getMessage("angal.admission.opd").toUpperCase();
-	public static String ADMISSION = MessageBundle.getMessage("angal.admission.admission").toUpperCase();
+	public static String OPD = MessageBundle.getMessage("angal.admission.opd.txt").toUpperCase();
+	public static String ADMISSION = MessageBundle.getMessage("angal.admission.admission.txt").toUpperCase();
 	public static String OPD_ADMISSION = OPD + " / " + ADMISSION;
 
 	private int pfrmBase = 8;
@@ -95,10 +96,10 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private JComboBox pbox;
 	private ArrayList<Operation> pOperation;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.operation.idm"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.operation.typem"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.operation.namem"),  //$NON-NLS-1$
-			MessageBundle.getMessage("angal.operation.operationcontext").toUpperCase() //$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.operation.operationcontext.col").toUpperCase()
 	};
 	private int[] pColumnWidth = { 50, 180, 200, 100 };
 	private Operation operation;
@@ -112,7 +113,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	
 	public OperationBrowser() {
 
-		setTitle(MessageBundle.getMessage("angal.operation.operationsbrowser")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.operation.operationsbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
@@ -137,7 +138,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		buttonPanel.add(selectlabel);
 
 		pbox = new JComboBox();
-		pbox.addItem(MessageBundle.getMessage("angal.operation.allm")); //$NON-NLS-1$
+		pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
 		ArrayList<OperationType> type;
 		try {
 			type = operationTypeManager.getOperationType();
@@ -152,7 +153,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		pbox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				pSelection = pbox.getSelectedItem().toString();
-				if (pSelection.compareTo(MessageBundle.getMessage("angal.operation.allm")) == 0) //$NON-NLS-1$
+				if (pSelection.compareTo(STR_ALL) == 0)
 					model = new OperationBrowserModel();
 				else
 					model = new OperationBrowserModel(pSelection);
@@ -162,8 +163,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		});
 		buttonPanel.add(pbox);
 
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new")); //$NON-NLS-1$
-		buttonNew.setMnemonic(KeyEvent.VK_N);
+		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent event) {
@@ -176,14 +177,13 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		});
 		buttonPanel.add(buttonNew);
 
-		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit")); //$NON-NLS-1$
-		buttonEdit.setMnemonic(KeyEvent.VK_E);
+		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
 					operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
@@ -195,21 +195,17 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		});
 		buttonPanel.add(buttonEdit);
 
-		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
-		buttonDelete.setMnemonic(KeyEvent.VK_D);
+		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					Operation m = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-					int n = JOptionPane.showConfirmDialog(
-							null, MessageBundle.getMessage("angal.operation.deleteoperation") + " \"" //$NON-NLS-1$ //$NON-NLS-2$
-									+ m.getDescription() + "\" ?", //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
+					Operation operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg",operation.getDescription());
 					try {
-						if ((n == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(m))) {
+						if ((answer == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(operation))) {
 							pOperation.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();
@@ -222,8 +218,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		});
 		buttonPanel.add(buttonDelete);
 
-		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-		buttonClose.setMnemonic(KeyEvent.VK_C);
+		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		buttonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -291,7 +287,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 						return OPD;
 					}
 				} else {
-					return MessageBundle.getMessage("angal.common.notdefined");
+					return MessageBundle.getMessage("angal.common.notdefined.txt");
 				}
 			}
 			return null;

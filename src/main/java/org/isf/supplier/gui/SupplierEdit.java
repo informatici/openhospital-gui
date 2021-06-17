@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -34,7 +33,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -46,6 +44,7 @@ import org.isf.supplier.model.Supplier;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JLabelRequired;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
@@ -149,9 +148,9 @@ public class SupplierEdit extends JDialog {
 		this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase * pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.supplier.newsupplier"));
+			this.setTitle(MessageBundle.getMessage("angal.supplier.newsupplier.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.supplier.editsupplier"));
+			this.setTitle(MessageBundle.getMessage("angal.supplier.editsupplier.title"));
 		}
 	}
 	
@@ -177,11 +176,11 @@ public class SupplierEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			idLabel = new JLabel(MessageBundle.getMessage("angal.supplier.id"));
-			nameLabel = new JLabelRequired(MessageBundle.getMessage("angal.supplier.name"));
-			addressLabel = new JLabel(MessageBundle.getMessage("angal.supplier.address"));
+			idLabel = new JLabel(MessageBundle.getMessage("angal.common.id.txt"));
+			nameLabel = new JLabelRequired(MessageBundle.getMessage("angal.common.name.txt"));
+			addressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
 			taxcodeLabel = new JLabel(MessageBundle.getMessage("angal.supplier.taxcode"));
-			phoneLabel = new JLabel(MessageBundle.getMessage("angal.supplier.telephone"));
+			phoneLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			faxLabel = new JLabel(MessageBundle.getMessage("angal.supplier.faxnumber"));
 			emailLabel = new JLabel(MessageBundle.getMessage("angal.supplier.email"));
 			noteLabel = new JLabel(MessageBundle.getMessage("angal.supplier.note"));
@@ -235,9 +234,8 @@ public class SupplierEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();
@@ -254,18 +252,13 @@ public class SupplierEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (nameTextField.getText().trim().equals("")) {
-						JOptionPane.showMessageDialog(				
-								null,
-								MessageBundle.getMessage("angal.supplier.pleaseinsertaname"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.supplier.pleaseinsertaname");
 						return;
 					}
 
@@ -300,8 +293,12 @@ public class SupplierEdit extends JDialog {
 							fireSupplierUpdated();
 						}
 					}
-					if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-					else  dispose();
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
+						dispose();
+					}
 				}
 			});
 		}

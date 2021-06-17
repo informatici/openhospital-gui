@@ -25,9 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -43,12 +40,14 @@ import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.UserGroup;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupListener {
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public void groupInserted(AWTEvent e) {
 		pGroup.add(0,group);
 		((UserGroupBrowserModel)table.getModel()).fireTableDataChanged();
@@ -56,6 +55,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		if (table.getRowCount() > 0)
 			table.setRowSelectionInterval(0, 0);
 	}
+	@Override
 	public void groupUpdated(AWTEvent e) {
 		pGroup.set(selectedrow,group);
 		((UserGroupBrowserModel)table.getModel()).fireTableDataChanged();
@@ -71,10 +71,13 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	private int pfrmHeight;
 	private int selectedrow;
 	private ArrayList<UserGroup> pGroup;
-	private String[] pColumns = { MessageBundle.getMessage("angal.menu.groupm"), MessageBundle.getMessage("angal.menu.descm") };
-	private int[] pColumnWidth = {70,  100 };
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
+	};
+	private int[] pColumnWidth = {70,  100};
 	private UserGroup group;
-	private DefaultTableModel model ;
+	private DefaultTableModel model;
 	private JTable table;
 	
 	private UserGroupBrowsing myFrame;
@@ -83,17 +86,14 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 	public UserGroupBrowsing() {
 		myFrame = this;
-		setTitle(MessageBundle.getMessage("angal.menu.groupsbrowser"));
-		
-		//addWindowListener(this);
+		setTitle(MessageBundle.getMessage("angal.groupsbrowser.title"));
 		
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmWidth = screensize.width / 2;
 		pfrmHeight = screensize.height / 4;
-		setBounds(screensize.width / 4, screensize.height / 4, pfrmWidth,
-				pfrmHeight);
+		setBounds(screensize.width / 4, screensize.height / 4, pfrmWidth, pfrmHeight);
 		
 		model = new UserGroupBrowserModel();
 		table = new JTable(model);
@@ -103,102 +103,64 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel();
-		
-		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit"));
-		buttonEdit.setMnemonic(KeyEvent.VK_E);
-		buttonEdit.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(				
-	                        null,
-	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
-	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);
-				} else {
-					selectedrow = table.getSelectedRow();
-					group = (UserGroup)(((UserGroupBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
-					//GroupEdit editrecord = 
-					new GroupEdit(myFrame, group,false);
-					//editrecord.addGroupListener(UserGroupBrowsing.this);
-					//editrecord.setVisible(true);
-				}	 				
+		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+		buttonEdit.addActionListener(event -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+			} else {
+				selectedrow = table.getSelectedRow();
+				group = (UserGroup)(model.getValueAt(table.getSelectedRow(), -1));
+				new GroupEdit(myFrame, group,false);
 			}
 		});
 		buttonPanel.add(buttonEdit);
-		
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new"));
-		buttonNew.setMnemonic(KeyEvent.VK_N);
-		buttonNew.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent event) {
-				group=new UserGroup();
-				//GroupEdit newrecord = 
-				new GroupEdit(myFrame, group,true);
-				//newrecord.addGroupListener(UserGroupBrowsing.this);
-				//newrecord.setVisible(true);
-			}
+		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
+		buttonNew.addActionListener(event -> {
+			group = new UserGroup();
+			new GroupEdit(myFrame, group,true);
 		});
 		buttonPanel.add(buttonNew);
 		
-		JButton buttonPrivilege = new JButton(MessageBundle.getMessage("angal.menu.groupmenu"));
-		buttonPrivilege.setMnemonic(KeyEvent.VK_M);
-		buttonPrivilege.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(				
-	                        null,
-	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
-	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);
-				} else {
-					UserGroup m = (UserGroup)(((UserGroupBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-					new PrivilegeTree(myFrame, m);
-				}
+		JButton buttonPrivilege = new JButton(MessageBundle.getMessage("angal.groupsbrowser.groupmenu.btn"));
+		buttonPrivilege.setMnemonic(MessageBundle.getMnemonic("angal.groupsbrowser.groupmenu.btn.key"));
+		buttonPrivilege.addActionListener(event -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+			} else {
+				UserGroup userGroup = (UserGroup)(model.getValueAt(table.getSelectedRow(), -1));
+				new PrivilegeTree(myFrame, userGroup);
 			}
 		});
 		buttonPanel.add(buttonPrivilege);
-		
-		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete"));
-		buttonDelete.setMnemonic(KeyEvent.VK_D);
-		buttonDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(				
-	                        null,
-	                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
-	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.PLAIN_MESSAGE);
-				} else {
-				UserGroup m = (UserGroup)(((UserGroupBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-				int n = JOptionPane.showConfirmDialog(
-                        null,
-                        MessageBundle.getMessage("angal.menu.deletegroup")+"\""+m.getCode()+"\" ?",
-                        MessageBundle.getMessage("angal.hospital"),
-                        JOptionPane.YES_NO_OPTION);
 
-                    try {
-                        if ((n == JOptionPane.YES_OPTION) && (manager.deleteGroup(m))){
-                            pGroup.remove(table.getSelectedRow());
-                            model.fireTableDataChanged();
-                            table.updateUI();
-                            }
-                    } catch (OHServiceException e) {
-                        OHServiceExceptionUtil.showMessages(e);
-                    }
-                }
+		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+		buttonDelete.addActionListener(event -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+			} else {
+				UserGroup userGroup = (UserGroup) (model.getValueAt(table.getSelectedRow(), -1));
+				int answer = MessageDialog.yesNo(null, "angal.groupsbrowser.deletegroup.fmt.msg", userGroup.getCode());
+				try {
+					if ((answer == JOptionPane.YES_OPTION) && (manager.deleteGroup(userGroup))) {
+						pGroup.remove(table.getSelectedRow());
+						model.fireTableDataChanged();
+						table.updateUI();
+					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+				}
 			}
 		});
 		buttonPanel.add(buttonDelete);
-		
-		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
-		buttonClose.setMnemonic(KeyEvent.VK_C);
-		buttonClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {				
-				dispose();
-			}
-		});
+
+		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+		buttonClose.addActionListener(event -> dispose());
 		buttonPanel.add(buttonClose);
 
 		add(buttonPanel, BorderLayout.SOUTH);
@@ -218,20 +180,26 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
                 OHServiceExceptionUtil.showMessages(e);
             }
         }
+
+		@Override
 		public int getRowCount() {
-			if (pGroup == null)
+			if (pGroup == null) {
 				return 0;
+			}
 			return pGroup.size();
 		}
 		
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
 				return pGroup.get(r).getCode();
@@ -245,7 +213,6 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}

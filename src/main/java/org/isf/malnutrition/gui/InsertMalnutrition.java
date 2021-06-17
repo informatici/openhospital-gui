@@ -23,7 +23,6 @@ package org.isf.malnutrition.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 
@@ -105,7 +104,12 @@ public class InsertMalnutrition extends JDialog {
 		super(owner, true);
 		maln = malnutrition;
 		inserting = insert;
-		setTitle(MessageBundle.getMessage("angal.malnutrition.malnutrition"));
+		if (inserting) {
+			setTitle(MessageBundle.getMessage("angal.malnutrition.newmalnutrition.title"));
+		}
+		else {
+			setTitle(MessageBundle.getMessage("angal.malnutrition.editmalnutrition.title"));
+		}
 		add(getJContentPane());
 		pack();
 		setLocationRelativeTo(null);
@@ -155,8 +159,8 @@ public class InsertMalnutrition extends JDialog {
 			weightField.setText(String.valueOf(maln.getWeight()));
 			heightField.setText(String.valueOf(maln.getHeight()));
 		}
-		JLabel weightLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.weight"));
-		JLabel heightLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.height"));
+		JLabel weightLabel = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
+		JLabel heightLabel = new JLabel(MessageBundle.getMessage("angal.common.height.txt"));
 		fieldPanel.add(weightLabel);
 		fieldPanel.add(weightField);
 		fieldPanel.add(heightLabel);
@@ -172,8 +176,8 @@ public class InsertMalnutrition extends JDialog {
 	}
 
 	private JButton getOkButton() {
-		okButton = new JButton(MessageBundle.getMessage("angal.common.ok"));
-		okButton.setMnemonic(KeyEvent.VK_O);
+		okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+		okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -219,8 +223,8 @@ public class InsertMalnutrition extends JDialog {
 	}
 
 	private JButton getCancelButton() {
-		cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel"));
-		cancelButton.setMnemonic(KeyEvent.VK_C);
+		cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();

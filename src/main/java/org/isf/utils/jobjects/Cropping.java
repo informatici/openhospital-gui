@@ -21,6 +21,7 @@
  */
 package org.isf.utils.jobjects;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -44,6 +45,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
 
+import org.isf.generaldata.MessageBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Cropping.java - 27/gen/2014
  *
@@ -52,7 +57,8 @@ import javax.swing.event.MouseInputAdapter;
 public class Cropping extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Cropping.class);
+
 	BufferedImage image;
 	Dimension size;
 	Rectangle clip;
@@ -122,20 +128,21 @@ public class Cropping extends JPanel {
 			clipped = image.getSubimage(x, y, w, h);
 			return clipped;
 		} catch (RasterFormatException rfe) {
-			System.out.println("raster format error: " + rfe.getMessage());
+			LOGGER.error("raster format error: {0}", rfe.getMessage());
 			return null;
 		}
 	}
 
 	public JPanel getUIPanel() {
-		JButton clip = new JButton("save");
-		clip.addActionListener(new ActionListener() {
+		JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
+		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clipImage();
 			}
 		});
 		JPanel panel = new JPanel();
-		panel.add(clip);
+		panel.add(saveButton);
 		return panel;
 	}
 
@@ -148,7 +155,7 @@ public class Cropping extends JPanel {
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.getContentPane().add(new JScrollPane(test));
-		f.getContentPane().add(test.getUIPanel(), "South");
+		f.getContentPane().add(test.getUIPanel(), BorderLayout.SOUTH);
 		f.setSize(400, 400);
 		f.setLocation(200, 200);
 		f.setVisible(true);

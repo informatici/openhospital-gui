@@ -27,7 +27,6 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -42,6 +41,7 @@ import org.isf.hospital.model.Hospital;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
@@ -79,7 +79,7 @@ public class HospitalBrowser extends ModalJFrame{
 	private Hospital hospital = null;
 	private JButton editJButton;
 	private JButton updateJButton;
-	private JButton exitJButton;
+	private JButton closeJButton;
 	
 	
 	public HospitalBrowser(){
@@ -97,7 +97,7 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 	
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.hospital.hospitalinformations"));
+		this.setTitle(MessageBundle.getMessage("angal.hospital.hospitalinformation.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
@@ -134,7 +134,7 @@ public class HospitalBrowser extends ModalJFrame{
 	public JPanel getJNamePanel() {
 		if (jNamePanel==null){
 			jNamePanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel nameJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.name")+": ");
+			JLabel nameJLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt") + ": ");
 			jNamePanel.add(nameJLabel);
 			nameJTextField = new JTextField(25);
 			nameJTextField.setEditable(false);			
@@ -147,7 +147,7 @@ public class HospitalBrowser extends ModalJFrame{
 	public JPanel getJAddressPanel() {
 		if (jAddressPanel==null){
 			jAddressPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel addJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.address")+": ");
+			JLabel addJLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt")+": ");
 			jAddressPanel.add(addJLabel);
 			addressJTextField = new JTextField(25);
 			addressJTextField.setEditable(false);
@@ -158,9 +158,9 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 	
 	public JPanel getJCityPanel() {
-		if (jCityPanel==null){
-			jCityPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel cityJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.city")+": ");
+		if (jCityPanel == null){
+			jCityPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel cityJLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt")+": ");
 			jCityPanel.add(cityJLabel);
 			cityJTextField = new JTextField(25);
 			cityJTextField.setEditable(false);
@@ -172,7 +172,7 @@ public class HospitalBrowser extends ModalJFrame{
 	public JPanel getJTelePanel() {
 		if (jTelePanel==null){
 			jTelePanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel teleJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.telephone")+": ");
+			JLabel teleJLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt")+": ");
 			jTelePanel.add(teleJLabel);
 			teleJTextField = new JTextField(25);
 			teleJTextField.setEditable(false);
@@ -236,13 +236,8 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 	
 	public void saveConfirm() {
-		int n = JOptionPane.showConfirmDialog(
-				null,
-				MessageBundle.getMessage("angal.hospital.savechanges")+" ?",
-				hospital.getDescription(),
-				JOptionPane.YES_NO_OPTION);
-		
-		if ((n == JOptionPane.YES_OPTION)){
+		int response = MessageDialog.yesNo(null, "angal.hospital.savethechanges.msg");
+		if (response == JOptionPane.YES_OPTION) {
 			updateHospitalEntity();
 		}
 	}
@@ -250,18 +245,17 @@ public class HospitalBrowser extends ModalJFrame{
 	public JPanel getJButtonPanel() {
 		if (jButtonPanel==null){
 			jButtonPanel= new JPanel();
-			editJButton = new JButton(MessageBundle.getMessage("angal.common.edit"));
-			editJButton.setMnemonic(KeyEvent.VK_E);
-			updateJButton = new JButton(MessageBundle.getMessage("angal.hospital.update"));
-			updateJButton.setMnemonic(KeyEvent.VK_U);
-			exitJButton = new JButton(MessageBundle.getMessage("angal.common.close"));
-			exitJButton.setMnemonic(KeyEvent.VK_C);
+			editJButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			editJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+			updateJButton = new JButton(MessageBundle.getMessage("angal.common.update.btn"));
+			updateJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.update.btn.key"));
+			closeJButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			updateJButton.setEnabled(false);
 			
-			exitJButton.addActionListener(new ActionListener() {
+			closeJButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					if (isModified())
-					{						
+					if (isModified()) {
 						//open confirm save window
 						saveConfirm();
 					}
@@ -282,7 +276,7 @@ public class HospitalBrowser extends ModalJFrame{
 			});
 			jButtonPanel.add(editJButton);
 			jButtonPanel.add(updateJButton);
-			jButtonPanel.add(exitJButton);
+			jButtonPanel.add(closeJButton);
 		}
 		return jButtonPanel;
 	}

@@ -45,7 +45,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
@@ -66,6 +65,9 @@ import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
+import org.isf.utils.jobjects.MessageDialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Detail for DICOM image
@@ -78,6 +80,8 @@ import org.isf.utils.exception.model.OHSeverityLevel;
 public class DicomViewGui extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DicomViewGuiMouseListener.class);
 
 	// status of fremereader
 	private int patID = -1;
@@ -126,12 +130,8 @@ public class DicomViewGui extends JPanel {
 		if (patID >= 0){
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
-			}catch(OHServiceException ex){
-				if (ex.getMessages() != null){
-					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 
@@ -151,18 +151,11 @@ public class DicomViewGui extends JPanel {
 		this.serieNumber = serieNumber;
 		this.frameIndex = 0;
 
-		// if (serieNumber == null || serieNumber.trim().length() == 0)
-		//    return;
-
 		if (patID >= 0) {
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
-			} catch (OHServiceException ex) {
-				if (ex.getMessages() != null) {
-					for (OHExceptionMessage msg : ex.getMessages()) {
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch (OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 
@@ -175,7 +168,6 @@ public class DicomViewGui extends JPanel {
 			refreshFrame();
 
 		reInitComponent();
-
 	}
 
 	/**
@@ -198,7 +190,6 @@ public class DicomViewGui extends JPanel {
 			jSliderFrame.setEnabled(false);
 			jSliderZoom.setEnabled(false);
 		} else {
-			// System.out.println("init per "+patID+" frames "+frames.length);
 			jSliderZoom.setEnabled(true);
 			jSliderZoom.setPaintTicks(true);
 			jSliderZoom.setMajorTickSpacing(10);
@@ -216,11 +207,9 @@ public class DicomViewGui extends JPanel {
 
 			jPanelCenter = new JPanel();
 
-			// System.out.println(this.getWidth()+" "+this.getHeight());
 			// center.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
 
 			jPanelCenter.add(composeCenter(jPanelCenter.getWidth(), jPanelCenter.getHeight(), true));
-
 		}
 
 		// center.getViewport().setBackground(Color.BLACK);
@@ -231,8 +220,8 @@ public class DicomViewGui extends JPanel {
 		JPanel fp2 = new JPanel();
 		fp1.setLayout(new BoxLayout(fp1, BoxLayout.Y_AXIS));
 		fp2.setLayout(new BoxLayout(fp2, BoxLayout.Y_AXIS));
-		fp1.setBorder(new TitledBorder("Zoom"));
-		fp2.setBorder(new TitledBorder("Frames"));
+		fp1.setBorder(new TitledBorder(MessageBundle.getMessage("angal.dicomview.zoom.title")));
+		fp2.setBorder(new TitledBorder(MessageBundle.getMessage("angal.dicomview.frames.title")));
 		jPanelFooter.setLayout(new GridLayout(1, 2));
 		fp1.add(Box.createRigidArea(new Dimension(5, 5)));
 		fp1.add(jSliderZoom);
@@ -258,8 +247,6 @@ public class DicomViewGui extends JPanel {
 			jSliderFrame.setEnabled(false);
 			jSliderZoom.setEnabled(false);
 		} else {
-			// System.out.println("reInitComponent per "+idPaziente+" immagini "+immagini.length);
-
 			// reset mouse relative position
 			resetMouseRelativePosition();
 
@@ -281,11 +268,8 @@ public class DicomViewGui extends JPanel {
 //			float value = (float) tmpImg.getWidth() * (float) perc / 100f;
 //			BufferedImage immagineResized = Scalr.resize(tmpImg, Math.round(value));
 
-			// System.out.println("reinitComponent x "+x+"y "+y);
-
 			jPanelCenter.add(composeCenter(jPanelCenter.getWidth(), jPanelCenter.getHeight(), true));
 			validate();
-
 		}
 		jSliderFrame.setValue(0);
 		jSliderZoom.setValue(100);
@@ -375,13 +359,13 @@ public class DicomViewGui extends JPanel {
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.oh"), 10, hi);
 		hi += VGAP;
 		txt = ohPatient.getName();
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.name") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.name.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = "" + ohPatient.getAge();
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.age") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.age.txt") + txt, 10, hi);
 		hi += VGAP;
 		txt = "" + ohPatient.getSex();
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.sex") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.sex.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		hi += VGAP;
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.dicom"), 10, hi);
@@ -389,17 +373,17 @@ public class DicomViewGui extends JPanel {
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientName) : tmpDbFile.getDicomPatientName();
 		if (txt == null)
 			txt = "";
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.name") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.name.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientSex) : tmpDbFile.getDicomPatientSex();
 		if (txt == null)
 			txt = "";
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.sex") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.sex.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientAge) :  tmpDbFile.getDicomPatientAge();
 		if (txt == null)
 			txt = "";
-		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.age") + " : " + txt, 10, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.age.txt") + " : " + txt, 10, hi);
 
 		if (ohPatient.getPatientProfilePhoto() != null) {
 			final Image photoAsImage = ohPatient.getPatientProfilePhoto().getPhotoAsImage();
@@ -459,7 +443,7 @@ public class DicomViewGui extends JPanel {
 			txt = df.format(d);
 		else
 			txt = "";
-		canvas.drawString(MessageBundle.getMessage("angal.common.date") + " : " + txt, ws, hi);
+		canvas.drawString(MessageBundle.getMessage("angal.common.date.txt") + " : " + txt, ws, hi);
 		canvas.setColor(orig);
 	}
 
@@ -494,12 +478,8 @@ public class DicomViewGui extends JPanel {
 			} else if (fileType.equalsIgnoreCase("dcm")) {
 				getImageFromDicom(tmpDbFile);
 			}
-		} catch(OHServiceException ex){
-			if (ex.getMessages() != null){
-				for(OHExceptionMessage msg : ex.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
 	}
 	
@@ -519,18 +499,16 @@ public class DicomViewGui extends JPanel {
 
 			try {
 				tmpImg = reader.read(0);//, param);
-				// System.out.println("Read image dim : "+tmpImg.getHeight()+" "+tmpImg.getWidth());
-
 			} catch (DicomCodingException dce) {
 				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
-						MessageBundle.getMessage("angal.dicom.load.err") + " : " + dett.getFileName(), OHSeverityLevel.ERROR));
+						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
+						OHSeverityLevel.ERROR));
 			}
 
 			imageInputStream.close();
 			this.tmpDicom = null;
-
-		} catch (Exception ecc) {
-			ecc.printStackTrace();
+		} catch (Exception exception) {
+			LOGGER.error(exception.getMessage(), exception);
 		}
 	}
 	
@@ -550,19 +528,17 @@ public class DicomViewGui extends JPanel {
 
 			try {
 				tmpImg = reader.read(0, param);
-				// System.out.println("Read image dim : "+tmpImg.getHeight()+" "+tmpImg.getWidth());
-
 			} catch (DicomCodingException dce) {
 				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
-						MessageBundle.getMessage("angal.dicom.load.err") + " : " + dett.getFileName(), OHSeverityLevel.ERROR));
+						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
+						OHSeverityLevel.ERROR));
 			}
 
 			imageInputStream.close();
 			DicomStreamMetaData dsmd = (DicomStreamMetaData) reader.getStreamMetadata();
 			this.tmpDicom = dsmd.getDicomObject();
-
-		} catch (Exception ecc) {
-			ecc.printStackTrace();
+		} catch (Exception exception) {
+			LOGGER.error(exception.getMessage(), exception);
 		}
 	}
 
@@ -700,7 +676,6 @@ public class DicomViewGui extends JPanel {
 		 * click position
 		 */
 		public void mousePressed(MouseEvent e) {
-			// System.out.println("mp["+e.getXOnScreen()+","+e.getYOnScreen()+"]");
 			p1x = e.getXOnScreen();
 			p1y = e.getYOnScreen();
 		}
@@ -713,7 +688,6 @@ public class DicomViewGui extends JPanel {
 			x = totX;
 
 			y = totY;
-
 		}
 
 		/**

@@ -37,7 +37,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
@@ -51,7 +50,7 @@ import org.isf.dicom.model.FileDicom;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 
 /**
@@ -159,12 +158,8 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		FileDicom[] fdb = null;
 		try {
 			fdb = DicomManagerFactory.getManager().loadPatientFiles(patID);
-		}catch(OHServiceException ex){
-			if (ex.getMessages() != null){
-				for(OHExceptionMessage msg : ex.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
 		if (fdb == null)
 			fdb = new FileDicom[0];
@@ -230,7 +225,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			JPanel header = new JPanel(new BorderLayout(), false);
 			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
 			date.setForeground(Color.LIGHT_GRAY);
-			JLabel type = new JLabel(instance.getDicomType() == null ? MessageBundle.getMessage("angal.common.notdefined") : instance.getDicomType().toString());
+			JLabel type = new JLabel(instance.getDicomType() == null ? MessageBundle.getMessage("angal.common.notdefined.txt") : instance.getDicomType().toString());
 			type.setForeground(Color.LIGHT_GRAY);
 			header.add(date, BorderLayout.NORTH);
 			header.add(type, BorderLayout.CENTER);
@@ -285,7 +280,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			JPanel header = new JPanel(new BorderLayout(), false);
 			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
 			date.setForeground(Color.LIGHT_GRAY);
-			JLabel type = new JLabel(instance.getDicomType() == null? MessageBundle.getMessage("angal.common.notdefined") : instance.getDicomType().toString());
+			JLabel type = new JLabel(instance.getDicomType() == null? MessageBundle.getMessage("angal.common.notdefined.txt") : instance.getDicomType().toString());
 			type.setForeground(Color.LIGHT_GRAY);
 			JLabel top = new JLabel(instance.getDicomSeriesDescription().toUpperCase());
 			top.setForeground(Color.LIGHT_GRAY);
@@ -345,7 +340,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		StringBuilder rv = new StringBuilder("<html>");
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.patient")).append(separator).append(dicomFile.getDicomPatientName());
 		if (isValorized(dicomFile.getDicomPatientAge()))
-			rv.append("[").append(MessageBundle.getMessage("angal.dicom.thumbnail.age")).append(separator).append(sanitize(dicomFile.getDicomPatientAge())).append("]");
+			rv.append("[").append(MessageBundle.getMessage("angal.common.age.txt")).append(separator).append(sanitize(dicomFile.getDicomPatientAge())).append("]");
 		rv.append(newline);
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.modality")).append(separator).append(sanitize(dicomFile.getModality()));
 		rv.append(" <br>");
@@ -355,7 +350,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		rv.append(" <br>");
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.series")).append(separator).append(sanitize(dicomFile.getDicomSeriesDescription()));
 		rv.append(" <br>");
-		rv.append(MessageBundle.getMessage("angal.common.date")).append(separator).append(sanitize(TimeTools.formatDateTime(dicomFile.getDicomSeriesDate(), "dd-MM-yyyy")));
+		rv.append(MessageBundle.getMessage("angal.common.date.txt")).append(separator).append(sanitize(TimeTools.formatDateTime(dicomFile.getDicomSeriesDate(), "dd-MM-yyyy")));
 		rv.append(" <br>");
 		if (dicomFile.getDicomType() != null)
 			rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.category")).append(separator).append(sanitize(dicomFile.getDicomType().getDicomTypeDescription()));

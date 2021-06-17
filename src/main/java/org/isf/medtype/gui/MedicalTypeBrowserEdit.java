@@ -23,7 +23,6 @@ package org.isf.medtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -31,7 +30,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -42,6 +40,7 @@ import org.isf.medtype.model.MedicalType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class MedicalTypeBrowserEdit extends JDialog{
@@ -120,9 +119,9 @@ public class MedicalTypeBrowserEdit extends JDialog{
 //		this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.medtype.newmedicaltyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medtype.newmedicaltype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.medtype.editingmedicaltyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medtype.editmedicaltype.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
@@ -181,9 +180,8 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				dispose();
@@ -200,9 +198,8 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 
@@ -216,10 +213,9 @@ public class MedicalTypeBrowserEdit extends JDialog{
 							if (result) {
 								fireMedicalInserted();
 								dispose();
-							} else
-								JOptionPane.showMessageDialog(MedicalTypeBrowserEdit.this,
-										MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-
+							} else {
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							}
 						} catch (OHServiceException e1) {
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
@@ -233,10 +229,9 @@ public class MedicalTypeBrowserEdit extends JDialog{
 								if (result) {
 									fireMedicalUpdated();
 									dispose();
-								} else
-									JOptionPane.showMessageDialog(MedicalTypeBrowserEdit.this,
-											MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-
+								} else {
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+								}
 							} catch (OHServiceException e1) {
 								result = false;
 								OHServiceExceptionUtil.showMessages(e1);
@@ -305,8 +300,7 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	 */
 	private JLabel getJCodeLabel() {
 		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.medtype.codemaxchars"));
+			jCodeLabel = new JLabel(MessageBundle.getMessage("angal.common.codemax1char.txt"));
 		}
 		return jCodeLabel;
 	}
@@ -332,8 +326,7 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	 */
 	private JPanel getJDescriptionLabelPanel() {
 		if (jDescriptionLabelPanel == null) {
-			jDescriptionLabel = new JLabel();
-			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			jDescriptionLabelPanel = new JPanel();
 			jDescriptionLabelPanel.add(jDescriptionLabel, null);
 		}

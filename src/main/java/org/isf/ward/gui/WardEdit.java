@@ -27,7 +27,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.JButton;
@@ -45,6 +44,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -145,9 +145,9 @@ public class WardEdit extends JDialog {
 	private void initialize() {
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.ward.newwardrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.ward.newward.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.ward.editingwardrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.ward.editward.title"));
 		}
 		pack();
 		setLocationRelativeTo(null);
@@ -214,16 +214,14 @@ public class WardEdit extends JDialog {
 			gbc_telTextField.gridx = 1;
 			gbc_telTextField.gridy = 2;
 			dataPanel.add(getTelTextField(), gbc_telTextField);
-			telLabel = new JLabel();
-			telLabel.setText(MessageBundle.getMessage("angal.ward.telephoneedit"));
+			telLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			GridBagConstraints gbc_telLabel = new GridBagConstraints();
 			gbc_telLabel.anchor = GridBagConstraints.WEST;
 			gbc_telLabel.insets = new Insets(0, 0, 5, 5);
 			gbc_telLabel.gridx = 0;
 			gbc_telLabel.gridy = 2;
 			dataPanel.add(telLabel, gbc_telLabel);
-			faxLabel = new JLabel();
-			faxLabel.setText(MessageBundle.getMessage("angal.ward.faxedit"));
+			faxLabel = new JLabel(MessageBundle.getMessage("angal.common.fax.txt"));
 			GridBagConstraints gbc_faxLabel = new GridBagConstraints();
 			gbc_faxLabel.anchor = GridBagConstraints.WEST;
 			gbc_faxLabel.insets = new Insets(0, 0, 5, 5);
@@ -346,9 +344,8 @@ public class WardEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -366,9 +363,8 @@ public class WardEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 
 			okButton.addActionListener(new ActionListener() {
 
@@ -378,22 +374,19 @@ public class WardEdit extends JDialog {
 					try {
 						beds = Integer.parseInt(bedsTextField.getText());
 					} catch (NumberFormatException f) {
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.ward.insertavalidbedsnumber"));
+						MessageDialog.error(WardEdit.this, "angal.ward.insertavalidbedsnumber");
 						return;
 					}
 					try {
 						nurs = Integer.parseInt(nursTextField.getText());
 					} catch (NumberFormatException f) {
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.ward.insertavalidnursesnumber"));
+						MessageDialog.error(WardEdit.this, "angal.ward.insertavalidnursesnumber");
 						return;
 					}
 					try {
 						docs = Integer.parseInt(docsTextField.getText());
 					} catch (NumberFormatException f) {
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.ward.insertavaliddoctorsnumber"));
+						MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddoctorsnumber");
 						return;
 					}
 
@@ -438,11 +431,12 @@ public class WardEdit extends JDialog {
 							fireWardUpdated();
 						}
 					}
-					if (!result)
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-					else
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
 						dispose();
+					}
 				}
 			});
 		}

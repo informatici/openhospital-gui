@@ -38,7 +38,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -52,6 +51,7 @@ import org.isf.patvac.model.PatientVaccine;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 import org.isf.vaccine.manager.VaccineBrowserManager;
@@ -72,7 +72,6 @@ import org.isf.vactype.model.VaccineType;
 public class PatVacEdit extends JDialog {
 
 	private static final long serialVersionUID = -4271389493861772053L;
-	private static final String VERSION = "v1.2";
 	private boolean insert = false;
 
 	private PatientVaccine patVac = null;
@@ -148,9 +147,9 @@ public class PatVacEdit extends JDialog {
 		this.setContentPane(getJContentPane());
 		this.setResizable(false);
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.patvac.newpatientvaccine") + "(" + VERSION + ")");
+			this.setTitle(MessageBundle.getMessage("angal.patvac.newpatientvaccine.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.patvac.edipatientvaccine") + "(" + VERSION + ")");
+			this.setTitle(MessageBundle.getMessage("angal.patvac.edipatientvaccine.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
@@ -187,7 +186,7 @@ public class PatVacEdit extends JDialog {
 			dataPanel.setBounds(0, 0, panelWidth, dataPanelHeight);
 
 			// vaccine date
-			vaccineDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date"));
+			vaccineDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
 			vaccineDateLabel.setBounds(5, 10, labelWidth, 20);
 			vaccineDateFieldCal = getVaccineDateFieldCal();
 			vaccineDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
@@ -580,11 +579,11 @@ public class PatVacEdit extends JDialog {
 			dataPatient.setLayout(null);
 			dataPatient.setBounds(0, dataPanelHeight, panelWidth, dataPatientHeight);
 			dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.patvac.datapatient")));
-			nameLabel = new JLabel(MessageBundle.getMessage("angal.patvac.name"));
+			nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
 			nameLabel.setBounds(10, DeltaBetweenLabels, labelWidth, 20);
 			patTextField = getPatientTextField();
 			patTextField.setBounds(labelWidth + 5, DeltaBetweenLabels, 180, 20);
-			ageLabel = new JLabel(MessageBundle.getMessage("angal.patvac.age"));
+			ageLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
 			ageLabel.setBounds(255, DeltaBetweenLabels, 35, 20);
 			ageTextField = getAgeTextField();
 			ageTextField.setBounds(295, DeltaBetweenLabels, 50, 20);
@@ -682,9 +681,8 @@ public class PatVacEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 
@@ -694,7 +692,7 @@ public class PatVacEdit extends JDialog {
 
 					// check on patient
 					if (selectedPatient == null) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.pleaseselectapatient"));
+						MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 						return;
 					}
 
@@ -725,9 +723,9 @@ public class PatVacEdit extends JDialog {
 						}
 					}
 
-					if (!result)
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.thedatacouldnobesaved"));
-					else {
+					if (!result) {
+						MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
+					} else {
 						patVac = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(), new Vaccine("", "", new VaccineType("", "")), 0);
 						dispose();
 					}
@@ -744,9 +742,8 @@ public class PatVacEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();

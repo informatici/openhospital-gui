@@ -62,6 +62,7 @@ import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
@@ -150,7 +151,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		panelForm.add(textDate, gbc_textDate);
 		// textDate.setColumns(10);
 
-		JLabel labelResultat = new JLabel(MessageBundle.getMessage("angal.operationrowedit.result")); //$NON-NLS-1$
+		JLabel labelResultat = new JLabel(MessageBundle.getMessage("angal.common.result.txt"));
 		GridBagConstraints gbc_labelResultat = new GridBagConstraints();
 		gbc_labelResultat.anchor = GridBagConstraints.EAST;
 		gbc_labelResultat.insets = new Insets(0, 0, 5, 5);
@@ -210,14 +211,16 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		panelListData.add(panelActions, BorderLayout.NORTH);
 
-		JButton btnSave = new JButton(MessageBundle.getMessage("angal.operationrowedit.save")); //$NON-NLS-1$
+		JButton btnSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		btnSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				addToGrid();
 			}
 		});
 
-		JButton btnNew = new JButton(MessageBundle.getMessage("angal.operationrowedit.new")); //$NON-NLS-1$
+		JButton btnNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		btnNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		btnNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				clearForm();
@@ -226,7 +229,8 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		panelActions.add(btnNew);
 		panelActions.add(btnSave);
 
-		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.operationrowlist.delete")); //$NON-NLS-1$
+		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		btnDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = tableData.getSelectedRow();
@@ -287,13 +291,12 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			try {
 				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
 				oprowData.addAll(res);
-			} catch (OHServiceException ex) {
-				ex.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
 		}
 		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 		tableData.setModel(modelOhOpeRow);
-
 	}
 
 	private CustomJDateChooser getJCalendarDate() {
@@ -332,15 +335,11 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 	public void addToGrid() {
 		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
-			JOptionPane.showMessageDialog(OperationRowAdm.this,
-					MessageBundle.getMessage("angal.operationrowedit.warningdateope"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateope");
 			return;
 		}
 		if ((myAdmission != null) && (myAdmission.getAdmDate().after(this.textDate.getDate()))) {
-			JOptionPane.showMessageDialog(OperationRowAdm.this,
-					MessageBundle.getMessage("angal.operationrowedit.warningdateafter"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateafter");
 			return;
 		}
 
@@ -434,14 +433,11 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		// int idRow = this.tableData.getSelectedRow();
 		OperationRow operationRow = null;
 		if (idRow < 0) {
-			JOptionPane.showMessageDialog(OperationRowAdm.this,
-					MessageBundle.getMessage("angal.common.pleaseselectarow"), //$NON-NLS-1$
-					MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+			MessageDialog.error(OperationRowAdm.this, "angal.common.pleaseselectarow.msg");
 		} else {
 			operationRow = oprowData.get(idRow);
-			int yesOrNo = JOptionPane.showConfirmDialog(OperationRowAdm.this,
-					MessageBundle.getMessage("angal.operationrowlist.confirmdelete"), null, JOptionPane.YES_NO_OPTION); //$NON-NLS-1$
-			if (yesOrNo == JOptionPane.YES_OPTION) {
+			int answer = MessageDialog.yesNo(OperationRowAdm.this, "angal.operationrowlist.delete.operation.msg");
+			if (answer == JOptionPane.YES_OPTION) {
 				int idOpe = operationRow.getId();
 				if (idOpe > 0) {
 					boolean result = false;
@@ -452,23 +448,17 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 						return;
 					}
 					if (result) {
-						JOptionPane.showMessageDialog(OperationRowAdm.this,
-								MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						MessageDialog.info(OperationRowAdm.this, "angal.operationrowlist.successdel");
 						oprowData.remove(idRow);
 						modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 						tableData.setModel(modelOhOpeRow);
 						tableData.repaint();
 						clearForm();
 					} else {
-						JOptionPane.showMessageDialog(OperationRowAdm.this,
-								MessageBundle.getMessage("angal.operationrowlist.errosdel"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						MessageDialog.error(OperationRowAdm.this, "angal.operationrowlist.errosdel");
 					}
 				} else {
-					JOptionPane.showMessageDialog(OperationRowAdm.this,
-							MessageBundle.getMessage("angal.operationrowlist.successdel"), //$NON-NLS-1$
-							MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+					MessageDialog.info(OperationRowAdm.this, "angal.operationrowlist.successdel");
 					oprowData.remove(idOpe);
 					modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 					tableData.setModel(modelOhOpeRow);

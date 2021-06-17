@@ -26,10 +26,9 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
-import org.isf.generaldata.MessageBundle;
+import org.isf.utils.jobjects.MessageDialog;
 
 /**
  * HelpViewer.java - 27/nov/2012
@@ -49,17 +48,17 @@ public class HelpViewer extends JDialog {
 				try {
 					Desktop.getDesktop().open(file);
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(HelpViewer.this, MessageBundle.getMessage("angal.help.userguidenotfound"));
+					MessageDialog.error(HelpViewer.this, "angal.help.userguidenotfound");
 				}
 			} else if (!GeneralData.INTERNALVIEWER) { //Try specified PDF viewer, if any
 				try {
 					Runtime rt = Runtime.getRuntime();
 					rt.exec(GeneralData.VIEWER + " " + file);
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(HelpViewer.this, MessageBundle.getMessage("angal.help.pdfviewernotfoundoruserguidenotfound"));
+					MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfoundoruserguidenotfound");
 				}
 			} else { //abort operation
-				JOptionPane.showMessageDialog(HelpViewer.this, MessageBundle.getMessage("angal.help.pdfviewernotfound"));
+				MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfound");
 			}
 		}
 	}

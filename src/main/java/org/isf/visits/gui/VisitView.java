@@ -31,7 +31,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -127,7 +126,7 @@ public class VisitView extends ModalJFrame {
 	private JButton todayButton;
 	private JButton tomorrowButton;
 	private JPanel dateViPanel;
-	private JButton dateAdm;
+	private JButton gotoDateButton;
 
 	private JTable jTableFirst;
 
@@ -176,7 +175,7 @@ public class VisitView extends ModalJFrame {
 
 	private void initComponents() {
 
-		setTitle(MessageBundle.getMessage("angal.visit.worksheet"));
+		setTitle(MessageBundle.getMessage("angal.visit.worksheet.title"));
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(getNorthPanel(), BorderLayout.NORTH);
 		getContentPane().add(dayCalendar(), BorderLayout.CENTER);
@@ -279,9 +278,9 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getAddVisitFirstButton() {
 		if (addFirstVisitButton == null) {
-			addFirstVisitButton = new JButton(MessageBundle.getMessage("angal.therapy.addvisit")); //$NON-NLS-1$
+			addFirstVisitButton = new JButton(MessageBundle.getMessage("angal.visit.addvisit1.btn"));
+			addFirstVisitButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.addvisit1.btn.key"));
 			addFirstVisitButton.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
-			addFirstVisitButton.setMnemonic(KeyEvent.VK_1);
 			addFirstVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			addFirstVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addFirstVisitButton.addActionListener(new ActionListener() {
@@ -303,9 +302,9 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getAddVisitSecondButton() {
 		if (addSecondVisitButton == null) {
-			addSecondVisitButton = new JButton(MessageBundle.getMessage("angal.therapy.addvisit")); //$NON-NLS-1$
+			addSecondVisitButton = new JButton(MessageBundle.getMessage("angal.visit.addvisit2.btn"));
+			addSecondVisitButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.addvisit2.btn.key"));
 			addSecondVisitButton.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
-			addSecondVisitButton.setMnemonic(KeyEvent.VK_V);
 			addSecondVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			addSecondVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addSecondVisitButton.addActionListener(new ActionListener() {
@@ -436,9 +435,9 @@ public class VisitView extends ModalJFrame {
 
 			dateViPanel = new JPanel();
 
-			dateAdm = new JButton();
-			dateAdm.setText(MessageBundle.getMessage("angal.visit.gotodate") + ":"); //$NON-NLS-1$
-			dateAdm.addActionListener(new ActionListener() {
+			gotoDateButton = new JButton(MessageBundle.getMessage("angal.visit.gotodate.btn"));
+			gotoDateButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.gotodate.btn.key"));
+			gotoDateButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					if (visitDateChooser.getDate() != null) {
@@ -450,7 +449,7 @@ public class VisitView extends ModalJFrame {
 				}
 			});
 
-			dateViPanel.add(dateAdm);
+			dateViPanel.add(gotoDateButton);
 			dateViPanel.add(getVisitDateChooser());
 
 		}
@@ -577,7 +576,7 @@ public class VisitView extends ModalJFrame {
 		strBuilder.append(formatDateTime(d)).append(" - "); //$NON-NLS-1$
 		strBuilder.append("(").append(MessageBundle.getMessage("angal.common.patientID")).append(": ").append(visit.getPatient().getCode()).append(") - "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		strBuilder.append(visit.getPatient().getName()).append(" - "); //$NON-NLS-1$
-		strBuilder.append(visit.getService() == null || visit.getService().isEmpty() ? MessageBundle.getMessage("angal.common.notdefined") : visit.getService()) //$NON-NLS-1$
+		strBuilder.append(visit.getService() == null || visit.getService().isEmpty() ? MessageBundle.getMessage("angal.common.notdefined.txt") : visit.getService()) //$NON-NLS-1$
 						.append(" "); //$NON-NLS-1$
 		strBuilder.append("(").append(visit.getDuration()).append(MessageBundle.getMessage("angal.common.minutesabbr")).append(")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return strBuilder.toString();
@@ -653,10 +652,9 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getPrintTodayButton() {
 		if (todayButton == null) {
-			todayButton = new JButton();
-			todayButton.setMnemonic(KeyEvent.VK_1);
+			todayButton = new JButton(MessageBundle.getMessage("angal.visit.printthisdaysvisits1.btn"));
+			todayButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.printthisdaysvisits1.btn.key"));
 			todayButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
-			todayButton.setText(MessageBundle.getMessage("angal.visit.printthisday") + " (1)"); //$NON-NLS-1$
 			todayButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -670,9 +668,8 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getPrintTomorrowButton() {
 		if (tomorrowButton == null) {
-			tomorrowButton = new JButton();
-			tomorrowButton.setMnemonic(KeyEvent.VK_2);
-			tomorrowButton.setText(MessageBundle.getMessage("angal.visit.printthisday") + " (2)"); //$NON-NLS-1$
+			tomorrowButton = new JButton(MessageBundle.getMessage("angal.visit.printthisdaysvisits2.btn"));
+			tomorrowButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.printthisdaysvisits2.btn.key"));
 			tomorrowButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -687,8 +684,8 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getButtonNext() {
 		if (nextButton == null) {
-			nextButton = new JButton(MessageBundle.getMessage("angal.visit.nextabbr") + "->"); //$NON-NLS-1$
-			nextButton.setMnemonic(KeyEvent.VK_N);
+			nextButton = new JButton(MessageBundle.getMessage("angal.visit.nextarrow.btn"));
+			nextButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.nextarrow.btn.key"));
 			nextButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			nextButton.setHorizontalAlignment(SwingConstants.LEFT);
 			nextButton.addActionListener(new ActionListener() {
@@ -704,8 +701,8 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getButtonBack() {
 		if (backButton == null) {
-			backButton = new JButton("<-" + MessageBundle.getMessage("angal.visit.previousabbr")); //$NON-NLS-1$
-			backButton.setMnemonic(KeyEvent.VK_P);
+			backButton = new JButton(MessageBundle.getMessage("angal.visit.arrowprevious.btn"));
+			backButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.arrowprevious.btn.key"));
 			backButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			backButton.setHorizontalAlignment(SwingConstants.LEFT);
 			backButton.addActionListener(new ActionListener() {
@@ -721,9 +718,9 @@ public class VisitView extends ModalJFrame {
 
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			closeButton.setIcon(new ImageIcon("rsc/icons/close_button.png"));
-			closeButton.setMnemonic(KeyEvent.VK_X);
 			closeButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			closeButton.setHorizontalAlignment(SwingConstants.LEFT);
 			closeButton.addActionListener(new ActionListener() {
@@ -751,18 +748,18 @@ public class VisitView extends ModalJFrame {
 		return northPanel;
 	}
 
-	private JPanel TodayPanel;
-	private JButton Todaybut;
+	private JPanel todayPanel;
+	private JButton todayBtn;
 
 	private JPanel getTodayVisit() {
 
-		if (TodayPanel == null) {
+		if (todayPanel == null) {
 
-			TodayPanel = new JPanel();
+			todayPanel = new JPanel();
 
-			Todaybut = new JButton();
-			Todaybut.setText(MessageBundle.getMessage("angal.common.today")); //$NON-NLS-1$
-			Todaybut.addActionListener(new ActionListener() {
+			todayBtn = new JButton(MessageBundle.getMessage("angal.visit.today.btn"));
+			todayBtn.setMnemonic(MessageBundle.getMnemonic("angal.visit.today.btn.key"));
+			todayBtn.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					setDateFirstThenSecond(new Date());
@@ -770,10 +767,10 @@ public class VisitView extends ModalJFrame {
 				}
 			});
 
-			TodayPanel.add(Todaybut);
+			todayPanel.add(todayBtn);
 
 		}
-		return TodayPanel;
+		return todayPanel;
 
 	}
 

@@ -87,10 +87,10 @@ public class OhTableModelExam<T> implements TableModel{
 		String columnLabel="";
 		switch (columnIndex) {
 		case 0:
-			columnLabel= MessageBundle.getMessage("angal.common.codem");
+			columnLabel= MessageBundle.getMessage("angal.common.code.txt").toUpperCase();
 			break;
 		case 1:
-			columnLabel= MessageBundle.getMessage("angal.common.description");
+			columnLabel= MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
 			break;
 		default:
 			break;

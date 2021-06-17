@@ -43,7 +43,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -63,10 +62,15 @@ import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoFloatTextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OperationRowEdit extends JPanel {
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OperationRowEdit.class);
+
 	     // LISTENER INTERFACE
 		// --------------------------------------------------------
 			List<OperationList> operationRowListener = new ArrayList<>();
@@ -127,7 +131,7 @@ public class OperationRowEdit extends JPanel {
 	
 	private OperationRow opeRow;
 	private JTextField DateTextField;
-	private JButton btnCancelButton;
+	private JButton btnCancel;
 	private JDialog myParent;
 	OperationBrowserManager ope ;
 	OperationRowBrowserManager opeManageRow;
@@ -158,8 +162,7 @@ public class OperationRowEdit extends JPanel {
 		gbl_panelHeader.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panelHeader.setLayout(gbl_panelHeader);
 		
-		titleLabel = new JLabel(MessageBundle.getMessage("angal.operationrowlist.add") + "/" +  //$NON-NLS-1$ //$NON-NLS-2$
-                        MessageBundle.getMessage("angal.operationrowlist.update")); //$NON-NLS-1$
+		titleLabel = new JLabel(MessageBundle.getMessage("angal.operationrowlist.addupdate"));
 		titleLabel.setFont(new Font("Tahoma", Font.PLAIN, 15)); //$NON-NLS-1$
 		GridBagConstraints gbc_titleLabel = new GridBagConstraints();
 		gbc_titleLabel.anchor = GridBagConstraints.NORTH;
@@ -236,7 +239,7 @@ public class OperationRowEdit extends JPanel {
 		
 		resultComboBox = getComboResultBox();
 		
-		lblResultat = new JLabel(MessageBundle.getMessage("angal.operationrowedit.result")); //$NON-NLS-1$
+		lblResultat = new JLabel(MessageBundle.getMessage("angal.common.result.txt"));
 		lblResultat.setBorder(new EmptyBorder(0, 0, 0, 4));
 		lblResultat.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblResultat = new GridBagConstraints();
@@ -309,23 +312,25 @@ public class OperationRowEdit extends JPanel {
 		add(panelButtons, BorderLayout.SOUTH);
 		panelButtons.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
-		JButton btnSaveButton = new JButton(MessageBundle.getMessage("angal.operationrowedit.save")); //$NON-NLS-1$
-		btnSaveButton.addMouseListener(new MouseAdapter() {
+		JButton btnSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		btnSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
+		btnSave.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				saveButtonMouseClicked(evt) ;
 			}
 		});
-		panelButtons.add(btnSaveButton);
-		
-		btnCancelButton = new JButton(MessageBundle.getMessage("angal.operationrowedit.cancel")); //$NON-NLS-1$
-		btnCancelButton.addMouseListener(new MouseAdapter() {
+		panelButtons.add(btnSave);
+
+		btnCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		btnCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+		btnCancel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				cancelButtonMouseClicked(evt);
 			}
 		});
-		panelButtons.add(btnCancelButton);
+		panelButtons.add(btnCancel);
 	}
 
 	public OperationRow getOpeRow() {
@@ -355,35 +360,33 @@ public class OperationRowEdit extends JPanel {
 		}			
 		return jCalendarDate;
 	}
-	
+
 	private JComboBox getOperationsBox() {
-		
+
 		JComboBox comboOpe = new JComboBox();
 		ArrayList<Operation> opeList = new ArrayList<>();
-                            try {
-                                opeList = ope.getOperation();
-                            } catch (OHServiceException ex) {
-                                ex.printStackTrace();
-                            }
-		if (opeRow != null){
+		try {
+			opeList = ope.getOperation();
+		} catch (OHServiceException ohServiceException) {
+			LOGGER.error(ohServiceException.getMessage(), ohServiceException);
+		}
+		if (opeRow != null) {
 			boolean found = false;
 			for (org.isf.operation.model.Operation elem : opeList) {
-				if (opeRow.getOperation().getCode().equals(elem.getCode())){
+				if (opeRow.getOperation().getCode().equals(elem.getCode())) {
 					found = true;
 					comboOpe.addItem(elem);
-					break;	
-				}					
+					break;
+				}
 			}
-			if (!found){
+			if (!found) {
 				//comboOpe.addItem("");
 				comboOpe.addItem(null);
 			}
 			for (org.isf.operation.model.Operation elem : opeList) {
-				
 				comboOpe.addItem(elem);
 			}
-		}
-		else{
+		} else {
 			//comboOpe.addItem("");
 			comboOpe.addItem(null);
 			for (org.isf.operation.model.Operation elem : opeList) {
@@ -393,6 +396,7 @@ public class OperationRowEdit extends JPanel {
 		comboOpe.setEnabled(true);
 		return comboOpe;
 	}
+
 	private JComboBox getComboResultBox() {
 		JComboBox comboResult = new JComboBox();
 			for (String description : operationResults) {
@@ -421,17 +425,12 @@ public class OperationRowEdit extends JPanel {
 	}
 	
 	/* **************  functions events ***** */
-	private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDataMouseClicked
-	      if ((this.jCalendarDate.getDate()==null) || (this.OpecomboBox.getSelectedItem()==null)){
-	    	  JOptionPane.showMessageDialog(OperationRowEdit.this,
-	    			  MessageBundle.getMessage("angal.operationrowedit.warningdateope"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
-						JOptionPane.PLAIN_MESSAGE);
-	      }
-	      else{
+	private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {
+	      if ((this.jCalendarDate.getDate()==null) || (this.OpecomboBox.getSelectedItem()==null)) {
+		      MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.warningdateope");
+	      } else {
 	    	  if (getMyOpd().getDate().after(this.jCalendarDate.getDate())){
-	    		  JOptionPane.showMessageDialog(OperationRowEdit.this,
-		    			  MessageBundle.getMessage("angal.operationrowedit.warningdateafter"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
-							JOptionPane.PLAIN_MESSAGE);
+			      MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.warningdateafter");
 	    		  return;
 	    	  }
 			if (opeRow!=null){
@@ -455,19 +454,15 @@ public class OperationRowEdit extends JPanel {
 					return;
 				}
 	        	if (result){
-	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
-	        				MessageBundle.getMessage("angal.operationrowedit.updatesucces"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
-							JOptionPane.PLAIN_MESSAGE);
+			        MessageDialog.info(OperationRowEdit.this, "angal.operationrowedit.updatesucces");
 	        		fireOperationRowUpdated(updateOpeRow);
 	        		this.myParent.dispose();
 	        	}
-	        	else{
-	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
-	        				MessageBundle.getMessage("angal.operationrowedit.updateerror"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
-							JOptionPane.PLAIN_MESSAGE);
+	        	else {
+			        MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.updateerror");
 	        	}
 	        }
-	        else{
+	        else {
 	        	OperationRow operationRow = new OperationRow();
 	        	GregorianCalendar dateop = new GregorianCalendar();
 				dateop.setTime(this.jCalendarDate.getDate());
@@ -490,25 +485,19 @@ public class OperationRowEdit extends JPanel {
 					return;
 				}
 	        	if (result){
-	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
-	        				MessageBundle.getMessage("angal.operationrowedit.savesucces"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
-							JOptionPane.PLAIN_MESSAGE);
+			        MessageDialog.info(OperationRowEdit.this, "angal.operationrowedit.savesucces");
 	        		fireOperationRowInserted(operationRow);
 	        		this.myParent.dispose();
 	        	}
-	        	else{
-	        		JOptionPane.showMessageDialog(OperationRowEdit.this,
-	        				MessageBundle.getMessage("angal.operationrowedit.saveerror"), MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$ //$NON-NLS-2$
-							JOptionPane.PLAIN_MESSAGE);
+	        	else {
+			        MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.saveerror");
 	        	}	
 	        }
 	      }
-	      
     }
 	
-	private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDataMouseClicked
+	private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {
         this.getMyParent().dispose();
-        
     }
 
 	public Opd getMyOpd() {

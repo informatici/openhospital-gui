@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 public class ChatTab extends JTabbedPane {
 
-	private final Logger logger = LoggerFactory.getLogger(ChatTab.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChatTab.class);
 
 	private static final long serialVersionUID = 1L;
 	public TabButton tab;
@@ -48,7 +48,7 @@ public class ChatTab extends JTabbedPane {
 		super.addTab(title, component);
 		int index;
 		index = indexOfTab(title);
-		logger.debug("index: {}", indexOfTabComponent(this));
+		LOGGER.debug("index: {}", indexOfTabComponent(this));
 		tab = new TabButton(title, indexOfTabComponent(this), this);
 		setTabComponentAt(index, tab);
 
@@ -79,15 +79,11 @@ public class ChatTab extends JTabbedPane {
 			user = new JLabel(label);
 			add(user);
 			try {
-
 				// load firefox buttons
 				reg = new ImageIcon("rsc/icons/regular_close_tab.JPG");
 				over = new ImageIcon("rsc/icons/hoverOver_close_tab.JPG");
-
-			} catch (Exception e) {
-
-				e.printStackTrace();
-
+			} catch (Exception exception) {
+				LOGGER.error(exception.getMessage(), exception);
 			}
 			setOpaque(false);
 			final JButton button = new JButton(reg);

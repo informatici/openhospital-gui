@@ -27,7 +27,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -44,6 +43,7 @@ import org.isf.supplier.manager.SupplierBrowserManager;
 import org.isf.supplier.model.Supplier;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
@@ -87,15 +87,17 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	private JScrollPane jScrollPane = null;
 	private JTable table = null;
 	private DefaultTableModel model = null;
-	private String[] pColumns = { MessageBundle.getMessage("angal.supplier.id"),
-			MessageBundle.getMessage("angal.supplier.namem"),
-			MessageBundle.getMessage("angal.supplier.addressm"),
-			MessageBundle.getMessage("angal.supplier.taxcode"),
-			MessageBundle.getMessage("angal.supplier.telephone"),
-			MessageBundle.getMessage("angal.supplier.faxm"),
-			MessageBundle.getMessage("angal.supplier.emailm"),
-			MessageBundle.getMessage("angal.supplier.note"),
-			MessageBundle.getMessage("angal.supplier.deletedm")};
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.address.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.supplier.taxcode.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.telephone.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.fax.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.email.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.note.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.supplier.deleted.col").toUpperCase()
+	};
 	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30};
 	private int selectedrow;
 	private List<Supplier> pSupplier;
@@ -118,14 +120,13 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.supplier.suppliersbrowser"));
+		this.setTitle(MessageBundle.getMessage("angal.supplier.suppliersbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
 		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
 		this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase * pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
-		
 	}
 	
 	/**
@@ -166,18 +167,13 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	 */
 	private JButton getJEditButton() {
 		if (jEditButton == null) {
-			jEditButton = new JButton();
-			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
-			jEditButton.setMnemonic(KeyEvent.VK_E);
+			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-								null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						selectedrow = table.getSelectedRow();
 						supplier = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
@@ -198,9 +194,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	 */
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
-			jNewButton = new JButton();
-			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
-			jNewButton.setMnemonic(KeyEvent.VK_N);
+			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -221,27 +216,19 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	 */
 	private JButton getJDeleteButton() {
 		if (jDeleteButton == null) {
-			jDeleteButton = new JButton();
-			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-								SupplierBrowser.this,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						Supplier m = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-						if (m.getSupDeleted().equals('Y')) return;
-						int n = JOptionPane.showConfirmDialog(
-								SupplierBrowser.this,
-								MessageBundle.getMessage("angal.supplier.deletesupplier") + " " + m.getSupName() + "?",
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
-						
-						if (n == JOptionPane.YES_OPTION) {
+						if (m.getSupDeleted().equals('Y')) {
+							return;
+						}
+						int answer = MessageDialog.yesNo(null, "angal.supplier.deletesupplier.fmt.msg", m.getSupName());
+						if (answer == JOptionPane.YES_OPTION) {
 							m.setSupDeleted('Y');
 							try {
 								supplierBrowserManager.saveOrUpdate(m);
@@ -265,9 +252,8 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();

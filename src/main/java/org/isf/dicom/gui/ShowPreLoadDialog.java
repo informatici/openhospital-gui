@@ -29,7 +29,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -87,14 +86,13 @@ class ShowPreLoadDialog extends JDialog {
 		 * Managers
 		 */
 		private DicomTypeBrowserManager dicomTypeMan = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
-		
 
 		public ShowPreLoadDialog(JFrame owner, int numfiles, FileDicom fileDicom, List<Date> dates) {
 			super(owner, true);
-			if (numfiles > 0) 
-				setTitle("Loading multiple images: " + numfiles);
+			if (numfiles > 1)
+				setTitle(MessageBundle.formatMessage("angal.showpreload.loadingmultipleimages.fmt.title", numfiles));
 			else
-				setTitle("Load image");
+				setTitle(MessageBundle.getMessage("angal.showpreload.loadimage.title"));
 			this.dicomDate = fileDicom.getDicomSeriesDate();
 			this.dicomDescription = fileDicom.getDicomSeriesDescription();
 			this.dates = dates;
@@ -119,7 +117,7 @@ class ShowPreLoadDialog extends JDialog {
 			gbc_dateLabel.gridx = 0;
 			gbc_dateLabel.gridy = 0;
 			gbc_dateLabel.anchor = GridBagConstraints.WEST;
-			JLabel dateLabel = new JLabel("Date" + ":");
+			JLabel dateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt") + ":");
 			centerPanel.add(dateLabel, gbc_dateLabel);
 			
 			GridBagConstraints gbc_date = new GridBagConstraints();
@@ -136,7 +134,7 @@ class ShowPreLoadDialog extends JDialog {
 				gbc_dateListLabel.gridx = 0;
 				gbc_dateListLabel.gridy = 1;
 				gbc_dateListLabel.anchor = GridBagConstraints.NORTHWEST;
-				JLabel dateListLabel = new JLabel("Other dates" + ":");
+				JLabel dateListLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.otherdates.txt") + ":");
 				centerPanel.add(dateListLabel, gbc_dateListLabel);
 				
 				GridBagConstraints gbc_dateList = new GridBagConstraints();
@@ -152,7 +150,7 @@ class ShowPreLoadDialog extends JDialog {
 			gbc_categoryLabel.gridx = 0;
 			gbc_categoryLabel.gridy = 2;
 			gbc_categoryLabel.anchor = GridBagConstraints.WEST;
-			JLabel categoryLabel = new JLabel("Category" + ":");
+			JLabel categoryLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.category.txt") + ":");
 			centerPanel.add(categoryLabel, gbc_categoryLabel);
 			
 			GridBagConstraints gbc_categoryComboBox = new GridBagConstraints();
@@ -167,7 +165,7 @@ class ShowPreLoadDialog extends JDialog {
 			gbc_descriptionLabel.gridx = 0;
 			gbc_descriptionLabel.gridy = 3;
 			gbc_descriptionLabel.anchor = GridBagConstraints.WEST;
-			JLabel descriptionLabel = new JLabel("Description" + ":");
+			JLabel descriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ":");
 			centerPanel.add(descriptionLabel, gbc_descriptionLabel);
 			
 			GridBagConstraints gbc_descriptionTextField = new GridBagConstraints();
@@ -240,8 +238,8 @@ class ShowPreLoadDialog extends JDialog {
 
 		private JButton getButtonCancel() {
 			if (buttonCancel == null) {
-				buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel"));
-				buttonCancel.setMnemonic(KeyEvent.VK_N);
+				buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+				buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 				buttonCancel.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent arg0) {
@@ -254,8 +252,8 @@ class ShowPreLoadDialog extends JDialog {
 
 		private JButton getButtonOK() {
 			if (buttonOK == null) {
-				buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok"));
-				buttonOK.setMnemonic(KeyEvent.VK_O);
+				buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+				buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 				buttonOK.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent arg0) {

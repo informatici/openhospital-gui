@@ -21,7 +21,13 @@
  */
 package org.isf.utils.jobjects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DelayTimer extends Thread {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DelayTimer.class);
+
 	private final DelayTimerCallback callback;
 	private final Object mutex = new Object();
 	private final Object triggeredMutex = new Object();
@@ -58,9 +64,8 @@ public class DelayTimer extends Thread {
 				waitTime = 0;
 				mutex.notify();
 			}
-		} catch (InterruptedException ie) {
-			System.err.println("trigger failure");
-			ie.printStackTrace(System.err);
+		} catch (InterruptedException interruptedException) {
+			LOGGER.error("trigger failure", interruptedException);
 		}
 	}
 
@@ -82,9 +87,8 @@ public class DelayTimer extends Thread {
 					if (triggered) {
 						callback.trigger();
 					}
-				} catch (Exception e) {
-					System.err.println("trigger() threw exception, continuing");
-					e.printStackTrace(System.err);
+				} catch (Exception exception) {
+					LOGGER.error("trigger() threw exception, continuing", exception);
 				} finally {
 					synchronized (triggeredMutex) {
 						triggered = false;
@@ -92,9 +96,8 @@ public class DelayTimer extends Thread {
 					}
 				}
 			}
-		} catch (InterruptedException ie) {
-			System.err.println("interrupted in run");
-			ie.printStackTrace(System.err);
+		} catch (InterruptedException interruptedException) {
+			LOGGER.error("interrupted in run", interruptedException);
 		}
 	}
 

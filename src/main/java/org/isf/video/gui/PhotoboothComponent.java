@@ -28,6 +28,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.isf.generaldata.MessageBundle;
 import org.isf.gui.BaseComponent;
 
 import com.jgoodies.forms.factories.CC;
@@ -129,17 +130,18 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 					"default"));
 
 				//---- webcamLabel ----
-				webcamLabel.setText("Webcam");
+				webcamLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.webcam.txt"));
 				resolutionPanel.add(webcamLabel, CC.xy(1, 1));
 				resolutionPanel.add(webcamComboBox, CC.xy(5, 1));
 
 				//---- resolutionLabel ----
-				resolutionLabel.setText("Resolution");
+				resolutionLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.resolution.txt"));
 				resolutionPanel.add(resolutionLabel, CC.xy(9, 1));
 				resolutionPanel.add(resolutionComboBox, CC.xy(13, 1));
 
 				//---- captureButton ----
-				captureButton.setText("Capture");
+				captureButton.setText(MessageBundle.getMessage("angal.photoboothcomponent.capture.btn"));
+				cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.photoboothcomponent.capture.btn.key"));
 				resolutionPanel.add(captureButton, CC.xy(15, 1));
 			}
 			photoBoothPanel.add(resolutionPanel, CC.xy(3, 5, CC.CENTER, CC.DEFAULT));
@@ -151,11 +153,13 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 					"default"));
 
 				//---- okButton ----
-				okButton.setText("OK");
+				okButton.setText(MessageBundle.getMessage("angal.common.ok.btn"));
+				okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 				buttonContainer.add(okButton, CC.xy(1, 1));
 
 				//---- cancelButton ----
-				cancelButton.setText("Cancel");
+				cancelButton.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
+				cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 				buttonContainer.add(cancelButton, CC.xy(3, 1));
 			}
 			photoBoothPanel.add(buttonContainer, CC.xy(3, 7, CC.RIGHT, CC.DEFAULT));

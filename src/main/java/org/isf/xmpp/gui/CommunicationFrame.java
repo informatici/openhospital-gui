@@ -85,7 +85,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private final Logger logger = LoggerFactory.getLogger(CommunicationFrame.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationFrame.class);
 
 	private JPanel leftpanel;
 	private JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
@@ -112,7 +112,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			frame.setVisible(false);
 			frame.validate();
 			frame.repaint();
-			logger.info("XMPP Server active and running"); //$NON-NLS-1$
+			LOGGER.info("XMPP Server active and running"); //$NON-NLS-1$
 		} else {
 			frame = getFrame();
 			frame.setVisible(true);
@@ -167,13 +167,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		});
 		setSize(600, 450);
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(MessageBundle.getMessage("angal.xmpp.communication")).append(" - ").append(UserBrowsingManager.getCurrentUser());
-
-		setTitle(sb.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+		setTitle(MessageBundle.formatMessage("angal.xmpp.communication.fmt.title", UserBrowsingManager.getCurrentUser()));
 		setResizable(false);
 		setLocationRelativeTo(null);
-
 	}
 
 	public void activateListeners() {
@@ -188,21 +184,21 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		roster.addRosterListener(new RosterListener() {
 
 			public void presenceChanged(Presence presence) {
-				logger.debug("State changed -> {} - {}", presence.getFrom(), presence); //$NON-NLS-1$ //$NON-NLS-2$
+				LOGGER.debug("State changed -> {} - {}", presence.getFrom(), presence); //$NON-NLS-1$ //$NON-NLS-2$
 				String user_name = interaction.userFromAddress(presence.getFrom());
 				StringBuilder sb = new StringBuilder();
 				if (!presence.isAvailable()) {
-					sb.append(user_name).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowoffline"));
+					sb.append(user_name).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowoffline.txt"));
 				} else if (presence.isAvailable()) {
-					sb.append(user_name).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowonline"));
+					sb.append(user_name).append(" ").append(MessageBundle.getMessage("angal.xmpp.isnowonline.txt"));
 				}
 				int index = tabs.indexOfTab(user_name);
 				if (index != -1) {
 					area = getArea(user_name, true);
 					try {
-						area.printNotification(sb.toString()); //$NON-NLS-1$
-					} catch (BadLocationException e) {
-						e.printStackTrace();
+						area.printNotification(sb.toString());
+					} catch (BadLocationException badLocationException) {
+						LOGGER.error(badLocationException.getMessage(), badLocationException);
 					}
 				}
 				refreshBuddyList();
@@ -238,8 +234,8 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 					@Override
 					public void processMessage(Chat chat, Message message) {
 						if (message.getType() == Message.Type.chat) {
-							logger.debug("Incoming message from: {}", chat.getThreadID());
-							logger.debug("GUI: {}", CommunicationFrame.this);
+							LOGGER.debug("Incoming message from: {}", chat.getThreadID());
+							LOGGER.debug("GUI: {}", CommunicationFrame.this);
 							String user = chat.getParticipant().substring(0, chat.getParticipant().indexOf("@"));
 							printMessage(getArea(user, true), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 							if (!isVisible()) {
@@ -267,9 +263,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 		buddyList = getBuddyList();
 		final JPopupMenu popUpMenu = new JPopupMenu();
-		popUpMenu.add(sendFile = new JMenuItem(MessageBundle.getMessage("angal.xmpp.sendfile"))); //$NON-NLS-1$
+		popUpMenu.add(sendFile = new JMenuItem(MessageBundle.getMessage("angal.xmpp.sendfile.txt")));
 		popUpMenu.add(new JPopupMenu.Separator());
-		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo"))); //$NON-NLS-1$
+		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo.txt")));
 		final JFileChooser fileChooser = new JFileChooser();
 		sendFile.addActionListener(new ActionListener() {
 
@@ -278,9 +274,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				int returnVal = fileChooser.showOpenDialog(getParent());
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
-					logger.debug("Selected file: {}", file.toString());
+					LOGGER.debug("Selected file: {}", file.toString());
 					String receiver = ((RosterEntry) buddyList.getSelectedValue()).getName();
-					logger.debug("Receiver: {}", receiver);
+					LOGGER.debug("Receiver: {}", receiver);
 					interaction.sendFile(receiver, file, null);
 				}
 			}
@@ -297,16 +293,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 					OHServiceExceptionUtil.showMessages(e);
 				}
 
-				StringBuilder sb = new StringBuilder();
-				sb.append(MessageBundle.getMessage("angal.xmpp.user")).append(": ");
-				sb.append(user_name).append("\n");
-				sb.append(MessageBundle.getMessage("angal.xmpp.info")).append(": ");
-				sb.append(info);
-
-				userInfo.setText(sb.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+				userInfo.setText(MessageBundle.formatMessage("angal.xmpp.userinfo.fmt.txt", user_name, info));
 				validate();
 				repaint();
-
 			}
 		});
 
@@ -342,10 +331,10 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 				if (e.getClickCount() == 2) {
 					int index = buddyList.locationToIndex(e.getPoint());
-					logger.debug("Index : {}", index);
+					LOGGER.debug("Index : {}", index);
 					if (index >= 0) {
 						user = ((RosterEntry) buddyList.getModel().getElementAt(index)).getName();
-						logger.debug("User selected: {}", user.toString()); //$NON-NLS-1$
+						LOGGER.debug("User selected: {}", user.toString()); //$NON-NLS-1$
 						newChat = new ChatPanel();
 						roster = interaction.getRoster();
 						Presence presence = roster.getPresence(((RosterEntry) buddyList.getModel().getElementAt(index)).getUser());
@@ -356,7 +345,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 							}
 							tabs.setSelectedIndex(tabs.indexOfTab((String) user));
 						} else {
-							logger.debug("User offline"); //$NON-NLS-1$
+							LOGGER.debug("User offline"); //$NON-NLS-1$
 						}
 					}
 				}
@@ -377,7 +366,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		userInfo.setMinimumSize(size);
 		userInfo.setMaximumSize(size);
 		userInfo.setSize(size);
-		userInfo.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.xmpp.usersinfo"))); //$NON-NLS-1$
+		userInfo.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.xmpp.usersinfo.border")));
 		userInfo.setEditable(false);
 
 		return userInfo;
@@ -390,7 +379,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 		leftpanel.setLayout(new BoxLayout(leftpanel, BoxLayout.Y_AXIS));
 		buddy = createBuddyList();
-		buddy.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.xmpp.contacts"))); //$NON-NLS-1$
+		buddy.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.xmpp.contacts.border")));
 		buddy.setPreferredSize(size);
 		buddy.setMaximumSize(size);
 		leftpanel.setMaximumSize(size);
@@ -403,7 +392,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	public ChatMessages getArea(String name, boolean incoming) {
 
 		int index = tabs.indexOfTab(name);
-		logger.debug("Index_: {}", index); //$NON-NLS-1$
+		LOGGER.debug("Index_: {}", index); //$NON-NLS-1$
 		if (index != -1) {
 			if (incoming) {
 				((TabButton) tabs.getTabComponentAt(index)).setColor(Color.red);
@@ -414,22 +403,22 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			return ((ChatPanel) tabs.getComponentAt(index)).getChatMessages();
 
 		} else {
-			logger.debug("Index creation: {}", index); //$NON-NLS-1$
+			LOGGER.debug("Index creation: {}", index); //$NON-NLS-1$
 			newChat = new ChatPanel();
 			tabs.addTab(name, newChat);
 			tabs.setTabColor(new Color(176, 23, 31));
 			validate();
 			repaint();
 			index = tabs.indexOfTab(name);
-			logger.debug("Index creation: {}", index); //$NON-NLS-1$
+			LOGGER.debug("Index creation: {}", index); //$NON-NLS-1$
 			return ((ChatPanel) tabs.getComponentAt(index)).getChatMessages();
 		}
 	}
 
 	public String getSelectedUser() {
 		int index = tabs.getSelectedIndex();
-		logger.debug("Title : {}", tabs.getTitleAt(index)); //$NON-NLS-1$
-		logger.debug("Index : {}", index); //$NON-NLS-1$
+		LOGGER.debug("Title : {}", tabs.getTitleAt(index)); //$NON-NLS-1$
+		LOGGER.debug("Index : {}", index); //$NON-NLS-1$
 		return tabs.getTitleAt(index);
 	}
 
@@ -442,18 +431,17 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			{
 				int index = text.indexOf("$"); //$NON-NLS-1$
 				area.printNotification(text.substring(index + 1));
-				logger.debug("Transfer accepted."); //$NON-NLS-1$
+				LOGGER.debug("Transfer accepted."); //$NON-NLS-1$
 			} else if (text.startsWith("0101010001010010")) {//trasferimento file rifiutato 0101010001010010=TR //$NON-NLS-1$
 				int index = text.indexOf("$"); //$NON-NLS-1$
-				logger.debug("Transfer rejected."); //$NON-NLS-1$
+				LOGGER.debug("Transfer rejected."); //$NON-NLS-1$
 				area.printNotification(text.substring(index + 1));
 			} else {
 				area.printMessage(user, text, visualize);
 			}
-		} catch (BadLocationException e) {
-			e.printStackTrace();
+		} catch (BadLocationException badLocationException) {
+			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
-
 	}
 
 	public void printNotification(ChatMessages area, String user, String file_transfer, JButton accept, JButton reject) {
@@ -463,14 +451,14 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	public void printNotification(ChatMessages area, String text) {
 		try {
 			area.printNotification(text);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
+		} catch (BadLocationException badLocationException) {
+			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
 	}
 
 	public JList getBuddyList() {
 
-		logger.debug("==> roster : {}", roster);
+		LOGGER.debug("==> roster : {}", roster);
 		List<RosterEntry> entries = new ArrayList<>(roster.getEntries());
 		Collections.sort(entries, new Comparator<RosterEntry>() {
 
@@ -503,7 +491,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 		interaction.sendMessage(CommunicationFrame.this, text_message, to, visualize);
 		if (visualize) {
-			printMessage(getArea(getSelectedUser(), false), "me", text_message, visualize);
+			printMessage(getArea(getSelectedUser(), false), MessageBundle.getMessage("angal.xmpp.me.txt"), text_message, visualize);
 		}
 	}
 
@@ -514,7 +502,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	@Override
 	public void processMessage(Chat arg0, Message arg1) {
 		if (arg1.getType() == Message.Type.normal) {
-			logger.debug("Send message from: {}", arg0.getThreadID());
+			LOGGER.debug("Send message from: {}", arg0.getThreadID());
 			String user = arg0.getParticipant().substring(0, arg0.getParticipant().indexOf("@"));
 			printMessage((getArea(user, false)), user, arg1.getBody(), false);
 			if (!this.isVisible()) {
@@ -536,7 +524,8 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		ImageIcon acceptIcon;
 		ImageIcon rejectIcon;
 
-		String file_transfer = ((interaction.userFromAddress(request.getRequestor()) + " would like to send: \n" + request.getFileName()));
+		String file_transfer = MessageBundle.formatMessage("angal.xmpp.wouldliketosend.fmt.msg",
+				interaction.userFromAddress(request.getRequestor()), request.getFileName());
 		acceptIcon = new ImageIcon("rsc/icons/ok_button.png");
 		rejectIcon = new ImageIcon("rsc/icons/delete_button.png");
 		final JButton accept = new JButton(acceptIcon);
@@ -566,22 +555,24 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				chooser.setAcceptAllFileFilterUsed(false);
 
 				if (chooser.showOpenDialog(CommunicationFrame.this) == JFileChooser.APPROVE_OPTION) {
-					logger.debug("getCurrentDirectory(): {}", chooser.getCurrentDirectory());
-					logger.debug("getSelectedFile() : {}", chooser.getSelectedFile());
+					LOGGER.debug("getCurrentDirectory(): {}", chooser.getCurrentDirectory());
+					LOGGER.debug("getSelectedFile() : {}", chooser.getSelectedFile());
 				} else {
-					logger.debug("No Selection.");
+					LOGGER.debug("No Selection.");
 				}
 				IncomingFileTransfer transfer = request.accept();
 				String path = chooser.getSelectedFile() + "/" + request.getFileName();
 				File file = new File(path);
 				try {
 					transfer.recieveFile(file);
-				} catch (XMPPException k) {
-					k.printStackTrace();
+				} catch (XMPPException xmppException) {
+					LOGGER.error(xmppException.getMessage(), xmppException);
 				}
 
-				printNotification((getArea(user, true)), "the file transfer of: " + request.getFileName() + " between you and " + user + " ended successfully");
-				sendMessage("0101010001000001 $File transfer of: " + request.getFileName() + " has been accepted", request.getRequestor(), false);
+				printNotification((getArea(user, true)), MessageBundle.formatMessage("angal.xmpp.thefiletransferofbetweenyouandendedsuccesfully.fmt.msg",
+						request.getFileName(), user));
+				sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenaccepted.fmt.msg", request.getFileName()),
+						request.getRequestor(), false);
 			}
 		});
 		reject.addActionListener(new ActionListener() {
@@ -592,8 +583,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				reject.setEnabled(false);
 				request.reject();
 
-				printNotification((getArea(user, false)), " you have rejected the file transfer");
-				sendMessage("0101010001010010 $File transfer of: " + request.getFileName() + " has been rejected", request.getRequestor(), false);
+				printNotification((getArea(user, false)), MessageBundle.getMessage("angal.xmpp.youhaverejectedthefiletransfer.txt"));
+				sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenrejected.fmt.msg",request.getFileName()),
+						request.getRequestor(), false);
 			}
 		});
 	}
@@ -607,8 +599,8 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				@Override
 				public void processMessage(Chat chat, Message message) {
 					if (message.getType() == Message.Type.chat) {
-						logger.debug("Incoming message from: {}", chat.getThreadID());
-						logger.debug("GUI: {}", CommunicationFrame.this);
+						LOGGER.debug("Incoming message from: {}", chat.getThreadID());
+						LOGGER.debug("GUI: {}", CommunicationFrame.this);
 						String user = chat.getParticipant().substring(0, chat.getParticipant().indexOf("@"));
 						printMessage((getArea(user, false)), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
 						if (!isVisible()) {

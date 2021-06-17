@@ -23,7 +23,6 @@ package org.isf.dlvrtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -31,7 +30,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -41,7 +39,7 @@ import org.isf.dlvrtype.model.DeliveryType;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class DeliveryTypeBrowserEdit extends JDialog{
@@ -118,9 +116,9 @@ public class DeliveryTypeBrowserEdit extends JDialog{
 //		this.setBounds(300,300,350,180);
         this.setContentPane(getJContentPane());
         if (insert) {
-            this.setTitle(MessageBundle.getMessage("angal.dlvrtype.newdeliverytyperecord"));
+            this.setTitle(MessageBundle.getMessage("angal.dlvrtype.newdeliverytype.title"));
         } else {
-            this.setTitle(MessageBundle.getMessage("angal.dlvrtype.editingdeliverytyperecord"));
+            this.setTitle(MessageBundle.getMessage("angal.dlvrtype.editdeliverytype.title"));
         }
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.pack();
@@ -177,9 +175,8 @@ public class DeliveryTypeBrowserEdit extends JDialog{
      */
     private JButton getCancelButton() {
         if (cancelButton == null) {
-            cancelButton = new JButton();
-            cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-            cancelButton.setMnemonic(KeyEvent.VK_C);
+            cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+            cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
             cancelButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     dispose();
@@ -196,9 +193,8 @@ public class DeliveryTypeBrowserEdit extends JDialog{
      */
     private JButton getOkButton() {
         if (okButton == null) {
-            okButton = new JButton();
-            okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-            okButton.setMnemonic(KeyEvent.VK_O);
+            okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+            okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
             okButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                 	DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
@@ -215,7 +211,9 @@ public class DeliveryTypeBrowserEdit extends JDialog{
                             if (result) {
                                 fireDeliveryInserted();
                             }
-                            if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.dlvrtype.thdatacouldnotbesaved"));
+                            if (!result) {
+                                MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
+                            }
                             else  dispose();
                         }
                         else {                          // updating
@@ -226,17 +224,15 @@ public class DeliveryTypeBrowserEdit extends JDialog{
                                 if (result) {
                                     fireDeliveryUpdated();
                                 }
-                                if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.dlvrtype.thdatacouldnotbesaved"));
+                                if (!result) {
+                                    MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
+                                }
                                 else  dispose();
                             }
 
                         }
-                    }catch(OHServiceException ex){
-                        if (ex.getMessages() != null){
-                            for(OHExceptionMessage msg : ex.getMessages()){
-                                JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-                            }
-                        }
+                    } catch(OHServiceException ohServiceException) {
+                        MessageDialog.showExceptions(ohServiceException);
                     }
                 }
             });
@@ -300,8 +296,7 @@ public class DeliveryTypeBrowserEdit extends JDialog{
      */
     private JLabel getJCodeLabel() {
         if (jCodeLabel == null) {
-            jCodeLabel = new JLabel();
-            jCodeLabel.setText(MessageBundle.getMessage("angal.dlvrtype.codemaxchars"));
+            jCodeLabel = new JLabel(MessageBundle.getMessage("angal.common.codemax1char.txt"));
         }
         return jCodeLabel;
     }
@@ -327,8 +322,7 @@ public class DeliveryTypeBrowserEdit extends JDialog{
      */
     private JPanel getJDescriptionLabelPanel() {
         if (jDescriptionLabelPanel == null) {
-            jDescriptionLabel = new JLabel();
-            jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description"));
+            jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
             jDescriptionLabelPanel = new JPanel();
             jDescriptionLabelPanel.add(jDescriptionLabel, null);
         }

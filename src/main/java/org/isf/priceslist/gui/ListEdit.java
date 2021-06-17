@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -33,7 +32,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
@@ -44,6 +42,7 @@ import org.isf.priceslist.manager.PriceListManager;
 import org.isf.priceslist.model.PriceList;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class ListEdit extends JDialog {
@@ -113,17 +112,16 @@ public class ListEdit extends JDialog {
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		setSize(400, 200);
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.priceslist.newlist")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.priceslist.newlist.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.priceslist.editlist")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.priceslist.editlist.title"));
 		}
 	}
 
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
-			jButtonOK = new JButton();
-			jButtonOK.setText(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			jButtonOK.setMnemonic(KeyEvent.VK_O);
+			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jButtonOK.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -151,11 +149,12 @@ public class ListEdit extends JDialog {
 					}catch(OHServiceException e){
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					if (!result) JOptionPane.showMessageDialog(
-											null,
-											MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved")); //$NON-NLS-1$
-					else  dispose();
-					
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
+						dispose();
+					}
 				}
 			});
 		}
@@ -164,9 +163,8 @@ public class ListEdit extends JDialog {
 	
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {

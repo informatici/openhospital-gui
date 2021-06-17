@@ -27,7 +27,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -43,6 +42,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
@@ -61,6 +61,7 @@ import org.isf.vactype.model.VaccineType;
 public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
 	public void vaccineInserted(AWTEvent e) {
 		pVaccine.add(0,vaccine);
@@ -90,9 +91,9 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	private JTable table = null;
 	private DefaultTableModel model = null;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.common.code"),
-			MessageBundle.getMessage("angal.vaccine.vaccinetype"),
-			MessageBundle.getMessage("angal.common.description")
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
 	private int[] pColumnWidth = {100, 50, 120};
 	private int selectedrow;
@@ -114,7 +115,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.vaccine.vaccinebrowser"));
+		this.setTitle(MessageBundle.getMessage("angal.vaccine.vaccinebrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
         final int pfrmBase = 6;
@@ -123,7 +124,6 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2,
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
-
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 				OHServiceExceptionUtil.showMessages(e1);
 			}
 			jSelectionCombo
-					.addItem(new Vaccine("", MessageBundle.getMessage("angal.vaccine.all"), new VaccineType("", "")));
+					.addItem(new Vaccine("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase(), new VaccineType("", "")));
 			if (allVacType != null) {
 				for (VaccineType elem : allVacType) {
 					jSelectionCombo.addItem(elem);
@@ -185,7 +185,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 			jSelectionCombo.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					String pSelectionVaccineType = jSelectionCombo.getSelectedItem().toString();
-					if (pSelectionVaccineType.equals(MessageBundle.getMessage("angal.vaccine.all")))
+					if (pSelectionVaccineType.equals(STR_ALL))
 						model = new VaccineBrowserModel();
 					else
 						model = new VaccineBrowserModel(((VaccineType) jSelectionCombo.getSelectedItem()).getCode());
@@ -208,18 +208,13 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	 */
 	private JButton getJEditButton() {
 		if (jEditButton == null) {
-			jEditButton = new JButton();
-			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
-			jEditButton.setMnemonic(KeyEvent.VK_E);
+			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(
-								null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						selectedrow = table.getSelectedRow();
 						vaccine = (Vaccine)(((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
@@ -240,9 +235,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	 */
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
-			jNewButton = new JButton();
-			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
-			jNewButton.setMnemonic(KeyEvent.VK_N);
+			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
@@ -263,27 +257,18 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	 */
 	private JButton getJDeleteButton() {
 		if (jDeleteButton == null) {
-			jDeleteButton = new JButton();
-			jDeleteButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeleteButton.setMnemonic(KeyEvent.VK_D);
+			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(
-								null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"),
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
-						Vaccine m = (Vaccine)(((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(
-								null,
-								MessageBundle.getMessage("angal.vaccine.deletevaccine") + " \""+m.getDescription()+"\" ?",
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
-                        try{
-                            if ((n == JOptionPane.YES_OPTION) && (manager.deleteVaccine(m))){
+						Vaccine vaccine = (Vaccine)(((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(null, "angal.vaccine.deletevaccine.fmt.msg", vaccine.getDescription());
+                        try {
+                            if ((answer == JOptionPane.YES_OPTION) && (manager.deleteVaccine(vaccine))){
                                 pVaccine.remove(table.getSelectedRow());
                                 model.fireTableDataChanged();
                                 table.updateUI();
@@ -305,9 +290,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();

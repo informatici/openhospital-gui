@@ -26,7 +26,6 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -36,7 +35,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -50,7 +48,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 /**
@@ -102,8 +100,6 @@ public class DiseaseEdit extends JDialog {
 			((DiseaseListener)listeners[i]).diseaseUpdated(event);
 	}
 	
-	private static final String VERSION="v1.2"; 
-
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -142,9 +138,9 @@ public class DiseaseEdit extends JDialog {
 	private void initialize() {
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.disease.newdisease")+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.disease.newdisease.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.disease.editdisease")+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.disease.editdisease.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();
@@ -195,15 +191,14 @@ public class DiseaseEdit extends JDialog {
 			gbc_typeComboBox.gridy = 0;
 			dataPanel.add(getTypeComboBox(), gbc_typeComboBox);  // Generated
 			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.code"));
+			codeLabel.setText(MessageBundle.getMessage("angal.common.code.txt"));
 			GridBagConstraints gbc_codeLabel = new GridBagConstraints();
 			gbc_codeLabel.insets = new Insets(5, 5, 5, 5);
 			gbc_codeLabel.fill = GridBagConstraints.BOTH;
 			gbc_codeLabel.gridx = 0;
 			gbc_codeLabel.gridy = 1;
 			dataPanel.add(codeLabel, gbc_codeLabel);  // Generated
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.common.description"));  // Generated
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			GridBagConstraints gbc_descLabel = new GridBagConstraints();
 			gbc_descLabel.fill = GridBagConstraints.BOTH;
 			gbc_descLabel.insets = new Insets(5, 5, 5, 5);
@@ -257,9 +252,8 @@ public class DiseaseEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();
@@ -276,9 +270,8 @@ public class DiseaseEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
@@ -315,9 +308,11 @@ public class DiseaseEdit extends JDialog {
 							}
 						}
                         if (!result) {
-                        	JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+	                        MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                         }
-                        else  dispose();
+                        else {
+                        	dispose();
+                        }
 					}catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -392,7 +387,7 @@ public class DiseaseEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox();
 			typeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
-			try{
+			try {
 				if (insert) {
 					ArrayList<DiseaseType> types = manager.getDiseaseType();
 					for (DiseaseType elem : types) {
@@ -411,12 +406,8 @@ public class DiseaseEdit extends JDialog {
 						typeComboBox.setSelectedItem(selectedDiseaseType);
 					//typeComboBox.setEnabled(false);
 				}
-			}catch(OHServiceException e){
-				if (e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 			
 		}

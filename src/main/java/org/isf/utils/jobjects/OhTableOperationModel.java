@@ -36,8 +36,12 @@ import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OhTableOperationModel<T> implements TableModel{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OhTableOperationModel.class);
 
 	List<T> dataList;	
 	List<T> filteredList;
@@ -93,19 +97,19 @@ public class OhTableOperationModel<T> implements TableModel{
 		String columnLabel="";
 		switch (columnIndex) {
 		case 0:
-			columnLabel= MessageBundle.getMessage("angal.operationrowlist.date");
+			columnLabel= MessageBundle.getMessage("angal.operationrowlist.date").toUpperCase();
 			//columnLabel= "Date";
 			break;
 		case 1:
-			columnLabel= MessageBundle.getMessage("angal.operationrowlist.natureop");
+			columnLabel= MessageBundle.getMessage("angal.operationrowlist.natureop").toUpperCase();
 			//columnLabel= "Nature Operation";
 			break;
 		case 2:
-			columnLabel= MessageBundle.getMessage("angal.operationrowedit.result");
+			columnLabel= MessageBundle.getMessage("angal.common.result.txt").toUpperCase();
 			//columnLabel= "Resultat";
 			break;
 		case 3:
-			columnLabel= MessageBundle.getMessage("angal.operationrowedit.unitetrans");
+			columnLabel= MessageBundle.getMessage("angal.operationrowedit.unitetrans").toUpperCase();
 			//columnLabel= "Unite Trans";
 			break;	
 		default:
@@ -147,10 +151,9 @@ public class OhTableOperationModel<T> implements TableModel{
 				case 1:
                     Operation ope = null;
                     try {
-                        //System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
                         ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
-                    } catch (OHServiceException ex) {
-                        ex.printStackTrace();
+                    } catch (OHServiceException ohServiceException) {
+                        LOGGER.error(ohServiceException.getMessage(), ohServiceException);
                     }
 					if (ope != null)
 						value = ope.getDescription();
