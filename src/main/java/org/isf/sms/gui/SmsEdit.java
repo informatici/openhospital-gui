@@ -70,7 +70,7 @@ import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
 public class SmsEdit extends JDialog implements SelectionListener {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	private JPanel jCenterPanel;
 	private JPanel jButtonPanel;
 	private JPanel jNorthPanel;
@@ -86,11 +86,11 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	private JTextField jSchedTimeTextField;
 	private JButton JTimeButton;
 	private JButton jPatientButton;
-
+	
 	private int maxLength;
-
+	
 	private SmsManager smsManager = Context.getApplicationContext().getBean(SmsManager.class);
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -111,7 +111,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		initialize();
 		initComponents();
 	}
-
+	
 	private void initialize() {
 		maxLength = smsManager.getMaxLength();
 	}
@@ -128,16 +128,16 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-
+	
 	private JPanel getJNorthPanel() {
 		if (jNorthPanel == null) {
 			jNorthPanel = new JPanel();
 			jNorthPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[] { 46, 110, 0, 0 };
-			gbl_panel.rowHeights = new int[] { 20, 0, 0, 0 };
-			gbl_panel.columnWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
-			gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
+			gbl_panel.columnWidths = new int[]{46, 110, 0, 0};
+			gbl_panel.rowHeights = new int[]{20, 0, 0, 0};
+			gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 			jNorthPanel.setLayout(gbl_panel);
 			{
 				JLabel jSchedDateLabel = new JLabel(MessageBundle.getMessage("angal.sms.scheduleddate")); //$NON-NLS-1$
@@ -200,15 +200,14 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			}
 		}
 		return jNorthPanel;
-
+		
 	}
-
+	
 	private JButton getJPatientButton() {
 		if (jPatientButton == null) {
 			jPatientButton = new JButton();
 			jPatientButton.setIcon(new ImageIcon("./rsc/icons/other_button.png")); //$NON-NLS-1$
 			jPatientButton.addActionListener(new ActionListener() {
-
 				public void actionPerformed(ActionEvent e) {
 					SelectPatient sp = new SelectPatient(SmsEdit.this, new String());
 					sp.addSelectionListener(SmsEdit.this);
@@ -219,7 +218,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		}
 		return jPatientButton;
 	}
-
+	
 	private CustomJDateChooser getJSchedDateChooser() {
 		if (jSchedDateChooser == null) {
 			jSchedDateChooser = new CustomJDateChooser();
@@ -227,7 +226,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jSchedDateChooser.setDate(new Date());
 			jSchedDateChooser.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jSchedDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
-
+				
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					Date date = (Date) evt.getNewValue();
@@ -255,22 +254,20 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jTextArea.setWrapStyleWord(true);
 			jTextArea.setLineWrap(true);
 			jTextArea.addKeyListener(new KeyListener() {
-
+				
 				@Override
-				public void keyTyped(KeyEvent e) {
-				}
-
+				public void keyTyped(KeyEvent e) {}
+				
 				@Override
 				public void keyReleased(KeyEvent e) {
 					JTextArea thisTextArea = (JTextArea) e.getComponent();
 					int remainingChars = maxLength - thisTextArea.getText().length();
 					jLabelCount.setText(String.valueOf(remainingChars));
 				}
-
+				
 				@Override
-				public void keyPressed(KeyEvent e) {
-				}
-
+				public void keyPressed(KeyEvent e) {}
+				
 			});
 		}
 		return jTextArea;
@@ -286,56 +283,55 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		}
 		return jButtonPanel;
 	}
-
+	
 	private JButton getJOkButton() {
 		if (jOkButton == null) {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jOkButton.addActionListener(new ActionListener() {
-
+				
 				public void actionPerformed(ActionEvent e) {
 					String number = jNumberTextField.getText().replaceAll(" ", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$
 					String text = jTextArea.getText();
 					Date schedDate = jSchedDateChooser.getDate();
-
+					
 					Sms smsToSend = new Sms();
 					smsToSend.setSmsNumber(number);
 					smsToSend.setSmsDateSched(schedDate);
 					smsToSend.setSmsUser(UserBrowsingManager.getCurrentUser());
-					System.err.println("SMS_USER: " + UserBrowsingManager.getCurrentUser());
 					smsToSend.setSmsText(text);
 					smsToSend.setModule("smsmanager");
-
+					
 					try {
-
+						
 						smsManager.saveOrUpdate(smsToSend, false);
-
+						
 					} catch (OHServiceException e1) {
-
+						
 						if (e1.getMessages().get(0).getTitle().equals("testMaxLenghtError")) {
-
+							
 							int textLength = text.length();
 							int textParts = (textLength + maxLength - 1) / maxLength;
 							StringBuilder message = new StringBuilder();
-							message.append(e1.getMessages().get(0).getMessage()).append("\n")
-											.append(MessageBundle.getMessage("angal.sms.doyouwanttosplitinmoremessages")).append(" (").append(textParts)
-											.append(")?");
-
+							message.append(e1.getMessages().get(0).getMessage())
+								.append("\n")
+								.append(MessageBundle.getMessage("angal.sms.doyouwanttosplitinmoremessages"))
+								.append(" (").append(textParts).append(")?");
+							
 							int ok = JOptionPane.showConfirmDialog(SmsEdit.this, message.toString());
 							if (ok == JOptionPane.YES_OPTION) {
-
+								
 								try {
-
+									
 									smsManager.saveOrUpdate(smsToSend, true);
-
+									
 								} catch (OHServiceException e2) {
 									OHServiceExceptionUtil.showMessages(e2, SmsEdit.this);
 									return;
 								}
-
-							} else
-								return;
-
+								
+							} else return;
+							
 						} else {
 							OHServiceExceptionUtil.showMessages(e1, SmsEdit.this);
 							return;
@@ -347,13 +343,13 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		}
 		return jOkButton;
 	}
-
+	
 	private JButton getJCancelButton() {
 		if (jCancelButton == null) {
 			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jCancelButton.addActionListener(new ActionListener() {
-
+				
 				public void actionPerformed(ActionEvent e) {
 					dispose();
 				}
@@ -365,10 +361,10 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		if (panel == null) {
 			panel = new JPanel();
 			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[] { 366, 53, 0 };
-			gbl_panel.rowHeights = new int[] { 14, 0 };
-			gbl_panel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-			gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+			gbl_panel.columnWidths = new int[]{366, 53, 0};
+			gbl_panel.rowHeights = new int[]{14, 0};
+			gbl_panel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+			gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 			panel.setLayout(gbl_panel);
 			GridBagConstraints gbc_jCharactersLabel = new GridBagConstraints();
 			gbc_jCharactersLabel.insets = new Insets(0, 0, 0, 5);
@@ -384,7 +380,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		}
 		return panel;
 	}
-
+	
 	private JLabel getJCharactersLabel() {
 		if (jCharactersLabel == null) {
 			jCharactersLabel = new JLabel(MessageBundle.getMessage("angal.sms.Characters")); //$NON-NLS-1$
@@ -392,7 +388,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		}
 		return jCharactersLabel;
 	}
-
+	
 	private JLabel getJLabelCount() {
 		if (jLabelCount == null) {
 			jLabelCount = new JLabel(String.valueOf(maxLength));
@@ -414,27 +410,27 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		}
 		return jSchedTimeTextField;
 	}
-
+	
 	private String formatTime(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm"); //$NON-NLS-1$
 		return sdf.format(date);
 	}
-
+	
 	private JButton getJTimeButton() {
 		if (JTimeButton == null) {
 			JTimeButton = new JButton(""); //$NON-NLS-1$
 			JTimeButton.setIcon(new ImageIcon("./rsc/icons/clock_button.png")); //$NON-NLS-1$
 			JTimeButton.addActionListener(new ActionListener() {
-
+				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-
+					
 					JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(SmsEdit.this, jSchedDateChooser.getDate());
 					schedDate.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					schedDate.setVisible(true);
-
+					
 					Date date = schedDate.getDate();
-
+					
 					if (date != null) {
 						jSchedDateChooser.setDate(date);
 						jSchedTimeTextField.setText(formatTime(date));

@@ -14,7 +14,7 @@
 	<artifactId>OH-gui</artifactId>
 	<packaging>jar</packaging>
 	<version>1.11</version>
-	
+
 	<properties>
 		<oh.version>1.11</oh.version>
 		<java.version>1.8</java.version>
@@ -82,8 +82,8 @@
 									<directory>lib/native</directory>
 								</resource>
 								<resource>
-		                       		<directory>../openhospital-core/lib/native</directory>
-		                    	</resource>
+									<directory>../openhospital-core/lib/native</directory>
+								</resource>
 							</resources>
 						</configuration>
 					</execution>
@@ -138,10 +138,10 @@
 									<include>startup.sh</include>
 								</resource>
 								<resource>
-		                       		<directory>../openhospital-core</directory>
-		                       		<include>SetupGSM.cmd</include>
+									<directory>../openhospital-core</directory>
+									<include>SetupGSM.cmd</include>
 									<include>SetupGSM.sh</include>
-		                    	</resource>
+								</resource>
 							</resources>
 						</configuration>
 					</execution>
@@ -219,7 +219,8 @@
 						<project.inceptionYear>2006</project.inceptionYear>
 						<project.name>Open Hospital</project.name>
 						<project.url>www.open-hospital.org</project.url>
-						<project.description>Open Hospital is a free and open source software for healthcare data management.</project.description>
+						<project.description>Open Hospital is a free and open source
+							software for healthcare data management.</project.description>
 					</properties>
 				</configuration>
 				<dependencies>
@@ -235,9 +236,9 @@
 
 	<dependencies>
 		<dependency>
-  			<groupId>org.isf</groupId>
-  			<artifactId>OH-core</artifactId>
-  			<version>${oh.version}</version>
+			<groupId>org.isf</groupId>
+			<artifactId>OH-core</artifactId>
+			<version>${oh.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.sarxos</groupId>
@@ -245,15 +246,15 @@
 			<version>0.3.11</version>
 		</dependency>
 		<dependency>
-		    <groupId>net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports</artifactId>
-		    <version>6.17.0</version>
-		    <exclusions>
-		    	<exclusion>
-		    		<groupId>com.lowagie</groupId>
-		    		<artifactId>itext</artifactId>
-		    	</exclusion>
-		    </exclusions>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.17.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.lowagie</groupId>
+					<artifactId>itext</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.lowagie</groupId>
@@ -261,9 +262,9 @@
 			<version>2.1.7</version>
 		</dependency>
 		<dependency>
-		    <groupId>net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports-fonts</artifactId>
-		    <version>6.17.0</version>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>6.17.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.toedter</groupId>
@@ -276,9 +277,9 @@
 			<version>2.2</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.rxtx</groupId>
-		    <artifactId>rxtx</artifactId>
-		    <version>2.1.7</version>
+			<groupId>org.rxtx</groupId>
+			<artifactId>rxtx</artifactId>
+			<version>2.1.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -299,17 +300,17 @@
 			<groupId>org.igniterealtime.smack</groupId>
 			<artifactId>smackx</artifactId>
 			<version>3.2.1</version>
-		</dependency >
-	  	<dependency>
-	  		<groupId>org.imgscalr</groupId>
-	  		<artifactId>imgscalr-lib</artifactId>
-	  		<version>4.2</version>
-	  	</dependency>
-	  	<dependency>
-	  		<groupId>org.springframework</groupId>
-	  		<artifactId>spring-context</artifactId>
-	  		<version>${spring.framework.version}</version>
-	  	</dependency>
+		</dependency>
+		<dependency>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.framework.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.jgoodies</groupId>
 			<artifactId>jgoodies-common</artifactId>
@@ -335,15 +336,5 @@
 			<artifactId>jgoodies-validation</artifactId>
 			<version>2.5.1</version>
 		</dependency>
-  </dependencies>
-  <!-- <repositories>
-        <repository>
-                <id>dcm4che</id>
-                <name>Dcm4Che Repository</name>
-                <url>https://www.dcm4che.org/maven2/</url>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-        </repository>
-	</repositories> -->
+	</dependencies>
 </project>
