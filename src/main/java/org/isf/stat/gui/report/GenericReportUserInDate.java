@@ -26,7 +26,6 @@ import java.util.Locale;
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
-import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.serviceprinting.manager.PrintReceipt;
 import org.isf.stat.dto.JasperReportResultDto;

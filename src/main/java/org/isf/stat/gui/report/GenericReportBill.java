@@ -27,7 +27,6 @@ import java.util.Locale;
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
-import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.TxtPrinter;
 import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
