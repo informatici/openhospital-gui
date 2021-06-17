@@ -9,3 +9,4 @@ logs
 *.iml
 *.bak
 *.pdf
+/pom.xml
