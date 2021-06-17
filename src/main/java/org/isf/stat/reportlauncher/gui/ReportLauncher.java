@@ -258,8 +258,8 @@ public class ReportLauncher extends ModalJFrame{
 			//Integer year = 2000 + Integer.parseInt(dt.substring(6, 8));
 
 			java.util.GregorianCalendar gc = new java.util.GregorianCalendar();
-			Integer month=gc.get(Calendar.MONTH);
-			Integer year = gc.get(Calendar.YEAR);
+			int month = gc.get(Calendar.MONTH);
+			int year = gc.get(Calendar.YEAR);
 
 			jRptLabel = new JLabel();
 			jRptLabel.setText(MessageBundle.getMessage("angal.stat.report"));
@@ -404,11 +404,11 @@ public class ReportLauncher extends ModalJFrame{
 	
 	protected void generateReport(boolean toExcel) {
 		   
-		int rptIndex=jRptComboBox.getSelectedIndex();
-		Integer month = jMonthComboBox.getSelectedIndex()+1;
-		Integer year = (Integer.parseInt((String)jYearComboBox.getSelectedItem()));
-		String fromDate=jFromDateField.getText().trim();
-		String toDate=jToDateField.getText().trim();
+		int rptIndex = jRptComboBox.getSelectedIndex();
+		int month = jMonthComboBox.getSelectedIndex()+1;
+		int year = (Integer.parseInt((String)jYearComboBox.getSelectedItem()));
+		String fromDate = jFromDateField.getText().trim();
+		String toDate = jToDateField.getText().trim();
 		
 		if (rptIndex>=0) {
 			String sParType = reportMatrix[rptIndex][TYPE];

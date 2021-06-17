@@ -633,8 +633,8 @@ public class PatVacEdit extends JDialog {
 				ageTextField.setText("");
 			} else {
 				try {
-					Integer intAge = patVac.getPatAge();
-					ageTextField.setText(intAge.toString());
+					int intAge = patVac.getPatAge();
+					ageTextField.setText(String.valueOf(intAge));
 				} catch (Exception e) {
 					ageTextField.setText("");
 				}
