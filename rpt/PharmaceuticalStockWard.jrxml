@@ -164,7 +164,7 @@ ORDER BY MDSRT_DESC, MDSR_DESC
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{QTY}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{Qty}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement key="staticText-12" x="294" y="0" width="83" height="18" forecolor="#FFFFFF" uuid="4a873bb4-77a8-44f3-8b6b-52a33e5d11b2"/>

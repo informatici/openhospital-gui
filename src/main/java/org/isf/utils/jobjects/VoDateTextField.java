@@ -26,7 +26,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.GregorianCalendar;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

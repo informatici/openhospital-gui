@@ -255,7 +255,7 @@ ORDER BY ADM_DATE_DIS]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{SEX}+"	"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Sex}+"	"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-9" mode="Opaque" x="281" y="0" width="35" height="19" forecolor="#FFFFFF" backcolor="#009900" uuid="ec03b704-4c92-42ea-9438-efb76801385a"/>
@@ -385,7 +385,7 @@ ORDER BY ADM_DATE_DIS]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{PAT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Pat}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
