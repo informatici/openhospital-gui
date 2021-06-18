@@ -315,7 +315,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{SEX}+"	"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Sex}+"	"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-9" mode="Opaque" x="370" y="0" width="40" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="8f680fd6-98d1-462f-8d23-5b10aa294f59"/>
