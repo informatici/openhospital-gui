@@ -288,7 +288,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	
 	private JButton getEditButton() {
 		if (editButton == null) {			
-			editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn").toUpperCase());
 			editButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			editButton.addActionListener(e -> {
 				if (admTable.getSelectedRow() < 0) {
@@ -320,7 +320,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 	private JButton getDeleteButton() {
 		if (deleteButton == null) {
-			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn").toUpperCase());
 			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			deleteButton.addActionListener(e -> {
 				if (admTable.getSelectedRow() < 0) {
