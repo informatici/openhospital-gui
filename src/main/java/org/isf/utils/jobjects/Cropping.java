@@ -146,20 +146,6 @@ public class Cropping extends JPanel {
 		return panel;
 	}
 
-	public static void main(String[] args) throws IOException {
-		File file = new File("E:\\Users\\Nanni\\Pictures\\Fototessere\\Pausa pranzo 044 Risate.jpg");
-		Cropping test = new Cropping(ImageIO.read(file));
-		ClipMoverAndResizer mover = new ClipMoverAndResizer(test);
-		test.addMouseListener(mover);
-		test.addMouseMotionListener(mover);
-		JFrame f = new JFrame();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().add(new JScrollPane(test));
-		f.getContentPane().add(test.getUIPanel(), BorderLayout.SOUTH);
-		f.setSize(400, 400);
-		f.setLocation(200, 200);
-		f.setVisible(true);
-	}
 }
 
 class ClipMover extends MouseInputAdapter {

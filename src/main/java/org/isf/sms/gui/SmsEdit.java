@@ -92,18 +92,6 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	private SmsManager smsManager = Context.getApplicationContext().getBean(SmsManager.class);
 	
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		GeneralData.initialize();
-		try {
-			new SmsEdit(new JFrame());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Create the dialog.
 	 */
 	public SmsEdit(JFrame owner) {

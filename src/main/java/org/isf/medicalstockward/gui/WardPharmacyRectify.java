@@ -135,19 +135,6 @@ public class WardPharmacyRectify extends JDialog {
 	private JButton jButtonNewLot;
 	private Lot selectedLot;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			WardPharmacyRectify dialog = new WardPharmacyRectify();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public WardPharmacyRectify() {
 		initMedicals();
 		initComponents();

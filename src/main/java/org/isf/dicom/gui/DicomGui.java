@@ -502,22 +502,4 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		Context.setApplicationContext(context);
-		GeneralData.initialize();
-		PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-		Patient patient = new Patient();
-		try {
-			patient = patManager.getPatientById(1);
-		} catch (OHServiceException e) {
-			e.printStackTrace();
-		}
-		DicomGui dg = new DicomGui(patient, null);
-
-	}
-
 }

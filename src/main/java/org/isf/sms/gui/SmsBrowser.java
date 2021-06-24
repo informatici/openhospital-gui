@@ -407,21 +407,4 @@ public class SmsBrowser extends ModalJFrame {
 		return null;
 	}
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		GeneralData.initialize();
-		MessageBundle.initialize();
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SmsBrowser frame = new SmsBrowser();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 }

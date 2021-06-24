@@ -66,7 +66,7 @@ public class PhotoboothTester {
             }
         });
 
-        // initialise to the highest resolution
+        // Initialize to the highest resolution
         presentationModel.setResolution(resolutions[resolutions.length - 1]);
 
         final PhotoboothDialog photoboothDialog = new PhotoboothDialog(presentationModel, new JDialog());

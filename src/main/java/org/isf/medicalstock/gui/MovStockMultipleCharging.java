@@ -138,18 +138,6 @@ public class MovStockMultipleCharging extends JDialog {
 	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			GeneralData.initialize();
-			new MovStockMultipleCharging(new JFrame());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	private boolean isAutomaticLot() {
 		return GeneralData.AUTOMATICLOT_IN;
 	}

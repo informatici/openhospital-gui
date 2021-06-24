@@ -82,23 +82,4 @@ public class JMonthYearChooser extends JPanel {
 		return gc;
 	}
 	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		GeneralData.initialize();
-		GregorianCalendar date;
-		JMonthYearChooser monthChooser = new JMonthYearChooser();
-		
-		int r = JOptionPane.showConfirmDialog(null,
-				monthChooser,
-                "JOptionPane Example : ",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-		
-		if (r == JOptionPane.OK_OPTION) {
-			date = monthChooser.getDate();
-			System.out.println(date);
-        }
-	}
 }

@@ -109,17 +109,6 @@ public class JTimeTable extends JPanel {
 
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-
-		JFrame frame = new JFrame();
-		frame.add(new JTimeTable());
-		frame.setVisible(true);
-		frame.pack();
-	}
-
 	public int getHour() {
 		return hour;
 	}

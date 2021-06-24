@@ -63,10 +63,4 @@ public class HelpViewer extends JDialog {
 		}
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		new HelpViewer();
-	}
 }

@@ -161,25 +161,4 @@ public class JFromDateToDateChooser extends JPanel {
 		this.dateToDateChooser = dateTo;
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		GeneralData.initialize();
-		Date date;
-		JFromDateToDateChooser fromDateToDateChooser = new JFromDateToDateChooser();
-		
-		int r = JOptionPane.showConfirmDialog(null,
-				fromDateToDateChooser,
-                "JOptionPane Example: ",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-		
-		if (r == JOptionPane.OK_OPTION) {
-			date = fromDateToDateChooser.getDateFrom();
-			System.out.println(date);
-			date = fromDateToDateChooser.getDateTo();
-			System.out.println(date);
-        }
-	}
 }

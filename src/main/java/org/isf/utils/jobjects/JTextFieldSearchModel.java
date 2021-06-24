@@ -231,22 +231,4 @@ public class JTextFieldSearchModel extends JPanel {
 		return selectedObject;
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			GeneralData.initialize();
-			JDialog newDialog = new JDialog();
-			JTextFieldSearchModel textField = new JTextFieldSearchModel(new JDialog(), Medical.class);
-			newDialog.add(textField, BorderLayout.NORTH);
-			newDialog.setVisible(true);
-			newDialog.pack();
-			newDialog.setLocationRelativeTo(null);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 }

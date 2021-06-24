@@ -111,22 +111,4 @@ public class JDateAndTimeChooser extends JPanel {
 		return dateTime;
 	}
 	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		GeneralData.initialize();
-		Date date;
-		JDateAndTimeChooser dateTimeChooser = new JDateAndTimeChooser();
-		int r = JOptionPane.showConfirmDialog(null,
-				dateTimeChooser,
-                "JOptionPane Example: ",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-		
-		if (r == JOptionPane.OK_OPTION) {
-			date = dateTimeChooser.getDateTime();
-			System.out.println(date);
-        }
-	}
 }

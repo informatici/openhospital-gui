@@ -1032,21 +1032,6 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		invalidate();
 	}
 
-	/**
-	 * Creates a JFrame with a JDayChooser inside and can be used for testing.
-	 *
-	 * @param s The command line arguments
-	 */
-	public static void main(String[] s) {
-		JFrame frame = new JFrame("JDayChooser");
-		frame.getContentPane().add(new JAgenda((JDialog) null));
-		frame.setSize(800,600);
-		//frame.setResizable(false);
-		frame.setLocationRelativeTo(null);
-		//frame.pack();
-		frame.setVisible(true);
-	}
-
 	class DecoratorButton extends JButton {
 		private static final long serialVersionUID = -5306477668406547496L;
 
