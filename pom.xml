@@ -342,6 +342,7 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 			<version>${spring-cloud-starter-openfeign}</version>
+			<scope>runtime</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>ch.qos.logback</groupId>
