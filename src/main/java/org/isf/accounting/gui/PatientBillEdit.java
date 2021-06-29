@@ -1690,8 +1690,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			//billItems = new ArrayList<BillItems>();
 			
 			/*
-			 * seleziona i prezzi del listino selezionato.
-			 * se nessun listino e' selezionato (new bill) si prende il primo.
+			 * Select the prices of the selected list.
+			 * If no price list is selected (new bill) the first one is taken.
 			 */
 			if (listSelected == null) listSelected = lstArray.get(0);
 			for (Price price : prcArray) {
@@ -1700,7 +1700,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		    }
 			
 			/*
-			 * crea una hastTable con i prezzi selezionati.
+			 * Create a hashTable with the selected prices.
 			 */
 			for (Price price : prcListArray) {
 				priceHashTable.put(price.getList().getId()+
@@ -1709,7 +1709,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		    }
 			
 			/*
-			 * aggiorna gli item presenti nel bill.
+			 * Updates the items in the bill.
 			 */
 		    for (BillItems item : billItems) {
 				
@@ -1721,7 +1721,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			}
 			
 		    /*
-		     * aggiorna i totali.
+		     * Updates the totals.
 		     */
 		    updateTotal();
 		    updateBigTotal();

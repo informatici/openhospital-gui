@@ -1834,7 +1834,7 @@ public class PatientInsertExtended extends JDialog {
 	}
 
 	/**
-	 * This method initializes jFatherUnknowRadioButton
+	 * This method initializes jFather_Unknown radio button
 	 * 
 	 * @return javax.swing.JRadioButton
 	 */

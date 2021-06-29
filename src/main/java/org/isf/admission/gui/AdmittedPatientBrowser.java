@@ -132,7 +132,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int PANEL_WITDH = 240;
+	private static final int PANEL_WIDTH = 240;
 
 	private String[] patientClassItems = {
 			MessageBundle.getMessage("angal.common.all.txt"),
@@ -407,12 +407,12 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		JPanel classPanel = new JPanel();
 		classPanel.setLayout(new BoxLayout(classPanel, BoxLayout.Y_AXIS));
 		classPanel.add(patientClassBox);
-		classPanel.setPreferredSize(new Dimension(PANEL_WITDH, 20));
+		classPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		classPanel = setMyBorder(classPanel, MessageBundle.getMessage("angal.admission.admissionstatus.border"));
 
 		JPanel wardPanel = new JPanel();
 		wardPanel.setLayout(new BoxLayout(wardPanel, BoxLayout.Y_AXIS));
-		wardPanel.setPreferredSize(new Dimension(PANEL_WITDH, 20));
+		wardPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		if (wardList == null) {
 			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			ArrayList<Ward> wardWithBeds;
@@ -476,7 +476,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		}
 
 		JPanel agePanel = new JPanel();
-		agePanel.setPreferredSize(new Dimension(PANEL_WITDH, 20));
+		agePanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		agePanel.add(ageFrom);
 		agePanel.add(patientAgeFromTextField);
 		agePanel.add(ageTo);
@@ -484,19 +484,19 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		agePanel = setMyBorder(agePanel, MessageBundle.getMessage("angal.admission.age.border"));
 
 		patientSexBox = new JComboBox(patientSexItems);
-		patientSexBox.setPreferredSize(new Dimension(PANEL_WITDH, 20));
+		patientSexBox.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		if (!GeneralData.ENHANCEDSEARCH) {
 			patientSexBox.addActionListener(listener);
 		}
 
 		JPanel sexPanel = new JPanel();
-		sexPanel.setPreferredSize(new Dimension(PANEL_WITDH, 20));
+		sexPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		sexPanel.setLayout(new BorderLayout());
 		sexPanel.add(patientSexBox, BorderLayout.CENTER);
 		sexPanel = setMyBorder(sexPanel, MessageBundle.getMessage("angal.admission.sex.border"));
 
 		JPanel searchPanel = new JPanel(new BorderLayout());
-		searchPanel.setPreferredSize(new Dimension(PANEL_WITDH, 20));
+		searchPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		searchString = new JTextField();
 		searchString.setColumns(15);
 		if (GeneralData.ENHANCEDSEARCH) {
@@ -575,7 +575,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JPanel getAdmissionFilterPanel() {
 		JPanel calendarPanel = new JPanel();
 		calendarPanel.setLayout(new GridBagLayout());
-		calendarPanel.setPreferredSize(new Dimension(PANEL_WITDH, 20));
+		calendarPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		calendarPanel = setMyBorder(calendarPanel, MessageBundle.getMessage("angal.admission.date.border"));
 		
 		JLabel admissionLabel = new JLabel(MessageBundle.getMessage("angal.admission.admissiondate.txt"));
@@ -827,7 +827,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
 			if (patient.getAdmission() != null) {
-				// edit previous admission or dismission
+				// edit previous admission or discharge
 				new AdmissionBrowser(myFrame, patient, true);
 			} else {
 				// new admission

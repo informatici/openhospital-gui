@@ -395,7 +395,8 @@ public class PatientDataBrowser extends ModalJFrame implements
 		return malnutritionButton;	
 	}
 	
-//Alex: nuovo AdmissionBrowserModel con OPD
+//Alex:
+// nuovo AdmissionBrowserModel con OPD
 class AdmissionBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = -453243229156512947L;

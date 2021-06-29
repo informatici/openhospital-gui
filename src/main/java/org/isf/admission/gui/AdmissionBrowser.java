@@ -248,7 +248,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private ArrayList<Ward> wardList = null;
 
-	// save value during a swith
+	// save value during a switch
 	private Ward saveWard = null;
 
 	private String saveYProg = null;

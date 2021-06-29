@@ -417,7 +417,7 @@ public class VisitView extends ModalJFrame {
 			jTableSecond.setBackground(Color.white);
 			jTableSecond.setModel(new VisitSecondModel());
 			jTableSecond.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			for (int i = 0; i < visColums.length; i++) {
+			for (int i = 0; i < visColumns.length; i++) {
 				jTableFirst.getColumnModel().getColumn(i).setMinWidth(visColumnsWidth[i]);
 				if (!visColumnsResizable[i])
 					jTableFirst.getColumnModel().getColumn(i).setMaxWidth(visColumnsWidth[i]);
@@ -563,7 +563,7 @@ public class VisitView extends ModalJFrame {
 		}
 	}
 
-	public String[] visColums = { MessageBundle.getMessage("angal.visit.visits"), //$NON-NLS-1$
+	public String[] visColumns = { MessageBundle.getMessage("angal.visit.visits"), //$NON-NLS-1$
 	};
 	private SpringLayout sl_visitParamsPanel;
 
@@ -599,11 +599,11 @@ public class VisitView extends ModalJFrame {
 		}
 
 		public String getColumnName(int c) {
-			return visColums[c];
+			return visColumns[c];
 		}
 
 		public int getColumnCount() {
-			return visColums.length;
+			return visColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
@@ -635,11 +635,11 @@ public class VisitView extends ModalJFrame {
 		}
 
 		public String getColumnName(int c) {
-			return visColums[c];
+			return visColumns[c];
 		}
 
 		public int getColumnCount() {
-			return visColums.length;
+			return visColumns.length;
 		}
 
 		public Object getValueAt(int r, int c) {
