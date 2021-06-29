@@ -243,7 +243,7 @@
 		<dependency>
 			<groupId>com.github.sarxos</groupId>
 			<artifactId>webcam-capture</artifactId>
-			<version>0.3.11</version>
+			<version>0.3.12</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
