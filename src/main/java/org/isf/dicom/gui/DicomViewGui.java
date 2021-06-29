@@ -83,7 +83,7 @@ public class DicomViewGui extends JPanel {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DicomViewGuiMouseListener.class);
 
-	// status of fremereader
+	// status of framereader
 	private int patID = -1;
 	private Patient ohPatient = null;
 	private String serieNumber = "";
@@ -342,13 +342,13 @@ public class DicomViewGui extends JPanel {
 
 	private void drawQuadrant(Graphics g, int h, int w, Color c) {
 
-		Color originale = g.getColor();
+		Color original = g.getColor();
 		g.setColor(c);
 		g.drawLine(0, 0, 0, h - 1);
 		g.drawLine(0, 0, w - 1, 0);
 		g.drawLine(w - 1, 0, w - 1, h - 1);
 		g.drawLine(0, h - 1, w - 1, h - 1);
-		g.setColor(originale);
+		g.setColor(original);
 	}
 
 	private void drawPatientUpRight(Graphics2D canvas, int w, int h) {

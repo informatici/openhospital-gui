@@ -136,20 +136,20 @@ public class MessageDialog {
 			return;
 		}
 		for (OHExceptionMessage ohExceptionMessage : ohServiceException.getMessages()) {
-			OHSeverityLevel serverity = ohExceptionMessage.getLevel();
-			if (OHSeverityLevel.ERROR == serverity) {
+			OHSeverityLevel severity = ohExceptionMessage.getLevel();
+			if (OHSeverityLevel.ERROR == severity) {
 				JOptionPane.showMessageDialog(
 						null,
 						ohExceptionMessage.getMessage(),
 						ERROR_MESSAGE,
 						JOptionPane.ERROR_MESSAGE);
-			} else if (OHSeverityLevel.WARNING == serverity) {
+			} else if (OHSeverityLevel.WARNING == severity) {
 				JOptionPane.showMessageDialog(
 						null,
 						ohExceptionMessage.getMessage(),
 						WARNING_MESSAGE,
 						JOptionPane.WARNING_MESSAGE);
-			} else if (OHSeverityLevel.INFO == serverity) {
+			} else if (OHSeverityLevel.INFO == severity) {
 				JOptionPane.showMessageDialog(
 						null,
 						ohExceptionMessage.getMessage(),

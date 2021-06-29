@@ -372,8 +372,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		return userInfo;
 	}
 
-	private JPanel createLeftPanel() {//pannello lista dei contatti
-		leftpanel = new JPanel();
+	private JPanel createLeftPanel() {  // contact list panel
 		JScrollPane buddy = new JScrollPane();
 		Dimension size = new Dimension(150, 200);
 
@@ -427,12 +426,11 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 			if (text.startsWith("011100100110010101110000011011110111001001110100")) {//report jasper //$NON-NLS-1$
 				area.printReport(user, text);
-			} else if (text.startsWith("0101010001000001"))//trasferimento file accettato 0101010001000001=TA //$NON-NLS-1$
-			{
+			} else if (text.startsWith("0101010001000001")) { //file transfer accepted 0101010001000001=TA //$NON-NLS-1$
 				int index = text.indexOf("$"); //$NON-NLS-1$
 				area.printNotification(text.substring(index + 1));
 				LOGGER.debug("Transfer accepted."); //$NON-NLS-1$
-			} else if (text.startsWith("0101010001010010")) {//trasferimento file rifiutato 0101010001010010=TR //$NON-NLS-1$
+			} else if (text.startsWith("0101010001010010")) {// file transfer refused 0101010001010010=TR //$NON-NLS-1$
 				int index = text.indexOf("$"); //$NON-NLS-1$
 				LOGGER.debug("Transfer rejected."); //$NON-NLS-1$
 				area.printNotification(text.substring(index + 1));

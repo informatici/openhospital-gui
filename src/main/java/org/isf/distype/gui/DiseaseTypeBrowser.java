@@ -200,9 +200,9 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						DiseaseType diseaseType = (DiseaseType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int answser = MessageDialog.yesNo(null, "angal.distype.deletediseasetype.fmt.msg", diseaseType.getDescription());
+						int answer = MessageDialog.yesNo(null, "angal.distype.deletediseasetype.fmt.msg", diseaseType.getDescription());
 						try {
-							if ((answser == JOptionPane.YES_OPTION) && (manager.deleteDiseaseType(diseaseType))) {
+							if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDiseaseType(diseaseType))) {
 								pDiseaseType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();

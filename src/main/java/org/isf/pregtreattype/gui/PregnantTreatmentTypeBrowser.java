@@ -201,9 +201,9 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
 						PregnantTreatmentType preTreatmentType = (PregnantTreatmentType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int answser = MessageDialog.yesNo(null, "angal.preagtreattype.deletetreatmenttype.fmt.msg", preTreatmentType.getDescription());
+						int answer = MessageDialog.yesNo(null, "angal.preagtreattype.deletetreatmenttype.fmt.msg", preTreatmentType.getDescription());
 						try {
-							if ((answser == JOptionPane.YES_OPTION) && (manager.deletePregnantTreatmentType(preTreatmentType))) {
+							if ((answer == JOptionPane.YES_OPTION) && (manager.deletePregnantTreatmentType(preTreatmentType))) {
 								pPregnantTreatmentType.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();

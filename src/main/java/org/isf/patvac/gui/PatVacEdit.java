@@ -361,7 +361,7 @@ public class PatVacEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes vaccineTypeCOmboBox. It is used to display available
+	 * This method initializes vaccineTypeComboBox. It is used to display available
 	 * vaccine types
 	 * 
 	 * @return vaccineTypeComboBox (JComboBox)

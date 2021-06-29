@@ -51,18 +51,13 @@ import org.isf.admission.gui.PatientFolderBrowser;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
 import org.isf.dicom.model.FileDicom;
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
-import org.isf.menu.manager.Context;
-import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.file.FileTools;
 import org.isf.utils.jobjects.MessageDialog;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * GUI for Dicom Viewer
@@ -460,7 +455,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	public void windowDeactivated(WindowEvent e) {
 	}
 
-	// BOTTONI
+	// BUTTONS
 
 	private FileDicom selectedElement = null;
 
@@ -470,9 +465,9 @@ public class DicomGui extends JFrame implements WindowListener {
 		jButtonDeleteDicom.setEnabled(false);
 	}
 
-	public void enableDeleteButton(FileDicom selezionato) {
+	public void enableDeleteButton(FileDicom selected) {
 
-		this.selectedElement = selezionato;
+		this.selectedElement = selected;
 
 		jButtonDeleteDicom.setEnabled(true);
 

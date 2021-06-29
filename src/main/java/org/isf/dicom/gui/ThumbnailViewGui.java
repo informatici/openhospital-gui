@@ -290,8 +290,8 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			panel.add(header, BorderLayout.NORTH);
 			
 			// Image
-			BufferedImage immagine = instance.getDicomThumbnailAsImage();
-			JLabel jLab = new JLabel(new ImageIcon(immagine));
+			BufferedImage image = instance.getDicomThumbnailAsImage();
+			JLabel jLab = new JLabel(new ImageIcon(image));
 			jLab.setPreferredSize(dim);
 			jLab.setMaximumSize(dim);
 			jLab.setVerticalTextPosition(SwingConstants.BOTTOM);
