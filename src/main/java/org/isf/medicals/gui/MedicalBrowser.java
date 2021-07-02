@@ -400,6 +400,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 				// Select Dates
 				JFromDateToDateChooserDialog dataRange = new JFromDateToDateChooserDialog(MedicalBrowser.this);
+				dataRange.setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
 				dataRange.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dataRange.setVisible(true);
 
