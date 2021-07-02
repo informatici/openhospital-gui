@@ -465,17 +465,19 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 				Medical med = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
 				int answer = MessageDialog.yesNo(MedicalBrowser.this, "angal.medicals.deletemedical.fmt.msg", med.getDescription());
-				boolean deleted;
-				try {
-					deleted = medicalBrowsingManager.deleteMedical(med);
-				} catch (OHServiceException e) {
-					deleted = false;
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				if ((answer == JOptionPane.YES_OPTION) && deleted) {
-					pMedicals.remove(selectedrow);
-					model.fireTableDataChanged();
-					table.updateUI();
+				if (answer == JOptionPane.YES_OPTION) {
+					boolean deleted;
+					try {
+						deleted = medicalBrowsingManager.deleteMedical(med);
+					} catch (OHServiceException e) {
+						deleted = false;
+						OHServiceExceptionUtil.showMessages(e);
+					}
+					if (deleted) {
+						pMedicals.remove(selectedrow);
+						model.fireTableDataChanged();
+						table.updateUI();
+					}
 				}
 			}
 		});
