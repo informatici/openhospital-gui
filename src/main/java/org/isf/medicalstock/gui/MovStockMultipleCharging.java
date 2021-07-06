@@ -486,7 +486,7 @@ public class MovStockMultipleCharging extends JDialog {
 		if (jDateChooser == null) {
 			jDateChooser = new CustomJDateChooser(new Date());
 			jDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
-			jDateChooser.setPreferredSize(new Dimension(150, 24));
+			jDateChooser.setPreferredSize(new Dimension(165, 24));
 		}
 		return jDateChooser;
 	}
