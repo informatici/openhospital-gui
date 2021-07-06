@@ -765,7 +765,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jWeightPanel.add(jLabelWeightFrom, null);
 			jWeightPanel.add(getJWeightFromTextField(), null);
 
-			JLabel jLabelWeightTo = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
+			JLabel jLabelWeightTo = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
 			jWeightPanel.add(jLabelWeightTo, null);
 			jWeightPanel.add(getJWeightToTextField(), null);
 		}
