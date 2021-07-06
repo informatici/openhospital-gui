@@ -1014,16 +1014,16 @@ public class MovStockMultipleDischarging extends JDialog {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.medicalstock.lotid"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.medicalstock.lotid").toUpperCase();
 			}
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.medicalstock.prepdate"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.medicalstock.prepdate").toUpperCase();
 			}
 			if (c == 2) {
-				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.medicalstock.duedate").toUpperCase();
 			}
 			if (c == 3) {
-				return MessageBundle.getMessage("angal.common.quantity.txt");
+				return MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase();
 			}
 			return ""; //$NON-NLS-1$
 		}
@@ -1070,10 +1070,10 @@ public class MovStockMultipleDischarging extends JDialog {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.common.code.txt");
+				return MessageBundle.getMessage("angal.common.code.txt").toUpperCase();
 			}
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.common.description.txt");
+				return MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
 			}
 			return ""; //$NON-NLS-1$
 		}

@@ -194,10 +194,10 @@ public class JTextFieldSearchModel extends JPanel {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.common.code.txt");
+				return MessageBundle.getMessage("angal.common.code.txt").toUpperCase();
 			}
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.common.description.txt");
+				return MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
 			}
 			return "";
 		}
