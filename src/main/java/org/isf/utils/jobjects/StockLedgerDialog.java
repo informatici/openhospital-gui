@@ -64,6 +64,7 @@ public class StockLedgerDialog extends JDialog {
 		add(dateRange, BorderLayout.CENTER);
 		add(getButtonsPanel(), BorderLayout.SOUTH);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);

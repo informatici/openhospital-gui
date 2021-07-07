@@ -21,6 +21,8 @@
  */
 package org.isf.utils.jobjects;
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.LayoutManager;
 import java.beans.PropertyChangeEvent;
@@ -28,9 +30,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.isf.generaldata.GeneralData;
@@ -52,7 +52,8 @@ public class JFromDateToDateChooser extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	public JFromDateToDateChooser() {
-		BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
+		FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
+		layout.setHgap(5);
 		this.setLayout(layout);
 		this.dateTimeFrom = new Date();
 		this.dateTimeTo = new Date();
@@ -60,7 +61,8 @@ public class JFromDateToDateChooser extends JPanel {
 	}
 	
 	public JFromDateToDateChooser(Date dateFrom, Date dateTo) {
-		BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
+		FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
+		layout.setHgap(5);
 		this.setLayout(layout);
 		this.dateTimeFrom = dateFrom;
 		this.dateTimeTo = dateTo;
@@ -81,6 +83,7 @@ public class JFromDateToDateChooser extends JPanel {
 			dateFromDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateFromDateChooser.setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
 			dateFromDateChooser.setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
+			dateFromDateChooser.setPreferredSize(new Dimension(100, 24));
 			dateFromDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
@@ -98,6 +101,7 @@ public class JFromDateToDateChooser extends JPanel {
 			dateToDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateToDateChooser.setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
 			dateToDateChooser.setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
+			dateToDateChooser.setPreferredSize(new Dimension(100, 24));
 			dateToDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
@@ -113,7 +117,6 @@ public class JFromDateToDateChooser extends JPanel {
 	 */
 	public JFromDateToDateChooser(LayoutManager layout) {
 		super(layout);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -121,7 +124,6 @@ public class JFromDateToDateChooser extends JPanel {
 	 */
 	public JFromDateToDateChooser(boolean isDoubleBuffered) {
 		super(isDoubleBuffered);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -130,7 +132,6 @@ public class JFromDateToDateChooser extends JPanel {
 	 */
 	public JFromDateToDateChooser(LayoutManager layout, boolean isDoubleBuffered) {
 		super(layout, isDoubleBuffered);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
