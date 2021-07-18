@@ -144,7 +144,7 @@ public class DiseasesListLauncher extends ModalJFrame{
 			
 			JPanel up = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			up.add(getJReport1Button());
-			up = setMyBorder(up, MessageBundle.getMessage("angal.stat.examslist"));
+			up = setMyBorder(up, MessageBundle.getMessage("angal.stat.diseaselist"));
 			
 			jContentPanel.add(up, BorderLayout.NORTH);
 		}
