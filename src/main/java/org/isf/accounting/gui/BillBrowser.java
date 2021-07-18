@@ -1054,8 +1054,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							return false;
 						}
 					});
-			jTableToday.getColumnModel().getColumn(1).setPreferredWidth(3);
-			jTableToday.getColumnModel().getColumn(4).setPreferredWidth(3);
+			jTableToday.getColumnModel().getColumn(1).setMinWidth(3);
+			jTableToday.getColumnModel().getColumn(4).setMinWidth(3);
 			jTableToday.setRowSelectionAllowed(false);
 			jTableToday.setGridColor(Color.WHITE);
 		}
@@ -1089,8 +1089,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					return false;
 				}
 			});
-			jTablePeriod.getColumnModel().getColumn(1).setPreferredWidth(3);
-			jTablePeriod.getColumnModel().getColumn(4).setPreferredWidth(3);
+			jTablePeriod.getColumnModel().getColumn(1).setMinWidth(3);
+			jTablePeriod.getColumnModel().getColumn(4).setMinWidth(3);
 			jTablePeriod.setRowSelectionAllowed(false);
 			jTablePeriod.setGridColor(Color.WHITE);
 
