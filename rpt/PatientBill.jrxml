@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientBill" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="PatientBill" whenResourceMissingType="Key" uuid="357797de-bc7b-4785-bebc-f9faf3a06ad3">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -161,7 +161,7 @@ WHERE BLL_ID = $P{billID}]]>
 				<textFieldExpression><![CDATA["BILL N. " + $P{billID}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
-				<reportElement key="textField-16" x="54" y="50" width="481" height="18" uuid="9201414a-05b6-4a3a-8787-214a0309cd7c"/>
+				<reportElement key="textField-16" x="80" y="50" width="455" height="18" uuid="9201414a-05b6-4a3a-8787-214a0309cd7c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -174,7 +174,7 @@ WHERE BLL_ID = $P{billID}]]>
 				<textFieldExpression><![CDATA[$F{BLL_USR_ID_A}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="false">
-				<reportElement key="textField-17" x="54" y="31" width="481" height="18" uuid="8aba0a07-df4b-484a-b856-e2b7253cfa17"/>
+				<reportElement key="textField-17" x="80" y="31" width="455" height="18" uuid="8aba0a07-df4b-484a-b856-e2b7253cfa17"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -187,7 +187,7 @@ WHERE BLL_ID = $P{billID}]]>
 				<textFieldExpression><![CDATA[$F{BLL_ID_PAT} + " - " + $F{BLL_PAT_NAME}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-8" x="0" y="31" width="49" height="18" uuid="605abf8b-680b-45d9-a191-6bd93a63d047"/>
+				<reportElement key="staticText-8" x="0" y="31" width="70" height="18" uuid="605abf8b-680b-45d9-a191-6bd93a63d047"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -200,7 +200,7 @@ WHERE BLL_ID = $P{billID}]]>
 				<textFieldExpression><![CDATA[$R{Patient}+":"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-9" x="0" y="50" width="49" height="18" uuid="f7cddc02-b466-4837-bfcf-d8f7eef4d5d9"/>
+				<reportElement key="staticText-9" x="0" y="50" width="70" height="18" uuid="f7cddc02-b466-4837-bfcf-d8f7eef4d5d9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -227,7 +227,7 @@ WHERE BLL_ID = $P{billID}]]>
 				<textFieldExpression><![CDATA["Items Statement"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-10" x="0" y="69" width="49" height="18" uuid="89ce9f48-1204-4107-821d-4e333dc541d5"/>
+				<reportElement key="staticText-10" x="0" y="69" width="70" height="18" uuid="89ce9f48-1204-4107-821d-4e333dc541d5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -240,7 +240,7 @@ WHERE BLL_ID = $P{billID}]]>
 				<textFieldExpression><![CDATA[$R{Date}+":"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="false">
-				<reportElement key="textField-23" x="54" y="69" width="188" height="18" uuid="cf293076-ebac-47f8-b263-49db554f84fe"/>
+				<reportElement key="textField-23" x="80" y="69" width="162" height="18" uuid="cf293076-ebac-47f8-b263-49db554f84fe"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

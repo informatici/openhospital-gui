@@ -23,8 +23,10 @@ package org.isf.accounting.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,6 +69,7 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.TxtPrinter;
 import org.isf.hospital.manager.HospitalBrowsingManager;
+import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.patient.gui.SelectPatient;
@@ -223,6 +226,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JPanel jPanelTop;
 	private CustomJDateChooser jCalendarDate;
 	private JLabel jLabelDate;
+	private JLabel jLabelUser;
 	private JLabel jLabelPatient;
 	private JButton jButtonRemoveItem;
 	private JLabel jLabelPriceList;
@@ -242,6 +246,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	private static final Dimension PatientDimension = new Dimension(300,20);
 	private static final Dimension LabelsDimension = new Dimension(60,20);
+	private static final Dimension UserDimension = new Dimension(190,20);
 	private static final int PanelWidth = 450;
 	private static final int ButtonWidth = 190;
 	private static final int ButtonWidthBill = 190;
@@ -584,8 +589,22 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jPanelDate.add(getJCalendarDate());
 			jPanelDate.add(getJButtonPickPatient());
 			jPanelDate.add(getJButtonTrashPatient());
+			if (!GeneralData.getGeneralData().getSINGLEUSER()) {
+				jPanelDate.add(getJLabelUser());
+			}
 		}
 		return jPanelDate;
+	}
+
+	private JLabel getJLabelUser() {
+		if (jLabelUser == null) {
+			jLabelUser = new JLabel(MainMenu.getUser().getUserName());
+			jLabelUser.setPreferredSize(UserDimension);
+			jLabelUser.setHorizontalAlignment(SwingConstants.RIGHT);
+			jLabelUser.setForeground(Color.BLUE);
+			jLabelUser.setFont(new Font(jLabelUser.getFont().getName(), Font.BOLD, jLabelUser.getFont().getSize() + 2));
+		}
+		return jLabelUser;
 	}
 
 	private JButton getJButtonTrashPatient() {

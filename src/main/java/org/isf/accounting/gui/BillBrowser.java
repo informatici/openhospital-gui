@@ -165,6 +165,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JButton jButtonToday;
 	
 	private String[] columnNames = {
+			MessageBundle.getMessage("angal.billbrowser.user.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.billbrowser.patientID.col").toUpperCase(),
@@ -174,12 +175,13 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			MessageBundle.getMessage("angal.common.status.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.billbrowser.balance.col").toUpperCase()
 	};
-	private int[] columnWidths = {50, 150, 50, 50, 100, 150, 50, 100};
-	private int[] maxWidth = {150, 150, 150, 200, 100, 150, 50, 100};
-	private boolean[] columnsResizable = {false, false, false, true, false, false, false, false};
-	private Class<?>[] columnsClasses = {Integer.class, String.class, String.class, String.class, Double.class, String.class, String.class, Double.class};
-	private boolean[] alignCenter = {true, true, true, false, false, true, true, false};
-	private boolean[] boldCenter = {true, false, false, false, false, false, false, false};
+	private boolean[] columnShow = {!GeneralData.getGeneralData().getSINGLEUSER(), true, true, true, true, true, true, true, true};
+	private int[] columnWidths = {50, 50, 150, 50, 50, 100, 150, 50, 100};
+	private int[] maxWidth = {50, 150, 150, 150, 200, 100, 150, 50, 100};
+	private boolean[] columnsResizable = {false, false, false, false, true, false, false, false, false};
+	private Class<?>[] columnsClasses = {String.class, Integer.class, String.class, String.class, String.class, Double.class, String.class, String.class, Double.class};
+	private boolean[] alignCenter = {false, true, true, true, false, false, true, true, false};
+	private boolean[] boldCenter = {false, true, false, false, false, false, false, false, false};
 	
 	//Totals
 	private BigDecimal totalToday;
@@ -204,6 +206,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private String user = UserBrowsingManager.getCurrentUser();
 	private ArrayList<String> users;
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
+	
 	
 	public BillBrowser() {
 		try {
@@ -924,6 +927,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						jTableClosed.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 					}
 				}
+				if (!columnShow[i]) {
+					jTableClosed.getColumnModel().getColumn(i).setWidth(0);
+					jTableClosed.getColumnModel().getColumn(i).setMinWidth(0);
+					jTableClosed.getColumnModel().getColumn(i).setMaxWidth(0);
+				}
 			}
 			jTableClosed.setAutoCreateColumnsFromModel(false);
 			jTableClosed.setDefaultRenderer(String.class, new StringTableCellRenderer());
@@ -956,6 +964,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						jTablePending.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 					}
 				}
+				if (!columnShow[i]) {
+					jTablePending.getColumnModel().getColumn(i).setWidth(0);
+					jTablePending.getColumnModel().getColumn(i).setMinWidth(0);
+					jTablePending.getColumnModel().getColumn(i).setMaxWidth(0);
+				}
 			}
 			jTablePending.setAutoCreateColumnsFromModel(false);
 			jTablePending.setDefaultRenderer(String.class, new StringTableCellRenderer());
@@ -987,6 +1000,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					if (boldCenter[i]) {
 						jTableBills.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 					}
+				}
+				if (!columnShow[i]) {
+					jTableBills.getColumnModel().getColumn(i).setWidth(0);
+					jTableBills.getColumnModel().getColumn(i).setMinWidth(0);
+					jTableBills.getColumnModel().getColumn(i).setMaxWidth(0);
 				}
 			}
 			jTableBills.setAutoCreateColumnsFromModel(false);
@@ -1036,8 +1054,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							return false;
 						}
 					});
-			jTableToday.getColumnModel().getColumn(1).setPreferredWidth(3);
-			jTableToday.getColumnModel().getColumn(4).setPreferredWidth(3);
+			jTableToday.getColumnModel().getColumn(1).setMinWidth(3);
+			jTableToday.getColumnModel().getColumn(4).setMinWidth(3);
 			jTableToday.setRowSelectionAllowed(false);
 			jTableToday.setGridColor(Color.WHITE);
 		}
@@ -1071,8 +1089,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					return false;
 				}
 			});
-			jTablePeriod.getColumnModel().getColumn(1).setPreferredWidth(3);
-			jTablePeriod.getColumnModel().getColumn(4).setPreferredWidth(3);
+			jTablePeriod.getColumnModel().getColumn(1).setMinWidth(3);
+			jTablePeriod.getColumnModel().getColumn(4).setMinWidth(3);
 			jTablePeriod.setRowSelectionAllowed(false);
 			jTablePeriod.setGridColor(Color.WHITE);
 
@@ -1313,14 +1331,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			return tableArray.size();
 		}
 		
-		//["Date", "Patient", "Balance", "Update", "Status", "Amount"};
-
 		@Override
 		public Object getValueAt(int r, int c) {
 			int index = -1;
 			Bill thisBill = tableArray.get(r);
 			if (c == index) {
 				return thisBill;
+			}
+			if (c == ++index) {
+				return thisBill.getUser();
 			}
 			if (c == ++index) {
 				return thisBill.getId();
