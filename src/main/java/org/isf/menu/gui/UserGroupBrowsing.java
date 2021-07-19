@@ -104,6 +104,14 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 		JPanel buttonPanel = new JPanel();
 
+		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
+		buttonNew.addActionListener(event -> {
+			group = new UserGroup();
+			new GroupEdit(myFrame, group,true);
+		});
+		buttonPanel.add(buttonNew);
+
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(event -> {
@@ -117,14 +125,6 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		});
 		buttonPanel.add(buttonEdit);
 
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
-		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		buttonNew.addActionListener(event -> {
-			group = new UserGroup();
-			new GroupEdit(myFrame, group,true);
-		});
-		buttonPanel.add(buttonNew);
-		
 		JButton buttonPrivilege = new JButton(MessageBundle.getMessage("angal.groupsbrowser.groupmenu.btn"));
 		buttonPrivilege.setMnemonic(MessageBundle.getMnemonic("angal.groupsbrowser.groupmenu.btn.key"));
 		buttonPrivilege.addActionListener(event -> {
