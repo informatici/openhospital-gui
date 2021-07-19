@@ -152,7 +152,7 @@ public class LabEditExtended extends ModalJFrame {
 	private GregorianCalendar dateIn = null;
 
 	
-	private static final Integer panelWidth=500; 
+	private static final Integer panelWidth=525;
 	private static final Integer labelWidth=50; 
 	private static final Integer dataPanelHeight=90;
 	private static final Integer dataPatientHeight=100;
@@ -238,24 +238,24 @@ public class LabEditExtended extends ModalJFrame {
 			examDateFieldCal.setBounds(labelWidth+5, 10, 90, 20);
 			//material
 			matLabel = new JLabel(MessageBundle.getMessage("angal.lab.material"));
-			matLabel.setBounds(155, 10, labelWidth, 20);
+			matLabel.setBounds(155, 10, 150, 20);
 			matComboBox= getMatComboBox();
-			matComboBox.setBounds(215, 10, 280, 20);
+			matComboBox.setBounds(225, 10, 300, 20);
 			//exam combo
 			examLabel = new JLabel(MessageBundle.getMessage("angal.lab.exam"));
 			examLabel.setBounds(5, 35, labelWidth, 20);
 			examComboBox=getExamComboBox();
-			examComboBox.setBounds(labelWidth+5, 35, 440, 20);
+			examComboBox.setBounds(labelWidth+5, 35, 470, 20);
 
 			//patient (in or out) data
 			patientLabel = new JLabel(MessageBundle.getMessage("angal.lab.patientcode"));
-			patientLabel.setBounds(labelWidth+5, 60, 110 , 20);
+			patientLabel.setBounds(labelWidth+5, 60, 120, 20);
 			
 			//ADDED: Alex
 			inPatientCheckBox = getInPatientCheckBox();
 			inPatientCheckBox.setBounds(5, 60, labelWidth, 20);
 			jTextPatientSrc = new VoLimitedTextField(200,20);
-			jTextPatientSrc.setBounds(labelWidth+50,60,100,20);
+			jTextPatientSrc.setBounds(labelWidth+70,60,90,20);
 			
 			jTextPatientSrc.addKeyListener(new KeyListener() {
 				public void keyTyped(KeyEvent e) 
@@ -278,7 +278,7 @@ public class LabEditExtended extends ModalJFrame {
 				public void keyReleased(KeyEvent e) {}
 			});
 			patientComboBox = getPatientComboBox(s);
-			patientComboBox.setBounds(labelWidth+160, 60, 285, 20);
+			patientComboBox.setBounds(labelWidth+170, 60, 305, 20);
 
 			//add all to the data panel
 			dataPanel.add(examDateLabel, null);
@@ -327,20 +327,19 @@ public class LabEditExtended extends ModalJFrame {
 			nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
 			nameLabel.setBounds(10, 20, labelWidth, 20);
 			patTextField=getPatientTextField();
-			patTextField.setBounds(labelWidth+5, 20, 180, 20);
+			patTextField.setBounds(labelWidth+5, 20, 200, 20);
 			ageLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
-			ageLabel.setBounds(255, 20, 35, 20);
+			ageLabel.setBounds(270, 20, 35, 20);
 			ageTextField=getAgeTextField();
-			ageTextField.setBounds(295, 20, 50, 20);
+			ageTextField.setBounds(310, 20, 50, 20);
 			sexLabel = new JLabel(MessageBundle.getMessage("angal.lab.sexmf"));
-			sexLabel.setBounds(370, 20, 80, 20);
+			sexLabel.setBounds(380, 20, 80, 20);
 			sexTextField=getSexTextField();
-			sexTextField.setBounds(440, 20, 50, 20);
+			sexTextField.setBounds(460, 20, 50, 20);
 			//note			
 			noteLabel = new JLabel(MessageBundle.getMessage("angal.lab.note"));
 			noteLabel.setBounds(10, 50, labelWidth, 20);
 			noteTextArea = getNoteTextArea();
-			noteTextArea.setBounds(labelWidth+5, 50, 440, 35);
 			noteTextArea.setEditable(true);
 			noteTextArea.setWrapStyleWord(true);
 			noteTextArea.setAutoscrolls(true);
@@ -348,10 +347,9 @@ public class LabEditExtended extends ModalJFrame {
 			/*
 			 * Teo : Adding scroll capabilities at note textArea
 			 */
-			if (noteScrollPane == null)
-			{
+			if (noteScrollPane == null) {
 				noteScrollPane = new JScrollPane(noteTextArea);
-				noteScrollPane.setBounds(labelWidth+5, 50, 440, 35);
+				noteScrollPane.setBounds(labelWidth+5, 50, 460, 35);
 				noteScrollPane.createVerticalScrollBar();
 				noteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 				noteScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
