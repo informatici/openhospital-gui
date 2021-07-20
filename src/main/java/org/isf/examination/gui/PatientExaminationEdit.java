@@ -33,10 +33,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +54,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -67,6 +69,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 
 import org.isf.examination.manager.ExaminationBrowserManager;
@@ -79,6 +82,7 @@ import org.isf.menu.manager.Context;
 import org.isf.stat.gui.report.GenericReportExamination;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.IconButton;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ScaledJSlider;
@@ -86,8 +90,6 @@ import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
 import org.isf.utils.time.Converters;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class PatientExaminationEdit extends ModalJFrame {
 
@@ -177,11 +179,12 @@ public class PatientExaminationEdit extends ModalJFrame {
 			MessageBundle.getMessage("angal.examination.diuresisvolume24habbr.col").toUpperCase(),
 			MessageBundle.getMessage("angal.examination.diuresisabbr.col").toUpperCase(),
 			MessageBundle.getMessage("angal.examination.bowelabbr.col").toUpperCase(),
-			MessageBundle.getMessage("angal.examination.auscultationabbr.col").toUpperCase()
+			MessageBundle.getMessage("angal.examination.auscultationabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.note.col").toUpperCase()
 	};
-	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, String.class, String.class};
-	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70};
-	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER};
+	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, String.class, String.class, JButton.class};
+	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70, 100};
+	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER};
 	
 	private static final String DATE_FORMAT = "dd/MM/yy HH:mm";
 
@@ -910,7 +913,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			gbl_jNotePanel.rowWeights = new double[] { 0.0, 1.0};
 			jNotePanel.setLayout(gbl_jNotePanel);
 			
-			JLabel jLabelNote = new JLabel(MessageBundle.getMessage("angal.examination.note")); //$NON-NLS-1$
+			JLabel jLabelNote = new JLabel(MessageBundle.getMessage("angal.examination.note"), new ImageIcon("rsc/icons/list_button.png"), JLabel.LEFT); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelNote = new GridBagConstraints();
 			gbc_jLabelNote.anchor = GridBagConstraints.WEST;
 			gbc_jLabelNote.insets = new Insets(5, 5, 5, 5);
@@ -1855,16 +1858,36 @@ public class PatientExaminationEdit extends ModalJFrame {
 	
 	private JScrollPane getJTableSummary() {
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setPreferredSize(new Dimension(400, 150));
+		scrollPane.setPreferredSize(new Dimension(500, 150));
+		TableCellRenderer buttonRenderer = new JTableButtonRenderer();
 		jTableSummary = new JTable(new JTableModelSummary());
-		for (int i = 0; i < columnNames.length; i++) {
+		for (int i = 0; i < columnNames.length - 1; i++) { //last column is for JButton
 			jTableSummary.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
 			jTableSummary.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
 		}
+		jTableSummary.getColumnModel().getColumn(columnNames.length - 1).setCellRenderer(buttonRenderer);
 		jTableSummary.setShowGrid(false);
 		
 		JTableHeader header = jTableSummary.getTableHeader();
 		header.setBackground(Color.white);
+		
+		jTableSummary.addMouseListener(new MouseAdapter() {
+
+			public void mouseClicked(MouseEvent me) {
+				int column = jTableSummary.getColumnModel().getColumnIndexAtX(me.getX()); // get the column of the button
+				JTable target = (JTable) me.getSource();
+				int row = target.getSelectedRow(); // select a row
+
+				/*Checking the row or column is valid or not*/
+				if (row < jTableSummary.getRowCount() && row >= 0 && column < jTableSummary.getColumnCount() && column >= 0) {
+					Object value = jTableSummary.getValueAt(row, column);
+					if (value instanceof JButton) {
+						/*perform a click event*/
+						((JButton) value).doClick();
+					}
+				}
+			}
+		});
 		
 		scrollPane.setViewportView(jTableSummary);
 		scrollPane.getViewport().setBackground(Color.white);
@@ -1882,6 +1905,15 @@ public class PatientExaminationEdit extends ModalJFrame {
 			
 		}
 		return jEditorPaneSummary;
+	}
+	
+	private static class JTableButtonRenderer implements TableCellRenderer {
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			JButton button = (JButton) value;
+			return button;
+		}
 	}
 	
 	public class JTableModelSummary extends AbstractTableModel {
@@ -1953,6 +1985,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			String diuresis = patex.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc());
 			String bowel = patex.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc());
 			String ausc = patex.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation());
+			String note = patex.getPex_note();
 			if (c == -1) {
 				return patex;
 			} else if (c == 0) {
@@ -1979,8 +2012,25 @@ public class PatientExaminationEdit extends ModalJFrame {
 				return diuresis;
 			} else if (c == 11) {
 				return bowel;
-			}else if (c == 12) {
+			} else if (c == 12) {
 				return ausc;
+			} else if (c == 13) {
+				if (!note.trim().isEmpty()) {
+					final IconButton button = new IconButton(new ImageIcon("rsc/icons/list_button.png"));
+					button.addActionListener(new ActionListener() {
+
+						public void actionPerformed(ActionEvent arg0) {
+							VoLimitedTextArea noteArea = new VoLimitedTextArea(150, 6, 20);
+							noteArea.setText(note);
+							JOptionPane.showMessageDialog(PatientExaminationEdit.this, 
+											new JScrollPane(noteArea), 
+											MessageBundle.getMessage("angal.examination.note"), //$NON-NLS-1$
+											JOptionPane.INFORMATION_MESSAGE);
+						}
+					});
+					return button;
+				}
+				return null;
 			}
 			return null;
 		}
