@@ -783,13 +783,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				selectPatient.setVisible(true);
 				Patient pat = selectPatient.getPatient();
 
-				// get bill items
-				List<BillItems> itemsList = new ArrayList<>();
-
 				try {
-					// FIXME: why need to call getDistinctItems() here ?????
-					itemsList = billManager.getDistinctItems();
-
 					patientSelected(pat);
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
@@ -1258,7 +1252,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			
 			tableArray.clear();
 			mapBill.clear();
-			
 			mapping(status);
 		}
 		
