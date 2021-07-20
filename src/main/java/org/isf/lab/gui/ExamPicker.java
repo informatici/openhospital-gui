@@ -267,7 +267,8 @@ public class ExamPicker extends javax.swing.JPanel {
         
         jPanel2.setBackground(new java.awt.Color(240, 240, 240));
 
-        jButtonSelect.setText(MessageBundle.getMessage("angal.ward.select")); 
+        jButtonSelect.setText(MessageBundle.getMessage("angal.common.select.btn"));
+        jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
         jButtonSelect.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButtonSelectMouseClicked(evt);
@@ -288,7 +289,7 @@ public class ExamPicker extends javax.swing.JPanel {
         });
         
         add(jPanel2, BorderLayout.SOUTH);
-        jPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+        jPanel2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         jPanel2.add(jButtonSelect);
         jPanel2.add(jButtonCancel);
     }
@@ -297,24 +298,22 @@ public class ExamPicker extends javax.swing.JPanel {
         
     }
 
-    private void validateSelection() {
-	       this.setSelectedRow(this.jTableData.getSelectedRow());
-	       this.setVisible(false);
-	       this.getParentFrame().dispose();
-	       
-    }
+	private void validateSelection() {
+		this.setSelectedRow(this.jTableData.getSelectedRow());
+		this.setVisible(false);
+		this.getParentFrame().dispose();
+	}
 
-    private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {
-       this.setSelectedRow(this.jTableData.getSelectedRow());
-            this.setVisible(false);
-            this.getParentFrame().dispose();
-    }
+	private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {
+		this.setSelectedRow(this.jTableData.getSelectedRow());
+		this.setVisible(false);
+		this.getParentFrame().dispose();
+	}
 
-    private void jButtonSelectMouseClicked(java.awt.event.MouseEvent evt) {  
-           
-            this.setSelectedRow(this.jTableData.getSelectedRow());
-            this.setVisible(false);
-            this.getParentFrame().dispose();
+	private void jButtonSelectMouseClicked(java.awt.event.MouseEvent evt) {
+		this.setSelectedRow(this.jTableData.getSelectedRow());
+		this.setVisible(false);
+		this.getParentFrame().dispose();
 	}
     
     private void jButtonQuitMouseClicked(java.awt.event.MouseEvent evt) {                                      
@@ -345,7 +344,6 @@ public class ExamPicker extends javax.swing.JPanel {
 
 	private void setSelectedRow(int selectedRow) {
 		this.selectedRow = selectedRow;
-            
 	}
 
 	

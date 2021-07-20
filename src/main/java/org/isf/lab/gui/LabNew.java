@@ -781,6 +781,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					examPicker.setSize(300, 400);
 
 					JDialog dialog = new JDialog();
+					dialog.setTitle(MessageBundle.getMessage("angal.stat.examslist")); // TODO: use more correct key
 					dialog.setLocationRelativeTo(null);
 					dialog.setSize(600, 350);
 					dialog.setLocationRelativeTo(null);
@@ -850,7 +851,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					
 					int selectedRow = jTableExams.getSelectedRow();
 					if (selectedRow < 0) {
-						MessageDialog.error(LabNew.this,"angal.labnew.pleaseselectanexam");
+						MessageDialog.error(LabNew.this,"angal.lab.pleaseselectanexam.msg");
 					} else {
 						examItems.remove(selectedRow);
 						jPanelResults.removeAll();
