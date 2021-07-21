@@ -991,6 +991,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							user);                                       //User
 					try {
 						billManager.newBill(newBill, billItems, payItems);
+						thisBill.setId(newBill.getId());
 					} catch(OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex, PatientBillEdit.this);
 						return;
