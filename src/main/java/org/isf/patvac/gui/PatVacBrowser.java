@@ -841,29 +841,29 @@ public class PatVacBrowser extends ModalJFrame {
 			return c;
 		}
 
-		/** 
-	     * This method converts a column number in the table
-	     * to the right number in the data.
-	     */
+		/**
+		 * This method converts a column number in the table 
+		 * to the right number in the data.
+		 */
 		protected int getNumber(int col) {
-	    	// right number to return
-	        int n = col;    
-	        int i = 0;
-	        do {
-	            if (!columnsVisible[i]) {
-	            	n++;
-	            }
-	            i++;
-	        } while (i < n);
-	        // If we are on an invisible column, 
-	        // we have to go one step further
-	        while (!columnsVisible[n]) {
-	        	n++;
-	        }
-	        return n;
-	    }
+			// right number to return
+			int n = col;
+			int i = 0;
+			do {
+				if (!columnsVisible[i]) {
+					n++;
+				}
+				i++;
+			} while (i < n);
+			// If we are on an invisible column,
+			// we have to go one step further
+			while (!columnsVisible[n]) {
+				n++;
+			}
+			return n;
+		}
 	    
-	    @Override
+		@Override
 		public Object getValueAt(int r, int c) {
 			PatientVaccine patVac = lPatVac.get(r);
 			if (c == -1) {
@@ -877,14 +877,14 @@ public class PatVacBrowser extends ModalJFrame {
 			} else if (getNumber(c) == 3) {
 				return patVac.getPatAge();
 			} else if (getNumber(c) == 4) {
-			    return patVac.getVaccine().getDescription();
-		    } else if (getNumber(c) == 5) {
-			    return patVac.getVaccine().getVaccineType().getDescription();
-		    } 
+				return patVac.getVaccine().getDescription();
+			} else if (getNumber(c) == 5) {
+				return patVac.getVaccine().getVaccineType().getDescription();
+			}
 			return null;
 		}
 
-	    @Override
+		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
 		}
