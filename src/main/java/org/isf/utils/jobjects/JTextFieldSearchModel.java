@@ -120,7 +120,7 @@ public class JTextFieldSearchModel extends JPanel {
 			
 			int ok = JOptionPane.showConfirmDialog(owner,
 					panel, 
-					MessageBundle.getMessage("angal.medicalstock.chooseamedical.msg"),
+					MessageBundle.getMessage("angal.medicalstock.multiplecharging.chooseamedical"),
 					JOptionPane.YES_NO_OPTION);
 			
 			if (ok == JOptionPane.OK_OPTION) {
@@ -140,7 +140,7 @@ public class JTextFieldSearchModel extends JPanel {
 			
 			TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.medicalstock.typeacodeoradescriptionandpressenter"), 
 					jTextFieldSearch, 
-					Show.FOCUS_LOST);
+					Show.FOCUS_GAINED);
 			{
 				suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14));
 				suggestion.setForeground(Color.GRAY);
