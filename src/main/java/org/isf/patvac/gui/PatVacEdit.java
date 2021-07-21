@@ -23,8 +23,6 @@ package org.isf.patvac.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -582,14 +580,12 @@ public class PatVacEdit extends JDialog {
 			} else
 				selectedPatient = null;
 		}
-		patientComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		patientComboBox.addActionListener(e -> {
 				if (patientComboBox.getSelectedIndex() > 0) {
 					selectedPatient = (Patient) patientComboBox.getSelectedItem();
 					setPatient(selectedPatient);
 				} else
 					selectedPatient = null;
-			}
 		});
 
 		return patientComboBox;
@@ -701,8 +697,7 @@ public class PatVacEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+			okButton.addActionListener(e -> {
 
 					GregorianCalendar gregDate = new GregorianCalendar();
 					gregDate.setTime(vaccineDateFieldCal.getDate());
@@ -718,13 +713,10 @@ public class PatVacEdit extends JDialog {
 					patVac.setVaccine((Vaccine) vaccineComboBox.getSelectedItem());
 					patVac.setPatient(selectedPatient);
 					patVac.setLock(0);
-					patVac.setPatName(selectedPatient.getName());
-					patVac.setPatSex(selectedPatient.getSex());
 
 					boolean result;
 					// handling db insert/update
 					if (insert) {
-						patVac.setPatAge(selectedPatient.getAge());
 						try {
 							result = patientVaccineManager.newPatientVaccine(patVac);
 						} catch (OHServiceException e1) {
@@ -742,11 +734,10 @@ public class PatVacEdit extends JDialog {
 
 					if (!result) {
 						MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
+						return;
 					} else {
-						patVac = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(), new Vaccine("", "", new VaccineType("", "")), 0);
 						dispose();
 					}
-				}
 			});
 		}
 		return okButton;
@@ -761,10 +752,8 @@ public class PatVacEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+			cancelButton.addActionListener(e -> {
 					dispose();
-				}
 			});
 		}
 		return cancelButton;

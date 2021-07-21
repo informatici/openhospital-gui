@@ -251,10 +251,7 @@ public class PatVacBrowser extends ModalJFrame {
 								                  patientVaccine.getVaccineDate(),
 								                  patientVaccine.getPatient(),
 								                  patientVaccine.getVaccine(),
-								                  patientVaccine.getLock(),
-								                  patientVaccine.getPatName(),
-								                  patientVaccine.getPatAge(),
-								                  patientVaccine.getPatSex());
+								                  patientVaccine.getLock());
 					
 					new PatVacEdit(myFrame, patientVaccine, false);
 					
