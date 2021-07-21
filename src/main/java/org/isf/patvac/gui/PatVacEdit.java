@@ -546,7 +546,7 @@ public class PatVacEdit extends JDialog {
 		if (GeneralData.ENHANCEDSEARCH){
 			try {
 				patientList = patientManager.getPatientsByOneOfFieldsLike(regExp);
-			}catch(OHServiceException ex){
+			} catch (OHServiceException ex){
 				OHServiceExceptionUtil.showMessages(ex);
 				patientList = new ArrayList<>();
 			}
