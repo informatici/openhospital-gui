@@ -423,12 +423,9 @@ public class PatVacEdit extends JDialog {
 			if (vaccineTypeSel != null)
 				vaccineTypeComboBox.setSelectedItem(vaccineTypeSel);
 
-			vaccineTypeComboBox.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
+			vaccineTypeComboBox.addActionListener(e -> {
 					vaccineComboBox.removeAllItems();
 					getVaccineComboBox();
-				}
 			});
 		}
 		return vaccineTypeComboBox;
@@ -444,9 +441,8 @@ public class PatVacEdit extends JDialog {
 		if (vaccineComboBox == null) {
 			vaccineComboBox = new JComboBox<Vaccine>();
 			vaccineComboBox.setPreferredSize(new Dimension(200, 30));
-			vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
 		}
-		
+		vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
 		ArrayList<Vaccine> allVac = null;
 		try {
 			if (((VaccineType) vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))) {
@@ -733,14 +729,14 @@ public class PatVacEdit extends JDialog {
 							result = patientVaccineManager.newPatientVaccine(patVac);
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
-							result = false;
+							return;
 						}
 					} else {
 						try {
 							result = patientVaccineManager.updatePatientVaccine(patVac);
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
-							result = false;
+							return;
 						}
 					}
 
