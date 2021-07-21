@@ -393,8 +393,8 @@ public class LabEdit extends ModalJFrame {
 			buttonPanel = new JPanel();
 			buttonPanel.setBounds(0, dataPanelHeight+resultPanelHeight, panelWidth, buttonPanelHeight);
 			buttonPanel.add(getOkButton(), null);
-			buttonPanel.add(getCancelButton(), null);
 			buttonPanel.add(getPrintButton(),null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
