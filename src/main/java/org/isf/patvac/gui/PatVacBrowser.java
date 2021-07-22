@@ -211,7 +211,7 @@ public class PatVacBrowser extends ModalJFrame {
 							
 					PatientVaccine  last = new PatientVaccine(0,0,new GregorianCalendar(),new Patient(),
 							                     new Vaccine ("","",new VaccineType("","")),0);
-                    new PatVacEdit (myFrame, patientVaccine, true);
+                    new PatVacEdit(myFrame, patientVaccine, true);
                     
                     if (!last.equals(patientVaccine)) {
 						lPatVac.add(0, patientVaccine);
@@ -251,12 +251,9 @@ public class PatVacBrowser extends ModalJFrame {
 								                  patientVaccine.getVaccineDate(),
 								                  patientVaccine.getPatient(),
 								                  patientVaccine.getVaccine(),
-								                  patientVaccine.getLock(),
-								                  patientVaccine.getPatName(),
-								                  patientVaccine.getPatAge(),
-								                  patientVaccine.getPatSex());
+								                  patientVaccine.getLock());
 					
-					new PatVacEdit (myFrame, patientVaccine, false);
+					new PatVacEdit(myFrame, patientVaccine, false);
 					
 					if (!last.equals(patientVaccine)) {
 						((PatVacBrowsingModel) jTable.getModel()).fireTableDataChanged();
@@ -821,16 +818,19 @@ public class PatVacBrowser extends ModalJFrame {
 			}
 		}
 
+		@Override
 		public int getRowCount() {
 			if (lPatVac == null)
 				return 0;
 			return lPatVac.size();
 		}
-
+		
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[getNumber(c)];
 		}
 
+		@Override
 		public int getColumnCount() {
 			int c = 0;
 			for (int i = 0; i < columnsVisible.length; i++) {
@@ -841,33 +841,29 @@ public class PatVacBrowser extends ModalJFrame {
 			return c;
 		}
 
-		/** 
-	     * This method converts a column number in the table
-	     * to the right number in the data.
-	     */
-	    protected int getNumber(int col) {
-	    	// right number to return
-	        int n = col;    
-	        int i = 0;
-	        do {
-	            if (!columnsVisible[i]) {
-	            	n++;
-	            }
-	            i++;
-	        } while (i < n);
-	        // If we are on an invisible column, 
-	        // we have to go one step further
-	        while (!columnsVisible[n]) {
-	        	n++;
-	        }
-	        return n;
-	    }
-	    
 		/**
-		 * Note: We must get the objects in a reversed way because of the query
-		 * 
-		 * @see org.isf.patvac.service.PatVacIoOperations
+		 * This method converts a column number in the table 
+		 * to the right number in the data.
 		 */
+		protected int getNumber(int col) {
+			// right number to return
+			int n = col;
+			int i = 0;
+			do {
+				if (!columnsVisible[i]) {
+					n++;
+				}
+				i++;
+			} while (i < n);
+			// If we are on an invisible column,
+			// we have to go one step further
+			while (!columnsVisible[n]) {
+				n++;
+			}
+			return n;
+		}
+	    
+		@Override
 		public Object getValueAt(int r, int c) {
 			PatientVaccine patVac = lPatVac.get(r);
 			if (c == -1) {
@@ -875,20 +871,20 @@ public class PatVacBrowser extends ModalJFrame {
 			} else if (getNumber(c) == 0) {
 				return dateFormat.format(patVac.getVaccineDate().getTime());
 			} else if (getNumber(c) == 1) {
-				return patVac.getPatName();
+				return patVac.getPatient().getName();
 			} else if (getNumber(c) == 2) {
 				return patVac.getPatSex();
 			} else if (getNumber(c) == 3) {
 				return patVac.getPatAge();
 			} else if (getNumber(c) == 4) {
-			    return patVac.getVaccine().getDescription();
-		    } else if (getNumber(c) == 5) {
-			    return patVac.getVaccine().getVaccineType().getDescription();
-		    } 
+				return patVac.getVaccine().getDescription();
+			} else if (getNumber(c) == 5) {
+				return patVac.getVaccine().getVaccineType().getDescription();
+			}
 			return null;
 		}
 
-		
+		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
 		}

@@ -21,10 +21,13 @@
  */
 package org.isf.patvac.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -78,25 +81,15 @@ public class PatVacEdit extends JDialog {
 	private JPanel jContentPane = null;
 	private JPanel buttonPanel = null;
 	private JPanel dataPanel = null;
-	private JPanel jPatientSearchPanel = null;
 	private JPanel dataPatient = null;
-
-	private JLabel vaccineLabel = null;
-	private JLabel patientLabel = null;
-	private JLabel nameLabel = null;
-	private JLabel ageLabel = null;
-	private JLabel sexLabel = null;
-	private JLabel vaccineDateLabel = null;
-	private JLabel progrLabel = null;
-	private JLabel vaccineTypeLabel = null;
 
 	private JButton okButton = null;
 	private JButton cancelButton = null;
 	private JButton jSearchButton = null;
 
-	private JComboBox vaccineComboBox = null;
-	private JComboBox patientComboBox = null;
-	private JComboBox vaccineTypeComboBox = null;
+	private JComboBox<Vaccine> vaccineComboBox = null;
+	private JComboBox<Object> patientComboBox = null;
+	private JComboBox<VaccineType> vaccineTypeComboBox = null;
 
 	private VoLimitedTextField patTextField = null;
 	private VoLimitedTextField ageTextField = null;
@@ -107,17 +100,18 @@ public class PatVacEdit extends JDialog {
 	private Patient selectedPatient = null;
 	private String lastKey;
 	private String s;
-	private ArrayList<Patient> pat = null;
+	private ArrayList<Patient> patientList = null;
 	private CustomJDateChooser vaccineDateFieldCal = null;
 	private GregorianCalendar dateIn = null;
 	private int patNextYProg;
 
-	private static final Integer panelWidth = 500;
-	private static final Integer labelWidth = 50;
-	private static final Integer dataPanelHeight = 180;
-	private static final Integer dataPatientHeight = 100;
-	private static final Integer buttonPanelHeight = 40;
-	private static final Integer DeltaBetweenLabels = 40;
+	private JPanel centerPanel;
+	private JPanel patientPanel;
+	
+	private VaccineBrowserManager vaccineManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+	private PatVacManager patientVaccineManager = Context.getApplicationContext().getBean(PatVacManager.class);
+	private VaccineTypeBrowserManager vaccineTypeManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	public PatVacEdit(JFrame myFrameIn, PatientVaccine patientVaccineIn, boolean action) {
 		super(myFrameIn, true);
@@ -129,9 +123,9 @@ public class PatVacEdit extends JDialog {
 	}
 
 	private int getPatientVaccineYMaxProg() {
-		PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
+		
 		try {
-			return manager.getProgYear(0);
+			return patientVaccineManager.getProgYear(0);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 			return 0;
@@ -143,7 +137,6 @@ public class PatVacEdit extends JDialog {
 	 */
 	private void initialize() {
 
-		this.setBounds(30, 100, panelWidth + 20, dataPanelHeight + dataPatientHeight + buttonPanelHeight + 30);
 		this.setContentPane(getJContentPane());
 		this.setResizable(false);
 		if (insert) {
@@ -152,6 +145,7 @@ public class PatVacEdit extends JDialog {
 			this.setTitle(MessageBundle.getMessage("angal.patvac.edipatientvaccine.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
@@ -164,10 +158,9 @@ public class PatVacEdit extends JDialog {
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
-			jContentPane.setLayout(null);
-			jContentPane.add(getDataPanel());
-			jContentPane.add(getDataPatient());
-			jContentPane.add(getButtonPanel());
+			jContentPane.setLayout(new BorderLayout());
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
+			jContentPane.add(getCenterPanel(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -182,121 +175,161 @@ public class PatVacEdit extends JDialog {
 		if (dataPanel == null) {
 			// initialize data panel
 			dataPanel = new JPanel();
-			dataPanel.setLayout(null);
-			dataPanel.setBounds(0, 0, panelWidth, dataPanelHeight);
-
-			// vaccine date
-			vaccineDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
-			vaccineDateLabel.setBounds(5, 10, labelWidth, 20);
-			vaccineDateFieldCal = getVaccineDateFieldCal();
-			vaccineDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			vaccineDateFieldCal.setDateFormatString("dd/MM/yy");
-			vaccineDateFieldCal.setBounds(labelWidth + 50, 10, 90, 20);
-			// progressive
-			progrLabel = new JLabel(MessageBundle.getMessage("angal.patvac.progressive"));
-			progrLabel.setBounds(280, 10, labelWidth + 200, 20);
-			progrTextField = getProgrTextField();
-			progrTextField.setBounds(445, 10, 50, 20);
-
-			// vaccineType combo box
-			vaccineTypeLabel = new JLabel(MessageBundle.getMessage("angal.patvac.vaccinetype"));
-			vaccineTypeLabel.setBounds(5, 2 * DeltaBetweenLabels, labelWidth + 70, 20);
-			vaccineTypeComboBox = getVaccineTypeComboBox();
-			vaccineTypeComboBox.setBounds(labelWidth + 50, 2 * DeltaBetweenLabels, 400, 20);
-
-			// vaccine combo box
-			vaccineLabel = new JLabel(MessageBundle.getMessage("angal.patvac.vaccine"));
-			vaccineLabel.setBounds(5, 3 * DeltaBetweenLabels, labelWidth, 20);
-			vaccineComboBox = getVaccineComboBox();
-			vaccineComboBox.setBounds(labelWidth + 50, 3 * DeltaBetweenLabels, 400, 20);
-
-			// add all to the data panel
-			dataPanel.add(vaccineDateLabel, null);
-			dataPanel.add(vaccineDateFieldCal, null);
-			dataPanel.add(progrLabel, null);
-			dataPanel.add(progrTextField, null);
-			dataPanel.add(getPatientSearchPanel(), null);
-			dataPanel.add(vaccineTypeLabel, null);
-			dataPanel.add(vaccineTypeComboBox, null);
-			dataPanel.add(vaccineLabel, null);
-			dataPanel.add(vaccineComboBox, null);
-		}
-		return dataPanel;
-	}
-
-	/**
-	 * This method initializes getPatientSearchPanel
-	 * 
-	 * @return JPanel
-	 */
-	private JPanel getPatientSearchPanel() {
-		if (jPatientSearchPanel == null) {
-			jPatientSearchPanel = new JPanel();
-			jPatientSearchPanel.setLayout(null);
-			jPatientSearchPanel.setBounds(0, 10, 500, 70);
-
-			patientLabel = new JLabel(MessageBundle.getMessage("angal.patvac.patientcode"));
-			patientLabel.setBounds(5, DeltaBetweenLabels - 8, labelWidth + 40, 20);
-			jTextPatientSrc = new JTextField();
-			jTextPatientSrc.setBounds(labelWidth + 50, DeltaBetweenLabels - 8, 100, 20);
-
+			GridBagLayout gbl_dataPanel = new GridBagLayout();
+			gbl_dataPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0};
+			dataPanel.setLayout(gbl_dataPanel);
+			
+			
+			//patient search fields
+			JLabel patientLabel = new JLabel(MessageBundle.getMessage("angal.patvac.searchpatient"));
+			GridBagConstraints gbc_jPatientLabel = new GridBagConstraints();
+			gbc_jPatientLabel.anchor = GridBagConstraints.WEST;
+			gbc_jPatientLabel.fill = GridBagConstraints.VERTICAL;
+			gbc_jPatientLabel.insets = new Insets(5, 5, 5, 5);
+			gbc_jPatientLabel.gridx = 0;
+			gbc_jPatientLabel.gridy = 1;
+			dataPanel.add(patientLabel, gbc_jPatientLabel);
+			
+			GridBagConstraints gbc_jPatientSearchField = new GridBagConstraints();
+			gbc_jPatientSearchField.fill = GridBagConstraints.BOTH;
+			gbc_jPatientSearchField.insets = new Insets(5, 5, 5, 5);
+			gbc_jPatientSearchField.gridx = 1;
+			gbc_jPatientSearchField.gridy = 1;
+			dataPanel.add(getJTextFieldSearchPatient(), gbc_jPatientSearchField);
+			
 			if (GeneralData.ENHANCEDSEARCH) {
-				jTextPatientSrc.addKeyListener(new KeyListener() {
-					public void keyPressed(KeyEvent e) {
-						int key = e.getKeyCode();
-						if (key == KeyEvent.VK_ENTER) {
-							jSearchButton.doClick();
-						}
-					}
-
-					public void keyReleased(KeyEvent e) {
-					}
-
-					public void keyTyped(KeyEvent e) {
-					}
-				});
-			} else {
-				jTextPatientSrc.addKeyListener(new KeyListener() {
-					public void keyTyped(KeyEvent e) {
-						lastKey = "";
-						String s = "" + e.getKeyChar();
-						if (Character.isLetterOrDigit(e.getKeyChar())) {
-							lastKey = s;
-						}
-						s = jTextPatientSrc.getText() + lastKey;
-						s = s.trim();
-						filterPatient(s);
-					}
-
-					public void keyPressed(KeyEvent e) {
-					}
-
-					public void keyReleased(KeyEvent e) {
-					}
-				});
-			} // search condition field
-
-			// patient data
-			jPatientSearchPanel.add(patientLabel, null);
-			jPatientSearchPanel.add(jTextPatientSrc, null);
-			patientComboBox = new JComboBox();
-			patientComboBox.setBounds(labelWidth + 180, DeltaBetweenLabels - 8, 270, 20);
-			patientComboBox.addItem(MessageBundle.getMessage("angal.patvac.selectapatient"));
-
-			if (GeneralData.ENHANCEDSEARCH) {
-				jPatientSearchPanel.add(getJSearchButton(), null);
-				s = (insert ? "-" : patVac.getPatName());
+				
+				GridBagConstraints gbc_jPatientSearchButton = new GridBagConstraints();
+				gbc_jPatientSearchButton.insets = new Insets(5, 5, 5, 5);
+				gbc_jPatientSearchButton.anchor = GridBagConstraints.WEST;
+				gbc_jPatientSearchButton.gridx = 2;
+				gbc_jPatientSearchButton.gridy = 1;
+				dataPanel.add(getJSearchButton(), gbc_jPatientSearchButton);
 			}
-			patientComboBox = getPatientComboBox(s);
-
+			
+			GridBagConstraints gbc_jPatientComboBox = new GridBagConstraints();
+			gbc_jPatientComboBox.gridwidth = 2;
+			gbc_jPatientComboBox.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jPatientComboBox.insets = new Insets(5, 5, 5, 5);
+			gbc_jPatientComboBox.gridx = 3;
+			gbc_jPatientComboBox.gridy = 1;
+			dataPanel.add(getPatientComboBox(s), gbc_jPatientComboBox);
+			
 			if (!insert) {
 				patientComboBox.setEnabled(false);
 				jTextPatientSrc.setEnabled(false);
 			}
 
-			jPatientSearchPanel.add(patientComboBox, null);
+			// vaccine date
+			JLabel vaccineDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
+			GridBagConstraints gbc_vaccineDateLabel = new GridBagConstraints();
+			gbc_vaccineDateLabel.anchor = GridBagConstraints.NORTHWEST;
+			gbc_vaccineDateLabel.insets = new Insets(5, 5, 5, 5);
+			gbc_vaccineDateLabel.gridx = 0;
+			gbc_vaccineDateLabel.gridy = 0;
+			dataPanel.add(vaccineDateLabel, gbc_vaccineDateLabel);
+			vaccineDateFieldCal = getVaccineDateFieldCal();
+			vaccineDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
+			vaccineDateFieldCal.setDateFormatString("dd/MM/yy");
+			GridBagConstraints gbc_vaccineDateFieldCal = new GridBagConstraints();
+			gbc_vaccineDateFieldCal.anchor = GridBagConstraints.WEST;
+			gbc_vaccineDateFieldCal.insets = new Insets(5, 5, 5, 5);
+			gbc_vaccineDateFieldCal.gridx = 1;
+			gbc_vaccineDateFieldCal.gridy = 0;
+			dataPanel.add(vaccineDateFieldCal, gbc_vaccineDateFieldCal);
+
+			// progressive
+			JLabel progrLabel = new JLabel(MessageBundle.getMessage("angal.patvac.progressive"));
+			GridBagConstraints gbc_progrLabel = new GridBagConstraints();
+			gbc_progrLabel.anchor = GridBagConstraints.NORTHEAST;
+			gbc_progrLabel.insets = new Insets(5, 5, 5, 5);
+			gbc_progrLabel.gridx = 3;
+			gbc_progrLabel.gridy = 0;
+			dataPanel.add(progrLabel, gbc_progrLabel);
+			GridBagConstraints gbc_progrTextField = new GridBagConstraints();
+			gbc_progrTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbc_progrTextField.anchor = GridBagConstraints.NORTHEAST;
+			gbc_progrTextField.insets = new Insets(5, 5, 5, 5);
+			gbc_progrTextField.gridx = 4;
+			gbc_progrTextField.gridy = 0;
+			dataPanel.add(getProgrTextField(), gbc_progrTextField);
+
+			// vaccineType combo box
+			JLabel vaccineTypeLabel = new JLabel(MessageBundle.getMessage("angal.patvac.vaccinetype"));
+			GridBagConstraints gbc_vaccineTypeLabel = new GridBagConstraints();
+			gbc_vaccineTypeLabel.anchor = GridBagConstraints.WEST;
+			gbc_vaccineTypeLabel.fill = GridBagConstraints.VERTICAL;
+			gbc_vaccineTypeLabel.insets = new Insets(5, 5, 5, 5);
+			gbc_vaccineTypeLabel.gridx = 0;
+			gbc_vaccineTypeLabel.gridy = 2;
+			dataPanel.add(vaccineTypeLabel, gbc_vaccineTypeLabel);
+			GridBagConstraints gbc_vaccineTypeComboBox = new GridBagConstraints();
+			gbc_vaccineTypeComboBox.fill = GridBagConstraints.BOTH;
+			gbc_vaccineTypeComboBox.insets = new Insets(5, 5, 5, 5);
+			gbc_vaccineTypeComboBox.gridwidth = 4;
+			gbc_vaccineTypeComboBox.gridx = 1;
+			gbc_vaccineTypeComboBox.gridy = 2;
+			dataPanel.add(getVaccineTypeComboBox(), gbc_vaccineTypeComboBox);
+
+			// vaccine combo box
+			JLabel vaccineLabel = new JLabel(MessageBundle.getMessage("angal.patvac.vaccine"));
+			GridBagConstraints gbc_vaccineLabel = new GridBagConstraints();
+			gbc_vaccineLabel.anchor = GridBagConstraints.WEST;
+			gbc_vaccineLabel.fill = GridBagConstraints.VERTICAL;
+			gbc_vaccineLabel.insets = new Insets(5, 5, 5, 5);
+			gbc_vaccineLabel.gridx = 0;
+			gbc_vaccineLabel.gridy = 3;
+			dataPanel.add(vaccineLabel, gbc_vaccineLabel);
+			GridBagConstraints gbc_vaccineComboBox = new GridBagConstraints();
+			gbc_vaccineComboBox.fill = GridBagConstraints.BOTH;
+			gbc_vaccineComboBox.insets = new Insets(5, 5, 5, 5);
+			gbc_vaccineComboBox.gridwidth = 4;
+			gbc_vaccineComboBox.gridx = 1;
+			gbc_vaccineComboBox.gridy = 3;
+			dataPanel.add(getVaccineComboBox(), gbc_vaccineComboBox);
+			
 		}
-		return jPatientSearchPanel;
+		return dataPanel;
+	}
+
+	private JTextField getJTextFieldSearchPatient() {
+		jTextPatientSrc = new JTextField();
+		if (GeneralData.ENHANCEDSEARCH) {
+			jTextPatientSrc.addKeyListener(new KeyListener() {
+				public void keyPressed(KeyEvent e) {
+					int key = e.getKeyCode();
+					if (key == KeyEvent.VK_ENTER) {
+						jSearchButton.doClick();
+					}
+				}
+
+				public void keyReleased(KeyEvent e) {
+				}
+
+				public void keyTyped(KeyEvent e) {
+				}
+			});
+		} else {
+			jTextPatientSrc.addKeyListener(new KeyListener() {
+				public void keyTyped(KeyEvent e) {
+					lastKey = "";
+					String s = "" + e.getKeyChar();
+					if (Character.isLetterOrDigit(e.getKeyChar())) {
+						lastKey = s;
+					}
+					s = jTextPatientSrc.getText() + lastKey;
+					s = s.trim();
+					filterPatient(s);
+				}
+
+				public void keyPressed(KeyEvent e) {
+				}
+
+				public void keyReleased(KeyEvent e) {
+				}
+			});
+		} // search condition field
+		return jTextPatientSrc;
 	}
 
 	/**
@@ -309,16 +342,13 @@ public class PatVacEdit extends JDialog {
 			jSearchButton = new JButton();
 			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			jSearchButton.setPreferredSize(new Dimension(20, 20));
-			jSearchButton.setBounds(labelWidth + 150, DeltaBetweenLabels - 8, 20, 20);
 			if (!insert) {
 				jSearchButton.setEnabled(false);
 			}
-			jSearchButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+			jSearchButton.addActionListener(e -> {
 					patientComboBox.removeAllItems();
 					resetPatVacPat();
 					getPatientComboBox(jTextPatientSrc.getText());
-				}
 			});
 		}
 		return jSearchButton;
@@ -339,7 +369,6 @@ public class PatVacEdit extends JDialog {
 		if (dateIn != null) {
 			myDate = dateIn.getTime();
 		}
-
 		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
 	}
 
@@ -350,7 +379,7 @@ public class PatVacEdit extends JDialog {
 	 */
 	private VoLimitedTextField getProgrTextField() {
 		if (progrTextField == null) {
-			progrTextField = new VoLimitedTextField(4);
+			progrTextField = new VoLimitedTextField(4, 5);
 			if (insert) {
 				progrTextField.setText(String.valueOf(patNextYProg));
 			} else {
@@ -366,21 +395,20 @@ public class PatVacEdit extends JDialog {
 	 * 
 	 * @return vaccineTypeComboBox (JComboBox)
 	 */
-	private JComboBox getVaccineTypeComboBox() {
+	private JComboBox<VaccineType> getVaccineTypeComboBox() {
 		if (vaccineTypeComboBox == null) {
-			vaccineTypeComboBox = new JComboBox();
+			vaccineTypeComboBox = new JComboBox<VaccineType>();
 			vaccineTypeComboBox.setPreferredSize(new Dimension(200, 30));
 			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));
 
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			ArrayList<VaccineType> types = null;
 			try {
-				types = manager.getVaccineType();
+				types = vaccineTypeManager.getVaccineType();
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
 			VaccineType vaccineTypeSel = null;
-			if (types != null){
+			if (types != null) {
 				for (VaccineType elem : types) {
 					vaccineTypeComboBox.addItem(elem);
 					if (!insert && elem.getCode() != null) {
@@ -393,12 +421,9 @@ public class PatVacEdit extends JDialog {
 			if (vaccineTypeSel != null)
 				vaccineTypeComboBox.setSelectedItem(vaccineTypeSel);
 
-			vaccineTypeComboBox.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
+			vaccineTypeComboBox.addActionListener(e -> {
 					vaccineComboBox.removeAllItems();
 					getVaccineComboBox();
-				}
 			});
 		}
 		return vaccineTypeComboBox;
@@ -410,35 +435,33 @@ public class PatVacEdit extends JDialog {
 	 * 
 	 * @return vaccineComboBox (JComboBox)
 	 */
-	private JComboBox getVaccineComboBox() {
-		Vaccine vaccineSel = null;
+	private JComboBox<Vaccine> getVaccineComboBox() {
 		if (vaccineComboBox == null) {
-			vaccineComboBox = new JComboBox();
+			vaccineComboBox = new JComboBox<Vaccine>();
 			vaccineComboBox.setPreferredSize(new Dimension(200, 30));
 		}
-		VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
-
-		ArrayList<Vaccine> allVac = null;
 		vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
-        try{
-            if (((VaccineType) vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))) {
-                allVac = manager.getVaccine();
-            } else {
-                allVac = manager.getVaccine(((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode());
-            }
-        } catch (OHServiceException e) {
-            OHServiceExceptionUtil.showMessages(e);
-        }
-        if (allVac != null) {
-            for (Vaccine elem : allVac) {
-                if (!insert && elem.getCode() != null) {
-                    if (elem.getCode().equalsIgnoreCase((patVac.getVaccine().getCode()))) {
-                        vaccineSel = elem;
-                    }
-                }
-                vaccineComboBox.addItem(elem);
-            }
-        }
+		ArrayList<Vaccine> allVac = null;
+		try {
+			if (((VaccineType) vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))) {
+				allVac = vaccineManager.getVaccine();
+			} else {
+				allVac = vaccineManager.getVaccine(((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode());
+			}
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
+		Vaccine vaccineSel = null;
+		if (allVac != null) {
+			for (Vaccine elem : allVac) {
+				if (!insert && elem.getCode() != null) {
+					if (elem.getCode().equalsIgnoreCase((patVac.getVaccine().getCode()))) {
+						vaccineSel = elem;
+					}
+				}
+				vaccineComboBox.addItem(elem);
+			}
+		}
 		if (vaccineSel != null) {
 			vaccineComboBox.setSelectedItem(vaccineSel);
 		}
@@ -456,7 +479,7 @@ public class PatVacEdit extends JDialog {
 			resetPatVacPat();
 		}
 
-		for (Patient elem : pat) {
+		for (Patient elem : patientList) {
 			if (key != null) {
 				// Search key extended to name and code
 				StringBuilder sbName = new StringBuilder();
@@ -496,6 +519,8 @@ public class PatVacEdit extends JDialog {
 		ageTextField.setText("");
 		sexTextField.setText("");
 		selectedPatient = null;
+		dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), 
+						MessageBundle.getMessage("angal.patvac.datapatient")));
 	}
 
 	/**
@@ -505,6 +530,8 @@ public class PatVacEdit extends JDialog {
 		patTextField.setText(selectedPatient.getName());
 		ageTextField.setText(selectedPatient.getAge() + "");
 		sexTextField.setText(selectedPatient.getSex() + "");
+		dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), 
+						MessageBundle.formatMessage("angal.patvac.patientcode.fmt.msg", selectedPatient.getCode())));
 	}
 
 	/**
@@ -513,27 +540,29 @@ public class PatVacEdit extends JDialog {
 	 * 
 	 * @return patientComboBox (JComboBox)
 	 */
-	private JComboBox getPatientComboBox(String regExp) {
-
+	private JComboBox<Object> getPatientComboBox(String regExp) {
+		if (patientComboBox == null) {
+			patientComboBox = new JComboBox<Object>();
+		}
+		patientComboBox.addItem(MessageBundle.getMessage("angal.patvac.selectapatient"));
 		Patient patSelected = null;
-		PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
-		if (GeneralData.ENHANCEDSEARCH){
+		if (GeneralData.ENHANCEDSEARCH) {
 			try {
-				pat = patBrowser.getPatientsByOneOfFieldsLike(regExp);
-			}catch(OHServiceException ex){
+				patientList = patientManager.getPatientsByOneOfFieldsLike(regExp);
+			} catch (OHServiceException ex) {
 				OHServiceExceptionUtil.showMessages(ex);
-				pat = new ArrayList<>();
+				patientList = new ArrayList<>();
 			}
 		}else{
 			try {
-				pat = patBrowser.getPatient();
+				patientList = patientManager.getPatient();
 			} catch (OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		if (pat != null){
-			for (Patient elem : pat) {
+		if (patientList != null) {
+			for (Patient elem : patientList) {
 				if (!insert) {
 					if (elem.getCode().equals(patVac.getPatient().getCode())) {
 						patSelected = elem;
@@ -555,14 +584,14 @@ public class PatVacEdit extends JDialog {
 			} else
 				selectedPatient = null;
 		}
-		patientComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		patientComboBox.addActionListener(e -> {
 				if (patientComboBox.getSelectedIndex() > 0) {
 					selectedPatient = (Patient) patientComboBox.getSelectedItem();
 					setPatient(selectedPatient);
-				} else
+				} else {
 					selectedPatient = null;
-			}
+					resetPatVacPat();
+				}
 		});
 
 		return patientComboBox;
@@ -576,29 +605,22 @@ public class PatVacEdit extends JDialog {
 	private JPanel getDataPatient() {
 		if (dataPatient == null) {
 			dataPatient = new JPanel();
-			dataPatient.setLayout(null);
-			dataPatient.setBounds(0, dataPanelHeight, panelWidth, dataPatientHeight);
-			dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.patvac.datapatient")));
-			nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
-			nameLabel.setBounds(10, DeltaBetweenLabels, labelWidth, 20);
-			patTextField = getPatientTextField();
-			patTextField.setBounds(labelWidth + 5, DeltaBetweenLabels, 180, 20);
-			ageLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
-			ageLabel.setBounds(255, DeltaBetweenLabels, 35, 20);
-			ageTextField = getAgeTextField();
-			ageTextField.setBounds(295, DeltaBetweenLabels, 50, 20);
-			sexLabel = new JLabel(MessageBundle.getMessage("angal.patvac.sex"));
-			sexLabel.setBounds(370, DeltaBetweenLabels, 80, 20);
-			sexTextField = getSexTextField();
-			sexTextField.setBounds(440, DeltaBetweenLabels, 50, 20);
-
-			// add all elements
-			dataPatient.add(nameLabel, null);
-			dataPatient.add(patTextField, null);
-			dataPatient.add(ageLabel, null);
-			dataPatient.add(ageTextField, null);
-			dataPatient.add(sexLabel, null);
-			dataPatient.add(sexTextField, null);
+			dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), 
+							MessageBundle.getMessage("angal.patvac.datapatient")));
+			
+			JLabel nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
+			dataPatient.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			dataPatient.add(nameLabel);
+			dataPatient.add(getPatientTextField());
+			
+			JLabel ageLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
+			dataPatient.add(ageLabel);
+			dataPatient.add(getAgeTextField());
+			
+			JLabel sexLabel = new JLabel(MessageBundle.getMessage("angal.patvac.sex"));
+			dataPatient.add(sexLabel);
+			dataPatient.add(getSexTextField());
+			
 			patTextField.setEditable(false);
 			ageTextField.setEditable(false);
 			sexTextField.setEditable(false);
@@ -613,7 +635,7 @@ public class PatVacEdit extends JDialog {
 	 */
 	private VoLimitedTextField getPatientTextField() {
 		if (patTextField == null) {
-			patTextField = new VoLimitedTextField(100);
+			patTextField = new VoLimitedTextField(100, 15);
 			if (!insert) {
 				patTextField.setText(patVac.getPatName());
 			}
@@ -628,7 +650,7 @@ public class PatVacEdit extends JDialog {
 	 */
 	private VoLimitedTextField getAgeTextField() {
 		if (ageTextField == null) {
-			ageTextField = new VoLimitedTextField(3);
+			ageTextField = new VoLimitedTextField(3, 3);
 			if (insert) {
 				ageTextField.setText("");
 			} else {
@@ -650,7 +672,7 @@ public class PatVacEdit extends JDialog {
 	 */
 	private VoLimitedTextField getSexTextField() {
 		if (sexTextField == null) {
-			sexTextField = new VoLimitedTextField(1);
+			sexTextField = new VoLimitedTextField(1, 1);
 			if (!insert) {
 				sexTextField.setText("" + patVac.getPatSex());
 			}
@@ -667,7 +689,6 @@ public class PatVacEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.setBounds(0, dataPanelHeight + dataPatientHeight, panelWidth, buttonPanelHeight);
 			buttonPanel.add(getOkButton(), null);
 			buttonPanel.add(getCancelButton(), null);
 		}
@@ -683,8 +704,7 @@ public class PatVacEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+			okButton.addActionListener(e -> {
 
 					GregorianCalendar gregDate = new GregorianCalendar();
 					gregDate.setTime(vaccineDateFieldCal.getDate());
@@ -700,36 +720,31 @@ public class PatVacEdit extends JDialog {
 					patVac.setVaccine((Vaccine) vaccineComboBox.getSelectedItem());
 					patVac.setPatient(selectedPatient);
 					patVac.setLock(0);
-					patVac.setPatName(selectedPatient.getName());
-					patVac.setPatSex(selectedPatient.getSex());
 
 					boolean result;
-					PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 					// handling db insert/update
 					if (insert) {
-						patVac.setPatAge(selectedPatient.getAge());
 						try {
-							result = manager.newPatientVaccine(patVac);
+							result = patientVaccineManager.newPatientVaccine(patVac);
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
-							result = false;
+							return;
 						}
 					} else {
 						try {
-							result = manager.updatePatientVaccine(patVac);
+							result = patientVaccineManager.updatePatientVaccine(patVac);
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
-							result = false;
+							return;
 						}
 					}
 
 					if (!result) {
 						MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
+						return;
 					} else {
-						patVac = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(), new Vaccine("", "", new VaccineType("", "")), 0);
 						dispose();
 					}
-				}
 			});
 		}
 		return okButton;
@@ -744,12 +759,31 @@ public class PatVacEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+			cancelButton.addActionListener(e -> {
 					dispose();
-				}
 			});
 		}
 		return cancelButton;
+	}
+	private JPanel getCenterPanel() {
+		if (centerPanel == null) {
+			centerPanel = new JPanel();
+			centerPanel.setLayout(new BorderLayout());
+			centerPanel.add(getDataPanel(), BorderLayout.CENTER);
+			centerPanel.add(getDataPatient(), BorderLayout.SOUTH);
+		}
+		return centerPanel;
+	}
+	private JPanel getPatientPanel() {
+		if (patientPanel == null) {
+			patientPanel = new JPanel();
+			GridBagLayout gbl_patientPanel = new GridBagLayout();
+			gbl_patientPanel.columnWidths = new int[]{0};
+			gbl_patientPanel.rowHeights = new int[]{0};
+			gbl_patientPanel.columnWeights = new double[]{Double.MIN_VALUE};
+			gbl_patientPanel.rowWeights = new double[]{Double.MIN_VALUE};
+			patientPanel.setLayout(gbl_patientPanel);
+		}
+		return patientPanel;
 	}
 }
