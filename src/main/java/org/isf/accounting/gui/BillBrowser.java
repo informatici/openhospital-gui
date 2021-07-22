@@ -39,7 +39,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -61,7 +60,6 @@ import javax.swing.table.DefaultTableModel;
 import org.isf.accounting.gui.PatientBillEdit.PatientBillListener;
 import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
-import org.isf.accounting.model.BillItems;
 import org.isf.accounting.model.BillPayments;
 import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.generaldata.GeneralData;
