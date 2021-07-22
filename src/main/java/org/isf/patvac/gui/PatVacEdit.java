@@ -408,7 +408,7 @@ public class PatVacEdit extends JDialog {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
 			VaccineType vaccineTypeSel = null;
-			if (types != null){
+			if (types != null) {
 				for (VaccineType elem : types) {
 					vaccineTypeComboBox.addItem(elem);
 					if (!insert && elem.getCode() != null) {
@@ -543,10 +543,10 @@ public class PatVacEdit extends JDialog {
 		patientComboBox.addItem(MessageBundle.getMessage("angal.patvac.selectapatient"));
 		Patient patSelected = null;
 
-		if (GeneralData.ENHANCEDSEARCH){
+		if (GeneralData.ENHANCEDSEARCH) {
 			try {
 				patientList = patientManager.getPatientsByOneOfFieldsLike(regExp);
-			} catch (OHServiceException ex){
+			} catch (OHServiceException ex) {
 				OHServiceExceptionUtil.showMessages(ex);
 				patientList = new ArrayList<>();
 			}
@@ -557,7 +557,7 @@ public class PatVacEdit extends JDialog {
                 OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		if (patientList != null){
+		if (patientList != null) {
 			for (Patient elem : patientList) {
 				if (!insert) {
 					if (elem.getCode().equals(patVac.getPatient().getCode())) {
