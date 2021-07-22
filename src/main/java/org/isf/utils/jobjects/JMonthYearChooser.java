@@ -26,7 +26,6 @@ import java.beans.PropertyChangeListener;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.isf.generaldata.GeneralData;

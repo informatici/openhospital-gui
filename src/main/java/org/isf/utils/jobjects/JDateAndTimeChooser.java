@@ -29,10 +29,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.swing.BoxLayout;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import org.isf.generaldata.GeneralData;
 
 public class JDateAndTimeChooser extends JPanel {
 
