@@ -181,7 +181,7 @@ public class PatVacEdit extends JDialog {
 			
 			
 			//patient search fields
-			JLabel patientLabel = new JLabel(MessageBundle.getMessage("angal.patvac.patientcode"));
+			JLabel patientLabel = new JLabel(MessageBundle.getMessage("angal.patvac.searchpatient"));
 			GridBagConstraints gbc_jPatientLabel = new GridBagConstraints();
 			gbc_jPatientLabel.anchor = GridBagConstraints.WEST;
 			gbc_jPatientLabel.fill = GridBagConstraints.VERTICAL;
@@ -519,6 +519,8 @@ public class PatVacEdit extends JDialog {
 		ageTextField.setText("");
 		sexTextField.setText("");
 		selectedPatient = null;
+		dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), 
+						MessageBundle.getMessage("angal.patvac.datapatient")));
 	}
 
 	/**
@@ -528,6 +530,8 @@ public class PatVacEdit extends JDialog {
 		patTextField.setText(selectedPatient.getName());
 		ageTextField.setText(selectedPatient.getAge() + "");
 		sexTextField.setText(selectedPatient.getSex() + "");
+		dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), 
+						MessageBundle.formatMessage("angal.patvac.patientcode.fmt.msg", selectedPatient.getCode())));
 	}
 
 	/**
@@ -584,8 +588,10 @@ public class PatVacEdit extends JDialog {
 				if (patientComboBox.getSelectedIndex() > 0) {
 					selectedPatient = (Patient) patientComboBox.getSelectedItem();
 					setPatient(selectedPatient);
-				} else
+				} else {
 					selectedPatient = null;
+					resetPatVacPat();
+				}
 		});
 
 		return patientComboBox;
@@ -599,7 +605,8 @@ public class PatVacEdit extends JDialog {
 	private JPanel getDataPatient() {
 		if (dataPatient == null) {
 			dataPatient = new JPanel();
-			dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.patvac.datapatient")));
+			dataPatient.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), 
+							MessageBundle.getMessage("angal.patvac.datapatient")));
 			
 			JLabel nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
 			dataPatient.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
