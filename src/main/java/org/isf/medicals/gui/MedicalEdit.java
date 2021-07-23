@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -36,6 +35,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -52,6 +53,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,8 +91,8 @@ public class MedicalEdit extends JDialog {
 		};
 
 		EventListener[] listeners = medicalListeners.getListeners(MedicalListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((MedicalListener) listeners[i]).medicalInserted(medical);
+		for (EventListener listener : listeners)
+			((MedicalListener) listener).medicalInserted(medical);
 	}
 
 	private void fireMedicalUpdated() {
@@ -100,8 +102,8 @@ public class MedicalEdit extends JDialog {
 		};
 
 		EventListener[] listeners = medicalListeners.getListeners(MedicalListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((MedicalListener) listeners[i]).medicalUpdated(event);
+		for (EventListener listener : listeners)
+			((MedicalListener) listener).medicalUpdated(event);
 	}
 
 	private JPanel jContentPane = null;
@@ -109,19 +111,14 @@ public class MedicalEdit extends JDialog {
 	private JPanel buttonPanel = null;
 	private JButton cancelButton = null;
 	private JButton okButton = null;
-	private JLabel descLabel = null;
-	private JLabel codeLabel = null;
-	private JLabel pcsperpckLabel = null;
-	private JLabel criticLabel = null;
 	private VoIntegerTextField pcsperpckField = null;
 	private VoLimitedTextField descriptionTextField = null;
 	private VoLimitedTextField codeTextField = null;
 	private VoDoubleTextField minQtiField = null;
-	private JLabel typeLabel = null;
-	private JComboBox typeComboBox = null;
+	private JComboBox<MedicalType> typeComboBox = null;
 	private Medical oldMedical = null;
-	private Medical medical = null;
-	private boolean insert = false;
+	private Medical medical;
+	private boolean insert;
 
 	private MedicalTypeBrowserManager medicalTypeManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
@@ -146,15 +143,13 @@ public class MedicalEdit extends JDialog {
 	 * This method initializes this
 	 */
 	private void initialize() {
-
-		//this.setBounds(300, 300, 350, 240);
 		this.setContentPane(getJContentPane());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.medicals.newmedical.title"));
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.medicals.editmedical.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
@@ -168,8 +163,8 @@ public class MedicalEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER); // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH); // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -181,34 +176,25 @@ public class MedicalEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			dataPanel = new JPanel();
-			dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS)); // Generated
-			
-			typeLabel = new JLabel();
-			typeLabel.setText(MessageBundle.getMessage("angal.medicals.type")); // Generated
-			typeLabel.setAlignmentX(CENTER_ALIGNMENT);
-			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.code.txt"));
-			codeLabel.setAlignmentX(CENTER_ALIGNMENT);
-			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-			descLabel.setAlignmentX(CENTER_ALIGNMENT);
-			pcsperpckLabel = new JLabel();
-			pcsperpckLabel.setText(MessageBundle.getMessage("angal.medicals.pcsperpckExt")); // Generated
-			pcsperpckLabel.setAlignmentX(CENTER_ALIGNMENT);
-			criticLabel = new JLabel();
-			criticLabel.setText(MessageBundle.getMessage("angal.medicals.criticallevel")); // Generated
-			criticLabel.setAlignmentX(CENTER_ALIGNMENT);
-			
-			dataPanel.add(typeLabel, null); // Generated
-			dataPanel.add(getTypeComboBox(), null); // Generated
-			dataPanel.add(codeLabel, null); // Generated
-			dataPanel.add(getCodeTextField(), null); // Generated
-			dataPanel.add(descLabel, null); // Generated
-			dataPanel.add(getDescriptionTextField(), null); // Generated
-			dataPanel.add(pcsperpckLabel, null);
+			dataPanel = new JPanel(new SpringLayout());
+
+			JLabel typeLabel = new JLabel(MessageBundle.getMessage("angal.medicals.type") + ":");
+			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ":");
+			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ":");
+			JLabel pcsperpckLabel = new JLabel(MessageBundle.getMessage("angal.medicals.pcsperpckExt") + ":");
+			JLabel criticLabel = new JLabel(MessageBundle.getMessage("angal.medicals.criticallevel") + ":");
+
+			dataPanel.add(typeLabel);
+			dataPanel.add(getTypeComboBox());
+			dataPanel.add(codeLabel);
+			dataPanel.add(getCodeTextField());
+			dataPanel.add(descLabel);
+			dataPanel.add(getDescriptionTextField());
+			dataPanel.add(pcsperpckLabel);
 			dataPanel.add(getPcsperpckField());
-			dataPanel.add(criticLabel, null);
+			dataPanel.add(criticLabel);
 			dataPanel.add(getMinQtiField());
+			SpringUtilities.makeCompactGrid(dataPanel, 5, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
 	}
@@ -221,8 +207,8 @@ public class MedicalEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null); // Generated
-			buttonPanel.add(getCancelButton(), null); // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -236,11 +222,7 @@ public class MedicalEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -255,6 +237,7 @@ public class MedicalEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
+				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					Medical newMedical = null;
 					try {
@@ -404,26 +387,23 @@ public class MedicalEdit extends JDialog {
 	 * 
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox getTypeComboBox() {
+	private JComboBox<MedicalType> getTypeComboBox() {
 		if (typeComboBox == null) {
-			typeComboBox = new JComboBox();
+			typeComboBox = new JComboBox<>();
 			if (insert) {
 				ArrayList<MedicalType> types;
 				try {
 					types = medicalTypeManager.getMedicalType();
-					
 					for (MedicalType elem : types) {
 						typeComboBox.addItem(elem);
 					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
-					
 				}
 			} else {
 				typeComboBox.addItem(medical.getType());
 				typeComboBox.setEnabled(false);
 			}
-
 		}
 		return typeComboBox;
 	}
