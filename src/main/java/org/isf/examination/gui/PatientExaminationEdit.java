@@ -254,8 +254,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jPanelButtons = new JPanel();
 			jPanelButtons.add(getJButtonSave());
 			jPanelButtons.add(getJButtonDelete());
-			jPanelButtons.add(getJButtonCancel());
 			jPanelButtons.add(getJButtonPrint());
+			jPanelButtons.add(getJButtonCancel());
 		}
 		return jPanelButtons;
 	}
