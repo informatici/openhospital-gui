@@ -30,7 +30,7 @@ Before running the application, you should copy the distribution files and chang
 
 `dicom.properties.dist			-> dicom.properties`	 	*(OH_PATH_SUBSTITUTE/DICOM_DIR, DICOM_SIZE)*
 
-`log4j.properties.dist			-> log4j.properties` 		*(LOG_DEST, DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS, DEBUG_LEVEL)*
+`log4j.properties.dist			-> log4j.properties` 		*(LOG_DEST, DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS, LOG_LEVEL)*
 
 `settings.properties.dist		-> settings.properties`	*(OH_SET_LANGUAGE)*
 	
