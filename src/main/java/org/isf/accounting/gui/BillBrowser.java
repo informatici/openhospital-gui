@@ -118,6 +118,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							jTableBills.getSelectionModel().setSelectionInterval(i, i);
 				}
 			}
+			if (!users.contains(user)) {
+				jComboUsers.addItem(user);
+			}
+			jComboUsers.setSelectedItem(user);
 		}
 	}
 
@@ -830,9 +834,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JComboBox<String> getJComboUsers() {
 		if (jComboUsers == null) {
 			jComboUsers = new JComboBox<>();
-			for (String user : users) 
+		
+			for (String user : users) {
 				jComboUsers.addItem(user);
+			}
 			
+			if (users.contains(user)) {
+				jComboUsers.setSelectedItem(user);
+			}
+
 			jComboUsers.addActionListener(arg0 -> {
 				user = (String) jComboUsers.getSelectedItem();
 				jTableUser.setValueAt("<html><b>"+user+"</b></html>", 0, 0);
@@ -1176,12 +1186,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		userToday = new BigDecimal(0);
 		userPeriod = new BigDecimal(0);
 		
-		ArrayList<Integer> notDeletedBills = new ArrayList<>();
 				
 		//Bills in range contribute for Not Paid (balance)
 		for (Bill bill : billPeriod) {
 			if (!bill.getStatus().equals("D")) {
-				notDeletedBills.add(bill.getId());
 				BigDecimal balance = new BigDecimal(Double.toString(bill.getBalance()));
 				balancePeriod = balancePeriod.add(balance);
 			}
@@ -1189,7 +1197,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		
 		//Payments in range contribute for Paid Period (total)
 		for (BillPayments payment : paymentsPeriod) {
-			if (notDeletedBills.contains(payment.getBill().getId())) {
+			if (!payment.getBill().getStatus().equals("D")) {
 				BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
 				String payUser = payment.getUser();
 				
@@ -1213,7 +1221,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		//Payments in today contribute for Paid Today (total)
 		if (paymentsToday != null){
 			for (BillPayments payment : paymentsToday) {
-				if (notDeletedBills.contains(payment.getBill().getId())) {
+				if (!payment.getBill().getStatus().equals("D")) {
 					BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
 					String payUser = payment.getUser();
 					totalToday = totalToday.add(payAmount);
