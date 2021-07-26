@@ -81,7 +81,7 @@ public class DicomViewGui extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DicomViewGuiMouseListener.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DicomViewGui.class);
 
 	// status of framereader
 	private int patID = -1;
