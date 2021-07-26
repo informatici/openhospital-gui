@@ -173,7 +173,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			MessageBundle.getMessage("angal.common.status.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.billbrowser.balance.col").toUpperCase()
 	};
-	private boolean[] columnShow = {!GeneralData.getGeneralData().getSINGLEUSER(), true, true, true, true, true, true, true, true};
+	private boolean[] columnShow = {MainMenu.checkUserGrants("cashiersfilter"), true, true, true, true, true, true, true, true};
 	private int[] columnWidths = {50, 50, 150, 50, 50, 100, 150, 50, 100};
 	private int[] maxWidth = {50, 150, 150, 150, 200, 100, 150, 50, 100};
 	private boolean[] columnsResizable = {false, false, false, false, true, false, false, false, false};
@@ -499,7 +499,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					}
 					int rowSelected = jTableBills.getSelectedRow();
 					Bill editBill = (Bill) jTableBills.getValueAt(rowSelected, -1);
-					if (user.equals("admin") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
+					if (MainMenu.checkUserGrants("editclosedbills") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
 						PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
 						pbe.addPatientBillListener(BillBrowser.this);
 						pbe.setVisible(true);
@@ -738,7 +738,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JPanel getPanelSupRange() {
 		if (panelSupRange == null) {
 			panelSupRange = new JPanel();
-			if (!isSingleUser && user.equals("admin")) {
+			if (MainMenu.checkUserGrants("cashiersfilter")) {
 				panelSupRange.add(getJComboUsers());
 			}
 			panelSupRange.add(getJButtonToday());
