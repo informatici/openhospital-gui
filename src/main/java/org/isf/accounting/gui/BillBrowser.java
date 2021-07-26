@@ -1374,6 +1374,16 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			   (aDate.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
 	}
 	
+	private void formatCellByBillStatus(JTable table, int row, Component cell) {
+		int status_column = !GeneralData.getGeneralData().getSINGLEUSER() ? 7 : 6;
+		if (((String)table.getValueAt(row, status_column)).equals("C")) { //$NON-NLS-1$
+			cell.setForeground(Color.GRAY);
+		}
+		if (((String)table.getValueAt(row, status_column)).equals("D")) { //$NON-NLS-1$
+			cell.setForeground(Color.RED);
+		}
+	}
+
 	class StringTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
@@ -1384,12 +1394,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
@@ -1405,12 +1410,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(CENTER);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
@@ -1427,12 +1427,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			cell.setForeground(Color.BLACK);
 			cell.setFont(new Font(null, Font.BOLD, 12));
 			setHorizontalAlignment(CENTER);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
@@ -1448,12 +1443,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(RIGHT);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
@@ -1465,17 +1455,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column) {  
-		   
+		    
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(CENTER);
 			cell.setFont(new Font(null, Font.BOLD, 12));
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
