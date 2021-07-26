@@ -173,7 +173,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			MessageBundle.getMessage("angal.common.status.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.billbrowser.balance.col").toUpperCase()
 	};
-	private boolean[] columnShow = {MainMenu.checkUserGrants("cashiersfilter"), true, true, true, true, true, true, true, true};
+	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
+	private boolean[] columnShow = {!isSingleUser && MainMenu.checkUserGrants("cashiersfilter"), true, true, true, true, true, true, true, true};
 	private int[] columnWidths = {50, 50, 150, 50, 50, 100, 150, 50, 100};
 	private int[] maxWidth = {50, 150, 150, 150, 200, 100, 150, 50, 100};
 	private boolean[] columnsResizable = {false, false, false, false, true, false, false, false, false};
@@ -203,8 +204,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	//Users
 	private String user = UserBrowsingManager.getCurrentUser();
 	private ArrayList<String> users;
-	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
-	
 	
 	public BillBrowser() {
 		try {
@@ -738,7 +737,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JPanel getPanelSupRange() {
 		if (panelSupRange == null) {
 			panelSupRange = new JPanel();
-			if (MainMenu.checkUserGrants("cashiersfilter")) {
+			if (!isSingleUser && MainMenu.checkUserGrants("cashiersfilter")) {
 				panelSupRange.add(getJComboUsers());
 			}
 			panelSupRange.add(getJButtonToday());
@@ -1375,7 +1374,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 	
 	private void formatCellByBillStatus(JTable table, int row, Component cell) {
-		int status_column = !GeneralData.getGeneralData().getSINGLEUSER() ? 7 : 6;
+		int status_column = table.getColumnModel().getColumnIndex(MessageBundle.getMessage("angal.common.status.txt").toUpperCase());
 		if (((String)table.getValueAt(row, status_column)).equals("C")) { //$NON-NLS-1$
 			cell.setForeground(Color.GRAY);
 		}
