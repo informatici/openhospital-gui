@@ -250,7 +250,7 @@ public class SupplierEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			
+
 			okButton.addActionListener(e -> {
 				if (nameTextField.getText().trim().equals("")) {
 					MessageDialog.error(null, "angal.supplier.pleaseinsertaname");
@@ -264,34 +264,34 @@ public class SupplierEdit extends JDialog {
 				supplier.setSupFax(faxTextField.getText());
 				supplier.setSupEmail(emailTextField.getText());
 				supplier.setSupNote(noteTextField.getText());
-				if (!insert) supplier.setSupDeleted(isDeletedCheck.isSelected() ? 'Y' : 'N');
-				else supplier.setSupDeleted('N');
+				if (!insert)
+					supplier.setSupDeleted(isDeletedCheck.isSelected() ? 'Y' : 'N');
+				else
+					supplier.setSupDeleted('N');
 
 				boolean result = false;
 				if (insert) { // inserting
 					try {
 						result = supplierBrowserManager.saveOrUpdate(supplier);
-} catch (OHServiceException ex) {
-OHServiceExceptionUtil.showMessages(ex);
-}
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
+					}
 					if (result) {
 						fireSupplierInserted();
 					}
-				}
-				else { // updating
+				} else { // updating
 					try {
 						result = supplierBrowserManager.saveOrUpdate(supplier);
-} catch (OHServiceException ex) {
-OHServiceExceptionUtil.showMessages(ex);
-}
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
+					}
 					if (result) {
 						fireSupplierUpdated();
 					}
 				}
 				if (!result) {
 					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-				}
-				else {
+				} else {
 					dispose();
 				}
 			});
