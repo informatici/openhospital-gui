@@ -28,8 +28,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -360,10 +358,6 @@ public class PatientFolderReportModal extends ModalJFrame {
 			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateFrom.setDateFormatString(DATE_FORMAT);
 			jDateChooserDateFrom.setDate(date.getTime());
-			jDateChooserDateFrom.addPropertyChangeListener("date", evt -> {
-				Date date = (Date) evt.getNewValue();
-				jDateChooserDateFrom.setDate(date);
-			});
 		}
 		return jDateChooserDateFrom;
 	}
@@ -375,47 +369,28 @@ public class PatientFolderReportModal extends ModalJFrame {
 			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateTo.setDateFormatString(DATE_FORMAT);
 			jDateChooserDateTo.setDate(new Date());
-			
-			jDateChooserDateTo.addPropertyChangeListener("date", evt -> {
-				Date date = (Date) evt.getNewValue();
-				jDateChooserDateTo.setDate(date);
-			});
 		}
 		return jDateChooserDateTo;
 	}
 
 	public Date getDateToValue() {
 
-		Date date3 = jDateChooserDateTo.getDate();
-		if (date3 != null) {
+		Date date = jDateChooserDateTo.getDate();
+		if (date != null) {
 			return jDateChooserDateTo.getDate();
 		} else {
-			String date = new SimpleDateFormat(DATE_FORMAT).format(new Date());
-			Date date2 = null;
-			try {
-				date2 = new SimpleDateFormat(DATE_FORMAT).parse(date);
-			} catch (ParseException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			jDateChooserDateTo.setDate(date2);
+			jDateChooserDateTo.setDate(new Date());
 			return jDateChooserDateTo.getDate();
 		}
 	}
 
 	public Date getDateFromValue() {
 
-		Date date3 = jDateChooserDateFrom.getDate();
-		if (date3 != null) {
+		Date date = jDateChooserDateFrom.getDate();
+		if (date != null) {
 			return jDateChooserDateFrom.getDate();
 		} else {
-			String date = "01/01/2000";
-			Date date2 = null;
-			try {
-				date2 = new SimpleDateFormat(DATE_FORMAT).parse(date);
-			} catch (ParseException e) {
-				LOGGER.error(e.getMessage(), e);
-			}
-			jDateChooserDateFrom.setDate(date2);
+			jDateChooserDateFrom.setDate(new Date());
 			return jDateChooserDateFrom.getDate();
 		}
 	}
