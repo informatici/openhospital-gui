@@ -28,7 +28,6 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -36,6 +35,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.exa.manager.ExamBrowsingManager;
@@ -47,6 +48,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 /**
  * ------------------------------------------
@@ -83,8 +85,8 @@ public class ExamEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((ExamListener)listeners[i]).examInserted(event);
+	    for (EventListener listener : listeners)
+		    ((ExamListener) listener).examInserted(event);
     }
     private void fireExamUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -92,8 +94,8 @@ public class ExamEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((ExamListener)listeners[i]).examUpdated(event);
+	    for (EventListener listener : listeners)
+		    ((ExamListener) listener).examUpdated(event);
     }
     
 	private JPanel jContentPane = null;
@@ -107,12 +109,12 @@ public class ExamEdit extends JDialog {
 	private JLabel defLabel = null;
 	private VoLimitedTextField descriptionTextField = null;
 	private VoLimitedTextField codeTextField=null;
-	private JComboBox procComboBox = null;
+	private JComboBox<String> procComboBox = null;
 	private VoLimitedTextField defTextField = null;
 	private JLabel typeLabel = null;
 	private JComboBox typeComboBox = null;
-	private Exam exam = null;
-	private boolean insert = false;
+	private Exam exam;
+	private boolean insert;
 	
 	private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
     
@@ -145,7 +147,7 @@ public class ExamEdit extends JDialog {
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.exa.editexam.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	/**
@@ -157,8 +159,8 @@ public class ExamEdit extends JDialog {
             if (jContentPane == null) {
                 jContentPane = new JPanel();
                 jContentPane.setLayout(new BorderLayout());
-                jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  // Generated
-                jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+                jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+                jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
             }
             return jContentPane;
 	}
@@ -170,23 +172,23 @@ public class ExamEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			typeLabel = new JLabel(MessageBundle.getMessage("angal.exa.type"));
-			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
-			procLabel = new JLabel(MessageBundle.getMessage("angal.exa.procedure"));
-			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default"));
-			dataPanel = new JPanel();
-			dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS));  // Generated
-			dataPanel.add(typeLabel, null);
-			dataPanel.add(getTypeComboBox(), null);  
-			dataPanel.add(codeLabel,null);
-			dataPanel.add(getCodeTextField(),null);
-			dataPanel.add(descLabel, null);  
-			dataPanel.add(getDescriptionTextField(), null);
-			dataPanel.add(procLabel, null);  
-			dataPanel.add(getProcComboBox(), null);
-			dataPanel.add(defLabel, null);  
-			dataPanel.add(getDefTextField(), null);
+			typeLabel = new JLabel(MessageBundle.getMessage("angal.exa.type") + ':');
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
+			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
+			procLabel = new JLabel(MessageBundle.getMessage("angal.exa.procedure") + ':');
+			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default") + ':');
+			dataPanel = new JPanel(new SpringLayout());
+			dataPanel.add(typeLabel);
+			dataPanel.add(getTypeComboBox());
+			dataPanel.add(codeLabel);
+			dataPanel.add(getCodeTextField());
+			dataPanel.add(descLabel);
+			dataPanel.add(getDescriptionTextField());
+			dataPanel.add(procLabel);
+			dataPanel.add(getProcComboBox());
+			dataPanel.add(defLabel);
+			dataPanel.add(getDefTextField());
+			SpringUtilities.makeCompactGrid(dataPanel, 5, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
 	}
@@ -199,8 +201,8 @@ public class ExamEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -214,11 +216,7 @@ public class ExamEdit extends JDialog {
             if (cancelButton == null) {
 	            cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 	            cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-                cancelButton.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent e) {
-                        dispose();
-                    }
-                });
+                cancelButton.addActionListener(e -> dispose());
             }
             return cancelButton;
 	}
@@ -230,59 +228,54 @@ public class ExamEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			if (okButton == null) {
-				okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
-				okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-				okButton.addActionListener(new java.awt.event.ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent e) {
-						if ((codeTextField.getText().trim().equals(""))||(descriptionTextField.getText().trim().equals(""))){
-							MessageDialog.error(null, "angal.exa.pleaseinsertcodeoranddescription");
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			okButton.addActionListener(e -> {
+				if ((codeTextField.getText().trim().equals("")) || (descriptionTextField.getText().trim().equals(""))) {
+					MessageDialog.error(null, "angal.exa.pleaseinsertcodeoranddescription");
+				} else {
+					int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
+
+					exam.setExamtype((ExamType) typeComboBox.getSelectedItem());
+					exam.setDescription(descriptionTextField.getText());
+
+					exam.setCode(codeTextField.getText().toUpperCase());
+					exam.setDefaultResult(defTextField.getText().toUpperCase());
+					exam.setProcedure(procedure);
+
+					boolean result = false;
+					if (insert) {
+						try {
+							if (manager.isKeyPresent(exam)) {
+								MessageDialog.error(ExamEdit.this, "angal.exa.changethecodebecauseisalreadyinuse");
+								return;
+							}
+						} catch (OHServiceException e1) {
+							OHServiceExceptionUtil.showMessages(e1);
 						}
-						else{
-							int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
-							
-							exam.setExamtype((ExamType)typeComboBox.getSelectedItem());
-							exam.setDescription(descriptionTextField.getText());
-							
-							exam.setCode(codeTextField.getText().toUpperCase());
-							exam.setDefaultResult(defTextField.getText().toUpperCase());
-							exam.setProcedure(procedure);
-							
-							boolean result = false;
-							if (insert) {
-								try {
-									if (manager.isKeyPresent(exam)) {
-										MessageDialog.error(ExamEdit.this, "angal.exa.changethecodebecauseisalreadyinuse");
-										return;
-									}
-								} catch (OHServiceException e1) {
-									OHServiceExceptionUtil.showMessages(e1);
-								}
-								try {
-									result = manager.newExam(exam);
-									if (result) fireExamInserted();
-								} catch (OHServiceException e1) {
-									OHServiceExceptionUtil.showMessages(e1);
-								}
-							} else {
-								try {
-									result = manager.updateExam(exam);
-									if (result) fireExamUpdated();
-								} catch (OHServiceException e1) {
-									OHServiceExceptionUtil.showMessages(e1);
-								}
-							}
-							if (!result) {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							}
-							else  {
-								dispose();
-							}
+						try {
+							result = manager.newExam(exam);
+							if (result)
+								fireExamInserted();
+						} catch (OHServiceException e1) {
+							OHServiceExceptionUtil.showMessages(e1);
+						}
+					} else {
+						try {
+							result = manager.updateExam(exam);
+							if (result)
+								fireExamUpdated();
+						} catch (OHServiceException e1) {
+							OHServiceExceptionUtil.showMessages(e1);
 						}
 					}
-				});
-			}
-			return okButton;
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					} else {
+						dispose();
+					}
+				}
+			});
 		}
 		return okButton;
 	}
@@ -323,16 +316,16 @@ public class ExamEdit extends JDialog {
 		}
 		return codeTextField;
 	}
-	
-	private JComboBox getProcComboBox(){
-		if (procComboBox==null){
-			procComboBox = new JComboBox();
+
+	private JComboBox getProcComboBox() {
+		if (procComboBox == null) {
+			procComboBox = new JComboBox<>();
 			if (insert) {
 				procComboBox.addItem("1");
 				procComboBox.addItem("2");
 				procComboBox.addItem("3");
 			} else {
-				procComboBox.addItem(exam.getProcedure());
+				procComboBox.addItem(String.valueOf(exam.getProcedure()));
 				procComboBox.setEnabled(false);
 			}
 		}
