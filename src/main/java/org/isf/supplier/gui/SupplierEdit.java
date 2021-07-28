@@ -184,7 +184,7 @@ public class SupplierEdit extends JDialog {
 			emailLabel = new JLabel(MessageBundle.getMessage("angal.supplier.email") + ':');
 			noteLabel = new JLabel(MessageBundle.getMessage("angal.supplier.note") + ':');
 			isDeletedLabel = new JLabel(MessageBundle.getMessage("angal.supplier.deleted") + ':');
-			requiredLabel= new JLabel(MessageBundle.getMessage("angal.supplier.requiredfields") + ':');
+			requiredLabel= new JLabel(MessageBundle.getMessage("angal.supplier.requiredfields"));
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(idLabel);
 			dataPanel.add(getIdTextField());
