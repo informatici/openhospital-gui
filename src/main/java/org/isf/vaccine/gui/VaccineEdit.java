@@ -76,25 +76,27 @@ public class VaccineEdit extends JDialog {
         vaccineListeners.remove(VaccineListener.class, listener);
     }
 
-    private void fireVaccineInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireVaccineInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = vaccineListeners.getListeners(VaccineListener.class);
-	    for (EventListener listener : listeners)
-		    ((VaccineListener) listener).vaccineInserted(event);
-    }
+		EventListener[] listeners = vaccineListeners.getListeners(VaccineListener.class);
+		for (EventListener listener : listeners)
+			((VaccineListener) listener).vaccineInserted(event);
+	}
 
-    private void fireVaccineUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireVaccineUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = vaccineListeners.getListeners(VaccineListener.class);
-	    for (EventListener listener : listeners)
-		    ((VaccineListener) listener).vaccineUpdated(event);
-    }
+		EventListener[] listeners = vaccineListeners.getListeners(VaccineListener.class);
+		for (EventListener listener : listeners)
+			((VaccineListener) listener).vaccineUpdated(event);
+	}
 
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -104,7 +106,7 @@ public class VaccineEdit extends JDialog {
 	private JTextField descriptionTextField = null;
 	private JTextField codeTextField = null;
 	private JComboBox<VaccineType> vaccineTypeComboBox = null;
-    private Vaccine vaccine;
+	private Vaccine vaccine;
 	private boolean insert;
 
 	/**
@@ -161,13 +163,13 @@ public class VaccineEdit extends JDialog {
 		if (dataPanel == null) {
 			// vaccine type
 			JLabel vaccineTypeDescLabel = new JLabel(MessageBundle.getMessage("angal.vaccine.vaccinetype") + ':');
-            // vaccine code
+			// vaccine code
 			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
 			// vaccine description
 			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
 			// required fields
-			JLabel requiredLabel= new JLabel(MessageBundle.getMessage("angal.vaccine.requiredfields"));
-			
+			JLabel requiredLabel = new JLabel(MessageBundle.getMessage("angal.vaccine.requiredfields"));
+
 			dataPanel = new JPanel();
 			dataPanel.setLayout(new SpringLayout());
 			dataPanel.add(vaccineTypeDescLabel);
