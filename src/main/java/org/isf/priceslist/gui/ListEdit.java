@@ -23,17 +23,15 @@ package org.isf.priceslist.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -44,6 +42,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 public class ListEdit extends JDialog {
 
@@ -68,8 +67,9 @@ public class ListEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
 		EventListener[] listeners = listListeners.getListeners(ListListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((ListListener)listeners[i]).listInserted(event);
+		for (EventListener listener : listeners) {
+			((ListListener) listener).listInserted(event);
+		}
 	}
 	private void fireListUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -77,8 +77,9 @@ public class ListEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = listListeners.getListeners(ListListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((ListListener)listeners[i]).listUpdated(event);
+		for (EventListener listener : listeners) {
+			((ListListener) listener).listUpdated(event);
+		}
 	}
 	
 	private static final long serialVersionUID = 1L;
@@ -107,7 +108,6 @@ public class ListEdit extends JDialog {
 	}
 
 	private void initComponents() {
-		//this.setLayout(new BorderLayout());
 		add(getJPanelData(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		setSize(400, 200);
@@ -122,39 +122,36 @@ public class ListEdit extends JDialog {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jButtonOK.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-						
-					list.setCode(jTextFieldCode.getText());
-					list.setName(jTextFieldName.getText());
-					list.setDescription(jTextFieldDescription.getText());
-					list.setCurrency(jTextFieldCurrency.getText());
-					
-					PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
-					boolean result = false;
-					try{
-						if (insert) {      // inserting
-							result = listManager.newList(list);
-							if (result) {
-								fireListInserted();
-							}
+			jButtonOK.addActionListener(event -> {
+
+				list.setCode(jTextFieldCode.getText());
+				list.setName(jTextFieldName.getText());
+				list.setDescription(jTextFieldDescription.getText());
+				list.setCurrency(jTextFieldCurrency.getText());
+
+				PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
+				boolean result = false;
+				try{
+					if (insert) {      // inserting
+						result = listManager.newList(list);
+						if (result) {
+							fireListInserted();
 						}
-						else {             // updating
-							result = listManager.updateList(list);
-							if (result) {
-								fireListUpdated();
-							}
+					}
+					else {             // updating
+						result = listManager.updateList(list);
+						if (result) {
+							fireListUpdated();
 						}
-					}catch(OHServiceException e){
-						OHServiceExceptionUtil.showMessages(e);
 					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-					}
-					else {
-						dispose();
-					}
+				} catch(OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+				}
+				if (!result) {
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+				}
+				else {
+					dispose();
 				}
 			});
 		}
@@ -165,12 +162,7 @@ public class ListEdit extends JDialog {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-						dispose();
-				}
-			});
+			jButtonCancel.addActionListener(event -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -180,16 +172,16 @@ public class ListEdit extends JDialog {
 			jTextFieldDescription = new VoLimitedTextField(100, 20);
 			if (!insert) {
 				jTextFieldDescription.setText(list.getDescription());
-			} else jTextFieldDescription = new VoLimitedTextField(100);
+			} else {
+				jTextFieldDescription = new VoLimitedTextField(100);
+			}
 		}
 		return jTextFieldDescription;
 	}
 
 	private JLabel getJLabelDescription() {
 		if (jLabelDescription == null) {
-			jLabelDescription = new JLabel();
-			jLabelDescription.setText(MessageBundle.getMessage("angal.priceslist.descriptionstar")); //$NON-NLS-1$
-			
+			jLabelDescription = new JLabel(MessageBundle.getMessage("angal.priceslist.descriptionstar")); //$NON-NLS-1$
 		}
 		return jLabelDescription;
 	}
@@ -208,15 +200,16 @@ public class ListEdit extends JDialog {
 			jTextFieldName = new VoLimitedTextField(50, 20);
 			if (!insert) {
 				jTextFieldName.setText(list.getName());
-			} else jTextFieldName.setText(""); //$NON-NLS-1$
+			} else {
+				jTextFieldName.setText(""); //$NON-NLS-1$
+			}
 		}
 		return jTextFieldName;
 	}
 
 	private JLabel getJLabelName() {
 		if (jLabelName == null) {
-			jLabelName = new JLabel();
-			jLabelName.setText(MessageBundle.getMessage("angal.priceslist.namestar")); //$NON-NLS-1$
+			jLabelName = new JLabel(MessageBundle.getMessage("angal.priceslist.namestar")); //$NON-NLS-1$
 		}
 		return jLabelName;
 	}
@@ -226,41 +219,42 @@ public class ListEdit extends JDialog {
 			jTextFieldCode = new VoLimitedTextField(7, 20);
 			if (!insert) {
 				jTextFieldCode.setText(list.getCode());
-			} else jTextFieldCode.setText(MessageBundle.getMessage("angal.priceslist.listm")); //$NON-NLS-1$
+			} else {
+				jTextFieldCode.setText(MessageBundle.getMessage("angal.priceslist.listm")); //$NON-NLS-1$
+			}
 		}
 		return jTextFieldCode;
 	}
 
 	private JLabel getJLabelCode() {
 		if (jLabelCode == null) {
-			jLabelCode = new JLabel();
-			jLabelCode.setText(MessageBundle.getMessage("angal.common.codestar")); //$NON-NLS-1$
+			jLabelCode = new JLabel(MessageBundle.getMessage("angal.common.codestar")); //$NON-NLS-1$
 		}
 		return jLabelCode;
 	}
-	
+
 	private JTextField getJTextFieldCurrency() {
 		if (jTextFieldCurrency == null) {
 			jTextFieldCurrency = new VoLimitedTextField(10, 20);
 			if (!insert) {
 				jTextFieldCurrency.setText(list.getCurrency());
-			} else jTextFieldCurrency.setText(""); //$NON-NLS-1$
+			} else {
+				jTextFieldCurrency.setText(""); //$NON-NLS-1$
+			}
 		}
 		return jTextFieldCurrency;
 	}
 
 	private JLabel getJLabelCurrency() {
 		if (jLabelCurrency == null) {
-			jLabelCurrency = new JLabel();
-			jLabelCurrency.setText(MessageBundle.getMessage("angal.priceslist.currencystar")); //$NON-NLS-1$
+			jLabelCurrency = new JLabel(MessageBundle.getMessage("angal.priceslist.currencystar")); //$NON-NLS-1$
 		}
 		return jLabelCurrency;
 	}
 
 	private JPanel getJPanelData() {
 		if (jPanelData == null) {
-			jPanelData = new JPanel();
-			jPanelData.setLayout(new BoxLayout(jPanelData, BoxLayout.Y_AXIS));
+			jPanelData = new JPanel(new SpringLayout());
 			jPanelData.add(getJLabelCode());
 			jPanelData.add(getJTextFieldCode());
 			jPanelData.add(getJLabelName());
@@ -269,6 +263,9 @@ public class ListEdit extends JDialog {
 			jPanelData.add(getJTextFieldDescription());
 			jPanelData.add(getJLabelCurrency());
 			jPanelData.add(getJTextFieldCurrency());
+			jPanelData.add(new JLabel(MessageBundle.getMessage("angal.vaccine.requiredfields")));
+			jPanelData.add(new JLabel(""));
+			SpringUtilities.makeCompactGrid(jPanelData, 5, 2, 5, 5, 5, 5);
 		}
 		return jPanelData;
 	}
