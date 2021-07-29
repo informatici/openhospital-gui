@@ -23,8 +23,6 @@ package org.isf.vaccine.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -83,8 +81,9 @@ public class VaccineEdit extends JDialog {
 		};
 
 		EventListener[] listeners = vaccineListeners.getListeners(VaccineListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((VaccineListener) listener).vaccineInserted(event);
+		}
 	}
 
 	private void fireVaccineUpdated() {
@@ -94,8 +93,9 @@ public class VaccineEdit extends JDialog {
 		};
 
 		EventListener[] listeners = vaccineListeners.getListeners(VaccineListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((VaccineListener) listener).vaccineUpdated(event);
+		}
 	}
 
 	private JPanel jContentPane = null;
@@ -124,19 +124,14 @@ public class VaccineEdit extends JDialog {
 	 * This method initializes this
 	 */
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		int pfrmWidth = 350;
-		int pfrmHeight = 250;
-		int pfrmBordX = screensize.width / 2 - (pfrmWidth / 2);
-		int pfrmBordY = screensize.height / 2 - (pfrmHeight / 2);
-		this.setBounds(pfrmBordX,pfrmBordY,pfrmWidth,pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.vaccine.newvaccine.title"));
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.vaccine.editvaccine.title"));
 		}
+		pack();
+		setLocationRelativeTo(null);
 	}
 
 	/**
@@ -167,8 +162,6 @@ public class VaccineEdit extends JDialog {
 			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
 			// vaccine description
 			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
-			// required fields
-			JLabel requiredLabel = new JLabel(MessageBundle.getMessage("angal.vaccine.requiredfields"));
 
 			dataPanel = new JPanel();
 			dataPanel.setLayout(new SpringLayout());
@@ -178,9 +171,7 @@ public class VaccineEdit extends JDialog {
 			dataPanel.add(getCodeTextField());
 			dataPanel.add(descLabel);
 			dataPanel.add(getDescriptionTextField());
-			dataPanel.add(requiredLabel);
-			dataPanel.add(new JLabel(""));
-			SpringUtilities.makeCompactGrid(dataPanel, 4, 2, 5, 5, 5, 5);
+			SpringUtilities.makeCompactGrid(dataPanel, 3, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
 	}
@@ -279,7 +270,7 @@ public class VaccineEdit extends JDialog {
 	 */
 	private JTextField getDescriptionTextField() {
 		if (descriptionTextField == null) {
-			descriptionTextField = new VoLimitedTextField(50);
+			descriptionTextField = new VoLimitedTextField(50, 25);
 			if (!insert) {
 				descriptionTextField.setText(vaccine.getDescription());
 			}
