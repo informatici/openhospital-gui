@@ -26,14 +26,12 @@ or any similar SQL database (e.g. MariaDB).
 Before running the application, you should copy the distribution files and change them accordingly
 (or use/modify `.sample` files with most common settings):
 
-`database.properties.dist 		-> database.properties` 	*(DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS)*
-
-`dicom.properties.dist			-> dicom.properties`	 	*(OH_PATH_SUBSTITUTE/DICOM_DIR, DICOM_SIZE)*
-
-`log4j.properties.dist			-> log4j.properties` 		*(LOG_DEST, DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS, LOG_LEVEL)*
-
-`settings.properties.dist		-> settings.properties`	*(OH_SET_LANGUAGE)*
-	
+| Dist file                | Property file       | Properties to fill in                                         |
+|--------------------------|---------------------|---------------------------------------------------------------|
+| database.properties.dist | database.properties | DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS                      |
+| dicom.properties.dist    | dicom.properties    | OH_PATH_SUBSTITUTE/DICOM_DIR, DICOM_SIZE                      |
+| log4j.properties.dist    | log4j.properties    | LOG_DEST, DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS, LOG_LEVEL |
+| settings.properties.dist | settings.properties | OH_SET_LANGUAGE                                               |
 For further information, please refer to the Admin and User manuals in the [Doc project][openhospital-doc].
 
 ## How to contribute
