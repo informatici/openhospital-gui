@@ -450,6 +450,11 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		patientTextField.setEditable(false);
 		choosePatientPanel.add(patientTextField);
 		choosePatientPanel.add(getJButtonPickPatient());
+		
+		if (patientSelected != null) {
+			patientSelected(patientSelected);
+			jButtonPickPatient.setEnabled(false);
+		}
 
 		return choosePatientPanel;
 	}
