@@ -23,10 +23,6 @@ package org.isf.exatype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -79,30 +75,22 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 	private ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
 	private ExamType examType = null;
 	private final JFrame myFrame;
-
 	
 	/**
 	 * This method initializes 
 	 */
 	public ExamTypeBrowser() {
 		super();
-		myFrame=this;
+		myFrame = this;
 		initialize();
 		setVisible(true);
 	}
-	
-	
+
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 10;
-        final int pfrmWidth = 5;
-        final int pfrmHeight = 4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle( MessageBundle.getMessage("angal.exatype.examtypebrowser.title"));
+		this.setTitle(MessageBundle.getMessage("angal.exatype.examtypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+		pack();
+		setLocationRelativeTo(null);
 	}
 	
 	
@@ -111,8 +99,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -128,20 +115,16 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					examType = new ExamType("","");
-					ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, true);
-					newrecord.addExamTypeListener(ExamTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				examType = new ExamType("","");
+				ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, true);
+				newrecord.addExamTypeListener(ExamTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -156,18 +139,15 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						examType = (ExamType) (model.getValueAt(selectedrow, -1));
-						ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, false);
-						newrecord.addExamTypeListener(ExamTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					examType = (ExamType) (model.getValueAt(selectedrow, -1));
+					ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, false);
+					newrecord.addExamTypeListener(ExamTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -183,11 +163,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -201,32 +177,29 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						ExamType examType = (ExamType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int answer = MessageDialog.yesNo(null,"angal.exatype.deleteexamtype.fmt.msg", examType.getDescription());
-						if (answer == JOptionPane.YES_OPTION) {
-							
-							boolean deleted;
-							try {
-								deleted = manager.deleteExamType(examType);
-							} catch (OHServiceException e) {
-								deleted = false;
-								OHServiceExceptionUtil.showMessages(e);
-							}
-							
-							if (deleted) {
-								pExamType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
+			jDeleteButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					ExamType examType = (ExamType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null,"angal.exatype.deleteexamtype.fmt.msg", examType.getDescription());
+					if (answer == JOptionPane.YES_OPTION) {
+
+						boolean deleted;
+						try {
+							deleted = manager.deleteExamType(examType);
+						} catch (OHServiceException e) {
+							deleted = false;
+							OHServiceExceptionUtil.showMessages(e);
+						}
+
+						if (deleted) {
+							pExamType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
 					}
 				}
-				
 			});
 		}
 		return jDeleteButton;
@@ -255,20 +228,25 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 			}
 		}
 		
+		@Override
 		public int getRowCount() {
-			if (pExamType == null)
+			if (pExamType == null) {
 				return 0;
+			}
 			return pExamType.size();
 		}
 		
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			ExamType examType = pExamType.get(r);
 			if (c == 0) {
@@ -283,26 +261,27 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 
-
+	@Override
 	public void examTypeUpdated(AWTEvent e) {
 		pExamType.set(selectedrow, examType);
 		((ExamTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1)
+		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
+		}
 	}
 	
-	
+	@Override
 	public void examTypeInserted(AWTEvent e) {
 		pExamType.add(0, examType);
 		((ExamTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-		if (jTable.getRowCount() > 0)
+		if (jTable.getRowCount() > 0) {
 			jTable.setRowSelectionInterval(0, 0);
+		}
 	}
 
 }
