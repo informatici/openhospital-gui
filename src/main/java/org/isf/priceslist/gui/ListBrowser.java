@@ -78,7 +78,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.priceslist.currency.col").toUpperCase()
 	};
-	private int[] columnWidth = {100, 100, 200, 200};
+	private int[] columnWidth = {100, 100, 200, 100};
 	private boolean[] columnResizable = {false, false, true, false};
 	
 	private PriceList list;
@@ -94,7 +94,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 	}
 
 	private void initComponents() {
-		add(getJScrollPaneTable(), BorderLayout.NORTH);
+		add(getJScrollPaneTable(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		setTitle(MessageBundle.getMessage("angal.priceslist.listbrowser.title"));
 	}
