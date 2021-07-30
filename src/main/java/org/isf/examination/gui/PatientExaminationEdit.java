@@ -887,7 +887,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 	private VoLimitedTextArea getJTextAreaNote() {
 		if (jTextAreaNote == null) {
-			jTextAreaNote = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGHT, 6, 20);
+			jTextAreaNote = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
 			jTextAreaNote.setLineWrap(true);
 			jTextAreaNote.setWrapStyleWord(true);
 			jTextAreaNote.setMargin(new Insets(0, 5, 0, 0));
@@ -2008,7 +2008,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					button.addActionListener(new ActionListener() {
 
 						public void actionPerformed(ActionEvent arg0) {
-							VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGHT, 6, 20);
+							VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
 							noteArea.setText(note);
 							noteArea.setEditable(false);
 							JOptionPane.showMessageDialog(PatientExaminationEdit.this, 
