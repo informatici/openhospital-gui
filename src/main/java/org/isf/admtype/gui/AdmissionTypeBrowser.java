@@ -23,10 +23,6 @@ package org.isf.admtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -73,42 +69,30 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 	private AdmissionTypeBrowserManager admissionTypeManager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 	private AdmissionType admissionType = null;
 	private final JFrame myFrame;
-	
-	
-	
-	
+
 	/**
 	 * This method initializes 
 	 */
 	public AdmissionTypeBrowser() {
 		super();
-		myFrame=this;
+		myFrame = this;
 		initialize();
 		setVisible(true);
 	}
-	
-	
+
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 10;
-        final int pfrmWidth = 5;
-        final int pfrmHeight = 4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.admtype.admissiontypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+		pack();
+		setLocationRelativeTo(null);
 	}
-	
-	
+
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -130,14 +114,11 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					AdmissionType mdsr = new AdmissionType("","");
-					AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame,mdsr, true);
-					newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				AdmissionType mdsr = new AdmissionType("","");
+				AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame, mdsr, true);
+				newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -152,18 +133,15 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						admissionType = (AdmissionType) (model.getValueAt(selectedrow, -1));
-						AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame,admissionType, false);
-						newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					admissionType = (AdmissionType) (model.getValueAt(selectedrow, -1));
+					AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame, admissionType, false);
+					newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -179,11 +157,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -197,25 +171,22 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						AdmissionType admType = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int answer = MessageDialog.yesNo(null, "angal.admtype.delete.fmt.msg",admType.getDescription());
-						try {
-							if ((answer == JOptionPane.YES_OPTION) && (admissionTypeManager.deleteAdmissionType(admType))) {
-								pAdmissionType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
-						} catch(OHServiceException e){
-                            OHServiceExceptionUtil.showMessages(e);
+			jDeleteButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					AdmissionType admType = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.admtype.delete.fmt.msg",admType.getDescription());
+					try {
+						if ((answer == JOptionPane.YES_OPTION) && (admissionTypeManager.deleteAdmissionType(admType))) {
+							pAdmissionType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
+					} catch(OHServiceException e){
+OHServiceExceptionUtil.showMessages(e);
 					}
 				}
-				
 			});
 		}
 		return jDeleteButton;
@@ -227,7 +198,8 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-		}return jTable;
+		}
+		return jTable;
 	}
 
 class AdmissionTypeBrowserModel extends DefaultTableModel {
@@ -244,20 +216,24 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 			}
 		}
 		
+		@Override
 		public int getRowCount() {
 			if (pAdmissionType == null)
 				return 0;
 			return pAdmissionType.size();
 		}
 		
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
 				return pAdmissionType.get(r).getCode();
@@ -271,11 +247,11 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 
+@Override
 public void admissionTypeUpdated(AWTEvent e) {
 	pAdmissionType.set(selectedrow, admissionType);
 	((AdmissionTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
@@ -284,6 +260,7 @@ public void admissionTypeUpdated(AWTEvent e) {
 		jTable.setRowSelectionInterval(selectedrow, selectedrow);
 }
 
+@Override
 public void admissionTypeInserted(AWTEvent e) {
 	admissionType = (AdmissionType)e.getSource();
 	pAdmissionType.add(0, admissionType);
