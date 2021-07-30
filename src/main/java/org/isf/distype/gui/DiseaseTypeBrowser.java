@@ -23,10 +23,6 @@ package org.isf.distype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -73,39 +69,29 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 	private DiseaseType diseaseType = null;
 	private final JFrame myFrame;
 	
-	
 	/**
 	 * This method initializes
 	 */
 	public DiseaseTypeBrowser() {
 		super();
-		myFrame=this;
+		myFrame = this;
 		initialize();
 		setVisible(true);
 	}
 	
-	
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 10;
-        final int pfrmWidth = 5;
-        final int pfrmHeight =4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.distype.diseasetypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+		pack();
+		setLocationRelativeTo(null);
 	}
-	
-	
+
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -121,20 +107,16 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					diseaseType = new DiseaseType("","");
-					DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, true);
-					newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				diseaseType = new DiseaseType("","");
+				DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, true);
+				newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -149,18 +131,15 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						diseaseType = (DiseaseType) (model.getValueAt(selectedrow, -1));
-						DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, false);
-						newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					diseaseType = (DiseaseType) (model.getValueAt(selectedrow, -1));
+					DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, false);
+					newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -176,11 +155,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -194,22 +169,20 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						DiseaseType diseaseType = (DiseaseType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int answer = MessageDialog.yesNo(null, "angal.distype.deletediseasetype.fmt.msg", diseaseType.getDescription());
-						try {
-							if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDiseaseType(diseaseType))) {
-								pDiseaseType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
-						} catch (OHServiceException ohServiceException) {
-							MessageDialog.showExceptions(ohServiceException);
+			jDeleteButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					DiseaseType diseaseType = (DiseaseType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.distype.deletediseasetype.fmt.msg", diseaseType.getDescription());
+					try {
+						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDiseaseType(diseaseType))) {
+							pDiseaseType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
+					} catch (OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
 			});
@@ -226,36 +199,39 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		}
 		return jTable;
 	}
-	
 
-	
-class DiseaseTypeBrowserModel extends DefaultTableModel {
-		
-	private static final long serialVersionUID = 1L;
-	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	class DiseaseTypeBrowserModel extends DefaultTableModel {
+
+		private static final long serialVersionUID = 1L;
+		private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 		public DiseaseTypeBrowserModel() {
 			try {
 				pDiseaseType = manager.getDiseaseType();
-			} catch(OHServiceException ohServiceException) {
+			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
-		
+
+		@Override
 		public int getRowCount() {
-			if (pDiseaseType == null)
+			if (pDiseaseType == null) {
 				return 0;
+			}
 			return pDiseaseType.size();
 		}
-		
+
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
 				return pDiseaseType.get(r).getCode();
@@ -266,29 +242,30 @@ class DiseaseTypeBrowserModel extends DefaultTableModel {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 
-public void diseaseTypeUpdated(AWTEvent e) {
-	pDiseaseType.set(selectedrow, diseaseType);
-	((DiseaseTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-	jTable.updateUI();
-	if ((jTable.getRowCount() > 0) && selectedrow > -1)
-		jTable.setRowSelectionInterval(selectedrow, selectedrow);
-}
+	@Override
+	public void diseaseTypeUpdated(AWTEvent e) {
+		pDiseaseType.set(selectedrow, diseaseType);
+		((DiseaseTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+		jTable.updateUI();
+		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+			jTable.setRowSelectionInterval(selectedrow, selectedrow);
+		}
+	}
 
+	@Override
+	public void diseaseTypeInserted(AWTEvent e) {
+		pDiseaseType.add(0, diseaseType);
+		((DiseaseTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+		if (jTable.getRowCount() > 0) {
+			jTable.setRowSelectionInterval(0, 0);
+		}
+	}
 
-public void diseaseTypeInserted(AWTEvent e) {
-	pDiseaseType.add(0, diseaseType);
-	((DiseaseTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-	if (jTable.getRowCount() > 0)
-		jTable.setRowSelectionInterval(0, 0);
-}
-	
-	
 }
