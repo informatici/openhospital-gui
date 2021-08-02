@@ -23,10 +23,6 @@ package org.isf.opetype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -73,40 +69,30 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 	private OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 	private OperationType operationType = null;
 	private final JFrame myFrame;
-	
 
 	/**
 	 * This method initializes 
 	 */
 	public OperationTypeBrowser() {
 		super();
-		myFrame=this;
+		myFrame = this;
 		initialize();
 		setVisible(true);
 	}
 	
-	
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 10;
-        final int pfrmWidth = 5;
-        final int pfrmHeight =4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.opetype.operationtypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+		pack();
+		setLocationRelativeTo(null);
 	}
-	
-	
+
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContainPanel.add(new JScrollPane(getJTable()),	java.awt.BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -122,20 +108,16 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					operationType = new OperationType("","");
-					OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, true);
-					newrecord.addOperationTypeListener(OperationTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				operationType = new OperationType("","");
+				OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, true);
+				newrecord.addOperationTypeListener(OperationTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -150,18 +132,15 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						operationType = (OperationType) (model.getValueAt(selectedrow, -1));
-						OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, false);
-						newrecord.addOperationTypeListener(OperationTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					operationType = (OperationType) (model.getValueAt(selectedrow, -1));
+					OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, false);
+					newrecord.addOperationTypeListener(OperationTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -177,11 +156,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -195,33 +170,29 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						OperationType opType = (OperationType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int answer = MessageDialog.yesNo(null, "angal.opetype.deleteoperationtype.fmt.msg", opType.getDescription());
-						if (answer == JOptionPane.YES_OPTION) {
-							
-							boolean deleted;
-							
-							try {
-								deleted = manager.deleteOperationType(opType);
-							} catch (OHServiceException e) {
-								deleted = false;
-								OHServiceExceptionUtil.showMessages(e);
-							}
-							
-							if (deleted) {
-								pOperationType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
+			jDeleteButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					OperationType opType = (OperationType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.opetype.deleteoperationtype.fmt.msg", opType.getDescription());
+					if (answer == JOptionPane.YES_OPTION) {
+
+						boolean deleted;
+						try {
+							deleted = manager.deleteOperationType(opType);
+						} catch (OHServiceException e) {
+							deleted = false;
+							OHServiceExceptionUtil.showMessages(e);
+						}
+
+						if (deleted) {
+							pOperationType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
 					}
 				}
-				
 			});
 		}
 		return jDeleteButton;
@@ -233,13 +204,13 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-		}return jTable;
+		}
+		return jTable;
 	}
-	
-	
-class OperationTypeBrowserModel extends DefaultTableModel {
-		
-	private static final long serialVersionUID = 1L;
+
+	class OperationTypeBrowserModel extends DefaultTableModel {
+
+		private static final long serialVersionUID = 1L;
 
 		public OperationTypeBrowserModel() {
 			OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
@@ -250,21 +221,26 @@ class OperationTypeBrowserModel extends DefaultTableModel {
 				pOperationType = null;
 			}
 		}
-		
+
+		@Override
 		public int getRowCount() {
-			if (pOperationType == null)
+			if (pOperationType == null) {
 				return 0;
+			}
 			return pOperationType.size();
 		}
-		
+
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
 				return pOperationType.get(r).getCode();
@@ -275,31 +251,30 @@ class OperationTypeBrowserModel extends DefaultTableModel {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 
+	@Override
+	public void operationTypeUpdated(AWTEvent e) {
+		pOperationType.set(selectedrow, operationType);
+		((OperationTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+		jTable.updateUI();
+		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+			jTable.setRowSelectionInterval(selectedrow, selectedrow);
+		}
+	}
 
-
-
-public void operationTypeUpdated(AWTEvent e) {
-	pOperationType.set(selectedrow, operationType);
-	((OperationTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-	jTable.updateUI();
-	if ((jTable.getRowCount() > 0) && selectedrow > -1)
-		jTable.setRowSelectionInterval(selectedrow, selectedrow);
-}
-
-
-public void operationTypeInserted(AWTEvent e) {
-	pOperationType.add(0, operationType);
-	((OperationTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-	if (jTable.getRowCount() > 0)
-		jTable.setRowSelectionInterval(0, 0);
-}
+	@Override
+	public void operationTypeInserted(AWTEvent e) {
+		pOperationType.add(0, operationType);
+		((OperationTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+		if (jTable.getRowCount() > 0) {
+			jTable.setRowSelectionInterval(0, 0);
+		}
+	}
 
 }
