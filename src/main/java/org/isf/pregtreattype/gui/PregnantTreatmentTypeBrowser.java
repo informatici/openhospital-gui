@@ -23,10 +23,6 @@ package org.isf.pregtreattype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -73,40 +69,30 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 	private PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 	private PregnantTreatmentType pregnantTreatmentType = null;
 	private final JFrame myFrame;
-	
 
 	/**
 	 * This method initializes 
 	 */
 	public PregnantTreatmentTypeBrowser() {
 		super();
-		myFrame=this;
+		myFrame = this;
 		initialize();
 		setVisible(true);
 	}
-	
-	
+
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 10;
-        final int pfrmWidth = 5;
-        final int pfrmHeight =4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.preagtreattype.pregnanttreatmenttypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+		pack();
+		setLocationRelativeTo(null);
 	}
-	
 	
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -128,14 +114,11 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					pregnantTreatmentType = new PregnantTreatmentType("","");
-					PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame,pregnantTreatmentType, true);
-					newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				pregnantTreatmentType = new PregnantTreatmentType("","");
+				PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame,pregnantTreatmentType, true);
+				newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -150,18 +133,15 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						pregnantTreatmentType = (PregnantTreatmentType) (model.getValueAt(selectedrow, -1));
-						PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame,pregnantTreatmentType, false);
-						newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					pregnantTreatmentType = (PregnantTreatmentType) (model.getValueAt(selectedrow, -1));
+					PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame,pregnantTreatmentType, false);
+					newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -177,11 +157,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -195,22 +171,20 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						PregnantTreatmentType preTreatmentType = (PregnantTreatmentType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int answer = MessageDialog.yesNo(null, "angal.preagtreattype.deletetreatmenttype.fmt.msg", preTreatmentType.getDescription());
-						try {
-							if ((answer == JOptionPane.YES_OPTION) && (manager.deletePregnantTreatmentType(preTreatmentType))) {
-								pPregnantTreatmentType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
-						} catch(OHServiceException e) {
-							OHServiceExceptionUtil.showMessages(e);
+			jDeleteButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					PregnantTreatmentType preTreatmentType = (PregnantTreatmentType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.preagtreattype.deletetreatmenttype.fmt.msg", preTreatmentType.getDescription());
+					try {
+						if ((answer == JOptionPane.YES_OPTION) && (manager.deletePregnantTreatmentType(preTreatmentType))) {
+							pPregnantTreatmentType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
+					} catch(OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
 			});
@@ -226,36 +200,39 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 		}return jTable;
 	}
-	
-	
-	
-class PregnantTreatmentTypeBrowserModel extends DefaultTableModel {
 
-	private static final long serialVersionUID = 1L;
+	class PregnantTreatmentTypeBrowserModel extends DefaultTableModel {
+
+		private static final long serialVersionUID = 1L;
 
 		public PregnantTreatmentTypeBrowserModel() {
 			PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 			try {
 				pPregnantTreatmentType = manager.getPregnantTreatmentType();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		
+
+		@Override
 		public int getRowCount() {
-			if (pPregnantTreatmentType == null)
+			if (pPregnantTreatmentType == null) {
 				return 0;
+			}
 			return pPregnantTreatmentType.size();
 		}
-		
+
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
 				return pPregnantTreatmentType.get(r).getCode();
@@ -266,32 +243,29 @@ class PregnantTreatmentTypeBrowserModel extends DefaultTableModel {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 
+	@Override
+	public void pregnantTreatmentTypeUpdated(AWTEvent e) {
+		pPregnantTreatmentType.set(selectedrow, pregnantTreatmentType);
+		((PregnantTreatmentTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+		jTable.updateUI();
+		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+			jTable.setRowSelectionInterval(selectedrow, selectedrow);
+		}
+	}
 
-
-
-public void pregnantTreatmentTypeUpdated(AWTEvent e) {
-	pPregnantTreatmentType.set(selectedrow, pregnantTreatmentType);
-	((PregnantTreatmentTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-	jTable.updateUI();
-	if ((jTable.getRowCount() > 0) && selectedrow > -1)
-		jTable.setRowSelectionInterval(selectedrow, selectedrow);
-}
-
-
-public void pregnantTreatmentTypeInserted(AWTEvent e) {
-	pPregnantTreatmentType.add(0, pregnantTreatmentType);
-	((PregnantTreatmentTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-	if (jTable.getRowCount() > 0)
-		jTable.setRowSelectionInterval(0, 0);
-}
-	
-	
+	@Override
+	public void pregnantTreatmentTypeInserted(AWTEvent e) {
+		pPregnantTreatmentType.add(0, pregnantTreatmentType);
+		((PregnantTreatmentTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+		if (jTable.getRowCount() > 0) {
+			jTable.setRowSelectionInterval(0, 0);
+		}
+	}
 }
