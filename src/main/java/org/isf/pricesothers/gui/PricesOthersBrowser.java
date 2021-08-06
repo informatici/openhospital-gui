@@ -24,8 +24,6 @@ package org.isf.pricesothers.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -34,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
@@ -48,10 +47,12 @@ import org.isf.utils.jobjects.ModalJFrame;
 
 public class PricesOthersBrowser extends ModalJFrame implements PricesOthersListener {
 
+	@Override
 	public void pOthersInserted(AWTEvent e) {
 		jTablePricesOthers.setModel(new PricesOthersBrowserModel());
 	}
 
+	@Override
 	public void pOthersUpdated(AWTEvent e) {
 		jTablePricesOthers.setModel(new PricesOthersBrowserModel());
 	}
@@ -86,7 +87,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	public PricesOthersBrowser() {
 		myFrame = this;
 		initComponents();
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
 
@@ -94,7 +95,6 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		setTitle(MessageBundle.getMessage("angal.pricesothers.otherpricesbrowser.title"));
 		add(getJScrollPaneTable(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
-		//setSize(550, 240);
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -103,12 +103,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonClose == null) {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jButtonClose.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-						dispose();
-				}
-			});
+			jButtonClose.addActionListener(event -> dispose());
 		}
 		return jButtonClose;
 	}
@@ -117,33 +112,30 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonDelete == null) {
 			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jButtonDelete.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTablePricesOthers.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtodelete");
-					} else {
-						int selectedRow = jTablePricesOthers.getSelectedRow();
-						pOthers = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
-						if (pOthers.getId() == 1) {
-							MessageDialog.error(null, "angal.sql.operationnotpermittedprotectedelement");
-							return;
+			jButtonDelete.addActionListener(event -> {
+				if (jTablePricesOthers.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtodelete");
+				} else {
+					int selectedRow = jTablePricesOthers.getSelectedRow();
+					pOthers = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
+					if (pOthers.getId() == 1) {
+						MessageDialog.error(null, "angal.sql.operationnotpermittedprotectedelement");
+						return;
+					}
+					int answer = MessageDialog.yesNo(null,"angal.pricesothers.deletethisitem.fmt.msg", pOthers.getDescription());
+					if (answer == JOptionPane.OK_OPTION) {
+
+						boolean result = false;
+						try {
+							result = pOthersManager.deleteOther(pOthers);
+						}catch(OHServiceException e){
+							OHServiceExceptionUtil.showMessages(e);
 						}
-						int answer = MessageDialog.yesNo(null,"angal.pricesothers.deletethisitem.fmt.msg", pOthers.getDescription());
-						if (answer == JOptionPane.OK_OPTION) {
-							
-							boolean result = false;
-							try {
-								result = pOthersManager.deleteOther(pOthers);
-							}catch(OHServiceException e){
-								OHServiceExceptionUtil.showMessages(e);
-							}
-							
-							if (result) {
-								jTablePricesOthers.setModel(new PricesOthersBrowserModel());
-							} else {
-								MessageDialog.error(null, "angal.pricesothers.thedatacouldnotbedeleted");
-							}
+
+						if (result) {
+							jTablePricesOthers.setModel(new PricesOthersBrowserModel());
+						} else {
+							MessageDialog.error(null, "angal.pricesothers.thedatacouldnotbedeleted");
 						}
 					}
 				}
@@ -156,18 +148,15 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonEdit == null) {
 			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jButtonEdit.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTablePricesOthers.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtoedit");
-					} else {
-						int selectedRow = jTablePricesOthers.getSelectedRow();
-						PricesOthers pOther = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
-						PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, false);	
-						editOther.addOtherListener(PricesOthersBrowser.this);
-						editOther.setVisible(true);
-					}
+			jButtonEdit.addActionListener(event -> {
+				if (jTablePricesOthers.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtoedit");
+				} else {
+					int selectedRow = jTablePricesOthers.getSelectedRow();
+					PricesOthers pOther = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
+					PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, false);
+					editOther.addOtherListener(PricesOthersBrowser.this);
+					editOther.setVisible(true);
 				}
 			});
 		}
@@ -178,14 +167,11 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonNew == null) {
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jButtonNew.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					PricesOthers pOther = new PricesOthers("", "", true,true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);	
-					editOther.addOtherListener(PricesOthersBrowser.this);
-					editOther.setVisible(true);
-				}
+			jButtonNew.addActionListener(event -> {
+				PricesOthers pOther = new PricesOthers("", "", true,true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);
+				editOther.addOtherListener(PricesOthersBrowser.this);
+				editOther.setVisible(true);
 			});
 		}
 		return jButtonNew;
@@ -221,6 +207,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 				// Override this method so that it returns the preferred
 			    // size of the JTable instead of the default fixed size
+			    @Override
 			    public Dimension getPreferredScrollableViewportSize() {
 			        return new Dimension((int) getPreferredSize().getWidth(), 200);
 			    }
@@ -228,7 +215,9 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 			jTablePricesOthers.setModel(new PricesOthersBrowserModel());
 			for (int i = 0; i< columnWidth.length; i++){
 				jTablePricesOthers.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
-		    	if (!columnResizable[i]) jTablePricesOthers.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
+		    	if (!columnResizable[i]) {
+				    jTablePricesOthers.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
+			    }
 			}
 			jTablePricesOthers.setAutoCreateColumnsFromModel(false);
 		}
@@ -247,20 +236,25 @@ class PricesOthersBrowserModel extends DefaultTableModel {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
+		@Override
 		public int getRowCount() {
-			if (pOthersArray == null)
+			if (pOthersArray == null) {
 				return 0;
+			}
 			return pOthersArray.size();
 		}
 		
+		@Override
 		public String getColumnName(int c) {
 			return columnNames[c];
 		}
 		
+		@Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
 		
+		@Override
 		public Object getValueAt(int r, int c) {
 			
 			PricesOthers price = pOthersArray.get(r);
@@ -283,10 +277,12 @@ class PricesOthersBrowserModel extends DefaultTableModel {
 			} return null;
 		}
 		
+		@Override
 		public Class<?> getColumnClass(int column) {
 			return cTypes[column];
 		}
 		
+		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
 		}

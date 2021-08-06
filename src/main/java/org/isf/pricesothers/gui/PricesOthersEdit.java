@@ -23,9 +23,6 @@ package org.isf.pricesothers.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.EventListener;
 
 import javax.swing.BoxLayout;
@@ -36,6 +33,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -46,10 +44,11 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 public class PricesOthersEdit extends JDialog {
 	
-	private EventListenerList OthersListeners = new EventListenerList();
+	private EventListenerList othersListeners = new EventListenerList();
 	
 	public interface PricesOthersListener extends EventListener {
 		void pOthersUpdated(AWTEvent e);
@@ -57,11 +56,11 @@ public class PricesOthersEdit extends JDialog {
 	}
 	
 	public void addOtherListener(PricesOthersListener l) {
-		OthersListeners.add(PricesOthersListener.class, l);
+		othersListeners.add(PricesOthersListener.class, l);
 	}
 	
 	public void removeOtherListener(PricesOthersListener listener) {
-		OthersListeners.remove(PricesOthersListener.class, listener);
+		othersListeners.remove(PricesOthersListener.class, listener);
 	}
 	
 	private void fireOtherInserted() {
@@ -69,28 +68,27 @@ public class PricesOthersEdit extends JDialog {
 
 			private static final long serialVersionUID = 1L;};
 
-		EventListener[] listeners = OthersListeners.getListeners(PricesOthersListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((PricesOthersListener)listeners[i]).pOthersInserted(event);
+		EventListener[] listeners = othersListeners.getListeners(PricesOthersListener.class);
+		for (EventListener listener : listeners) {
+			((PricesOthersListener) listener).pOthersInserted(event);
+		}
 	}
 	private void fireOtherUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
 			private static final long serialVersionUID = 1L;};
 		
-		EventListener[] listeners = OthersListeners.getListeners(PricesOthersListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((PricesOthersListener)listeners[i]).pOthersUpdated(event);
+		EventListener[] listeners = othersListeners.getListeners(PricesOthersListener.class);
+		for (EventListener listener : listeners) {
+			((PricesOthersListener) listener).pOthersUpdated(event);
+		}
 	}
 	
 	
 	private static final long serialVersionUID = 1L;
 	private JPanel jPanelData;
-	private JPanel jPanelCode;
-	private JLabel jLabelCode;
+	private JPanel jPanelCodeDescription;
 	private JTextField jTextFieldCode;
-	private JPanel jPanelDescription;
-	private JLabel jLabelDescription;
 	private JTextField jTextFieldDescription;
 	private JPanel jPanelParameters;
 	private JCheckBox jCheckBoxOPD;
@@ -127,12 +125,7 @@ public class PricesOthersEdit extends JDialog {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-						dispose();
-				}
-			});
+			jButtonCancel.addActionListener(event -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -141,42 +134,37 @@ public class PricesOthersEdit extends JDialog {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jButtonOK.addActionListener(new ActionListener() {
+			jButtonOK.addActionListener(event -> {
 
-				public void actionPerformed(ActionEvent event) {
+				pOther.setCode(jTextFieldCode.getText());
+				pOther.setDescription(jTextFieldDescription.getText());
+				pOther.setOpdInclude(jCheckBoxOPD.isSelected());
+				pOther.setIpdInclude(jCheckBoxIPD.isSelected());
+				pOther.setDaily(jCheckBoxDaily.isSelected());
+				pOther.setDischarge(jCheckBoxDischarge.isSelected());
+				pOther.setUndefined(jCheckBoxUndefined.isSelected());
 
-					pOther.setCode(jTextFieldCode.getText());
-					pOther.setDescription(jTextFieldDescription.getText());
-					pOther.setOpdInclude(jCheckBoxOPD.isSelected());
-					pOther.setIpdInclude(jCheckBoxIPD.isSelected());
-					pOther.setDaily(jCheckBoxDaily.isSelected());
-					pOther.setDischarge(jCheckBoxDischarge.isSelected());
-					pOther.setUndefined(jCheckBoxUndefined.isSelected());
-
-					PricesOthersManager pOtherManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
-					boolean result = false;
-					try {
-						if (insert) {      // inserting
-							result = pOtherManager.newOther(pOther);
-							if (result) {
-								fireOtherInserted();
-							}
-						} else {             // updating
-							result = pOtherManager.updateOther(pOther);
-							if (result) {
-								fireOtherUpdated();
-							}
+				PricesOthersManager pOtherManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
+				boolean result = false;
+				try {
+					if (insert) {      // inserting
+						result = pOtherManager.newOther(pOther);
+						if (result) {
+							fireOtherInserted();
 						}
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
+					} else {             // updating
+						result = pOtherManager.updateOther(pOther);
+						if (result) {
+							fireOtherUpdated();
+						}
 					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						dispose();
-					} else {
-						dispose();
-					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
+				if (!result) {
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+				}
+				dispose();
 			});
 		}
 		return jButtonOK;
@@ -194,7 +182,7 @@ public class PricesOthersEdit extends JDialog {
 	private JCheckBox getJCheckBoxUndefined() {
 		if (jCheckBoxUndefined == null) {
 			jCheckBoxUndefined = new JCheckBox(MessageBundle.getMessage("angal.common.undefined.txt"));
-			jCheckBoxUndefined.setSelected(insert? false : pOther.isUndefined());
+			jCheckBoxUndefined.setSelected(!insert && pOther.isUndefined());
 		}
 		return jCheckBoxUndefined;
 	}
@@ -202,7 +190,7 @@ public class PricesOthersEdit extends JDialog {
 	private JCheckBox getJCheckBoxDischarge() {
 		if (jCheckBoxDischarge == null) {
 			jCheckBoxDischarge = new JCheckBox(MessageBundle.getMessage("angal.common.discharge.txt"));
-			jCheckBoxDischarge.setSelected(insert? false : pOther.isDischarge());
+			jCheckBoxDischarge.setSelected(!insert && pOther.isDischarge());
 		}
 		return jCheckBoxDischarge;
 	}
@@ -210,7 +198,7 @@ public class PricesOthersEdit extends JDialog {
 	private JCheckBox getJCheckBoxDaily() {
 		if (jCheckBoxDaily == null) {
 			jCheckBoxDaily = new JCheckBox(MessageBundle.getMessage("angal.pricesothers.daily.txt"));
-			jCheckBoxDaily.setSelected(insert? false : pOther.isDaily());
+			jCheckBoxDaily.setSelected(!insert && pOther.isDaily());
 		}
 		return jCheckBoxDaily;
 	}
@@ -219,7 +207,7 @@ public class PricesOthersEdit extends JDialog {
 		if (jCheckBoxIPD == null) {
 			jCheckBoxIPD = new JCheckBox();
 			jCheckBoxIPD.setText("IPD");
-			jCheckBoxIPD.setSelected(insert? true : pOther.isIpdInclude());
+			jCheckBoxIPD.setSelected(insert || pOther.isIpdInclude());
 
 		}
 		return jCheckBoxIPD;
@@ -229,7 +217,7 @@ public class PricesOthersEdit extends JDialog {
 		if (jCheckBoxOPD == null) {
 			jCheckBoxOPD = new JCheckBox();
 			jCheckBoxOPD.setText("OPD");
-			jCheckBoxOPD.setSelected(insert? true : pOther.isOpdInclude());
+			jCheckBoxOPD.setSelected(insert || pOther.isOpdInclude());
 
 		}
 		return jCheckBoxOPD;
@@ -255,56 +243,32 @@ public class PricesOthersEdit extends JDialog {
 		return jTextFieldDescription;
 	}
 
-	private JLabel getJLabelDescription() {
-		if (jLabelDescription == null) {
-			jLabelDescription = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-			jLabelDescription.setSize(50, 10);
-		}
-		return jLabelDescription;
-	}
-
-	private JPanel getJPanelDescription() {
-		if (jPanelDescription == null) {
-			jPanelDescription = new JPanel();
-			jPanelDescription.setLayout(new GridLayout(2, 2));
-			jPanelDescription.add(getJLabelDescription());
-			jPanelDescription.add(getJTextFieldDescription());
-		}
-		return jPanelDescription;
-	}
-
 	private JTextField getJTextFieldCode() {
 		if (jTextFieldCode == null) {
 			jTextFieldCode = new VoLimitedTextField(10);
-			jTextFieldCode.setText(insert? MessageBundle.getMessage("angal.pricesothers.othm") : pOther.getCode()); //$NON-NLS-1$
+			jTextFieldCode.setText(insert ? MessageBundle.getMessage("angal.pricesothers.othm") : pOther.getCode()); //$NON-NLS-1$
 		}
 		return jTextFieldCode;
 	}
 
-	private JLabel getJLabelCode() {
-		if (jLabelCode == null) {
-			jLabelCode = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
-			jLabelCode.setSize(50, 10);
+	private JPanel getJPanelCodeDescription() {
+		if (jPanelCodeDescription == null) {
+			jPanelCodeDescription = new JPanel();
+			jPanelCodeDescription.setLayout(new SpringLayout());
+			jPanelCodeDescription.add(new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':'));
+			jPanelCodeDescription.add(getJTextFieldCode());
+			jPanelCodeDescription.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':'));
+			jPanelCodeDescription.add(getJTextFieldDescription());
+			SpringUtilities.makeCompactGrid(jPanelCodeDescription, 2, 2, 5, 5, 5, 5);
 		}
-		return jLabelCode;
-	}
-
-	private JPanel getJPanelCode() {
-		if (jPanelCode == null) {
-			jPanelCode = new JPanel();
-			jPanelCode.setLayout(new GridLayout(2, 2));
-			jPanelCode.add(getJLabelCode());
-			jPanelCode.add(getJTextFieldCode());
-		}
-		return jPanelCode;
+		return jPanelCodeDescription;
 	}
 
 	private JPanel getJPanelData() {
 		if (jPanelData == null) {
 			jPanelData = new JPanel();
 			jPanelData.setLayout(new BoxLayout(jPanelData, BoxLayout.Y_AXIS));
-			jPanelData.add(getJPanelCode());
-			jPanelData.add(getJPanelDescription());
+			jPanelData.add(getJPanelCodeDescription());
 			jPanelData.add(getJPanelParameters());
 		}
 		return jPanelData;
