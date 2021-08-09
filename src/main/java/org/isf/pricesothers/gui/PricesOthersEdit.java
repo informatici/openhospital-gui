@@ -48,19 +48,19 @@ import org.isf.utils.layout.SpringUtilities;
 
 public class PricesOthersEdit extends JDialog {
 	
-	private EventListenerList othersListeners = new EventListenerList();
+	private EventListenerList pricesOthersListeners = new EventListenerList();
 	
 	public interface PricesOthersListener extends EventListener {
-		void pOthersUpdated(AWTEvent e);
-		void pOthersInserted(AWTEvent e);
+		void pricesOthersUpdated(AWTEvent e);
+		void pricesOthersInserted(AWTEvent e);
 	}
 	
 	public void addOtherListener(PricesOthersListener l) {
-		othersListeners.add(PricesOthersListener.class, l);
+		pricesOthersListeners.add(PricesOthersListener.class, l);
 	}
 	
 	public void removeOtherListener(PricesOthersListener listener) {
-		othersListeners.remove(PricesOthersListener.class, listener);
+		pricesOthersListeners.remove(PricesOthersListener.class, listener);
 	}
 	
 	private void fireOtherInserted() {
@@ -68,9 +68,9 @@ public class PricesOthersEdit extends JDialog {
 
 			private static final long serialVersionUID = 1L;};
 
-		EventListener[] listeners = othersListeners.getListeners(PricesOthersListener.class);
+		EventListener[] listeners = pricesOthersListeners.getListeners(PricesOthersListener.class);
 		for (EventListener listener : listeners) {
-			((PricesOthersListener) listener).pOthersInserted(event);
+			((PricesOthersListener) listener).pricesOthersInserted(event);
 		}
 	}
 	private void fireOtherUpdated() {
@@ -78,9 +78,9 @@ public class PricesOthersEdit extends JDialog {
 
 			private static final long serialVersionUID = 1L;};
 		
-		EventListener[] listeners = othersListeners.getListeners(PricesOthersListener.class);
+		EventListener[] listeners = pricesOthersListeners.getListeners(PricesOthersListener.class);
 		for (EventListener listener : listeners) {
-			((PricesOthersListener) listener).pOthersUpdated(event);
+			((PricesOthersListener) listener).pricesOthersUpdated(event);
 		}
 	}
 	

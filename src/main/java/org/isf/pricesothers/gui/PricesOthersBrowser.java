@@ -48,12 +48,12 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class PricesOthersBrowser extends ModalJFrame implements PricesOthersListener {
 
 	@Override
-	public void pOthersInserted(AWTEvent e) {
+	public void pricesOthersInserted(AWTEvent e) {
 		jTablePricesOthers.setModel(new PricesOthersBrowserModel());
 	}
 
 	@Override
-	public void pOthersUpdated(AWTEvent e) {
+	public void pricesOthersUpdated(AWTEvent e) {
 		jTablePricesOthers.setModel(new PricesOthersBrowserModel());
 	}
 	
