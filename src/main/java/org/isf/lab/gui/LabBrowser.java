@@ -231,7 +231,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			printLabelButton.addActionListener(new ActionListener() {
 			
 				public void actionPerformed(ActionEvent arg0) {
-					Integer labId = null;
+					Integer patId = null;
 					if (GeneralData.LABEXTENDED) {
 						selectedrow = jTable.getSelectedRow();
 						if (selectedrow < 0) {
@@ -241,11 +241,11 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 							}
 						} else {
 							laboratory = (Laboratory) (model.getValueAt(selectedrow, -1));
-							labId = laboratory.getCode();
+							patId = laboratory.getPatient().getCode();
 						}
 					}
 					try {
-						new PrintLabels("LabelForSamples", labId);
+						new PrintLabels("LabelForSamples", patId);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
