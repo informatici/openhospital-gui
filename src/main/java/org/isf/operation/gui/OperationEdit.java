@@ -23,12 +23,10 @@ package org.isf.operation.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -38,6 +36,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -50,6 +50,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 /**
  * This class allows operations edits and inserts
@@ -87,8 +88,9 @@ public class OperationEdit extends JDialog {
 		};
 
 		EventListener[] listeners = operationListeners.getListeners(OperationListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((OperationListener) listeners[i]).operationInserted(event);
+		for (EventListener listener : listeners) {
+			((OperationListener) listener).operationInserted(event);
+		}
 	}
 
 	private void fireOperationUpdated() {
@@ -98,8 +100,9 @@ public class OperationEdit extends JDialog {
 		};
 
 		EventListener[] listeners = operationListeners.getListeners(OperationListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((OperationListener) listeners[i]).operationUpdated(event);
+		for (EventListener listener : listeners) {
+			((OperationListener) listener).operationUpdated(event);
+		}
 	}
 
 	private JPanel jContentPane = null;
@@ -107,20 +110,16 @@ public class OperationEdit extends JDialog {
 	private JPanel buttonPanel = null;
 	private JButton cancelButton = null;
 	private JButton okButton = null;
-	private JLabel descLabel = null;
-	private JLabel codeLabel = null;
 	private JTextField descriptionTextField = null;
 	private JTextField codeTextField = null;
-	private JLabel typeLabel = null;
-	private JComboBox typeComboBox = null;
+	private JComboBox<OperationType> typeComboBox = null;
 	private String lastdescription;
-	private Operation operation = null;
+	private Operation operation;
 	private JRadioButton major = null;
 	private JRadioButton minor = null;
 	private JPanel radioButtonPanel;
-	private JLabel operForLabel=null;
-	private boolean insert = false;
-	private JComboBox operBox;
+	private boolean insert;
+	private JComboBox<String> operBox;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -137,22 +136,13 @@ public class OperationEdit extends JDialog {
 	 * This method initializes this
 	 */
 	private void initialize() {
-
-		// Toolkit kit = Toolkit.getDefaultToolkit();
-		// Dimension screensize = kit.getScreenSize();
-		// pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) /
-		// 2;
-		// pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight))
-		// / 2;
-		// this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase *
-		// pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.operation.newoperation.title"));
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.operation.editoperation.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -166,8 +156,8 @@ public class OperationEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH); // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH); // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -179,35 +169,30 @@ public class OperationEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			typeLabel = new JLabel();
-			typeLabel.setText(MessageBundle.getMessage("angal.operation.type")); // Generated //$NON-NLS-1$
-			typeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-			descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.code.txt"));
-			codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-			operForLabel = new JLabel();
-			operForLabel.setText(MessageBundle.getMessage("angal.operation.operationcontext")); //$NON-NLS-1$
-			operForLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-			dataPanel = new JPanel();
-			dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS)); // Generated
-			dataPanel.add(typeLabel, null); // Generated
-			dataPanel.add(getTypeComboBox(), null); // Generated
-			dataPanel.add(codeLabel, null); // Generated
-			dataPanel.add(getCodeTextField(), null); // Generated
-			dataPanel.add(descLabel, null); // Generated
-			dataPanel.add(getDescriptionTextField(), null); // Generated
+			JLabel typeLabel = new JLabel(MessageBundle.getMessage("angal.operation.type") + ':');
+			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
+			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
+			JLabel operForLabel = new JLabel(MessageBundle.getMessage("angal.operation.operationcontext") + ':');
+
+			dataPanel = new JPanel(new SpringLayout());
+			dataPanel.add(typeLabel);
+			dataPanel.add(getTypeComboBox());
+			dataPanel.add(codeLabel);
+			dataPanel.add(getCodeTextField());
+			dataPanel.add(descLabel);
+			dataPanel.add(getDescriptionTextField());
+			dataPanel.add(new JLabel(""));
 			dataPanel.add(getRadioButtonPanel());
-			dataPanel.add(operForLabel, null); // Generated
-			dataPanel.add(getOperFor(), null); 
+			dataPanel.add(operForLabel);
+			dataPanel.add(getOperFor());
+			SpringUtilities.makeCompactGrid(dataPanel, 5, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
 	}
 
-	private JComboBox getOperFor() {
+	private JComboBox<String> getOperFor() {
 		
-		operBox = new JComboBox();
+		operBox = new JComboBox<>();
 		//TODO: replace integer values with mnemonic ones
 		operBox.addItem(OperationBrowser.OPD_ADMISSION); 	// = "1"
 		operBox.addItem(OperationBrowser.ADMISSION);		// = "2"
@@ -233,8 +218,8 @@ public class OperationEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null); // Generated
-			buttonPanel.add(getCancelButton(), null); // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -248,11 +233,7 @@ public class OperationEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -266,72 +247,70 @@ public class OperationEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					try {
-						if (insert) {
-							String key = codeTextField.getText().trim();
-							if (key.equals("")) {
-								MessageDialog.error(null, "angal.common.pleaseinsertacode.msg");
-								return;
-							}
-							if (key.length() > 10) {
-								MessageDialog.error(null, "angal.common.thecodeistoolongmaxchars.fmt.msg", 10);
-								return;
-							}
-							OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-
-							if (manager.isCodePresent(key)) {
-								MessageDialog.error(null, "angal.common.thecodeisalreadyinuse.msg");
-								return;
-							}
+			okButton.addActionListener(e -> {
+				try {
+					if (insert) {
+						String key = codeTextField.getText().trim();
+						if (key.equals("")) {
+							MessageDialog.error(null, "angal.common.pleaseinsertacode.msg");
+							return;
 						}
-						if (descriptionTextField.getText().equals("")) {
-							MessageDialog.error(null, "angal.common.pleaseinsertavaliddescription.msg");
+						if (key.length() > 10) {
+							MessageDialog.error(null, "angal.common.thecodeistoolongmaxchars.fmt.msg", 10);
 							return;
 						}
 						OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-						if (descriptionTextField.getText().equals(lastdescription)) {
-						} else {
 
-							if (manager.descriptionControl(descriptionTextField.getText(),
-									((OperationType) typeComboBox.getSelectedItem()).getCode())) {
-								MessageDialog.error(null, "angal.operation.operationalreadypresent");
-								return;
-							}
+						if (manager.isCodePresent(key)) {
+							MessageDialog.error(null, "angal.common.thecodeisalreadyinuse.msg");
+							return;
 						}
-						String opeForSelection = String.valueOf(operBox.getSelectedIndex()+1);
-						operation.setOpeFor(opeForSelection);
-						operation.setType((OperationType) typeComboBox.getSelectedItem());
-						operation.setDescription(descriptionTextField.getText());
-						operation.setCode(codeTextField.getText().trim().toUpperCase());
-						if (major.isSelected()) {
-							operation.setMajor(1);
-						} else {
-							operation.setMajor(0);
-						}
-
-						boolean result = false;
-						if (insert) { // inserting
-							result = manager.newOperation(operation);
-							if (result) {
-								fireOperationInserted();
-							}
-						} else { // updating
-							result = manager.updateOperation(operation);
-							if (result) {
-								fireOperationUpdated();
-							}
-						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
-						else {
-							dispose();
-						}
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
 					}
+					if (descriptionTextField.getText().equals("")) {
+						MessageDialog.error(null, "angal.common.pleaseinsertavaliddescription.msg");
+						return;
+					}
+					OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+					if (descriptionTextField.getText().equals(lastdescription)) {
+					} else {
+
+						if (manager.descriptionControl(descriptionTextField.getText(),
+								((OperationType) typeComboBox.getSelectedItem()).getCode())) {
+							MessageDialog.error(null, "angal.operation.operationalreadypresent");
+							return;
+						}
+					}
+					String opeForSelection = String.valueOf(operBox.getSelectedIndex()+1);
+					operation.setOpeFor(opeForSelection);
+					operation.setType((OperationType) typeComboBox.getSelectedItem());
+					operation.setDescription(descriptionTextField.getText());
+					operation.setCode(codeTextField.getText().trim().toUpperCase());
+					if (major.isSelected()) {
+						operation.setMajor(1);
+					} else {
+						operation.setMajor(0);
+					}
+
+					boolean result;
+					if (insert) { // inserting
+						result = manager.newOperation(operation);
+						if (result) {
+							fireOperationInserted();
+						}
+					} else { // updating
+						result = manager.updateOperation(operation);
+						if (result) {
+							fireOperationUpdated();
+						}
+					}
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
+						dispose();
+					}
+				} catch (OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 		}
@@ -419,9 +398,9 @@ public class OperationEdit extends JDialog {
 	 * 
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox getTypeComboBox() {
+	private JComboBox<OperationType> getTypeComboBox() {
 		if (typeComboBox == null) {
-			typeComboBox = new JComboBox();
+			typeComboBox = new JComboBox<>();
 			if (insert) {
 				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 				ArrayList<OperationType> types;

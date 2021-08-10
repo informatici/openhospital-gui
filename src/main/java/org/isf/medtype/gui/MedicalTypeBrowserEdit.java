@@ -25,13 +25,14 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -42,6 +43,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 public class MedicalTypeBrowserEdit extends JDialog{
 
@@ -67,8 +69,9 @@ public class MedicalTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = medicalTypeListeners.getListeners(MedicalTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((MedicalTypeListener)listeners[i]).medicalTypeInserted(event);
+	    for (EventListener listener : listeners) {
+		    ((MedicalTypeListener) listener).medicalTypeInserted(event);
+	    }
     }
     private void fireMedicalUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -76,8 +79,9 @@ public class MedicalTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = medicalTypeListeners.getListeners(MedicalTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((MedicalTypeListener)listeners[i]).medicalTypeUpdated(event);
+	    for (EventListener listener : listeners) {
+		    ((MedicalTypeListener) listener).medicalTypeUpdated(event);
+	    }
     }
     
 	private JPanel jContentPane = null;
@@ -88,46 +92,36 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	private JTextField descriptionTextField = null;
 	private VoLimitedTextField codeTextField = null;
 	private String lastdescription;
-	private MedicalType medicalType = null;
+	private MedicalType medicalType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private JLabel jCodeLabel = null;
-	private JPanel jCodeLabelPanel = null;
-	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescriptionLabel = null;
-
 	private MedicalTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
-	public MedicalTypeBrowserEdit(JFrame owner,MedicalType old,boolean inserting) {
+	public MedicalTypeBrowserEdit(JFrame owner, MedicalType old, boolean inserting) {
 		super(owner,true);
 		insert = inserting;
-		medicalType = old;//disease will be used for every operation
+		medicalType = old; //medical type will be used for every operation
 		lastdescription= medicalType.getDescription();
 		initialize();
 	}
-
 
 	/**
 	 * This method initializes this
 	 */
 	private void initialize() {
-		
-//		this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.medtype.newmedicaltype.title"));
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.medtype.editmedicaltype.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.pack();
 		this.setLocationRelativeTo(null);
-
 	}
 
 	/**
@@ -139,8 +133,8 @@ public class MedicalTypeBrowserEdit extends JDialog{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -153,7 +147,6 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			dataPanel = new JPanel();
-			//dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS));  // Generated
 			dataPanel.add(getJDataPanel(), null);
 		}
 		return dataPanel;
@@ -167,8 +160,8 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -182,11 +175,7 @@ public class MedicalTypeBrowserEdit extends JDialog{
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -200,42 +189,38 @@ public class MedicalTypeBrowserEdit extends JDialog{
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+			okButton.addActionListener(e -> {
 
-					medicalType.setDescription(descriptionTextField.getText());
-					medicalType.setCode(codeTextField.getText());
+				medicalType.setDescription(descriptionTextField.getText());
+				medicalType.setCode(codeTextField.getText());
 
-					boolean result;
-					if (insert) { // inserting
+				boolean result;
+				if (insert) { // inserting
+					try {
+						result = manager.newMedicalType(medicalType);
+						if (result) {
+							fireMedicalInserted();
+							dispose();
+						} else {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						}
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1);
+					}
+				} else { // updating
+					if (descriptionTextField.getText().equals(lastdescription)) {
+						dispose();
+					} else {
 						try {
-							result = manager.newMedicalType(medicalType);
+							result = manager.updateMedicalType(medicalType);
 							if (result) {
-								fireMedicalInserted();
+								fireMedicalUpdated();
 								dispose();
 							} else {
 								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						} catch (OHServiceException e1) {
-							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
-						}
-					} else { // updating
-						if (descriptionTextField.getText().equals(lastdescription)) {
-							dispose();
-						} else {
-							try {
-								result = manager.updateMedicalType(medicalType);
-								if (result) {
-									fireMedicalUpdated();
-									dispose();
-								} else {
-									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-								}
-							} catch (OHServiceException e1) {
-								result = false;
-								OHServiceExceptionUtil.showMessages(e1);
-							}
 						}
 					}
 				}
@@ -283,54 +268,14 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	 */
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
-			jDataPanel = new JPanel();
-			jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
-			jDataPanel.add(getJCodeLabelPanel(), null);
-			jDataPanel.add(getCodeTextField(), null);
-			jDataPanel.add(getJDescriptionLabelPanel(), null);
-			jDataPanel.add(getDescriptionTextField(), null);
+			jDataPanel = new JPanel(new SpringLayout());
+			jDataPanel.add( new JLabel(MessageBundle.getMessage("angal.common.codemax1char.txt") + ':'));
+			jDataPanel.add(getCodeTextField());
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':'));
+			jDataPanel.add(getDescriptionTextField());
+			SpringUtilities.makeCompactGrid(jDataPanel, 2, 2, 5, 5, 5, 5);
 		}
 		return jDataPanel;
-	}
-
-	/**
-	 * This method initializes jCodeLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
-	 */
-	private JLabel getJCodeLabel() {
-		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel(MessageBundle.getMessage("angal.common.codemax1char.txt"));
-		}
-		return jCodeLabel;
-	}
-
-	/**
-	 * This method initializes jCodeLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJCodeLabelPanel() {
-		if (jCodeLabelPanel == null) {
-			jCodeLabelPanel = new JPanel();
-			//jCodeLabelPanel.setLayout(new BorderLayout());
-			jCodeLabelPanel.add(getJCodeLabel(), BorderLayout.CENTER);
-		}
-		return jCodeLabelPanel;
-	}
-
-	/**
-	 * This method initializes jDescriptionLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJDescriptionLabelPanel() {
-		if (jDescriptionLabelPanel == null) {
-			jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescriptionLabel, null);
-		}
-		return jDescriptionLabelPanel;
 	}
 
 }

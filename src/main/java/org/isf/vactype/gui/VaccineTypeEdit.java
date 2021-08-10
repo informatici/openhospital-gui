@@ -25,13 +25,14 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -40,6 +41,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
@@ -77,8 +79,9 @@ public class VaccineTypeEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((VaccineTypeListener)listeners[i]).vaccineTypeInserted(event);
+	    for (EventListener listener : listeners) {
+		    ((VaccineTypeListener) listener).vaccineTypeInserted(event);
+	    }
     }
 
     
@@ -88,8 +91,9 @@ public class VaccineTypeEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
 		EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-           ((VaccineTypeListener)listeners[i]).vaccineTypeUpdated(event);	
+	    for (EventListener listener : listeners) {
+		    ((VaccineTypeListener) listener).vaccineTypeUpdated(event);
+	    }
     }
     
 	private JPanel jContentPane = null;
@@ -100,19 +104,15 @@ public class VaccineTypeEdit extends JDialog{
 	private JTextField descriptionTextField = null;
 	private VoLimitedTextField codeTextField = null;
 	private String lastdescription;
-	private VaccineType vaccineType = null;
+	private VaccineType vaccineType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private JLabel jCodeLabel = null;
-	private JPanel jCodeLabelPanel = null;
-	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescriptionLabel = null;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
-	public VaccineTypeEdit(JFrame owner,VaccineType old,boolean inserting) {
+	public VaccineTypeEdit(JFrame owner, VaccineType old, boolean inserting) {
 		super(owner,true);
 		insert = inserting;
 		vaccineType = old;
@@ -132,7 +132,7 @@ public class VaccineTypeEdit extends JDialog{
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.vactype.editvaccinetype.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
@@ -146,8 +146,8 @@ public class VaccineTypeEdit extends JDialog{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -173,8 +173,8 @@ public class VaccineTypeEdit extends JDialog{
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -188,37 +188,48 @@ public class VaccineTypeEdit extends JDialog{
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
 
 	/**
-	 * This method initializes okButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes okButton
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					
-					vaccineType.setDescription(descriptionTextField.getText());
-					vaccineType.setCode(codeTextField.getText());
-					
-					boolean result;
-					VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-					if (insert) {// inserting
+			okButton.addActionListener(e -> {
+
+				vaccineType.setDescription(descriptionTextField.getText());
+				vaccineType.setCode(codeTextField.getText());
+
+				boolean result;
+				VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+				if (insert) {// inserting
+					try {
+						result = manager.newVaccineType(vaccineType);
+						if (result) {
+							fireVaccineInserted();
+							dispose();
+						} else {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						}
+					} catch (OHServiceException e1) {
+						result = false;
+						OHServiceExceptionUtil.showMessages(e1);
+					}
+				} else { // updating
+					if (descriptionTextField.getText().equals(lastdescription)) {
+						dispose();
+					} else {
 						try {
-							result = manager.newVaccineType(vaccineType);
+							result = manager.updateVaccineType(vaccineType);
 							if (result) {
-								fireVaccineInserted();
+								fireVaccineUpdated();
 								dispose();
 							} else {
 								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
@@ -227,25 +238,8 @@ public class VaccineTypeEdit extends JDialog{
 							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
 						}
-					} else { // updating
-						if (descriptionTextField.getText().equals(lastdescription)){
-							dispose();	
-						}else {
-							try {
-								result = manager.updateVaccineType(vaccineType);
-								if (result) {
-									fireVaccineUpdated();
-									dispose();
-								} else {
-									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-								}
-							} catch (OHServiceException e1) {
-								result = false;
-								OHServiceExceptionUtil.showMessages(e1);
-							}
-						}
 					}
-                }
+				}
 			});
 		}
 		return okButton;
@@ -290,53 +284,13 @@ public class VaccineTypeEdit extends JDialog{
 	 */
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
-			jDataPanel = new JPanel();
-			jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
-			jDataPanel.add(getJCodeLabelPanel(), null);
-			jDataPanel.add(getCodeTextField(), null);
-			jDataPanel.add(getJDescriptionLabelPanel(), null);
-			jDataPanel.add(getDescriptionTextField(), null);
+			jDataPanel = new JPanel(new SpringLayout());
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.codemax1char.txt") + ':'));
+			jDataPanel.add(getCodeTextField());
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':'));
+			jDataPanel.add(getDescriptionTextField());
+			SpringUtilities.makeCompactGrid(jDataPanel, 2, 2, 5, 5, 5, 5);
 		}
 		return jDataPanel;
-	}
-
-	/**
-	 * This method initializes jCodeLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
-	 */
-	private JLabel getJCodeLabel() {
-		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel(MessageBundle.getMessage("angal.common.codemax1char.txt"));
-		}
-		return jCodeLabel;
-	}
-	
-	/**
-	 * This method initializes jCodeLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJCodeLabelPanel() {
-		if (jCodeLabelPanel == null) {
-			jCodeLabelPanel = new JPanel();
-			//jCodeLabelPanel.setLayout(new BorderLayout());
-			jCodeLabelPanel.add(getJCodeLabel(), BorderLayout.CENTER);
-		}
-		return jCodeLabelPanel;
-	}
-
-	/**
-	 * This method initializes jDescriptionLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJDescriptionLabelPanel() {
-		if (jDescriptionLabelPanel == null) {
-			jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescriptionLabel, null);
-		}
-		return jDescriptionLabelPanel;
 	}
 }

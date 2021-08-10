@@ -27,7 +27,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -35,6 +34,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -46,6 +46,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JLabelRequired;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 /**
  * This class allows suppliers edits and inserts
@@ -76,8 +77,8 @@ public class SupplierEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((SupplierListener)listeners[i]).supplierInserted(event);
+		for (EventListener listener : listeners)
+			((SupplierListener) listener).supplierInserted(event);
 	}
 	private void fireSupplierUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -85,8 +86,8 @@ public class SupplierEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((SupplierListener)listeners[i]).supplierUpdated(event);
+		for (EventListener listener : listeners)
+			((SupplierListener) listener).supplierUpdated(event);
 	}
 	
 	private int pfrmBase = 16;
@@ -109,7 +110,6 @@ public class SupplierEdit extends JDialog {
 	private JLabel noteLabel = null;
 	private JLabel isDeletedLabel = null;
 	private JLabel requiredLabel = null;
-//	private JLabel junkLabel = null;
 	private JTextField nameTextField = null;
 	private JTextField idTextField = null;
 	private JTextField addressTexField = null;
@@ -119,9 +119,8 @@ public class SupplierEdit extends JDialog {
 	private JTextField emailTextField = null;
 	private JTextField noteTextField = null;
 	private JCheckBox isDeletedCheck = null;
-//	private String lastdescription;
-	private Supplier supplier = null;
-	private boolean insert = false;
+	private Supplier supplier;
+	private boolean insert;
 
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
 	
@@ -163,8 +162,8 @@ public class SupplierEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -176,39 +175,40 @@ public class SupplierEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			idLabel = new JLabel(MessageBundle.getMessage("angal.common.id.txt"));
-			nameLabel = new JLabelRequired(MessageBundle.getMessage("angal.common.name.txt"));
-			addressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
-			taxcodeLabel = new JLabel(MessageBundle.getMessage("angal.supplier.taxcode"));
-			phoneLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
-			faxLabel = new JLabel(MessageBundle.getMessage("angal.supplier.faxnumber"));
-			emailLabel = new JLabel(MessageBundle.getMessage("angal.supplier.email"));
-			noteLabel = new JLabel(MessageBundle.getMessage("angal.supplier.note"));
-			isDeletedLabel = new JLabel(MessageBundle.getMessage("angal.supplier.deleted"));
+			idLabel = new JLabel(MessageBundle.getMessage("angal.common.id.txt") + ':');
+			nameLabel = new JLabelRequired(MessageBundle.getMessage("angal.common.name.txt") + ':');
+			addressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt") + ':');
+			taxcodeLabel = new JLabel(MessageBundle.getMessage("angal.supplier.taxcode") + ':');
+			phoneLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt") + ':');
+			faxLabel = new JLabel(MessageBundle.getMessage("angal.supplier.faxnumber") + ':');
+			emailLabel = new JLabel(MessageBundle.getMessage("angal.supplier.email") + ':');
+			noteLabel = new JLabel(MessageBundle.getMessage("angal.supplier.note") + ':');
+			isDeletedLabel = new JLabel(MessageBundle.getMessage("angal.supplier.deleted") + ':');
 			requiredLabel= new JLabel(MessageBundle.getMessage("angal.supplier.requiredfields"));
-			dataPanel = new JPanel();
-			dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS));  // Generated
-			dataPanel.add(idLabel, null);
-			dataPanel.add(getIdTextField(), null);
-			dataPanel.add(nameLabel, null);
-			dataPanel.add(getNameTextField(),null);
-			dataPanel.add(addressLabel, null);
-			dataPanel.add(getAddressTextField(), null);
-			dataPanel.add(taxcodeLabel, null);
-			dataPanel.add(getTaxcodeTextField(),null);
-			dataPanel.add(phoneLabel, null);
-			dataPanel.add(getPhoneTextField(),null);
-			dataPanel.add(faxLabel, null);
-			dataPanel.add(getFaxTextField(),null);
-			dataPanel.add(emailLabel, null);
-			dataPanel.add(getEmailTextField(),null);
-			dataPanel.add(noteLabel, null);
-			dataPanel.add(getNoteTextField(),null);
+			dataPanel = new JPanel(new SpringLayout());
+			dataPanel.add(idLabel);
+			dataPanel.add(getIdTextField());
+			dataPanel.add(nameLabel);
+			dataPanel.add(getNameTextField());
+			dataPanel.add(addressLabel);
+			dataPanel.add(getAddressTextField());
+			dataPanel.add(taxcodeLabel);
+			dataPanel.add(getTaxcodeTextField());
+			dataPanel.add(phoneLabel);
+			dataPanel.add(getPhoneTextField());
+			dataPanel.add(faxLabel);
+			dataPanel.add(getFaxTextField());
+			dataPanel.add(emailLabel);
+			dataPanel.add(getEmailTextField());
+			dataPanel.add(noteLabel);
+			dataPanel.add(getNoteTextField());
 			if (!insert) {
-				dataPanel.add(isDeletedLabel, null);
-				dataPanel.add(getIsDeleted(),null);
+				dataPanel.add(isDeletedLabel);
+				dataPanel.add(getIsDeleted());
 			}
-			dataPanel.add(requiredLabel, null);
+			dataPanel.add(requiredLabel);
+			dataPanel.add(new JLabel(""));
+			SpringUtilities.makeCompactGrid(dataPanel, insert ? 9 : 10, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
 	}
@@ -221,8 +221,8 @@ public class SupplierEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -236,11 +236,7 @@ public class SupplierEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -254,51 +250,49 @@ public class SupplierEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (nameTextField.getText().trim().equals("")) {
-						MessageDialog.error(null, "angal.supplier.pleaseinsertaname");
-						return;
-					}
 
-					supplier.setSupName(nameTextField.getText());
-					supplier.setSupAddress(addressTexField.getText().trim());
-					supplier.setSupTaxcode(taxcodeTestField.getText());
-					supplier.setSupPhone(phoneTextField.getText());
-					supplier.setSupFax(faxTextField.getText());
-					supplier.setSupEmail(emailTextField.getText());
-					supplier.setSupNote(noteTextField.getText());
-					if (!insert) supplier.setSupDeleted(isDeletedCheck.isSelected() ? 'Y' : 'N');
-					else supplier.setSupDeleted('N');
-					
-					boolean result = false;
-					if (insert) { // inserting
-						try {
-							result = supplierBrowserManager.saveOrUpdate(supplier);
-                        } catch (OHServiceException ex) {
-                            OHServiceExceptionUtil.showMessages(ex);
-                        }
-						if (result) {
-							fireSupplierInserted();
-						}
+			okButton.addActionListener(e -> {
+				if (nameTextField.getText().trim().equals("")) {
+					MessageDialog.error(null, "angal.supplier.pleaseinsertaname");
+					return;
+				}
+
+				supplier.setSupName(nameTextField.getText());
+				supplier.setSupAddress(addressTexField.getText().trim());
+				supplier.setSupTaxcode(taxcodeTestField.getText());
+				supplier.setSupPhone(phoneTextField.getText());
+				supplier.setSupFax(faxTextField.getText());
+				supplier.setSupEmail(emailTextField.getText());
+				supplier.setSupNote(noteTextField.getText());
+				if (!insert)
+					supplier.setSupDeleted(isDeletedCheck.isSelected() ? 'Y' : 'N');
+				else
+					supplier.setSupDeleted('N');
+
+				boolean result = false;
+				if (insert) { // inserting
+					try {
+						result = supplierBrowserManager.saveOrUpdate(supplier);
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 					}
-					else { // updating
-						try {
-							result = supplierBrowserManager.saveOrUpdate(supplier);
-                        } catch (OHServiceException ex) {
-                            OHServiceExceptionUtil.showMessages(ex);
-                        }
-						if (result) {
-							fireSupplierUpdated();
-						}
+					if (result) {
+						fireSupplierInserted();
 					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+				} else { // updating
+					try {
+						result = supplierBrowserManager.saveOrUpdate(supplier);
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 					}
-					else {
-						dispose();
+					if (result) {
+						fireSupplierUpdated();
 					}
+				}
+				if (!result) {
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+				} else {
+					dispose();
 				}
 			});
 		}

@@ -23,10 +23,6 @@ package org.isf.dlvrrestype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -74,7 +70,6 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	private DeliveryResultType deliveryresultType = null;
 	private final JFrame myFrame;
 	
-	
 	/**
 	 * This method initializes
 	 */
@@ -87,26 +82,18 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	
 	
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 10;
-        final int pfrmWidth = 5;
-        final int pfrmHeight = 4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.dlvrrestype.deliveryresulttypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+		pack();
+		setLocationRelativeTo(null);
 	}
 	
 	
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
-			jContainPanel = new JPanel();
-			jContainPanel.setLayout(new BorderLayout());
+			jContainPanel = new JPanel(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -128,14 +115,11 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					deliveryresultType = new DeliveryResultType("","");
-					DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, true);
-					newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				deliveryresultType = new DeliveryResultType("","");
+				DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, true);
+				newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -150,18 +134,15 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						deliveryresultType = (DeliveryResultType) (model.getValueAt(selectedrow, -1));
-						DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, false);
-						newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					deliveryresultType = (DeliveryResultType) (model.getValueAt(selectedrow, -1));
+					DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, false);
+					newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -177,11 +158,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -195,25 +172,22 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						DeliveryResultType resultType = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg",resultType.getDescription());
-						try {
-							if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryResultType(resultType))) {
-								pDeliveryResultType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
-						} catch(OHServiceException ohServiceException) {
-							MessageDialog.showExceptions(ohServiceException);
+			jDeleteButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					DeliveryResultType resultType = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg",resultType.getDescription());
+					try {
+						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryResultType(resultType))) {
+							pDeliveryResultType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
+					} catch(OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
-				
 			});
 		}
 		return jDeleteButton;
@@ -225,13 +199,10 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-		}return jTable;
+		}
+		return jTable;
 	}
-	
-	
-	
-	
-	
+
 	
 class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 
@@ -246,20 +217,25 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 			}
 		}
 		
+		@Override
 		public int getRowCount() {
-			if (pDeliveryResultType == null)
+			if (pDeliveryResultType == null) {
 				return 0;
+			}
 			return pDeliveryResultType.size();
 		}
 		
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			DeliveryResultType deliveryResultType = pDeliveryResultType.get(r);
 			if (c == 0) {
@@ -274,25 +250,28 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 
+	@Override
 	public void deliveryresultTypeUpdated(AWTEvent e) {
 		pDeliveryResultType.set(selectedrow, deliveryresultType);
 		((DeliveryResultTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1)
+		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
+		}
 	}
 	
 	
+	@Override
 	public void deliveryresultTypeInserted(AWTEvent e) {
 		pDeliveryResultType.add(0, deliveryresultType);
 		((DeliveryResultTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-		if (jTable.getRowCount() > 0)
+		if (jTable.getRowCount() > 0) {
 			jTable.setRowSelectionInterval(0, 0);
+		}
 	}
 	
 }

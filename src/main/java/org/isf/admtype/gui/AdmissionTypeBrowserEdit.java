@@ -25,13 +25,14 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.admtype.manager.AdmissionTypeBrowserManager;
@@ -42,6 +43,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 public class AdmissionTypeBrowserEdit extends JDialog{
 
@@ -67,8 +69,9 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((LaboratoryTypeListener)listeners[i]).admissionTypeInserted(event);
+	    for (EventListener listener : listeners) {
+		    ((LaboratoryTypeListener) listener).admissionTypeInserted(event);
+	    }
     }
     private void fireAdmissionUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -76,8 +79,9 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((LaboratoryTypeListener)listeners[i]).admissionTypeUpdated(event);
+	    for (EventListener listener : listeners) {
+		    ((LaboratoryTypeListener) listener).admissionTypeUpdated(event);
+	    }
     }
     
 	private JPanel jContentPane = null;
@@ -87,21 +91,16 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 	private JButton okButton = null;
 	private JTextField descriptionTextField = null;
 	private VoLimitedTextField codeTextField = null;
-	//private JTextField classTextField = null;
 	private String lastdescription;
-	private AdmissionType admissionType = null;
+	private AdmissionType admissionType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private JLabel jCodeLabel = null;
-	private JPanel jCodeLabelPanel = null;
-	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescriptionLabel = null;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
-	public AdmissionTypeBrowserEdit(JFrame owner,AdmissionType old,boolean inserting) {
+	public AdmissionTypeBrowserEdit(JFrame owner, AdmissionType old, boolean inserting) {
 		super(owner,true);
 		insert = inserting;
 		admissionType = old;//disease will be used for every operation
@@ -109,20 +108,17 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 		initialize();
 	}
 
-
 	/**
 	 * This method initializes this
 	 */
 	private void initialize() {
-		
-		//this.setBounds(400,400,350,170);
 		this.setContentPane(getJContentPane());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.admtype.newadmissiontype.title"));
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.admtype.editadmissiontype.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
@@ -136,8 +132,8 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -150,7 +146,6 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			dataPanel = new JPanel();
-			//dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS));  // Generated
 			dataPanel.add(getJDataPanel(), null);
 		}
 		return dataPanel;
@@ -164,8 +159,8 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -179,11 +174,7 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -197,54 +188,49 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
+			okButton.addActionListener(e -> {
+				AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
-					if (descriptionTextField.getText().equals(lastdescription)){
-						dispose();	
+				if (descriptionTextField.getText().equals(lastdescription)) {
+					dispose();
+				}
+
+				admissionType.setDescription(descriptionTextField.getText());
+				admissionType.setCode(codeTextField.getText());
+				boolean result;
+				if (insert) {      // inserting
+					try {
+						result = manager.newAdmissionType(admissionType);
+						if (result) {
+							fireAdmissionInserted(admissionType);
+						}
+						if (!result) {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						} else {
+							dispose();
+						}
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 					}
-				
-					admissionType.setDescription(descriptionTextField.getText());
-					admissionType.setCode(codeTextField.getText());
-					boolean result = false;
-					if (insert) {      // inserting
+				} else {                          // updating
+					if (descriptionTextField.getText().equals(lastdescription)) {
+						dispose();
+					} else {
 						try {
-							result = manager.newAdmissionType(admissionType);
-                            if (result) {
-                                fireAdmissionInserted(admissionType);
-                            }
-                            if (!result) {
-	                            MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-                            } else {
-                            	dispose();
-                            }
-						} catch(OHServiceException ex){
+							result = manager.updateAdmissionType(admissionType);
+							if (result) {
+								fireAdmissionUpdated();
+							}
+							if (!result) {
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							} else {
+								dispose();
+							}
+						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
-                    }
-                    else {                          // updating
-                    	if (descriptionTextField.getText().equals(lastdescription)){
-    						dispose();	
-    					} else {
-    						try {
-								result = manager.updateAdmissionType(admissionType);
-                                if (result) {
-                                    fireAdmissionUpdated();
-                                }
-                                if (!result) {
-	                                MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-                                } else {
-                                	dispose();
-                                }
-    						} catch(OHServiceException ex){
-    							OHServiceExceptionUtil.showMessages(ex);
-    						}
-    					}
-                    	
 					}
-					
-                }
+				}
 			});
 		}
 		return okButton;
@@ -289,58 +275,13 @@ public class AdmissionTypeBrowserEdit extends JDialog{
 	 */
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
-			jDataPanel = new JPanel();
-			jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
-			jDataPanel.add(getJCodeLabelPanel(), null);
-			jDataPanel.add(getCodeTextField(), null);
-			jDataPanel.add(getJDescriptionLabelPanel(), null);
-			jDataPanel.add(getDescriptionTextField(), null);
+			jDataPanel = new JPanel(new SpringLayout());
+			jDataPanel.add( new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 10) + ':'));
+			jDataPanel.add(getCodeTextField());
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':'));
+			jDataPanel.add(getDescriptionTextField());
+			SpringUtilities.makeCompactGrid(jDataPanel, 2, 2, 5, 5, 5, 5);
 		}
 		return jDataPanel;
 	}
-
-	/**
-	 * This method initializes jCodeLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
-	 */
-	private JLabel getJCodeLabel() {
-		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 10));
-		}
-		return jCodeLabel;
-	}
-
-	/**
-	 * This method initializes jCodeLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJCodeLabelPanel() {
-		if (jCodeLabelPanel == null) {
-			jCodeLabelPanel = new JPanel();
-			//jCodeLabelPanel.setLayout(new BorderLayout());
-			jCodeLabelPanel.add(getJCodeLabel(), BorderLayout.CENTER);
-		}
-		return jCodeLabelPanel;
-	}
-
-	/**
-	 * This method initializes jDescriptionLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJDescriptionLabelPanel() {
-		if (jDescriptionLabelPanel == null) {
-			jDescriptionLabel = new JLabel();
-			jDescriptionLabel.setText(MessageBundle.getMessage("angal.common.description.txt"));
-			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescriptionLabel, null);
-		}
-		return jDescriptionLabelPanel;
-	}
-
 }
-
-

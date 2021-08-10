@@ -157,7 +157,6 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JEditorPane jEditorPaneBMI;
 	private JPanel jPanelSummary;
 	private JPanel jNotePanel;
-	private JEditorPane jEditorPaneSummary;
 	
 	private PatientExamination patex;
 	private boolean isMale;
@@ -183,7 +182,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			MessageBundle.getMessage("angal.examination.note.col").toUpperCase()
 	};
 	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, String.class, String.class, JButton.class};
-	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70, 100};
+	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70, 70};
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER};
 	
 	private static final String DATE_FORMAT = "dd/MM/yy HH:mm";
@@ -254,8 +253,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jPanelButtons = new JPanel();
 			jPanelButtons.add(getJButtonSave());
 			jPanelButtons.add(getJButtonDelete());
-			jPanelButtons.add(getJButtonCancel());
 			jPanelButtons.add(getJButtonPrint());
+			jPanelButtons.add(getJButtonCancel());
 		}
 		return jPanelButtons;
 	}
@@ -888,7 +887,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 	private VoLimitedTextArea getJTextAreaNote() {
 		if (jTextAreaNote == null) {
-			jTextAreaNote = new VoLimitedTextArea(300, 6, 20);
+			jTextAreaNote = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
 			jTextAreaNote.setLineWrap(true);
 			jTextAreaNote.setWrapStyleWord(true);
 			jTextAreaNote.setMargin(new Insets(0, 5, 0, 0));
@@ -1858,7 +1857,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	
 	private JScrollPane getJTableSummary() {
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setPreferredSize(new Dimension(500, 150));
+		scrollPane.setPreferredSize(new Dimension(870, 150));
 		TableCellRenderer buttonRenderer = new JTableButtonRenderer();
 		jTableSummary = new JTable(new JTableModelSummary());
 		for (int i = 0; i < columnNames.length - 1; i++) { //last column is for JButton
@@ -1866,6 +1865,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jTableSummary.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
 		}
 		jTableSummary.getColumnModel().getColumn(columnNames.length - 1).setCellRenderer(buttonRenderer);
+		jTableSummary.getColumnModel().getColumn(columnNames.length - 1).setMinWidth(columnWidth[columnNames.length - 1]);
 		jTableSummary.setShowGrid(false);
 		
 		JTableHeader header = jTableSummary.getTableHeader();
@@ -1895,18 +1895,6 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return scrollPane;
 	}
 
-	private JEditorPane getJEditorPaneSummary() {
-		if (jEditorPaneSummary == null) {
-			jEditorPaneSummary = new JEditorPane();
-			jEditorPaneSummary.setFont(new Font("Arial", Font.PLAIN, 11));
-			jEditorPaneSummary.setContentType("text/html");
-			jEditorPaneSummary.setEditable(false);
-			jEditorPaneSummary.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-			
-		}
-		return jEditorPaneSummary;
-	}
-	
 	private static class JTableButtonRenderer implements TableCellRenderer {
 
 		@Override
@@ -2020,8 +2008,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 					button.addActionListener(new ActionListener() {
 
 						public void actionPerformed(ActionEvent arg0) {
-							VoLimitedTextArea noteArea = new VoLimitedTextArea(150, 6, 20);
+							VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
 							noteArea.setText(note);
+							noteArea.setEditable(false);
 							JOptionPane.showMessageDialog(PatientExaminationEdit.this, 
 											new JScrollPane(noteArea), 
 											MessageBundle.getMessage("angal.examination.note"), //$NON-NLS-1$

@@ -23,10 +23,6 @@ package org.isf.disctype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -73,10 +69,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 	private DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 	private DischargeType dischargeType = null;
 	private final JFrame myFrame;
-	
-	
-	
-	
+
 	/**
 	 * This method initializes 
 	 */
@@ -86,29 +79,20 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		initialize();
 		setVisible(true);
 	}
-	
-	
+
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 10;
-        final int pfrmWidth = 5;
-        final int pfrmHeight = 4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.disctype.dischargetypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+		pack();
+		setLocationRelativeTo(null);
 	}
-	
-	
+
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -130,14 +114,11 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					DischargeType mdsr = new DischargeType("","");
-					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,mdsr, true);
-					newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				DischargeType mdsr = new DischargeType("","");
+				DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,mdsr, true);
+				newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -152,18 +133,15 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						dischargeType = (DischargeType) (model.getValueAt(selectedrow, -1));
-						DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,dischargeType, false);
-						newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					dischargeType = (DischargeType) (model.getValueAt(selectedrow, -1));
+					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,dischargeType, false);
+					newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -179,11 +157,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -197,33 +171,29 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						DischargeType disType = (DischargeType) (model.getValueAt(jTable.getSelectedRow(), -1));
-                        int answer = MessageDialog.yesNo(null, "angal.disctype.deleterow.fmt.msg", disType.getDescription());
-                        if (answer == JOptionPane.YES_OPTION) {
+			jDeleteButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					DischargeType disType = (DischargeType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.disctype.deleterow.fmt.msg", disType.getDescription());
+					if (answer == JOptionPane.YES_OPTION) {
 
-                            boolean deleted;
+						boolean deleted;
+						try {
+							deleted = manager.deleteDischargeType(disType);
+						} catch (OHServiceException e) {
+							deleted = false;
+							OHServiceExceptionUtil.showMessages(e);
+						}
 
-                            try {
-                                deleted = manager.deleteDischargeType(disType);
-                            } catch (OHServiceException e) {
-                                deleted = false;
-                                OHServiceExceptionUtil.showMessages(e);
-                            }
-
-                            if (deleted) {
-                                pDischargeType.remove(jTable.getSelectedRow());
-                                model.fireTableDataChanged();
-                                jTable.updateUI();
-                            }
-                        }
+						if (deleted) {
+							pDischargeType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
+						}
 					}
 				}
-				
 			});
 		}
 		return jDeleteButton;
@@ -235,7 +205,8 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-		}return jTable;
+		}
+		return jTable;
 	}
 
 class DischargeTypeBrowserModel extends DefaultTableModel {
@@ -252,20 +223,24 @@ class DischargeTypeBrowserModel extends DefaultTableModel {
 			}
 		}
 		
+		@Override
 		public int getRowCount() {
 			if (pDischargeType == null)
 				return 0;
 			return pDischargeType.size();
 		}
 		
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
 				return pDischargeType.get(r).getCode();
@@ -279,25 +254,28 @@ class DischargeTypeBrowserModel extends DefaultTableModel {
 		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 
+@Override
 public void dischargeTypeUpdated(AWTEvent e) {
 	pDischargeType.set(selectedrow, dischargeType);
 	((DischargeTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 	jTable.updateUI();
-	if ((jTable.getRowCount() > 0) && selectedrow > -1)
+	if ((jTable.getRowCount() > 0) && selectedrow > -1) {
 		jTable.setRowSelectionInterval(selectedrow, selectedrow);
+	}
 }
 
+@Override
 public void dischargeTypeInserted(AWTEvent e) {
 	dischargeType = (DischargeType)e.getSource();
 	pDischargeType.add(0, dischargeType);
 	((DischargeTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-	if (jTable.getRowCount() > 0)
+	if (jTable.getRowCount() > 0) {
 		jTable.setRowSelectionInterval(0, 0);
+	}
 }
 	
 }

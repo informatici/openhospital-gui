@@ -118,6 +118,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							jTableBills.getSelectionModel().setSelectionInterval(i, i);
 				}
 			}
+			if (!users.contains(user)) {
+				jComboUsers.addItem(user);
+			}
+			jComboUsers.setSelectedItem(user);
 		}
 	}
 
@@ -173,7 +177,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			MessageBundle.getMessage("angal.common.status.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.billbrowser.balance.col").toUpperCase()
 	};
-	private boolean[] columnShow = {!GeneralData.getGeneralData().getSINGLEUSER(), true, true, true, true, true, true, true, true};
+	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
+	private boolean[] columnShow = {!isSingleUser && MainMenu.checkUserGrants("cashiersfilter"), true, true, true, true, true, true, true, true};
 	private int[] columnWidths = {50, 50, 150, 50, 50, 100, 150, 50, 100};
 	private int[] maxWidth = {50, 150, 150, 150, 200, 100, 150, 50, 100};
 	private boolean[] columnsResizable = {false, false, false, false, true, false, false, false, false};
@@ -203,8 +208,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	//Users
 	private String user = UserBrowsingManager.getCurrentUser();
 	private ArrayList<String> users;
-	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
-	
 	
 	public BillBrowser() {
 		try {
@@ -499,7 +502,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					}
 					int rowSelected = jTableBills.getSelectedRow();
 					Bill editBill = (Bill) jTableBills.getValueAt(rowSelected, -1);
-					if (user.equals("admin") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
+					if (MainMenu.checkUserGrants("editclosedbills") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
 						PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
 						pbe.addPatientBillListener(BillBrowser.this);
 						pbe.setVisible(true);
@@ -738,7 +741,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JPanel getPanelSupRange() {
 		if (panelSupRange == null) {
 			panelSupRange = new JPanel();
-			if (!isSingleUser && user.equals("admin")) {
+			if (!isSingleUser && MainMenu.checkUserGrants("cashiersfilter")) {
 				panelSupRange.add(getJComboUsers());
 			}
 			panelSupRange.add(getJButtonToday());
@@ -830,9 +833,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JComboBox<String> getJComboUsers() {
 		if (jComboUsers == null) {
 			jComboUsers = new JComboBox<>();
-			for (String user : users) 
+		
+			for (String user : users) {
 				jComboUsers.addItem(user);
+			}
 			
+			if (users.contains(user)) {
+				jComboUsers.setSelectedItem(user);
+			}
+
 			jComboUsers.addActionListener(arg0 -> {
 				user = (String) jComboUsers.getSelectedItem();
 				jTableUser.setValueAt("<html><b>"+user+"</b></html>", 0, 0);
@@ -1176,12 +1185,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		userToday = new BigDecimal(0);
 		userPeriod = new BigDecimal(0);
 		
-		ArrayList<Integer> notDeletedBills = new ArrayList<>();
 				
 		//Bills in range contribute for Not Paid (balance)
 		for (Bill bill : billPeriod) {
 			if (!bill.getStatus().equals("D")) {
-				notDeletedBills.add(bill.getId());
 				BigDecimal balance = new BigDecimal(Double.toString(bill.getBalance()));
 				balancePeriod = balancePeriod.add(balance);
 			}
@@ -1189,7 +1196,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		
 		//Payments in range contribute for Paid Period (total)
 		for (BillPayments payment : paymentsPeriod) {
-			if (notDeletedBills.contains(payment.getBill().getId())) {
+			if (!payment.getBill().getStatus().equals("D")) {
 				BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
 				String payUser = payment.getUser();
 				
@@ -1213,7 +1220,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		//Payments in today contribute for Paid Today (total)
 		if (paymentsToday != null){
 			for (BillPayments payment : paymentsToday) {
-				if (notDeletedBills.contains(payment.getBill().getId())) {
+				if (!payment.getBill().getStatus().equals("D")) {
 					BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
 					String payUser = payment.getUser();
 					totalToday = totalToday.add(payAmount);
@@ -1374,6 +1381,16 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			   (aDate.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
 	}
 	
+	private void formatCellByBillStatus(JTable table, int row, Component cell) {
+		int status_column = table.getColumnModel().getColumnIndex(MessageBundle.getMessage("angal.common.status.txt").toUpperCase());
+		if (((String)table.getValueAt(row, status_column)).equals("C")) { //$NON-NLS-1$
+			cell.setForeground(Color.GRAY);
+		}
+		if (((String)table.getValueAt(row, status_column)).equals("D")) { //$NON-NLS-1$
+			cell.setForeground(Color.RED);
+		}
+	}
+
 	class StringTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
@@ -1384,12 +1401,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
@@ -1405,12 +1417,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(CENTER);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
@@ -1427,12 +1434,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			cell.setForeground(Color.BLACK);
 			cell.setFont(new Font(null, Font.BOLD, 12));
 			setHorizontalAlignment(CENTER);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
@@ -1448,12 +1450,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(RIGHT);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
@@ -1465,17 +1462,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column) {  
-		   
+		    
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(CENTER);
 			cell.setFont(new Font(null, Font.BOLD, 12));
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}

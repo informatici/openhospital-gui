@@ -60,7 +60,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                                                       final boolean isSelected,
                                                       final boolean cellHasFocus) {
             final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value != null && value instanceof Dimension) {
+            if (value instanceof Dimension) {
                 final Dimension valueAsDimension = (Dimension) value;
                 setText(String.format("%d x %d", (int) valueAsDimension.getWidth(), (int) valueAsDimension.getHeight()));
             }
@@ -75,7 +75,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                                                       final boolean isSelected,
                                                       final boolean cellHasFocus) {
             final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value != null && value instanceof Webcam) {
+            if (value instanceof Webcam) {
                 final Webcam webcam = (Webcam) value;
                 setText(webcam.getName());
             }
@@ -152,7 +152,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
             @Override
             public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
                 final Object newValue = propertyChangeEvent.getNewValue();
-                if (newValue != null && newValue instanceof Dimension) {
+                if (newValue instanceof Dimension) {
                     PhotoboothComponentImpl.this.stopWebcam();
 
                     LOGGER.info("Changing webcam dimension to {}", newValue);
@@ -178,7 +178,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
             @Override
             public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
                 final Object newValue = propertyChangeEvent.getNewValue();
-                if (newValue != null && newValue instanceof Webcam) {
+                if (newValue instanceof Webcam) {
                     PhotoboothComponentImpl.this.stopWebcam();
 
                     webcam = (Webcam) newValue;

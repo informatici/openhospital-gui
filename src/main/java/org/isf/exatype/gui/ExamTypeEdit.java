@@ -25,13 +25,14 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.exatype.manager.ExamTypeBrowserManager;
@@ -41,6 +42,7 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 /**
  * ------------------------------------------
@@ -76,8 +78,9 @@ public class ExamTypeEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((ExamTypeListener)listeners[i]).examTypeInserted(event);
+	    for (EventListener listener : listeners) {
+		    ((ExamTypeListener) listener).examTypeInserted(event);
+	    }
     }
     private void fireExamTypeUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -85,8 +88,9 @@ public class ExamTypeEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((ExamTypeListener)listeners[i]).examTypeUpdated(event);
+	    for (EventListener listener : listeners) {
+		    ((ExamTypeListener) listener).examTypeUpdated(event);
+	    }
     }
     
 	private JPanel jContentPane = null;
@@ -97,40 +101,33 @@ public class ExamTypeEdit extends JDialog {
 	private JTextField descriptionTextField = null;
 	private VoLimitedTextField codeTextField = null;
 	private String lastdescription;
-	private ExamType examType = null;
+	private ExamType examType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private JLabel jCodeLabel = null;
-	private JPanel jCodeLabelPanel = null;
-	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescriptionLabel = null;
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
-	public ExamTypeEdit(JFrame owner,ExamType old,boolean inserting) {
+	public ExamTypeEdit(JFrame owner, ExamType old, boolean inserting) {
 		super(owner,true);
 		insert = inserting;
-		examType = old;//disease will be used for every operation
+		examType = old;//examType will be used for every operation
 		lastdescription= examType.getDescription();
 		initialize();
 	}
-
 
 	/**
 	 * This method initializes this
 	 */
 	private void initialize() {
-		
-//		this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.exatype.newexamtype.title"));
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.exatype.editexamtype.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		
 		this.pack();
 		this.setLocationRelativeTo(null);
@@ -145,8 +142,8 @@ public class ExamTypeEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -159,7 +156,6 @@ public class ExamTypeEdit extends JDialog {
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			dataPanel = new JPanel();
-			//dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS));  // Generated
 			dataPanel.add(getJDataPanel(), null);
 		}
 		return dataPanel;
@@ -173,8 +169,8 @@ public class ExamTypeEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -188,11 +184,7 @@ public class ExamTypeEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -206,37 +198,36 @@ public class ExamTypeEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
-					try{
-						examType.setDescription(descriptionTextField.getText());
-						examType.setCode(codeTextField.getText());
-						
-						if (insert) {     // inserting
-							if (manager.newExamType(examType)) {
-	                           fireExamTypeInserted();
-	                           dispose();
-	                        } else
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-	                    }
-	                    else {            // updating
-	                    	if (descriptionTextField.getText().equals(lastdescription)){
-	    						dispose();	
-	    					}else{
-								if (manager.updateExamType(examType)) {
-									fireExamTypeUpdated();
-									dispose();
-		                        } else {
-									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-								}
-	    					}
+			okButton.addActionListener(e -> {
+				ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
+				try{
+					examType.setDescription(descriptionTextField.getText());
+					examType.setCode(codeTextField.getText());
+
+					if (insert) {     // inserting
+						if (manager.newExamType(examType)) {
+                           fireExamTypeInserted();
+                           dispose();
+                        } else {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
-					} catch(OHServiceException ohServiceException) {
-						MessageDialog.showExceptions(ohServiceException);
+                    }
+                    else {            // updating
+	                    if (descriptionTextField.getText().equals(lastdescription)){
+						    dispose();
+					    }else{
+							if (manager.updateExamType(examType)) {
+								fireExamTypeUpdated();
+								dispose();
+	                        } else {
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							}
+					    }
 					}
-                }
-			});
+				} catch(OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
+				}
+});
 		}
 		return okButton;
 	}
@@ -280,54 +271,13 @@ public class ExamTypeEdit extends JDialog {
 	 */
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
-			jDataPanel = new JPanel();
-			jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
-			jDataPanel.add(getJCodeLabelPanel(), null);
-			jDataPanel.add(getCodeTextField(), null);
-			jDataPanel.add(getJDescriptionLabelPanel(), null);
-			jDataPanel.add(getDescriptionTextField(), null);
+			jDataPanel = new JPanel(new SpringLayout());
+			jDataPanel.add(new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 2) + ':'));
+			jDataPanel.add(getCodeTextField());
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':'));
+			jDataPanel.add(getDescriptionTextField());
+			SpringUtilities.makeCompactGrid(jDataPanel, 2, 2, 5, 5, 5, 5);
 		}
 		return jDataPanel;
 	}
-
-	/**
-	 * This method initializes jCodeLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
-	 */
-	private JLabel getJCodeLabel() {
-		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 2));
-		}
-		return jCodeLabel;
-	}
-
-	/**
-	 * This method initializes jCodeLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJCodeLabelPanel() {
-		if (jCodeLabelPanel == null) {
-			jCodeLabelPanel = new JPanel();
-			//jCodeLabelPanel.setLayout(new BorderLayout());
-			jCodeLabelPanel.add(getJCodeLabel(), BorderLayout.CENTER);
-		}
-		return jCodeLabelPanel;
-	}
-
-	/**
-	 * This method initializes jDescriptionLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJDescriptionLabelPanel() {
-		if (jDescriptionLabelPanel == null) {
-			jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescriptionLabel, null);
-		}
-		return jDescriptionLabelPanel;
-	}
-	
 }

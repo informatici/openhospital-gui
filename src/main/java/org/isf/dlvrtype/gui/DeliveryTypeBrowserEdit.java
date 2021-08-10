@@ -25,13 +25,14 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.dlvrtype.manager.DeliveryTypeBrowserManager;
@@ -41,6 +42,7 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 public class DeliveryTypeBrowserEdit extends JDialog{
 
@@ -66,8 +68,9 @@ public class DeliveryTypeBrowserEdit extends JDialog{
             private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = deliveryTypeListeners.getListeners(DeliveryTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((DeliveryTypeListener)listeners[i]).deliveryTypeInserted(event);
+        for (EventListener listener : listeners) {
+            ((DeliveryTypeListener) listener).deliveryTypeInserted(event);
+        }
     }
     private void fireDeliveryUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -75,8 +78,9 @@ public class DeliveryTypeBrowserEdit extends JDialog{
             private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = deliveryTypeListeners.getListeners(DeliveryTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((DeliveryTypeListener)listeners[i]).deliveryTypeUpdated(event);
+        for (EventListener listener : listeners) {
+            ((DeliveryTypeListener) listener).deliveryTypeUpdated(event);
+        }
     }
 
     private JPanel jContentPane = null;
@@ -87,13 +91,10 @@ public class DeliveryTypeBrowserEdit extends JDialog{
     private JTextField descriptionTextField = null;
     private VoLimitedTextField codeTextField = null;
     private String lastdescription;
-    private DeliveryType deliveryType = null;
+    private DeliveryType deliveryType;
     private boolean insert;
     private JPanel jDataPanel = null;
     private JLabel jCodeLabel = null;
-    private JPanel jCodeLabelPanel = null;
-    private JPanel jDescriptionLabelPanel = null;
-    private JLabel jDescriptionLabel = null;
 
     /**
      * This is the default constructor; we pass the arraylist and the selectedrow
@@ -106,21 +107,19 @@ public class DeliveryTypeBrowserEdit extends JDialog{
         lastdescription= deliveryType.getDescription();
         initialize();
     }
-
-
+    
     /**
      * This method initializes this
      */
     private void initialize() {
 
-//		this.setBounds(300,300,350,180);
         this.setContentPane(getJContentPane());
         if (insert) {
             this.setTitle(MessageBundle.getMessage("angal.dlvrtype.newdeliverytype.title"));
         } else {
             this.setTitle(MessageBundle.getMessage("angal.dlvrtype.editdeliverytype.title"));
         }
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.pack();
         setLocationRelativeTo(null);
     }
@@ -134,8 +133,8 @@ public class DeliveryTypeBrowserEdit extends JDialog{
         if (jContentPane == null) {
             jContentPane = new JPanel();
             jContentPane.setLayout(new BorderLayout());
-            jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  // Generated
-            jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+            jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+            jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
         }
         return jContentPane;
     }
@@ -148,7 +147,6 @@ public class DeliveryTypeBrowserEdit extends JDialog{
     private JPanel getDataPanel() {
         if (dataPanel == null) {
             dataPanel = new JPanel();
-            //dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS));  // Generated
             dataPanel.add(getJDataPanel(), null);
         }
         return dataPanel;
@@ -162,8 +160,8 @@ public class DeliveryTypeBrowserEdit extends JDialog{
     private JPanel getButtonPanel() {
         if (buttonPanel == null) {
             buttonPanel = new JPanel();
-            buttonPanel.add(getOkButton(), null);  // Generated
-            buttonPanel.add(getCancelButton(), null);  // Generated
+            buttonPanel.add(getOkButton(), null);
+            buttonPanel.add(getCancelButton(), null);
         }
         return buttonPanel;
     }
@@ -177,11 +175,7 @@ public class DeliveryTypeBrowserEdit extends JDialog{
         if (cancelButton == null) {
             cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
             cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-            cancelButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    dispose();
-                }
-            });
+            cancelButton.addActionListener(e -> dispose());
         }
         return cancelButton;
     }
@@ -195,45 +189,44 @@ public class DeliveryTypeBrowserEdit extends JDialog{
         if (okButton == null) {
             okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
             okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-            okButton.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                	DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
+            okButton.addActionListener(e -> {
+                DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
-                    try{
-                        if (descriptionTextField.getText().equals(lastdescription)){
+                try{
+                    if (descriptionTextField.getText().equals(lastdescription)){
+                        dispose();
+                    }
+                    deliveryType.setDescription(descriptionTextField.getText());
+                    deliveryType.setCode(codeTextField.getText());
+                    boolean result;
+                    if (insert) {      // inserting
+                        result = manager.newDeliveryType(deliveryType);
+                        if (result) {
+                            fireDeliveryInserted();
+                        }
+                        if (!result) {
+                            MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
+                        } else {
                             dispose();
                         }
-                        deliveryType.setDescription(descriptionTextField.getText());
-                        deliveryType.setCode(codeTextField.getText());
-                        boolean result = false;
-                        if (insert) {      // inserting
-                            result = manager.newDeliveryType(deliveryType);
+                    } else {                          // updating
+                        if (descriptionTextField.getText().equals(lastdescription)){
+                            dispose();
+                        } else {
+                            result = manager.updateDeliveryType(deliveryType);
                             if (result) {
-                                fireDeliveryInserted();
+                                fireDeliveryUpdated();
                             }
                             if (!result) {
                                 MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
-                            }
-                            else  dispose();
-                        }
-                        else {                          // updating
-                            if (descriptionTextField.getText().equals(lastdescription)){
+                            } else {
                                 dispose();
-                            }else{
-                                result = manager.updateDeliveryType(deliveryType);
-                                if (result) {
-                                    fireDeliveryUpdated();
-                                }
-                                if (!result) {
-                                    MessageDialog.error(null, "angal.dlvrtype.thdatacouldnotbesaved");
-                                }
-                                else  dispose();
                             }
-
                         }
-                    } catch(OHServiceException ohServiceException) {
-                        MessageDialog.showExceptions(ohServiceException);
+
                     }
+                } catch(OHServiceException ohServiceException) {
+                    MessageDialog.showExceptions(ohServiceException);
                 }
             });
         }
@@ -279,54 +272,13 @@ public class DeliveryTypeBrowserEdit extends JDialog{
      */
     private JPanel getJDataPanel() {
         if (jDataPanel == null) {
-            jDataPanel = new JPanel();
-            jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
-            jDataPanel.add(getJCodeLabelPanel(), null);
-            jDataPanel.add(getCodeTextField(), null);
-            jDataPanel.add(getJDescriptionLabelPanel(), null);
-            jDataPanel.add(getDescriptionTextField(), null);
+            jDataPanel = new JPanel(new SpringLayout());
+            jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.codemax1char.txt") + ':'));
+            jDataPanel.add(getCodeTextField());
+            jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':'));
+            jDataPanel.add(getDescriptionTextField());
+            SpringUtilities.makeCompactGrid(jDataPanel, 2, 2, 5, 5, 5, 5);
         }
         return jDataPanel;
     }
-
-    /**
-     * This method initializes jCodeLabel
-     *
-     * @return javax.swing.JLabel
-     */
-    private JLabel getJCodeLabel() {
-        if (jCodeLabel == null) {
-            jCodeLabel = new JLabel(MessageBundle.getMessage("angal.common.codemax1char.txt"));
-        }
-        return jCodeLabel;
-    }
-
-    /**
-     * This method initializes jCodeLabelPanel
-     *
-     * @return javax.swing.JPanel
-     */
-    private JPanel getJCodeLabelPanel() {
-        if (jCodeLabelPanel == null) {
-            jCodeLabelPanel = new JPanel();
-            //jCodeLabelPanel.setLayout(new BorderLayout());
-            jCodeLabelPanel.add(getJCodeLabel(), BorderLayout.CENTER);
-        }
-        return jCodeLabelPanel;
-    }
-
-    /**
-     * This method initializes jDescriptionLabelPanel
-     *
-     * @return javax.swing.JPanel
-     */
-    private JPanel getJDescriptionLabelPanel() {
-        if (jDescriptionLabelPanel == null) {
-            jDescriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-            jDescriptionLabelPanel = new JPanel();
-            jDescriptionLabelPanel.add(jDescriptionLabel, null);
-        }
-        return jDescriptionLabelPanel;
-    }
-
 }

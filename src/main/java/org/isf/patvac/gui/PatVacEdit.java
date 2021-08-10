@@ -397,7 +397,7 @@ public class PatVacEdit extends JDialog {
 	 */
 	private JComboBox<VaccineType> getVaccineTypeComboBox() {
 		if (vaccineTypeComboBox == null) {
-			vaccineTypeComboBox = new JComboBox<VaccineType>();
+			vaccineTypeComboBox = new JComboBox<>();
 			vaccineTypeComboBox.setPreferredSize(new Dimension(200, 30));
 			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));
 
@@ -437,7 +437,7 @@ public class PatVacEdit extends JDialog {
 	 */
 	private JComboBox<Vaccine> getVaccineComboBox() {
 		if (vaccineComboBox == null) {
-			vaccineComboBox = new JComboBox<Vaccine>();
+			vaccineComboBox = new JComboBox<>();
 			vaccineComboBox.setPreferredSize(new Dimension(200, 30));
 		}
 		vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
@@ -542,7 +542,7 @@ public class PatVacEdit extends JDialog {
 	 */
 	private JComboBox<Object> getPatientComboBox(String regExp) {
 		if (patientComboBox == null) {
-			patientComboBox = new JComboBox<Object>();
+			patientComboBox = new JComboBox<>();
 		}
 		patientComboBox.addItem(MessageBundle.getMessage("angal.patvac.selectapatient"));
 		Patient patSelected = null;
