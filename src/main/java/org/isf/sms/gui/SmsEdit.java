@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.sms.gui;
 
 import java.awt.BorderLayout;
@@ -44,14 +65,10 @@ import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
 
 /**
- * 
  * @author Mwithi
  */
 public class SmsEdit extends JDialog implements SelectionListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel jCenterPanel;
@@ -70,22 +87,10 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	private JButton JTimeButton;
 	private JButton jPatientButton;
 	
-	private int MAX_LENGHT;
+	private int maxLength;
 	
 	private SmsManager smsManager = Context.getApplicationContext().getBean(SmsManager.class);
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		GeneralData.getGeneralData();
-		try {
-			new SmsEdit(new JFrame());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Create the dialog.
 	 */
@@ -96,11 +101,11 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	}
 	
 	private void initialize() {
-		MAX_LENGHT = smsManager.getMAX_LENGHT();
+		maxLength = smsManager.getMaxLength();
 	}
 
 	private void initComponents() {
-		setTitle(MessageBundle.getMessage("angal.sms.edit.title"));
+		setTitle(MessageBundle.getMessage("angal.sms.newsms.title"));
 		setResizable(false);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		add(getJNorthPanel(), BorderLayout.NORTH);
@@ -244,7 +249,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 				@Override
 				public void keyReleased(KeyEvent e) {
 					JTextArea thisTextArea = (JTextArea) e.getComponent();
-					int remainingChars = MAX_LENGHT - thisTextArea.getText().length();
+					int remainingChars = maxLength - thisTextArea.getText().length();
 					jLabelCount.setText(String.valueOf(remainingChars));
 				}
 				
@@ -269,8 +274,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	
 	private JButton getJOkButton() {
 		if (jOkButton == null) {
-			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			jOkButton.setMnemonic(KeyEvent.VK_O);
+			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jOkButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
@@ -293,8 +298,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 						
 						if (e1.getMessages().get(0).getTitle().equals("testMaxLenghtError")) {
 							
-							int textLenght = text.length();
-							int textParts = (textLenght + MAX_LENGHT - 1) / MAX_LENGHT;
+							int textLength = text.length();
+							int textParts = (textLength + maxLength - 1) / maxLength;
 							StringBuilder message = new StringBuilder();
 							message.append(e1.getMessages().get(0).getMessage())
 								.append("\n")
@@ -329,8 +334,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	
 	private JButton getJCancelButton() {
 		if (jCancelButton == null) {
-			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jCancelButton.setMnemonic(KeyEvent.VK_C);
+			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jCancelButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
@@ -374,7 +379,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	
 	private JLabel getJLabelCount() {
 		if (jLabelCount == null) {
-			jLabelCount = new JLabel(String.valueOf(MAX_LENGHT));
+			jLabelCount = new JLabel(String.valueOf(maxLength));
 			jLabelCount.setForeground(Color.GRAY);
 		}
 		return jLabelCount;
@@ -415,12 +420,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 					Date date = schedDate.getDate();
 					
 					if (date != null) {
-						
 						jSchedDateChooser.setDate(date);
 						jSchedTimeTextField.setText(formatTime(date));
-						
-					} else {
-						return;
 					}
 				}
 			});

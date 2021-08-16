@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.ward.gui;
 
 import java.awt.AWTEvent;
@@ -6,7 +27,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.JButton;
@@ -14,7 +34,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -24,6 +43,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -32,54 +52,49 @@ import org.isf.ward.model.Ward;
  * This class allows wards edits and inserts
  * 
  * @author Rick
- * 
  */
 public class WardEdit extends JDialog {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private EventListenerList wardListeners = new EventListenerList();
-	
+
 	public interface WardListener extends EventListener {
-		public void wardUpdated(AWTEvent e);
-		public void wardInserted(AWTEvent e);
+
+		void wardUpdated(AWTEvent e);
+
+		void wardInserted(AWTEvent e);
 	}
-	
+
 	public void addWardListener(WardListener l) {
 		wardListeners.add(WardListener.class, l);
 	}
-	
+
 	public void removeWardListener(WardListener listener) {
 		wardListeners.remove(WardListener.class, listener);
 	}
-	
+
 	private void fireWardInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = wardListeners.getListeners(WardListener.class);
 		for (int i = 0; i < listeners.length; i++)
-			((WardListener)listeners[i]).wardInserted(event);
+			((WardListener) listeners[i]).wardInserted(event);
 	}
+
 	private void fireWardUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = wardListeners.getListeners(WardListener.class);
 		for (int i = 0; i < listeners.length; i++)
-			((WardListener)listeners[i]).wardUpdated(event);
+			((WardListener) listeners[i]).wardUpdated(event);
 	}
-	
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -110,39 +125,36 @@ public class WardEdit extends JDialog {
 	private int beds;
 	private int nurs;
 	private int docs;
-	
+
 	/**
-	 * 
 	 * This is the default constructor; we pass the parent frame
 	 * (because it is a jdialog), the arraylist and the selected
 	 * row because we need to update them
 	 */
-	public WardEdit(JFrame parent,Ward old,boolean inserting) {
+	public WardEdit(JFrame parent, Ward old, boolean inserting) {
 		super(parent, true);
 		insert = inserting;
-		ward = old;		//operation will be used for every operation
+		ward = old;        //operation will be used for every operation
 		initialize();
 	}
-	
+
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.ward.newwardrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.ward.newward.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.ward.editingwardrecord"));
+			this.setTitle(MessageBundle.getMessage("angal.ward.editward.title"));
 		}
 		pack();
 		setLocationRelativeTo(null);
 	}
-	
+
 	/**
 	 * This method initializes jContentPane
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
@@ -155,17 +167,17 @@ public class WardEdit extends JDialog {
 		}
 		return jContentPane;
 	}
-	
+
 	/**
-	 * This method initializes dataPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes dataPanel
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			dataPanel = new JPanel();
 			GridBagLayout gbl_dataPanel = new GridBagLayout();
-			gbl_dataPanel.columnWeights = new double[]{0.0, 1.0};
+			gbl_dataPanel.columnWeights = new double[] { 0.0, 1.0 };
 			dataPanel.setLayout(gbl_dataPanel);
 			codeLabel = new JLabel();
 			codeLabel.setText(MessageBundle.getMessage("angal.common.codestar"));
@@ -201,16 +213,14 @@ public class WardEdit extends JDialog {
 			gbc_telTextField.gridx = 1;
 			gbc_telTextField.gridy = 2;
 			dataPanel.add(getTelTextField(), gbc_telTextField);
-			telLabel = new JLabel();
-			telLabel.setText(MessageBundle.getMessage("angal.ward.telephoneedit"));
+			telLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			GridBagConstraints gbc_telLabel = new GridBagConstraints();
 			gbc_telLabel.anchor = GridBagConstraints.WEST;
 			gbc_telLabel.insets = new Insets(0, 0, 5, 5);
 			gbc_telLabel.gridx = 0;
 			gbc_telLabel.gridy = 2;
 			dataPanel.add(telLabel, gbc_telLabel);
-			faxLabel = new JLabel();
-			faxLabel.setText(MessageBundle.getMessage("angal.ward.faxedit"));
+			faxLabel = new JLabel(MessageBundle.getMessage("angal.common.fax.txt"));
 			GridBagConstraints gbc_faxLabel = new GridBagConstraints();
 			gbc_faxLabel.anchor = GridBagConstraints.WEST;
 			gbc_faxLabel.insets = new Insets(0, 0, 5, 5);
@@ -300,7 +310,7 @@ public class WardEdit extends JDialog {
 			gbc_isFemaleCheck.gridx = 0;
 			gbc_isFemaleCheck.gridy = 10;
 			dataPanel.add(getIsFemaleCheck(), gbc_isFemaleCheck);
-			requiredLabel= new JLabel();
+			requiredLabel = new JLabel();
 			requiredLabel.setText(MessageBundle.getMessage("angal.ward.requiredfields"));
 			GridBagConstraints gbc_requiredLabel = new GridBagConstraints();
 			gbc_requiredLabel.gridwidth = 2;
@@ -311,11 +321,11 @@ public class WardEdit extends JDialog {
 		}
 		return dataPanel;
 	}
-	
+
 	/**
-	 * This method initializes buttonPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
+	 * This method initializes buttonPanel
+	 *
+	 * @return javax.swing.JPanel
 	 */
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
@@ -325,18 +335,18 @@ public class WardEdit extends JDialog {
 		}
 		return buttonPanel;
 	}
-	
+
 	/**
-	 * This method initializes cancelButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes cancelButton
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new ActionListener() {
+
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();
 				}
@@ -344,41 +354,38 @@ public class WardEdit extends JDialog {
 		}
 		return cancelButton;
 	}
-	
+
 	/**
-	 * This method initializes okButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes okButton
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
-			
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+
 			okButton.addActionListener(new ActionListener() {
+
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 					try {
 						beds = Integer.parseInt(bedsTextField.getText());
 					} catch (NumberFormatException f) {
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.ward.insertavalidbedsnumber"));
+						MessageDialog.error(WardEdit.this, "angal.ward.insertavalidbedsnumber");
 						return;
 					}
 					try {
 						nurs = Integer.parseInt(nursTextField.getText());
 					} catch (NumberFormatException f) {
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.ward.insertavalidnursesnumber"));
+						MessageDialog.error(WardEdit.this, "angal.ward.insertavalidnursesnumber");
 						return;
 					}
 					try {
 						docs = Integer.parseInt(docsTextField.getText());
 					} catch (NumberFormatException f) {
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.ward.insertavaliddoctorsnumber"));
+						MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddoctorsnumber");
 						return;
 					}
 
@@ -395,9 +402,14 @@ public class WardEdit extends JDialog {
 					ward.setFemale(isFemaleCheck.isSelected());
 
 					boolean result = false;
+					Ward savedWard = null;
 					if (insert) { // inserting
 						try {
-							result = manager.newWard(ward);
+							savedWard = manager.newWard(ward);
+							if (savedWard != null) {
+								ward.setLock(savedWard.getLock());
+								result = true;
+							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -406,7 +418,11 @@ public class WardEdit extends JDialog {
 						}
 					} else {
 						try { // updating
-							result = manager.updateWard(ward);
+							savedWard = manager.updateWard(ward);
+							if (savedWard != null) {
+								ward.setLock(savedWard.getLock());
+								result = true;
+							}
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -414,40 +430,41 @@ public class WardEdit extends JDialog {
 							fireWardUpdated();
 						}
 					}
-					if (!result)
-						JOptionPane.showMessageDialog(WardEdit.this,
-								MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-					else
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
 						dispose();
+					}
 				}
 			});
 		}
 		return okButton;
 	}
-	
+
 	/**
-	 * This method initializes descriptionTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes descriptionTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getDescriptionTextField() {
 		if (descriptionTextField == null) {
 			descriptionTextField = new VoLimitedTextField(50);
-			if (!insert) {				
+			if (!insert) {
 				descriptionTextField.setText(ward.getDescription());
 			}
 		}
 		return descriptionTextField;
 	}
-	
+
 	/**
-	 * This method initializes codeTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes codeTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
-			codeTextField = new VoLimitedTextField(1, 20);			
+			codeTextField = new VoLimitedTextField(1, 20);
 			if (!insert) {
 				codeTextField.setText(ward.getCode());
 				codeTextField.setEnabled(false);
@@ -455,11 +472,11 @@ public class WardEdit extends JDialog {
 		}
 		return codeTextField;
 	}
-	
+
 	/**
-	 * This method initializes telTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes telTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getTelTextField() {
 		if (telTextField == null) {
@@ -470,11 +487,11 @@ public class WardEdit extends JDialog {
 		}
 		return telTextField;
 	}
-	
+
 	/**
-	 * This method initializes faxTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes faxTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getFaxTextField() {
 		if (faxTextField == null) {
@@ -485,11 +502,11 @@ public class WardEdit extends JDialog {
 		}
 		return faxTextField;
 	}
-	
+
 	/**
-	 * This method initializes emailTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes emailTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getEmailTextField() {
 		if (emailTextField == null) {
@@ -500,13 +517,13 @@ public class WardEdit extends JDialog {
 		}
 		return emailTextField;
 	}
-	
+
 	/**
-	 * This method initializes bedsTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes bedsTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
-	private JTextField getBedsTextField() {	
+	private JTextField getBedsTextField() {
 		if (bedsTextField == null) {
 			bedsTextField = new VoLimitedTextField(4, 20);
 			if (!insert) {
@@ -515,11 +532,11 @@ public class WardEdit extends JDialog {
 		}
 		return bedsTextField;
 	}
-	
+
 	/**
-	 * This method initializes nursTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes nursTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getNursTextField() {
 		if (nursTextField == null) {
@@ -530,11 +547,11 @@ public class WardEdit extends JDialog {
 		}
 		return nursTextField;
 	}
-	
+
 	/**
-	 * This method initializes docsTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes docsTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private JTextField getDocsTextField() {
 		if (docsTextField == null) {
@@ -545,14 +562,14 @@ public class WardEdit extends JDialog {
 		}
 		return docsTextField;
 	}
-	
+
 	/**
 	 * This method initializes isPharmacyCheck
-	 * 
+	 *
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getIsPharmacyCheck() {
-		if (isPharmacyCheck==null) {
+		if (isPharmacyCheck == null) {
 			isPharmacyCheck = new JCheckBox(MessageBundle.getMessage("angal.ward.wardwithpharmacy"));
 			if (!insert) {
 				isPharmacyCheck.setSelected(ward.isPharmacy());
@@ -560,10 +577,10 @@ public class WardEdit extends JDialog {
 		}
 		return isPharmacyCheck;
 	}
-	
+
 	/**
 	 * This method initializes isFemaleCheck
-	 * 
+	 *
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getIsMaleCheck() {
@@ -575,10 +592,10 @@ public class WardEdit extends JDialog {
 		}
 		return isMaleCheck;
 	}
-	
+
 	/**
 	 * This method initializes isFemaleCheck
-	 * 
+	 *
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getIsFemaleCheck() {
@@ -590,4 +607,4 @@ public class WardEdit extends JDialog {
 		}
 		return isFemaleCheck;
 	}
-} 
+}

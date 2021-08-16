@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.therapy.gui;
 
 import java.awt.BorderLayout;
@@ -9,7 +30,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
@@ -27,7 +47,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -52,6 +71,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.IconButton;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -59,13 +79,9 @@ import org.joda.time.PeriodType;
 
 /**
  * @author Mwithi
- * 
  */
 public class TherapyEntryForm extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/*
@@ -139,7 +155,7 @@ public class TherapyEntryForm extends JDialog {
 		try {
 			this.medArray = medBrowser.getMedicals();
 		} catch (OHServiceException e) {
-			this.medArray = new ArrayList<Medical>();
+			this.medArray = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
 		}
 		this.therapy = th;
@@ -159,9 +175,9 @@ public class TherapyEntryForm extends JDialog {
 
 	private void initComponents() {
 		if (therapy == null) {
-			setTitle(MessageBundle.getMessage("angal.therapy.titlenew")); //$NON-NLS-1$
+			setTitle(MessageBundle.getMessage("angal.therapy.newtherapyentryform.title"));
 		} else {
-			setTitle(MessageBundle.getMessage("angal.therapy.titleedit")); //$NON-NLS-1$
+			setTitle(MessageBundle.getMessage("angal.therapy.edittherapyentryform.title"));
 			getContentPane().setBackground(Color.RED);
 		}
 		setSize(new Dimension(740, 400));
@@ -268,7 +284,7 @@ public class TherapyEntryForm extends JDialog {
 				double value = (Double) source.getValue();
 				therapy.setQty(value);
 				/*
-				 * sebbene sia utile crea conflitto 
+				 * although it is useful it creates conflicts
 				 */
 				//int intValue = new Double(value).intValue();
 				//jSliderQty.setValue(intValue);
@@ -307,7 +323,7 @@ public class TherapyEntryForm extends JDialog {
 		JPanel daysPanel = new JPanel();
 		BoxLayout daysLayout = new BoxLayout(daysPanel, BoxLayout.Y_AXIS);
 		daysPanel.setLayout(daysLayout);
-		JLabel labelDays = new JLabel(MessageBundle.getMessage("angal.therapy.days")); //$NON-NLS-1$
+		JLabel labelDays = new JLabel(MessageBundle.getMessage("angal.common.days.txt"));
 		labelDays.setAlignmentX(CENTER_ALIGNMENT);
 		jSpinnerDays.addChangeListener(new ChangeListener() {
 
@@ -345,7 +361,7 @@ public class TherapyEntryForm extends JDialog {
 		JPanel monthsPanel = new JPanel();
 		BoxLayout monthsLayout = new BoxLayout(monthsPanel, BoxLayout.Y_AXIS);
 		monthsPanel.setLayout(monthsLayout);
-		JLabel labelMonths = new JLabel(MessageBundle.getMessage("angal.therapy.months")); //$NON-NLS-1$
+		JLabel labelMonths = new JLabel(MessageBundle.getMessage("angal.common.months.txt"));
 		labelMonths.setAlignmentX(CENTER_ALIGNMENT);
 
 		jSpinnerMonths.addChangeListener(new ChangeListener() {
@@ -401,7 +417,7 @@ public class TherapyEntryForm extends JDialog {
 
 	private ArrayList<JRadioButton> getRadioButtonSet(int frequencyInDayOptions) {
 
-		radioButtonSet = new ArrayList<JRadioButton>();
+		radioButtonSet = new ArrayList<>();
 		ButtonGroup buttonGroup = new ButtonGroup();
 
 		for (int i = 0; i < frequencyInDayOptions; i++) {
@@ -420,7 +436,7 @@ public class TherapyEntryForm extends JDialog {
 			quantityPanel.setLayout(new BoxLayout(quantityPanel,
 					BoxLayout.X_AXIS));
 
-			JLabel quantityLabel = new JLabel(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+			JLabel quantityLabel = new JLabel(MessageBundle.getMessage("angal.common.quantity.txt"));
 			quantityPanel.add(quantityLabel);
 			quantityPanel.add(getSpinnerQty());
 			quantityPanel.add(getQuantitySlider());
@@ -720,8 +736,8 @@ public class TherapyEntryForm extends JDialog {
 	
 	private JButton getButtonCancel() {
 		if (buttonCancel == null) {
-			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			buttonCancel.setMnemonic(KeyEvent.VK_N);
+			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			buttonCancel.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent arg0) {
@@ -734,26 +750,25 @@ public class TherapyEntryForm extends JDialog {
 	
 	private JButton getButtonOK() {
 		if (buttonOK == null) {
-			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			buttonOK.setMnemonic(KeyEvent.VK_O);
+			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent arg0) {
 					/*
-					 * estrapolazione Dati
+					 * Data extrapolation
 					 */
-					
 					GregorianCalendar startDate = new GregorianCalendar();
 					startDate.setTime(therapyStartdate.getDate());
 					GregorianCalendar endDate = therapyEndDate;
 					Medical medical = (Medical) medicalsList.getSelectedValue();
 					if (medical == null) {
-						JOptionPane.showMessageDialog(TherapyEntryForm.this, MessageBundle.getMessage("angal.therapy.selectapharmaceutical"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+						MessageDialog.error(TherapyEntryForm.this, "angal.therapy.selectapharmaceutical");
 						return;
 					}
 					Double qty = (Double) jSpinnerQty.getValue();
 					if (qty == 0.) {
-						JOptionPane.showMessageDialog(TherapyEntryForm.this, MessageBundle.getMessage("angal.therapy.pleaseinsertaquantitygreaterthanzero"), MessageBundle.getMessage("angal.therapy.warning"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+						MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero");
 						return;
 					}
 					int therapyID = 0;

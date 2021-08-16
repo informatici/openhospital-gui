@@ -1,18 +1,38 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.opetype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -21,19 +41,18 @@ import org.isf.opetype.manager.OperationTypeBrowserManager;
 import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 public class OperationTypeEdit extends JDialog{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList operationTypeListeners = new EventListenerList();
 
     public interface OperationTypeListener extends EventListener {
-        public void operationTypeUpdated(AWTEvent e);
-        public void operationTypeInserted(AWTEvent e);
+        void operationTypeUpdated(AWTEvent e);
+        void operationTypeInserted(AWTEvent e);
     }
 
     public void addOperationTypeListener(OperationTypeListener l) {
@@ -47,26 +66,22 @@ public class OperationTypeEdit extends JDialog{
     private void fireOperationInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((OperationTypeListener)listeners[i]).operationTypeInserted(event);
+	    for (EventListener listener : listeners) {
+		    ((OperationTypeListener) listener).operationTypeInserted(event);
+	    }
     }
     private void fireOperationUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((OperationTypeListener)listeners[i]).operationTypeUpdated(event);
+	    for (EventListener listener : listeners) {
+		    ((OperationTypeListener) listener).operationTypeUpdated(event);
+	    }
     }
     
 	private JPanel jContentPane = null;
@@ -77,19 +92,15 @@ public class OperationTypeEdit extends JDialog{
 	private JTextField descriptionTextField = null;
 	private VoLimitedTextField codeTextField = null;
 	private String lastdescription;
-	private OperationType operationType = null;
+	private OperationType operationType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private JLabel jCodeLabel = null;
-	private JPanel jCodeLabelPanel = null;
-	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescripitonLabel = null;
+
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
-	public OperationTypeEdit(JFrame owner,OperationType old,boolean inserting) {
+	public OperationTypeEdit(JFrame owner, OperationType old, boolean inserting) {
 		super(owner,true);
 		insert = inserting;
 		operationType = old;//operation will be used for every operation
@@ -97,22 +108,17 @@ public class OperationTypeEdit extends JDialog{
 		initialize();
 	}
 
-
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
-		
-		//this.setBounds(300,300,350,180);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.opetype.newoperationtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.opetype.newoperationtype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.opetype.editingoperationtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.opetype.editoperationtype.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.pack();
 		this.setLocationRelativeTo(null);
 	}
@@ -126,8 +132,8 @@ public class OperationTypeEdit extends JDialog{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -140,7 +146,6 @@ public class OperationTypeEdit extends JDialog{
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			dataPanel = new JPanel();
-			//dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS));  // Generated
 			dataPanel.add(getJDataPanel(), null);
 		}
 		return dataPanel;
@@ -154,8 +159,8 @@ public class OperationTypeEdit extends JDialog{
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -167,14 +172,9 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -186,53 +186,51 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					String key = codeTextField.getText();
-					OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
-
-					if (descriptionTextField.getText().equals(lastdescription)){
-						dispose();	
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			okButton.addActionListener(e -> {
+				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+				if (descriptionTextField.getText().equals(lastdescription)) {
+					dispose();
+				}
+				operationType.setDescription(descriptionTextField.getText());
+				operationType.setCode(codeTextField.getText());
+				boolean result = false;
+				if (insert) {      // inserting
+					try {
+						result = manager.newOperationType(operationType);
+					} catch (OHServiceException e1) {
+						result = false;
+						OHServiceExceptionUtil.showMessages(e1);
 					}
-					operationType.setDescription(descriptionTextField.getText());
-					operationType.setCode(codeTextField.getText());
-					boolean result = false;
-					if (insert) {      // inserting
+					if (result) {
+						fireOperationInserted();
+					}
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					} else {
+						dispose();
+					}
+				} else {                          // updating
+					if (descriptionTextField.getText().equals(lastdescription)) {
+						dispose();
+					} else {
 						try {
-							result = manager.newOperationType(operationType);
+							result = manager.updateOperationType(operationType);
 						} catch (OHServiceException e1) {
-							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
+							result = false;
 						}
 						if (result) {
-                           fireOperationInserted();
-                        }
-						if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-	                    else  dispose();
-                    }
-                    else {                          // updating
-                    	if (descriptionTextField.getText().equals(lastdescription)){
-    						dispose();	
-    					}else{
-    						try {
-								result = manager.updateOperationType(operationType);
-							} catch (OHServiceException e1) {
-								OHServiceExceptionUtil.showMessages(e1);
-								result = false;
-							}
-						if (result) {
 							fireOperationUpdated();
-                        }
-						if (!result) JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                        else  dispose();
-    					}
-                    	
+						}
+						if (!result) {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						} else {
+							dispose();
+						}
 					}
-					
-                }
+				}
 			});
 		}
 		return okButton;
@@ -277,60 +275,13 @@ public class OperationTypeEdit extends JDialog{
 	 */
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
-			jDataPanel = new JPanel();
-			jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
-			jDataPanel.add(getJCodeLabelPanel(), null);
-			jDataPanel.add(getCodeTextField(), null);
-			jDataPanel.add(getJDescriptionLabelPanel(), null);
-			jDataPanel.add(getDescriptionTextField(), null);
+			jDataPanel = new JPanel(new SpringLayout());
+			jDataPanel.add(new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 2) + ':'));
+			jDataPanel.add(getCodeTextField());
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':'));
+			jDataPanel.add(getDescriptionTextField());
+			SpringUtilities.makeCompactGrid(jDataPanel, 2, 2, 5, 5, 5, 5);
 		}
 		return jDataPanel;
 	}
-
-	/**
-	 * This method initializes jCodeLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
-	 */
-	private JLabel getJCodeLabel() {
-		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.opetype.codemaxchars"));
-		}
-		return jCodeLabel;
-	}
-
-	/**
-	 * This method initializes jCodeLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJCodeLabelPanel() {
-		if (jCodeLabelPanel == null) {
-			jCodeLabelPanel = new JPanel();
-			//jCodeLabelPanel.setLayout(new BorderLayout());
-			jCodeLabelPanel.add(getJCodeLabel(), BorderLayout.CENTER);
-		}
-		return jCodeLabelPanel;
-	}
-
-	/**
-	 * This method initializes jDescriptionLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJDescriptionLabelPanel() {
-		if (jDescriptionLabelPanel == null) {
-			jDescripitonLabel = new JLabel();
-			jDescripitonLabel.setText(MessageBundle.getMessage("angal.common.description"));
-			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescripitonLabel, null);
-		}
-		return jDescriptionLabelPanel;
-	}
-	
-
-
-}  //  @jve:decl-index=0:visual-constraint="146,61"
-
-
+}

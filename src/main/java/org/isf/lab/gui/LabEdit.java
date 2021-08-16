@@ -1,18 +1,24 @@
-
-/*------------------------------------------
- * LabEdit - Add/edit a laboratory exam
- * -----------------------------------------
- * modification history
- * 02/03/2006 - Davide - first beta version
- * 03/11/2006 - ross - changed title, enlarged window
- *                   - changed note from textfield to textarea
- * 			         - version is now 1.0 
- * 08/11/2006 - ross - added age, sex, exam date, material
- *                   - added editing capability 
- * 18/08/2008 - Teo  - Add scroll capabilities at note JTextArea
- * 13/02/2009 - Alex - add calendar
- *------------------------------------------*/
-
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.lab.gui;
 
 import java.awt.AWTEvent;
@@ -20,7 +26,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
@@ -34,7 +39,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -64,21 +68,35 @@ import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
+/**
+ * ------------------------------------------
+ * LabEdit - Add/edit a laboratory exam
+ * -----------------------------------------
+ * modification history
+ * 02/03/2006 - Davide - first beta version
+ * 03/11/2006 - ross - changed title, enlarged window
+ *                   - changed note from textfield to textarea
+ * 			         - version is now 1.0
+ * 08/11/2006 - ross - added age, sex, exam date, material
+ *                   - added editing capability
+ * 18/08/2008 - Teo  - Add scroll capabilities at note JTextArea
+ * 13/02/2009 - Alex - add calendar
+ * ------------------------------------------
+ */
 public class LabEdit extends ModalJFrame {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1055379190540460482L;
 
 	//LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList labEditListener = new EventListenerList();
 	
 	public interface LabEditListener extends EventListener {
-		public void labUpdated();
+		void labUpdated();
 	}
 	
 	public void addLabEditListener(LabEditListener l) {
@@ -89,9 +107,6 @@ public class LabEdit extends ModalJFrame {
 	private void fireLabUpdated() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = labEditListener.getListeners(LabEditListener.class);
@@ -99,8 +114,6 @@ public class LabEdit extends ModalJFrame {
 			((LabEditListener)listeners[i]).labUpdated();
 	}
 	//---------------------------------------------------------------------------
-	
-	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
 	
 	private boolean insert = false;
 
@@ -139,8 +152,8 @@ public class LabEdit extends ModalJFrame {
 	private GregorianCalendar dateIn = null;
 
 	
-	private static final Integer panelWidth=500; 
-	private static final Integer labelWidth=50; 
+	private static final Integer panelWidth=525;
+	private static final Integer labelWidth=70;
 	private static final Integer dataPanelHeight=150; 
 	private static final Integer resultPanelHeight=350; 
 	private static final Integer buttonPanelHeight=40; 
@@ -171,9 +184,9 @@ public class LabEdit extends ModalJFrame {
 		this.setContentPane(getJContentPane());
 		this.setResizable(false);
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.lab.newlaboratoryexam")+"("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.lab.newlaboratoryexam.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.lab.editlaboratoryexam")+"("+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.lab.editlaboratoryexam.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		//this.setVisible(true);
@@ -199,7 +212,7 @@ public class LabEdit extends ModalJFrame {
 			
 			}
 			resultPanel.setBorder(BorderFactory.createTitledBorder(
-					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.lab.result")));
+					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.common.result.txt")));
 			jContentPane.add(resultPanel);
 			jContentPane.add(getButtonPanel()); // Generated
 		}
@@ -213,7 +226,7 @@ public class LabEdit extends ModalJFrame {
 			dataPanel.setLayout(null);
 			dataPanel.setBounds(0, 0, panelWidth, dataPanelHeight);
 			//exam date
-			examDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date"));
+			examDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
 			examDateLabel.setBounds(5, 10, labelWidth, 20);
 			//examDateField=getExamDateField();
 			//examDateField.setBounds(labelWidth+5, 10, 70, 20);
@@ -223,14 +236,15 @@ public class LabEdit extends ModalJFrame {
 			examDateFieldCal.setBounds(labelWidth+5, 10, 90, 20);
 			//material
 			matLabel = new JLabel(MessageBundle.getMessage("angal.lab.material"));
-			matLabel.setBounds(155, 10, labelWidth, 20);
+			matLabel.setBounds(175, 10, 160, 20);
 			matComboBox= getMatComboBox();
-			matComboBox.setBounds(215, 10, 280, 20);
+			matComboBox.setBounds(255, 10, 270, 20);
+
 			//exam combo
 			examLabel = new JLabel(MessageBundle.getMessage("angal.lab.exam"));
 			examLabel.setBounds(5, 35, labelWidth, 20);
 			examComboBox=getExamComboBox();
-			examComboBox.setBounds(labelWidth+5, 35, 440, 20);
+			examComboBox.setBounds(labelWidth+5, 35, 450, 20);
 
 			//patient (in or out) data
 			patientLabel = new JLabel(MessageBundle.getMessage("angal.lab.patient"));
@@ -238,25 +252,24 @@ public class LabEdit extends ModalJFrame {
 			inPatientCheckBox = getInPatientCheckBox();
 			inPatientCheckBox.setBounds(labelWidth+5, 60, labelWidth, 20);
 			patientComboBox=getPatientComboBox();
-			patientComboBox.setBounds((labelWidth+5)*2, 60, 385, 20);
+			patientComboBox.setBounds((labelWidth+5)*2, 60, 375, 20);
 
-			nameLabel = new JLabel(MessageBundle.getMessage("angal.lab.name"));
+			nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
 			nameLabel.setBounds(5, 85, labelWidth, 20);
 			patTextField=getPatientTextField();
 			patTextField.setBounds(labelWidth+5, 85, 180, 20);
-			ageLabel = new JLabel(MessageBundle.getMessage("angal.lab.age"));
-			ageLabel.setBounds(250, 85, 35, 20);
+			ageLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
+			ageLabel.setBounds(280, 85, 35, 20);
 			ageTextField=getAgeTextField();
-			ageTextField.setBounds(290, 85, 50, 20);
+			ageTextField.setBounds(320, 85, 50, 20);
 			sexLabel = new JLabel(MessageBundle.getMessage("angal.lab.sexmf"));
-			sexLabel.setBounds(375, 85, 80, 20);
+			sexLabel.setBounds(390, 85, 80, 20);
 			sexTextField=getSexTextField();
-			sexTextField.setBounds(445, 85, 50, 20);
+			sexTextField.setBounds(460, 85, 50, 20);
 			//note			
 			noteLabel = new JLabel(MessageBundle.getMessage("angal.lab.note"));
 			noteLabel.setBounds(5, 110, labelWidth, 20);
 			noteTextArea=getNoteTextArea();
-			noteTextArea.setBounds(labelWidth+5, 110, 440, 40);
 			noteTextArea.setEditable(true);
 			noteTextArea.setWrapStyleWord(true);
 			noteTextArea.setAutoscrolls(true);
@@ -284,10 +297,10 @@ public class LabEdit extends ModalJFrame {
 			/*
 			 * Teo : Adding scroll capabilities at note textArea
 			 */
-			if(noteScrollPane == null)
+			if (noteScrollPane == null)
 			{
 				noteScrollPane = new JScrollPane(noteTextArea);
-				noteScrollPane.setBounds(labelWidth+5, 110, 440, 40);
+				noteScrollPane.setBounds(labelWidth+5, 110, 450, 40);
 				noteScrollPane.createVerticalScrollBar();
 				noteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 				noteScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -340,10 +353,10 @@ public class LabEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			patientComboBox.addItem(MessageBundle.getMessage("angal.lab.selectapatient"));
-			if(pat != null){
+			if (pat != null){
 				for (Patient elem : pat) {
 					if (lab.getPatient() != null && !insert) {
-						if (elem.getCode() == lab.getPatient().getCode()) {
+						if (elem.getCode().equals(lab.getPatient().getCode())) {
 							patSelected=elem;
 						}
 					}
@@ -380,8 +393,8 @@ public class LabEdit extends ModalJFrame {
 			buttonPanel = new JPanel();
 			buttonPanel.setBounds(0, dataPanelHeight+resultPanelHeight, panelWidth, buttonPanelHeight);
 			buttonPanel.add(getOkButton(), null);
-			buttonPanel.add(getCancelButton(), null);
 			buttonPanel.add(getPrintButton(),null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -462,7 +475,6 @@ public class LabEdit extends ModalJFrame {
 				noteTextArea.setText(lab.getNote());
 			}
 			noteTextArea.setLineWrap(true);
-			noteTextArea.setPreferredSize(new Dimension(10,30));
 			noteTextArea.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		}
 		return noteTextArea;
@@ -509,13 +521,13 @@ public class LabEdit extends ModalJFrame {
 	
 	private JButton getPrintButton() {
 		if (printButton == null) {
-			printButton = new JButton(MessageBundle.getMessage("angal.lab.print"));
-			printButton.setMnemonic(KeyEvent.VK_P);
+			printButton = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
+			printButton.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
 			printButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {					
 					try {
-						ArrayList<LaboratoryForPrint> labs = new ArrayList<LaboratoryForPrint>();
+						ArrayList<LaboratoryForPrint> labs = new ArrayList<>();
 						
 						labs.add(new LaboratoryForPrint(
 								lab.getCode(),
@@ -525,15 +537,12 @@ public class LabEdit extends ModalJFrame {
 							)
 						);
 						if (!labs.isEmpty()) {
-							
-							printManager.print("Laboratory",labs,0);
+							printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 						}
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					
 				}
-
 			});
 		}
 		return printButton;
@@ -541,9 +550,8 @@ public class LabEdit extends ModalJFrame {
 	
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();
@@ -555,13 +563,12 @@ public class LabEdit extends ModalJFrame {
 
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (examComboBox.getSelectedIndex() == 0) {
-						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.lab.pleaseselectanexam"));
+						MessageDialog.error(null, "angal.lab.pleaseselectanexam.msg");
 						return;
 					}
 					String matSelected=(String)matComboBox.getSelectedItem();
@@ -572,17 +579,17 @@ public class LabEdit extends ModalJFrame {
 						patId=((Patient)(patientComboBox.getSelectedItem())).getCode();
 					String sex=sexTextField.getText().toUpperCase();
 					if (!(sex.equals("M") || sex.equals("F"))) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.lab.pleaseinsertmformaleorfforfemale"));
+						MessageDialog.error(null, "angal.lab.pleaseinsertmformaleorfforfemale.msg");
 						return;
 					}
 						
 					if (examSelected.getProcedure() == 3 && examRowTextField.getText().isEmpty()) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.labnew.pleaseinsertavalidvalue"));
-							return;
+						MessageDialog.error(null, "angal.labnew.pleaseinsertavalidvalue");
+						return;
 					}
 					// exam date	
 					GregorianCalendar gregDate = new GregorianCalendar();
-					ArrayList<String> labRow = new ArrayList<String>();
+					ArrayList<String> labRow = new ArrayList<>();
 					RememberDates.setLastLabExamDate(gregDate);
 					
 					lab.setDate(new GregorianCalendar());
@@ -597,14 +604,14 @@ public class LabEdit extends ModalJFrame {
 					try {
 						tmpAge=Integer.parseInt(ageTextField.getText());
 					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(LabEdit.this, MessageBundle.getMessage("angal.lab.insertvalidage"));
+						MessageDialog.error(LabEdit.this, "angal.lab.insertvalidage.msg");
 					}
 					lab.setSex(sexTextField.getText().toUpperCase());
 					
 					if (examSelected.getProcedure() == 1)
 						lab.setResult(examRowComboBox.getSelectedItem().toString());
 					else if (examSelected.getProcedure() == 2) {
-						lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults"));
+						lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults.txt"));
 						for (int i = 0; i < resultPanel.getComponentCount(); i++) {
 							if (((SubPanel) resultPanel.getComponent(i))
 									.getSelectedResult().equalsIgnoreCase("P")) {
@@ -631,9 +638,9 @@ public class LabEdit extends ModalJFrame {
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 					}
-					if (!result)
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
 					else {
 						fireLabUpdated();
 						dispose();
@@ -698,7 +705,7 @@ public class LabEdit extends ModalJFrame {
 			try {
 				lRows = lRowManager.getLabRowByLabId(lab.getCode());
 			} catch (OHServiceException e) {
-				lRows = new ArrayList<LaboratoryRow>();
+				lRows = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			boolean find;
@@ -741,9 +748,6 @@ public class LabEdit extends ModalJFrame {
 	}
 	class SubPanel extends JPanel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		private JLabel label = null;
@@ -760,26 +764,27 @@ public class LabEdit extends ModalJFrame {
 			this.add(label);
 
 			group = new ButtonGroup();
-			radioPos = new JRadioButton(MessageBundle.getMessage("angal.lab.p"));
-			radioNeg = new JRadioButton(MessageBundle.getMessage("angal.lab.n"));
+			radioPos = new JRadioButton(MessageBundle.getMessage("angal.lab.positiveabbr.btn"));
+			radioNeg = new JRadioButton(MessageBundle.getMessage("angal.lab.negativeabbr.btn"));
 			group.add(radioPos);
 			group.add(radioNeg);
 
 			this.add(radioPos);
 			this.add(radioNeg);
-			if (result.equals(MessageBundle.getMessage("angal.lab.p")))
+			if (result.equals(MessageBundle.getMessage("angal.lab.positiveabbr.btn"))) {
 				radioPos.setSelected(true);
-			else
+			} else {
 				radioNeg.setSelected(true);
+			}
 		}
 
 		public String getSelectedResult() {
-			if (radioPos.isSelected())
-				return MessageBundle.getMessage("angal.lab.p");
-			else
-				return MessageBundle.getMessage("angal.lab.n");
+			if (radioPos.isSelected()) {
+				return MessageBundle.getMessage("angal.lab.positiveabbr.btn");
+			} else {
+				return MessageBundle.getMessage("angal.lab.negativeabbr.btn");
+			}
 		}
-
 	}
 
 }

@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.medicalstockward.gui;
 
 import java.awt.AWTEvent;
@@ -21,7 +42,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -38,6 +58,7 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
 public class WardPharmacyEdit extends JDialog {
@@ -74,7 +95,7 @@ public class WardPharmacyEdit extends JDialog {
 	private float movSelectedWeight;
 	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
-	private ArrayList<Patient> pat = new ArrayList<Patient>();
+	private ArrayList<Patient> pat = new ArrayList<>();
 	private ArrayList<MedicalWard> medList = null;
 	
 //	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel"; //$NON-NLS-1$
@@ -83,8 +104,8 @@ public class WardPharmacyEdit extends JDialog {
 	
 	
 	public interface MovementWardListeners extends EventListener {
-		public void movementUpdated(AWTEvent e);
-		public void movementInserted(AWTEvent e);
+		void movementUpdated(AWTEvent e);
+		void movementInserted(AWTEvent e);
 	}
 	
 	public void addMovementWardListener(MovementWardListeners l) {
@@ -98,9 +119,6 @@ public class WardPharmacyEdit extends JDialog {
 	private void fireMovementWardUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = movementWardListeners.getListeners(MovementWardListeners.class);
@@ -115,7 +133,7 @@ public class WardPharmacyEdit extends JDialog {
 		initComponents();
 		if (movSelected.isPatient()) jComboBoxPatients.setSelectedItem(movWard.getPatient());
 		jComboBoxDrugs.setSelectedItem(movWard.getMedical());
-		setTitle(MessageBundle.getMessage("angal.common.edit")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.medicalstock.editwardpharmacy.title"));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -180,10 +198,10 @@ public class WardPharmacyEdit extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					jComboBoxPatients.removeAllItems();
 					try {
-						pat = patBrowser.getPatientWithHeightAndWeight(jTextFieldSearchPatient.getText());
+						pat = patBrowser.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 					}catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
-						pat = new ArrayList<Patient>();
+						pat = new ArrayList<>();
 					}
 					getJComboBoxPatients(jTextFieldSearchPatient.getText());
 				}
@@ -233,7 +251,7 @@ public class WardPharmacyEdit extends JDialog {
 						lastKey = s;
 					}
 					s = jTextFieldSearchMedical.getText() + lastKey;
-					s.trim();
+					s = s.trim();
 					
 					jComboBoxDrugs.removeAllItems();
 					getJComboBoxDrugs(s);
@@ -293,9 +311,8 @@ public class WardPharmacyEdit extends JDialog {
 
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -308,9 +325,8 @@ public class WardPharmacyEdit extends JDialog {
 
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
-			jButtonOK = new JButton();
-			jButtonOK.setText(MessageBundle.getMessage("angal.common.savem")); //$NON-NLS-1$
-			jButtonOK.setMnemonic(KeyEvent.VK_O);
+			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			jButtonOK.addActionListener(new ActionListener() {
 
 				
@@ -326,7 +342,7 @@ public class WardPharmacyEdit extends JDialog {
 							movSelected.setAge(movSelectedAge);
 							movSelected.setWeight(movSelectedWeight);
 						} else {
-							JOptionPane.showMessageDialog(null,	MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectapatient")); //$NON-NLS-1$
+							MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 							return;
 						}
 					} else {
@@ -337,7 +353,7 @@ public class WardPharmacyEdit extends JDialog {
 					if (item instanceof Medical) {
 						movSelectedMedical = (Medical) item;
 					} else {
-						JOptionPane.showMessageDialog(null,	MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectadrug")); //$NON-NLS-1$
+						MessageDialog.error(null, "angal.medicalstockwardedit.pleaseselectadrug.msg");
 						return;
 					}
 					
@@ -355,10 +371,12 @@ public class WardPharmacyEdit extends JDialog {
 					if (result) {
 						fireMovementWardUpdated();
 					}
-					if (!result)
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved")); //$NON-NLS-1$
-					else
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
 						dispose();
+					}
 				}
 			});
 		}
@@ -402,7 +420,7 @@ public class WardPharmacyEdit extends JDialog {
 
 	private JLabel getJLabelQty() {
 		JLabel jLabelQty= new JLabel();
-		jLabelQty.setText(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+		jLabelQty.setText(MessageBundle.getMessage("angal.common.quantity.txt"));
 		return jLabelQty;
 	}
 
@@ -431,11 +449,11 @@ public class WardPharmacyEdit extends JDialog {
 		}
 		
 		for (Patient elem : pat) {
-			if(key != null)	{
+			if (key != null)	{
 				s1 = key.split(" ");
 				int a = 0;
 				for (int i = 0; i < s1.length; i++) {
-					if(elem.getSearchString().contains(key.toLowerCase()) == true) {
+					if (elem.getSearchString().contains(key.toLowerCase())) {
 						a++;
 					}
 				}
@@ -492,8 +510,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelWeight() {
-		JLabel jLabelWeight = new JLabel();
-		jLabelWeight.setText(MessageBundle.getMessage("angal.medicalstockwardedit.weight")); //$NON-NLS-1$
+		JLabel jLabelWeight = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
 		return jLabelWeight;
 	}
 	
@@ -508,7 +525,7 @@ public class WardPharmacyEdit extends JDialog {
 					try {
 						movSelectedWeight = Float.parseFloat(jWeightTextField.getText());
 						if ((movSelectedWeight < 0)) {
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstockward.insertvalidweight"));
+							MessageDialog.error(null, "angal.medicalstockward.insertavalidweight");
 							movSelectedWeight = 0;
 						}
 					} catch (NumberFormatException ex) {
@@ -525,8 +542,7 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JLabel getJLabelAge() {
-		JLabel jLabelAge = new JLabel();
-		jLabelAge.setText(MessageBundle.getMessage("angal.medicalstockwardedit.age")); //$NON-NLS-1$
+		JLabel jLabelAge = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
 		return jLabelAge;
 	}
 	
@@ -541,7 +557,7 @@ public class WardPharmacyEdit extends JDialog {
 					try {
 						movSelectedAge = Integer.parseInt(jAgeTextField.getText());
 						if ((movSelectedAge < 0) || (movSelectedAge > 200)) {
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstockwardedit.insertvalidage"));
+							MessageDialog.error(null, "angal.medicalstockwardedit.insertvalidage");
 							movSelectedAge = 0;
 						}
 					} catch (NumberFormatException ex) {
@@ -584,9 +600,9 @@ public class WardPharmacyEdit extends JDialog {
 		}
 		
 		for (MedicalWard elem : medList) {
-			if(key != null)
+			if (key != null)
 			{
-				if(elem.toString().toLowerCase().contains(key.toLowerCase()) == true)
+				if (elem.toString().toLowerCase().contains(key.toLowerCase()))
 					jComboBoxDrugs.addItem(elem);
 			}
 			else jComboBoxDrugs.addItem(elem);

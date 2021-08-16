@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.patient.gui;
 
 import java.awt.AWTEvent;
@@ -9,7 +30,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.BorderFactory;
@@ -33,18 +53,17 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
+import org.joda.time.DateTime;
 
 public class PatientInsert extends JDialog implements ActionListener{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private EventListenerList patientListeners = new EventListenerList();
 	
 	public interface PatientListener extends EventListener {
-		public void patientUpdated(AWTEvent e);
-		public void patientInserted(AWTEvent e);
+		void patientUpdated(AWTEvent e);
+		void patientInserted(AWTEvent e);
 	}
 	
 	public void addPatientListener(PatientListener l) {
@@ -58,9 +77,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 private void firePatientInserted(Patient aPatient) {
 	        AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
 
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;};
 
 	        EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
@@ -72,9 +88,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private void firePatientUpdated(Patient aPatient) {
 		AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
@@ -141,7 +154,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JPanel jPanel2 = null;
 	private JPanel jPanel3 = null;
 	private JPanel jPanel5 = null;
-	private JPanel jAdress = null;
+	private JPanel jAddress = null;
 	private JPanel jCity = null;
 	private JPanel jNextKin = null;
 	private JPanel jTelephone = null;
@@ -161,7 +174,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	
 	/**
 	 * This method initializes 
-	 * 
 	 */
 	public PatientInsert(JDialog owner, Patient old, boolean inserting) {
 		super(owner, true);
@@ -179,7 +191,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	
 	/**
 	 * This method initializes this
-	 * 
 	 */
 	private void initialize() {
 		
@@ -193,7 +204,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 		this.setBounds(pfrmBordX+10,pfrmBordY+10,screensize.width / pfrmBase * 
 		pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContainPanel());
-		this.setTitle(MessageBundle.getMessage("angal.patient.newpatient"));
+		this.setTitle(MessageBundle.getMessage("angal.patient.newpatient.title"));
 		this.setSize(new java.awt.Dimension(604,445));
 		setSize(screensize.width / pfrmBase * pfrmWidth,
 				screensize.height / pfrmBase * pfrmHeight);
@@ -253,49 +264,49 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JButton getJOkButton() {
 		if (jOkButton == null) {
-			jOkButton = new JButton();
-			jOkButton.setText(MessageBundle.getMessage("angal.common.ok"));
-			jOkButton.setMnemonic(KeyEvent.VK_A+('O'-'A')); 
+			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jOkButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
+
+				public void actionPerformed(ActionEvent e) {
 					boolean ok = true;
+					DateTime bdate = new DateTime();
+
 					if (insert) {
 						if (jFirstNameTextField.getText().equals("")) {
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertfirstname"));
+							MessageDialog.error(null, "angal.patient.insertfirstname.msg");
 						} else {
 							if (jSecondNameTextField.getText().equals("")) {
-								JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertsecondname"));
-							} else {	
+								MessageDialog.error(null, "angal.patient.insertsecondname.msg");
+							} else {
 								if (age == -1) {
-									JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertvalidage"));
+									MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 								} else {
+									bdate = bdate.minusYears(age);
 									String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
-									try{
-										if (manager.isPatientPresent(name)) {										
-											switch (JOptionPane.showConfirmDialog(null, 
-													MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" +
-															MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?", 
-															MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {
-															case JOptionPane.OK_OPTION:
-																ok=true;
-																break;
-															case JOptionPane.NO_OPTION:
-																ok=false;
-																break;									
+									try {
+										if (manager.isNamePresent(name)) {
+											switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
+												case JOptionPane.OK_OPTION:
+													ok = true;
+													break;
+												case JOptionPane.NO_OPTION:
+													ok = false;
+													break;
 											}
 										}
-									}catch(OHServiceException ex){
-                                        OHServiceExceptionUtil.showMessages(ex);
+									} catch (OHServiceException ex) {
+										OHServiceExceptionUtil.showMessages(ex);
 									}
 									if (ok) {
 										patient.setFirstName(jFirstNameTextField.getText());
 										patient.setSecondName(jSecondNameTextField.getText());
-										patient.setAge(age.intValue());
-									
-										if (sexSelect.equals(MessageBundle.getMessage("angal.patient.female"))) {
-											sex='F';
+										patient.setAge(age);
+
+										if (sexSelect.equals(MessageBundle.getMessage("angal.common.female.txt"))) {
+											sex = 'F';
 										} else {
-											sex='M';
+											sex = 'M';
 										}
 										patient.setSex(sex);
 										patient.setAddress(jAddressTextField.getText());
@@ -303,97 +314,93 @@ public class PatientInsert extends JDialog implements ActionListener{
 										patient.setNextKin(jNextKinTextField.getText());
 										patient.setTelephone(jTelephoneTextField.getText());
 										patient.setNote(jNoteTextArea.getText());
-										
-										//PatientExtended Compatibilty
-										patient.setBirthDate(null);
+
+										//PatientExtended Compatibility
+										patient.setBirthDate(bdate.toDate());
 										patient.setAgetype("");
-										patient.setMother_name("");
+										patient.setMotherName("");
 										patient.setMother('U');
-										patient.setFather_name("");
+										patient.setFatherName("");
 										patient.setFather('U');
 										patient.setBloodType("");
 										patient.setHasInsurance('U');
 										patient.setParentTogether('U');
-										
-										try{
+
+										try {
 											patient = manager.savePatient(patient);
 											firePatientInserted(patient);
 											dispose();
-										}catch(OHServiceException ex){
-                                            OHServiceExceptionUtil.showMessages(ex);
-											JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+										} catch (OHServiceException ex) {
+											OHServiceExceptionUtil.showMessages(ex);
+											MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 										}
 									}
-									}
+								}
 							}
 						}
-					}else{//Update
-						String name= jFirstNameTextField.getText()+" "+jSecondNameTextField.getText();
-						if(!(patient.getName().equals(name))){
-							try{
-								if(manager.isPatientPresent(name)){										
-									switch (JOptionPane.showConfirmDialog(null, 
-											MessageBundle.getMessage("angal.patient.thepatientisalreadypresent") + ". /n" +
-													MessageBundle.getMessage("angal.patient.doyouwanttocontinue") + "?", 
-													MessageBundle.getMessage("angal.patient.select"), JOptionPane.YES_NO_OPTION)) {
-													case JOptionPane.OK_OPTION:
-														ok=true;
-														break;
-													case JOptionPane.NO_OPTION:
-														ok=false;
-														break;									
+					} else { //Update
+						String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
+						if (!(patient.getName().equals(name))) {
+							try {
+								if (manager.isNamePresent(name)) {
+									switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
+										case JOptionPane.OK_OPTION:
+											ok = true;
+											break;
+										case JOptionPane.NO_OPTION:
+											ok = false;
+											break;
 									}
 								}
-							}catch(OHServiceException ex){
-                                OHServiceExceptionUtil.showMessages(ex);
+							} catch (OHServiceException ex) {
+								OHServiceExceptionUtil.showMessages(ex);
 							}
-						}else{
-							ok=true;
+						} else {
+							ok = true;
 						}
-						if(ok){
-						
-						patient.setFirstName(jFirstNameTextField.getText());
-						patient.setSecondName(jSecondNameTextField.getText());
-						patient.setAge(age.intValue());
-						if (sexSelect.equals(" ")) {
-							sex=patient.getSex();
-						}else if(sexSelect.equals(MessageBundle.getMessage("angal.patient.female"))) {
-							sex='F';
-						}else{
-							sex='M';
-						};
-						patient.setSex(sex);
-						patient.setAddress(jAddressTextField.getText());
-						patient.setCity(jCityTextField.getText());
-						patient.setNextKin(jNextKinTextField.getText());
-						patient.setTelephone(jTelephoneTextField.getText());
-						patient.setNote(jNoteTextArea.getText());
-						
-						//PatientExtended Compatibilty: NO NEEDED on Edit
-						//patient.setBirthDate("");
-						//patient.setAgetype("");
-						//patient.setMother_name("");
-						//patient.setMother('U');
-						//patient.setFather_name("");
-						//patient.setFather('U');
-						//patient.setBloodType("");
-						//patient.setHasInsurance('U');
-						//patient.setParentTogether('U');*/
-						try{
-							patient = manager.savePatient(patient);
-							firePatientUpdated(patient);
-							dispose();
-						}catch(OHServiceException ex){
-                            OHServiceExceptionUtil.showMessages(ex);
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+						if (ok) {
+
+							patient.setFirstName(jFirstNameTextField.getText());
+							patient.setSecondName(jSecondNameTextField.getText());
+							patient.setAge(age);
+							if (sexSelect.equals(" ")) {
+								sex = patient.getSex();
+							} else if (sexSelect.equals(MessageBundle.getMessage("angal.common.female.txt"))) {
+								sex = 'F';
+							} else {
+								sex = 'M';
+							}
+							patient.setSex(sex);
+							patient.setAddress(jAddressTextField.getText());
+							patient.setCity(jCityTextField.getText());
+							patient.setNextKin(jNextKinTextField.getText());
+							patient.setTelephone(jTelephoneTextField.getText());
+							patient.setNote(jNoteTextArea.getText());
+
+							//PatientExtended Compatibility: NO NEEDED on Edit
+							//patient.setBirthDate("");
+							//patient.setAgetype("");
+							//patient.setMother_name("");
+							//patient.setMother('U');
+							//patient.setFather_name("");
+							//patient.setFather('U');
+							//patient.setBloodType("");
+							//patient.setHasInsurance('U');
+							//patient.setParentTogether('U');*/
+							try {
+								patient = manager.savePatient(patient);
+								firePatientUpdated(patient);
+								dispose();
+							} catch (OHServiceException ex) {
+								OHServiceExceptionUtil.showMessages(ex);
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							}
 						}
 					}
-					};					
-					
+
 				}
 			});
-			
-			
+
 		}
 		return jOkButton;
 	}
@@ -405,9 +412,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JButton getJCancelButton() {
 		if (jCancelButton == null) {
-			jCancelButton = new JButton();
-			jCancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));
-			jCancelButton.setMnemonic(KeyEvent.VK_A+('C'-'A')); 
+			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jCancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();
@@ -423,8 +429,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 * 	
 	 * @return javax.swing.JTextField	
 	 */
-	
-	
 	private JTextField getAgeField() {
 		if (ageField == null) {
 			ageField = new JTextField(15);
@@ -436,7 +440,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 			} else {
 				//Integer oldage = parseInt(patient.getAge());
 				ageField.setText(String.valueOf(patient.getAge()));
-				age = new Integer(patient.getAge());
+				age = patient.getAge();
 			}
 			ageField.setMinimumSize(new Dimension(100, 50));
 		}
@@ -447,13 +451,12 @@ public class PatientInsert extends JDialog implements ActionListener{
 					age = Integer.parseInt(ageField.getText());
 					if ((age < 0)||(age > 200)) {
 						ageField.setText("0");
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertvalidage"));
+						MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 					}
 				} catch (NumberFormatException ex) {
 					//ageField.setText("0");
-					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patient.insertvalidage"));
+					MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 				}
-				
 			}
 			
 			public void focusGained(FocusEvent e) {
@@ -483,7 +486,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJFirstNameTextField() {
 		if (jFirstNameTextField == null) {
 			jFirstNameTextField = new JTextField(15);
-			if(!insert)jFirstNameTextField.setText(patient.getFirstName());
+			if (!insert)jFirstNameTextField.setText(patient.getFirstName());
 		}
 		return jFirstNameTextField;
 	}
@@ -509,7 +512,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJSecondNameTextField() {
 		if (jSecondNameTextField == null) {
 			jSecondNameTextField = new JTextField(15);
-			if(!insert)jSecondNameTextField.setText(patient.getSecondName());		
+			if (!insert)jSecondNameTextField.setText(patient.getSecondName());		
 			
 		}
 		return jSecondNameTextField;
@@ -524,17 +527,15 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (sexPanel == null) {			
 			sexPanel = new JPanel();
 			sexGroup=new ButtonGroup();
-			JRadioButton radiom= new JRadioButton(MessageBundle.getMessage("angal.patient.male"));
-			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.patient.female"));
-			radiom.setMnemonic(KeyEvent.VK_A+('M'-'A')); 
-			radiof.setMnemonic(KeyEvent.VK_A+('F'-'A')); 
+			JRadioButton radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			sexPanel.add(getJSexLabelPanel(), null);
 			sexPanel.add(radiom, radiom.getName());
-			if(insert){
+			if (insert){
 				radiom.setSelected(true);
 			}
 			else{
-				if(patient.getSex()=='F')
+				if (patient.getSex()=='F')
 					radiof.setSelected(true);
 				else radiom.setSelected(true);
 			}			
@@ -549,14 +550,13 @@ public class PatientInsert extends JDialog implements ActionListener{
 	}
 	
 	/**
-	 * This method initializes jAdressPanel	
+	 * This method initializes jAddressPanel
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getJAddressPanel() {
 		if (jAddressPanel == null) {
-			jAddressLabel = new JLabel();
-			jAddressLabel.setText(MessageBundle.getMessage("angal.patient.address"));
+			jAddressLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
 			jAddressPanel = new JPanel();
 			jAddressPanel.add(jAddressLabel, BorderLayout.EAST);
 		}
@@ -564,14 +564,14 @@ public class PatientInsert extends JDialog implements ActionListener{
 	}
 	
 	/**
-	 * This method initializes jAdressTextField	
+	 * This method initializes jAddressTextField
 	 * 	
 	 * @return javax.swing.JTextField	
 	 */
-	private JTextField getJAdressTextField() {
+	private JTextField getJAddressTextField() {
 		if (jAddressTextField == null) {
 			jAddressTextField = new JTextField(15);
-			if(!insert)jAddressTextField.setText(patient.getAddress());
+			if (!insert)jAddressTextField.setText(patient.getAddress());
 		}
 		return jAddressTextField;
 	}
@@ -583,8 +583,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JPanel getJCityPanel() {
 		if (jCityPanel == null) {
-			jCityLabel = new JLabel();
-			jCityLabel.setText(MessageBundle.getMessage("angal.patient.city"));
+			jCityLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt"));
 			jCityPanel = new JPanel();		
 			jCityPanel.add(jCityLabel, BorderLayout.EAST);
 		}
@@ -599,7 +598,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJCityTextField() {
 		if (jCityTextField == null) {
 			jCityTextField = new JTextField(15);
-			if(!insert)jCityTextField.setText(patient.getCity());
+			if (!insert)jCityTextField.setText(patient.getCity());
 		}
 		return jCityTextField;
 	}
@@ -611,8 +610,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JPanel getJTelPanel() {
 		if (jTelPanel == null) {
-			jTelLabel = new JLabel();
-			jTelLabel.setText(MessageBundle.getMessage("angal.patient.telephone"));
+			jTelLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
 			jTelPanel = new JPanel();				
 			jTelPanel.add(jTelLabel,  BorderLayout.EAST);
 		}
@@ -627,7 +625,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJTelephoneTextField() {
 		if (jTelephoneTextField == null) {
 			jTelephoneTextField = new JTextField(15);
-			if(!insert)jTelephoneTextField.setText(patient.getTelephone());
+			if (!insert)jTelephoneTextField.setText(patient.getTelephone());
 		}
 		return jTelephoneTextField;
 	}
@@ -655,7 +653,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJNextKinTextField() {
 		if (jNextKinTextField == null) {
 			jNextKinTextField = new JTextField(15);
-			if(!insert)jNextKinTextField.setText(patient.getNextKin());
+			if (!insert)jNextKinTextField.setText(patient.getNextKin());
 		}
 		return jNextKinTextField;
 	}
@@ -697,8 +695,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JLabel getJAgeLabel() {
 		if (jAgeLabel == null) {
-			jAgeLabel = new JLabel();
-			jAgeLabel.setText(MessageBundle.getMessage("angal.patient.age") + " *");
+			jAgeLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt") + " *");
 		}
 		return jAgeLabel;
 	}
@@ -730,7 +727,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 			jLabelPanel.add(getJSecondName(), null);
 			jLabelPanel.add(getJAge(), null);
 			jLabelPanel.add(getSexPanel(), null);
-			jLabelPanel.add(getJAdress(), null);
+			jLabelPanel.add(getJAddress(), null);
 			jLabelPanel.add(getJCity(), null);
 			jLabelPanel.add(getJNextKin(), null);
 			jLabelPanel.add(getJTelephone(), null);
@@ -847,7 +844,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JPanel getJPanel() {
 		if (jPanel == null) {
 			jPanel = new JPanel();
-			jPanel.add(getJAdressTextField(), null);
+			jPanel.add(getJAddressTextField(), null);
 		}
 		return jPanel;
 	}
@@ -892,19 +889,19 @@ public class PatientInsert extends JDialog implements ActionListener{
 	}
 
 	/**
-	 * This method initializes jAdress	
+	 * This method initializes jAddress
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	private JPanel getJAdress() {
-		if (jAdress == null) {
-			jAdress = new JPanel();
-			jAdress.setLayout(new BorderLayout());
-			jAdress.add(getJAddressPanel(), java.awt.BorderLayout.WEST);
-			jAdress.add(getJPanel(), java.awt.BorderLayout.EAST);
+	private JPanel getJAddress() {
+		if (jAddress == null) {
+			jAddress = new JPanel();
+			jAddress.setLayout(new BorderLayout());
+			jAddress.add(getJAddressPanel(), java.awt.BorderLayout.WEST);
+			jAddress.add(getJPanel(), java.awt.BorderLayout.EAST);
 			
 		}
-		return jAdress;
+		return jAddress;
 	}
 
 	/**
@@ -960,7 +957,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JPanel getJDataContainPanel() {
 		if (jDataContainPanel == null) {
 			jDataContainPanel = new JPanel();
-			if(!insert){
+			if (!insert){
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel,patient.getName());
 			}else{
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel,MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
@@ -973,11 +970,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 	}
 
 
-
-	
-
 	/**
-	 * set a specific border+title to a panel
+	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title){
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
@@ -1044,6 +1038,5 @@ public class PatientInsert extends JDialog implements ActionListener{
 		}
 		return jNotePanel;
 	}
-	
-	
-}  //  @jve:decl-index=0:visual-constraint="378,59"
+
+}

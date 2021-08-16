@@ -1,0 +1,23 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: org.springframework:spring-context
+    versions:
+    - 5.3.3
+    - 5.3.4
+    - 5.3.5
+  - dependency-name: joda-time:joda-time
+    versions:
+    - 2.10.9
+  - dependency-name: dcm4che:dcm4che-imageio
+    versions:
+    - 2.0.29
+  - dependency-name: dcm4che:dcm4che-core
+    versions:
+    - 2.0.29

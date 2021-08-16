@@ -1,15 +1,25 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.medicalstock.gui;
-
-/*------------------------------------------
- * MovStockBrowser - list medicals movement. let the user search for movements
- * 					  and insert a new movements
- * -----------------------------------------
- * modification history
- * 30/03/2006 - Theo - first beta version
- * 03/11/2006 - ross - changed title, removed delete all button
- *                   - corrected an error in datetextfield class (the month displayed in the filter was -1
- * 			         - version is now  1.0
- *------------------------------------------*/
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -74,6 +84,7 @@ import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.DateTextField;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.StockCardDialog;
 import org.isf.utils.jobjects.StockLedgerDialog;
@@ -83,14 +94,23 @@ import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * ------------------------------------------
+ * MovStockBrowser - list medicals movement. let the user search for movements
+ * 					  and insert a new movements
+ * -----------------------------------------
+ * modification history
+ * 30/03/2006 - Theo - first beta version
+ * 03/11/2006 - ross - changed title, removed delete all button
+ *                   - corrected an error in datetextfield class (the month displayed in the filter was -1
+ * 			         - version is now  1.0
+ * ------------------------------------------
+ */
 public class MovStockBrowser extends ModalJFrame {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private static Logger logger = LoggerFactory.getLogger(MovStockBrowser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MovStockBrowser.class);
 
 	private final JFrame myFrame;
 	private JPanel contentPane;
@@ -101,7 +121,6 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton dischargeButton;
 	private JButton filterButton;
 	private JButton exportToExcel;
-	//	private JButton importFromExcel;
 	private JButton stockCardButton;
 	private JButton stockLedgerButton;
 	private JPanel filterPanel;
@@ -122,20 +141,20 @@ public class MovStockBrowser extends ModalJFrame {
 	private BigDecimal totalAmount;
 	private MovBrowserModel model;
 	private ArrayList<Movement> moves;
-	private String[] pColums = {
-			MessageBundle.getMessage("angal.medicalstock.refno"),
-			MessageBundle.getMessage("angal.common.datem"),                //1
-			MessageBundle.getMessage("angal.medicalstock.typem"),            //2
-			MessageBundle.getMessage("angal.medicalstock.wardm"),            //3
-			MessageBundle.getMessage("angal.medicalstock.qtym"),            //4
-			MessageBundle.getMessage("angal.medicalstock.pharmaceuticalm"),    //5
-			MessageBundle.getMessage("angal.medicalstock.medtypem"),        //6
-			MessageBundle.getMessage("angal.medicalstock.lotm"),            //7
-			MessageBundle.getMessage("angal.medicalstock.prepdatem"),        //8
-			MessageBundle.getMessage("angal.medicalstock.duedatem"),        //9
-			MessageBundle.getMessage("angal.medicalstock.originm"),            //10
-			MessageBundle.getMessage("angal.medicalstock.costm"),            //11
-			MessageBundle.getMessage("angal.medicalstock.totalm")            //12
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.medicalstock.refno.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),        //1
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),       //2
+			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(),            //3
+			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(),            //4
+			MessageBundle.getMessage("angal.medicalstock.pharmaceutical.col").toUpperCase(),    //5
+			MessageBundle.getMessage("angal.medicalstock.medtype.col").toUpperCase(),        //6
+			MessageBundle.getMessage("angal.medicalstock.lot.col").toUpperCase(),            //7
+			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(),        //8
+			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),        //9
+			MessageBundle.getMessage("angal.medicalstock.origin.col").toUpperCase(),            //10
+			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(),            //11
+			MessageBundle.getMessage("angal.common.total.txt").toUpperCase()            //12
 	};
 	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
@@ -144,20 +163,20 @@ public class MovStockBrowser extends ModalJFrame {
 	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
 			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, true };
 
-	private int[] pColumwidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70 };
+	private int[] pColumnWidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70 };
 	private static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
 	private static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
 
 	private String currencyCod;
 
 	/*
-	 *Adds to facilitate the selection of products
+	 * Adds to facilitate the selection of products
 	 */
 	private JPanel searchPanel;
 	private JTextField searchTextField;
 	private JButton searchButton;
 
-	private HashMap<Integer, String> supMap = new HashMap<Integer, String>();
+	private HashMap<Integer, String> supMap = new HashMap<>();
 
 	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
@@ -169,7 +188,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 	public MovStockBrowser() {
 		myFrame = this;
-		setTitle(MessageBundle.getMessage("angal.medicalstock.stockmovementbrowser"));
+		setTitle(MessageBundle.getMessage("angal.medicalstock.stockmovementbrowser.title"));
 		try {
 			supMap = supplierBrowserManager.getHashMap(true);
 		} catch (OHServiceException e) {
@@ -205,7 +224,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * this method controls if the automaticlot option is on
+	 * This method controls if the automaticlot option is on
 	 *
 	 * @return
 	 */
@@ -218,7 +237,7 @@ public class MovStockBrowser extends ModalJFrame {
 		if (MainMenu.checkUserGrants("btnpharmstockcharge"))
 			buttonPanel.add(getChargeButton());
 		if (MainMenu.checkUserGrants("btnpharmstockdischarge"))
-			buttonPanel.add(getDishargeButton());
+			buttonPanel.add(getDischargeButton());
 		buttonPanel.add(getExportToExcelButton());
 		buttonPanel.add(getStockCardButton());
 		buttonPanel.add(getStockLedgerButton());
@@ -227,14 +246,14 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JButton getStockCardButton() {
-		stockCardButton = new JButton(MessageBundle.getMessage("angal.medicalstock.stockcard"));
-		stockCardButton.setMnemonic(KeyEvent.VK_K);
+		stockCardButton = new JButton(MessageBundle.getMessage("angal.common.stockcard.btn"));
+		stockCardButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockcard.btn.key"));
 		stockCardButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				Medical medical = null;
 				if (movTable.getSelectedRow() > -1) {
-					Movement movement = (Movement) (((MovBrowserModel) model).getValueAt(movTable.getSelectedRow(), -1));
+					Movement movement = (Movement) (model.getValueAt(movTable.getSelectedRow(), -1));
 					medical = movement.getMedical();
 				}
 
@@ -249,12 +268,10 @@ public class MovStockBrowser extends ModalJFrame {
 
 				if (!stockCardDialog.isCancel()) {
 					if (medical == null) {
-						JOptionPane.showMessageDialog(MovStockBrowser.this,
-								MessageBundle.getMessage("angal.medicalstock.chooseamedical"));
+						MessageDialog.error(MovStockBrowser.this, "angal.medicalstock.chooseamedical.msg");
 						return;
 					}
 					new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom, dateTo, medical, null, toExcel);
-					return;
 				}
 			}
 		});
@@ -262,8 +279,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JButton getStockLedgerButton() {
-		stockLedgerButton = new JButton(MessageBundle.getMessage("angal.medicalstock.stockledger"));
-		stockLedgerButton.setMnemonic(KeyEvent.VK_L);
+		stockLedgerButton = new JButton(MessageBundle.getMessage("angal.common.stockledger.btn"));
+		stockLedgerButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockledger.btn.key"));
 		stockLedgerButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -275,7 +292,6 @@ public class MovStockBrowser extends ModalJFrame {
 
 				if (!stockCardDialog.isCancel()) {
 					new GenericReportPharmaceuticalStockCard("ProductLedger_multi", dateFrom, dateTo, null, null, false);
-					return;
 				}
 			}
 		});
@@ -293,7 +309,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JScrollPane getTable() {
 		JScrollPane scrollPane = new JScrollPane(getMovTable());
 		int totWidth = 0;
-		for (int colWidth : pColumwidth) {
+		for (int colWidth : pColumnWidth) {
 			totWidth += colWidth;
 		}
 		scrollPane.setPreferredSize(new Dimension(totWidth, 450));
@@ -303,7 +319,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JScrollPane getTableTotal() {
 		JScrollPane scrollPane = new JScrollPane(getJTableTotal());
 		int totWidth = 0;
-		for (int colWidth : pColumwidth) {
+		for (int colWidth : pColumnWidth) {
 			totWidth += colWidth;
 		}
 		scrollPane.setPreferredSize(new Dimension(totWidth, 20));
@@ -319,7 +335,7 @@ public class MovStockBrowser extends ModalJFrame {
 		totalAmount = new BigDecimal(0);
 
 		// quantity
-		if (!medicalBox.getSelectedItem().equals(MessageBundle.getMessage("angal.medicalstock.all"))) {
+		if (!medicalBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
 			for (Movement mov : moves) {
 				if (mov.getType().getType().contains("+")) {
 					totalQti += mov.getQuantity();
@@ -329,7 +345,7 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 			jTableTotal.getModel().setValueAt(totalQti, 0, 4);
 		} else {
-			jTableTotal.getModel().setValueAt(MessageBundle.getMessage("angal.common.notapplicable"), 0, 4);
+			jTableTotal.getModel().setValueAt(MessageBundle.getMessage("angal.common.notapplicable.txt"), 0, 4);
 		}
 
 		// amount
@@ -380,7 +396,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
 				.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.medicalstock.pharmaceutical")));
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.description")));
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt")));
 		medicalPanel.add(label1Panel);
 		medicalPanel.add(getMedicalSearchPanel());
 		JPanel medicalDescPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -415,17 +431,17 @@ public class MovStockBrowser extends ModalJFrame {
 		movementPanel.add(wardPanel);
 
 		JPanel label4Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label4Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date")));
+		label4Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt")));
 		movementPanel.add(label4Panel);
 
 		JPanel moveFromPanel = new JPanel(new BorderLayout());
-		JLabel label = new JLabel(MessageBundle.getMessage("angal.common.from"));
+		JLabel label = new JLabel(MessageBundle.getMessage("angal.common.from.txt"));
 		label.setVerticalAlignment(SwingConstants.TOP);
 		moveFromPanel.add(label, BorderLayout.WEST);
 		moveFromPanel.add(getMovDateFrom(), BorderLayout.EAST);
 		movementPanel.add(moveFromPanel);
 		JPanel moveToPanel = new JPanel(new BorderLayout());
-		JLabel label_1 = new JLabel(MessageBundle.getMessage("angal.common.to"));
+		JLabel label_1 = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
 		label_1.setVerticalAlignment(SwingConstants.TOP);
 		moveToPanel.add(label_1, BorderLayout.WEST);
 		moveToPanel.add(getMovDateTo(), BorderLayout.EAST);
@@ -442,11 +458,11 @@ public class MovStockBrowser extends ModalJFrame {
 				MessageBundle.getMessage("angal.medicalstock.lotpreparationdate")));
 
 		JPanel lotPrepFromPanel = new JPanel(new BorderLayout());
-		lotPrepFromPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from")), BorderLayout.WEST);
+		lotPrepFromPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt")), BorderLayout.WEST);
 		lotPrepFromPanel.add(getLotPrepFrom(), BorderLayout.EAST);
 		lotPreparationDatePanel.add(lotPrepFromPanel);
 		JPanel lotPrepToPanel = new JPanel(new BorderLayout());
-		lotPrepToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to")), BorderLayout.WEST);
+		lotPrepToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt")), BorderLayout.WEST);
 		lotPrepToPanel.add(getLotPrepTo(), BorderLayout.EAST);
 		lotPreparationDatePanel.add(lotPrepToPanel);
 
@@ -461,11 +477,11 @@ public class MovStockBrowser extends ModalJFrame {
 				BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.medicalstock.lotduedate")));
 
 		JPanel lotDueFromPanel = new JPanel(new BorderLayout());
-		lotDueFromPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from")), BorderLayout.WEST);
+		lotDueFromPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt")), BorderLayout.WEST);
 		lotDueFromPanel.add(getLotDueFrom(), BorderLayout.EAST);
 		lotDueDatePanel.add(lotDueFromPanel);
 		JPanel lotDueToPanel = new JPanel(new BorderLayout());
-		lotDueToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to")), BorderLayout.WEST);
+		lotDueToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt")), BorderLayout.WEST);
 		lotDueToPanel.add(getLotDueTo(), BorderLayout.EAST);
 		lotDueDatePanel.add(lotDueToPanel);
 
@@ -476,12 +492,12 @@ public class MovStockBrowser extends ModalJFrame {
 		WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 		wardBox = new JComboBox();
 		wardBox.setPreferredSize(new Dimension(130, 25));
-		wardBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+		wardBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 		ArrayList<Ward> wardList;
 		try {
 			wardList = wbm.getWards();
 		} catch (OHServiceException e) {
-			wardList = new ArrayList<Ward>();
+			wardList = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		for (org.isf.ward.model.Ward elem : wardList) {
@@ -512,7 +528,7 @@ public class MovStockBrowser extends ModalJFrame {
 					int originalSize = medicals.size();
 					int resultsSize = results.size();
 					if (originalSize == resultsSize) {
-						medicalBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+						medicalBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 					}
 					for (Medical aMedical : results) {
 						medicalBox.addItem(aMedical);
@@ -563,7 +579,7 @@ public class MovStockBrowser extends ModalJFrame {
 			medical = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
-		medicalBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+		medicalBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 		if (null != medical) {
 			for (Medical aMedical : medical) {
 				medicalBox.addItem(aMedical);
@@ -598,7 +614,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalTypeBox.setPreferredSize(new Dimension(130, 25));
 		ArrayList<MedicalType> medical;
 
-		medicalTypeBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+		medicalTypeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 
 		try {
 			medical = medicalTypeBrowserManager.getMedicalType();
@@ -644,7 +660,7 @@ public class MovStockBrowser extends ModalJFrame {
 			type = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
-		typeBox.addItem(MessageBundle.getMessage("angal.medicalstock.all"));
+		typeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 		if (null != type) {
 			for (MovementType movementType : type) {
 				typeBox.addItem(movementType);
@@ -679,12 +695,12 @@ public class MovStockBrowser extends ModalJFrame {
 		model = new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 		movTable = new JTable(model);
 
-		for (int i = 0; i < pColums.length; i++) {
+		for (int i = 0; i < pColumns.length; i++) {
 			movTable.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
-			movTable.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
+			movTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			//			if (!pColumnResizable[i]) {
 			//				movTable.getColumnModel().getColumn(i).setResizable(pColumnResizable[i]);
-			//				movTable.getColumnModel().getColumn(i).setMaxWidth(pColumwidth[i]);
+			//				movTable.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
 			//			}
 			if (!pColumnVisible[i]) {
 				movTable.getColumnModel().getColumn(i).setMinWidth(0);
@@ -716,9 +732,10 @@ public class MovStockBrowser extends ModalJFrame {
 
 			jTableTotal.setModel(new DefaultTableModel(
 					new Object[][] {
-							{ "", "", "", "<html><b>Total Qty: </b></html>", totalQti, "", "", "", "", "", "<html><b>Total: </b></html>", currencyCod,
+							{ "", "", "", "<html><b>Total Qty: </b></html>", totalQti, "", "", "", "", "", "<html><b>"
+									+ MessageBundle.getMessage("angal.common.total.txt") + ": </b></html>", currencyCod,
 									totalAmount }
-					}, new String[pColums.length]) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					}, new String[pColumns.length]) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 				private static final long serialVersionUID = 1L;
 
@@ -733,9 +750,9 @@ public class MovStockBrowser extends ModalJFrame {
 			jTableTotal.setCellSelectionEnabled(false);
 			jTableTotal.setColumnSelectionAllowed(false);
 
-			for (int i = 0; i < pColums.length; i++) {
+			for (int i = 0; i < pColumns.length; i++) {
 				jTableTotal.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
-				jTableTotal.getColumnModel().getColumn(i).setPreferredWidth(pColumwidth[i]);
+				jTableTotal.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 				if (!pColumnVisible[i]) {
 					jTableTotal.getColumnModel().getColumn(i).setMinWidth(0);
 					jTableTotal.getColumnModel().getColumn(i).setMaxWidth(0);
@@ -788,14 +805,13 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * this method creates the button that filters the data
+	 * This method creates the button that filters the data
 	 *
 	 * @return
 	 */
-
 	private JButton getFilterButton() {
-		filterButton = new JButton(MessageBundle.getMessage("angal.medicalstock.filter"));
-		filterButton.setMnemonic(KeyEvent.VK_F);
+		filterButton = new JButton(MessageBundle.getMessage("angal.common.filter.btn"));
+		filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.filter.btn.key"));
 		filterButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -809,14 +825,11 @@ public class MovStockBrowser extends ModalJFrame {
 				GregorianCalendar movTo = movDateTo.getCompleteDate();
 				if ((movFrom == null) || (movTo == null)) {
 					if (!((movFrom == null) && (movTo == null))) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstock.chooseavalidmovementdate"));
+						MessageDialog.error(null, "angal.medicalstock.chooseavalidmovementdate.msg");
 						dateOk = false;
 					}
-				} else if (movFrom.compareTo(
-						movTo) > 0) {
-					JOptionPane
-							.showMessageDialog(null,
-									MessageBundle.getMessage("angal.medicalstock.movementdatefromcannotbelaterthanmovementdateto"));
+				} else if (movFrom.compareTo(movTo) > 0) {
+					MessageDialog.error(null, "angal.medicalstock.movementdatefromcannotbelaterthanmovementdateto");
 					dateOk = false;
 				}
 
@@ -825,13 +838,11 @@ public class MovStockBrowser extends ModalJFrame {
 					GregorianCalendar prepTo = lotPrepTo.getCompleteDate();
 					if ((prepFrom == null) || (prepTo == null)) {
 						if (!((prepFrom == null) && (prepTo == null))) {
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstock.chooseavalidpreparationdate"));
+							MessageDialog.error(null, "angal.medicalstock.chooseavalidpreparationdate");
 							dateOk = false;
 						}
-					} else if (prepFrom.compareTo(
-							prepTo) > 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.medicalstock.preparationdatefromcannotbelaterpreparationdateto"));
+					} else if (prepFrom.compareTo(prepTo) > 0) {
+						MessageDialog.error(null, "angal.medicalstock.preparationdatefromcannotbelaterpreparationdateto");
 						dateOk = false;
 					}
 				}
@@ -840,13 +851,11 @@ public class MovStockBrowser extends ModalJFrame {
 				GregorianCalendar dueTo = lotDueTo.getCompleteDate();
 				if ((dueFrom == null) || (dueTo == null)) {
 					if (!((dueFrom == null) && (dueTo == null))) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.medicalstock.chooseavalidduedate"));
+						MessageDialog.error(null, "angal.medicalstock.chooseavalidduedate.msg");
 						dateOk = false;
 					}
-				} else if (dueFrom.compareTo(
-						dueTo) > 0) {
-					JOptionPane.showMessageDialog(null,
-							MessageBundle.getMessage("angal.medicalstock.duedatefromcannotbelaterthanduedateto"));
+				} else if (dueFrom.compareTo(dueTo) > 0) {
+					MessageDialog.error(null, "angal.medicalstock.duedatefromcannotbelaterthanduedateto");
 					dateOk = false;
 				}
 
@@ -903,13 +912,13 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * this method creates the button that close the mask
+	 * This method creates the button that close the mask
 	 *
 	 * @return
 	 */
 	private JButton getCloseButton() {
-		closeButton = new JButton(MessageBundle.getMessage("angal.common.close"));
-		closeButton.setMnemonic(KeyEvent.VK_C);
+		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		closeButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -921,72 +930,13 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * this method creates the button that deletes all the records in
-	 * medicaldsrstockmov and lot it is for training pourposes only to be
-	 * deleted in production environment
-	 *
-	 * @return
-	 */
-	/*private JButton getdeleteAllButton() {
-		deleteAllButton = new JButton(MessageBundle.getMessage("angal.medicalstock.deleteall"));
-		deleteAllButton.setMnemonic(KeyEvent.VK_D);
-		deleteAllButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int n = JOptionPane.showConfirmDialog(null,
-						MessageBundle.getMessage("angal.medicalstock.reallywanttodeleteallstockmovementsandlot"),
-						MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-				if ((n == JOptionPane.YES_OPTION)) {
-					try {
-						DbQuery query = new DbQuery();
-						String s = "delete from MEDICALDSRSTOCKMOV";
-						query.setData(s, true);
-						s = "delete from MEDICALDSRLOT;";
-						query.setData(s, true);
-					} catch (IOException err) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.sql.problemsoccurredwithserverconnection"));
-						err.printStackTrace();
-					} catch (SQLException err) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.medicalstock.problemsoccurredwithsqlistruction"));
-						err.printStackTrace();
-					}
-				}
-				filterButton.doClick();
-			}
-		});
-		return deleteAllButton;
-	}*/
-
-	//	/**
-	//	 * this method creates the button that load the insert movement mask
-	//	 *
-	//	 * @return
-	//	 */
-	//	private JButton getInsertButton() {
-	//		insertButton = new JButton(MessageBundle.getMessage("angal.medicalstock.insert"));
-	//		insertButton.setMnemonic(KeyEvent.VK_I);
-	//		insertButton.addActionListener(new ActionListener() {
-	//
-	//			public void actionPerformed(ActionEvent e) {
-	//				new MovStockInserting(myFrame);
-	//				model = new MovBrowserModel();
-	//				//model.fireTableDataChanged();
-	//				movTable.updateUI();
-	//				if (jCheckBoxKeepFilter.isSelected()) filterButton.doClick();
-	//			}
-	//		});
-	//		return insertButton;
-	//	}
-
-	/**
-	 * this method creates the button that load the charging movement mask
+	 * This method creates the button that load the charging movement mask
 	 *
 	 * @return
 	 */
 	private JButton getChargeButton() {
-		chargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.charge"));
-		chargeButton.setMnemonic(KeyEvent.VK_C);
+		chargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.charge.btn"));
+		chargeButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.charge.btn.key"));
 		chargeButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1003,13 +953,13 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * this method creates the button that load the discharging movement mask
+	 * This method creates the button that load the discharging movement mask
 	 *
 	 * @return
 	 */
-	private JButton getDishargeButton() {
-		dischargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.discharge"));
-		dischargeButton.setMnemonic(KeyEvent.VK_D);
+	private JButton getDischargeButton() {
+		dischargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.discharge.btn"));
+		dischargeButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.discharge.btn.key"));
 		dischargeButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1025,39 +975,9 @@ public class MovStockBrowser extends ModalJFrame {
 		return dischargeButton;
 	}
 
-	//	private JButton getImportFromExcelButton()
-	//	{
-	//		importFromExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.import"));
-	//		importFromExcel.setMnemonic(KeyEvent.VK_I);
-	//		importFromExcel.addActionListener(new ActionListener()
-	//		{
-	//			public void actionPerformed(ActionEvent e) {
-	//
-	//				JFileChooser fcExcel = new JFileChooser();
-	//				FileNameExtensionFilter excelFilter = new FileNameExtensionFilter("Excel (*.xls)","xls");
-	//				fcExcel.setFileFilter(excelFilter);
-	//
-	//				int iRetVal = fcExcel.showOpenDialog(MovStockBrowser.this);
-	//				if(iRetVal == JFileChooser.APPROVE_OPTION)
-	//				{
-	//					ExcelImporter xlsImport = new ExcelImporter();
-	//					try
-	//					{
-	//						xlsImport.OpenInTable(movTable, fcExcel.getSelectedFile());
-	//						movTable.updateUI();
-	//					} catch(IOException exc)
-	//					{
-	//						System.out.println("Import to excel error : "+exc.getMessage());
-	//					}
-	//				}
-	//			}
-	//		});
-	//		return importFromExcel;
-	//	}
-
 	private JButton getExportToExcelButton() {
-		exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.export"));
-		exportToExcel.setMnemonic(KeyEvent.VK_E);
+		exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
+		exportToExcel.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.exporttoexcel.btn.key"));
 		exportToExcel.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1079,7 +999,7 @@ public class MovStockBrowser extends ModalJFrame {
 								exc.getMessage(),
 								MessageBundle.getMessage("angal.hospital"),
 								JOptionPane.PLAIN_MESSAGE);
-						logger.info("Export to excel error : {}", exc.getMessage());
+						LOGGER.info("Export to excel error : {}", exc.getMessage());
 					}
 				}
 			}
@@ -1091,36 +1011,36 @@ public class MovStockBrowser extends ModalJFrame {
 		StringBuilder filename = new StringBuilder("Stock Ledger");
 		if (medicalBox.isEnabled()
 				&& !medicalBox.getSelectedItem().equals(
-				MessageBundle.getMessage("angal.medicalstock.all"))) {
+				MessageBundle.getMessage("angal.common.all.txt"))) {
 
-			filename.append("_").append(medicalBox.getSelectedItem());
+			filename.append('_').append(medicalBox.getSelectedItem());
 		}
 		if (medicalTypeBox.isEnabled()
 				&& !medicalTypeBox.getSelectedItem().equals(
-				MessageBundle.getMessage("angal.medicalstock.all"))) {
+				MessageBundle.getMessage("angal.common.all.txt"))) {
 
-			filename.append("_").append(medicalTypeBox.getSelectedItem());
+			filename.append('_').append(medicalTypeBox.getSelectedItem());
 		}
 		if (typeBox.isEnabled() &&
 				!typeBox.getSelectedItem().equals(
-						MessageBundle.getMessage("angal.medicalstock.all"))) {
+						MessageBundle.getMessage("angal.common.all.txt"))) {
 
-			filename.append("_").append(typeBox.getSelectedItem());
+			filename.append('_').append(typeBox.getSelectedItem());
 		}
 		if (wardBox.isEnabled() &&
 				!wardBox.getSelectedItem().equals(
-						MessageBundle.getMessage("angal.medicalstock.all"))) {
+						MessageBundle.getMessage("angal.common.all.txt"))) {
 
-			filename.append("_").append(wardBox.getSelectedItem());
+			filename.append('_').append(wardBox.getSelectedItem());
 		}
-		filename.append("_").append(TimeTools.formatDateTime(movDateFrom.getCompleteDate(), "yyyyMMdd"))
-				.append("_").append(TimeTools.formatDateTime(movDateTo.getCompleteDate(), "yyyyMMdd"));
+		filename.append('_').append(TimeTools.formatDateTime(movDateFrom.getCompleteDate(), "yyyyMMdd"))
+				.append('_').append(TimeTools.formatDateTime(movDateTo.getCompleteDate(), "yyyyMMdd"));
 		return filename.toString();
 	}
 
 	private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {
 		String query = s.trim();
-		ArrayList<Medical> results = new ArrayList<Medical>();
+		ArrayList<Medical> results = new ArrayList<>();
 		for (Medical medoc : medicalsList) {
 			if (!query.equals("")) {
 				String[] patterns = query.split(" ");
@@ -1149,9 +1069,6 @@ public class MovStockBrowser extends ModalJFrame {
 	 */
 	class MovBrowserModel extends DefaultTableModel {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public MovBrowserModel() {
@@ -1185,11 +1102,11 @@ public class MovStockBrowser extends ModalJFrame {
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		/**
@@ -1234,7 +1151,7 @@ public class MovStockBrowser extends ModalJFrame {
 				return formatDate(lot.getDueDate());
 			} else if (c == ++col) {
 				Supplier origin = movement.getOrigin();
-				return origin != null ? supMap.get(new Integer(origin.getSupId())) : "";
+				return origin != null ? supMap.get(origin.getSupId()) : "";
 			} else if (c == ++col) {
 				return cost;
 			} else if (c == ++col && cost != null) {
@@ -1265,9 +1182,6 @@ public class MovStockBrowser extends ModalJFrame {
 
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -1282,9 +1196,6 @@ public class MovStockBrowser extends ModalJFrame {
 
 	class RightAlignCellRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -1296,9 +1207,6 @@ public class MovStockBrowser extends ModalJFrame {
 
 	class DecimalFormatRenderer extends DefaultTableCellRenderer {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
 		private final DecimalFormat formatter100 = new DecimalFormat("#,##0.000");
 		private final DecimalFormat formatter10 = new DecimalFormat("#,##0.00");

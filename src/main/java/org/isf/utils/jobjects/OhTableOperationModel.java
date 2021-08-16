@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.utils.jobjects;
 
 import java.text.DateFormat;
@@ -15,8 +36,12 @@ import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.operation.model.OperationRow;
 import org.isf.utils.exception.OHServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OhTableOperationModel<T> implements TableModel{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(OhTableOperationModel.class);
 
 	List<T> dataList;	
 	List<T> filteredList;
@@ -24,9 +49,9 @@ public class OhTableOperationModel<T> implements TableModel{
 	
 	public  OhTableOperationModel(List<T> dataList) {
 		this.dataList = dataList;
-		this.filteredList = new ArrayList<T>();
+		this.filteredList = new ArrayList<>();
 		
-		if(dataList!=null){
+		if (dataList!=null){
 			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
 				T t = (T) iterator.next();
 				this.filteredList.add(t);			
@@ -35,16 +60,16 @@ public class OhTableOperationModel<T> implements TableModel{
 	}
 	
 	public int filter(String searchQuery){
-		this.filteredList=new ArrayList<T>();
+		this.filteredList= new ArrayList<>();
 		
 		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext();) {
 			Object object = (Object) iterator.next();
-			if(object instanceof OperationRow){
+			if (object instanceof OperationRow){
 				OperationRow price=(OperationRow) object;
 				String strItem=price.getOperation().getCode()+price.getOpResult();
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if(strItem.indexOf(searchQuery)>=0){
+				if (strItem.contains(searchQuery)) {
 					filteredList.add((T) object);
 				}
 			}
@@ -55,7 +80,6 @@ public class OhTableOperationModel<T> implements TableModel{
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -70,33 +94,33 @@ public class OhTableOperationModel<T> implements TableModel{
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		String columnLable="";
+		String columnLabel="";
 		switch (columnIndex) {
 		case 0:
-			columnLable= MessageBundle.getMessage("angal.operationrowlist.date");
-			//columnLable= "Date";
+			columnLabel= MessageBundle.getMessage("angal.operationrowlist.date").toUpperCase();
+			//columnLabel= "Date";
 			break;
 		case 1:
-			columnLable= MessageBundle.getMessage("angal.operationrowlist.natureop");
-			//columnLable= "Nature Operation";
+			columnLabel= MessageBundle.getMessage("angal.operationrowlist.natureop").toUpperCase();
+			//columnLabel= "Nature Operation";
 			break;
 		case 2:
-			columnLable= MessageBundle.getMessage("angal.operationrowedit.result");
-			//columnLable= "Resultat";
+			columnLabel= MessageBundle.getMessage("angal.common.result.txt").toUpperCase();
+			//columnLabel= "Resultat";
 			break;
 		case 3:
-			columnLable= MessageBundle.getMessage("angal.operationrowedit.unitetrans");
-			//columnLable= "Unite Trans";
+			columnLabel= MessageBundle.getMessage("angal.operationrowedit.unitetrans").toUpperCase();
+			//columnLabel= "Unite Trans";
 			break;	
 		default:
 			break;
 		}
-		return columnLable;
+		return columnLabel;
 	}
 
 	@Override
 	public int getRowCount() {
-		if(this.filteredList==null){
+		if (this.filteredList==null){
 			return 0;
 		}
 		return this.filteredList.size();
@@ -106,9 +130,9 @@ public class OhTableOperationModel<T> implements TableModel{
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
 		String value="";
-		if(rowIndex >=0 && rowIndex < this.filteredList.size()){
+		if (rowIndex >=0 && rowIndex < this.filteredList.size()){
 			T obj=this.filteredList.get(rowIndex);
-			if(obj instanceof OperationRow){
+			if (obj instanceof OperationRow){
 				OperationRow opdObj=(OperationRow)obj;
 				switch (columnIndex) {
 				case -1:
@@ -123,23 +147,21 @@ public class OhTableOperationModel<T> implements TableModel{
 					catch (Exception ex){
 						value=opdObj.getOpDate().getTime().toString();
 					}
-					
 					break;
 				case 1:
                     Operation ope = null;
                     try {
-                        //System.out.println("Looking operation whose code is " + opdObj.getOperation().getCode());
                         ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
-                    } catch (OHServiceException ex) {
-                        ex.printStackTrace();
+                    } catch (OHServiceException ohServiceException) {
+                        LOGGER.error(ohServiceException.getMessage(), ohServiceException);
                     }
-					if(ope != null)					
+					if (ope != null)
 						value = ope.getDescription();
 					else
 						value = "";
 					break;
 				case 2:
-					value=opdObj.getOpResult();
+					value=manageop.getResultDescriptionTranslated(opdObj.getOpResult());
 					break;
 				case 3:
 					value=opdObj.getTransUnit()+"";
@@ -161,13 +183,11 @@ public class OhTableOperationModel<T> implements TableModel{
 	@Override
 	public void removeTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

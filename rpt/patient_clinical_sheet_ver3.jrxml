@@ -1,43 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"  ?>
-<!-- Created with iReport - A designer for JasperReports -->
-<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-<jasperReport
-		 name="patient_clinical_sheet_ver3"
-		 columnCount="1"
-		 printOrder="Vertical"
-		 orientation="Portrait"
-		 pageWidth="595"
-		 pageHeight="842"
-		 columnWidth="535"
-		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
-		 topMargin="20"
-		 bottomMargin="20"
-		 whenNoDataType="AllSectionsNoDetail"
-		 isTitleNewPage="false"
-		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="0" />
-	<property name="ireport.encoding" value="UTF-8" />
-	<import value="java.util.*" />
-	<import value="net.sf.jasperreports.engine.*" />
-	<import value="net.sf.jasperreports.engine.data.*" />
-
-	<parameter name="patientID" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="SUBREPORT_DIR" isForPrompting="true" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["./rpt/"]]></defaultValueExpression>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_clinical_sheet_ver3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_clinical_sheet_ver3" whenResourceMissingType="Key" uuid="9d971b4c-5fa3-4819-adfb-28dfac75b382">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="patientID" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./rpt/"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="Type" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="Date_from" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="Date_to" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="Opd" isForPrompting="true" class="java.lang.Boolean"/>
-	<parameter name="Admission" isForPrompting="true" class="java.lang.Boolean"/>
-	<parameter name="Drugs" isForPrompting="true" class="java.lang.Boolean"/>
-	<parameter name="Examination" isForPrompting="true" class="java.lang.Boolean"/>
-	<parameter name="All" isForPrompting="true" class="java.lang.Boolean"/>
-	<parameter name="Laboratory" isForPrompting="true" class="java.lang.Boolean"/>
-	<parameter name="Operations" isForPrompting="true" class="java.lang.Boolean"/>
-	<queryString><![CDATA[SELECT TYPE, DATE, IDS, NOTE, DETAILS_1, DETAILS_2, DETAILS_3, DETAILS_4
+	<parameter name="Type" class="java.lang.String"/>
+	<parameter name="Date_from" class="java.lang.String"/>
+	<parameter name="Date_to" class="java.lang.String"/>
+	<parameter name="Opd" class="java.lang.Boolean"/>
+	<parameter name="Admission" class="java.lang.Boolean"/>
+	<parameter name="Drugs" class="java.lang.Boolean"/>
+	<parameter name="Examination" class="java.lang.Boolean"/>
+	<parameter name="All" class="java.lang.Boolean"/>
+	<parameter name="Laboratory" class="java.lang.Boolean"/>
+	<parameter name="Operations" class="java.lang.Boolean"/>
+	<queryString>
+		<![CDATA[SELECT TYPE, DATE, IDS, NOTE, DETAILS_1, DETAILS_2, DETAILS_3, DETAILS_4
 FROM (
 SELECT CONCAT("Opd", " (", OPD_PROG_YEAR, ")") AS TYPE,
 	   OPD_DATE AS DATE, OPD_ID AS IDS,
@@ -154,7 +138,23 @@ SELECT "Laboratory" AS TYPE,
 	AND EXA_PROC = 2
 GROUP BY LABR_LAB_ID
 
+UNION
 
+SELECT "Laboratory" AS TYPE,
+	   LAB_DATE AS DATE, LAB_RES AS IDS,
+	   EXA_DESC DETAILS_1,
+	   LAB_RES AS DETAILS_2,
+	   "" AS DETAILS_3,
+	   "" AS DETAILS_4,
+	   LAB_NOTE AS NOTE
+	FROM 
+		LABORATORY  
+		LEFT JOIN EXAM ON (EXA_ID_A = LAB_EXA_ID_A) 
+		LEFT JOIN LABORATORYROW ON LABR_LAB_ID = LAB_ID
+	WHERE LAB_PAT_ID = $P{patientID} AND (LAB_DATE BETWEEN $P{Date_from} AND $P{Date_to})
+    AND EXA_PROC = 3
+	
+GROUP BY LABR_LAB_ID
     
 ) 
 AS DETAILS
@@ -166,8 +166,8 @@ WHERE TYPE LIKE IF ($P!{Opd},'%Opd%','')
    OR TYPE LIKE IF ($P!{Laboratory},'%Laboratory%','') 
    OR TYPE LIKE IF ($P!{Operations},'%Operations%','') 
    OR TYPE LIKE IF ($P!{All}, '%%','')
-ORDER BY DATE DESC]]></queryString>
-
+ORDER BY DATE DESC]]>
+	</queryString>
 	<field name="TYPE" class="java.lang.String"/>
 	<field name="DATE" class="java.sql.Timestamp"/>
 	<field name="IDS" class="java.lang.String"/>
@@ -176,340 +176,291 @@ ORDER BY DATE DESC]]></queryString>
 	<field name="DETAILS_2" class="java.lang.String"/>
 	<field name="DETAILS_3" class="java.lang.String"/>
 	<field name="DETAILS_4" class="java.lang.String"/>
-
-
-		<group  name="DATE" >
-			<groupExpression><![CDATA[$F{DATE}]]></groupExpression>
-			<groupHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-			</groupHeader>
-			<groupFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-			</groupFooter>
-		</group>
-		<background>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</background>
-		<title>
-			<band height="106"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						x="0"
-						y="0"
-						width="164"
-						height="21"
-						key="staticText-1"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+	<group name="DATE">
+		<groupExpression><![CDATA[$F{DATE}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Stretch"/>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="106" splitType="Stretch">
+			<textField>
+				<reportElement key="staticText-1" x="0" y="0" width="164" height="21" uuid="811e880e-0f1f-4d59-aaac-c0561ee9e848"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
-					</textElement>
-				<text><![CDATA[ PATIENT CLINICAL SHEET]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="164"
-						y="8"
-						width="73"
-						height="13"
-						key="staticText-2"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$R{PatientClinicalSheet}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-2" x="164" y="8" width="73" height="13" uuid="ece2cbf9-33d4-4589-a5cc-2fa95866e94e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="7"/>
-					</textElement>
-				<text><![CDATA[version 2.0]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="0"
-						y="22"
-						width="350"
-						height="11"
-						key="staticText-3"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Version}+" 3.0"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-3" x="0" y="22" width="535" height="11" uuid="32458d98-2ae1-4dab-a679-c9235917d841"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="7"/>
-					</textElement>
-				<text><![CDATA[this report list all the admissions and laboratory exams for the patient, more recent information as first]]></text>
-				</staticText>
-				<subreport  isUsingCache="true">
-					<reportElement
-						x="0"
-						y="42"
-						width="535"
-						height="55"
-						key="subreport-1"/>
-					<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_patsubreport.jasper"]]></subreportExpression>
-				</subreport>
-			</band>
-		</title>
-		<pageHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnHeader>
-		<detail>
-			<band height="89"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="21"
-						width="65"
-						height="13"
-						key="textField-1"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{ThisReportShowsPatientHistoryBetweenTwoDatesMoreRecentInformationAsFirst}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-1" x="0" y="51" width="535" height="55" uuid="5d373780-5338-4367-8206-e45cba9aae79"/>
+				<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_patsubreport.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement key="staticText-21" x="411" y="33" width="26" height="18" uuid="159c29bb-2e42-4c09-8828-19bd79cad6e9"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{DATE}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="8"
-						width="65"
-						height="13"
-						key="textField-2"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-22" x="158" y="33" width="155" height="18" uuid="e9a133fe-d920-478c-8e32-715adc027093"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica-Bold" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TYPE}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="75"
-						y="60"
-						width="460"
-						height="13"
-						key="textField-3"
-						isRemoveLineWhenBlank="true"/>
-					<box></box>
-					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica-Oblique" isItalic="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NOTE}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="75"
-						y="8"
-						width="460"
-						height="13"
-						key="textField-4"
-						stretchType="RelativeToBandHeight"/>
-					<box></box>
-					<textElement>
-						<font fontName="SansSerif" pdfFontName="Helvetica" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DETAILS_1}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="75"
-						y="21"
-						width="460"
-						height="13"
-						key="textField-5"
-						isRemoveLineWhenBlank="true"/>
-					<box></box>
-					<textElement>
-						<font fontName="SansSerif"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DETAILS_2}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="75"
-						y="34"
-						width="460"
-						height="13"
-						key="textField-6"
-						isRemoveLineWhenBlank="true"/>
-					<box></box>
-					<textElement>
-						<font fontName="SansSerif"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DETAILS_3}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="75"
-						y="47"
-						width="460"
-						height="13"
-						key="textField-7"
-						isRemoveLineWhenBlank="true"/>
-					<box></box>
-					<textElement>
-						<font fontName="SansSerif"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DETAILS_4}]]></textFieldExpression>
-				</textField>
-				<subreport  isUsingCache="true">
-					<reportElement
-						x="75"
-						y="76"
-						width="460"
-						height="10"
-						key="subreport-2"/>
-					<subreportParameter  name="id">
-						<subreportParameterExpression><![CDATA[$F{IDS}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter  name="type">
-						<subreportParameterExpression><![CDATA[$F{TYPE}]]></subreportParameterExpression>
-					</subreportParameter>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression  class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_ver3_subreport_Operation.jasper"]]></subreportExpression>
-				</subreport>
-			</band>
-		</detail>
-		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnFooter>
-		<pageFooter>
-			<band height="14"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="0"
-						width="100"
-						height="14"
-						key="textField-8"/>
-					<box leftPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Report.From}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-35" x="313" y="33" width="98" height="18" uuid="2388479c-c2d5-4c85-8160-9e4e5714ce0a"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="328"
-						y="0"
-						width="150"
-						height="14"
-						key="textField-9"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Date_from}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-36" x="437" y="33" width="98" height="18" uuid="7a3953c2-9929-40f2-a720-39f01fb5a080"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="485"
-						y="0"
-						width="43"
-						height="14"
-						key="textField-10"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Date_to}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="89" splitType="Stretch">
+			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement key="textField-1" x="0" y="21" width="65" height="13" uuid="e8b6c04a-0d0d-4fab-87b2-fde877b88b93"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
-				</textField>
-			</band>
-		</pageFooter>
-		<lastPageFooter>
-			<band height="14"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						mode="Opaque"
-						x="0"
-						y="0"
-						width="100"
-						height="14"
-						key="textField-11"/>
-					<box leftPadding="2">					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-2" x="0" y="8" width="65" height="13" uuid="292fe642-de0a-4b47-ac03-8e0a5a2397b8"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						mode="Opaque"
-						x="328"
-						y="0"
-						width="150"
-						height="14"
-						key="textField-12"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TYPE}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-3" x="75" y="60" width="460" height="13" isRemoveLineWhenBlank="true" uuid="8c6b7e88-2a94-4b49-b949-1b0f9ac14e54"/>
+				<textElement>
+					<font fontName="DejaVu Sans" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOTE}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-4" stretchType="RelativeToBandHeight" x="75" y="8" width="460" height="13" uuid="953c5e45-2879-4d26-9db8-e2ffdf797a41"/>
+				<textElement>
+					<font fontName="DejaVu Sans" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DETAILS_1}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-5" x="75" y="21" width="460" height="13" isRemoveLineWhenBlank="true" uuid="76b9dd4e-f6aa-421a-8577-4792fd3c2100"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DETAILS_2}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-6" x="75" y="34" width="460" height="13" isRemoveLineWhenBlank="true" uuid="2970c65b-3f79-410d-9626-31b41af81994"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DETAILS_3}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-7" x="75" y="47" width="460" height="13" isRemoveLineWhenBlank="true" uuid="b3d2434d-c55b-48c0-aca2-edabd12aeeac"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DETAILS_4}]]></textFieldExpression>
+			</textField>
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-2" x="75" y="76" width="460" height="10" uuid="b6b8b178-370e-45eb-b8ed-5c826cb4dd37"/>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$F{IDS}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="type">
+					<subreportParameterExpression><![CDATA[$F{TYPE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_ver3_subreport_Operation.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="14" splitType="Stretch">
+			<textField evaluationTime="Report" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-8" x="0" y="0" width="100" height="14" uuid="180a78d1-a918-4d2c-afe8-ce61226d85c9"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						mode="Opaque"
-						x="485"
-						y="0"
-						width="43"
-						height="14"
-						key="textField-13"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-9" x="328" y="0" width="150" height="14" uuid="f9337529-312f-4c3b-8e8d-5d6f03c0308b"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
-				</textField>
-			</band>
-		</lastPageFooter>
-		<summary>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</summary>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement key="textField-10" x="485" y="0" width="43" height="14" uuid="ebae6d77-b3ed-4da5-9fb3-e7aa3334017d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="14" splitType="Stretch">
+			<textField evaluationTime="Report" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-11" mode="Opaque" x="0" y="0" width="100" height="14" uuid="463c9589-d448-4412-89d2-84e9b75595d3"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-12" mode="Opaque" x="328" y="0" width="150" height="14" uuid="b9d151a7-9fbe-4d60-aa40-24dc987cb9da"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement key="textField-13" mode="Opaque" x="485" y="0" width="43" height="14" uuid="93d976e8-56d2-4c8f-8c3e-9473aad78317"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
 </jasperReport>

@@ -1,4 +1,25 @@
 /*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+/*
  *  JDayChooser.java  - A bean for choosing a day
  *  Copyright (C) 2004 Kai Toedter
  *  kai@toedter.com
@@ -59,17 +80,12 @@ import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-
 /**
- * JAgenda
- * 
- * @author Mwithi 
- * 
- * It's a substantial modification of JCalendar(r) by Kai Toedter
- * 
- * it allow to create a BIG JCalendar with an AgendaDayObject for
+ * JAgenda - It's a substantial modification of JCalendar(r) by Kai Toedter
+ * that allows the creation of a BIG JCalendar with an AgendaDayObject for
  * each day.
- * 
+ *
+ * @author Mwithi
  */
 public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		FocusListener {
@@ -247,7 +263,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * Initilizes the locale specific names for the days of the week.
+	 * Initializes the locale specific names for the days of the week.
 	 */
 	protected void init() {
 		JButton testButton = new JButton();
@@ -263,7 +279,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * Draws the day names of the day columnes.
+	 * Draws the day names of the day columns.
 	 */
 	private void drawDayNames() {
 		int firstDayOfWeek = calendar.getFirstDayOfWeek();
@@ -455,10 +471,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * Sets the day. This is a bound property.
-	 * 
-	 * @param d
-	 *            the day
-	 * 
+	 *
+	 * @param d the day
 	 * @see #getDay
 	 */
 	public void setDay(int d) {
@@ -525,9 +539,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * Sets a specific month. This is needed for correct graphical
 	 * representation of the days.
-	 * 
-	 * @param month
-	 *            the new month
+	 *
+	 * @param month the new month
 	 */
 	public void setMonth(int month) {
 		calendar.set(Calendar.MONTH, month);
@@ -545,9 +558,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * Sets a specific year. This is needed for correct graphical representation
 	 * of the days.
-	 * 
-	 * @param year
-	 *            the new year
+	 *
+	 * @param year the new year
 	 */
 	public void setYear(int year) {
 		calendar.set(Calendar.YEAR, year);
@@ -557,9 +569,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * Sets a specific calendar. This is needed for correct graphical
 	 * representation of the days.
-	 * 
-	 * @param calendar
-	 *            the new calendar
+	 *
+	 * @param calendar the new calendar
 	 */
 	public void setCalendar(Calendar calendar) {
 		this.calendar = calendar;
@@ -568,9 +579,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * Sets the font property.
-	 * 
-	 * @param font
-	 *            the new font
+	 *
+	 * @param font the new font
 	 */
 	public void setFont(Font font) {
 		if (days != null) {
@@ -587,9 +597,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * Sets the foregroundColor color.
-	 * 
-	 * @param foreground
-	 *            the new foregroundColor
+	 *
+	 * @param foreground the new foregroundColor
 	 */
 	public void setForeground(Color foreground) {
 		super.setForeground(foreground);
@@ -605,24 +614,22 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * JDayChooser is the ActionListener for all day buttons.
-	 * 
-	 * @param e
-	 *            the ActionEvent
+	 *
+	 * @param e the ActionEvent
 	 */
 	public void actionPerformed(ActionEvent e) {
 
 		JButton button = (JButton) e.getSource();
 		String buttonText = button.getText();
-		int day = new Integer(buttonText).intValue();
+		int day = new Integer(buttonText);
 		setDay(day);
 	}
 
 	/**
 	 * JDayChooser is the FocusListener for all day buttons. (Added by Thomas
 	 * Schaefer)
-	 * 
-	 * @param e
-	 *            the FocusEvent
+	 *
+	 * @param e the FocusEvent
 	 */
 	/*
 	 * Code below commented out by Mark Brown on 24 Aug 2004. This code breaks
@@ -652,9 +659,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * JDayChooser is the KeyListener for all day buttons. (Added by Thomas
 	 * Schaefer and modified by Austin Moore)
-	 * 
-	 * @param e
-	 *            the KeyEvent
+	 *
+	 * @param e the KeyEvent
 	 */
 	public void keyPressed(KeyEvent e) {
 		int offset = (e.getKeyCode() == KeyEvent.VK_UP) ? (-7) : ((e
@@ -672,27 +678,24 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * Does nothing.
-	 * 
-	 * @param e
-	 *            the KeyEvent
+	 *
+	 * @param e the KeyEvent
 	 */
 	public void keyTyped(KeyEvent e) {
 	}
 
 	/**
 	 * Does nothing.
-	 * 
-	 * @param e
-	 *            the KeyEvent
+	 *
+	 * @param e the KeyEvent
 	 */
 	public void keyReleased(KeyEvent e) {
 	}
 
 	/**
 	 * Enable or disable the JDayChooser.
-	 * 
-	 * @param enabled
-	 *            The new enabled value
+	 *
+	 * @param enabled The new enabled value
 	 */
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
@@ -711,7 +714,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * In some Countries it is often usefull to know in which week of the year a
+	 * In some Countries it is often useful to know in which week of the year a
 	 * date is.
 	 * 
 	 * @return boolean true, if the weeks of the year is shown
@@ -721,11 +724,10 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * In some Countries it is often usefull to know in which week of the year a
+	 * In some Countries it is often useful to know in which week of the year a
 	 * date is.
-	 * 
-	 * @param weekOfYearVisible
-	 *            true, if the weeks of the year shall be shown
+	 *
+	 * @param weekOfYearVisible true, if the weeks of the year shall be shown
 	 */
 	public void setWeekOfYearVisible(boolean weekOfYearVisible) {
 		if (weekOfYearVisible == this.weekOfYearVisible) {
@@ -761,9 +763,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * Sets the background of days and weeks of year buttons.
-	 * 
-	 * @param decorationBackgroundColor
-	 *            The background to set
+	 *
+	 * @param decorationBackgroundColor The background to set
 	 */
 	public void setDecorationBackgroundColor(Color decorationBackgroundColor) {
 		this.decorationBackgroundColor = decorationBackgroundColor;
@@ -813,9 +814,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 
 	/**
 	 * Sets the weekday foreground.
-	 * 
-	 * @param weekdayForeground
-	 *            The weekdayForeground to set
+	 *
+	 * @param weekdayForeground The weekdayForeground to set
 	 */
 	public void setWeekdayForeground(Color weekdayForeground) {
 		this.weekdayForeground = weekdayForeground;
@@ -872,9 +872,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * The decoration border is the button border of the day titles and the
 	 * weeks of the year.
-	 * 
-	 * @param decorationBordersVisible
-	 *            true, if the decoration border shall be painted.
+	 *
+	 * @param decorationBordersVisible true, if the decoration border shall be painted.
 	 */
 	public void setDecorationBordersVisible(boolean decorationBordersVisible) {
 		this.decorationBordersVisible = decorationBordersVisible;
@@ -924,13 +923,11 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * Sets a valid date range for selectable dates. If max is before min, the
 	 * default range with no limitation is set.
-	 * 
-	 * @param min
-	 *            the minimum selectable date or null (then the minimum date is
-	 *            set to 01\01\0001)
-	 * @param max
-	 *            the maximum selectable date or null (then the maximum date is
-	 *            set to 01\01\9999)
+	 *
+	 * @param min the minimum selectable date or null (then the minimum date is
+	 * set to 01\01\0001)
+	 * @param max the maximum selectable date or null (then the maximum date is
+	 * set to 01\01\9999)
 	 */
 	public void setSelectableDateRange(Date min, Date max) {
 		if (min == null) {
@@ -953,10 +950,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * Sets the maximum selectable date. If null, the date 01\01\9999 will be
 	 * set instead.
-	 * 
-	 * @param max
-	 *            the maximum selectable date
-	 * 
+	 *
+	 * @param max the maximum selectable date
 	 * @return the maximum selectable date
 	 */
 	public Date setMaxSelectableDate(Date max) {
@@ -972,10 +967,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * Sets the minimum selectable date. If null, the date 01\01\0001 will be
 	 * set instead.
-	 * 
-	 * @param min
-	 *            the minimum selectable date
-	 * 
+	 *
+	 * @param min the minimum selectable date
 	 * @return the minimum selectable date
 	 */
 	public Date setMinSelectableDate(Date min) {
@@ -1021,9 +1014,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 * values are 0-4. If set to 0, dateFormatSymbols.getShortWeekdays() will be
 	 * used, otherwise theses strings will be reduced to the maximum number of
 	 * characters.
-	 * 
-	 * @param maxDayCharacters
-	 *            the maximum number of characters of a day name.
+	 *
+	 * @param maxDayCharacters the maximum number of characters of a day name.
 	 */
 	public void setMaxDayCharacters(int maxDayCharacters) {
 		if (maxDayCharacters == this.maxDayCharacters) {
@@ -1038,22 +1030,6 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		drawDayNames();
 		drawDays();
 		invalidate();
-	}
-
-	/**
-	 * Creates a JFrame with a JDayChooser inside and can be used for testing.
-	 * 
-	 * @param s
-	 *            The command line arguments
-	 */
-	public static void main(String[] s) {
-		JFrame frame = new JFrame("JDayChooser");
-		frame.getContentPane().add(new JAgenda((JDialog) null));
-		frame.setSize(800,600);
-		//frame.setResizable(false);
-		frame.setLocationRelativeTo(null);
-		//frame.pack();
-		frame.setVisible(true);
 	}
 
 	class DecoratorButton extends JButton {
@@ -1090,24 +1066,20 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 			}
 			super.paint(g);
 		}
-	};
-	
+	}
+
 	/**
-	 * 
-	 * @author Mwithi
-	 * 
 	 * AgendaDayObject is a JPanel showing a list
 	 * and a label meant for a DAY_OF_MONTH number
 	 * on background.
-	 *
+	 * <p>
 	 * A clickable icon with a magnifier allows to
 	 * zoom in and out itself.
+	 *
+	 * @author Mwithi
 	 */
 	public class AgendaDayObject extends JPanel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private int day;
 		private JLabel label;
@@ -1189,9 +1161,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		}
 
 		private class FilledLayeredPane extends JLayeredPane {
-		    /**
-			 * 
-			 */
+
 			private static final long serialVersionUID = 1L;
 
 			/**
@@ -1341,5 +1311,4 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		}
 		
 	}
-	
 }

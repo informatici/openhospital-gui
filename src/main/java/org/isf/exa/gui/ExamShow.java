@@ -1,20 +1,30 @@
-
-/*------------------------------------------
- * ExamShow - list all possible results for an exam
- * -----------------------------------------
- * modification history
- * 03/11/2006 - ross - changed title
- * 			         - version is now 1.0 
- *------------------------------------------*/
-
-
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.exa.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -34,12 +44,19 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 
+/**
+ * ------------------------------------------
+ * ExamShow - list all possible results for an exam
+ * -----------------------------------------
+ * modification history
+ * 03/11/2006 - ross - changed title
+ * 			         - version is now 1.0
+ * ------------------------------------------
+ */
 public class ExamShow extends JDialog implements ExamRowListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private JPanel jContentPane = null;
@@ -49,11 +66,11 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private Exam exam = null;
 	private JButton newButton = null;
 	private JButton deleteButton = null;
-	private String[] pColums = {
-			MessageBundle.getMessage("angal.common.codem"),
-			MessageBundle.getMessage("angal.common.descriptionm")
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
-	private int[] pColumwidth = {50,250};
+	private int[] pColumnWidth = {50,250};
 	private DefaultTableModel model ;
 	private JTable table;
 	private ExamRow examRow = null;
@@ -76,7 +93,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
-		this.setTitle(exam.getDescription() + " " + MessageBundle.getMessage("angal.exa.results"));
+		this.setTitle(MessageBundle.formatMessage("angal.exa.results.fmt.title", exam.getDescription()));
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}
@@ -97,8 +114,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
                         
 			model = new ExamRowBrowsingModel(exam.getCode());
 			table = new JTable(model);
-			table.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			table.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);			
+			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 			jContentPane.add(new JScrollPane(table),BorderLayout.CENTER);
 		}
 		return dataPanel;
@@ -115,10 +132,9 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	}
 	
 	private JButton getNewButton(){
-		if(newButton == null){
-			newButton = new JButton();
-			newButton.setText(MessageBundle.getMessage("angal.common.new"));  // Generated
-            newButton.setMnemonic(KeyEvent.VK_N);
+		if (newButton == null){
+			newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			newButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					examRow = new ExamRow();
@@ -133,9 +149,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton();
-			closeButton.setText(MessageBundle.getMessage("angal.common.close"));  // Generated
-            closeButton.setMnemonic(KeyEvent.VK_C);
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			closeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				dispose();
@@ -147,32 +162,21 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	
 	private JButton getDeleteButton() {
 		if (deleteButton == null) {
-			deleteButton = new JButton();
-			deleteButton.setText(MessageBundle.getMessage("angal.common.delete"));  // Generated
-            deleteButton.setMnemonic(KeyEvent.VK_D);
+			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			deleteButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					if (table.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(				
-		                        null,
-		                        MessageBundle.getMessage("angal.common.pleaseselectarow"),
-		                        MessageBundle.getMessage("angal.hospital"),
-		                        JOptionPane.PLAIN_MESSAGE);				
-						return;									
-					}else {
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+					} else {
 						ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 						ExamRow row = (ExamRow)(((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(
-	                        null,
-	                        MessageBundle.getMessage("angal.exa.deleteexamresult")+" \""+row.getDescription()+"\" ?",
-	                        MessageBundle.getMessage("angal.hospital"),
-	                        JOptionPane.YES_NO_OPTION);
-
-						if ((n == JOptionPane.YES_OPTION)){
+						int answer = MessageDialog.yesNo(null,"angal.exa.deleteexamresult.fmt.msg", row.getDescription());
+						if ((answer == JOptionPane.YES_OPTION)){
 							try {
 								boolean deleted = manager.deleteExamRow(row);
 								
-								if (true == deleted) {
+								if (deleted) {
 									examRowDeleted();
 								}
 							} catch (OHServiceException e1) {
@@ -210,16 +214,16 @@ class ExamRowBrowsingModel extends DefaultTableModel {
             }
 
             public String getColumnName(int c) {
-                return pColums[c];
+                return pColumns[c];
             }
 
             public int getColumnCount() {
-                return pColums.length;
+                return pColumns.length;
             }
 
             public Object getValueAt(int r, int c) {
                 ExamRow examRow = pExamRow.get(r);
-                if(c==-1){
+                if (c==-1){
                     return examRow;
                 }
                 else if (c == 0) {

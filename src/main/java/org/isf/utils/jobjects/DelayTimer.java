@@ -1,6 +1,33 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.utils.jobjects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DelayTimer extends Thread {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(DelayTimer.class);
+
 	private final DelayTimerCallback callback;
 	private final Object mutex = new Object();
 	private final Object triggeredMutex = new Object();
@@ -37,9 +64,8 @@ public class DelayTimer extends Thread {
 				waitTime = 0;
 				mutex.notify();
 			}
-		} catch (InterruptedException ie) {
-			System.err.println("trigger failure");
-			ie.printStackTrace(System.err);
+		} catch (InterruptedException interruptedException) {
+			LOGGER.error("trigger failure", interruptedException);
 		}
 	}
 
@@ -61,9 +87,8 @@ public class DelayTimer extends Thread {
 					if (triggered) {
 						callback.trigger();
 					}
-				} catch (Exception e) {
-					System.err.println("trigger() threw exception, continuing");
-					e.printStackTrace(System.err);
+				} catch (Exception exception) {
+					LOGGER.error("trigger() threw exception, continuing", exception);
 				} finally {
 					synchronized (triggeredMutex) {
 						triggered = false;
@@ -71,9 +96,8 @@ public class DelayTimer extends Thread {
 					}
 				}
 			}
-		} catch (InterruptedException ie) {
-			System.err.println("interrupted in run");
-			ie.printStackTrace(System.err);
+		} catch (InterruptedException interruptedException) {
+			LOGGER.error("interrupted in run", interruptedException);
 		}
 	}
 

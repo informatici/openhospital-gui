@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.stat.gui;
 
 import java.awt.BorderLayout;
@@ -7,7 +28,6 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,16 +41,10 @@ import org.isf.utils.jobjects.ModalJFrame;
  * This class launch reports creation
  * 
  * @author Rick
- *
  */
 public class ExamsList1Launcher extends ModalJFrame{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
-	private static final String VERSION="v 1.0"; 
 
 	private int pfrmExactWidth = 356;
 	private int pfrmExactHeight = 165;
@@ -56,12 +70,10 @@ public class ExamsList1Launcher extends ModalJFrame{
 	}
 
 	/**
-	 * This method initializes this	
-	 * 	
-	 * @return void	
+	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.stat.examsreport") + " ("+VERSION+")");
+		this.setTitle(MessageBundle.getMessage("angal.stat.examsreport.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
@@ -108,9 +120,8 @@ public class ExamsList1Launcher extends ModalJFrame{
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();
@@ -147,10 +158,10 @@ public class ExamsList1Launcher extends ModalJFrame{
 	 */
 	private JButton getJReport1Button() {
 		if (jReport1Button == null) {
-			jReport1Button = new JButton();
+			jReport1Button = new JButton(MessageBundle.getMessage("angal.stat.runexamslistreportbytype.btn"));
+			jReport1Button.setMnemonic(MessageBundle.getMnemonic("angal.stat.runexamslistreportbytype.btn.key"));
 			jReport1Button.setBounds(new Rectangle(15, 15, 120, 31));
-			jReport1Button.setText(MessageBundle.getMessage("angal.stat.runexamslistreportbytype"));
-			jReport1Button.addActionListener(new ActionListener() {   
+			jReport1Button.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {   
 					new ExamsList1();
 				}
@@ -160,8 +171,8 @@ public class ExamsList1Launcher extends ModalJFrame{
 	}
 
 	
-	/*
-	 * set a specific border+title to a panel
+	/**
+	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(

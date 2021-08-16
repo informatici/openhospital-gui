@@ -652,8 +652,8 @@
 			   --> mysql/db/step_03_dump_default_data_it.sql
 			   <-- mysql/db/step_04_dump_example_data.sql
 			   
-	Added sample mechanism to install OpenHospital in different languages (the internal
-	data set is changed accordingly) or with demo data (english only)
+	Added sample mechanism to install Open Hospital in different languages (the internal
+	data set is changed accordingly) or with demo data (English only)
 ===========================================================================================
 73.
 	29/11/2014 --> poh_files/oh.bat

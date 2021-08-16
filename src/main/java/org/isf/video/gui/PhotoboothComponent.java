@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.video.gui;
 
 import java.awt.Dimension;
@@ -7,16 +28,15 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.isf.generaldata.MessageBundle;
 import org.isf.gui.BaseComponent;
 
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-/*
- * Created by JFormDesigner on Mon Mar 09 21:10:41 AEDT 2020
- */
 
 /**
  * @author User #1
+ * Created by JFormDesigner on Mon Mar 09 21:10:41 AEDT 2020
  */
 public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentationModel> {
 
@@ -110,17 +130,18 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 					"default"));
 
 				//---- webcamLabel ----
-				webcamLabel.setText("Webcam");
+				webcamLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.webcam.txt"));
 				resolutionPanel.add(webcamLabel, CC.xy(1, 1));
 				resolutionPanel.add(webcamComboBox, CC.xy(5, 1));
 
 				//---- resolutionLabel ----
-				resolutionLabel.setText("Resolution");
+				resolutionLabel.setText(MessageBundle.getMessage("angal.photoboothcomponent.resolution.txt"));
 				resolutionPanel.add(resolutionLabel, CC.xy(9, 1));
 				resolutionPanel.add(resolutionComboBox, CC.xy(13, 1));
 
 				//---- captureButton ----
-				captureButton.setText("Capture");
+				captureButton.setText(MessageBundle.getMessage("angal.photoboothcomponent.capture.btn"));
+				cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.photoboothcomponent.capture.btn.key"));
 				resolutionPanel.add(captureButton, CC.xy(15, 1));
 			}
 			photoBoothPanel.add(resolutionPanel, CC.xy(3, 5, CC.CENTER, CC.DEFAULT));
@@ -132,11 +153,13 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 					"default"));
 
 				//---- okButton ----
-				okButton.setText("OK");
+				okButton.setText(MessageBundle.getMessage("angal.common.ok.btn"));
+				okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 				buttonContainer.add(okButton, CC.xy(1, 1));
 
 				//---- cancelButton ----
-				cancelButton.setText("Cancel");
+				cancelButton.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
+				cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 				buttonContainer.add(cancelButton, CC.xy(3, 1));
 			}
 			photoBoothPanel.add(buttonContainer, CC.xy(3, 7, CC.RIGHT, CC.DEFAULT));
@@ -159,7 +182,5 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 	private JButton okButton;
 	private JButton cancelButton;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
-
-
 
 }

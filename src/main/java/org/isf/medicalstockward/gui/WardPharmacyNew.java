@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.medicalstockward.gui;
 
 import java.awt.AWTEvent;
@@ -13,8 +34,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Optional;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -36,11 +56,11 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstock.manager.MovStockInsertingManager;
-import org.isf.medicalstock.model.Lot;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
@@ -50,18 +70,23 @@ import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WardPharmacyNew extends JDialog implements SelectionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(WardPharmacyNew.class);
 
 //LISTENER INTERFACE --------------------------------------------------------
     private EventListenerList movementWardListeners = new EventListenerList();
 	
 	public interface MovementWardListeners extends EventListener {
-		public void movementUpdated(AWTEvent e);
-		public void movementInserted(AWTEvent e);
+		void movementUpdated(AWTEvent e);
+		void movementInserted(AWTEvent e);
 	}
 	
 	public void addMovementWardListener(MovementWardListeners l) {
@@ -75,9 +100,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private void fireMovementWardInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = movementWardListeners.getListeners(MovementWardListeners.class);
@@ -105,9 +127,19 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.changepatient")); //$NON-NLS-1$
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.changethepatientassociatedwiththismovement")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
-//		if (patientSelected.getWeight() == 0) {
-//			JOptionPane.showMessageDialog(WardPharmacyNew.this, MessageBundle.getMessage("angal.medicalstockwardedit.theselectedpatienthasnoweightdefined"));
-//		}
+		
+		ExaminationBrowserManager exm = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+		
+		try {
+			Optional.ofNullable(exm.getLastByPatID(patientSelected.getCode()))
+			.map(lastExam -> lastExam.getPex_weight())
+			.map(weight -> weight.floatValue())
+			.ifPresent(w -> patientWeight = w);
+			
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e, WardPharmacyNew.this);
+			MessageDialog.error(WardPharmacyNew.this, "angal.medicalstockwardedit.problemoccurredwhileretrievingweight");
+		}
 	}
 	
 	private static final long serialVersionUID = 1L;
@@ -132,11 +164,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	
 	private Patient patientSelected = null;
+	private float patientWeight;
 	private Ward wardSelected;
 	private Object[] medClasses = {Medical.class, Integer.class, String.class};
-	private String[] medColumnNames = {MessageBundle.getMessage("angal.medicalstockward.medical"), 
-									   MessageBundle.getMessage("angal.common.quantity"),
-									   MessageBundle.getMessage("angal.medicalstockward.lotnumberabb") };
+	private String[] medColumnNames = {
+			MessageBundle.getMessage("angal.wardpharmacy.medical.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.wardpharmacy.lotnumber.col").toUpperCase()
+	};
 	private Integer[] medWidth = {150, 150, 50};
 	private boolean[] medResizable = {true, false, false};
 	
@@ -146,10 +181,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	//Medicals (in WARD)
 	//ArrayList<MedItem> medItems = new ArrayList<MedItem>();
-	private ArrayList<Medical> medArray = new ArrayList<Medical>();
-	private ArrayList<Double> qtyArray = new ArrayList<Double>(); 
+	private ArrayList<Medical> medArray = new ArrayList<>();
 	private ArrayList<MedicalWard> wardDrugs = null;
-	private ArrayList<MedicalWard> medItems = new ArrayList<MedicalWard>();
+	private ArrayList<MedicalWard> medItems = new ArrayList<>();
 	private JRadioButton jRadioUse;
 	private JTextField jTextFieldUse;
 	private JLabel jLabelUse;
@@ -158,7 +192,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JComboBox wardBox;
 	private JPanel panelWard;
         /*
-         *Adds to facilitate the selection of products 
+         * Adds to facilitate the selection of products
          */
         private JPanel searchPanel;
         private JTextField searchTextField;
@@ -173,7 +207,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		wardDrugs = drugs;
 		for (MedicalWard elem : wardDrugs) {
 			medArray.add(elem.getMedical());
-			qtyArray.add(elem.getQty());
 		}
 		wardSelected = ward;
 		initComponents();
@@ -255,9 +288,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	
 	class StockMovModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private ArrayList<MedicalWard> druglist;
 
@@ -273,14 +304,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.medicalstock.lotid"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.medicalstock.lotid").toUpperCase();
 			}
 			
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.medicalstock.duedate").toUpperCase();
 			}
 			if (c == 2) {
-				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase();
 			}
 			return ""; //$NON-NLS-1$
 		}
@@ -292,19 +323,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		public Object getValueAt(int r, int c) {
 			MedicalWard medicalWard = druglist.get(r);
 			if (c == -1) {
+				
 				return medicalWard;
 			} else if (c == 0) {
 				return medicalWard.getId().getLot();
-			} else if (c == 1) {
-				ArrayList<Lot> lot = null;
-				try {
-					lot = movManager.getLotByMedical(medicalWard.getMedical());
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				return TimeTools.formatDateTime(lot.get(0).getDueDate(), DATE_FORMAT_DD_MM_YYYY);
-			}  else if (c == 2) {
+			} else if (c == 1) {	
 				return medicalWard.getQty();
+			}  else if (c == 2) {
+				return TimeTools.formatDateTime(medicalWard.getLot().getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			}
 			return null;
 		}
@@ -318,15 +344,13 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private boolean checkQuantityInLot(MedicalWard medWard, double qty) {
 		double wardQty = medWard.getQty();
 		if (qty > wardQty) {
-			JOptionPane.showMessageDialog(WardPharmacyNew.this, 
-					MessageBundle.getMessage("angal.medicalstock.movementquantityisgreaterthanthequantityof")); //$NON-NLS-1$
+			MessageDialog.error(WardPharmacyNew.this, "angal.medicalstock.movementquantityisgreaterthanthequantityof.msg");
 			return false;
 		} 
 		return true;
 	}
 	
-	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int qanty) {
-		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int quantity) {
 		Collections.sort(drug, new Comparator<MedicalWard>() {
 			@Override
 			public int compare(MedicalWard o1, MedicalWard o2) {
@@ -337,7 +361,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		});
 
 		MedicalWard medWard = null;
-		int q = qanty;
+		int q = quantity;
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
 
@@ -345,7 +369,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					if (q != 0) {
 						if (elem.getQty() <= q) {
 							MedicalWard e = elem;
-							dr.add(e);
 							q = (int) (q - elem.getQty());
 							int maxquantity = (int) (elem.getQty() - 0);
 							medWard = elem;
@@ -353,7 +376,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 						} else {
 							MedicalWard e = elem;
-							dr.add(e);
 							int qu = (int) (elem.getQty() - q);
 							medWard = elem;
 
@@ -369,12 +391,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return medWard;
 	}
 	
-	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int qanty) {
-		ArrayList<MedicalWard> dr = new ArrayList<MedicalWard>();
+	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int quantity) {
+		ArrayList<MedicalWard> dr = new ArrayList<>();
 		MedicalWard medWard =null;
 		for (MedicalWard elem : drug) {
-			if(elem.getMedical().getDescription().equals(me)) {
-				if(elem.getQty() != 0.0) {
+			if (elem.getMedical().getDescription().equals(me)) {
+				if (elem.getQty() != 0.0) {
 					MedicalWard e = elem;
 						dr.add(e);
 					}
@@ -401,10 +423,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						else return null;
 					
 					
-					if (!checkQuantityInLot(medWard, qanty)) medWard = null;
+					if (!checkQuantityInLot(medWard, quantity)) medWard = null;
 					
 					
-					addItem(medWard, qanty);
+					addItem(medWard, quantity);
 					
 				}
 				
@@ -426,16 +448,15 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			}
 
 		}
-		double usedQty = 0;
 		StringBuilder message = new StringBuilder();
-		message.append(med.toString()).append("\n") //$NON-NLS-1$
+		message.append(med).append('\n') //$NON-NLS-1$
 				.append(MessageBundle.getMessage("angal.medicalstock.multipledischarging.lyinginstock")) //$NON-NLS-1$
 				.append(totalQty); // $NON-NLS-1$
-		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
 
 		if (prodCode != null && !prodCode.equals("")) { //$NON-NLS-1$
-			title.append(" ") //$NON-NLS-1$
-					.append(MessageBundle.getMessage("angal.common.code")) //$NON-NLS-1$
+			title.append(' ') //$NON-NLS-1$
+					.append(MessageBundle.getMessage("angal.common.code.txt"))
 					.append(": ") //$NON-NLS-1$
 					.append(prodCode);
 		} else {
@@ -455,18 +476,17 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						throw new NumberFormatException();
 
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(WardPharmacyNew.this,
-							MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+					MessageDialog.error(WardPharmacyNew.this, "angal.medicalstock.multipledischarging.pleaseinsertavalidvalue");
 					qty = 0;
 				}
 			} else
 				return qty;
 			if (checkQuantity(totalQty, qty)) {
 
-				if (isAutomaticLot()) {
-					MedicalWard warSe = automaticChoose(wardDrugs, med, qty);
+				if (isAutomaticLot() || jRadioPatient.isSelected()) {
+					MedicalWard medicalSelection = automaticChoose(wardDrugs, med, qty);
 				} else {
-					MedicalWard warSe = chooseLot(wardDrugs, med, qty);
+					MedicalWard medicalSelection = chooseLot(wardDrugs, med, qty);
 				}
 			} else {
 				askQuantity(med, wardDrugs);
@@ -492,15 +512,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	}
 	private JButton getJButtonAddMedical() {
 		if (jButtonAddMedical == null) {
-			jButtonAddMedical = new JButton();
-			jButtonAddMedical.setText(MessageBundle.getMessage("angal.medicalstockwardedit.medical")); //$NON-NLS-1$
-			jButtonAddMedical.setMnemonic(KeyEvent.VK_M);
+			jButtonAddMedical = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.medical.btn"));
+			jButtonAddMedical.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.medical.btn.key"));
 			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
 			jButtonAddMedical.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					String medical=(String)jComboBoxMedicals.getSelectedItem();
-					int qanty = askQuantity(medical,wardDrugs);
+					int quantity = askQuantity(medical,wardDrugs);
 				}
 			});
 		}
@@ -513,17 +532,14 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	
 	private JButton getJButtonRemoveMedical() {
 		if (jButtonRemoveMedical == null) {
-			jButtonRemoveMedical = new JButton();
-			jButtonRemoveMedical.setText(MessageBundle.getMessage("angal.medicalstockwardedit.removeitem")); //$NON-NLS-1$
+			jButtonRemoveMedical = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.removeitem.btn"));
+			jButtonRemoveMedical.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.removeitem.btn.key"));
 			jButtonRemoveMedical.setIcon(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
 			jButtonRemoveMedical.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					if (jTableMedicals.getSelectedRow() < 0) { 
-						JOptionPane.showMessageDialog(WardPharmacyNew.this,
-								MessageBundle.getMessage("angal.medicalstockwardedit.pleaseselectanitem"), //$NON-NLS-1$
-								"Error", //$NON-NLS-1$
-								JOptionPane.WARNING_MESSAGE);
+					if (jTableMedicals.getSelectedRow() < 0) {
+						MessageDialog.error(WardPharmacyNew.this, "angal.medicalstockwardedit.pleaseselectanitem");
 					} else {
 						removeItem(jTableMedicals.getSelectedRow());
 					}
@@ -533,14 +549,13 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return jButtonRemoveMedical;
 	}
 
-	private void addItem(MedicalWard ward, int qanty) {
+	private void addItem(MedicalWard ward, int quantity) {
 		if (ward != null) {
 		
-			MedicalWard item = new MedicalWard(ward.getMedical(), (double) qanty, ward.getId().getLot());
+			MedicalWard item = new MedicalWard(ward.getMedical(), (double) quantity, ward.getId().getLot());
 			medItems.add(item);
 			
 //			medArray.add(med);
-			qtyArray.add((double) qanty);
 			jTableMedicals.updateUI();
 		}
 	}
@@ -549,7 +564,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (row != -1) {
 			medItems.remove(row);
 			medArray.remove(row);
-			qtyArray.remove(row);
 			jTableMedicals.updateUI();
 		}
 		
@@ -588,9 +602,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	private JButton getJButtonOK() {
 		if (jButtonOK == null) {
-			jButtonOK = new JButton();
-			jButtonOK.setText(MessageBundle.getMessage("angal.common.ok")); //$NON-NLS-1$
-			jButtonOK.setMnemonic(KeyEvent.VK_O);
+			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jButtonOK.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -598,7 +611,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					boolean isPatient;
 					String description = "";
 					int age = 0;
-					float weight = 0;
 					GregorianCalendar newDate = new GregorianCalendar();
 					Ward wardTo = null; //
 					if (jRadioPatient.isSelected()) {
@@ -606,21 +618,17 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 						if (patientSelected != null) {
 							description = patientSelected.getName();
 							age = patientSelected.getAge();
-							weight = patientSelected.getWeight();
-						}else {
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseselectpatient"));
+						} else {
+							MessageDialog.error(null, "angal.medicalstock.multipledischarging.pleaseselectpatient");
 							return;
 						}
 					} 
                     else if (jRadioWard.isSelected()) {
 						Object selectedObj = wardBox.getSelectedItem();
-						if(selectedObj instanceof Ward){
+						if (selectedObj instanceof Ward){
 							wardTo = (Ward) selectedObj;
-						}
-						else{
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.medicalstock.multipledischarging.pleaseselectaward"));
+						} else {
+							MessageDialog.error(null, "angal.medicalstock.multipledischarging.pleaseselectaward.msg");
 							return;
 						}
                         description = wardTo.getDescription();
@@ -647,7 +655,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 //									MessageBundle.getMessage("angal.medicalstockwardedit.pieces"),
 //                                                                        wardTo));
 //						} catch (OHException e1) {
-//							e1.printStackTrace();
+//							LOGGER.error(e1.getMessage(), e1)
 //						}
 //					}
 //					MovWardBrowserManager wardManager = new MovWardBrowserManager();
@@ -658,7 +666,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 //							fireMovementWardInserted();
 //							dispose();
 //						} else
-//							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+//							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 //					} catch (OHServiceException e1) {
 //						result = false;
 //						OHServiceExceptionUtil.showMessages(e1);
@@ -669,29 +677,23 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 					//Lot aLot = new Lot("", newDate, newDate);
 					//String refNo = "";
                                         
-                    ArrayList<MovementWard> manyMovementWard = new ArrayList<MovementWard>();
+                    ArrayList<MovementWard> manyMovementWard = new ArrayList<>();
                     //MovStockInsertingManager movManager = new MovStockInsertingManager();
-                    boolean result;
 					try {
 						// MovementType typeCharge = new
 						// MedicaldsrstockmovTypeBrowserManager().getMovementType("charge");
 						for (int i = 0; i < medItems.size(); i++) {
 							manyMovementWard.add(new MovementWard(wardSelected, newDate, isPatient, patientSelected,
-									age, weight, description, medItems.get(i).getMedical(), medItems.get(i).getQty(),
+									age, patientWeight, description, medItems.get(i).getMedical(), medItems.get(i).getQty(),
 									MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null,medItems.get(i).getLot()));
 						}
 
-						result = wardManager.newMovementWard(manyMovementWard);
+						wardManager.newMovementWard(manyMovementWard);
+						fireMovementWardInserted();
+						dispose();
 					} catch (OHServiceException ex) {
-                        result = false;
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                     }
-					if (result) {
-                        fireMovementWardInserted();
-                        dispose();
-					} else {
-                        JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-                    
-                    }	
 				}
 			});
 		}
@@ -700,9 +702,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton();
-			jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent event) {
@@ -752,7 +753,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jRadioPatient.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					System.out.println("in jRadioPatient: " + e.getID());
 					jTextFieldUse.setEnabled(false);
 					jTextFieldPatient.setEnabled(true);
 					jButtonPickPatient.setEnabled(true);
@@ -768,7 +768,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JButton getJButtonTrashPatient() {
 		if (jButtonTrashPatient == null) {
 			jButtonTrashPatient = new JButton();
-			jButtonTrashPatient.setMnemonic(KeyEvent.VK_R);
 			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.removepatientassociationwiththismovement")); //$NON-NLS-1$
@@ -791,9 +790,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
-			jButtonPickPatient = new JButton();
-			jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.pickpatient"));
-			jButtonPickPatient.setMnemonic(KeyEvent.VK_P);
+			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.pickpatient.btn"));
+			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.pickpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
 			jButtonPickPatient.addActionListener(new ActionListener() {
@@ -902,7 +900,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	private JRadioButton getJRadioWard() {
 		if (jRadioWard == null) {
-			jRadioWard = new JRadioButton(MessageBundle.getMessage("angal.wardpharmacynew.ward"));
+			jRadioWard = new JRadioButton(MessageBundle.getMessage("angal.wardpharmacynew.ward.btn"));
 			jRadioWard.setSelected(false);
 			jRadioWard.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -927,10 +925,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
                         try {
                             wardList = wbm.getWards();
                         } catch (OHServiceException ex) {
-                            Logger.getLogger(WardPharmacyNew.class.getName()).log(Level.SEVERE, null, ex);
+	                        LOGGER.error(ex.getMessage(), ex);
                         }
 			wardBox.addItem("");
-			if(wardList != null) {
+			if (wardList != null) {
                             for (org.isf.ward.model.Ward elem : wardList) {
 				if (!wardSelected.getCode().equals(elem.getCode()))
 					wardBox.addItem(elem);
@@ -984,7 +982,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jComboBoxMedicals.setMaximumSize(new Dimension(300, 24));
 			jComboBoxMedicals.setPreferredSize(new Dimension(300, 24));
 		}
-		ArrayList<Object> med = new ArrayList<Object>();
+		ArrayList<Object> med = new ArrayList<>();
 		for (Medical aMedical : medArray) {
 			if (!med.contains(aMedical.getDescription())) { 
 				med.add(aMedical.getDescription());
@@ -996,9 +994,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
         
         private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {
             String query = s.trim();
-            ArrayList<Medical> results = new ArrayList<Medical>();
+            ArrayList<Medical> results = new ArrayList<>();
             for (Medical medoc : medicalsList) {
-                if(!query.equals("")) {
+                if (!query.equals("")) {
                     String[] patterns = query.split(" ");
                     String code = medoc.getProd_code().toLowerCase();
                     String description = medoc.getDescription().toLowerCase();

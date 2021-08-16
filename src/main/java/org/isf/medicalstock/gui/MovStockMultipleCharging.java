@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.medicalstock.gui;
 
 import java.awt.BorderLayout;
@@ -13,7 +34,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -41,7 +61,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
@@ -58,20 +77,25 @@ import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
 import org.isf.utils.time.TimeTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MovStockMultipleCharging extends JDialog {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = LoggerFactory.getLogger(MovStockMultipleCharging.class);
+
 	private static final String DATE_FORMAT_DD_MM_YYYY_HH_MM_SS = "dd/MM/yyyy HH:mm:ss"; //$NON-NLS-1$
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	private static final int CODE_COLUMN_WIDTH = 100;
-	
+	private static final int UNITS = 0;
+	private static final int PACKETS = 1;
+
 	private JPanel mainPanel;
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
@@ -79,17 +103,18 @@ public class MovStockMultipleCharging extends JDialog {
 	private CustomJDateChooser jDateChooser;
 	private JComboBox jComboBoxSupplier;
 	private JTable jTableMovements;
-	private final String[] columnNames = { 
-		MessageBundle.getMessage("angal.common.codem"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.common.descriptionm"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.qtypacket"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.qty"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.unitpack"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.total"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotnumberabb"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.cost"), //$NON-NLS-1$
-		MessageBundle.getMessage("angal.medicalstock.multiplecharging.total") }; //$NON-NLS-1$
+	private final String[] columnNames = {
+      	MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.qtypacket").toUpperCase(),
+		MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.unitpack").toUpperCase(),
+		MessageBundle.getMessage("angal.common.total.txt").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotnumberabb").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate").toUpperCase(),
+		MessageBundle.getMessage("angal.medicalstock.multiplecharging.cost").toUpperCase(),
+		MessageBundle.getMessage("angal.common.total.txt").toUpperCase()
+	};
 	private final Class[] columnClasses = { String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, String.class, String.class, Double.class, Double.class };
 	private boolean[] columnEditable = { true, false, false, true, true, false, !GeneralData.AUTOMATICLOT_IN, true, true, false };
  	private int[] columnWidth = { 50, 100, 70, 50, 70, 50, 50, 80, 50, 80 };
@@ -106,27 +131,12 @@ public class MovStockMultipleCharging extends JDialog {
 			MessageBundle.getMessage("angal.medicalstock.multiplecharging.packets") //$NON-NLS-2$
 	};
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
-	private final int UNITS = 0;
-	private final int PACKETS = 1;
 	private int optionSelected = UNITS;
 	
 	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath()); //$NON-NLS-1$
-			GeneralData.getGeneralData();
-			new MovStockMultipleCharging(new JFrame());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	private boolean isAutomaticLot() {
 		return GeneralData.AUTOMATICLOT_IN;
@@ -152,7 +162,7 @@ public class MovStockMultipleCharging extends JDialog {
 			medicals = null;
 		}
 
-		medicalMap = new HashMap<String, Medical>();
+		medicalMap = new HashMap<>();
 		if (null != medicals) {
 			for (Medical med : medicals) {
 				String key = med.getProd_code();
@@ -160,11 +170,11 @@ public class MovStockMultipleCharging extends JDialog {
 				medicalMap.put(key, med);
 			}
 		}
-		units = new ArrayList<Integer>();
+		units = new ArrayList<>();
 	}
 	
 	private void initcomponents() {
-		setTitle(MessageBundle.getMessage("angal.medicalstock.stockmovementinserting")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.medicalstock.stockmovement.title"));
 		add(getJPanelHeader(), BorderLayout.NORTH);
 		add(getJMainPanel(), BorderLayout.CENTER);
 		add(getJButtonPane(), BorderLayout.SOUTH);
@@ -183,7 +193,7 @@ public class MovStockMultipleCharging extends JDialog {
 		gbl_headerPanel.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		headerPanel.setLayout(gbl_headerPanel);
 		{
-			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date")+":"); //$NON-NLS-1$
+			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date.txt")+":");
 			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
 			gbc_jLabelDate.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDate.insets = new Insets(5, 5, 5, 5);
@@ -260,7 +270,8 @@ public class MovStockMultipleCharging extends JDialog {
 		JPanel buttonPane = new JPanel();
 		//buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		{
-			JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete"));
+			JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			deleteButton.addActionListener(new ActionListener() {
 				
 				@Override
@@ -272,7 +283,8 @@ public class MovStockMultipleCharging extends JDialog {
 			buttonPane.add(deleteButton);
 		}
 		{
-			JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save")); //$NON-NLS-1$
+			JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			saveButton.addActionListener(new ActionListener() {
 				
 				@Override
@@ -289,7 +301,8 @@ public class MovStockMultipleCharging extends JDialog {
 			buttonPane.add(saveButton);
 		}
 		{
-			JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel")); //$NON-NLS-1$
+			JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new ActionListener() {
 				
 				@Override
@@ -456,7 +469,7 @@ public class MovStockMultipleCharging extends JDialog {
 						String refNo = jTextFieldReference.getText().trim();
 						
 						Movement movement = new Movement(med, (MovementType) jComboBoxChargeType.getSelectedItem(), null, lot, date, qty, new Supplier(), refNo);
-						model.addItem(movement, new Boolean(isNewLot));
+						model.addItem(movement, isNewLot);
 
 						units.add(PACKETS);
 
@@ -473,7 +486,7 @@ public class MovStockMultipleCharging extends JDialog {
 		if (jDateChooser == null) {
 			jDateChooser = new CustomJDateChooser(new Date());
 			jDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
-			jDateChooser.setPreferredSize(new Dimension(150, 24));
+			jDateChooser.setPreferredSize(new Dimension(165, 24));
 		}
 		return jDateChooser;
 	}
@@ -515,8 +528,7 @@ public class MovStockMultipleCharging extends JDialog {
 						cost = total / qty;
 					}
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.medicalstock.multiplecharging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.pleaseinsertavalidvalue");
 				}
 			} else return new BigDecimal(cost);
 		} while (cost == 0.);
@@ -534,8 +546,7 @@ public class MovStockMultipleCharging extends JDialog {
 				if (total < 0)
 					throw new NumberFormatException();
 			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-						MessageBundle.getMessage("angal.medicalstock.multiplecharging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+				MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.pleaseinsertavalidvalue");
 			}
 		}
 		return total;
@@ -586,26 +597,17 @@ public class MovStockMultipleCharging extends JDialog {
 			if (ok == JOptionPane.OK_OPTION) {
 				String lotName = lotNameTextField.getText();
 				
-				if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) 
-				{
-					JOptionPane.showMessageDialog(
-							MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.medicalstock.multiplecharging.expirydatebeforepreparationdate")); //$NON-NLS-1$
+				if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) {
+					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expirydatebeforepreparationdate");
 				} 
-				else if (expireDateChooser.getDate().before(jDateChooser.getDate())) 
-				{
-					JOptionPane.showMessageDialog(
-							MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdateinthepastnotallowed")); //$NON-NLS-1$
-				} 
-				else 
-				{
+				else if (expireDateChooser.getDate().before(jDateChooser.getDate())) {
+					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expiringdateinthepastnotallowed");
+				} else {
 					expiringDate.setTime(expireDateChooser.getDate());
 					preparationDate.setTime(preparationDateChooser.getDate());
 					lot = new Lot(lotName, preparationDate, expiringDate);
 				}
 			} else {
-				
 				return null;
 			}
 		}
@@ -614,7 +616,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	protected Medical chooseMedical(String text) {
-		ArrayList<Medical> medList = new ArrayList<Medical>();
+		ArrayList<Medical> medList = new ArrayList<>();
 		for (Medical aMed : medicalMap.values()) {
 			if (NormalizeString.normalizeContains(aMed.getDescription().toLowerCase(), text.toLowerCase()))
 				medList.add(aMed);
@@ -649,7 +651,7 @@ public class MovStockMultipleCharging extends JDialog {
 		try {
 			lots = movManager.getLotByMedical(med);
 		} catch (OHServiceException e) {
-			lots = new ArrayList<Lot>();
+			lots = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		Lot lot = null;
@@ -678,8 +680,7 @@ public class MovStockMultipleCharging extends JDialog {
 				if (ok == JOptionPane.YES_OPTION) {
 					row = lotTable.getSelectedRow();
 					if (row != -1) lot = lots.get(row);
-					else JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.common.pleaseselectarow")); //$NON-NLS-1$
+					else MessageDialog.error(MovStockMultipleCharging.this, "angal.common.pleaseselectarow.msg");
 				} else row = 0;
 				
 			} while (row == -1);
@@ -708,11 +709,11 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 
 	protected int askQuantity(Medical med) {
-		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity")); //$NON-NLS-1$
+		StringBuilder title = new StringBuilder(MessageBundle.getMessage("angal.common.quantity.txt"));
 		StringBuilder message = new StringBuilder(med.toString());
 		String prodCode = med.getProd_code();
 		if (prodCode != null && !prodCode.equals("")) {
-			title.append(" ").append(MessageBundle.getMessage("angal.common.code")); //$NON-NLS-1$ //$NON-NLS-2$
+			title.append(" ").append(MessageBundle.getMessage("angal.common.code.txt")); //$NON-NLS-1$ //$NON-NLS-2$
 			title.append(": ").append(prodCode); //$NON-NLS-1$
 		} else { 
 			title.append(": "); //$NON-NLS-1$
@@ -731,8 +732,7 @@ public class MovStockMultipleCharging extends JDialog {
 					if (qty < 0)
 						throw new NumberFormatException();
 				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-							MessageBundle.getMessage("angal.medicalstock.multiplecharging.pleaseinsertavalidvalue")); //$NON-NLS-1$
+					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.pleaseinsertavalidvalue");
 					qty = 0;
 				}
 			} else return qty;
@@ -750,7 +750,7 @@ public class MovStockMultipleCharging extends JDialog {
             } catch (OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
             }
-            if(suppliers != null) {
+            if (suppliers != null) {
                 for (Supplier sup : suppliers) {
                     jComboBoxSupplier.addItem(sup);
                 }
@@ -770,8 +770,8 @@ public class MovStockMultipleCharging extends JDialog {
 		private static final long serialVersionUID = 1L;
 
 		public JTableModel() {
-			movements = new ArrayList<Movement>();
-			newLots = new ArrayList<Boolean>();
+			movements = new ArrayList<>();
+			newLots = new ArrayList<>();
 		}
 		
 		public ArrayList<Movement> getMovements() {
@@ -813,8 +813,9 @@ public class MovStockMultipleCharging extends JDialog {
 
 		@Override
 		public boolean isCellEditable(int r, int c) {
-			if (c == 6 || c == 7 || c == 8)
-				return newLots.get(r).booleanValue();
+			if (c == 6 || c == 7 || c == 8) {
+				return newLots.get(r);
+			}
 			return columnEditable[c];
 		}
 
@@ -830,7 +831,7 @@ public class MovStockMultipleCharging extends JDialog {
 			Lot lot = movement.getLot();
 			String lotName = lot.getCode();
 			int qty = movement.getQuantity();
-			int ppp = medical.getPcsperpck().intValue() == 0 ? 1 : medical.getPcsperpck().intValue();
+			int ppp = medical.getPcsperpck() == 0 ? 1 : medical.getPcsperpck();
 			int option = units.get(r);
 			int total = option == UNITS ? qty : ppp * qty;
 			BigDecimal cost = lot.getCost();
@@ -855,7 +856,9 @@ public class MovStockMultipleCharging extends JDialog {
 			} else if (c == 8) {
 				return cost;
 			} else if (c == 9) {
-				return cost.multiply(new BigDecimal(total));
+				if (cost != null) {
+					return cost.multiply(new BigDecimal(total));
+				}
 			}
 			return null;
 		}
@@ -888,8 +891,8 @@ public class MovStockMultipleCharging extends JDialog {
 				try {
 					GregorianCalendar date = TimeTools.parseDate((String) value, DATE_FORMAT_DD_MM_YYYY, true);
 					lot.setDueDate(date);
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (Exception exception) {
+					LOGGER.error(exception.getMessage(), exception);
 				}
 			} else if (c == 8) {
 				lot.setCost((BigDecimal) value);
@@ -904,15 +907,14 @@ public class MovStockMultipleCharging extends JDialog {
 
 		ArrayList<Movement> movements = model.getMovements();
 		if (movements.isEmpty()) {
-			JOptionPane.showMessageDialog(MovStockMultipleCharging.this, 
-					MessageBundle.getMessage("angal.medicalstock.multiplecharging.noelementtosave")); //$NON-NLS-1$
+			MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.noelementtosave");
 			return false;
 		}
 		
 		// Check supplier
 		Object supplier = jComboBoxSupplier.getSelectedItem();
 		if (supplier == null || supplier instanceof String) {
-			JOptionPane.showMessageDialog(MovStockMultipleCharging.this, MessageBundle.getMessage("angal.medicalstock.multiplecharging.pleaseselectasupplier")); //$NON-NLS-1$
+			MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.pleaseselectasupplier.msg");
 			return false;
 		}
 		
@@ -932,13 +934,13 @@ public class MovStockMultipleCharging extends JDialog {
 		}
 		return ok;
 	}
-	
+
 	private int calcTotal(Movement mov, int option) {
 		Medical medical = mov.getMedical();
 		int qty = mov.getQuantity();
-		int ppp = medical.getPcsperpck().intValue() == 0 ? 1 : medical.getPcsperpck().intValue();
+		int ppp = medical.getPcsperpck() == 0 ? 1 : medical.getPcsperpck();
 		int total = option == UNITS ? qty : ppp * qty;
-		
+
 		return total;
 	}
 	
@@ -955,9 +957,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -976,16 +976,16 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	class DecimalFormatRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private final DecimalFormat formatter = new DecimalFormat("#,##0.00"); //$NON-NLS-1$
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			// First format the cell value as required
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			value = formatter.format((Number) value);
+			if (value != null) {
+				value = formatter.format(value);
+			}
 			setHorizontalAlignment(columnAlignment[column]);
 			if (!table.isCellEditable(row, column)) {
 				cell.setBackground(Color.LIGHT_GRAY);
@@ -1001,9 +1001,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	class StockMovModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private ArrayList<Lot> lotList;
 
@@ -1019,20 +1017,20 @@ public class MovStockMultipleCharging extends JDialog {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.medicalstock.lotid"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.medicalstock.lotid").toUpperCase();
 			}
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.medicalstock.prepdate"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.medicalstock.prepdate").toUpperCase();
 			}
 			if (c == 2) {
-				return MessageBundle.getMessage("angal.medicalstock.duedate"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.medicalstock.duedate").toUpperCase();
 			}
 			if (c == 3) {
-				return MessageBundle.getMessage("angal.common.quantity"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase();
 			}
 			if (GeneralData.LOTWITHCOST) {
 				if (c == 4) {
-					return MessageBundle.getMessage("angal.medicalstock.multiplecharging.cost"); //$NON-NLS-1$
+					return MessageBundle.getMessage("angal.medicalstock.multiplecharging.cost").toUpperCase();
 				}
 			}
 			return ""; //$NON-NLS-1$
@@ -1054,7 +1052,7 @@ public class MovStockMultipleCharging extends JDialog {
 			} else if (c == 2) {
 				return TimeTools.formatDateTime(lot.getDueDate(), DATE_FORMAT_DD_MM_YYYY);
 			} else if (c == 3) {
-				return lot.getQuantity();
+				return lot.getMainStoreQuantity();
 			} else if (c == 4) {
 				return lot.getCost();
 			}
@@ -1068,9 +1066,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 	
 	class StockMedModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private ArrayList<Medical> medList;
 
@@ -1086,10 +1082,10 @@ public class MovStockMultipleCharging extends JDialog {
 
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.common.code"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.code.txt").toUpperCase();
 			}
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.common.description"); //$NON-NLS-1$
+				return MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
 			}
 			return ""; //$NON-NLS-1$
 		}

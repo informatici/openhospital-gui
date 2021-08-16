@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.therapy.gui;
 
 import java.awt.AWTEvent;
@@ -13,7 +34,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -61,6 +81,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JAgenda;
 import org.isf.utils.jobjects.JAgenda.AgendaDayObject;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.visits.gui.VisitView;
@@ -72,17 +93,6 @@ import org.isf.ward.model.Ward;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
-
-/**
- * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
- * Builder, which is free for non-commercial use. If Jigloo is being used
- * commercially (ie, by a corporation, company or business for any purpose
- * whatever) then you should purchase a license for each developer using Jigloo.
- * Please visit www.cloudgarden.com for details. Use of Jigloo implies
- * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
- * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
- * ANY CORPORATE OR COMMERCIAL PURPOSE.
- */
 public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JAgenda jAgenda;
@@ -102,13 +112,13 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private JPanel actionsPanel;
 	private Patient patient;
 	private boolean admitted;
-	private JButton addVisit;
-	private JButton removeVisit;
+	private JButton addVisitButton;
+	private JButton removeVisitButton;
 
-	private JButton removeTherapy;
-	private JButton addTherapy;
-	private JButton editTherapy;
-	private JButton checkTherapy;
+	private JButton removeTherapyButton;
+	private JButton addTherapyButton;
+	private JButton editTherapyButton;
+	private JButton checkTherapyButton;
 	private JLabel therapyCheckLabel;
 	private JButton checkIconButton;
 	private JButton smsIconButton;
@@ -127,7 +137,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private boolean visitModified = false;
 	private Therapy selectedTherapy;
 	private Visit selectedVisit;
-	private Hashtable<Integer, Therapy> hashTableTherapy;
 	private Hashtable<Integer, TherapyRow> hashTableThRow;
 	private Hashtable<Integer, Visit> hashTableVisits;
 
@@ -144,10 +153,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private ArrayList<Medical> medArray;
-	private ArrayList<Double> qtyArray = new ArrayList<Double>();
-	private ArrayList<Therapy> therapies = new ArrayList<Therapy>();
-	private ArrayList<TherapyRow> thRows = new ArrayList<TherapyRow>();
-	private ArrayList<Visit> visits = new ArrayList<Visit>();
+	private ArrayList<Therapy> therapies = new ArrayList<>();
+	private ArrayList<TherapyRow> thRows = new ArrayList<>();
+	private ArrayList<Visit> visits = new ArrayList<>();
 	private Ward ward;
 
 	public TherapyEdit(JFrame owner, Patient patient, boolean admitted) {
@@ -178,13 +186,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				if (medArray != null) medArray.clear();
 				if (therapies != null) therapies.clear();
 				if (thRows != null) thRows.clear();
-				if (qtyArray != null) qtyArray.clear();
 				if (visits != null) visits.clear();
 			}
 		});
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// setResizable(false);
-		setTitle(MessageBundle.getMessage("angal.therapy.therapy"));
+		setTitle(MessageBundle.getMessage("angal.therapy.therapy.title"));
 		setSize(new Dimension(screenSize.width - 20, screenSize.height - 100));
 
 	}
@@ -225,7 +232,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		/*
 		 * HashTable of the rows
 		 */
-		hashTableThRow = new Hashtable<Integer, TherapyRow>();
+		hashTableThRow = new Hashtable<>();
 		if (!thRows.isEmpty()) {
 			for (TherapyRow thRow : thRows) {
 				hashTableThRow.put(thRow.getTherapyID(), thRow);
@@ -252,7 +259,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		/*
 		 * HashTable of the visits
 		 */
-		hashTableVisits = new Hashtable<Integer, Visit>();
+		hashTableVisits = new Hashtable<>();
 		if (!visits.isEmpty()) {
 			for (Visit visit : visits) {
 				hashTableVisits.put(visit.getVisitID(), visit);
@@ -262,9 +269,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
 		   
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
@@ -276,10 +280,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			return cell;
 	   }
 	}
-	public String[] visColums = {
-			MessageBundle.getMessage(getDate()),
-			
-	}; 
 	
 	private void showAll() {
 		jAgenda.removeAll();
@@ -296,12 +296,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		return dateFormat.format(date);
 	}
 
-
 	private void showTherapies() {
-		
-		hashTableTherapy = new Hashtable<Integer, Therapy>();
 		for (Therapy th : therapies) {
-			hashTableTherapy.put(th.getTherapyID(), th);
 			showTherapy(th);
 		}
 	}
@@ -316,8 +312,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			}
 		}
 	}
+
 	private void showVisits() {
-		hashTableVisits = new Hashtable<Integer, Visit>();
+		hashTableVisits = new Hashtable<>();
 		for (Visit vs : visits) {
 			hashTableVisits.put(vs.getVisitID(), vs);
 			showVisit(vs);
@@ -345,7 +342,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			southPanel = new JPanel();
 			southPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.therapy.note"))); //$NON-NLS-1$
 			southPanel.add(getNote());
-
 		}
 		return southPanel;
 	}
@@ -415,22 +411,20 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private JButton getRemoveVisitButton() {
-		if (removeVisit == null) {
-			removeVisit = new JButton(MessageBundle.getMessage("angal.therapy.removevisit")); //$NON-NLS-1$
-			removeVisit.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
-			removeVisit.setMnemonic(KeyEvent.VK_W);
+		if (removeVisitButton == null) {
+			removeVisitButton = new JButton(MessageBundle.getMessage("angal.therapy.removevisit.btn"));
+			removeVisitButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.removevisit.btn.key"));
+			removeVisitButton.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
 			if (admitted) {
-				removeVisit.setEnabled(false);
+				removeVisitButton.setEnabled(false);
 			}
-			removeVisit.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
-			removeVisit.setHorizontalAlignment(SwingConstants.LEFT);
-			removeVisit.addActionListener(new ActionListener() {
+			removeVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
+			removeVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
+			removeVisitButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					if (selectedVisit == null)
 						return;
-					//System.out.println("==> SelectedVisit : " + selectedVisit.getVisitID());
-					//System.out.println("==> hashTableThRow : " + hashTableVisits.get(selectedVisit.getVisitID()));
 					visits.remove(selectedVisit);
 					
 					visitModified = true;
@@ -441,19 +435,19 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				}
 			});
 		}
-		return removeVisit;
+		return removeVisitButton;
 	}
 	
 	private JButton worksheetButton;
 
 	private JButton getWorkSheetButton() {
 		if (worksheetButton == null) {
-			worksheetButton = new JButton(MessageBundle.getMessage("angal.menu.worksheet")); //$NON-NLS-1$
+			worksheetButton = new JButton(MessageBundle.getMessage("angal.therapy.worksheet.btn"));
+			worksheetButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.worksheet.btn.key"));
 			worksheetButton.setIcon(new ImageIcon("rsc/icons/worksheet_button.png"));
 //			if (admitted) {
 //				worksheetButton.setEnabled(false);
 //			}
-			worksheetButton.setMnemonic(KeyEvent.VK_V);
 			worksheetButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			worksheetButton.setHorizontalAlignment(SwingConstants.LEFT);
 
@@ -471,16 +465,16 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 	
 	private JButton getAddVisitButton() {
-		if (addVisit == null) {
-			addVisit = new JButton(MessageBundle.getMessage("angal.therapy.addvisit")); //$NON-NLS-1$
-			addVisit.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
-			addVisit.setMnemonic(KeyEvent.VK_V);
-			addVisit.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
-			addVisit.setHorizontalAlignment(SwingConstants.LEFT);
+		if (addVisitButton == null) {
+			addVisitButton = new JButton(MessageBundle.getMessage("angal.therapy.addvisit.btn"));
+			addVisitButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.addvisit.btn.key"));
+			addVisitButton.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
+			addVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
+			addVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			if (admitted) {
-				addVisit.setEnabled(false);
+				addVisitButton.setEnabled(false);
 			}
-			addVisit.addActionListener(new ActionListener() {
+			addVisitButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 
@@ -498,7 +492,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 						//therapyModified = true;
 						if (smsenable) smsCheckBox.setEnabled(true);
 						if (notifiable) notifyCheckBox.setEnabled(true);
-						checkTherapy.setEnabled(true);
+						checkTherapyButton.setEnabled(true);
 						//saveButton.setEnabled(true);
 						updateCheckLabel();
 						showAll();
@@ -508,7 +502,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				}
 			});
 		}
-		return addVisit;
+		return addVisitButton;
 	}
 
 	private JPanel getNotifyAndSMSPanel() {
@@ -614,15 +608,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				public void actionPerformed(ActionEvent e) {
 					String telephone = patient.getTelephone();
 					if (smsCheckBox.isSelected() && (telephone.equals("") || telephone.length() < 7)) {
-						JOptionPane.showMessageDialog(TherapyEdit.this, 
-								MessageBundle.getMessage("angal.therapy.theresnotelephonenumberassociatedwiththispatient"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.therapy.warning"), //$NON-NLS-1$
-								JOptionPane.WARNING_MESSAGE);
+						MessageDialog.warning(TherapyEdit.this,  "angal.therapy.theresnotelephonenumberassociatedwiththispatient");
 						int ok = JOptionPane.showConfirmDialog(
 								TherapyEdit.this,
 								MessageBundle.getMessage("angal.therapy.doyouwanttosetanumernowfor") + " " + patient.getName(),
 								MessageBundle.getMessage("angal.therapy.settelephonenumber"),
-								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
+								JOptionPane.CANCEL_OPTION);
 						if (ok == JOptionPane.YES_OPTION) {
 							
 							String number = JOptionPane.showInputDialog(
@@ -689,9 +680,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JButton getSaveButton() {
 		if (saveButton == null) {
-			saveButton = new JButton(MessageBundle.getMessage("angal.common.savem")); //$NON-NLS-1$
+			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			saveButton.setIcon(new ImageIcon("rsc/icons/save_button.png"));
-			saveButton.setMnemonic(KeyEvent.VK_S);
 			saveButton.setEnabled(false);
 			saveButton.setMaximumSize(new Dimension(ActionsButtonWidth,
 					AllButtonHeight));
@@ -775,11 +766,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 								OHServiceExceptionUtil.showMessages(ex);
 							}
 							if (result) {
-								JOptionPane.showMessageDialog(TherapyEdit.this,
-										MessageBundle.getMessage("angal.therapy.patientvisitssaved")); //$NON-NLS-1$
+								MessageDialog.info(TherapyEdit.this, "angal.therapy.patientvisitssaved");
 							} else {
-								JOptionPane.showMessageDialog(TherapyEdit.this,
-										MessageBundle.getMessage("angal.therapy.patientvisitscouldnotbesaved")); //$NON-NLS-1$
+								MessageDialog.error(TherapyEdit.this, "angal.therapy.patientvisitscouldnotbesaved");
 							}
 						}
 					}
@@ -789,7 +778,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 								TherapyEdit.this,
 								MessageBundle.getMessage("angal.therapy.changenotifysettingsfor") + " " + patient.getName(),
 								MessageBundle.getMessage("angal.therapy.notifychanged"),
-								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
+								JOptionPane.CANCEL_OPTION);
 						if (ok == JOptionPane.YES_OPTION)
 							saveTherapies = true;
 						else
@@ -804,11 +793,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
 						if (result) {
-							JOptionPane.showMessageDialog(TherapyEdit.this,
-									MessageBundle.getMessage("angal.therapy.therapiesplansaved"));
+							MessageDialog.info(TherapyEdit.this, "angal.therapy.therapiesplansaved");
 						} else {
-							JOptionPane.showMessageDialog(TherapyEdit.this,
-									MessageBundle.getMessage("angal.therapy.therapiesplancouldnotbesaved"));
+							MessageDialog.error(TherapyEdit.this, "angal.therapy.therapiesplancouldnotbesaved");
 						}
 					}
 					
@@ -823,19 +810,17 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private JButton getCloseButton() {
 		if (closeButton == null) {
-			closeButton = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
+			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			closeButton.setIcon(new ImageIcon("rsc/icons/close_button.png"));
-			closeButton.setMnemonic(KeyEvent.VK_X);
-			closeButton.setMaximumSize(new Dimension(ActionsButtonWidth,
-					AllButtonHeight));
+			closeButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			closeButton.setHorizontalAlignment(SwingConstants.LEFT);
 			closeButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					// to free memory
 					if (therapyModified || visitModified) {
-						int ok = JOptionPane
-								.showConfirmDialog(TherapyEdit.this,
+						int ok = JOptionPane.showConfirmDialog(TherapyEdit.this,
 										MessageBundle.getMessage("angal.common.save") + "?"); //$NON-NLS-1$
 						if (ok == JOptionPane.YES_OPTION) {
 							saveButton.doClick();
@@ -849,7 +834,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					if (medArray != null) medArray.clear();
 					if (therapies != null) therapies.clear();
 					if (thRows != null) thRows.clear();
-					if (qtyArray != null) qtyArray.clear();
 					if (visits != null) visits.clear();
 					dispose();
 				}
@@ -888,17 +872,17 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private JButton getCheckTherapyButton() {
-		if (checkTherapy == null) {
-			checkTherapy = new JButton(MessageBundle.getMessage("angal.therapy.checkavailability")); //$NON-NLS-1$
-			checkTherapy.setIcon(new ImageIcon("rsc/icons/flag_button.png"));
-			checkTherapy.setMnemonic(KeyEvent.VK_C);
-			checkTherapy.setMaximumSize(new Dimension(TherapyButtonWidth,
+		if (checkTherapyButton == null) {
+			checkTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.checkavailability.btn"));
+			checkTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.checkavailability.btn.key"));
+			checkTherapyButton.setIcon(new ImageIcon("rsc/icons/flag_button.png"));
+			checkTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth,
 					AllButtonHeight));
-			checkTherapy.setHorizontalAlignment(SwingConstants.LEFT);
+			checkTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
 			if (thRows.isEmpty()) {
-					checkTherapy.setEnabled(false);
+					checkTherapyButton.setEnabled(false);
 			}
-			checkTherapy.addActionListener(new ActionListener() {
+			checkTherapyButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 
@@ -910,7 +894,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 						available = false;
 						OHServiceExceptionUtil.showMessages(ex);
 					}
-					if(medOutStock != null 
+					if (medOutStock != null
 							&& !medOutStock.isEmpty()){
 						available = false;
 					}
@@ -925,18 +909,18 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				}
 			});
 		}
-		return checkTherapy;
+		return checkTherapyButton;
 	}
 
 	protected void showMedOutOfStock(ArrayList<Medical> medOutStock) {
 
-		if (medOutStock.size() > 0) {
+		if (!medOutStock.isEmpty()) {
 			StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.therapy.followingdrugsarefewornotavailable")); //$NON-NLS-1$
 			for (Medical med : medOutStock) {
 				message.append("\n").append(med.toString());
 			}
 			JOptionPane.showMessageDialog(TherapyEdit.this, message.toString(),
-					MessageBundle.getMessage("angal.therapy.therapynotavailable"), JOptionPane.WARNING_MESSAGE); //$NON-NLS-1$
+					MessageBundle.getMessage("angal.therapy.therapynotavailable.title"), JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
@@ -963,18 +947,16 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	/*
-	 * new AddTherapy action
-	 * 
+	 * New AddTherapy action
 	 */
 	private JButton getAddTherapyButton() {
-		if (addTherapy == null) {
-			addTherapy = new JButton(MessageBundle.getMessage("angal.therapy.addtherapy")); //$NON-NLS-1$
-			addTherapy.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
-			addTherapy.setMnemonic(KeyEvent.VK_A);
-			addTherapy.setMaximumSize(new Dimension(TherapyButtonWidth,
-					AllButtonHeight));
-			addTherapy.setHorizontalAlignment(SwingConstants.LEFT);
-			addTherapy.addActionListener(new ActionListener() {
+		if (addTherapyButton == null) {
+			addTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.addtherapy.btn"));
+			addTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.addtherapy.btn.key"));
+			addTherapyButton.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
+			addTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth,	AllButtonHeight));
+			addTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
+			addTherapyButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 
@@ -994,13 +976,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
 						therapies.add(thisTherapy); // FOR GUI
-						hashTableTherapy.put(thRow.getTherapyID(), thisTherapy);
 						hashTableThRow.put(thRow.getTherapyID(), thRow);
 						checked = false;
 						//therapyModified = true;
 						if (smsenable) smsCheckBox.setEnabled(true);
 						if (notifiable) notifyCheckBox.setEnabled(true);
-						checkTherapy.setEnabled(true);
+						checkTherapyButton.setEnabled(true);
 						//saveButton.setEnabled(true);
 						updateCheckLabel();
 						showAll();
@@ -1010,22 +991,21 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				}
 			});
 		}
-		return addTherapy;
+		return addTherapyButton;
 	}
 	
 	/*
 	 * RemoveTherapy action
-	 * 
 	 */
 	private JButton getEditTherapyButton() {
-		if (editTherapy == null) {
-			editTherapy = new JButton(MessageBundle.getMessage("angal.therapy.edittherapy")); //$NON-NLS-1$
-			editTherapy.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
-			editTherapy.setMnemonic(KeyEvent.VK_E);
-			editTherapy.setMaximumSize(new Dimension(TherapyButtonWidth,
+		if (editTherapyButton == null) {
+			editTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.edittherapy.btn"));
+			editTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.edittherapy.btn.key"));
+			editTherapyButton.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
+			editTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth,
 					AllButtonHeight));
-			editTherapy.setHorizontalAlignment(SwingConstants.LEFT);
-			editTherapy.addActionListener(new ActionListener() {
+			editTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
+			editTherapyButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 
@@ -1064,26 +1044,25 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				}
 			});
 		}
-		return editTherapy;
+		return editTherapyButton;
 	}
 	
 	private JButton getRemoveTherapyButton() {
-		if (removeTherapy == null) {
-			removeTherapy = new JButton(MessageBundle.getMessage("angal.therapy.removetherapy")); //$NON-NLS-1$
-			removeTherapy.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
-			removeTherapy.setMaximumSize(new Dimension(TherapyButtonWidth, AllButtonHeight));
-			removeTherapy.setHorizontalAlignment(SwingConstants.LEFT);
-			removeTherapy.addActionListener(new ActionListener() {
+		if (removeTherapyButton == null) {
+			removeTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.removetherapy.btn"));
+			removeTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.removetherapy.btn.key"));
+			removeTherapyButton.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
+			removeTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth, AllButtonHeight));
+			removeTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
+			removeTherapyButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					if (selectedTherapy == null)
 						return;
-					//System.out.println("==> SelectedTherapy : " + selectedTherapy.getTherapyID());
-					//System.out.println("==> hashTableThRow : " + hashTableThRow.get(selectedTherapy.getTherapyID()));
 					thRows.remove(hashTableThRow.get(selectedTherapy.getTherapyID()));
 					therapies.remove(selectedTherapy);
 					//thRows.remove(selectedTherapy.getNumTherapy() - 1);
-					if (thRows.isEmpty()) checkTherapy.setEnabled(false);
+					if (thRows.isEmpty()) checkTherapyButton.setEnabled(false);
 					therapyModified = true;
 					selectedTherapy = null;
 					saveButton.setEnabled(true);
@@ -1094,7 +1073,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			});
 
 		}
-		return removeTherapy;
+		return removeTherapyButton;
 	}
 
 	private JPanel getNorthPanel() {

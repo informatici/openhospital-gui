@@ -13,11 +13,15 @@
 	<groupId>org.isf</groupId>
 	<artifactId>OH-gui</artifactId>
 	<packaging>jar</packaging>
-	<version>1.10</version>
-	
+	<version>1.11</version>
+
 	<properties>
+		<oh.version>1.11</oh.version>
+		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.framework.version>4.3.18.RELEASE</spring.framework.version>
+		<spring.framework.version>4.3.28.RELEASE</spring.framework.version>
+		<license.maven.plugin.version>4.1</license.maven.plugin.version>
+		<spring-cloud-starter-openfeign>1.4.7.RELEASE</spring-cloud-starter-openfeign>
 	</properties>
 
 	<build>
@@ -26,14 +30,14 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.7</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<id>copy-resources</id>
@@ -42,7 +46,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/rsc</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/rsc</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/resources</directory>
@@ -58,7 +62,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/lib</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/lib</outputDirectory>
 							<resources>
 								<resource>
 									<directory>lib</directory>
@@ -73,10 +77,13 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/lib/native</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/lib/native</outputDirectory>
 							<resources>
 								<resource>
 									<directory>lib/native</directory>
+								</resource>
+								<resource>
+									<directory>../openhospital-core/lib/native</directory>
 								</resource>
 							</resources>
 						</configuration>
@@ -88,7 +95,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/bundle</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/bundle</outputDirectory>
 							<resources>
 								<resource>
 									<directory>bundle</directory>
@@ -97,7 +104,7 @@
 						</configuration>
 					</execution>
 					<!-- <execution> <id>copy-doc</id> <phase>validate</phase> <goals> <goal>copy-resources</goal> 
-						</goals> <configuration> <outputDirectory>${basedir}/target/OpenHospital20/doc</outputDirectory> 
+						</goals> <configuration> <outputDirectory>${project.basedir}/target/OpenHospital20/doc</outputDirectory> 
 						<resources> <resource> <directory>doc</directory> </resource> </resources> 
 						</configuration> </execution> -->
 					<execution>
@@ -107,7 +114,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20/rpt</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/rpt</outputDirectory>
 							<resources>
 								<resource>
 									<directory>rpt</directory>
@@ -122,14 +129,19 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/OpenHospital20</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}</directory>
+									<directory>${project.basedir}</directory>
 									<include>oh.ico</include>
 									<include>README.md</include>
-									<include>*.cmd</include>
-									<include>*.sh</include>
+									<include>startup.cmd</include>
+									<include>startup.sh</include>
+								</resource>
+								<resource>
+									<directory>../openhospital-core</directory>
+									<include>SetupGSM.cmd</include>
+									<include>SetupGSM.sh</include>
 								</resource>
 							</resources>
 						</configuration>
@@ -139,7 +151,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<id>copy-dependencies</id>
@@ -175,67 +187,85 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>2.0.0</version>
+				<version>${license.maven.plugin.version}</version>
 				<configuration>
-					<verbose>false</verbose>
-					<addSvnKeyWords>true</addSvnKeyWords>
+					<!-- <header>.license-header/license-header.txt</header> -->
+					<licenseSets>
+						<licenseSet>
+							<header>.license-header/license-header.txt</header>
+							<excludes>
+								<exclude>./license-header/**</exclude>
+								<exclude>./ide-settings/eclipse/**</exclude>
+								<exclude>./ide-settings/idea/**</exclude>
+								<exclude>.springBeans</exclude>
+								<exclude>**/README</exclude>
+								<exclude>doc/**/*.txt</exclude>
+								<exclude>lib/**</exclude>
+								<exclude>rpt/**</exclude>
+								<exclude>rsc/**</exclude>
+								<exclude>src/test/resources/**</exclude>
+								<exclude>src/main/resources/**</exclude>
+								<exclude>**/*.properties</exclude>
+								<exclude>**/*.xml</exclude>
+								<exclude>**/*.yml</exclude>
+								<exclude>**/*.jfd</exclude>
+							</excludes>
+						</licenseSet>
+					</licenseSets>
+					<properties>
+						<owner>Informatici Senza Frontiere</owner>
+						<email>info@informaticisenzafrontiere.org</email>
+						<project.inceptionYear>2006</project.inceptionYear>
+						<project.name>Open Hospital</project.name>
+						<project.url>www.open-hospital.org</project.url>
+						<project.description>Open Hospital is a free and open source
+							software for healthcare data management.</project.description>
+					</properties>
 				</configuration>
-				<executions>
-					<execution>
-						<id>first</id>
-						<goals>
-							<goal>update-file-header</goal>
-						</goals>
-						<phase>process-sources</phase>
-						<configuration>
-							<licenseName>gpl_v3</licenseName>
-							<inceptionYear>2006</inceptionYear>
-							<organizationName>Informatici Senza Frontiere</organizationName>
-							<projectName>OpenHospital</projectName>
-							<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-							<roots>
-								<root>src/main/java</root>
-							</roots>
-						</configuration>
-					</execution>
-				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.mycila</groupId>
+						<artifactId>license-maven-plugin-git</artifactId>
+						<version>${license.maven.plugin.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
 		<dependency>
-  			<groupId>org.isf</groupId>
-  			<artifactId>OH-core</artifactId>
-  			<version>1.10</version>
-  			<exclusions>
-  				<exclusion>
-  					<groupId>org.apache.poi</groupId>
-  					<artifactId>poi</artifactId>
-  				</exclusion>
-  			</exclusions>
+			<groupId>org.isf</groupId>
+			<artifactId>OH-core</artifactId>
+			<version>${oh.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.sarxos</groupId>
 			<artifactId>webcam-capture</artifactId>
-			<version>0.3.11</version>
+			<version>0.3.12</version>
 		</dependency>
 		<dependency>
-			<groupId>jasperreports</groupId>
+			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
+			<version>6.17.0</version>
 			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
 				<exclusion>
 					<groupId>com.lowagie</groupId>
 					<artifactId>itext</artifactId>
 				</exclusion>
 			</exclusions>
-			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>6.17.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.toedter</groupId>
@@ -245,32 +275,22 @@
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>2.2</version>
+			<version>2.10.10</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.rxtx</groupId>
-		    <artifactId>rxtx</artifactId>
-		    <version>2.1.7</version>
-		</dependency>
-		<dependency>
-			<groupId>dcm4che</groupId>
-			<artifactId>dcm4che-core</artifactId>
-			<version>2.0.26</version>
-		</dependency>
-		<dependency>
-			<groupId>dcm4che</groupId>
-			<artifactId>dcm4che-imageio</artifactId>
-			<version>2.0.26</version>
+			<groupId>org.rxtx</groupId>
+			<artifactId>rxtx</artifactId>
+			<version>2.1.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.30</version>
+			<version>1.7.31</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.30</version>
+			<version>1.7.31</version>
 		</dependency>
 		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
@@ -281,17 +301,17 @@
 			<groupId>org.igniterealtime.smack</groupId>
 			<artifactId>smackx</artifactId>
 			<version>3.2.1</version>
-		</dependency >
-	  	<dependency>
-	  		<groupId>org.imgscalr</groupId>
-	  		<artifactId>imgscalr-lib</artifactId>
-	  		<version>4.2</version>
-	  	</dependency>
-	  	<dependency>
-	  		<groupId>org.springframework</groupId>
-	  		<artifactId>spring-context</artifactId>
-	  		<version>${spring.framework.version}</version>
-	  	</dependency>
+		</dependency>
+		<dependency>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>4.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.framework.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.jgoodies</groupId>
 			<artifactId>jgoodies-common</artifactId>
@@ -312,46 +332,47 @@
 			<artifactId>jgoodies-looks</artifactId>
 			<version>2.7.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.jgoodies</groupId>
 			<artifactId>jgoodies-validation</artifactId>
 			<version>2.5.1</version>
 		</dependency>
-	  	<!-- <dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>poi-3.7</version>
-			<scope>provided</scope>
-		</dependency> -->
-  </dependencies>
-  <repositories>
-    	<repository>
-        	<id>spring-libs-release</id>
-        	<name>Spring Releases</name>
-        	<url>https://repo.spring.io/libs-release</url>
-        	<snapshots>
-            	<enabled>false</enabled>
-        	</snapshots>
-    	</repository>
-    	<repository>
-                <id>jaspersoft</id>
-                <name>Jasper Soft</name>
-                <url>http://jasperforge.org/maven2/</url>
-                <releases>
-                    <enabled>false</enabled>
-                </releases>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-        </repository>
-        <repository>
-                <id>dcm4che</id>
-                <name>Dcm4Che Repository</name>
-                <url>http://www.dcm4che.org/maven2/</url>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-        </repository>
-	</repositories>
+		<!-- Feign -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>${spring-cloud-starter-openfeign}</version>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-parent</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>log4j-over-slf4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
 </project>

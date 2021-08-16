@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.dicom.gui;
 
 import java.awt.Dimension;
@@ -26,36 +47,26 @@ import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.admission.gui.PatientFolderBrowser;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
 import org.isf.dicom.model.FileDicom;
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
-import org.isf.menu.manager.Context;
-import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHDicomException;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.file.FileTools;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.isf.utils.jobjects.MessageDialog;
 
 /**
  * GUI for Dicom Viewer
- * 
+ *
  * @author Pietro Castellucci
  * @version 1.0.0
- * 
  */
 public class DicomGui extends JFrame implements WindowListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	// STATUS
@@ -66,7 +77,7 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private JButton jButtonLoadDicom;
 	private JButton jButtonDeleteDicom;
-	private JButton jButtonExit;
+	private JButton jButtonCloseDicom;
 	private JPanel jPanel1;
 	private JPanel jPanelDetail;
 	private JPanel jPanelButton;
@@ -85,12 +96,12 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	/**
 	 * Construct a GUI
-	 * 
+	 *
 	 * @param patient the data wrapper for OH Patient
 	 */
 	public DicomGui(Patient patient, PatientFolderBrowser owner) {
 		super();
-		this.patient = patient.getCode().intValue();
+		this.patient = patient.getCode();
 		this.ohPatient = patient;
 		this.owner = owner;
 
@@ -153,7 +164,7 @@ public class DicomGui extends JFrame implements WindowListener {
 			w = Math.round(screensize.width * factor);
 			x = Math.round((screensize.width - w) / 2);
 			y = Math.round((screensize.height - h) / 2);
-		} 
+		}
 
 		this.setBounds(x, y, w, h);
 
@@ -162,7 +173,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	private void initialize() {
 		loadWindowSettings();
 
-		this.setTitle(MessageBundle.getMessage("angal.dicom.title"));
+		this.setTitle(MessageBundle.getMessage("angal.dicomviewer.title"));
 
 		initComponents();
 
@@ -172,9 +183,19 @@ public class DicomGui extends JFrame implements WindowListener {
 
 		jPanelMain = new JPanel();
 		jPanel1 = new JPanel();
-		jButtonLoadDicom = new JButton();
-		jButtonDeleteDicom = new JButton();
-		jButtonExit = new JButton();
+		jButtonLoadDicom = new JButton(MessageBundle.getMessage("angal.dicom.load.btn"));
+		jButtonLoadDicom.setMnemonic(MessageBundle.getMnemonic("angal.dicom.load.btn.key"));
+		jButtonLoadDicom.setName("jButtonLoadDicom");
+
+		jButtonDeleteDicom = new JButton(MessageBundle.getMessage("angal.dicom.delete.btn"));
+		jButtonDeleteDicom.setMnemonic(MessageBundle.getMnemonic("angal.dicom.delete.btn.key"));
+		jButtonDeleteDicom.setName("jButtonDeleteDicom");
+		jButtonDeleteDicom.setEnabled(false);
+
+		jButtonCloseDicom = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		jButtonCloseDicom.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+		jButtonCloseDicom.setName("jButtonCloseDicom");
+
 		jPanelDetail = new DicomViewGui(null, null);
 		jPanelDetail.setName("jPanelDetail");
 		jPanelButton = new JPanel();
@@ -182,15 +203,6 @@ public class DicomGui extends JFrame implements WindowListener {
 		jPanelButton.add(jButtonDeleteDicom);
 		jPanelMain.setName("mainPanel");
 		jPanel1.setName("jPanel1");
-		jButtonLoadDicom.setText(MessageBundle.getMessage("angal.dicom.load.txt"));
-		jButtonLoadDicom.setName("jButtonLoadDicom");
-
-		jButtonDeleteDicom.setText(MessageBundle.getMessage("angal.dicom.delete.txt"));
-		jButtonDeleteDicom.setName("jButtonDeleteDicom");
-		jButtonDeleteDicom.setEnabled(false);
-
-		jButtonExit.setText(MessageBundle.getMessage("angal.common.close"));
-		jButtonExit.setName("jButtonExit");
 
 		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
 		jPanel1Layout.setAutoCreateContainerGaps(true);
@@ -203,12 +215,14 @@ public class DicomGui extends JFrame implements WindowListener {
 				.addGroup(
 						GroupLayout.Alignment.TRAILING,
 						jPanel1Layout.createSequentialGroup().addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE))
-								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)).addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE))
+								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 				.addGroup(GroupLayout.Alignment.TRAILING,
-						jPanel1Layout.createSequentialGroup().addContainerGap().addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(jPanelButton))));
+						jPanel1Layout.createSequentialGroup().addContainerGap()
+								.addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(jPanelButton))));
 
 		//jSplitPane1.setDividerLocation(position);
-		
+
 		thumbnail = new ThumbnailViewGui(patient, this);
 		thumbnail.initialize();
 
@@ -217,18 +231,19 @@ public class DicomGui extends JFrame implements WindowListener {
 		jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		jScrollPane2.setViewportView(thumbnail);
 		jScrollPane2.setName("jScrollPane2");
-		jScrollPane2.setMinimumSize(new Dimension(150,50));
+		jScrollPane2.setMinimumSize(new Dimension(150, 50));
 
 		jSplitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jScrollPane2, jPanelDetail);
 		jSplitPane1.setName("jSplitPane1");
 		jSplitPane1.setEnabled(false);
-		
+
 		GroupLayout mainPanelLayout = new GroupLayout(jPanelMain);
 		jPanelMain.setLayout(mainPanelLayout);
 
 		mainPanelLayout.setHorizontalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addGroup(mainPanelLayout.createSequentialGroup().addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE).addGap(10, 10, 10)));
+				.addGroup(
+						mainPanelLayout.createSequentialGroup().addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE).addGap(10, 10, 10)));
 
 		mainPanelLayout.setVerticalGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
 				GroupLayout.Alignment.TRAILING,
@@ -246,12 +261,13 @@ public class DicomGui extends JFrame implements WindowListener {
 	private void addEventListener() {
 		actionListenerJButtonLoadDicom();
 		actionListenerJButtonDeleteDicom();
-		actionListenerJButtonExit();
+		actionListenerjButtonCloseDicom();
 	}
 
 	private void actionListenerJButtonLoadDicom() {
 
 		jButtonLoadDicom.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 
 				JFileChooser jfc = new JFileChooser(new File(lastDir));
@@ -275,7 +291,7 @@ public class DicomGui extends JFrame implements WindowListener {
 
 					if (dir != null)
 						lastDir = dir.getAbsolutePath();
-					
+
 					File file = selectedFile;
 					int numfiles = 1;
 					if (selectedFile.isDirectory()) {
@@ -285,15 +301,13 @@ public class DicomGui extends JFrame implements WindowListener {
 							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
 							return;
 						}
-						if (numfiles == 1) return;
+						if (numfiles == 1)
+							return;
 						file = selectedFile.listFiles()[0];
 					} else {
 						try {
 							if (!SourceFiles.checkSize(file)) {
-								JOptionPane.showMessageDialog(DicomGui.this, 
-										MessageBundle.getMessage("angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty") + 
-			            				" (" + DicomManagerFactory.getMaxDicomSize() + ")", 
-										"DICOM", JOptionPane.ERROR_MESSAGE);
+								MessageDialog.error(DicomGui.this, "angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty.fmt.msg", DicomManagerFactory.getMaxDicomSize());
 								return;
 							}
 						} catch (OHDicomException e1) {
@@ -301,24 +315,24 @@ public class DicomGui extends JFrame implements WindowListener {
 							return;
 						}
 					}
-					
+
 					//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
 					FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file, numfiles);
-					
+
 					//shows settings to the user for validation/modification
 					List<Date> dates = FileTools.getTimestampFromName(file);
-					
+
 					ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
 					preLoadDialog.setVisible(true);
-					
-					if (!preLoadDialog.isSave()) 
+
+					if (!preLoadDialog.isSave())
 						return; //user pressed CANCEL
-					
+
 					dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
 					dummyFileDicom.setDicomSeriesDate(preLoadDialog.getDicomDate());
 					dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
 					dummyFileDicom.setDicomType(preLoadDialog.getDicomType());
-					
+
 					//TODO: to specify in which already existing series to load the file
 
 					if (selectedFile.isDirectory()) {
@@ -341,22 +355,20 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private void actionListenerJButtonDeleteDicom() {
 		jButtonDeleteDicom.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 
 				Object[] options = { MessageBundle.getMessage("angal.dicom.delete.yes"), MessageBundle.getMessage("angal.dicom.delete.no") };
 
-				int n = JOptionPane.showOptionDialog(DicomGui.this, MessageBundle.getMessage("angal.dicom.delete.request"), MessageBundle.getMessage("angal.dicom.delete.title"),
+				int n = JOptionPane.showOptionDialog(DicomGui.this, MessageBundle.getMessage("angal.dicom.delete.request"),
+						MessageBundle.getMessage("angal.dicom.delete.title"),
 						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "");
 
-				if (n == 0){
+				if (n == 0) {
 					try {
 						DicomManagerFactory.getManager().deleteSerie(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
-					}catch(OHServiceException ex){
-						if(ex.getMessages() != null){
-							for(OHExceptionMessage msg : ex.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
-						}
+					} catch (OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
 				thumbnail.initialize();
@@ -367,8 +379,9 @@ public class DicomGui extends JFrame implements WindowListener {
 		});
 	}
 
-	private void actionListenerJButtonExit() {
-		jButtonExit.addActionListener(new ActionListener() {
+	private void actionListenerjButtonCloseDicom() {
+		jButtonCloseDicom.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				System.exit(100);
 				// this.dispose();
@@ -382,7 +395,6 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Invoked the first time a window is made visible.
 	 */
 	public void windowOpened(WindowEvent e) {
-		// System.out.println("windowOpened");
 	}
 
 	/**
@@ -407,7 +419,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Invoked when a window is changed from a normal to a minimized state. For
 	 * many platforms, a minimized window is displayed as the icon specified in
 	 * the window's iconImage property.
-	 * 
+	 *
 	 * @see java.awt.Frame#setIconImage
 	 */
 	public void windowIconified(WindowEvent e) {
@@ -443,7 +455,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	public void windowDeactivated(WindowEvent e) {
 	}
 
-	// BOTTONI
+	// BUTTONS
 
 	private FileDicom selectedElement = null;
 
@@ -453,9 +465,9 @@ public class DicomGui extends JFrame implements WindowListener {
 		jButtonDeleteDicom.setEnabled(false);
 	}
 
-	public void enableDeleteButton(FileDicom selezionato) {
+	public void enableDeleteButton(FileDicom selected) {
 
-		this.selectedElement = selezionato;
+		this.selectedElement = selected;
 
 		jButtonDeleteDicom.setEnabled(true);
 
@@ -483,25 +495,6 @@ public class DicomGui extends JFrame implements WindowListener {
 
 		((DicomViewGui) jPanelDetail).notifyChanges(ohPatient, serie);
 
-	}
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		PropertyConfigurator.configure(new File("./rsc/log4j.properties").getAbsolutePath());
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		Context.setApplicationContext(context);
-		GeneralData.getGeneralData();
-		PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-		Patient patient = new Patient();
-		try {
-			patient = patManager.getPatient(1);
-		} catch (OHServiceException e) {
-			e.printStackTrace();
-		}
-		DicomGui dg = new DicomGui(patient, null);
-		
 	}
 
 }

@@ -1,12 +1,28 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.medstockmovtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -24,35 +40,31 @@ import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * Browsing of table MedicalStockMovType
- * 
+ *
  * @author Furlanetto, Zoia, Finotto
- * 
  */
-
 public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements MedicaldsrstockmovTypeListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ArrayList<MovementType> pMedicaldsrstockmovType;
-	private String[] pColums = {
-			MessageBundle.getMessage("angal.common.codem"),
-			MessageBundle.getMessage("angal.common.descriptionm"),
-			MessageBundle.getMessage("angal.medstockmovtype.typem")
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase()
 	};
-	private int[] pColumwidth = {80, 200, 40};
+	private int[] pColumnWidth = {80, 200, 40};
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jDeteleButton = null;
+	private JButton jDeleteButton = null;
 	private JTable jTable = null;
 	private MedicaldsrstockmovTypeBrowserModel model;
 	private int selectedrow;
@@ -61,38 +73,28 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	private final JFrame myFrame;
 	
 	/**
-	 * This method initializes 
-	 * 
+	 * This method initializes
 	 */
 	public MedicaldsrstockmovTypeBrowser() {
 		super();
-		myFrame=this;
+		myFrame = this;
 		initialize();
 		setVisible(true);
 	}
-	
-	
+
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 10;
-        final int pfrmWidth = 5;
-        final int pfrmHeight =4;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.medicalsstockmovementtypebrowsing"));
+		this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.medicalstockmovementtypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+		pack();
+		setLocationRelativeTo(null);
 	}
-	
 	
 	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContainPanel.add(new JScrollPane(getJTable()),
-					java.awt.BorderLayout.CENTER);
+			jContainPanel.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -103,26 +105,21 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
-			jButtonPanel.add(getJDeteleButton(), null);
+			jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
-			jNewButton = new JButton();
-			jNewButton.setText(MessageBundle.getMessage("angal.common.new"));
-			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					MovementType mdsr = new MovementType("","","");
-					MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,mdsr, true);
-					newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
+			jNewButton.addActionListener(event -> {
+				MovementType mdsr = new MovementType("","","");
+				MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,mdsr, true);
+				newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -135,25 +132,17 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	 */
 	private JButton getJEditButton() {
 		if (jEditButton == null) {
-			jEditButton = new JButton();
-			jEditButton.setText(MessageBundle.getMessage("angal.common.edit"));
-			jEditButton.setMnemonic(KeyEvent.VK_E);
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						medicaldsrstockmovType = (MovementType) (((MedicaldsrstockmovTypeBrowserModel) model)
-								.getValueAt(selectedrow, -1));
-						MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,medicaldsrstockmovType, false);
-						newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
-						newrecord.setVisible(true);
-					}
+			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					medicaldsrstockmovType = (MovementType) (model.getValueAt(selectedrow, -1));
+					MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,medicaldsrstockmovType, false);
+					newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
+					newrecord.setVisible(true);
 				}
 			});
 		}
@@ -167,81 +156,63 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
 	
 	/**
-	 * This method initializes jDeteleButton	
+	 * This method initializes jDeleteButton
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getJDeteleButton() {
-		if (jDeteleButton == null) {
-			jDeteleButton = new JButton();
-			jDeteleButton.setText(MessageBundle.getMessage("angal.common.delete"));
-			jDeteleButton.setMnemonic(KeyEvent.VK_D);
-			jDeteleButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						MovementType dis = (MovementType) (((MedicaldsrstockmovTypeBrowserModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-						int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.medstockmovtype.deletemovementtype")+" \" "+dis.getDescription() + "\" ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
-						
-						if ((n == JOptionPane.YES_OPTION)) {
-							
-							boolean deleted;
-							
-							try {
-								deleted = manager.deleteMedicaldsrstockmovType(dis);
-							} catch (OHServiceException e) {
-								deleted = false;
-								OHServiceExceptionUtil.showMessages(e);
-							}
-							
-							if (true == deleted) {
-								pMedicaldsrstockmovType.remove(jTable.getSelectedRow());
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
+	private JButton getJDeleteButton() {
+		if (jDeleteButton == null) {
+			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+			jDeleteButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					MovementType movType = (MovementType) (model.getValueAt(jTable.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.medstockmovtype.deletemovementtype.fmt.msg", movType.getDescription());
+					if ((answer == JOptionPane.YES_OPTION)) {
+
+						boolean deleted;
+
+						try {
+							deleted = manager.deleteMedicaldsrstockmovType(movType);
+						} catch (OHServiceException e) {
+							deleted = false;
+							OHServiceExceptionUtil.showMessages(e);
+						}
+
+						if (deleted) {
+							pMedicaldsrstockmovType.remove(jTable.getSelectedRow());
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
 					}
 				}
-				
 			});
 		}
-		return jDeteleButton;
+		return jDeleteButton;
 	}
 	
 	public JTable getJTable() {
 		if (jTable == null) {
 			model = new MedicaldsrstockmovTypeBrowserModel();
 			jTable = new JTable(model);
-			jTable.getColumnModel().getColumn(0).setMinWidth(pColumwidth[0]);
-			jTable.getColumnModel().getColumn(1).setMinWidth(pColumwidth[1]);
-		}return jTable;
+			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
+			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
+		}
+		return jTable;
 	}
 	
 	class MedicaldsrstockmovTypeBrowserModel extends DefaultTableModel {
 
-		/**
-		* 
-		*/
 		private static final long serialVersionUID = 1L;
 
 		public MedicaldsrstockmovTypeBrowserModel() {
@@ -253,20 +224,25 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 			}
 		}
 
+		@Override
 		public int getRowCount() {
-			if (pMedicaldsrstockmovType == null)
+			if (pMedicaldsrstockmovType == null) {
 				return 0;
+			}
 			return pMedicaldsrstockmovType.size();
 		}
 
+		@Override
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			MovementType movType = pMedicaldsrstockmovType.get(r);
 			if (c == 0) {
@@ -283,30 +259,30 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			// return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 
 
-
-
+	@Override
 	public void medicaldsrstockmovTypeUpdated(AWTEvent e) {
 		pMedicaldsrstockmovType.set(selectedrow, medicaldsrstockmovType);
 		((MedicaldsrstockmovTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1)
+		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
+		}
 	}
 	
 	
+	@Override
 	public void medicaldsrstockmovTypeInserted(AWTEvent e) {
 		medicaldsrstockmovType = (MovementType)e.getSource();
 		pMedicaldsrstockmovType.add(0, medicaldsrstockmovType);
 		((MedicaldsrstockmovTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-		if (jTable.getRowCount() > 0)
+		if (jTable.getRowCount() > 0) {
 			jTable.setRowSelectionInterval(0, 0);
+		}
 	}
-	
-	
+
 }

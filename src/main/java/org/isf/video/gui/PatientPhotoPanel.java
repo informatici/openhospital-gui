@@ -1,9 +1,29 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.video.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,18 +51,17 @@ import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.jobjects.Cropping;
 import org.isf.utils.jobjects.IconButton;
+import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.sarxos.webcam.Webcam;
 
 public class PatientPhotoPanel extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 9129641275344016618L;
 	
-	private final Logger logger = LoggerFactory.getLogger(PatientInsertExtended.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
 
 	// Photo Components:
 	private JPanel jPhotoPanel = null;
@@ -70,19 +89,14 @@ public class PatientPhotoPanel extends JPanel {
 			btnDeletePhoto.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
-					int n = JOptionPane.showConfirmDialog(owner, 
-							MessageBundle.getMessage("angal.patient.doyoureallywanttodeletepatientsphoto"),  //$NON-NLS-1$
-							MessageBundle.getMessage("angal.patient.confirmdeletion"),  //$NON-NLS-1$
-							JOptionPane.YES_NO_OPTION);
-
-					if (n == JOptionPane.YES_OPTION) {
+					int answer = MessageDialog.yesNo(owner, "angal.patient.doyouwanttodeletethepatientsphoto.msg");
+					if (answer == JOptionPane.YES_OPTION) {
 						btnDeletePhoto.setVisible(false);
 						patientFrame.setPatientPhoto(null);
 						externalPanel.updatePhoto(nophoto);
-						logger.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
+						LOGGER.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
 					} else {
-						logger.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
-						return;
+						LOGGER.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
 					}
 				}
 			});
@@ -117,13 +131,11 @@ public class PatientPhotoPanel extends JPanel {
 				btnDeletePhoto.setVisible(true);
 			else
 				btnDeletePhoto.setVisible(false);
-
-			GridBagConstraints gbs = new GridBagConstraints();
-			gbs.anchor = GridBagConstraints.CENTER;
 			
 			final Box buttonBox1 = Box.createHorizontalBox();
 
-			jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patient.file"));
+			jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.file.btn"));
+			jAttachPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.file.btn.key"));
 			jAttachPhotoButton.setMinimumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.addActionListener(new ActionListener() {
@@ -132,7 +144,7 @@ public class PatientPhotoPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					JFileChooser fc = new JFileChooser();
 					String[] extensions = {"tif","tiff","jpg","jpeg","bmp","png","gif"};
-					FileFilter imageFilter = new FileNameExtensionFilter("Image files", extensions); //ImageIO.getReaderFileSuffixes());
+					FileFilter imageFilter = new FileNameExtensionFilter(MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
 					fc.setFileFilter(imageFilter);
 					fc.setAcceptAllFileFilterUsed(false);
 					int returnVal = fc.showOpenDialog(patientFrame);
@@ -155,7 +167,8 @@ public class PatientPhotoPanel extends JPanel {
 			final Webcam webcam = Webcam.getDefault();
 
 			if (GeneralData.VIDEOMODULEENABLED && webcam != null) {
-				jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patient.newphoto")); //$NON-NLS-1$
+				jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.newphoto.btn"));
+				jGetPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.newphoto.btn.key"));
 				jGetPhotoButton.setMinimumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 				jGetPhotoButton.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 
@@ -207,11 +220,10 @@ public class PatientPhotoPanel extends JPanel {
 
 class CroppingDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CroppingDialog.class);
+
 	/*
 	 * Attributes
 	 */
@@ -229,7 +241,6 @@ class CroppingDialog extends JDialog {
 		super(owner, true);
 		this.image = image;
 		initComponents();
-		
 	}
 
 	private void initComponents() {
@@ -237,15 +248,15 @@ class CroppingDialog extends JDialog {
 			crop = new Cropping(ImageIO.read(image));
 			getContentPane().add(crop, BorderLayout.CENTER);
 			getContentPane().add(getSaveButton(), BorderLayout.SOUTH);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioException) {
+			LOGGER.error(ioException.getMessage(), ioException);
 		}
-		
 	}
 
 	private JButton getSaveButton() {
 		if (saveButton == null) {
-			saveButton = new JButton("save");
+			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			saveButton.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {

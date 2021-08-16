@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.utils.jobjects;
 
 import java.util.ArrayList;
@@ -18,7 +39,7 @@ public class OhTableModelExam<T> implements TableModel{
 	public  OhTableModelExam(ArrayList<Exam> dataList) {
 		this.dataListExam=dataList;
 		
-		this.filteredList=new ArrayList<Exam>();
+		this.filteredList= new ArrayList<>();
 		
 		for (Iterator<Exam> iterator = dataList.iterator(); iterator.hasNext();) {
 			Exam t = (Exam) iterator.next();
@@ -28,21 +49,20 @@ public class OhTableModelExam<T> implements TableModel{
 	}
 	
 	public int filter(String searchQuery){
-		this.filteredList=new ArrayList<Exam>();
+		this.filteredList= new ArrayList<>();
 		
 		for (Iterator<Exam> iterator = this.dataListExam.iterator(); iterator.hasNext();) {
 			Object object = (Object) iterator.next();	
-			if(object instanceof Exam){
+			if (object instanceof Exam){
 				Exam exam =(Exam) object;
 				String strItem = exam.getCode() + exam.getDescription();				
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
-				if(strItem.indexOf(searchQuery)>=0){
+				if (strItem.contains(searchQuery)) {
 					filteredList.add((Exam) object);
 				}
 			}
-
-		}	
+		}
 		return filteredList.size();
 	}
 	
@@ -50,7 +70,6 @@ public class OhTableModelExam<T> implements TableModel{
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -65,24 +84,23 @@ public class OhTableModelExam<T> implements TableModel{
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		String columnLable="";
+		String columnLabel="";
 		switch (columnIndex) {
 		case 0:
-			columnLable= MessageBundle.getMessage("angal.common.codem");
+			columnLabel= MessageBundle.getMessage("angal.common.code.txt").toUpperCase();
 			break;
 		case 1:
-			columnLable= MessageBundle.getMessage("angal.common.description");
+			columnLabel= MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
 			break;
-
 		default:
 			break;
 		}
-		return columnLable;
+		return columnLabel;
 	}
 
 	@Override
 	public int getRowCount() {
-		if(this.filteredList==null){
+		if (this.filteredList==null){
 			return 0;
 		}
 		return this.filteredList.size();
@@ -92,11 +110,11 @@ public class OhTableModelExam<T> implements TableModel{
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
 		String value="";
-		if(rowIndex>=0 && rowIndex<this.filteredList.size()){
+		if (rowIndex>=0 && rowIndex<this.filteredList.size()){
 			Exam obj=this.filteredList.get(rowIndex);
-			if(obj instanceof Exam){
+			if (obj instanceof Exam){
 				Exam mdwObj=(Exam)obj;
-				if(columnIndex==0){
+				if (columnIndex==0){
 					value=mdwObj.getCode()+"";
 				}
 				else{
@@ -108,7 +126,7 @@ public class OhTableModelExam<T> implements TableModel{
 	}
 	
 	public Exam getObjectAt(int rowIndex){
-		if(rowIndex>=0 && rowIndex<this.filteredList.size()){
+		if (rowIndex>=0 && rowIndex<this.filteredList.size()){
 			return this.filteredList.get(rowIndex);			
 		}
 		return null;

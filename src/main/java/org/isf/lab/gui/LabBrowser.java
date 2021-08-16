@@ -1,23 +1,31 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.lab.gui;
-
-/*------------------------------------------
- * LabBrowser - list all exams
- * -----------------------------------------
- * modification history
- * 02/03/2006 - theo, Davide - first beta version
- * 08/11/2006 - ross - changed button Show into Results
- *                     fixed the exam deletion
- * 					   version is now 1.0 
- * 04/01/2009 - ross - do not use roll, use add(week,-1)!
- *                     roll does not change the year! 
- *------------------------------------------*/
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -52,26 +60,34 @@ import org.isf.serviceprinting.manager.PrintLabels;
 import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoDateTextField;
 
+/**
+ * ------------------------------------------
+ * LabBrowser - list all labs
+ * -----------------------------------------
+ * modification history
+ * 02/03/2006 - theo, Davide - first beta version
+ * 08/11/2006 - ross - changed button Show into Results
+ *                     fixed the exam deletion
+ * 					   version is now 1.0
+ * 04/01/2009 - ross - do not use roll, use add(week,-1)!
+ *                     roll does not change the year!
+ * ------------------------------------------
+ */
 public class LabBrowser extends ModalJFrame implements LabListener, LabEditListener, LabEditExtendedListener {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public void labInserted() {
 		jTable.setModel(new LabBrowsingModel());
-		
 	}
 	
 	public void labUpdated() {
 		filterButton.doClick();
 	}
-	
-	private static final String VERSION=MessageBundle.getMessage("angal.versione");
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -89,14 +105,14 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JComboBox comboExams = null;
 	private int pfrmHeight;
 	private ArrayList<Laboratory> pLabs;
-	private String[] pColums = { 
-			MessageBundle.getMessage("angal.common.datem"), 
-			MessageBundle.getMessage("angal.lab.patient"), 
-			MessageBundle.getMessage("angal.lab.examm"), 
-			MessageBundle.getMessage("angal.lab.resultm") 
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.patient.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
 	};
 	private boolean[] columnsResizable = {false, true, true, false};
-	private int[] pColumwidth = { 100, 200, 200, 200 };
+	private int[] pColumnWidth = {100, 200, 200, 200};
 	private int[] maxWidth = {150, 200, 200, 200};
 	private boolean[] columnsVisible = { true, GeneralData.LABEXTENDED, true, true};
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
@@ -128,8 +144,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	/**
 	 * This method initializes this Frame, sets the correct Dimensions
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -142,7 +156,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				* pfrmHeight / pfrmBase) / 2, screensize.width * pfrmWidth
 				/ pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
-		this.setTitle(MessageBundle.getMessage("angal.lab.laboratorybrowsing")+" ("+VERSION+")");
+		this.setTitle(MessageBundle.getMessage("angal.lab.laboratorybrowser.title"));
 	}
 
 	/**
@@ -185,13 +199,13 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	private JButton getPrintTableButton() {
 		if (printTableButton == null) {
-			printTableButton = new JButton(MessageBundle.getMessage("angal.lab.printtable"));
-			printTableButton.setMnemonic(KeyEvent.VK_P);
+			printTableButton = new JButton(MessageBundle.getMessage("angal.lab.printtable.btn"));
+			printTableButton.setMnemonic(MessageBundle.getMnemonic("angal.lab.printtable.btn.key"));
 			printTableButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
 					typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
-					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all"))) {
+					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 						typeSelected = null;
 					}
 					
@@ -199,39 +213,39 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 						ArrayList<LaboratoryForPrint> labs;
 						labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDate(), dateTo.getDate());
 						if (!labs.isEmpty()) {
-							
-							printManager.print("Laboratory",labs,0);
+							printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 						}
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
-					
 				}
-
 			});
 		}
 		return printTableButton;
 	}
 	
 	private JButton getPrintLabelButton(){
-		if(printLabelButton==null){
-			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel"));
-			
-			printLabelButton.setMnemonic(KeyEvent.VK_O);
+		if (printLabelButton==null){
+			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel.btn"));
+			printLabelButton.setMnemonic(MessageBundle.getMnemonic("angal.labnew.printlabel.btn.key"));
 			printLabelButton.addActionListener(new ActionListener() {
 			
 				public void actionPerformed(ActionEvent arg0) {
-					selectedrow = jTable.getSelectedRow();
-					if (selectedrow < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} 
-					laboratory = (Laboratory) (((LabBrowsingModel) model).getValueAt(selectedrow, -1));
-					Integer patId = laboratory.getPatient().getCode();
+					Integer patId = null;
+					if (GeneralData.LABEXTENDED) {
+						selectedrow = jTable.getSelectedRow();
+						if (selectedrow < 0) {
+							int ok = MessageDialog.yesNoCancel(LabBrowser.this, "angal.lab.nopatientselectedprintempylabel.msg");
+							if (ok != JOptionPane.YES_OPTION) {
+								return;
+							}
+						} else {
+							laboratory = (Laboratory) (model.getValueAt(selectedrow, -1));
+							patId = laboratory.getPatient().getCode();
+						}
+					}
 					try {
-						new PrintLabels("labelForSamples",patId);
+						new PrintLabels("LabelForSamples", patId);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -244,19 +258,17 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	private JButton getButtonEdit() {
 		if (buttonEdit == null) {
-			buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit"));
-			buttonEdit.setMnemonic(KeyEvent.VK_E);
+			buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			buttonEdit.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
 					selectedrow = jTable.getSelectedRow();
 					if (selectedrow < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 						return;
 					} 
-					laboratory = (Laboratory) (((LabBrowsingModel) model).getValueAt(selectedrow, -1));
+					laboratory = (Laboratory) (model.getValueAt(selectedrow, -1));
 					if (GeneralData.LABEXTENDED) {
 						LabEditExtended editrecord = new LabEditExtended(myFrame, laboratory, false);
 						editrecord.addLabEditExtendedListener(LabBrowser.this);
@@ -279,8 +291,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	 */
 	private JButton getButtonNew() {
 		if (buttonNew == null) {
-			buttonNew = new JButton(MessageBundle.getMessage("angal.common.new"));
-			buttonNew.setMnemonic(KeyEvent.VK_N);
+			buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			buttonNew.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent event) {
@@ -309,30 +321,28 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	}
 
 	/**
-	 * This method initializes buttonDelete, that delets the selected records
+	 * This method initializes buttonDelete, that deletes the selected records
 	 * 
 	 * @return buttonDelete (JButton)
 	 */
 	private JButton getButtonDelete() {
 		if (buttonDelete == null) {
-			buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete"));
-			buttonDelete.setMnemonic(KeyEvent.VK_D);
+			buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			buttonDelete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
-						return;
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					} else {
-						Laboratory lab = (Laboratory) (((LabBrowsingModel) model)
-								.getValueAt(jTable.getSelectedRow(), -1));
-						
-						int n = JOptionPane.showConfirmDialog(LabBrowser.this,
-								getLabMessage(lab),
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+						Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
+						int answer = MessageDialog.yesNo(LabBrowser.this, "angal.lab.deletelabexam.fmt.msg",
+								dateFormat.format(lab.getDate().getTime()),
+								dateTimeFormat.format(lab.getExamDate().getTime()),
+								lab.getExam(),
+								lab.getPatName(),
+								lab.getResult());
 
-						if (n == JOptionPane.YES_OPTION) {
+						if (answer == JOptionPane.YES_OPTION) {
 							boolean deleted;
 							
 							try {
@@ -342,7 +352,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 								OHServiceExceptionUtil.showMessages(e);
 							}
 							
-							if (true == deleted) {
+							if (deleted) {
 								pLabs.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();
@@ -356,22 +366,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		return buttonDelete;
 	}
 
-	protected String getLabMessage(Laboratory lab) {
-		StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.lab.deletefollowinglabexam"))
-				.append(";\n")
-				.append(MessageBundle.getMessage("angal.lab.registationdate")).append("=").append(dateFormat.format(lab.getDate().getTime()))
-				.append("\n")
-				.append(MessageBundle.getMessage("angal.lab.examdate")).append("=").append(dateTimeFormat.format(lab.getExamDate().getTime()))
-				.append("\n")
-				.append(MessageBundle.getMessage("angal.lab.exam")).append("=").append(lab.getExam())
-				.append("\n")
-				.append(MessageBundle.getMessage("angal.lab.patient")).append("=").append(lab.getPatName())
-				.append("\n")
-				.append(MessageBundle.getMessage("angal.lab.result")).append("=").append(lab.getResult())
-				.append("\n ?");
-		return message.toString();
-	}
-
 	/**
 	 * This method initializes buttonClose, that disposes the entire Frame
 	 * 
@@ -379,8 +373,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	 */
 	private JButton getCloseButton() {
 		if (buttonClose == null) {
-			buttonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
-			buttonClose.setMnemonic(KeyEvent.VK_C);
+			buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			buttonClose.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();
@@ -420,7 +414,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			jTable = new JTable(model);
 			TableColumnModel columnModel = jTable.getColumnModel();
 			for (int i = 0; i < model.getColumnCount(); i++) {
-				jTable.getColumnModel().getColumn(i).setMinWidth(pColumwidth[i]);
+				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
 				if (!columnsResizable[i]) 
 					columnModel.getColumn(i).setMaxWidth(maxWidth[i]);
 				if (!columnsVisible[i]) {
@@ -444,7 +438,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (comboExams == null) {
 			comboExams = new JComboBox();
 			comboExams.setPreferredSize(new Dimension(200, 30));
-			comboExams.addItem(new Exam("", MessageBundle.getMessage("angal.lab.all"), new ExamType("", ""), 0, ""));
+			comboExams.addItem(new Exam("", MessageBundle.getMessage("angal.common.all.txt"), new ExamType("", ""), 0, ""));
 			ArrayList<Exam> type;
 			try {
 				type = managerExams.getExams();
@@ -465,7 +459,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				public void actionPerformed(ActionEvent e) {
 					typeSelected = ((Exam) comboExams.getSelectedItem())
 							.toString();
-					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
+					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt")))
 						typeSelected = null;
 
 				}
@@ -494,7 +488,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel getDateFromPanel() {
 		if (jPanelDateFrom == null) {
 			jPanelDateFrom = new JPanel();
-			jPanelDateFrom.add(new JLabel(MessageBundle.getMessage("angal.common.datem") +" "+ MessageBundle.getMessage("angal.common.from") + ": "), null);
+			jPanelDateFrom.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")), null);
 			jPanelDateFrom.add(getDateFieldFromPanel());
 			
 		}
@@ -519,7 +513,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel getDateToPanel() {
 		if (jPanelDateTo == null) {
 			jPanelDateTo = new JPanel();
-			jPanelDateTo.add(new JLabel(MessageBundle.getMessage("angal.common.datem") +" "+ MessageBundle.getMessage("angal.common.to") + ": "), null);
+			jPanelDateTo.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")), null);
 			jPanelDateTo.add(getDateFieldToPanel());
 			
 		}
@@ -534,13 +528,13 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	 */
 	private JButton getFilterButton() {
 		if (filterButton == null) {
-			filterButton = new JButton(MessageBundle.getMessage("angal.lab.search"));
-			filterButton.setMnemonic(KeyEvent.VK_S);
+			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
+			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
 			filterButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
-					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.lab.all")))
+					if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt")))
 						typeSelected = null;
 					model = new LabBrowsingModel(typeSelected, dateFrom.getDate(), dateTo.getDate());
 					model.fireTableDataChanged();
@@ -558,9 +552,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	 * 
 	 */
 	class LabBrowsingModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
 
@@ -568,7 +560,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			try {
 				pLabs = manager.getLaboratory(exam, dateFrom, dateTo);
 			} catch (OHServiceException e) {
-				pLabs = new ArrayList<Laboratory>();
+				pLabs = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
@@ -577,7 +569,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			try {
 				pLabs = manager.getLaboratory();
 			} catch (OHServiceException e) {
-				pLabs = new ArrayList<Laboratory>();
+				pLabs = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
@@ -589,11 +581,11 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		}
 
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
 		/**
@@ -627,7 +619,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	/**
 	 * This method updates the Table because a laboratory test has been updated
 	 * Sets the focus on the same record as before
-	 * 
 	 */
 	public void laboratoryUpdated() {
 		pLabs.set(pLabs.size() - selectedrow - 1, laboratory);
@@ -640,7 +631,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	/**
 	 * This method updates the Table because a laboratory test has been inserted
 	 * Sets the focus on the first record
-	 * 
 	 */
 	public void laboratoryInserted() {
 		pLabs.add(pLabs.size(), laboratory);

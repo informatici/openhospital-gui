@@ -1,21 +1,31 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.disease.gui;
-
-/*------------------------------------------
- * LabEdit - Add/edit a Disease
- * -----------------------------------------
- * modification history
- * 25/01/2006 - Rick, Vero, Pupo - first beta version
- * 03/11/2006 - ross - added flags OPD / IPD
- * 			         - changed title, version is now 1.0 
- * 09/06/2007 - ross - when updating, now the user can change the "dis type" also
- *------------------------------------------*/
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -25,7 +35,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -39,21 +48,29 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
+/**
+ * ------------------------------------------
+ * DiseaseEdit - Add/edit a Disease
+ * -----------------------------------------
+ * modification history
+ * 25/01/2006 - Rick, Vero, Pupo - first beta version
+ * 03/11/2006 - ross - added flags OPD / IPD
+ * 			         - changed title, version is now 1.0
+ * 09/06/2007 - ross - when updating, now the user can change the "dis type" also
+ * ------------------------------------------
+ */
 public class DiseaseEdit extends JDialog {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private EventListenerList diseaseListeners = new EventListenerList();
 	
 	public interface DiseaseListener extends EventListener {
-		public void diseaseUpdated(AWTEvent e);
-		public void diseaseInserted(AWTEvent e);
+		void diseaseUpdated(AWTEvent e);
+		void diseaseInserted(AWTEvent e);
 	}
 	
 	public void addDiseaseListener(DiseaseListener l) {
@@ -67,9 +84,6 @@ public class DiseaseEdit extends JDialog {
 	private void fireDiseaseInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
@@ -79,9 +93,6 @@ public class DiseaseEdit extends JDialog {
 	private void fireDiseaseUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
@@ -89,8 +100,6 @@ public class DiseaseEdit extends JDialog {
 			((DiseaseListener)listeners[i]).diseaseUpdated(event);
 	}
 	
-	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
-
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -113,7 +122,6 @@ public class DiseaseEdit extends JDialog {
 	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 	/**
-	 * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
 	 * because we need to update them
 	 */
@@ -126,15 +134,13 @@ public class DiseaseEdit extends JDialog {
 	
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.disease.newdisease")+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.disease.newdisease.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.disease.editdisease")+VERSION+")");
+			this.setTitle(MessageBundle.getMessage("angal.disease.editdisease.title"));
 		}
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.pack();
@@ -185,15 +191,14 @@ public class DiseaseEdit extends JDialog {
 			gbc_typeComboBox.gridy = 0;
 			dataPanel.add(getTypeComboBox(), gbc_typeComboBox);  // Generated
 			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.code"));
+			codeLabel.setText(MessageBundle.getMessage("angal.common.code.txt"));
 			GridBagConstraints gbc_codeLabel = new GridBagConstraints();
 			gbc_codeLabel.insets = new Insets(5, 5, 5, 5);
 			gbc_codeLabel.fill = GridBagConstraints.BOTH;
 			gbc_codeLabel.gridx = 0;
 			gbc_codeLabel.gridy = 1;
 			dataPanel.add(codeLabel, gbc_codeLabel);  // Generated
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.common.description"));  // Generated
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			GridBagConstraints gbc_descLabel = new GridBagConstraints();
 			gbc_descLabel.fill = GridBagConstraints.BOTH;
 			gbc_descLabel.insets = new Insets(5, 5, 5, 5);
@@ -247,9 +252,8 @@ public class DiseaseEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					dispose();
@@ -266,9 +270,8 @@ public class DiseaseEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
@@ -281,22 +284,35 @@ public class DiseaseEdit extends JDialog {
 					disease.setIpdOutInclude(includeIpdOutCheckBox.isSelected());
 					
 					boolean result = false;
+					Disease savedDisease = null;
 					try{
 						if (insert) { // inserting
-							result = manager.newDisease(disease);
+							savedDisease = manager.newDisease(disease);
+							if (savedDisease != null) {
+								disease.setLock(savedDisease.getLock());
+								result  = true;
+							}
+							
 							if (result) {
 								fireDiseaseInserted();
 							}
 						} else { // updating
-							result = manager.updateDisease(disease);
+							savedDisease = manager.updateDisease(disease);
+							if (savedDisease != null) {
+								disease.setLock(savedDisease.getLock());
+								result  = true;
+							}
+							
 							if (result) {
 								fireDiseaseUpdated();
 							}
 						}
                         if (!result) {
-                        	JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+	                        MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
                         }
-                        else  dispose();
+                        else {
+                        	dispose();
+                        }
 					}catch(OHServiceException ex){
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -340,7 +356,7 @@ public class DiseaseEdit extends JDialog {
 	}
 
 	
-	//private JLabel inludeOpdLabel = null;
+	//private JLabel includeOpdLabel = null;
 	//private JCheckBox includeOpdCheckBox  = null;
 
 	
@@ -353,7 +369,7 @@ public class DiseaseEdit extends JDialog {
 			jNewPatientPanel.add(includeOpdCheckBox);
 			jNewPatientPanel.add(includeIpdInCheckBox);
 			jNewPatientPanel.add(includeIpdOutCheckBox);
-			if(!insert){
+			if (!insert){
 				if (disease.getOpdInclude()) includeOpdCheckBox.setSelected(true);
 				if (disease.getIpdInInclude()) includeIpdInCheckBox.setSelected(true);
 				if (disease.getIpdOutInclude()) includeIpdOutCheckBox.setSelected(true);
@@ -361,8 +377,6 @@ public class DiseaseEdit extends JDialog {
 		}
 		return jNewPatientPanel;
 	}
-
-	
 	
 	/**
 	 * This method initializes typeComboBox	
@@ -373,7 +387,7 @@ public class DiseaseEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox();
 			typeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
-			try{
+			try {
 				if (insert) {
 					ArrayList<DiseaseType> types = manager.getDiseaseType();
 					for (DiseaseType elem : types) {
@@ -392,17 +406,12 @@ public class DiseaseEdit extends JDialog {
 						typeComboBox.setSelectedItem(selectedDiseaseType);
 					//typeComboBox.setEnabled(false);
 				}
-			}catch(OHServiceException e){
-				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 			
 		}
 		return typeComboBox;
 	}
 	
-	
-}  //  @jve:decl-index=0:visual-constraint="82,7"
+}

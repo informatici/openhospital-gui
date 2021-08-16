@@ -1,19 +1,39 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.medstockmovtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -22,19 +42,18 @@ import org.isf.medstockmovtype.model.MovementType;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList medicaldsrstockmovTypeListeners = new EventListenerList();
 
     public interface MedicaldsrstockmovTypeListener extends EventListener {
-        public void medicaldsrstockmovTypeUpdated(AWTEvent e);
-        public void medicaldsrstockmovTypeInserted(AWTEvent e);
+        void medicaldsrstockmovTypeUpdated(AWTEvent e);
+        void medicaldsrstockmovTypeInserted(AWTEvent e);
     }
 
     public void addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener l) {
@@ -48,26 +67,22 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
     private void fireMedicaldsrstockmovInserted(MovementType anMedicaldsrstockmovType) {
         AWTEvent event = new AWTEvent(anMedicaldsrstockmovType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((MedicaldsrstockmovTypeListener)listeners[i]).medicaldsrstockmovTypeInserted(event);
+	    for (EventListener listener : listeners) {
+		    ((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeInserted(event);
+	    }
     }
     private void fireMedicaldsrstockmovUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((MedicaldsrstockmovTypeListener)listeners[i]).medicaldsrstockmovTypeUpdated(event);
+	    for (EventListener listener : listeners) {
+		    ((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeUpdated(event);
+	    }
     }
     
 	private JPanel jContentPane = null;
@@ -77,22 +92,14 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	private JButton okButton = null;
 	private JTextField descriptionTextField = null;
 	private VoLimitedTextField codeTextField = null;
-	private JComboBox typeComboBox = null;
+	private JComboBox<String> typeComboBox = null;
 	private String lastdescription;
-	private MovementType medicaldsrstockmovType = null;
+	private MovementType medicaldsrstockmovType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private JLabel jTypeLabel = null;
-	private JPanel jTypeLabelPanel = null;
-	private JLabel jCodeLabel = null;
-	private JPanel jCodeLabelPanel = null;
-	private JPanel jDescriptionLabelPanel = null;
-	private JLabel jDescripitonLabel = null;
-
 	private MedicaldsrstockmovTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 	
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -107,21 +114,18 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
-		
-		//this.setBounds(300,300,330,210);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.newmedicalsstockmovementtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.newmedicalstockmovementtype.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.editingmedicalsstockmovementtyperecord"));
+			this.setTitle(MessageBundle.getMessage("angal.medstockmovtype.editmedicalstockmovementtype.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.pack();
 		this.setLocationRelativeTo(null);
+		codeTextField.requestFocus();
 	}
 
 	/**
@@ -133,8 +137,8 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -147,7 +151,6 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			dataPanel = new JPanel();
-			//dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS));  // Generated
 			dataPanel.add(getJDataPanel(), null);
 		}
 		return dataPanel;
@@ -161,8 +164,8 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -174,72 +177,59 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-			cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
 
 	/**
-	 * This method initializes okButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes okButton
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-			okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					
-					String description = descriptionTextField.getText();
-					medicaldsrstockmovType.setDescription(description);
-					medicaldsrstockmovType.setCode(codeTextField.getText());
-					medicaldsrstockmovType.setType((String) typeComboBox.getSelectedItem());
-					
-					boolean result;
-					if (insert) { // inserting
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			okButton.addActionListener(e -> {
+
+				String description = descriptionTextField.getText();
+				medicaldsrstockmovType.setDescription(description);
+				medicaldsrstockmovType.setCode(codeTextField.getText());
+				medicaldsrstockmovType.setType((String) typeComboBox.getSelectedItem());
+
+				boolean result;
+				if (insert) { // inserting
+					try {
+						result = manager.newMedicaldsrstockmovType(medicaldsrstockmovType);
+						if (result) {
+							fireMedicaldsrstockmovInserted(medicaldsrstockmovType);
+							dispose();
+						} else {
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						}
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1);
+					}
+				} else { // updating
+					if (description.equals(lastdescription)) {
+						dispose();
+					} else {
 						try {
-							result = manager.newMedicaldsrstockmovType(medicaldsrstockmovType);
+							result = manager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
 							if (result) {
-								fireMedicaldsrstockmovInserted(medicaldsrstockmovType);
+								fireMedicaldsrstockmovUpdated();
 								dispose();
-							} else
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
+							} else {
+								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							}
 						} catch (OHServiceException e1) {
-							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 					}
-					else { // updating
-						if (description.equals(lastdescription)){
-							dispose();	
-						} else {
-							try {
-								result = manager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
-								if (result) {
-									fireMedicaldsrstockmovUpdated();
-									dispose();
-								} else
-									JOptionPane.showMessageDialog(null,
-											MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved"));
-							} catch (OHServiceException e1) {
-								result = false;
-								OHServiceExceptionUtil.showMessages(e1);
-							}
-						}
-
-					}
-					
-                }
+				}
 			});
 		}
 		return okButton;
@@ -282,9 +272,9 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	 * 	
 	 * @return javax.swing.JTextField	
 	 */
-	private JComboBox getTypeComboBox() {
+	private JComboBox<String> getTypeComboBox() {
 		if (typeComboBox == null) {
-			typeComboBox = new JComboBox();
+			typeComboBox = new JComboBox<>();
 			typeComboBox.addItem("+");
 			typeComboBox.addItem("-");
 			if (!insert) {
@@ -302,72 +292,15 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	 */
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
-			jDataPanel = new JPanel();
-			jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
-			jDataPanel.add(getJCodeLabelPanel(), null);
-			jDataPanel.add(getCodeTextField(), null);
-			jDataPanel.add(getJDescriptionLabelPanel(), null);
-			jDataPanel.add(getDescriptionTextField(), null);
-			jDataPanel.add(getJTypeLabelPanel(), null);
-			jDataPanel.add(getTypeComboBox(), null);
+			jDataPanel = new JPanel(new SpringLayout());
+			jDataPanel.add(new JLabel(MessageBundle.formatMessage("angal.common.codemaxchars.fmt.txt", 10) + ':'));
+			jDataPanel.add(getCodeTextField());
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':'));
+			jDataPanel.add(getDescriptionTextField());
+			jDataPanel.add(new JLabel(MessageBundle.getMessage("angal.medstockmovtype.type") + ':'));
+			jDataPanel.add(getTypeComboBox());
+			SpringUtilities.makeCompactGrid(jDataPanel, 3, 2, 5, 5, 5, 5);
 		}
 		return jDataPanel;
 	}
-
-	/**
-	 * This method initializes jCodeLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
-	 */
-	private JLabel getJCodeLabel() {
-		if (jCodeLabel == null) {
-			jCodeLabel = new JLabel();
-			jCodeLabel.setText(MessageBundle.getMessage("angal.medstockmovtype.codemaxchars"));
-		}
-		return jCodeLabel;
-	}
-
-	/**
-	 * This method initializes jCodeLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJCodeLabelPanel() {
-		if (jCodeLabelPanel == null) {
-			jCodeLabelPanel = new JPanel();
-			//jCodeLabelPanel.setLayout(new BorderLayout());
-			jCodeLabelPanel.add(getJCodeLabel(), BorderLayout.CENTER);
-		}
-		return jCodeLabelPanel;
-	}
-
-	/**
-	 * This method initializes jDescriptionLabelPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
-	private JPanel getJDescriptionLabelPanel() {
-		if (jDescriptionLabelPanel == null) {
-			jDescripitonLabel = new JLabel();
-			jDescripitonLabel.setText(MessageBundle.getMessage("angal.common.description"));
-			jDescriptionLabelPanel = new JPanel();
-			jDescriptionLabelPanel.add(jDescripitonLabel, null);
-		}
-		return jDescriptionLabelPanel;
-	}
-	
-	private JPanel getJTypeLabelPanel() {
-		if (jTypeLabelPanel == null) {
-			jTypeLabel = new JLabel();
-			jTypeLabel.setText(MessageBundle.getMessage("angal.medstockmovtype.type"));
-			jTypeLabelPanel = new JPanel();
-			jTypeLabelPanel.add(jTypeLabel, null);
-		}
-		return jTypeLabelPanel;
-	}
-	
-
-
-}  //  @jve:decl-index=0:visual-constraint="146,61"
-
-
+}

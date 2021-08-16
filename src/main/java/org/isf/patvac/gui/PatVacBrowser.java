@@ -1,15 +1,25 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.patvac.gui;
-
-/*------------------------------------------
- * PatVacBrowser - list all patient's vaccines
- * -----------------------------------------
- * modification history
- * 25/08/2011 - claudia - first beta version
- * 25/10/2011 - claudia - modify selection section
- * 14/11/2011 - claudia - elimitated @override tag
- *                      - inserted ENHANCEDSEARCH functionality on search
- * 
- *------------------------------------------*/
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -19,7 +29,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -49,6 +58,7 @@ import org.isf.patvac.model.PatientVaccine;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.vaccine.manager.VaccineBrowserManager;
@@ -56,16 +66,21 @@ import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
 
-
+/**
+ * ------------------------------------------
+ * PatVacBrowser - list all patient's vaccines
+ * -----------------------------------------
+ * modification history
+ * 25/08/2011 - claudia - first beta version
+ * 25/10/2011 - claudia - modify selection section
+ * 14/11/2011 - claudia - eliminated @override tag
+ *                      - inserted ENHANCEDSEARCH functionality on search
+ * ------------------------------------------
+ */
 public class PatVacBrowser extends ModalJFrame {
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION=MessageBundle.getMessage("angal.versione");
-	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     	
 	private JPanel jContentPane = null;
@@ -86,7 +101,7 @@ public class PatVacBrowser extends ModalJFrame {
 	private JRadioButton radiom;
 	private JRadioButton radiof;
 	private JRadioButton radioa;
-	private String sexSelect = MessageBundle.getMessage("angal.patvac.all");
+	private String sexSelect = MessageBundle.getMessage("angal.common.all.txt");
 	private JLabel rowCounter = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.patvac.count") + ": ";
 	
@@ -98,9 +113,16 @@ public class PatVacBrowser extends ModalJFrame {
 	private ArrayList<PatientVaccine> lPatVac;
 	
 		
-	private String[] pColums = { MessageBundle.getMessage("angal.common.datem"), MessageBundle.getMessage("angal.patvac.patientm"), MessageBundle.getMessage("angal.patvac.sexm"),MessageBundle.getMessage("angal.patvac.agem"), MessageBundle.getMessage("angal.patvac.vaccinem"), MessageBundle.getMessage("angal.patvac.vaccinetypem")};
-	private int[] pColumwidth = { 100, 150, 50, 50, 150, 150};
-	private boolean[] columnsVisible = { true, GeneralData.PATIENTVACCINEEXTENDED, true, true, true, true};
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.patient.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.sex.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.patvac.vaccine.col").toUpperCase(),
+			MessageBundle.getMessage("angal.patvac.vaccinetype.col").toUpperCase()
+	};
+	private int[] pColumnWidth = {100, 150, 50, 50, 150, 150};
+	private boolean[] columnsVisible = {true, GeneralData.PATIENTVACCINEEXTENDED, true, true, true, true};
 	private PatVacManager manager;
 	private PatVacBrowsingModel model;
 	private PatientVaccine patientVaccine;
@@ -115,13 +137,10 @@ public class PatVacBrowser extends ModalJFrame {
 		manager = Context.getApplicationContext().getBean(PatVacManager.class);
 		initialize();
 		setVisible(true);
-		
 	}
 
 	/**
 	 * This method initializes this Frame, sets the correct Dimensions
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -133,7 +152,7 @@ public class PatVacBrowser extends ModalJFrame {
         		(screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase+50,
                 screensize.height * pfrmHeight / pfrmBase+20);
-        setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowsing")+" ("+VERSION+")");
+        setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowser.title"));
 		this.setContentPane(getJContentPane());
 		updateRowCounter();
 		validate();
@@ -182,8 +201,8 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private JButton getButtonNew(){
 	   if (buttonNew == null) {
-		   buttonNew = new JButton(MessageBundle.getMessage("angal.common.new"));
-		   buttonNew.setMnemonic(KeyEvent.VK_N);
+		   buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		   buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		   buttonNew.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
@@ -192,7 +211,7 @@ public class PatVacBrowser extends ModalJFrame {
 							
 					PatientVaccine  last = new PatientVaccine(0,0,new GregorianCalendar(),new Patient(),
 							                     new Vaccine ("","",new VaccineType("","")),0);
-                    new PatVacEdit (myFrame, patientVaccine, true);
+                    new PatVacEdit(myFrame, patientVaccine, true);
                     
                     if (!last.equals(patientVaccine)) {
 						lPatVac.add(0, patientVaccine);
@@ -215,31 +234,26 @@ public class PatVacBrowser extends ModalJFrame {
 	private JButton getButtonEdit(){
 		
 		if (buttonEdit == null) {
-			buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit"));
-			buttonEdit.setMnemonic(KeyEvent.VK_S);
+			buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			buttonEdit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 						return;
 					} 
 					
 					selectedrow = jTable.getSelectedRow();
-					patientVaccine = (PatientVaccine) (((PatVacBrowsingModel) model).getValueAt(selectedrow, -1));
+					patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
 
 					PatientVaccine last = new PatientVaccine(patientVaccine.getCode(),
 								                  patientVaccine.getProgr(),
 								                  patientVaccine.getVaccineDate(),
 								                  patientVaccine.getPatient(),
 								                  patientVaccine.getVaccine(),
-								                  patientVaccine.getLock(),
-								                  patientVaccine.getPatName(),
-								                  patientVaccine.getPatAge(),
-								                  patientVaccine.getPatSex());
+								                  patientVaccine.getLock());
 					
-					new PatVacEdit (myFrame, patientVaccine, false);
+					new PatVacEdit(myFrame, patientVaccine, false);
 					
 					if (!last.equals(patientVaccine)) {
 						((PatVacBrowsingModel) jTable.getModel()).fireTableDataChanged();
@@ -261,27 +275,22 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private JButton getButtonDelete(){
 		if (buttonDelete == null) {
-			buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete"));
-			buttonDelete.setMnemonic(KeyEvent.VK_D);
+			buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			buttonDelete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.PLAIN_MESSAGE);
+						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 						return;
 					} 
 					selectedrow = jTable.getSelectedRow();
-					patientVaccine = (PatientVaccine) (((PatVacBrowsingModel) model).getValueAt(selectedrow, -1));
-                    int n = JOptionPane.showConfirmDialog(null,
-								MessageBundle.getMessage("angal.patvac.deleteselectedpatientvaccinerow") +
-								"\n"+ MessageBundle.getMessage("angal.patvac.vaccinedate")+" = " +  dateFormat.format( patientVaccine.getVaccineDate().getTime()) +
-								"\n "+ MessageBundle.getMessage("angal.patvac.vaccine")+" = " + patientVaccine.getVaccine().getDescription() + 
-								"\n "+ MessageBundle.getMessage("angal.patvac.patient")+" =" + patientVaccine.getPatName() + 
-								"\n ?",
-								MessageBundle.getMessage("angal.hospital"), JOptionPane.YES_NO_OPTION);
+					patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
+					int answer = MessageDialog.yesNo(null,"angal.patvac.deletepatientvaccine.fmt.msg",
+							dateFormat.format(patientVaccine.getVaccineDate().getTime()),
+							patientVaccine.getVaccine().getDescription(),
+							patientVaccine.getPatName());
 
-					if (n == JOptionPane.YES_OPTION) {
+					if (answer == JOptionPane.YES_OPTION) {
 						
 							boolean deleted;
 							
@@ -292,7 +301,7 @@ public class PatVacBrowser extends ModalJFrame {
 								OHServiceExceptionUtil.showMessages(e);
 							}
 						
-							if (true == deleted) {
+							if (deleted) {
 								lPatVac.remove(jTable.getSelectedRow());
 								model.fireTableDataChanged();
 								jTable.updateUI();
@@ -311,8 +320,8 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private JButton getCloseButton() {
 		if (buttonClose == null) {
-			buttonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
-			buttonClose.setMnemonic(KeyEvent.VK_C);
+			buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			buttonClose.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();
@@ -402,14 +411,14 @@ public class PatVacBrowser extends ModalJFrame {
 		datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.Y_AXIS));
 
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date") +": "+ MessageBundle.getMessage("angal.common.from")), null);
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") +": "+ MessageBundle.getMessage("angal.common.from.txt")), null);
 		datePanel.add(label1Panel);
 		
 		label1Panel.add(getDateFromPanel());
 		datePanel.add(label1Panel,null);
 		
 		label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date") +": "+MessageBundle.getMessage("angal.common.to") +"     "), null);
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") +": "+MessageBundle.getMessage("angal.common.to.txt") +"     "), null);
 		datePanel.add(label1Panel);
 		
 		label1Panel.add(getDateToPanel());
@@ -429,13 +438,13 @@ public class PatVacBrowser extends ModalJFrame {
 			jAgePanel.setLayout(new BoxLayout(getAgePanel(),BoxLayout.Y_AXIS));
 			
 			JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.patvac.agefrom")), null);
+			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.agefrom.label")), null);
 			jAgePanel.add(label1Panel);
 			label1Panel.add(getJAgeFromTextField(), null);
 			jAgePanel.add(label1Panel);
 			
 			label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.patvac.ageto")), null);
+			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.ageto.label")), null);
 			jAgePanel.add(label1Panel);
 			label1Panel.add(getJAgeToTextField(), null);
 			jAgePanel.add(label1Panel);
@@ -453,14 +462,14 @@ public class PatVacBrowser extends ModalJFrame {
 			sexPanel = new JPanel();
 			sexPanel.setLayout(new BoxLayout(sexPanel, BoxLayout.Y_AXIS));
 			JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.patvac.selectsex")), null);
+			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.selectsex.txt")), null);
 			sexPanel.add(label1Panel);
 			
 			label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			group=new ButtonGroup();
-			radiom= new JRadioButton(MessageBundle.getMessage("angal.patvac.male"));
-			radiof= new JRadioButton(MessageBundle.getMessage("angal.patvac.female"));
-			radioa= new JRadioButton(MessageBundle.getMessage("angal.patvac.all"));
+			radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
+			radioa= new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
 			radioa.setSelected(true);
 			group.add(radiom);
 			group.add(radiof);
@@ -526,7 +535,7 @@ public class PatVacBrowser extends ModalJFrame {
 						if ((ageFrom<0)||(ageFrom>200)) {
 							jAgeFromTextField.setText("0");
 							ageFrom = Integer.parseInt(jAgeFromTextField.getText());
-						    JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.insertvalidage"));
+							MessageDialog.error(null, "angal.patvac.insertvalidage");
 						}
 					} catch (NumberFormatException ex) {
 						jAgeFromTextField.setText("0");
@@ -560,11 +569,10 @@ public class PatVacBrowser extends ModalJFrame {
 						if ((ageTo<0)||(ageTo>200)) {
 							jAgeToTextField.setText("0");
 							ageTo = Integer.parseInt(jAgeToTextField.getText());
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.insertvalidage"));
-							
+							MessageDialog.error(null, "angal.patvac.insertvalidage");
 						}
-						if(ageFrom>ageTo){
-							JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.agefrommustbelowerthanageto"));
+						if (ageFrom>ageTo){
+							MessageDialog.error(null, "angal.patvac.agefrommustbelowerthanageto");
 							jAgeFromTextField.setText(ageTo.toString());
 							ageFrom=ageTo;
 						}
@@ -572,7 +580,6 @@ public class PatVacBrowser extends ModalJFrame {
 						jAgeToTextField.setText("0");
 						ageTo = Integer.parseInt(jAgeToTextField.getText());
 					}
-					
 				}
 				
 				public void focusGained(FocusEvent e) {
@@ -588,7 +595,6 @@ public class PatVacBrowser extends ModalJFrame {
 	 * 	
 	 * @return vaccineTypeComboBox (jComboBox)	
 	 */
-	
 	private JComboBox getComboVaccineTypes() {
 		if (vaccineTypeComboBox == null) {
 			
@@ -603,7 +609,7 @@ public class PatVacBrowser extends ModalJFrame {
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
-			if(types != null){
+			if (types != null){
 				for (VaccineType elem : types) {
 					vaccineTypeComboBox.addItem(elem);
 				}
@@ -625,10 +631,9 @@ public class PatVacBrowser extends ModalJFrame {
 	/**
 	 * This method initializes comboVaccine.
 	 * It used to display available vaccine  
-      * 
+     *
 	 * @return vaccineComboBox (JComboBox)
 	 */
-	
 	private JComboBox getComboVaccines() {
 		if (vaccineComboBox == null) {
 			vaccineComboBox = new JComboBox();
@@ -648,7 +653,7 @@ public class PatVacBrowser extends ModalJFrame {
             OHServiceExceptionUtil.showMessages(e);
         }
 
-        if(allVac != null) {
+        if (allVac != null) {
             for (Vaccine elem : allVac) {
                 vaccineComboBox.addItem(elem);
             }
@@ -662,7 +667,6 @@ public class PatVacBrowser extends ModalJFrame {
 	 * 
 	 * @return dateFrom (JPanel)
 	 */
-	
 	private CustomJDateChooser getDateFromPanel() {
 		if (dateFrom == null) {
 			GregorianCalendar now = new GregorianCalendar();
@@ -695,15 +699,15 @@ public class PatVacBrowser extends ModalJFrame {
 	}
 	
 	/**
-	 * This method initializes filterButton, which is the button that perform
+	 * This method initializes filterButton, which is the button that performs
 	 * the filtering and calls the methods to refresh the Table
 	 * 
 	 * @return filterButton (JButton)
 	 */
 	private JButton getFilterButton() {
 		if (filterButton == null) {
-			filterButton = new JButton(MessageBundle.getMessage("angal.patvac.search"));
-			filterButton.setMnemonic(KeyEvent.VK_S);
+			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
+			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
 			filterButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					
@@ -727,12 +731,12 @@ public class PatVacBrowser extends ModalJFrame {
 					}
 			        		        
 			        if (dateFrom.getDate() == null ) {
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.pleaseinsertvaliddatefrom"));
+				        MessageDialog.error(null, "angal.patvac.pleaseinsertvaliddatefrom");
 						return;
 					}
 			        
 			        if (dateTo.getDate() == null){
-						JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.patvac.pleaseinsertvaliddateto"));
+				        MessageDialog.error(null, "angal.patvac.pleaseinsertvaliddateto");
 						return;
 					}
 			        
@@ -765,18 +769,18 @@ public class PatVacBrowser extends ModalJFrame {
 			jTable = new JTable(model);
 			TableColumnModel columnModel = jTable.getColumnModel();
 			if (GeneralData.PATIENTVACCINEEXTENDED) {
-				columnModel.getColumn(0).setMinWidth(pColumwidth[0]);
-				columnModel.getColumn(1).setMinWidth(pColumwidth[1]);
-				columnModel.getColumn(2).setMinWidth(pColumwidth[2]);
-				columnModel.getColumn(3).setMinWidth(pColumwidth[3]);
-				columnModel.getColumn(4).setMinWidth(pColumwidth[4]);
-				columnModel.getColumn(5).setMinWidth(pColumwidth[5]);
+				columnModel.getColumn(0).setMinWidth(pColumnWidth[0]);
+				columnModel.getColumn(1).setMinWidth(pColumnWidth[1]);
+				columnModel.getColumn(2).setMinWidth(pColumnWidth[2]);
+				columnModel.getColumn(3).setMinWidth(pColumnWidth[3]);
+				columnModel.getColumn(4).setMinWidth(pColumnWidth[4]);
+				columnModel.getColumn(5).setMinWidth(pColumnWidth[5]);
 			} else {
-				columnModel.getColumn(0).setMinWidth(pColumwidth[0]);
-				columnModel.getColumn(1).setMaxWidth(pColumwidth[2]);
-				columnModel.getColumn(2).setMinWidth(pColumwidth[3]);
-				columnModel.getColumn(3).setMinWidth(pColumwidth[4]);
-				columnModel.getColumn(4).setMinWidth(pColumwidth[5]);
+				columnModel.getColumn(0).setMinWidth(pColumnWidth[0]);
+				columnModel.getColumn(1).setMaxWidth(pColumnWidth[2]);
+				columnModel.getColumn(2).setMinWidth(pColumnWidth[3]);
+				columnModel.getColumn(3).setMinWidth(pColumnWidth[4]);
+				columnModel.getColumn(4).setMinWidth(pColumnWidth[5]);
 			}
 		}
 		return jTable;
@@ -786,14 +790,9 @@ public class PatVacBrowser extends ModalJFrame {
 	
 	/**
 	 * This class defines the model for the Table
-	 * 
-	 * 
 	 */
-	
 	class PatVacBrowsingModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 
@@ -819,16 +818,19 @@ public class PatVacBrowser extends ModalJFrame {
 			}
 		}
 
+		@Override
 		public int getRowCount() {
 			if (lPatVac == null)
 				return 0;
 			return lPatVac.size();
 		}
-
+		
+		@Override
 		public String getColumnName(int c) {
-			return pColums[getNumber(c)];
+			return pColumns[getNumber(c)];
 		}
 
+		@Override
 		public int getColumnCount() {
 			int c = 0;
 			for (int i = 0; i < columnsVisible.length; i++) {
@@ -839,33 +841,29 @@ public class PatVacBrowser extends ModalJFrame {
 			return c;
 		}
 
-		/** 
-	     * This method converts a column number in the table
-	     * to the right number of the datas.
-	     */
-	    protected int getNumber(int col) {
-	    	// right number to return
-	        int n = col;    
-	        int i = 0;
-	        do {
-	            if (!columnsVisible[i]) {
-	            	n++;
-	            }
-	            i++;
-	        } while (i < n);
-	        // If we are on an invisible column, 
-	        // we have to go one step further
-	        while (!columnsVisible[n]) {
-	        	n++;
-	        }
-	        return n;
-	    }
-	    
 		/**
-		 * Note: We must get the objects in a reversed way because of the query
-		 * 
-		 * @see org.isf.patvac.service.PatVacIoOperations
+		 * This method converts a column number in the table 
+		 * to the right number in the data.
 		 */
+		protected int getNumber(int col) {
+			// right number to return
+			int n = col;
+			int i = 0;
+			do {
+				if (!columnsVisible[i]) {
+					n++;
+				}
+				i++;
+			} while (i < n);
+			// If we are on an invisible column,
+			// we have to go one step further
+			while (!columnsVisible[n]) {
+				n++;
+			}
+			return n;
+		}
+	    
+		@Override
 		public Object getValueAt(int r, int c) {
 			PatientVaccine patVac = lPatVac.get(r);
 			if (c == -1) {
@@ -873,20 +871,20 @@ public class PatVacBrowser extends ModalJFrame {
 			} else if (getNumber(c) == 0) {
 				return dateFormat.format(patVac.getVaccineDate().getTime());
 			} else if (getNumber(c) == 1) {
-				return patVac.getPatName();
+				return patVac.getPatient().getName();
 			} else if (getNumber(c) == 2) {
 				return patVac.getPatSex();
 			} else if (getNumber(c) == 3) {
 				return patVac.getPatAge();
 			} else if (getNumber(c) == 4) {
-			    return patVac.getVaccine().getDescription();
-		    } else if (getNumber(c) == 5) {
-			    return patVac.getVaccine().getVaccineType().getDescription();
-		    } 
+				return patVac.getVaccine().getDescription();
+			} else if (getNumber(c) == 5) {
+				return patVac.getVaccine().getVaccineType().getDescription();
+			}
 			return null;
 		}
 
-		
+		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
 		}
@@ -895,14 +893,9 @@ public class PatVacBrowser extends ModalJFrame {
 
 	public void actionPerformed(ActionEvent e) {
 		sexSelect=e.getActionCommand();
-		
 	}
 
-	/**
-	 * 
-	 */
 	private void updateRowCounter() {
 		rowCounter.setText(rowCounterText + lPatVac.size());
 	}
 }
-

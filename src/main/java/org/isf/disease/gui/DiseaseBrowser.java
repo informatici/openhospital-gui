@@ -1,16 +1,25 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.disease.gui;
-
-
-/*------------------------------------------
- * DiseaseBrowser - This class shows a list of diseases.
- * 					It is possible to filter data with a selection combo box
- * 					and edit-insert-delete records
- * -----------------------------------------
- * modification history
- * 25-gen-2006 - Rick, Vero, Pupo - first beta version
- * 03/11/2006 - ross - version is now 1.0 
- *------------------------------------------*/
-
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -18,7 +27,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -40,16 +48,23 @@ import org.isf.distype.model.DiseaseType;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
+/**
+ * ------------------------------------------
+ * DiseaseBrowser - This class shows a list of diseases.
+ * 					It is possible to filter data with a selection combo box
+ * 					and edit-insert-delete records
+ * -----------------------------------------
+ * modification history
+ * 25-gen-2006 - Rick, Vero, Pupo - first beta version
+ * 03/11/2006 - ross - version is now 1.0
+ * ------------------------------------------
+ */
 public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private static final String VERSION=MessageBundle.getMessage("angal.versione"); 
 
 	public void diseaseInserted(AWTEvent e) {
 		pDisease.add(0,disease);
@@ -72,12 +87,12 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	private JLabel selectlabel;
 	private JComboBox pbox;
 	private ArrayList<Disease> pDisease;
-	private String[] pColums = {
-			MessageBundle.getMessage("angal.common.codem"),
-			MessageBundle.getMessage("angal.disease.typem"),
-			MessageBundle.getMessage("angal.disease.namem")
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase()
 	};
-	private int[] pColumwidth = {50, 180, 200 };
+	private int[] pColumnWidth = {50, 180, 200};
 	private Disease disease;
 	private DefaultTableModel model ;
 	private JTable table;
@@ -89,14 +104,14 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	
 	public DiseaseBrowser() {
 		
-		setTitle(MessageBundle.getMessage("angal.disease.diseasesbrowser")+VERSION+")");
+		setTitle(MessageBundle.getMessage("angal.disease.diseasesbrowser.title"));
 		myFrame = this;
 		model = new DiseaseBrowserModel();
 		table = new JTable(model);
 		table.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
-		table.getColumnModel().getColumn(0).setMaxWidth(pColumwidth[0]);
-		table.getColumnModel().getColumn(1).setPreferredWidth(pColumwidth[1]);
-		table.getColumnModel().getColumn(2).setPreferredWidth(pColumwidth[2]);
+		table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+		table.getColumnModel().getColumn(1).setPreferredWidth(pColumnWidth[1]);
+		table.getColumnModel().getColumn(2).setPreferredWidth(pColumnWidth[2]);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -107,19 +122,15 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		buttonPanel.add(selectlabel);
 		
 		pbox = new JComboBox();
-		pbox.addItem(new DiseaseType("0", MessageBundle.getMessage("angal.disease.allm")));
+		pbox.addItem(new DiseaseType("0", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
 		ArrayList<DiseaseType> type = null;
 		try {
 			type = disTypeManager.getDiseaseType();
-		}catch(OHServiceException e){
-			if(e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
-		//for efficiency in the sequent for
-		if(type != null){
+		// for efficiency in the sequent for
+		if (type != null){
 			for (DiseaseType elem : type) {
 				pbox.addItem(elem);
 			}
@@ -127,7 +138,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		pbox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				pSelection = (DiseaseType) pbox.getSelectedItem();
-				if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.disease.allm")) == 0)
+				if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.common.all.txt").toLowerCase()) == 0)
 					model = new DiseaseBrowserModel();
 				else
 					model = new DiseaseBrowserModel(pSelection.getCode());
@@ -137,8 +148,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		});
 		buttonPanel.add(pbox);
 		
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new"));
-		buttonNew.setMnemonic(KeyEvent.VK_N);
+		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent event) {
@@ -150,19 +161,14 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		});
 		buttonPanel.add(buttonNew);
 		
-		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit"));
-		buttonEdit.setMnemonic(KeyEvent.VK_E);
+		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(				
-							DiseaseBrowser.this,
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {		
+					MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
+				} else {
 					selectedrow = table.getSelectedRow();
 					disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));	
 					DiseaseEdit editrecord = new DiseaseEdit(myFrame,disease,false);
@@ -173,46 +179,33 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		});
 		buttonPanel.add(buttonEdit);
 		
-		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete"));
-		buttonDelete.setMnemonic(KeyEvent.VK_D);
+		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(				
-							DiseaseBrowser.this,
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.PLAIN_MESSAGE);				
-					return;									
-				}else {
+					MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
+				} else {
 					selectedrow = table.getSelectedRow();
 					disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
-					int n = JOptionPane.showConfirmDialog(
-							DiseaseBrowser.this,
-							MessageBundle.getMessage("angal.disease.deletedisease") + " \""+disease.getDescription()+"\" ?",
-							MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.YES_NO_OPTION);
-					try{
-						if ((n == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))){
+					int answer = MessageDialog.yesNo(DiseaseBrowser.this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
+					try {
+						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))){
 							disease.setIpdInInclude(false);
 							disease.setIpdOutInclude(false);
 							disease.setOpdInclude(false);
 							diseaseUpdated(null);
 						}
-					}catch(OHServiceException e){
-						if(e.getMessages() != null){
-							for(OHExceptionMessage msg : e.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
-						}
+					} catch(OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
 			}
 		});
 		buttonPanel.add(buttonDelete);
 		
-		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close"));
-		buttonClose.setMnemonic(KeyEvent.VK_C);
+		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		buttonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -228,32 +221,21 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	
 	
 	class DiseaseBrowserModel extends DefaultTableModel {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		public DiseaseBrowserModel(String s) {
 			try {
 				pDisease = manager.getDisease(s);
-			}catch(OHServiceException e){
-				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 		public DiseaseBrowserModel() {
 			try {
 				pDisease = manager.getDiseaseAll();
-			}catch(OHServiceException e){
-				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 		public int getRowCount() {
@@ -263,11 +245,11 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		}
 		
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 		
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 		
 		public Object getValueAt(int r, int c) {
@@ -292,10 +274,8 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	
 	//////////////////////////////////////////////////////////////////////////////////////
 	class ColorTableCellRenderer extends DefaultTableCellRenderer
-	{  
-	   /**
-		 * 
-		 */
+	{
+
 		private static final long serialVersionUID = 1L;
 
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
@@ -303,7 +283,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	   {  
 		   Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 		   cell.setForeground(Color.BLACK);
-		   if(!((Disease)table.getValueAt(row,-1)).getIpdInInclude() &&
+		   if (!((Disease)table.getValueAt(row,-1)).getIpdInInclude() &&
 				   !((Disease)table.getValueAt(row,-1)).getIpdOutInclude() &&
 				   !((Disease)table.getValueAt(row,-1)).getOpdInclude()) {
 			   cell.setForeground(Color.GRAY);

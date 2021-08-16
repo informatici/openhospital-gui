@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.video.gui;
 
 import java.awt.Component;
@@ -39,7 +60,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                                                       final boolean isSelected,
                                                       final boolean cellHasFocus) {
             final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value != null && value instanceof Dimension) {
+            if (value instanceof Dimension) {
                 final Dimension valueAsDimension = (Dimension) value;
                 setText(String.format("%d x %d", (int) valueAsDimension.getWidth(), (int) valueAsDimension.getHeight()));
             }
@@ -54,7 +75,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                                                       final boolean isSelected,
                                                       final boolean cellHasFocus) {
             final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value != null && value instanceof Webcam) {
+            if (value instanceof Webcam) {
                 final Webcam webcam = (Webcam) value;
                 setText(webcam.getName());
             }
@@ -84,9 +105,9 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         this.allWebcams = Webcam.getWebcams();
         this.webcam = Webcam.getDefault();
 
-        this.supportedResolutions = new ArrayList<Dimension>();
+        this.supportedResolutions = new ArrayList<>();
         Collections.addAll(supportedResolutions, webcam.getDevice().getResolutions());
-        dimensionSelectionInList = new SelectionInList<Dimension>(supportedResolutions);
+        dimensionSelectionInList = new SelectionInList<>(supportedResolutions);
     }
 
     @Override
@@ -131,7 +152,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
             @Override
             public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
                 final Object newValue = propertyChangeEvent.getNewValue();
-                if (newValue != null && newValue instanceof Dimension) {
+                if (newValue instanceof Dimension) {
                     PhotoboothComponentImpl.this.stopWebcam();
 
                     LOGGER.info("Changing webcam dimension to {}", newValue);
@@ -157,7 +178,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
             @Override
             public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
                 final Object newValue = propertyChangeEvent.getNewValue();
-                if (newValue != null && newValue instanceof Webcam) {
+                if (newValue instanceof Webcam) {
                     PhotoboothComponentImpl.this.stopWebcam();
 
                     webcam = (Webcam) newValue;
