@@ -39,7 +39,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-import javax.persistence.TypedQuery;
 import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -177,7 +176,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 	private ArrayList<Disease> diseases = null;
 	protected AbstractButton searchButton;
-	private JTextField searchDiseasetextField;
 	
 	private String disease;
 	private String diseasetype;
@@ -187,7 +185,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private GregorianCalendar dateTo;
 	private int currentPageNumber;
 	private int pageSize = 100;
-	private TypedQuery<Opd> resultSet;
 
 	public JTable getJTable() {
 		if (jTable == null) {
@@ -1022,12 +1019,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		private static final long serialVersionUID = -9129145534999353730L;
 
 		public OpdBrowsingModel(String diseaseTypeCode, String diseaseCode, GregorianCalendar dateFrom, GregorianCalendar dateTo, int ageFrom, int ageTo,
-				char sex, char newPatient, int pageNumber) {
-			try {
-				pSur = manager.getOpd(diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient);
-			} catch (OHServiceException ohServiceException) {
-				MessageDialog.showExceptions(ohServiceException);
-			}
+						char sex, char newPatient, int pageNumber) {
+			pSur = manager.getOpdPaginated(diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient, pageNumber, pageSize);
 		}
 
 		public OpdBrowsingModel() {
@@ -1180,19 +1173,19 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	}
 
 	private void loadAndUpdateTable(int pageNumber) {
-		model = new OpdBrowsingModel(diseasetype,disease,getDateFrom(), getDateTo(),ageFrom,ageTo,sex,newPatient, pageNumber);
+		model = new OpdBrowsingModel(diseasetype, disease, getDateFrom(), getDateTo(), ageFrom, ageTo, sex, newPatient, pageNumber);
 		model.fireTableDataChanged();
 		jTable.updateUI();
 		rowCounter.setText(rowCounterText + pSur.size());
 		pageNumberLabel.setText(pageNumberText + (currentPageNumber + 1));
-		if(pageNumber == 0) {
+		if (pageNumber == 0) {
 			jPreviousPageButton.setEnabled(false);
 		}
 		enableNextPageButton();
 	}
 
 	private void enableNextPageButton() {
-		if(pSur.size() < pageSize) {
+		if (pSur.size() < pageSize) {
 			jNextPageButton.setEnabled(false);
 		} else {
 			jNextPageButton.setEnabled(true);
