@@ -375,7 +375,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	}
 
 	private JButton getJPreviousPageButton() {
-		if(jPreviousPageButton == null) {
+		if (jPreviousPageButton == null) {
 			jPreviousPageButton = new JButton();
 			jPreviousPageButton.setText(MessageBundle.getMessage("angal.common.previouspage"));
 			jPreviousPageButton.setMnemonic(KeyEvent.VK_PAGE_UP);
@@ -391,7 +391,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	}
 
 	private JButton getJNextPageButton() {
-		if(jNextPageButton == null) {
+		if (jNextPageButton == null) {
 			jNextPageButton = new JButton();
 			jNextPageButton.setText(MessageBundle.getMessage("angal.common.nextpage"));
 			jNextPageButton.setMnemonic(KeyEvent.VK_PAGE_DOWN);
