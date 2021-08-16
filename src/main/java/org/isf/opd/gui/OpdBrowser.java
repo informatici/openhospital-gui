@@ -1166,8 +1166,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				//TODO: to retrieve resultset size instead of assuming 1 year as limit for the warning
 				if (TimeTools.getDaysBetweenDates(dateFrom, dateTo, true) >= 360) {
 					int ok = JOptionPane.showConfirmDialog(OpdBrowser.this, 
-							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed"),
-							MessageBundle.getMessage("angal.hospital"),
+							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
+							MessageBundle.getMessage("angal.messagedialog.question.title"),
 							JOptionPane.OK_CANCEL_OPTION);
 					if (ok != JOptionPane.OK_OPTION) return;
 				}
