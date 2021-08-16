@@ -1181,10 +1181,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (pageNumber == 0) {
 			jPreviousPageButton.setEnabled(false);
 		}
-		enableNextPageButton();
+		toggleNextPageButton();
 	}
 
-	private void enableNextPageButton() {
+	private void toggleNextPageButton() {
 		if (pSur.size() < pageSize) {
 			jNextPageButton.setEnabled(false);
 		} else {
