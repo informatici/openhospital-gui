@@ -51,7 +51,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -77,6 +76,10 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.jobjects.ObjectTableModel;
+import org.isf.utils.jobjects.PaginatedTableDecorator;
+import org.isf.utils.jobjects.MyPaginatedTableDecorator;
+import org.isf.utils.jobjects.PaginationDataProvider;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.TimeTools;
 
@@ -102,12 +105,13 @@ import org.isf.utils.time.TimeTools;
  *                   - version is now 1.2.2
  * ------------------------------------------
  */
-public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, OpdEditExtended.SurgeryListener {
+public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, OpdEditExtended.SurgeryListener, PaginationDataProvider<Opd> {
 
 	private static final long serialVersionUID = 2372745781159245861L;
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-
+	private final int defaultPageSize = 100;
+	
 	private JPanel jButtonPanel = null;
 	private JPanel jContainPanel = null;
 	private int pfrmHeight;
@@ -154,6 +158,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			MessageBundle.getMessage("angal.opd.patientstatus.col").toUpperCase()
 	};
 	private List<Opd> pSur;
+	private int pSurSize;
 	private JTable jTable = null;
 	private OpdBrowsingModel model;
 	private int[] pColumnWidth = {50, 50, 70, 70, 150, 30, 30, 195, 195, 50 };
@@ -166,8 +171,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JButton filterButton = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.common.count.label") + ' ';
 	private JLabel rowCounter = null;
-	private String pageNumberText = MessageBundle.getMessage("angal.opd.pagenumber") + ": ";
-	private JLabel pageNumberLabel = null;
 	private JRadioButton radioNew;
 	private JRadioButton radioAll;
 	private final JFrame myFrame;
@@ -184,7 +187,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private GregorianCalendar dateFrom;
 	private GregorianCalendar dateTo;
 	private int currentPageNumber;
-	private int pageSize = 100;
+
+	private PaginatedTableDecorator<Opd> paginatedDecorator;
 
 	public JTable getJTable() {
 		if (jTable == null) {
@@ -259,8 +263,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			if (MainMenu.checkUserGrants("btnopdedit")) jButtonPanel.add(getJEditButton(), null);
 			if (MainMenu.checkUserGrants("btnopddel")) jButtonPanel.add(getJDeleteButton(), null);
 			jButtonPanel.add(getJCloseButton(), null);
-			jButtonPanel.add(getJPreviousPageButton(), null);
-			jButtonPanel.add(getJNextPageButton(), null);
 		}
 		return jButtonPanel;
 	}
@@ -281,7 +283,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		this.setTitle(MessageBundle.getMessage("angal.opd.opdoutpatientdepartment.title"));
 		this.setContentPane(getJContainPanel());
 		rowCounter.setText(rowCounterText + pSur.size());
-		pageNumberLabel.setText(pageNumberText + (currentPageNumber + 1));
 		validate();
 		this.setLocationRelativeTo(null);
 	}
@@ -297,7 +298,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
 			jContainPanel.add(getJSelectionPanel(), java.awt.BorderLayout.WEST);
-			jContainPanel.add(new JScrollPane(getJTable()),	java.awt.BorderLayout.CENTER);
+			paginatedDecorator = PaginatedTableDecorator.decorate(getJTable(),
+				              OpdBrowser.this, new int[]{5, 10, 20, 50, 75, 100}, defaultPageSize);
+			jContainPanel.add(paginatedDecorator.getContentPanel());
+			//jContainPanel.add(new JScrollPane(getJTable()),	java.awt.BorderLayout.CENTER);
 			validate();
 		}
 		return jContainPanel;
@@ -374,37 +378,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		return jCloseButton;
 	}
 
-	private JButton getJPreviousPageButton() {
-		if (jPreviousPageButton == null) {
-			jPreviousPageButton = new JButton();
-			jPreviousPageButton.setText(MessageBundle.getMessage("angal.common.previouspage"));
-			jPreviousPageButton.setMnemonic(KeyEvent.VK_PAGE_UP);
-			jPreviousPageButton.addActionListener(event -> {
-				loadAndUpdateTable(--currentPageNumber);
-				if (!jNextPageButton.isEnabled()) {
-					jNextPageButton.setEnabled(true);
-				}
-			});
-			jPreviousPageButton.setEnabled(false);
-		}
-		return jPreviousPageButton;
-	}
-
-	private JButton getJNextPageButton() {
-		if (jNextPageButton == null) {
-			jNextPageButton = new JButton();
-			jNextPageButton.setText(MessageBundle.getMessage("angal.common.nextpage"));
-			jNextPageButton.setMnemonic(KeyEvent.VK_PAGE_DOWN);
-			jNextPageButton.addActionListener(event -> {
-				loadAndUpdateTable(++currentPageNumber);
-				if (!jPreviousPageButton.isEnabled()) {
-					jPreviousPageButton.setEnabled(true);
-				}
-			});
-			jNextPageButton.setEnabled(false);
-		}
-		return jNextPageButton;
-	}
+	
 
 	/**
 	 * This method initializes jDeleteButton
@@ -488,7 +462,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jSelectionPanel.add(getNewPatientPanel(), null);			
 			jSelectionPanel.add(filterButtonPanel, null);
 			jSelectionPanel.add(getRowCounter(), null);
-			jSelectionPanel.add(getRowPageNumber(), null);
 		}
 		return jSelectionPanel;
 	}
@@ -500,14 +473,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			rowCounter.setAlignmentX(Component.CENTER_ALIGNMENT);
 		}
 		return rowCounter;
-	}
-
-	private JLabel getRowPageNumber() {
-		if(pageNumberLabel == null) {
-			pageNumberLabel = new JLabel();
-			pageNumberLabel.setAlignmentX(Box.CENTER_ALIGNMENT);
-		}
-		return pageNumberLabel;
 	}
 
 	private JPanel getDateFromPanel() {
@@ -1014,13 +979,20 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		return jAgePanel;
 	}
 
-	class OpdBrowsingModel extends DefaultTableModel {
+	class OpdBrowsingModel extends ObjectTableModel<Opd>  {
 
 		private static final long serialVersionUID = -9129145534999353730L;
 
 		public OpdBrowsingModel(String diseaseTypeCode, String diseaseCode, GregorianCalendar dateFrom, GregorianCalendar dateTo, int ageFrom, int ageTo,
-						char sex, char newPatient, int pageNumber) {
-			pSur = manager.getOpdPaginated(diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient, pageNumber, pageSize);
+						char sex, char newPatient, int pageNumber, int pageSize) {
+			pSur = manager.getOpdPaginated(diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient, 
+							pageNumber, 
+							pageSize == 0 ? defaultPageSize : pageSize);
+			try {
+				pSurSize = manager.getOpd(diseasetype, disease, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient).size();
+			} catch (OHServiceException e) {
+				e.printStackTrace();
+			}
 		}
 
 		public OpdBrowsingModel() {
@@ -1049,8 +1021,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		}
 
 		@Override
-		public Object getValueAt(int r, int c) {
-			Opd opd = pSur.get(pSur.size() - r - 1);
+		public Object getValueAt(Opd opd, int c) {
+			//Opd opd = pSur.get(r);
 			Patient pat = opd.getPatient();
 			if (c == -1) {
 				return opd;
@@ -1094,6 +1066,13 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
 		}
+
+		@Override
+		public String getFieldName(int column) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 	
 	@Override
@@ -1105,7 +1084,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 		rowCounter.setText(rowCounterText + pSur.size());
-		pageNumberLabel.setText(pageNumberText + (currentPageNumber + 1));
 	}
 	
 	@Override
@@ -1116,7 +1094,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jTable.setRowSelectionInterval(0, 0);
 		}
 		rowCounter.setText(rowCounterText + pSur.size());
-		pageNumberLabel.setText(pageNumberText + (currentPageNumber + 1));
 	}
 	
 	private JButton getFilterButton() {
@@ -1156,40 +1133,47 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					return;
 				}
 				
+				try {
+					pSurSize = manager.getOpd(diseasetype, disease, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient).size();
+				} catch (OHServiceException e1) {
+					e1.printStackTrace();
+				}
+				if (getTotalRowCount() > 200) {
 				//TODO: to retrieve resultset size instead of assuming 1 year as limit for the warning
-				if (TimeTools.getDaysBetweenDates(dateFrom, dateTo, true) >= 360) {
+				//if (TimeTools.getDaysBetweenDates(dateFrom, dateTo, true) >= 360) {
 					int ok = JOptionPane.showConfirmDialog(OpdBrowser.this, 
 							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
 							MessageBundle.getMessage("angal.messagedialog.question.title"),
 							JOptionPane.OK_CANCEL_OPTION);
 					if (ok != JOptionPane.OK_OPTION) return;
 				}
-				currentPageNumber = 0;
-				loadAndUpdateTable(currentPageNumber);
+				rowCounter.setText(rowCounterText + getTotalRowCount());
+				//currentPageNumber = 0;
+				//loadAndUpdateTable(currentPageNumber, defaultPageSize);
+				paginatedDecorator.paginate();
 
 			});
 		}
 		return filterButton;
 	}
 
-	private void loadAndUpdateTable(int pageNumber) {
-		model = new OpdBrowsingModel(diseasetype, disease, getDateFrom(), getDateTo(), ageFrom, ageTo, sex, newPatient, pageNumber);
+	public List<Opd> loadAndUpdateTable(int pageNumber, int pageSize) {
+		model = new OpdBrowsingModel(diseasetype, disease, getDateFrom(), getDateTo(), ageFrom, ageTo, sex, newPatient, pageNumber, pageSize);
 		model.fireTableDataChanged();
 		jTable.updateUI();
-		rowCounter.setText(rowCounterText + pSur.size());
-		pageNumberLabel.setText(pageNumberText + (currentPageNumber + 1));
-		if (pageNumber == 0) {
-			jPreviousPageButton.setEnabled(false);
-		}
-		toggleNextPageButton();
+		rowCounter.setText(rowCounterText + getTotalRowCount());
+		return pSur;
 	}
 
-	private void toggleNextPageButton() {
-		if (pSur.size() < pageSize) {
-			jNextPageButton.setEnabled(false);
-		} else {
-			jNextPageButton.setEnabled(true);
-		}
+	@Override
+	public int getTotalRowCount() {
+		return pSurSize;
+	}
+
+	@Override
+	public List<Opd> getRows(int pageNumber, int pageSize, int sortColumn, boolean sortDescending) {
+		model = new OpdBrowsingModel(diseasetype, disease, getDateFrom(), getDateTo(), ageFrom, ageTo, sex, newPatient, pageNumber, pageSize);
+		return pSur;
 	}
 
 } 
