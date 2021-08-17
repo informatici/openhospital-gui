@@ -2,8 +2,7 @@
  * Open Hospital (www.open-hospital.org)
  * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
- * Open Hospital is a free and open source
-							software for healthcare data management.
+ * Open Hospital is a free and open source software for healthcare data management.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +20,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -39,7 +39,6 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.event.RowSorterEvent;
-import javax.swing.event.RowSorterListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableModel;
 
@@ -53,10 +52,10 @@ public class PaginatedTableDecorator<T> {
     private JPanel pageLinkPanel;
     private PageableTableModel objectTableModel;
     private static final int MaxPagingCompToShow = 9;
-    private static final String Ellipses = "...";
+    private static final String ELLIPSES = "...";
 
     private PaginatedTableDecorator(JTable table, PaginationDataProvider<T> dataProvider,
-                                    int[] pageSizes, int defaultPageSize) {
+            int[] pageSizes, int defaultPageSize) {
         this.table = table;
         this.dataProvider = dataProvider;
         this.pageSizes = pageSizes;
@@ -64,8 +63,8 @@ public class PaginatedTableDecorator<T> {
     }
 
     public static <T> PaginatedTableDecorator<T> decorate(JTable table,
-                                                          PaginationDataProvider<T> dataProvider,
-                                                          int[] pageSizes, int defaultPageSize) {
+            PaginationDataProvider<T> dataProvider,
+            int[] pageSizes, int defaultPageSize) {
         PaginatedTableDecorator<T> decorator = new PaginatedTableDecorator<>(table, dataProvider,
                 pageSizes, defaultPageSize);
         decorator.init();
@@ -86,14 +85,11 @@ public class PaginatedTableDecorator<T> {
     private void initListeners() {
         objectTableModel.addTableModelListener(this::refreshPageButtonPanel);
         if (table.getRowSorter() != null) {
-            table.getRowSorter().addRowSorterListener(new RowSorterListener() {
-                @Override
-				public void sorterChanged(RowSorterEvent e) {
-					if (e.getType() == RowSorterEvent.Type.SORT_ORDER_CHANGED) {
-						currentPage = 1;
-						paginate();
-					}
-				}
+            table.getRowSorter().addRowSorterListener(e -> {
+                if (e.getType() == RowSorterEvent.Type.SORT_ORDER_CHANGED) {
+                    currentPage = 1;
+                    paginate();
+                }
             });
         }
     }
@@ -170,7 +166,7 @@ public class PaginatedTableDecorator<T> {
     }
 
     private Component createEllipsesComponent() {
-        return new JLabel(Ellipses, SwingConstants.CENTER);
+        return new JLabel(ELLIPSES, SwingConstants.CENTER);
     }
 
     private void addPageButtonRange(JPanel parentPanel, ButtonGroup buttonGroup, int start, int end) {

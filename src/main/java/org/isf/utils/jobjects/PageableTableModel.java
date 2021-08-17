@@ -2,8 +2,7 @@
  * Open Hospital (www.open-hospital.org)
  * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
- * Open Hospital is a free and open source
-							software for healthcare data management.
+ * Open Hospital is a free and open source software for healthcare data management.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +20,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
-import javax.swing.table.AbstractTableModel;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.table.AbstractTableModel;
 
 public abstract class PageableTableModel<T> extends AbstractTableModel {
     private List<T> objectRows = new ArrayList<>();
