@@ -29,7 +29,7 @@ public class PaginatedTableDecorator<T> {
     private int currentPageSize;
     private int currentPage = 1;
     private JPanel pageLinkPanel;
-    private ObjectTableModel objectTableModel;
+    private PageableTableModel objectTableModel;
     private static final int MaxPagingCompToShow = 9;
     private static final String Ellipses = "...";
 
@@ -78,10 +78,10 @@ public class PaginatedTableDecorator<T> {
 
     private void initDataModel() {
         TableModel model = table.getModel();
-        if (!(model instanceof ObjectTableModel)) {
+        if (!(model instanceof PageableTableModel)) {
             throw new IllegalArgumentException("TableModel must be a subclass of ObjectTableModel");
         }
-        objectTableModel = (ObjectTableModel) model;
+        objectTableModel = (PageableTableModel) model;
     }
 
     private void initPaginationComponents() {

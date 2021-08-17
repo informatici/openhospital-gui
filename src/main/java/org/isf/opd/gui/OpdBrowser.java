@@ -75,7 +75,7 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.jobjects.ObjectTableModel;
+import org.isf.utils.jobjects.PageableTableModel;
 import org.isf.utils.jobjects.PaginatedTableDecoratorFull;
 import org.isf.utils.jobjects.PaginatedTableDecoratorSimple;
 import org.isf.utils.jobjects.PaginationDataProvider;
@@ -977,7 +977,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		return jAgePanel;
 	}
 
-	class OpdBrowsingModel extends ObjectTableModel<Opd>  {
+	class OpdBrowsingModel extends PageableTableModel<Opd>  {
 
 		private static final long serialVersionUID = -9129145534999353730L;
 

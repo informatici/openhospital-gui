@@ -19,7 +19,7 @@ public class PaginatedTableDecoratorSimple<T> {
     private int currentPage = 1;
     private int lastPage = 1;
     private JPanel pageLinkPanel;
-    private ObjectTableModel objectTableModel;
+    private PageableTableModel objectTableModel;
     private JButton jFirstPageButton;
 	private JButton jPreviousPageButton;
 	private JButton jNextPageButton;
@@ -71,10 +71,10 @@ public class PaginatedTableDecoratorSimple<T> {
 
     private void initDataModel() {
         TableModel model = table.getModel();
-        if (!(model instanceof ObjectTableModel)) {
+        if (!(model instanceof PageableTableModel)) {
             throw new IllegalArgumentException("TableModel must be a subclass of ObjectTableModel");
         }
-        objectTableModel = (ObjectTableModel) model;
+        objectTableModel = (PageableTableModel) model;
     }
 
     private void initPaginationComponents() {
