@@ -1132,7 +1132,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				} catch (OHServiceException e1) {
 					e1.printStackTrace();
 				}
-				if (getTotalRowCount() > 200) {
+				if (getTotalRowCount() > defaultPageSize * 10) {
 					int ok = JOptionPane.showConfirmDialog(OpdBrowser.this, 
 							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
 							MessageBundle.getMessage("angal.messagedialog.question.title"),
