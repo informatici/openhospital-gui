@@ -181,8 +181,8 @@ public class PaginatedTableDecoratorFull<T> {
             addPageButtonRange(pageLinkPanel, buttonGroup, 1, pages);
         }
         getJLabelCurrentPage();
-		togglePreviousPageButton();
-		toggleNextPageButton();
+        togglePreviousPageButton();
+        toggleNextPageButton();
         pageLinkPanel.getParent().validate();
         pageLinkPanel.getParent().repaint();
     }
