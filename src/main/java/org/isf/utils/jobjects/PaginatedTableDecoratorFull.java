@@ -1,16 +1,29 @@
 package org.isf.utils.jobjects;
-import javax.swing.*;
-import javax.swing.event.RowSorterEvent;
-import javax.swing.event.RowSorterListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.table.TableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 
-public class PaginatedTableDecoratorSimple<T> {
+import javax.swing.Box;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.TableModel;
+
+public class PaginatedTableDecoratorFull<T> {
     private JTable table;
     private PaginationDataProvider<T> dataProvider;
     private int[] pageSizes;
@@ -25,8 +38,10 @@ public class PaginatedTableDecoratorSimple<T> {
 	private JButton jNextPageButton;
 	private JButton jLastPageButton;
 	private JLabel currentPageLabel;
+    private static final int MaxPagingCompToShow = 9;
+    private static final String Ellipses = "...";
 
-    private PaginatedTableDecoratorSimple(JTable table, PaginationDataProvider<T> dataProvider,
+    private PaginatedTableDecoratorFull(JTable table, PaginationDataProvider<T> dataProvider,
                                     int[] pageSizes, int defaultPageSize) {
         this.table = table;
         this.dataProvider = dataProvider;
@@ -34,10 +49,10 @@ public class PaginatedTableDecoratorSimple<T> {
         this.currentPageSize = defaultPageSize;
     }
 
-    public static <T> PaginatedTableDecoratorSimple<T> decorate(JTable table,
+    public static <T> PaginatedTableDecoratorFull<T> decorate(JTable table,
                                                           PaginationDataProvider<T> dataProvider,
                                                           int[] pageSizes, int defaultPageSize) {
-        PaginatedTableDecoratorSimple<T> decorator = new PaginatedTableDecoratorSimple<>(table, dataProvider,
+        PaginatedTableDecoratorFull<T> decorator = new PaginatedTableDecoratorFull<>(table, dataProvider,
                 pageSizes, defaultPageSize);
         decorator.init();
         return decorator;
@@ -86,12 +101,14 @@ public class PaginatedTableDecoratorSimple<T> {
 
     private JPanel createPaginationPanel() {
         JPanel paginationPanel = new JPanel();
-        pageLinkPanel = new JPanel(new GridLayout(1, 5, 5, 5));
-        pageLinkPanel.add(getJFirstPageButton());
-        pageLinkPanel.add(getJPreviousPageButton());
-		pageLinkPanel.add(getJLabelCurrentPage());
-		pageLinkPanel.add(getJNextPageButton());
-		pageLinkPanel.add(getJLastPageButton());
+        paginationPanel.add(getJFirstPageButton());
+        paginationPanel.add(getJPreviousPageButton());
+        paginationPanel.add(getJLabelCurrentPage());
+        paginationPanel.add(getJNextPageButton());
+        paginationPanel.add(getJLastPageButton());
+        paginationPanel.add(Box.createHorizontalStrut(15));
+        
+        pageLinkPanel = new JPanel(new GridLayout(1, MaxPagingCompToShow, 3, 3));
         paginationPanel.add(pageLinkPanel);
 
         if (pageSizes != null) {
@@ -114,11 +131,62 @@ public class PaginatedTableDecoratorSimple<T> {
     }
 
     private void refreshPageButtonPanel(TableModelEvent tme) {
-    	getJLabelCurrentPage();
-    	togglePreviousPageButton();
+        pageLinkPanel.removeAll();
+        int totalRows = dataProvider.getTotalRowCount();
+        int pages = (int) Math.ceil((double) totalRows / currentPageSize);
+        ButtonGroup buttonGroup = new ButtonGroup();
+        if (pages > MaxPagingCompToShow) {
+            addPageButton(pageLinkPanel, buttonGroup, 1);
+            if (currentPage > (pages - ((MaxPagingCompToShow + 1) / 2))) {
+                //case: 1 ... n->lastPage
+                pageLinkPanel.add(createEllipsesComponent());
+                addPageButtonRange(pageLinkPanel, buttonGroup, pages - MaxPagingCompToShow + 3, pages);
+            } else if (currentPage <= (MaxPagingCompToShow + 1) / 2) {
+                //case: 1->n ...lastPage
+                addPageButtonRange(pageLinkPanel, buttonGroup, 2, MaxPagingCompToShow - 2);
+                pageLinkPanel.add(createEllipsesComponent());
+                addPageButton(pageLinkPanel, buttonGroup, pages);
+            } else {//case: 1 .. x->n .. lastPage
+                pageLinkPanel.add(createEllipsesComponent());//first ellipses
+                //currentPage is approx mid point among total max-4 center links
+                int start = currentPage - (MaxPagingCompToShow - 4) / 2;
+                int end = start + MaxPagingCompToShow - 5;
+                addPageButtonRange(pageLinkPanel, buttonGroup, start, end);
+                pageLinkPanel.add(createEllipsesComponent());//last ellipsis
+                addPageButton(pageLinkPanel, buttonGroup, pages);//last page link
+            }
+        } else {
+            addPageButtonRange(pageLinkPanel, buttonGroup, 1, pages);
+        }
+        getJLabelCurrentPage();
+		togglePreviousPageButton();
 		toggleNextPageButton();
         pageLinkPanel.getParent().validate();
         pageLinkPanel.getParent().repaint();
+    }
+
+    private Component createEllipsesComponent() {
+        return new JLabel(Ellipses, SwingConstants.CENTER);
+    }
+
+    private void addPageButtonRange(JPanel parentPanel, ButtonGroup buttonGroup, int start, int end) {
+        for (; start <= end; start++) {
+            addPageButton(parentPanel, buttonGroup, start);
+        }
+    }
+
+    private void addPageButton(JPanel parentPanel, ButtonGroup buttonGroup, int pageNumber) {
+        JToggleButton toggleButton = new JToggleButton(Integer.toString(pageNumber));
+        toggleButton.setMargin(new Insets(1, 3, 1, 3));
+        buttonGroup.add(toggleButton);
+        parentPanel.add(toggleButton);
+        if (pageNumber == currentPage) {
+            toggleButton.setSelected(true);
+        }
+        toggleButton.addActionListener(ae -> {
+            currentPage = Integer.parseInt(ae.getActionCommand());
+            paginate();
+        });
     }
 
     public void paginate() {
