@@ -106,7 +106,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private static final long serialVersionUID = 2372745781159245861L;
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
 	private final int defaultPageSize = 100;
 	
 	private JPanel jButtonPanel = null;
@@ -397,7 +397,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				}
 
 				String message = MessageBundle.formatMessage("angal.opd.deletefollowingopd.fmt.msg",
-						dateFormat.format(opd.getDate()),
+						DATE_FORMAT.format(opd.getDate()),
 						opd.getDisease().getDescription() == null
 								? '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']'
 								: opd.getDisease().getDescription(),
@@ -1029,7 +1029,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				if (opd.getVisitDate() == null) {
 					sVisitDate = "";
 				} else {
-					sVisitDate = dateFormat.format(opd.getVisitDate().getTime());
+					sVisitDate = DATE_FORMAT.format(opd.getVisitDate().getTime());
 				}
 				return sVisitDate;
 			} else if (c == 3) {
