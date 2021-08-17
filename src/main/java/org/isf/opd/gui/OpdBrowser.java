@@ -115,8 +115,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JButton jNewButton = null;
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
-	private JButton jPreviousPageButton = null;
-	private JButton jNextPageButton = null;
 	private JButton jDeleteButton = null;
 	private JPanel jSelectionPanel = null;
 	private JPanel dateFromPanel = null;
@@ -183,7 +181,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private char newPatient;
 	private GregorianCalendar dateFrom;
 	private GregorianCalendar dateTo;
-	private int currentPageNumber;
 
 	private PaginatedTableDecoratorFull<Opd> paginatedDecorator;
 
