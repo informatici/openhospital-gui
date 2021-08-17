@@ -77,7 +77,6 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.PageableTableModel;
 import org.isf.utils.jobjects.PaginatedTableDecoratorFull;
-import org.isf.utils.jobjects.PaginatedTableDecoratorSimple;
 import org.isf.utils.jobjects.PaginationDataProvider;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
