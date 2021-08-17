@@ -56,7 +56,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -77,11 +76,9 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ObjectTableModel;
-import org.isf.utils.jobjects.PaginatedTableDecorator;
-import org.isf.utils.jobjects.MyPaginatedTableDecorator;
+import org.isf.utils.jobjects.PaginatedTableDecoratorSimple;
 import org.isf.utils.jobjects.PaginationDataProvider;
 import org.isf.utils.jobjects.VoLimitedTextField;
-import org.isf.utils.time.TimeTools;
 
 /**
  * ------------------------------------------
@@ -188,7 +185,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private GregorianCalendar dateTo;
 	private int currentPageNumber;
 
-	private PaginatedTableDecorator<Opd> paginatedDecorator;
+	private PaginatedTableDecoratorSimple<Opd> paginatedDecorator;
 
 	public JTable getJTable() {
 		if (jTable == null) {
@@ -298,7 +295,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
 			jContainPanel.add(getJSelectionPanel(), java.awt.BorderLayout.WEST);
-			paginatedDecorator = PaginatedTableDecorator.decorate(getJTable(),
+			paginatedDecorator = PaginatedTableDecoratorSimple.decorate(getJTable(),
 				              OpdBrowser.this, new int[]{5, 10, 20, 50, 75, 100}, defaultPageSize);
 			jContainPanel.add(paginatedDecorator.getContentPanel());
 			//jContainPanel.add(new JScrollPane(getJTable()),	java.awt.BorderLayout.CENTER);
@@ -1139,8 +1136,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					e1.printStackTrace();
 				}
 				if (getTotalRowCount() > 200) {
-				//TODO: to retrieve resultset size instead of assuming 1 year as limit for the warning
-				//if (TimeTools.getDaysBetweenDates(dateFrom, dateTo, true) >= 360) {
 					int ok = JOptionPane.showConfirmDialog(OpdBrowser.this, 
 							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
 							MessageBundle.getMessage("angal.messagedialog.question.title"),
@@ -1148,21 +1143,11 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					if (ok != JOptionPane.OK_OPTION) return;
 				}
 				rowCounter.setText(rowCounterText + getTotalRowCount());
-				//currentPageNumber = 0;
-				//loadAndUpdateTable(currentPageNumber, defaultPageSize);
 				paginatedDecorator.paginate();
 
 			});
 		}
 		return filterButton;
-	}
-
-	public List<Opd> loadAndUpdateTable(int pageNumber, int pageSize) {
-		model = new OpdBrowsingModel(diseasetype, disease, getDateFrom(), getDateTo(), ageFrom, ageTo, sex, newPatient, pageNumber, pageSize);
-		model.fireTableDataChanged();
-		jTable.updateUI();
-		rowCounter.setText(rowCounterText + getTotalRowCount());
-		return pSur;
 	}
 
 	@Override
@@ -1171,7 +1156,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	}
 
 	@Override
-	public List<Opd> getRows(int pageNumber, int pageSize, int sortColumn, boolean sortDescending) {
+	public List<Opd> getRows(int pageNumber, int pageSize) {
 		model = new OpdBrowsingModel(diseasetype, disease, getDateFrom(), getDateTo(), ageFrom, ageTo, sex, newPatient, pageNumber, pageSize);
 		return pSur;
 	}
