@@ -108,7 +108,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private static final long serialVersionUID = 2372745781159245861L;
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy");
-	private static final int defaultPageSize = 100;
+	private static final int DEFAULT_PAGE_SIZE = 100;
 	private static final String CURRENT_YEAR = Year.now().toString();
 
 	private JPanel jButtonPanel = null;
@@ -301,7 +301,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
 			jContainPanel.add(getJSelectionPanel(), java.awt.BorderLayout.WEST);
 			paginatedDecorator = PaginatedTableDecoratorFull.decorate(getJTable(),
-				              OpdBrowser.this, new int[]{5, 10, 20, 50, 75, 100}, defaultPageSize);
+				              OpdBrowser.this, new int[]{5, 10, 20, 50, 75, 100}, DEFAULT_PAGE_SIZE);
 			jContainPanel.add(paginatedDecorator.getContentPanel());
 			validate();
 		}
@@ -992,7 +992,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						char sex, char newPatient, int pageNumber, int pageSize) {
 			pSur = manager.getOpdPaginated(diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient, 
 							pageNumber, 
-							pageSize == 0 ? defaultPageSize : pageSize);
+							pageSize == 0 ? DEFAULT_PAGE_SIZE : pageSize);
 			try {
 				pSurSize = manager.getOpd(diseasetype, disease, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient).size();
 			} catch (OHServiceException  ohServiceException) {
@@ -1149,7 +1149,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				} catch (OHServiceException  ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 				}
-				if (getTotalRowCount() > defaultPageSize * 10) {
+				if (getTotalRowCount() > DEFAULT_PAGE_SIZE * 10) {
 					int ok = JOptionPane.showConfirmDialog(OpdBrowser.this,
 							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
 							MessageBundle.getMessage("angal.messagedialog.question.title"),

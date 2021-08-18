@@ -99,7 +99,7 @@ public class PaginatedTableDecoratorSimple<T> {
 	private void initDataModel() {
 		TableModel model = table.getModel();
 		if (!(model instanceof PageableTableModel)) {
-			throw new IllegalArgumentException("TableModel must be a subclass of ObjectTableModel");
+			throw new IllegalArgumentException("TableModel must be a subclass of PageableTableModel");
 		}
 		objectTableModel = (PageableTableModel) model;
 	}
