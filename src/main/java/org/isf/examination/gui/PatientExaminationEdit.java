@@ -139,7 +139,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JComboBox jComboBoxAuscultation;
 	private JButton jButtonSave;
 	private JButton jButtonDelete;
-	private JButton jButtonCancel;
+	private JButton jButtonClose;
 	private JButton jButtonPrint;
 	private Action actionSavePatientExamination;
 	private Action actionToggleAP;
@@ -161,6 +161,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private PatientExamination patex;
 	private boolean isMale;
 	private double bmi;
+	private boolean modified;
 	
 	private static final String PATH_FEMALE_GENDER = "rsc/images/sagoma-donna-132x300.jpg"; //$NON-NLS-1$
 	private static final String PATH_MALE_GENDER = "rsc/images/sagoma-uomo-132x300.jpg"; //$NON-NLS-1$
@@ -254,7 +255,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jPanelButtons.add(getJButtonSave());
 			jPanelButtons.add(getJButtonDelete());
 			jPanelButtons.add(getJButtonPrint());
-			jPanelButtons.add(getJButtonCancel());
+			jPanelButtons.add(getJButtonClose());
 		}
 		return jPanelButtons;
 	}
@@ -310,6 +311,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		disableDiuresisVolume();
 		disableDiuresisType();
 		disableBowel();
+		modified = false;
 	}
 
 	private JPanel getJPanelExamination() {
@@ -897,6 +899,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				public void focusLost(FocusEvent e) {
 					super.focusLost(e);
 					patex.setPex_note(jTextAreaNote.getText());
+					modified = true;
 				}
 			});
 		}
@@ -965,7 +968,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				@Override
 				public void focusLost(FocusEvent e) {
 					patex.setPex_ap_min((Integer) jSpinnerAPmin.getValue());
-					
+					modified = true;
 				}
 				
 				@Override
@@ -986,7 +989,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				@Override
 				public void focusLost(FocusEvent e) {
 					patex.setPex_ap_max((Integer) jSpinnerAPmax.getValue());
-					
+					modified = true;
 				}
 				
 				@Override
@@ -1009,7 +1012,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					int hgt = Integer.parseInt(jTextFieldHGT.getText());
 					jSliderHGT.setValue(hgt);
 					patex.setPex_hgt(hgt);
-					
+					modified = true;
 				}
 				
 				@Override
@@ -1032,7 +1035,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					int diuresisVolume = Integer.parseInt(jTextFieldDiuresisVolume.getText());
 					jSliderDiuresisVolume.setValue(diuresisVolume);
 					patex.setPex_diuresis(diuresisVolume);
-					
+					modified = true;
 				}
 				
 				@Override
@@ -1055,7 +1058,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					int height = Integer.parseInt(jTextFieldHeight.getText());
 					jSliderHeight.setValue(height);
 					patex.setPex_height(height);
-					
+					modified = true;
 				}
 				
 				@Override
@@ -1078,6 +1081,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					double weight = Double.parseDouble(jTextFieldWeight.getText());
 					jSliderWeight.setValue(weight);
 					patex.setPex_weight(weight);
+					modified = true;
 				}
 				
 				@Override
@@ -1100,6 +1104,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					double temp = Double.parseDouble(jTextFieldTemp.getText());
 					jSliderTemp.setValue(temp);
 					patex.setPex_temp(temp);
+					modified = true;
 				}
 				
 				@Override
@@ -1122,6 +1127,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					double sat = Double.parseDouble(jTextFieldSaturation.getText());
 					jSliderSaturation.setValue(sat);
 					patex.setPex_sat(sat);
+					modified = true;
 				}
 				
 				@Override
@@ -1144,6 +1150,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					int hr = Integer.parseInt(jTextFieldHR.getText());
 					jSliderHR.setValue(hr);
 					patex.setPex_hr(hr);
+					modified = true;
 				}
 				
 				@Override
@@ -1164,6 +1171,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					int rr = Integer.parseInt(jTextFieldRR.getText());
 					jSliderRR.setValue(rr);
 					patex.setPex_rr(rr);
+					modified = true;
 				}
 			});
 		}
@@ -1190,10 +1198,14 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if (jSliderHeight == null) {
 			jSliderHeight = new JSlider(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX, ExaminationParameters.HEIGHT_INIT);
 			jSliderHeight.addChangeListener(e -> {
-				int value = jSliderHeight.getValue();
-				jTextFieldHeight.setText(String.valueOf(value));
-				patex.setPex_height(value);
-				updateBMI();
+				JSlider source = (JSlider)e.getSource();
+				if (!source.getValueIsAdjusting()) {
+					int value = jSliderHeight.getValue();
+					jTextFieldHeight.setText(String.valueOf(value));
+					patex.setPex_height(value);
+					updateBMI();
+					modified = true;
+				}    
 			});
 			jSliderHeight.setFocusable(false);
 		}
@@ -1204,11 +1216,14 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if (jSliderWeight == null) {
 			jSliderWeight = new ScaledJSlider(ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_MAX, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_INIT);
 			jSliderWeight.addChangeListener(e -> {
-				double value = jSliderWeight.getScaledValue();
-				//double weight = (double) value / 10;
-				jTextFieldWeight.setText(String.valueOf(value));
-				patex.setPex_weight(value);
-				updateBMI();
+				JSlider source = (JSlider) e.getSource();
+				if (!source.getValueIsAdjusting()) {
+					double value = jSliderWeight.getScaledValue();
+					jTextFieldWeight.setText(String.valueOf(value));
+					patex.setPex_weight(value);
+					updateBMI();
+					modified = true;
+				}
 			});
 			jSliderWeight.setFocusable(false);
 		}
@@ -1330,13 +1345,27 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return jButtonDelete;
 	}
 	
-	private JButton getJButtonCancel() {
-		if (jButtonCancel == null) {
-			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
-			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(e -> dispose());
+	private JButton getJButtonClose() {
+		if (jButtonClose == null) {
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			jButtonClose.addActionListener(e -> {
+				
+				//TODO: to provide a more rigorous changes inspections logic
+				if (modified) {
+					int ok = MessageDialog.yesNoCancel(PatientExaminationEdit.this, "angal.examination.savethechanges.msg");
+					if (ok == JOptionPane.YES_OPTION) {
+						jButtonSave.doClick();
+						dispose();
+					} else if (ok == JOptionPane.NO_OPTION) {
+						dispose();
+					}
+				} else {
+					dispose();
+				}
+			});
 		}
-		return jButtonCancel;
+		return jButtonClose;
 	}
 	
 	private JButton getJButtonPrint() {
@@ -1448,6 +1477,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			
 			try {
 				examManager.saveOrUpdate(patex);
+				modified = false;
 			} catch(OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -1468,6 +1498,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		patex.setPex_ap_min((Integer)jSpinnerAPmin.getValue());
 		jSpinnerAPmax.setEnabled(true);
 		patex.setPex_ap_max((Integer)jSpinnerAPmax.getValue());
+		modified = true;
 	}
 
 	private void disableAP() {
@@ -1512,6 +1543,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		} else {
 			patex.setPex_temp(null);
 		}
+		modified = true;
 	}
 
 	private void disableTemp() {
@@ -1529,6 +1561,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		} else {
 			patex.setPex_sat(null);
 		}
+		modified = true;
 	}
 
 	private void disableSaturation() {
@@ -1546,6 +1579,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		} else {
 			patex.setPex_hgt(null);
 		}
+		modified = true;
 	}
 
 	private void disableHGT() {
@@ -1557,6 +1591,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private void enableBowel() {
 		jComboBoxBowel.setEnabled(true);
 		patex.setPex_bowel_desc(examManager.getBowelDescriptionKey((String) jComboBoxBowel.getSelectedItem()));
+		modified = true;
 	}
 
 	private void disableBowel() {
@@ -1573,6 +1608,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		} else {
 			patex.setPex_diuresis(null);
 		}
+		modified = true;
 	}
 
 	private void disableDiuresisVolume() {
@@ -1584,6 +1620,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private void enableDiuresisType() {
 		jComboBoxDiuresisType.setEnabled(true);
 		patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) jComboBoxDiuresisType.getSelectedItem()));
+		modified = true;
 	}
 	
 	private void disableDiuresisType() {
@@ -1595,6 +1632,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		jSliderHR.setEnabled(true);
 		jTextFieldHR.setEnabled(true);
 		patex.setPex_hr(Integer.parseInt(jTextFieldHR.getText()));
+		modified = true;
 	}
 
 	private void disableHR() {
@@ -1679,6 +1717,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		jSliderRR.setEnabled(true);
 		jTextFieldRR.setEnabled(true);
 		patex.setPex_rr(Integer.parseInt(jTextFieldRR.getText()));
+		modified = true;
 	}
 
 	private void disableRR() {
@@ -1690,6 +1729,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private void enableAuscultation(){
 		jComboBoxAuscultation.setEnabled(true);
 		patex.setPex_auscultation(examManager.getAuscultationKey((String)jComboBoxAuscultation.getSelectedItem()));
+		modified = true;
 	}
 
 	private void disableAuscultation() {
