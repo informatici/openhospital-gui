@@ -65,7 +65,6 @@ import javax.swing.JTextField;
 import javax.swing.OverlayLayout;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
