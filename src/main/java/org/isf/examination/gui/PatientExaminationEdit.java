@@ -139,7 +139,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JComboBox jComboBoxAuscultation;
 	private JButton jButtonSave;
 	private JButton jButtonDelete;
-	private JButton jButtonCancel;
+	private JButton jButtonClose;
 	private JButton jButtonPrint;
 	private Action actionSavePatientExamination;
 	private Action actionToggleAP;
@@ -1336,10 +1336,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private JButton getJButtonClose() {
-		if (jButtonCancel == null) {
-			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
-			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jButtonCancel.addActionListener(e -> {
+		if (jButtonClose == null) {
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			jButtonClose.addActionListener(e -> {
 				
 				if (modified) {
 					int ok = MessageDialog.yesNoCancel(PatientExaminationEdit.this, "angal.examination.savethechanges.msg");
@@ -1354,7 +1354,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				}
 			});
 		}
-		return jButtonCancel;
+		return jButtonClose;
 	}
 	
 	private JButton getJButtonPrint() {
