@@ -2,8 +2,7 @@
  * Open Hospital (www.open-hospital.org)
  * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
- * Open Hospital is a free and open source
-							software for healthcare data management.
+ * Open Hospital is a free and open source software for healthcare data management.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +24,8 @@ package org.isf.utils.jobjects;
 import java.util.List;
 
 public interface PaginationDataProvider<T> {
-    int getTotalRowCount();
+
+	int getTotalRowCount();
+
 	List<T> getRows(int startPage, int pageSize);
 }
