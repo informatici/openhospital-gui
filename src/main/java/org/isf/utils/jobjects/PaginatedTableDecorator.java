@@ -44,6 +44,8 @@ import javax.swing.event.RowSorterEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableModel;
 
+import org.isf.generaldata.MessageBundle;
+
 /**
  * Idea inspired by <a href="https://www.logicbig.com/tutorials/java-swing/jtable-lazy-pagination.html">LogicBig - JTable Lazy Pagination with JPA</a><br>
  * <br>
@@ -92,13 +94,9 @@ public class PaginatedTableDecorator<T> {
 	private JButton jNextPageButton;
 	private JButton jLastPageButton;
 	private JLabel currentPageLabel;
-	private static final int MaxPagingCompToShow = 9;
+	private static final int MAX_PAGING_COMP_TO_SHOW = 9;
 	private static final String ELLIPSES = "...";
 
-	/**
-	 * 
-	
-	 */
 	private PaginatedTableDecorator(JTable table, PaginationDataProvider<T> dataProvider, int[] pageSizes, int defaultPageSize, int paginatorType) {
 		this.table = table;
 		this.dataProvider = dataProvider;
@@ -188,7 +186,7 @@ public class PaginatedTableDecorator<T> {
 
 		if (paginatorType == PAGELINK || paginatorType == PAGEBROWSER_PAGELINK) {
 
-			pageLinkPanel = new JPanel(new GridLayout(1, MaxPagingCompToShow, 3, 3));
+			pageLinkPanel = new JPanel(new GridLayout(1, MAX_PAGING_COMP_TO_SHOW, 3, 3));
 			paginationPanel.add(pageLinkPanel);
 		}
 
@@ -202,7 +200,7 @@ public class PaginatedTableDecorator<T> {
 				paginate();
 			});
 			paginationPanel.add(Box.createHorizontalStrut(15));
-			paginationPanel.add(new JLabel("Page Size: "));
+			paginationPanel.add(new JLabel(MessageBundle.getMessage("angal.common.pagesize.label")));
 			paginationPanel.add(pageComboBox);
 			pageComboBox.setSelectedItem(currentPageSize);
 		}
@@ -224,22 +222,22 @@ public class PaginatedTableDecorator<T> {
 			int totalRows = dataProvider.getTotalRowCount();
 			int pages = (int) Math.ceil((double) totalRows / currentPageSize);
 			ButtonGroup buttonGroup = new ButtonGroup();
-			if (pages > MaxPagingCompToShow) {
+			if (pages > MAX_PAGING_COMP_TO_SHOW) {
 				addPageButton(pageLinkPanel, buttonGroup, 1);
-				if (currentPage > (pages - ((MaxPagingCompToShow + 1) / 2))) {
+				if (currentPage > (pages - ((MAX_PAGING_COMP_TO_SHOW + 1) / 2))) {
 					// case: 1 ... n->lastPage
 					pageLinkPanel.add(createEllipsesComponent());
-					addPageButtonRange(pageLinkPanel, buttonGroup, pages - MaxPagingCompToShow + 3, pages);
-				} else if (currentPage <= (MaxPagingCompToShow + 1) / 2) {
+					addPageButtonRange(pageLinkPanel, buttonGroup, pages - MAX_PAGING_COMP_TO_SHOW + 3, pages);
+				} else if (currentPage <= (MAX_PAGING_COMP_TO_SHOW + 1) / 2) {
 					// case: 1->n ...lastPage
-					addPageButtonRange(pageLinkPanel, buttonGroup, 2, MaxPagingCompToShow - 2);
+					addPageButtonRange(pageLinkPanel, buttonGroup, 2, MAX_PAGING_COMP_TO_SHOW - 2);
 					pageLinkPanel.add(createEllipsesComponent());
 					addPageButton(pageLinkPanel, buttonGroup, pages);
 				} else {// case: 1 .. x->n .. lastPage
 					pageLinkPanel.add(createEllipsesComponent());// first ellipses
 					// currentPage is approx mid point among total max-4 center links
-					int start = currentPage - (MaxPagingCompToShow - 4) / 2;
-					int end = start + MaxPagingCompToShow - 5;
+					int start = currentPage - (MAX_PAGING_COMP_TO_SHOW - 4) / 2;
+					int end = start + MAX_PAGING_COMP_TO_SHOW - 5;
 					addPageButtonRange(pageLinkPanel, buttonGroup, start, end);
 					pageLinkPanel.add(createEllipsesComponent());// last ellipsis
 					addPageButton(pageLinkPanel, buttonGroup, pages);// last page link
@@ -287,7 +285,7 @@ public class PaginatedTableDecorator<T> {
 		if (currentPageLabel == null) {
 			currentPageLabel = new JLabel();
 		}
-		currentPageLabel.setText("Page " + currentPage + " / " + lastPage);
+		currentPageLabel.setText(MessageBundle.formatMessage("angal.common.page.range.fmt", currentPage, lastPage));
 		return currentPageLabel;
 	}
 
