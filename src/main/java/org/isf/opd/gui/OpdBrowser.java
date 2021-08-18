@@ -77,7 +77,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.PageableTableModel;
-import org.isf.utils.jobjects.PaginatedTableDecoratorFull;
+import org.isf.utils.jobjects.PaginatedTableDecorator;
 import org.isf.utils.jobjects.PaginationDataProvider;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
@@ -184,7 +184,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private GregorianCalendar dateFrom;
 	private GregorianCalendar dateTo;
 
-	private PaginatedTableDecoratorFull<Opd> paginatedDecorator;
+	private PaginatedTableDecorator<Opd> paginatedDecorator;
 
 	public JTable getJTable() {
 		if (jTable == null) {
@@ -300,8 +300,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jContainPanel.setLayout(new BorderLayout());
 			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
 			jContainPanel.add(getJSelectionPanel(), java.awt.BorderLayout.WEST);
-			paginatedDecorator = PaginatedTableDecoratorFull.decorate(getJTable(),
-				              OpdBrowser.this, new int[]{5, 10, 20, 50, 75, 100}, DEFAULT_PAGE_SIZE);
+			paginatedDecorator = PaginatedTableDecorator.decorate(getJTable(),
+				              OpdBrowser.this, new int[]{5, 10, 20, 50, 75, 100}, DEFAULT_PAGE_SIZE, PaginatedTableDecorator.PAGEBROWSER);
 			jContainPanel.add(paginatedDecorator.getContentPanel());
 			validate();
 		}
