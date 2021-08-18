@@ -1190,14 +1190,13 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jSliderHeight = new JSlider(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX, ExaminationParameters.HEIGHT_INIT);
 			jSliderHeight.addChangeListener(e -> {
 				JSlider source = (JSlider)e.getSource();
-		        if (!source.getValueIsAdjusting()) {
-		        	System.out.println("change!");
-		        	int value = jSliderHeight.getValue();
+				if (!source.getValueIsAdjusting()) {
+					int value = jSliderHeight.getValue();
 					jTextFieldHeight.setText(String.valueOf(value));
 					patex.setPex_height(value);
 					updateBMI();
 					modified = true;
-		        }    
+				}    
 			});
 			jSliderHeight.setFocusable(false);
 		}
@@ -1208,15 +1207,14 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if (jSliderWeight == null) {
 			jSliderWeight = new ScaledJSlider(ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_MAX, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_INIT);
 			jSliderWeight.addChangeListener(e -> {
-				JSlider source = (JSlider)e.getSource();
-		        if (!source.getValueIsAdjusting()) {
-		        	System.out.println("change!");
-		        	double value = jSliderWeight.getScaledValue();
+				JSlider source = (JSlider) e.getSource();
+				if (!source.getValueIsAdjusting()) {
+					double value = jSliderWeight.getScaledValue();
 					jTextFieldWeight.setText(String.valueOf(value));
 					patex.setPex_weight(value);
 					updateBMI();
 					modified = true;
-		        }
+				}
 			});
 			jSliderWeight.setFocusable(false);
 		}
