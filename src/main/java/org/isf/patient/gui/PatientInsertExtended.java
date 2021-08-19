@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -103,8 +102,9 @@ public class PatientInsertExtended extends JDialog {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientInsertExtended.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
-	
+
 	public interface PatientListener extends EventListener {
+
 		void patientUpdated(AWTEvent e);
 
 		void patientInserted(AWTEvent e);
@@ -143,14 +143,14 @@ public class PatientInsertExtended extends JDialog {
 			((PatientListener) listeners[i]).patientUpdated(event);
 		}
 	}
-	
+
 	// COMPONENTS: Main
 	private JPanel jMainPanel = null;
 	private boolean insert;
 	private boolean justSave;
 	private Patient patient;
 	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	
+
 	// COMPONENTS: Data
 	private JPanel jDataPanel = null;
 
@@ -320,12 +320,12 @@ public class PatientInsertExtended extends JDialog {
 	private JButton jCancelButton = null;
 
 	private JLabel labelRequiredFields;
-	
+
 	private PatientPhotoPanel photoPanel;
-	
 
 	/**
 	 * This method initializes
+	 *
 	 * @param owner
 	 */
 	public PatientInsertExtended(JFrame owner, Patient old, boolean inserting) {
@@ -371,7 +371,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jContainPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContainPanel() {
@@ -386,7 +386,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jMainPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJDataPanel() {
@@ -402,7 +402,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jButtonPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJButtonPanel() {
@@ -416,132 +416,51 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jOkButton
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJOkButton() {
 		if (jOkButton == null) {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jOkButton.addActionListener(new ActionListener() {
+			jOkButton.addActionListener(e -> {
+				boolean ok = true;
+				boolean result = false;
+				String firstName = jFirstNameTextField.getText().trim();
+				String secondName = jSecondNameTextField.getText().trim();
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					boolean ok = true;
-					boolean result = false;
-					String firstName = jFirstNameTextField.getText().trim();
-					String secondName = jSecondNameTextField.getText().trim();
-
-					if (firstName.equals("")) {
-						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertfirstname.msg");
-						return;
-					}
-					if (secondName.equals("")) {
-						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertsecondname.msg");
-						return;
-					}
-					if (!checkAge()) {
-						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertage");
-						return;
-					}
-					if (insert) {
-						String name = firstName + " " + secondName;
-						try {
-							if (patientManager.isNamePresent(name)) {
-								switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-									case JOptionPane.OK_OPTION:
-										ok = true;
-										break;
-									case JOptionPane.NO_OPTION:
-										ok = false;
-										break;
-								}
-							}
-						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
-						}
-						if (ok) {
-							patient.setFirstName(firstName);
-							patient.setSecondName(secondName);
-
-							if (radiof.isSelected()) {
-								patient.setSex('F');
-							} else if (radiom.isSelected()) {
-								patient.setSex('M');
-							} else {
-								MessageDialog.info(PatientInsertExtended.this, "angal.patient.pleaseselectasex.msg");
-								return;
-							}
-							patient.setTaxCode(jTaxCodeTextField.getText().trim());
-							patient.setAddress(jAddressTextField.getText().trim());
-							patient.setCity(jCityTextField.getText().trim());
-							patient.setNextKin(jNextKinTextField.getText().trim());
-							patient.setTelephone(jTelephoneTextField.getText().replaceAll(" ", ""));
-							patient.setMotherName(jMotherNameTextField.getText().trim());
-							if (jMother_Alive.isSelected()) {
-								patient.setMother('A');
-							} else {
-								if (jMother_Dead.isSelected()) {
-									patient.setMother('D');
-								} else {
-									patient.setMother('U');
-								}
-							}
-							patient.setFatherName(jFatherNameTextField.getText().trim());
-							if (jFather_Alive.isSelected()) {
-								patient.setFather('A');
-							} else {
-								if (jFather_Dead.isSelected()) {
-									patient.setFather('D');
-								} else {
-									patient.setFather('U');
-								}
-							}
-							patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
-							patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
-							patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
-							if (jInsurance_Yes.isSelected()) {
-								patient.setHasInsurance('Y');
-							} else {
-								if (jInsurance_No.isSelected()) {
-									patient.setHasInsurance('N');
-								} else {
-									patient.setHasInsurance('U');
-								}
-							}
-
-							if (jParent_Yes.isSelected()) {
-								patient.setParentTogether('Y');
-							} else {
-								if (jParent_No.isSelected()) {
-									patient.setParentTogether('N');
-								} else {
-									patient.setParentTogether('U');
-								}
-							}
-
-							patient.setNote(jNoteTextArea.getText().trim());
-
-							try {
-								patient = patientManager.savePatient(patient);
-								firePatientInserted(patient);
-								if (justSave) {
-									insert = false;
-									justSave = false;
-									PatientInsertExtended.this.requestFocus();
-								} else {
-									dispose();
-								}
-							} catch (OHServiceException ohServiceException) {
-								OHServiceExceptionUtil.showMessages(ohServiceException);
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-								LOGGER.error(ohServiceException.getMessage(), ohServiceException);
+				if (firstName.equals("")) {
+					MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertfirstname.msg");
+					return;
+				}
+				if (secondName.equals("")) {
+					MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertsecondname.msg");
+					return;
+				}
+				if (!checkAge()) {
+					MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertage");
+					return;
+				}
+				if (insert) {
+					String name = firstName + " " + secondName;
+					try {
+						if (patientManager.isNamePresent(name)) {
+							switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
+								case JOptionPane.OK_OPTION:
+									ok = true;
+									break;
+								case JOptionPane.NO_OPTION:
+									ok = false;
+									break;
 							}
 						}
-					} else {// Update
-
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
+					}
+					if (ok) {
 						patient.setFirstName(firstName);
 						patient.setSecondName(secondName);
+
 						if (radiof.isSelected()) {
 							patient.setSex('F');
 						} else if (radiom.isSelected()) {
@@ -556,7 +475,6 @@ public class PatientInsertExtended extends JDialog {
 						patient.setNextKin(jNextKinTextField.getText().trim());
 						patient.setTelephone(jTelephoneTextField.getText().replaceAll(" ", ""));
 						patient.setMotherName(jMotherNameTextField.getText().trim());
-
 						if (jMother_Alive.isSelected()) {
 							patient.setMother('A');
 						} else {
@@ -579,7 +497,6 @@ public class PatientInsertExtended extends JDialog {
 						patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
 						patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
 						patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
-
 						if (jInsurance_Yes.isSelected()) {
 							patient.setHasInsurance('Y');
 						} else {
@@ -599,16 +516,95 @@ public class PatientInsertExtended extends JDialog {
 								patient.setParentTogether('U');
 							}
 						}
+
 						patient.setNote(jNoteTextArea.getText().trim());
 
 						try {
 							patient = patientManager.savePatient(patient);
-							firePatientUpdated(patient);
-							dispose();
-						} catch (final OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
+							firePatientInserted(patient);
+							if (justSave) {
+								insert = false;
+								justSave = false;
+								PatientInsertExtended.this.requestFocus();
+							} else {
+								dispose();
+							}
+						} catch (OHServiceException ohServiceException) {
+							OHServiceExceptionUtil.showMessages(ohServiceException);
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 						}
+					}
+				} else {// Update
+
+					patient.setFirstName(firstName);
+					patient.setSecondName(secondName);
+					if (radiof.isSelected()) {
+						patient.setSex('F');
+					} else if (radiom.isSelected()) {
+						patient.setSex('M');
+					} else {
+						MessageDialog.info(PatientInsertExtended.this, "angal.patient.pleaseselectasex.msg");
+						return;
+					}
+					patient.setTaxCode(jTaxCodeTextField.getText().trim());
+					patient.setAddress(jAddressTextField.getText().trim());
+					patient.setCity(jCityTextField.getText().trim());
+					patient.setNextKin(jNextKinTextField.getText().trim());
+					patient.setTelephone(jTelephoneTextField.getText().replaceAll(" ", ""));
+					patient.setMotherName(jMotherNameTextField.getText().trim());
+
+					if (jMother_Alive.isSelected()) {
+						patient.setMother('A');
+					} else {
+						if (jMother_Dead.isSelected()) {
+							patient.setMother('D');
+						} else {
+							patient.setMother('U');
+						}
+					}
+					patient.setFatherName(jFatherNameTextField.getText().trim());
+					if (jFather_Alive.isSelected()) {
+						patient.setFather('A');
+					} else {
+						if (jFather_Dead.isSelected()) {
+							patient.setFather('D');
+						} else {
+							patient.setFather('U');
+						}
+					}
+					patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
+					patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
+					patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
+
+					if (jInsurance_Yes.isSelected()) {
+						patient.setHasInsurance('Y');
+					} else {
+						if (jInsurance_No.isSelected()) {
+							patient.setHasInsurance('N');
+						} else {
+							patient.setHasInsurance('U');
+						}
+					}
+
+					if (jParent_Yes.isSelected()) {
+						patient.setParentTogether('Y');
+					} else {
+						if (jParent_No.isSelected()) {
+							patient.setParentTogether('N');
+						} else {
+							patient.setParentTogether('U');
+						}
+					}
+					patient.setNote(jNoteTextArea.getText().trim());
+
+					try {
+						patient = patientManager.savePatient(patient);
+						firePatientUpdated(patient);
+						dispose();
+					} catch (final OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				}
 			});
@@ -619,7 +615,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method checks Age insertion
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private boolean checkAge() {
@@ -646,7 +642,7 @@ public class PatientInsertExtended extends JDialog {
 					return false;
 				}
 			}
-			
+
 		} else if (jAgeType_BirthDate.isSelected()) {
 			if (cBirthDate == null) {
 				return false;
@@ -657,12 +653,12 @@ public class PatientInsertExtended extends JDialog {
 		} else if (jAgeType_Description.isSelected()) {
 			int index = jAgeDescComboBox.getSelectedIndex();
 			AgeType ageType = null;
-			
+
 			if (index > 0) {
 				try {
 					ageType = ageTypeManager.getTypeByCode(index);
-				}catch(OHServiceException e){
-                    OHServiceExceptionUtil.showMessages(e);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			} else {
 				return false;
@@ -677,7 +673,7 @@ public class PatientInsertExtended extends JDialog {
 				bdate = bdate.minusYears(years);
 			}
 		}
-		
+
 		patient.setAge(years);
 		patient.setBirthDate(bdate.toDate());
 		patient.setAgetype("");
@@ -686,36 +682,31 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jCancelButton
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJCancelButton() {
 		if (jCancelButton == null) {
 			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jCancelButton.addActionListener(new java.awt.event.ActionListener() {
-				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			jCancelButton.addActionListener(e -> dispose());
 		}
 		return jCancelButton;
 	}
 
 	/**
 	 * This method initializes jBirthDate
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJBirthDate() {
 		if (jBirthDate == null) {
 			jBirthDate = new JPanel();
 			GridBagLayout gbl_jBirthDate = new GridBagLayout();
-			gbl_jBirthDate.columnWidths = new int[]{0, 0};
-			gbl_jBirthDate.rowHeights = new int[]{0, 0};
-			gbl_jBirthDate.columnWeights = new double[]{0.0, 1.0};
-			gbl_jBirthDate.rowWeights = new double[]{0.0, 0.0};
+			gbl_jBirthDate.columnWidths = new int[] { 0, 0 };
+			gbl_jBirthDate.rowHeights = new int[] { 0, 0 };
+			gbl_jBirthDate.columnWeights = new double[] { 0.0, 1.0 };
+			gbl_jBirthDate.rowWeights = new double[] { 0.0, 0.0 };
 			jBirthDate.setLayout(gbl_jBirthDate);
 			GridBagConstraints gbc_jBirthDateLabelPanel = new GridBagConstraints();
 			gbc_jBirthDateLabelPanel.anchor = GridBagConstraints.WEST;
@@ -743,14 +734,14 @@ public class PatientInsertExtended extends JDialog {
 		}
 		return jBirthDateAge;
 	}
-	
+
 	private String formatYearsMonthsDays(int years, int months, int days) {
 		return MessageBundle.formatMessage("angal.patient.ymd.fmt.msg", years, months, days);
 	}
 
 	/**
 	 * This method initializes jBirthDateLabel
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private JLabel getJBirthDateLabel() {
@@ -763,7 +754,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jBirthDateGroupPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJBirthDateGroupPanel() {
@@ -808,7 +799,7 @@ public class PatientInsertExtended extends JDialog {
 				}
 			}
 		}
-		
+
 		if (jBirthDateGroupPanel == null) {
 			jBirthDateGroupPanel = new JPanel();
 			jBirthDateGroupPanel.setLayout(new BorderLayout());
@@ -829,15 +820,12 @@ public class PatientInsertExtended extends JDialog {
 				jBirthDateReset = new JButton();
 				jBirthDateReset.setIcon(new ImageIcon("rsc/icons/trash_button.png"));
 				jBirthDateReset.setPreferredSize(new Dimension(20, 20));
-				jBirthDateReset.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						jBirthDateChooser.getDateEditor().setDate(null);
-						/*
-						 * jAgeField.setText(""); jAgeField.setEditable(true);
-						 */
-						cBirthDate = null;
-					}
+				jBirthDateReset.addActionListener(e -> {
+					jBirthDateChooser.getDateEditor().setDate(null);
+					/*
+					 * jAgeField.setText(""); jAgeField.setEditable(true);
+					 */
+					cBirthDate = null;
 				});
 
 				jBirthDateGroupPanel.add(jBirthDateReset, BorderLayout.EAST);
@@ -854,10 +842,10 @@ public class PatientInsertExtended extends JDialog {
 		getJBirthDateAge();
 		jBirthDateAge.setText(formatYearsMonthsDays(years, months, days));
 	}
-	
+
 	/**
 	 * This method initializes jBirthDateLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJBirthDateLabelPanel() {
@@ -870,7 +858,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jFirstNameTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJFirstNameTextField() {
@@ -885,7 +873,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jSecondNamePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJSecondNamePanel() {
@@ -898,7 +886,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jSecondNameTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJSecondNameTextField() {
@@ -907,13 +895,14 @@ public class PatientInsertExtended extends JDialog {
 			if (!insert) {
 				jSecondNameTextField.setText(patient.getSecondName());
 			}
+
 		}
 		return jSecondNameTextField;
 	}
 
 	/**
 	 * This method initializes jSexPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getSexPanel() {
@@ -934,13 +923,14 @@ public class PatientInsertExtended extends JDialog {
 			sexGroup.add(radiom);
 			sexGroup.add(radiof);
 			jSexPanel.add(radiof);
+
 		}
 		return jSexPanel;
 	}
 
 	/**
 	 * This method initializes jAddressPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAddressLabelPanel() {
@@ -954,7 +944,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jTaxCodeLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTaxCodeLabelPanel() {
@@ -969,7 +959,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAddressTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJAddressTextField() {
@@ -984,7 +974,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jTaxCodeTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTaxCodeTextField() {
@@ -999,7 +989,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jCityLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJCityLabelPanel() {
@@ -1013,7 +1003,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jCityTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJCityTextField() {
@@ -1028,7 +1018,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jTelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTelPanel() {
@@ -1042,7 +1032,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jTelephoneTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTelephoneTextField() {
@@ -1059,7 +1049,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jNextKinLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJNextKinLabelPanel() {
@@ -1074,7 +1064,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jNextKinTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJNextKinTextField() {
@@ -1089,7 +1079,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jBloodTypePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJBloodTypePanel() {
@@ -1102,35 +1092,33 @@ public class PatientInsertExtended extends JDialog {
 
 			if (!insert) {
 				jBloodTypeComboBox.setSelectedItem(patient.getBloodType());
-			} 
+			}
 		}
 		return jBloodTypePanel;
 	}
 
 	/**
 	 * This method initializes jMaritalPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJMaritalPanel() {
 		if (jMaritalPanel == null) {
 			jMaritalPanel = new JPanel();
-			jMaritalPanel = setMyBorder(jMaritalPanel,  MessageBundle.getMessage("angal.patient.maritalstatus"));
+			jMaritalPanel = setMyBorder(jMaritalPanel, MessageBundle.getMessage("angal.patient.maritalstatus"));
 			jMaritalStatusComboBox = new JComboBox(patientManager.getMaritalList());
 			jMaritalPanel.add(jMaritalStatusComboBox);
 
 			if (!insert) {
 				jMaritalStatusComboBox.setSelectedItem(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
-			} 
+			}
 		}
 		return jMaritalPanel;
 	}
 
-
-	
 	/**
 	 * This method initializes jFirstNameLabel
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private JLabel getJFirstNameLabel() {
@@ -1143,7 +1131,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jSecondNameLabel
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private JLabel getJSecondNameLabel() {
@@ -1156,7 +1144,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jFirstNameLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFirstNamePanel() {
@@ -1169,7 +1157,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAnagraphPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAnagraphPanel() {
@@ -1191,7 +1179,7 @@ public class PatientInsertExtended extends JDialog {
 		}
 		return jAnagraphPanel;
 	}
-	
+
 	private JLabel getJLabelRequiredFields() {
 		if (labelRequiredFields == null) {
 			labelRequiredFields = new JLabel(MessageBundle.getMessage("angal.patient.indicatesrequiredfields"));
@@ -1202,7 +1190,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jSexLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJSexLabelPanel() {
@@ -1217,7 +1205,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jSecondNameFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJSecondNamePanel1() {
@@ -1230,7 +1218,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jFirstName
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFirstName() {
@@ -1243,10 +1231,9 @@ public class PatientInsertExtended extends JDialog {
 		return jFirstName;
 	}
 
-
 	/**
 	 * This method initializes jFirstNameFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFirstNameFieldPanel() {
@@ -1259,7 +1246,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jSecondName
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJSecondName() {
@@ -1274,7 +1261,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAgeType
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeType() {
@@ -1284,14 +1271,14 @@ public class PatientInsertExtended extends JDialog {
 			jAgeType.setLayout(new BorderLayout());
 			jAgeType.add(getJAgeTypeButtonGroup(), BorderLayout.NORTH);
 			jAgeType.add(getJAgeTypeSelection(), BorderLayout.CENTER);
-			jAgeType.setPreferredSize(new Dimension(100,100));
+			jAgeType.setPreferredSize(new Dimension(100, 100));
 		}
 		return jAgeType;
 	}
 
 	/**
 	 * This method initializes jAgeTypeButtonGroup
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeTypeButtonGroup() {
@@ -1306,14 +1293,11 @@ public class PatientInsertExtended extends JDialog {
 			jAgeTypeButtonGroup.add(getJAgeType_Description(), BorderLayout.EAST);
 			jAgeTypeButtonGroup.add(getJAgeType_BirthDatePanel(), BorderLayout.CENTER);
 
-			ActionListener sliceActionListener = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					jAgeType.remove(jAgeTypeSelection);
-					jAgeType.add(getJAgeTypeSelection());
-					jAgeType.validate();
-					jAgeType.repaint();
-				}
+			ActionListener sliceActionListener = actionEvent -> {
+				jAgeType.remove(jAgeTypeSelection);
+				jAgeType.add(getJAgeTypeSelection());
+				jAgeType.validate();
+				jAgeType.repaint();
 			};
 
 			if (!insert) {
@@ -1326,6 +1310,7 @@ public class PatientInsertExtended extends JDialog {
 				} else {
 					jAgeType_Age.setSelected(true);
 					years = patient.getAge();
+
 				}
 			} else {
 				jAgeType_Age.setSelected(true);
@@ -1351,6 +1336,7 @@ public class PatientInsertExtended extends JDialog {
 			ageType = Integer.parseInt(t1);
 
 			if (token.hasMoreTokens()) {
+
 				String token2 = token.nextToken();
 				int t2 = Integer.parseInt(token2);
 				ageTypeMonths = t2;
@@ -1364,11 +1350,11 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAgeTypeSelection
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeTypeSelection() {
-		
+
 		if (jAgeType_Age.isSelected()) {
 			jAgeTypeSelection = getJAge();
 		} else if (jAgeType_BirthDate.isSelected()) {
@@ -1381,7 +1367,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAgeType_Age
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJAgeType_Age() {
@@ -1394,7 +1380,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAgeType_BirthDate
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJAgeType_BirthDate() {
@@ -1407,7 +1393,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAgeType_Description
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJAgeType_Description() {
@@ -1420,7 +1406,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAgeType_BirthDatePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeType_BirthDatePanel() {
@@ -1433,7 +1419,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAgeDesc
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeDescription() {
@@ -1447,7 +1433,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAgeMonthsPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeMonthsPanel() {
@@ -1455,7 +1441,8 @@ public class PatientInsertExtended extends JDialog {
 			jAgeMonthsPanel = new JPanel();
 			jAgeMonthsLabel = new JLabel(MessageBundle.getMessage("angal.common.months.txt"));
 
-			String[] months = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
+			String[] months = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22",
+					"23" };
 			jAgeMonthsComboBox = new JComboBox(months);
 		}
 
@@ -1472,7 +1459,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAgeDescPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeDescPanel() {
@@ -1484,9 +1471,9 @@ public class PatientInsertExtended extends JDialog {
 			ArrayList<AgeType> ageList;
 			try {
 				ageList = ageTypeManager.getAgeType();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				ageList = new ArrayList<>();
-                OHServiceExceptionUtil.showMessages(e);
+				OHServiceExceptionUtil.showMessages(e);
 			}
 			jAgeDescComboBox.addItem("");
 			for (AgeType ag : ageList) {
@@ -1497,14 +1484,11 @@ public class PatientInsertExtended extends JDialog {
 			jAgeDescPanel.add(getJAgeMonthsPanel());
 			jAgeMonthsComboBox.setEnabled(false);
 
-			jAgeDescComboBox.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (jAgeDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn.txt")) == 0) {
-						jAgeMonthsComboBox.setEnabled(true);
-					} else {
-						jAgeMonthsComboBox.setEnabled(false);
-					}
+			jAgeDescComboBox.addActionListener(e -> {
+				if (jAgeDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn.txt")) == 0) {
+					jAgeMonthsComboBox.setEnabled(true);
+				} else {
+					jAgeMonthsComboBox.setEnabled(false);
 				}
 			});
 
@@ -1525,7 +1509,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAge
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAge() {
@@ -1543,7 +1527,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAddressFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAddressFieldPanel() {
@@ -1558,11 +1542,11 @@ public class PatientInsertExtended extends JDialog {
 		if (jAgeYears == null) {
 			jAgeYears = new JTextField("0", 3);
 			jAgeYears.addFocusListener(new FocusListener() {
-				
+
 				@Override
 				public void focusLost(FocusEvent e) {
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					JTextField thisField = (JTextField) e.getSource();
@@ -1571,21 +1555,21 @@ public class PatientInsertExtended extends JDialog {
 				}
 			});
 			if (!insert) {
-				jAgeYears.setText(""+years);
+				jAgeYears.setText("" + years);
 			}
 		}
 		return jAgeYears;
 	}
-	
+
 	private JTextField getJAgeFieldMonths() {
 		if (jAgeMonths == null) {
 			jAgeMonths = new JTextField("0", 3);
 			jAgeMonths.addFocusListener(new FocusListener() {
-				
+
 				@Override
 				public void focusLost(FocusEvent e) {
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					JTextField thisField = (JTextField) e.getSource();
@@ -1594,21 +1578,21 @@ public class PatientInsertExtended extends JDialog {
 				}
 			});
 			if (!insert) {
-				jAgeMonths.setText(""+months);
+				jAgeMonths.setText("" + months);
 			}
 		}
 		return jAgeMonths;
 	}
-	
+
 	private JTextField getJAgeFieldDays() {
 		if (jAgeDays == null) {
 			jAgeDays = new JTextField("0", 3);
 			jAgeDays.addFocusListener(new FocusListener() {
-				
+
 				@Override
 				public void focusLost(FocusEvent e) {
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					JTextField thisField = (JTextField) e.getSource();
@@ -1617,7 +1601,7 @@ public class PatientInsertExtended extends JDialog {
 				}
 			});
 			if (!insert) {
-				jAgeDays.setText(""+days);
+				jAgeDays.setText("" + days);
 			}
 		}
 		return jAgeDays;
@@ -1625,7 +1609,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jTaxCodeFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTaxCodeFieldPanel() {
@@ -1638,7 +1622,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jCityFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJCityFieldPanel() {
@@ -1651,7 +1635,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jNextKinFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJNextKinFieldPanel() {
@@ -1664,7 +1648,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jTelephoneFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTelephoneFieldPanel() {
@@ -1677,7 +1661,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jAddressPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAddressPanel() {
@@ -1693,7 +1677,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jTaxCodePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTaxCodePanel() {
@@ -1709,7 +1693,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jCity
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJCity() {
@@ -1724,7 +1708,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jNextKin
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJNextKin() {
@@ -1739,7 +1723,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jTelephone
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTelephone() {
@@ -1754,7 +1738,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jDataContainPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJDataContainPanel() {
@@ -1781,26 +1765,26 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jProfessionPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJProfessionPanel() {
 		if (jProfessionPanel == null) {
 			jProfessionPanel = new JPanel();
-			jProfessionPanel = setMyBorder(jProfessionPanel,  MessageBundle.getMessage("angal.patient.profession"));
-			jProfessionComboBox= new JComboBox(patientManager.getProfessionList());
+			jProfessionPanel = setMyBorder(jProfessionPanel, MessageBundle.getMessage("angal.patient.profession"));
+			jProfessionComboBox = new JComboBox(patientManager.getProfessionList());
 			jProfessionPanel.add(jProfessionComboBox);
 
 			if (!insert) {
 				jProfessionComboBox.setSelectedItem(patientManager.getProfessionTranslated(patient.getProfession()));
-			} 
+			}
 		}
 		return jProfessionPanel;
 	}
 
 	/**
 	 * This method initializes jFatherPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFatherPanel() {
@@ -1818,14 +1802,14 @@ public class PatientInsertExtended extends JDialog {
 			jFatherPanel.add(getJFatherOptions(), BorderLayout.CENTER);
 			if (!insert) {
 				switch (patient.getFather()) {
-				case 'D':
-					getJFather_Dead().setSelected(true);
-					break;
-				case 'A':
-					getJFather_Alive().setSelected(true);
-					break;
-				default:
-					break;
+					case 'D':
+						getJFather_Dead().setSelected(true);
+						break;
+					case 'A':
+						getJFather_Alive().setSelected(true);
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -1845,7 +1829,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jFatherDeadRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJFather_Dead() {
@@ -1857,7 +1841,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jFatherAliveRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJFather_Alive() {
@@ -1869,7 +1853,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jFather_Unknown radio button
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJFather_Unknown() {
@@ -1882,7 +1866,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jMotherPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJMotherPanel() {
@@ -1901,14 +1885,14 @@ public class PatientInsertExtended extends JDialog {
 			motherGroup.add(getJMother_Unknown());
 			if (!insert) {
 				switch (patient.getMother()) {
-				case 'D':
-					getJMother_Dead().setSelected(true);
-					break;
-				case 'A':
-					getJMother_Alive().setSelected(true);
-					break;
-				default:
-					break;
+					case 'D':
+						getJMother_Dead().setSelected(true);
+						break;
+					case 'A':
+						getJMother_Alive().setSelected(true);
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -1927,7 +1911,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jMotherDeadRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJMother_Dead() {
@@ -1939,7 +1923,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jMotherAliveRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJMother_Alive() {
@@ -1951,7 +1935,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jMotherUnknownRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJMother_Unknown() {
@@ -1964,7 +1948,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jInsurancePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJInsurancePanel() {
@@ -1976,21 +1960,21 @@ public class PatientInsertExtended extends JDialog {
 			groupPanel.add(getJInsurance_Yes());
 			groupPanel.add(getJInsurance_NoPanel());
 			groupPanel.add(getJInsurance_Unknown());
-			
+
 			insuranceGroup = new ButtonGroup();
 			insuranceGroup.add(getJInsurance_Yes());
 			insuranceGroup.add(getJInsurance_No());
 			insuranceGroup.add(getJInsurance_Unknown());
 			if (!insert) {
 				switch (patient.getHasInsurance()) {
-				case 'Y':
-					getJInsurance_Yes().setSelected(true);
-					break;
-				case 'N':
-					getJInsurance_No().setSelected(true);
-					break;
-				default:
-					break;
+					case 'Y':
+						getJInsurance_Yes().setSelected(true);
+						break;
+					case 'N':
+						getJInsurance_No().setSelected(true);
+						break;
+					default:
+						break;
 				}
 			}
 			jInsurancePanel.add(groupPanel, BorderLayout.CENTER);
@@ -2000,7 +1984,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jInsuranceYesRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJInsurance_Yes() {
@@ -2012,7 +1996,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jInsuranceNoRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJInsurance_No() {
@@ -2024,7 +2008,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jInsuranceUnknownRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJInsurance_Unknown() {
@@ -2037,7 +2021,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jParentPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJParentPanel() {
@@ -2053,14 +2037,14 @@ public class PatientInsertExtended extends JDialog {
 			jParentPanel.add(getJParent_Unknown());
 			if (!insert) {
 				switch (patient.getParentTogether()) {
-				case 'Y':
-					getJParent_Yes().setSelected(true);
-					break;
-				case 'N':
-					getJParent_No().setSelected(true);
-					break;
-				default:
-					break;
+					case 'Y':
+						getJParent_Yes().setSelected(true);
+						break;
+					case 'N':
+						getJParent_No().setSelected(true);
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -2069,7 +2053,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jParentYesRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJParent_Yes() {
@@ -2081,7 +2065,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jParentNoRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJParent_No() {
@@ -2093,7 +2077,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jParentUnknownRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJParent_Unknown() {
@@ -2106,7 +2090,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jExtensionContent
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJExtensionContent() {
@@ -2115,7 +2099,7 @@ public class PatientInsertExtended extends JDialog {
 			jExtensionContent.setLayout(new BoxLayout(getJExtensionContent(), BoxLayout.Y_AXIS));
 			jExtensionContent.add(getJBloodTypePanel(), null);
 			jExtensionContent.add(getJMaritalPanel(), null);
-			jExtensionContent.add(getJProfessionPanel(),null);
+			jExtensionContent.add(getJProfessionPanel(), null);
 			jExtensionContent.add(getJFatherPanel(), null);
 			jExtensionContent.add(getJMotherPanel(), null);
 			jExtensionContent.add(getJParentPanel(), null);
@@ -2153,7 +2137,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jFatherAlivePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFatherAlivePanel() {
@@ -2166,7 +2150,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jMotherAlivePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJMotherAlivePanel() {
@@ -2179,7 +2163,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jInsuranceNoPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJInsurance_NoPanel() {
@@ -2192,7 +2176,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jParentNoPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelNoPanel() {
@@ -2205,7 +2189,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jNoteTextArea
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JTextArea getJTextArea() {
@@ -2223,7 +2207,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jNotePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJRightPanel() {
@@ -2252,7 +2236,8 @@ public class PatientInsertExtended extends JDialog {
 			jNoteScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			jNoteScrollPane.setPreferredSize(new Dimension(200, 200));
 			jNoteScrollPane.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patient.note")), BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+					BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patient.note")),
+							BorderFactory.createEmptyBorder(5, 5, 5, 5)),
 					jNoteScrollPane.getBorder()));
 		}
 		return jNoteScrollPane;
@@ -2260,7 +2245,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jFatherNameTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJFatherNameTextField() {
@@ -2275,7 +2260,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jMotherNameTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJMotherNameTextField() {
@@ -2287,7 +2272,7 @@ public class PatientInsertExtended extends JDialog {
 		}
 		return jMotherNameTextField;
 	}
-	
+
 	public void setPatientPhoto(final BufferedImage photo) {
 		if (photo != null) {
 			PatientProfilePhoto patientProfilePhoto = new PatientProfilePhoto();

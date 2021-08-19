@@ -33,7 +33,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -2043,18 +2042,14 @@ public class PatientExaminationEdit extends ModalJFrame {
 			} else if (c == 13) {
 				if (!note.trim().isEmpty()) {
 					final IconButton button = new IconButton(new ImageIcon("rsc/icons/list_button.png"));
-					button.addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
-							noteArea.setText(note);
-							noteArea.setEditable(false);
-							JOptionPane.showMessageDialog(PatientExaminationEdit.this, 
-											new JScrollPane(noteArea), 
-											MessageBundle.getMessage("angal.examination.note"), //$NON-NLS-1$
-											JOptionPane.INFORMATION_MESSAGE);
-						}
+					button.addActionListener(arg0 -> {
+						VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
+						noteArea.setText(note);
+						noteArea.setEditable(false);
+						JOptionPane.showMessageDialog(PatientExaminationEdit.this,
+										new JScrollPane(noteArea),
+										MessageBundle.getMessage("angal.examination.note"), //$NON-NLS-1$
+										JOptionPane.INFORMATION_MESSAGE);
 					});
 					return button;
 				}

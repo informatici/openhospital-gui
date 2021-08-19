@@ -25,8 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -56,20 +54,24 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public void supplierInserted(AWTEvent e) {
 		pSupplier.add(0,supplier);
 		((SupplierBrowserModel)table.getModel()).fireTableDataChanged();
 		//table.updateUI();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 	}
 	
+	@Override
 	public void supplierUpdated(AWTEvent e) {
 		pSupplier.set(selectedrow,supplier);
 		((SupplierBrowserModel)table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow >-1)
+		if ((table.getRowCount() > 0) && selectedrow >-1) {
 			table.setRowSelectionInterval(selectedrow,selectedrow);
+		}
 		
 	}
 	
@@ -169,18 +171,15 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (table.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = table.getSelectedRow();
-						supplier = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
-						SupplierEdit editrecord = new SupplierEdit(myFrame,supplier,false);
-						editrecord.addSupplierListener(SupplierBrowser.this);
-						editrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (table.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = table.getSelectedRow();
+					supplier = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					SupplierEdit editrecord = new SupplierEdit(myFrame,supplier,false);
+					editrecord.addSupplierListener(SupplierBrowser.this);
+					editrecord.setVisible(true);
 				}
 			});
 		}
@@ -196,14 +195,11 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					supplier = new Supplier();	//operation will reference the new record
-					SupplierEdit newrecord = new SupplierEdit(myFrame,supplier,true);
-					newrecord.addSupplierListener(SupplierBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				supplier = new Supplier();	//operation will reference the new record
+				SupplierEdit newrecord = new SupplierEdit(myFrame,supplier,true);
+				newrecord.addSupplierListener(SupplierBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -218,26 +214,24 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (table.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						Supplier m = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-						if (m.getSupDeleted().equals('Y')) {
-							return;
+			jDeleteButton.addActionListener(event -> {
+				if (table.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					Supplier m = (Supplier) (((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					if (m.getSupDeleted().equals('Y')) {
+						return;
+					}
+					int answer = MessageDialog.yesNo(null, "angal.supplier.deletesupplier.fmt.msg", m.getSupName());
+					if (answer == JOptionPane.YES_OPTION) {
+						m.setSupDeleted('Y');
+						try {
+							supplierBrowserManager.saveOrUpdate(m);
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
 						}
-						int answer = MessageDialog.yesNo(null, "angal.supplier.deletesupplier.fmt.msg", m.getSupName());
-						if (answer == JOptionPane.YES_OPTION) {
-							m.setSupDeleted('Y');
-							try {
-								supplierBrowserManager.saveOrUpdate(m);
-                            } catch (OHServiceException e) {
-                                OHServiceExceptionUtil.showMessages(e);
-                            }
-							model.fireTableDataChanged();
-							table.updateUI();
-						}
+						model.fireTableDataChanged();
+						table.updateUI();
 					}
 				}
 			});
@@ -254,11 +248,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -309,20 +299,25 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
                 OHServiceExceptionUtil.showMessages(e);
             }
 		}
+		@Override
 		public int getRowCount() {
-			if (pSupplier == null)
+			if (pSupplier == null) {
 				return 0;
+			}
 			return pSupplier.size();
 		}
 		
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 		
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 		
+		@Override
 		public Object getValueAt(int r, int c) {
 			Supplier sup = pSupplier.get(r);
 			if (c == -1) {
@@ -354,7 +349,9 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 		 */
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
-			if (columnIndex == pColumns.length - 1) return Boolean.class;
+			if (columnIndex == pColumns.length - 1) {
+				return Boolean.class;
+			}
 			return super.getColumnClass(columnIndex);
 		}
 		@Override

@@ -45,24 +45,18 @@ public class PhotoboothTester {
         final Webcam webcam = Webcam.getDefault();
         final Dimension[] resolutions = webcam.getDevice().getResolutions();
         final PhotoboothPanelPresentationModel presentationModel = new PhotoboothPanelPresentationModel();
-        presentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-                final Object newValue = propertyChangeEvent.getNewValue();
-                if (newValue instanceof BufferedImage) {
-                    final BufferedImage bufferedImage = (BufferedImage) newValue;
-                    LOGGER.info("New image is being set {}x{}", bufferedImage.getWidth(), bufferedImage.getHeight());
-                }
+        presentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
+            final Object newValue = propertyChangeEvent.getNewValue();
+            if (newValue instanceof BufferedImage) {
+                final BufferedImage bufferedImage = (BufferedImage) newValue;
+                LOGGER.info("New image is being set {}x{}", bufferedImage.getWidth(), bufferedImage.getHeight());
             }
         });
-        presentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_RESOLUTION, new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-                Object newValue = propertyChangeEvent.getNewValue();
-                if (newValue instanceof Dimension) {
-                    final Dimension newDimension = (Dimension) newValue;
-                    LOGGER.info("New dimension is {}x{}", newDimension.getWidth(), newDimension.getHeight());
-                }
+        presentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_RESOLUTION, propertyChangeEvent -> {
+            Object newValue = propertyChangeEvent.getNewValue();
+            if (newValue instanceof Dimension) {
+                final Dimension newDimension = (Dimension) newValue;
+                LOGGER.info("New dimension is {}x{}", newDimension.getWidth(), newDimension.getHeight());
             }
         });
 

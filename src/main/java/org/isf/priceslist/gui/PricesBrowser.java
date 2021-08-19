@@ -25,8 +25,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -152,15 +150,12 @@ public class PricesBrowser extends ModalJFrame {
 			jPrintTableButton = new JButton(MessageBundle.getMessage("angal.priceslist.printing.btn"));
 			jPrintTableButton.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.printing.btn.key"));
 			jPrintTableButton.setVisible(true);
-			jPrintTableButton.addActionListener(new ActionListener() {
+			jPrintTableButton.addActionListener(arg0 -> {
 
-				public void actionPerformed(ActionEvent arg0) {
-					
-					try {
-						printManager.print("PriceList", listManager.convertPrice(listSelected, priceArray), 0);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e, PricesBrowser.this);
-					}
+				try {
+					printManager.print("PriceList", listManager.convertPrice(listSelected, priceArray), 0);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e, PricesBrowser.this);
 				}
 			});
 		}
@@ -172,13 +167,10 @@ public class PricesBrowser extends ModalJFrame {
 			jButtonManage = new JButton(MessageBundle.getMessage("angal.priceslist.managelists.btn"));
 			jButtonManage.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.managelists.btn.key"));
 			//jButtonManage.setEnabled(false);
-			jButtonManage.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-						ListBrowser browseList = new ListBrowser();
-						browseList.setVisible(true);
-						dispose();						
-				}
+			jButtonManage.addActionListener(event -> {
+					ListBrowser browseList = new ListBrowser();
+					browseList.setVisible(true);
+					dispose();
 			});
 			
 		}
@@ -227,12 +219,7 @@ public class PricesBrowser extends ModalJFrame {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(new ActionListener() {
-	
-				public void actionPerformed(ActionEvent event) {
-						dispose();
-				}
-			});
+			jButtonCancel.addActionListener(event -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -241,38 +228,35 @@ public class PricesBrowser extends ModalJFrame {
 		if (jButtonSave == null) {
 			jButtonSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			jButtonSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			jButtonSave.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					int option = JOptionPane.showConfirmDialog(null, 
-							   MessageBundle.getMessage("angal.priceslist.thiswillsavecurrentpricescontinue"),  //$NON-NLS-1$
-							   MessageBundle.getMessage("angal.priceslist.savelist"),  //$NON-NLS-1$
-							   JOptionPane.OK_CANCEL_OPTION);
+			jButtonSave.addActionListener(event -> {
+				int option = JOptionPane.showConfirmDialog(null,
+						MessageBundle.getMessage("angal.priceslist.thiswillsavecurrentpricescontinue"),  //$NON-NLS-1$
+						MessageBundle.getMessage("angal.priceslist.savelist"),  //$NON-NLS-1$
+						JOptionPane.OK_CANCEL_OPTION);
 
-					if (option == 0) {
-						
-						ArrayList<Price> updateList = new ArrayList<>();
-						updateList = convertTreeToArray();
-						boolean updated = false;
-						try {
-							updated = listManager.updatePrices(listSelected, updateList);
-						}catch(OHServiceException e){
-							OHServiceExceptionUtil.showMessages(e);
-						}
-						
-						if (updated) {
-							MessageDialog.info(null, "angal.priceslist.listsaved");
-							updateFromDB();
-							PriceNode root = getTreeContent();
-							jTreeTable.setModel(new PriceModel(root));
-							jTreeTable.getTree().expandRow(3);
-						    jTreeTable.getTree().expandRow(2);
-						    jTreeTable.getTree().expandRow(1);
-							validate();
-							repaint();
-						} else {
-							MessageDialog.error(null, "angal.priceslist.listcouldnotbesaved");
-						}
+				if (option == 0) {
+
+					ArrayList<Price> updateList = new ArrayList<>();
+					updateList = convertTreeToArray();
+					boolean updated = false;
+					try {
+						updated = listManager.updatePrices(listSelected, updateList);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
+
+					if (updated) {
+						MessageDialog.info(null, "angal.priceslist.listsaved");
+						updateFromDB();
+						PriceNode root = getTreeContent();
+						jTreeTable.setModel(new PriceModel(root));
+						jTreeTable.getTree().expandRow(3);
+						jTreeTable.getTree().expandRow(2);
+						jTreeTable.getTree().expandRow(1);
+						validate();
+						repaint();
+					} else {
+						MessageDialog.error(null, "angal.priceslist.listcouldnotbesaved");
 					}
 				}
 			});
@@ -332,7 +316,9 @@ public class PricesBrowser extends ModalJFrame {
 		    for (int i = 0; i< columnWidth.length; i++){
 		    	jTreeTable.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
 		    	
-		    	if (!columnsResizable[i]) jTreeTable.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
+		    	if (!columnsResizable[i]) {
+				    jTreeTable.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
+			    }
 			}
 		    jTreeTable.setAutoCreateColumnsFromModel(false); 
 		    
@@ -417,32 +403,29 @@ public class PricesBrowser extends ModalJFrame {
 				
 				jComboBoxLists.addItem(elem);
 			}
-			jComboBoxLists.addActionListener(new ActionListener() {
+			jComboBoxLists.addActionListener(e -> {
 
-				public void actionPerformed(ActionEvent e) {
-					
-					int option = JOptionPane.showConfirmDialog(null, 
-															   MessageBundle.getMessage("angal.priceslist.doyoureallywanttochangelist"),  //$NON-NLS-1$
-															   MessageBundle.getMessage("angal.priceslist.changelist"),  //$NON-NLS-1$
-															   JOptionPane.OK_CANCEL_OPTION);
-						
-					if (option == 0) {
-						listSelected = (PriceList) jComboBoxLists.getSelectedItem();
-						
-						PriceNode root = getTreeContent();
-						jTreeTable.setModel(new PriceModel(root));
-						jTreeTable.getTree().expandRow(3);
-					    jTreeTable.getTree().expandRow(2);
-					    jTreeTable.getTree().expandRow(1);
-					    
-					    updateDescription();
-						validate();
-						repaint();
-					} else {
-						jComboBoxLists.setSelectedItem(listSelected);
-					}
-				}				
-			});	
+				int option = JOptionPane.showConfirmDialog(null,
+						MessageBundle.getMessage("angal.priceslist.doyoureallywanttochangelist"),  //$NON-NLS-1$
+						MessageBundle.getMessage("angal.priceslist.changelist"),  //$NON-NLS-1$
+						JOptionPane.OK_CANCEL_OPTION);
+
+				if (option == 0) {
+					listSelected = (PriceList) jComboBoxLists.getSelectedItem();
+
+					PriceNode root = getTreeContent();
+					jTreeTable.setModel(new PriceModel(root));
+					jTreeTable.getTree().expandRow(3);
+					jTreeTable.getTree().expandRow(2);
+					jTreeTable.getTree().expandRow(1);
+
+					updateDescription();
+					validate();
+					repaint();
+				} else {
+					jComboBoxLists.setSelectedItem(listSelected);
+				}
+			});
 			listSelected = (PriceList) jComboBoxLists.getSelectedItem();
 			jComboBoxLists.setDoubleBuffered(false);
 			jComboBoxLists.setBorder(null);
