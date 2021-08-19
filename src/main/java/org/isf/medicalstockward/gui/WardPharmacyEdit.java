@@ -25,8 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -122,8 +120,9 @@ public class WardPharmacyEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = movementWardListeners.getListeners(MovementWardListeners.class);
-		for (int i = 0; i < listeners.length; i++)
+		for (int i = 0; i < listeners.length; i++) {
 			((MovementWardListeners)listeners[i]).movementUpdated(event);
+		}
 	}
 	
 	public WardPharmacyEdit(JFrame owner, MovementWard movWard, ArrayList<MedicalWard> drugList) {
@@ -131,7 +130,9 @@ public class WardPharmacyEdit extends JDialog {
 		medList = drugList;
 		movSelected = movWard;
 		initComponents();
-		if (movSelected.isPatient()) jComboBoxPatients.setSelectedItem(movWard.getPatient());
+		if (movSelected.isPatient()) {
+			jComboBoxPatients.setSelectedItem(movWard.getPatient());
+		}
 		jComboBoxDrugs.setSelectedItem(movWard.getMedical());
 		setTitle(MessageBundle.getMessage("angal.medicalstock.editwardpharmacy.title"));
 		setResizable(false);
@@ -150,6 +151,7 @@ public class WardPharmacyEdit extends JDialog {
 			jTextFieldSearchPatient.setPreferredSize(new Dimension(100,20));
 			jTextFieldSearchPatient.addKeyListener(new KeyListener() {
 
+				@Override
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
 				     if (key == KeyEvent.VK_ENTER) {
@@ -157,9 +159,11 @@ public class WardPharmacyEdit extends JDialog {
 				     }
 				}
 
+				@Override
 				public void keyReleased(KeyEvent e) {
 				}
 
+				@Override
 				public void keyTyped(KeyEvent e) {
 				}
 			});
@@ -187,24 +191,21 @@ public class WardPharmacyEdit extends JDialog {
 		}
 		return jTextFieldSearchPatient;
 	}
-	
+
 	private JButton getJSearchButton() {
 		if (jSearchButton == null) {
 			jSearchButton = new JButton();
 			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			jSearchButton.setPreferredSize(new Dimension(20, 20));
-			jSearchButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e) {
-					jComboBoxPatients.removeAllItems();
-					try {
-						pat = patBrowser.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
-					}catch(OHServiceException ex){
-						OHServiceExceptionUtil.showMessages(ex);
-						pat = new ArrayList<>();
-					}
-					getJComboBoxPatients(jTextFieldSearchPatient.getText());
+			jSearchButton.addActionListener(e -> {
+				jComboBoxPatients.removeAllItems();
+				try {
+					pat = patBrowser.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
+				} catch (OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
+					pat = new ArrayList<>();
 				}
+				getJComboBoxPatients(jTextFieldSearchPatient.getText());
 			});
 		}
 		return jSearchButton;
@@ -217,19 +218,17 @@ public class WardPharmacyEdit extends JDialog {
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/trash_button.png")); //$NON-NLS-1$
 			jButtonTrashPatient.setBorderPainted(false);
 			jButtonTrashPatient.setPreferredSize(new Dimension(20, 20));
-			jButtonTrashPatient.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (true) {
-						jTextFieldSearchPatient.setText(""); //$NON-NLS-1$
-						jComboBoxPatients.removeAllItems();
-						getJComboBoxPatients(""); //$NON-NLS-1$
-						jTextFieldSearchPatient.requestFocus();
-						movSelectedPatient = null;
-						movSelectedAge = 0;
-						movSelectedWeight = 0;
-						jAgeTextField.setText("0");
-						jWeightTextField.setText("0");
-					}
+			jButtonTrashPatient.addActionListener(e -> {
+				if (true) {
+					jTextFieldSearchPatient.setText(""); //$NON-NLS-1$
+					jComboBoxPatients.removeAllItems();
+					getJComboBoxPatients(""); //$NON-NLS-1$
+					jTextFieldSearchPatient.requestFocus();
+					movSelectedPatient = null;
+					movSelectedAge = 0;
+					movSelectedWeight = 0;
+					jAgeTextField.setText("0");
+					jWeightTextField.setText("0");
 				}
 			});
 		}	
@@ -243,7 +242,8 @@ public class WardPharmacyEdit extends JDialog {
 			jTextFieldSearchMedical.setPreferredSize(new Dimension(100,20));
 			
 			jTextFieldSearchMedical.addKeyListener(new KeyListener() {
-				public void keyTyped(KeyEvent e) 
+				@Override
+				public void keyTyped(KeyEvent e)
 				{
 					lastKey = ""; //$NON-NLS-1$
 					String s = "" + e.getKeyChar(); //$NON-NLS-1$
@@ -259,9 +259,11 @@ public class WardPharmacyEdit extends JDialog {
 	
 
 				//@Override
+				@Override
 				public void keyPressed(KeyEvent e) {}
 
 				//@Override
+				@Override
 				public void keyReleased(KeyEvent e) {}
 				
 			});
@@ -276,19 +278,16 @@ public class WardPharmacyEdit extends JDialog {
 			jButtonTrashMedical.setIcon(new ImageIcon("rsc/icons/trash_button.png")); //$NON-NLS-1$
 			jButtonTrashMedical.setBorderPainted(false);
 			jButtonTrashMedical.setPreferredSize(new Dimension(20, 20));
-			jButtonTrashMedical.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (true) {
-						jTextFieldSearchMedical.setText(""); //$NON-NLS-1$
-						jComboBoxDrugs.removeAllItems();
-						getJComboBoxDrugs(""); //$NON-NLS-1$
-						jTextFieldSearchMedical.requestFocus();
-						movSelectedMedical = null;
-					}
+			jButtonTrashMedical.addActionListener(e -> {
+				if (true) {
+					jTextFieldSearchMedical.setText(""); //$NON-NLS-1$
+					jComboBoxDrugs.removeAllItems();
+					getJComboBoxDrugs(""); //$NON-NLS-1$
+					jTextFieldSearchMedical.requestFocus();
+					movSelectedMedical = null;
 				}
 			});
-		}	
-		
+		}
 		return jButtonTrashMedical;
 	}
 
@@ -313,12 +312,7 @@ public class WardPharmacyEdit extends JDialog {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-						dispose();
-				}
-			});
+			jButtonCancel.addActionListener(event -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -327,56 +321,52 @@ public class WardPharmacyEdit extends JDialog {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			jButtonOK.addActionListener(new ActionListener() {
+			jButtonOK.addActionListener(e -> {
 
-				
-				public void actionPerformed(ActionEvent e) {
-					
-					Object item;
-					if (movSelected.isPatient()) {
-						item = jComboBoxPatients.getSelectedItem();
-						if (item instanceof Patient) {
-							movSelectedPatient = (Patient) item;
-							movSelected.setPatient(movSelectedPatient);
-							movSelected.setDescription(movSelectedPatient.getName());
-							movSelected.setAge(movSelectedAge);
-							movSelected.setWeight(movSelectedWeight);
-						} else {
-							MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
-							return;
-						}
+				Object item;
+				if (movSelected.isPatient()) {
+					item = jComboBoxPatients.getSelectedItem();
+					if (item instanceof Patient) {
+						movSelectedPatient = (Patient) item;
+						movSelected.setPatient(movSelectedPatient);
+						movSelected.setDescription(movSelectedPatient.getName());
+						movSelected.setAge(movSelectedAge);
+						movSelected.setWeight(movSelectedWeight);
 					} else {
-						movSelected.setDescription(jDescriptionTextField.getText());
-					}
-					
-					item = jComboBoxDrugs.getSelectedItem();
-					if (item instanceof Medical) {
-						movSelectedMedical = (Medical) item;
-					} else {
-						MessageDialog.error(null, "angal.medicalstockwardedit.pleaseselectadrug.msg");
+						MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 						return;
 					}
-					
-					movSelected.setMedical(movSelectedMedical);
-					movSelected.setQuantity((Double)jSpinnerQty.getValue());
-					movSelected.setUnits((String)jComboBoxType.getSelectedItem());
-					
-					boolean result;
-					try {
-						result = movWardBrowserManager.updateMovementWard(movSelected);
-					} catch (OHServiceException e1) {
-						result = false;
-						OHServiceExceptionUtil.showMessages(e1);
-					}
-					if (result) {
-						fireMovementWardUpdated();
-					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-					}
-					else {
-						dispose();
-					}
+				} else {
+					movSelected.setDescription(jDescriptionTextField.getText());
+				}
+
+				item = jComboBoxDrugs.getSelectedItem();
+				if (item instanceof Medical) {
+					movSelectedMedical = (Medical) item;
+				} else {
+					MessageDialog.error(null, "angal.medicalstockwardedit.pleaseselectadrug.msg");
+					return;
+				}
+
+				movSelected.setMedical(movSelectedMedical);
+				movSelected.setQuantity((Double)jSpinnerQty.getValue());
+				movSelected.setUnits((String)jComboBoxType.getSelectedItem());
+
+				boolean result;
+				try {
+					result = movWardBrowserManager.updateMovementWard(movSelected);
+				} catch (OHServiceException e1) {
+					result = false;
+					OHServiceExceptionUtil.showMessages(e1);
+				}
+				if (result) {
+					fireMovementWardUpdated();
+				}
+				if (!result) {
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+				}
+				else {
+					dispose();
 				}
 			});
 		}
@@ -457,8 +447,12 @@ public class WardPharmacyEdit extends JDialog {
 						a++;
 					}
 				}
-				if (a == s1.length)	jComboBoxPatients.addItem(elem);
-			} else jComboBoxPatients.addItem(elem);
+				if (a == s1.length) {
+					jComboBoxPatients.addItem(elem);
+				}
+			} else {
+				jComboBoxPatients.addItem(elem);
+			}
 		}
 		
 		//Workaround for one item only
@@ -521,6 +515,7 @@ public class WardPharmacyEdit extends JDialog {
 			jWeightTextField.setText(String.valueOf(movSelectedWeight));
 			jWeightTextField.setMinimumSize(new Dimension(100, 50));
 			jWeightTextField.addFocusListener(new FocusListener() {
+				@Override
 				public void focusLost(FocusEvent e) {
 					try {
 						movSelectedWeight = Float.parseFloat(jWeightTextField.getText());
@@ -534,6 +529,7 @@ public class WardPharmacyEdit extends JDialog {
 						jWeightTextField.setText(String.valueOf(movSelectedWeight));
 					}
 				}
+				@Override
 				public void focusGained(FocusEvent e) {
 				}
 			});
@@ -553,6 +549,7 @@ public class WardPharmacyEdit extends JDialog {
 			jAgeTextField.setText(String.valueOf(movSelectedAge));
 			jAgeTextField.setMinimumSize(new Dimension(100, 50));
 			jAgeTextField.addFocusListener(new FocusListener() {
+				@Override
 				public void focusLost(FocusEvent e) {
 					try {
 						movSelectedAge = Integer.parseInt(jAgeTextField.getText());
@@ -566,6 +563,7 @@ public class WardPharmacyEdit extends JDialog {
 						jAgeTextField.setText(String.valueOf(movSelectedAge));
 					}
 				}
+				@Override
 				public void focusGained(FocusEvent e) {
 				}
 			});
@@ -598,15 +596,16 @@ public class WardPharmacyEdit extends JDialog {
 		if (key == null || key.compareTo("") == 0) { //$NON-NLS-1$
 			jComboBoxDrugs.addItem(MessageBundle.getMessage("angal.medicalstockwardedit.selectadrug")); //$NON-NLS-1$
 		}
-		
+
 		for (MedicalWard elem : medList) {
-			if (key != null)
-			{
-				if (elem.toString().toLowerCase().contains(key.toLowerCase()))
+			if (key != null) {
+				if (elem.toString().toLowerCase().contains(key.toLowerCase())) {
 					jComboBoxDrugs.addItem(elem);
+				}
+			} else {
+				jComboBoxDrugs.addItem(elem);
 			}
-			else jComboBoxDrugs.addItem(elem);
-		
+
 		}
 		
 		//Workaround for one item only

@@ -25,8 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -56,21 +54,24 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public void wardInserted(AWTEvent e) {
 		pWard.add(0,ward);
 		((WardBrowserModel)table.getModel()).fireTableDataChanged();
 		//table.updateUI();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 	}
 	
+	@Override
 	public void wardUpdated(AWTEvent e) {
 		pWard.set(selectedrow,ward);
 		((WardBrowserModel)table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow >-1)
+		if ((table.getRowCount() > 0) && selectedrow >-1) {
 			table.setRowSelectionInterval(selectedrow,selectedrow);
-		
+		}
 	}
 	
 	private int pfrmBase = 10;
@@ -178,18 +179,15 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (table.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = table.getSelectedRow();
-						ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));	
-						WardEdit editrecord = new WardEdit(myFrame,ward,false);
-						editrecord.addWardListener(WardBrowser.this);
-						editrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (table.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = table.getSelectedRow();
+					ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					WardEdit editrecord = new WardEdit(myFrame,ward,false);
+					editrecord.addWardListener(WardBrowser.this);
+					editrecord.setVisible(true);
 				}
 			});
 		}
@@ -205,14 +203,11 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					ward=new Ward(null,"","","","",null,null,null,false,false);	//operation will reference the new record
-					WardEdit newrecord = new WardEdit(myFrame,ward,true);
-					newrecord.addWardListener(WardBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				ward=new Ward(null,"","","","",null,null,null,false,false);	//operation will reference the new record
+				WardEdit newrecord = new WardEdit(myFrame,ward,true);
+				newrecord.addWardListener(WardBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -227,23 +222,21 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (table.getSelectedRow() < 0) {
-						MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
-					} else {
-						WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-						Ward ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-						int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
-						try {
-							if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))){
-								pWard.remove(table.getSelectedRow());
-								model.fireTableDataChanged();
-								table.updateUI();
-							}
-						} catch(OHServiceException e) {
-							OHServiceExceptionUtil.showMessages(e);
+			jDeleteButton.addActionListener(event -> {
+				if (table.getSelectedRow() < 0) {
+					MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
+				} else {
+					WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+					Ward ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
+					try {
+						if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))){
+							pWard.remove(table.getSelectedRow());
+							model.fireTableDataChanged();
+							table.updateUI();
 						}
+					} catch(OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
 			});
@@ -260,11 +253,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -319,20 +308,25 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
+		@Override
 		public int getRowCount() {
-			if (pWard == null)
+			if (pWard == null) {
 				return 0;
+			}
 			return pWard.size();
 		}
 		
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 		
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 		
+		@Override
 		public Object getValueAt(int r, int c) {
 			Ward ward = pWard.get(r);
 			if (c == 0) {

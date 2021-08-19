@@ -41,8 +41,6 @@ import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.isf.dicom.manager.AbstractThumbnailViewGui;
 import org.isf.dicom.manager.DicomManagerFactory;
@@ -92,22 +90,22 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			setCellRenderer(new CellListCellRender());
 		}
 
-		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
+		getSelectionModel().addListSelectionListener(e -> {
 
-				if (thumbnailViewEnabled && !e.getValueIsAdjusting()) {
-					DefaultListSelectionModel sel = (DefaultListSelectionModel) e.getSource();
+			if (thumbnailViewEnabled && !e.getValueIsAdjusting()) {
+				DefaultListSelectionModel sel = (DefaultListSelectionModel) e.getSource();
 
-					if (sel.isSelectionEmpty())
-						disableDeleteButton();
-					else
-						enableDeleteButton((FileDicom) getModel().getElementAt(sel.getLeadSelectionIndex()));
-
+				if (sel.isSelectionEmpty()) {
+					disableDeleteButton();
+				} else {
+					enableDeleteButton((FileDicom) getModel().getElementAt(sel.getLeadSelectionIndex()));
 				}
+
 			}
 		});
 		addMouseListener(new MouseListener() {
 
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (thumbnailViewEnabled && 2 == e.getClickCount()) {
 					// double click
@@ -115,20 +113,25 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 				}
 			}
 
+			@Override
 			public void mousePressed(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 			}
 		});
 	}
 
+	@Override
 	public void initialize() {
 		loadDicomFromDB();
 		dicomViewer.enableLoadButton();
@@ -161,13 +164,15 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		} catch(OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
-		if (fdb == null)
+		if (fdb == null) {
 			fdb = new FileDicom[0];
+		}
 
 		dicomThumbsModel.clear();
 
-		for (int i = 0; i < fdb.length; i++)
+		for (int i = 0; i < fdb.length; i++) {
 			dicomThumbsModel.addInstance(fdb[i]);
+		}
 
 	}
 
@@ -182,6 +187,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 		}
 
+		@Override
 		public Object getElementAt(int index) {
 			if (index < 0) {
 				return null;
@@ -190,6 +196,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			}
 		}
 
+		@Override
 		public int getSize() {
 			return thumbnailList.size();
 		}
@@ -212,6 +219,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 	
 	private class CellListCellRender implements ListCellRenderer {
 
+		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
 			FileDicom instance = (FileDicom) value;
@@ -265,6 +273,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 	private class ImageListCellRender implements ListCellRenderer {
 
+		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
 			FileDicom instance = (FileDicom) value;
@@ -339,8 +348,9 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		String newline = " <br>";
 		StringBuilder rv = new StringBuilder("<html>");
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.patient")).append(separator).append(dicomFile.getDicomPatientName());
-		if (isValorized(dicomFile.getDicomPatientAge()))
+		if (isValorized(dicomFile.getDicomPatientAge())) {
 			rv.append("[").append(MessageBundle.getMessage("angal.common.age.txt")).append(separator).append(sanitize(dicomFile.getDicomPatientAge())).append("]");
+		}
 		rv.append(newline);
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.modality")).append(separator).append(sanitize(dicomFile.getModality()));
 		rv.append(" <br>");
@@ -352,20 +362,22 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		rv.append(" <br>");
 		rv.append(MessageBundle.getMessage("angal.common.date.txt")).append(separator).append(sanitize(TimeTools.formatDateTime(dicomFile.getDicomSeriesDate(), "dd-MM-yyyy")));
 		rv.append(" <br>");
-		if (dicomFile.getDicomType() != null)
+		if (dicomFile.getDicomType() != null) {
 			rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.category")).append(separator).append(sanitize(dicomFile.getDicomType().getDicomTypeDescription()));
-		else
+		} else {
 			rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.category")).append(separator).append("N/D");
+		}
 		rv.append(" <br>");
 		rv.append("</html>");
 		return rv.toString();
 	}
 
 	private String sanitize(String val) {
-		if (isValorized(val))
+		if (isValorized(val)) {
 			return val;
-		else
+		} else {
 			return "";
+		}
 	}
 
 	private boolean isValorized(String val) {
