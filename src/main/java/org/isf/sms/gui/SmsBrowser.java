@@ -165,15 +165,12 @@ public class SmsBrowser extends ModalJFrame {
 			jFromDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			jFromDateChooser.setDate(dateTimeAtStartOfToday.toDate());
 			jFromDateChooser.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			jFromDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
+			//$NON-NLS-1$
+			jFromDateChooser.addPropertyChangeListener("date", evt -> {
+				dateFrom = (Date) evt.getNewValue();
+				updateModel(dateFrom, dateTo);
+				updateGUI();
 
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					dateFrom = (Date) evt.getNewValue();
-					updateModel(dateFrom, dateTo);
-					updateGUI();
-					
-				} 
 			});
 		}
 		return jFromDateChooser;
@@ -185,14 +182,11 @@ public class SmsBrowser extends ModalJFrame {
 			jToDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			jToDateChooser.setDate(dateTimeAtEndOfToday.toDate());
 			jToDateChooser.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			jToDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
-
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					dateTo = (Date) evt.getNewValue();
-					updateModel(dateFrom, dateTo);
-					updateGUI();
-				} 
+			//$NON-NLS-1$
+			jToDateChooser.addPropertyChangeListener("date", evt -> {
+				dateTo = (Date) evt.getNewValue();
+				updateModel(dateFrom, dateTo);
+				updateGUI();
 			});
 		}
 		return jToDateChooser;
@@ -255,12 +249,10 @@ public class SmsBrowser extends ModalJFrame {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					new SmsEdit(SmsBrowser.this);
-					updateModel(dateFrom, dateTo);
-					updateGUI();
-				}
+			jNewButton.addActionListener(e -> {
+				new SmsEdit(SmsBrowser.this);
+				updateModel(dateFrom, dateTo);
+				updateGUI();
 			});
 		}
 		return jNewButton;
@@ -270,29 +262,27 @@ public class SmsBrowser extends ModalJFrame {
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int[] indexes = jSmsTable.getSelectedRows();
-					if (indexes.length == 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						ArrayList<Sms> smsList = new ArrayList<>();
-						int answer = MessageDialog.yesNo(null, "angal.sms.deletetheselectedsms.msg");
-						if (answer == JOptionPane.YES_OPTION) {
-							for (int i : indexes) {
-								Sms sms = (Sms) jSmsTable.getValueAt(i, -1);
-								smsList.add(sms);
-							}
+			jDeleteButton.addActionListener(e -> {
+				int[] indexes = jSmsTable.getSelectedRows();
+				if (indexes.length == 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					ArrayList<Sms> smsList = new ArrayList<>();
+					int answer = MessageDialog.yesNo(null, "angal.sms.deletetheselectedsms.msg");
+					if (answer == JOptionPane.YES_OPTION) {
+						for (int i : indexes) {
+							Sms sms = (Sms) jSmsTable.getValueAt(i, -1);
+							smsList.add(sms);
 						}
-						
-						try {
-							smsManager.delete(smsList);
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1, SmsBrowser.this);
-						}
-						updateModel(dateFrom, dateTo);
-						updateGUI();
 					}
+
+					try {
+						smsManager.delete(smsList);
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1, SmsBrowser.this);
+					}
+					updateModel(dateFrom, dateTo);
+					updateGUI();
 				}
 			});
 		}
@@ -315,11 +305,7 @@ public class SmsBrowser extends ModalJFrame {
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(e -> dispose());
 		}
 		return jCloseButton;
 	}

@@ -57,31 +57,26 @@ class SplashWindow3 extends JWindow {
 
         addMouseListener(new MouseAdapter() {
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 setVisible(false);
                 dispose();
             }
         });
         final int pause = waitTime;
-        final Runnable closerRunner = new Runnable() {
-
-            public void run() {
-                setVisible(false);
-                dispose();
-                new MainMenu();
-            }
+        final Runnable closerRunner = () -> {
+            setVisible(false);
+            dispose();
+            new MainMenu();
         };
-        Runnable waitRunner = new Runnable() {
-
-            public void run() {
-                try {
-                    Thread.sleep(pause);
-                    SwingUtilities.invokeAndWait(closerRunner);
-                } catch (Exception exception) {
-                    LOGGER.error(exception.getMessage(), exception);
-                    // can catch InvocationTargetException
-                    // can catch InterruptedException
-                }
+        Runnable waitRunner = () -> {
+            try {
+                Thread.sleep(pause);
+                SwingUtilities.invokeAndWait(closerRunner);
+            } catch (Exception exception) {
+                LOGGER.error(exception.getMessage(), exception);
+                // can catch InvocationTargetException
+                // can catch InterruptedException
             }
         };
         setVisible(true);

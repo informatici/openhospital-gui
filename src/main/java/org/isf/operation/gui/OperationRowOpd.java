@@ -28,8 +28,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -214,29 +212,19 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 		JButton btnSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 		btnSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				addToGrid();
-			}
-		});
+		btnSave.addActionListener(arg0 -> addToGrid());
 
 		JButton btnNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		btnNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		btnNew.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				clearForm();
-			}
-		});
+		btnNew.addActionListener(arg0 -> clearForm());
 		panelActions.add(btnNew);
 		panelActions.add(btnSave);
 
 		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		btnDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		btnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int index = tableData.getSelectedRow();
-				deleteOpeRow(index);
-			}
+		btnDelete.addActionListener(e -> {
+			int index = tableData.getSelectedRow();
+			deleteOpeRow(index);
 		});
 		panelActions.add(btnDelete);
 
@@ -345,8 +333,9 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		if (this.comboResult.getSelectedItem() != null) {
 			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			operationRow.setOpResult(opResult);
-		} else
+		} else {
 			operationRow.setOpResult(""); //$NON-NLS-1$
+		}
 		try {
 			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 		} catch (NumberFormatException e) {
@@ -354,8 +343,9 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		}
 		Operation op = (Operation) this.comboOperation.getSelectedItem();
 		operationRow.setOperation(op);
-		if (myOpd != null)
+		if (myOpd != null) {
 			operationRow.setOpd(myOpd);
+		}
 		operationRow.setPrescriber(MainMenu.getUser().getUserName());
 		operationRow.setRemarks(textAreaRemark.getText());
 		int index = tableData.getSelectedRow();

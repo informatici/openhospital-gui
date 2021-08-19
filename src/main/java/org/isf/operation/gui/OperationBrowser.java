@@ -26,8 +26,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -64,20 +62,24 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private static final long serialVersionUID = 1L;
 	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
+	@Override
 	public void operationInserted(AWTEvent e) {
 		pOperation.add(0, operation);
 		((OperationBrowserModel) table.getModel()).fireTableDataChanged();
 		// table.updateUI();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 	}
 
+	@Override
 	public void operationUpdated(AWTEvent e) {
 		pOperation.set(selectedrow, operation);
 		((OperationBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1)
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
+		}
 
 	}
 	
@@ -150,69 +152,60 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 
-		pbox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				pSelection = pbox.getSelectedItem().toString();
-				if (pSelection.compareTo(STR_ALL) == 0)
-					model = new OperationBrowserModel();
-				else
-					model = new OperationBrowserModel(pSelection);
-				model.fireTableDataChanged();
-				table.updateUI();
+		pbox.addActionListener(arg0 -> {
+			pSelection = pbox.getSelectedItem().toString();
+			if (pSelection.compareTo(STR_ALL) == 0) {
+				model = new OperationBrowserModel();
+			} else {
+				model = new OperationBrowserModel(pSelection);
 			}
+			model.fireTableDataChanged();
+			table.updateUI();
 		});
 		buttonPanel.add(pbox);
 
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		buttonNew.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent event) {
-				operation = new Operation(null, "", new OperationType("", ""), 0); // operation will reference the new //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-																					// record
-				OperationEdit newrecord = new OperationEdit(myFrame, operation, true);
-				newrecord.addOperationListener(OperationBrowser.this);
-				newrecord.setVisible(true);
-			}
+		buttonNew.addActionListener(event -> {
+			operation = new Operation(null, "", new OperationType("", ""), 0); // operation will reference the new //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+																				// record
+			OperationEdit newrecord = new OperationEdit(myFrame, operation, true);
+			newrecord.addOperationListener(OperationBrowser.this);
+			newrecord.setVisible(true);
 		});
 		buttonPanel.add(buttonNew);
 
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		buttonEdit.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-				} else {
-					selectedrow = table.getSelectedRow();
-					operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-					OperationEdit editrecord = new OperationEdit(myFrame, operation, false);
-					editrecord.addOperationListener(OperationBrowser.this);
-					editrecord.setVisible(true);
-				}
+		buttonEdit.addActionListener(event -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+			} else {
+				selectedrow = table.getSelectedRow();
+				operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+				OperationEdit editrecord = new OperationEdit(myFrame, operation, false);
+				editrecord.addOperationListener(OperationBrowser.this);
+				editrecord.setVisible(true);
 			}
 		});
 		buttonPanel.add(buttonEdit);
 
 		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		buttonDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-				} else {
-					Operation operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-					int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg",operation.getDescription());
-					try {
-						if ((answer == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(operation))) {
-							pOperation.remove(table.getSelectedRow());
-							model.fireTableDataChanged();
-							table.updateUI();
-						}
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
+		buttonDelete.addActionListener(event -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+			} else {
+				Operation operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg",operation.getDescription());
+				try {
+					if ((answer == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(operation))) {
+						pOperation.remove(table.getSelectedRow());
+						model.fireTableDataChanged();
+						table.updateUI();
 					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			}
 		});
@@ -220,11 +213,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		buttonClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
+		buttonClose.addActionListener(arg0 -> dispose());
 		buttonPanel.add(buttonClose);
 		add(buttonPanel, BorderLayout.SOUTH);
 
@@ -252,20 +241,25 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		}
 
+		@Override
 		public int getRowCount() {
-			if (pOperation == null)
+			if (pOperation == null) {
 				return 0;
+			}
 			return pOperation.size();
 		}
 
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			Operation operation = pOperation.get(r);
 			String p = operation.getOpeFor();

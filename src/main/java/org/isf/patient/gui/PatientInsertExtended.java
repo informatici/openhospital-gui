@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -139,8 +138,9 @@ public class PatientInsertExtended extends JDialog {
 		};
 
 		EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
-		for (int i = 0; i < listeners.length; i++)
+		for (int i = 0; i < listeners.length; i++) {
 			((PatientListener) listeners[i]).patientUpdated(event);
+		}
 	}
 	
 	// COMPONENTS: Main
@@ -357,10 +357,11 @@ public class PatientInsertExtended extends JDialog {
 	private void initialize() {
 
 		this.setContentPane(getJContainPanel());
-		if (insert)
+		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.patient.newpatient.title"));
-		else
+		} else {
 			this.setTitle(MessageBundle.getMessage("angal.patient.editpatient.title"));
+		}
 		this.setSize(new Dimension(604, 445));
 		pack();
 		setResizable(false);
@@ -421,119 +422,44 @@ public class PatientInsertExtended extends JDialog {
 		if (jOkButton == null) {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jOkButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					boolean ok = true;
-					boolean result = false;
-					String firstName = jFirstNameTextField.getText().trim();
-					String secondName = jSecondNameTextField.getText().trim();
-					
-					if (firstName.equals("")) {
-						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertfirstname.msg");
-						return;
-					}
-					if (secondName.equals("")) {
-						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertsecondname.msg");
-						return;
-					}
-					if (!checkAge()) {
-						MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertage");
-						return;
-					}
-					if (insert) {
-						String name = firstName + " " + secondName;
-						try {
-							if (patientManager.isNamePresent(name)) {
-								switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-										case JOptionPane.OK_OPTION:
-											ok = true;
-											break;
-										case JOptionPane.NO_OPTION:
-											ok = false;
-											break;
-								}
-							}
-						} catch(OHServiceException ex) {
-                            OHServiceExceptionUtil.showMessages(ex);
-						}
-						if (ok) {
-							patient.setFirstName(firstName);
-							patient.setSecondName(secondName);
+			jOkButton.addActionListener(e -> {
+				boolean ok = true;
+				boolean result = false;
+				String firstName = jFirstNameTextField.getText().trim();
+				String secondName = jSecondNameTextField.getText().trim();
 
-							if (radiof.isSelected()) {
-								patient.setSex('F');
-							} else if (radiom.isSelected()) {
-								patient.setSex('M');
-							} else {
-								MessageDialog.info(PatientInsertExtended.this, "angal.patient.pleaseselectasex.msg");
-								return;
-							}
-							patient.setTaxCode(jTaxCodeTextField.getText().trim());
-							patient.setAddress(jAddressTextField.getText().trim());
-							patient.setCity(jCityTextField.getText().trim());
-							patient.setNextKin(jNextKinTextField.getText().trim());
-							patient.setTelephone(jTelephoneTextField.getText().replaceAll(" ", ""));
-							patient.setMotherName(jMotherNameTextField.getText().trim());
-							if (jMother_Alive.isSelected()) {
-								patient.setMother('A');
-							} else {
-								if (jMother_Dead.isSelected()) {
-									patient.setMother('D');
-								} else
-									patient.setMother('U');
-							}
-							patient.setFatherName(jFatherNameTextField.getText().trim());
-							if (jFather_Alive.isSelected()) {
-								patient.setFather('A');
-							} else {
-								if (jFather_Dead.isSelected()) {
-									patient.setFather('D');
-								} else
-									patient.setFather('U');
-							}
-							patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
-							patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
-							patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
-							if (jInsurance_Yes.isSelected()) {
-								patient.setHasInsurance('Y');
-							} else {
-								if (jInsurance_No.isSelected()) {
-									patient.setHasInsurance('N');
-								} else
-									patient.setHasInsurance('U');
-							}
-
-							if (jParent_Yes.isSelected()) {
-								patient.setParentTogether('Y');
-							} else {
-								if (jParent_No.isSelected()) {
-									patient.setParentTogether('N');
-								} else
-									patient.setParentTogether('U');
-							}
-
-							patient.setNote(jNoteTextArea.getText().trim());
-
-							try{
-								patient = patientManager.savePatient(patient);
-								firePatientInserted(patient);
-								if (justSave) {
-									insert = false;
-									justSave = false;
-									PatientInsertExtended.this.requestFocus();
-								} else {
-									dispose();
-								}
-							} catch(OHServiceException ohServiceException) {
-								OHServiceExceptionUtil.showMessages(ohServiceException);
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-								LOGGER.error(ohServiceException.getMessage(), ohServiceException);
+				if (firstName.equals("")) {
+					MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertfirstname.msg");
+					return;
+				}
+				if (secondName.equals("")) {
+					MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertsecondname.msg");
+					return;
+				}
+				if (!checkAge()) {
+					MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertage");
+					return;
+				}
+				if (insert) {
+					String name = firstName + " " + secondName;
+					try {
+						if (patientManager.isNamePresent(name)) {
+							switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
+									case JOptionPane.OK_OPTION:
+										ok = true;
+										break;
+									case JOptionPane.NO_OPTION:
+										ok = false;
+										break;
 							}
 						}
-					} else {// Update
-
+					} catch(OHServiceException ex) {
+OHServiceExceptionUtil.showMessages(ex);
+					}
+					if (ok) {
 						patient.setFirstName(firstName);
 						patient.setSecondName(secondName);
+
 						if (radiof.isSelected()) {
 							patient.setSex('F');
 						} else if (radiom.isSelected()) {
@@ -548,7 +474,6 @@ public class PatientInsertExtended extends JDialog {
 						patient.setNextKin(jNextKinTextField.getText().trim());
 						patient.setTelephone(jTelephoneTextField.getText().replaceAll(" ", ""));
 						patient.setMotherName(jMotherNameTextField.getText().trim());
-
 						if (jMother_Alive.isSelected()) {
 							patient.setMother('A');
 						} else {
@@ -571,7 +496,6 @@ public class PatientInsertExtended extends JDialog {
 						patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
 						patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
 						patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
-						
 						if (jInsurance_Yes.isSelected()) {
 							patient.setHasInsurance('Y');
 						} else {
@@ -591,17 +515,95 @@ public class PatientInsertExtended extends JDialog {
 								patient.setParentTogether('U');
 							}
 						}
-						patient.setNote(jNoteTextArea.getText().trim());
 
+						patient.setNote(jNoteTextArea.getText().trim());
 
 						try{
 							patient = patientManager.savePatient(patient);
-							firePatientUpdated(patient);
-							dispose();
-						} catch(final OHServiceException ex){
-                            OHServiceExceptionUtil.showMessages(ex);
+							firePatientInserted(patient);
+							if (justSave) {
+								insert = false;
+								justSave = false;
+								PatientInsertExtended.this.requestFocus();
+							} else {
+								dispose();
+							}
+						} catch(OHServiceException ohServiceException) {
+							OHServiceExceptionUtil.showMessages(ohServiceException);
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 						}
+					}
+				} else {// Update
+
+					patient.setFirstName(firstName);
+					patient.setSecondName(secondName);
+					if (radiof.isSelected()) {
+						patient.setSex('F');
+					} else if (radiom.isSelected()) {
+						patient.setSex('M');
+					} else {
+						MessageDialog.info(PatientInsertExtended.this, "angal.patient.pleaseselectasex.msg");
+						return;
+					}
+					patient.setTaxCode(jTaxCodeTextField.getText().trim());
+					patient.setAddress(jAddressTextField.getText().trim());
+					patient.setCity(jCityTextField.getText().trim());
+					patient.setNextKin(jNextKinTextField.getText().trim());
+					patient.setTelephone(jTelephoneTextField.getText().replaceAll(" ", ""));
+					patient.setMotherName(jMotherNameTextField.getText().trim());
+
+					if (jMother_Alive.isSelected()) {
+						patient.setMother('A');
+					} else {
+						if (jMother_Dead.isSelected()) {
+							patient.setMother('D');
+						} else {
+							patient.setMother('U');
+						}
+					}
+					patient.setFatherName(jFatherNameTextField.getText().trim());
+					if (jFather_Alive.isSelected()) {
+						patient.setFather('A');
+					} else {
+						if (jFather_Dead.isSelected()) {
+							patient.setFather('D');
+						} else {
+							patient.setFather('U');
+						}
+					}
+					patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
+					patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
+					patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
+
+					if (jInsurance_Yes.isSelected()) {
+						patient.setHasInsurance('Y');
+					} else {
+						if (jInsurance_No.isSelected()) {
+							patient.setHasInsurance('N');
+						} else {
+							patient.setHasInsurance('U');
+						}
+					}
+
+					if (jParent_Yes.isSelected()) {
+						patient.setParentTogether('Y');
+					} else {
+						if (jParent_No.isSelected()) {
+							patient.setParentTogether('N');
+						} else {
+							patient.setParentTogether('U');
+						}
+					}
+					patient.setNote(jNoteTextArea.getText().trim());
+
+					try {
+						patient = patientManager.savePatient(patient);
+						firePatientUpdated(patient);
+						dispose();
+					} catch(final OHServiceException ex){
+OHServiceExceptionUtil.showMessages(ex);
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				}
 			});
@@ -622,15 +624,18 @@ public class PatientInsertExtended extends JDialog {
 				years = Integer.parseInt(jAgeYears.getText());
 				months = Integer.parseInt(jAgeMonths.getText());
 				days = Integer.parseInt(jAgeDays.getText());
-				if (years == 0 && months == 0 && days == 0) throw new NumberFormatException();
+				if (years == 0 && months == 0 && days == 0) {
+					throw new NumberFormatException();
+				}
 				bdate = bdate.minusYears(years).minusMonths(months).minusDays(days);
 
 			} catch (NumberFormatException ex1) {
 				MessageDialog.error(PatientInsertExtended.this, "angal.patient.insertvalidage.msg");
 				return false;
 			}
-			if (years < 0 || years > 200)
+			if (years < 0 || years > 200) {
 				return false;
+			}
 			if (years > 100) {
 				if (MessageDialog.yesNo(null, "angal.patient.confirmage.msg") == 1) {
 					return false;
@@ -638,8 +643,9 @@ public class PatientInsertExtended extends JDialog {
 			}
 			
 		} else if (jAgeType_BirthDate.isSelected()) {
-			if (cBirthDate == null) return false;
-			else {
+			if (cBirthDate == null) {
+				return false;
+			} else {
 				bdate = new DateTime(cBirthDate);
 				calcAge(bdate);
 			}
@@ -653,8 +659,9 @@ public class PatientInsertExtended extends JDialog {
 				}catch(OHServiceException e){
                     OHServiceExceptionUtil.showMessages(e);
 				}
-			} else
+			} else {
 				return false;
+			}
 
 			years = ageType.getFrom();
 			if (index == 1) {
@@ -681,11 +688,7 @@ public class PatientInsertExtended extends JDialog {
 		if (jCancelButton == null) {
 			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jCancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			jCancelButton.addActionListener(e -> dispose());
 		}
 		return jCancelButton;
 	}
@@ -770,21 +773,28 @@ public class PatientInsertExtended extends JDialog {
 				}
 			}
 
+			@Override
 			public void propertyChange(PropertyChangeEvent e) {
 				super.propertyChange(e);
 
 				if (super.dateSelected) {
 					cBirthDate = super.jcalendar.getCalendar();
 					DateTime bdate = new DateTime(cBirthDate);
-					if (bdate.isAfter(new DateTime())) super.setCalendar(new DateTime().toGregorianCalendar());
-					else calcAge(bdate);
+					if (bdate.isAfter(new DateTime())) {
+						super.setCalendar(new DateTime().toGregorianCalendar());
+					} else {
+						calcAge(bdate);
+					}
 				}
 
 				if (super.dateEditor.getDate() != null) {
 					cBirthDate = super.getCalendar();
 					DateTime bdate = new DateTime(cBirthDate);
-					if (bdate.isAfter(new DateTime())) super.setCalendar(new DateTime().toGregorianCalendar());
-					else calcAge(bdate);
+					if (bdate.isAfter(new DateTime())) {
+						super.setCalendar(new DateTime().toGregorianCalendar());
+					} else {
+						calcAge(bdate);
+					}
 				}
 			}
 		}
@@ -809,14 +819,12 @@ public class PatientInsertExtended extends JDialog {
 				jBirthDateReset = new JButton();
 				jBirthDateReset.setIcon(new ImageIcon("rsc/icons/trash_button.png"));
 				jBirthDateReset.setPreferredSize(new Dimension(20, 20));
-				jBirthDateReset.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						jBirthDateChooser.getDateEditor().setDate(null);
-						/*
-						 * jAgeField.setText(""); jAgeField.setEditable(true);
-						 */
-						cBirthDate = null;
-					}
+				jBirthDateReset.addActionListener(e -> {
+					jBirthDateChooser.getDateEditor().setDate(null);
+					/*
+					 * jAgeField.setText(""); jAgeField.setEditable(true);
+					 */
+					cBirthDate = null;
 				});
 
 				jBirthDateGroupPanel.add(jBirthDateReset, BorderLayout.EAST);
@@ -855,8 +863,9 @@ public class PatientInsertExtended extends JDialog {
 	private JTextField getJFirstNameTextField() {
 		if (jFirstNameTextField == null) {
 			jFirstNameTextField = new JTextField(15);
-			if (!insert)
+			if (!insert) {
 				jFirstNameTextField.setText(patient.getFirstName());
+			}
 		}
 		return jFirstNameTextField;
 	}
@@ -882,8 +891,9 @@ public class PatientInsertExtended extends JDialog {
 	private JTextField getJSecondNameTextField() {
 		if (jSecondNameTextField == null) {
 			jSecondNameTextField = new JTextField(15);
-			if (!insert)
+			if (!insert) {
 				jSecondNameTextField.setText(patient.getSecondName());
+			}
 
 		}
 		return jSecondNameTextField;
@@ -903,10 +913,11 @@ public class PatientInsertExtended extends JDialog {
 			jSexPanel.add(getJSexLabelPanel(), null);
 			jSexPanel.add(radiom, radiom.getName());
 			if (!insert) {
-				if (patient.getSex() == 'F')
+				if (patient.getSex() == 'F') {
 					radiof.setSelected(true);
-				else
+				} else {
 					radiom.setSelected(true);
+				}
 			}
 			sexGroup.add(radiom);
 			sexGroup.add(radiof);
@@ -953,8 +964,9 @@ public class PatientInsertExtended extends JDialog {
 	private JTextField getJAddressTextField() {
 		if (jAddressTextField == null) {
 			jAddressTextField = new JTextField(15);
-			if (!insert)
+			if (!insert) {
 				jAddressTextField.setText(patient.getAddress());
+			}
 		}
 		return jAddressTextField;
 	}
@@ -967,8 +979,9 @@ public class PatientInsertExtended extends JDialog {
 	private JTextField getJTaxCodeTextField() {
 		if (jTaxCodeTextField == null) {
 			jTaxCodeTextField = new JTextField(15);
-			if (!insert)
+			if (!insert) {
 				jTaxCodeTextField.setText(patient.getTaxCode());
+			}
 		}
 		return jTaxCodeTextField;
 	}
@@ -995,8 +1008,9 @@ public class PatientInsertExtended extends JDialog {
 	private JTextField getJCityTextField() {
 		if (jCityTextField == null) {
 			jCityTextField = new JTextField(15);
-			if (!insert)
+			if (!insert) {
 				jCityTextField.setText(patient.getCity());
+			}
 		}
 		return jCityTextField;
 	}
@@ -1025,8 +1039,9 @@ public class PatientInsertExtended extends JDialog {
 		if (jTelephoneTextField == null) {
 			jTelephoneTextField = new JTextField(15);
 			jTelephoneTextField.setText(SmsParameters.ICC);
-			if (!insert)
+			if (!insert) {
 				jTelephoneTextField.setText(patient.getTelephone());
+			}
 		}
 		return jTelephoneTextField;
 	}
@@ -1054,8 +1069,9 @@ public class PatientInsertExtended extends JDialog {
 	private JTextField getJNextKinTextField() {
 		if (jNextKinTextField == null) {
 			jNextKinTextField = new JTextField(15);
-			if (!insert)
+			if (!insert) {
 				jNextKinTextField.setText(patient.getNextKin());
+			}
 		}
 		return jNextKinTextField;
 	}
@@ -1279,14 +1295,11 @@ public class PatientInsertExtended extends JDialog {
 			jAgeTypeButtonGroup.add(getJAgeType_Description(), BorderLayout.EAST);
 			jAgeTypeButtonGroup.add(getJAgeType_BirthDatePanel(), BorderLayout.CENTER);
 
-			ActionListener sliceActionListener = new ActionListener() {
-				public void actionPerformed(ActionEvent actionEvent) {
-					jAgeType.remove(jAgeTypeSelection);
-					jAgeType.add(getJAgeTypeSelection());
-					jAgeType.validate();
-					jAgeType.repaint();
-
-				}
+			ActionListener sliceActionListener = actionEvent -> {
+				jAgeType.remove(jAgeTypeSelection);
+				jAgeType.add(getJAgeTypeSelection());
+				jAgeType.validate();
+				jAgeType.repaint();
 			};
 
 			if (!insert) {
@@ -1329,8 +1342,9 @@ public class PatientInsertExtended extends JDialog {
 				String token2 = token.nextToken();
 				int t2 = Integer.parseInt(token2);
 				ageTypeMonths = t2;
-			} else
+			} else {
 				ageTypeMonths = 0;
+			}
 		} else {
 			ageType = -1;
 		}
@@ -1343,12 +1357,13 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JPanel getJAgeTypeSelection() {
 		
-		if (jAgeType_Age.isSelected())
+		if (jAgeType_Age.isSelected()) {
 			jAgeTypeSelection = getJAge();
-		else if (jAgeType_BirthDate.isSelected())
+		} else if (jAgeType_BirthDate.isSelected()) {
 			jAgeTypeSelection = getJBirthDate();
-		else
+		} else {
 			jAgeTypeSelection = getJAgeDescription();
+		}
 		return jAgeTypeSelection;
 	}
 
@@ -1470,13 +1485,11 @@ public class PatientInsertExtended extends JDialog {
 			jAgeDescPanel.add(getJAgeMonthsPanel());
 			jAgeMonthsComboBox.setEnabled(false);
 
-			jAgeDescComboBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (jAgeDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn.txt")) == 0) {
-						jAgeMonthsComboBox.setEnabled(true);
-					} else {
-						jAgeMonthsComboBox.setEnabled(false);
-					}
+			jAgeDescComboBox.addActionListener(e -> {
+				if (jAgeDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn.txt")) == 0) {
+					jAgeMonthsComboBox.setEnabled(true);
+				} else {
+					jAgeMonthsComboBox.setEnabled(false);
 				}
 			});
 
@@ -1542,7 +1555,9 @@ public class PatientInsertExtended extends JDialog {
 					thisField.setSelectionEnd(thisField.getText().length());
 				}
 			});
-			if (!insert) jAgeYears.setText(""+years); 
+			if (!insert) {
+				jAgeYears.setText(""+years);
+			}
 		}
 		return jAgeYears;
 	}
@@ -1563,7 +1578,9 @@ public class PatientInsertExtended extends JDialog {
 					thisField.setSelectionEnd(thisField.getText().length());
 				}
 			});
-			if (!insert) jAgeMonths.setText(""+months); 
+			if (!insert) {
+				jAgeMonths.setText(""+months);
+			}
 		}
 		return jAgeMonths;
 	}
@@ -1584,7 +1601,9 @@ public class PatientInsertExtended extends JDialog {
 					thisField.setSelectionEnd(thisField.getText().length());
 				}
 			});
-			if (!insert) jAgeDays.setText(""+days); 
+			if (!insert) {
+				jAgeDays.setText(""+days);
+			}
 		}
 		return jAgeDays;
 	}
@@ -2232,8 +2251,9 @@ public class PatientInsertExtended extends JDialog {
 	private JTextField getJFatherNameTextField() {
 		if (jFatherNameTextField == null) {
 			jFatherNameTextField = new JTextField(15);
-			if (!insert)
+			if (!insert) {
 				jFatherNameTextField.setText(patient.getFatherName());
+			}
 		}
 		return jFatherNameTextField;
 	}
@@ -2246,8 +2266,9 @@ public class PatientInsertExtended extends JDialog {
 	private JTextField getJMotherNameTextField() {
 		if (jMotherNameTextField == null) {
 			jMotherNameTextField = new JTextField(15);
-			if (!insert)
+			if (!insert) {
 				jMotherNameTextField.setText(patient.getMotherName());
+			}
 		}
 		return jMotherNameTextField;
 	}

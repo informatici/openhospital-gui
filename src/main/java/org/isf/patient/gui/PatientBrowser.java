@@ -25,8 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -155,15 +153,11 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					patient = new Patient();
-					PatientInsert newrecord = new PatientInsert(PatientBrowser.this, patient, true);
-					newrecord.addPatientListener(PatientBrowser.this);
-					newrecord.setVisible(true);
-				}
+			jNewButton.addActionListener(event -> {
+				patient = new Patient();
+				PatientInsert newrecord = new PatientInsert(PatientBrowser.this, patient, true);
+				newrecord.addPatientListener(PatientBrowser.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
@@ -178,19 +172,15 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(PatientBrowser.this, "angal.common.pleaseselectarow.msg");
-					} else {
-						selectedrow = jTable.getSelectedRow();
-						patient = (Patient) (model.getValueAt(selectedrow, -1));
-						PatientInsert editrecord = new PatientInsert(PatientBrowser.this, patient, false);
-						editrecord.addPatientListener(PatientBrowser.this);
-						editrecord.setVisible(true);
-					}
+			jEditButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(PatientBrowser.this, "angal.common.pleaseselectarow.msg");
+				} else {
+					selectedrow = jTable.getSelectedRow();
+					patient = (Patient) (model.getValueAt(selectedrow, -1));
+					PatientInsert editrecord = new PatientInsert(PatientBrowser.this, patient, false);
+					editrecord.addPatientListener(PatientBrowser.this);
+					editrecord.setVisible(true);
 				}
 			});
 		}
@@ -206,12 +196,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -225,23 +210,20 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					if (jTable.getSelectedRow() < 0) {
-						MessageDialog.error(PatientBrowser.this, "angal.common.pleaseselectarow.msg");
-					} else {
-						Patient pat = (Patient) (model.getValueAt(jTable.getSelectedRow(), -1));
-						int answer = MessageDialog.yesNo(null, "angal.patient.deletepatient.fmt.msg",pat.getName());
-						try {
-							if ((answer == JOptionPane.YES_OPTION) && (manager.deletePatient(pat))) {
-								pPat.remove(pPat.size() - jTable.getSelectedRow() - 1);
-								model.fireTableDataChanged();
-								jTable.updateUI();
-							}
-						} catch(OHServiceException ohServiceException) {
-							MessageDialog.showExceptions(ohServiceException);
+			jDeleteButton.addActionListener(event -> {
+				if (jTable.getSelectedRow() < 0) {
+					MessageDialog.error(PatientBrowser.this, "angal.common.pleaseselectarow.msg");
+				} else {
+					Patient pat = (Patient) (model.getValueAt(jTable.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.patient.deletepatient.fmt.msg",pat.getName());
+					try {
+						if ((answer == JOptionPane.YES_OPTION) && (manager.deletePatient(pat))) {
+							pPat.remove(pPat.size() - jTable.getSelectedRow() - 1);
+							model.fireTableDataChanged();
+							jTable.updateUI();
 						}
+					} catch(OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
 			});
