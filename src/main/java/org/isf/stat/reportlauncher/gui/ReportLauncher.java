@@ -210,11 +210,7 @@ public class ReportLauncher extends ModalJFrame{
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -269,12 +265,10 @@ public class ReportLauncher extends ModalJFrame{
 			for (int i=0;i<reportMatrix.length;i++)
 				jRptComboBox.addItem(MessageBundle.getMessage(reportMatrix[i][BUNDLE]));
 			
-			jRptComboBox.addActionListener(new ActionListener() {   
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (e.getActionCommand()!= null) {
-						if (e.getActionCommand().equalsIgnoreCase("comboBoxChanged")) {
-							selectAction();
-						}
+			jRptComboBox.addActionListener(e -> {
+				if (e.getActionCommand()!= null) {
+					if (e.getActionCommand().equalsIgnoreCase("comboBoxChanged")) {
+						selectAction();
 					}
 				}
 			});
@@ -378,11 +372,7 @@ public class ReportLauncher extends ModalJFrame{
 			jLaunchReport = new JButton(MessageBundle.getMessage("angal.common.launchreport.btn"));
 			jLaunchReport.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
 			jLaunchReport.setBounds(new Rectangle(15, 15, 91, 31));
-			jLaunchReport.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					generateReport(false);
-				}
-			});
+			jLaunchReport.addActionListener(e -> generateReport(false));
 		}
 		return jLaunchReport;
 	}
@@ -392,12 +382,7 @@ public class ReportLauncher extends ModalJFrame{
 			jCSVButton = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
 			jCSVButton.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
 			jCSVButton.setBounds(new Rectangle(15, 15, 91, 31));
-			jCSVButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					generateReport(true);
-				}
-			});
+			jCSVButton.addActionListener(e -> generateReport(true));
 		}
 		return jCSVButton;
 	}

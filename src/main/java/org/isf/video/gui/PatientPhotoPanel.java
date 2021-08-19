@@ -25,11 +25,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -86,19 +82,16 @@ public class PatientPhotoPanel extends JPanel {
 
 			final IconButton btnDeletePhoto = new IconButton(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
 			btnDeletePhoto.setSize(new Dimension(40, 40));
-			btnDeletePhoto.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					
-					int answer = MessageDialog.yesNo(owner, "angal.patient.doyouwanttodeletethepatientsphoto.msg");
-					if (answer == JOptionPane.YES_OPTION) {
-						btnDeletePhoto.setVisible(false);
-						patientFrame.setPatientPhoto(null);
-						externalPanel.updatePhoto(nophoto);
-						LOGGER.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
-					} else {
-						LOGGER.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
-					}
+			btnDeletePhoto.addActionListener(e -> {
+
+				int answer = MessageDialog.yesNo(owner, "angal.patient.doyouwanttodeletethepatientsphoto.msg");
+				if (answer == JOptionPane.YES_OPTION) {
+					btnDeletePhoto.setVisible(false);
+					patientFrame.setPatientPhoto(null);
+					externalPanel.updatePhoto(nophoto);
+					LOGGER.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
+				} else {
+					LOGGER.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
 				}
 			});
 
@@ -115,14 +108,11 @@ public class PatientPhotoPanel extends JPanel {
 			box.add(Box.createHorizontalGlue());
 
 			externalPanel.add(box, BorderLayout.NORTH);
-			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, new PropertyChangeListener() {
-				@Override
-				public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-					final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
-					if (newImage != null) {
-						externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
-						patientFrame.setPatientPhoto(newImage);
-					}
+			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
+				final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
+				if (newImage != null) {
+					externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
+					patientFrame.setPatientPhoto(newImage);
 				}
 			});
 
@@ -133,35 +123,31 @@ public class PatientPhotoPanel extends JPanel {
 			} else {
 				btnDeletePhoto.setVisible(false);
 			}
-			
+
 			final Box buttonBox1 = Box.createHorizontalBox();
 
 			jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.file.btn"));
 			jAttachPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.file.btn.key"));
 			jAttachPhotoButton.setMinimumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
-			jAttachPhotoButton.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					JFileChooser fc = new JFileChooser();
-					String[] extensions = {"tif","tiff","jpg","jpeg","bmp","png","gif"};
-					FileFilter imageFilter = new FileNameExtensionFilter(MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
-					fc.setFileFilter(imageFilter);
-					fc.setAcceptAllFileFilterUsed(false);
-					int returnVal = fc.showOpenDialog(patientFrame);
-					if (returnVal == JFileChooser.APPROVE_OPTION) {  
-                        File image = fc.getSelectedFile();
-                        CroppingDialog cropDiag = new CroppingDialog(patientFrame, image);
-                        cropDiag.pack();
-                        cropDiag.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                        cropDiag.setLocationRelativeTo(null);
-                        cropDiag.setVisible(true);
-                        
-                        final Image croppedImage = cropDiag.getCropped();
-						if (croppedImage != null) {
-							photoboothPanelPresentationModel.setImage(croppedImage);
-						}
+			jAttachPhotoButton.addActionListener(e -> {
+				JFileChooser fc = new JFileChooser();
+				String[] extensions = { "tif", "tiff", "jpg", "jpeg", "bmp", "png", "gif" };
+				FileFilter imageFilter = new FileNameExtensionFilter(MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
+				fc.setFileFilter(imageFilter);
+				fc.setAcceptAllFileFilterUsed(false);
+				int returnVal = fc.showOpenDialog(patientFrame);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File image = fc.getSelectedFile();
+					CroppingDialog cropDiag = new CroppingDialog(patientFrame, image);
+					cropDiag.pack();
+					cropDiag.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					cropDiag.setLocationRelativeTo(null);
+					cropDiag.setVisible(true);
+
+					final Image croppedImage = cropDiag.getCropped();
+					if (croppedImage != null) {
+						photoboothPanelPresentationModel.setImage(croppedImage);
 					}
 				}
 			});
@@ -175,19 +161,16 @@ public class PatientPhotoPanel extends JPanel {
 				jGetPhotoButton.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 
 				final Dimension[] resolutions = webcam.getDevice().getResolutions();
-				jGetPhotoButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent event) {
-						photoboothPanelPresentationModel.setWebcam(webcam);
-						// start with the highest resolution.
-						photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
+				jGetPhotoButton.addActionListener(event -> {
+					photoboothPanelPresentationModel.setWebcam(webcam);
+					// start with the highest resolution.
+					photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
 
-						final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel, owner);
-						photoBoothDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-						photoBoothDialog.setVisible(true);
-						photoBoothDialog.toFront();
-						photoBoothDialog.requestFocus();
-					}
+					final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel, owner);
+					photoBoothDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					photoBoothDialog.setVisible(true);
+					photoBoothDialog.toFront();
+					photoBoothDialog.requestFocus();
 				});
 
 				buttonBox1.add(jGetPhotoButton);
@@ -202,7 +185,7 @@ public class PatientPhotoPanel extends JPanel {
 
 			jPhotoPanel.setMinimumSize(new Dimension((int) getPreferredSize().getWidth(), 100));
 		}
-		
+
 		add(jPhotoPanel);
 	}
 

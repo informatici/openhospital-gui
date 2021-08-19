@@ -28,8 +28,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -213,29 +211,19 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 		JButton btnAdd = new JButton(MessageBundle.getMessage("angal.operationrowlist.add.btn"));
 		btnAdd.setMnemonic(MessageBundle.getMnemonic("angal.operationrowlist.add.btn.key"));
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				addToGrid();
-			}
-		});
+		btnAdd.addActionListener(arg0 -> addToGrid());
 		panelActions.add(btnAdd);
 
 		JButton btnClear = new JButton(MessageBundle.getMessage("angal.operationrow.clear.btn"));
 		btnClear.setMnemonic(MessageBundle.getMnemonic("angal.operationrow.clear.btn.key"));
-		btnClear.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				clearForm();
-			}
-		});
+		btnClear.addActionListener(arg0 -> clearForm());
 		panelActions.add(btnClear);
 
 		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		btnDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		btnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int index = tableData.getSelectedRow();
-				deleteOpeRow(index);
-			}
+		btnDelete.addActionListener(e -> {
+			int index = tableData.getSelectedRow();
+			deleteOpeRow(index);
 		});
 		panelActions.add(btnDelete);
 
@@ -350,8 +338,9 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		if (this.comboResult.getSelectedItem() != null) {
 			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			operationRow.setOpResult(opResult);
-		} else
+		} else {
 			operationRow.setOpResult(""); //$NON-NLS-1$
+		}
 		try {
 			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 		} catch (NumberFormatException e) {
@@ -359,8 +348,9 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		}
 		Operation op = (Operation) this.comboOperation.getSelectedItem();
 		operationRow.setOperation(op);
-		if (myAdmission != null)
+		if (myAdmission != null) {
 			operationRow.setAdmission(myAdmission);
+		}
 		operationRow.setPrescriber(MainMenu.getUser().getUserName());
 		operationRow.setRemarks(textAreaRemark.getText());
 		int index = tableData.getSelectedRow();
