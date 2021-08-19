@@ -26,7 +26,6 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 import java.util.EventListener;
 
 import javax.swing.JButton;
@@ -80,8 +79,9 @@ public class WardEdit extends JDialog {
 		};
 
 		EventListener[] listeners = wardListeners.getListeners(WardListener.class);
-		for (int i = 0; i < listeners.length; i++)
+		for (int i = 0; i < listeners.length; i++) {
 			((WardListener) listeners[i]).wardInserted(event);
+		}
 	}
 
 	private void fireWardUpdated() {
@@ -91,8 +91,9 @@ public class WardEdit extends JDialog {
 		};
 
 		EventListener[] listeners = wardListeners.getListeners(WardListener.class);
-		for (int i = 0; i < listeners.length; i++)
+		for (int i = 0; i < listeners.length; i++) {
 			((WardListener) listeners[i]).wardUpdated(event);
+		}
 	}
 
 	private JPanel jContentPane = null;
@@ -345,12 +346,7 @@ public class WardEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -365,77 +361,74 @@ public class WardEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 
-			okButton.addActionListener(new ActionListener() {
+			okButton.addActionListener(e -> {
+				WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+				try {
+					beds = Integer.parseInt(bedsTextField.getText());
+				} catch (NumberFormatException f) {
+					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidbedsnumber");
+					return;
+				}
+				try {
+					nurs = Integer.parseInt(nursTextField.getText());
+				} catch (NumberFormatException f) {
+					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidnursesnumber");
+					return;
+				}
+				try {
+					docs = Integer.parseInt(docsTextField.getText());
+				} catch (NumberFormatException f) {
+					MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddoctorsnumber");
+					return;
+				}
 
+				ward.setDescription(descriptionTextField.getText());
+				ward.setCode(codeTextField.getText().toUpperCase().trim());
+				ward.setTelephone(telTextField.getText());
+				ward.setFax(faxTextField.getText());
+				ward.setEmail(emailTextField.getText());
+				ward.setBeds(beds);
+				ward.setNurs(nurs);
+				ward.setDocs(docs);
+				ward.setPharmacy(isPharmacyCheck.isSelected());
+				ward.setMale(isMaleCheck.isSelected());
+				ward.setFemale(isFemaleCheck.isSelected());
+
+				boolean result = false;
+				Ward savedWard = null;
+				if (insert) { // inserting
 					try {
-						beds = Integer.parseInt(bedsTextField.getText());
-					} catch (NumberFormatException f) {
-						MessageDialog.error(WardEdit.this, "angal.ward.insertavalidbedsnumber");
-						return;
-					}
-					try {
-						nurs = Integer.parseInt(nursTextField.getText());
-					} catch (NumberFormatException f) {
-						MessageDialog.error(WardEdit.this, "angal.ward.insertavalidnursesnumber");
-						return;
-					}
-					try {
-						docs = Integer.parseInt(docsTextField.getText());
-					} catch (NumberFormatException f) {
-						MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddoctorsnumber");
-						return;
-					}
-
-					ward.setDescription(descriptionTextField.getText());
-					ward.setCode(codeTextField.getText().toUpperCase().trim());
-					ward.setTelephone(telTextField.getText());
-					ward.setFax(faxTextField.getText());
-					ward.setEmail(emailTextField.getText());
-					ward.setBeds(beds);
-					ward.setNurs(nurs);
-					ward.setDocs(docs);
-					ward.setPharmacy(isPharmacyCheck.isSelected());
-					ward.setMale(isMaleCheck.isSelected());
-					ward.setFemale(isFemaleCheck.isSelected());
-
-					boolean result = false;
-					Ward savedWard = null;
-					if (insert) { // inserting
-						try {
-							savedWard = manager.newWard(ward);
-							if (savedWard != null) {
-								ward.setLock(savedWard.getLock());
-								result = true;
-							}
-						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
+						savedWard = manager.newWard(ward);
+						if (savedWard != null) {
+							ward.setLock(savedWard.getLock());
+							result = true;
 						}
-						if (result) {
-							fireWardInserted();
-						}
-					} else {
-						try { // updating
-							savedWard = manager.updateWard(ward);
-							if (savedWard != null) {
-								ward.setLock(savedWard.getLock());
-								result = true;
-							}
-						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
-						}
-						if (result) {
-							fireWardUpdated();
-						}
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					if (result) {
+						fireWardInserted();
 					}
-					else {
-						dispose();
+				} else {
+					try { // updating
+						savedWard = manager.updateWard(ward);
+						if (savedWard != null) {
+							ward.setLock(savedWard.getLock());
+							result = true;
+						}
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 					}
+					if (result) {
+						fireWardUpdated();
+					}
+				}
+				if (!result) {
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+				}
+				else {
+					dispose();
 				}
 			});
 		}
