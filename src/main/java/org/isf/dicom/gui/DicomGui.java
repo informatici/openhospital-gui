@@ -75,7 +75,6 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private JButton jButtonLoadDicom;
 	private JButton jButtonDeleteDicom;
-	private JButton jButtonCloseDicom;
 	private JPanel jPanel1;
 	private JPanel jPanelDetail;
 	private JPanel jPanelButton;
@@ -190,10 +189,6 @@ public class DicomGui extends JFrame implements WindowListener {
 		jButtonDeleteDicom.setName("jButtonDeleteDicom");
 		jButtonDeleteDicom.setEnabled(false);
 
-		jButtonCloseDicom = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
-		jButtonCloseDicom.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		jButtonCloseDicom.setName("jButtonCloseDicom");
-
 		jPanelDetail = new DicomViewGui(null, null);
 		jPanelDetail.setName("jPanelDetail");
 		jPanelButton = new JPanel();
@@ -259,7 +254,6 @@ public class DicomGui extends JFrame implements WindowListener {
 	private void addEventListener() {
 		actionListenerJButtonLoadDicom();
 		actionListenerJButtonDeleteDicom();
-		actionListenerjButtonCloseDicom();
 	}
 
 	private void actionListenerJButtonLoadDicom() {
@@ -372,13 +366,6 @@ public class DicomGui extends JFrame implements WindowListener {
 			//selectedElement = null;
 			//detail();
 			((DicomViewGui) jPanelDetail).clear();
-		});
-	}
-
-	private void actionListenerjButtonCloseDicom() {
-		jButtonCloseDicom.addActionListener(e -> {
-			System.exit(100);
-			// this.dispose();
 		});
 	}
 
