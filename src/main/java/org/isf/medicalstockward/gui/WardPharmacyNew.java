@@ -276,11 +276,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				jButtonPickPatient.setEnabled(false);
 				jButtonTrashPatient.setEnabled(false);
 				jTextFieldUse.setEnabled(true);
-wardBox.setEnabled(false);
+				wardBox.setEnabled(false);
 			});
 		}
 		return jRadioUse;
 	}
+
 	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	
 	class StockMovModel extends DefaultTableModel {
@@ -707,11 +708,10 @@ wardBox.setEnabled(false);
 				jTextFieldUse.setEnabled(false);
 				jTextFieldPatient.setEnabled(true);
 				jButtonPickPatient.setEnabled(true);
-wardBox.setEnabled(false);
+				wardBox.setEnabled(false);
 				if (patientSelected != null) {
 					jButtonTrashPatient.setEnabled(true);
 				}
-
 			});
 		}
 		return jRadioPatient;
@@ -783,7 +783,6 @@ wardBox.setEnabled(false);
 			return medClasses[i].getClass();
 		}
 
-		
 		@Override
 		public int getColumnCount() {
 			return medClasses.length;
@@ -825,13 +824,10 @@ wardBox.setEnabled(false);
 		
 		@Override
 		public void setValueAt(Object item, int r, int c) {
-			//if (c == 1) billItems.get(r).setItemQuantity((Integer)item);
-
 		}
 
 		@Override
 		public void addTableModelListener(TableModelListener l) {
-			
 		}
 
 		@Override
@@ -842,10 +838,9 @@ wardBox.setEnabled(false);
 		@Override
 		public void removeTableModelListener(TableModelListener l) {
 		}
-
 	}
-        
-        private JPanel getPanelWard() {
+
+	private JPanel getPanelWard() {
 		if (panelWard == null) {
 			panelWard = new JPanel();
 			panelWard.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
@@ -977,13 +972,4 @@ wardBox.setEnabled(false);
 		}
 		return results;
 	}
-
-//	private JLabel getJLabelSelectWard() {
-//		if (jLabelSelectWard == null) {
-//			jLabelSelectWard = new JLabel(MessageBundle.getMessage("angal.wardpharmacynew.selectward"));
-//			jLabelSelectWard.setVisible(false);
-//			jLabelSelectWard.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-//		}
-//		return jLabelSelectWard;
-//	}
 }
