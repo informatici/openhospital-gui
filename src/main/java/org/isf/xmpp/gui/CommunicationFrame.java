@@ -308,8 +308,8 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (SwingUtilities.isRightMouseButton(e) && !buddyList.isSelectionEmpty() && buddyList.locationToIndex(e.getPoint()) == buddyList
-						.getSelectedIndex()) {
+				if (SwingUtilities.isRightMouseButton(e) && !buddyList.isSelectionEmpty()
+						&& buddyList.locationToIndex(e.getPoint()) == buddyList.getSelectedIndex()) {
 					popUpMenu.show(buddyList, e.getX(), e.getY());
 				}
 
