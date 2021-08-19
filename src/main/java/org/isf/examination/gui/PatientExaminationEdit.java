@@ -1374,7 +1374,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 			jButtonPrint.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
 			jButtonPrint.addActionListener(e -> {
 				int selectedrow = jTableSummary.getSelectedRow();
-				if (selectedrow < 0) selectedrow = 0;
+				if (selectedrow < 0) {
+					selectedrow = 0;
+				}
 
 				PatientExamination	exam = (PatientExamination) jTableSummary.getValueAt(selectedrow,-1);
 				new GenericReportExamination(patex.getPatient().getCode(), exam.getPex_ID(), GeneralData.EXAMINATIONCHART);
@@ -1413,10 +1415,11 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JLabel getJLabelImageGender() {
 		if (jLabelGender == null) {
 			jLabelGender = new JLabel(); //$NON-NLS-1$
-			if (isMale) 
+			if (isMale) {
 				jLabelGender.setIcon(new ImageIcon(PATH_MALE_GENDER));
-			else
+			} else {
 				jLabelGender.setIcon(new ImageIcon(PATH_FEMALE_GENDER));
+			}
 			jLabelGender.setAlignmentX(0.5f);
 			jLabelGender.setAlignmentY(0.5f);
 		}
@@ -1509,9 +1512,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private class SwingActionToggleAP extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleAP() {
 			putValue(NAME, ""); //$NON-NLS-1$
@@ -1642,9 +1643,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private class SwingActionToggleHGT extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleHGT() {
 			putValue(NAME, ""); //$NON-NLS-1$
@@ -1678,9 +1677,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 	
 	private class SwingActionToggleDiuresisVolume extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleDiuresisVolume() {
 			putValue(NAME, ""); //$NON-NLS-1$
@@ -1913,6 +1910,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		
 		jTableSummary.addMouseListener(new MouseAdapter() {
 
+			@Override
 			public void mouseClicked(MouseEvent me) {
 				int column = jTableSummary.getColumnModel().getColumnIndexAtX(me.getX()); // get the column of the button
 				JTable target = (JTable) me.getSource();
@@ -2047,6 +2045,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 					final IconButton button = new IconButton(new ImageIcon("rsc/icons/list_button.png"));
 					button.addActionListener(new ActionListener() {
 
+						@Override
 						public void actionPerformed(ActionEvent arg0) {
 							VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
 							noteArea.setText(note);

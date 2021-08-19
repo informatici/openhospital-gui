@@ -211,12 +211,13 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-		}return jTable;
+		}
+		return jTable;
 	}
-	
-class ExamTypeBrowserModel extends DefaultTableModel {
-		
-	private static final long serialVersionUID = 1L;
+
+	class ExamTypeBrowserModel extends DefaultTableModel {
+
+		private static final long serialVersionUID = 1L;
 
 		public ExamTypeBrowserModel() {
 			ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
@@ -227,7 +228,7 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		
+
 		@Override
 		public int getRowCount() {
 			if (pExamType == null) {
@@ -235,7 +236,7 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 			}
 			return pExamType.size();
 		}
-		
+
 		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
@@ -258,7 +259,7 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
@@ -274,7 +275,7 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
-	
+
 	@Override
 	public void examTypeInserted(AWTEvent e) {
 		pExamType.add(0, examType);

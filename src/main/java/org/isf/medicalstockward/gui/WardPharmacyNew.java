@@ -103,8 +103,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = movementWardListeners.getListeners(MovementWardListeners.class);
-		for (int i = 0; i < listeners.length; i++)
+		for (int i = 0; i < listeners.length; i++) {
 			((MovementWardListeners)listeners[i]).movementInserted(event);
+		}
 	}
 	/*private void fireMovementWardUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -120,6 +121,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	}*/
 //---------------------------------------------------------------------------
 	
+	@Override
 	public void patientSelected(Patient patient) {
 		patientSelected = patient;
 		jTextFieldPatient.setText(patientSelected.getName());
@@ -274,6 +276,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jRadioUse = new JRadioButton();
 			jRadioUse.addActionListener(new ActionListener() {
 
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					jTextFieldPatient.setEnabled(false);
 					jButtonPickPatient.setEnabled(false);
@@ -296,12 +299,15 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			druglist = drug;
 		}
 
+		@Override
 		public int getRowCount() {
-			if (druglist == null)
+			if (druglist == null) {
 				return 0;
+			}
 			return druglist.size();
 		}
 
+		@Override
 		public String getColumnName(int c) {
 			if (c == 0) {
 				return MessageBundle.getMessage("angal.medicalstock.lotid").toUpperCase();
@@ -316,10 +322,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			return ""; //$NON-NLS-1$
 		}
 
+		@Override
 		public int getColumnCount() {
 			return 3;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			MedicalWard medicalWard = druglist.get(r);
 			if (c == -1) {
@@ -354,8 +362,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		Collections.sort(drug, new Comparator<MedicalWard>() {
 			@Override
 			public int compare(MedicalWard o1, MedicalWard o2) {
-				if (o1.getLot().getDueDate() == null || o2.getLot().getDueDate() == null)
+				if (o1.getLot().getDueDate() == null || o2.getLot().getDueDate() == null) {
 					return 0;
+				}
 				return o1.getLot().getDueDate().compareTo(o2.getLot().getDueDate());
 			}
 		});
@@ -390,51 +399,52 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 		return medWard;
 	}
-	
+
 	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int quantity) {
 		ArrayList<MedicalWard> dr = new ArrayList<>();
-		MedicalWard medWard =null;
+		MedicalWard medWard = null;
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
 				if (elem.getQty() != 0.0) {
 					MedicalWard e = elem;
-						dr.add(e);
-					}
-			}
-			
-		}
-	
-			
-			JTable lotTable = new JTable(new StockMovModel(dr));
-			lotTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			JPanel panel = new JPanel(new BorderLayout());
-			panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multipledischarging.selectalot")), BorderLayout.NORTH); //$NON-NLS-1$
-			panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
-			
-			do {
-				int ok = JOptionPane.showConfirmDialog(WardPharmacyNew.this, 
-						panel, 
-						MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$ 
-						JOptionPane.OK_CANCEL_OPTION);
-	
-				if (ok == JOptionPane.OK_OPTION) {
-					int row = lotTable.getSelectedRow();
-					if (row != -1) medWard = dr.get(row);
-						else return null;
-					
-					
-					if (!checkQuantityInLot(medWard, quantity)) medWard = null;
-					
-					
-					addItem(medWard, quantity);
-					
+					dr.add(e);
 				}
-				
-			} while (dr == null);
-		 
+			}
+
+		}
+
+		JTable lotTable = new JTable(new StockMovModel(dr));
+		lotTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multipledischarging.selectalot")), BorderLayout.NORTH); //$NON-NLS-1$
+		panel.add(new JScrollPane(lotTable), BorderLayout.CENTER);
+
+		do {
+			int ok = JOptionPane.showConfirmDialog(WardPharmacyNew.this,
+					panel,
+					MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$
+					JOptionPane.OK_CANCEL_OPTION);
+
+			if (ok == JOptionPane.OK_OPTION) {
+				int row = lotTable.getSelectedRow();
+				if (row != -1) {
+					medWard = dr.get(row);
+				} else {
+					return null;
+				}
+
+				if (!checkQuantityInLot(medWard, quantity)) {
+					medWard = null;
+				}
+
+				addItem(medWard, quantity);
+			}
+
+		} while (dr == null);
+
 		return medWard;
 	}
-	
+
 	protected int askQuantity(String med, ArrayList<MedicalWard> drug) {
 		int qty = 0;
 		double totalQty = 0;
@@ -470,17 +480,20 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			if (quantity != null) {
 				try {
 					qty = Integer.parseInt(quantity);
-					if (qty == 0)
+					if (qty == 0) {
 						return 0;
-					if (qty < 0)
+					}
+					if (qty < 0) {
 						throw new NumberFormatException();
+					}
 
 				} catch (NumberFormatException nfe) {
 					MessageDialog.error(WardPharmacyNew.this, "angal.medicalstock.multipledischarging.pleaseinsertavalidvalue");
 					qty = 0;
 				}
-			} else
+			} else {
 				return qty;
+			}
 			if (checkQuantity(totalQty, qty)) {
 
 				if (isAutomaticLot() || jRadioPatient.isSelected()) {
@@ -510,6 +523,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 		return true;
 	}
+
 	private JButton getJButtonAddMedical() {
 		if (jButtonAddMedical == null) {
 			jButtonAddMedical = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.medical.btn"));
@@ -517,6 +531,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
 			jButtonAddMedical.addActionListener(new ActionListener() {
 
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					String medical=(String)jComboBoxMedicals.getSelectedItem();
 					int quantity = askQuantity(medical,wardDrugs);
@@ -537,6 +552,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonRemoveMedical.setIcon(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
 			jButtonRemoveMedical.addActionListener(new ActionListener() {
 
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (jTableMedicals.getSelectedRow() < 0) {
 						MessageDialog.error(WardPharmacyNew.this, "angal.medicalstockwardedit.pleaseselectanitem");
@@ -594,7 +610,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jTableMedicals.setModel(new MedicalTableModel());
 			for (int i = 0; i < medWidth.length; i++) {
 				jTableMedicals.getColumnModel().getColumn(i).setMinWidth(medWidth[i]);
-				if (!medResizable[i]) jTableMedicals.getColumnModel().getColumn(i).setMaxWidth(medWidth[i]);
+				if (!medResizable[i]) {
+					jTableMedicals.getColumnModel().getColumn(i).setMaxWidth(medWidth[i]);
+				}
 			}
 		}
 		return jTableMedicals;
@@ -606,6 +624,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jButtonOK.addActionListener(new ActionListener() {
 
+				@Override
 				public void actionPerformed(ActionEvent e) {
 
 					boolean isPatient;
@@ -706,6 +725,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			jButtonCancel.addActionListener(new ActionListener() {
 				
+				@Override
 				public void actionPerformed(ActionEvent event) {
 						dispose();
 				}
@@ -752,12 +772,15 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jRadioPatient.setSelected(true);
 			jRadioPatient.addActionListener(new ActionListener() {
 
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					jTextFieldUse.setEnabled(false);
 					jTextFieldPatient.setEnabled(true);
 					jButtonPickPatient.setEnabled(true);
                                         wardBox.setEnabled(false);
-					if (patientSelected != null) jButtonTrashPatient.setEnabled(true);
+					if (patientSelected != null) {
+						jButtonTrashPatient.setEnabled(true);
+					}
 					
 				}
 			});
@@ -773,6 +796,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.removepatientassociationwiththismovement")); //$NON-NLS-1$
 			jButtonTrashPatient.addActionListener(new ActionListener() {
 
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					
 					patientSelected = null;
@@ -796,6 +820,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
 			jButtonPickPatient.addActionListener(new ActionListener() {
 
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					SelectPatient sp = new SelectPatient(WardPharmacyNew.this, patientSelected);
 					sp.addSelectionListener(WardPharmacyNew.this);
@@ -832,21 +857,26 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			
 		}
 		
+		@Override
 		public Class<?> getColumnClass(int i) {
 			return medClasses[i].getClass();
 		}
 
 		
+		@Override
 		public int getColumnCount() {
 			return medClasses.length;
 		}
 		
+		@Override
 		public int getRowCount() {
-			if (medItems == null)
+			if (medItems == null) {
 				return 0;
+			}
 			return medItems.size();
 		}
 		
+		@Override
 		public Object getValueAt(int r, int c) {
 			MedicalWard medWard = medItems.get(r);
 			if (c == -1) {
@@ -864,24 +894,31 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			return null;
 		}
 		
+		@Override
 		public boolean isCellEditable(int r, int c) {
-			if (c == 1) return true;
+			if (c == 1) {
+				return true;
+			}
 			return false;
 		}
 		
+		@Override
 		public void setValueAt(Object item, int r, int c) {
 			//if (c == 1) billItems.get(r).setItemQuantity((Integer)item);
 
 		}
 
+		@Override
 		public void addTableModelListener(TableModelListener l) {
 			
 		}
 
+		@Override
 		public String getColumnName(int columnIndex) {
 			return medColumnNames[columnIndex];
 		}
 
+		@Override
 		public void removeTableModelListener(TableModelListener l) {
 		}
 
@@ -903,6 +940,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jRadioWard = new JRadioButton(MessageBundle.getMessage("angal.wardpharmacynew.ward.btn"));
 			jRadioWard.setSelected(false);
 			jRadioWard.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					jTextFieldUse.setEnabled(false);
 					jTextFieldPatient.setEnabled(false);
@@ -930,53 +968,61 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			wardBox.addItem("");
 			if (wardList != null) {
                             for (org.isf.ward.model.Ward elem : wardList) {
-				if (!wardSelected.getCode().equals(elem.getCode()))
+				if (!wardSelected.getCode().equals(elem.getCode())) {
 					wardBox.addItem(elem);
+				}
                             }
                         }
 			wardBox.setEnabled(false);
 		}
 		return wardBox;
 	}
-        
-        private JPanel getJPanelMedicalsSearch() {
-            searchButton = new JButton();
-            searchButton.setPreferredSize(new Dimension(20, 20));
-            searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-            searchButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent ae) {
-                    jComboBoxMedicals.removeAllItems();
-                    ArrayList<Medical> results = getSearchMedicalsResults(searchTextField.getText(), medArray);
-                    for (Medical aMedical : results) {
-                    	jComboBoxMedicals.addItem(aMedical.getDescription());
-                    }
-                }
-            });
-            
-            searchTextField = new JTextField(10);
-            searchTextField.addKeyListener(new KeyListener() {
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    int key = e.getKeyCode();
-                    if (key == KeyEvent.VK_ENTER) {
-                        searchButton.doClick();
-                    }
-                }
-                @Override
-                public void keyReleased(KeyEvent e) {}
-                @Override
-                public void keyTyped(KeyEvent e) {}
-            });
-            
-            searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
-            searchPanel.add(searchTextField);
-            searchPanel.add(searchButton);
-            searchPanel.add(getJComboBoxMedicals());
-            searchPanel.add(getJButtonAddMedical());
-            return searchPanel;
-        }
-        private JComboBox getJComboBoxMedicals() {
+
+	private JPanel getJPanelMedicalsSearch() {
+		searchButton = new JButton();
+		searchButton.setPreferredSize(new Dimension(20, 20));
+		searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+		searchButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				jComboBoxMedicals.removeAllItems();
+				ArrayList<Medical> results = getSearchMedicalsResults(searchTextField.getText(), medArray);
+				for (Medical aMedical : results) {
+					jComboBoxMedicals.addItem(aMedical.getDescription());
+				}
+			}
+		});
+
+		searchTextField = new JTextField(10);
+		searchTextField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					searchButton.doClick();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+		});
+
+		searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		searchPanel.add(searchTextField);
+		searchPanel.add(searchButton);
+		searchPanel.add(getJComboBoxMedicals());
+		searchPanel.add(getJButtonAddMedical());
+		return searchPanel;
+	}
+
+	private JComboBox getJComboBoxMedicals() {
 		if (jComboBoxMedicals == null) {
 			jComboBoxMedicals = new JComboBox();
 			jComboBoxMedicals.setMaximumSize(new Dimension(300, 24));
@@ -984,39 +1030,39 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		}
 		ArrayList<Object> med = new ArrayList<>();
 		for (Medical aMedical : medArray) {
-			if (!med.contains(aMedical.getDescription())) { 
+			if (!med.contains(aMedical.getDescription())) {
 				med.add(aMedical.getDescription());
 				jComboBoxMedicals.addItem(aMedical.getDescription());
-            } 
+			}
 		}
 		return jComboBoxMedicals;
 	}
-        
-        private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {
-            String query = s.trim();
-            ArrayList<Medical> results = new ArrayList<>();
-            for (Medical medoc : medicalsList) {
-                if (!query.equals("")) {
-                    String[] patterns = query.split(" ");
-                    String code = medoc.getProd_code().toLowerCase();
-                    String description = medoc.getDescription().toLowerCase();
-                    boolean patternFound = false;
-                    for (String pattern : patterns) {
-                        if (code.contains(pattern.toLowerCase()) || description.contains(pattern.toLowerCase())) {
-                            patternFound = true;
-                            //It is sufficient that only one pattern matches the query
-                            break;
-                        }
-                    }
-                    if (patternFound){
-                        results.add(medoc);
-                    }
-                } else {
-                    results.add(medoc);
-                }
-            }		
-            return results;
-        }
+
+	private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {
+		String query = s.trim();
+		ArrayList<Medical> results = new ArrayList<>();
+		for (Medical medoc : medicalsList) {
+			if (!query.equals("")) {
+				String[] patterns = query.split(" ");
+				String code = medoc.getProd_code().toLowerCase();
+				String description = medoc.getDescription().toLowerCase();
+				boolean patternFound = false;
+				for (String pattern : patterns) {
+					if (code.contains(pattern.toLowerCase()) || description.contains(pattern.toLowerCase())) {
+						patternFound = true;
+						//It is sufficient that only one pattern matches the query
+						break;
+					}
+				}
+				if (patternFound) {
+					results.add(medoc);
+				}
+			} else {
+				results.add(medoc);
+			}
+		}
+		return results;
+	}
 
 //	private JLabel getJLabelSelectWard() {
 //		if (jLabelSelectWard == null) {

@@ -83,7 +83,8 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 			jTable.getColumnModel().getColumn(3).setMaxWidth(pColumnWidth[3]);
 			jTable.getColumnModel().getColumn(4).setMinWidth(pColumnWidth[4]);
 			jTable.getColumnModel().getColumn(5).setMinWidth(pColumnWidth[5]);
-		}return jTable;
+		}
+		return jTable;
 	}
 	
 	/**
@@ -156,6 +157,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(new ActionListener() {
 				
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					patient = new Patient();
 					PatientInsert newrecord = new PatientInsert(PatientBrowser.this, patient, true);
@@ -178,6 +180,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(new ActionListener() {
 				
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(PatientBrowser.this, "angal.common.pleaseselectarow.msg");
@@ -204,6 +207,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();
 				}
@@ -222,6 +226,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(PatientBrowser.this, "angal.common.pleaseselectarow.msg");
@@ -243,10 +248,10 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 		}
 		return jDeleteButton;
 	}
-	
-class PatientBrowserModel extends DefaultTableModel {
-		
-	private static final long serialVersionUID = 1L;
+
+	class PatientBrowserModel extends DefaultTableModel {
+
+		private static final long serialVersionUID = 1L;
 
 		public PatientBrowserModel() {
 			PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
@@ -257,22 +262,26 @@ class PatientBrowserModel extends DefaultTableModel {
 			}
 		}
 
+		@Override
 		public int getRowCount() {
-			if (pPat == null)
+			if (pPat == null) {
 				return 0;
+			}
 			return pPat.size();
 		}
-		
+
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
-		
 		//{ "NAME", "AGE","SEX","ADDRESS","CITY", "TELEPHONE"};
+		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
 				return pPat.get(r).getName();
@@ -291,7 +300,7 @@ class PatientBrowserModel extends DefaultTableModel {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			//return super.isCellEditable(arg0, arg1);
@@ -299,22 +308,24 @@ class PatientBrowserModel extends DefaultTableModel {
 		}
 	}
 
+	@Override
+	public void patientUpdated(AWTEvent e) {
+		model = new PatientBrowserModel();
+		model.fireTableDataChanged();
+		jTable.updateUI();
+		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+			jTable.setRowSelectionInterval(selectedrow, selectedrow);
+		}
+	}
 
+	@Override
+	public void patientInserted(AWTEvent e) {
 
-public void patientUpdated(AWTEvent e) {
-	model= new PatientBrowserModel();
-	model.fireTableDataChanged();
-	jTable.updateUI();
-	if ((jTable.getRowCount() > 0) && selectedrow > -1)
-		jTable.setRowSelectionInterval(selectedrow, selectedrow);
-}
-
-public void patientInserted(AWTEvent e) {
-	
-	pPat.add(0, patient);
-	((PatientBrowserModel) jTable.getModel()).fireTableDataChanged();
-	if (jTable.getRowCount() > 0)
-		jTable.setRowSelectionInterval(0, 0);
-}
+		pPat.add(0, patient);
+		((PatientBrowserModel) jTable.getModel()).fireTableDataChanged();
+		if (jTable.getRowCount() > 0) {
+			jTable.setRowSelectionInterval(0, 0);
+		}
+	}
 
 }

@@ -205,7 +205,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-		}return jTable;
+		}
+		return jTable;
 	}
 
 	class VaccineTypeBrowserModel extends DefaultTableModel {
