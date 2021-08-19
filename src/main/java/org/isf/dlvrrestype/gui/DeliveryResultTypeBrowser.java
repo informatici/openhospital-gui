@@ -203,20 +203,19 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		return jTable;
 	}
 
-	
-class DeliveryResultTypeBrowserModel extends DefaultTableModel {
+	class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 
-	private static final long serialVersionUID = 1L;
-	private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
+		private static final long serialVersionUID = 1L;
+		private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 
 		public DeliveryResultTypeBrowserModel() {
 			try {
 				pDeliveryResultType = manager.getDeliveryResultType();
-			} catch(OHServiceException ohServiceException) {
+			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
-		
+
 		@Override
 		public int getRowCount() {
 			if (pDeliveryResultType == null) {
@@ -224,7 +223,7 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 			}
 			return pDeliveryResultType.size();
 		}
-		
+
 		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
@@ -247,7 +246,7 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
@@ -263,8 +262,7 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
-	
-	
+
 	@Override
 	public void deliveryresultTypeInserted(AWTEvent e) {
 		pDeliveryResultType.add(0, deliveryresultType);

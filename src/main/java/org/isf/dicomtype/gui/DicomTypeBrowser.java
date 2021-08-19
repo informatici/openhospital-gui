@@ -130,6 +130,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(new ActionListener() {
 				
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					DicomType dicomType = new DicomType("","");
 					DicomTypeEdit newrecord = new DicomTypeEdit(myFrame,dicomType, true);
@@ -152,6 +153,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jEditButton.addActionListener(new ActionListener() {
 				
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
@@ -178,6 +180,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			jCloseButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					dispose();
 				}
@@ -196,6 +199,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jDeleteButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					if (jTable.getSelectedRow() < 0) {
 						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
@@ -233,13 +237,14 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-		}return jTable;
+		}
+		return jTable;
 	}
 
-class DicomTypeBrowserModel extends DefaultTableModel {
-		
-	private static final long serialVersionUID = 1L;
-	private DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
+	class DicomTypeBrowserModel extends DefaultTableModel {
+
+		private static final long serialVersionUID = 1L;
+		private DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 
 		public DicomTypeBrowserModel() {
 			try {
@@ -249,21 +254,26 @@ class DicomTypeBrowserModel extends DefaultTableModel {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		
+
+		@Override
 		public int getRowCount() {
-			if (pDicomType == null)
+			if (pDicomType == null) {
 				return 0;
+			}
 			return pDicomType.size();
 		}
-		
+
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
 				return pDicomType.get(r).getDicomTypeID();
@@ -271,10 +281,10 @@ class DicomTypeBrowserModel extends DefaultTableModel {
 				return pDicomType.get(r);
 			} else if (c == 1) {
 				return pDicomType.get(r).getDicomTypeDescription();
-			} 
+			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			//return super.isCellEditable(arg0, arg1);
@@ -282,20 +292,24 @@ class DicomTypeBrowserModel extends DefaultTableModel {
 		}
 	}
 
+	@Override
 	public void dicomTypeUpdated(AWTEvent e) {
 		pDicomType.set(selectedrow, dicomType);
 		((DicomTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
 		jTable.updateUI();
-		if ((jTable.getRowCount() > 0) && selectedrow > -1)
+		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
+		}
 	}
-	
+
+	@Override
 	public void dicomTypeInserted(AWTEvent e) {
-		dicomType = (DicomType)e.getSource();
+		dicomType = (DicomType) e.getSource();
 		pDicomType.add(0, dicomType);
 		((DicomTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-		if (jTable.getRowCount() > 0)
+		if (jTable.getRowCount() > 0) {
 			jTable.setRowSelectionInterval(0, 0);
+		}
 	}
 
 }
