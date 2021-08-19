@@ -102,8 +102,9 @@ public class PatientInsertExtended extends JDialog {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientInsertExtended.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
-	
+
 	public interface PatientListener extends EventListener {
+
 		void patientUpdated(AWTEvent e);
 
 		void patientInserted(AWTEvent e);
@@ -142,14 +143,14 @@ public class PatientInsertExtended extends JDialog {
 			((PatientListener) listeners[i]).patientUpdated(event);
 		}
 	}
-	
+
 	// COMPONENTS: Main
 	private JPanel jMainPanel = null;
 	private boolean insert;
 	private boolean justSave;
 	private Patient patient;
 	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	
+
 	// COMPONENTS: Data
 	private JPanel jDataPanel = null;
 
@@ -319,12 +320,12 @@ public class PatientInsertExtended extends JDialog {
 	private JButton jCancelButton = null;
 
 	private JLabel labelRequiredFields;
-	
+
 	private PatientPhotoPanel photoPanel;
-	
 
 	/**
 	 * This method initializes
+	 *
 	 * @param owner
 	 */
 	public PatientInsertExtended(JFrame owner, Patient old, boolean inserting) {
@@ -370,7 +371,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jContainPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContainPanel() {
@@ -385,7 +386,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jMainPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJDataPanel() {
@@ -401,7 +402,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jButtonPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJButtonPanel() {
@@ -415,7 +416,7 @@ public class PatientInsertExtended extends JDialog {
 
 	/**
 	 * This method initializes jOkButton
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJOkButton() {
@@ -445,16 +446,16 @@ public class PatientInsertExtended extends JDialog {
 					try {
 						if (patientManager.isNamePresent(name)) {
 							switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-									case JOptionPane.OK_OPTION:
-										ok = true;
-										break;
-									case JOptionPane.NO_OPTION:
-										ok = false;
-										break;
+								case JOptionPane.OK_OPTION:
+									ok = true;
+									break;
+								case JOptionPane.NO_OPTION:
+									ok = false;
+									break;
 							}
 						}
-					} catch(OHServiceException ex) {
-OHServiceExceptionUtil.showMessages(ex);
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 					}
 					if (ok) {
 						patient.setFirstName(firstName);
@@ -518,7 +519,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 						patient.setNote(jNoteTextArea.getText().trim());
 
-						try{
+						try {
 							patient = patientManager.savePatient(patient);
 							firePatientInserted(patient);
 							if (justSave) {
@@ -528,7 +529,7 @@ OHServiceExceptionUtil.showMessages(ex);
 							} else {
 								dispose();
 							}
-						} catch(OHServiceException ohServiceException) {
+						} catch (OHServiceException ohServiceException) {
 							OHServiceExceptionUtil.showMessages(ohServiceException);
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							LOGGER.error(ohServiceException.getMessage(), ohServiceException);
@@ -601,8 +602,8 @@ OHServiceExceptionUtil.showMessages(ex);
 						patient = patientManager.savePatient(patient);
 						firePatientUpdated(patient);
 						dispose();
-					} catch(final OHServiceException ex){
-OHServiceExceptionUtil.showMessages(ex);
+					} catch (final OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
 						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 					}
 				}
@@ -614,7 +615,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method checks Age insertion
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private boolean checkAge() {
@@ -641,7 +642,7 @@ OHServiceExceptionUtil.showMessages(ex);
 					return false;
 				}
 			}
-			
+
 		} else if (jAgeType_BirthDate.isSelected()) {
 			if (cBirthDate == null) {
 				return false;
@@ -652,12 +653,12 @@ OHServiceExceptionUtil.showMessages(ex);
 		} else if (jAgeType_Description.isSelected()) {
 			int index = jAgeDescComboBox.getSelectedIndex();
 			AgeType ageType = null;
-			
+
 			if (index > 0) {
 				try {
 					ageType = ageTypeManager.getTypeByCode(index);
-				}catch(OHServiceException e){
-                    OHServiceExceptionUtil.showMessages(e);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			} else {
 				return false;
@@ -672,7 +673,7 @@ OHServiceExceptionUtil.showMessages(ex);
 				bdate = bdate.minusYears(years);
 			}
 		}
-		
+
 		patient.setAge(years);
 		patient.setBirthDate(bdate.toDate());
 		patient.setAgetype("");
@@ -681,7 +682,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jCancelButton
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private JButton getJCancelButton() {
@@ -695,17 +696,17 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jBirthDate
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJBirthDate() {
 		if (jBirthDate == null) {
 			jBirthDate = new JPanel();
 			GridBagLayout gbl_jBirthDate = new GridBagLayout();
-			gbl_jBirthDate.columnWidths = new int[]{0, 0};
-			gbl_jBirthDate.rowHeights = new int[]{0, 0};
-			gbl_jBirthDate.columnWeights = new double[]{0.0, 1.0};
-			gbl_jBirthDate.rowWeights = new double[]{0.0, 0.0};
+			gbl_jBirthDate.columnWidths = new int[] { 0, 0 };
+			gbl_jBirthDate.rowHeights = new int[] { 0, 0 };
+			gbl_jBirthDate.columnWeights = new double[] { 0.0, 1.0 };
+			gbl_jBirthDate.rowWeights = new double[] { 0.0, 0.0 };
 			jBirthDate.setLayout(gbl_jBirthDate);
 			GridBagConstraints gbc_jBirthDateLabelPanel = new GridBagConstraints();
 			gbc_jBirthDateLabelPanel.anchor = GridBagConstraints.WEST;
@@ -733,14 +734,14 @@ OHServiceExceptionUtil.showMessages(ex);
 		}
 		return jBirthDateAge;
 	}
-	
+
 	private String formatYearsMonthsDays(int years, int months, int days) {
 		return MessageBundle.formatMessage("angal.patient.ymd.fmt.msg", years, months, days);
 	}
 
 	/**
 	 * This method initializes jBirthDateLabel
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private JLabel getJBirthDateLabel() {
@@ -753,7 +754,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jBirthDateGroupPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJBirthDateGroupPanel() {
@@ -798,7 +799,7 @@ OHServiceExceptionUtil.showMessages(ex);
 				}
 			}
 		}
-		
+
 		if (jBirthDateGroupPanel == null) {
 			jBirthDateGroupPanel = new JPanel();
 			jBirthDateGroupPanel.setLayout(new BorderLayout());
@@ -841,10 +842,10 @@ OHServiceExceptionUtil.showMessages(ex);
 		getJBirthDateAge();
 		jBirthDateAge.setText(formatYearsMonthsDays(years, months, days));
 	}
-	
+
 	/**
 	 * This method initializes jBirthDateLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJBirthDateLabelPanel() {
@@ -857,7 +858,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jFirstNameTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJFirstNameTextField() {
@@ -872,7 +873,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jSecondNamePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJSecondNamePanel() {
@@ -885,7 +886,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jSecondNameTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJSecondNameTextField() {
@@ -901,7 +902,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jSexPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getSexPanel() {
@@ -929,7 +930,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAddressPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAddressLabelPanel() {
@@ -943,7 +944,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jTaxCodeLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTaxCodeLabelPanel() {
@@ -958,7 +959,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAddressTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJAddressTextField() {
@@ -973,7 +974,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jTaxCodeTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTaxCodeTextField() {
@@ -988,7 +989,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jCityLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJCityLabelPanel() {
@@ -1002,7 +1003,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jCityTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJCityTextField() {
@@ -1017,7 +1018,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jTelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTelPanel() {
@@ -1031,7 +1032,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jTelephoneTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJTelephoneTextField() {
@@ -1048,7 +1049,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jNextKinLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJNextKinLabelPanel() {
@@ -1063,7 +1064,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jNextKinTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJNextKinTextField() {
@@ -1078,7 +1079,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jBloodTypePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJBloodTypePanel() {
@@ -1091,35 +1092,33 @@ OHServiceExceptionUtil.showMessages(ex);
 
 			if (!insert) {
 				jBloodTypeComboBox.setSelectedItem(patient.getBloodType());
-			} 
+			}
 		}
 		return jBloodTypePanel;
 	}
 
 	/**
 	 * This method initializes jMaritalPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJMaritalPanel() {
 		if (jMaritalPanel == null) {
 			jMaritalPanel = new JPanel();
-			jMaritalPanel = setMyBorder(jMaritalPanel,  MessageBundle.getMessage("angal.patient.maritalstatus"));
+			jMaritalPanel = setMyBorder(jMaritalPanel, MessageBundle.getMessage("angal.patient.maritalstatus"));
 			jMaritalStatusComboBox = new JComboBox(patientManager.getMaritalList());
 			jMaritalPanel.add(jMaritalStatusComboBox);
 
 			if (!insert) {
 				jMaritalStatusComboBox.setSelectedItem(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
-			} 
+			}
 		}
 		return jMaritalPanel;
 	}
 
-
-	
 	/**
 	 * This method initializes jFirstNameLabel
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private JLabel getJFirstNameLabel() {
@@ -1132,7 +1131,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jSecondNameLabel
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private JLabel getJSecondNameLabel() {
@@ -1145,7 +1144,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jFirstNameLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFirstNamePanel() {
@@ -1158,7 +1157,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAnagraphPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAnagraphPanel() {
@@ -1180,7 +1179,7 @@ OHServiceExceptionUtil.showMessages(ex);
 		}
 		return jAnagraphPanel;
 	}
-	
+
 	private JLabel getJLabelRequiredFields() {
 		if (labelRequiredFields == null) {
 			labelRequiredFields = new JLabel(MessageBundle.getMessage("angal.patient.indicatesrequiredfields"));
@@ -1191,7 +1190,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jSexLabelPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJSexLabelPanel() {
@@ -1206,7 +1205,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jSecondNameFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJSecondNamePanel1() {
@@ -1219,7 +1218,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jFirstName
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFirstName() {
@@ -1232,10 +1231,9 @@ OHServiceExceptionUtil.showMessages(ex);
 		return jFirstName;
 	}
 
-
 	/**
 	 * This method initializes jFirstNameFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFirstNameFieldPanel() {
@@ -1248,7 +1246,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jSecondName
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJSecondName() {
@@ -1263,7 +1261,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAgeType
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeType() {
@@ -1273,14 +1271,14 @@ OHServiceExceptionUtil.showMessages(ex);
 			jAgeType.setLayout(new BorderLayout());
 			jAgeType.add(getJAgeTypeButtonGroup(), BorderLayout.NORTH);
 			jAgeType.add(getJAgeTypeSelection(), BorderLayout.CENTER);
-			jAgeType.setPreferredSize(new Dimension(100,100));
+			jAgeType.setPreferredSize(new Dimension(100, 100));
 		}
 		return jAgeType;
 	}
 
 	/**
 	 * This method initializes jAgeTypeButtonGroup
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeTypeButtonGroup() {
@@ -1312,7 +1310,7 @@ OHServiceExceptionUtil.showMessages(ex);
 				} else {
 					jAgeType_Age.setSelected(true);
 					years = patient.getAge();
-					
+
 				}
 			} else {
 				jAgeType_Age.setSelected(true);
@@ -1352,11 +1350,11 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAgeTypeSelection
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeTypeSelection() {
-		
+
 		if (jAgeType_Age.isSelected()) {
 			jAgeTypeSelection = getJAge();
 		} else if (jAgeType_BirthDate.isSelected()) {
@@ -1369,7 +1367,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAgeType_Age
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJAgeType_Age() {
@@ -1382,7 +1380,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAgeType_BirthDate
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJAgeType_BirthDate() {
@@ -1395,7 +1393,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAgeType_Description
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJAgeType_Description() {
@@ -1408,7 +1406,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAgeType_BirthDatePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeType_BirthDatePanel() {
@@ -1421,7 +1419,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAgeDesc
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeDescription() {
@@ -1435,7 +1433,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAgeMonthsPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeMonthsPanel() {
@@ -1443,7 +1441,8 @@ OHServiceExceptionUtil.showMessages(ex);
 			jAgeMonthsPanel = new JPanel();
 			jAgeMonthsLabel = new JLabel(MessageBundle.getMessage("angal.common.months.txt"));
 
-			String[] months = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" };
+			String[] months = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22",
+					"23" };
 			jAgeMonthsComboBox = new JComboBox(months);
 		}
 
@@ -1460,7 +1459,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAgeDescPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeDescPanel() {
@@ -1472,9 +1471,9 @@ OHServiceExceptionUtil.showMessages(ex);
 			ArrayList<AgeType> ageList;
 			try {
 				ageList = ageTypeManager.getAgeType();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				ageList = new ArrayList<>();
-                OHServiceExceptionUtil.showMessages(e);
+				OHServiceExceptionUtil.showMessages(e);
 			}
 			jAgeDescComboBox.addItem("");
 			for (AgeType ag : ageList) {
@@ -1510,7 +1509,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAge
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAge() {
@@ -1528,7 +1527,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAddressFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAddressFieldPanel() {
@@ -1543,11 +1542,11 @@ OHServiceExceptionUtil.showMessages(ex);
 		if (jAgeYears == null) {
 			jAgeYears = new JTextField("0", 3);
 			jAgeYears.addFocusListener(new FocusListener() {
-				
+
 				@Override
 				public void focusLost(FocusEvent e) {
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					JTextField thisField = (JTextField) e.getSource();
@@ -1556,21 +1555,21 @@ OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 			if (!insert) {
-				jAgeYears.setText(""+years);
+				jAgeYears.setText("" + years);
 			}
 		}
 		return jAgeYears;
 	}
-	
+
 	private JTextField getJAgeFieldMonths() {
 		if (jAgeMonths == null) {
 			jAgeMonths = new JTextField("0", 3);
 			jAgeMonths.addFocusListener(new FocusListener() {
-				
+
 				@Override
 				public void focusLost(FocusEvent e) {
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					JTextField thisField = (JTextField) e.getSource();
@@ -1579,21 +1578,21 @@ OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 			if (!insert) {
-				jAgeMonths.setText(""+months);
+				jAgeMonths.setText("" + months);
 			}
 		}
 		return jAgeMonths;
 	}
-	
+
 	private JTextField getJAgeFieldDays() {
 		if (jAgeDays == null) {
 			jAgeDays = new JTextField("0", 3);
 			jAgeDays.addFocusListener(new FocusListener() {
-				
+
 				@Override
 				public void focusLost(FocusEvent e) {
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {
 					JTextField thisField = (JTextField) e.getSource();
@@ -1602,7 +1601,7 @@ OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 			if (!insert) {
-				jAgeDays.setText(""+days);
+				jAgeDays.setText("" + days);
 			}
 		}
 		return jAgeDays;
@@ -1610,7 +1609,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jTaxCodeFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTaxCodeFieldPanel() {
@@ -1623,7 +1622,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jCityFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJCityFieldPanel() {
@@ -1636,7 +1635,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jNextKinFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJNextKinFieldPanel() {
@@ -1649,7 +1648,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jTelephoneFieldPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTelephoneFieldPanel() {
@@ -1662,7 +1661,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jAddressPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAddressPanel() {
@@ -1678,7 +1677,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jTaxCodePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTaxCodePanel() {
@@ -1694,7 +1693,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jCity
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJCity() {
@@ -1709,7 +1708,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jNextKin
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJNextKin() {
@@ -1724,7 +1723,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jTelephone
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJTelephone() {
@@ -1739,7 +1738,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jDataContainPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJDataContainPanel() {
@@ -1766,26 +1765,26 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jProfessionPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJProfessionPanel() {
 		if (jProfessionPanel == null) {
 			jProfessionPanel = new JPanel();
-			jProfessionPanel = setMyBorder(jProfessionPanel,  MessageBundle.getMessage("angal.patient.profession"));
-			jProfessionComboBox= new JComboBox(patientManager.getProfessionList());
+			jProfessionPanel = setMyBorder(jProfessionPanel, MessageBundle.getMessage("angal.patient.profession"));
+			jProfessionComboBox = new JComboBox(patientManager.getProfessionList());
 			jProfessionPanel.add(jProfessionComboBox);
 
 			if (!insert) {
 				jProfessionComboBox.setSelectedItem(patientManager.getProfessionTranslated(patient.getProfession()));
-			} 
+			}
 		}
 		return jProfessionPanel;
 	}
 
 	/**
 	 * This method initializes jFatherPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFatherPanel() {
@@ -1803,14 +1802,14 @@ OHServiceExceptionUtil.showMessages(ex);
 			jFatherPanel.add(getJFatherOptions(), BorderLayout.CENTER);
 			if (!insert) {
 				switch (patient.getFather()) {
-				case 'D':
-					getJFather_Dead().setSelected(true);
-					break;
-				case 'A':
-					getJFather_Alive().setSelected(true);
-					break;
-				default:
-					break;
+					case 'D':
+						getJFather_Dead().setSelected(true);
+						break;
+					case 'A':
+						getJFather_Alive().setSelected(true);
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -1830,7 +1829,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jFatherDeadRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJFather_Dead() {
@@ -1842,7 +1841,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jFatherAliveRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJFather_Alive() {
@@ -1854,7 +1853,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jFather_Unknown radio button
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJFather_Unknown() {
@@ -1867,7 +1866,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jMotherPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJMotherPanel() {
@@ -1886,14 +1885,14 @@ OHServiceExceptionUtil.showMessages(ex);
 			motherGroup.add(getJMother_Unknown());
 			if (!insert) {
 				switch (patient.getMother()) {
-				case 'D':
-					getJMother_Dead().setSelected(true);
-					break;
-				case 'A':
-					getJMother_Alive().setSelected(true);
-					break;
-				default:
-					break;
+					case 'D':
+						getJMother_Dead().setSelected(true);
+						break;
+					case 'A':
+						getJMother_Alive().setSelected(true);
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -1912,7 +1911,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jMotherDeadRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJMother_Dead() {
@@ -1924,7 +1923,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jMotherAliveRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJMother_Alive() {
@@ -1936,7 +1935,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jMotherUnknownRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJMother_Unknown() {
@@ -1949,7 +1948,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jInsurancePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJInsurancePanel() {
@@ -1961,21 +1960,21 @@ OHServiceExceptionUtil.showMessages(ex);
 			groupPanel.add(getJInsurance_Yes());
 			groupPanel.add(getJInsurance_NoPanel());
 			groupPanel.add(getJInsurance_Unknown());
-			
+
 			insuranceGroup = new ButtonGroup();
 			insuranceGroup.add(getJInsurance_Yes());
 			insuranceGroup.add(getJInsurance_No());
 			insuranceGroup.add(getJInsurance_Unknown());
 			if (!insert) {
 				switch (patient.getHasInsurance()) {
-				case 'Y':
-					getJInsurance_Yes().setSelected(true);
-					break;
-				case 'N':
-					getJInsurance_No().setSelected(true);
-					break;
-				default:
-					break;
+					case 'Y':
+						getJInsurance_Yes().setSelected(true);
+						break;
+					case 'N':
+						getJInsurance_No().setSelected(true);
+						break;
+					default:
+						break;
 				}
 			}
 			jInsurancePanel.add(groupPanel, BorderLayout.CENTER);
@@ -1985,7 +1984,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jInsuranceYesRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJInsurance_Yes() {
@@ -1997,7 +1996,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jInsuranceNoRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJInsurance_No() {
@@ -2009,7 +2008,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jInsuranceUnknownRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJInsurance_Unknown() {
@@ -2022,7 +2021,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jParentPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJParentPanel() {
@@ -2038,14 +2037,14 @@ OHServiceExceptionUtil.showMessages(ex);
 			jParentPanel.add(getJParent_Unknown());
 			if (!insert) {
 				switch (patient.getParentTogether()) {
-				case 'Y':
-					getJParent_Yes().setSelected(true);
-					break;
-				case 'N':
-					getJParent_No().setSelected(true);
-					break;
-				default:
-					break;
+					case 'Y':
+						getJParent_Yes().setSelected(true);
+						break;
+					case 'N':
+						getJParent_No().setSelected(true);
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -2054,7 +2053,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jParentYesRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJParent_Yes() {
@@ -2066,7 +2065,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jParentNoRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJParent_No() {
@@ -2078,7 +2077,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jParentUnknownRadioButton
-	 * 
+	 *
 	 * @return javax.swing.JRadioButton
 	 */
 	private JRadioButton getJParent_Unknown() {
@@ -2091,7 +2090,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jExtensionContent
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJExtensionContent() {
@@ -2100,7 +2099,7 @@ OHServiceExceptionUtil.showMessages(ex);
 			jExtensionContent.setLayout(new BoxLayout(getJExtensionContent(), BoxLayout.Y_AXIS));
 			jExtensionContent.add(getJBloodTypePanel(), null);
 			jExtensionContent.add(getJMaritalPanel(), null);
-			jExtensionContent.add(getJProfessionPanel(),null);
+			jExtensionContent.add(getJProfessionPanel(), null);
 			jExtensionContent.add(getJFatherPanel(), null);
 			jExtensionContent.add(getJMotherPanel(), null);
 			jExtensionContent.add(getJParentPanel(), null);
@@ -2138,7 +2137,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jFatherAlivePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJFatherAlivePanel() {
@@ -2151,7 +2150,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jMotherAlivePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJMotherAlivePanel() {
@@ -2164,7 +2163,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jInsuranceNoPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJInsurance_NoPanel() {
@@ -2177,7 +2176,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jParentNoPanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanelNoPanel() {
@@ -2190,7 +2189,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jNoteTextArea
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JTextArea getJTextArea() {
@@ -2208,7 +2207,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jNotePanel
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJRightPanel() {
@@ -2237,7 +2236,8 @@ OHServiceExceptionUtil.showMessages(ex);
 			jNoteScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			jNoteScrollPane.setPreferredSize(new Dimension(200, 200));
 			jNoteScrollPane.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patient.note")), BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+					BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patient.note")),
+							BorderFactory.createEmptyBorder(5, 5, 5, 5)),
 					jNoteScrollPane.getBorder()));
 		}
 		return jNoteScrollPane;
@@ -2245,7 +2245,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jFatherNameTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJFatherNameTextField() {
@@ -2260,7 +2260,7 @@ OHServiceExceptionUtil.showMessages(ex);
 
 	/**
 	 * This method initializes jMotherNameTextField
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private JTextField getJMotherNameTextField() {
@@ -2272,7 +2272,7 @@ OHServiceExceptionUtil.showMessages(ex);
 		}
 		return jMotherNameTextField;
 	}
-	
+
 	public void setPatientPhoto(final BufferedImage photo) {
 		if (photo != null) {
 			PatientProfilePhoto patientProfilePhoto = new PatientProfilePhoto();
