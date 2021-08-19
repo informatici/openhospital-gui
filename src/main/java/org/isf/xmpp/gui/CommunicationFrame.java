@@ -25,8 +25,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -35,7 +33,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -67,8 +64,6 @@ import org.isf.xmpp.manager.ComplexCellRender;
 import org.isf.xmpp.manager.Interaction;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
@@ -183,6 +178,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 		roster.addRosterListener(new RosterListener() {
 
+			@Override
 			public void presenceChanged(Presence presence) {
 				LOGGER.debug("State changed -> {} - {}", presence.getFrom(), presence); //$NON-NLS-1$ //$NON-NLS-2$
 				String user_name = interaction.userFromAddress(presence.getFrom());
@@ -204,12 +200,15 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				refreshBuddyList();
 			}
 
+			@Override
 			public void entriesUpdated(Collection<String> arg0) {
 			}
 
+			@Override
 			public void entriesDeleted(Collection<String> arg0) {
 			}
 
+			@Override
 			public void entriesAdded(Collection<String> arg0) {
 			}
 		});
@@ -225,32 +224,24 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 	private void incomingChat() {
 		ChatManager chatmanager = interaction.getServer().getChatManager();
-		chatmanager.addChatListener(new ChatManagerListener() {
-
-			@Override
-			public void chatCreated(Chat chat, boolean createLocally) {
-				chat.addMessageListener(new MessageListener() {
-
-					@Override
-					public void processMessage(Chat chat, Message message) {
-						if (message.getType() == Message.Type.chat) {
-							LOGGER.debug("Incoming message from: {}", chat.getThreadID());
-							LOGGER.debug("GUI: {}", CommunicationFrame.this);
-							String user = chat.getParticipant().substring(0, chat.getParticipant().indexOf("@"));
-							printMessage(getArea(user, true), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
-							if (!isVisible()) {
-								setVisible(true);
-								setState(java.awt.Frame.NORMAL);
-								toFront();
-							} else {
-								toFront();
-							}
-						}
+		chatmanager.addChatListener((chat, createLocally) -> {
+			chat.addMessageListener((chat1, message) -> {
+				if (message.getType() == Message.Type.chat) {
+					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
+					LOGGER.debug("GUI: {}", CommunicationFrame.this);
+					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf("@"));
+					printMessage(getArea(user, true), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
+					if (!isVisible()) {
+						setVisible(true);
+						setState(java.awt.Frame.NORMAL);
+						toFront();
+					} else {
+						toFront();
 					}
-				});
-				if (!createLocally) {
-
 				}
+			});
+			if (!createLocally) {
+
 			}
 		});
 	}
@@ -267,36 +258,28 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		popUpMenu.add(new JPopupMenu.Separator());
 		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo.txt")));
 		final JFileChooser fileChooser = new JFileChooser();
-		sendFile.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int returnVal = fileChooser.showOpenDialog(getParent());
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fileChooser.getSelectedFile();
-					LOGGER.debug("Selected file: {}", file.toString());
-					String receiver = ((RosterEntry) buddyList.getSelectedValue()).getName();
-					LOGGER.debug("Receiver: {}", receiver);
-					interaction.sendFile(receiver, file, null);
-				}
+		sendFile.addActionListener(e -> {
+			int returnVal = fileChooser.showOpenDialog(getParent());
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File file = fileChooser.getSelectedFile();
+				LOGGER.debug("Selected file: {}", file.toString());
+				String receiver = ((RosterEntry) buddyList.getSelectedValue()).getName();
+				LOGGER.debug("Receiver: {}", receiver);
+				interaction.sendFile(receiver, file, null);
 			}
 		});
-		getInfo.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String user_name = ((RosterEntry) buddyList.getSelectedValue()).getName();
-				String info = null;
-				try {
-					info = userBrowsingManager.getUsrInfo(user_name);
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-				}
-
-				userInfo.setText(MessageBundle.formatMessage("angal.xmpp.userinfo.fmt.txt", user_name, info));
-				validate();
-				repaint();
+		getInfo.addActionListener(arg0 -> {
+			String user_name = ((RosterEntry) buddyList.getSelectedValue()).getName();
+			String info = null;
+			try {
+				info = userBrowsingManager.getUsrInfo(user_name);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
+
+			userInfo.setText(MessageBundle.formatMessage("angal.xmpp.userinfo.fmt.txt", user_name, info));
+			validate();
+			repaint();
 		});
 
 		buddyList.addMouseListener(new MouseListener() {
@@ -326,8 +309,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e) && !buddyList.isSelectionEmpty() && buddyList.locationToIndex(e.getPoint()) == buddyList
-						.getSelectedIndex())
+						.getSelectedIndex()) {
 					popUpMenu.show(buddyList, e.getX(), e.getY());
+				}
 
 				if (e.getClickCount() == 2) {
 					int index = buddyList.locationToIndex(e.getPoint());
@@ -458,23 +442,21 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 
 		LOGGER.debug("==> roster : {}", roster);
 		List<RosterEntry> entries = new ArrayList<>(roster.getEntries());
-		Collections.sort(entries, new Comparator<RosterEntry>() {
-
-			public int compare(RosterEntry r1, RosterEntry r2) {
-				Presence presence1 = roster.getPresence(r1.getUser());
-				Presence presence2 = roster.getPresence(r2.getUser());
-				String r1_name = r1.getName();
-				String r2_name = r2.getName();
-				if (presence1.isAvailable() == presence2.isAvailable())
-					return r1_name.toLowerCase().compareTo(r2_name.toLowerCase());
-
-				if (presence1.isAvailable() && (!presence2.isAvailable()))
-					return -1;
-
-				else
-					return 1;
-
+		Collections.sort(entries, (r1, r2) -> {
+			Presence presence1 = roster.getPresence(r1.getUser());
+			Presence presence2 = roster.getPresence(r2.getUser());
+			String r1_name = r1.getName();
+			String r2_name = r2.getName();
+			if (presence1.isAvailable() == presence2.isAvailable()) {
+				return r1_name.toLowerCase().compareTo(r2_name.toLowerCase());
 			}
+
+			if (presence1.isAvailable() && (!presence2.isAvailable())) {
+				return -1;
+			} else {
+				return 1;
+			}
+
 		});
 		JList buddy = new JList(entries.toArray());
 
@@ -516,8 +498,9 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	@Override
 	public void fileTransferRequest(final FileTransferRequest request) {
 
-		if (!this.isVisible())
+		if (!this.isVisible()) {
 			this.setVisible(true);
+		}
 
 		ImageIcon acceptIcon;
 		ImageIcon rejectIcon;
@@ -539,52 +522,44 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		final String user = interaction.userFromAddress(request.getRequestor());
 		this.printNotification((this.getArea(user, false)), user, file_transfer, accept, reject);
 
-		accept.addActionListener(new ActionListener() {
+		accept.addActionListener(e -> {
+			accept.setEnabled(false);
+			reject.setEnabled(false);
+			JFileChooser chooser = new JFileChooser();
+			chooser.setCurrentDirectory(new File("."));
+			chooser.setDialogTitle("Select the directory");
+			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				accept.setEnabled(false);
-				reject.setEnabled(false);
-				JFileChooser chooser = new JFileChooser();
-				chooser.setCurrentDirectory(new java.io.File("."));
-				chooser.setDialogTitle("Select the directory");
-				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			chooser.setAcceptAllFileFilterUsed(false);
 
-				chooser.setAcceptAllFileFilterUsed(false);
-
-				if (chooser.showOpenDialog(CommunicationFrame.this) == JFileChooser.APPROVE_OPTION) {
-					LOGGER.debug("getCurrentDirectory(): {}", chooser.getCurrentDirectory());
-					LOGGER.debug("getSelectedFile() : {}", chooser.getSelectedFile());
-				} else {
-					LOGGER.debug("No Selection.");
-				}
-				IncomingFileTransfer transfer = request.accept();
-				String path = chooser.getSelectedFile() + "/" + request.getFileName();
-				File file = new File(path);
-				try {
-					transfer.recieveFile(file);
-				} catch (XMPPException xmppException) {
-					LOGGER.error(xmppException.getMessage(), xmppException);
-				}
-
-				printNotification((getArea(user, true)), MessageBundle.formatMessage("angal.xmpp.thefiletransferofbetweenyouandendedsuccesfully.fmt.msg",
-						request.getFileName(), user));
-				sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenaccepted.fmt.msg", request.getFileName()),
-						request.getRequestor(), false);
+			if (chooser.showOpenDialog(CommunicationFrame.this) == JFileChooser.APPROVE_OPTION) {
+				LOGGER.debug("getCurrentDirectory(): {}", chooser.getCurrentDirectory());
+				LOGGER.debug("getSelectedFile() : {}", chooser.getSelectedFile());
+			} else {
+				LOGGER.debug("No Selection.");
 			}
+			IncomingFileTransfer transfer = request.accept();
+			String path = chooser.getSelectedFile() + "/" + request.getFileName();
+			File file = new File(path);
+			try {
+				transfer.recieveFile(file);
+			} catch (XMPPException xmppException) {
+				LOGGER.error(xmppException.getMessage(), xmppException);
+			}
+
+			printNotification((getArea(user, true)), MessageBundle.formatMessage("angal.xmpp.thefiletransferofbetweenyouandendedsuccesfully.fmt.msg",
+					request.getFileName(), user));
+			sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenaccepted.fmt.msg", request.getFileName()),
+					request.getRequestor(), false);
 		});
-		reject.addActionListener(new ActionListener() {
+		reject.addActionListener(e -> {
+			accept.setEnabled(false);
+			reject.setEnabled(false);
+			request.reject();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				accept.setEnabled(false);
-				reject.setEnabled(false);
-				request.reject();
-
-				printNotification((getArea(user, false)), MessageBundle.getMessage("angal.xmpp.youhaverejectedthefiletransfer.txt"));
-				sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenrejected.fmt.msg",request.getFileName()),
-						request.getRequestor(), false);
-			}
+			printNotification((getArea(user, false)), MessageBundle.getMessage("angal.xmpp.youhaverejectedthefiletransfer.txt"));
+			sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenrejected.fmt.msg",request.getFileName()),
+					request.getRequestor(), false);
 		});
 	}
 
@@ -592,22 +567,18 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 	public void chatCreated(Chat chat, boolean createdLocally) {
 		if (!createdLocally) {
 
-			chat.addMessageListener(new MessageListener() {
-
-				@Override
-				public void processMessage(Chat chat, Message message) {
-					if (message.getType() == Message.Type.chat) {
-						LOGGER.debug("Incoming message from: {}", chat.getThreadID());
-						LOGGER.debug("GUI: {}", CommunicationFrame.this);
-						String user = chat.getParticipant().substring(0, chat.getParticipant().indexOf("@"));
-						printMessage((getArea(user, false)), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
-						if (!isVisible()) {
-							setVisible(true);
-							setState(java.awt.Frame.NORMAL);
-							toFront();
-						} else {
-							toFront();
-						}
+			chat.addMessageListener((chat1, message) -> {
+				if (message.getType() == Message.Type.chat) {
+					LOGGER.debug("Incoming message from: {}", chat1.getThreadID());
+					LOGGER.debug("GUI: {}", CommunicationFrame.this);
+					String user = chat1.getParticipant().substring(0, chat1.getParticipant().indexOf("@"));
+					printMessage((getArea(user, false)), interaction.userFromAddress(message.getFrom()), message.getBody(), false);
+					if (!isVisible()) {
+						setVisible(true);
+						setState(java.awt.Frame.NORMAL);
+						toFront();
+					} else {
+						toFront();
 					}
 				}
 			});

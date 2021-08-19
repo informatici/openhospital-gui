@@ -87,8 +87,9 @@ public class DiseaseEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
-		for (int i = 0; i < listeners.length; i++)
+		for (int i = 0; i < listeners.length; i++) {
 			((DiseaseListener)listeners[i]).diseaseInserted(event);
+		}
 	}
 	private void fireDiseaseUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -96,8 +97,9 @@ public class DiseaseEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
-		for (int i = 0; i < listeners.length; i++)
+		for (int i = 0; i < listeners.length; i++) {
 			((DiseaseListener)listeners[i]).diseaseUpdated(event);
+		}
 	}
 	
 	private JPanel jContentPane = null;
@@ -254,11 +256,7 @@ public class DiseaseEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -272,50 +270,47 @@ public class DiseaseEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+			okButton.addActionListener(e -> {
+				DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
-					disease.setType((DiseaseType)typeComboBox.getSelectedItem());
-					disease.setDescription(descriptionTextField.getText());
-					disease.setCode(codeTextField.getText().trim().toUpperCase());
-					disease.setOpdInclude(includeOpdCheckBox.isSelected());
-					disease.setIpdInInclude(includeIpdInCheckBox.isSelected());
-					disease.setIpdOutInclude(includeIpdOutCheckBox.isSelected());
-					
-					boolean result = false;
-					Disease savedDisease = null;
-					try{
-						if (insert) { // inserting
-							savedDisease = manager.newDisease(disease);
-							if (savedDisease != null) {
-								disease.setLock(savedDisease.getLock());
-								result  = true;
-							}
-							
-							if (result) {
-								fireDiseaseInserted();
-							}
-						} else { // updating
-							savedDisease = manager.updateDisease(disease);
-							if (savedDisease != null) {
-								disease.setLock(savedDisease.getLock());
-								result  = true;
-							}
-							
-							if (result) {
-								fireDiseaseUpdated();
-							}
+				disease.setType((DiseaseType) typeComboBox.getSelectedItem());
+				disease.setDescription(descriptionTextField.getText());
+				disease.setCode(codeTextField.getText().trim().toUpperCase());
+				disease.setOpdInclude(includeOpdCheckBox.isSelected());
+				disease.setIpdInInclude(includeIpdInCheckBox.isSelected());
+				disease.setIpdOutInclude(includeIpdOutCheckBox.isSelected());
+
+				boolean result = false;
+				Disease savedDisease = null;
+				try {
+					if (insert) { // inserting
+						savedDisease = manager.newDisease(disease);
+						if (savedDisease != null) {
+							disease.setLock(savedDisease.getLock());
+							result = true;
 						}
-                        if (!result) {
-	                        MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-                        }
-                        else {
-                        	dispose();
-                        }
-					}catch(OHServiceException ex){
-						OHServiceExceptionUtil.showMessages(ex);
+
+						if (result) {
+							fireDiseaseInserted();
+						}
+					} else { // updating
+						savedDisease = manager.updateDisease(disease);
+						if (savedDisease != null) {
+							disease.setLock(savedDisease.getLock());
+							result = true;
+						}
+
+						if (result) {
+							fireDiseaseUpdated();
+						}
 					}
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					} else {
+						dispose();
+					}
+				} catch (OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 		}
@@ -370,9 +365,15 @@ public class DiseaseEdit extends JDialog {
 			jNewPatientPanel.add(includeIpdInCheckBox);
 			jNewPatientPanel.add(includeIpdOutCheckBox);
 			if (!insert){
-				if (disease.getOpdInclude()) includeOpdCheckBox.setSelected(true);
-				if (disease.getIpdInInclude()) includeIpdInCheckBox.setSelected(true);
-				if (disease.getIpdOutInclude()) includeIpdOutCheckBox.setSelected(true);
+				if (disease.getOpdInclude()) {
+					includeOpdCheckBox.setSelected(true);
+				}
+				if (disease.getIpdInInclude()) {
+					includeIpdInCheckBox.setSelected(true);
+				}
+				if (disease.getIpdOutInclude()) {
+					includeIpdOutCheckBox.setSelected(true);
+				}
 			}
 		}
 		return jNewPatientPanel;
@@ -402,8 +403,9 @@ public class DiseaseEdit extends JDialog {
 							selectedDiseaseType = elem;
 						}
 					}
-					if (selectedDiseaseType!=null)
+					if (selectedDiseaseType!=null) {
 						typeComboBox.setSelectedItem(selectedDiseaseType);
+					}
 					//typeComboBox.setEnabled(false);
 				}
 			} catch(OHServiceException ohServiceException) {

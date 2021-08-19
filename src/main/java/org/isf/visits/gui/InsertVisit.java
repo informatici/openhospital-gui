@@ -309,12 +309,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			buttonCancel.addActionListener(arg0 -> dispose());
 		}
 		return buttonCancel;
 	}
@@ -327,6 +322,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 				private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 
+				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					if (visitDateChooser.getDate() == null) {
 						MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseadate.msg");
@@ -390,8 +386,9 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		visitDateChooser = new JDateChooser();
 		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 		visitDateChooser.setDateFormatString(dateTimeFormat); // $NON-NLS-1$
-		if (visitDate != null)
+		if (visitDate != null) {
 			visitDateChooser.setDate(visitDate);
+		}
 
 		return visitDateChooser;
 	}
@@ -401,20 +398,16 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (admButton == null) {
 			admButton = new JButton(""); //$NON-NLS-1$
 			admButton.setIcon(new ImageIcon("./rsc/icons/clock_button.png")); //$NON-NLS-1$
-			admButton.addActionListener(new ActionListener() {
+			admButton.addActionListener(e -> {
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
+				JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(InsertVisit.this, visitDateChooser.getDate());
+				schedDate.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				schedDate.setVisible(true);
 
-					JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(InsertVisit.this, visitDateChooser.getDate());
-					schedDate.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					schedDate.setVisible(true);
+				Date date = schedDate.getDate();
 
-					Date date = schedDate.getDate();
-
-					if (date != null) {
-						visitDateChooser.setDate(date);
-					}
+				if (date != null) {
+					visitDateChooser.setDate(date);
 				}
 			});
 		}
@@ -426,16 +419,13 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.visit.findpatient.btn"));
 			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.visit.findpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
-			jButtonPickPatient.addActionListener(new ActionListener() {
+			jButtonPickPatient.addActionListener(e -> {
 
-				public void actionPerformed(ActionEvent e) {
+				SelectPatient sp = new SelectPatient(InsertVisit.this, patientSelected);
+				sp.addSelectionListener(InsertVisit.this);
+				sp.pack();
+				sp.setVisible(true);
 
-					SelectPatient sp = new SelectPatient(InsertVisit.this, patientSelected);
-					sp.addSelectionListener(InsertVisit.this);
-					sp.pack();
-					sp.setVisible(true);
-
-				}
 			});
 		}
 		return jButtonPickPatient;
@@ -459,6 +449,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		return choosePatientPanel;
 	}
 
+	@Override
 	public void patientSelected(Patient patient) {
 		patientSelected = patient;
 		patientTextField.setText(patientSelected != null ? patientSelected.getFirstName() + " " + patientSelected.getSecondName() : ""); //$NON-NLS-1$ //$NON-NLS-2$

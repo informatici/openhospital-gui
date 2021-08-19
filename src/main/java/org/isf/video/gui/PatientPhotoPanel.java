@@ -87,6 +87,7 @@ public class PatientPhotoPanel extends JPanel {
 			final IconButton btnDeletePhoto = new IconButton(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
 			btnDeletePhoto.setSize(new Dimension(40, 40));
 			btnDeletePhoto.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					
 					int answer = MessageDialog.yesNo(owner, "angal.patient.doyouwanttodeletethepatientsphoto.msg");
@@ -127,10 +128,11 @@ public class PatientPhotoPanel extends JPanel {
 
 			box.add(btnDeletePhoto);
 
-			if (patientHasPhoto)
+			if (patientHasPhoto) {
 				btnDeletePhoto.setVisible(true);
-			else
+			} else {
 				btnDeletePhoto.setVisible(false);
+			}
 			
 			final Box buttonBox1 = Box.createHorizontalBox();
 
@@ -257,12 +259,9 @@ class CroppingDialog extends JDialog {
 		if (saveButton == null) {
 			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			saveButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e) {
-					cropped = crop.clipImage();
-					dispose();
-				}
+			saveButton.addActionListener(e -> {
+				cropped = crop.clipImage();
+				dispose();
 			});
 		}
 		return saveButton;

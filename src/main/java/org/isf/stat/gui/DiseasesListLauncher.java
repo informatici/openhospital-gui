@@ -26,8 +26,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -122,11 +120,7 @@ public class DiseasesListLauncher extends ModalJFrame{
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -161,11 +155,7 @@ public class DiseasesListLauncher extends ModalJFrame{
 			jReport1Button = new JButton(MessageBundle.getMessage("angal.stat.rundiseaseslistbytype.btn"));
 			jReport1Button.setMnemonic(MessageBundle.getMnemonic("angal.stat.rundiseaseslistbytype.btn.key"));
 			jReport1Button.setBounds(new Rectangle(15, 15, 120, 31));
-			jReport1Button.addActionListener(new ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {   
-					new DiseasesList();
-				}
-			});
+			jReport1Button.addActionListener(e -> new DiseasesList());
 		}
 		return jReport1Button;
 	}

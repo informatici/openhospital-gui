@@ -24,8 +24,6 @@ package org.isf.lab.gui;
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -101,8 +99,9 @@ public class LabEditExtended extends ModalJFrame {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = labEditExtendedListener.getListeners(LabEditExtendedListener.class);
-		for (int i = 0; i < listeners.length; i++)
+		for (int i = 0; i < listeners.length; i++) {
 			((LabEditExtendedListener)listeners[i]).labUpdated();
+		}
 	}
 	//---------------------------------------------------------------------------
 	
@@ -206,12 +205,13 @@ public class LabEditExtended extends ModalJFrame {
 			resultPanel.setBounds(0, dataPanelHeight+dataPatientHeight, panelWidth, resultPanelHeight);
 			if (!insert) {
 				examSelected = lab.getExam();
-				if (examSelected.getProcedure() == 1)
+				if (examSelected.getProcedure() == 1) {
 					resultPanel = getFirstPanel();
-				else if (examSelected.getProcedure() == 2)
+				} else if (examSelected.getProcedure() == 2) {
 					resultPanel = getSecondPanel();
-				else if (examSelected.getProcedure() == 3)
+				} else if (examSelected.getProcedure() == 3) {
 					resultPanel = getThirdPanel();
+				}
 			}
 			resultPanel.setBorder(BorderFactory.createTitledBorder(
 					BorderFactory.createLineBorder(Color.GRAY), MessageBundle.getMessage("angal.common.result.txt")));
@@ -258,7 +258,8 @@ public class LabEditExtended extends ModalJFrame {
 			jTextPatientSrc.setBounds(labelWidth+70,60,90,20);
 			
 			jTextPatientSrc.addKeyListener(new KeyListener() {
-				public void keyTyped(KeyEvent e) 
+				@Override
+				public void keyTyped(KeyEvent e)
 				{
 					lastKey = "";
 					String s = "" + e.getKeyChar();
@@ -272,9 +273,11 @@ public class LabEditExtended extends ModalJFrame {
 				}
 
 				//@Override
+				@Override
 				public void keyPressed(KeyEvent e) {}
 
 				//@Override
+				@Override
 				public void keyReleased(KeyEvent e) {}
 			});
 			patientComboBox = getPatientComboBox(s);
@@ -390,8 +393,9 @@ public class LabEditExtended extends ModalJFrame {
 	private JCheckBox getInPatientCheckBox() {
 		if (inPatientCheckBox == null) {
 			inPatientCheckBox = new JCheckBox(MessageBundle.getMessage("angal.lab.in"));
-			if (!insert)
+			if (!insert) {
 				inPatientCheckBox.setSelected(lab.getInOutPatient().equalsIgnoreCase("I"));
+			}
 			lab.setInOutPatient((inPatientCheckBox.isSelected()?"I":"R"));
 		}
 		return inPatientCheckBox;
@@ -435,19 +439,17 @@ public class LabEditExtended extends ModalJFrame {
 					patientComboBox.addItem(elem);
 				}
 			}
-			patientComboBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					if (patientComboBox.getSelectedIndex()>0) {
-						labPat=(Patient)patientComboBox.getSelectedItem();
-						setPatient(labPat);
-						Admission admission = null;
-						try {
-							admission = admMan.getCurrentAdmission(labPat);
-						}catch(OHServiceException e){
-							OHServiceExceptionUtil.showMessages(e);
-						}
-						inPatientCheckBox.setSelected(admission != null ? true : false);
+			patientComboBox.addActionListener(arg0 -> {
+				if (patientComboBox.getSelectedIndex() > 0) {
+					labPat = (Patient) patientComboBox.getSelectedItem();
+					setPatient(labPat);
+					Admission admission = null;
+					try {
+						admission = admMan.getCurrentAdmission(labPat);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
 					}
+					inPatientCheckBox.setSelected(admission != null ? true : false);
 				}
 			});
 		}
@@ -544,22 +546,21 @@ public class LabEditExtended extends ModalJFrame {
 			}
 			examComboBox.setSelectedItem(examSel);
 			
-			examComboBox.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					if (!(examComboBox.getSelectedItem() instanceof String)) {
-						examSelected = (Exam) examComboBox
-								.getSelectedItem();
+			examComboBox.addActionListener(arg0 -> {
+				if (!(examComboBox.getSelectedItem() instanceof String)) {
+					examSelected = (Exam) examComboBox
+							.getSelectedItem();
 
-						if (examSelected.getProcedure() == 1)
-							resultPanel = getFirstPanel();
-						else if (examSelected.getProcedure() == 2)
-							resultPanel = getSecondPanel();
-						else if (examSelected.getProcedure() == 3)
-							resultPanel = getThirdPanel();
-
-						validate();
-						repaint();
+					if (examSelected.getProcedure() == 1) {
+						resultPanel = getFirstPanel();
+					} else if (examSelected.getProcedure() == 2) {
+						resultPanel = getSecondPanel();
+					} else if (examSelected.getProcedure() == 3) {
+						resultPanel = getThirdPanel();
 					}
+
+					validate();
+					repaint();
 				}
 			});
 			resultPanel = null;
@@ -640,45 +641,38 @@ public class LabEditExtended extends ModalJFrame {
 		}
 		return sexTextField;
 	}
-	
+
 	private JButton getPrintButton() {
 		if (printButton == null) {
 			printButton = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
 			printButton.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
-			printButton.addActionListener(new ActionListener() {
+			printButton.addActionListener(arg0 -> {
+				try {
+					ArrayList<LaboratoryForPrint> labs = new ArrayList<>();
 
-				public void actionPerformed(ActionEvent arg0) {					
-					try {
-						ArrayList<LaboratoryForPrint> labs = new ArrayList<>();
-						
-						labs.add(new LaboratoryForPrint(
-								lab.getCode(),
-								lab.getExam(),
-								lab.getDate(),
-								lab.getResult()
+					labs.add(new LaboratoryForPrint(
+									lab.getCode(),
+									lab.getExam(),
+									lab.getDate(),
+									lab.getResult()
 							)
-						);
-						if (!labs.isEmpty()) {
-							printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
-						}
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
+					);
+					if (!labs.isEmpty()) {
+						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 					}
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
 			});
 		}
 		return printButton;
 	}
-	
+
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
@@ -687,90 +681,81 @@ public class LabEditExtended extends ModalJFrame {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				
+			okButton.addActionListener(e -> {
+				if (examComboBox.getSelectedIndex() == 0) {
+					MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseselectanexam.msg");
+					return;
+				}
+				String matSelected = (String) matComboBox.getSelectedItem();
+				examSelected = (Exam) examComboBox.getSelectedItem();
+				try {
+					labPat = (Patient) patientComboBox.getSelectedItem();
+				} catch (ClassCastException e2) {
+					MessageDialog.error(LabEditExtended.this, "angal.common.pleaseselectapatient.msg");
+					return;
+				}
+				GregorianCalendar gregDate = new GregorianCalendar();
+				try {
+					gregDate.setTime(examDateFieldCal.getDate());
+				} catch (Exception e1) {
+					MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseinsertavalidexamdate.msg");
+					return;
+				}
+				if (examSelected.getProcedure() == 3 && examTextField.getText().isEmpty()) {
+					MessageDialog.error(LabEditExtended.this, "angal.labnew.pleaseinsertavalidvalue");
+					return;
+				}
+				ArrayList<String> labRow = new ArrayList<>();
+				lab.setDate(new GregorianCalendar());
+				lab.setExamDate(gregDate);
+				RememberDates.setLastLabExamDate(gregDate);
+				lab.setMaterial(labManager.getMaterialKey(matSelected));
+				lab.setExam(examSelected);
+				lab.setNote(noteTextArea.getText());
+				lab.setInOutPatient((inPatientCheckBox.isSelected() ? "I" : "O"));
+				lab.setPatient(labPat);
+				lab.setPatName(labPat.getName());
+				lab.setSex(labPat.getSex() + "");
 
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (examComboBox.getSelectedIndex() == 0) {
-						MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseselectanexam.msg");
-						return;
+				if (examSelected.getProcedure() == 1) {
+					lab.setResult(examRowComboBox.getSelectedItem()
+							.toString());
+				} else if (examSelected.getProcedure() == 2) {
+					lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults.txt"));
+					for (int i = 0; i < resultPanel.getComponentCount(); i++) {
+						if (((SubPanel) resultPanel.getComponent(i))
+								.getSelectedResult().equalsIgnoreCase("P")) {
+							labRow.add(eRows.get(i).getDescription());
+						}
 					}
-					String matSelected=(String)matComboBox.getSelectedItem();
-					examSelected=(Exam)examComboBox.getSelectedItem();
+				} else if (examSelected.getProcedure() == 3) {
+					lab.setResult(examTextField.getText());
+				}
+				boolean result = false;
+				if (insert) {
+					lab.setAge(labPat.getAge());
 					try {
-						labPat=(Patient)patientComboBox.getSelectedItem();
-					} catch (ClassCastException e2) {
-						MessageDialog.error(LabEditExtended.this,"angal.common.pleaseselectapatient.msg");
+						result = labManager.newLaboratory(lab, labRow);
+					} catch (OHServiceException e1) {
+						result = false;
+						OHServiceExceptionUtil.showMessages(e1);
 						return;
 					}
-					GregorianCalendar gregDate = new GregorianCalendar();
+				} else {
 					try {
-						gregDate.setTime(examDateFieldCal.getDate());
-					} catch (Exception e1) {
-						MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseinsertavalidexamdate.msg");
+						result = labManager.updateLaboratory(lab, labRow);
+					} catch (OHServiceException e1) {
+						result = false;
+						OHServiceExceptionUtil.showMessages(e1);
 						return;
-					}
-					if (examSelected.getProcedure() == 3 && examTextField.getText().isEmpty()) {
-						MessageDialog.error(LabEditExtended.this, "angal.labnew.pleaseinsertavalidvalue");
-						return;
-					}
-					ArrayList<String> labRow = new ArrayList<>();
-					lab.setDate(new GregorianCalendar());
-					lab.setExamDate(gregDate);
-					RememberDates.setLastLabExamDate(gregDate);
-					lab.setMaterial(labManager.getMaterialKey(matSelected));
-					lab.setExam(examSelected);
-					lab.setNote(noteTextArea.getText());
-					lab.setInOutPatient((inPatientCheckBox.isSelected()?"I":"O"));
-					lab.setPatient(labPat);
-					lab.setPatName(labPat.getName());
-					lab.setSex(labPat.getSex()+"");
-					
-					if (examSelected.getProcedure() == 1)
-						lab.setResult(examRowComboBox.getSelectedItem()
-								.toString());
-					else if (examSelected.getProcedure() == 2) {
-						lab.setResult(MessageBundle.getMessage("angal.lab.multipleresults.txt"));
-						for (int i = 0; i < resultPanel.getComponentCount(); i++) {
-							if (((SubPanel) resultPanel.getComponent(i))
-									.getSelectedResult().equalsIgnoreCase("P")) {
-								labRow.add(eRows.get(i).getDescription());
-							}
-						}
-					}
-					else if (examSelected.getProcedure() == 3) {
-						lab.setResult(examTextField.getText());
-					}
-					boolean result = false;
-					if (insert) {
-						lab.setAge(labPat.getAge());
-						try {
-							result = labManager.newLaboratory(lab,	labRow);
-						} catch (OHServiceException e1) {
-							result = false;
-							OHServiceExceptionUtil.showMessages(e1);
-							return;
-						}
-					}
-					else {
-						try {
-							result = labManager.updateLaboratory(lab, labRow);
-						} catch (OHServiceException e1) {
-							result = false;
-							OHServiceExceptionUtil.showMessages(e1);
-							return;
-						}
-					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-					}
-					else {
-						fireLabUpdated();
-						dispose();
 					}
 				}
-
-				
+				if (!result) {
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+				} else {
+					fireLabUpdated();
+					dispose();
+				}
 			});
 		}
 		return okButton;
@@ -799,11 +784,14 @@ public class LabEditExtended extends ModalJFrame {
 		}
 		if (null != rows) {
 			for (ExamRow r : rows) {
-				if (!r.getDescription().equals(result))
+				if (!r.getDescription().equals(result)) {
 					examRowComboBox.addItem(r.getDescription());
+				}
 			}
 		}
-		if (examRowComboBox.getItemCount() > 0) resultPanel.add(examRowComboBox);
+		if (examRowComboBox.getItemCount() > 0) {
+			resultPanel.add(examRowComboBox);
+		}
 
 		return resultPanel;
 	}
@@ -821,8 +809,9 @@ public class LabEditExtended extends ModalJFrame {
 		}
 		if (insert) {
 			if (null != eRows) {
-				for (ExamRow r : eRows)
+				for (ExamRow r : eRows) {
 					resultPanel.add(new SubPanel(r, "N"));
+				}
 			}
 		} else {
 
@@ -839,8 +828,9 @@ public class LabEditExtended extends ModalJFrame {
 					find = false;
 					for (LaboratoryRow lR : lRows) {
 						if (r.getDescription()
-								.equalsIgnoreCase(lR.getDescription()))
+								.equalsIgnoreCase(lR.getDescription())) {
 							find = true;
+						}
 					}
 					if (find) {
 						resultPanel.add(new SubPanel(r, "P"));

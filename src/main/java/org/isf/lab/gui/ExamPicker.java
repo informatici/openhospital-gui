@@ -139,9 +139,11 @@ public class ExamPicker extends javax.swing.JPanel {
         jTableData.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         jTableData.setShowVerticalLines(false);
         jTableData.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableDataMouseClicked(evt);
             }
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
             	if (evt.getClickCount() == 2) {
                	    validateSelection();
@@ -260,33 +262,33 @@ public class ExamPicker extends javax.swing.JPanel {
         		super.keyPressed(e);
         	}
 		});
-        
-        jPanel2 = new javax.swing.JPanel();
-        jButtonSelect = new javax.swing.JButton();
-        jButtonCancel = new javax.swing.JButton();
-        
-        jPanel2.setBackground(new java.awt.Color(240, 240, 240));
 
-        jButtonSelect.setText(MessageBundle.getMessage("angal.common.select.btn"));
-        jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
-        jButtonSelect.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButtonSelectMouseClicked(evt);
-            }
-        });
-        jButtonSelect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSelectActionPerformed(evt);
-            }
-        });
+	    jPanel2 = new javax.swing.JPanel();
+	    jButtonSelect = new javax.swing.JButton();
+	    jButtonCancel = new javax.swing.JButton();
+
+	    jPanel2.setBackground(new java.awt.Color(240, 240, 240));
+
+	    jButtonSelect.setText(MessageBundle.getMessage("angal.common.select.btn"));
+	    jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
+	    jButtonSelect.addMouseListener(new java.awt.event.MouseAdapter() {
+
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+			    jButtonSelectMouseClicked(evt);
+		    }
+	    });
+	    jButtonSelect.addActionListener(evt -> jButtonSelectActionPerformed(evt));
 
 	    jButtonCancel.setText(MessageBundle.getMessage("angal.common.cancel.btn"));
 	    jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-        jButtonCancel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButtonQuitMouseClicked(evt);
-            }
-        });
+	    jButtonCancel.addMouseListener(new java.awt.event.MouseAdapter() {
+
+		    @Override
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+			    jButtonQuitMouseClicked(evt);
+		    }
+	    });
         
         add(jPanel2, BorderLayout.SOUTH);
         jPanel2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));

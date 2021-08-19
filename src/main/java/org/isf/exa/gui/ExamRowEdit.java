@@ -77,8 +77,9 @@ public class ExamRowEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examRowListeners.getListeners(ExamRowListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((ExamRowListener)listeners[i]).examRowInserted(event);
+        for (int i = 0; i < listeners.length; i++) {
+	        ((ExamRowListener)listeners[i]).examRowInserted(event);
+        }
     }
 	
 	private JPanel jContentPane = null;
@@ -172,39 +173,33 @@ public class ExamRowEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton.addActionListener(e -> dispose());
 		}
 		return cancelButton;
 	}
 
 	/**
-	 * This method initializes okButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes okButton
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					
-					examRow.setDescription(descriptionTextField.getText().toUpperCase());
-					examRow.setExamCode(exam);
-					
-					ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-					try {
-						if (manager.newExamRow(examRow)) {
-							fireExamRowInserted();
-							dispose();
-						}
-					} catch(OHServiceException ohServiceException) {
-						MessageDialog.showExceptions(ohServiceException);
+			okButton.addActionListener(e -> {
+
+				examRow.setDescription(descriptionTextField.getText().toUpperCase());
+				examRow.setExamCode(exam);
+
+				ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+				try {
+					if (manager.newExamRow(examRow)) {
+						fireExamRowInserted();
+						dispose();
 					}
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
 				}
 			});
 		}
