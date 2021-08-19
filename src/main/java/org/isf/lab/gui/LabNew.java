@@ -336,32 +336,9 @@ public class LabNew extends JDialog implements SelectionListener {
 		if (jPanelButtons == null) {
 			jPanelButtons = new JPanel();
 			jPanelButtons.add(getJButtonOK());
-			jPanelButtons.add(getPrintLabelButton());
 			jPanelButtons.add(getJButtonCancel());
 		}
 		return jPanelButtons;
-	}
-
-	private JButton getPrintLabelButton(){
-		if (printLabelButton == null) {
-			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel.btn"));
-			printLabelButton.setMnemonic(MessageBundle.getMnemonic("angal.labnew.printlabel.btn.key"));
-			printLabelButton.addActionListener(arg0 -> {
-
-				if (patientSelected == null) {
-					MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
-					return;
-				}
-
-				try {
-					new PrintLabels("LabelForSamples", patientSelected.getCode());
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-				}
-
-			});
-		}
-		return printLabelButton;
 	}
 
 	private JPanel getJPanelNote() {

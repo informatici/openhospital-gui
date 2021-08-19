@@ -55,6 +55,7 @@ import org.isf.lab.model.LaboratoryForPrint;
 import org.isf.lab.service.LabIoOperations;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
+import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.model.Patient;
 import org.isf.serviceprinting.manager.PrintLabels;
 import org.isf.serviceprinting.manager.PrintManager;
@@ -236,7 +237,15 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 						selectedrow = jTable.getSelectedRow();
 						if (selectedrow < 0) {
 							int ok = MessageDialog.yesNoCancel(LabBrowser.this, "angal.lab.nopatientselectedprintempylabel.msg");
-							if (ok != JOptionPane.YES_OPTION) {
+							if (ok == JOptionPane.NO_OPTION) {
+								SelectPatient selectPatient = new SelectPatient(LabBrowser.this, false, true);
+								selectPatient.setVisible(true);
+								Patient patient = selectPatient.getPatient();
+								if (patient != null) {
+									patId = selectPatient.getPatient().getCode();
+								} else return;
+							}
+							if (ok == JOptionPane.CANCEL_OPTION) {
 								return;
 							}
 						} else {
@@ -638,4 +647,5 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (jTable.getRowCount() > 0)
 			jTable.setRowSelectionInterval(0, 0);
 	}
+
 }
