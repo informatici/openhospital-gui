@@ -22,8 +22,6 @@
 package org.isf.utils.jobjects;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -95,12 +93,9 @@ public class JFromDateToDateChooserDialog extends JDialog {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {
-					cancel = true;
-					dispose();
-				}
+			buttonCancel.addActionListener(arg0 -> {
+				cancel = true;
+				dispose();
 			});
 		}
 		return buttonCancel;
@@ -110,13 +105,10 @@ public class JFromDateToDateChooserDialog extends JDialog {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			buttonOK.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {
-					dateFrom = fromDateToDateChooser.getDateFrom();
-					dateTo = fromDateToDateChooser.getDateTo();
-					dispose();
-				}
+			buttonOK.addActionListener(arg0 -> {
+				dateFrom = fromDateToDateChooser.getDateFrom();
+				dateTo = fromDateToDateChooser.getDateTo();
+				dispose();
 			});
 		}
 		return buttonOK;
@@ -126,14 +118,11 @@ public class JFromDateToDateChooserDialog extends JDialog {
 		if (buttonExcel == null) {
 			buttonExcel = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
 			buttonExcel.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
-			buttonExcel.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {
-					dateFrom = fromDateToDateChooser.getDateFrom();
-					dateTo = fromDateToDateChooser.getDateTo();
-					excel = true;
-					dispose();
-				}
+			buttonExcel.addActionListener(arg0 -> {
+				dateFrom = fromDateToDateChooser.getDateFrom();
+				dateTo = fromDateToDateChooser.getDateTo();
+				excel = true;
+				dispose();
 			});
 		}
 		return buttonExcel;

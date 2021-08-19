@@ -24,8 +24,6 @@ package org.isf.agetype.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -112,29 +110,26 @@ public class AgeTypeBrowser extends ModalJFrame {
 		if (jEditSaveButton == null) {
 			jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditSaveButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent event) {
-					if (!edit) {
-						edit = true;
-						jEditSaveButton.setText(MessageBundle.getMessage("angal.common.save.btn"));
-						jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-						jTable.updateUI();
-					} else {
-					    if (jTable.isEditing()){
-                            jTable.getCellEditor().stopCellEditing();
-                        }
-						AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
-						try {
-							manager.updateAgeType(pAgeType);
-						}catch(OHServiceException e){
-                            OHServiceExceptionUtil.showMessages(e);
-						}
-						edit = false;
-						jTable.updateUI();
-						jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
-						jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+			jEditSaveButton.addActionListener(event -> {
+				if (!edit) {
+					edit = true;
+					jEditSaveButton.setText(MessageBundle.getMessage("angal.common.save.btn"));
+					jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
+					jTable.updateUI();
+				} else {
+					if (jTable.isEditing()) {
+						jTable.getCellEditor().stopCellEditing();
 					}
+					AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
+					try {
+						manager.updateAgeType(pAgeType);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
+					edit = false;
+					jTable.updateUI();
+					jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+					jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 				}
 			});
 		}
@@ -150,11 +145,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(arg0 -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -185,20 +176,25 @@ public class AgeTypeBrowser extends ModalJFrame {
 			}
 		}
 
+		@Override
 		public int getRowCount() {
-			if (pAgeType == null)
+			if (pAgeType == null) {
 				return 0;
+			}
 			return pAgeType.size();
 		}
 
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
 				return pAgeType.get(r).getCode();
@@ -214,6 +210,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 			return null;
 		}
 		
+		@Override
 		public void setValueAt(Object value, int row, int col) {
 			int number;
 			try {
@@ -234,12 +231,14 @@ public class AgeTypeBrowser extends ModalJFrame {
 		@Override
 		public boolean isCellEditable(int r, int c) {
 			if (edit) {
-				if (c == 1 || c == 2)
+				if (c == 1 || c == 2) {
 					return true;
-				else
+				} else {
 					return false;
-			} else
+				}
+			} else {
 				return false;
+			}
 		}
 	}
 	
@@ -247,13 +246,18 @@ public class AgeTypeBrowser extends ModalJFrame {
 
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if (edit) {
-				if (column == 0 || column == 3)
+				if (column == 0 || column == 3) {
 					cell.setBackground(Color.LIGHT_GRAY);
-				else cell.setBackground(Color.WHITE);
-			} else cell.setBackground(Color.WHITE);
+				} else {
+					cell.setBackground(Color.WHITE);
+				}
+			} else {
+				cell.setBackground(Color.WHITE);
+			}
 			return cell;
 		}
 	}

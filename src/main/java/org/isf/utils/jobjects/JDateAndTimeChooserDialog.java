@@ -24,8 +24,6 @@ package org.isf.utils.jobjects;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.Locale;
 
@@ -96,12 +94,7 @@ public class JDateAndTimeChooserDialog extends JDialog {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			buttonCancel.addActionListener(arg0 -> dispose());
 		}
 		return buttonCancel;
 	}
@@ -110,12 +103,9 @@ public class JDateAndTimeChooserDialog extends JDialog {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			buttonOK.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {
-					date = dateAndTimeChooser.getDateTime();
-					dispose();
-				}
+			buttonOK.addActionListener(arg0 -> {
+				date = dateAndTimeChooser.getDateTime();
+				dispose();
 			});
 		}
 		return buttonOK;
@@ -127,7 +117,9 @@ public class JDateAndTimeChooserDialog extends JDialog {
 			dateAndTimeChooser.getDateChooser().setLocale(new Locale(GeneralData.LANGUAGE));
 			dateAndTimeChooser.getDateChooser().setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
 			dateAndTimeChooser.getDateChooser().setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
-			if (date != null) dateAndTimeChooser.getDateChooser().setDate(date);
+			if (date != null) {
+				dateAndTimeChooser.getDateChooser().setDate(date);
+			}
 		}
 		return dateAndTimeChooser;
 	}

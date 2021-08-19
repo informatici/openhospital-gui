@@ -75,7 +75,6 @@ import org.isf.patient.gui.SelectPatient;
 import org.isf.patient.gui.SelectPatient.SelectionListener;
 import org.isf.patient.model.Patient;
 import org.isf.priceslist.model.Price;
-import org.isf.serviceprinting.manager.PrintLabels;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
@@ -107,8 +106,9 @@ public class LabNew extends JDialog implements SelectionListener {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = labListener.getListeners(LabListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((LabListener) listener).labInserted();
+		}
 	}
 //---------------------------------------------------------------------------
 	
@@ -122,8 +122,11 @@ public class LabNew extends JDialog implements SelectionListener {
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.changethepatientassociatedwiththisexams")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
 		inOut = getIsAdmitted();
-		if (inOut.equalsIgnoreCase("O")) jRadioButtonOPD.setSelected(true);
-		else jRadioButtonIPD.setSelected(true);
+		if (inOut.equalsIgnoreCase("O")) {
+			jRadioButtonOPD.setSelected(true);
+		} else {
+			jRadioButtonIPD.setSelected(true);
+		}
 	}
 	
 	private static final long serialVersionUID = 1L;
@@ -392,10 +395,11 @@ public class LabNew extends JDialog implements SelectionListener {
 					examItems.set(selectedRow, selectedLab);
 					jTableExams.updateUI();
 				});
-				if (jComboBoxExamResults.getItemCount() > 0)
+				if (jComboBoxExamResults.getItemCount() > 0) {
 					jPanelResults.add(jComboBoxExamResults);
-				else
+				} else {
 					jPanelResults.add(new JLabel(selectedExam.getDefaultResult()));
+				}
 
 			}  else if (selectedExam.getProcedure() == 2) {
 				
@@ -427,8 +431,9 @@ public class LabNew extends JDialog implements SelectionListener {
 							checked = false;
 							LaboratoryRow labRow = new LaboratoryRow();
 							labRow.setDescription(exaRow.getDescription());
-							if (checking.contains(labRow))
+							if (checking.contains(labRow)) {
 								checked = true;
+							}
 							
 	                        resultsContainer.add(new CheckBox(exaRow, checked));
 						}
@@ -677,7 +682,9 @@ public class LabNew extends JDialog implements SelectionListener {
 			for (int i = 0; i < examColumnWidth.length; i++) {
 				
 				jTableExams.getColumnModel().getColumn(i).setMinWidth(examColumnWidth[i]);
-				if (!examResizable[i]) jTableExams.getColumnModel().getColumn(i).setMaxWidth(examColumnWidth[i]);
+				if (!examResizable[i]) {
+					jTableExams.getColumnModel().getColumn(i).setMaxWidth(examColumnWidth[i]);
+				}
 			}
 			
 			jTableExams.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -830,8 +837,9 @@ public class LabNew extends JDialog implements SelectionListener {
 
 		@Override
 		public int getRowCount() {
-			if (examItems == null)
+			if (examItems == null) {
 				return 0;
+			}
 			return examItems.size();
 		}
 

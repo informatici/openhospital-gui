@@ -25,8 +25,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -243,8 +241,8 @@ public class HospitalBrowser extends ModalJFrame{
 	}
 
 	public JPanel getJButtonPanel() {
-		if (jButtonPanel==null){
-			jButtonPanel= new JPanel();
+		if (jButtonPanel == null) {
+			jButtonPanel = new JPanel();
 			editJButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			editJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			updateJButton = new JButton(MessageBundle.getMessage("angal.common.update.btn"));
@@ -252,27 +250,18 @@ public class HospitalBrowser extends ModalJFrame{
 			closeJButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			updateJButton.setEnabled(false);
-			
-			closeJButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					if (isModified()) {
-						//open confirm save window
-						saveConfirm();
-					}
-					dispose();
+
+			closeJButton.addActionListener(arg0 -> {
+				if (isModified()) {
+					//open confirm save window
+					saveConfirm();
 				}
+				dispose();
 			});
-			editJButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					setFieldsForEditing(true);
-				}
-			});
-			updateJButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					setFieldsForEditing(false);
-					updateHospitalEntity();
-				}
-				
+			editJButton.addActionListener(arg0 -> setFieldsForEditing(true));
+			updateJButton.addActionListener(arg0 -> {
+				setFieldsForEditing(false);
+				updateHospitalEntity();
 			});
 			jButtonPanel.add(editJButton);
 			jButtonPanel.add(updateJButton);

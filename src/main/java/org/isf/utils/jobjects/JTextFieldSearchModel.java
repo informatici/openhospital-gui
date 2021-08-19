@@ -25,8 +25,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,10 +74,12 @@ public class JTextFieldSearchModel extends JPanel {
 		this.owner = owner;
 		if (model == Medical.class || model instanceof Medical) {
 			initializeMedical();
-			if (model == Medical.class)
+			if (model == Medical.class) {
 				add(getJTextFieldSearch(null), BorderLayout.CENTER);
-			if (model instanceof Medical)
+			}
+			if (model instanceof Medical) {
 				add(getJTextFieldSearch((Medical) model), BorderLayout.CENTER);
+			}
 		}
 	}
 
@@ -94,7 +94,9 @@ public class JTextFieldSearchModel extends JPanel {
 		if (medicals != null) {
 			for (Medical med : medicals) {
 				String key = med.getProd_code();
-				if (key == null || key.equals("")) key = med.getType().getCode() + med.getDescription();
+				if (key == null || key.equals("")) {
+					key = med.getType().getCode() + med.getDescription();
+				}
 				medicalMap.put(key, med);
 			}
 		}
@@ -104,8 +106,9 @@ public class JTextFieldSearchModel extends JPanel {
 		ArrayList<Medical> medList = new ArrayList<>();
 		for (Medical aMed : medicalMap.values()) {
 			if (aMed.getProd_code().toLowerCase().contains(text) 
-					|| aMed.getDescription().toLowerCase().contains(text))
+					|| aMed.getDescription().toLowerCase().contains(text)) {
 				medList.add(aMed);
+			}
 		}
 		Collections.sort(medList);
 		Medical med = null;
@@ -151,23 +154,18 @@ public class JTextFieldSearchModel extends JPanel {
 				selectedObject = medical;
 				jTextFieldSearch.setText(medical.toString());
 			}
-			jTextFieldSearch.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String text = jTextFieldSearch.getText();
-					Medical med = null;
-					if (medicalMap.containsKey(text)) {
-						// Medical found
-						med = medicalMap.get(text);
-					} else {
-						
-						med = chooseMedical(text.toLowerCase());
-					}
-					if (med != null) {
-						selectedObject = med;
-						jTextFieldSearch.setText(med.toString());
-					}
+			jTextFieldSearch.addActionListener(e -> {
+				String text = jTextFieldSearch.getText();
+				Medical med = null;
+				if (medicalMap.containsKey(text)) {
+					// Medical found
+					med = medicalMap.get(text);
+				} else {
+					med = chooseMedical(text.toLowerCase());
+				}
+				if (med != null) {
+					selectedObject = med;
+					jTextFieldSearch.setText(med.toString());
 				}
 			});
 		}
@@ -175,9 +173,7 @@ public class JTextFieldSearchModel extends JPanel {
 	}
 	
 	class StockMedModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private ArrayList<Medical> medList;
 
@@ -185,12 +181,15 @@ public class JTextFieldSearchModel extends JPanel {
 			medList = meds;
 		}
 
+		@Override
 		public int getRowCount() {
-			if (medList == null)
+			if (medList == null) {
 				return 0;
+			}
 			return medList.size();
 		}
 
+		@Override
 		public String getColumnName(int c) {
 			if (c == 0) {
 				return MessageBundle.getMessage("angal.common.code.txt").toUpperCase();
@@ -201,10 +200,12 @@ public class JTextFieldSearchModel extends JPanel {
 			return "";
 		}
 
+		@Override
 		public int getColumnCount() {
 			return 2;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			Medical med = medList.get(r);
 			if (c == -1) {
