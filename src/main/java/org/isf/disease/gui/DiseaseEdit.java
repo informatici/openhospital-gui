@@ -350,13 +350,8 @@ public class DiseaseEdit extends JDialog {
 		return codeTextField;
 	}
 
-	
-	//private JLabel includeOpdLabel = null;
-	//private JCheckBox includeOpdCheckBox  = null;
-
-	
 	public JPanel getJFlagsPanel() {
-		if (jNewPatientPanel == null){
+		if (jNewPatientPanel == null) {
 			jNewPatientPanel = new JPanel();
 			includeOpdCheckBox = new JCheckBox(MessageBundle.getMessage("angal.disease.opd"));
 			includeIpdInCheckBox = new JCheckBox(MessageBundle.getMessage("angal.disease.ipdin"));
@@ -364,7 +359,7 @@ public class DiseaseEdit extends JDialog {
 			jNewPatientPanel.add(includeOpdCheckBox);
 			jNewPatientPanel.add(includeIpdInCheckBox);
 			jNewPatientPanel.add(includeIpdOutCheckBox);
-			if (!insert){
+			if (!insert) {
 				if (disease.getOpdInclude()) {
 					includeOpdCheckBox.setSelected(true);
 				}

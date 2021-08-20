@@ -192,8 +192,8 @@ public class DeliveryTypeBrowserEdit extends JDialog{
             okButton.addActionListener(actionEvent -> {
                 DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
-                try{
-                    if (descriptionTextField.getText().equals(lastdescription)){
+                try {
+                    if (descriptionTextField.getText().equals(lastdescription)) {
                         dispose();
                     }
                     deliveryType.setDescription(descriptionTextField.getText());
@@ -210,7 +210,7 @@ public class DeliveryTypeBrowserEdit extends JDialog{
                             dispose();
                         }
                     } else {                          // updating
-                        if (descriptionTextField.getText().equals(lastdescription)){
+                        if (descriptionTextField.getText().equals(lastdescription)) {
                             dispose();
                         } else {
                             result = manager.updateDeliveryType(deliveryType);
@@ -225,7 +225,7 @@ public class DeliveryTypeBrowserEdit extends JDialog{
                         }
 
                     }
-                } catch(OHServiceException ohServiceException) {
+                } catch (OHServiceException ohServiceException) {
                     MessageDialog.showExceptions(ohServiceException);
                 }
             });

@@ -68,19 +68,19 @@ public class OhTableModel<T> implements TableModel{
 			this.filteredList.add(t);			
 		}
 	}
-	
-	public T filter(String searchQuery) throws OHException{
 
-		this.searchQuery=searchQuery;
-		this.filteredList= new ArrayList<>();
-		
-		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext();) { 
+	public T filter(String searchQuery) throws OHException {
+
+		this.searchQuery = searchQuery;
+		this.filteredList = new ArrayList<>();
+
+		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext(); ) {
 			Object object = (Object) iterator.next();
-			if (object instanceof Price){
-				Price price=(Price) object;
-				String strItem=price.getItem()+price.getDesc();
-				if ( allowSearchByCode && searchQuery.equalsIgnoreCase(price.getItem())){
-					T resPbj=(T)object;
+			if (object instanceof Price) {
+				Price price = (Price) object;
+				String strItem = price.getItem() + price.getDesc();
+				if (allowSearchByCode && searchQuery.equalsIgnoreCase(price.getItem())) {
+					T resPbj = (T) object;
 					filteredList.clear();
 					filteredList.add(resPbj);
 					return resPbj;
@@ -91,54 +91,54 @@ public class OhTableModel<T> implements TableModel{
 					filteredList.add((T) object);
 				}
 			}
-			
-			if (object instanceof MedicalWard){
-				MedicalWard mdw =(MedicalWard) object;
-				String strItem = mdw.getMedical().getProd_code() + mdw.getMedical().getDescription();				
 
-				if ( allowSearchByCode && searchQuery.equalsIgnoreCase(mdw.getMedical().getProd_code())){
-					T resPbj=(T)object;
-					filteredList.clear(); 
+			if (object instanceof MedicalWard) {
+				MedicalWard mdw = (MedicalWard) object;
+				String strItem = mdw.getMedical().getProd_code() + mdw.getMedical().getDescription();
+
+				if (allowSearchByCode && searchQuery.equalsIgnoreCase(mdw.getMedical().getProd_code())) {
+					T resPbj = (T) object;
+					filteredList.clear();
 					filteredList.add(resPbj);
 					return resPbj;
 				}
-				
+
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
 				if (strItem.contains(searchQuery)) {
 					filteredList.add((T) object);
 				}
 			}
-			
-			if (object instanceof PricesOthers){
-				PricesOthers priceO =(PricesOthers) object;
-				String strItem = priceO.getCode() + priceO.getDescription();				
 
-				if ( allowSearchByCode && searchQuery.equalsIgnoreCase(priceO.getCode())){
-					T resPbj=(T)object;
+			if (object instanceof PricesOthers) {
+				PricesOthers priceO = (PricesOthers) object;
+				String strItem = priceO.getCode() + priceO.getDescription();
+
+				if (allowSearchByCode && searchQuery.equalsIgnoreCase(priceO.getCode())) {
+					T resPbj = (T) object;
 					filteredList.clear();
 					filteredList.add(resPbj);
 					return resPbj;
 				}
-				
+
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
 				if (strItem.contains(searchQuery)) {
 					filteredList.add((T) object);
 				}
 			}
-			
-			if (object instanceof BillItems){
-				BillItems priceO =(BillItems) object;
-				String strItem = priceO.getItemDisplayCode() + priceO.getItemDescription();				
 
-				if ( allowSearchByCode && searchQuery.equalsIgnoreCase(priceO.getItemDisplayCode())){
-					T resPbj=(T)object;
+			if (object instanceof BillItems) {
+				BillItems priceO = (BillItems) object;
+				String strItem = priceO.getItemDisplayCode() + priceO.getItemDescription();
+
+				if (allowSearchByCode && searchQuery.equalsIgnoreCase(priceO.getItemDisplayCode())) {
+					T resPbj = (T) object;
 					filteredList.clear();
 					filteredList.add(resPbj);
 					return resPbj;
 				}
-				
+
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
 				if (strItem.contains(searchQuery)) {
@@ -147,7 +147,7 @@ public class OhTableModel<T> implements TableModel{
 			}
 
 		}
-		if (filteredList.size()==1){
+		if (filteredList.size() == 1) {
 			return filteredList.get(0);
 		}
 		return null;
@@ -187,7 +187,7 @@ public class OhTableModel<T> implements TableModel{
 
 	@Override
 	public int getRowCount() {
-		if (this.filteredList==null){
+		if (this.filteredList == null) {
 			return 0;
 		}
 		return this.filteredList.size();
@@ -195,54 +195,50 @@ public class OhTableModel<T> implements TableModel{
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		
-		String value="";
-		if (rowIndex>=0 && rowIndex<this.filteredList.size()){
-			T obj=this.filteredList.get(rowIndex);
-			if (obj instanceof Price){
-				Price priceObj=(Price)obj;
-				if (columnIndex==0){
-				value= priceObj.getItem()!=null ?priceObj.getItem():priceObj.getId()+"";
-				}
-				else{
-					value=priceObj.getDesc();
-				}
-			}
-			if (obj instanceof MedicalWard){
-				MedicalWard mdwObj=(MedicalWard)obj;
-				if (columnIndex==0){
-					value= mdwObj.getMedical().getProd_code()!=null? mdwObj.getMedical().getProd_code() : mdwObj.getMedical().getCode()+"";
-				}
-				else{
-					value=mdwObj.getMedical().getDescription();
+
+		String value = "";
+		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
+			T obj = this.filteredList.get(rowIndex);
+			if (obj instanceof Price) {
+				Price priceObj = (Price) obj;
+				if (columnIndex == 0) {
+					value = priceObj.getItem() != null ? priceObj.getItem() : priceObj.getId() + "";
+				} else {
+					value = priceObj.getDesc();
 				}
 			}
-			if (obj instanceof PricesOthers){
-				PricesOthers mdwObj=(PricesOthers)obj;
-				if (columnIndex==0){
-					value= mdwObj.getCode()!=null?mdwObj.getCode():mdwObj.getId()+"";
-				}
-				else{
-					value= mdwObj.getDescription();
-				}
-			}
-			
-			if (obj instanceof BillItems){
-				BillItems mdwObj=(BillItems)obj;
-				if (columnIndex==0){
-					value= mdwObj.getItemDisplayCode()!=null?mdwObj.getItemDisplayCode():mdwObj.getId()+"";
-				}
-				else{
-					value=mdwObj.getItemDescription();
+			if (obj instanceof MedicalWard) {
+				MedicalWard mdwObj = (MedicalWard) obj;
+				if (columnIndex == 0) {
+					value = mdwObj.getMedical().getProd_code() != null ? mdwObj.getMedical().getProd_code() : mdwObj.getMedical().getCode() + "";
+				} else {
+					value = mdwObj.getMedical().getDescription();
 				}
 			}
-			
+			if (obj instanceof PricesOthers) {
+				PricesOthers mdwObj = (PricesOthers) obj;
+				if (columnIndex == 0) {
+					value = mdwObj.getCode() != null ? mdwObj.getCode() : mdwObj.getId() + "";
+				} else {
+					value = mdwObj.getDescription();
+				}
+			}
+
+			if (obj instanceof BillItems) {
+				BillItems mdwObj = (BillItems) obj;
+				if (columnIndex == 0) {
+					value = mdwObj.getItemDisplayCode() != null ? mdwObj.getItemDisplayCode() : mdwObj.getId() + "";
+				} else {
+					value = mdwObj.getItemDescription();
+				}
+			}
+
 		}
 		return value;
 	}
-	
-	public T getObjectAt(int rowIndex){
-		if (rowIndex>=0 && rowIndex<this.filteredList.size()){
+
+	public T getObjectAt(int rowIndex) {
+		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
 			return this.filteredList.get(rowIndex);
 		}
 		return null;
@@ -250,18 +246,15 @@ public class OhTableModel<T> implements TableModel{
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void removeTableModelListener(TableModelListener l) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
 	}
 
 	public String getSearchQuery() {

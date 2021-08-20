@@ -448,36 +448,36 @@ public class AdmissionBrowser extends ModalJFrame {
 		//TODO: remove this anti-pattern OperationRowAdm
 		operationad = new OperationRowAdm(anAdmission);
 		addAdmissionListener((AdmissionListener) operationad);
-                
+
 		try {
 			diseaseOutList = dbm.getDiseaseIpdOut();
-		} catch(OHServiceException e){
-            OHServiceExceptionUtil.showMessages(e);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
 		}
 		try {
 			diseaseInList = dbm.getDiseaseIpdIn();
-		} catch(OHServiceException e){
-            OHServiceExceptionUtil.showMessages(e);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
 		}
 		try {
 			admission = admissionManager.getAdmission(anAdmission.getId());
-		} catch(OHServiceException e){
-            OHServiceExceptionUtil.showMessages(e);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
 		}
 		if (admission.getWard().getCode().equalsIgnoreCase("M")) {
 			viewingPregnancy = true;
-		} 
-		
+		}
+
 		if (editing) {
 			dateIn = admission.getAdmDate();
 		} else {
 			dateIn = new GregorianCalendar(); //RememberDates.getLastAdmInDateGregorian();
 		}
-		
+
 		initialize(parentFrame);
-		
-		this.addWindowListener(new WindowAdapter(){
-			
+
+		this.addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
@@ -491,7 +491,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					diseaseAllList.clear();
 				}
 				dispose();
-			}			
+			}
 		});
 	}
 
@@ -711,16 +711,16 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getTreatmentPanel() {
 		if (treatmentPanel == null) {
 			treatmentPanel = new JPanel();
-			
+
 			PregnantTreatmentTypeBrowserManager abm = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 			treatmTypeBox = new JComboBox();
 			treatmTypeBox.addItem("");
 			try {
 				treatmTypeList = abm.getPregnantTreatmentType();
-			} catch(OHServiceException e){
-                OHServiceExceptionUtil.showMessages(e);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
-			if (treatmTypeList != null){
+			if (treatmTypeList != null) {
 				for (PregnantTreatmentType elem : treatmTypeList) {
 					treatmTypeBox.addItem(elem);
 					if (editing) {
@@ -730,7 +730,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 				}
 			}
-			
+
 			treatmentPanel.add(treatmTypeBox);
 			treatmentPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.treatmenttype.border")));
 		}
@@ -777,16 +777,16 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getDeliveryResultTypePanel() {
 		if (deliveryResultTypePanel == null) {
 			deliveryResultTypePanel = new JPanel();
-			
+
 			DeliveryResultTypeBrowserManager drtbm = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 			deliveryResultTypeBox = new JComboBox();
 			deliveryResultTypeBox.addItem("");
 			try {
 				deliveryResultTypeList = drtbm.getDeliveryResultType();
-			} catch(OHServiceException e){
-                OHServiceExceptionUtil.showMessages(e);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
-			if (deliveryResultTypeList != null){
+			if (deliveryResultTypeList != null) {
 				for (DeliveryResultType elem : deliveryResultTypeList) {
 					deliveryResultTypeBox.addItem(elem);
 					if (editing) {
@@ -805,16 +805,16 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getDeliveryTypePanel() {
 		if (deliveryTypePanel == null) {
 			deliveryTypePanel = new JPanel();
-			
+
 			DeliveryTypeBrowserManager dtbm = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 			deliveryTypeBox = new JComboBox();
 			deliveryTypeBox.addItem("");
-            try{
-                deliveryTypeList = dtbm.getDeliveryType();
-            } catch(OHServiceException e){
-                OHServiceExceptionUtil.showMessages(e);
-            }
-			if (deliveryTypeList != null){
+			try {
+				deliveryTypeList = dtbm.getDeliveryType();
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
+			if (deliveryTypeList != null) {
 				for (DeliveryType elem : deliveryTypeList) {
 					deliveryTypeBox.addItem(elem);
 					if (editing) {
@@ -1160,14 +1160,14 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getAdmissionTypePanel() {
 		if (admissionTypePanel == null) {
 			admissionTypePanel = new JPanel();
-			
+
 			admTypeBox = new JComboBox();
 			admTypeBox.setPreferredSize(new Dimension(preferredWidthTypes, preferredHeightLine));
 			admTypeBox.addItem("");
 			try {
 				admTypeList = admissionManager.getAdmissionType();
-			} catch(OHServiceException e){
-                OHServiceExceptionUtil.showMessages(e);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
 			for (AdmissionType elem : admTypeList) {
 				admTypeBox.addItem(elem);
@@ -1177,10 +1177,10 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 				}
 			}
-			
+
 			admissionTypePanel.add(admTypeBox);
 			admissionTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.admissiontype.border")));
-				
+
 		}
 		return admissionTypePanel;
 	}
@@ -1560,8 +1560,8 @@ public class AdmissionBrowser extends ModalJFrame {
 			disTypeBox.addItem("");
 			try {
 				disTypeList = admissionManager.getDischargeType();
-			} catch(OHServiceException e){
-                OHServiceExceptionUtil.showMessages(e);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
 			for (DischargeType elem : disTypeList) {
 				disTypeBox.addItem(elem);
@@ -1665,7 +1665,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				PatientExamination lastPatex = null;
 				try {
 					lastPatex = examManager.getLastByPatID(patient.getCode());
-				} catch(OHServiceException ex){
+				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 				}
 				if (lastPatex != null) {

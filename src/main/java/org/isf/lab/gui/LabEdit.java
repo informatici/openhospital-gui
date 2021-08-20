@@ -354,11 +354,11 @@ public class LabEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			patientComboBox.addItem(MessageBundle.getMessage("angal.lab.selectapatient"));
-			if (pat != null){
+			if (pat != null) {
 				for (Patient elem : pat) {
 					if (lab.getPatient() != null && !insert) {
 						if (elem.getCode().equals(lab.getPatient().getCode())) {
-							patSelected=elem;
+							patSelected = elem;
 						}
 					}
 					patientComboBox.addItem(elem);
@@ -469,8 +469,8 @@ public class LabEdit extends ModalJFrame {
 
 	private JTextArea getNoteTextArea() {
 		if (noteTextArea == null) {
-			noteTextArea = new JTextArea(10,30);
-			if (!insert){
+			noteTextArea = new JTextArea(10, 30);
+			if (!insert) {
 				noteTextArea.setText(lab.getNote());
 			}
 			noteTextArea.setLineWrap(true);

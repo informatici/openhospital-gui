@@ -71,53 +71,53 @@ public class OperationRowEdit extends JPanel {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationRowEdit.class);
 
-	     // LISTENER INTERFACE
-		// --------------------------------------------------------
-			List<OperationList> operationRowListener = new ArrayList<>();
+	// LISTENER INTERFACE
+	// --------------------------------------------------------
+	List<OperationList> operationRowListener = new ArrayList<>();
 
-			public interface OperationRowListener extends EventListener {
-				void operationRowInserted(AWTEvent aEvent);
-			}
+	public interface OperationRowListener extends EventListener {
 
-			public interface OperationRowEditListener extends EventListener{
-				void operationRowEdited(AWTEvent event);
-			}
-			
-			public void addOperationRowListener(OperationList l) {
-				operationRowListener.add(l);
-			}
-			
-			public void addOperationListener(OperationList l) {
-				operationRowListener.add(l);
-			}
+		void operationRowInserted(AWTEvent aEvent);
+	}
 
-			private void fireOperationRowInserted(OperationRow opeRow) {
-				AWTEvent event = new AWTEvent(opeRow, AWTEvent.RESERVED_ID_MAX + 1) {
-					private static final long serialVersionUID = 1L;
-				};
-				for (Iterator<OperationList> iterator = operationRowListener.iterator(); iterator.hasNext();){
-					OperationList opelist = (OperationList) iterator.next();
-						opelist.operationRowInserted(event);
-				}
-			}
-			
-			private void fireOperationRowUpdated(OperationRow opeRow) {
-				AWTEvent event = new AWTEvent(opeRow, AWTEvent.RESERVED_ID_MAX + 1) {
-					private static final long serialVersionUID = 1L;
-				};
-                for (Iterator<OperationList> iterator = operationRowListener.iterator(); iterator.hasNext();){
-					OperationList opelist = (OperationList) iterator.next();
-						opelist.operationRowEdited(event);
-				}
-			}
-			
-			
-	
-	
-	//private JTextField TransTextField;
+	public interface OperationRowEditListener extends EventListener {
+
+		void operationRowEdited(AWTEvent event);
+	}
+
+	public void addOperationRowListener(OperationList l) {
+		operationRowListener.add(l);
+	}
+
+	public void addOperationListener(OperationList l) {
+		operationRowListener.add(l);
+	}
+
+	private void fireOperationRowInserted(OperationRow opeRow) {
+		AWTEvent event = new AWTEvent(opeRow, AWTEvent.RESERVED_ID_MAX + 1) {
+
+			private static final long serialVersionUID = 1L;
+		};
+		for (Iterator<OperationList> iterator = operationRowListener.iterator(); iterator.hasNext(); ) {
+			OperationList opelist = (OperationList) iterator.next();
+			opelist.operationRowInserted(event);
+		}
+	}
+
+	private void fireOperationRowUpdated(OperationRow opeRow) {
+		AWTEvent event = new AWTEvent(opeRow, AWTEvent.RESERVED_ID_MAX + 1) {
+
+			private static final long serialVersionUID = 1L;
+		};
+		for (Iterator<OperationList> iterator = operationRowListener.iterator(); iterator.hasNext(); ) {
+			OperationList opelist = (OperationList) iterator.next();
+			opelist.operationRowEdited(event);
+		}
+	}
+
 	private VoFloatTextField TransTextField;
-	
-	private JTextArea remarkstextArea ;
+
+	private JTextArea remarkstextArea;
 	private JPanel panelButtons;
 	private JLabel lblTransUnite;
 	private JComboBox resultComboBox;
@@ -125,27 +125,26 @@ public class OperationRowEdit extends JPanel {
 	private JLabel lblDate;
 	private JComboBox OpecomboBox;
 	private JLabel lblOperation;
-	
+
 	private CustomJDateChooser jCalendarDate;
-	private GregorianCalendar date ;
-	
+	private GregorianCalendar date;
+
 	private OperationRow opeRow;
 	private JTextField DateTextField;
 	private JButton btnCancel;
 	private JDialog myParent;
-	OperationBrowserManager ope ;
+	OperationBrowserManager ope;
 	OperationRowBrowserManager opeManageRow;
 	private Opd myOpd;
 	private JSeparator separator;
 	private JSeparator separator_1;
 	private JLabel lblNewLabel;
 	private JLabel titleLabel;
-	
+
 	private ArrayList<String> operationResults = ope.getResultDescriptionList();
 
 	
 	public OperationRowEdit(OperationRow opRow) {
-		
 		opeRow = opRow;
 		ope = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 		opeManageRow = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
@@ -276,7 +275,7 @@ public class OperationRowEdit extends JPanel {
 		
 		remarkstextArea = new JTextArea();
 		remarkstextArea.setTabSize(5);
-		if (this.opeRow!=null){
+		if (this.opeRow != null) {
 			remarkstextArea.setText(opeRow.getRemarks());
 		}
 		
@@ -303,9 +302,9 @@ public class OperationRowEdit extends JPanel {
 		gbc_separator_1.gridx = 0;
 		gbc_separator_1.gridy = 7;
 		panelBody.add(separator_1, gbc_separator_1);
-		
-		if (this.opeRow != null){
-			TransTextField.setText(opeRow.getTransUnit()+""); //$NON-NLS-1$
+
+		if (this.opeRow != null) {
+			TransTextField.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
 		}
 		
 		panelButtons = new JPanel();
@@ -348,16 +347,16 @@ public class OperationRowEdit extends JPanel {
 	public void setMyParent(JDialog myParent) {
 		this.myParent = myParent;
 	}
-	
+
 	private CustomJDateChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
 			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			if (opeRow !=null ){
+			if (opeRow != null) {
 				jCalendarDate.setDate(this.opeRow.getOpDate().getTime());
 			}
-		}			
+		}
 		return jCalendarDate;
 	}
 
@@ -399,102 +398,99 @@ public class OperationRowEdit extends JPanel {
 
 	private JComboBox getComboResultBox() {
 		JComboBox comboResult = new JComboBox();
-			for (String description : operationResults) {
-				comboResult.addItem(description);
-			}
-			if (opeRow != null){
-				boolean found = false;
-				for (String elem : operationResults) {
-					if (opeRow.getOpResult().equals(ope.getResultDescriptionKey(elem))) {
-						found = true;
-						comboResult.addItem(elem);
-						break;
-					}				
-				}
-				if (!found){
-					//comboOpe.addItem("");
-					comboResult.addItem(null);
-				}
-				for (String elem : operationResults) {
-					
+		for (String description : operationResults) {
+			comboResult.addItem(description);
+		}
+		if (opeRow != null) {
+			boolean found = false;
+			for (String elem : operationResults) {
+				if (opeRow.getOpResult().equals(ope.getResultDescriptionKey(elem))) {
+					found = true;
 					comboResult.addItem(elem);
+					break;
 				}
 			}
-			
+			if (!found) {
+				//comboOpe.addItem("");
+				comboResult.addItem(null);
+			}
+			for (String elem : operationResults) {
+
+				comboResult.addItem(elem);
+			}
+		}
+
 		return comboResult;
 	}
 	
 	/* **************  functions events ***** */
-	private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {
-	      if ((this.jCalendarDate.getDate()==null) || (this.OpecomboBox.getSelectedItem()==null)) {
-		      MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.warningdateope");
-	      } else {
-	    	  if (getMyOpd().getDate().after(this.jCalendarDate.getDate())){
-			      MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.warningdateafter");
-	    		  return;
-	    	  }
-			if (opeRow!=null){
-	        	OperationRow updateOpeRow = opeRow;
-	        	GregorianCalendar dateop = new GregorianCalendar();
+	private void saveButtonMouseClicked(java.awt.event.MouseEvent mouseEvent) {
+		if ((this.jCalendarDate.getDate() == null) || (this.OpecomboBox.getSelectedItem() == null)) {
+			MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.warningdateope");
+		} else {
+			if (getMyOpd().getDate().after(this.jCalendarDate.getDate())) {
+				MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.warningdateafter");
+				return;
+			}
+			if (opeRow != null) {
+				OperationRow updateOpeRow = opeRow;
+				GregorianCalendar dateop = new GregorianCalendar();
 				dateop.setTime(jCalendarDate.getDate());
 				updateOpeRow.setOpDate(dateop);
-				
+
 				String opResult = ope.getResultDescriptionKey((String) this.resultComboBox.getSelectedItem());
 				updateOpeRow.setOpResult(opResult);
-				
+
 				updateOpeRow.setTransUnit(Float.parseFloat(TransTextField.getText()));
-	        	Operation op = (Operation)OpecomboBox.getSelectedItem();
-	        	updateOpeRow.setOperation(op);
-	        	updateOpeRow.setRemarks(remarkstextArea.getText());
-	        	boolean result = false;
+				Operation op = (Operation) OpecomboBox.getSelectedItem();
+				updateOpeRow.setOperation(op);
+				updateOpeRow.setRemarks(remarkstextArea.getText());
+				boolean result = false;
 				try {
 					result = opeManageRow.updateOperationRow(updateOpeRow);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 					return;
 				}
-	        	if (result){
-			        MessageDialog.info(OperationRowEdit.this, "angal.operationrowedit.updatesucces");
-	        		fireOperationRowUpdated(updateOpeRow);
-	        		this.myParent.dispose();
-	        	}
-	        	else {
-			        MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.updateerror");
-	        	}
-	        }
-	        else {
-	        	OperationRow operationRow = new OperationRow();
-	        	GregorianCalendar dateop = new GregorianCalendar();
+				if (result) {
+					MessageDialog.info(OperationRowEdit.this, "angal.operationrowedit.updatesucces");
+					fireOperationRowUpdated(updateOpeRow);
+					this.myParent.dispose();
+				} else {
+					MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.updateerror");
+				}
+			} else {
+				OperationRow operationRow = new OperationRow();
+				GregorianCalendar dateop = new GregorianCalendar();
 				dateop.setTime(this.jCalendarDate.getDate());
 				operationRow.setOpDate(dateop);
-				
+
 				String opResult = ope.getResultDescriptionKey((String) this.resultComboBox.getSelectedItem());
 				operationRow.setOpResult(opResult);
 
 				operationRow.setTransUnit(Float.parseFloat(this.TransTextField.getText()));
-	        	Operation op = (Operation)this.OpecomboBox.getSelectedItem();
-	        	operationRow.setOperation(op);
-	        	operationRow.setOpd(this.getMyOpd());	       
-	        	operationRow.setPrescriber(MainMenu.getUser().getUserName());
-	        	operationRow.setRemarks(remarkstextArea.getText());
-	        	boolean result = false;
+				Operation op = (Operation) this.OpecomboBox.getSelectedItem();
+				operationRow.setOperation(op);
+				operationRow.setOpd(this.getMyOpd());
+				operationRow.setPrescriber(MainMenu.getUser().getUserName());
+				operationRow.setRemarks(remarkstextArea.getText());
+				boolean result = false;
 				try {
 					result = opeManageRow.newOperationRow(operationRow);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 					return;
 				}
-	        	if (result){
-			        MessageDialog.info(OperationRowEdit.this, "angal.operationrowedit.savesucces");
-	        		fireOperationRowInserted(operationRow);
-	        		this.myParent.dispose();
-	        	}
-	        	else {
-			        MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.saveerror");
-	        	}	
-	        }
-	      }
-    }
+				if (result) {
+					MessageDialog.info(OperationRowEdit.this, "angal.operationrowedit.savesucces");
+					fireOperationRowInserted(operationRow);
+					this.myParent.dispose();
+				} else {
+					MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.saveerror");
+				}
+			}
+		}
+	}
 	
 	private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {
         this.getMyParent().dispose();

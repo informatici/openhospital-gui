@@ -234,8 +234,7 @@ public class PatVacBrowser extends ModalJFrame {
 	 * 
 	 * @return buttonEdit (JButton)
 	 */
-	private JButton getButtonEdit(){
-		
+	private JButton getButtonEdit() {
 		if (buttonEdit == null) {
 			buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
@@ -249,11 +248,11 @@ public class PatVacBrowser extends ModalJFrame {
 				patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
 
 				PatientVaccine last = new PatientVaccine(patientVaccine.getCode(),
-							                  patientVaccine.getProgr(),
-							                  patientVaccine.getVaccineDate(),
-							                  patientVaccine.getPatient(),
-							                  patientVaccine.getVaccine(),
-							                  patientVaccine.getLock());
+						patientVaccine.getProgr(),
+						patientVaccine.getVaccineDate(),
+						patientVaccine.getPatient(),
+						patientVaccine.getVaccine(),
+						patientVaccine.getLock());
 
 				new PatVacEdit(myFrame, patientVaccine, false);
 
@@ -265,17 +264,16 @@ public class PatVacBrowser extends ModalJFrame {
 					}
 				}
 			});
-		}		
-     return buttonEdit;
+		}
+		return buttonEdit;
 	}
 
-	
 	/**
 	 * This method initializes buttonDelete, that loads patientVaccineEdit Mask
 	 * 
 	 * @return buttonDelete (JButton)
 	 */
-	private JButton getButtonDelete(){
+	private JButton getButtonDelete() {
 		if (buttonDelete == null) {
 			buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
@@ -286,31 +284,31 @@ public class PatVacBrowser extends ModalJFrame {
 				}
 				selectedrow = jTable.getSelectedRow();
 				patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
-				int answer = MessageDialog.yesNo(null,"angal.patvac.deletepatientvaccine.fmt.msg",
+				int answer = MessageDialog.yesNo(null, "angal.patvac.deletepatientvaccine.fmt.msg",
 						dateFormat.format(patientVaccine.getVaccineDate().getTime()),
 						patientVaccine.getVaccine().getDescription(),
 						patientVaccine.getPatName());
 
 				if (answer == JOptionPane.YES_OPTION) {
 
-						boolean deleted;
+					boolean deleted;
 
-						try {
-							deleted = manager.deletePatientVaccine(patientVaccine);
-						} catch (OHServiceException e) {
-							deleted = false;
-							OHServiceExceptionUtil.showMessages(e);
-						}
+					try {
+						deleted = manager.deletePatientVaccine(patientVaccine);
+					} catch (OHServiceException e) {
+						deleted = false;
+						OHServiceExceptionUtil.showMessages(e);
+					}
 
-						if (deleted) {
-							lPatVac.remove(jTable.getSelectedRow());
-							model.fireTableDataChanged();
-							jTable.updateUI();
-						}
+					if (deleted) {
+						lPatVac.remove(jTable.getSelectedRow());
+						model.fireTableDataChanged();
+						jTable.updateUI();
+					}
 				}
 			});
-		 }
-     return buttonDelete;
+		}
+		return buttonDelete;
 	}	
 	
 	/**
@@ -350,47 +348,44 @@ public class PatVacBrowser extends ModalJFrame {
 		}
 		return jSelectionPanel;
 	}
-	
 
-	
 	/**
 	 * This method initializes getVaccineTypePanel
 	 * 
 	 * @return vaccineTypePanel  (JPanel)
 	 */
-	private JPanel getVaccineTypePanel (){
-		
+	private JPanel getVaccineTypePanel() {
+
 		JPanel vaccineTypePanel = new JPanel();
-		
+
 		vaccineTypePanel.setLayout(new BoxLayout(vaccineTypePanel, BoxLayout.Y_AXIS));
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.patvac.selectavaccinetype")));
 		vaccineTypePanel.add(label1Panel);
-		
+
 		label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		label1Panel.add(getComboVaccineTypes());
-		vaccineTypePanel.add(label1Panel,null);
+		vaccineTypePanel.add(label1Panel, null);
 		return vaccineTypePanel;
 	}
-	
-	
+
 	/**
 	 * This method initializes getVaccinePanel
 	 * 
 	 * @return vaccinePanel  (JPanel)
-	 */	
-	private JPanel getVaccinePanel (){
-			
+	 */
+	private JPanel getVaccinePanel() {
+
 		JPanel vaccinePanel = new JPanel();
-		
+
 		vaccinePanel.setLayout(new BoxLayout(vaccinePanel, BoxLayout.Y_AXIS));
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.patvac.selectavaccine")));
 		vaccinePanel.add(label1Panel);
-		
+
 		label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		label1Panel.add(getComboVaccines());
-		vaccinePanel.add(label1Panel,null);
+		vaccinePanel.add(label1Panel, null);
 		return vaccinePanel;
 	}
 
@@ -399,26 +394,26 @@ public class PatVacBrowser extends ModalJFrame {
 	 * 
 	 * @return datePanel  (JPanel)
 	 */
-	private JPanel getDatePanel (){
-		
+	private JPanel getDatePanel() {
+
 		JPanel datePanel = new JPanel();
-		
+
 		datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.Y_AXIS));
 
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") +": "+ MessageBundle.getMessage("angal.common.from.txt")), null);
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") + ": " + MessageBundle.getMessage("angal.common.from.txt")), null);
 		datePanel.add(label1Panel);
-		
+
 		label1Panel.add(getDateFromPanel());
-		datePanel.add(label1Panel,null);
-		
+		datePanel.add(label1Panel, null);
+
 		label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") +": "+MessageBundle.getMessage("angal.common.to.txt") +"     "), null);
+		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") + ": " + MessageBundle.getMessage("angal.common.to.txt") + "     "), null);
 		datePanel.add(label1Panel);
-		
+
 		label1Panel.add(getDateToPanel());
-		datePanel.add(label1Panel,null);
-		
+		datePanel.add(label1Panel, null);
+
 		return datePanel;
 	}
 
@@ -485,12 +480,12 @@ public class PatVacBrowser extends ModalJFrame {
 	 * 
 	 * @return filterPanel  (JPanel)
 	 */
-	private JPanel getFilterPanel (){
-		
+	private JPanel getFilterPanel() {
+
 		JPanel filterPanel = new JPanel();
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.Y_AXIS));
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	    label1Panel.add(getFilterButton());
+		label1Panel.add(getFilterButton());
 		filterPanel.add(label1Panel);
 		return filterPanel;
 	}
@@ -555,31 +550,32 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private VoLimitedTextField getJAgeToTextField() {
 		if (jAgeToTextField == null) {
-			jAgeToTextField = new VoLimitedTextField(3,2);
+			jAgeToTextField = new VoLimitedTextField(3, 2);
 			jAgeToTextField.setText("0");
 			jAgeToTextField.setMaximumSize(new Dimension(100, 50));
-			ageTo=0;
+			ageTo = 0;
 			jAgeToTextField.addFocusListener(new FocusListener() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
-					try {				
+					try {
 						ageTo = Integer.parseInt(jAgeToTextField.getText());
-						if ((ageTo<0)||(ageTo>200)) {
+						if ((ageTo < 0) || (ageTo > 200)) {
 							jAgeToTextField.setText("0");
 							ageTo = Integer.parseInt(jAgeToTextField.getText());
 							MessageDialog.error(null, "angal.patvac.insertvalidage");
 						}
-						if (ageFrom>ageTo){
+						if (ageFrom > ageTo) {
 							MessageDialog.error(null, "angal.patvac.agefrommustbelowerthanageto");
 							jAgeFromTextField.setText(ageTo.toString());
-							ageFrom=ageTo;
+							ageFrom = ageTo;
 						}
 					} catch (NumberFormatException ex) {
 						jAgeToTextField.setText("0");
 						ageTo = Integer.parseInt(jAgeToTextField.getText());
 					}
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {
 				}
@@ -608,7 +604,7 @@ public class PatVacBrowser extends ModalJFrame {
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
-			if (types != null){
+			if (types != null) {
 				for (VaccineType elem : types) {
 					vaccineTypeComboBox.addItem(elem);
 				}
@@ -634,25 +630,25 @@ public class PatVacBrowser extends ModalJFrame {
 			vaccineComboBox.setPreferredSize(new Dimension(200, 30));
 		}
 		VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
-			
-		ArrayList<Vaccine> allVac = null ;
-		vaccineComboBox.addItem( new Vaccine ( "", MessageBundle.getMessage("angal.patvac.allvaccine"),new VaccineType ("","")));
-        try {
-            if (((VaccineType)vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))){
-                allVac = manager.getVaccine();
-            } else {
-                allVac = manager.getVaccine( ((VaccineType)vaccineTypeComboBox.getSelectedItem()).getCode());
-            }
-        } catch (OHServiceException e) {
-            OHServiceExceptionUtil.showMessages(e);
-        }
 
-        if (allVac != null) {
-            for (Vaccine elem : allVac) {
-                vaccineComboBox.addItem(elem);
-            }
-        }
-	    return vaccineComboBox;
+		ArrayList<Vaccine> allVac = null;
+		vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
+		try {
+			if (((VaccineType) vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))) {
+				allVac = manager.getVaccine();
+			} else {
+				allVac = manager.getVaccine(((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode());
+			}
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
+
+		if (allVac != null) {
+			for (Vaccine elem : allVac) {
+				vaccineComboBox.addItem(elem);
+			}
+		}
+		return vaccineComboBox;
 	}
 	
 	/**
@@ -882,8 +878,8 @@ public class PatVacBrowser extends ModalJFrame {
 	
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		sexSelect=e.getActionCommand();
+	public void actionPerformed(ActionEvent actionEvent) {
+		sexSelect = actionEvent.getActionCommand();
 	}
 
 	private void updateRowCounter() {

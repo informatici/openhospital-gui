@@ -96,14 +96,14 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillBrowser.class);
 
 	@Override
-	public void billInserted(AWTEvent event){
-		if (patientParent!=null) {
+	public void billInserted(AWTEvent event) {
+		if (patientParent != null) {
 			try {
 				updateDataSet(dateFrom, dateTo, patientParent);
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
-		} else{
+		} else {
 			updateDataSet(dateFrom, dateTo);
 		}
 		updateTables();
@@ -1131,7 +1131,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				}
 
 				@Override
-				public boolean isCellEditable(int row, int column){
+				public boolean isCellEditable(int row, int column) {
 					return false;
 				}
 			});
@@ -1150,14 +1150,14 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private void updateDataSet() {
 		updateDataSet(new DateTime().toDateMidnight().toGregorianCalendar(), new DateTime().toDateMidnight().plusDays(1).toGregorianCalendar());
 	}
-	
-	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo){
+
+	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo) {
 		try {
 			/*
 			 * Bills in the period
 			 */
 			billPeriod = billManager.getBills(dateFrom, dateTo);
-		} catch(OHServiceException ohServiceException) {
+		} catch (OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
 
@@ -1166,7 +1166,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			 * Payments in the period
 			 */
 			paymentsPeriod = billManager.getPayments(dateFrom, dateTo);
-		} catch(OHServiceException ohServiceException) {
+		} catch (OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
 
@@ -1175,7 +1175,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			 * Bills not in the period but with payments in the period
 			 */
 			billFromPayments = billManager.getBills(paymentsPeriod);
-		} catch(OHServiceException ohServiceException) {
+		} catch (OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
 	}
@@ -1226,7 +1226,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}
 		
 		//Bills in today contribute for Not Paid Today (balance)
-		if (billToday != null){
+		if (billToday != null) {
 			for (Bill bill : billToday) {
 				if (!bill.getStatus().equals("D")) {
 					BigDecimal balance = new BigDecimal(Double.toString(bill.getBalance()));
@@ -1236,7 +1236,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}
 		
 		//Payments in today contribute for Paid Today (total)
-		if (paymentsToday != null){
+		if (paymentsToday != null) {
 			for (BillPayments payment : paymentsToday) {
 				if (!payment.getBill().getStatus().equals("D")) {
 					BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));

@@ -433,8 +433,8 @@ public class LabEditExtended extends ModalJFrame {
 				}
 				return patientComboBox;
 			}
-			
-			if (pat != null){
+
+			if (pat != null) {
 				for (Patient elem : pat) {
 					patientComboBox.addItem(elem);
 				}
@@ -586,22 +586,19 @@ public class LabEditExtended extends ModalJFrame {
 		return matComboBox;
 	}
 
-	
 	private JTextArea getNoteTextArea() {
 		if (noteTextArea == null) {
-			noteTextArea = new JTextArea(10,30);
-			if (!insert){
+			noteTextArea = new JTextArea(10, 30);
+			if (!insert) {
 				noteTextArea.setText(lab.getNote());
 			}
 			noteTextArea.setLineWrap(true);
-			noteTextArea.setPreferredSize(new Dimension(10,30));
+			noteTextArea.setPreferredSize(new Dimension(10, 30));
 			noteTextArea.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		}
 		return noteTextArea;
 	}
-	
-	
-	
+
 	private VoLimitedTextField getPatientTextField() {
 		if (patTextField == null) {
 			patTextField = new VoLimitedTextField(100);

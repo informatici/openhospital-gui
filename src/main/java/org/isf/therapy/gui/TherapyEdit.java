@@ -231,10 +231,10 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		 */
 		try {
 			thRows = thManager.getTherapyRows(patient.getCode());
-		}catch(OHServiceException e){
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		
+
 		/*
 		 * HashTable of the rows
 		 */
@@ -244,13 +244,13 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				hashTableThRow.put(thRow.getTherapyID(), thRow);
 			}
 		}
-		
+
 		/*
 		 * Therapy(s) related to the rows in the therapies table
 		 */
 		try {
 			therapies = thManager.getTherapies(thRows);
-		}catch(OHServiceException e){
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		/*
@@ -258,10 +258,10 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		 */
 		try {
 			visits = vstManager.getVisits(patient.getCode());
-		}catch(OHServiceException e){
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		
+
 		/*
 		 * HashTable of the visits
 		 */
@@ -623,9 +623,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 								MessageBundle.getMessage("angal.therapy.telephonenumberfor") + " " + patient.getName());
 						if (number != null) {
 							patient.setTelephone(number);
-							try{
+							try {
 								patientBrowserManager.savePatient(patient);
-							}catch(OHServiceException ex){
+							} catch (OHServiceException ex) {
 								OHServiceExceptionUtil.showMessages(ex);
 							}
 						}
@@ -674,7 +674,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			reportButton.setHorizontalAlignment(SwingConstants.LEFT);
 			reportButton.addActionListener(new ActionListener() {
 
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(ActionEvent actionEvent) {
 
 				}
 			});
@@ -905,8 +905,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					available = false;
 					OHServiceExceptionUtil.showMessages(ex);
 				}
-				if (medOutStock != null
-						&& !medOutStock.isEmpty()){
+				if (medOutStock != null && !medOutStock.isEmpty()) {
 					available = false;
 				}
 
@@ -984,7 +983,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					Therapy thisTherapy = null;
 					try {
 						thisTherapy = thManager.createTherapy(thRow);
-					}catch(OHServiceException ex){
+					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
 					therapies.add(thisTherapy); // FOR GUI
@@ -1042,7 +1041,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					Therapy thisTherapy = null;
 					try {
 						thisTherapy = thManager.createTherapy(thRow);
-					}catch(OHServiceException ex){
+					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
 					therapies.add(thisTherapy); // FOR GUI

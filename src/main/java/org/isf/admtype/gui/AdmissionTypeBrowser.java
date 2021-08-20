@@ -207,10 +207,10 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 	private AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
 		public AdmissionTypeBrowserModel() {
-			
+
 			try {
 				pAdmissionType = manager.getAdmissionType();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}

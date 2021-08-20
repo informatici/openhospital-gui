@@ -169,10 +169,10 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextArea jNoteTextArea = null;
 	private JPanel jNotePanel = null;
 	private JScrollPane jNoteScrollPane = null;
+
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		sexSelect=e.getActionCommand();
-		
+	public void actionPerformed(ActionEvent actionEvent) {
+		sexSelect = actionEvent.getActionCommand();
 	}
 	
 	/**
@@ -531,11 +531,10 @@ public class PatientInsert extends JDialog implements ActionListener{
 			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			sexPanel.add(getJSexLabelPanel(), null);
 			sexPanel.add(radiom, radiom.getName());
-			if (insert){
+			if (insert) {
 				radiom.setSelected(true);
-			}
-			else{
-				if (patient.getSex()=='F') {
+			} else {
+				if (patient.getSex() == 'F') {
 					radiof.setSelected(true);
 				} else {
 					radiom.setSelected(true);
@@ -546,7 +545,6 @@ public class PatientInsert extends JDialog implements ActionListener{
 			sexGroup.add(radiom);
 			sexGroup.add(radiof);
 			sexPanel.add(radiof);
-			
 		}
 		return sexPanel;
 	}
@@ -967,10 +965,10 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JPanel getJDataContainPanel() {
 		if (jDataContainPanel == null) {
 			jDataContainPanel = new JPanel();
-			if (!insert){
-				jDataContainPanel = setMyBorderCenter(jDataContainPanel,patient.getName());
+			if (!insert) {
+				jDataContainPanel = setMyBorderCenter(jDataContainPanel, patient.getName());
 			} else {
-				jDataContainPanel = setMyBorderCenter(jDataContainPanel,MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
+				jDataContainPanel = setMyBorderCenter(jDataContainPanel, MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
 			}
 			jDataContainPanel.setLayout(new BorderLayout());
 			jDataContainPanel.add(getJLabelPanel(), BorderLayout.CENTER);
@@ -979,30 +977,28 @@ public class PatientInsert extends JDialog implements ActionListener{
 		return jDataContainPanel;
 	}
 
-
 	/**
 	 * Set a specific border+title to a panel
 	 */
-	private JPanel setMyBorder(JPanel c, String title){
+	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1,title,
-	             javax.swing.border.TitledBorder.LEFT,javax.swing.border.TitledBorder.TOP);
-	            
+
+		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title,
+				javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
+
 		c.setBorder(b2);
 		return c;
 	}
-	
-	private JPanel setMyBorderCenter(JPanel c, String title){
+
+	private JPanel setMyBorderCenter(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1,title,
-	             javax.swing.border.TitledBorder.CENTER,javax.swing.border.TitledBorder.TOP);
-	            
+
+		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title,
+				javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP);
+
 		c.setBorder(b2);
 		return c;
 	}
-	
 
 	/**
 	 * This method initializes jTextPane	
@@ -1011,12 +1007,12 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JTextArea getJTextArea() {
 		if (jNoteTextArea == null) {
-			jNoteTextArea = new JTextArea(40,30);
-			if (!insert){
+			jNoteTextArea = new JTextArea(40, 30);
+			if (!insert) {
 				jNoteTextArea.setText(patient.getNote());
 			}
 			jNoteTextArea.setLineWrap(true);
-			jNoteTextArea.setPreferredSize(new Dimension(jNoteTextArea.getSize()));	
+			jNoteTextArea.setPreferredSize(new Dimension(jNoteTextArea.getSize()));
 			jNoteTextArea.setAutoscrolls(true);
 		}
 		return jNoteTextArea;

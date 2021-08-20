@@ -176,9 +176,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	protected boolean altKeyReleased = true;
 	protected Timer ageTimer = new Timer(1000, e -> filterPatient(null));
-	
-	public void fireMyDeletedPatient(Patient p){
-				
+
+	public void fireMyDeletedPatient(Patient p) {
+
 		int cc = 0;
 		boolean found = false;
 		for (AdmittedPatient elem : pPatient) {
@@ -188,7 +188,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			}
 			cc++;
 		}
-		if (found){
+		if (found) {
 			pPatient.remove(cc);
 			lastKey = "";
 			filterPatient(searchString.getText());
@@ -208,9 +208,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				Admission elemAdm = elem.getAdmission();
 				if (elemAdm != null) {
 					//the patient is admitted
-					if (elemAdm.getId() == adm.getId())
+					if (elemAdm.getId() == adm.getId()) {
 						//same admission --> delete
-					{
 						elem.setAdmission(null);
 					}
 				}
@@ -355,8 +354,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			// Load the whole list of patients
 			try {
 				pPatient = admissionManager.getAdmittedPatients(null);
-			} catch(OHServiceException e){
-                OHServiceExceptionUtil.showMessages(e);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 		
@@ -368,8 +367,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		rowCounter.setText(MessageBundle.formatMessage("angal.admission.count.fmt.txt", pPatient.size()));
 		searchString.requestFocus();
 
-		myFrame.addWindowListener(new WindowAdapter(){
-			
+		myFrame.addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
@@ -380,7 +379,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					wardList.clear();
 				}
 				dispose();
-			}			
+			}
 		});
 	}
 
@@ -424,14 +423,14 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			ArrayList<Ward> wardWithBeds;
 			try {
 				wardWithBeds = wbm.getWards();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				wardWithBeds = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			
+
 			wardList = new ArrayList<>();
 			for (Ward elem : wardWithBeds) {
-				
+
 				if (elem.getBeds() > 0) {
 					wardList.add(elem);
 				}
@@ -665,8 +664,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JScrollPane getScrollPane() {
 		table = new JTable(new AdmittedPatientBrowserModel(null));
 		table.setAutoCreateColumnsFromModel(false);
-		
-		for (int i = 0; i< pColumns.length; i++){
+
+		for (int i = 0; i < pColumns.length; i++) {
 			table.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
 			if (!pColumnResizable[i]) {
 				table.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
@@ -744,7 +743,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				PatientExamination lastPatex = null;
 				try {
 					lastPatex = examManager.getLastByPatID(pat.getCode());
-				}catch(OHServiceException ex){
+				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 				}
 				if (lastPatex != null) {
@@ -819,26 +818,26 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			Patient pat = patient.getPatient();
 
 			int n = MessageDialog.yesNo(AdmittedPatientBrowser.this, "angal.admission.deletepatient.fmt.msg", pat.getName());
-			if (n == JOptionPane.YES_OPTION){
+			if (n == JOptionPane.YES_OPTION) {
 				boolean result = false;
 				try {
 					result = patientManager.deletePatient(pat);
-				} catch(OHServiceException e){
+				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
-				if (result){
+				if (result) {
 					ArrayList<Admission> patientAdmissions;
 					try {
 						patientAdmissions = admissionManager.getAdmissions(pat);
-					} catch(OHServiceException ex){
+					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 						patientAdmissions = new ArrayList<>();
 					}
 
-					for (Admission elem : patientAdmissions){
+					for (Admission elem : patientAdmissions) {
 						try {
 							admissionManager.setDeleted(elem.getId());
-						} catch(OHServiceException e){
+						} catch (OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e);
 						}
 					}
@@ -904,13 +903,13 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
 
-			if (patient  != null) {
+			if (patient != null) {
 				Patient pat = patient.getPatient();
 				BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
 				ArrayList<Bill> patientPendingBills;
 				try {
 					patientPendingBills = billManager.getPendingBills(pat.getCode());
-				}catch(OHServiceException e){
+				} catch (OHServiceException e) {
 					patientPendingBills = new ArrayList<>();
 					OHServiceExceptionUtil.showMessages(e);
 				}
@@ -1039,11 +1038,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				}
 			}
 
-			try{
-				if (patientManager.mergePatient(mergedPatient, patient2)){
+			try {
+				if (patientManager.mergePatient(mergedPatient, patient2)) {
 					fireMyDeletedPatient(patient2);
 				}
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		});
@@ -1109,10 +1108,10 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				break;
 			}
 		}
-		
+
 		try {
 			pPatient = admissionManager.getAdmittedPatients(admissionRange, dischargeRange, searchString.getText());
-		}catch(OHServiceException e){
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		filterPatient(null);

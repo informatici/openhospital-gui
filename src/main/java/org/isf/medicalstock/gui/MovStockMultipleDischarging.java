@@ -487,12 +487,11 @@ public class MovStockMultipleDischarging extends JDialog {
 		return headerPanel;
 	}
 
-	private JComboBox getShareUser(){
-
-		share= new Interaction();
+	private JComboBox getShareUser() {
+		share = new Interaction();
 		Collection<String> contacts = share.getContactOnline();
 		contacts.add(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody")); //$NON-NLS-1$
-		shareWith= new JComboBox(contacts.toArray());
+		shareWith = new JComboBox(contacts.toArray());
 		shareWith.setSelectedItem(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody")); //$NON-NLS-1$
 
 		return shareWith;
@@ -775,7 +774,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			ArrayList<Ward> wards;
 			try {
 				wards = wardMan.getWards();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				wards = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -971,26 +970,26 @@ public class MovStockMultipleDischarging extends JDialog {
 		ArrayList<Movement> movements = model.getMovements();
 		try {
 			movManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
-			
+
 			if (isXmpp()) {
 				if (shareWith.isEnabled() && (!(((String) shareWith.getSelectedItem())
-						.equals(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody"))))){ //$NON-NLS-1$
-					CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
+						.equals(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody"))))) { //$NON-NLS-1$
+					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 					for (Medical med : pool) {
 						frame.sendMessage(
 								MessageBundle.getMessage("angal.medicalstock.multipledischarging.alert") + //$NON-NLS-1$ 
-								med.getDescription() + 
-								MessageBundle.getMessage("angal.medicalstock.multipledischarging.isabouttoend"), //$NON-NLS-1$
-								(String)shareWith.getSelectedItem(), 
+										med.getDescription() +
+										MessageBundle.getMessage("angal.medicalstock.multipledischarging.isabouttoend"), //$NON-NLS-1$
+								(String) shareWith.getSelectedItem(),
 								false);
 					}
 				}
 			}
-			
+
 		} catch (OHServiceException e) {
 			ok = false;
 			OHServiceExceptionUtil.showMessages(e);
-		} 
+		}
 		return ok;
 	}
 

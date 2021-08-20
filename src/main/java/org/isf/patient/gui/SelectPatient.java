@@ -139,15 +139,15 @@ public class SelectPatient extends JDialog implements PatientListener {
 		}
 		ps = new PatientSummary(patient);
 		initComponents();
-		addWindowListener(new WindowAdapter(){
-			
+		addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				patArray.clear();
 				patSearch.clear();
 				dispose();
-			}			
+			}
 		});
 		setLocationRelativeTo(null);
 	}
@@ -170,15 +170,15 @@ public class SelectPatient extends JDialog implements PatientListener {
 		}
 		ps = new PatientSummary(patient);
 		initComponents();
-		addWindowListener(new WindowAdapter(){
-			
+		addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				patArray.clear();
 				patSearch.clear();
 				dispose();
-			}			
+			}
 		});
 		setLocationRelativeTo(null);
 	}
@@ -196,15 +196,15 @@ public class SelectPatient extends JDialog implements PatientListener {
 		}
 		ps = new PatientSummary(patient);
 		initComponents();
-		addWindowListener(new WindowAdapter(){
-			
+		addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				patArray.clear();
 				patSearch.clear();
 				dispose();
-			}			
+			}
 		});
 		setLocationRelativeTo(null);
 		jTextFieldSearchPatient.setText(search);

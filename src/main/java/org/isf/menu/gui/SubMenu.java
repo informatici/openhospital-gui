@@ -138,9 +138,9 @@ public class SubMenu extends JDialog implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent event) {
+	public void actionPerformed(ActionEvent actionEvent) {
 
-		String command = event.getActionCommand();
+		String command = actionEvent.getActionCommand();
 		for (UserMenuItem u : myMenu) {
 			if (u.getCode().equals(command)) {
 				if (u.isASubMenu()) {
@@ -166,14 +166,15 @@ public class SubMenu extends JDialog implements ActionListener {
 
 			int numItems = 0;
 			for (UserMenuItem u : myMenu) {
-				if (u.getMySubmenu().equals(subName))
+				if (u.getMySubmenu().equals(subName)) {
 					numItems++;
+				}
 			}
 
 			button = new JButton[numItems];
 
 			int k = 0;
-			for (UserMenuItem u : myMenu)
+			for (UserMenuItem u : myMenu) {
 				if (u.getMySubmenu().equals(subName)) {
 					button[k] = new JButton(u.getButtonLabel());
 					button[k].setMnemonic(KeyEvent.VK_A + u.getShortcut() - 'A');
@@ -185,6 +186,7 @@ public class SubMenu extends JDialog implements ActionListener {
 					}
 					k++;
 				}
+			}
 
 			setButtonsSize(button);
 

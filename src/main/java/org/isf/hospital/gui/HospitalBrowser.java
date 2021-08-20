@@ -78,13 +78,12 @@ public class HospitalBrowser extends ModalJFrame{
 	private JButton editJButton;
 	private JButton updateJButton;
 	private JButton closeJButton;
-	
-	
-	public HospitalBrowser(){
-		super();			
+
+	public HospitalBrowser() {
+		super();
 		manager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 		try {
-			hospital= manager.getHospital();
+			hospital = manager.getHospital();
 		} catch (OHServiceException e) {
 			this.hospital = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -103,49 +102,49 @@ public class HospitalBrowser extends ModalJFrame{
 		this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase * pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContainPanel());
 	}
-	
+
 	public JPanel getJContainPanel() {
-		if (jContainPanel==null){
-			jContainPanel= new JPanel();
+		if (jContainPanel == null) {
+			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
-			jContainPanel.add(getJDataPanel(),java.awt.BorderLayout.CENTER);
-			jContainPanel.add(getJButtonPanel(),java.awt.BorderLayout.SOUTH);
+			jContainPanel.add(getJDataPanel(), java.awt.BorderLayout.CENTER);
+			jContainPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContainPanel;
 	}
-	
+
 	public JPanel getJDataPanel() {
-		if (jDataPanel==null){
-			jDataPanel= new JPanel();
-			jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
+		if (jDataPanel == null) {
+			jDataPanel = new JPanel();
+			jDataPanel.setLayout(new BoxLayout(getJDataPanel(), BoxLayout.Y_AXIS));
 			jDataPanel.add(getJNamePanel());
 			jDataPanel.add(getJAddressPanel());
-			jDataPanel.add(getJCityPanel(),null);
-			jDataPanel.add(getJTelePanel(),null);
-			jDataPanel.add(getJFaxPanel(),null);
-			jDataPanel.add(getJEmailPanel(),null);
-			jDataPanel.add(getJCurrencyCodPanel(),null);
+			jDataPanel.add(getJCityPanel(), null);
+			jDataPanel.add(getJTelePanel(), null);
+			jDataPanel.add(getJFaxPanel(), null);
+			jDataPanel.add(getJEmailPanel(), null);
+			jDataPanel.add(getJCurrencyCodPanel(), null);
 		}
 		return jDataPanel;
 	}
-	
+
 	public JPanel getJNamePanel() {
-		if (jNamePanel==null){
-			jNamePanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		if (jNamePanel == null) {
+			jNamePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel nameJLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt") + ": ");
 			jNamePanel.add(nameJLabel);
 			nameJTextField = new JTextField(25);
-			nameJTextField.setEditable(false);			
+			nameJTextField.setEditable(false);
 			jNamePanel.add(nameJTextField);
-			nameJTextField.setText(hospital.getDescription());			
+			nameJTextField.setText(hospital.getDescription());
 		}
 		return jNamePanel;
 	}
-	
+
 	public JPanel getJAddressPanel() {
-		if (jAddressPanel==null){
-			jAddressPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel addJLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt")+": ");
+		if (jAddressPanel == null) {
+			jAddressPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel addJLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt") + ": ");
 			jAddressPanel.add(addJLabel);
 			addressJTextField = new JTextField(25);
 			addressJTextField.setEditable(false);
@@ -154,11 +153,11 @@ public class HospitalBrowser extends ModalJFrame{
 		}
 		return jAddressPanel;
 	}
-	
+
 	public JPanel getJCityPanel() {
-		if (jCityPanel == null){
+		if (jCityPanel == null) {
 			jCityPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel cityJLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt")+": ");
+			JLabel cityJLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt") + ": ");
 			jCityPanel.add(cityJLabel);
 			cityJTextField = new JTextField(25);
 			cityJTextField.setEditable(false);
@@ -167,10 +166,11 @@ public class HospitalBrowser extends ModalJFrame{
 		}
 		return jCityPanel;
 	}
+
 	public JPanel getJTelePanel() {
-		if (jTelePanel==null){
-			jTelePanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel teleJLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt")+": ");
+		if (jTelePanel == null) {
+			jTelePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel teleJLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt") + ": ");
 			jTelePanel.add(teleJLabel);
 			teleJTextField = new JTextField(25);
 			teleJTextField.setEditable(false);
@@ -179,10 +179,11 @@ public class HospitalBrowser extends ModalJFrame{
 		}
 		return jTelePanel;
 	}
+
 	public JPanel getJFaxPanel() {
-		if (jFaxPanel==null){
-			jFaxPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel faxJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.faxnumber")+": ");
+		if (jFaxPanel == null) {
+			jFaxPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel faxJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.faxnumber") + ": ");
 			jFaxPanel.add(faxJLabel);
 			faxJTextField = new JTextField(25);
 			faxJTextField.setEditable(false);
@@ -191,10 +192,11 @@ public class HospitalBrowser extends ModalJFrame{
 		}
 		return jFaxPanel;
 	}
+
 	public JPanel getJEmailPanel() {
-		if (jEmailPanel==null){
-			jEmailPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel emailJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.emailaddress")+": ");
+		if (jEmailPanel == null) {
+			jEmailPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel emailJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.emailaddress") + ": ");
 			jEmailPanel.add(emailJLabel);
 			emailJTextField = new JTextField(25);
 			emailJTextField.setEditable(false);
@@ -202,13 +204,14 @@ public class HospitalBrowser extends ModalJFrame{
 			jEmailPanel.add(emailJTextField);
 		}
 		return jEmailPanel;
-	}	
+	}
+
 	public JPanel getJCurrencyCodPanel() {
-		if (jCurrencyCodPanel==null){
-			jCurrencyCodPanel= new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			JLabel currencyCodJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.currencycod")+": ");
+		if (jCurrencyCodPanel == null) {
+			jCurrencyCodPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+			JLabel currencyCodJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.currencycod") + ": ");
 			jCurrencyCodPanel.add(currencyCodJLabel);
-			currencyCodJTextField = new VoLimitedTextField(3,25);
+			currencyCodJTextField = new VoLimitedTextField(3, 25);
 			currencyCodJTextField.setEditable(false);
 			currencyCodJTextField.setText(hospital.getCurrencyCod());
 			jCurrencyCodPanel.add(currencyCodJTextField);

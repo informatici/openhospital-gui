@@ -181,10 +181,10 @@ public class WardPharmacyRectify extends JDialog {
 		}
 		wardMap = new HashMap<>();
 		for (MedicalWard medWard : wardDrugs) {
-			
-			if (wardMap.containsKey(medWard.getMedical().getCode())){
-			 Double qu = wardMap.get(medWard.getMedical().getCode());
-			 wardMap.put(medWard.getMedical().getCode(), qu + medWard.getQty());
+
+			if (wardMap.containsKey(medWard.getMedical().getCode())) {
+				Double qu = wardMap.get(medWard.getMedical().getCode());
+				wardMap.put(medWard.getMedical().getCode(), qu + medWard.getQty());
 			} else {
 				wardMap.put(medWard.getMedical().getCode(), medWard.getQty());
 			}
@@ -732,7 +732,7 @@ public class WardPharmacyRectify extends JDialog {
 		if (jComboBoxMedical == null) {
 			jComboBoxMedical = new JComboBox();
 			jComboBoxMedical.addItem(""); //$NON-NLS-1$
-			for (Medical med : medicals){
+			for (Medical med : medicals) {
 				jComboBoxMedical.addItem(med);
 			}
 			jComboBoxMedical.addActionListener(actionEvent -> {

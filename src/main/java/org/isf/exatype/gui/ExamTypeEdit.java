@@ -200,34 +200,33 @@ public class ExamTypeEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 				ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
-				try{
+				try {
 					examType.setDescription(descriptionTextField.getText());
 					examType.setCode(codeTextField.getText());
 
 					if (insert) {     // inserting
 						if (manager.newExamType(examType)) {
-                           fireExamTypeInserted();
-                           dispose();
-                        } else {
+							fireExamTypeInserted();
+							dispose();
+						} else {
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
-                    }
-                    else {            // updating
-	                    if (descriptionTextField.getText().equals(lastdescription)){
-						    dispose();
-					    } else {
+					} else {            // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
+							dispose();
+						} else {
 							if (manager.updateExamType(examType)) {
 								fireExamTypeUpdated();
 								dispose();
-	                        } else {
+							} else {
 								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
-					    }
+						}
 					}
-				} catch(OHServiceException ohServiceException) {
+				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 				}
-});
+			});
 		}
 		return okButton;
 	}

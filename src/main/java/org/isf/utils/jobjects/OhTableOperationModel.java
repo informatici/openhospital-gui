@@ -50,23 +50,23 @@ public class OhTableOperationModel<T> implements TableModel{
 	public  OhTableOperationModel(List<T> dataList) {
 		this.dataList = dataList;
 		this.filteredList = new ArrayList<>();
-		
-		if (dataList!=null){
-			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
+
+		if (dataList != null) {
+			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext(); ) {
 				T t = (T) iterator.next();
-				this.filteredList.add(t);			
+				this.filteredList.add(t);
 			}
 		}
 	}
-	
-	public int filter(String searchQuery){
-		this.filteredList= new ArrayList<>();
-		
-		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext();) {
+
+	public int filter(String searchQuery) {
+		this.filteredList = new ArrayList<>();
+
+		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext(); ) {
 			Object object = (Object) iterator.next();
-			if (object instanceof OperationRow){
-				OperationRow price=(OperationRow) object;
-				String strItem=price.getOperation().getCode()+price.getOpResult();
+			if (object instanceof OperationRow) {
+				OperationRow price = (OperationRow) object;
+				String strItem = price.getOperation().getCode() + price.getOpResult();
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
 				if (strItem.contains(searchQuery)) {
@@ -120,7 +120,7 @@ public class OhTableOperationModel<T> implements TableModel{
 
 	@Override
 	public int getRowCount() {
-		if (this.filteredList==null){
+		if (this.filteredList == null) {
 			return 0;
 		}
 		return this.filteredList.size();
@@ -128,55 +128,53 @@ public class OhTableOperationModel<T> implements TableModel{
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
-		String value="";
-		if (rowIndex >=0 && rowIndex < this.filteredList.size()){
-			T obj=this.filteredList.get(rowIndex);
-			if (obj instanceof OperationRow){
-				OperationRow opdObj=(OperationRow)obj;
+		String value = "";
+		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
+			T obj = this.filteredList.get(rowIndex);
+			if (obj instanceof OperationRow) {
+				OperationRow opdObj = (OperationRow) obj;
 				switch (columnIndex) {
-				case -1:
-					return opdObj;
-				case 0:
-					String dt = "";
-					try {
-						final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
-						dt = currentDateFormat.format(opdObj.getOpDate().getTime());
-						value = dt;
-					}
-					catch (Exception ex){
-						value=opdObj.getOpDate().getTime().toString();
-					}
-					break;
-				case 1:
-                    Operation ope = null;
-                    try {
-                        ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
-                    } catch (OHServiceException ohServiceException) {
-                        LOGGER.error(ohServiceException.getMessage(), ohServiceException);
-                    }
-					if (ope != null)
-						value = ope.getDescription();
-					else
-						value = "";
-					break;
-				case 2:
-					value=manageop.getResultDescriptionTranslated(opdObj.getOpResult());
-					break;
-				case 3:
-					value=opdObj.getTransUnit()+"";
-					break;	
-				default:
-					break;
+					case -1:
+						return opdObj;
+					case 0:
+						String dt = "";
+						try {
+							final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
+							dt = currentDateFormat.format(opdObj.getOpDate().getTime());
+							value = dt;
+						} catch (Exception ex) {
+							value = opdObj.getOpDate().getTime().toString();
+						}
+						break;
+					case 1:
+						Operation ope = null;
+						try {
+							ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
+						} catch (OHServiceException ohServiceException) {
+							LOGGER.error(ohServiceException.getMessage(), ohServiceException);
+						}
+						if (ope != null) {
+							value = ope.getDescription();
+						} else {
+							value = "";
+						}
+						break;
+					case 2:
+						value = manageop.getResultDescriptionTranslated(opdObj.getOpResult());
+						break;
+					case 3:
+						value = opdObj.getTransUnit() + "";
+						break;
+					default:
+						break;
 				}
-			}			
+			}
 		}
 		return value;
 	}
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

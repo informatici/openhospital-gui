@@ -412,7 +412,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		Opd lastOpd = null;
 		try {
 			lastOpd = opdManager.getLastOpd(code);
-		}catch(OHServiceException e){
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		
@@ -424,7 +424,6 @@ public class OpdEditExtended extends ModalJFrame implements
 			jLabelLastOpdNote.setText("");
 			jFieldLastOpdNote.setText("");
 			jNoteTextArea.setText("");
-			
 			return false;
 		}
 		
@@ -583,8 +582,8 @@ public class OpdEditExtended extends ModalJFrame implements
 		} else {
 			jNoteTextArea.requestFocusInWindow();
 		}
-		this.addWindowListener(new WindowAdapter(){
-			
+		this.addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
@@ -598,7 +597,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				diseaseBox2.removeAllItems();
 				diseaseBox3.removeAllItems();
 				dispose();
-			}			
+			}
 		});
 	}
 
@@ -975,17 +974,17 @@ public class OpdEditExtended extends ModalJFrame implements
 	private String getOpdNum() {
 		int OpdNum;
 		if (!insert) {
-			return ""+opd.getProgYear();
+			return "" + opd.getProgYear();
 		}
 		GregorianCalendar date = new GregorianCalendar();
 		date.setTime(OpdDateFieldCal.getDate());
 		try {
-			opd.setProgYear(opdManager.getProgYear(date.get(Calendar.YEAR))+1);
-		}catch(OHServiceException e){
+			opd.setProgYear(opdManager.getProgYear(date.get(Calendar.YEAR)) + 1);
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		OpdNum = opd.getProgYear();
-		return ""+OpdNum;
+		return "" + OpdNum;
 	}
 	
 	private JPanel getJNotePanel() {
@@ -1062,17 +1061,17 @@ public class OpdEditExtended extends ModalJFrame implements
 		}
 		Disease elem2 = null;
 		diseaseBox1.addItem("");
-		
+
 		for (Disease elem : diseasesOPD) {
-			if (((DiseaseType)diseaseTypeBox.getSelectedItem()).equals(allType)) {
+			if (((DiseaseType) diseaseTypeBox.getSelectedItem()).equals(allType)) {
 				diseaseBox1.addItem(elem);
-			} else if (elem.getType().equals((DiseaseType)diseaseTypeBox.getSelectedItem())) {
+			} else if (elem.getType().equals((DiseaseType) diseaseTypeBox.getSelectedItem())) {
 				diseaseBox1.addItem(elem);
 			}
-			if (!insert && opd.getDisease()!=null){
+			if (!insert && opd.getDisease() != null) {
 				if (opd.getDisease().getCode().equals(elem.getCode())) {
-					elem2 = elem;}
-				
+					elem2 = elem;
+				}
 			}
 		}
 		if (!insert) {
@@ -1103,10 +1102,11 @@ public class OpdEditExtended extends ModalJFrame implements
 
 		for (Disease elem : diseasesOPD) {
 			diseaseBox2.addItem(elem);
-			if (!insert && opd.getDisease2()!=null){
+			if (!insert && opd.getDisease2() != null) {
 				if (opd.getDisease2().getCode().equals(elem.getCode())) {
-					elem2 = elem;}
-			} 
+					elem2 = elem;
+				}
+			}
 		}
 		if (elem2 !=  null) {
 			diseaseBox2.setSelectedItem(elem2);
@@ -1160,7 +1160,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				jComboPatResult.removeAllItems();
 				try {
 					pat = patBrowser.getPatientsByOneOfFieldsLike(jTextPatientSrc.getText());
-				}catch(OHServiceException ex){
+				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 					pat = new ArrayList<>();
 				}
@@ -1319,9 +1319,10 @@ public class OpdEditExtended extends ModalJFrame implements
 
 		for (Disease elem : diseasesOPD) {
 			diseaseBox3.addItem(elem);
-			if (!insert && opd.getDisease3()!=null){
+			if (!insert && opd.getDisease3() != null) {
 				if (opd.getDisease3().getCode().equals(elem.getCode())) {
-					elem2 = elem;}
+					elem2 = elem;
+				}
 			}
 		}
 		if (elem2!= null) {
@@ -1363,18 +1364,18 @@ public class OpdEditExtended extends ModalJFrame implements
 		}
 		return jPanelOperation;
 	}
-	
+
 	private JPanel getJPanelPatient() {
-		if (jPanelPatient == null){
-			
+		if (jPanelPatient == null) {
+
 			jPanelPatient = new JPanel();
 			GridBagLayout gbl_jPanelPatient = new GridBagLayout();
-			gbl_jPanelPatient.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
-			gbl_jPanelPatient.columnWeights = new double[]{0.0, 1.0, 1.0};
-			gbl_jPanelPatient.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+			gbl_jPanelPatient.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
+			gbl_jPanelPatient.columnWeights = new double[] { 0.0, 1.0, 1.0 };
+			gbl_jPanelPatient.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 			jPanelPatient.setLayout(gbl_jPanelPatient);
 			setMyMatteBorder(jPanelPatient, MessageBundle.getMessage("angal.common.patient.txt"));
-			
+
 			jLabelfirstName = new JLabel();
 			jLabelfirstName.setText(MessageBundle.getMessage("angal.opd.firstname.txt") + "\t");
 			GridBagConstraints gbc_jLabelfirstName = new GridBagConstraints();
@@ -1383,7 +1384,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelfirstName.gridx = 0;
 			gbc_jLabelfirstName.gridy = 0;
 			jPanelPatient.add(jLabelfirstName, gbc_jLabelfirstName);
-			jFieldFirstName= new VoLimitedTextField(50,20);
+			jFieldFirstName = new VoLimitedTextField(50, 20);
 			jFieldFirstName.setEditable(false);
 			jFieldFirstName.setFocusable(false);
 			GridBagConstraints gbc_jFieldFirstName = new GridBagConstraints();
@@ -1400,7 +1401,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelsecondName.gridx = 0;
 			gbc_jLabelsecondName.gridy = 1;
 			jPanelPatient.add(jLabelsecondName, gbc_jLabelsecondName);
-			jFieldSecondName= new VoLimitedTextField(50,20);
+			jFieldSecondName = new VoLimitedTextField(50, 20);
 			jFieldSecondName.setEditable(false);
 			jFieldSecondName.setFocusable(false);
 			GridBagConstraints gbc_jFieldSecondName = new GridBagConstraints();
@@ -1409,14 +1410,14 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jFieldSecondName.gridx = 1;
 			gbc_jFieldSecondName.gridy = 1;
 			jPanelPatient.add(jFieldSecondName, gbc_jFieldSecondName);
-			jLabeladdress  = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
+			jLabeladdress = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
 			GridBagConstraints gbc_jLabeladdress = new GridBagConstraints();
 			gbc_jLabeladdress.fill = GridBagConstraints.BOTH;
 			gbc_jLabeladdress.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabeladdress.gridx = 0;
 			gbc_jLabeladdress.gridy = 2;
 			jPanelPatient.add(jLabeladdress, gbc_jLabeladdress);
-			jFieldAddress= new VoLimitedTextField(50,20);
+			jFieldAddress = new VoLimitedTextField(50, 20);
 			jFieldAddress.setEditable(false);
 			jFieldAddress.setFocusable(false);
 			GridBagConstraints gbc_jFieldAddress = new GridBagConstraints();
@@ -1432,8 +1433,8 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelcity.insets = new Insets(5, 5, 5, 5);
 			gbc_jLabelcity.gridx = 0;
 			gbc_jLabelcity.gridy = 3;
-			jPanelPatient.add(jLabelcity, gbc_jLabelcity );
-			jFieldCity= new VoLimitedTextField(50,20);
+			jPanelPatient.add(jLabelcity, gbc_jLabelcity);
+			jFieldCity = new VoLimitedTextField(50, 20);
 			jFieldCity.setEditable(false);
 			jFieldCity.setFocusable(false);
 			GridBagConstraints gbc_jFieldCity = new GridBagConstraints();
@@ -1450,7 +1451,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelnextKin.gridx = 0;
 			gbc_jLabelnextKin.gridy = 4;
 			jPanelPatient.add(jLabelnextKin, gbc_jLabelnextKin);
-			jFieldNextKin= new VoLimitedTextField(50,20);
+			jFieldNextKin = new VoLimitedTextField(50, 20);
 			jFieldNextKin.setEditable(false);
 			jFieldNextKin.setFocusable(false);
 			GridBagConstraints gbc_jFieldNextKin = new GridBagConstraints();
@@ -1467,7 +1468,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelAge.gridx = 0;
 			gbc_jLabelAge.gridy = 5;
 			jPanelPatient.add(jLabelAge, gbc_jLabelAge);
-			jFieldAge = new VoLimitedTextField(50,20);
+			jFieldAge = new VoLimitedTextField(50, 20);
 			jFieldAge.setEditable(false);
 			jFieldAge.setFocusable(false);
 			GridBagConstraints gbc_jFieldAge = new GridBagConstraints();
@@ -1484,8 +1485,8 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jLabelSex.gridx = 0;
 			gbc_jLabelSex.gridy = 6;
 			jPanelPatient.add(jLabelSex, gbc_jLabelSex);
-			radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
-			radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
+			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			jPanelSex = new JPanel();
 			jPanelSex.add(radiom);
 			jPanelSex.add(radiof);
@@ -1502,7 +1503,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			gbc_jPatientNote.gridy = 0;
 			gbc_jPatientNote.gridheight = 7;
 			jPanelPatient.add(getJPatientNote(), gbc_jPatientNote);
-			
+
 			group = new ButtonGroup();
 			group.add(radiom);
 			group.add(radiof);
@@ -1579,7 +1580,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				PatientExamination lastPatex = null;
 				try {
 					lastPatex = examManager.getLastByPatID(opdPatient.getCode());
-				}catch(OHServiceException ex){
+				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 				}
 				if (lastPatex != null) {
@@ -1829,55 +1830,55 @@ public class OpdEditExtended extends ModalJFrame implements
 	}
 
 	@Override
-    public void actionPerformed(ActionEvent ae) {
-        JButton source = (JButton) ae.getSource();
-        if (source == searchDiseaseButton) {
-            diseaseBox1.removeAllItems();
-            diseaseBox1.addItem("");
-            for(Disease disease: 
-                    getSearchDiagnosisResults(searchDiseaseTextField.getText(), 
-                            diseasesOPD == null? diseasesAll : diseasesOPD )) {
-                diseaseBox1.addItem(disease);
-            }
-            if (diseaseBox1.getItemCount() >= 2){
-                diseaseBox1.setSelectedIndex(1);
-            }
-            diseaseBox1.requestFocus();
-            if (diseaseBox1.getItemCount() > 2){
-                diseaseBox1.showPopup();
-            }
-        } else if (source == searchDiseaseButton2) {
-            diseaseBox2.removeAllItems();
-            diseaseBox2.addItem("");
-            for(Disease disease: 
-                    getSearchDiagnosisResults(searchDiseaseTextField2.getText(), 
-                            diseasesOPD == null? diseasesAll : diseasesOPD)) {
-                diseaseBox2.addItem(disease);
-            }
-            if (diseaseBox2.getItemCount() >= 2){
-                diseaseBox2.setSelectedIndex(1);
-            }
-            diseaseBox2.requestFocus();
-            if (diseaseBox2.getItemCount() > 2){
-                diseaseBox2.showPopup();
-            }
-        } else if (source == searchDiseaseButton3) {
-            diseaseBox3.removeAllItems();
-            diseaseBox3.addItem("");
-            for(Disease disease: 
-                    getSearchDiagnosisResults(searchDiseaseTextField3.getText(), 
-                            diseasesOPD == null? diseasesAll : diseasesOPD)) {
-                diseaseBox3.addItem(disease);
-            }
-            if (diseaseBox3.getItemCount() >= 2){
-                diseaseBox3.setSelectedIndex(1);
-            }
-            diseaseBox3.requestFocus();
-            if (diseaseBox3.getItemCount() > 2){
-                diseaseBox3.showPopup();
-            }
-        }
-    }
+	public void actionPerformed(ActionEvent actionEvent) {
+		JButton source = (JButton) actionEvent.getSource();
+		if (source == searchDiseaseButton) {
+			diseaseBox1.removeAllItems();
+			diseaseBox1.addItem("");
+			for (Disease disease :
+					getSearchDiagnosisResults(searchDiseaseTextField.getText(),
+							diseasesOPD == null ? diseasesAll : diseasesOPD)) {
+				diseaseBox1.addItem(disease);
+			}
+			if (diseaseBox1.getItemCount() >= 2) {
+				diseaseBox1.setSelectedIndex(1);
+			}
+			diseaseBox1.requestFocus();
+			if (diseaseBox1.getItemCount() > 2) {
+				diseaseBox1.showPopup();
+			}
+		} else if (source == searchDiseaseButton2) {
+			diseaseBox2.removeAllItems();
+			diseaseBox2.addItem("");
+			for (Disease disease :
+					getSearchDiagnosisResults(searchDiseaseTextField2.getText(),
+							diseasesOPD == null ? diseasesAll : diseasesOPD)) {
+				diseaseBox2.addItem(disease);
+			}
+			if (diseaseBox2.getItemCount() >= 2) {
+				diseaseBox2.setSelectedIndex(1);
+			}
+			diseaseBox2.requestFocus();
+			if (diseaseBox2.getItemCount() > 2) {
+				diseaseBox2.showPopup();
+			}
+		} else if (source == searchDiseaseButton3) {
+			diseaseBox3.removeAllItems();
+			diseaseBox3.addItem("");
+			for (Disease disease :
+					getSearchDiagnosisResults(searchDiseaseTextField3.getText(),
+							diseasesOPD == null ? diseasesAll : diseasesOPD)) {
+				diseaseBox3.addItem(disease);
+			}
+			if (diseaseBox3.getItemCount() >= 2) {
+				diseaseBox3.setSelectedIndex(1);
+			}
+			diseaseBox3.requestFocus();
+			if (diseaseBox3.getItemCount() > 2) {
+				diseaseBox3.showPopup();
+			}
+		}
+	}
 
 	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
 		String query = s.trim();

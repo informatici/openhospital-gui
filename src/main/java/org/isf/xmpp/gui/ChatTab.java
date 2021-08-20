@@ -44,6 +44,7 @@ public class ChatTab extends JTabbedPane {
 	private static final long serialVersionUID = 1L;
 	public TabButton tab;
 
+	@Override
 	public void addTab(String title, Component component) {
 		super.addTab(title, component);
 		int index;
@@ -105,7 +106,8 @@ public class ChatTab extends JTabbedPane {
 			return user.getForeground();
 		}
 
-		public void actionPerformed(ActionEvent ae) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			tabReference.remove(tabReference.indexOfTabComponent(this));
 		}
 

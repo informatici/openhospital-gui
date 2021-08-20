@@ -87,9 +87,8 @@ public class GBC extends GridBagConstraints
     * @param anchor the anchor value
     * @return this object for further modification
     */
-   public GBC setAnchor(int anchor) 
-   { 
-      this.anchor = anchor; 
+   public GBC setAnchor(int anchor) {
+      this.anchor = anchor;
       return this;
    }
 
@@ -99,9 +98,8 @@ public class GBC extends GridBagConstraints
     * @param fill the fill direction
     * @return this object for further modification
     */
-   public GBC setFill(int fill) 
-   { 
-      this.fill = fill; 
+   public GBC setFill(int fill) {
+      this.fill = fill;
       return this;
    }
 
@@ -112,10 +110,9 @@ public class GBC extends GridBagConstraints
     * @param weighty the cell weight in y-direction
     * @return this object for further modification
     */
-   public GBC setWeight(double weightx, double weighty) 
-   { 
-      this.weightx = weightx; 
-      this.weighty = weighty; 
+   public GBC setWeight(double weightx, double weighty) {
+      this.weightx = weightx;
+      this.weighty = weighty;
       return this;
    }
 
@@ -125,8 +122,7 @@ public class GBC extends GridBagConstraints
     * @param distance the spacing to use in all directions
     * @return this object for further modification
     */
-   public GBC setInsets(int distance) 
-   { 
+   public GBC setInsets(int distance) {
       this.insets = new Insets(distance, distance, distance, distance);
       return this;
    }
@@ -140,8 +136,7 @@ public class GBC extends GridBagConstraints
     * @param right the spacing to use to the right
     * @return this object for further modification
     */
-   public GBC setInsets(int top, int left, int bottom, int right) 
-   { 
+   public GBC setInsets(int top, int left, int bottom, int right) {
       this.insets = new Insets(top, left, bottom, right);
       return this;
    }
@@ -153,10 +148,9 @@ public class GBC extends GridBagConstraints
     * @param ipady the internal padding in y-direction
     * @return this object for further modification
     */
-   public GBC setIpad(int ipadx, int ipady) 
-   { 
-      this.ipadx = ipadx; 
-      this.ipady = ipady; 
+   public GBC setIpad(int ipadx, int ipady) {
+      this.ipadx = ipadx;
+      this.ipady = ipady;
       return this;
    }
 }

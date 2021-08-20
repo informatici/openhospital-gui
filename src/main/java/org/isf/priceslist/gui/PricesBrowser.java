@@ -115,7 +115,7 @@ public class PricesBrowser extends ModalJFrame {
 			listArray = listManager.getLists();
 			priceArray = listManager.getPrices();
 			othArray = othManager.getOthers();
-		}catch(OHServiceException e){
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		initComponents();
@@ -312,32 +312,30 @@ public class PricesBrowser extends ModalJFrame {
 		    jTreeTable.getTree().expandRow(3);
 		    jTreeTable.getTree().expandRow(2);
 		    jTreeTable.getTree().expandRow(1);
-		    
-		    for (int i = 0; i< columnWidth.length; i++){
-		    	jTreeTable.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
-		    	
-		    	if (!columnsResizable[i]) {
-				    jTreeTable.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
-			    }
+
+			for (int i = 0; i < columnWidth.length; i++) {
+				jTreeTable.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
+
+				if (!columnsResizable[i]) {
+					jTreeTable.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
+				}
 			}
-		    jTreeTable.setAutoCreateColumnsFromModel(false); 
-		    
+		    jTreeTable.setAutoCreateColumnsFromModel(false);
 		}
-		    
 		return jTreeTable;
 	}
 
 	private void updateFromDB() {
-		
-	    try {
-	    	listArray = listManager.getLists();
-	    	priceArray = listManager.getPrices();
-	    	examArray = examManager.getExams();
+
+		try {
+			listArray = listManager.getLists();
+			priceArray = listManager.getPrices();
+			examArray = examManager.getExams();
 			operArray = operManager.getOperation();
 			mediArray = mediManager.getMedicals();
 			othArray = othManager.getOthers();
-	    }catch(OHServiceException e){
-	    	OHServiceExceptionUtil.showMessages(e);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
 		}
 	}
 
@@ -349,42 +347,43 @@ public class PricesBrowser extends ModalJFrame {
 	    					  price.getGroup()+
 	    					  price.getItem(), price);
 	    }
-	    
-	    examNodes = new PriceNode(new Price(null,"","",cCategoriesNames[0],null)); //$NON-NLS-1$ //$NON-NLS-2$
-	    for(Exam exa: examArray){
-	    	Price p = priceHashTable.get(listSelected.getId()+cCategories[0]+exa.getCode());
-	    	double priceValue = p != null ? p.getPrice() : 0.;
-		    examNodes.addItem(new PriceNode(new Price(null, cCategories[0], exa.getCode(), exa.getDescription(), priceValue)));
-	    }
-	    
-	    opeNodes = new PriceNode(new Price(null,"","",cCategoriesNames[1],null)); //$NON-NLS-1$ //$NON-NLS-2$
-	    for(Operation ope: operArray){
-	    	Price p = priceHashTable.get(listSelected.getId()+cCategories[1]+ope.getCode());
-	    	double priceValue = p != null ? p.getPrice() : 0.;
-		    opeNodes.addItem(new PriceNode(new Price(null, cCategories[1], ope.getCode(), ope.getDescription(), priceValue)));
-	    }
-	    
-	    medNodes = new PriceNode(new Price(null,"","",cCategoriesNames[2],null)); //$NON-NLS-1$ //$NON-NLS-2$
-	    for(Medical med: mediArray){
-	    	Price p = priceHashTable.get(listSelected.getId()+cCategories[2]+med.getCode().toString());
-	    	double priceValue = p != null ? p.getPrice() : 0.;
-		    medNodes.addItem(new PriceNode(new Price(null, cCategories[2], med.getCode().toString(), med.getDescription(), priceValue)));
-	    }
-	    
-	    othNodes = new PriceNode(new Price(null,"","",cCategoriesNames[3],null)); //$NON-NLS-1$ //$NON-NLS-2$
-	    for(PricesOthers oth: othArray){
-	    	Price p = priceHashTable.get(listSelected.getId()+cCategories[3]+oth.getId());
-	    	double priceValue = p != null ? p.getPrice() : 0.;
-	    	othNodes.addItem(new PriceNode(new Price(null, cCategories[3], Integer.toString(oth.getId()), oth.getDescription(), priceValue, !oth.isUndefined())));
-	    }
-	    
-	    PriceNode root = new PriceNode(new Price(null,"","",listSelected.getName(),null)); //$NON-NLS-1$ //$NON-NLS-2$
-	    root.addItem(examNodes);
-	    root.addItem(opeNodes);
-	    root.addItem(medNodes);
-	    root.addItem(othNodes);
-	    
-	    return root;
+
+		examNodes = new PriceNode(new Price(null, "", "", cCategoriesNames[0], null)); //$NON-NLS-1$ //$NON-NLS-2$
+		for (Exam exa : examArray) {
+			Price p = priceHashTable.get(listSelected.getId() + cCategories[0] + exa.getCode());
+			double priceValue = p != null ? p.getPrice() : 0.;
+			examNodes.addItem(new PriceNode(new Price(null, cCategories[0], exa.getCode(), exa.getDescription(), priceValue)));
+		}
+
+		opeNodes = new PriceNode(new Price(null, "", "", cCategoriesNames[1], null)); //$NON-NLS-1$ //$NON-NLS-2$
+		for (Operation ope : operArray) {
+			Price p = priceHashTable.get(listSelected.getId() + cCategories[1] + ope.getCode());
+			double priceValue = p != null ? p.getPrice() : 0.;
+			opeNodes.addItem(new PriceNode(new Price(null, cCategories[1], ope.getCode(), ope.getDescription(), priceValue)));
+		}
+
+		medNodes = new PriceNode(new Price(null, "", "", cCategoriesNames[2], null)); //$NON-NLS-1$ //$NON-NLS-2$
+		for (Medical med : mediArray) {
+			Price p = priceHashTable.get(listSelected.getId() + cCategories[2] + med.getCode().toString());
+			double priceValue = p != null ? p.getPrice() : 0.;
+			medNodes.addItem(new PriceNode(new Price(null, cCategories[2], med.getCode().toString(), med.getDescription(), priceValue)));
+		}
+
+		othNodes = new PriceNode(new Price(null, "", "", cCategoriesNames[3], null)); //$NON-NLS-1$ //$NON-NLS-2$
+		for (PricesOthers oth : othArray) {
+			Price p = priceHashTable.get(listSelected.getId() + cCategories[3] + oth.getId());
+			double priceValue = p != null ? p.getPrice() : 0.;
+			othNodes.addItem(
+					new PriceNode(new Price(null, cCategories[3], Integer.toString(oth.getId()), oth.getDescription(), priceValue, !oth.isUndefined())));
+		}
+
+		PriceNode root = new PriceNode(new Price(null, "", "", listSelected.getName(), null)); //$NON-NLS-1$ //$NON-NLS-2$
+		root.addItem(examNodes);
+		root.addItem(opeNodes);
+		root.addItem(medNodes);
+		root.addItem(othNodes);
+
+		return root;
 	}
 
 	private JScrollPane getJScrollPaneList() {

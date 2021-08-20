@@ -132,7 +132,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 			MessageDialog.showExceptions(ohServiceException);
 		}
 		// for efficiency in the sequent for
-		if (type != null){
+		if (type != null) {
 			for (DiseaseType elem : type) {
 				pbox.addItem(elem);
 			}
@@ -267,23 +267,21 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////
-	class ColorTableCellRenderer extends DefaultTableCellRenderer
-	{
+	class ColorTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
 
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-	      boolean hasFocus, int row, int column)
-	   {  
-		   Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
-		   cell.setForeground(Color.BLACK);
-		   if (!((Disease)table.getValueAt(row,-1)).getIpdInInclude() &&
-				   !((Disease)table.getValueAt(row,-1)).getIpdOutInclude() &&
-				   !((Disease)table.getValueAt(row,-1)).getOpdInclude()) {
-			   cell.setForeground(Color.GRAY);
-		   }
-	      return cell;
-	   }
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+				boolean hasFocus, int row, int column) {
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			cell.setForeground(Color.BLACK);
+			if (!((Disease) table.getValueAt(row, -1)).getIpdInInclude() &&
+					!((Disease) table.getValueAt(row, -1)).getIpdOutInclude() &&
+					!((Disease) table.getValueAt(row, -1)).getOpdInclude()) {
+				cell.setForeground(Color.GRAY);
+			}
+			return cell;
+		}
 	}
 }

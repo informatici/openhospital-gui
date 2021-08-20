@@ -81,12 +81,15 @@ public class ChatPanel extends JPanel {
 			BoundedRangeModel brm = received.getVerticalScrollBar().getModel();
 			boolean wasAtBottom = true;	
 
+			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
 				if (!brm.getValueIsAdjusting()) {
-					if (wasAtBottom)
+					if (wasAtBottom) {
 						brm.setValue(brm.getMaximum());
-				} else
+					}
+				} else {
 					wasAtBottom = ((brm.getValue() + brm.getExtent()) == brm.getMaximum());
+				}
 			}
 		});
 
@@ -100,7 +103,7 @@ public class ChatPanel extends JPanel {
 		return this;
 	}
 
-	public ChatMessages getChatMessages(){
+	public ChatMessages getChatMessages() {
 		return chatMessages;
 	}
 

@@ -1475,7 +1475,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			
 			try {
 				examManager.saveOrUpdate(patex);
@@ -1518,7 +1518,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleAP.isSelected()) {
 				disableAP();
 			} else {
@@ -1649,7 +1649,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleHGT.isSelected()) {
 				disableHGT();
 			} else {
@@ -1666,7 +1666,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleBowel.isSelected()) {
 				disableBowel();
 			} else {
@@ -1683,7 +1683,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleDiuresisVolume.isSelected()) {
 				disableDiuresisVolume();
 			} else {
@@ -1700,7 +1700,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleDiuresisType.isSelected()) {
 				disableDiuresisType();
 			} else {
@@ -1722,9 +1722,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 		patex.setPex_rr(null);
 	}
 
-	private void enableAuscultation(){
+	private void enableAuscultation() {
 		jComboBoxAuscultation.setEnabled(true);
-		patex.setPex_auscultation(examManager.getAuscultationKey((String)jComboBoxAuscultation.getSelectedItem()));
+		patex.setPex_auscultation(examManager.getAuscultationKey((String) jComboBoxAuscultation.getSelectedItem()));
 		modified = true;
 	}
 
@@ -1741,7 +1741,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleSaturation.isSelected()) {
 				disableSaturation();
 			} else {
@@ -1758,7 +1758,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleRR.isSelected()) {
 				disableRR();
 			} else {
@@ -1770,12 +1770,14 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private class SwingActionToggleAusc extends AbstractAction {
 
 		private static final long serialVersionUID = 1L;
-		public SwingActionToggleAusc(){
+
+		public SwingActionToggleAusc() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
+
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleAusc.isSelected()) {
 				disableAuscultation();
 			} else {
@@ -1792,7 +1794,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleTemp.isSelected()) {
 				disableTemp();
 			} else {
@@ -1809,7 +1811,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleHR.isSelected()) {
 				disableHR();
 			} else {
@@ -2029,7 +2031,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 				return patex.getPex_sat() == null ? "-" : patex.getPex_sat();
 			} else if (c == 7) {
 				return patex.getPex_hgt() == null ? "-" : patex.getPex_hgt();
-			} else if (c == 8){
+			} else if (c == 8) {
 				return patex.getPex_rr() == null ? "-" : patex.getPex_rr();
 			} else if (c == 9) {
 				return patex.getPex_diuresis() == null ? "-" : patex.getPex_diuresis();

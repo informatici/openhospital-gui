@@ -309,7 +309,7 @@ public class VaccineEdit extends JDialog {
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			if (types != null){
+			if (types != null) {
 				for (VaccineType elem : types) {
 					vaccineTypeComboBox.addItem(elem);
 				}

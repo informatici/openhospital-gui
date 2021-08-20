@@ -230,9 +230,9 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				return;
 			}
 			selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-			Exam examToDelete = (Exam)(((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
+			Exam examToDelete = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 			int answer = MessageDialog.yesNo(null, "angal.exa.deleteexam.fmt.msg", examToDelete.getCode(), examToDelete.getDescription());
-			if ((answer == JOptionPane.YES_OPTION)){
+			if ((answer == JOptionPane.YES_OPTION)) {
 				boolean deleted;
 
 				try {
@@ -352,10 +352,9 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		@Override
 		public Object getValueAt(int r, int c) {
 			Exam exam = pExam.get(r);
-			if (c==-1){
+			if (c == -1) {
 				return exam;
-			}
-			else if (c == 0) {
+			} else if (c == 0) {
 				return exam.getCode();
 			} else if (c == 1) {
 				return exam.getExamtype().getDescription();

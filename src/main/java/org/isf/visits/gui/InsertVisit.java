@@ -323,7 +323,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 				private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 
 				@Override
-				public void actionPerformed(ActionEvent arg0) {
+				public void actionPerformed(ActionEvent actionEvent) {
 					if (visitDateChooser.getDate() == null) {
 						MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseadate.msg");
 						return;
