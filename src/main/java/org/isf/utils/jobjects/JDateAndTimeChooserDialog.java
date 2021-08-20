@@ -94,7 +94,7 @@ public class JDateAndTimeChooserDialog extends JDialog {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(arg0 -> dispose());
+			buttonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return buttonCancel;
 	}
@@ -103,7 +103,7 @@ public class JDateAndTimeChooserDialog extends JDialog {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			buttonOK.addActionListener(arg0 -> {
+			buttonOK.addActionListener(actionEvent -> {
 				date = dateAndTimeChooser.getDateTime();
 				dispose();
 			});

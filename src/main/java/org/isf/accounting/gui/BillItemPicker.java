@@ -278,7 +278,7 @@ public class BillItemPicker extends javax.swing.JPanel {
 				jButtonSelectMouseClicked(evt);
 			}
 		});
-		jButtonSelect.addActionListener(evt -> jButtonSelectActionPerformed(evt));
+		jButtonSelect.addActionListener(actionEvent -> jButtonSelectActionPerformed(actionEvent));
 
 		jButtonQuit.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override

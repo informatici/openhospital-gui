@@ -181,8 +181,9 @@ public class OpdEditExtended extends ModalJFrame implements
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((SurgeryListener) listener).surgeryInserted(event, opd);
+		}
 	}
 	private void fireSurgeryUpdated(Opd opd) {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -190,8 +191,9 @@ public class OpdEditExtended extends ModalJFrame implements
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((SurgeryListener) listener).surgeryUpdated(event, opd);
+		}
 	}
 
 	private static final String LAST_OPD_LABEL = "<html><i>"+MessageBundle.getMessage("angal.opd.lastopdvisitm.txt")+"</i></html>:";
@@ -384,7 +386,9 @@ public class OpdEditExtended extends ModalJFrame implements
 			} else if (p.getSex() == 'F') {
 				radiof.setSelected(true);			
 			}
-			if (insert) getLastOpd(p.getCode());
+			if (insert) {
+				getLastOpd(p.getCode());
+			}
 			opdNextVisitDate.setEnabled(true);
 	}
 	
@@ -448,8 +452,12 @@ public class OpdEditExtended extends ModalJFrame implements
 			setAttendance();
 			lastOPDDisease.append(lastOPDDisease1.getDescription());
 		} 
-		if (lastOPDDisease2 != null) lastOPDDisease.append(", ").append(lastOPDDisease2.getDescription());
-		if (lastOPDDisease3 != null) lastOPDDisease.append(", ").append(lastOPDDisease3.getDescription());
+		if (lastOPDDisease2 != null) {
+			lastOPDDisease.append(", ").append(lastOPDDisease2.getDescription());
+		}
+		if (lastOPDDisease3 != null) {
+			lastOPDDisease.append(", ").append(lastOPDDisease3.getDescription());
+		}
 		jLabelLastOpdVisit.setText(LAST_OPD_LABEL);
 		jFieldLastOpdVisit.setText(lastOPDDisease.toString());
 		jLabelLastOpdNote.setText(LAST_NOTE_LABEL);
@@ -461,7 +469,9 @@ public class OpdEditExtended extends ModalJFrame implements
 	}
 	
 	private void setAttendance() {
-		if (!insert) return;
+		if (!insert) {
+			return;
+		}
 		Object selectedObject = diseaseBox1.getSelectedItem();
 		if (selectedObject instanceof Disease) {
 			Disease disease = (Disease) selectedObject;
@@ -485,7 +495,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			jPanelNorth = new JPanel(new FlowLayout());
 			rePatientCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.reattendance.txt"));
 			newPatientCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.newattendance.txt"));
-			newPatientCheckBox.addActionListener(e -> {
+			newPatientCheckBox.addActionListener(actionEvent -> {
 				if (newPatientCheckBox.isSelected()) {
 					newPatientCheckBox.setSelected(true);
 					rePatientCheckBox.setSelected(false);
@@ -494,7 +504,7 @@ public class OpdEditExtended extends ModalJFrame implements
 					rePatientCheckBox.setSelected(true);
 				}
 			});
-			rePatientCheckBox.addActionListener(e -> {
+			rePatientCheckBox.addActionListener(actionEvent -> {
 				if (rePatientCheckBox.isSelected()) {
 					rePatientCheckBox.setSelected(true);
 					newPatientCheckBox.setSelected(false);
@@ -506,24 +516,33 @@ public class OpdEditExtended extends ModalJFrame implements
 			jPanelNorth.add(rePatientCheckBox);
 			jPanelNorth.add(newPatientCheckBox);
 			if (!insert) {
-				if (opd.getNewPatient() == 'N')
+				if (opd.getNewPatient() == 'N') {
 					newPatientCheckBox.setSelected(true);
-				else
+				} else {
 					rePatientCheckBox.setSelected(true);
+				}
 			}
 			referralFromCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.txt"));
 			jPanelNorth.add(referralFromCheckBox);
 			if (!insert) {
 				referralFrom = opd.getReferralFrom();
-				if (referralFrom == null) referralFrom="";
-				if (referralFrom.equals("R"))referralFromCheckBox.setSelected(true);
+				if (referralFrom == null) {
+					referralFrom="";
+				}
+				if (referralFrom.equals("R")) {
+					referralFromCheckBox.setSelected(true);
+				}
 			}
 			referralToCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referralto.txt"));
 			jPanelNorth.add(referralToCheckBox);
 			if (!insert) {
 				referralTo = opd.getReferralTo();
-				if (referralTo == null) referralTo="";
-				if (referralTo.equals("R"))referralToCheckBox.setSelected(true);
+				if (referralTo == null) {
+					referralTo="";
+				}
+				if (referralTo.equals("R")) {
+					referralToCheckBox.setSelected(true);
+				}
 			}
 		}
 		return jPanelNorth;
@@ -923,7 +942,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				OpdDateFieldCal = new CustomJDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
 				OpdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 				OpdDateFieldCal.setDateFormatString("dd/MM/yy");
-				OpdDateFieldCal.addPropertyChangeListener("date", evt -> jOpdNumField.setText(getOpdNum()));
+				OpdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> jOpdNumField.setText(getOpdNum()));
 			} catch (ParseException parseException) {
 				LOGGER.error(parseException.getMessage(), parseException);
 			}
@@ -955,7 +974,9 @@ public class OpdEditExtended extends ModalJFrame implements
 
 	private String getOpdNum() {
 		int OpdNum;
-		if (!insert) return ""+opd.getProgYear();
+		if (!insert) {
+			return ""+opd.getProgYear();
+		}
 		GregorianCalendar date = new GregorianCalendar();
 		date.setTime(OpdDateFieldCal.getDate());
 		try {
@@ -1020,7 +1041,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			} else {
 				diseaseTypeBox.setSelectedIndex(0);
 			}
-			diseaseTypeBox.addActionListener(e -> {
+			diseaseTypeBox.addActionListener(actionEvent -> {
 				diseaseBox1.removeAllItems();
 				getDiseaseBox1();
 			});
@@ -1037,16 +1058,17 @@ public class OpdEditExtended extends ModalJFrame implements
 		if (diseaseBox1 == null) {
 			diseaseBox1 = new JComboBox();
 			diseaseBox1.setMaximumSize(new Dimension(400, 50));
-			diseaseBox1.addActionListener(e -> setAttendance());
+			diseaseBox1.addActionListener(actionEvent -> setAttendance());
 		}
 		Disease elem2 = null;
 		diseaseBox1.addItem("");
 		
 		for (Disease elem : diseasesOPD) {
-			if (((DiseaseType)diseaseTypeBox.getSelectedItem()).equals(allType))
+			if (((DiseaseType)diseaseTypeBox.getSelectedItem()).equals(allType)) {
 				diseaseBox1.addItem(elem);
-			else if (elem.getType().equals((DiseaseType)diseaseTypeBox.getSelectedItem()))
+			} else if (elem.getType().equals((DiseaseType)diseaseTypeBox.getSelectedItem())) {
 				diseaseBox1.addItem(elem);
+			}
 			if (!insert && opd.getDisease()!=null){
 				if (opd.getDisease().getCode().equals(elem.getCode())) {
 					elem2 = elem;}
@@ -1134,7 +1156,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			jSearchButton.setBorderPainted(false);
 			jSearchButton.setPreferredSize(new Dimension(20, 20));
-			jSearchButton.addActionListener(e -> {
+			jSearchButton.addActionListener(actionEvent -> {
 				jComboPatResult.removeAllItems();
 				try {
 					pat = patBrowser.getPatientsByOneOfFieldsLike(jTextPatientSrc.getText());
@@ -1158,8 +1180,12 @@ public class OpdEditExtended extends ModalJFrame implements
 			jFieldLastOpdVisit.setText(" ");
 			jLabelLastOpdNote.setText(" ");
 			jFieldLastOpdNote.setText(" ");
-			if (jNoteTextArea != null) jNoteTextArea.setText("");
-			if (jPanelPatient != null) resetPatient();
+			if (jNoteTextArea != null) {
+				jNoteTextArea.setText("");
+			}
+			if (jPanelPatient != null) {
+				resetPatient();
+			}
 		}
 				
 		for (Patient elem : pat) {
@@ -1172,9 +1198,12 @@ public class OpdEditExtended extends ModalJFrame implements
 						a++;
 					}
 				}
-				if (a == s1.length)	jComboPatResult.addItem(elem);
-			} else 
+				if (a == s1.length) {
+					jComboPatResult.addItem(elem);
+				}
+			} else {
 				jComboPatResult.addItem(elem);
+			}
 		}
 		//ADDED: Workaround for no items
 		if (jComboPatResult.getItemCount() == 0) {
@@ -1182,7 +1211,9 @@ public class OpdEditExtended extends ModalJFrame implements
 				opdPatient = null;
 				//resetOpd();
 				//disableOpd();
-				if (jPanelPatient != null) resetPatient();
+				if (jPanelPatient != null) {
+					resetPatient();
+				}
 				jPatientEditButton.setEnabled(true);
 		}
 		//ADDED: Workaround for one item only
@@ -1223,7 +1254,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.enteranewpatient.txt"));
 			}
 
-			jComboPatResult.addActionListener(arg0 -> {
+			jComboPatResult.addActionListener(actionEvent -> {
 
 				if (jComboPatResult.getSelectedItem() != null) {
 					if (jComboPatResult.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.opd.enteranewpatient.txt")) == 0) {
@@ -1258,7 +1289,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			jPatientEditButton.setIcon(new ImageIcon("rsc/icons/edit_button.png"));
 			jPatientEditButton.setBorderPainted(false);
 			jPatientEditButton.setPreferredSize(new Dimension(20, 20));
-			jPatientEditButton.addActionListener(e -> {
+			jPatientEditButton.addActionListener(actionEvent -> {
 				if (opdPatient != null) {
 					if (GeneralData.PATIENTEXTENDED) {
 						PatientInsertExtended editrecord = new PatientInsertExtended(OpdEditExtended.this, opdPatient, false);
@@ -1271,7 +1302,9 @@ public class OpdEditExtended extends ModalJFrame implements
 					}
 				}
 			});
-			if (!insert) jPatientEditButton.setEnabled(false);
+			if (!insert) {
+				jPatientEditButton.setEnabled(false);
+			}
 		}	
 		return jPatientEditButton;
 	}
@@ -1312,8 +1345,9 @@ public class OpdEditExtended extends ModalJFrame implements
 			jTabbedPaneOpd = new JTabbedPane();
 			jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.common.patient.txt"), getJPanelPatient());
 			if ((insert && MainMenu.checkUserGrants("btnopdnewoperation"))
-							|| (!insert && MainMenu.checkUserGrants("btnopdeditoperation"))) 
-							jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.admission.operation"), getMultiOperationTab());
+							|| (!insert && MainMenu.checkUserGrants("btnopdeditoperation"))) {
+				jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.admission.operation"), getMultiOperationTab());
+			}
 			jTabbedPaneOpd.setPreferredSize(new Dimension(200,400));
 		}
 		return jTabbedPaneOpd;
@@ -1478,7 +1512,9 @@ public class OpdEditExtended extends ModalJFrame implements
 			radiom.setFocusable(false);
 			radiof.setFocusable(false);
 
-			if (opdPatient != null) setPatient(opdPatient);
+			if (opdPatient != null) {
+				setPatient(opdPatient);
+			}
 		}
 		return jPanelPatient;
 	}
@@ -1519,8 +1555,9 @@ public class OpdEditExtended extends ModalJFrame implements
 			jPanelButtons = new JPanel();
 			jPanelButtons.add(getOkButton(), null);
 			if (insert && MainMenu.checkUserGrants("btnopdnewexamination") || 
-					!insert && MainMenu.checkUserGrants("btnopdeditexamination"))
+					!insert && MainMenu.checkUserGrants("btnopdeditexamination")) {
 				jPanelButtons.add(getJButtonExamination(), null);
+			}
 			jPanelButtons.add(getCancelButton(), null);
 		}
 		return jPanelButtons;
@@ -1531,7 +1568,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			jButtonExamination = new JButton(MessageBundle.getMessage("angal.opd.examination.btn"));
 			jButtonExamination.setMnemonic(MessageBundle.getMnemonic("angal.opd.examination.btn.key"));
 			
-			jButtonExamination.addActionListener(e -> {
+			jButtonExamination.addActionListener(actionEvent -> {
 				if (opdPatient == null) {
 					MessageDialog.error(OpdEditExtended.this,"angal.common.pleaseselectapatient.msg");
 					return;
@@ -1573,7 +1610,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				boolean opdNumExist = false;
 				if (!jOpdNumField.getText().equals("") || !jOpdNumField.getText().contains(" ")) {
 					OpdBrowserManager opm = Context.getApplicationContext().getBean(OpdBrowserManager.class);
@@ -1748,7 +1785,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> {
+			cancelButton.addActionListener(actionEvent -> {
 				//to free Memory
 				pat.clear();
 				diseasesAll.clear();
@@ -1897,16 +1934,19 @@ public class OpdEditExtended extends ModalJFrame implements
 														// update
 			}
 			try {
-				if (!d.equals(""))
+				if (!d.equals("")) {
 					opdNextVisitDate = new JDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
-				else
+				} else {
 					opdNextVisitDate = new JDateChooser();
+				}
 				opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
 				opdNextVisitDate.setDateFormatString("dd/MM/yy");
 			} catch (ParseException parseException) {
 				LOGGER.error(parseException.getMessage(), parseException);
 			}
-			if (opd.getPatient() == null) opdNextVisitDate.setEnabled(false);
+			if (opd.getPatient() == null) {
+				opdNextVisitDate.setEnabled(false);
+			}
 		}
 		return opdNextVisitDate;
 	}

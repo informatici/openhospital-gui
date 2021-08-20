@@ -346,7 +346,7 @@ public class WardEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -361,7 +361,7 @@ public class WardEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 				try {

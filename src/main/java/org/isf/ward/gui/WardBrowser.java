@@ -179,7 +179,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(event -> {
+			jEditButton.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -203,7 +203,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(event -> {
+			jNewButton.addActionListener(actionEvent -> {
 				ward=new Ward(null,"","","","",null,null,null,false,false);	//operation will reference the new record
 				WardEdit newrecord = new WardEdit(myFrame,ward,true);
 				newrecord.addWardListener(WardBrowser.this);
@@ -222,7 +222,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(event -> {
+			jDeleteButton.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -253,7 +253,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(arg0 -> dispose());
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}

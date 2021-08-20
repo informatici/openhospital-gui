@@ -271,8 +271,8 @@ public class TherapyEntryForm extends JDialog {
 				oneLineComponentsHeight));
 		jSpinnerQty.setMaximumSize(new Dimension(Short.MAX_VALUE,
 				oneLineComponentsHeight));
-		jSpinnerQty.addChangeListener(e -> {
-			JSpinner source = (JSpinner) e.getSource();
+		jSpinnerQty.addChangeListener(changeEvent -> {
+			JSpinner source = (JSpinner) changeEvent.getSource();
 			double value = (Double) source.getValue();
 			therapy.setQty(value);
 			/*
@@ -316,8 +316,8 @@ public class TherapyEntryForm extends JDialog {
 		daysPanel.setLayout(daysLayout);
 		JLabel labelDays = new JLabel(MessageBundle.getMessage("angal.common.days.txt"));
 		labelDays.setAlignmentX(CENTER_ALIGNMENT);
-		jSpinnerDays.addChangeListener(e -> {
-			JSpinner theSpinner = (JSpinner) e.getSource();
+		jSpinnerDays.addChangeListener(changeEvent -> {
+			JSpinner theSpinner = (JSpinner) changeEvent.getSource();
 			if ((Integer) theSpinner.getValue() == 0) {
 				/*
 				 * Days must be at least one.
@@ -337,7 +337,7 @@ public class TherapyEntryForm extends JDialog {
 		JLabel labelWeeks = new JLabel(MessageBundle.getMessage("angal.therapy.weeks")); //$NON-NLS-1$
 		labelWeeks.setAlignmentX(CENTER_ALIGNMENT);
 
-		jSpinnerWeeks.addChangeListener(e -> updateEndDateLabel());
+		jSpinnerWeeks.addChangeListener(changeEvent -> updateEndDateLabel());
 		jSpinnerWeeks.setAlignmentX(CENTER_ALIGNMENT);
 		weeksPanel.add(labelWeeks);
 		weeksPanel.add(jSpinnerWeeks);
@@ -347,7 +347,7 @@ public class TherapyEntryForm extends JDialog {
 		JLabel labelMonths = new JLabel(MessageBundle.getMessage("angal.common.months.txt"));
 		labelMonths.setAlignmentX(CENTER_ALIGNMENT);
 
-		jSpinnerMonths.addChangeListener(e -> updateEndDateLabel());
+		jSpinnerMonths.addChangeListener(changeEvent -> updateEndDateLabel());
 		jSpinnerMonths.setAlignmentX(CENTER_ALIGNMENT);
 		monthsPanel.add(labelMonths);
 		monthsPanel.add(jSpinnerMonths);
@@ -471,7 +471,7 @@ public class TherapyEntryForm extends JDialog {
 		jSpinnerFreqInPeriod.setAlignmentX(Component.LEFT_ALIGNMENT);
 		jSpinnerFreqInPeriod.setMaximumSize(new Dimension(Short.MAX_VALUE,
 				oneLineComponentsHeight));
-		jSpinnerFreqInPeriod.addChangeListener(e -> {
+		jSpinnerFreqInPeriod.addChangeListener(changeEvent -> {
 		});
 		return jSpinnerFreqInPeriod;
 	}
@@ -481,11 +481,7 @@ public class TherapyEntryForm extends JDialog {
 			therapyStartdate = new CustomJDateChooser(new Date());
 			therapyStartdate.setLocale(new Locale(GeneralData.LANGUAGE));
 			therapyStartdate.setDateFormatString(dateFormat.toPattern());
-
-			//$NON-NLS-1$
-			therapyStartdate.addPropertyChangeListener("date", evt -> {
-				updateEndDateLabel();
-			});
+			therapyStartdate.addPropertyChangeListener("date", propertyChangeEvent -> updateEndDateLabel());
 		}
 		return therapyStartdate;
 	}
@@ -681,8 +677,8 @@ public class TherapyEntryForm extends JDialog {
 			jSliderQty.setMinorTickSpacing(sliderMinorStepValue);
 			jSliderQty.setPaintLabels(true);
 
-			jSliderQty.addChangeListener(e -> {
-				JSlider source = (JSlider) e.getSource();
+			jSliderQty.addChangeListener(changeEvent -> {
+				JSlider source = (JSlider) changeEvent.getSource();
 				double value = (double) source.getValue();
 				jSpinnerQty.setValue(value);
 				therapy.setQty(value);
@@ -704,7 +700,7 @@ public class TherapyEntryForm extends JDialog {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(arg0 -> dispose());
+			buttonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return buttonCancel;
 	}
@@ -713,7 +709,7 @@ public class TherapyEntryForm extends JDialog {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			buttonOK.addActionListener(arg0 -> {
+			buttonOK.addActionListener(actionEvent -> {
 				/*
 				 * Data extrapolation
 				 */

@@ -135,7 +135,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		if (newButton == null) {
 			newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			newButton.addActionListener(e -> {
+			newButton.addActionListener(actionEvent -> {
 				examRow = new ExamRow();
 				ExamRowEdit newrecord = new ExamRowEdit(myFrame, examRow, exam);
 				newrecord.addExamListener(ExamShow.this);
@@ -149,7 +149,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		if (closeButton == null) {
 			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			closeButton.addActionListener(e -> dispose());
+			closeButton.addActionListener(actionEvent -> dispose());
 		}
 		return closeButton;
 	}
@@ -158,7 +158,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		if (deleteButton == null) {
 			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			deleteButton.addActionListener(e -> {
+			deleteButton.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {

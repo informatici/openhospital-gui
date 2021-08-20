@@ -122,7 +122,7 @@ public class ListEdit extends JDialog {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jButtonOK.addActionListener(event -> {
+			jButtonOK.addActionListener(actionEvent -> {
 
 				list.setCode(jTextFieldCode.getText());
 				list.setName(jTextFieldName.getText());
@@ -162,7 +162,7 @@ public class ListEdit extends JDialog {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(event -> dispose());
+			jButtonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonCancel;
 	}

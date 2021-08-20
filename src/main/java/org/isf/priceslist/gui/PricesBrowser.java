@@ -150,7 +150,7 @@ public class PricesBrowser extends ModalJFrame {
 			jPrintTableButton = new JButton(MessageBundle.getMessage("angal.priceslist.printing.btn"));
 			jPrintTableButton.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.printing.btn.key"));
 			jPrintTableButton.setVisible(true);
-			jPrintTableButton.addActionListener(arg0 -> {
+			jPrintTableButton.addActionListener(actionEvent -> {
 
 				try {
 					printManager.print("PriceList", listManager.convertPrice(listSelected, priceArray), 0);
@@ -167,7 +167,7 @@ public class PricesBrowser extends ModalJFrame {
 			jButtonManage = new JButton(MessageBundle.getMessage("angal.priceslist.managelists.btn"));
 			jButtonManage.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.managelists.btn.key"));
 			//jButtonManage.setEnabled(false);
-			jButtonManage.addActionListener(event -> {
+			jButtonManage.addActionListener(actionEvent -> {
 					ListBrowser browseList = new ListBrowser();
 					browseList.setVisible(true);
 					dispose();
@@ -219,7 +219,7 @@ public class PricesBrowser extends ModalJFrame {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(event -> dispose());
+			jButtonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -228,7 +228,7 @@ public class PricesBrowser extends ModalJFrame {
 		if (jButtonSave == null) {
 			jButtonSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			jButtonSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			jButtonSave.addActionListener(event -> {
+			jButtonSave.addActionListener(actionEvent -> {
 				int option = JOptionPane.showConfirmDialog(null,
 						MessageBundle.getMessage("angal.priceslist.thiswillsavecurrentpricescontinue"),  //$NON-NLS-1$
 						MessageBundle.getMessage("angal.priceslist.savelist"),  //$NON-NLS-1$
@@ -403,7 +403,7 @@ public class PricesBrowser extends ModalJFrame {
 				
 				jComboBoxLists.addItem(elem);
 			}
-			jComboBoxLists.addActionListener(e -> {
+			jComboBoxLists.addActionListener(actionEvent -> {
 
 				int option = JOptionPane.showConfirmDialog(null,
 						MessageBundle.getMessage("angal.priceslist.doyoureallywanttochangelist"),  //$NON-NLS-1$

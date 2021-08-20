@@ -176,7 +176,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -190,7 +190,7 @@ public class DischargeTypeBrowserEdit extends JDialog{
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 
 				dischargeType.setDescription(descriptionTextField.getText());

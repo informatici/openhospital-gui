@@ -236,7 +236,7 @@ public class SupplierEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -251,7 +251,7 @@ public class SupplierEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				if (nameTextField.getText().trim().equals("")) {
 					MessageDialog.error(null, "angal.supplier.pleaseinsertaname");
 					return;

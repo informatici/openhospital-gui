@@ -49,16 +49,16 @@ public class JMonthYearChooser extends JPanel {
 		
 		JMonthChooser month = new JMonthChooser();
 		month.setLocale(new Locale(GeneralData.LANGUAGE));
-		month.addPropertyChangeListener("month", evt -> {
-			JMonthChooser theChooser = (JMonthChooser) evt.getSource();
+		month.addPropertyChangeListener("month", propertyChangeEvent -> {
+			JMonthChooser theChooser = (JMonthChooser) propertyChangeEvent.getSource();
 			gc.set(GregorianCalendar.MONTH, theChooser.getMonth());
 		});
 		
 		
 		JYearChooser year = new JYearChooser();
 		year.setLocale(new Locale(GeneralData.LANGUAGE));
-		year.addPropertyChangeListener("year", evt -> {
-			JYearChooser theChooser = (JYearChooser) evt.getSource();
+		year.addPropertyChangeListener("year", propertyChangeEvent -> {
+			JYearChooser theChooser = (JYearChooser) propertyChangeEvent.getSource();
 			gc.set(GregorianCalendar.YEAR, theChooser.getYear());
 		});
 		

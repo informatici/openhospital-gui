@@ -296,6 +296,7 @@ public class PatVacEdit extends JDialog {
 		jTextPatientSrc = new JTextField();
 		if (GeneralData.ENHANCEDSEARCH) {
 			jTextPatientSrc.addKeyListener(new KeyListener() {
+				@Override
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
 					if (key == KeyEvent.VK_ENTER) {
@@ -303,14 +304,17 @@ public class PatVacEdit extends JDialog {
 					}
 				}
 
+				@Override
 				public void keyReleased(KeyEvent e) {
 				}
 
+				@Override
 				public void keyTyped(KeyEvent e) {
 				}
 			});
 		} else {
 			jTextPatientSrc.addKeyListener(new KeyListener() {
+				@Override
 				public void keyTyped(KeyEvent e) {
 					lastKey = "";
 					String s = "" + e.getKeyChar();
@@ -322,9 +326,11 @@ public class PatVacEdit extends JDialog {
 					filterPatient(s);
 				}
 
+				@Override
 				public void keyPressed(KeyEvent e) {
 				}
 
+				@Override
 				public void keyReleased(KeyEvent e) {
 				}
 			});
@@ -345,7 +351,7 @@ public class PatVacEdit extends JDialog {
 			if (!insert) {
 				jSearchButton.setEnabled(false);
 			}
-			jSearchButton.addActionListener(e -> {
+			jSearchButton.addActionListener(actionEvent -> {
 					patientComboBox.removeAllItems();
 					resetPatVacPat();
 					getPatientComboBox(jTextPatientSrc.getText());
@@ -418,10 +424,11 @@ public class PatVacEdit extends JDialog {
 					}
 				}
 			}
-			if (vaccineTypeSel != null)
+			if (vaccineTypeSel != null) {
 				vaccineTypeComboBox.setSelectedItem(vaccineTypeSel);
+			}
 
-			vaccineTypeComboBox.addActionListener(e -> {
+			vaccineTypeComboBox.addActionListener(actionEvent -> {
 					vaccineComboBox.removeAllItems();
 					getVaccineComboBox();
 			});
@@ -505,10 +512,12 @@ public class PatVacEdit extends JDialog {
 			if (patientComboBox.getItemAt(0) instanceof Patient) {
 				selectedPatient = (Patient) patientComboBox.getItemAt(0);
 				setPatient(selectedPatient);
-			} else
+			} else {
 				selectedPatient = null;
-		} else
+			}
+		} else {
 			selectedPatient = null;
+		}
 	}
 
 	/**
@@ -554,7 +563,7 @@ public class PatVacEdit extends JDialog {
 				OHServiceExceptionUtil.showMessages(ex);
 				patientList = new ArrayList<>();
 			}
-		}else{
+		} else {
 			try {
 				patientList = patientManager.getPatient();
 			} catch (OHServiceException e) {
@@ -579,12 +588,14 @@ public class PatVacEdit extends JDialog {
 				if (patientComboBox.getItemAt(0) instanceof Patient) {
 					selectedPatient = (Patient) patientComboBox.getItemAt(0);
 					setPatient(selectedPatient);
-				} else
+				} else {
 					selectedPatient = null;
-			} else
+				}
+			} else {
 				selectedPatient = null;
+			}
 		}
-		patientComboBox.addActionListener(e -> {
+		patientComboBox.addActionListener(actionEvent -> {
 				if (patientComboBox.getSelectedIndex() > 0) {
 					selectedPatient = (Patient) patientComboBox.getSelectedItem();
 					setPatient(selectedPatient);
@@ -704,7 +715,7 @@ public class PatVacEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 
 					GregorianCalendar gregDate = new GregorianCalendar();
 					gregDate.setTime(vaccineDateFieldCal.getDate());
@@ -759,9 +770,7 @@ public class PatVacEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> {
-					dispose();
-			});
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}

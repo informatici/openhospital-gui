@@ -208,7 +208,7 @@ public class PatVacBrowser extends ModalJFrame {
 		if (buttonNew == null) {
 			buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			buttonNew.addActionListener(event -> {
+			buttonNew.addActionListener(actionEvent -> {
 				patientVaccine = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(),
 						new Vaccine("", "", new VaccineType("", "")), 0);
 
@@ -239,7 +239,7 @@ public class PatVacBrowser extends ModalJFrame {
 		if (buttonEdit == null) {
 			buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			buttonEdit.addActionListener(event -> {
+			buttonEdit.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					return;
@@ -279,7 +279,7 @@ public class PatVacBrowser extends ModalJFrame {
 		if (buttonDelete == null) {
 			buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			buttonDelete.addActionListener(event -> {
+			buttonDelete.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					return;
@@ -322,7 +322,7 @@ public class PatVacBrowser extends ModalJFrame {
 		if (buttonClose == null) {
 			buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			buttonClose.addActionListener(e -> dispose());
+			buttonClose.addActionListener(actionEvent -> dispose());
 		}
 		return buttonClose;
 	}
@@ -614,7 +614,7 @@ public class PatVacBrowser extends ModalJFrame {
 				}
 			}
             
-            vaccineTypeComboBox.addActionListener(e -> {
+            vaccineTypeComboBox.addActionListener(actionEvent -> {
 	            vaccineComboBox.removeAllItems();
 	            getComboVaccines();
             });
@@ -640,7 +640,7 @@ public class PatVacBrowser extends ModalJFrame {
         try {
             if (((VaccineType)vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))){
                 allVac = manager.getVaccine();
-            }else{
+            } else {
                 allVac = manager.getVaccine( ((VaccineType)vaccineTypeComboBox.getSelectedItem()).getCode());
             }
         } catch (OHServiceException e) {
@@ -704,7 +704,7 @@ public class PatVacBrowser extends ModalJFrame {
 		if (filterButton == null) {
 			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
 			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
-			filterButton.addActionListener(e -> {
+			filterButton.addActionListener(actionEvent -> {
 
 				String vaccineTypeCode = ((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode();
 				String vaccineCode = ((Vaccine) vaccineComboBox.getSelectedItem()).getCode();

@@ -103,7 +103,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonClose == null) {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jButtonClose.addActionListener(event -> dispose());
+			jButtonClose.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonClose;
 	}
@@ -112,7 +112,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonDelete == null) {
 			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jButtonDelete.addActionListener(event -> {
+			jButtonDelete.addActionListener(actionEvent -> {
 				if (jTablePricesOthers.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtodelete");
 				} else {
@@ -148,7 +148,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonEdit == null) {
 			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jButtonEdit.addActionListener(event -> {
+			jButtonEdit.addActionListener(actionEvent -> {
 				if (jTablePricesOthers.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtoedit");
 				} else {
@@ -167,7 +167,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonNew == null) {
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jButtonNew.addActionListener(event -> {
+			jButtonNew.addActionListener(actionEvent -> {
 				PricesOthers pOther = new PricesOthers("", "", true,true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);
 				editOther.addOtherListener(PricesOthersBrowser.this);

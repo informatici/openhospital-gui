@@ -135,7 +135,7 @@ public class Cropping extends JPanel {
 	public JPanel getUIPanel() {
 		JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-		saveButton.addActionListener(e -> clipImage());
+		saveButton.addActionListener(actionEvent -> clipImage());
 		JPanel panel = new JPanel();
 		panel.add(saveButton);
 		return panel;

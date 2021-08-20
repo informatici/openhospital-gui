@@ -417,12 +417,15 @@ public class AdmissionBrowser extends ModalJFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				// to free memory
-				if (diseaseInList != null)
+				if (diseaseInList != null) {
 					diseaseInList.clear();
-				if (diseaseOutList != null)
+				}
+				if (diseaseOutList != null) {
 					diseaseOutList.clear();
-				if (diseaseAllList != null)
+				}
+				if (diseaseAllList != null) {
 					diseaseAllList.clear();
+				}
 				dispose();
 			}
 		});
@@ -478,9 +481,15 @@ public class AdmissionBrowser extends ModalJFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
-				if (diseaseInList != null) diseaseInList.clear();
-				if (diseaseOutList != null) diseaseOutList.clear();
-				if (diseaseAllList != null) diseaseAllList.clear();
+				if (diseaseInList != null) {
+					diseaseInList.clear();
+				}
+				if (diseaseOutList != null) {
+					diseaseOutList.clear();
+				}
+				if (diseaseAllList != null) {
+					diseaseAllList.clear();
+				}
 				dispose();
 			}			
 		});
@@ -954,8 +963,9 @@ public class AdmissionBrowser extends ModalJFrame {
 				} else if (("" + patient.getSex()).equalsIgnoreCase("M") && !ward.isMale()) {
 					continue;
 				} else {
-					if (ward.getBeds() > 0)
+					if (ward.getBeds() > 0) {
 						wardBox.addItem(ward);
+					}
 				}
 				if (saveWard != null) {
 					if (saveWard.getCode().equalsIgnoreCase(ward.getCode())) {
@@ -967,7 +977,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 				}
 			}
-			wardBox.addActionListener(e -> {
+			wardBox.addActionListener(actionEvent -> {
 				// set yProg
 				if (wardBox.getSelectedIndex() == 0) {
 					yProgTextField.setText("");
@@ -1057,8 +1067,9 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				//Not found: search among all diseases
 				try {
-					if (diseaseAllList == null)
+					if (diseaseAllList == null) {
 						diseaseAllList = dbm.getDiseaseAll();
+					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
@@ -1101,7 +1112,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			searchButton = new JButton("");
 			diseaseInPanel.add(searchButton);
-			searchButton.addActionListener(arg0 -> {
+			searchButton.addActionListener(actionEvent -> {
 				diseaseInBox.removeAllItems();
 				diseaseInBox.addItem("");
 				for (Disease disease :
@@ -1189,11 +1200,11 @@ public class AdmissionBrowser extends ModalJFrame {
 			dateInFieldCal = new CustomJDateChooser(dateIn.getTime(), "dd/MM/yy"); // Calendar
 			dateInFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateInFieldCal.setDateFormatString("dd/MM/yy");
-			dateInFieldCal.addPropertyChangeListener("date", evt -> {
-				Date newValue = (Date) evt.getNewValue();
+			dateInFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {
+				Date newValue = (Date) propertyChangeEvent.getNewValue();
 				if (newValue.before(patient.getBirthDate())) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.thepatientwasnotyetbornatselecteddate.msg");
-					dateInFieldCal.setDate((Date) evt.getOldValue());
+					dateInFieldCal.setDate((Date) propertyChangeEvent.getOldValue());
 					return;
 				}
 				dateInFieldCal.setDate(newValue);
@@ -1259,8 +1270,9 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				// Not found: search among all diseases
 				try {
-					if (diseaseAllList == null)
+					if (diseaseAllList == null) {
 						diseaseAllList = dbm.getDiseaseAll();
+					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
@@ -1305,7 +1317,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			searchDiseaseOut1Button = new JButton("");
 			diseaseOut1Panel.add(searchDiseaseOut1Button);
-			searchDiseaseOut1Button.addActionListener(arg0 -> {
+			searchDiseaseOut1Button.addActionListener(actionEvent -> {
 				diseaseOut1Box.removeAllItems();
 				diseaseOut1Box.addItem("");
 				for (Disease disease : getSearchDiagnosisResults(searchDiseaseOut1textField.getText(), diseaseOutList)) {
@@ -1363,8 +1375,9 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				// Not found: search among all diseases
 				try {
-					if (diseaseAllList == null)
+					if (diseaseAllList == null) {
 						diseaseAllList = dbm.getDiseaseAll();
+					}
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
@@ -1409,7 +1422,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			searchDiseaseOut2Button = new JButton("");
 			diseaseOut2Panel.add(searchDiseaseOut2Button);
-			searchDiseaseOut2Button.addActionListener(arg0 -> {
+			searchDiseaseOut2Button.addActionListener(actionEvent -> {
 				diseaseOut2Box.removeAllItems();
 				diseaseOut2Box.addItem("");
 				for (Disease disease :
@@ -1513,7 +1526,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			searchDiseaseOut3Button = new JButton("");
 			diseaseOut3Panel.add(searchDiseaseOut3Button);
-			searchDiseaseOut3Button.addActionListener(arg0 -> {
+			searchDiseaseOut3Button.addActionListener(actionEvent -> {
 				diseaseOut3Box.removeAllItems();
 				diseaseOut3Box.addItem("");
 				for (Disease disease :
@@ -1583,7 +1596,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			Date admission = dateInFieldCal.getDate();
 			Date discharge = dateOutFieldCal.getDate();
 			int bedDays = TimeTools.getDaysBetweenDates(admission, discharge, false);
-			if (bedDays == 0) bedDays++;
+			if (bedDays == 0) {
+				bedDays++;
+			}
 			bedDaysTextField.setText(String.valueOf(bedDays));
 		} catch (Exception e) {
 			bedDaysTextField.setText("");
@@ -1605,12 +1620,10 @@ public class AdmissionBrowser extends ModalJFrame {
 			dateOutFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			dateOutFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateOutFieldCal.setDateFormatString("dd/MM/yy");
-			dateOutFieldCal.addPropertyChangeListener("date", evt -> updateBedDays());
-			
-			
+			dateOutFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> updateBedDays());
+
 			dischargeDatePanel.add(dateOutFieldCal);
 			dischargeDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.dischargedate.border")));
-			
 		}
 		return dischargeDatePanel;
 	}
@@ -1621,7 +1634,9 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
 			buttonPanel.add(getSaveButton());
-			if (MainMenu.checkUserGrants("btnadmadmexamination")) buttonPanel.add(getJButtonExamination());
+			if (MainMenu.checkUserGrants("btnadmadmexamination")) {
+				buttonPanel.add(getJButtonExamination());
+			}
 			buttonPanel.add(getCloseButton());
 
 			if (GeneralData.XMPPMODULEENABLED) {
@@ -1642,7 +1657,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			jButtonExamination = new JButton(MessageBundle.getMessage("angal.admission.examination.btn"));
 			jButtonExamination.setMnemonic(MessageBundle.getMnemonic("angal.admission.examination.btn.key"));
 			
-			jButtonExamination.addActionListener(e -> {
+			jButtonExamination.addActionListener(actionEvent -> {
 
 				PatientExamination patex;
 				ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
@@ -1685,7 +1700,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (closeButton == null) {
 			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			closeButton.addActionListener(e -> dispose());
+			closeButton.addActionListener(actionEvent -> dispose());
 		}
 		return closeButton;
 	}
@@ -1695,7 +1710,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (saveButton == null) {
 			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			saveButton.addActionListener(e -> {
+			saveButton.addActionListener(actionEvent -> {
 
 				/*
 				 * is it an admission update or a discharge? if we have a

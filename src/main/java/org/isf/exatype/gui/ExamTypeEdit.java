@@ -184,7 +184,7 @@ public class ExamTypeEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -198,7 +198,7 @@ public class ExamTypeEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
 				try{
 					examType.setDescription(descriptionTextField.getText());
@@ -215,7 +215,7 @@ public class ExamTypeEdit extends JDialog {
                     else {            // updating
 	                    if (descriptionTextField.getText().equals(lastdescription)){
 						    dispose();
-					    }else{
+					    } else {
 							if (manager.updateExamType(examType)) {
 								fireExamTypeUpdated();
 								dispose();

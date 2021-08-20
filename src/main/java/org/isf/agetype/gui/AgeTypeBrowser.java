@@ -110,7 +110,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 		if (jEditSaveButton == null) {
 			jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditSaveButton.addActionListener(event -> {
+			jEditSaveButton.addActionListener(actionEvent -> {
 				if (!edit) {
 					edit = true;
 					jEditSaveButton.setText(MessageBundle.getMessage("angal.common.save.btn"));
@@ -145,7 +145,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(arg0 -> dispose());
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}

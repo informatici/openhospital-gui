@@ -271,7 +271,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JRadioButton getJRadioUse() {
 		if (jRadioUse == null) {
 			jRadioUse = new JRadioButton();
-			jRadioUse.addActionListener(e -> {
+			jRadioUse.addActionListener(actionEvent -> {
 				jTextFieldPatient.setEnabled(false);
 				jButtonPickPatient.setEnabled(false);
 				jButtonTrashPatient.setEnabled(false);
@@ -520,7 +520,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonAddMedical = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.medical.btn"));
 			jButtonAddMedical.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.medical.btn.key"));
 			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
-			jButtonAddMedical.addActionListener(e -> {
+			jButtonAddMedical.addActionListener(actionEvent -> {
 				String medical=(String)jComboBoxMedicals.getSelectedItem();
 				int quantity = askQuantity(medical,wardDrugs);
 			});
@@ -537,7 +537,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonRemoveMedical = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.removeitem.btn"));
 			jButtonRemoveMedical.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.removeitem.btn.key"));
 			jButtonRemoveMedical.setIcon(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
-			jButtonRemoveMedical.addActionListener(e -> {
+			jButtonRemoveMedical.addActionListener(actionEvent -> {
 				if (jTableMedicals.getSelectedRow() < 0) {
 					MessageDialog.error(WardPharmacyNew.this, "angal.medicalstockwardedit.pleaseselectanitem");
 				} else {
@@ -605,7 +605,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jButtonOK.addActionListener(e -> {
+			jButtonOK.addActionListener(actionEvent -> {
 
 				boolean isPatient;
 				String description = "";
@@ -663,7 +663,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(event -> dispose());
+			jButtonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -704,7 +704,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (jRadioPatient == null) {
 			jRadioPatient = new JRadioButton();
 			jRadioPatient.setSelected(true);
-			jRadioPatient.addActionListener(e -> {
+			jRadioPatient.addActionListener(actionEvent -> {
 				jTextFieldUse.setEnabled(false);
 				jTextFieldPatient.setEnabled(true);
 				jButtonPickPatient.setEnabled(true);
@@ -723,7 +723,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.removepatientassociationwiththismovement")); //$NON-NLS-1$
-			jButtonTrashPatient.addActionListener(e -> {
+			jButtonTrashPatient.addActionListener(actionEvent -> {
 
 				patientSelected = null;
 				jTextFieldPatient.setText(""); //$NON-NLS-1$
@@ -743,7 +743,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.pickpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
-			jButtonPickPatient.addActionListener(e -> {
+			jButtonPickPatient.addActionListener(actionEvent -> {
 				SelectPatient sp = new SelectPatient(WardPharmacyNew.this, patientSelected);
 				sp.addSelectionListener(WardPharmacyNew.this);
 				sp.pack();
@@ -855,7 +855,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (jRadioWard == null) {
 			jRadioWard = new JRadioButton(MessageBundle.getMessage("angal.wardpharmacynew.ward.btn"));
 			jRadioWard.setSelected(false);
-			jRadioWard.addActionListener(e -> {
+			jRadioWard.addActionListener(actionEvent -> {
 				jTextFieldUse.setEnabled(false);
 				jTextFieldPatient.setEnabled(false);
 				jButtonPickPatient.setEnabled(false);

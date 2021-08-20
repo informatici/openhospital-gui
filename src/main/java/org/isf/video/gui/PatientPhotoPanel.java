@@ -82,7 +82,7 @@ public class PatientPhotoPanel extends JPanel {
 
 			final IconButton btnDeletePhoto = new IconButton(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
 			btnDeletePhoto.setSize(new Dimension(40, 40));
-			btnDeletePhoto.addActionListener(e -> {
+			btnDeletePhoto.addActionListener(actionEvent -> {
 
 				int answer = MessageDialog.yesNo(owner, "angal.patient.doyouwanttodeletethepatientsphoto.msg");
 				if (answer == JOptionPane.YES_OPTION) {
@@ -130,7 +130,7 @@ public class PatientPhotoPanel extends JPanel {
 			jAttachPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.file.btn.key"));
 			jAttachPhotoButton.setMinimumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
-			jAttachPhotoButton.addActionListener(e -> {
+			jAttachPhotoButton.addActionListener(actionEvent -> {
 				JFileChooser fc = new JFileChooser();
 				String[] extensions = { "tif", "tiff", "jpg", "jpeg", "bmp", "png", "gif" };
 				FileFilter imageFilter = new FileNameExtensionFilter(MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
@@ -161,7 +161,7 @@ public class PatientPhotoPanel extends JPanel {
 				jGetPhotoButton.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 
 				final Dimension[] resolutions = webcam.getDevice().getResolutions();
-				jGetPhotoButton.addActionListener(event -> {
+				jGetPhotoButton.addActionListener(actionEvent -> {
 					photoboothPanelPresentationModel.setWebcam(webcam);
 					// start with the highest resolution.
 					photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
@@ -242,7 +242,7 @@ class CroppingDialog extends JDialog {
 		if (saveButton == null) {
 			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			saveButton.addActionListener(e -> {
+			saveButton.addActionListener(actionEvent -> {
 				cropped = crop.clipImage();
 				dispose();
 			});

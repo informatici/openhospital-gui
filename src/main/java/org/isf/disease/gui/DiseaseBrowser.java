@@ -137,7 +137,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				pbox.addItem(elem);
 			}
 		}
-		pbox.addActionListener(arg0 -> {
+		pbox.addActionListener(actionEvent -> {
 			pSelection = (DiseaseType) pbox.getSelectedItem();
 			if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.common.all.txt").toLowerCase()) == 0) {
 				model = new DiseaseBrowserModel();
@@ -151,7 +151,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		buttonNew.addActionListener(event -> {
+		buttonNew.addActionListener(actionEvent -> {
 			disease = new Disease(null, "", new DiseaseType("", ""));    //disease will reference the new record
 			DiseaseEdit newrecord = new DiseaseEdit(myFrame, disease, true);
 			newrecord.addDiseaseListener(DiseaseBrowser.this);
@@ -161,7 +161,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		buttonEdit.addActionListener(event -> {
+		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -176,7 +176,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 
 		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		buttonDelete.addActionListener(event -> {
+		buttonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -199,7 +199,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 
 		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		buttonClose.addActionListener(arg0 -> dispose());
+		buttonClose.addActionListener(actionEvent -> dispose());
 		buttonPanel.add(buttonClose);
 
 		add(buttonPanel, BorderLayout.SOUTH);

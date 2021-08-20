@@ -258,7 +258,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		popUpMenu.add(new JPopupMenu.Separator());
 		popUpMenu.add(getInfo = new JMenuItem(MessageBundle.getMessage("angal.xmpp.getinfo.txt")));
 		final JFileChooser fileChooser = new JFileChooser();
-		sendFile.addActionListener(e -> {
+		sendFile.addActionListener(actionEvent -> {
 			int returnVal = fileChooser.showOpenDialog(getParent());
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
@@ -268,7 +268,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				interaction.sendFile(receiver, file, null);
 			}
 		});
-		getInfo.addActionListener(arg0 -> {
+		getInfo.addActionListener(actionEvent -> {
 			String user_name = ((RosterEntry) buddyList.getSelectedValue()).getName();
 			String info = null;
 			try {
@@ -522,7 +522,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 		final String user = interaction.userFromAddress(request.getRequestor());
 		this.printNotification((this.getArea(user, false)), user, file_transfer, accept, reject);
 
-		accept.addActionListener(e -> {
+		accept.addActionListener(actionEvent -> {
 			accept.setEnabled(false);
 			reject.setEnabled(false);
 			JFileChooser chooser = new JFileChooser();
@@ -552,7 +552,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			sendMessage(MessageBundle.formatMessage("angal.xmpp.filetransferofhasbeenaccepted.fmt.msg", request.getFileName()),
 					request.getRequestor(), false);
 		});
-		reject.addActionListener(e -> {
+		reject.addActionListener(actionEvent -> {
 			accept.setEnabled(false);
 			reject.setEnabled(false);
 			request.reject();

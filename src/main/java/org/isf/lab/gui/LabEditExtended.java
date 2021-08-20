@@ -439,7 +439,7 @@ public class LabEditExtended extends ModalJFrame {
 					patientComboBox.addItem(elem);
 				}
 			}
-			patientComboBox.addActionListener(arg0 -> {
+			patientComboBox.addActionListener(actionEvent -> {
 				if (patientComboBox.getSelectedIndex() > 0) {
 					labPat = (Patient) patientComboBox.getSelectedItem();
 					setPatient(labPat);
@@ -546,7 +546,7 @@ public class LabEditExtended extends ModalJFrame {
 			}
 			examComboBox.setSelectedItem(examSel);
 			
-			examComboBox.addActionListener(arg0 -> {
+			examComboBox.addActionListener(actionEvent -> {
 				if (!(examComboBox.getSelectedItem() instanceof String)) {
 					examSelected = (Exam) examComboBox
 							.getSelectedItem();
@@ -646,7 +646,7 @@ public class LabEditExtended extends ModalJFrame {
 		if (printButton == null) {
 			printButton = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
 			printButton.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
-			printButton.addActionListener(arg0 -> {
+			printButton.addActionListener(actionEvent -> {
 				try {
 					ArrayList<LaboratoryForPrint> labs = new ArrayList<>();
 
@@ -672,7 +672,7 @@ public class LabEditExtended extends ModalJFrame {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -681,7 +681,7 @@ public class LabEditExtended extends ModalJFrame {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				if (examComboBox.getSelectedIndex() == 0) {
 					MessageDialog.error(LabEditExtended.this, "angal.lab.pleaseselectanexam.msg");
 					return;

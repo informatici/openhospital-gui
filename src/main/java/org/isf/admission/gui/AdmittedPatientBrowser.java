@@ -210,7 +210,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					//the patient is admitted
 					if (elemAdm.getId() == adm.getId())
 						//same admission --> delete
-						elem.setAdmission(null);	
+					{
+						elem.setAdmission(null);
+					}
 				}
 				break;
 			}
@@ -371,8 +373,12 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
-				if (pPatient != null) pPatient.clear();
-				if (wardList != null) wardList.clear();
+				if (pPatient != null) {
+					pPatient.clear();
+				}
+				if (wardList != null) {
+					wardList.clear();
+				}
 				dispose();
 			}			
 		});
@@ -394,7 +400,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	 * Panel with filtering controls
 	 */
 	private JPanel getControlPanel() {
-		ActionListener listener = e -> SwingUtilities.invokeLater(() -> {
+		ActionListener listener = actionEvent -> SwingUtilities.invokeLater(() -> {
 			lastKey = "";
 			filterPatient(null);
 		});
@@ -426,8 +432,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			wardList = new ArrayList<>();
 			for (Ward elem : wardWithBeds) {
 				
-				if (elem.getBeds() > 0)
+				if (elem.getBeds() > 0) {
 					wardList.add(elem);
+				}
 			}
 		} 
 		
@@ -526,8 +533,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				@Override
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
-					if (key == KeyEvent.VK_ALT)
+					if (key == KeyEvent.VK_ALT) {
 						altKeyReleased = false;
+					}
 				}
 	
 				@Override
@@ -660,7 +668,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		
 		for (int i = 0; i< pColumns.length; i++){
 			table.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
-			if (!pColumnResizable[i]) table.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
+			if (!pColumnResizable[i]) {
+				table.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
+			}
 		}
 		
 		table.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
@@ -679,17 +689,39 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 	private JPanel getButtonPanel() {
 		JPanel buttonPanel = new JPanel();
-		if (MainMenu.checkUserGrants("btnadmnew")) buttonPanel.add(getButtonNew());
-		if (MainMenu.checkUserGrants("btnadmedit")) buttonPanel.add(getButtonEdit());
-		if (MainMenu.checkUserGrants("btnadmdel")) buttonPanel.add(getButtonDelete());
-		if (MainMenu.checkUserGrants("btnadmadm")) buttonPanel.add(getButtonAdmission());
-		if (MainMenu.checkUserGrants("btnadmexamination")) buttonPanel.add(getButtonExamination());
-		if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) buttonPanel.add(getButtonOpd());
-		if (MainMenu.checkUserGrants("btnadmbill")) buttonPanel.add(getButtonBill());
-		if (MainMenu.checkUserGrants("data")) buttonPanel.add(getButtonData());
-		if (MainMenu.checkUserGrants("btnadmpatientfolder")) buttonPanel.add(getButtonPatientFolderBrowser());
-		if (MainMenu.checkUserGrants("btnadmtherapy")) buttonPanel.add(getButtonTherapy());
-		if (GeneralData.MERGEFUNCTION && MainMenu.checkUserGrants("btnadmmer")) buttonPanel.add(getButtonMerge());
+		if (MainMenu.checkUserGrants("btnadmnew")) {
+			buttonPanel.add(getButtonNew());
+		}
+		if (MainMenu.checkUserGrants("btnadmedit")) {
+			buttonPanel.add(getButtonEdit());
+		}
+		if (MainMenu.checkUserGrants("btnadmdel")) {
+			buttonPanel.add(getButtonDelete());
+		}
+		if (MainMenu.checkUserGrants("btnadmadm")) {
+			buttonPanel.add(getButtonAdmission());
+		}
+		if (MainMenu.checkUserGrants("btnadmexamination")) {
+			buttonPanel.add(getButtonExamination());
+		}
+		if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) {
+			buttonPanel.add(getButtonOpd());
+		}
+		if (MainMenu.checkUserGrants("btnadmbill")) {
+			buttonPanel.add(getButtonBill());
+		}
+		if (MainMenu.checkUserGrants("data")) {
+			buttonPanel.add(getButtonData());
+		}
+		if (MainMenu.checkUserGrants("btnadmpatientfolder")) {
+			buttonPanel.add(getButtonPatientFolderBrowser());
+		}
+		if (MainMenu.checkUserGrants("btnadmtherapy")) {
+			buttonPanel.add(getButtonTherapy());
+		}
+		if (GeneralData.MERGEFUNCTION && MainMenu.checkUserGrants("btnadmmer")) {
+			buttonPanel.add(getButtonMerge());
+		}
 		buttonPanel.add(getButtonClose());
 		return buttonPanel;
 	}
@@ -698,7 +730,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		if (jButtonExamination == null) {
 			jButtonExamination = new JButton(MessageBundle.getMessage("angal.admission.examination.btn"));
 			jButtonExamination.setMnemonic(MessageBundle.getMnemonic("angal.admission.examination.btn.key"));
-			jButtonExamination.addActionListener(e -> {
+			jButtonExamination.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 					return;
@@ -736,7 +768,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonNew() {
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.newpatient.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.newpatient.btn.key"));
-		buttonNew.addActionListener(event -> {
+		buttonNew.addActionListener(actionEvent -> {
 			final Patient newPatient = new Patient();
 			if (GeneralData.PATIENTEXTENDED) {
 				final PatientInsertExtended newrecord = new PatientInsertExtended(AdmittedPatientBrowser.this, newPatient, true);
@@ -755,7 +787,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonEdit() {
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.admission.editpatient.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.admission.editpatient.btn.key"));
-		buttonEdit.addActionListener(event -> {
+		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 				return;
@@ -778,7 +810,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonDelete() {
 		JButton buttonDel = new JButton(MessageBundle.getMessage("angal.admission.deletepatient.btn"));
 		buttonDel.setMnemonic(MessageBundle.getMnemonic("angal.admission.deletepatient.btn.key"));
-		buttonDel.addActionListener(event -> {
+		buttonDel.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 				return;
@@ -820,7 +852,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonAdmission() {
 		JButton buttonAdmission = new JButton(MessageBundle.getMessage("angal.admission.admission.btn"));
 		buttonAdmission.setMnemonic(MessageBundle.getMnemonic("angal.admission.admission.btn.key"));
-		buttonAdmission.addActionListener(event -> {
+		buttonAdmission.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 				return;
@@ -846,7 +878,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonOpd() {
 		JButton buttonOpd = new JButton(MessageBundle.getMessage("angal.admission.opd.btn"));
 		buttonOpd.setMnemonic(MessageBundle.getMnemonic("angal.admission.opd.btn.key"));
-		buttonOpd.addActionListener(event -> {
+		buttonOpd.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 				return;
@@ -865,7 +897,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonBill() {
 		JButton buttonBill = new JButton(MessageBundle.getMessage("angal.admission.bill.btn"));
 		buttonBill.setMnemonic(MessageBundle.getMnemonic("angal.admission.bill.btn.key"));
-		buttonBill.addActionListener(event -> {
+		buttonBill.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 				return;
@@ -908,7 +940,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonData() {
 		JButton buttonData = new JButton(MessageBundle.getMessage("angal.admission.data.btn"));
 		buttonData.setMnemonic(MessageBundle.getMnemonic("angal.admission.data.btn.key"));
-		buttonData.addActionListener(event -> {
+		buttonData.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 				return;
@@ -925,7 +957,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonPatientFolderBrowser() {
 		JButton buttonPatientFolderBrowser = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.btn"));
 		buttonPatientFolderBrowser.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.btn.key"));
-		buttonPatientFolderBrowser.addActionListener(event -> {
+		buttonPatientFolderBrowser.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 				return;
@@ -940,7 +972,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonTherapy() {
 		JButton buttonTherapy = new JButton(MessageBundle.getMessage("angal.admission.therapy.btn"));
 		buttonTherapy.setMnemonic(MessageBundle.getMnemonic("angal.admission.therapy.btn.key"));
-		buttonTherapy.addActionListener(event -> {
+		buttonTherapy.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
 				return;
@@ -958,7 +990,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonMerge() {
 		JButton buttonMerge = new JButton(MessageBundle.getMessage("angal.admission.merge.btn"));
 		buttonMerge.setMnemonic(MessageBundle.getMnemonic("angal.admission.merge.btn.key"));
-		buttonMerge.addActionListener(event -> {
+		buttonMerge.addActionListener(actionEvent -> {
 			if (table.getSelectedRowCount() != 2) {
 				MessageDialog.error(null, "angal.admission.pleaseselecttwopatients.msg");
 				return;
@@ -1021,10 +1053,14 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton getButtonClose() {
 		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		buttonClose.addActionListener(event -> {
+		buttonClose.addActionListener(actionEvent -> {
 			//to free Memory
-			if (pPatient != null) pPatient.clear();
-			if (wardList != null) wardList.clear();
+			if (pPatient != null) {
+				pPatient.clear();
+			}
+			if (wardList != null) {
+				wardList.clear();
+			}
 			dispose();
 		});
 		return buttonClose;
@@ -1087,11 +1123,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			jSearchButton = new JButton();
 			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			jSearchButton.setPreferredSize(new Dimension(20, 20));
-			jSearchButton.addActionListener(e -> {
-				((JButton) e.getSource()).setEnabled(false);
+			jSearchButton.addActionListener(actionEvent -> {
+				((JButton) actionEvent.getSource()).setEnabled(false);
 				SwingUtilities.invokeLater(() -> {
 					searchPatient();
-					EventQueue.invokeLater(() -> ((JButton) e.getSource()).setEnabled(true));
+					EventQueue.invokeLater(() -> ((JButton) actionEvent.getSource()).setEnabled(true));
 				});
 			});
 		}
@@ -1118,14 +1154,16 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				// if not admitted stripes admitted
 				if (((String) patientClassBox.getSelectedItem())
 						.equals(patientClassItems[2])) {
-					if (adm != null)
+					if (adm != null) {
 						continue;
+					}
 				}
 				// if admitted stripes not admitted
 				else if (((String) patientClassBox.getSelectedItem())
 						.equals(patientClassItems[1])) {
-					if (adm == null)
+					if (adm == null) {
 						continue;
+					}
 				}
 
 				// if all or admitted filters not matching ward
@@ -1140,8 +1178,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 								break;
 							}
 						}
-						if (!wardCheck[cc].isSelected())
+						if (!wardCheck[cc].isSelected()) {
 							continue;
+						}
 					}
 				}
 
@@ -1190,9 +1229,15 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 								a++;
 							}
 						}
-						if (a == tokens.length) patientList.add(ap);
-					} else patientList.add(ap);
-				} else patientList.add(ap);
+						if (a == tokens.length) {
+							patientList.add(ap);
+						}
+					} else {
+						patientList.add(ap);
+					}
+				} else {
+					patientList.add(ap);
+				}
 			}
 		}
 

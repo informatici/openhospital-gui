@@ -433,7 +433,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			}
 			removeVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			removeVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
-			removeVisitButton.addActionListener(e -> {
+			removeVisitButton.addActionListener(actionEvent -> {
 				if (selectedVisit == null) {
 					return;
 				}
@@ -462,7 +462,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			worksheetButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			worksheetButton.setHorizontalAlignment(SwingConstants.LEFT);
 
-			worksheetButton.addActionListener(e -> {
+			worksheetButton.addActionListener(actionEvent -> {
 				VisitView worksheet = new VisitView(TherapyEdit.this, patient, ward);
 				worksheet.addVisitListener(TherapyEdit.this);
 				worksheet.showAsModal(TherapyEdit.this);
@@ -481,7 +481,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			if (admitted) {
 				addVisitButton.setEnabled(false);
 			}
-			addVisitButton.addActionListener(e -> {
+			addVisitButton.addActionListener(actionEvent -> {
 
 				InsertVisit newVsRow = new InsertVisit(TherapyEdit.this, null, patient);
 				newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -560,7 +560,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				notifiable = true;
 				notifyCheckBox.setEnabled(false);
 			}
-			notifyCheckBox.addActionListener(e -> {
+			notifyCheckBox.addActionListener(actionEvent -> {
 				selectedTherapy.setNotify(!selectedTherapy.isNotify());
 				saveButton.setEnabled(true);
 			});
@@ -608,7 +608,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			} else {
 				smsenable = true;
 			}
-			smsCheckBox.addActionListener(e -> {
+			smsCheckBox.addActionListener(actionEvent -> {
 				String telephone = patient.getTelephone();
 				if (smsCheckBox.isSelected() && (telephone.equals("") || telephone.length() < 7)) {
 					MessageDialog.warning(TherapyEdit.this,  "angal.therapy.theresnotelephonenumberassociatedwiththispatient");
@@ -691,7 +691,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			saveButton.setMaximumSize(new Dimension(ActionsButtonWidth,
 					AllButtonHeight));
 			saveButton.setHorizontalAlignment(SwingConstants.LEFT);
-			saveButton.addActionListener(e -> {
+			saveButton.addActionListener(actionEvent -> {
 
 				int ok;
 				boolean saveTherapies = false;
@@ -823,7 +823,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			closeButton.setIcon(new ImageIcon("rsc/icons/close_button.png"));
 			closeButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			closeButton.setHorizontalAlignment(SwingConstants.LEFT);
-			closeButton.addActionListener(e -> {
+			closeButton.addActionListener(actionEvent -> {
 				// to free memory
 				if (therapyModified || visitModified) {
 					int ok = JOptionPane.showConfirmDialog(TherapyEdit.this,
@@ -895,7 +895,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			if (thRows.isEmpty()) {
 					checkTherapyButton.setEnabled(false);
 			}
-			checkTherapyButton.addActionListener(e -> {
+			checkTherapyButton.addActionListener(actionEvent -> {
 
 				available = true;
 				ArrayList<Medical> medOutStock = null;
@@ -970,7 +970,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addTherapyButton.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
 			addTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth,	AllButtonHeight));
 			addTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addTherapyButton.addActionListener(e -> {
+			addTherapyButton.addActionListener(actionEvent -> {
 
 				TherapyEntryForm newThRow = new TherapyEntryForm(TherapyEdit.this, patient.getCode(), null);
 				newThRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -1020,7 +1020,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			editTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth,
 					AllButtonHeight));
 			editTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
-			editTherapyButton.addActionListener(e -> {
+			editTherapyButton.addActionListener(actionEvent -> {
 
 				if (selectedTherapy == null) {
 					return;
@@ -1067,7 +1067,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			removeTherapyButton.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
 			removeTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth, AllButtonHeight));
 			removeTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
-			removeTherapyButton.addActionListener(e -> {
+			removeTherapyButton.addActionListener(actionEvent -> {
 				if (selectedTherapy == null) {
 					return;
 				}
@@ -1114,14 +1114,14 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		if (monthYearPanel == null) {
 			monthYearPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			monthChooser = new JMonthChooser();
-			monthChooser.addPropertyChangeListener("month", evt -> {
-				JMonthChooser thisChooser = (JMonthChooser) evt.getSource();
+			monthChooser.addPropertyChangeListener("month", propertyChangeEvent -> {
+				JMonthChooser thisChooser = (JMonthChooser) propertyChangeEvent.getSource();
 				jAgenda.setMonth(thisChooser.getMonth());
 				showAll();
 			});
 			yearChooser = new JYearChooser();
-			yearChooser.addPropertyChangeListener("year", evt -> {
-				JYearChooser thisChooser = (JYearChooser) evt.getSource();
+			yearChooser.addPropertyChangeListener("year", propertyChangeEvent -> {
+				JYearChooser thisChooser = (JYearChooser) propertyChangeEvent.getSource();
 				jAgenda.setYear(thisChooser.getYear());
 				showAll();
 			});

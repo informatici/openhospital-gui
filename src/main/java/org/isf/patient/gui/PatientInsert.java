@@ -269,7 +269,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (jOkButton == null) {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jOkButton.addActionListener(e -> {
+			jOkButton.addActionListener(actionEvent -> {
 				boolean ok = true;
 				DateTime bdate = new DateTime();
 
@@ -412,7 +412,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (jCancelButton == null) {
 			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jCancelButton.addActionListener(e -> dispose());
+			jCancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCancelButton;
 	}
@@ -969,7 +969,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 			jDataContainPanel = new JPanel();
 			if (!insert){
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel,patient.getName());
-			}else{
+			} else {
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel,MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
 			}
 			jDataContainPanel.setLayout(new BorderLayout());

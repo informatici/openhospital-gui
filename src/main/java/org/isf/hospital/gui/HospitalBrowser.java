@@ -251,15 +251,15 @@ public class HospitalBrowser extends ModalJFrame{
 			closeJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			updateJButton.setEnabled(false);
 
-			closeJButton.addActionListener(arg0 -> {
+			closeJButton.addActionListener(actionEvent -> {
 				if (isModified()) {
 					//open confirm save window
 					saveConfirm();
 				}
 				dispose();
 			});
-			editJButton.addActionListener(arg0 -> setFieldsForEditing(true));
-			updateJButton.addActionListener(arg0 -> {
+			editJButton.addActionListener(actionEvent -> setFieldsForEditing(true));
+			updateJButton.addActionListener(actionEvent -> {
 				setFieldsForEditing(false);
 				updateHospitalEntity();
 			});

@@ -246,7 +246,7 @@ public class DateTextField extends JPanel{
 			day.setEnabled(true);
 			month.setEnabled(true);
 			year.setEnabled(true);
-		}else{
+		} else {
 			day.setEnabled(false);
 			month.setEnabled(false);
 			year.setEnabled(false);

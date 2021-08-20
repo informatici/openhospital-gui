@@ -309,7 +309,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(arg0 -> dispose());
+			buttonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return buttonCancel;
 	}
@@ -398,7 +398,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (admButton == null) {
 			admButton = new JButton(""); //$NON-NLS-1$
 			admButton.setIcon(new ImageIcon("./rsc/icons/clock_button.png")); //$NON-NLS-1$
-			admButton.addActionListener(e -> {
+			admButton.addActionListener(actionEvent -> {
 
 				JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(InsertVisit.this, visitDateChooser.getDate());
 				schedDate.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -419,7 +419,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.visit.findpatient.btn"));
 			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.visit.findpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
-			jButtonPickPatient.addActionListener(e -> {
+			jButtonPickPatient.addActionListener(actionEvent -> {
 
 				SelectPatient sp = new SelectPatient(InsertVisit.this, patientSelected);
 				sp.addSelectionListener(InsertVisit.this);

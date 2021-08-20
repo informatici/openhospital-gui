@@ -126,7 +126,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				pbox.addItem(elem);
 			}
 		}
-		pbox.addActionListener(event -> {
+		pbox.addActionListener(actionEvent -> {
 			pSelection = pbox.getSelectedItem().toString();
 			if (pSelection.compareTo(ALL_STR) == 0) {
 				model = new UserBrowserModel();
@@ -140,7 +140,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		buttonNew.addActionListener(event -> {
+		buttonNew.addActionListener(actionEvent -> {
 			user = new User("", new UserGroup(), "", "");
 			new UserEdit(myFrame, user, true);
 		});
@@ -148,7 +148,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		buttonEdit.addActionListener(event -> {
+		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -161,7 +161,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		JButton buttonResetPassword = new JButton(MessageBundle.getMessage("angal.userbrowser.resetpassword.btn"));
 		buttonResetPassword.setMnemonic(MessageBundle.getMnemonic("angal.userbrowser.resetpassword.btn.key"));
-		buttonResetPassword.addActionListener(event -> {
+		buttonResetPassword.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -238,7 +238,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		buttonDelete.addActionListener(event -> {
+		buttonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -259,7 +259,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		buttonClose.addActionListener(event -> dispose());
+		buttonClose.addActionListener(actionEvent -> dispose());
 		buttonPanel.add(buttonClose);
 
 		add(buttonPanel, BorderLayout.SOUTH);

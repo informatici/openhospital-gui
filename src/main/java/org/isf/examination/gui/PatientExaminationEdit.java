@@ -876,8 +876,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDate.setLocale(new Locale("en")); //$NON-NLS-1$
 			jDateChooserDate.setDateFormatString("dd/MM/yyyy - HH:mm"); //$NON-NLS-1$
-			jDateChooserDate.addPropertyChangeListener("date", evt -> {
-				Date date = (Date) evt.getNewValue();
+			jDateChooserDate.addPropertyChangeListener("date", propertyChangeEvent -> {
+				Date date = (Date) propertyChangeEvent.getNewValue();
 				jDateChooserDate.setDate(date);
 				patex.setPex_date(Converters.toCalendar(date));
 
@@ -1318,7 +1318,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if (jButtonDelete == null) {
 			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jButtonDelete.addActionListener(e -> {
+			jButtonDelete.addActionListener(actionEvent -> {
 				int[] row = jTableSummary.getSelectedRows();
 				if (row.length == 0) {
 					MessageDialog.error(PatientExaminationEdit.this, "angal.common.pleaseselectarow.msg");
@@ -1348,7 +1348,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if (jButtonClose == null) {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jButtonClose.addActionListener(e -> {
+			jButtonClose.addActionListener(actionEvent -> {
 				
 				//TODO: to provide a more rigorous changes inspections logic
 				if (modified) {
@@ -1371,7 +1371,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		if (jButtonPrint == null) {
 			jButtonPrint = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
 			jButtonPrint.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
-			jButtonPrint.addActionListener(e -> {
+			jButtonPrint.addActionListener(actionEvent -> {
 				int selectedrow = jTableSummary.getSelectedRow();
 				if (selectedrow < 0) {
 					selectedrow = 0;
@@ -2042,7 +2042,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			} else if (c == 13) {
 				if (!note.trim().isEmpty()) {
 					final IconButton button = new IconButton(new ImageIcon("rsc/icons/list_button.png"));
-					button.addActionListener(arg0 -> {
+					button.addActionListener(actionEvent -> {
 						VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
 						noteArea.setText(note);
 						noteArea.setEditable(false);
