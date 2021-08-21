@@ -87,8 +87,7 @@ import javax.swing.UIManager;
  *
  * @author Mwithi
  */
-public class JAgenda extends JPanel implements ActionListener, KeyListener,
-		FocusListener {
+public class JAgenda extends JPanel implements ActionListener, KeyListener,	FocusListener {
 	
 	private static final long serialVersionUID = 5876398337018781820L;
 
@@ -671,15 +670,15 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
-		int offset = (e.getKeyCode() == KeyEvent.VK_UP) ? (-7) : ((e
-				.getKeyCode() == KeyEvent.VK_DOWN) ? (+7)
-				: ((e.getKeyCode() == KeyEvent.VK_LEFT) ? (-1) : ((e
-						.getKeyCode() == KeyEvent.VK_RIGHT) ? (+1) : 0)));
+		int offset = (e.getKeyCode() == KeyEvent.VK_UP) ? (-7)
+				: ((e.getKeyCode() == KeyEvent.VK_DOWN) ? (+7)
+				: ((e.getKeyCode() == KeyEvent.VK_LEFT) ? (-1)
+				: ((e.getKeyCode() == KeyEvent.VK_RIGHT) ? (+1)
+				: 0)));
 
 		int newDay = getDay() + offset;
 
-		if ((newDay >= 1)
-				&& (newDay <= calendar.getMaximum(Calendar.DAY_OF_MONTH))) {
+		if ((newDay >= 1) && (newDay <= calendar.getMaximum(Calendar.DAY_OF_MONTH))) {
 			setDay(newDay);
 		}
 	}
@@ -860,8 +859,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 * @param decorationBackgroundVisible
 	 *            true, if the decoration background shall be painted.
 	 */
-	public void setDecorationBackgroundVisible(
-			boolean decorationBackgroundVisible) {
+	public void setDecorationBackgroundVisible(boolean decorationBackgroundVisible) {
 		this.decorationBackgroundVisible = decorationBackgroundVisible;
 		initDecorations();
 	}
@@ -1283,7 +1281,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 			return copyPanel;
 		}
 	}
-	
+
 	public void addElement(Object obj, int day) {
 
 		Calendar tmpCalendar = (Calendar) calendar.clone();
@@ -1291,17 +1289,17 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		tmpCalendar.set(Calendar.MINUTE, 0);
 		tmpCalendar.set(Calendar.SECOND, 0);
 		tmpCalendar.set(Calendar.MILLISECOND, 0);
-		
+
 		int firstDayOfWeek = tmpCalendar.getFirstDayOfWeek();
-		
+
 		tmpCalendar.set(Calendar.DAY_OF_MONTH, 1);
 		int firstDay = tmpCalendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
 		if (firstDay < 0) {
-			firstDay+=7;
+			firstDay += 7;
 		}
-		
+
 		int realIndex = 6 + firstDay + day;
-		
+
 		DefaultListModel model = (DefaultListModel) days[realIndex].getList().getModel();
 		model.addElement(obj);
 	}
@@ -1334,6 +1332,5 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 				model.removeAllElements();
 			}
 		}
-		
 	}
 }
