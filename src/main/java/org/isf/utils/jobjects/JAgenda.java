@@ -87,8 +87,7 @@ import javax.swing.UIManager;
  *
  * @author Mwithi
  */
-public class JAgenda extends JPanel implements ActionListener, KeyListener,
-		FocusListener {
+public class JAgenda extends JPanel implements ActionListener, KeyListener,	FocusListener {
 	
 	private static final long serialVersionUID = 5876398337018781820L;
 
@@ -447,6 +446,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 * 
 	 * @see #setLocale
 	 */
+	@Override
 	public Locale getLocale() {
 		return locale;
 	}
@@ -459,6 +459,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 * 
 	 * @see #getLocale
 	 */
+	@Override
 	public void setLocale(Locale locale) {
 		if (!initialized) {
 			super.setLocale(locale);
@@ -582,6 +583,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 *
 	 * @param font the new font
 	 */
+	@Override
 	public void setFont(Font font) {
 		if (days != null) {
 			for (int i = 0; i < 49; i++) {
@@ -600,6 +602,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 *
 	 * @param foreground the new foregroundColor
 	 */
+	@Override
 	public void setForeground(Color foreground) {
 		super.setForeground(foreground);
 
@@ -617,9 +620,10 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 *
 	 * @param e the ActionEvent
 	 */
-	public void actionPerformed(ActionEvent e) {
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
 
-		JButton button = (JButton) e.getSource();
+		JButton button = (JButton) actionEvent.getSource();
 		String buttonText = button.getText();
 		int day = new Integer(buttonText);
 		setDay(day);
@@ -637,6 +641,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 * next day button. This causes the date chosen to always be incremented by
 	 * one day.
 	 */
+	@Override
 	public void focusGained(FocusEvent e) {
 		// JButton button = (JButton) e.getSource();
 		// String buttonText = button.getText();
@@ -653,6 +658,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 * @param e
 	 *            the FocusEvent
 	 */
+	@Override
 	public void focusLost(FocusEvent e) {
 	}
 
@@ -662,16 +668,17 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 *
 	 * @param e the KeyEvent
 	 */
+	@Override
 	public void keyPressed(KeyEvent e) {
-		int offset = (e.getKeyCode() == KeyEvent.VK_UP) ? (-7) : ((e
-				.getKeyCode() == KeyEvent.VK_DOWN) ? (+7)
-				: ((e.getKeyCode() == KeyEvent.VK_LEFT) ? (-1) : ((e
-						.getKeyCode() == KeyEvent.VK_RIGHT) ? (+1) : 0)));
+		int offset = (e.getKeyCode() == KeyEvent.VK_UP) ? (-7)
+				: ((e.getKeyCode() == KeyEvent.VK_DOWN) ? (+7)
+				: ((e.getKeyCode() == KeyEvent.VK_LEFT) ? (-1)
+				: ((e.getKeyCode() == KeyEvent.VK_RIGHT) ? (+1)
+				: 0)));
 
 		int newDay = getDay() + offset;
 
-		if ((newDay >= 1)
-				&& (newDay <= calendar.getMaximum(Calendar.DAY_OF_MONTH))) {
+		if ((newDay >= 1) && (newDay <= calendar.getMaximum(Calendar.DAY_OF_MONTH))) {
 			setDay(newDay);
 		}
 	}
@@ -681,6 +688,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 *
 	 * @param e the KeyEvent
 	 */
+	@Override
 	public void keyTyped(KeyEvent e) {
 	}
 
@@ -689,6 +697,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 *
 	 * @param e the KeyEvent
 	 */
+	@Override
 	public void keyReleased(KeyEvent e) {
 	}
 
@@ -697,6 +706,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 *
 	 * @param enabled The new enabled value
 	 */
+	@Override
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 
@@ -849,8 +859,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	 * @param decorationBackgroundVisible
 	 *            true, if the decoration background shall be painted.
 	 */
-	public void setDecorationBackgroundVisible(
-			boolean decorationBackgroundVisible) {
+	public void setDecorationBackgroundVisible(boolean decorationBackgroundVisible) {
 		this.decorationBackgroundVisible = decorationBackgroundVisible;
 		initDecorations();
 	}
@@ -900,6 +909,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 	/**
 	 * Updates the UI and sets the day button preferences.
 	 */
+	@Override
 	public void updateUI() {
 		super.updateUI();
 		//setFont(Font.decode("Dialog Plain 11"));
@@ -1041,13 +1051,16 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 			setBorderPainted(decorationBordersVisible);
 		}
 
+		@Override
 		public void addMouseListener(MouseListener l) {
 		}
 
+		@Override
 		public boolean isFocusable() {
 			return false;
 		}
 
+		@Override
 		public void paint(Graphics g) {
 			if ("Windows".equals(UIManager.getLookAndFeel().getID())) {
 				// this is a hack to get the background painted
@@ -1107,7 +1120,9 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 			
 			//LABEL PANEL
 			label = new JLabel();
-			if (day != 0) label.setText(String.valueOf(day));
+			if (day != 0) {
+				label.setText(String.valueOf(day));
+			}
 			label.setForeground(dayForegroundColor);
 				
 			label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1168,6 +1183,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		     * Layout each of the components in this JLayeredPane so that they all fill
 		     * the entire extents of the layered pane -- from (0,0) to (getWidth(), getHeight())
 		     */
+		    @Override
 		    public void doLayout() {
 		        // Synchronizing on getTreeLock, because I see other layouts doing that.
 		        // see BorderLayout::layoutContainer(Container)
@@ -1198,7 +1214,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		
 		public class MagnifierListener implements ActionListener {
 
-			public void actionPerformed(ActionEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
 				
 				JPanel thisDay = null;
 				thisDay = AgendaDayObject.this.popUp();
@@ -1211,8 +1228,10 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 				dialog.setFocusable(true);
 				dialog.addFocusListener(new FocusListener() {
 
+					@Override
 					public void focusGained(FocusEvent e) {}
 
+					@Override
 					public void focusLost(FocusEvent e) {
 						dialog.setVisible(false);
 					}
@@ -1241,6 +1260,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 				
 				protected DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
 				
+				@Override
 				public Component getListCellRendererComponent(JList list,
 						Object value, int index, boolean isSelected,
 						boolean cellHasFocus) {
@@ -1261,7 +1281,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 			return copyPanel;
 		}
 	}
-	
+
 	public void addElement(Object obj, int day) {
 
 		Calendar tmpCalendar = (Calendar) calendar.clone();
@@ -1269,15 +1289,17 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		tmpCalendar.set(Calendar.MINUTE, 0);
 		tmpCalendar.set(Calendar.SECOND, 0);
 		tmpCalendar.set(Calendar.MILLISECOND, 0);
-		
+
 		int firstDayOfWeek = tmpCalendar.getFirstDayOfWeek();
-		
+
 		tmpCalendar.set(Calendar.DAY_OF_MONTH, 1);
 		int firstDay = tmpCalendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
-		if (firstDay < 0) firstDay+=7;
-		
+		if (firstDay < 0) {
+			firstDay += 7;
+		}
+
 		int realIndex = 6 + firstDay + day;
-		
+
 		DefaultListModel model = (DefaultListModel) days[realIndex].getList().getModel();
 		model.addElement(obj);
 	}
@@ -1300,6 +1322,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 		days[realIndex].getList().remove(index);
 	}
 
+	@Override
 	public void removeAll() {
 		
 		DefaultListModel model = new DefaultListModel();
@@ -1309,6 +1332,5 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,
 				model.removeAllElements();
 			}
 		}
-		
 	}
 }

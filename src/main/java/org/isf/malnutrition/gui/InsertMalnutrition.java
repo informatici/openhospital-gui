@@ -132,7 +132,7 @@ public class InsertMalnutrition extends JDialog {
 		if (inserting) {
 			suppDate = new DateTextField(new GregorianCalendar());
 			confDate = new DateTextField();
-		}else{
+		} else {
 			suppDate = new DateTextField(maln.getDateSupp());
 			confDate = new DateTextField(maln.getDateConf());
 		}
@@ -178,7 +178,7 @@ public class InsertMalnutrition extends JDialog {
 	private JButton getOkButton() {
 		okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 		okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-		okButton.addActionListener(arg0 -> {
+		okButton.addActionListener(actionEvent -> {
 			try {
 				maln.setHeight(Float.parseFloat(heightField.getText()));
 			} catch (NumberFormatException e) {
@@ -223,7 +223,7 @@ public class InsertMalnutrition extends JDialog {
 	private JButton getCancelButton() {
 		cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 		cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-		cancelButton.addActionListener(arg0 -> dispose());
+		cancelButton.addActionListener(actionEvent -> dispose());
 		return cancelButton;
 	}
 }

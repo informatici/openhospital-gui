@@ -187,7 +187,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 					pbox.addItem(elem);
 				}
 			}
-			pbox.addActionListener(arg0 -> reloadTable());
+			pbox.addActionListener(actionEvent -> reloadTable());
 		}
 		return pbox;
 	}
@@ -206,8 +206,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			table.getColumnModel().getColumn(3).setMinWidth(pColumnWidth[3]);
 			table.getColumnModel().getColumn(4).setMinWidth(pColumnWidth[4]);
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			table.getSelectionModel().addListSelectionListener(e -> {
-				if (!e.getValueIsAdjusting()) {
+			table.getSelectionModel().addListSelectionListener(selectionEvent -> {
+				if (!selectionEvent.getValueIsAdjusting()) {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 					if (exam.getProcedure() == 3) {
@@ -224,15 +224,15 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	private JButton getJButtonDelete() {
 		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		jButtonDelete.addActionListener(event -> {
+		jButtonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
 				return;
 			}
 			selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-			Exam examToDelete = (Exam)(((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
+			Exam examToDelete = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
 			int answer = MessageDialog.yesNo(null, "angal.exa.deleteexam.fmt.msg", examToDelete.getCode(), examToDelete.getDescription());
-			if ((answer == JOptionPane.YES_OPTION)){
+			if ((answer == JOptionPane.YES_OPTION)) {
 				boolean deleted;
 
 				try {
@@ -255,7 +255,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		if (jButtonNew == null) {
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jButtonNew.addActionListener(event -> {
+			jButtonNew.addActionListener(actionEvent -> {
 				exam = new Exam("", "", new ExamType("", ""), 0, "");
 				ExamEdit newrecord = new ExamEdit(myFrame, exam, true);
 				newrecord.addExamListener(ExamBrowser.this);
@@ -269,7 +269,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		if (jButtonEdit == null) {
 			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jButtonEdit.addActionListener(event -> {
+			jButtonEdit.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -288,7 +288,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		if (jButtonShow == null) {
 			jButtonShow = new JButton(MessageBundle.getMessage("angal.exa.results.btn"));
 			jButtonShow.setMnemonic(MessageBundle.getMnemonic("angal.exa.results.btn.key"));
-			jButtonShow.addActionListener(event -> {
+			jButtonShow.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(ExamBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -305,7 +305,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		if (jButtonClose == null) {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jButtonClose.addActionListener(arg0 -> dispose());
+			jButtonClose.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonClose;
 	}
@@ -333,8 +333,9 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		}
 		@Override
 		public int getRowCount() {
-			if (pExam == null)
+			if (pExam == null) {
 				return 0;
+			}
 			return pExam.size();
 		}
 		
@@ -351,10 +352,9 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		@Override
 		public Object getValueAt(int r, int c) {
 			Exam exam = pExam.get(r);
-			if (c==-1){
+			if (c == -1) {
 				return exam;
-			}
-			else if (c == 0) {
+			} else if (c == 0) {
 				return exam.getCode();
 			} else if (c == 1) {
 				return exam.getExamtype().getDescription();
@@ -378,15 +378,17 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	@Override
 	public void examUpdated(AWTEvent e) {
 		reloadTable();
-		if ((table.getRowCount() > 0) && selectedrow > -1)
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
+		}
 	}
 
 	@Override
 	public void examInserted(AWTEvent e) {
 		reloadTable();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 	}
 	
 	private void filterExam() {
@@ -414,10 +416,11 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	
 	private void reloadTable() {
 		pSelection=pbox.getSelectedItem().toString();
-		if (pSelection.compareTo(STR_ALL) == 0)
+		if (pSelection.compareTo(STR_ALL) == 0) {
 			model = new ExamBrowsingModel();
-		else
+		} else {
 			model = new ExamBrowsingModel(pSelection);
+		}
 		model.fireTableDataChanged();
 		table.updateUI();
 	}

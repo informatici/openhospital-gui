@@ -125,7 +125,7 @@ public class PricesOthersEdit extends JDialog {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(event -> dispose());
+			jButtonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -134,7 +134,7 @@ public class PricesOthersEdit extends JDialog {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jButtonOK.addActionListener(event -> {
+			jButtonOK.addActionListener(actionEvent -> {
 
 				pOther.setCode(jTextFieldCode.getText());
 				pOther.setDescription(jTextFieldDescription.getText());

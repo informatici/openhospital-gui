@@ -147,7 +147,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JButton getNewButton() {
 		newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		newButton.addActionListener(arg0 -> {
+		newButton.addActionListener(actionEvent -> {
 			malnutrition = new Malnutrition(0, null, null, adm, 0, 0);
 			InsertMalnutrition newRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, true);
 			newRecord.addMalnutritionListener(MalnutritionBrowser.this);
@@ -160,7 +160,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JButton getEditButton() {
 		editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		editButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		editButton.addActionListener(event -> {
+		editButton.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -177,7 +177,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JButton getDeleteButton() {
 		deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		deleteButton.addActionListener(event -> {
+		deleteButton.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -211,7 +211,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JButton getCloseButton() {
 		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		closeButton.addActionListener(e -> dispose());
+		closeButton.addActionListener(actionEvent -> dispose());
 		return closeButton;
 	}
 

@@ -47,15 +47,15 @@ public class OhTableModelExam<T> implements TableModel{
 		}
 //		Collections.copy(this.filteredList, this.dataList);
 	}
-	
-	public int filter(String searchQuery){
-		this.filteredList= new ArrayList<>();
-		
-		for (Iterator<Exam> iterator = this.dataListExam.iterator(); iterator.hasNext();) {
-			Object object = (Object) iterator.next();	
-			if (object instanceof Exam){
-				Exam exam =(Exam) object;
-				String strItem = exam.getCode() + exam.getDescription();				
+
+	public int filter(String searchQuery) {
+		this.filteredList = new ArrayList<>();
+
+		for (Iterator<Exam> iterator = this.dataListExam.iterator(); iterator.hasNext(); ) {
+			Object object = (Object) iterator.next();
+			if (object instanceof Exam) {
+				Exam exam = (Exam) object;
+				String strItem = exam.getCode() + exam.getDescription();
 				strItem = strItem.toLowerCase();
 				searchQuery = searchQuery.toLowerCase();
 				if (strItem.contains(searchQuery)) {
@@ -65,8 +65,7 @@ public class OhTableModelExam<T> implements TableModel{
 		}
 		return filteredList.size();
 	}
-	
-	
+
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		// TODO Auto-generated method stub
@@ -100,7 +99,7 @@ public class OhTableModelExam<T> implements TableModel{
 
 	@Override
 	public int getRowCount() {
-		if (this.filteredList==null){
+		if (this.filteredList == null) {
 			return 0;
 		}
 		return this.filteredList.size();
@@ -108,33 +107,30 @@ public class OhTableModelExam<T> implements TableModel{
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
-		String value="";
-		if (rowIndex>=0 && rowIndex<this.filteredList.size()){
-			Exam obj=this.filteredList.get(rowIndex);
-			if (obj instanceof Exam){
-				Exam mdwObj=(Exam)obj;
-				if (columnIndex==0){
-					value=mdwObj.getCode()+"";
+		String value = "";
+		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
+			Exam obj = this.filteredList.get(rowIndex);
+			if (obj instanceof Exam) {
+				Exam mdwObj = (Exam) obj;
+				if (columnIndex == 0) {
+					value = mdwObj.getCode() + "";
+				} else {
+					value = mdwObj.getDescription();
 				}
-				else{
-					value=mdwObj.getDescription();
-				}
-			}	
+			}
 		}
 		return value;
 	}
-	
-	public Exam getObjectAt(int rowIndex){
-		if (rowIndex>=0 && rowIndex<this.filteredList.size()){
-			return this.filteredList.get(rowIndex);			
+
+	public Exam getObjectAt(int rowIndex) {
+		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
+			return this.filteredList.get(rowIndex);
 		}
 		return null;
 	}
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

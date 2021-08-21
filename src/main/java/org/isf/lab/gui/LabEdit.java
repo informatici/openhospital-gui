@@ -354,11 +354,11 @@ public class LabEdit extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			patientComboBox.addItem(MessageBundle.getMessage("angal.lab.selectapatient"));
-			if (pat != null){
+			if (pat != null) {
 				for (Patient elem : pat) {
 					if (lab.getPatient() != null && !insert) {
 						if (elem.getCode().equals(lab.getPatient().getCode())) {
-							patSelected=elem;
+							patSelected = elem;
 						}
 					}
 					patientComboBox.addItem(elem);
@@ -368,7 +368,7 @@ public class LabEdit extends ModalJFrame {
 				patientComboBox.setSelectedItem(patSelected);
 			}
 
-			patientComboBox.addActionListener(arg0 -> {
+			patientComboBox.addActionListener(actionEvent -> {
 				if (patientComboBox.getSelectedIndex() > 0) {
 					AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 					patSelected = (Patient) patientComboBox.getSelectedItem();
@@ -425,7 +425,7 @@ public class LabEdit extends ModalJFrame {
 			}
 			examComboBox.setSelectedItem(examSel);
 			
-			examComboBox.addActionListener(arg0 -> {
+			examComboBox.addActionListener(actionEvent -> {
 				if (!(examComboBox.getSelectedItem() instanceof String)) {
 					examSelected = (Exam) examComboBox
 							.getSelectedItem();
@@ -469,8 +469,8 @@ public class LabEdit extends ModalJFrame {
 
 	private JTextArea getNoteTextArea() {
 		if (noteTextArea == null) {
-			noteTextArea = new JTextArea(10,30);
-			if (!insert){
+			noteTextArea = new JTextArea(10, 30);
+			if (!insert) {
 				noteTextArea.setText(lab.getNote());
 			}
 			noteTextArea.setLineWrap(true);
@@ -522,7 +522,7 @@ public class LabEdit extends ModalJFrame {
 		if (printButton == null) {
 			printButton = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
 			printButton.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
-			printButton.addActionListener(arg0 -> {
+			printButton.addActionListener(actionEvent -> {
 				try {
 					ArrayList<LaboratoryForPrint> labs = new ArrayList<>();
 
@@ -548,7 +548,7 @@ public class LabEdit extends ModalJFrame {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -557,7 +557,7 @@ public class LabEdit extends ModalJFrame {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				if (examComboBox.getSelectedIndex() == 0) {
 					MessageDialog.error(null, "angal.lab.pleaseselectanexam.msg");
 					return;

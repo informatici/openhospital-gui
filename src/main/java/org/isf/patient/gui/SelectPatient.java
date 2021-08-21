@@ -86,8 +86,9 @@ public class SelectPatient extends JDialog implements PatientListener {
 		};
 
 		EventListener[] listeners = selectionListener.getListeners(SelectionListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((SelectionListener) listener).patientSelected(patient);
+		}
 	}
 //---------------------------------------------------------------------------	
 	private static final long serialVersionUID = 1L;
@@ -133,19 +134,20 @@ public class SelectPatient extends JDialog implements PatientListener {
 		}
 		if (pat == null) {
 			patient = null;
-		} else
+		} else {
 			patient = pat;
+		}
 		ps = new PatientSummary(patient);
 		initComponents();
-		addWindowListener(new WindowAdapter(){
-			
+		addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				patArray.clear();
 				patSearch.clear();
 				dispose();
-			}			
+			}
 		});
 		setLocationRelativeTo(null);
 	}
@@ -163,19 +165,20 @@ public class SelectPatient extends JDialog implements PatientListener {
 		}
 		if (pat == null) {
 			patient = null;
-		} else
+		} else {
 			patient = pat;
+		}
 		ps = new PatientSummary(patient);
 		initComponents();
-		addWindowListener(new WindowAdapter(){
-			
+		addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				patArray.clear();
 				patSearch.clear();
 				dispose();
-			}			
+			}
 		});
 		setLocationRelativeTo(null);
 	}
@@ -193,15 +196,15 @@ public class SelectPatient extends JDialog implements PatientListener {
 		}
 		ps = new PatientSummary(patient);
 		initComponents();
-		addWindowListener(new WindowAdapter(){
-			
+		addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				patArray.clear();
 				patSearch.clear();
 				dispose();
-			}			
+			}
 		});
 		setLocationRelativeTo(null);
 		jTextFieldSearchPatient.setText(search);
@@ -213,18 +216,19 @@ public class SelectPatient extends JDialog implements PatientListener {
 	public SelectPatient(JFrame owner, boolean abbleAddPatient, boolean full) {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
-			if (!full)
+			if (!full) {
 				try {
 					patArray = patManager.getPatientsByOneOfFieldsLike(null);
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 				}
-			else
+			} else {
 				try {
 					patArray = patManager.getPatient();
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 				}
+			}
 			patSearch = patArray;
 		}
 		ps = new PatientSummary(patient);
@@ -246,18 +250,19 @@ public class SelectPatient extends JDialog implements PatientListener {
 	public SelectPatient(JDialog owner, boolean abbleAddPatient, boolean full) {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
-			if (!full)
+			if (!full) {
 				try {
 					patArray = patManager.getPatientsByOneOfFieldsLike(null);
 				} catch (OHServiceException e2) {
 					OHServiceExceptionUtil.showMessages(e2);
 				}
-			else
+			} else {
 				try {
 					patArray = patManager.getPatient();
 				} catch (OHServiceException e1) {
 					OHServiceExceptionUtil.showMessages(e1);
 				}
+			}
 			patSearch = patArray;
 		}
 		ps = new PatientSummary(patient);
@@ -360,7 +365,9 @@ public class SelectPatient extends JDialog implements PatientListener {
 						a++;
 					}
 				}
-				if (a == s1.length) patSearch.add(pat);
+				if (a == s1.length) {
+					patSearch.add(pat);
+				}
 			} else {
 				patSearch.add(pat);
 			}
@@ -393,7 +400,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (jButtonSelect == null) {
 			jButtonSelect = new JButton(MessageBundle.getMessage("angal.common.select.btn"));
 			jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
-			jButtonSelect.addActionListener(arg0 -> {
+			jButtonSelect.addActionListener(actionEvent -> {
 
 				if (patient != null) {
 					//to free memory
@@ -411,7 +418,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(e -> {
+			jButtonCancel.addActionListener(actionEvent -> {
 				//to free memory
 				patArray.clear();
 				patSearch.clear();
@@ -437,15 +444,16 @@ public class SelectPatient extends JDialog implements PatientListener {
 			jTablePatient.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			for (int i = 0; i < patColumns.length; i++) {
 				jTablePatient.getColumnModel().getColumn(i).setMinWidth(patColumnsWidth[i]);
-				if (!patColumnsResizable[i]) jTablePatient.getColumnModel().getColumn(i).setMaxWidth(patColumnsWidth[i]);
+				if (!patColumnsResizable[i]) {
+					jTablePatient.getColumnModel().getColumn(i).setMaxWidth(patColumnsWidth[i]);
+				}
 			}
 			jTablePatient.setAutoCreateColumnsFromModel(false);
 			jTablePatient.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
 			
 			ListSelectionModel listSelectionModel = jTablePatient.getSelectionModel();
-			listSelectionModel.addListSelectionListener(e -> {
-				if (!e.getValueIsAdjusting()) {
-
+			listSelectionModel.addListSelectionListener(selectionEvent -> {
+				if (!selectionEvent.getValueIsAdjusting()) {
 					int index = jTablePatient.getSelectedRow();
 					final Patient selectedPatient = (Patient)jTablePatient.getValueAt(index, -1);
 					patient = reloadSelectedPatient(selectedPatient.getCode());
@@ -510,7 +518,9 @@ public class SelectPatient extends JDialog implements PatientListener {
 					if (patSearch.get(i).getCode().equals(patient.getCode())) {
 						jTablePatient.addRowSelectionInterval(i, i);
 						int j = 0;
-						if (i > 10) j = i-10; //to center the selected row
+						if (i > 10) {
+							j = i-10; //to center the selected row
+						}
 						jTablePatient.scrollRectToVisible(jTablePatient.getCellRect(j,i,true));
 						break;
 					}
@@ -525,10 +535,12 @@ public class SelectPatient extends JDialog implements PatientListener {
 			jPanelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			jPanelTop.add(getJLabelSearch());
 			jPanelTop.add(getJTextFieldSearchPatient());
-			if (MainMenu.checkUserGrants("btnadmnew"))
+			if (MainMenu.checkUserGrants("btnadmnew")) {
 				jPanelTop.add(getButtonNew());
-			if (GeneralData.ENHANCEDSEARCH)
+			}
+			if (GeneralData.ENHANCEDSEARCH) {
 				jPanelTop.add(getJSearchButton());
+			}
 		}
 		return jPanelTop;
 	}
@@ -538,7 +550,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			jSearchButton = new JButton();
 			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			jSearchButton.setPreferredSize(new Dimension(20, 20));
-			jSearchButton.addActionListener(e -> {
+			jSearchButton.addActionListener(actionEvent -> {
 				try {
 					patArray = patManager.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 				} catch(OHServiceException ohServiceException) {
@@ -553,7 +565,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private JButton getButtonNew() {
 		buttonNew = new JButton(MessageBundle.getMessage("angal.common.newpatient.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.newpatient.btn.key"));
-		buttonNew.addActionListener(event -> {
+		buttonNew.addActionListener(actionEvent -> {
 
 			if (GeneralData.PATIENTEXTENDED) {
 				PatientInsertExtended newrecord = new PatientInsertExtended(SelectPatient.this, new Patient(),
@@ -588,8 +600,9 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 		@Override
 		public int getRowCount() {
-			if (patSearch == null)
+			if (patSearch == null) {
 				return 0;
+			}
 			return patSearch.size();
 		}
 

@@ -208,7 +208,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (printTableButton == null) {
 			printTableButton = new JButton(MessageBundle.getMessage("angal.lab.printtable.btn"));
 			printTableButton.setMnemonic(MessageBundle.getMnemonic("angal.lab.printtable.btn.key"));
-			printTableButton.addActionListener(arg0 -> {
+			printTableButton.addActionListener(actionEvent -> {
 				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
@@ -232,7 +232,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (printLabelButton == null) {
 			printLabelButton = new JButton(MessageBundle.getMessage("angal.labnew.printlabel.btn"));
 			printLabelButton.setMnemonic(MessageBundle.getMnemonic("angal.labnew.printlabel.btn.key"));
-			printLabelButton.addActionListener(arg0 -> {
+			printLabelButton.addActionListener(actionEvent -> {
 				Integer patId = null;
 				if (GeneralData.LABEXTENDED) {
 					selectedrow = jTable.getSelectedRow();
@@ -271,7 +271,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (buttonEdit == null) {
 			buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			buttonEdit.addActionListener(event -> {
+			buttonEdit.addActionListener(actionEvent -> {
 				selectedrow = jTable.getSelectedRow();
 				if (selectedrow < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
@@ -301,7 +301,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (buttonNew == null) {
 			buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			buttonNew.addActionListener(event -> {
+			buttonNew.addActionListener(actionEvent -> {
 				laboratory = new Laboratory(0, new Exam("", "",
 						new ExamType("", ""), 0, ""),
 						new GregorianCalendar(), "P", "", new Patient(), "");
@@ -334,7 +334,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (buttonDelete == null) {
 			buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			buttonDelete.addActionListener(event -> {
+			buttonDelete.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -377,7 +377,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (buttonClose == null) {
 			buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			buttonClose.addActionListener(e -> dispose());
+			buttonClose.addActionListener(actionEvent -> dispose());
 		}
 		return buttonClose;
 	}
@@ -450,7 +450,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 					comboExams.addItem(elem);
 				}
 			}
-			comboExams.addActionListener(e -> {
+			comboExams.addActionListener(actionEvent -> {
 				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
@@ -523,7 +523,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		if (filterButton == null) {
 			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
 			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
-			filterButton.addActionListener(e -> {
+			filterButton.addActionListener(actionEvent -> {
 				typeSelected = ((Exam) comboExams.getSelectedItem()).toString();
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;

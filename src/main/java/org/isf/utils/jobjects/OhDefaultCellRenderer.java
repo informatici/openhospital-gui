@@ -54,44 +54,41 @@ public class OhDefaultCellRenderer extends DefaultTableCellRenderer{
 	@Override
 	public Component getTableCellRendererComponent(JTable table, java.lang.Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
-		Component cmp= super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		Component cmp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-		JLabel lbl=(JLabel)cmp;
-		
-		boolean found=false;
-		for (Iterator<Integer> iterator = this.centeredColumns.iterator(); iterator.hasNext();) {
+		JLabel lbl = (JLabel) cmp;
+
+		boolean found = false;
+		for (Iterator<Integer> iterator = this.centeredColumns.iterator(); iterator.hasNext(); ) {
 			Integer centered = (Integer) iterator.next();
-			if (centered==column){
-				
+			if (centered == column) {
+
 				lbl.setHorizontalAlignment(CENTER);
-				found=true;
+				found = true;
 				break;
 			}
-			
+
 		}
-		
-		if (!found){
+
+		if (!found) {
 			lbl.setHorizontalAlignment(LEFT);
 		}
-		if (isSelected){
+		if (isSelected) {
 			cmp.setBackground(darkOrange);
-		}
-		else{
-			if (row % 2== 0){
+		} else {
+			if (row % 2 == 0) {
 				cmp.setBackground(lightGray);
-			}
-			else{
+			} else {
 				cmp.setBackground(lightOrange);
-			}				
+			}
 		}
-		if (row == hoveredRow){
+		if (row == hoveredRow) {
 			cmp.setBackground(darkOrange);
-	    }
+		}
 		return cmp;
 	}
-	
+
 	public void setHoveredRow(int hoveredRow) {
-		// TODO Auto-generated method stub
-		this.hoveredRow=hoveredRow;
+		this.hoveredRow = hoveredRow;
 	}
 }

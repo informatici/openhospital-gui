@@ -174,7 +174,7 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -188,9 +188,9 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
-				try{
+				try {
 
 					deliveryresultType.setDescription(descriptionTextField.getText());
 					deliveryresultType.setCode(codeTextField.getText());
@@ -202,9 +202,8 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 						} else {
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
-					}
-					else {            // updating
-						if (descriptionTextField.getText().equals(lastdescription)){
+					} else {            // updating
+						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
 							if (manager.updateDeliveryResultType(deliveryresultType)) {
@@ -215,10 +214,10 @@ public class DeliveryResultTypeBrowserEdit extends JDialog{
 							}
 						}
 					}
-				} catch(OHServiceException ohServiceException) {
+				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 				}
-});
+			});
 		}
 		return okButton;
 	}

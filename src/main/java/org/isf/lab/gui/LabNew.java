@@ -279,7 +279,7 @@ public class LabNew extends JDialog implements SelectionListener {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(e -> dispose());
+			jButtonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -288,7 +288,7 @@ public class LabNew extends JDialog implements SelectionListener {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jButtonOK.addActionListener(e -> {
+			jButtonOK.addActionListener(actionEvent -> {
 
 				GregorianCalendar newDate = new GregorianCalendar();
 				try {
@@ -390,7 +390,7 @@ public class LabNew extends JDialog implements SelectionListener {
 					}
 				}
 				jComboBoxExamResults.setSelectedItem(selectedLab.getResult());
-				jComboBoxExamResults.addActionListener(e -> {
+				jComboBoxExamResults.addActionListener(actionEvent -> {
 					selectedLab.setResult(jComboBoxExamResults.getSelectedItem().toString());
 					examItems.set(selectedRow, selectedLab);
 					jTableExams.updateUI();
@@ -481,14 +481,14 @@ public class LabNew extends JDialog implements SelectionListener {
 		public CheckBox(ExamRow exaRow, boolean checked) {
 			this.setText(exaRow.getDescription());
 			this.setSelected(checked);
-			this.addActionListener(e -> {
+			this.addActionListener(actionEvent -> {
 				if (check.isSelected()) {
 					LaboratoryRow laboratoryRow = new LaboratoryRow();
-					laboratoryRow.setDescription(e.getActionCommand());
+					laboratoryRow.setDescription(actionEvent.getActionCommand());
 					examResults.get(jTableExams.getSelectedRow()).add(laboratoryRow);
 				} else {
 					LaboratoryRow laboratoryRow = new LaboratoryRow();
-					laboratoryRow.setDescription(e.getActionCommand());
+					laboratoryRow.setDescription(actionEvent.getActionCommand());
 					examResults.get(jTableExams.getSelectedRow()).remove(laboratoryRow);
 				}
 			});
@@ -501,7 +501,7 @@ public class LabNew extends JDialog implements SelectionListener {
 			for (String elem : matList) {
 				jComboBoxMaterial.addItem(elem);
 			}
-			jComboBoxMaterial.addActionListener(e -> {
+			jComboBoxMaterial.addActionListener(actionEvent -> {
 				selectedLab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
 				examItems.get(jTableExams.getSelectedRow()).setMaterial(selectedLab.getMaterial());
 //					jTableExams.updateUI();
@@ -557,7 +557,7 @@ public class LabNew extends JDialog implements SelectionListener {
 			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.removepatientassociationwiththisexam")); //$NON-NLS-1$
-			jButtonTrashPatient.addActionListener(e -> {
+			jButtonTrashPatient.addActionListener(actionEvent -> {
 
 				patientSelected = null;
 				//INTERFACE
@@ -577,7 +577,7 @@ public class LabNew extends JDialog implements SelectionListener {
 			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.labnew.findpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.associateapatientwiththisexam"));  //$NON-NLS-1$
-			jButtonPickPatient.addActionListener(e -> {
+			jButtonPickPatient.addActionListener(actionEvent -> {
 				SelectPatient sp = new SelectPatient(LabNew.this, patientSelected);
 				sp.addSelectionListener(LabNew.this);
 				sp.pack();
@@ -689,18 +689,16 @@ public class LabNew extends JDialog implements SelectionListener {
 			
 			jTableExams.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			ListSelectionModel listSelectionModel = jTableExams.getSelectionModel();
-			listSelectionModel.addListSelectionListener(e -> {
+			listSelectionModel.addListSelectionListener(selectionEvent -> {
 			// Check that mouse has been released.
-			if (!e.getValueIsAdjusting()) {
+			if (!selectionEvent.getValueIsAdjusting()) {
 				int selectedRow = jTableExams.getSelectedRow();
-				
 				if (selectedRow > -1) {
 					selectedLab = (Laboratory)jTableExams.getValueAt(selectedRow, -1);
 					jComboBoxMaterial.setSelectedItem(labManager.getMaterialTranslated(selectedLab.getMaterial()));
 					jTextAreaNote.setText(selectedLab.getNote());
 					jPanelResults = getJPanelResults();
 					jComboBoxMaterial.setEnabled(true);
-					
 					validate();
 					repaint();
 					}
@@ -726,7 +724,7 @@ public class LabNew extends JDialog implements SelectionListener {
 			jButtonAddExam = new JButton(MessageBundle.getMessage("angal.labnew.exam.btn"));
 			jButtonAddExam.setMnemonic(MessageBundle.getMnemonic("angal.labnew.exam.btn.key"));
 			jButtonAddExam.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
-			jButtonAddExam.addActionListener(e -> {
+			jButtonAddExam.addActionListener(actionEvent -> {
 				String mat = "";
 
 				OhTableModelExam<Price> modelOh = new OhTableModelExam<>(exaArray);
@@ -799,7 +797,7 @@ public class LabNew extends JDialog implements SelectionListener {
 			jButtonRemoveItem = new JButton(MessageBundle.getMessage("angal.labnew.remove.btn"));
 			jButtonRemoveItem.setMnemonic(MessageBundle.getMnemonic("angal.labnew.remove.btn.key"));
 			jButtonRemoveItem.setIcon(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
-			jButtonRemoveItem.addActionListener(e -> {
+			jButtonRemoveItem.addActionListener(actionEvent -> {
 
 				int selectedRow = jTableExams.getSelectedRow();
 				if (selectedRow < 0) {

@@ -113,7 +113,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(event -> {
+			jNewButton.addActionListener(actionEvent -> {
 				AdmissionType mdsr = new AdmissionType("","");
 				AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame, mdsr, true);
 				newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
@@ -132,7 +132,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(event -> {
+			jEditButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -156,7 +156,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(arg0 -> dispose());
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -170,7 +170,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(event -> {
+			jDeleteButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -207,10 +207,10 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 	private AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
 		public AdmissionTypeBrowserModel() {
-			
+
 			try {
 				pAdmissionType = manager.getAdmissionType();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}

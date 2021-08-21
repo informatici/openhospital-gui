@@ -272,7 +272,7 @@ public class MovStockMultipleCharging extends JDialog {
 		{
 			JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			deleteButton.addActionListener(e -> {
+			deleteButton.addActionListener(actionEvent -> {
 				int row = jTableMovements.getSelectedRow();
 				if (row > -1) {
 					model.removeItem(row);
@@ -283,7 +283,7 @@ public class MovStockMultipleCharging extends JDialog {
 		{
 			JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			saveButton.addActionListener(e -> {
+			saveButton.addActionListener(actionEvent -> {
 				if (!checkAndPrepareMovements()) {
 					return;
 				}
@@ -297,7 +297,7 @@ public class MovStockMultipleCharging extends JDialog {
 		{
 			JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 			buttonPane.add(cancelButton);
 		}
 		return buttonPane;
@@ -391,7 +391,7 @@ public class MovStockMultipleCharging extends JDialog {
 				suggestion.changeAlpha(0.5f);
 				suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 			}
-			jTextFieldSearch.addActionListener(e -> {
+			jTextFieldSearch.addActionListener(actionEvent -> {
 				String text = jTextFieldSearch.getText();
 				Medical med = null;
 				if (medicalMap.containsKey(text)) {

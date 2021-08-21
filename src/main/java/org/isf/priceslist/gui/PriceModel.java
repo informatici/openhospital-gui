@@ -95,23 +95,29 @@ public class PriceModel extends AbstractTreeTableModel {
     	super(root);
 	}
 
+	@Override
 	public int getColumnCount() {
 		return cNames.length;
 	}
 
+	@Override
 	public String getColumnName(int column) {
 		return cNames[column];
 	}
 	
+	@Override
 	public Class<?> getColumnClass(int column) {
 		return cTypes[column];
 	}
 	
+	@Override
 	public void setValueAt(Object aValue, Object node, int column) {
-		if (column == 1)
+		if (column == 1) {
 			((PriceNode)node).getPrice().setPrice((Double)aValue);
+		}
 	}
 	
+	@Override
 	public Object getValueAt(Object node, int column) {
 		
 		Price price = getPrice(node);
@@ -130,8 +136,11 @@ public class PriceModel extends AbstractTreeTableModel {
 	}
 
 	
+	@Override
 	public boolean isCellEditable(Object node, int column) {
-		if (getPrice(node).isPrice() && getPrice(node).isEditable()) return true;
+		if (getPrice(node).isPrice() && getPrice(node).isEditable()) {
+			return true;
+		}
 		return super.isCellEditable(node, column);
     }
 
@@ -145,10 +154,12 @@ public class PriceModel extends AbstractTreeTableModel {
     	return priceNode.getItems(); 
     }
 
+	@Override
 	public Object getChild(Object node, int i) {
 		return getChildren(node)[i];
 	}
 
+	@Override
 	public int getChildCount(Object node) {
 		Object[] items = getChildren(node);
 		return (items == null) ? 0 : items.length;
@@ -169,13 +180,15 @@ class PriceNode {
     	return price.getList().getId() == 0;
 	}
 
-	public void addItem(PriceNode price){
-    	this.items.add(price);
-    }
+	public void addItem(PriceNode price) {
+		this.items.add(price);
+	}
+
 	/**
      * Returns the string to be used to display this leaf in the JTree.
      */
-    public String toString() { 
+    @Override
+    public String toString() {
     	return price.getDesc();
     }
 

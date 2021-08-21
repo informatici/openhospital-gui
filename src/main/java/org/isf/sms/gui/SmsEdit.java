@@ -191,7 +191,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		if (jPatientButton == null) {
 			jPatientButton = new JButton();
 			jPatientButton.setIcon(new ImageIcon("./rsc/icons/other_button.png")); //$NON-NLS-1$
-			jPatientButton.addActionListener(e -> {
+			jPatientButton.addActionListener(actionEvent -> {
 				SelectPatient sp = new SelectPatient(SmsEdit.this, new String());
 				sp.addSelectionListener(SmsEdit.this);
 				sp.pack();
@@ -207,9 +207,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jSchedDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			jSchedDateChooser.setDate(new Date());
 			jSchedDateChooser.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			//$NON-NLS-1$
-			jSchedDateChooser.addPropertyChangeListener("date", evt -> {
-				Date date = (Date) evt.getNewValue();
+			jSchedDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
+				Date date = (Date) propertyChangeEvent.getNewValue();
 				jSchedTimeTextField.setText(formatTime(date));
 			});
 		}
@@ -267,7 +266,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		if (jOkButton == null) {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jOkButton.addActionListener(e -> {
+			jOkButton.addActionListener(actionEvent -> {
 				String number = jNumberTextField.getText().replaceAll(" ", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$
 				String text = jTextArea.getText();
 				Date schedDate = jSchedDateChooser.getDate();
@@ -321,7 +320,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		if (jCancelButton == null) {
 			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jCancelButton.addActionListener(e -> dispose());
+			jCancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCancelButton;
 	}
@@ -388,7 +387,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		if (JTimeButton == null) {
 			JTimeButton = new JButton(""); //$NON-NLS-1$
 			JTimeButton.setIcon(new ImageIcon("./rsc/icons/clock_button.png")); //$NON-NLS-1$
-			JTimeButton.addActionListener(e -> {
+			JTimeButton.addActionListener(actionEvent -> {
 
 				JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(SmsEdit.this, jSchedDateChooser.getDate());
 				schedDate.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

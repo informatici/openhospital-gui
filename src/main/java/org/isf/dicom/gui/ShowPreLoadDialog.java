@@ -205,9 +205,9 @@ class ShowPreLoadDialog extends JDialog {
 		if (datesList == null) {
 			datesList = new JList(dates.toArray());
 			datesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			datesList.addListSelectionListener(e -> {
-				if (!e.getValueIsAdjusting()) {
-					Date selectedDate = (Date) ((JList) e.getSource()).getSelectedValue();
+			datesList.addListSelectionListener(selectionEvent -> {
+				if (!selectionEvent.getValueIsAdjusting()) {
+					Date selectedDate = (Date) ((JList) selectionEvent.getSource()).getSelectedValue();
 					dateChooser.setDate(selectedDate);
 				}
 			});
@@ -228,7 +228,7 @@ class ShowPreLoadDialog extends JDialog {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(arg0 -> dispose());
+			buttonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return buttonCancel;
 	}
@@ -237,7 +237,7 @@ class ShowPreLoadDialog extends JDialog {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			buttonOK.addActionListener(arg0 -> {
+			buttonOK.addActionListener(actionEvent -> {
 				dicomDate = dateChooser.getDate();
 				dicomDescription = descriptionTextField.getText().trim();
 				save = true;

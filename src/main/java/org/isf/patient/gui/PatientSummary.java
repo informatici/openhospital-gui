@@ -117,7 +117,7 @@ public class PatientSummary {
 		return dataPanel;
 	}
 
-	private JPanel getPatientMaritalAndProfession(){
+	private JPanel getPatientMaritalAndProfession() {
 		JPanel dataPanel = null;
 		dataPanel = new JPanel(new java.awt.GridLayout(1, 2));
 		dataPanel.add(setMyBorder(getPatientMaritalStatusPanel(), MessageBundle.getMessage("angal.admission.maritalstatus.label")));
@@ -357,24 +357,27 @@ public class PatientSummary {
 
 	private JPanel getPatientParentNewsPanel() {
 		StringBuffer labelBfr = new StringBuffer("<html>");
-		if (patient.getMother() == 'A')
+		if (patient.getMother() == 'A') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisalive"));
-		else if (patient.getMother() == 'D')
+		} else if (patient.getMother() == 'D') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.motherisdead"));
+		}
 		// added
 			labelBfr.append((patient.getMotherName() == null || patient.getMotherName().compareTo("") == 0 ? "<BR>" : "(" + patient.getMotherName() + ")<BR>"));
-		if (patient.getFather() == 'A')
+		if (patient.getFather() == 'A') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisalive"));
-		else if (patient.getFather() == 'D')
+		} else if (patient.getFather() == 'D') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.fatherisdead"));
+		}
 		// added
 		labelBfr.append((patient.getFatherName() == null || patient.getFatherName().compareTo("") == 0 ? "<BR>" : "(" + patient.getFatherName() + ")<BR>"));
-		if (patient.getParentTogether() == 'Y')
+		if (patient.getParentTogether() == 'Y') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.parentslivetoghether"));
-		else if (patient.getParentTogether() == 'N')
+		} else if (patient.getParentTogether() == 'N') {
 			labelBfr.append(MessageBundle.getMessage("angal.admission.parentsnotlivingtogether"));
-		else 
+		} else {
 			labelBfr.append("<BR>");
+		}
 		labelBfr.append("</html>");
 		JLabel l = new JLabel(labelBfr.toString());
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));

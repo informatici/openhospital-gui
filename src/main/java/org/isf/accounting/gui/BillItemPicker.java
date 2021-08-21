@@ -61,9 +61,9 @@ public class BillItemPicker extends javax.swing.JPanel {
 		OhTableModel<?> ohModel = (OhTableModel<?>) model;
 		jTextFieldFind.setText(ohModel.getSearchQuery());
 		jTextFieldFind.selectAll();
-		if (jTableData.getRowCount()>0){
+		if (jTableData.getRowCount() > 0) {
 			jTableData.setRowSelectionInterval(0, 0);
-		}		
+		}
 	}
 
 	/**
@@ -224,14 +224,15 @@ public class BillItemPicker extends javax.swing.JPanel {
 		});
 
 		jTextFieldFind.addKeyListener(new KeyAdapter() {
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					validateSelection();
 				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 					int selectedRow = jTableData.getSelectedRow();
-					if (jTableData.getRowCount() > 0 && selectedRow<0){
-						selectedRow=0;
+					if (jTableData.getRowCount() > 0 && selectedRow < 0) {
+						selectedRow = 0;
 					}
 					if (jTableData.getRowCount() > 0 && selectedRow >= 0) {
 						selectedRow++;
@@ -247,15 +248,16 @@ public class BillItemPicker extends javax.swing.JPanel {
 						selectedRow--;
 
 						jTableData.setRowSelectionInterval(selectedRow, selectedRow);
-						
+
 						jTableData.scrollRectToVisible(new Rectangle(jTableData.getCellRect(selectedRow, 0, true)));
 
 					}
 					jTableData.updateUI();
 				}
 				super.keyPressed(e);
-				
+
 			}
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -278,7 +280,7 @@ public class BillItemPicker extends javax.swing.JPanel {
 				jButtonSelectMouseClicked(evt);
 			}
 		});
-		jButtonSelect.addActionListener(evt -> jButtonSelectActionPerformed(evt));
+		jButtonSelect.addActionListener(actionEvent -> jButtonSelectActionPerformed(actionEvent));
 
 		jButtonQuit.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override

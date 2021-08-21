@@ -281,7 +281,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 		if (closeButton == null) {
 			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			closeButton.addActionListener(e -> dispose());
+			closeButton.addActionListener(actionEvent -> dispose());
 		}
 		return closeButton;
 	}
@@ -290,7 +290,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 		if (editButton == null) {			
 			editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			editButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			editButton.addActionListener(e -> {
+			editButton.addActionListener(actionEvent -> {
 				if (admTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					return;
@@ -322,7 +322,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 		if (deleteButton == null) {
 			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			deleteButton.addActionListener(e -> {
+			deleteButton.addActionListener(actionEvent -> {
 				if (admTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					return;
@@ -371,7 +371,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 		if (malnutritionButton == null) {			
 			malnutritionButton = new JButton(MessageBundle.getMessage("angal.admission.malnutritioncontrol.btn"));
 			malnutritionButton.setMnemonic(MessageBundle.getMnemonic( "angal.admission.malnutritioncontrol.btn.key"));
-			malnutritionButton.addActionListener(e -> {
+			malnutritionButton.addActionListener(actionEvent -> {
 				if (admTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 					return;

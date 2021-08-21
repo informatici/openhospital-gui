@@ -283,7 +283,7 @@ public class OpdEdit extends JDialog {
 			} else {
 				diseaseTypeBox.setSelectedIndex(0);
 			}
-			diseaseTypeBox.addActionListener(e -> {
+			diseaseTypeBox.addActionListener(actionEvent -> {
 				diseaseBox.removeAllItems();
 				getDiseaseBox1();
 			});
@@ -444,7 +444,7 @@ public class OpdEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
             okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				boolean result;
 				GregorianCalendar gregDate = new GregorianCalendar();
 				char newPatient;
@@ -562,7 +562,7 @@ public class OpdEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
             cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}

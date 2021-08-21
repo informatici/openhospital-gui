@@ -248,7 +248,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton getStockCardButton() {
 		stockCardButton = new JButton(MessageBundle.getMessage("angal.common.stockcard.btn"));
 		stockCardButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockcard.btn.key"));
-		stockCardButton.addActionListener(e -> {
+		stockCardButton.addActionListener(actionEvent -> {
 			Medical medical = null;
 			if (movTable.getSelectedRow() > -1) {
 				Movement movement = (Movement) (model.getValueAt(movTable.getSelectedRow(), -1));
@@ -278,7 +278,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton getStockLedgerButton() {
 		stockLedgerButton = new JButton(MessageBundle.getMessage("angal.common.stockledger.btn"));
 		stockLedgerButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockledger.btn.key"));
-		stockLedgerButton.addActionListener(e -> {
+		stockLedgerButton.addActionListener(actionEvent -> {
 
 			StockLedgerDialog stockCardDialog = new StockLedgerDialog(MovStockBrowser.this, movDateFrom.getCompleteDate().getTime(),
 					movDateTo.getCompleteDate().getTime());
@@ -506,7 +506,7 @@ public class MovStockBrowser extends ModalJFrame {
 		searchButton = new JButton();
 		searchButton.setPreferredSize(new Dimension(20, 20));
 		searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-		searchButton.addActionListener(ae -> {
+		searchButton.addActionListener(actionEvent -> {
 			medicalBox.removeAllItems();
 			ArrayList<Medical> medicals;
 			try {
@@ -667,7 +667,7 @@ public class MovStockBrowser extends ModalJFrame {
 				typeBox.addItem(movementType);
 			}
 		}
-		typeBox.addActionListener(e -> {
+		typeBox.addActionListener(actionEvent -> {
 			if (!(typeBox.getSelectedItem() instanceof String)) {
 				MovementType selected = (MovementType) typeBox.getSelectedItem();
 				if (selected.getType().contains("-")) {
@@ -810,7 +810,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton getFilterButton() {
 		filterButton = new JButton(MessageBundle.getMessage("angal.common.filter.btn"));
 		filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.filter.btn.key"));
-		filterButton.addActionListener(e -> {
+		filterButton.addActionListener(actionEvent -> {
 			Integer medicalSelected = null;
 			String medicalTypeSelected = null;
 			String typeSelected = null;
@@ -913,7 +913,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton getCloseButton() {
 		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		closeButton.addActionListener(e -> dispose());
+		closeButton.addActionListener(actionEvent -> dispose());
 		return closeButton;
 	}
 
@@ -925,7 +925,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton getChargeButton() {
 		chargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.charge.btn"));
 		chargeButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.charge.btn.key"));
-		chargeButton.addActionListener(e -> {
+		chargeButton.addActionListener(actionEvent -> {
 			new MovStockMultipleCharging(myFrame);
 			model = new MovBrowserModel();
 			//model.fireTableDataChanged();
@@ -946,7 +946,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton getDischargeButton() {
 		dischargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.discharge.btn"));
 		dischargeButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.discharge.btn.key"));
-		dischargeButton.addActionListener(e -> {
+		dischargeButton.addActionListener(actionEvent -> {
 			new MovStockMultipleDischarging(myFrame);
 			model = new MovBrowserModel();
 			//model.fireTableDataChanged();
@@ -962,7 +962,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JButton getExportToExcelButton() {
 		exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
 		exportToExcel.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.exporttoexcel.btn.key"));
-		exportToExcel.addActionListener(e -> {
+		exportToExcel.addActionListener(actionEvent -> {
 
 			String fileName = compileFileName();
 			File defaultFileName = new File(fileName);

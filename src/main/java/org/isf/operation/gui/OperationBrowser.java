@@ -152,7 +152,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 
-		pbox.addActionListener(arg0 -> {
+		pbox.addActionListener(actionEvent -> {
 			pSelection = pbox.getSelectedItem().toString();
 			if (pSelection.compareTo(STR_ALL) == 0) {
 				model = new OperationBrowserModel();
@@ -166,7 +166,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		buttonNew.addActionListener(event -> {
+		buttonNew.addActionListener(actionEvent -> {
 			operation = new Operation(null, "", new OperationType("", ""), 0); // operation will reference the new //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 																				// record
 			OperationEdit newrecord = new OperationEdit(myFrame, operation, true);
@@ -177,7 +177,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		buttonEdit.addActionListener(event -> {
+		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -192,7 +192,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		buttonDelete.addActionListener(event -> {
+		buttonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -213,7 +213,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		buttonClose.addActionListener(arg0 -> dispose());
+		buttonClose.addActionListener(actionEvent -> dispose());
 		buttonPanel.add(buttonClose);
 		add(buttonPanel, BorderLayout.SOUTH);
 

@@ -154,7 +154,7 @@ public class JTextFieldSearchModel extends JPanel {
 				selectedObject = medical;
 				jTextFieldSearch.setText(medical.toString());
 			}
-			jTextFieldSearch.addActionListener(e -> {
+			jTextFieldSearch.addActionListener(actionEvent -> {
 				String text = jTextFieldSearch.getText();
 				Medical med = null;
 				if (medicalMap.containsKey(text)) {

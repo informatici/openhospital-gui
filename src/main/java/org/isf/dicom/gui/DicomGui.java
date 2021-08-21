@@ -258,7 +258,7 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private void actionListenerJButtonLoadDicom() {
 
-		jButtonLoadDicom.addActionListener(e -> {
+		jButtonLoadDicom.addActionListener(actionEvent -> {
 
 			JFileChooser jfc = new JFileChooser(new File(lastDir));
 
@@ -347,7 +347,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	}
 
 	private void actionListenerJButtonDeleteDicom() {
-		jButtonDeleteDicom.addActionListener(e -> {
+		jButtonDeleteDicom.addActionListener(actionEvent -> {
 
 			Object[] options = { MessageBundle.getMessage("angal.dicom.delete.yes"), MessageBundle.getMessage("angal.dicom.delete.no") };
 

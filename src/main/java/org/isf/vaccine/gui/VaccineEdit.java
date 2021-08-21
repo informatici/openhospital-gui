@@ -199,7 +199,7 @@ public class VaccineEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -213,7 +213,7 @@ public class VaccineEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 
 				vaccine.setDescription(descriptionTextField.getText());
 				vaccine.setCode(codeTextField.getText());
@@ -309,7 +309,7 @@ public class VaccineEdit extends JDialog {
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			if (types != null){
+			if (types != null) {
 				for (VaccineType elem : types) {
 					vaccineTypeComboBox.addItem(elem);
 				}

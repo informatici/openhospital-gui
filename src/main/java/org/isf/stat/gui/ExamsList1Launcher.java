@@ -120,7 +120,7 @@ public class ExamsList1Launcher extends ModalJFrame{
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(arg0 -> dispose());
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -155,7 +155,7 @@ public class ExamsList1Launcher extends ModalJFrame{
 			jReport1Button = new JButton(MessageBundle.getMessage("angal.stat.runexamslistreportbytype.btn"));
 			jReport1Button.setMnemonic(MessageBundle.getMnemonic("angal.stat.runexamslistreportbytype.btn.key"));
 			jReport1Button.setBounds(new Rectangle(15, 15, 120, 31));
-			jReport1Button.addActionListener(e -> new ExamsList1());
+			jReport1Button.addActionListener(actionEvent -> new ExamsList1());
 		}
 		return jReport1Button;
 	}
