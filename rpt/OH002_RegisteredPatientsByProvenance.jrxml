@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH002_RegisteredPatientsByProvenance" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="OH002_RegisteredPatientsByProvenance" whenResourceMissingType="Key" uuid="91824bbf-b3b8-4456-a8da-2a4102185562">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -132,7 +132,7 @@ ORDER BY NUMBER DESC]]>
 				<textFieldExpression><![CDATA[" "+$R{byProvenance}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
-				<reportElement key="textField-8" x="194" y="122" width="64" height="17" uuid="429a22b3-e364-4304-819e-400c45f38c23"/>
+				<reportElement key="textField-8" x="238" y="122" width="86" height="17" uuid="4d700752-8300-47c3-95ce-07ecb4602834"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -145,7 +145,20 @@ ORDER BY NUMBER DESC]]>
 				<textFieldExpression><![CDATA[$P{todate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-3" x="129" y="122" width="65" height="17" uuid="dba0e401-8d42-4b20-bcc5-dee169bc4cce"/>
+				<reportElement key="staticText-4" x="0" y="122" width="65" height="17" uuid="1469fb61-a7b9-4755-b6b5-228f48d41c81"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{From}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-3" x="151" y="122" width="87" height="17" uuid="c205cbd9-9375-4e2e-889f-6f28b384f0f1"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -158,7 +171,7 @@ ORDER BY NUMBER DESC]]>
 				<textFieldExpression><![CDATA[$R{To}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy" isBlankWhenNull="false">
-				<reportElement key="textField-9" x="65" y="122" width="64" height="17" uuid="455fffd0-cf1b-431d-96d6-2a698f6f9a20"/>
+				<reportElement key="textField-9" x="65" y="122" width="86" height="17" uuid="44b504c5-e2a0-411d-970c-4e0e542a4cee"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -170,19 +183,6 @@ ORDER BY NUMBER DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{fromdate}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement key="staticText-4" x="0" y="122" width="65" height="17" uuid="95843134-7b15-4709-8aab-d207870a2550"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{From}]]></textFieldExpression>
-			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -190,7 +190,7 @@ ORDER BY NUMBER DESC]]>
 			<textField>
 				<reportElement key="staticText" positionType="Float" x="40" y="0" width="97" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="2d8275c6-ad9e-4104-8bb5-e603abbc9396"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
-					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{City}]]></textFieldExpression>
@@ -198,7 +198,7 @@ ORDER BY NUMBER DESC]]>
 			<textField>
 				<reportElement key="staticText-1" positionType="Float" x="137" y="0" width="97" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="364da5fe-f074-466c-b5c4-77393ad7777c"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
-					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Address}]]></textFieldExpression>
@@ -233,7 +233,7 @@ ORDER BY NUMBER DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAT_CITY}]]></textFieldExpression>
@@ -247,7 +247,7 @@ ORDER BY NUMBER DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAT_ADDR}]]></textFieldExpression>
@@ -371,8 +371,8 @@ ORDER BY NUMBER DESC]]>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None">
-					<font fontName="DejaVu Sans" size="20" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font fontName="DejaVu Sans" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TOTAL}]]></textFieldExpression>
@@ -386,10 +386,10 @@ ORDER BY NUMBER DESC]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="DejaVu Sans" size="20" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<font fontName="DejaVu Sans" size="16" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA["TOTAL"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{TOTAL}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
