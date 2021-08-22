@@ -161,6 +161,7 @@ public class VisitView extends ModalJFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		addWindowListener(new FreeMemoryAdapter());
+		this.pack();
 	}
 
 	public VisitView() {
@@ -811,6 +812,9 @@ public class VisitView extends ModalJFrame {
 		getAddVisitFirstButton().setVisible(show);
 		getVisitDateChooserPanel().setVisible(show);
 		getTodayVisit().setVisible(show);
+
+		// call repack, as we are showing more components
+		this.pack();
 	}
 
 	public Ward getWard() {
