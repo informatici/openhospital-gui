@@ -117,6 +117,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private boolean[] columnBold = { false, false, false, false, false, true, false, false};
 	private HashMap<String, Medical> medicalMap;
 	private ArrayList<Integer> units;
+	private ArrayList<Integer> quantities;
 	private JTableModel model;
 	private String[] qtyOption = new String[] {
 			MessageBundle.getMessage("angal.medicalstock.multipledischarging.units"), //$NON-NLS-1$
@@ -180,15 +181,15 @@ public class MovStockMultipleDischarging extends JDialog {
 		setTitle(MessageBundle.getMessage("angal.medicalstock.stockmovement.title"));
 		add(getJPanelHeader(), BorderLayout.NORTH);
 		add(getJMainPanel(), BorderLayout.CENTER);
-		add(getJButtonPane(), BorderLayout.SOUTH);
+		add(getJButtonPanel(), BorderLayout.SOUTH);
 		setPreferredSize(new Dimension(800, 600));
 		pack();
 		setLocationRelativeTo(null);
 	}
 
-	private JPanel getJButtonPane() {
+	private JPanel getJButtonPanel() {
 
-		JPanel buttonPane = new JPanel();
+		JPanel buttonPanel = new JPanel();
 		{
 			JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
@@ -198,7 +199,7 @@ public class MovStockMultipleDischarging extends JDialog {
 					model.removeItem(row);
 				}
 			});
-			buttonPane.add(deleteButton);
+			buttonPanel.add(deleteButton);
 		}
 		{
 			JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
@@ -208,27 +209,28 @@ public class MovStockMultipleDischarging extends JDialog {
 					return;
 				}
 				if (!save()) {
+					rollBackMovements();
 					return;
 				}
 				dispose();
 			});
-			buttonPane.add(saveButton);
+			buttonPanel.add(saveButton);
 		}
 		{
 			JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			cancelButton.addActionListener(actionEvent -> dispose());
-			buttonPane.add(cancelButton);
+			buttonPanel.add(cancelButton);
 		}
 		{
 			if (isXmpp()) {
 				shareWith = getShareUser();
 				shareWith.setEnabled(false);
-				buttonPane.add(shareWith);
+				buttonPanel.add(shareWith);
 			}
 		}
 
-		return buttonPane;
+		return buttonPanel;
 	}
 
 	private JPanel getJMainPanel() {
@@ -667,7 +669,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		}
 		
 		newTotalQty = totalQty - usedQty;
-		if (!checkQuantityInLot(movement.getLot(), qty)) {
+		if (!isAutomaticLot() && !checkQuantityInLot(movement.getLot(), qty)) {
 			return false;
 		}
 		return checkQuantity(med, newTotalQty, qty);
@@ -901,31 +903,16 @@ public class MovStockMultipleDischarging extends JDialog {
 		@Override
 		public void setValueAt(Object value, int r, int c) {
 			Movement movement = movements.get(r);
-			int option = units.get(r);
-			if (c == 0) {
-				String key = String.valueOf(value);
-				if (medicalMap.containsKey(key)) {
-					movement.setMedical(medicalMap.get(key));
-					movements.set(r, movement);
-				}
-			} else if (c == 3) {
-				int qty = (Integer) value;
-				int total = calcTotal(movement, option);
-				if (checkQuantityInMovement(movement, total))
-				{
-					movement.setQuantity(qty);
-				}
-			} else if (c == 4) {
+			if (c == 4) {
 				int newOption = 0;
-				if (value == qtyOption[1]) {
+				if (qtyOption[1].equals(value)) {
 					newOption = 1;
 				}
 				int total = calcTotal(movement, newOption);
-				if (checkQuantityInMovement(movement, total))
-				{
+				if (checkQuantityInMovement(movement, total)) {
 					units.set(r, newOption);
 				}
-			} 
+			}
 			movements.set(r, movement);
 			fireTableDataChanged();
 		}
@@ -933,6 +920,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	
 	private boolean checkAndPrepareMovements() {
 		boolean ok = true;
+		quantities = new ArrayList<>();
 		
 		ArrayList<Movement> movements = model.getMovements();
 		if (movements.isEmpty()) {
@@ -958,11 +946,22 @@ public class MovStockMultipleDischarging extends JDialog {
 			mov.setWard((Ward) jComboBoxDestination.getSelectedItem());
 			mov.setDate(thisDate);
 			mov.setRefNo(jTextFieldReference.getText());
+			quantities.add(mov.getQuantity());
 			mov.setQuantity(calcTotal(mov, option));
 			mov.setType((MovementType) jComboBoxDischargeType.getSelectedItem());
 			//mov.getLot().setPreparationDate(thisDate);
 		}
 		return ok;
+	}
+	
+	private void rollBackMovements() {
+		ArrayList<Movement> movements = model.getMovements();
+
+		// Set back changed quantities
+		for (int i = 0; i < movements.size(); i++) {
+			Movement mov = movements.get(i);
+			mov.setQuantity(quantities.get(i));
+		}
 	}
 	
 	private boolean save() {

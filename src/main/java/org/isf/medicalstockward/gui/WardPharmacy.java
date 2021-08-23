@@ -1270,9 +1270,9 @@ public class WardPharmacy extends ModalJFrame implements
 				int packets = 0;
 				if (pcsPerPck != 0) {
 					packets = pieces / pcsPerPck;
-					return "" + packets + " " + MessageBundle.getMessage("angal.medicalstockward.packets"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$;
+					return MessageBundle.formatMessage("angal.medicalstockward.packets.fmt", packets);
 				} else {
-					return ""; //$NON-NLS-1$;
+					return MessageBundle.getMessage("angal.medicalstockward.pieces");
 				}
 			}
 			if (c == 5) {
@@ -1350,6 +1350,7 @@ public class WardPharmacy extends ModalJFrame implements
 				Lot lot = mov.getLot();
 				int age = mov.getAge();
 				float weight = mov.getWeight();
+				Ward wardFrom = mov.getWardFrom();
 
 				// Medical control
 				if (medicalSelected != null) {
@@ -1371,6 +1372,11 @@ public class WardPharmacy extends ModalJFrame implements
 				// weight control if weightTo > 0
 				if (weightTo != 0) {
 					ok = ok && weight >= weightFrom && weight <= weightTo;
+				}
+				
+				// filter out movements to this ward, already shown in 'Incomings' table
+				if (wardFrom != null) {
+					ok = false;
 				}
 
 				if (ok) {
