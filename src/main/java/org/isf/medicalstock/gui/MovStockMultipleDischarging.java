@@ -907,13 +907,12 @@ public class MovStockMultipleDischarging extends JDialog {
 				int newOption = 0;
 				if (qtyOption[1].equals(value)) {
 					newOption = 1;
-				} 
+				}
 				int total = calcTotal(movement, newOption);
-				if (checkQuantityInMovement(movement, total))
-				{
+				if (checkQuantityInMovement(movement, total)) {
 					units.set(r, newOption);
 				}
-			} 
+			}
 			movements.set(r, movement);
 			fireTableDataChanged();
 		}
