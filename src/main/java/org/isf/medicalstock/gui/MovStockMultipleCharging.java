@@ -113,7 +113,7 @@ public class MovStockMultipleCharging extends JDialog {
 		MessageBundle.getMessage("angal.medicalstock.multiplecharging.cost").toUpperCase(),
 		MessageBundle.getMessage("angal.common.total.txt").toUpperCase()
 	};
-	private final Class[] columnClasses = { String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, String.class, String.class, Double.class, Double.class };
+	private final Class[] columnClasses = { String.class, String.class, Integer.class, Integer.class, String.class, Integer.class, String.class, String.class, BigDecimal.class, BigDecimal.class };
 	private boolean[] columnEditable = { true, false, false, true, true, false, !GeneralData.AUTOMATICLOT_IN, true, true, false };
  	private int[] columnWidth = { 50, 100, 70, 50, 70, 50, 50, 80, 50, 80 };
 	private boolean[] columnResizable = { false, true, false, false, false, false, false, false, false, false };
