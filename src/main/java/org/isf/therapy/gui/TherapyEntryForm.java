@@ -165,6 +165,7 @@ public class TherapyEntryForm extends JDialog {
 			radioButtonSet.get(0).setSelected(true);
 			endDateLabel.setText(dateFormat.format(new Date()));
 		}
+		this.pack();
 	}
 
 	private void initComponents() {
