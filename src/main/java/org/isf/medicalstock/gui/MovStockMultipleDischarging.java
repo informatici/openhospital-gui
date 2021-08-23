@@ -193,7 +193,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		{
 			JButton deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			deleteButton.addActionListener(e -> {
+			deleteButton.addActionListener(actionEvent -> {
 				int row = jTableMovements.getSelectedRow();
 				if (row > -1) {
 					model.removeItem(row);
@@ -204,7 +204,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		{
 			JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			saveButton.addActionListener(e -> {
+			saveButton.addActionListener(actionEvent -> {
 				if (!checkAndPrepareMovements()) {
 					return;
 				}
@@ -219,7 +219,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		{
 			JButton cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 			buttonPanel.add(cancelButton);
 		}
 		{
@@ -260,7 +260,7 @@ public class MovStockMultipleDischarging extends JDialog {
 				suggestion.changeAlpha(0.5f);
 				suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 			}
-			jTextFieldSearch.addActionListener(e -> {
+			jTextFieldSearch.addActionListener(actionEvent -> {
 				String text = jTextFieldSearch.getText();
 				Medical med = null;
 				if (medicalMap.containsKey(text)) {
@@ -489,12 +489,11 @@ public class MovStockMultipleDischarging extends JDialog {
 		return headerPanel;
 	}
 
-	private JComboBox getShareUser(){
-
-		share= new Interaction();
+	private JComboBox getShareUser() {
+		share = new Interaction();
 		Collection<String> contacts = share.getContactOnline();
 		contacts.add(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody")); //$NON-NLS-1$
-		shareWith= new JComboBox(contacts.toArray());
+		shareWith = new JComboBox(contacts.toArray());
 		shareWith.setSelectedItem(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody")); //$NON-NLS-1$
 
 		return shareWith;
@@ -777,7 +776,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			ArrayList<Ward> wards;
 			try {
 				wards = wardMan.getWards();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				wards = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -971,26 +970,26 @@ public class MovStockMultipleDischarging extends JDialog {
 		ArrayList<Movement> movements = model.getMovements();
 		try {
 			movManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
-			
+
 			if (isXmpp()) {
 				if (shareWith.isEnabled() && (!(((String) shareWith.getSelectedItem())
-						.equals(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody"))))){ //$NON-NLS-1$
-					CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
+						.equals(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody"))))) { //$NON-NLS-1$
+					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 					for (Medical med : pool) {
 						frame.sendMessage(
 								MessageBundle.getMessage("angal.medicalstock.multipledischarging.alert") + //$NON-NLS-1$ 
-								med.getDescription() + 
-								MessageBundle.getMessage("angal.medicalstock.multipledischarging.isabouttoend"), //$NON-NLS-1$
-								(String)shareWith.getSelectedItem(), 
+										med.getDescription() +
+										MessageBundle.getMessage("angal.medicalstock.multipledischarging.isabouttoend"), //$NON-NLS-1$
+								(String) shareWith.getSelectedItem(),
 								false);
 					}
 				}
 			}
-			
+
 		} catch (OHServiceException e) {
 			ok = false;
 			OHServiceExceptionUtil.showMessages(e);
-		} 
+		}
 		return ok;
 	}
 

@@ -197,7 +197,7 @@ public class WardPharmacyEdit extends JDialog {
 			jSearchButton = new JButton();
 			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			jSearchButton.setPreferredSize(new Dimension(20, 20));
-			jSearchButton.addActionListener(e -> {
+			jSearchButton.addActionListener(actionEvent -> {
 				jComboBoxPatients.removeAllItems();
 				try {
 					pat = patBrowser.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
@@ -218,7 +218,7 @@ public class WardPharmacyEdit extends JDialog {
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/trash_button.png")); //$NON-NLS-1$
 			jButtonTrashPatient.setBorderPainted(false);
 			jButtonTrashPatient.setPreferredSize(new Dimension(20, 20));
-			jButtonTrashPatient.addActionListener(e -> {
+			jButtonTrashPatient.addActionListener(actionEvent -> {
 				if (true) {
 					jTextFieldSearchPatient.setText(""); //$NON-NLS-1$
 					jComboBoxPatients.removeAllItems();
@@ -278,7 +278,7 @@ public class WardPharmacyEdit extends JDialog {
 			jButtonTrashMedical.setIcon(new ImageIcon("rsc/icons/trash_button.png")); //$NON-NLS-1$
 			jButtonTrashMedical.setBorderPainted(false);
 			jButtonTrashMedical.setPreferredSize(new Dimension(20, 20));
-			jButtonTrashMedical.addActionListener(e -> {
+			jButtonTrashMedical.addActionListener(actionEvent -> {
 				if (true) {
 					jTextFieldSearchMedical.setText(""); //$NON-NLS-1$
 					jComboBoxDrugs.removeAllItems();
@@ -312,7 +312,7 @@ public class WardPharmacyEdit extends JDialog {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jButtonCancel.addActionListener(event -> dispose());
+			jButtonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonCancel;
 	}
@@ -321,7 +321,7 @@ public class WardPharmacyEdit extends JDialog {
 		if (jButtonOK == null) {
 			jButtonOK = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			jButtonOK.addActionListener(e -> {
+			jButtonOK.addActionListener(actionEvent -> {
 
 				Object item;
 				if (movSelected.isPatient()) {

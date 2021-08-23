@@ -118,7 +118,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 		try {
 			manager.maternityControl(true);
-		}catch(OHServiceException e){
+		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		initialize();
@@ -179,7 +179,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(event -> {
+			jEditButton.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -203,7 +203,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(event -> {
+			jNewButton.addActionListener(actionEvent -> {
 				ward=new Ward(null,"","","","",null,null,null,false,false);	//operation will reference the new record
 				WardEdit newrecord = new WardEdit(myFrame,ward,true);
 				newrecord.addWardListener(WardBrowser.this);
@@ -222,20 +222,20 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(event -> {
+			jDeleteButton.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-					Ward ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					Ward ward = (Ward) (((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))){
+						if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))) {
 							pWard.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();
 						}
-					} catch(OHServiceException e) {
+					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
@@ -253,7 +253,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(arg0 -> dispose());
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -303,11 +303,12 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			try {
 				pWard = manager.getWards();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				pWard = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
+
 		@Override
 		public int getRowCount() {
 			if (pWard == null) {

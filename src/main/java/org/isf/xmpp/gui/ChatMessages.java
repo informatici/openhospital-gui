@@ -138,7 +138,7 @@ public class ChatMessages extends JTextPane {
 		select(position, position);
 
 		insertComponent(view);
-		view.addActionListener(arg0 -> {
+		view.addActionListener(actionEvent -> {
 			new GenericReportFromDateToDate(fromDate, toDate, typeReport, typeReport, false);
 			view.setEnabled(false);
 		});

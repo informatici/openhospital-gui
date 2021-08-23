@@ -311,7 +311,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jButtonStockCard = new JButton(MessageBundle.getMessage("angal.common.stockcard.btn"));
 			jButtonStockCard.setMnemonic(MessageBundle.getMnemonic("angal.common.stockcard.btn.key"));
 			jButtonStockCard.setVisible(false);
-			jButtonStockCard.addActionListener(event -> {
+			jButtonStockCard.addActionListener(actionEvent -> {
 
 				Medical medical = null;
 				if (jTabbedPaneWard.getSelectedIndex() == 0) {
@@ -350,7 +350,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jButtonStockLedger = new JButton(MessageBundle.getMessage("angal.common.stockledger.btn"));
 			jButtonStockLedger.setMnemonic(MessageBundle.getMnemonic("angal.common.stockledger.btn.key"));
 			jButtonStockLedger.setVisible(false);
-			jButtonStockLedger.addActionListener(event -> {
+			jButtonStockLedger.addActionListener(actionEvent -> {
 
 				StockLedgerDialog stockCardDialog = new StockLedgerDialog(WardPharmacy.this, dateFrom.getTime(), dateTo.getTime());
 				Date dateFrom = stockCardDialog.getDateFrom();
@@ -369,7 +369,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jButtonNew.setVisible(false);
-			jButtonNew.addActionListener(e -> {
+			jButtonNew.addActionListener(actionEvent -> {
 				WardPharmacyNew editor = new WardPharmacyNew(WardPharmacy.this, wardSelected, wardDrugs);
 				editor.addMovementWardListener(WardPharmacy.this);
 				editor.setVisible(true);
@@ -383,7 +383,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			jButtonEdit.setVisible(false);
-			jButtonEdit.addActionListener(e -> {
+			jButtonEdit.addActionListener(actionEvent -> {
 
 				if (jTableOutcomes.getSelectedRow() < 0 || !jScrollPaneOutcomes.isShowing()) {
 					MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.pleaseselectanoutcomesmovementfirst");
@@ -402,7 +402,7 @@ public class WardPharmacy extends ModalJFrame implements
 		if (jButtonClose == null) {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jButtonClose.addActionListener(event -> {
+			jButtonClose.addActionListener(actionEvent -> {
 				// to free memory
 				listMovementCentral.clear();
 				listMovementWardFromTo.clear();
@@ -454,9 +454,8 @@ public class WardPharmacy extends ModalJFrame implements
 			jCalendarTo = new CustomJDateChooser(dateTo.getTime()); // Calendar
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarTo.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			//$NON-NLS-1$
-			jCalendarTo.addPropertyChangeListener("date", evt -> {
-				dateTo.setTime((Date) evt.getNewValue());
+			jCalendarTo.addPropertyChangeListener("date", propertyChangeEvent -> {
+				dateTo.setTime((Date) propertyChangeEvent.getNewValue());
 				jTableOutcomes.setModel(new OutcomesModel());
 				jTableIncomes.setModel(new IncomesModel());
 				rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
@@ -474,9 +473,8 @@ public class WardPharmacy extends ModalJFrame implements
 			jCalendarFrom = new CustomJDateChooser(dateFrom.getTime()); // Calendar
 			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarFrom.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			//$NON-NLS-1$
-			jCalendarFrom.addPropertyChangeListener("date", evt -> {
-				dateFrom.setTime((Date) evt.getNewValue());
+			jCalendarFrom.addPropertyChangeListener("date", propertyChangeEvent -> {
+				dateFrom.setTime((Date) propertyChangeEvent.getNewValue());
 				jTableOutcomes.setModel(new OutcomesModel());
 				jTableIncomes.setModel(new IncomesModel());
 				rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
@@ -710,7 +708,7 @@ public class WardPharmacy extends ModalJFrame implements
 			filterButton = new JButton(MessageBundle.getMessage("angal.common.filter.btn"));
 			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.filter.btn.key"));
 			filterButton.setAlignmentX(Box.CENTER_ALIGNMENT);
-			filterButton.addActionListener(e -> {
+			filterButton.addActionListener(actionEvent -> {
 				if (ageFrom > ageTo) {
 					MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.agefrommustbelowerthanageto");
 					jAgeFromTextField.setText(String.valueOf(ageTo));
@@ -735,7 +733,7 @@ public class WardPharmacy extends ModalJFrame implements
 			resetButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.reset.btn"));
 			resetButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.reset.btn.key"));
 			resetButton.setAlignmentX(Box.CENTER_ALIGNMENT);
-			resetButton.addActionListener(e -> {
+			resetButton.addActionListener(actionEvent -> {
 				jAgeFromTextField.setText("0"); //$NON-NLS-1$
 				jAgeToTextField.setText("0"); //$NON-NLS-1$
 				jWeightFromTextField.setText("0"); //$NON-NLS-1$
@@ -940,7 +938,7 @@ public class WardPharmacy extends ModalJFrame implements
 				OHServiceExceptionUtil.showMessages(e);
 			}
 
-			jComboBoxTypes.addActionListener(arg0 -> {
+			jComboBoxTypes.addActionListener(actionEvent -> {
 				jComboBoxMedicals.removeAllItems();
 				getJComboBoxMedicals();
 			});
@@ -1130,7 +1128,7 @@ public class WardPharmacy extends ModalJFrame implements
 			}
 			jComboBoxWard.setBorder(null);
 			jComboBoxWard.setBounds(15, 14, 122, 24);
-			jComboBoxWard.addActionListener(event -> {
+			jComboBoxWard.addActionListener(actionEvent -> {
 				Object ward = jComboBoxWard.getSelectedItem();
 				if (ward instanceof Ward) {
 					wardSelected = (Ward) ward;
@@ -1509,7 +1507,7 @@ public class WardPharmacy extends ModalJFrame implements
 			if (c == 3) {
 				final JButton button = new JButton(MessageBundle.getMessage("angal.medicalstockward.rectify.btn"));
 				button.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.rectify.btn.key"));
-				button.addActionListener(arg0 -> {
+				button.addActionListener(actionEvent -> {
 					Medical medic = wardDrug.getMedical();
 					WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected, medic);
 					wardRectify.addMovementWardListener(WardPharmacy.this);
@@ -1545,7 +1543,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jRectifyButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.rectify.btn.key"));
 			jRectifyButton.setBackground(Color.PINK);
 			jRectifyButton.setVisible(false);
-			jRectifyButton.addActionListener(arg0 -> {
+			jRectifyButton.addActionListener(actionEvent -> {
 
 				if (jTableDrugs.getSelectedRow() < 0) {
 					WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected);
@@ -1571,7 +1569,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jPrintTableButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.report.btn"));
 			jPrintTableButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.report.btn.key"));
 			jPrintTableButton.setVisible(false);
-			jPrintTableButton.addActionListener(arg0 -> {
+			jPrintTableButton.addActionListener(actionEvent -> {
 
 				if (jTabbedPaneWard.getSelectedIndex() == 0) {
 					try {
@@ -1635,7 +1633,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jExportToExcelButton = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
 			jExportToExcelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
 			jExportToExcelButton.setVisible(false);
-			jExportToExcelButton.addActionListener(arg0 -> {
+			jExportToExcelButton.addActionListener(actionEvent -> {
 				String fileName = compileFileName();
 				File defaultFileName = new File(fileName);
 				JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFileName);

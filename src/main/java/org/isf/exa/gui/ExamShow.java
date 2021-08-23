@@ -76,22 +76,22 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private ExamRow examRow = null;
 	private ArrayList<ExamRow> pExamRow;
 	private JDialog myFrame;
-	
-	public ExamShow(JFrame owner, Exam aExam){
-		super(owner,true);
+
+	public ExamShow(JFrame owner, Exam aExam) {
+		super(owner, true);
 		myFrame = this;
 		exam = aExam;
 		initialize();
 	}
-	
-	private void initialize(){
+
+	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-        final int pfrmBase = 10;
-        final int pfrmWidth = 3;
-        final int pfrmHeight = 3;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
+		final int pfrmBase = 10;
+		final int pfrmWidth = 3;
+		final int pfrmHeight = 3;
+		this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase) / 2,
+				screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
 		this.setTitle(MessageBundle.formatMessage("angal.exa.results.fmt.title", exam.getDescription()));
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -135,7 +135,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		if (newButton == null) {
 			newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			newButton.addActionListener(e -> {
+			newButton.addActionListener(actionEvent -> {
 				examRow = new ExamRow();
 				ExamRowEdit newrecord = new ExamRowEdit(myFrame, examRow, exam);
 				newrecord.addExamListener(ExamShow.this);
@@ -149,7 +149,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		if (closeButton == null) {
 			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			closeButton.addActionListener(e -> dispose());
+			closeButton.addActionListener(actionEvent -> dispose());
 		}
 		return closeButton;
 	}
@@ -158,7 +158,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		if (deleteButton == null) {
 			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			deleteButton.addActionListener(e -> {
+			deleteButton.addActionListener(actionEvent -> {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {

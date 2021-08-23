@@ -90,17 +90,14 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			setCellRenderer(new CellListCellRender());
 		}
 
-		getSelectionModel().addListSelectionListener(e -> {
-
-			if (thumbnailViewEnabled && !e.getValueIsAdjusting()) {
-				DefaultListSelectionModel sel = (DefaultListSelectionModel) e.getSource();
-
+		getSelectionModel().addListSelectionListener(selectionEvent -> {
+			if (thumbnailViewEnabled && !selectionEvent.getValueIsAdjusting()) {
+				DefaultListSelectionModel sel = (DefaultListSelectionModel) selectionEvent.getSource();
 				if (sel.isSelectionEmpty()) {
 					disableDeleteButton();
 				} else {
 					enableDeleteButton((FileDicom) getModel().getElementAt(sel.getLeadSelectionIndex()));
 				}
-
 			}
 		});
 		addMouseListener(new MouseListener() {

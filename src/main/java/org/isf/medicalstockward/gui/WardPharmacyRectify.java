@@ -181,10 +181,10 @@ public class WardPharmacyRectify extends JDialog {
 		}
 		wardMap = new HashMap<>();
 		for (MedicalWard medWard : wardDrugs) {
-			
-			if (wardMap.containsKey(medWard.getMedical().getCode())){
-			 Double qu = wardMap.get(medWard.getMedical().getCode());
-			 wardMap.put(medWard.getMedical().getCode(), qu + medWard.getQty());
+
+			if (wardMap.containsKey(medWard.getMedical().getCode())) {
+				Double qu = wardMap.get(medWard.getMedical().getCode());
+				wardMap.put(medWard.getMedical().getCode(), qu + medWard.getQty());
 			} else {
 				wardMap.put(medWard.getMedical().getCode(), medWard.getQty());
 			}
@@ -338,7 +338,7 @@ public class WardPharmacyRectify extends JDialog {
 			{
 				JButton jButtonOk = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 				jButtonOk.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-				jButtonOk.addActionListener(e -> {
+				jButtonOk.addActionListener(actionEvent -> {
 					Object item;
 					Medical med;
 
@@ -419,7 +419,7 @@ public class WardPharmacyRectify extends JDialog {
 			{
 				JButton jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 				jButtonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-				jButtonCancel.addActionListener(e -> dispose());
+				jButtonCancel.addActionListener(actionEvent -> dispose());
 				jButtonPanel.add(jButtonCancel);
 			}
 		}
@@ -475,7 +475,7 @@ public class WardPharmacyRectify extends JDialog {
 		if (jButtonNewLot == null) {
 			jButtonNewLot = new JButton(MessageBundle.getMessage("angal.medicalstockward.newlot.btn"));
 			jButtonNewLot.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.newlot.btn.key"));
-			jButtonNewLot.addActionListener(e -> {
+			jButtonNewLot.addActionListener(actionEvent -> {
 				Medical medical;
 				try {
 					medical = (Medical) jComboBoxMedical.getSelectedItem();
@@ -492,7 +492,7 @@ public class WardPharmacyRectify extends JDialog {
 		if (jButtonChooseLot == null) {
 			jButtonChooseLot = new JButton(MessageBundle.getMessage("angal.medicalstockward.chooselot.btn"));
 			jButtonChooseLot.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.chooselot.btn.key"));
-			jButtonChooseLot.addActionListener(e -> {
+			jButtonChooseLot.addActionListener(actionEvent -> {
 				Medical medical;
 				try {
 					medical = (Medical) jComboBoxMedical.getSelectedItem();
@@ -682,7 +682,7 @@ public class WardPharmacyRectify extends JDialog {
 		if (jSpinnerNewQty == null) {
 			jSpinnerNewQty = new JSpinner(new SpinnerNumberModel(0.0, 0.0, null, 1));
 			jSpinnerNewQty.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-			jSpinnerNewQty.addChangeListener(e -> {
+			jSpinnerNewQty.addChangeListener(changeEvent -> {
 				Double stock = Double.parseDouble(jLabelStockQty.getText());
 				Double newQty = (Double) jSpinnerNewQty.getValue();
 				if (stock > 0) {
@@ -732,10 +732,10 @@ public class WardPharmacyRectify extends JDialog {
 		if (jComboBoxMedical == null) {
 			jComboBoxMedical = new JComboBox();
 			jComboBoxMedical.addItem(""); //$NON-NLS-1$
-			for (Medical med : medicals){
+			for (Medical med : medicals) {
 				jComboBoxMedical.addItem(med);
 			}
-			jComboBoxMedical.addActionListener(e -> {
+			jComboBoxMedical.addActionListener(actionEvent -> {
 				try {
 					Medical med = ((Medical) jComboBoxMedical.getSelectedItem());
 					jButtonChooseLot.setEnabled(false);

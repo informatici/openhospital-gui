@@ -161,6 +161,7 @@ public class VisitView extends ModalJFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		addWindowListener(new FreeMemoryAdapter());
+		this.pack();
 	}
 
 	public VisitView() {
@@ -282,7 +283,7 @@ public class VisitView extends ModalJFrame {
 			addFirstVisitButton.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
 			addFirstVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			addFirstVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addFirstVisitButton.addActionListener(e -> {
+			addFirstVisitButton.addActionListener(actionEvent -> {
 
 				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateFirst, getWard(), patient);
 				newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -303,7 +304,7 @@ public class VisitView extends ModalJFrame {
 			addSecondVisitButton.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
 			addSecondVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
 			addSecondVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
-			addSecondVisitButton.addActionListener(e -> {
+			addSecondVisitButton.addActionListener(actionEvent -> {
 
 				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateSecond, getWard(), patient);
 				newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -432,7 +433,7 @@ public class VisitView extends ModalJFrame {
 
 			gotoDateButton = new JButton(MessageBundle.getMessage("angal.visit.gotodate.btn"));
 			gotoDateButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.gotodate.btn.key"));
-			gotoDateButton.addActionListener(e -> {
+			gotoDateButton.addActionListener(actionEvent -> {
 				if (visitDateChooser.getDate() != null) {
 					setDateFirstThenSecond(visitDateChooser.getDate());
 					updatePanels();
@@ -455,7 +456,7 @@ public class VisitView extends ModalJFrame {
 		visitDateChooser = new JDateChooser();
 		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 		visitDateChooser.setDateFormatString(dateFormat);
-		visitDateChooser.addPropertyChangeListener("date", evt -> {
+		visitDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
 			setDateFirstThenSecond(visitDateChooser.getDate());
 			updatePanels();
 		});
@@ -655,7 +656,7 @@ public class VisitView extends ModalJFrame {
 			todayButton = new JButton(MessageBundle.getMessage("angal.visit.printthisdaysvisits1.btn"));
 			todayButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.printthisdaysvisits1.btn.key"));
 			todayButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
-			todayButton.addActionListener(e -> new WardVisitsReport(getWard().getCode(), dateFirst, GeneralData.VISITSHEET));
+			todayButton.addActionListener(actionEvent -> new WardVisitsReport(getWard().getCode(), dateFirst, GeneralData.VISITSHEET));
 		}
 		return todayButton;
 	}
@@ -664,7 +665,7 @@ public class VisitView extends ModalJFrame {
 		if (tomorrowButton == null) {
 			tomorrowButton = new JButton(MessageBundle.getMessage("angal.visit.printthisdaysvisits2.btn"));
 			tomorrowButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.printthisdaysvisits2.btn.key"));
-			tomorrowButton.addActionListener(e -> {
+			tomorrowButton.addActionListener(actionEvent -> {
 				ward = (Ward) wardBox.getSelectedItem();
 				new WardVisitsReport(ward.getCode(), dateSecond, GeneralData.VISITSHEET);
 
@@ -679,7 +680,7 @@ public class VisitView extends ModalJFrame {
 			nextButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.nextarrow.btn.key"));
 			nextButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			nextButton.setHorizontalAlignment(SwingConstants.LEFT);
-			nextButton.addActionListener(e -> {
+			nextButton.addActionListener(actionEvent -> {
 				setDateDayAfter();
 				updatePanels();
 			});
@@ -693,7 +694,7 @@ public class VisitView extends ModalJFrame {
 			backButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.arrowprevious.btn.key"));
 			backButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			backButton.setHorizontalAlignment(SwingConstants.LEFT);
-			backButton.addActionListener(e -> {
+			backButton.addActionListener(actionEvent -> {
 				setDateDayBefore();
 				updatePanels();
 			});
@@ -708,7 +709,7 @@ public class VisitView extends ModalJFrame {
 			closeButton.setIcon(new ImageIcon("rsc/icons/close_button.png"));
 			closeButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
 			closeButton.setHorizontalAlignment(SwingConstants.LEFT);
-			closeButton.addActionListener(e -> {
+			closeButton.addActionListener(actionEvent -> {
 				// to free memory
 				freeMemory();
 				if (owner != null) {
@@ -742,7 +743,7 @@ public class VisitView extends ModalJFrame {
 
 			todayBtn = new JButton(MessageBundle.getMessage("angal.visit.today.btn"));
 			todayBtn.setMnemonic(MessageBundle.getMnemonic("angal.visit.today.btn.key"));
-			todayBtn.addActionListener(e -> {
+			todayBtn.addActionListener(actionEvent -> {
 				setDateFirstThenSecond(new Date());
 				updatePanels();
 			});
@@ -780,7 +781,7 @@ public class VisitView extends ModalJFrame {
 				}
 			}
 
-			wardBox.addActionListener(arg0 -> {
+			wardBox.addActionListener(actionEvent -> {
 				Object selectedWard = wardBox.getSelectedItem();
 
 				if (selectedWard instanceof Ward) {
@@ -811,6 +812,9 @@ public class VisitView extends ModalJFrame {
 		getAddVisitFirstButton().setVisible(show);
 		getVisitDateChooserPanel().setVisible(show);
 		getTodayVisit().setVisible(show);
+
+		// call repack, as we are showing more components
+		this.pack();
 	}
 
 	public Ward getWard() {

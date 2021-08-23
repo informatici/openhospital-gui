@@ -169,8 +169,8 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent event) {
-		String command = event.getActionCommand();
+	public void actionPerformed(ActionEvent actionEvent) {
+		String command = actionEvent.getActionCommand();
 		if (command.equals(CANCEL_BTN)) {
 			LOGGER.warn("Login cancelled.");
 			dispose();

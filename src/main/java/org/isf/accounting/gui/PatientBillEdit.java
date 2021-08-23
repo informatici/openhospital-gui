@@ -118,8 +118,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		};
 
 		EventListener[] listeners = patientBillListener.getListeners(PatientBillListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((PatientBillListener) listener).billInserted(event);
+		}
 	}
 
 	@Override
@@ -512,15 +513,17 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			for (PriceList lst : lstArray) {
 				
 				jComboBoxPriceList.addItem(lst);
-				if (!insert)
+				if (!insert) {
 					if (lst.getId() == thisBill.getPriceList().getId()) {
 						list = lst;
 					}
+				}
 			}
-			if (list != null) 
+			if (list != null) {
 				jComboBoxPriceList.setSelectedItem(list);
+			}
 			
-			jComboBoxPriceList.addActionListener(e -> {
+			jComboBoxPriceList.addActionListener(actionEvent -> {
 
 				listSelected = (PriceList)jComboBoxPriceList.getSelectedItem();
 				jTableBill.setModel(new BillTableModel());
@@ -546,26 +549,25 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			}
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarDate.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
-			//$NON-NLS-1$
-			jCalendarDate.getJCalendar().addPropertyChangeListener("calendar", evt -> {
+			jCalendarDate.getJCalendar().addPropertyChangeListener("calendar", propertyChangeEvent -> {
 
 				if (!insert) {
-					if (keepDate && evt.getNewValue().toString().compareTo(evt.getOldValue().toString()) != 0) {
+					if (keepDate && propertyChangeEvent.getNewValue().toString().compareTo(propertyChangeEvent.getOldValue().toString()) != 0) {
 
 						int ok = MessageDialog.yesNo(PatientBillEdit.this, "angal.newbill.doyouwanttochangetheoriginaldate.msg");
 						if (ok == JOptionPane.YES_OPTION) {
 							keepDate = false;
 							modified = true;
-							jCalendarDate.setDate(((Calendar)evt.getNewValue()).getTime());
+							jCalendarDate.setDate(((Calendar)propertyChangeEvent.getNewValue()).getTime());
 						} else {
-							jCalendarDate.setDate(((Calendar)evt.getOldValue()).getTime());
+							jCalendarDate.setDate(((Calendar)propertyChangeEvent.getOldValue()).getTime());
 						}
 					} else {
-						jCalendarDate.setDate(((Calendar)evt.getNewValue()).getTime());
+						jCalendarDate.setDate(((Calendar)propertyChangeEvent.getNewValue()).getTime());
 					}
 					billDate.setTime(jCalendarDate.getDate());
 				} else {
-					jCalendarDate.setDate(((Calendar)evt.getNewValue()).getTime());
+					jCalendarDate.setDate(((Calendar)propertyChangeEvent.getNewValue()).getTime());
 					billDate.setTime(jCalendarDate.getDate());
 				}
 			});
@@ -613,7 +615,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.removethepatientassociatedwiththisbill.tooltip"));
-			jButtonTrashPatient.addActionListener(e -> {
+			jButtonTrashPatient.addActionListener(actionEvent -> {
 
 				patientSelected = null;
 				//BILL
@@ -640,7 +642,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.newbill.findpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.associateapatientwiththisbill.tooltip"));
-			jButtonPickPatient.addActionListener(e -> {
+			jButtonPickPatient.addActionListener(actionEvent -> {
 
 				SelectPatient sp = new SelectPatient(PatientBillEdit.this, patientSelected);
 				sp.addSelectionListener(PatientBillEdit.this);
@@ -925,7 +927,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			if (insert)  {
 				jButtonBalance.setEnabled(false);
 			}
-			jButtonBalance.addActionListener(arg0 -> {
+			jButtonBalance.addActionListener(actionEvent -> {
 
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png");
 				BigDecimal amount = new BigDecimal(0);
@@ -965,7 +967,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonSave.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
 			jButtonSave.setIcon(new ImageIcon("rsc/icons/save_button.png"));
 			jButtonSave.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonSave.addActionListener(e -> {
+			jButtonSave.addActionListener(actionEvent -> {
 
 				if (listSelected == null) {
 					listSelected = lstArray.get(0);
@@ -1032,8 +1034,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				}
 				if (paid && GeneralData.RECEIPTPRINTER) {
 					TxtPrinter.initialize();
-					if (TxtPrinter.PRINT_AS_PAID)
+					if (TxtPrinter.PRINT_AS_PAID) {
 						new GenericReportBill(billID, GeneralData.PATIENTBILL, false, !TxtPrinter.PRINT_WITHOUT_ASK);
+					}
 				}
 				dispose();
 			});
@@ -1052,7 +1055,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonPrintPayment.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			jButtonPrintPayment.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonPrintPayment.setIcon(new ImageIcon("rsc/icons/receipt_button.png"));
-			jButtonPrintPayment.addActionListener(e -> {
+			jButtonPrintPayment.addActionListener(actionEvent -> {
 				TxtPrinter.initialize();
 				new GenericReportBill(thisBill.getId(), "PatientBillPayments", false, !TxtPrinter.PRINT_WITHOUT_ASK);
 			});
@@ -1073,7 +1076,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			if (insert) {
 				jButtonPaid.setEnabled(false);
 			}
-			jButtonPaid.addActionListener(e -> {
+			jButtonPaid.addActionListener(actionEvent -> {
 
 				GregorianCalendar datePay = new GregorianCalendar();
 
@@ -1129,7 +1132,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonClose.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
 			jButtonClose.setIcon(new ImageIcon("rsc/icons/close_button.png"));
 			jButtonClose.setHorizontalAlignment(SwingConstants.LEFT);
-			jButtonClose.addActionListener(e -> {
+			jButtonClose.addActionListener(actionEvent -> {
 				if (modified) {
 					int ok = MessageDialog.yesNoCancel(PatientBillEdit.this, "angal.newbill.billhasbeenchangedwouldyouliketosavethechanges.msg");
 					if (ok == JOptionPane.YES_OPTION) {
@@ -1152,7 +1155,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonAddRefund.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			jButtonAddRefund.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddRefund.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
-			jButtonAddRefund.addActionListener(e -> {
+			jButtonAddRefund.addActionListener(actionEvent -> {
 
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png");
 				BigDecimal amount = new BigDecimal(0);
@@ -1170,12 +1173,16 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				if (quantity != null) {
 					try {
 						amount = new BigDecimal(quantity).negate();
-						if (amount.equals(new BigDecimal(0))) return;
+						if (amount.equals(new BigDecimal(0))) {
+							return;
+						}
 					} catch (Exception eee) {
 						MessageDialog.error(PatientBillEdit.this, "angal.newbill.invalidquantitypleasetryagain.msg");
 						return;
 					}
-				} else return;
+				} else {
+					return;
+				}
 
 				if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
 
@@ -1235,7 +1242,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonAddPayment.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			jButtonAddPayment.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddPayment.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
-			jButtonAddPayment.addActionListener(e -> {
+			jButtonAddPayment.addActionListener(actionEvent -> {
 
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png");
 				BigDecimal amount = new BigDecimal(0);
@@ -1253,12 +1260,16 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				if (quantity != null) {
 					try {
 						amount = new BigDecimal(quantity);
-						if (amount.equals(new BigDecimal(0))) return;
+						if (amount.equals(new BigDecimal(0))) {
+							return;
+						}
 					} catch (Exception eee) {
 						MessageDialog.error(PatientBillEdit.this, "angal.newbill.invalidquantitypleasetryagain.msg");
 						return;
 					}
-				} else return;
+				} else {
+					return;
+				}
 
 				if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
 
@@ -1297,7 +1308,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonRemovePayment.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
 			jButtonRemovePayment.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonRemovePayment.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
-			jButtonRemovePayment.addActionListener(e -> {
+			jButtonRemovePayment.addActionListener(actionEvent -> {
 				int row = jTablePayment.getSelectedRow();
 				if (row > -1) {
 					removePayment(row);
@@ -1314,7 +1325,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonAddOther.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonAddOther.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddOther.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
-			jButtonAddOther.addActionListener(e -> {
+			jButtonAddOther.addActionListener(actionEvent -> {
 
 				boolean isPrice = true;
 
@@ -1326,7 +1337,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				ArrayList<Price> othArray = new ArrayList<>();
 				for (Price price : prcListArray) {
 					if (price.getGroup().equals("OTH")) //$NON-NLS-1$
+					{
 						othArray.add(price);
+					}
 				}
 
 				Icon icon = new ImageIcon("rsc/icons/plus_dialog.png");
@@ -1351,7 +1364,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			                    null,
 								"0"); //$NON-NLS-1$
 						try {
-							if (price == null) return;
+							if (price == null) {
+								return;
+							}
 							double amount = Double.parseDouble(price);
 							oth.setPrice(amount);
 							isPrice = false;
@@ -1376,7 +1391,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			                    null,
 			                    qty);
 						try {
-							if (quantity == null || quantity.equals("")) return;
+							if (quantity == null || quantity.equals("")) {
+								return;
+							}
 							qty = Integer.parseInt(quantity);
 							addItem(oth, qty, isPrice);
 						} catch (Exception eee) {
@@ -1398,13 +1415,15 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonAddExam.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonAddExam.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddExam.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
-			jButtonAddExam.addActionListener(e -> {
+			jButtonAddExam.addActionListener(actionEvent -> {
 
 				ArrayList<Price> exaArray = new ArrayList<>();
 				for (Price price : prcListArray) {
 
 					if (price.getGroup().equals("EXA")) //$NON-NLS-1$
+					{
 						exaArray.add(price);
+					}
 				}
 
 				Icon icon = new ImageIcon("rsc/icons/exam_dialog.png"); //$NON-NLS-1$
@@ -1429,13 +1448,15 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonAddOperation.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonAddOperation.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddOperation.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
-			jButtonAddOperation.addActionListener(e -> {
+			jButtonAddOperation.addActionListener(actionEvent -> {
 
 				ArrayList<Price> opeArray = new ArrayList<>();
 				for (Price price : prcListArray) {
 
 					if (price.getGroup().equals("OPE")) //$NON-NLS-1$
+					{
 						opeArray.add(price);
+					}
 				}
 
 				Icon icon = new ImageIcon("rsc/icons/operation_dialog.png"); //$NON-NLS-1$
@@ -1460,13 +1481,15 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonAddMedical.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonAddMedical.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
-			jButtonAddMedical.addActionListener(e -> {
+			jButtonAddMedical.addActionListener(actionEvent -> {
 
 				ArrayList<Price> medArray = new ArrayList<>();
 				for (Price price : prcListArray) {
 
 					if (price.getGroup().equals("MED")) //$NON-NLS-1$
+					{
 						medArray.add(price);
+					}
 				}
 
 				Icon icon = new ImageIcon("rsc/icons/medical_dialog.png"); //$NON-NLS-1$
@@ -1510,7 +1533,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonCustom.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonCustom.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonCustom.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
-			jButtonCustom.addActionListener(e -> {
+			jButtonCustom.addActionListener(actionEvent -> {
 				double amount;
 				Icon icon = new ImageIcon("rsc/icons/custom_dialog.png"); //$NON-NLS-1$
 				String desc = (String)JOptionPane.showInputDialog(
@@ -1566,7 +1589,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonRemoveItem.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
 			jButtonRemoveItem.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonRemoveItem.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
-			jButtonRemoveItem.addActionListener(e -> {
+			jButtonRemoveItem.addActionListener(actionEvent -> {
 				int row = jTableBill.getSelectedRow();
 				if (row > -1) {
 					removeItem(row);
@@ -1603,8 +1626,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			payments = payments.add(payAmount); 
 		}
 		balance = bigTotal.subtract(payments);
-		if (jButtonPaid != null) jButtonPaid.setEnabled(balance.compareTo(new BigDecimal(0)) >= 0);
-		if (jButtonBalance != null) jButtonBalance.setEnabled(balance.compareTo(new BigDecimal(0)) >= 0);
+		if (jButtonPaid != null) {
+			jButtonPaid.setEnabled(balance.compareTo(new BigDecimal(0)) >= 0);
+		}
+		if (jButtonBalance != null) {
+			jButtonBalance.setEnabled(balance.compareTo(new BigDecimal(0)) >= 0);
+		}
 	}
 
 	private void addItem(Price prc, int qty, boolean isPrice) {
@@ -1713,10 +1740,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			 * Select the prices of the selected list.
 			 * If no price list is selected (new bill) the first one is taken.
 			 */
-			if (listSelected == null) listSelected = lstArray.get(0);
+			if (listSelected == null) {
+				listSelected = lstArray.get(0);
+			}
 			for (Price price : prcArray) {
-				if (price.getList().getId() == listSelected.getId()) 
-		    		prcListArray.add(price);
+				if (price.getList().getId() == listSelected.getId()) {
+					prcListArray.add(price);
+				}
 		    }
 			
 			/*
@@ -1761,8 +1791,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		
 		@Override
 		public int getRowCount() {
-			if (billItems == null)
+			if (billItems == null) {
 				return 0;
+			}
 			return billItems.size();
 		}
 		

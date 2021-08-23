@@ -423,7 +423,7 @@ public class PatientInsertExtended extends JDialog {
 		if (jOkButton == null) {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jOkButton.addActionListener(e -> {
+			jOkButton.addActionListener(actionEvent -> {
 				boolean ok = true;
 				boolean result = false;
 				String firstName = jFirstNameTextField.getText().trim();
@@ -689,7 +689,7 @@ public class PatientInsertExtended extends JDialog {
 		if (jCancelButton == null) {
 			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jCancelButton.addActionListener(e -> dispose());
+			jCancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCancelButton;
 	}
@@ -820,7 +820,7 @@ public class PatientInsertExtended extends JDialog {
 				jBirthDateReset = new JButton();
 				jBirthDateReset.setIcon(new ImageIcon("rsc/icons/trash_button.png"));
 				jBirthDateReset.setPreferredSize(new Dimension(20, 20));
-				jBirthDateReset.addActionListener(e -> {
+				jBirthDateReset.addActionListener(actionEvent -> {
 					jBirthDateChooser.getDateEditor().setDate(null);
 					/*
 					 * jAgeField.setText(""); jAgeField.setEditable(true);
@@ -1484,7 +1484,7 @@ public class PatientInsertExtended extends JDialog {
 			jAgeDescPanel.add(getJAgeMonthsPanel());
 			jAgeMonthsComboBox.setEnabled(false);
 
-			jAgeDescComboBox.addActionListener(e -> {
+			jAgeDescComboBox.addActionListener(actionEvent -> {
 				if (jAgeDescComboBox.getSelectedItem().toString().compareTo(MessageBundle.getMessage("angal.agetype.newborn.txt")) == 0) {
 					jAgeMonthsComboBox.setEnabled(true);
 				} else {

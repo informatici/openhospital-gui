@@ -93,7 +93,7 @@ public class JFromDateToDateChooserDialog extends JDialog {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(arg0 -> {
+			buttonCancel.addActionListener(actionEvent -> {
 				cancel = true;
 				dispose();
 			});
@@ -105,7 +105,7 @@ public class JFromDateToDateChooserDialog extends JDialog {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			buttonOK.addActionListener(arg0 -> {
+			buttonOK.addActionListener(actionEvent -> {
 				dateFrom = fromDateToDateChooser.getDateFrom();
 				dateTo = fromDateToDateChooser.getDateTo();
 				dispose();
@@ -118,7 +118,7 @@ public class JFromDateToDateChooserDialog extends JDialog {
 		if (buttonExcel == null) {
 			buttonExcel = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
 			buttonExcel.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
-			buttonExcel.addActionListener(arg0 -> {
+			buttonExcel.addActionListener(actionEvent -> {
 				dateFrom = fromDateToDateChooser.getDateFrom();
 				dateTo = fromDateToDateChooser.getDateTo();
 				excel = true;

@@ -211,17 +211,17 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 
 		JButton btnAdd = new JButton(MessageBundle.getMessage("angal.operationrowlist.add.btn"));
 		btnAdd.setMnemonic(MessageBundle.getMnemonic("angal.operationrowlist.add.btn.key"));
-		btnAdd.addActionListener(arg0 -> addToGrid());
+		btnAdd.addActionListener(actionEvent -> addToGrid());
 		panelActions.add(btnAdd);
 
 		JButton btnClear = new JButton(MessageBundle.getMessage("angal.operationrow.clear.btn"));
 		btnClear.setMnemonic(MessageBundle.getMnemonic("angal.operationrow.clear.btn.key"));
-		btnClear.addActionListener(arg0 -> clearForm());
+		btnClear.addActionListener(actionEvent -> clearForm());
 		panelActions.add(btnClear);
 
 		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		btnDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		btnDelete.addActionListener(e -> {
+		btnDelete.addActionListener(actionEvent -> {
 			int index = tableData.getSelectedRow();
 			deleteOpeRow(index);
 		});

@@ -256,7 +256,7 @@ public class DiseaseEdit extends JDialog {
 		if (cancelButton == null) {
 			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			cancelButton.addActionListener(e -> dispose());
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -270,7 +270,7 @@ public class DiseaseEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 				disease.setType((DiseaseType) typeComboBox.getSelectedItem());
@@ -350,13 +350,8 @@ public class DiseaseEdit extends JDialog {
 		return codeTextField;
 	}
 
-	
-	//private JLabel includeOpdLabel = null;
-	//private JCheckBox includeOpdCheckBox  = null;
-
-	
 	public JPanel getJFlagsPanel() {
-		if (jNewPatientPanel == null){
+		if (jNewPatientPanel == null) {
 			jNewPatientPanel = new JPanel();
 			includeOpdCheckBox = new JCheckBox(MessageBundle.getMessage("angal.disease.opd"));
 			includeIpdInCheckBox = new JCheckBox(MessageBundle.getMessage("angal.disease.ipdin"));
@@ -364,7 +359,7 @@ public class DiseaseEdit extends JDialog {
 			jNewPatientPanel.add(includeOpdCheckBox);
 			jNewPatientPanel.add(includeIpdInCheckBox);
 			jNewPatientPanel.add(includeIpdOutCheckBox);
-			if (!insert){
+			if (!insert) {
 				if (disease.getOpdInclude()) {
 					includeOpdCheckBox.setSelected(true);
 				}

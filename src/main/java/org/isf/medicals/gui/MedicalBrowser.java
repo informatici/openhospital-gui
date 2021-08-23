@@ -235,7 +235,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		if (buttonAMC == null) {
 			buttonAMC = new JButton(MessageBundle.getMessage("angal.medicals.averagemonthlyconsumption.btn"));
 			buttonAMC.setMnemonic(MessageBundle.getMnemonic("angal.medicals.averagemonthlyconsumption.btn.key"));
-			buttonAMC.addActionListener(event -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALAMC));
+			buttonAMC.addActionListener(actionEvent -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALAMC));
 		}
 		return buttonAMC;
 	}
@@ -277,28 +277,28 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonClose() {
 		JButton closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		closeButton.addActionListener(arg0 -> dispose());
+		closeButton.addActionListener(actionEvent -> dispose());
 		return closeButton;
 	}
 
 	private JButton getJButtonExpiring() {
 		JButton buttonExpiring = new JButton(MessageBundle.getMessage("angal.medicals.expiring.btn"));
 		buttonExpiring.setMnemonic(MessageBundle.getMnemonic("angal.medicals.expiring.btn.key"));
-		buttonExpiring.addActionListener(event -> launchExpiringReport());
+		buttonExpiring.addActionListener(actionEvent -> launchExpiringReport());
 		return buttonExpiring;
 	}
 
 	private JButton getJButtonOrderList() {
 		JButton buttonOrderList = new JButton(MessageBundle.getMessage("angal.medicals.order.btn"));
 		buttonOrderList.setMnemonic(MessageBundle.getMnemonic("angal.medicals.order.btn.key"));
-		buttonOrderList.addActionListener(event -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALORDER));
+		buttonOrderList.addActionListener(actionEvent -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALORDER));
 		return buttonOrderList;
 	}
 
 	private JButton getJButtonStock() {
 		JButton buttonStock = new JButton(MessageBundle.getMessage("angal.medicals.stock.btn"));
 		buttonStock.setMnemonic(MessageBundle.getMnemonic("angal.medicals.stock.btn.key"));
-		buttonStock.addActionListener(event -> {
+		buttonStock.addActionListener(actionEvent -> {
 
 			ArrayList<String> dateOptions = new ArrayList<>();
 			dateOptions.add(MessageBundle.getMessage("angal.medicals.today"));
@@ -391,7 +391,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonStockCard() {
 		JButton buttonStockCard = new JButton(MessageBundle.getMessage("angal.common.stockcard.btn"));
 		buttonStockCard.setMnemonic(MessageBundle.getMnemonic("angal.common.stockcard.btn.key"));
-		buttonStockCard.addActionListener(event -> {
+		buttonStockCard.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -419,7 +419,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonReport() {
 		JButton buttonExport = new JButton(MessageBundle.getMessage("angal.medicals.export.btn"));
 		buttonExport.setMnemonic(MessageBundle.getMnemonic("angal.medicals.export.btn.key"));
-		buttonExport.addActionListener(event -> {
+		buttonExport.addActionListener(actionEvent -> {
 
 			String fileName = compileFileName();
 			File defaultFileName = new File(fileName);
@@ -459,7 +459,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonDelete() {
 		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		buttonDelete.addActionListener(event -> {
+		buttonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -488,7 +488,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonEdit() {
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		buttonEdit.addActionListener(event -> {
+		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -505,7 +505,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonNew() {
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		buttonNew.addActionListener(event -> {
+		buttonNew.addActionListener(actionEvent -> {
 			// medical will reference the new record
 			medical = new Medical(null, new MedicalType("", ""), "", "", 0, 0, 0, 0, 0);
 			MedicalEdit newrecord = new MedicalEdit(medical, true, me);
@@ -529,7 +529,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		pbox.addActionListener(arg0 -> {
+		pbox.addActionListener(actionEvent -> {
 			pSelection = pbox.getSelectedItem().toString();
 			if (pSelection.compareTo(STR_ALL) == 0) {
 				model = new MedicalBrowsingModel();

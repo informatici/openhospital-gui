@@ -212,17 +212,17 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 
 		JButton btnSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 		btnSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-		btnSave.addActionListener(arg0 -> addToGrid());
+		btnSave.addActionListener(actionEvent -> addToGrid());
 
 		JButton btnNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		btnNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		btnNew.addActionListener(arg0 -> clearForm());
+		btnNew.addActionListener(actionEvent -> clearForm());
 		panelActions.add(btnNew);
 		panelActions.add(btnSave);
 
 		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		btnDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		btnDelete.addActionListener(e -> {
+		btnDelete.addActionListener(actionEvent -> {
 			int index = tableData.getSelectedRow();
 			deleteOpeRow(index);
 		});
