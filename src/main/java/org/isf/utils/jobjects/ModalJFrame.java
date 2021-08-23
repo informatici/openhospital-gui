@@ -48,16 +48,19 @@ public class ModalJFrame extends JFrame {
 		setIconImage(img.getImage());
 
 		this.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowOpened(WindowEvent e) {
 				owner.setEnabled(false);
 			}
 
+			@Override
 			public void windowClosing(WindowEvent e) {
 				owner.setEnabled(true);
 				owner.toFront();
 				frame.removeWindowListener(this);
 			}
 
+			@Override
 			public void windowClosed(WindowEvent e) {
 				owner.setEnabled(true);
 				owner.toFront();
@@ -66,6 +69,7 @@ public class ModalJFrame extends JFrame {
 		});
 		
 		owner.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowActivated(WindowEvent e) {
 				if (frame.isShowing()) {
 					frame.setExtendedState(JFrame.NORMAL);

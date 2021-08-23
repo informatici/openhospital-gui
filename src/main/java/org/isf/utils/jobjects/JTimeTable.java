@@ -126,6 +126,7 @@ public class JTimeTable extends JPanel {
 
 	private class HourListener implements MouseListener {
 
+		@Override
 		public void mouseClicked(MouseEvent evt) {
 			JLabel thisLabel = (JLabel) evt.getSource();
 			String previousValue;
@@ -141,21 +142,26 @@ public class JTimeTable extends JPanel {
 			thisLabel.setBackground(Color.GRAY);
 		}
 
+		@Override
 		public void mouseEntered(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mouseExited(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mousePressed(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent arg0) {
 		}
 	}
 
 	private class MinuteListener implements MouseListener {
 
+		@Override
 		public void mouseClicked(MouseEvent evt) {
 			JLabel thisLabel = (JLabel) evt.getSource();
 			String previousValue;
@@ -172,15 +178,19 @@ public class JTimeTable extends JPanel {
 			
 		}
 
+		@Override
 		public void mouseEntered(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mouseExited(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mousePressed(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent arg0) {
 		}
 	}
