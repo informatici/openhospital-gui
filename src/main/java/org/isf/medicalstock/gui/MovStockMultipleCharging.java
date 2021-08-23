@@ -53,6 +53,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -147,7 +148,7 @@ public class MovStockMultipleCharging extends JDialog {
 		super(owner, true);
 		initialize();
 		initcomponents();
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
 
@@ -387,7 +388,7 @@ public class MovStockMultipleCharging extends JDialog {
 			{
 				suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
 				suggestion.setForeground(Color.GRAY);
-				suggestion.setHorizontalAlignment(JLabel.CENTER);
+				suggestion.setHorizontalAlignment(SwingConstants.CENTER);
 				suggestion.changeAlpha(0.5f);
 				suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 			}
@@ -559,7 +560,7 @@ public class MovStockMultipleCharging extends JDialog {
 		{
 			suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
 			suggestion.setForeground(Color.GRAY);
-			suggestion.setHorizontalAlignment(JLabel.CENTER);
+			suggestion.setHorizontalAlignment(SwingConstants.CENTER);
 			suggestion.changeAlpha(0.5f);
 			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 		}

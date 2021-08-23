@@ -42,6 +42,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.EventListenerList;
 
@@ -187,7 +189,7 @@ public class LabEdit extends ModalJFrame {
 		} else {
 			this.setTitle(MessageBundle.getMessage("angal.lab.editlaboratoryexam.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		//this.setVisible(true);
 	}
 
@@ -302,8 +304,8 @@ public class LabEdit extends ModalJFrame {
 				noteScrollPane = new JScrollPane(noteTextArea);
 				noteScrollPane.setBounds(labelWidth+5, 110, 450, 40);
 				noteScrollPane.createVerticalScrollBar();
-				noteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-				noteScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				noteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+				noteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				noteScrollPane.setAutoscrolls(true);
 				dataPanel.add(noteScrollPane);
 			}

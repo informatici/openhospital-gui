@@ -49,6 +49,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
@@ -335,7 +336,7 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 				}
 			}
 		});
-		JScrollPane buddy = new JScrollPane(buddyList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane buddy = new JScrollPane(buddyList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		Dimension size = new Dimension(150, 1000);
 		buddy.setPreferredSize(size);
 

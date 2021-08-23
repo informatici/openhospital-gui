@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -54,7 +55,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -64,6 +64,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -250,7 +251,7 @@ public class WardPharmacy extends ModalJFrame implements
 			editAllowed = true;
 		}
 		initComponents();
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
 		addWindowListener(new WindowAdapter() {
@@ -448,9 +449,9 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private CustomJDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
-			dateTo.set(GregorianCalendar.HOUR_OF_DAY, 23);
-			dateTo.set(GregorianCalendar.MINUTE, 59);
-			dateTo.set(GregorianCalendar.SECOND, 59);
+			dateTo.set(Calendar.HOUR_OF_DAY, 23);
+			dateTo.set(Calendar.MINUTE, 59);
+			dateTo.set(Calendar.SECOND, 59);
 			jCalendarTo = new CustomJDateChooser(dateTo.getTime()); // Calendar
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarTo.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
@@ -467,9 +468,9 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private CustomJDateChooser getJCalendarFrom() {
 		if (jCalendarFrom == null) {
-			dateFrom.set(GregorianCalendar.HOUR_OF_DAY, 0);
-			dateFrom.set(GregorianCalendar.MINUTE, 0);
-			dateFrom.set(GregorianCalendar.SECOND, 0);
+			dateFrom.set(Calendar.HOUR_OF_DAY, 0);
+			dateFrom.set(Calendar.MINUTE, 0);
+			dateFrom.set(Calendar.SECOND, 0);
 			jCalendarFrom = new CustomJDateChooser(dateFrom.getTime()); // Calendar
 			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarFrom.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
@@ -668,7 +669,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jPanelFilter.setLayout(new BoxLayout(jPanelFilter, BoxLayout.Y_AXIS));
 			jPanelFilter.add(Box.createVerticalStrut(filterSpacing));
 			JLabel jLabelMedical = new JLabel(MessageBundle.getMessage("angal.medicalstockward.medical")); //$NON-NLS-1$
-			jLabelMedical.setAlignmentX(Box.CENTER_ALIGNMENT);
+			jLabelMedical.setAlignmentX(Component.CENTER_ALIGNMENT);
 			jPanelFilter.add(jLabelMedical);
 			jPanelFilter.add(Box.createVerticalStrut(filterSpacing));
 			jPanelFilter.add(getJComboBoxTypes());
@@ -698,7 +699,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private JLabel getRowCounter() {
 		if (rowCounter == null) {
 			rowCounter = new JLabel();
-			rowCounter.setAlignmentX(Box.CENTER_ALIGNMENT);
+			rowCounter.setAlignmentX(Component.CENTER_ALIGNMENT);
 		}
 		return rowCounter;
 	}
@@ -707,7 +708,7 @@ public class WardPharmacy extends ModalJFrame implements
 		if (filterButton == null) {
 			filterButton = new JButton(MessageBundle.getMessage("angal.common.filter.btn"));
 			filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.filter.btn.key"));
-			filterButton.setAlignmentX(Box.CENTER_ALIGNMENT);
+			filterButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			filterButton.addActionListener(actionEvent -> {
 				if (ageFrom > ageTo) {
 					MessageDialog.error(WardPharmacy.this, "angal.medicalstockward.agefrommustbelowerthanageto");
@@ -732,7 +733,7 @@ public class WardPharmacy extends ModalJFrame implements
 		if (resetButton == null) {
 			resetButton = new JButton(MessageBundle.getMessage("angal.medicalstockward.reset.btn"));
 			resetButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockward.reset.btn.key"));
-			resetButton.setAlignmentX(Box.CENTER_ALIGNMENT);
+			resetButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 			resetButton.addActionListener(actionEvent -> {
 				jAgeFromTextField.setText("0"); //$NON-NLS-1$
 				jAgeToTextField.setText("0"); //$NON-NLS-1$

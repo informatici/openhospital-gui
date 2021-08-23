@@ -27,6 +27,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JDialog;
+import javax.swing.WindowConstants;
 
 import org.isf.video.gui.PhotoboothDialog;
 import org.isf.video.gui.PhotoboothPanelModel;
@@ -62,7 +63,7 @@ public class PhotoboothTester {
         presentationModel.setResolution(resolutions[resolutions.length - 1]);
 
         final PhotoboothDialog photoboothDialog = new PhotoboothDialog(presentationModel, new JDialog());
-        photoboothDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        photoboothDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         photoboothDialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent windowEvent) {

@@ -207,7 +207,7 @@ public class DicomViewGui extends JPanel {
 			}
 			
 			// center = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-			// JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			// ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			jPanelCenter = new JPanel();
 

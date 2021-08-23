@@ -24,6 +24,7 @@ package org.isf.utils.jobjects;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.swing.JTextField;
@@ -155,21 +156,21 @@ public class VoDateTextField extends JTextField {
 						GregorianCalendar gc = new GregorianCalendar();
 						gc.setLenient(false); //must do this
 						if (type.equals("dd/mm/yy") || type.equals("mm/dd/yy")) {
-							gc.set(GregorianCalendar.YEAR, Integer.parseInt(getText().substring(6,8)) + 2000);
+							gc.set(Calendar.YEAR, Integer.parseInt(getText().substring(6,8)) + 2000);
 						} else if (type.equals("dd/mm/yyyy") || type.equals("mm/dd/yyyy") ) {
-							gc.set(GregorianCalendar.YEAR, Integer.parseInt(getText().substring(6,10)));
+							gc.set(Calendar.YEAR, Integer.parseInt(getText().substring(6,10)));
 						}
 						
 						if (type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy")) {
-							gc.set(GregorianCalendar.MONTH, Integer.parseInt(getText().substring(3,5)) - 1);
+							gc.set(Calendar.MONTH, Integer.parseInt(getText().substring(3,5)) - 1);
 						} else {
-							gc.set(GregorianCalendar.MONTH, Integer.parseInt(getText().substring(0,2)) - 1);
+							gc.set(Calendar.MONTH, Integer.parseInt(getText().substring(0,2)) - 1);
 						}
 						
 						if (type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy")) {
-							gc.set(GregorianCalendar.DATE, Integer.parseInt(getText().substring(0,2)));
+							gc.set(Calendar.DATE, Integer.parseInt(getText().substring(0,2)));
 						} else {
-							gc.set(GregorianCalendar.DATE, Integer.parseInt(getText().substring(3,5)));
+							gc.set(Calendar.DATE, Integer.parseInt(getText().substring(3,5)));
 						}
 						gc.getTime(); //exception thrown here (if needed)
 						currentDate = getText();
@@ -209,33 +210,33 @@ public class VoDateTextField extends JTextField {
 
 	public void setDate(GregorianCalendar time) {
 		String string;
-		if (time.get(GregorianCalendar.DAY_OF_MONTH) > 9) {
-			string = String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH));
+		if (time.get(Calendar.DAY_OF_MONTH) > 9) {
+			string = String.valueOf(time.get(Calendar.DAY_OF_MONTH));
 		} else {
-			string = "0" + String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH));
+			string = "0" + String.valueOf(time.get(Calendar.DAY_OF_MONTH));
 		}
-		if (time.get(GregorianCalendar.MONTH) + 1 > 9) {
-			string += "/" + String.valueOf(time.get(GregorianCalendar.MONTH) + 1);
+		if (time.get(Calendar.MONTH) + 1 > 9) {
+			string += "/" + String.valueOf(time.get(Calendar.MONTH) + 1);
 		} else {
-			string += "/0" + String.valueOf(time.get(GregorianCalendar.MONTH) + 1);
+			string += "/0" + String.valueOf(time.get(Calendar.MONTH) + 1);
 		}
-		string += "/" + String.valueOf(time.get(GregorianCalendar.YEAR));
+		string += "/" + String.valueOf(time.get(Calendar.YEAR));
 		currentDate = string;
 	}
 
 	private String getConvertedString(GregorianCalendar time) {
 		String string;
-		if (time.get(GregorianCalendar.DAY_OF_MONTH) > 9) {
-			string = String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH));
+		if (time.get(Calendar.DAY_OF_MONTH) > 9) {
+			string = String.valueOf(time.get(Calendar.DAY_OF_MONTH));
 		} else {
-			string = "0" + String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH));
+			string = "0" + String.valueOf(time.get(Calendar.DAY_OF_MONTH));
 		}
-		if (time.get(GregorianCalendar.MONTH) + 1 > 9) {
-			string += "/" + String.valueOf(time.get(GregorianCalendar.MONTH) + 1);
+		if (time.get(Calendar.MONTH) + 1 > 9) {
+			string += "/" + String.valueOf(time.get(Calendar.MONTH) + 1);
 		} else {
-			string += "/0" + String.valueOf(time.get(GregorianCalendar.MONTH) + 1);
+			string += "/0" + String.valueOf(time.get(Calendar.MONTH) + 1);
 		}
-		string += "/" + String.valueOf(time.get(GregorianCalendar.YEAR));
+		string += "/" + String.valueOf(time.get(Calendar.YEAR));
 		return string;
 	}
 	

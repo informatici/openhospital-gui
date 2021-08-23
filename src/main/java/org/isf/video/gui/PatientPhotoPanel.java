@@ -38,6 +38,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -141,7 +142,7 @@ public class PatientPhotoPanel extends JPanel {
 					File image = fc.getSelectedFile();
 					CroppingDialog cropDiag = new CroppingDialog(patientFrame, image);
 					cropDiag.pack();
-					cropDiag.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					cropDiag.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 					cropDiag.setLocationRelativeTo(null);
 					cropDiag.setVisible(true);
 
@@ -167,7 +168,7 @@ public class PatientPhotoPanel extends JPanel {
 					photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
 
 					final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel, owner);
-					photoBoothDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					photoBoothDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 					photoBoothDialog.setVisible(true);
 					photoBoothDialog.toFront();
 					photoBoothDialog.requestFocus();

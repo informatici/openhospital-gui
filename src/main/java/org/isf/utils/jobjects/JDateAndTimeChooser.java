@@ -24,7 +24,6 @@ package org.isf.utils.jobjects;
 import java.awt.Dimension;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -60,16 +59,16 @@ public class JDateAndTimeChooser extends JPanel {
 			timeTable = new JTimeTable();
 			timeTable.addPropertyChangeListener("hour", propertyChangeEvent -> {
 				Calendar calendar = date.getCalendar();
-				calendar.set(GregorianCalendar.HOUR_OF_DAY, Integer.parseInt((String) propertyChangeEvent.getNewValue()));
-				calendar.set(GregorianCalendar.SECOND, 0);
+				calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt((String) propertyChangeEvent.getNewValue()));
+				calendar.set(Calendar.SECOND, 0);
 				date.setCalendar(calendar);
 				dateTime = date.getDate();
 			});
 
 			timeTable.addPropertyChangeListener("minute", propertyChangeEvent -> {
 				Calendar calendar = date.getCalendar();
-				calendar.set(GregorianCalendar.MINUTE, Integer.parseInt((String) propertyChangeEvent.getNewValue()));
-				calendar.set(GregorianCalendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, Integer.parseInt((String) propertyChangeEvent.getNewValue()));
+				calendar.set(Calendar.SECOND, 0);
 				date.setCalendar(calendar);
 				dateTime = date.getDate();
 			});

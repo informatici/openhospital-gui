@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 public class ChatPanel extends JPanel {
 
@@ -72,7 +73,7 @@ public class ChatPanel extends JPanel {
 			}
 		});
 		chatMessages.setSize(new Dimension(100, 200));
-		final JScrollPane received = new JScrollPane(chatMessages,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		final JScrollPane received = new JScrollPane(chatMessages, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		received.setPreferredSize(new Dimension(200,200));
 		received.setMaximumSize(new Dimension(10,10));

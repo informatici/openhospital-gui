@@ -26,6 +26,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.swing.JButton;
@@ -466,7 +467,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			GregorianCalendar now = new GregorianCalendar();
 			//04/01/2009 - ross - do not use roll, use add(week,-1)!
 			//now.roll(GregorianCalendar.WEEK_OF_YEAR, false);
-			now.add(GregorianCalendar.WEEK_OF_YEAR, -1);
+			now.add(Calendar.WEEK_OF_YEAR, -1);
 			dateFrom = new VoDateTextField("dd/mm/yyyy", now, 10);
 		}
 		return dateFrom;

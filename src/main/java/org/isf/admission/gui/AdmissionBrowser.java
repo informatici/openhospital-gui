@@ -52,7 +52,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -60,7 +59,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.EventListenerList;
@@ -497,7 +498,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private void initialize(JFrame parent) {
 		this.add(getJContentPane(), BorderLayout.CENTER);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pack();
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -671,7 +672,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JScrollPane getJPanelNote() {
 
 		JScrollPane scrollPane = new JScrollPane(getJTextAreaNote());
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 50, 0, 50), // external
 				new ShadowBorder(5, Color.LIGHT_GRAY))); // internal
 		scrollPane.addAncestorListener(new AncestorListener() {
@@ -1677,7 +1678,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				GenderPatientExamination gpatex = new GenderPatientExamination(patex, patient.getSex() == 'M');
 
 				PatientExaminationEdit dialog = new PatientExaminationEdit(AdmissionBrowser.this, gpatex);
-				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.pack();
 				dialog.setLocationRelativeTo(null);
 				dialog.showAsModal(AdmissionBrowser.this);

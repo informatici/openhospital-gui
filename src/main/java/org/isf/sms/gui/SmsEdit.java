@@ -44,6 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.isf.generaldata.GeneralData;
@@ -103,7 +104,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	private void initComponents() {
 		setTitle(MessageBundle.getMessage("angal.sms.newsms.title"));
 		setResizable(false);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		add(getJNorthPanel(), BorderLayout.NORTH);
 		add(getJCenterPanel(), BorderLayout.CENTER);
 		add(getJButtonPanel(), BorderLayout.SOUTH);
@@ -390,7 +391,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			JTimeButton.addActionListener(actionEvent -> {
 
 				JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(SmsEdit.this, jSchedDateChooser.getDate());
-				schedDate.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				schedDate.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				schedDate.setVisible(true);
 
 				Date date = schedDate.getDate();

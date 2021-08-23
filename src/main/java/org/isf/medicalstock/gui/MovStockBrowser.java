@@ -38,6 +38,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -57,6 +58,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -209,7 +211,7 @@ public class MovStockBrowser extends ModalJFrame {
 		pack();
 		setVisible(true);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	private JPanel getContentpane() {
@@ -687,7 +689,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JTable getMovTable() {
 		GregorianCalendar now = new GregorianCalendar();
 		GregorianCalendar old = new GregorianCalendar();
-		old.add(GregorianCalendar.WEEK_OF_YEAR, -1);
+		old.add(Calendar.WEEK_OF_YEAR, -1);
 
 		model = new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 		movTable = new JTable(model);
@@ -771,8 +773,8 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private DateTextField getMovDateFrom() {
 		GregorianCalendar time = new GregorianCalendar();
-		//time.roll(GregorianCalendar.WEEK_OF_YEAR, false);
-		time.add(GregorianCalendar.WEEK_OF_YEAR, -1);
+		//time.roll(Calendar.WEEK_OF_YEAR, false);
+		time.add(Calendar.WEEK_OF_YEAR, -1);
 		movDateFrom = new DateTextField(time);
 		return movDateFrom;
 	}

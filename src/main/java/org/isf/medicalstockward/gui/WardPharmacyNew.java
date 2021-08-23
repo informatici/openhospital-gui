@@ -48,6 +48,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -215,7 +216,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		add(getJPanelMedicals(), BorderLayout.CENTER);
 		add(getJPanelNorth(), BorderLayout.NORTH);
-		setDefaultCloseOperation(WardPharmacyNew.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.medicalstockwardedit.title"));
 		pack();
 		setLocationRelativeTo(null);

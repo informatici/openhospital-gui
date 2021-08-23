@@ -34,13 +34,13 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -119,7 +119,7 @@ public class SmsBrowser extends ModalJFrame {
 
 	private void initComponents() {
 		setTitle(MessageBundle.getMessage("angal.sms.smsmanager.title"));
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		getContentPane().add(getJButtonPanel(), BorderLayout.SOUTH);
 		JScrollPane scrollPane = new JScrollPane(getJSmsTable());
 		getContentPane().add(scrollPane, BorderLayout.CENTER);

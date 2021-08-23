@@ -44,6 +44,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
@@ -121,10 +122,11 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		gbc_TypeSourceLabelValue.gridy = 0;
 		panelHeader.add(TypeSourceLabelValue, gbc_TypeSourceLabelValue);
 
-		if (myOpd != null)
+		if (myOpd != null) {
 			CodeSourceLabelValue = new JLabel(myOpd.getCode() + ""); //$NON-NLS-1$
-		else
+		} else {
 			CodeSourceLabelValue = new JLabel(""); //$NON-NLS-1$
+		}
 		CodeSourceLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
 		GridBagConstraints gbc_CodeSourceLabelValue = new GridBagConstraints();
 		gbc_CodeSourceLabelValue.fill = GridBagConstraints.BOTH;
@@ -133,10 +135,11 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		gbc_CodeSourceLabelValue.gridy = 0;
 		panelHeader.add(CodeSourceLabelValue, gbc_CodeSourceLabelValue);
 
-		if (myOpd != null)
+		if (myOpd != null) {
 			DateLabelValue = new JLabel(myOpd.getDate().toString());
-		else
+		} else {
 			DateLabelValue = new JLabel(""); //$NON-NLS-1$
+		}
 		DateLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
 		GridBagConstraints gbc_DateLabelValue = new GridBagConstraints();
 		gbc_DateLabelValue.insets = new Insets(0, 0, 0, 5);
@@ -146,10 +149,11 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		gbc_DateLabelValue.gridy = 0;
 		panelHeader.add(DateLabelValue, gbc_DateLabelValue);
 
-		if (myOpd != null)
+		if (myOpd != null) {
 			PatientLabelValue = new JLabel(myOpd.getFullName());
-		else
+		} else {
 			PatientLabelValue = new JLabel(""); //$NON-NLS-1$
+		}
 		PatientLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
 		GridBagConstraints gbc_PatientLabelValue = new GridBagConstraints();
 		gbc_PatientLabelValue.anchor = GridBagConstraints.EAST;
@@ -370,7 +374,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		opeRowEdit.setMyParent(dialogOpe);
 		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.newoperation.title"));
 		dialogOpe.setVisible(true);
-		dialogOpe.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialogOpe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	private void updateButtonMouseClicked(java.awt.event.MouseEvent evt) {
@@ -391,7 +395,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		opeRowEdit.setMyParent(dialogOpe);
 		opeRowEdit.getTitleLabel().setText(MessageBundle.getMessage("angal.operationrowlist.editoperation.title"));
 		dialogOpe.setVisible(true);
-		dialogOpe.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialogOpe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {

@@ -29,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
 
@@ -61,7 +62,7 @@ public class StockLedgerDialog extends JDialog {
 	private void initAndShow() {
 		add(dateRange, BorderLayout.CENTER);
 		add(getButtonsPanel(), BorderLayout.SOUTH);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
 		pack();
 		setLocationRelativeTo(null);

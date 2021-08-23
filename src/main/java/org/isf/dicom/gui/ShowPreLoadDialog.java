@@ -38,6 +38,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
+import javax.swing.WindowConstants;
 
 import org.isf.dicom.model.FileDicom;
 import org.isf.dicomtype.manager.DicomTypeBrowserManager;
@@ -101,7 +102,7 @@ class ShowPreLoadDialog extends JDialog {
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
 		pack();
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	private JPanel getCenterPanel() {
