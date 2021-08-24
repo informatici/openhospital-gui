@@ -44,6 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -136,7 +137,7 @@ public class WardPharmacyEdit extends JDialog {
 		jComboBoxDrugs.setSelectedItem(movWard.getMedical());
 		setTitle(MessageBundle.getMessage("angal.medicalstock.editwardpharmacy.title"));
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 	}
 	

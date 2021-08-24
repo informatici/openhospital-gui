@@ -914,7 +914,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			gbl_jNotePanel.rowWeights = new double[] { 0.0, 1.0};
 			jNotePanel.setLayout(gbl_jNotePanel);
 			
-			JLabel jLabelNote = new JLabel(MessageBundle.getMessage("angal.examination.note"), new ImageIcon("rsc/icons/list_button.png"), JLabel.LEFT); //$NON-NLS-1$
+			JLabel jLabelNote = new JLabel(MessageBundle.getMessage("angal.examination.note"), new ImageIcon("rsc/icons/list_button.png"), SwingConstants.LEFT); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelNote = new GridBagConstraints();
 			gbc_jLabelNote.anchor = GridBagConstraints.WEST;
 			gbc_jLabelNote.insets = new Insets(5, 5, 5, 5);

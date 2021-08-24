@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -292,7 +291,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private JPanel getJPanelDataPatient() {
 		if (jPanelDataPatient == null) {
 			jPanelDataPatient = ps.getPatientCompleteSummary();
-			jPanelDataPatient.setAlignmentY(Box.TOP_ALIGNMENT);
+			jPanelDataPatient.setAlignmentY(Component.TOP_ALIGNMENT);
 		}
 		return jPanelDataPatient;
 	}
@@ -432,7 +431,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (jScrollPaneTablePatient == null) {
 			jScrollPaneTablePatient = new JScrollPane();
 			jScrollPaneTablePatient.setViewportView(getJTablePatient());
-			jScrollPaneTablePatient.setAlignmentY(Box.TOP_ALIGNMENT);
+			jScrollPaneTablePatient.setAlignmentY(Component.TOP_ALIGNMENT);
 		}
 		return jScrollPaneTablePatient;
 	}
@@ -499,7 +498,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		jPanelCenter.remove(jPanelDataPatient);
 		ps = new PatientSummary(patient);
 		jPanelDataPatient = ps.getPatientCompleteSummary();
-		jPanelDataPatient.setAlignmentY(Box.TOP_ALIGNMENT);
+		jPanelDataPatient.setAlignmentY(Component.TOP_ALIGNMENT);
 		
 		jPanelCenter.add(jPanelDataPatient);
 		jPanelCenter.validate();

@@ -303,11 +303,11 @@ public class ReportLauncher extends ModalJFrame{
 			jFromDateLabel = new JLabel();
 			jFromDateLabel.setText(MessageBundle.getMessage("angal.stat.fromdate"));
 			GregorianCalendar defaultDate = new GregorianCalendar();
-			defaultDate.add(GregorianCalendar.DAY_OF_MONTH, -8);
+			defaultDate.add(Calendar.DAY_OF_MONTH, -8);
 			jFromDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
 			jToDateLabel = new JLabel();
 			jToDateLabel.setText(MessageBundle.getMessage("angal.stat.todate"));
-			defaultDate.add(GregorianCalendar.DAY_OF_MONTH, 7);
+			defaultDate.add(Calendar.DAY_OF_MONTH, 7);
 			jToDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
@@ -406,12 +406,12 @@ public class ReportLauncher extends ModalJFrame{
 			}
 			if (sParType.equalsIgnoreCase("twodatesfrommonthyear")) {
 				GregorianCalendar d = new GregorianCalendar();
-				d.set(GregorianCalendar.DAY_OF_MONTH,1 );
-				d.set(GregorianCalendar.MONTH, month-1);
-				d.set(GregorianCalendar.YEAR, year);
+				d.set(Calendar.DAY_OF_MONTH,1 );
+				d.set(Calendar.MONTH, month-1);
+				d.set(Calendar.YEAR, year);
 				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
 				fromDate = sdf.format(d.getTime());
-				d.set(GregorianCalendar.DAY_OF_MONTH, d.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
+				d.set(Calendar.DAY_OF_MONTH, d.getActualMaximum(Calendar.DAY_OF_MONTH));
 				toDate = sdf.format(d.getTime());
 				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {

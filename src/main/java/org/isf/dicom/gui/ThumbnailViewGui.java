@@ -34,13 +34,13 @@ import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 
 import org.isf.dicom.manager.AbstractThumbnailViewGui;
 import org.isf.dicom.manager.DicomManagerFactory;
@@ -133,12 +133,12 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		loadDicomFromDB();
 		dicomViewer.enableLoadButton();
 		thumbnailViewEnabled = true;
-		dicomViewer.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		dicomViewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	public void disableLoadButton() {
 		thumbnailViewEnabled = false;
-		dicomViewer.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		dicomViewer.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		dicomViewer.disableLoadButton();
 	}
 

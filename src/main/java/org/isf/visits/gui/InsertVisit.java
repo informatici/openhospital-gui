@@ -47,6 +47,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -401,7 +402,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			admButton.addActionListener(actionEvent -> {
 
 				JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(InsertVisit.this, visitDateChooser.getDate());
-				schedDate.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				schedDate.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				schedDate.setVisible(true);
 
 				Date date = schedDate.getDate();

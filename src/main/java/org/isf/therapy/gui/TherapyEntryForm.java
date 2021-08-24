@@ -30,6 +30,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -50,6 +51,7 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
@@ -495,9 +497,9 @@ public class TherapyEntryForm extends JDialog {
 		
 		therapyEndDate = new GregorianCalendar();
 		therapyEndDate.setTime(therapyStartdate.getDate());
-		therapyEndDate.add(GregorianCalendar.DAY_OF_YEAR, days - 1);
-		therapyEndDate.add(GregorianCalendar.WEEK_OF_YEAR, weeks);
-		therapyEndDate.add(GregorianCalendar.MONTH, months);
+		therapyEndDate.add(Calendar.DAY_OF_YEAR, days - 1);
+		therapyEndDate.add(Calendar.WEEK_OF_YEAR, weeks);
+		therapyEndDate.add(Calendar.MONTH, months);
 		
 		endDateLabel.setText(dateFormat.format(therapyEndDate.getTime()));
 	}
@@ -559,8 +561,7 @@ public class TherapyEntryForm extends JDialog {
 	private JScrollPane getNoteScrollPane() {
 		if (noteScrollPane == null) {
 			noteScrollPane = new JScrollPane(getNoteTextArea());
-			noteScrollPane
-					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			noteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		}
 		return noteScrollPane;
 	}

@@ -45,6 +45,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -1028,8 +1029,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (jNoteScrollPane == null && (jNotePanel == null)) {
 			JScrollPane jNoteScrollPane = new JScrollPane(getJTextArea());
 			
-			jNoteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-			jNoteScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+			jNoteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			jNoteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 			jNoteScrollPane.createVerticalScrollBar();
 			jNoteScrollPane.setAutoscrolls(true);
 			jNoteScrollPane.setPreferredSize(new Dimension(200, 350));

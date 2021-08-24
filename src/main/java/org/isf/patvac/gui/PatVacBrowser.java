@@ -30,6 +30,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -661,7 +662,7 @@ public class PatVacBrowser extends ModalJFrame {
 		if (dateFrom == null) {
 			GregorianCalendar now = new GregorianCalendar();
 			if (!GeneralData.ENHANCEDSEARCH) {
-				now.add(GregorianCalendar.WEEK_OF_YEAR, -1);
+				now.add(Calendar.WEEK_OF_YEAR, -1);
 			}
 			java.util.Date myDate = now.getTime();
 			dateFrom = new CustomJDateChooser(myDate, "dd/MM/yy");

@@ -39,6 +39,7 @@ import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
@@ -49,7 +50,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -60,6 +60,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.isf.admission.manager.AdmissionBrowserManager;
@@ -315,9 +316,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private void showTherapy(Therapy th) {
 		for (GregorianCalendar gc : th.getDates()) {
-			if (gc.get(GregorianCalendar.YEAR) == yearChooser.getYear()) {
-				if (gc.get(GregorianCalendar.MONTH) == monthChooser.getMonth()) {
-					jAgenda.addElement(th, gc.get(GregorianCalendar.DAY_OF_MONTH));
+			if (gc.get(Calendar.YEAR) == yearChooser.getYear()) {
+				if (gc.get(Calendar.MONTH) == monthChooser.getMonth()) {
+					jAgenda.addElement(th, gc.get(Calendar.DAY_OF_MONTH));
 					notifyCheckBox.setSelected(th.isNotify());
 				}
 			}
@@ -339,10 +340,10 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		Date vis = vs.getDate().getTime();
 		sdf.setCalendar(vs.getDate());
 		String dateFormatted = sdf.format(vs.getDate().getTime());
-		if (vs.getDate().get(GregorianCalendar.YEAR) == yearChooser.getYear()) {
-			if (vs.getDate().get(GregorianCalendar.MONTH) == monthChooser.getMonth()) {
+		if (vs.getDate().get(Calendar.YEAR) == yearChooser.getYear()) {
+			if (vs.getDate().get(Calendar.MONTH) == monthChooser.getMonth()) {
 
-				jAgenda.addElement(vs, vs.getDate().get(GregorianCalendar.DAY_OF_MONTH));
+				jAgenda.addElement(vs, vs.getDate().get(Calendar.DAY_OF_MONTH));
 
 			}
 		}
@@ -484,7 +485,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addVisitButton.addActionListener(actionEvent -> {
 
 				InsertVisit newVsRow = new InsertVisit(TherapyEdit.this, null, patient);
-				newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
 				Visit visit = newVsRow.getVisit();
@@ -972,7 +973,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addTherapyButton.addActionListener(actionEvent -> {
 
 				TherapyEntryForm newThRow = new TherapyEntryForm(TherapyEdit.this, patient.getCode(), null);
-				newThRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				newThRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newThRow.setVisible(true);
 
 				TherapyRow thRow = newThRow.getThRow();
@@ -1025,7 +1026,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					return;
 				}
 				TherapyEntryForm newThRow = new TherapyEntryForm(TherapyEdit.this, patient.getCode(), selectedTherapy);
-				newThRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				newThRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newThRow.setVisible(true);
 
 				TherapyRow thRow = newThRow.getThRow();

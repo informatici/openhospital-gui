@@ -44,7 +44,6 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -53,6 +52,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -158,7 +158,7 @@ public class VisitView extends ModalJFrame {
 		}
 		initialize();
 		initComponents();
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		addWindowListener(new FreeMemoryAdapter());
 		this.pack();
@@ -167,7 +167,7 @@ public class VisitView extends ModalJFrame {
 	public VisitView() {
 		initialize();
 		initComponents();
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
 		addWindowListener(new FreeMemoryAdapter());
@@ -286,7 +286,7 @@ public class VisitView extends ModalJFrame {
 			addFirstVisitButton.addActionListener(actionEvent -> {
 
 				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateFirst, getWard(), patient);
-				newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
 				Visit visit = newVsRow.getVisit();
@@ -307,7 +307,7 @@ public class VisitView extends ModalJFrame {
 			addSecondVisitButton.addActionListener(actionEvent -> {
 
 				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateSecond, getWard(), patient);
-				newVsRow.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
 				Visit vsRow = newVsRow.getVisit();

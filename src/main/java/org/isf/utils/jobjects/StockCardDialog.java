@@ -28,6 +28,7 @@ import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
@@ -83,7 +84,7 @@ public class StockCardDialog extends JDialog {
 		add(textField, BorderLayout.NORTH);
 		add(dateRange, BorderLayout.CENTER);
 		add(getButtonsPanel(), BorderLayout.SOUTH);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
 		pack();
 		setLocationRelativeTo(null);
