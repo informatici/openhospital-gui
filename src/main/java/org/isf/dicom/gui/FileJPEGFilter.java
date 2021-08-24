@@ -38,6 +38,7 @@ public class FileJPEGFilter
 	/**
 	 * Whether the given file is accepted by this filter.
 	 */
+    @Override
     public boolean accept(File f)
     {
         return  (f.getName().toLowerCase().endsWith(".jpg") ||
@@ -50,6 +51,7 @@ public class FileJPEGFilter
 	 *
 	 * @see FileView#getName
 	 */
+    @Override
     public String getDescription()
     {
         return "JPEG Images";

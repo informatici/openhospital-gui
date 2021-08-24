@@ -72,6 +72,7 @@ public class PhotoboothComponent extends BaseComponent<PhotoboothPanelPresentati
 		return buttonContainer;
 	}
 
+	@Override
 	public void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		photoBoothPanel = new JPanel();

@@ -44,6 +44,7 @@ public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallba
 		return parentQueue;
 	}
 
+	@Override
 	protected void dispatchEvent(AWTEvent event) {
 		cursorManager.push(event.getSource());
 		waitTimer.startTimer();
@@ -55,11 +56,13 @@ public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallba
 		}
 	}
 
+	@Override
 	public AWTEvent getNextEvent() throws InterruptedException {
 		waitTimer.stopTimer();
 		return super.getNextEvent();
 	}
 
+	@Override
 	public void trigger() {
 		cursorManager.setCursor();
 	}

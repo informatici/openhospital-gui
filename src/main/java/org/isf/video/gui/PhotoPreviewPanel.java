@@ -53,6 +53,7 @@ public class PhotoPreviewPanel extends JPanel	{
 	}
 	
 	//override paint method of panel
+	@Override
 	public void paint(Graphics g)	{
 		//draw the image
 		if (img != null)	{

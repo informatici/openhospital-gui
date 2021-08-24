@@ -42,6 +42,7 @@ public class VoDoubleTextField extends JTextField {
 		super("" + defval, columns);
 	}
 
+	@Override
 	protected Document createDefaultModel() {
 		return new IntTextDocument();
 	}
@@ -58,9 +59,11 @@ public class VoDoubleTextField extends JTextField {
 
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-			if (str == null)
+			if (str == null) {
 				return;
+			}
 			String oldString = getText(0, getLength());
 			String newString = oldString.substring(0, offs) + str + oldString.substring(offs);
 			try {
@@ -69,7 +72,9 @@ public class VoDoubleTextField extends JTextField {
 			} catch (NumberFormatException e) {
 				if (!str.matches("^[a-zA-Z0-9]*$"))
 					//super.insertString(offs, String.valueOf(DecimalFormatSymbols.getInstance(new Locale(GeneralData.LANGUAGE)).getDecimalSeparator()), a);
+				{
 					super.insertString(offs, ".", a);
+				}
 			}
 		}
 	}
