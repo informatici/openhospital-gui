@@ -52,7 +52,7 @@ import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
 import org.isf.menu.model.UserGroup;
 import org.isf.menu.model.UserMenuItem;
-import org.isf.sms.service.SmsDaemon;
+import org.isf.sms.service.SmsSender;
 import org.isf.telemetry.TelemetryGUI;
 import org.isf.telemetry.daemon.TelemetryDaemon;
 import org.isf.telemetry.model.Telemetry;
@@ -148,7 +148,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 			// start connection with SMS service
 			if (flagSms) {
-				Thread thread = new Thread(new SmsDaemon());
+				Thread thread = new Thread(new SmsSender());
 				thread.start();
 			}
 
