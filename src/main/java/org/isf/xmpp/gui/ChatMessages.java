@@ -23,8 +23,6 @@ package org.isf.xmpp.gui;
 
 import java.awt.Color;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -89,10 +87,11 @@ public class ChatMessages extends JTextPane {
 	//print send and received messages
 	public void printMessage(String user, String message, boolean incomingType) throws BadLocationException {
 		StyleConstants.setBold(keyWord, true);
-		if (incomingType)
+		if (incomingType) {
 			StyleConstants.setForeground(keyWord, blueColor);
-		else
+		} else {
 			StyleConstants.setForeground(keyWord, redColor);
+		}
 		sDoc = getDocument();
 		sDoc.insertString(sDoc.getEndPosition().getOffset(), "(" + sdf.format(new Date()) + ") " + user + " : ", keyWord);
 		StyleConstants.setBold(keyWord, false);
@@ -139,13 +138,9 @@ public class ChatMessages extends JTextPane {
 		select(position, position);
 
 		insertComponent(view);
-		view.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new GenericReportFromDateToDate(fromDate, toDate, typeReport, typeReport, false);
-				view.setEnabled(false);
-			}
+		view.addActionListener(actionEvent -> {
+			new GenericReportFromDateToDate(fromDate, toDate, typeReport, typeReport, false);
+			view.setEnabled(false);
 		});
 
 	}

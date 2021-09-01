@@ -45,6 +45,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -80,8 +81,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 				private static final long serialVersionUID = 1L;};
 
 	        EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
-	        for (int i = 0; i < listeners.length; i++)
-	            ((PatientListener)listeners[i]).patientInserted(event);
+	        for (int i = 0; i < listeners.length; i++) {
+		        ((PatientListener)listeners[i]).patientInserted(event);
+	        }
 	    }
 	 
 	
@@ -91,8 +93,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
-		for (int i = 0; i < listeners.length; i++)
+		for (int i = 0; i < listeners.length; i++) {
 			((PatientListener)listeners[i]).patientUpdated(event);
+		}
 	}		
 	
 	 /*
@@ -167,9 +170,10 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextArea jNoteTextArea = null;
 	private JPanel jNotePanel = null;
 	private JScrollPane jNoteScrollPane = null;
-	public void actionPerformed(ActionEvent e) {
-		sexSelect=e.getActionCommand();
-		
+
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
+		sexSelect = actionEvent.getActionCommand();
 	}
 	
 	/**
@@ -266,141 +270,136 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (jOkButton == null) {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			jOkButton.addActionListener(new java.awt.event.ActionListener() {
+			jOkButton.addActionListener(actionEvent -> {
+				boolean ok = true;
+				DateTime bdate = new DateTime();
 
-				public void actionPerformed(ActionEvent e) {
-					boolean ok = true;
-					DateTime bdate = new DateTime();
-
-					if (insert) {
-						if (jFirstNameTextField.getText().equals("")) {
-							MessageDialog.error(null, "angal.patient.insertfirstname.msg");
+				if (insert) {
+					if (jFirstNameTextField.getText().equals("")) {
+						MessageDialog.error(null, "angal.patient.insertfirstname.msg");
+					} else {
+						if (jSecondNameTextField.getText().equals("")) {
+							MessageDialog.error(null, "angal.patient.insertsecondname.msg");
 						} else {
-							if (jSecondNameTextField.getText().equals("")) {
-								MessageDialog.error(null, "angal.patient.insertsecondname.msg");
+							if (age == -1) {
+								MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 							} else {
-								if (age == -1) {
-									MessageDialog.error(null, "angal.patient.insertvalidage.msg");
-								} else {
-									bdate = bdate.minusYears(age);
-									String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
-									try {
-										if (manager.isNamePresent(name)) {
-											switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-												case JOptionPane.OK_OPTION:
-													ok = true;
-													break;
-												case JOptionPane.NO_OPTION:
-													ok = false;
-													break;
-											}
+								bdate = bdate.minusYears(age);
+								String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
+								try {
+									if (manager.isNamePresent(name)) {
+										switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
+											case JOptionPane.OK_OPTION:
+												ok = true;
+												break;
+											case JOptionPane.NO_OPTION:
+												ok = false;
+												break;
 										}
+									}
+								} catch (OHServiceException ex) {
+									OHServiceExceptionUtil.showMessages(ex);
+								}
+								if (ok) {
+									patient.setFirstName(jFirstNameTextField.getText());
+									patient.setSecondName(jSecondNameTextField.getText());
+									patient.setAge(age);
+
+									if (sexSelect.equals(MessageBundle.getMessage("angal.common.female.txt"))) {
+										sex = 'F';
+									} else {
+										sex = 'M';
+									}
+									patient.setSex(sex);
+									patient.setAddress(jAddressTextField.getText());
+									patient.setCity(jCityTextField.getText());
+									patient.setNextKin(jNextKinTextField.getText());
+									patient.setTelephone(jTelephoneTextField.getText());
+									patient.setNote(jNoteTextArea.getText());
+
+									//PatientExtended Compatibility
+									patient.setBirthDate(bdate.toDate());
+									patient.setAgetype("");
+									patient.setMotherName("");
+									patient.setMother('U');
+									patient.setFatherName("");
+									patient.setFather('U');
+									patient.setBloodType("");
+									patient.setHasInsurance('U');
+									patient.setParentTogether('U');
+
+									try {
+										patient = manager.savePatient(patient);
+										firePatientInserted(patient);
+										dispose();
 									} catch (OHServiceException ex) {
 										OHServiceExceptionUtil.showMessages(ex);
-									}
-									if (ok) {
-										patient.setFirstName(jFirstNameTextField.getText());
-										patient.setSecondName(jSecondNameTextField.getText());
-										patient.setAge(age);
-
-										if (sexSelect.equals(MessageBundle.getMessage("angal.common.female.txt"))) {
-											sex = 'F';
-										} else {
-											sex = 'M';
-										}
-										patient.setSex(sex);
-										patient.setAddress(jAddressTextField.getText());
-										patient.setCity(jCityTextField.getText());
-										patient.setNextKin(jNextKinTextField.getText());
-										patient.setTelephone(jTelephoneTextField.getText());
-										patient.setNote(jNoteTextArea.getText());
-
-										//PatientExtended Compatibility
-										patient.setBirthDate(bdate.toDate());
-										patient.setAgetype("");
-										patient.setMotherName("");
-										patient.setMother('U');
-										patient.setFatherName("");
-										patient.setFather('U');
-										patient.setBloodType("");
-										patient.setHasInsurance('U');
-										patient.setParentTogether('U');
-
-										try {
-											patient = manager.savePatient(patient);
-											firePatientInserted(patient);
-											dispose();
-										} catch (OHServiceException ex) {
-											OHServiceExceptionUtil.showMessages(ex);
-											MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-										}
+										MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 									}
 								}
-							}
-						}
-					} else { //Update
-						String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
-						if (!(patient.getName().equals(name))) {
-							try {
-								if (manager.isNamePresent(name)) {
-									switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-										case JOptionPane.OK_OPTION:
-											ok = true;
-											break;
-										case JOptionPane.NO_OPTION:
-											ok = false;
-											break;
-									}
-								}
-							} catch (OHServiceException ex) {
-								OHServiceExceptionUtil.showMessages(ex);
-							}
-						} else {
-							ok = true;
-						}
-						if (ok) {
-
-							patient.setFirstName(jFirstNameTextField.getText());
-							patient.setSecondName(jSecondNameTextField.getText());
-							patient.setAge(age);
-							if (sexSelect.equals(" ")) {
-								sex = patient.getSex();
-							} else if (sexSelect.equals(MessageBundle.getMessage("angal.common.female.txt"))) {
-								sex = 'F';
-							} else {
-								sex = 'M';
-							}
-							patient.setSex(sex);
-							patient.setAddress(jAddressTextField.getText());
-							patient.setCity(jCityTextField.getText());
-							patient.setNextKin(jNextKinTextField.getText());
-							patient.setTelephone(jTelephoneTextField.getText());
-							patient.setNote(jNoteTextArea.getText());
-
-							//PatientExtended Compatibility: NO NEEDED on Edit
-							//patient.setBirthDate("");
-							//patient.setAgetype("");
-							//patient.setMother_name("");
-							//patient.setMother('U');
-							//patient.setFather_name("");
-							//patient.setFather('U');
-							//patient.setBloodType("");
-							//patient.setHasInsurance('U');
-							//patient.setParentTogether('U');*/
-							try {
-								patient = manager.savePatient(patient);
-								firePatientUpdated(patient);
-								dispose();
-							} catch (OHServiceException ex) {
-								OHServiceExceptionUtil.showMessages(ex);
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						}
 					}
+				} else { //Update
+					String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
+					if (!(patient.getName().equals(name))) {
+						try {
+							if (manager.isNamePresent(name)) {
+								switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
+									case JOptionPane.OK_OPTION:
+										ok = true;
+										break;
+									case JOptionPane.NO_OPTION:
+										ok = false;
+										break;
+								}
+							}
+						} catch (OHServiceException ex) {
+							OHServiceExceptionUtil.showMessages(ex);
+						}
+					} else {
+						ok = true;
+					}
+					if (ok) {
 
+						patient.setFirstName(jFirstNameTextField.getText());
+						patient.setSecondName(jSecondNameTextField.getText());
+						patient.setAge(age);
+						if (sexSelect.equals(" ")) {
+							sex = patient.getSex();
+						} else if (sexSelect.equals(MessageBundle.getMessage("angal.common.female.txt"))) {
+							sex = 'F';
+						} else {
+							sex = 'M';
+						}
+						patient.setSex(sex);
+						patient.setAddress(jAddressTextField.getText());
+						patient.setCity(jCityTextField.getText());
+						patient.setNextKin(jNextKinTextField.getText());
+						patient.setTelephone(jTelephoneTextField.getText());
+						patient.setNote(jNoteTextArea.getText());
+
+						//PatientExtended Compatibility: NO NEEDED on Edit
+						//patient.setBirthDate("");
+						//patient.setAgetype("");
+						//patient.setMother_name("");
+						//patient.setMother('U');
+						//patient.setFather_name("");
+						//patient.setFather('U');
+						//patient.setBloodType("");
+						//patient.setHasInsurance('U');
+						//patient.setParentTogether('U');*/
+						try {
+							patient = manager.savePatient(patient);
+							firePatientUpdated(patient);
+							dispose();
+						} catch (OHServiceException ex) {
+							OHServiceExceptionUtil.showMessages(ex);
+							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+						}
+					}
 				}
 			});
-
 		}
 		return jOkButton;
 	}
@@ -414,11 +413,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (jCancelButton == null) {
 			jCancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			jCancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			jCancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			jCancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCancelButton;
 	}
@@ -445,7 +440,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 			ageField.setMinimumSize(new Dimension(100, 50));
 		}
 		ageField.addFocusListener(new FocusListener() {
-			public void focusLost(FocusEvent e) {				
+			@Override
+			public void focusLost(FocusEvent e) {
 				try {				
 					//ageField.setText(new StringTokenizer(ageField.getText()).nextToken());
 					age = Integer.parseInt(ageField.getText());
@@ -459,6 +455,7 @@ public class PatientInsert extends JDialog implements ActionListener{
 				}
 			}
 			
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 		});
@@ -486,7 +483,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJFirstNameTextField() {
 		if (jFirstNameTextField == null) {
 			jFirstNameTextField = new JTextField(15);
-			if (!insert)jFirstNameTextField.setText(patient.getFirstName());
+			if (!insert) {
+				jFirstNameTextField.setText(patient.getFirstName());
+			}
 		}
 		return jFirstNameTextField;
 	}
@@ -512,7 +511,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJSecondNameTextField() {
 		if (jSecondNameTextField == null) {
 			jSecondNameTextField = new JTextField(15);
-			if (!insert)jSecondNameTextField.setText(patient.getSecondName());		
+			if (!insert) {
+				jSecondNameTextField.setText(patient.getSecondName());
+			}
 			
 		}
 		return jSecondNameTextField;
@@ -531,20 +532,20 @@ public class PatientInsert extends JDialog implements ActionListener{
 			JRadioButton radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
 			sexPanel.add(getJSexLabelPanel(), null);
 			sexPanel.add(radiom, radiom.getName());
-			if (insert){
+			if (insert) {
 				radiom.setSelected(true);
-			}
-			else{
-				if (patient.getSex()=='F')
+			} else {
+				if (patient.getSex() == 'F') {
 					radiof.setSelected(true);
-				else radiom.setSelected(true);
+				} else {
+					radiom.setSelected(true);
+				}
 			}			
 			radiom.addActionListener(this);
 			radiof.addActionListener(this);
 			sexGroup.add(radiom);
 			sexGroup.add(radiof);
 			sexPanel.add(radiof);
-			
 		}
 		return sexPanel;
 	}
@@ -571,7 +572,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJAddressTextField() {
 		if (jAddressTextField == null) {
 			jAddressTextField = new JTextField(15);
-			if (!insert)jAddressTextField.setText(patient.getAddress());
+			if (!insert) {
+				jAddressTextField.setText(patient.getAddress());
+			}
 		}
 		return jAddressTextField;
 	}
@@ -598,7 +601,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJCityTextField() {
 		if (jCityTextField == null) {
 			jCityTextField = new JTextField(15);
-			if (!insert)jCityTextField.setText(patient.getCity());
+			if (!insert) {
+				jCityTextField.setText(patient.getCity());
+			}
 		}
 		return jCityTextField;
 	}
@@ -625,7 +630,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJTelephoneTextField() {
 		if (jTelephoneTextField == null) {
 			jTelephoneTextField = new JTextField(15);
-			if (!insert)jTelephoneTextField.setText(patient.getTelephone());
+			if (!insert) {
+				jTelephoneTextField.setText(patient.getTelephone());
+			}
 		}
 		return jTelephoneTextField;
 	}
@@ -653,7 +660,9 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JTextField getJNextKinTextField() {
 		if (jNextKinTextField == null) {
 			jNextKinTextField = new JTextField(15);
-			if (!insert)jNextKinTextField.setText(patient.getNextKin());
+			if (!insert) {
+				jNextKinTextField.setText(patient.getNextKin());
+			}
 		}
 		return jNextKinTextField;
 	}
@@ -957,10 +966,10 @@ public class PatientInsert extends JDialog implements ActionListener{
 	private JPanel getJDataContainPanel() {
 		if (jDataContainPanel == null) {
 			jDataContainPanel = new JPanel();
-			if (!insert){
-				jDataContainPanel = setMyBorderCenter(jDataContainPanel,patient.getName());
-			}else{
-				jDataContainPanel = setMyBorderCenter(jDataContainPanel,MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
+			if (!insert) {
+				jDataContainPanel = setMyBorderCenter(jDataContainPanel, patient.getName());
+			} else {
+				jDataContainPanel = setMyBorderCenter(jDataContainPanel, MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
 			}
 			jDataContainPanel.setLayout(new BorderLayout());
 			jDataContainPanel.add(getJLabelPanel(), BorderLayout.CENTER);
@@ -969,30 +978,28 @@ public class PatientInsert extends JDialog implements ActionListener{
 		return jDataContainPanel;
 	}
 
-
 	/**
 	 * Set a specific border+title to a panel
 	 */
-	private JPanel setMyBorder(JPanel c, String title){
+	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1,title,
-	             javax.swing.border.TitledBorder.LEFT,javax.swing.border.TitledBorder.TOP);
-	            
+
+		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title,
+				javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
+
 		c.setBorder(b2);
 		return c;
 	}
-	
-	private JPanel setMyBorderCenter(JPanel c, String title){
+
+	private JPanel setMyBorderCenter(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1,title,
-	             javax.swing.border.TitledBorder.CENTER,javax.swing.border.TitledBorder.TOP);
-	            
+
+		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title,
+				javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP);
+
 		c.setBorder(b2);
 		return c;
 	}
-	
 
 	/**
 	 * This method initializes jTextPane	
@@ -1001,12 +1008,12 @@ public class PatientInsert extends JDialog implements ActionListener{
 	 */
 	private JTextArea getJTextArea() {
 		if (jNoteTextArea == null) {
-			jNoteTextArea = new JTextArea(40,30);
-			if (!insert){
+			jNoteTextArea = new JTextArea(40, 30);
+			if (!insert) {
 				jNoteTextArea.setText(patient.getNote());
 			}
 			jNoteTextArea.setLineWrap(true);
-			jNoteTextArea.setPreferredSize(new Dimension(jNoteTextArea.getSize()));	
+			jNoteTextArea.setPreferredSize(new Dimension(jNoteTextArea.getSize()));
 			jNoteTextArea.setAutoscrolls(true);
 		}
 		return jNoteTextArea;
@@ -1022,8 +1029,8 @@ public class PatientInsert extends JDialog implements ActionListener{
 		if (jNoteScrollPane == null && (jNotePanel == null)) {
 			JScrollPane jNoteScrollPane = new JScrollPane(getJTextArea());
 			
-			jNoteScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-			jNoteScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+			jNoteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			jNoteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 			jNoteScrollPane.createVerticalScrollBar();
 			jNoteScrollPane.setAutoscrolls(true);
 			jNoteScrollPane.setPreferredSize(new Dimension(200, 350));

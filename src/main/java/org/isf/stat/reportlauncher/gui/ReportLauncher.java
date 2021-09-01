@@ -26,8 +26,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -180,8 +178,9 @@ public class ReportLauncher extends ModalJFrame{
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
 			jButtonPanel.setLayout(new FlowLayout());
-			if (GeneralData.XMPPMODULEENABLED)
+			if (GeneralData.XMPPMODULEENABLED) {
 				jButtonPanel.add(getComboShareReport(),null);
+			}
 			jButtonPanel.add(getJLaunchReportButton(), null);
 			jButtonPanel.add(getJCSVButton(), null);
 			//jButtonPanel.add(getJShareButton(),null);
@@ -210,11 +209,7 @@ public class ReportLauncher extends ModalJFrame{
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -266,19 +261,17 @@ public class ReportLauncher extends ModalJFrame{
 			
 			
 			jRptComboBox = new JComboBox();
-			for (int i=0;i<reportMatrix.length;i++)
+			for (int i=0;i<reportMatrix.length;i++) {
 				jRptComboBox.addItem(MessageBundle.getMessage(reportMatrix[i][BUNDLE]));
+			}
 			
-			jRptComboBox.addActionListener(new ActionListener() {   
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (e.getActionCommand()!= null) {
-						if (e.getActionCommand().equalsIgnoreCase("comboBoxChanged")) {
-							selectAction();
-						}
+			jRptComboBox.addActionListener(actionEvent -> {
+				if (actionEvent.getActionCommand()!= null) {
+					if (actionEvent.getActionCommand().equalsIgnoreCase("comboBoxChanged")) {
+						selectAction();
 					}
 				}
 			});
-			
 			
 			jMonthLabel = new JLabel();
 			jMonthLabel.setText("        " + MessageBundle.getMessage("angal.stat.month"));
@@ -303,25 +296,24 @@ public class ReportLauncher extends ModalJFrame{
 			jYearLabel.setText("        " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox();
 
-			for (int i=0;i<20;i++){
-				jYearComboBox.addItem((year-i)+"");
+			for (int i = 0; i < 20; i++) {
+				jYearComboBox.addItem((year - i) + "");
 			}
 			
 			jFromDateLabel = new JLabel();
 			jFromDateLabel.setText(MessageBundle.getMessage("angal.stat.fromdate"));
 			GregorianCalendar defaultDate = new GregorianCalendar();
-			defaultDate.add(GregorianCalendar.DAY_OF_MONTH, -8);
+			defaultDate.add(Calendar.DAY_OF_MONTH, -8);
 			jFromDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
 			jToDateLabel = new JLabel();
 			jToDateLabel.setText(MessageBundle.getMessage("angal.stat.todate"));
-			defaultDate.add(GregorianCalendar.DAY_OF_MONTH, 7);
+			defaultDate.add(Calendar.DAY_OF_MONTH, 7);
 			jToDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
 			jFromDateLabel.setVisible(false);
 			jFromDateField.setVisible(false);
 			
-			//jMonthPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 			jMonthPanel.add(jRptLabel, null);
 			jMonthPanel.add(jRptComboBox, null);
 			jMonthPanel.add(jMonthLabel, null);
@@ -336,10 +328,9 @@ public class ReportLauncher extends ModalJFrame{
 		return jMonthPanel;
 	}
 
-
 	protected void selectAction() {
-		String sParType="";
-		int rptIndex=jRptComboBox.getSelectedIndex();
+		String sParType = "";
+		int rptIndex = jRptComboBox.getSelectedIndex();
 		sParType = reportMatrix[rptIndex][TYPE];
 		if (sParType.equalsIgnoreCase("twodates")) {
 			jMonthComboBox.setVisible(false);
@@ -378,11 +369,7 @@ public class ReportLauncher extends ModalJFrame{
 			jLaunchReport = new JButton(MessageBundle.getMessage("angal.common.launchreport.btn"));
 			jLaunchReport.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
 			jLaunchReport.setBounds(new Rectangle(15, 15, 91, 31));
-			jLaunchReport.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					generateReport(false);
-				}
-			});
+			jLaunchReport.addActionListener(actionEvent -> generateReport(false));
 		}
 		return jLaunchReport;
 	}
@@ -392,12 +379,7 @@ public class ReportLauncher extends ModalJFrame{
 			jCSVButton = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
 			jCSVButton.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
 			jCSVButton.setBounds(new Rectangle(15, 15, 91, 31));
-			jCSVButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					generateReport(true);
-				}
-			});
+			jCSVButton.addActionListener(actionEvent -> generateReport(true));
 		}
 		return jCSVButton;
 	}
@@ -409,47 +391,46 @@ public class ReportLauncher extends ModalJFrame{
 		int year = (Integer.parseInt((String)jYearComboBox.getSelectedItem()));
 		String fromDate = jFromDateField.getText().trim();
 		String toDate = jToDateField.getText().trim();
-		
-		if (rptIndex>=0) {
+
+		if (rptIndex >= 0) {
 			String sParType = reportMatrix[rptIndex][TYPE];
 			if (sParType.equalsIgnoreCase("twodates")) {
-				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
+				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]),
+						toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
-					String user= (String)shareWith.getSelectedItem();
-					CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 "+fromDate+" "+toDate+" "+reportMatrix[rptIndex][FILENAME],
+					String user = (String) shareWith.getSelectedItem();
+					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + " " + toDate + " " + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
 			if (sParType.equalsIgnoreCase("twodatesfrommonthyear")) {
 				GregorianCalendar d = new GregorianCalendar();
-				d.set(GregorianCalendar.DAY_OF_MONTH,1 );
-				d.set(GregorianCalendar.MONTH, month-1);
-				d.set(GregorianCalendar.YEAR, year);
+				d.set(Calendar.DAY_OF_MONTH,1 );
+				d.set(Calendar.MONTH, month-1);
+				d.set(Calendar.YEAR, year);
 				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
 				fromDate = sdf.format(d.getTime());
-				d.set(GregorianCalendar.DAY_OF_MONTH, d.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
+				d.set(Calendar.DAY_OF_MONTH, d.getActualMaximum(Calendar.DAY_OF_MONTH));
 				toDate = sdf.format(d.getTime());
 				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
-					String user= (String)shareWith.getSelectedItem();
-					CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 "+fromDate+" "+toDate+" "+reportMatrix[rptIndex][FILENAME],
+					String user = (String) shareWith.getSelectedItem();
+					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + " " + toDate + " " + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
 			if (sParType.equalsIgnoreCase("monthyear")) {
 				new GenericReportMY(month, year, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
-					String user= (String)shareWith.getSelectedItem();
-					CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 "+month+" "+year+" "+reportMatrix[rptIndex][FILENAME],
+					String user = (String) shareWith.getSelectedItem();
+					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + " " + year + " " + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
 		}
-	
-		
 	}
 
 	/**
@@ -457,8 +438,7 @@ public class ReportLauncher extends ModalJFrame{
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(title), BorderFactory
-						.createEmptyBorder(0, 0, 0, 0));
+				BorderFactory.createTitledBorder(title), BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		c.setBorder(b2);
 		return c;
 	}

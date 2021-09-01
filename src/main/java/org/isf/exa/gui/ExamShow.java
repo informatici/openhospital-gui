@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.exa.gui.ExamRowEdit.ExamRowListener;
@@ -76,25 +77,25 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private ExamRow examRow = null;
 	private ArrayList<ExamRow> pExamRow;
 	private JDialog myFrame;
-	
-	public ExamShow(JFrame owner, Exam aExam){
-		super(owner,true);
+
+	public ExamShow(JFrame owner, Exam aExam) {
+		super(owner, true);
 		myFrame = this;
 		exam = aExam;
 		initialize();
 	}
-	
-	private void initialize(){
+
+	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-        final int pfrmBase = 10;
-        final int pfrmWidth = 3;
-        final int pfrmHeight = 3;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
+		final int pfrmBase = 10;
+		final int pfrmWidth = 3;
+		final int pfrmHeight = 3;
+		this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase) / 2,
+				screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
 		this.setTitle(MessageBundle.formatMessage("angal.exa.results.fmt.title", exam.getDescription()));
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}
 	
@@ -130,58 +131,50 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		}
 		return buttonPanel;
 	}
-	
-	private JButton getNewButton(){
-		if (newButton == null){
+
+	private JButton getNewButton() {
+		if (newButton == null) {
 			newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			newButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					examRow = new ExamRow();
-					ExamRowEdit newrecord = new ExamRowEdit(myFrame, examRow, exam);
-					newrecord.addExamListener(ExamShow.this);
-					newrecord.setVisible(true);
-				}
+			newButton.addActionListener(actionEvent -> {
+				examRow = new ExamRow();
+				ExamRowEdit newrecord = new ExamRowEdit(myFrame, examRow, exam);
+				newrecord.addExamListener(ExamShow.this);
+				newrecord.setVisible(true);
 			});
 		}
 		return newButton;
 	}
-	
+
 	private JButton getCloseButton() {
 		if (closeButton == null) {
 			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			closeButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-				dispose();
-				}
-			});
+			closeButton.addActionListener(actionEvent -> dispose());
 		}
 		return closeButton;
 	}
-	
+
 	private JButton getDeleteButton() {
 		if (deleteButton == null) {
 			deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			deleteButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (table.getSelectedRow() < 0) {
-						MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
-					} else {
-						ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-						ExamRow row = (ExamRow)(((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
-						int answer = MessageDialog.yesNo(null,"angal.exa.deleteexamresult.fmt.msg", row.getDescription());
-						if ((answer == JOptionPane.YES_OPTION)){
-							try {
-								boolean deleted = manager.deleteExamRow(row);
-								
-								if (deleted) {
-									examRowDeleted();
-								}
-							} catch (OHServiceException e1) {
-								OHServiceExceptionUtil.showMessages(e1);
+			deleteButton.addActionListener(actionEvent -> {
+				if (table.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+					ExamRow row = (ExamRow) (((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+					int answer = MessageDialog.yesNo(null, "angal.exa.deleteexamresult.fmt.msg", row.getDescription());
+					if ((answer == JOptionPane.YES_OPTION)) {
+						try {
+							boolean deleted = manager.deleteExamRow(row);
+
+							if (deleted) {
+								examRowDeleted();
 							}
+						} catch (OHServiceException e1) {
+							OHServiceExceptionUtil.showMessages(e1);
 						}
 					}
 				}
@@ -189,67 +182,70 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		}
 		return deleteButton;
 	}
-	
-	
-class ExamRowBrowsingModel extends DefaultTableModel {
-		
-	private static final long serialVersionUID = 1L;
-			
-	private ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-	
-            public ExamRowBrowsingModel(String aCode) {
-            	
-                try {
-                    pExamRow = manager.getExamRowByExamCode(aCode);
-                } catch (OHServiceException e) {
-                    pExamRow = null;
-                    OHServiceExceptionUtil.showMessages(e);
-                }
-            }
 
-            public int getRowCount() {
-                if (pExamRow == null)
-                    return 0;
-                return pExamRow.size();
-            }
+	class ExamRowBrowsingModel extends DefaultTableModel {
 
-            public String getColumnName(int c) {
-                return pColumns[c];
-            }
+		private static final long serialVersionUID = 1L;
 
-            public int getColumnCount() {
-                return pColumns.length;
-            }
+		private ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 
-            public Object getValueAt(int r, int c) {
-                ExamRow examRow = pExamRow.get(r);
-                if (c==-1){
-                    return examRow;
-                }
-                else if (c == 0) {
-                    return examRow.getCode();
-                } else if (c == 1) {
-                    return examRow.getDescription();
-                } 
-                return null;
-            }
+		public ExamRowBrowsingModel(String aCode) {
 
-            @Override
-            public boolean isCellEditable(int arg0, int arg1) {
-                //return super.isCellEditable(arg0, arg1);
-                return false;
-            }
+			try {
+				pExamRow = manager.getExamRowByExamCode(aCode);
+			} catch (OHServiceException e) {
+				pExamRow = null;
+				OHServiceExceptionUtil.showMessages(e);
+			}
+		}
+
+		@Override
+		public int getRowCount() {
+			if (pExamRow == null) {
+				return 0;
+			}
+			return pExamRow.size();
+		}
+
+		@Override
+		public String getColumnName(int c) {
+			return pColumns[c];
+		}
+
+		@Override
+		public int getColumnCount() {
+			return pColumns.length;
+		}
+
+		@Override
+		public Object getValueAt(int r, int c) {
+			ExamRow examRow = pExamRow.get(r);
+			if (c == -1) {
+				return examRow;
+			} else if (c == 0) {
+				return examRow.getCode();
+			} else if (c == 1) {
+				return examRow.getDescription();
+			}
+			return null;
+		}
+
+		@Override
+		public boolean isCellEditable(int arg0, int arg1) {
+			//return super.isCellEditable(arg0, arg1);
+			return false;
+		}
 	}
-
 
 	@Override
 	public void examRowInserted(AWTEvent e) {
 		pExamRow.add(0, examRow);
 		((ExamRowBrowsingModel) table.getModel()).fireTableDataChanged();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 	}
-	
+
 	public void examRowDeleted() {
 		pExamRow.remove(table.getSelectedRow());
 		model.fireTableDataChanged();

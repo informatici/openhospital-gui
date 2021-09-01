@@ -120,7 +120,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(event -> {
+			jNewButton.addActionListener(actionEvent -> {
 				examType = new ExamType("","");
 				ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, true);
 				newrecord.addExamTypeListener(ExamTypeBrowser.this);
@@ -139,7 +139,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(event -> {
+			jEditButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -163,7 +163,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(arg0 -> dispose());
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -177,7 +177,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(event -> {
+			jDeleteButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -211,12 +211,13 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 			jTable = new JTable(model);
 			jTable.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			jTable.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-		}return jTable;
+		}
+		return jTable;
 	}
-	
-class ExamTypeBrowserModel extends DefaultTableModel {
-		
-	private static final long serialVersionUID = 1L;
+
+	class ExamTypeBrowserModel extends DefaultTableModel {
+
+		private static final long serialVersionUID = 1L;
 
 		public ExamTypeBrowserModel() {
 			ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
@@ -227,7 +228,7 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		
+
 		@Override
 		public int getRowCount() {
 			if (pExamType == null) {
@@ -235,7 +236,7 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 			}
 			return pExamType.size();
 		}
-		
+
 		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
@@ -258,7 +259,7 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
@@ -274,7 +275,7 @@ class ExamTypeBrowserModel extends DefaultTableModel {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
-	
+
 	@Override
 	public void examTypeInserted(AWTEvent e) {
 		pExamType.add(0, examType);

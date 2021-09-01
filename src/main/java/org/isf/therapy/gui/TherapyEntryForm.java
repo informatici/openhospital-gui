@@ -28,12 +28,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -54,10 +51,9 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -171,6 +167,7 @@ public class TherapyEntryForm extends JDialog {
 			radioButtonSet.get(0).setSelected(true);
 			endDateLabel.setText(dateFormat.format(new Date()));
 		}
+		this.pack();
 	}
 
 	private void initComponents() {
@@ -277,18 +274,15 @@ public class TherapyEntryForm extends JDialog {
 				oneLineComponentsHeight));
 		jSpinnerQty.setMaximumSize(new Dimension(Short.MAX_VALUE,
 				oneLineComponentsHeight));
-		jSpinnerQty.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e) {
-				JSpinner source = (JSpinner) e.getSource();
-				double value = (Double) source.getValue();
-				therapy.setQty(value);
-				/*
-				 * although it is useful it creates conflicts
-				 */
-				//int intValue = new Double(value).intValue();
-				//jSliderQty.setValue(intValue);
-			}
+		jSpinnerQty.addChangeListener(changeEvent -> {
+			JSpinner source = (JSpinner) changeEvent.getSource();
+			double value = (Double) source.getValue();
+			therapy.setQty(value);
+			/*
+			 * although it is useful it creates conflicts
+			 */
+			//int intValue = new Double(value).intValue();
+			//jSliderQty.setValue(intValue);
 		});
 		return jSpinnerQty;
 	}
@@ -325,20 +319,17 @@ public class TherapyEntryForm extends JDialog {
 		daysPanel.setLayout(daysLayout);
 		JLabel labelDays = new JLabel(MessageBundle.getMessage("angal.common.days.txt"));
 		labelDays.setAlignmentX(CENTER_ALIGNMENT);
-		jSpinnerDays.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e) {
-				JSpinner theSpinner = (JSpinner) e.getSource();
-				if ((Integer) theSpinner.getValue() == 0) {
-					/*
-					 * Days must be at least one.
-					 */
-					if ((Integer) jSpinnerWeeks.getValue() == 0 && (Integer) jSpinnerMonths.getValue() == 0) {
-						theSpinner.setValue(theSpinner.getNextValue());
-					}
+		jSpinnerDays.addChangeListener(changeEvent -> {
+			JSpinner theSpinner = (JSpinner) changeEvent.getSource();
+			if ((Integer) theSpinner.getValue() == 0) {
+				/*
+				 * Days must be at least one.
+				 */
+				if ((Integer) jSpinnerWeeks.getValue() == 0 && (Integer) jSpinnerMonths.getValue() == 0) {
+					theSpinner.setValue(theSpinner.getNextValue());
 				}
-				updateEndDateLabel();
 			}
+			updateEndDateLabel();
 		});
 		jSpinnerDays.setAlignmentX(CENTER_ALIGNMENT);
 		daysPanel.add(labelDays);
@@ -349,12 +340,7 @@ public class TherapyEntryForm extends JDialog {
 		JLabel labelWeeks = new JLabel(MessageBundle.getMessage("angal.therapy.weeks")); //$NON-NLS-1$
 		labelWeeks.setAlignmentX(CENTER_ALIGNMENT);
 
-		jSpinnerWeeks.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e) {
-				updateEndDateLabel();
-			}
-		});
+		jSpinnerWeeks.addChangeListener(changeEvent -> updateEndDateLabel());
 		jSpinnerWeeks.setAlignmentX(CENTER_ALIGNMENT);
 		weeksPanel.add(labelWeeks);
 		weeksPanel.add(jSpinnerWeeks);
@@ -364,12 +350,7 @@ public class TherapyEntryForm extends JDialog {
 		JLabel labelMonths = new JLabel(MessageBundle.getMessage("angal.common.months.txt"));
 		labelMonths.setAlignmentX(CENTER_ALIGNMENT);
 
-		jSpinnerMonths.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e) {
-				updateEndDateLabel();
-			}
-		});
+		jSpinnerMonths.addChangeListener(changeEvent -> updateEndDateLabel());
 		jSpinnerMonths.setAlignmentX(CENTER_ALIGNMENT);
 		monthsPanel.add(labelMonths);
 		monthsPanel.add(jSpinnerMonths);
@@ -493,11 +474,7 @@ public class TherapyEntryForm extends JDialog {
 		jSpinnerFreqInPeriod.setAlignmentX(Component.LEFT_ALIGNMENT);
 		jSpinnerFreqInPeriod.setMaximumSize(new Dimension(Short.MAX_VALUE,
 				oneLineComponentsHeight));
-		jSpinnerFreqInPeriod.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e) {
-
-			}
+		jSpinnerFreqInPeriod.addChangeListener(changeEvent -> {
 		});
 		return jSpinnerFreqInPeriod;
 	}
@@ -507,16 +484,7 @@ public class TherapyEntryForm extends JDialog {
 			therapyStartdate = new CustomJDateChooser(new Date());
 			therapyStartdate.setLocale(new Locale(GeneralData.LANGUAGE));
 			therapyStartdate.setDateFormatString(dateFormat.toPattern());
-
-			therapyStartdate.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
-
-						public void propertyChange(PropertyChangeEvent evt) {
-
-//							JDateChooser theChooser = (JDateChooser) evt.getSource();
-//							newStartingDate(theChooser.getDate());
-							updateEndDateLabel();
-						}
-					});
+			therapyStartdate.addPropertyChangeListener("date", propertyChangeEvent -> updateEndDateLabel());
 		}
 		return therapyStartdate;
 	}
@@ -529,9 +497,9 @@ public class TherapyEntryForm extends JDialog {
 		
 		therapyEndDate = new GregorianCalendar();
 		therapyEndDate.setTime(therapyStartdate.getDate());
-		therapyEndDate.add(GregorianCalendar.DAY_OF_YEAR, days - 1);
-		therapyEndDate.add(GregorianCalendar.WEEK_OF_YEAR, weeks);
-		therapyEndDate.add(GregorianCalendar.MONTH, months);
+		therapyEndDate.add(Calendar.DAY_OF_YEAR, days - 1);
+		therapyEndDate.add(Calendar.WEEK_OF_YEAR, weeks);
+		therapyEndDate.add(Calendar.MONTH, months);
 		
 		endDateLabel.setText(dateFormat.format(therapyEndDate.getTime()));
 	}
@@ -593,8 +561,7 @@ public class TherapyEntryForm extends JDialog {
 	private JScrollPane getNoteScrollPane() {
 		if (noteScrollPane == null) {
 			noteScrollPane = new JScrollPane(getNoteTextArea());
-			noteScrollPane
-					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			noteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		}
 		return noteScrollPane;
 	}
@@ -712,14 +679,11 @@ public class TherapyEntryForm extends JDialog {
 			jSliderQty.setMinorTickSpacing(sliderMinorStepValue);
 			jSliderQty.setPaintLabels(true);
 
-			jSliderQty.addChangeListener(new ChangeListener() {
-
-				public void stateChanged(ChangeEvent e) {
-					JSlider source = (JSlider) e.getSource();
-					double value = (double) source.getValue();
-					jSpinnerQty.setValue(value);
-					therapy.setQty(value);
-				}
+			jSliderQty.addChangeListener(changeEvent -> {
+				JSlider source = (JSlider) changeEvent.getSource();
+				double value = (double) source.getValue();
+				jSpinnerQty.setValue(value);
+				therapy.setQty(value);
 			});
 		}
 		return jSliderQty;
@@ -738,12 +702,7 @@ public class TherapyEntryForm extends JDialog {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			buttonCancel.addActionListener(actionEvent -> dispose());
 		}
 		return buttonCancel;
 	}
@@ -752,45 +711,42 @@ public class TherapyEntryForm extends JDialog {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			buttonOK.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent arg0) {
-					/*
-					 * Data extrapolation
-					 */
-					GregorianCalendar startDate = new GregorianCalendar();
-					startDate.setTime(therapyStartdate.getDate());
-					GregorianCalendar endDate = therapyEndDate;
-					Medical medical = (Medical) medicalsList.getSelectedValue();
-					if (medical == null) {
-						MessageDialog.error(TherapyEntryForm.this, "angal.therapy.selectapharmaceutical");
-						return;
-					}
-					Double qty = (Double) jSpinnerQty.getValue();
-					if (qty == 0.) {
-						MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero");
-						return;
-					}
-					int therapyID = 0;
-					int unitID = 0; //TODO: UoM table
-					int freqInDay = getFreqInDay();
-					int freqInPeriod = Integer.parseInt(jSpinnerFreqInPeriod.getValue().toString());
-					String note = noteTextArea.getText();
-					boolean notify = false;
-					boolean sms = false;
-
-					try {
-						thRow = therapyManager.newTherapy(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
-						therapyID = thRow.getTherapyID();
-					} catch (OHServiceException e){
-						OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
-					}
-					if (therapyID > 0) {
-						thRow.setTherapyID(therapyID);
-					}
-					setVisible(false);
-					
+			buttonOK.addActionListener(actionEvent -> {
+				/*
+				 * Data extrapolation
+				 */
+				GregorianCalendar startDate = new GregorianCalendar();
+				startDate.setTime(therapyStartdate.getDate());
+				GregorianCalendar endDate = therapyEndDate;
+				Medical medical = (Medical) medicalsList.getSelectedValue();
+				if (medical == null) {
+					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.selectapharmaceutical");
+					return;
 				}
+				Double qty = (Double) jSpinnerQty.getValue();
+				if (qty == 0.) {
+					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero");
+					return;
+				}
+				int therapyID = 0;
+				int unitID = 0; //TODO: UoM table
+				int freqInDay = getFreqInDay();
+				int freqInPeriod = Integer.parseInt(jSpinnerFreqInPeriod.getValue().toString());
+				String note = noteTextArea.getText();
+				boolean notify = false;
+				boolean sms = false;
+
+				try {
+					thRow = therapyManager.newTherapy(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
+					therapyID = thRow.getTherapyID();
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
+				}
+				if (therapyID > 0) {
+					thRow.setTherapyID(therapyID);
+				}
+				setVisible(false);
+
 			});
 		}
 		return buttonOK;

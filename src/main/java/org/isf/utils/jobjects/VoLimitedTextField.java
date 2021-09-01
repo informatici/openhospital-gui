@@ -44,6 +44,7 @@ public class VoLimitedTextField extends JTextField {
 			this.maxChars = maxChars;
 		}
 		
+		@Override
 		public void insertString(int off, String text, AttributeSet att)
 		throws BadLocationException {
 			int charsInDocument = getLength();

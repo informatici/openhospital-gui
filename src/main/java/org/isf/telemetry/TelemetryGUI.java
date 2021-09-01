@@ -28,7 +28,6 @@ import org.isf.menu.gui.MainMenu;
 import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.telemetry.util.TelemetryUtils;
-import org.isf.utils.BooleanUtils;
 import org.isf.utils.ExceptionUtils;
 import org.isf.utils.layout.SpringUtilities;
 import org.slf4j.Logger;
@@ -170,7 +169,7 @@ public class TelemetryGUI extends JDialog {
 				if (cd == null || cd.isEmpty()) {
 					return false;
 				}
-				return cd.keySet().stream().anyMatch(key -> BooleanUtils.isTrue(cd.get(key)));
+				return cd.keySet().stream().anyMatch(key -> Boolean.TRUE.equals(cd.get(key)));
 			}
 
 			private Map<String, Boolean> buildConsentData(List<CheckBoxWrapper> permissions) {
