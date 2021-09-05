@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.isf.telemetry;
+package org.isf.telemetry.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -45,6 +45,7 @@ import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
+import org.isf.menu.manager.Context;
 import org.isf.telemetry.envdatacollector.AbstractDataCollector;
 import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
@@ -55,7 +56,6 @@ import org.isf.utils.layout.SpringUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
 public class TelemetryGUI extends JDialog {
@@ -71,13 +71,12 @@ public class TelemetryGUI extends JDialog {
 		super(parent, MessageBundle.getMessage("angal.login.title"), true);
 		this.parent = parent;
 		this.addTelemetryListener(parent);
-		ApplicationContext springSexyContext = new ClassPathXmlApplicationContext("applicationContext.xml");
-		TelemetryManager telemetryManager = springSexyContext.getBean(TelemetryManager.class);
-		TelemetryUtils telemetryUtils = springSexyContext.getBean(TelemetryUtils.class);
+		TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
+		TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
 
 		Telemetry telemetry = telemetryManager.retrieveSettings();
 		Map<String, Boolean> settings = telemetry != null && telemetry.getConsentMap() != null ? telemetry.getConsentMap() : new HashMap<>();
-		List<CheckBoxWrapper> checkboxes = buildPermissionCheckboxes(springSexyContext, settings);
+		List<CheckBoxWrapper> checkboxes = buildPermissionCheckboxes(Context.getApplicationContext(), settings);
 		JButton confirmButton = buildConfirmButton(checkboxes, telemetryManager, telemetryUtils);
 		JButton cancelButton = buildCancelButton(telemetryManager);
 
