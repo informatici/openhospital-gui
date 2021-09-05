@@ -43,13 +43,14 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
-import org.isf.datacollector.AbstractDataCollector;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
+import org.isf.telemetry.envdatacollector.AbstractDataCollector;
 import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.telemetry.util.TelemetryUtils;
 import org.isf.utils.ExceptionUtils;
+import org.isf.utils.exception.OHException;
 import org.isf.utils.layout.SpringUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,9 +171,9 @@ public class TelemetryGUI extends JDialog {
 					fireTelemetryInserted(telemetry);
 					try {
 						telemetryUtils.sendTelemetryData(consentMap);
-					} catch (RuntimeException f) {
+					} catch (RuntimeException | OHException f) {
 						LOGGER.error("Something strange happened: " + f.getMessage());
-						LOGGER.error(ExceptionUtils.extractStackTrace());
+						LOGGER.error(ExceptionUtils.retrieveExceptionStacktrace(f));
 					}
 				} else {
 					telemetryManager.disable(new HashMap<>());
