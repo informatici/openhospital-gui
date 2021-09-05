@@ -43,7 +43,7 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
-import org.isf.envdatacollector.AbstractDataCollector;
+import org.isf.datacollector.AbstractDataCollector;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
 import org.isf.telemetry.manager.TelemetryManager;
