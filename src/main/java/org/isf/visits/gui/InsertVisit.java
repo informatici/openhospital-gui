@@ -81,7 +81,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	 * Constants
 	 */
 	private static final String DATE_TIME_FORMAT = "dd/MM/yy HH:mm:ss"; //$NON-NLS-1$
-	private static final Integer DEFAULT_DURATION = new Integer(30);
+	private static final Integer DEFAULT_DURATION = 30;
 	private static final int PREFERRED_SPINNER_WIDTH = 100;
 	private static final int ONE_LINE_COMPONENTS_HEIGHT = 30;
 	
@@ -305,31 +305,28 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			buttonOK.addActionListener(new ActionListener() {
+			buttonOK.addActionListener(actionEvent -> {
 
-				@Override
-				public void actionPerformed(ActionEvent actionEvent) {
-					GregorianCalendar date = new GregorianCalendar();
-					date.setTime(visitDateChooser.getDate());
-					if (date.before(TimeTools.getDateToday0())) {
-						MessageDialog.error(InsertVisit.this, "angal.visit.cannotsetadateinthepastfornextvisit.msg");
-						return;
-					}
-					
-					Visit thisVisit = new Visit();
-					thisVisit.setPatient(patientSelected);
-					thisVisit.setWard(getSelectedWard());					
-					thisVisit.setDate(date);
-					thisVisit.setDuration((Integer) jSpinnerDur.getValue());
-					thisVisit.setService(serviceField.getText());
-					try {
-						visit = visitManager.newVisit(thisVisit);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e, InsertVisit.this);
-						return;
-					}
-					dispose();
+				GregorianCalendar date = new GregorianCalendar();
+				date.setTime(visitDateChooser.getDate());
+				if (date.before(TimeTools.getDateToday0())) {
+					MessageDialog.error(InsertVisit.this, "angal.visit.cannotsetadateinthepastfornextvisit.msg");
+					return;
 				}
+
+				Visit thisVisit = new Visit();
+				thisVisit.setPatient(patientSelected);
+				thisVisit.setWard(getSelectedWard());
+				thisVisit.setDate(date);
+				thisVisit.setDuration((Integer) jSpinnerDur.getValue());
+				thisVisit.setService(serviceField.getText());
+				try {
+					visit = visitManager.newVisit(thisVisit);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e, InsertVisit.this);
+					return;
+				}
+				dispose();
 			});
 		}
 		return buttonOK;
