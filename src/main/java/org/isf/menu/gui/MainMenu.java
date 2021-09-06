@@ -72,7 +72,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private static final long serialVersionUID = 7620582079916035164L;
 	public static final String ADMIN_STR = "admin";
 	private boolean flag_Xmpp;
-	private boolean flagSms;
+	private boolean flag_Sms;
 	private boolean flagTelemetry;
 	private Telemetry telemetry;
 
@@ -144,10 +144,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				LOGGER.info("Debug: OpenHospital in debug mode.");
 			}
 			flag_Xmpp = GeneralData.XMPPMODULEENABLED;
-			flagSms = GeneralData.SMSENABLED;
+			flag_Sms = GeneralData.SMSENABLED;
 
 			// start connection with SMS service
-			if (flagSms) {
+			if (flag_Sms) {
 				Thread thread = new Thread(new SmsSender());
 				thread.start();
 			}
