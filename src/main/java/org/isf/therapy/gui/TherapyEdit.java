@@ -772,7 +772,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 							result = vstManager.newVisits(visits);
 
 						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
+							OHServiceExceptionUtil.showMessages(ex, TherapyEdit.this);
+							return;
 						}
 						if (result) {
 							MessageDialog.info(TherapyEdit.this, "angal.therapy.patientvisitssaved");
