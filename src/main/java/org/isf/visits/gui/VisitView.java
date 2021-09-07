@@ -812,6 +812,7 @@ public class VisitView extends ModalJFrame {
 
 		// call repack, as we are showing more components
 		this.pack();
+		this.setLocationRelativeTo(null);
 	}
 
 	public Ward getWard() {
