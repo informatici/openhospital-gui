@@ -92,6 +92,13 @@ import com.toedter.calendar.JYearChooser;
 
 public class TherapyEdit extends ModalJFrame implements VisitListener {
 
+	private static final long serialVersionUID = 1L;
+
+	private static final int THERAPY_BUTTON_WIDTH = 200;
+	private static final int VISIT_BUTTON_WIDTH = 200;
+	private static final int ACTIONS_BUTTON_WIDTH = 240;
+	private static final int ALL_BUTTON_HEIGHT = 30;
+
 	private JAgenda jAgenda;
 	
 	private JPanel northPanel;
@@ -136,13 +143,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private Visit selectedVisit;
 	private Hashtable<Integer, TherapyRow> hashTableThRow;
 	private Hashtable<Integer, Visit> hashTableVisits;
-
-	private static final int TherapyButtonWidth = 200;
-	private static final int VisitButtonWidth = 200;
-	private static final int ActionsButtonWidth = 240;
-	private static final int AllButtonHeight = 30;
-
-	private static final long serialVersionUID = 1L;
 
 	private AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private MedicalBrowsingManager medBrowser = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
@@ -432,7 +432,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			if (admitted) {
 				removeVisitButton.setEnabled(false);
 			}
-			removeVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
+			removeVisitButton.setMaximumSize(new Dimension(VISIT_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			removeVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			removeVisitButton.addActionListener(actionEvent -> {
 				if (selectedVisit == null) {
@@ -460,7 +460,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 //			if (admitted) {
 //				worksheetButton.setEnabled(false);
 //			}
-			worksheetButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
+			worksheetButton.setMaximumSize(new Dimension(VISIT_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			worksheetButton.setHorizontalAlignment(SwingConstants.LEFT);
 
 			worksheetButton.addActionListener(actionEvent -> {
@@ -477,7 +477,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addVisitButton = new JButton(MessageBundle.getMessage("angal.therapy.addvisit.btn"));
 			addVisitButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.addvisit.btn.key"));
 			addVisitButton.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
-			addVisitButton.setMaximumSize(new Dimension(VisitButtonWidth, AllButtonHeight));
+			addVisitButton.setMaximumSize(new Dimension(VISIT_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			addVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			if (admitted) {
 				addVisitButton.setEnabled(false);
@@ -591,8 +591,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			checkIconButton.setBorderPainted(false);
 			checkIconButton.setFocusPainted(false);
 			checkIconButton.setContentAreaFilled(false);
-			checkIconButton.setMaximumSize(new Dimension(Short.MAX_VALUE, AllButtonHeight));
-			checkIconButton.setMinimumSize(new Dimension(AllButtonHeight, AllButtonHeight));
+			checkIconButton.setMaximumSize(new Dimension(Short.MAX_VALUE, ALL_BUTTON_HEIGHT));
+			checkIconButton.setMinimumSize(new Dimension(ALL_BUTTON_HEIGHT, ALL_BUTTON_HEIGHT));
 		}
 		return checkIconButton;
 	}
@@ -689,8 +689,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
 			saveButton.setIcon(new ImageIcon("rsc/icons/save_button.png"));
 			saveButton.setEnabled(false);
-			saveButton.setMaximumSize(new Dimension(ActionsButtonWidth,
-					AllButtonHeight));
+			saveButton.setMaximumSize(new Dimension(ACTIONS_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			saveButton.setHorizontalAlignment(SwingConstants.LEFT);
 			saveButton.addActionListener(actionEvent -> {
 
@@ -799,7 +798,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				if (saveTherapies) {
 					boolean result = false;
 					try {
-						result = thManager.newTherapies(thRows);
+						result = thManager.deleteAllTherapies(patient.getCode());
+						result = result && thManager.newTherapies(thRows);
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -823,7 +823,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 			closeButton.setIcon(new ImageIcon("rsc/icons/close_button.png"));
-			closeButton.setMaximumSize(new Dimension(ActionsButtonWidth, AllButtonHeight));
+			closeButton.setMaximumSize(new Dimension(ACTIONS_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			closeButton.setHorizontalAlignment(SwingConstants.LEFT);
 			closeButton.addActionListener(actionEvent -> {
 				// to free memory
@@ -891,8 +891,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			checkTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.checkavailability.btn"));
 			checkTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.checkavailability.btn.key"));
 			checkTherapyButton.setIcon(new ImageIcon("rsc/icons/flag_button.png"));
-			checkTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth,
-					AllButtonHeight));
+			checkTherapyButton.setMaximumSize(new Dimension(THERAPY_BUTTON_WIDTH,
+					ALL_BUTTON_HEIGHT));
 			checkTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
 			if (thRows.isEmpty()) {
 					checkTherapyButton.setEnabled(false);
@@ -969,7 +969,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.addtherapy.btn"));
 			addTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.addtherapy.btn.key"));
 			addTherapyButton.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
-			addTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth,	AllButtonHeight));
+			addTherapyButton.setMaximumSize(new Dimension(THERAPY_BUTTON_WIDTH,	ALL_BUTTON_HEIGHT));
 			addTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addTherapyButton.addActionListener(actionEvent -> {
 
@@ -1018,8 +1018,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			editTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.edittherapy.btn"));
 			editTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.edittherapy.btn.key"));
 			editTherapyButton.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
-			editTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth,
-					AllButtonHeight));
+			editTherapyButton.setMaximumSize(new Dimension(THERAPY_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			editTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
 			editTherapyButton.addActionListener(actionEvent -> {
 
@@ -1034,11 +1033,11 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 				if (thRow != null) {
 
-					//Removing the therapy from the array
+					// Removing original modified therapy from arrays
 					thRows.remove(hashTableThRow.get(selectedTherapy.getTherapyID()));
 					therapies.remove(selectedTherapy);
 
-					//Rewrite all the therapies
+					// Adding modified therapy
 					thRows.add(thRow); // FOR DB;
 					Therapy thisTherapy = null;
 					try {
@@ -1066,7 +1065,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			removeTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.removetherapy.btn"));
 			removeTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.removetherapy.btn.key"));
 			removeTherapyButton.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
-			removeTherapyButton.setMaximumSize(new Dimension(TherapyButtonWidth, AllButtonHeight));
+			removeTherapyButton.setMaximumSize(new Dimension(THERAPY_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			removeTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
 			removeTherapyButton.addActionListener(actionEvent -> {
 				if (selectedTherapy == null) {
