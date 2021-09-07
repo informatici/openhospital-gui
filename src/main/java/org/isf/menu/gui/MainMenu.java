@@ -55,6 +55,7 @@ import org.isf.menu.model.UserMenuItem;
 import org.isf.sms.service.SmsSender;
 import org.isf.telemetry.daemon.TelemetryDaemon;
 import org.isf.telemetry.gui.TelemetryGUI;
+import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -73,7 +74,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	public static final String ADMIN_STR = "admin";
 	private boolean flag_Xmpp;
 	private boolean flag_Sms;
-	private boolean flagTelemetry;
 	private Telemetry telemetry;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
@@ -171,7 +171,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				// Login failed
 				actionExit(2);
 			}
-			new TelemetryGUI(this);
+		}
+
+		if (GeneralData.TELEMETRYENABLED) {
+			runTelemetry();
 		}
 
 		// get menu items
@@ -299,6 +302,22 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	}
 
+	private void runTelemetry() {
+		TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
+		Telemetry settings = telemetryManager.retrieveSettings();
+		// active = null => show popup
+		// active = true => start daemon
+		// active = false => do nothing
+		if (settings == null || settings.getActive() == null) {
+			// show telemetry popup
+			new TelemetryGUI(this);
+		} else if (settings != null && Boolean.TRUE.equals(settings.getActive())) {
+			// start telemetry daemon
+			Thread thread = new Thread(new TelemetryDaemon());
+			thread.start();
+		}
+	}
+
 	private void actionExit(int status) {
 		if (2 == status) {
 			LOGGER.info("Login failed.");
@@ -424,11 +443,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			telemetry = (Telemetry) e.getSource();
 			LOGGER.info("Telemetry: \"{}\" telemetry inserted.", telemetry);
 			if (null != this.telemetry) {
-				flagTelemetry = GeneralData.TELEMETRYENABLED;
-				if (flagTelemetry) {
-					Thread thread = new Thread(new TelemetryDaemon());
-					thread.start();
-				}
+				Thread thread = new Thread(new TelemetryDaemon());
+				thread.start();
 			}
 		}
 
