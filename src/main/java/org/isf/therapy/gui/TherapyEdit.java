@@ -891,8 +891,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			checkTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.checkavailability.btn"));
 			checkTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.checkavailability.btn.key"));
 			checkTherapyButton.setIcon(new ImageIcon("rsc/icons/flag_button.png"));
-			checkTherapyButton.setMaximumSize(new Dimension(THERAPY_BUTTON_WIDTH,
-					ALL_BUTTON_HEIGHT));
+			checkTherapyButton.setMaximumSize(new Dimension(THERAPY_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			checkTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
 			if (thRows.isEmpty()) {
 					checkTherapyButton.setEnabled(false);
@@ -969,7 +968,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addTherapyButton = new JButton(MessageBundle.getMessage("angal.therapy.addtherapy.btn"));
 			addTherapyButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.addtherapy.btn.key"));
 			addTherapyButton.setIcon(new ImageIcon("rsc/icons/therapy_button.png"));
-			addTherapyButton.setMaximumSize(new Dimension(THERAPY_BUTTON_WIDTH,	ALL_BUTTON_HEIGHT));
+			addTherapyButton.setMaximumSize(new Dimension(THERAPY_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			addTherapyButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addTherapyButton.addActionListener(actionEvent -> {
 
