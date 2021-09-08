@@ -697,8 +697,8 @@ public class VisitView extends ModalJFrame {
 
 		@Override
 		public Object getValueAt(int r, int c) {
-
 			Visit visit = visitSecond.get(r);
+			if (c == -1) return visit;
 			GregorianCalendar d = visitSecond.get(r).getDate();
 			return getVisitString(visit, d);
 		}
