@@ -404,7 +404,7 @@ public class VisitView extends ModalJFrame {
 	private void addVisit(Visit vsRow) {
 		if (vsRow != null && vsRow.getVisitID() != 0) {
 
-			visits.add(vsRow); // FOR GUI
+			loadDataForWard(ward);
 
 			if (!TimeTools.isSameDay(dateFirst, vsRow.getDate().getTime()) && !TimeTools.isSameDay(dateSecond, vsRow.getDate().getTime())) {
 				// if new visit date is not already shown, change view
