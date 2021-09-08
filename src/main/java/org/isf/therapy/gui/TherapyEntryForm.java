@@ -731,7 +731,7 @@ public class TherapyEntryForm extends JDialog {
 					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero");
 					return;
 				}
-				int therapyID;
+				int therapyID = inserting ? 0 : therapy.getTherapyID();
 				int unitID = 0; //TODO: UoM table
 				int freqInDay = getFreqInDay();
 				int freqInPeriod = Integer.parseInt(jSpinnerFreqInPeriod.getValue().toString());
@@ -739,20 +739,10 @@ public class TherapyEntryForm extends JDialog {
 				boolean notify = false;
 				boolean sms = false;
 
-				if (inserting) {
-					try {
-						thRow = therapyManager.newTherapy(0, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
-						therapyID = thRow.getTherapyID();
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
-					}
-				} else {
-					try {
-						therapyID = therapy.getTherapyID();
-						thRow = therapyManager.getTherapyRow(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
-					}
+				try {
+					thRow = therapyManager.getTherapyRow(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
 				}
 				setVisible(false);
 

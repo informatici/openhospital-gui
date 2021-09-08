@@ -112,6 +112,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private JComboBox wardBox;
 	private Ward ward;
 	private Visit visit;
+	private boolean insert = false;
 	
 	/*
 	 * Managers
@@ -120,11 +121,12 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private ArrayList<Ward> wardList = new ArrayList<>();
 	
-	public InsertVisit(JFrame owner, Ward ward, Patient patient) {
+	public InsertVisit(JFrame owner, Ward ward, Patient patient, boolean insert) {
 		super(owner, true);
 		setTitle(MessageBundle.getMessage("angal.visit.addvisit.title"));
 		this.patientSelected = patient;
 		this.ward = ward;
+		this.insert = insert;
 		initComponents();
 	}
 
@@ -321,7 +323,12 @@ public class InsertVisit extends JDialog implements SelectionListener {
 				thisVisit.setDuration((Integer) jSpinnerDur.getValue());
 				thisVisit.setService(serviceField.getText());
 				try {
-					visit = visitManager.newVisit(thisVisit);
+					if (insert) {
+						visit = visitManager.newVisit(thisVisit);
+					} else {
+						visit = thisVisit;
+					}
+					
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e, InsertVisit.this);
 					return;

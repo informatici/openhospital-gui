@@ -473,34 +473,38 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addVisitButton.addActionListener(actionEvent -> {
 
-				InsertVisit newVsRow = new InsertVisit(TherapyEdit.this, ward, patient);
+				InsertVisit newVsRow = new InsertVisit(TherapyEdit.this, ward, patient, false);
 				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
 				Visit visit = newVsRow.getVisit();
 
-				if (visit != null && visit.getVisitID() != 0) {
+				if (visit != null) {
 
-					visits.add(visit); // FOR GUI
-					hashTableVisits.put(visit.getVisitID(), visit);
-					checked = false;
-					//therapyModified = true;
-					if (smsenable) {
-						smsCheckBox.setEnabled(true);
-					}
-					if (notifiable) {
-						notifyCheckBox.setEnabled(true);
-					}
-					checkTherapyButton.setEnabled(true);
-					//saveButton.setEnabled(true);
-					updateCheckLabel();
-					showAll();
+					addVisitForSave(visit);
 				}
 				selectedVisit = null;
 				newVsRow.dispose();
 			});
 		}
 		return addVisitButton;
+	}
+
+	private void addVisitForSave(Visit visit) {
+		visits.add(visit); // FOR GUI
+		hashTableVisits.put(visit.getVisitID(), visit);
+		checked = false;
+		visitModified = true;
+		if (smsenable) {
+			smsCheckBox.setEnabled(true);
+		}
+		if (notifiable) {
+			notifyCheckBox.setEnabled(true);
+		}
+		checkTherapyButton.setEnabled(true);
+		saveButton.setEnabled(true);
+		updateCheckLabel();
+		showAll();
 	}
 
 	private JPanel getNotifyAndSMSPanel() {
@@ -964,35 +968,41 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 				TherapyRow thRow = newThRow.getThRow();
 
-				if (thRow != null && thRow.getTherapyID() != 0) {
+				if (thRow != null) {
 
-					thRows.add(thRow); // FOR DB;
-					Therapy thisTherapy = null;
-					try {
-						thisTherapy = thManager.createTherapy(thRow);
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
-					}
-					therapies.add(thisTherapy); // FOR GUI
-					hashTableThRow.put(thRow.getTherapyID(), thRow);
-					checked = false;
-					//therapyModified = true;
+					// Adding new therapy
+					addTherapyForSave(thRow);
+					
 					if (smsenable) {
 						smsCheckBox.setEnabled(true);
 					}
 					if (notifiable) {
 						notifyCheckBox.setEnabled(true);
 					}
-					checkTherapyButton.setEnabled(true);
-					//saveButton.setEnabled(true);
-					updateCheckLabel();
-					showAll();
 				}
 				selectedTherapy = null;
 				newThRow.dispose();
 			});
 		}
 		return addTherapyButton;
+	}
+
+	private void addTherapyForSave(TherapyRow thRow) {
+		thRows.add(thRow); // FOR DB;
+		Therapy thisTherapy = null;
+		try {
+			thisTherapy = thManager.createTherapy(thRow);
+		} catch (OHServiceException ex) {
+			OHServiceExceptionUtil.showMessages(ex);
+		}
+		therapies.add(thisTherapy); // FOR GUI
+		hashTableThRow.put(thRow.getTherapyID(), thRow);
+		checked = false;
+		therapyModified = true;
+		checkTherapyButton.setEnabled(true);
+		saveButton.setEnabled(true);
+		updateCheckLabel();
+		showAll();
 	}
 	
 	/*
@@ -1022,23 +1032,10 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					thRows.remove(hashTableThRow.get(selectedTherapy.getTherapyID()));
 					therapies.remove(selectedTherapy);
 
-					// Adding modified therapy
-					thRows.add(thRow); // FOR DB;
-					Therapy thisTherapy = null;
-					try {
-						thisTherapy = thManager.createTherapy(thRow);
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
-					}
-					therapies.add(thisTherapy); // FOR GUI
-					checked = false;
-					therapyModified = true;
-					saveButton.setEnabled(true);
-					updateCheckLabel();
-					showAll();
+					// Re-adding modified therapy
+					addTherapyForSave(thRow);
 				}
 				selectedTherapy = null;
-				showAll();
 				newThRow.dispose();
 			});
 		}
