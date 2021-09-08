@@ -343,16 +343,15 @@ public class VisitView extends ModalJFrame {
 				if (row < 0) {
 					MessageDialog.info(VisitView.this, MessageBundle.getMessage("angal.common.pleaseselectarow.msg"));
 					return;
-				} else {
-					Visit visit = (Visit) jTableFirst.getModel().getValueAt(row, -1);
-					int ok = MessageDialog.okCancel(VisitView.this,	MessageBundle.getMessage("angal.visit.removevisit.msg"));
-					if (ok == JOptionPane.YES_OPTION) {
-						vstManager.deleteVisit(visit);
-						loadDataForWard(ward);
-						updatePanels();
-					}
-					return;
 				}
+				Visit visit = (Visit) jTableFirst.getModel().getValueAt(row, -1);
+				int ok = MessageDialog.okCancel(VisitView.this, MessageBundle.getMessage("angal.visit.removevisit.msg"));
+				if (ok == JOptionPane.YES_OPTION) {
+					vstManager.deleteVisit(visit);
+					loadDataForWard(ward);
+					updatePanels();
+				}
+				return;
 			});
 		}
 		return deleteFirstVisitButton;
@@ -390,16 +389,15 @@ public class VisitView extends ModalJFrame {
 				if (row < 0) {
 					MessageDialog.info(VisitView.this, MessageBundle.getMessage("angal.common.pleaseselectarow.msg"));
 					return;
-				} else {
-					Visit visit = (Visit) jTableSecond.getModel().getValueAt(row, -1);
-					int ok = MessageDialog.okCancel(VisitView.this,	MessageBundle.getMessage("angal.visit.removevisit.msg"));
-					if (ok == JOptionPane.YES_OPTION) {
-						vstManager.deleteVisit(visit);
-						loadDataForWard(ward);
-						updatePanels();
-					}
-					return;
 				}
+				Visit visit = (Visit) jTableSecond.getModel().getValueAt(row, -1);
+				int ok = MessageDialog.okCancel(VisitView.this, MessageBundle.getMessage("angal.visit.removevisit.msg"));
+				if (ok == JOptionPane.YES_OPTION) {
+					vstManager.deleteVisit(visit);
+					loadDataForWard(ward);
+					updatePanels();
+				}
+				return;
 			});
 		}
 		return deleteSecondVisitButton;
@@ -838,9 +836,11 @@ public class VisitView extends ModalJFrame {
 			}
 
 			wardBox.addActionListener(actionEvent -> {
-				ward = (Ward) wardBox.getSelectedItem();
+				
+				Object selectedWard = wardBox.getSelectedItem();
 
-				if (ward instanceof Ward) {
+				if (selectedWard instanceof Ward) {
+					ward = (Ward) selectedWard;
 					loadDataForWard(ward);
 					showGui(true);
 				}
