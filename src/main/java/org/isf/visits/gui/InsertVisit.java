@@ -136,11 +136,12 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		initComponents();
 	}
 
-	public InsertVisit(JFrame owner, Date date, Ward ward, Patient patient) {
+	public InsertVisit(JFrame owner, Date date, Ward ward, Patient patient, boolean insert) {
 		super(owner, true);
 		this.patientSelected = patient;
 		this.visitDate = date;
 		this.ward = ward;
+		this.insert = insert;
 		initComponents();
 
 	}

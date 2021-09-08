@@ -320,7 +320,7 @@ public class VisitView extends ModalJFrame {
 			addFirstVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addFirstVisitButton.addActionListener(actionEvent -> {
 
-				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateFirst, getWard(), patient);
+				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateFirst, getWard(), patient, true);
 				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
@@ -366,7 +366,7 @@ public class VisitView extends ModalJFrame {
 			addSecondVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			addSecondVisitButton.addActionListener(actionEvent -> {
 
-				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateSecond, getWard(), patient);
+				InsertVisit newVsRow = new InsertVisit(VisitView.this, dateSecond, getWard(), patient, true);
 				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
