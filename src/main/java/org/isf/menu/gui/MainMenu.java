@@ -33,7 +33,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -53,8 +55,10 @@ import org.isf.menu.model.User;
 import org.isf.menu.model.UserGroup;
 import org.isf.menu.model.UserMenuItem;
 import org.isf.sms.service.SmsSender;
+import org.isf.telemetry.constants.TelemetryConst;
 import org.isf.telemetry.daemon.TelemetryDaemon;
 import org.isf.telemetry.gui.TelemetryGUI;
+import org.isf.telemetry.gui.TelemetryGUI.TelemetryListener;
 import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.utils.exception.OHServiceException;
@@ -68,13 +72,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener, TelemetryGUI.TelemetryListener {
+public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener, TelemetryListener {
 
 	private static final long serialVersionUID = 7620582079916035164L;
 	public static final String ADMIN_STR = "admin";
 	private boolean flag_Xmpp;
 	private boolean flag_Sms;
-	private Telemetry telemetry;
+	private Thread telemetryThread;
+	// used to understand if a module is enabled
+	private Map<String, Boolean> activableModules;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
 
@@ -134,6 +140,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	public MainMenu() {
 		myFrame = this;
 		GeneralData.initialize();
+		this.activableModules = retrieveActivatedModulesMap();
 		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); // for all fixed options YES_NO_CANCEL in dialogs
 		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
@@ -263,7 +270,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// remove disabled buttons
 		ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 		for (UserMenuItem umi : myMenu) {
-			if (!umi.isActive()) {
+			// if is not active or it is a module that is not enabled (there is no point in showing a menu item)
+			if (!umi.isActive() || isMenuItemNotEnabled(umi.getCode())) {
 				junkMenu.add(umi);
 			}
 		}
@@ -300,6 +308,20 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		setResizable(false);
 		setVisible(true);
 
+	}
+
+	private HashMap<String, Boolean> retrieveActivatedModulesMap() {
+		return new HashMap<String, Boolean>() {
+
+			private static final long serialVersionUID = 1L;
+			{
+				put(TelemetryConst.MENU_ID, Boolean.valueOf(GeneralData.TELEMETRYENABLED));
+			}
+		};
+	}
+
+	private boolean isMenuItemNotEnabled(String menuCode) {
+		return this.activableModules.containsKey(menuCode) && !activableModules.get(menuCode).booleanValue();
 	}
 
 	private void runTelemetry() {
@@ -440,11 +462,11 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	@Override
 	public void telemetryInserted(AWTEvent e) {
 		if (e.getSource() instanceof Telemetry) {
-			telemetry = (Telemetry) e.getSource();
+			Telemetry telemetry = (Telemetry) e.getSource();
 			LOGGER.info("Telemetry: \"{}\" telemetry inserted.", telemetry);
-			if (null != this.telemetry) {
-				Thread thread = new Thread(new TelemetryDaemon());
-				thread.start();
+			if (null != this.telemetryThread) {
+				this.telemetryThread = new Thread(new TelemetryDaemon());
+				this.telemetryThread.start();
 			}
 		}
 

@@ -23,9 +23,7 @@ package org.isf.telemetry.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -61,17 +59,27 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
 public class TelemetryGUI extends JDialog {
 
+	private static final String KEY_TELEMETRY_TITLE = "angal.telemetry.title";
+
 	private static final long serialVersionUID = 891561833857381224L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Telemetry.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TelemetryGUI.class);
 	private MainMenu parent;
 	private EventListenerList telemetryListeners = new EventListenerList();
-	private Telemetry telemetry;
+
+	public TelemetryGUI() {
+		super();
+		init();
+	}
 
 	public TelemetryGUI(MainMenu parent) {
-		super(parent, MessageBundle.getMessage("angal.login.title"), true);
+		super(parent, MessageBundle.getMessage(KEY_TELEMETRY_TITLE), true);
 		this.parent = parent;
 		this.addTelemetryListener(parent);
+		init();
+	}
+
+	private void init() {
 		TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
 		TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
 
@@ -83,11 +91,6 @@ public class TelemetryGUI extends JDialog {
 
 		add(this.panel(checkboxes, confirmButton, cancelButton));
 		pack();
-
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-
-		Dimension mySize = getSize();
 
 		setLocationRelativeTo(null);
 
@@ -167,7 +170,7 @@ public class TelemetryGUI extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				Map<String, Boolean> consentMap = buildConsentData(checkboxes);
 				if (this.isReallyEnabled(consentMap)) {
-					telemetry = telemetryManager.enable(consentMap);
+					Telemetry telemetry = telemetryManager.enable(consentMap);
 					fireTelemetryInserted(telemetry);
 					try {
 						GeneralData.initialize();
