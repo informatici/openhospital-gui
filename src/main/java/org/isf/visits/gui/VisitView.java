@@ -146,8 +146,6 @@ public class VisitView extends ModalJFrame {
 	
 	// private JButton reportButton; TODO to enable when a report will be designed
 	public String[] visColumns = { MessageBundle.getMessage("angal.visit.visits") };
-	private int[] visColumnsWidth = { 500, 350 };
-	private boolean[] visColumnsResizable = { false, true };
 
 	/*
 	 * Managers
@@ -480,12 +478,7 @@ public class VisitView extends ModalJFrame {
 			jTableSecond.setBackground(Color.white);
 			jTableSecond.setModel(new VisitSecondModel());
 			jTableSecond.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			for (int i = 0; i < visColumns.length; i++) {
-				jTableFirst.getColumnModel().getColumn(i).setMinWidth(visColumnsWidth[i]);
-				if (!visColumnsResizable[i]) {
-					jTableFirst.getColumnModel().getColumn(i).setMaxWidth(visColumnsWidth[i]);
-				}
-			}
+
 			jTableSecond.setAutoCreateColumnsFromModel(false);
 			jTableSecond.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
 
