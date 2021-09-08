@@ -115,7 +115,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private JPanel notifyAndSMSPanel;
 	private JPanel actionsPanel;
 	private Patient patient;
-	private boolean admitted;
 	private JButton addVisitButton;
 	private JButton removeVisitButton;
 
@@ -164,7 +163,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 		this.patient = patient;
-		this.admitted = admitted;
 		if (admitted) {
 			try {
 				this.ward = admMan.getCurrentAdmission(patient).getWard();
@@ -429,9 +427,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			removeVisitButton = new JButton(MessageBundle.getMessage("angal.therapy.removevisit.btn"));
 			removeVisitButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.removevisit.btn.key"));
 			removeVisitButton.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
-			if (admitted) {
-				removeVisitButton.setEnabled(false);
-			}
 			removeVisitButton.setMaximumSize(new Dimension(VISIT_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			removeVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			removeVisitButton.addActionListener(actionEvent -> {
@@ -457,9 +452,6 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			worksheetButton = new JButton(MessageBundle.getMessage("angal.therapy.worksheet.btn"));
 			worksheetButton.setMnemonic(MessageBundle.getMnemonic("angal.therapy.worksheet.btn.key"));
 			worksheetButton.setIcon(new ImageIcon("rsc/icons/worksheet_button.png"));
-//			if (admitted) {
-//				worksheetButton.setEnabled(false);
-//			}
 			worksheetButton.setMaximumSize(new Dimension(VISIT_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			worksheetButton.setHorizontalAlignment(SwingConstants.LEFT);
 
@@ -479,12 +471,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			addVisitButton.setIcon(new ImageIcon("rsc/icons/calendar_button.png"));
 			addVisitButton.setMaximumSize(new Dimension(VISIT_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			addVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
-			if (admitted) {
-				addVisitButton.setEnabled(false);
-			}
 			addVisitButton.addActionListener(actionEvent -> {
 
-				InsertVisit newVsRow = new InsertVisit(TherapyEdit.this, null, patient);
+				InsertVisit newVsRow = new InsertVisit(TherapyEdit.this, ward, patient);
 				newVsRow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				newVsRow.setVisible(true);
 
@@ -554,12 +543,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			notifyCheckBox = new JCheckBox(MessageBundle.getMessage("angal.therapy.important")); //$NON-NLS-1$
 			notifyCheckBox.setSelected(false);
 			notifyCheckBox.setAlignmentX(CENTER_ALIGNMENT);
-			if 	(!admitted) {
-				notifiable = false;
-				notifyCheckBox.setEnabled(false);
-			} else if (thRows.isEmpty()) {
+			notifyCheckBox.setEnabled(false);
+			if (thRows.isEmpty()) {
 				notifiable = true;
-				notifyCheckBox.setEnabled(false);
 			}
 			notifyCheckBox.addActionListener(actionEvent -> {
 				selectedTherapy.setNotify(!selectedTherapy.isNotify());
@@ -604,7 +590,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			smsCheckBox.setEnabled(false);
 			smsCheckBox.setAlignmentX(CENTER_ALIGNMENT);
 			smsCheckBox.setAlignmentY(CENTER_ALIGNMENT);
-			if (!GeneralData.SMSENABLED || admitted) {
+			if (!GeneralData.SMSENABLED) {
 				smsenable = false;
 			} else {
 				smsenable = true;
