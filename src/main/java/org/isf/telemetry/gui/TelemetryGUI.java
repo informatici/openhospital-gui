@@ -43,6 +43,7 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
@@ -169,7 +170,8 @@ public class TelemetryGUI extends JDialog {
 					telemetry = telemetryManager.enable(consentMap);
 					fireTelemetryInserted(telemetry);
 					try {
-						telemetryUtils.sendTelemetryData(consentMap);
+						GeneralData.initialize();
+						telemetryUtils.sendTelemetryData(consentMap, GeneralData.DEBUG);
 					} catch (RuntimeException | OHException f) {
 						LOGGER.error("Something strange happened: " + f.getMessage());
 						LOGGER.error(ExceptionUtils.retrieveExceptionStacktrace(f));
