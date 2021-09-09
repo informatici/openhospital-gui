@@ -455,6 +455,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			worksheetButton.setHorizontalAlignment(SwingConstants.LEFT);
 
 			worksheetButton.addActionListener(actionEvent -> {
+				
+				if (visitModified) {
+					MessageDialog.info(TherapyEdit.this, "angal.therapy.pleasesavethevisitplanfirst.msg");
+					return;
+				}
+				
 				VisitView worksheet = new VisitView(TherapyEdit.this, patient, ward);
 				worksheet.addVisitListener(TherapyEdit.this);
 				worksheet.showAsModal(TherapyEdit.this);
