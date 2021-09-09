@@ -281,11 +281,8 @@ public class TherapyEntryForm extends JDialog {
 			JSpinner source = (JSpinner) changeEvent.getSource();
 			double value = (Double) source.getValue();
 			therapy.setQty(value);
-			/*
-			 * although it is useful it creates conflicts
-			 */
-			//int intValue = new Double(value).intValue();
-			//jSliderQty.setValue(intValue);
+			int intValue = (int) Math.round(value);
+			jSliderQty.setValue(intValue);
 		});
 		return jSpinnerQty;
 	}
