@@ -339,11 +339,11 @@ public class VisitView extends ModalJFrame {
 
 				int row = jTableFirst.getSelectedRow();
 				if (row < 0) {
-					MessageDialog.info(VisitView.this, MessageBundle.getMessage("angal.common.pleaseselectarow.msg"));
+					MessageDialog.info(VisitView.this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
 				Visit visit = (Visit) jTableFirst.getModel().getValueAt(row, -1);
-				int ok = MessageDialog.okCancel(VisitView.this, MessageBundle.getMessage("angal.visit.removevisit.msg"));
+				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
 					vstManager.deleteVisit(visit);
 					loadDataForWard(ward);
@@ -385,11 +385,11 @@ public class VisitView extends ModalJFrame {
 
 				int row = jTableSecond.getSelectedRow();
 				if (row < 0) {
-					MessageDialog.info(VisitView.this, MessageBundle.getMessage("angal.common.pleaseselectarow.msg"));
+					MessageDialog.info(VisitView.this, "angal.common.pleaseselectarow.msg");
 					return;
 				}
 				Visit visit = (Visit) jTableSecond.getModel().getValueAt(row, -1);
-				int ok = MessageDialog.okCancel(VisitView.this, MessageBundle.getMessage("angal.visit.removevisit.msg"));
+				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
 					vstManager.deleteVisit(visit);
 					loadDataForWard(ward);
