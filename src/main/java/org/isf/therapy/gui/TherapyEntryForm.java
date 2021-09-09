@@ -728,7 +728,7 @@ public class TherapyEntryForm extends JDialog {
 				}
 				Double qty = (Double) jSpinnerQty.getValue();
 				if (qty == 0.) {
-					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero");
+					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero.msg");
 					return;
 				}
 				int therapyID = inserting ? 0 : therapy.getTherapyID();

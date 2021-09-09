@@ -136,7 +136,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private boolean available = false;
 	private boolean therapyModified = false;
 	private boolean notifiable = false;
-	private boolean smsenable = false;
+	private boolean smsenable = GeneralData.SMSENABLED;;
 	private boolean visitModified = false;
 	private Therapy selectedTherapy;
 	private Visit selectedVisit;
@@ -599,24 +599,19 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			smsCheckBox.setEnabled(false);
 			smsCheckBox.setAlignmentX(CENTER_ALIGNMENT);
 			smsCheckBox.setAlignmentY(CENTER_ALIGNMENT);
-			if (!GeneralData.SMSENABLED) {
-				smsenable = false;
-			} else {
-				smsenable = true;
-			}
 			smsCheckBox.addActionListener(actionEvent -> {
 				String telephone = patient.getTelephone();
 				if (smsCheckBox.isSelected() && (telephone.equals("") || telephone.length() < 7)) {
-					MessageDialog.warning(TherapyEdit.this,  "angal.therapy.theresnotelephonenumberassociatedwiththispatient");
+					MessageDialog.warning(TherapyEdit.this, "angal.therapy.theresnotelephonenumberassociatedwiththispatient");
 					int ok = JOptionPane.showConfirmDialog(
 							TherapyEdit.this,
-							MessageBundle.getMessage("angal.therapy.doyouwanttosetanumernowfor") + " " + patient.getName(),
+							MessageBundle.formatMessage("angal.therapy.doyouwanttosetanumernowfor.fmt", patient.getName()),
 							MessageBundle.getMessage("angal.therapy.settelephonenumber"),
 							JOptionPane.CANCEL_OPTION);
 					if (ok == JOptionPane.YES_OPTION) {
 
 						String number = JOptionPane.showInputDialog(
-								MessageBundle.getMessage("angal.therapy.telephonenumberfor") + " " + patient.getName());
+								MessageBundle.formatMessage("angal.therapy.telephonenumberfor.fmt", patient.getName()));
 						if (number != null) {
 							patient.setTelephone(number);
 							try {
@@ -698,7 +693,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					if (thRows.isEmpty()) {
 						ok = JOptionPane.showConfirmDialog(
 								TherapyEdit.this,
-								MessageBundle.getMessage("angal.therapy.deletealltherapiesfor") + " " + patient.getName(),
+								MessageBundle.formatMessage("angal.therapy.deletealltherapiesfor.fmt", patient.getName()),
 								MessageBundle.getMessage("angal.therapy.notherapies"),
 								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
 						if (ok == JOptionPane.YES_OPTION) {
@@ -748,7 +743,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					if (visits.isEmpty()) {
 						ok = JOptionPane.showConfirmDialog(
 								TherapyEdit.this,
-								MessageBundle.getMessage("angal.therapy.deleteallvisitsfor") + " " + patient.getName(),
+								MessageBundle.formatMessage("angal.therapy.deleteallvisitsfor.fmt", patient.getName()),
 								MessageBundle.getMessage("angal.therapy.novisits"),
 								JOptionPane.CANCEL_OPTION); //$NON-NLS-1$
 						if (ok == JOptionPane.YES_OPTION) {
@@ -780,7 +775,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				if (!therapyModified && !visitModified) {
 					ok = JOptionPane.showConfirmDialog(
 							TherapyEdit.this,
-							MessageBundle.getMessage("angal.therapy.changenotifysettingsfor") + " " + patient.getName(),
+							MessageBundle.formatMessage("angal.therapy.changenotifysettingsfor.fmt", patient.getName()),
 							MessageBundle.getMessage("angal.therapy.notifychanged"),
 							JOptionPane.CANCEL_OPTION);
 					if (ok == JOptionPane.YES_OPTION) {
@@ -1089,7 +1084,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private JPanel getPatientPanel() {
 		if (patientPanel == null) {
 			patientPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			String patientString = MessageBundle.getMessage("angal.therapy.therapyfor") + " " + patient.getName();// + //$NON-NLS-1$
+			String patientString = MessageBundle.formatMessage("angal.therapy.therapyfor.fmt", patient.getName());
 			JLabel patientLabel = new JLabel(patientString);
 			patientLabel.setFont(new Font("Serif", Font.PLAIN, 30));
 			patientPanel.add(patientLabel);
