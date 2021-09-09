@@ -208,8 +208,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		loadFromDB();
 
 		for (int i = 0; i < jAgenda.getDayPanel().getComponentCount(); i++) {
-			org.isf.utils.jobjects.JAgenda.AgendaDayObject obj = (org.isf.utils.jobjects.JAgenda.AgendaDayObject) jAgenda
-					.getDayPanel().getComponent(i);
+			AgendaDayObject obj = (AgendaDayObject) jAgenda.getDayPanel().getComponent(i);
 			if (obj.getList() != null) {
 				obj.getList().addMouseListener(new MyMouseListener());
 			}
@@ -799,10 +798,11 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 						MessageDialog.error(TherapyEdit.this, "angal.therapy.therapiesplancouldnotbesaved");
 					}
 				}
-
+				loadFromDB();
 				therapyModified = false;
 				visitModified = false;
 				saveButton.setEnabled(false);
+				showAll();
 			});
 		}
 		return saveButton;
@@ -1144,8 +1144,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 				smsCheckBox.setEnabled(false);
 				return;
 			}
-			if (model.getElementAt(index) instanceof Visit) {
-				vs = (Visit) model.getElementAt(index);
+			Object selectedItem = model.getElementAt(index);
+			if (selectedItem instanceof Visit) {
+				vs = (Visit) selectedItem;
 				selectedTherapy = null;
 				selectedVisit = vs;
 				if (vs != null) {
@@ -1155,9 +1156,9 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					smsCheckBox.setEnabled(true);
 					smsCheckBox.setSelected(vs.isSms());
 				}
-				selectedTherapy = null;
-			} else if (model.getElementAt(index) instanceof Therapy) {
-				th = (Therapy) model.getElementAt(index);
+				thisList.setSelectedIndex(index);
+			} else if (selectedItem instanceof Therapy) {
+				th = (Therapy) selectedItem;
 				selectedTherapy = th;
 				selectedVisit = null;
 				if (th != null) {
@@ -1166,26 +1167,38 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					noteTextArea.setEnabled(true);
 					smsCheckBox.setEnabled(true);
 					smsCheckBox.setSelected(th.isSms());
-				} else {
-					return;
-				}
-			} 
+				} 
+				thisList.setSelectedIndex(index);
+			} else {
+				return;
+			}
+			/* 
+			 * highlighting/de-highlighting therapies and visits
+			 * if saved (therapyID == 0)
+			 * 
+			 * TODO:
+			 * - better arrays management (to highlight also unsaved)
+			 * - improve events handling (to avoid selection flickering) 
+			 */
 			for (Component comp : jAgenda.getDayPanel().getComponents()) {
 				AgendaDayObject day = (AgendaDayObject) comp;
 				JList list = day.getList();
 				if (list != null) {
-					list.clearSelection();
+					if (list != thisList) {
+						list.clearSelection();
+					}
 					model = list.getModel();
 					for (int i = 0; i < model.getSize(); i++) {
-						if (model.getElementAt(i) instanceof Therapy) {
-							Therapy aTherapy = (Therapy) model.getElementAt(i);
-							if (aTherapy.getTherapyID() == therapyID) {
+						Object iteratedItem = model.getElementAt(i);
+						if (iteratedItem instanceof Therapy) {
+							Therapy aTherapy = (Therapy) iteratedItem;
+							if (therapyID != 0 && aTherapy.getTherapyID() == therapyID) {
 								list.setSelectedIndex(i);
 							}
 						}
-						if (model.getElementAt(i) instanceof Visit) {
-							Visit aVisit = (Visit) model.getElementAt(i);
-							if (aVisit.getVisitID() == visitID) {
+						if (iteratedItem instanceof Visit) {
+							Visit aVisit = (Visit) iteratedItem;
+							if (visitID != 0 && aVisit.getVisitID() == visitID) {
 								list.setSelectedIndex(i);
 							}
 						}
