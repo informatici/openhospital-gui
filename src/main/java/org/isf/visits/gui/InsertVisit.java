@@ -325,9 +325,9 @@ public class InsertVisit extends JDialog implements SelectionListener {
 					if (insert) {
 						visit = visitManager.newVisit(thisVisit);
 					} else {
+						visitManager.validateVisit(thisVisit);
 						visit = thisVisit;
 					}
-					
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e, InsertVisit.this);
 					return;
