@@ -456,8 +456,8 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 			worksheetButton.addActionListener(actionEvent -> {
 				
-				if (visitModified) {
-					MessageDialog.info(TherapyEdit.this, "angal.therapy.pleasesavethevisitplanfirst.msg");
+				if (visitModified || therapyModified) {
+					MessageDialog.info(TherapyEdit.this, "angal.therapy.pleasesavechangesfirst.msg");
 					return;
 				}
 				
