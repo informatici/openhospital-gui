@@ -142,12 +142,15 @@ public class TherapyEntryForm extends JDialog {
 	private JPanel therapyPanel;
 	private int freqInDay;
 	private int patID;
+
+	private boolean inserting;
 	
 	/**
 	 * Create the dialog.
 	 */
 	public TherapyEntryForm(JFrame owner, int patID, Therapy th) {
 		super(owner, true);
+		inserting = th == null;
 		try {
 			this.medArray = medBrowser.getMedicals();
 		} catch (OHServiceException e) {
@@ -160,7 +163,7 @@ public class TherapyEntryForm extends JDialog {
 		initComponents();
 		
 
-		if (therapy != null) {
+		if (!inserting) {
 			fillFormWithTherapy(therapy);
 		} else {
 			therapy = new Therapy();
@@ -171,7 +174,7 @@ public class TherapyEntryForm extends JDialog {
 	}
 
 	private void initComponents() {
-		if (therapy == null) {
+		if (inserting) {
 			setTitle(MessageBundle.getMessage("angal.therapy.newtherapyentryform.title"));
 		} else {
 			setTitle(MessageBundle.getMessage("angal.therapy.edittherapyentryform.title"));
@@ -240,7 +243,7 @@ public class TherapyEntryForm extends JDialog {
 		
 		jSpinnerMonths.setValue(period.getMonths());
 		jSpinnerWeeks.setValue(period.getWeeks());
-		jSpinnerDays.setValue(period.getDays());
+		jSpinnerDays.setValue(period.getDays()+1);
 	}
 
 	private JList getMedicalsList() {
@@ -278,11 +281,8 @@ public class TherapyEntryForm extends JDialog {
 			JSpinner source = (JSpinner) changeEvent.getSource();
 			double value = (Double) source.getValue();
 			therapy.setQty(value);
-			/*
-			 * although it is useful it creates conflicts
-			 */
-			//int intValue = new Double(value).intValue();
-			//jSliderQty.setValue(intValue);
+			int intValue = (int) Math.round(value);
+			jSliderQty.setValue(intValue);
 		});
 		return jSpinnerQty;
 	}
@@ -717,6 +717,10 @@ public class TherapyEntryForm extends JDialog {
 				 */
 				GregorianCalendar startDate = new GregorianCalendar();
 				startDate.setTime(therapyStartdate.getDate());
+				if (startDate.before(TimeTools.getDateToday0())) {
+					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.atherapycannotbedefinedforadatethatispast.msg");
+					return;
+				}
 				GregorianCalendar endDate = therapyEndDate;
 				Medical medical = (Medical) medicalsList.getSelectedValue();
 				if (medical == null) {
@@ -725,10 +729,10 @@ public class TherapyEntryForm extends JDialog {
 				}
 				Double qty = (Double) jSpinnerQty.getValue();
 				if (qty == 0.) {
-					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero");
+					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.pleaseinsertaquantitygreaterthanzero.msg");
 					return;
 				}
-				int therapyID = 0;
+				int therapyID = inserting ? 0 : therapy.getTherapyID();
 				int unitID = 0; //TODO: UoM table
 				int freqInDay = getFreqInDay();
 				int freqInPeriod = Integer.parseInt(jSpinnerFreqInPeriod.getValue().toString());
@@ -737,13 +741,9 @@ public class TherapyEntryForm extends JDialog {
 				boolean sms = false;
 
 				try {
-					thRow = therapyManager.newTherapy(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
-					therapyID = thRow.getTherapyID();
+					thRow = therapyManager.getTherapyRow(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
-				}
-				if (therapyID > 0) {
-					thRow.setTherapyID(therapyID);
 				}
 				setVisible(false);
 
