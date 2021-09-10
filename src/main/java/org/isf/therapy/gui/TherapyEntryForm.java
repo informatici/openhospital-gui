@@ -717,6 +717,10 @@ public class TherapyEntryForm extends JDialog {
 				 */
 				GregorianCalendar startDate = new GregorianCalendar();
 				startDate.setTime(therapyStartdate.getDate());
+				if (startDate.before(TimeTools.getDateToday0())) {
+					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.atherapycannotbedefinedforadatethatispast.msg");
+					return;
+				}
 				GregorianCalendar endDate = therapyEndDate;
 				Medical medical = (Medical) medicalsList.getSelectedValue();
 				if (medical == null) {

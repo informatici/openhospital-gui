@@ -311,7 +311,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 				GregorianCalendar date = new GregorianCalendar();
 				date.setTime(visitDateChooser.getDate());
 				if (date.before(TimeTools.getDateToday0())) {
-					MessageDialog.error(InsertVisit.this, "angal.visit.cannotsetadateinthepastfornextvisit.msg");
+					MessageDialog.error(InsertVisit.this, "angal.visit.avisitcannotbescheduledforadatethatispast.msg");
 					return;
 				}
 
