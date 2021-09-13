@@ -177,12 +177,24 @@ public class PatientFolderReportModal extends ModalJFrame {
 						parameterString.append("All");
 						return parameterString.toString();
 					}
-					if (getDrugsValue()) parameterString.append("Drugs");
-					if (getExaminationValue()) parameterString.append("Examination");
-					if (getAdmissionValue()) parameterString.append("Admission");
-					if (getOpdValue()) parameterString.append("Opd");
-					if (getLaboratoryValue()) parameterString.append("Laboratory");
-					if (getOperationValue()) parameterString.append("Operations");
+					if (getDrugsValue()) {
+						parameterString.append("Drugs");
+					}
+					if (getExaminationValue()) {
+						parameterString.append("Examination");
+					}
+					if (getAdmissionValue()) {
+						parameterString.append("Admission");
+					}
+					if (getOpdValue()) {
+						parameterString.append("Opd");
+					}
+					if (getLaboratoryValue()) {
+						parameterString.append("Laboratory");
+					}
+					if (getOperationValue()) {
+						parameterString.append("Operations");
+					}
 					
 					return parameterString.toString();
 				}
@@ -376,22 +388,18 @@ public class PatientFolderReportModal extends ModalJFrame {
 	public Date getDateToValue() {
 
 		Date date = jDateChooserDateTo.getDate();
-		if (date != null) {
-			return jDateChooserDateTo.getDate();
-		} else {
+		if (date == null) {
 			jDateChooserDateTo.setDate(new Date());
-			return jDateChooserDateTo.getDate();
 		}
+		return jDateChooserDateTo.getDate();
 	}
 
 	public Date getDateFromValue() {
 
 		Date date = jDateChooserDateFrom.getDate();
-		if (date != null) {
-			return jDateChooserDateFrom.getDate();
-		} else {
+		if (date == null) {
 			jDateChooserDateFrom.setDate(new Date());
-			return jDateChooserDateFrom.getDate();
 		}
+		return jDateChooserDateFrom.getDate();
 	}
 }
