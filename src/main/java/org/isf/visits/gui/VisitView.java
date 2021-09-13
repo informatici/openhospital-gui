@@ -220,7 +220,7 @@ public class VisitView extends ModalJFrame {
 		JPanel visitParamPanel = new JPanel(sl_visitParamsPanel);
 
 		GridBagLayout gbl_jPanelData = new GridBagLayout();
-		gbl_jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 00 };
+		gbl_jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 0 };
 		gbl_jPanelData.rowHeights = new int[] { 20, 20, 20, 0, 0, 0, 0, 0 };
 		gbl_jPanelData.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		gbl_jPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -656,7 +656,9 @@ public class VisitView extends ModalJFrame {
 		@Override
 		public Object getValueAt(int r, int c) {
 			Visit visit = visitfirst.get(r);
-			if (c == -1) return visit;
+			if (c == -1) {
+				return visit;
+			}
 			GregorianCalendar d = visitfirst.get(r).getDate();
 			return getVisitString(visit, d);
 		}
@@ -698,7 +700,9 @@ public class VisitView extends ModalJFrame {
 		@Override
 		public Object getValueAt(int r, int c) {
 			Visit visit = visitSecond.get(r);
-			if (c == -1) return visit;
+			if (c == -1) {
+				return visit;
+			}
 			GregorianCalendar d = visitSecond.get(r).getDate();
 			return getVisitString(visit, d);
 		}
