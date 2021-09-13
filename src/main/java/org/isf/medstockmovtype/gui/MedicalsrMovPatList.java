@@ -47,12 +47,13 @@ public class MedicalsrMovPatList extends JPanel {
 	private Patient myPatient;
 	private ArrayList<MovementWard> drugsData;
 	private JDialog dialogDrug;
-	private JTable JtableData;
+	private JTable jTableData;
 	private OhTableDrugsModel<MovementWard> modelMedWard;
 	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 	private MovWardBrowserManager movManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
+
 	public MedicalsrMovPatList(Object object) {
-		
+
 		setLayout(new BorderLayout(0, 0));
 		JPanel panelData = new JPanel();
 		add(panelData);
@@ -66,28 +67,23 @@ public class MedicalsrMovPatList extends JPanel {
 		}
 		
 		if (myPatient != null) {
-			MovWardBrowserManager movManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 			try {
 				ArrayList<MovementWard> movPat = movManager.getMovementToPatient(myPatient);
 				drugsData = new ArrayList<>();
-				for (MovementWard mov : movPat) {
-					drugsData.add(mov);
-				}
+				drugsData.addAll(movPat);
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
-			} 
-			
+			}
 		}
-		JtableData = new JTable();
-		scrollPaneData.setViewportView(JtableData);
+		jTableData = new JTable();
+		scrollPaneData.setViewportView(jTableData);
 		/* ** apply default oh cellRender **** */
-		JtableData.setDefaultRenderer(Object.class, cellRenderer);
-		JtableData.setDefaultRenderer(Double.class, cellRenderer);
-		
-		
+		jTableData.setDefaultRenderer(Object.class, cellRenderer);
+		jTableData.setDefaultRenderer(Double.class, cellRenderer);
+
 		modelMedWard = new OhTableDrugsModel<>(drugsData);
 
-		JtableData.setModel(modelMedWard);
+		jTableData.setModel(modelMedWard);
 		dialogDrug = new JDialog();
 		dialogDrug.setLocationRelativeTo(null);
 		dialogDrug.setSize(450, 280);
