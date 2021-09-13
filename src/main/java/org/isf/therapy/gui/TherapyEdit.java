@@ -136,7 +136,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private boolean available = false;
 	private boolean therapyModified = false;
 	private boolean notifiable = false;
-	private boolean smsenable = GeneralData.SMSENABLED;;
+	private boolean smsenable = GeneralData.SMSENABLED;
 	private boolean visitModified = false;
 	private Therapy selectedTherapy;
 	private Visit selectedVisit;
