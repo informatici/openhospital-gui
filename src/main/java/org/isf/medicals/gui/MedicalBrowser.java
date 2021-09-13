@@ -32,6 +32,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -41,7 +42,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -52,6 +52,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -104,8 +105,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		pMedicals.add(0, medical);
 		((MedicalBrowsingModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 		repaint();
 	}
 
@@ -114,8 +116,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		pMedicals.set(selectedrow, medical);
 		((MedicalBrowsingModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1)
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
+		}
 		repaint();
 
 	}
@@ -203,8 +206,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			table.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
 			for (int i = 0; i < pColumnWidth.length; i++) {
 				table.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
-				if (!pColumnResizable[i])
+				if (!pColumnResizable[i]) {
 					table.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
+				}
 			}
 		}
 		return table;
@@ -215,12 +219,15 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		buttonPanel.add(new JLabel(MessageBundle.getMessage("angal.medicals.selecttype")));
 		buttonPanel.add(getComboBoxMedicalType());
 		buttonPanel.add(getSearchBox());
-		if (MainMenu.checkUserGrants("btnpharmaceuticalnew"))
+		if (MainMenu.checkUserGrants("btnpharmaceuticalnew")) {
 			buttonPanel.add(getJButtonNew());
-		if (MainMenu.checkUserGrants("btnpharmaceuticaledit"))
+		}
+		if (MainMenu.checkUserGrants("btnpharmaceuticaledit")) {
 			buttonPanel.add(getJButtonEdit());
-		if (MainMenu.checkUserGrants("btnpharmaceuticaldel"))
+		}
+		if (MainMenu.checkUserGrants("btnpharmaceuticaldel")) {
 			buttonPanel.add(getJButtonDelete());
+		}
 		buttonPanel.add(getJButtonReport());
 		buttonPanel.add(getJButtonStock());
 		buttonPanel.add(getJButtonStockCard());
@@ -235,7 +242,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		if (buttonAMC == null) {
 			buttonAMC = new JButton(MessageBundle.getMessage("angal.medicals.averagemonthlyconsumption.btn"));
 			buttonAMC.setMnemonic(MessageBundle.getMnemonic("angal.medicals.averagemonthlyconsumption.btn.key"));
-			buttonAMC.addActionListener(event -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALAMC));
+			buttonAMC.addActionListener(actionEvent -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALAMC));
 		}
 		return buttonAMC;
 	}
@@ -261,8 +268,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				@Override
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
-					if (key == KeyEvent.VK_ALT)
+					if (key == KeyEvent.VK_ALT) {
 						altKeyReleased = false;
+					}
 				}
 
 				@Override
@@ -277,28 +285,28 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonClose() {
 		JButton closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		closeButton.addActionListener(arg0 -> dispose());
+		closeButton.addActionListener(actionEvent -> dispose());
 		return closeButton;
 	}
 
 	private JButton getJButtonExpiring() {
 		JButton buttonExpiring = new JButton(MessageBundle.getMessage("angal.medicals.expiring.btn"));
 		buttonExpiring.setMnemonic(MessageBundle.getMnemonic("angal.medicals.expiring.btn.key"));
-		buttonExpiring.addActionListener(event -> launchExpiringReport());
+		buttonExpiring.addActionListener(actionEvent -> launchExpiringReport());
 		return buttonExpiring;
 	}
 
 	private JButton getJButtonOrderList() {
 		JButton buttonOrderList = new JButton(MessageBundle.getMessage("angal.medicals.order.btn"));
 		buttonOrderList.setMnemonic(MessageBundle.getMnemonic("angal.medicals.order.btn.key"));
-		buttonOrderList.addActionListener(event -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALORDER));
+		buttonOrderList.addActionListener(actionEvent -> new GenericReportPharmaceuticalOrder(GeneralData.PHARMACEUTICALORDER));
 		return buttonOrderList;
 	}
 
 	private JButton getJButtonStock() {
 		JButton buttonStock = new JButton(MessageBundle.getMessage("angal.medicals.stock.btn"));
 		buttonStock.setMnemonic(MessageBundle.getMnemonic("angal.medicals.stock.btn.key"));
-		buttonStock.addActionListener(event -> {
+		buttonStock.addActionListener(actionEvent -> {
 
 			ArrayList<String> dateOptions = new ArrayList<>();
 			dateOptions.add(MessageBundle.getMessage("angal.medicals.today"));
@@ -311,8 +319,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 					dateOptions.get(0),
 					"angal.medicals.pleaseselectareport.msg");
 
-			if (dateOption == null)
+			if (dateOption == null) {
 				return;
+			}
 
 			ArrayList<String> lotOptions = new ArrayList<>();
 			lotOptions.add(MessageBundle.getMessage("angal.medicals.onlyquantity"));
@@ -328,8 +337,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			String sortBy = null;
 			String groupBy = null;
 			String filter = "%" + searchString.getText() + "%";
-			if (pbox.getSelectedItem() instanceof MedicalType)
+			if (pbox.getSelectedItem() instanceof MedicalType) {
 				groupBy = ((MedicalType) pbox.getSelectedItem()).getDescription();
+			}
 			List<?> sortedKeys = table.getRowSorter().getSortKeys();
 			if (!sortedKeys.isEmpty()) {
 				int sortedColumn = ((SortKey) sortedKeys.get(0)).getColumn();
@@ -337,13 +347,15 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 				String columnName = pColumnsSorter[sortedColumn];
 				String columnOrder = sortedOrder.toString().equals("ASCENDING") ? "ASC" : "DESC";
-				if (!pColumnsNormalSorting[sortedColumn])
+				if (!pColumnsNormalSorting[sortedColumn]) {
 					columnOrder = sortedOrder.toString().equals("ASCENDING") ? "DESC" : "ASC";
+				}
 				if (groupBy == null) {
 					groupBy = "%";
 					sortBy = "MDSRT_DESC, " + columnName + " " + columnOrder;
-				} else
+				} else {
 					sortBy = columnName + " " + columnOrder;
+				}
 
 			} else { //default values
 				groupBy = "%%";
@@ -391,7 +403,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonStockCard() {
 		JButton buttonStockCard = new JButton(MessageBundle.getMessage("angal.common.stockcard.btn"));
 		buttonStockCard.setMnemonic(MessageBundle.getMnemonic("angal.common.stockcard.btn.key"));
-		buttonStockCard.addActionListener(event -> {
+		buttonStockCard.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -401,7 +413,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				// Select Dates
 				JFromDateToDateChooserDialog dataRange = new JFromDateToDateChooserDialog(MedicalBrowser.this);
 				dataRange.setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
-				dataRange.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dataRange.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dataRange.setVisible(true);
 
 				Date dateFrom = dataRange.getDateFrom();
@@ -419,7 +431,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonReport() {
 		JButton buttonExport = new JButton(MessageBundle.getMessage("angal.medicals.export.btn"));
 		buttonExport.setMnemonic(MessageBundle.getMnemonic("angal.medicals.export.btn.key"));
-		buttonExport.addActionListener(event -> {
+		buttonExport.addActionListener(actionEvent -> {
 
 			String fileName = compileFileName();
 			File defaultFileName = new File(fileName);
@@ -428,8 +440,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			int iRetVal = fcExcel.showSaveDialog(MedicalBrowser.this);
 			if (iRetVal == JFileChooser.APPROVE_OPTION) {
 				File exportFile = fcExcel.getSelectedFile();
-				if (!exportFile.getName().endsWith("xls"))
+				if (!exportFile.getName().endsWith("xls")) {
 					exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
+				}
 				ExcelExporter xlsExport = new ExcelExporter();
 				try {
 					xlsExport.exportTableToExcel(table, exportFile);
@@ -459,7 +472,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonDelete() {
 		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		buttonDelete.addActionListener(event -> {
+		buttonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -488,7 +501,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonEdit() {
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		buttonEdit.addActionListener(event -> {
+		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -505,7 +518,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private JButton getJButtonNew() {
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		buttonNew.addActionListener(event -> {
+		buttonNew.addActionListener(actionEvent -> {
 			// medical will reference the new record
 			medical = new Medical(null, new MedicalType("", ""), "", "", 0, 0, 0, 0, 0);
 			MedicalEdit newrecord = new MedicalEdit(medical, true, me);
@@ -529,7 +542,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		pbox.addActionListener(arg0 -> {
+		pbox.addActionListener(actionEvent -> {
 			pSelection = pbox.getSelectedItem().toString();
 			if (pSelection.compareTo(STR_ALL) == 0) {
 				model = new MedicalBrowsingModel();
@@ -560,8 +573,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				options.get(0),
 				"angal.medicals.pleaseselectperiod.msg");
 
-		if (option == null)
+		if (option == null) {
 			return;
+		}
 
 		GregorianCalendar from = new GregorianCalendar();
 		GregorianCalendar to = new GregorianCalendar();
@@ -575,26 +589,26 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		}
 		if (options.indexOf(option) == ++i) {
 			//this month
-			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
-			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
+			from.set(Calendar.DAY_OF_MONTH, 1);
+			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
 		}
 		if (options.indexOf(option) == ++i) {
-			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+			from.set(Calendar.DAY_OF_MONTH, 1);
 			//next month
-			to.add(GregorianCalendar.MONTH, 1);
-			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
+			to.add(Calendar.MONTH, 1);
+			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
 		}
 		if (options.indexOf(option) == ++i) {
-			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+			from.set(Calendar.DAY_OF_MONTH, 1);
 			//next two month
-			to.add(GregorianCalendar.MONTH, 2);
-			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
+			to.add(Calendar.MONTH, 2);
+			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
 		}
 		if (options.indexOf(option) == ++i) {
-			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+			from.set(Calendar.DAY_OF_MONTH, 1);
 			//next three month
-			to.add(GregorianCalendar.MONTH, 3);
-			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
+			to.add(Calendar.MONTH, 3);
+			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
 		}
 		if (options.indexOf(option) == ++i) {
 			GregorianCalendar monthYear;
@@ -613,11 +627,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				return;
 			}
 
-			from.set(GregorianCalendar.DAY_OF_MONTH, 1);
+			from.set(Calendar.DAY_OF_MONTH, 1);
 			//other month
-			to.set(GregorianCalendar.MONTH, monthYear.get(GregorianCalendar.MONTH));
-			to.set(GregorianCalendar.YEAR, monthYear.get(GregorianCalendar.YEAR));
-			to.set(GregorianCalendar.DAY_OF_MONTH, to.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
+			to.set(Calendar.MONTH, monthYear.get(Calendar.MONTH));
+			to.set(Calendar.YEAR, monthYear.get(Calendar.YEAR));
+			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
 		}
 		new GenericReportFromDateToDate(
 				TimeTools.formatDateTime(from, "dd/MM/yyyy"),
@@ -658,12 +672,15 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 									a++;
 								}
 							}
-							if (a == tokens.length)
+							if (a == tokens.length) {
 								medicalList.add(med);
-						} else
+							}
+						} else {
 							medicalList.add(med);
-					} else
+						}
+					} else {
 						medicalList.add(med);
+					}
 				}
 			}
 		}
@@ -699,8 +716,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 		@Override
 		public int getRowCount() {
-			if (medicalList == null)
+			if (medicalList == null) {
 				return 0;
+			}
 			return medicalList.size();
 		}
 
@@ -735,10 +753,11 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				return minQuantity;
 			} else if (c == 6) {
 				//if (actualQty<=minQuantity)return true;
-				if (actualQty == 0)
+				if (actualQty == 0) {
 					return true;
-				else
+				} else {
 					return false;
+				}
 			}
 			return null;
 		}
@@ -761,10 +780,12 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			cell.setForeground(Color.BLACK);
 			Medical med = pMedicals.get(row);
 			double actualQty = med.getInitialqty() + med.getInqty() - med.getOutqty();
-			if ((Boolean) table.getValueAt(row, 6))
+			if ((Boolean) table.getValueAt(row, 6)) {
 				cell.setForeground(Color.GRAY); // out of stock
-			if (med.getMinqty() != 0 && actualQty <= med.getMinqty())
+			}
+			if (med.getMinqty() != 0 && actualQty <= med.getMinqty()) {
 				cell.setForeground(Color.RED); // under critical level
+			}
 			return cell;
 		}
 	}

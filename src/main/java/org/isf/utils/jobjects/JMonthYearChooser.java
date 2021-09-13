@@ -21,8 +21,7 @@
  */
 package org.isf.utils.jobjects;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -51,23 +50,17 @@ public class JMonthYearChooser extends JPanel {
 		
 		JMonthChooser month = new JMonthChooser();
 		month.setLocale(new Locale(GeneralData.LANGUAGE));
-		month.addPropertyChangeListener("month", new PropertyChangeListener() {
-
-			public void propertyChange(PropertyChangeEvent evt) {
-				JMonthChooser theChooser = (JMonthChooser) evt.getSource();
-				gc.set(GregorianCalendar.MONTH, theChooser.getMonth());
-			}
+		month.addPropertyChangeListener("month", propertyChangeEvent -> {
+			JMonthChooser theChooser = (JMonthChooser) propertyChangeEvent.getSource();
+			gc.set(Calendar.MONTH, theChooser.getMonth());
 		});
 		
 		
 		JYearChooser year = new JYearChooser();
 		year.setLocale(new Locale(GeneralData.LANGUAGE));
-		year.addPropertyChangeListener("year", new PropertyChangeListener() {
-
-			public void propertyChange(PropertyChangeEvent evt) {
-				JYearChooser theChooser = (JYearChooser) evt.getSource();
-				gc.set(GregorianCalendar.YEAR, theChooser.getYear());
-			}
+		year.addPropertyChangeListener("year", propertyChangeEvent -> {
+			JYearChooser theChooser = (JYearChooser) propertyChangeEvent.getSource();
+			gc.set(Calendar.YEAR, theChooser.getYear());
 		});
 		
 		JPanel datePanel = new JPanel();

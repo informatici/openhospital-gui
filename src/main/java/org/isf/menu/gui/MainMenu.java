@@ -350,8 +350,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		String command = e.getActionCommand();
+	public void actionPerformed(ActionEvent actionEvent) {
+		String command = actionEvent.getActionCommand();
 		launchApp(command);
 	}
 

@@ -33,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 public class ChatPanel extends JPanel {
 
@@ -72,7 +73,7 @@ public class ChatPanel extends JPanel {
 			}
 		});
 		chatMessages.setSize(new Dimension(100, 200));
-		final JScrollPane received = new JScrollPane(chatMessages,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		final JScrollPane received = new JScrollPane(chatMessages, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		received.setPreferredSize(new Dimension(200,200));
 		received.setMaximumSize(new Dimension(10,10));
@@ -81,12 +82,15 @@ public class ChatPanel extends JPanel {
 			BoundedRangeModel brm = received.getVerticalScrollBar().getModel();
 			boolean wasAtBottom = true;	
 
+			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
 				if (!brm.getValueIsAdjusting()) {
-					if (wasAtBottom)
+					if (wasAtBottom) {
 						brm.setValue(brm.getMaximum());
-				} else
+					}
+				} else {
 					wasAtBottom = ((brm.getValue() + brm.getExtent()) == brm.getMaximum());
+				}
 			}
 		});
 
@@ -100,7 +104,7 @@ public class ChatPanel extends JPanel {
 		return this;
 	}
 
-	public ChatMessages getChatMessages(){
+	public ChatMessages getChatMessages() {
 		return chatMessages;
 	}
 

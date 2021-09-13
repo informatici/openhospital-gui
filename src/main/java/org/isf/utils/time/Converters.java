@@ -39,8 +39,9 @@ public class Converters {
      * @return the date in format {@code yyyy-MM-dd HH:mm:ss}.
      */
     public static String convertToSQLDate(GregorianCalendar datetime) {
-        if (datetime == null)
+        if (datetime == null) {
             return null;
+        }
         return convertToSQLDate(datetime.getTime());
     }
 
@@ -50,8 +51,9 @@ public class Converters {
      * @return the date in format {@code yyyy-MM-dd HH:mm:ss}.
      */
     public static String convertToSQLDate(Date datetime) {
-        if (datetime == null)
+        if (datetime == null) {
             return null;
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(datetime);
     }
@@ -62,8 +64,9 @@ public class Converters {
      * @return the date in format {@code yyyy-MM-dd}.
      */
     public static String convertToSQLDateLimited(GregorianCalendar date) {
-        if (date == null)
+        if (date == null) {
             return null;
+        }
         return convertToSQLDateLimited(date.getTime());
     }
 
@@ -73,8 +76,9 @@ public class Converters {
      * @return the date in format {@code yyyy-MM-dd}.
      */
     public static String convertToSQLDateLimited(Date date) {
-        if (date == null)
+        if (date == null) {
             return null;
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
     }
@@ -85,14 +89,16 @@ public class Converters {
      * @return the converted value or {@code null} if the passed value is {@code null}.
      */
     public static Date toDate(GregorianCalendar calendar) {
-        if (calendar == null)
+        if (calendar == null) {
             return null;
+        }
         return new Date(calendar.getTimeInMillis());
     }
     
     public static DateTime toDateTime(GregorianCalendar calendar) {
-        if (calendar == null)
+        if (calendar == null) {
             return null;
+        }
         return new DateTime(calendar.getTimeInMillis());
     }
 
@@ -101,9 +107,10 @@ public class Converters {
      * @param date the date to convert.
      * @return the converted date.
      */
-    public static GregorianCalendar toCalendar(Date date){
-        if (date == null)
+    public static GregorianCalendar toCalendar(Date date) {
+        if (date == null) {
             return null;
+        }
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         return calendar;

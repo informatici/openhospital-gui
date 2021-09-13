@@ -115,7 +115,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(event -> {
+			jNewButton.addActionListener(actionEvent -> {
 				deliveryresultType = new DeliveryResultType("","");
 				DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, true);
 				newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
@@ -134,7 +134,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(event -> {
+			jEditButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -158,7 +158,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(arg0 -> dispose());
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -172,7 +172,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(event -> {
+			jDeleteButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -203,20 +203,19 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		return jTable;
 	}
 
-	
-class DeliveryResultTypeBrowserModel extends DefaultTableModel {
+	class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 
-	private static final long serialVersionUID = 1L;
-	private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
+		private static final long serialVersionUID = 1L;
+		private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 
 		public DeliveryResultTypeBrowserModel() {
 			try {
 				pDeliveryResultType = manager.getDeliveryResultType();
-			} catch(OHServiceException ohServiceException) {
+			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
-		
+
 		@Override
 		public int getRowCount() {
 			if (pDeliveryResultType == null) {
@@ -224,7 +223,7 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 			}
 			return pDeliveryResultType.size();
 		}
-		
+
 		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
@@ -247,7 +246,7 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
@@ -263,8 +262,7 @@ class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 			jTable.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
-	
-	
+
 	@Override
 	public void deliveryresultTypeInserted(AWTEvent e) {
 		pDeliveryResultType.add(0, deliveryresultType);

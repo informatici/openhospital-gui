@@ -106,12 +106,14 @@ class PrivilegeTree extends JDialog {
 				//
 				// So if myMenu does not contains umi it means that there is but is not active
 				if (myMenu.contains(umi)) {
-					if (addMenuItem(myMenu.get(myMenu.indexOf(umi))) != null)
+					if (addMenuItem(myMenu.get(myMenu.indexOf(umi))) != null) {
 						junkMenu.add(umi);
+					}
 				} else {
 					umi.setActive(false);
-					if (addMenuItem(umi) != null)
+					if (addMenuItem(umi) != null) {
 						junkMenu.add(umi);
+					}
 				}
 			}
 			// Cycle to remove already processed rootMenu items
@@ -170,16 +172,16 @@ class PrivilegeTree extends JDialog {
 	public void addButton() {
 		JPanel panel = new JPanel();
 
-		ActionListener addListener = event -> {
+		ActionListener addListener = actionEvent -> {
 
 			ArrayList<UserMenuItem> newUserMenu = new ArrayList<>();
-
 			Enumeration<?> e = root.breadthFirstEnumeration();
 			while (e.hasMoreElements()) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
 				UserMenuItem umi = (UserMenuItem) node.getUserObject();
-				if (!umi.getCode().equals("main"))
+				if (!umi.getCode().equals("main")) {
 					newUserMenu.add(umi);
+				}
 			}
 			try {
 				manager.setGroupMenu(aGroup, newUserMenu);
@@ -196,7 +198,7 @@ class PrivilegeTree extends JDialog {
 
 		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		buttonClose.addActionListener(event -> dispose());
+		buttonClose.addActionListener(actionEvent -> dispose());
 		panel.add(buttonClose);
 
 		add(panel, BorderLayout.SOUTH);

@@ -23,8 +23,6 @@ package org.isf.malnutrition.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -57,8 +55,9 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	public void malnutritionInserted() {
 		pMaln.add(pMaln.size(), malnutrition);
 		((MalnBrowsingModel) table.getModel()).fireTableDataChanged();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 	}
 
 	@Override
@@ -66,8 +65,9 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		pMaln.set(selectedrow, maln);
 		((MalnBrowsingModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1)
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow,selectedrow);
+		}
 	}
 
 	private Malnutrition malnutrition;
@@ -147,13 +147,11 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JButton getNewButton() {
 		newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		newButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				malnutrition = new Malnutrition(0, null, null, adm, 0, 0);
-				InsertMalnutrition newRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, true);
-				newRecord.addMalnutritionListener(MalnutritionBrowser.this);
-				newRecord.setVisible(true);
-			}
+		newButton.addActionListener(actionEvent -> {
+			malnutrition = new Malnutrition(0, null, null, adm, 0, 0);
+			InsertMalnutrition newRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, true);
+			newRecord.addMalnutritionListener(MalnutritionBrowser.this);
+			newRecord.setVisible(true);
 		});
 		return newButton;
 
@@ -162,17 +160,15 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JButton getEditButton() {
 		editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		editButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		editButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
-				} else {
-					selectedrow = table.getSelectedRow();
-					malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(selectedrow, -1));
-					InsertMalnutrition editRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, false);
-					editRecord.addMalnutritionListener(MalnutritionBrowser.this);
-					editRecord.setVisible(true);
-				}
+		editButton.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
+			} else {
+				selectedrow = table.getSelectedRow();
+				malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(selectedrow, -1));
+				InsertMalnutrition editRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, false);
+				editRecord.addMalnutritionListener(MalnutritionBrowser.this);
+				editRecord.setVisible(true);
 			}
 		});
 		return editButton;
@@ -181,30 +177,28 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JButton getDeleteButton() {
 		deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
-				} else {
-					Malnutrition malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
-					int answer = MessageDialog.yesNo(null, "angal.malnutrition.delete.msg");
-					if (answer == JOptionPane.YES_OPTION) {
-						if (malnutrition == null) {
-							MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
-						} else {
-							boolean deleted;
-							try {
-								deleted = manager.deleteMalnutrition(malnutrition);
-							} catch (OHServiceException e) {
-								deleted = false;
-								OHServiceExceptionUtil.showMessages(e);
-							}
-							
-							if (deleted) {
-								pMaln.remove(table.getSelectedRow());
-								model.fireTableDataChanged();
-								table.updateUI();
-							}
+		deleteButton.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
+			} else {
+				Malnutrition malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+				int answer = MessageDialog.yesNo(null, "angal.malnutrition.delete.msg");
+				if (answer == JOptionPane.YES_OPTION) {
+					if (malnutrition == null) {
+						MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
+					} else {
+						boolean deleted;
+						try {
+							deleted = manager.deleteMalnutrition(malnutrition);
+						} catch (OHServiceException e) {
+							deleted = false;
+							OHServiceExceptionUtil.showMessages(e);
+						}
+
+						if (deleted) {
+							pMaln.remove(table.getSelectedRow());
+							model.fireTableDataChanged();
+							table.updateUI();
 						}
 					}
 				}
@@ -217,11 +211,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	private JButton getCloseButton() {
 		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+		closeButton.addActionListener(actionEvent -> dispose());
 		return closeButton;
 	}
 
@@ -254,20 +244,25 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 			}
 		}
 
+		@Override
 		public int getRowCount() {
-			if (pMaln == null)
+			if (pMaln == null) {
 				return 0;
+			}
 			return pMaln.size();
 		}
 
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			Malnutrition malnutrition = pMaln.get(r);
 			if (c == -1) {
@@ -292,8 +287,9 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	}
 
 	private String getConvertedString(GregorianCalendar time) {
-		if (time == null)
+		if (time == null) {
 			return MessageBundle.getMessage("angal.malnutrition.nodate.msg");
+		}
 		return TimeTools.formatDateTime(time.getTime(), "dd/MM/yyyy");
 	}
 }

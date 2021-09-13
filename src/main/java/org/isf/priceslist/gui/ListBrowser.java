@@ -103,7 +103,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 		if (jButtonClose == null) {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jButtonClose.addActionListener(event -> dispose());
+			jButtonClose.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonClose;
 	}
@@ -112,7 +112,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 		if (jButtonDelete == null) {
 			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jButtonDelete.addActionListener(event -> {
+			jButtonDelete.addActionListener(actionEvent -> {
 				if (jTablePriceLists.getSelectedRow() < 0) {
 					JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.priceslist.pleaseselectalisttodelete"));
 				} else {
@@ -150,7 +150,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 		if (jButtonCopy == null) {
 			jButtonCopy = new JButton(MessageBundle.getMessage("angal.priceslist.copy.btn"));
 			jButtonCopy.setMnemonic(MessageBundle.getMnemonic("angal.priceslist.copy.btn.key"));
-			jButtonCopy.addActionListener(event -> {
+			jButtonCopy.addActionListener(actionEvent -> {
 				if (jTablePriceLists.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.priceslist.pleaseselectalisttocopy");
 				} else {
@@ -250,7 +250,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 		if (jButtonEdit == null) {
 			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jButtonEdit.addActionListener(event -> {
+			jButtonEdit.addActionListener(actionEvent -> {
 
 				if (jTablePriceLists.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.priceslist.pleaseselectalisttoedit");
@@ -270,7 +270,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 		if (jButtonNew == null) {
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jButtonNew.addActionListener(event -> {
+			jButtonNew.addActionListener(actionEvent -> {
 
 				PriceList newList = new PriceList(0, "", "", "", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				ListEdit editList = new ListEdit(myFrame, newList, true);

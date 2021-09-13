@@ -85,8 +85,9 @@ public class ExamEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-	    for (EventListener listener : listeners)
+	    for (EventListener listener : listeners) {
 		    ((ExamListener) listener).examInserted(event);
+	    }
     }
     private void fireExamUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -94,8 +95,9 @@ public class ExamEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-	    for (EventListener listener : listeners)
+	    for (EventListener listener : listeners) {
 		    ((ExamListener) listener).examUpdated(event);
+	    }
     }
     
 	private JPanel jContentPane = null;
@@ -156,13 +158,13 @@ public class ExamEdit extends JDialog {
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJContentPane() {
-            if (jContentPane == null) {
-                jContentPane = new JPanel();
-                jContentPane.setLayout(new BorderLayout());
-                jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-                jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
-            }
-            return jContentPane;
+		if (jContentPane == null) {
+			jContentPane = new JPanel();
+			jContentPane.setLayout(new BorderLayout());
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+		}
+		return jContentPane;
 	}
 
 	/**
@@ -213,12 +215,12 @@ public class ExamEdit extends JDialog {
 	 * @return javax.swing.JButton	
 	 */
 	private JButton getCancelButton() {
-            if (cancelButton == null) {
-	            cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
-	            cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-                cancelButton.addActionListener(e -> dispose());
-            }
-            return cancelButton;
+		if (cancelButton == null) {
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+			cancelButton.addActionListener(actionEvent -> dispose());
+		}
+		return cancelButton;
 	}
 
 	/**
@@ -230,7 +232,7 @@ public class ExamEdit extends JDialog {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			okButton.addActionListener(e -> {
+			okButton.addActionListener(actionEvent -> {
 				if ((codeTextField.getText().trim().equals("")) || (descriptionTextField.getText().trim().equals(""))) {
 					MessageDialog.error(null, "angal.exa.pleaseinsertcodeoranddescription");
 				} else {
@@ -255,16 +257,18 @@ public class ExamEdit extends JDialog {
 						}
 						try {
 							result = manager.newExam(exam);
-							if (result)
+							if (result) {
 								fireExamInserted();
+							}
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 					} else {
 						try {
 							result = manager.updateExam(exam);
-							if (result)
+							if (result) {
 								fireExamUpdated();
+							}
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
 						}

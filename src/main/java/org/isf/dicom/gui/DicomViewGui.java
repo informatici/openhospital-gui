@@ -127,18 +127,19 @@ public class DicomViewGui extends JPanel {
 		addMouseMotionListener(new DicomViewGuiMouseMotionListener());
 		addMouseWheelListener(new DicomViewGuiMouseWheelListener());
 
-		if (patID >= 0){
+		if (patID >= 0) {
 			try {
 				frames = DicomManagerFactory.getManager().getSerieDetail(patID, serieNumber);
-			} catch(OHServiceException ohServiceException) {
+			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 
-		if (frames == null)
+		if (frames == null) {
 			frames = new Long[0];
-		else
+		} else {
 			refreshFrame();
+		}
 
 		initComponent();
 
@@ -159,13 +160,15 @@ public class DicomViewGui extends JPanel {
 			}
 		}
 
-		if (frames == null)
+		if (frames == null) {
 			frames = new Long[0];
+		}
 
 		jSliderZoom.setValue(100);
 
-		if (frames.length > 0)
+		if (frames.length > 0) {
 			refreshFrame();
+		}
 
 		reInitComponent();
 	}
@@ -199,11 +202,12 @@ public class DicomViewGui extends JPanel {
 				jSliderFrame.setEnabled(true);
 				jSliderFrame.setPaintTicks(true);
 				jSliderFrame.setMajorTickSpacing(1);
-			} else
+			} else {
 				jSliderFrame.setEnabled(false);
+			}
 			
 			// center = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-			// JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			// ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			jPanelCenter = new JPanel();
 
@@ -259,8 +263,9 @@ public class DicomViewGui extends JPanel {
 				jSliderFrame.setEnabled(true);
 				jSliderFrame.setPaintTicks(true);
 				jSliderFrame.setMajorTickSpacing(1);
-			} else
+			} else {
 				jSliderFrame.setEnabled(false);
+			}
 
 			jPanelCenter.removeAll();
 			
@@ -315,16 +320,20 @@ public class DicomViewGui extends JPanel {
 		totX = x - (p1x - p2x);
 		totY = y - (p1y - p2y);
 
-		if (totX < -width)
+		if (totX < -width) {
 			totX = -width;
-		if (totY < -height)
+		}
+		if (totY < -height) {
 			totY = -height;
+		}
 
-		if (totX > imageCanvas.getWidth())
+		if (totX > imageCanvas.getWidth()) {
 			totX = imageCanvas.getWidth();
+		}
 
-		if (totY > imageCanvas.getHeight())
+		if (totY > imageCanvas.getHeight()) {
 			totY = imageCanvas.getHeight();
+		}
 
 		canvas.drawImage(immagineResized, totX, totY, this);
 		
@@ -371,18 +380,21 @@ public class DicomViewGui extends JPanel {
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.dicom"), 10, hi);
 		hi += VGAP;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientName) : tmpDbFile.getDicomPatientName();
-		if (txt == null)
+		if (txt == null) {
 			txt = "";
+		}
 		canvas.drawString(MessageBundle.getMessage("angal.common.name.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientSex) : tmpDbFile.getDicomPatientSex();
-		if (txt == null)
+		if (txt == null) {
 			txt = "";
+		}
 		canvas.drawString(MessageBundle.getMessage("angal.common.sex.txt") + " : " + txt, 10, hi);
 		hi += VGAP;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.PatientAge) :  tmpDbFile.getDicomPatientAge();
-		if (txt == null)
+		if (txt == null) {
 			txt = "";
+		}
 		canvas.drawString(MessageBundle.getMessage("angal.common.age.txt") + " : " + txt, 10, hi);
 
 		if (ohPatient.getPatientProfilePhoto() != null) {
@@ -421,28 +433,32 @@ public class DicomViewGui extends JPanel {
 		int hi = 10;
 		int ws = w - 200;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.InstitutionName) :  tmpDbFile.getDicomInstitutionName();
-		if (txt == null)
+		if (txt == null) {
 			txt = "";
+		}
 		canvas.drawString(txt, ws, hi);
 		hi += VGAP;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.StudyID) : tmpDbFile.getDicomStudyId();
-		if (txt == null)
+		if (txt == null) {
 			txt = "";
+		}
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.studyid") + " : " + txt, ws, hi);
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.StudyDescription) : tmpDbFile.getDicomStudyDescription();
 		hi += VGAP;
-		if (txt == null)
+		if (txt == null) {
 			txt = "";
+		}
 		canvas.drawString(txt, ws, hi);
 		hi += VGAP;
 		txt = "";
 		Date d = null;
 		d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : tmpDbFile.getDicomStudyDate();
 		DateFormat df = DateFormat.getDateInstance();
-		if (d != null)
+		if (d != null) {
 			txt = df.format(d);
-		else
+		} else {
 			txt = "";
+		}
 		canvas.drawString(MessageBundle.getMessage("angal.common.date.txt") + " : " + txt, ws, hi);
 		canvas.setColor(orig);
 	}
@@ -454,13 +470,15 @@ public class DicomViewGui extends JPanel {
 		canvas.setColor(colScr);
 		String txt = "";
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.SeriesDescription) : tmpDbFile.getDicomSeriesDescription();
-		if (txt == null)
+		if (txt == null) {
 			txt = "";
+		}
 		canvas.drawString(txt, ws, hi);
 		hi -= VGAP;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.SeriesNumber) : tmpDbFile.getDicomSeriesNumber() + "      ";
-		if (txt == null)
+		if (txt == null) {
 			txt = "";
+		}
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.serie.n") + " " + txt, ws, hi);
 		canvas.setColor(orig);
 	}
@@ -581,6 +599,7 @@ public class DicomViewGui extends JPanel {
 
 		}
 
+		@Override
 		public void stateChanged(ChangeEvent e) {
 			JSlider s1 = (JSlider) e.getSource();
 			if (s1.getValueIsAdjusting()) {
@@ -595,6 +614,7 @@ public class DicomViewGui extends JPanel {
 
 		}
 
+		@Override
 		public void stateChanged(ChangeEvent e) {
 			JSlider s1 = (JSlider) e.getSource();
 			if (s1.getValueIsAdjusting()) {
@@ -652,6 +672,7 @@ public class DicomViewGui extends JPanel {
 		 * Mouse dragged, if is also pressed a button calculate the displacement
 		 * of position with point of initial position
 		 */
+		@Override
 		public void mouseDragged(MouseEvent e) {
 			p2x = e.getXOnScreen();
 			p2y = e.getYOnScreen();
@@ -661,6 +682,7 @@ public class DicomViewGui extends JPanel {
 		/**
 		 * Mouse moved, NOT USED
 		 */
+		@Override
 		public void mouseMoved(MouseEvent e) {
 		}
 
@@ -675,6 +697,7 @@ public class DicomViewGui extends JPanel {
 		 * Mouse pressed, enable mouse motion and set relative X,Y with the
 		 * click position
 		 */
+		@Override
 		public void mousePressed(MouseEvent e) {
 			p1x = e.getXOnScreen();
 			p1y = e.getYOnScreen();
@@ -683,6 +706,7 @@ public class DicomViewGui extends JPanel {
 		/**
 		 * Mouse released, disable mouse motion
 		 */
+		@Override
 		public void mouseReleased(MouseEvent e) {
 
 			x = totX;
@@ -693,18 +717,21 @@ public class DicomViewGui extends JPanel {
 		/**
 		 * Mouse clicked in frame, NOT USED
 		 */
+		@Override
 		public void mouseClicked(MouseEvent e) {
 		}
 
 		/**
 		 * Mouse entered into frame, NOT USED
 		 */
+		@Override
 		public void mouseEntered(MouseEvent e) {
 		}
 
 		/**
 		 * Mouse exited of frame, NOT USED
 		 */
+		@Override
 		public void mouseExited(MouseEvent e) {
 		}
 	}

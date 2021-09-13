@@ -23,14 +23,13 @@ package org.isf.utils.jobjects;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
 
@@ -63,7 +62,7 @@ public class StockLedgerDialog extends JDialog {
 	private void initAndShow() {
 		add(dateRange, BorderLayout.CENTER);
 		add(getButtonsPanel(), BorderLayout.SOUTH);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
 		pack();
 		setLocationRelativeTo(null);
@@ -83,12 +82,9 @@ public class StockLedgerDialog extends JDialog {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
-			buttonCancel.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {
-					cancel = true;
-					dispose();
-				}
+			buttonCancel.addActionListener(actionEvent -> {
+				cancel = true;
+				dispose();
 			});
 		}
 		return buttonCancel;
@@ -98,20 +94,17 @@ public class StockLedgerDialog extends JDialog {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
-			buttonOK.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent arg0) {
-					int n = JOptionPane.showConfirmDialog(StockLedgerDialog.this,
-							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
-							MessageBundle.getMessage("angal.messagedialog.question.title"),
-							JOptionPane.OK_CANCEL_OPTION);
-					if (n != JOptionPane.OK_OPTION) {
-						cancel = true;
-					}
-					dateFrom = dateRange.getDateFrom();
-					dateTo = dateRange.getDateTo();
-					dispose();
+			buttonOK.addActionListener(actionEvent -> {
+				int n = JOptionPane.showConfirmDialog(StockLedgerDialog.this,
+						MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
+						MessageBundle.getMessage("angal.messagedialog.question.title"),
+						JOptionPane.OK_CANCEL_OPTION);
+				if (n != JOptionPane.OK_OPTION) {
+					cancel = true;
 				}
+				dateFrom = dateRange.getDateFrom();
+				dateTo = dateRange.getDateTo();
+				dispose();
 			});
 		}
 		return buttonOK;

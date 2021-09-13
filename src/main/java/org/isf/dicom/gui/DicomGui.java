@@ -23,8 +23,6 @@ package org.isf.dicom.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -77,7 +75,6 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private JButton jButtonLoadDicom;
 	private JButton jButtonDeleteDicom;
-	private JButton jButtonCloseDicom;
 	private JPanel jPanel1;
 	private JPanel jPanelDetail;
 	private JPanel jPanelButton;
@@ -192,10 +189,6 @@ public class DicomGui extends JFrame implements WindowListener {
 		jButtonDeleteDicom.setName("jButtonDeleteDicom");
 		jButtonDeleteDicom.setEnabled(false);
 
-		jButtonCloseDicom = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
-		jButtonCloseDicom.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		jButtonCloseDicom.setName("jButtonCloseDicom");
-
 		jPanelDetail = new DicomViewGui(null, null);
 		jPanelDetail.setName("jPanelDetail");
 		jPanelButton = new JPanel();
@@ -261,131 +254,118 @@ public class DicomGui extends JFrame implements WindowListener {
 	private void addEventListener() {
 		actionListenerJButtonLoadDicom();
 		actionListenerJButtonDeleteDicom();
-		actionListenerjButtonCloseDicom();
 	}
 
 	private void actionListenerJButtonLoadDicom() {
 
-		jButtonLoadDicom.addActionListener(new ActionListener() {
+		jButtonLoadDicom.addActionListener(actionEvent -> {
 
-			public void actionPerformed(ActionEvent e) {
+			JFileChooser jfc = new JFileChooser(new File(lastDir));
 
-				JFileChooser jfc = new JFileChooser(new File(lastDir));
+			jfc.addChoosableFileFilter(new FileDicomFilter());
+			jfc.addChoosableFileFilter(new FileJPEGFilter());
+			jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-				jfc.addChoosableFileFilter(new FileDicomFilter());
-				jfc.addChoosableFileFilter(new FileJPEGFilter());
-				jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			int status = jfc.showDialog(new JLabel(""), MessageBundle.getMessage("angal.dicom.open.txt"));
 
-				int status = jfc.showDialog(new JLabel(""), MessageBundle.getMessage("angal.dicom.open.txt"));
+			if (status == JFileChooser.APPROVE_OPTION) {
 
-				if (status == JFileChooser.APPROVE_OPTION) {
+				File selectedFile = jfc.getSelectedFile();
 
-					File selectedFile = jfc.getSelectedFile();
+				File dir = null;
 
-					File dir = null;
+				try {
+					dir = selectedFile.getParentFile();
+				} catch (Exception ec) {
+				}
 
+				if (dir != null) {
+					lastDir = dir.getAbsolutePath();
+				}
+
+				File file = selectedFile;
+				int numfiles = 1;
+				if (selectedFile.isDirectory()) {
 					try {
-						dir = selectedFile.getParentFile();
-					} catch (Exception ec) {
+						numfiles = SourceFiles.countFiles(selectedFile, patient);
+					} catch (OHDicomException e1) {
+						OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+						return;
 					}
-
-					if (dir != null)
-						lastDir = dir.getAbsolutePath();
-
-					File file = selectedFile;
-					int numfiles = 1;
-					if (selectedFile.isDirectory()) {
-						try {
-							numfiles = SourceFiles.countFiles(selectedFile, patient);
-						} catch (OHDicomException e1) {
-							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+					if (numfiles == 1) {
+						return;
+					}
+					file = selectedFile.listFiles()[0];
+				} else {
+					try {
+						if (!SourceFiles.checkSize(file)) {
+							MessageDialog.error(DicomGui.this, "angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty.fmt.msg",
+									DicomManagerFactory.getMaxDicomSize());
 							return;
 						}
-						if (numfiles == 1)
-							return;
-						file = selectedFile.listFiles()[0];
-					} else {
-						try {
-							if (!SourceFiles.checkSize(file)) {
-								MessageDialog.error(DicomGui.this, "angal.dicom.thefileistoobigpleasesetdicommaxsizeproperty.fmt.msg", DicomManagerFactory.getMaxDicomSize());
-								return;
-							}
-						} catch (OHDicomException e1) {
-							OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
-							return;
-						}
+					} catch (OHDicomException e1) {
+						OHServiceExceptionUtil.showMessages(e1, DicomGui.this);
+						return;
 					}
+				}
 
-					//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
-					FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file, numfiles);
+				//dummyFileDicom: temporary FileDicom type in order to allow some settings by the user
+				FileDicom dummyFileDicom = SourceFiles.preLoadDicom(file, numfiles);
 
-					//shows settings to the user for validation/modification
-					List<Date> dates = FileTools.getTimestampFromName(file);
+				//shows settings to the user for validation/modification
+				List<Date> dates = FileTools.getTimestampFromName(file);
 
-					ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
-					preLoadDialog.setVisible(true);
+				ShowPreLoadDialog preLoadDialog = new ShowPreLoadDialog(DicomGui.this, numfiles, dummyFileDicom, dates);
+				preLoadDialog.setVisible(true);
 
-					if (!preLoadDialog.isSave())
-						return; //user pressed CANCEL
+				if (!preLoadDialog.isSave()) {
+					return; //user pressed CANCEL
+				}
 
-					dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
-					dummyFileDicom.setDicomSeriesDate(preLoadDialog.getDicomDate());
-					dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
-					dummyFileDicom.setDicomType(preLoadDialog.getDicomType());
+				dummyFileDicom.setDicomSeriesDescription(preLoadDialog.getDicomDescription());
+				dummyFileDicom.setDicomSeriesDate(preLoadDialog.getDicomDate());
+				dummyFileDicom.setDicomStudyDate(preLoadDialog.getDicomDate());
+				dummyFileDicom.setDicomType(preLoadDialog.getDicomType());
 
-					//TODO: to specify in which already existing series to load the file
+				//TODO: to specify in which already existing series to load the file
 
-					if (selectedFile.isDirectory()) {
-						//folder
-						thumbnail.disableLoadButton();
-						new SourceFiles(dummyFileDicom, selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
-					} else {
-						// single file 
-						try {
-							SourceFiles.loadDicom(dummyFileDicom, selectedFile, patient);
-						} catch (Exception e1) {
-							OHServiceExceptionUtil.showMessages((OHDicomException) e1);
-						}
-						thumbnail.initialize();
+				if (selectedFile.isDirectory()) {
+					//folder
+					thumbnail.disableLoadButton();
+					new SourceFiles(dummyFileDicom, selectedFile, patient, numfiles, thumbnail, new DicomLoader(numfiles, myJFrame));
+				} else {
+					// single file
+					try {
+						SourceFiles.loadDicom(dummyFileDicom, selectedFile, patient);
+					} catch (Exception e1) {
+						OHServiceExceptionUtil.showMessages((OHDicomException) e1);
 					}
+					thumbnail.initialize();
 				}
 			}
 		});
 	}
 
 	private void actionListenerJButtonDeleteDicom() {
-		jButtonDeleteDicom.addActionListener(new ActionListener() {
+		jButtonDeleteDicom.addActionListener(actionEvent -> {
 
-			public void actionPerformed(ActionEvent e) {
+			Object[] options = { MessageBundle.getMessage("angal.dicom.delete.yes"), MessageBundle.getMessage("angal.dicom.delete.no") };
 
-				Object[] options = { MessageBundle.getMessage("angal.dicom.delete.yes"), MessageBundle.getMessage("angal.dicom.delete.no") };
+			int n = JOptionPane.showOptionDialog(DicomGui.this, MessageBundle.getMessage("angal.dicom.delete.request"),
+					MessageBundle.getMessage("angal.dicom.delete.title"),
+					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "");
 
-				int n = JOptionPane.showOptionDialog(DicomGui.this, MessageBundle.getMessage("angal.dicom.delete.request"),
-						MessageBundle.getMessage("angal.dicom.delete.title"),
-						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, "");
-
-				if (n == 0) {
-					try {
-						DicomManagerFactory.getManager().deleteSerie(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
-					} catch (OHServiceException ohServiceException) {
-						MessageDialog.showExceptions(ohServiceException);
-					}
+			if (n == 0) {
+				try {
+					DicomManagerFactory.getManager().deleteSerie(patient, thumbnail.getSelectedInstance().getDicomSeriesNumber());
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
 				}
-				thumbnail.initialize();
-				//selectedElement = null;
-				//detail();
-				((DicomViewGui) jPanelDetail).clear();
 			}
-		});
-	}
-
-	private void actionListenerjButtonCloseDicom() {
-		jButtonCloseDicom.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				System.exit(100);
-				// this.dispose();
-			}
+			thumbnail.initialize();
+			//selectedElement = null;
+			//detail();
+			((DicomViewGui) jPanelDetail).clear();
 		});
 	}
 
@@ -394,6 +374,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	/**
 	 * Invoked the first time a window is made visible.
 	 */
+	@Override
 	public void windowOpened(WindowEvent e) {
 	}
 
@@ -401,6 +382,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Invoked when the user attempts to close the window from the window's
 	 * system menu.
 	 */
+	@Override
 	public void windowClosing(WindowEvent e) {
 		saveWindowSettings();
 	}
@@ -409,6 +391,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Invoked when a window has been closed as the result of calling dispose on
 	 * the window.
 	 */
+	@Override
 	public void windowClosed(WindowEvent e) {
 		this.setVisible(false);
 		this.dispose();
@@ -422,6 +405,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	 *
 	 * @see java.awt.Frame#setIconImage
 	 */
+	@Override
 	public void windowIconified(WindowEvent e) {
 		this.dispose();
 	}
@@ -429,6 +413,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	/**
 	 * Invoked when a window is changed from a minimized to a normal state.
 	 */
+	@Override
 	public void windowDeiconified(WindowEvent e) {
 
 	}
@@ -441,6 +426,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Window, or the first Frame or Dialog that is an owner of the focused
 	 * Window.
 	 */
+	@Override
 	public void windowActivated(WindowEvent e) {
 	}
 
@@ -452,6 +438,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	 * Window, or the first Frame or Dialog that is an owner of the focused
 	 * Window.
 	 */
+	@Override
 	public void windowDeactivated(WindowEvent e) {
 	}
 

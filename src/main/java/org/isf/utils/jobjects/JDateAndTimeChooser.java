@@ -22,11 +22,8 @@
 package org.isf.utils.jobjects;
 
 import java.awt.Dimension;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -48,16 +45,11 @@ public class JDateAndTimeChooser extends JPanel {
 		this.add(getCustomJDateChooser());
 		this.add(getJTimeTable());
 	}
-	
+
 	private CustomJDateChooser getCustomJDateChooser() {
 		if (date == null) {
 			date = new CustomJDateChooser(dateTime);
-			date.addPropertyChangeListener("date", new PropertyChangeListener() {
-
-				public void propertyChange(PropertyChangeEvent evt) {
-					dateTime = date.getDate();
-				}
-			});
+			date.addPropertyChangeListener("date", propertyChangeEvent -> dateTime = date.getDate());
 		}
 		return date;
 	}
@@ -65,26 +57,20 @@ public class JDateAndTimeChooser extends JPanel {
 	private JTimeTable getJTimeTable() {
 		if (timeTable == null) {
 			timeTable = new JTimeTable();
-			timeTable.addPropertyChangeListener("hour", new PropertyChangeListener() {
-				
-				public void propertyChange(PropertyChangeEvent evt) {
-					Calendar calendar = date.getCalendar();
-					calendar.set(GregorianCalendar.HOUR_OF_DAY, Integer.parseInt((String) evt.getNewValue()));
-					calendar.set(GregorianCalendar.SECOND, 0);
-					date.setCalendar(calendar);
-					dateTime = date.getDate();
-				}
+			timeTable.addPropertyChangeListener("hour", propertyChangeEvent -> {
+				Calendar calendar = date.getCalendar();
+				calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt((String) propertyChangeEvent.getNewValue()));
+				calendar.set(Calendar.SECOND, 0);
+				date.setCalendar(calendar);
+				dateTime = date.getDate();
 			});
-			
-			timeTable.addPropertyChangeListener("minute", new PropertyChangeListener() {
-				
-				public void propertyChange(PropertyChangeEvent evt) {
-					Calendar calendar = date.getCalendar();
-					calendar.set(GregorianCalendar.MINUTE, Integer.parseInt((String) evt.getNewValue()));
-					calendar.set(GregorianCalendar.SECOND, 0);
-					date.setCalendar(calendar);
-					dateTime = date.getDate();
-				}
+
+			timeTable.addPropertyChangeListener("minute", propertyChangeEvent -> {
+				Calendar calendar = date.getCalendar();
+				calendar.set(Calendar.MINUTE, Integer.parseInt((String) propertyChangeEvent.getNewValue()));
+				calendar.set(Calendar.SECOND, 0);
+				date.setCalendar(calendar);
+				dateTime = date.getDate();
 			});
 		}
 		return timeTable;

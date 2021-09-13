@@ -36,6 +36,7 @@ public class FileDicomFilter extends javax.swing.filechooser.FileFilter {
 	/**
 	 * Whether the given file is accepted by this filter.
 	 */
+	@Override
 	public boolean accept(File f) {
 		return (f.getName().toLowerCase().endsWith(".dcm")
 				|| f.isDirectory()
@@ -47,6 +48,7 @@ public class FileDicomFilter extends javax.swing.filechooser.FileFilter {
 	 *
 	 * @see FileView#getName
 	 */
+	@Override
 	public String getDescription() {
 		return "DICOM Images";
 	}

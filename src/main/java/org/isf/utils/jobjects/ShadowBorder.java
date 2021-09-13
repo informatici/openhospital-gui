@@ -49,12 +49,14 @@ public class ShadowBorder extends AbstractBorder {
 		color = aColor;
 	}
 
+	@Override
 	public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
 
 		g.setColor(color);
 		g.fillRect(x + offset, y + offset, w + offset, h + offset);
 	}
 
+	@Override
 	public boolean isBorderOpaque() {
 		return true;
 	}

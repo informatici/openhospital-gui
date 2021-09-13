@@ -25,8 +25,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.LayoutManager;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Date;
 import java.util.Locale;
 
@@ -84,12 +82,7 @@ public class JFromDateToDateChooser extends JPanel {
 			dateFromDateChooser.setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
 			dateFromDateChooser.setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
 			dateFromDateChooser.setPreferredSize(new Dimension(100, 24));
-			dateFromDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
-
-				public void propertyChange(PropertyChangeEvent evt) {
-					dateTimeFrom = dateFromDateChooser.getDate();
-				}
-			});
+			dateFromDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> dateTimeFrom = dateFromDateChooser.getDate());
 		}
 		return dateFromDateChooser;
 	}
@@ -102,12 +95,7 @@ public class JFromDateToDateChooser extends JPanel {
 			dateToDateChooser.setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
 			dateToDateChooser.setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
 			dateToDateChooser.setPreferredSize(new Dimension(100, 24));
-			dateToDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() {
-
-				public void propertyChange(PropertyChangeEvent evt) {
-					dateTimeTo = dateToDateChooser.getDate();
-				}
-			});
+			dateToDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> dateTimeTo = dateToDateChooser.getDate());
 		}
 		return dateToDateChooser;
 	}

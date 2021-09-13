@@ -13,7 +13,7 @@
 	<groupId>org.isf</groupId>
 	<artifactId>OH-gui</artifactId>
 	<packaging>jar</packaging>
-	<version>1.11</version>
+	<version>1.11.0</version>
 
 	<properties>
 		<oh.version>1.11.0</oh.version>
@@ -220,8 +220,7 @@
 						<project.inceptionYear>2006</project.inceptionYear>
 						<project.name>Open Hospital</project.name>
 						<project.url>www.open-hospital.org</project.url>
-						<project.description>Open Hospital is a free and open source
-							software for healthcare data management.</project.description>
+						<project.description>Open Hospital is a free and open source software for healthcare data management.</project.description>
 					</properties>
 				</configuration>
 				<dependencies>

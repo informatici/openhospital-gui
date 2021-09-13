@@ -108,13 +108,12 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jNewButton.addActionListener(event -> {
+			jNewButton.addActionListener(actionEvent -> {
 				AdmissionType mdsr = new AdmissionType("","");
 				AdmissionTypeBrowserEdit newrecord = new AdmissionTypeBrowserEdit(myFrame, mdsr, true);
 				newrecord.addAdmissionTypeListener(AdmissionTypeBrowser.this);
@@ -133,7 +132,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jEditButton == null) {
 			jEditButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jEditButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jEditButton.addActionListener(event -> {
+			jEditButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
@@ -157,7 +156,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jCloseButton == null) {
 			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jCloseButton.addActionListener(arg0 -> dispose());
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -171,20 +170,20 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		if (jDeleteButton == null) {
 			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jDeleteButton.addActionListener(event -> {
+			jDeleteButton.addActionListener(actionEvent -> {
 				if (jTable.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					AdmissionType admType = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
-					int answer = MessageDialog.yesNo(null, "angal.admtype.delete.fmt.msg",admType.getDescription());
+					int answer = MessageDialog.yesNo(null, "angal.admtype.delete.fmt.msg", admType.getDescription());
 					try {
 						if ((answer == JOptionPane.YES_OPTION) && (admissionTypeManager.deleteAdmissionType(admType))) {
 							pAdmissionType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
 						}
-					} catch(OHServiceException e){
-OHServiceExceptionUtil.showMessages(e);
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
 			});
@@ -208,18 +207,19 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 	private AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
 		public AdmissionTypeBrowserModel() {
-			
+
 			try {
 				pAdmissionType = manager.getAdmissionType();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 		
 		@Override
 		public int getRowCount() {
-			if (pAdmissionType == null)
+			if (pAdmissionType == null) {
 				return 0;
+			}
 			return pAdmissionType.size();
 		}
 		
@@ -251,22 +251,24 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 		}
 	}
 
-@Override
-public void admissionTypeUpdated(AWTEvent e) {
-	pAdmissionType.set(selectedrow, admissionType);
-	((AdmissionTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-	jTable.updateUI();
-	if ((jTable.getRowCount() > 0) && selectedrow > -1)
-		jTable.setRowSelectionInterval(selectedrow, selectedrow);
-}
+	@Override
+	public void admissionTypeUpdated(AWTEvent e) {
+		pAdmissionType.set(selectedrow, admissionType);
+		((AdmissionTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+		jTable.updateUI();
+		if ((jTable.getRowCount() > 0) && selectedrow > -1) {
+			jTable.setRowSelectionInterval(selectedrow, selectedrow);
+		}
+	}
 
-@Override
-public void admissionTypeInserted(AWTEvent e) {
-	admissionType = (AdmissionType)e.getSource();
-	pAdmissionType.add(0, admissionType);
-	((AdmissionTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
-	if (jTable.getRowCount() > 0)
-		jTable.setRowSelectionInterval(0, 0);
-}
+	@Override
+	public void admissionTypeInserted(AWTEvent e) {
+		admissionType = (AdmissionType) e.getSource();
+		pAdmissionType.add(0, admissionType);
+		((AdmissionTypeBrowserModel) jTable.getModel()).fireTableDataChanged();
+		if (jTable.getRowCount() > 0) {
+			jTable.setRowSelectionInterval(0, 0);
+		}
+	}
 	
 }

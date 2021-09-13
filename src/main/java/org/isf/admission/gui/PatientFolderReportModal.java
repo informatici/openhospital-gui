@@ -177,12 +177,24 @@ public class PatientFolderReportModal extends ModalJFrame {
 						parameterString.append("All");
 						return parameterString.toString();
 					}
-					if (getDrugsValue()) parameterString.append("Drugs");
-					if (getExaminationValue()) parameterString.append("Examination");
-					if (getAdmissionValue()) parameterString.append("Admission");
-					if (getOpdValue()) parameterString.append("Opd");
-					if (getLaboratoryValue()) parameterString.append("Laboratory");
-					if (getOperationValue()) parameterString.append("Operations");
+					if (getDrugsValue()) {
+						parameterString.append("Drugs");
+					}
+					if (getExaminationValue()) {
+						parameterString.append("Examination");
+					}
+					if (getAdmissionValue()) {
+						parameterString.append("Admission");
+					}
+					if (getOpdValue()) {
+						parameterString.append("Opd");
+					}
+					if (getLaboratoryValue()) {
+						parameterString.append("Laboratory");
+					}
+					if (getOperationValue()) {
+						parameterString.append("Operations");
+					}
 					
 					return parameterString.toString();
 				}
@@ -195,7 +207,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 		if (closeButton == null) {
 			closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			closeButton.addActionListener(e -> dispose());
+			closeButton.addActionListener(actionEvent -> dispose());
 		}
 		return closeButton;
 	}
@@ -237,7 +249,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 			allCheck.setSelected(true);
 			allPanel.add(allCheck);
 			allPanel.add(new JLabel(MessageBundle.getMessage("angal.common.all.txt").toUpperCase()), BorderLayout.CENTER);
-			allCheck.addActionListener(e -> {
+			allCheck.addActionListener(actionEvent -> {
 				examinationCheck.setSelected(false);
 				admissionCheck.setSelected(false);
 				drugsCheck.setSelected(false);
@@ -257,7 +269,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 
 			examinationPanel.add(examinationCheck);
 			examinationPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.examination.txt")), BorderLayout.CENTER);
-			examinationCheck.addActionListener(e -> allCheck.setSelected(false));
+			examinationCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
 			
 		}
 		return examinationPanel;
@@ -271,7 +283,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 
 			operationsPanel.add(operationCheck);
 			operationsPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.operation.txt")), BorderLayout.CENTER);
-			operationCheck.addActionListener(e -> allCheck.setSelected(false));
+			operationCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
 		}
 		return operationsPanel;
 	}
@@ -284,7 +296,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 
 			laboratoryPanel.add(laboratoryCheck);
 			laboratoryPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.laboratory.txt")), BorderLayout.CENTER);
-			laboratoryCheck.addActionListener(e -> allCheck.setSelected(false));
+			laboratoryCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
 		}
 		return laboratoryPanel;
 	}
@@ -297,7 +309,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 
 			drugsPanel.add(drugsCheck);
 			drugsPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.drugs.txt")), BorderLayout.CENTER);
-			drugsCheck.addActionListener(e -> allCheck.setSelected(false));
+			drugsCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
 		}
 		return drugsPanel;
 	}
@@ -310,7 +322,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 
 			opdPanel.add(opdCheck);
 			opdPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.opd.txt")), BorderLayout.CENTER);
-			opdCheck.addActionListener(e -> allCheck.setSelected(false));
+			opdCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
 		}
 		return opdPanel;
 	}
@@ -323,7 +335,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 
 			admissionPanel.add(admissionCheck);
 			admissionPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.admission.txt")), BorderLayout.CENTER);
-			admissionCheck.addActionListener(e -> allCheck.setSelected(false));
+			admissionCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
 		}
 		return admissionPanel;
 	}
@@ -376,22 +388,18 @@ public class PatientFolderReportModal extends ModalJFrame {
 	public Date getDateToValue() {
 
 		Date date = jDateChooserDateTo.getDate();
-		if (date != null) {
-			return jDateChooserDateTo.getDate();
-		} else {
+		if (date == null) {
 			jDateChooserDateTo.setDate(new Date());
-			return jDateChooserDateTo.getDate();
 		}
+		return jDateChooserDateTo.getDate();
 	}
 
 	public Date getDateFromValue() {
 
 		Date date = jDateChooserDateFrom.getDate();
-		if (date != null) {
-			return jDateChooserDateFrom.getDate();
-		} else {
+		if (date == null) {
 			jDateChooserDateFrom.setDate(new Date());
-			return jDateChooserDateFrom.getDate();
 		}
+		return jDateChooserDateFrom.getDate();
 	}
 }

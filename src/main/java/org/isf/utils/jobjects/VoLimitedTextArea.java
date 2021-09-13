@@ -44,6 +44,7 @@ public class VoLimitedTextArea extends JTextArea {
 			this.maxChars = maxChars;
 		}
 		
+		@Override
 		public void insertString(int off, String text, AttributeSet att)
 		throws BadLocationException {
 			int charsInDocument = getLength();

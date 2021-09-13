@@ -103,7 +103,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonClose == null) {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jButtonClose.addActionListener(event -> dispose());
+			jButtonClose.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonClose;
 	}
@@ -112,23 +112,23 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonDelete == null) {
 			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-			jButtonDelete.addActionListener(event -> {
+			jButtonDelete.addActionListener(actionEvent -> {
 				if (jTablePricesOthers.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtodelete");
 				} else {
 					int selectedRow = jTablePricesOthers.getSelectedRow();
-					pOthers = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
+					pOthers = (PricesOthers) jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
 					if (pOthers.getId() == 1) {
 						MessageDialog.error(null, "angal.sql.operationnotpermittedprotectedelement");
 						return;
 					}
-					int answer = MessageDialog.yesNo(null,"angal.pricesothers.deletethisitem.fmt.msg", pOthers.getDescription());
+					int answer = MessageDialog.yesNo(null, "angal.pricesothers.deletethisitem.fmt.msg", pOthers.getDescription());
 					if (answer == JOptionPane.OK_OPTION) {
 
 						boolean result = false;
 						try {
 							result = pOthersManager.deleteOther(pOthers);
-						}catch(OHServiceException e){
+						} catch (OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e);
 						}
 
@@ -148,7 +148,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonEdit == null) {
 			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			jButtonEdit.addActionListener(event -> {
+			jButtonEdit.addActionListener(actionEvent -> {
 				if (jTablePricesOthers.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtoedit");
 				} else {
@@ -167,7 +167,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jButtonNew == null) {
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-			jButtonNew.addActionListener(event -> {
+			jButtonNew.addActionListener(actionEvent -> {
 				PricesOthers pOther = new PricesOthers("", "", true,true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);
 				editOther.addOtherListener(PricesOthersBrowser.this);
@@ -200,42 +200,44 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	private JTable getJTablePricesOthers() {
 		if (jTablePricesOthers == null) {
 			jTablePricesOthers = new JTable() {
+
 				/**
-				 * 
+				 *
 				 */
 				private static final long serialVersionUID = 1L;
 
 				// Override this method so that it returns the preferred
-			    // size of the JTable instead of the default fixed size
-			    @Override
-			    public Dimension getPreferredScrollableViewportSize() {
-			        return new Dimension((int) getPreferredSize().getWidth(), 200);
-			    }
+				// size of the JTable instead of the default fixed size
+				@Override
+				public Dimension getPreferredScrollableViewportSize() {
+					return new Dimension((int) getPreferredSize().getWidth(), 200);
+				}
 			};
 			jTablePricesOthers.setModel(new PricesOthersBrowserModel());
-			for (int i = 0; i< columnWidth.length; i++){
+			for (int i = 0; i < columnWidth.length; i++) {
 				jTablePricesOthers.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
-		    	if (!columnResizable[i]) {
-				    jTablePricesOthers.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
-			    }
+				if (!columnResizable[i]) {
+					jTablePricesOthers.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
+				}
 			}
 			jTablePricesOthers.setAutoCreateColumnsFromModel(false);
 		}
 		return jTablePricesOthers;
 	}
 
-class PricesOthersBrowserModel extends DefaultTableModel {
+	class PricesOthersBrowserModel extends DefaultTableModel {
 
-	private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
 		public PricesOthersBrowserModel() {
 			pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 			try {
 				pOthersArray = pOthersManager.getOthers();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
+
 		@Override
 		public int getRowCount() {
 			if (pOthersArray == null) {
@@ -243,20 +245,20 @@ class PricesOthersBrowserModel extends DefaultTableModel {
 			}
 			return pOthersArray.size();
 		}
-		
+
 		@Override
 		public String getColumnName(int c) {
 			return columnNames[c];
 		}
-		
+
 		@Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
-		
+
 		@Override
 		public Object getValueAt(int r, int c) {
-			
+
 			PricesOthers price = pOthersArray.get(r);
 			if (c == -1) {
 				return price;
@@ -270,18 +272,19 @@ class PricesOthersBrowserModel extends DefaultTableModel {
 				return price.isIpdInclude();
 			} else if (c == 4) {
 				return price.isDaily();
-			}  else if (c == 5) {
+			} else if (c == 5) {
 				return price.isDischarge();
-			}  else if (c == 6) {
+			} else if (c == 6) {
 				return price.isUndefined();
-			} return null;
+			}
+			return null;
 		}
-		
+
 		@Override
 		public Class<?> getColumnClass(int column) {
 			return cTypes[column];
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;

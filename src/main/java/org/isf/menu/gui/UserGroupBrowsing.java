@@ -106,7 +106,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		buttonNew.addActionListener(event -> {
+		buttonNew.addActionListener(actionEvent -> {
 			group = new UserGroup();
 			new GroupEdit(myFrame, group,true);
 		});
@@ -114,7 +114,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		buttonEdit.addActionListener(event -> {
+		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -127,7 +127,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 		JButton buttonPrivilege = new JButton(MessageBundle.getMessage("angal.groupsbrowser.groupmenu.btn"));
 		buttonPrivilege.setMnemonic(MessageBundle.getMnemonic("angal.groupsbrowser.groupmenu.btn.key"));
-		buttonPrivilege.addActionListener(event -> {
+		buttonPrivilege.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -139,7 +139,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		buttonDelete.addActionListener(event -> {
+		buttonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
@@ -160,7 +160,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		buttonClose.addActionListener(event -> dispose());
+		buttonClose.addActionListener(actionEvent -> dispose());
 		buttonPanel.add(buttonClose);
 
 		add(buttonPanel, BorderLayout.SOUTH);

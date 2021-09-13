@@ -25,8 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -66,21 +64,25 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public void diseaseInserted(AWTEvent e) {
-		pDisease.add(0,disease);
-		((DiseaseBrowserModel)table.getModel()).fireTableDataChanged();
+		pDisease.add(0, disease);
+		((DiseaseBrowserModel) table.getModel()).fireTableDataChanged();
 		//table.updateUI();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 	}
-	
+
+	@Override
 	public void diseaseUpdated(AWTEvent e) {
-		pDisease.set(selectedrow,disease);
-		((DiseaseBrowserModel)table.getModel()).fireTableDataChanged();
+		pDisease.set(selectedrow, disease);
+		((DiseaseBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow >-1)
-			table.setRowSelectionInterval(selectedrow,selectedrow);
-		
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
+			table.setRowSelectionInterval(selectedrow, selectedrow);
+		}
+
 	}
 	
 	private int selectedrow;
@@ -130,89 +132,76 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 			MessageDialog.showExceptions(ohServiceException);
 		}
 		// for efficiency in the sequent for
-		if (type != null){
+		if (type != null) {
 			for (DiseaseType elem : type) {
 				pbox.addItem(elem);
 			}
 		}
-		pbox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				pSelection = (DiseaseType) pbox.getSelectedItem();
-				if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.common.all.txt").toLowerCase()) == 0)
-					model = new DiseaseBrowserModel();
-				else
-					model = new DiseaseBrowserModel(pSelection.getCode());
-				model.fireTableDataChanged();
-				table.updateUI();
+		pbox.addActionListener(actionEvent -> {
+			pSelection = (DiseaseType) pbox.getSelectedItem();
+			if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.common.all.txt").toLowerCase()) == 0) {
+				model = new DiseaseBrowserModel();
+			} else {
+				model = new DiseaseBrowserModel(pSelection.getCode());
 			}
+			model.fireTableDataChanged();
+			table.updateUI();
 		});
 		buttonPanel.add(pbox);
-		
+
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		buttonNew.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent event) {
-				disease=new Disease(null,"",new DiseaseType("",""));	//disease will reference the new record
-				DiseaseEdit newrecord = new DiseaseEdit(myFrame,disease,true);
-				newrecord.addDiseaseListener(DiseaseBrowser.this);
-				newrecord.setVisible(true);
-			}
+		buttonNew.addActionListener(actionEvent -> {
+			disease = new Disease(null, "", new DiseaseType("", ""));    //disease will reference the new record
+			DiseaseEdit newrecord = new DiseaseEdit(myFrame, disease, true);
+			newrecord.addDiseaseListener(DiseaseBrowser.this);
+			newrecord.setVisible(true);
 		});
 		buttonPanel.add(buttonNew);
-		
+
 		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-		buttonEdit.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
-				} else {
-					selectedrow = table.getSelectedRow();
-					disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));	
-					DiseaseEdit editrecord = new DiseaseEdit(myFrame,disease,false);
-					editrecord.addDiseaseListener(DiseaseBrowser.this);
-					editrecord.setVisible(true);
-				}
+		buttonEdit.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
+			} else {
+				selectedrow = table.getSelectedRow();
+				disease = (Disease) (((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				DiseaseEdit editrecord = new DiseaseEdit(myFrame, disease, false);
+				editrecord.addDiseaseListener(DiseaseBrowser.this);
+				editrecord.setVisible(true);
 			}
 		});
 		buttonPanel.add(buttonEdit);
-		
+
 		JButton buttonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		buttonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
-		buttonDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
-				} else {
-					selectedrow = table.getSelectedRow();
-					disease = (Disease)(((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
-					int answer = MessageDialog.yesNo(DiseaseBrowser.this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
-					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))){
-							disease.setIpdInInclude(false);
-							disease.setIpdOutInclude(false);
-							disease.setOpdInclude(false);
-							diseaseUpdated(null);
-						}
-					} catch(OHServiceException ohServiceException) {
-						MessageDialog.showExceptions(ohServiceException);
+		buttonDelete.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
+			} else {
+				selectedrow = table.getSelectedRow();
+				disease = (Disease) (((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				int answer = MessageDialog.yesNo(DiseaseBrowser.this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
+				try {
+					if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))) {
+						disease.setIpdInInclude(false);
+						disease.setIpdOutInclude(false);
+						disease.setOpdInclude(false);
+						diseaseUpdated(null);
 					}
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
 				}
 			}
 		});
 		buttonPanel.add(buttonDelete);
-		
+
 		JButton buttonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		buttonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-		buttonClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
+		buttonClose.addActionListener(actionEvent -> dispose());
 		buttonPanel.add(buttonClose);
-		
+
 		add(buttonPanel, BorderLayout.SOUTH);
 		pack();
 		setVisible(true);
@@ -238,20 +227,25 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
+		@Override
 		public int getRowCount() {
-			if (pDisease == null)
+			if (pDisease == null) {
 				return 0;
+			}
 			return pDisease.size();
 		}
 		
+		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
 		}
 		
+		@Override
 		public int getColumnCount() {
 			return pColumns.length;
 		}
 		
+		@Override
 		public Object getValueAt(int r, int c) {
 			Disease disease = pDisease.get(r);
 			if (c == 0) {
@@ -273,22 +267,21 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////
-	class ColorTableCellRenderer extends DefaultTableCellRenderer
-	{
+	class ColorTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
 
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
-	      boolean hasFocus, int row, int column)
-	   {  
-		   Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
-		   cell.setForeground(Color.BLACK);
-		   if (!((Disease)table.getValueAt(row,-1)).getIpdInInclude() &&
-				   !((Disease)table.getValueAt(row,-1)).getIpdOutInclude() &&
-				   !((Disease)table.getValueAt(row,-1)).getOpdInclude()) {
-			   cell.setForeground(Color.GRAY);
-		   }
-	      return cell;
-	   }
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+				boolean hasFocus, int row, int column) {
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			cell.setForeground(Color.BLACK);
+			if (!((Disease) table.getValueAt(row, -1)).getIpdInInclude() &&
+					!((Disease) table.getValueAt(row, -1)).getIpdOutInclude() &&
+					!((Disease) table.getValueAt(row, -1)).getOpdInclude()) {
+				cell.setForeground(Color.GRAY);
+			}
+			return cell;
+		}
 	}
 }
