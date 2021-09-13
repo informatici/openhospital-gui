@@ -565,11 +565,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					} else {
 						jCalendarDate.setDate(((Calendar)propertyChangeEvent.getNewValue()).getTime());
 					}
-					billDate.setTime(jCalendarDate.getDate());
 				} else {
 					jCalendarDate.setDate(((Calendar)propertyChangeEvent.getNewValue()).getTime());
-					billDate.setTime(jCalendarDate.getDate());
 				}
+				billDate.setTime(jCalendarDate.getDate());
 			});
 		}
 		return jCalendarDate;
