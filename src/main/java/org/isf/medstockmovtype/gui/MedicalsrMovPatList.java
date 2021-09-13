@@ -50,8 +50,10 @@ public class MedicalsrMovPatList extends JPanel {
 	private JTable jTableData;
 	private OhTableDrugsModel<MovementWard> modelMedWard;
 	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
+	private MovWardBrowserManager movManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
+
 	public MedicalsrMovPatList(Object object) {
-		
+
 		setLayout(new BorderLayout(0, 0));
 		JPanel panelData = new JPanel();
 		add(panelData);
@@ -65,7 +67,6 @@ public class MedicalsrMovPatList extends JPanel {
 		}
 		
 		if (myPatient != null) {
-			MovWardBrowserManager movManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 			try {
 				ArrayList<MovementWard> movPat = movManager.getMovementToPatient(myPatient);
 				drugsData = new ArrayList<>();
