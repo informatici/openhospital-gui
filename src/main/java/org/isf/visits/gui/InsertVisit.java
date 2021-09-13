@@ -160,7 +160,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		JPanel patientParamsPanel = new JPanel(new SpringLayout());
 
 		GridBagLayout gbl_jPanelData = new GridBagLayout();
-		gbl_jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 00 };
+		gbl_jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 0 };
 		gbl_jPanelData.rowHeights = new int[] { 20, 20, 20, 0, 0, 0, 0, 0 };
 		gbl_jPanelData.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		gbl_jPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
