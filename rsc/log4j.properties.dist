@@ -25,7 +25,7 @@ log4j.appender.DB.sql=INSERT INTO LOG (LOG_TYPE, LOG_CLASS, LOG_METHOD, LOG_TIME
 log4j.appender.DB.layout=org.apache.log4j.PatternLayout
 
 # Assigning appenders to packages (application loggers)
-log4j.category.org.isf=DEBUG_LEVEL,RollingFile
+log4j.category.org.isf=LOG_LEVEL,RollingFile
 log4j.additivity.org.isf = false
 
 # Assigning appenders to Hibernate packages (DB loggers)
