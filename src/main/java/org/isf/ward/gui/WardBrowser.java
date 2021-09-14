@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -104,7 +105,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	private int[] pColumnWidth = {45, 80, 60, 60, 80, 30, 30, 30, 30, 30, 30};
 	private Class[] pColumnClass = {String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class, Boolean.class};
 	private int selectedrow;
-	private ArrayList<Ward> pWard;
+	private List<Ward> pWard;
 	private Ward ward;
 	private final JFrame myFrame;
 	

@@ -129,7 +129,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	private int pfrmHeight;
 	private int selectedrow;
 	private JComboBox pbox;
-	private ArrayList<Medical> pMedicals;
+	private List<Medical> pMedicals;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
@@ -532,7 +532,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		if (pbox == null) {
 			pbox = new JComboBox();
 			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
-			ArrayList<MedicalType> type;
+			List<MedicalType> type;
 			try {
 				type = medicalTypeManager.getMedicalType();
 				for (MedicalType elem : type) {
@@ -645,7 +645,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 		private static final long serialVersionUID = 1L;
 
-		ArrayList<Medical> medicalList = new ArrayList<>();
+		List<Medical> medicalList = new ArrayList<>();
 
 		public MedicalBrowsingModel(String key, boolean isType) {
 			if (isType) {

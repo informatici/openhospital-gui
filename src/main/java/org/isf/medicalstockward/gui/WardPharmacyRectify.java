@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -123,11 +124,11 @@ public class WardPharmacyRectify extends JDialog {
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	
-	private ArrayList<Medical> medicals; //list of all medicals available in the application
+	private List<Medical> medicals; //list of all medicals available in the application
 	private HashMap<Integer, Double> wardMap; //map quantities by their medical_id
 	private JTextField jTextFieldLotNumber;
 	private JButton jButtonChooseLot;
-	private ArrayList<MedicalWard> wardDrugs; //list of drugs available in the selected ward
+	private List<MedicalWard> wardDrugs; //list of drugs available in the selected ward
 	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	
 	private JButton jButtonNewLot;

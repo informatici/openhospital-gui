@@ -28,9 +28,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -214,10 +214,10 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 	private static final String DATE_FORMAT = "dd/MM/yy";
 
-	private ArrayList<Admission> admList;
-	private ArrayList<Disease> disease;
-	private ArrayList<Ward> ward;
-	private ArrayList<Opd> opdList;
+	private List<Admission> admList;
+	private List<Disease> disease;
+	private List<Ward> ward;
+	private List<Opd> opdList;
 
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
@@ -264,9 +264,15 @@ public class PatientDataBrowser extends ModalJFrame implements
 	private JPanel getButtonPanel() {
 		JPanel buttonPanel; 
 			buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,5,5));
-			if (MainMenu.checkUserGrants("btndataedit")) buttonPanel.add(getEditButton(), null);
-			if (MainMenu.checkUserGrants("btndatadel")) buttonPanel.add(getDeleteButton(), null);  
-			if (MainMenu.checkUserGrants("btndatamalnut")) buttonPanel.add(getMalnutritionButton(), null);  
+			if (MainMenu.checkUserGrants("btndataedit")) {
+				buttonPanel.add(getEditButton(), null);
+			}
+			if (MainMenu.checkUserGrants("btndatadel")) {
+				buttonPanel.add(getDeleteButton(), null);
+			}
+			if (MainMenu.checkUserGrants("btndatamalnut")) {
+				buttonPanel.add(getMalnutritionButton(), null);
+			}
 			buttonPanel.add(getCloseButton(), null);
 		return buttonPanel;
 	}
@@ -476,8 +482,9 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				if (row < admList.size()) {
 					String id = admList.get(row).getWard().getCode();
 					for (Ward elem : ward) {
-						if (elem.getCode().equalsIgnoreCase(id))
+						if (elem.getCode().equalsIgnoreCase(id)) {
 							return elem.getDescription();
+						}
 					}
 				} else {
 					return "OPD";
@@ -495,8 +502,9 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					id = "";
 				}
 				for (Disease elem : disease) {
-					if (elem.getCode().equalsIgnoreCase(id))
+					if (elem.getCode().equalsIgnoreCase(id)) {
 						return elem.getDescription();
+					}
 				}
 				return MessageBundle.getMessage("angal.admission.nodisease.txt");
 
@@ -522,16 +530,17 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					}
 				}
 				for (Disease elem : disease) {
-					if (elem.getCode().equalsIgnoreCase(id))
+					if (elem.getCode().equalsIgnoreCase(id)) {
 						return elem.getDescription();
+					}
 				}				
 				return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				
 			}  else if (column == 4) {
 				if (row < admList.size()) {
-					if (admList.get(row).getDisDate()==null)
+					if (admList.get(row).getDisDate()==null) {
 						return MessageBundle.getMessage("angal.admission.present.txt");
-					else {
+					} else {
 						Date myDate = admList.get(row).getDisDate().getTime();
 						return myDate;
 					}

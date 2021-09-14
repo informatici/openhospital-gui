@@ -88,7 +88,7 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 	private List<OperationRow> oprowData = new ArrayList<>();
 	private Opd myOpd;
 	
-	private ArrayList<String> operationResults = opeManager.getResultDescriptionList();
+	private List<String> operationResults = opeManager.getResultDescriptionList();
 
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 

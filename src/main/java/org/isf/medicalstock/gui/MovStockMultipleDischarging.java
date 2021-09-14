@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.DefaultCellEditor;
@@ -156,7 +157,7 @@ public class MovStockMultipleDischarging extends JDialog {
 
 	private void initialize() {
 
-		ArrayList<Medical> medicals;
+		List<Medical> medicals;
 		try {
 			medicals = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e) {
@@ -289,7 +290,7 @@ public class MovStockMultipleDischarging extends JDialog {
 					}
 
 					// Lot (PreparationDate && ExpiringDate)
-					ArrayList<Lot> lots;
+					List<Lot> lots;
 					try {
 						lots = movManager.getLotByMedical(med);
 					} catch (OHServiceException e1) {
@@ -512,7 +513,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private JComboBox getJComboBoxChargeType() {
 		if (jComboBoxDischargeType == null) {
 			jComboBoxDischargeType = new JComboBox();
-			ArrayList<MovementType> movTypes;
+			List<MovementType> movTypes;
 			try {
 				movTypes = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
 			} catch (OHServiceException e) {
@@ -564,7 +565,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		return null;
 	}
 
-	protected Lot chooseLot(ArrayList<Lot> lots, double qty) {
+	protected Lot chooseLot(List<Lot> lots, double qty) {
 		Lot lot = null;
 		if (!lots.isEmpty()) {
 			stripeLots(lots);
@@ -611,7 +612,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		return true;
 	}
 
-	private void stripeLots(ArrayList<Lot> lots) {
+	private void stripeLots(List<Lot> lots) {
 		if (!lots.isEmpty()) {
 			ArrayList<Movement> movements = model.getMovements();
 			ListIterator<Lot> lotIterator = lots.listIterator();
@@ -775,7 +776,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			jComboBoxDestination = new JComboBox();
 			jComboBoxDestination.addItem(""); //$NON-NLS-1$
 			WardBrowserManager wardMan = Context.getApplicationContext().getBean(WardBrowserManager.class);
-			ArrayList<Ward> wards;
+			List<Ward> wards;
 			try {
 				wards = wardMan.getWards();
 			} catch (OHServiceException e) {
@@ -1017,9 +1018,9 @@ public class MovStockMultipleDischarging extends JDialog {
 	class StockMovModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private ArrayList<Lot> lotList;
+		private List<Lot> lotList;
 
-		public StockMovModel(ArrayList<Lot> lots) {
+		public StockMovModel(List<Lot> lots) {
 			lotList = lots;
 		}
 

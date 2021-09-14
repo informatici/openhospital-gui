@@ -42,6 +42,7 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.AbstractAction;
@@ -741,7 +742,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JComboBox getJComboBoxDiuresisType() {
 		if (jComboBoxDiuresisType == null) {
 			jComboBoxDiuresisType = new JComboBox();
-			ArrayList<String> diuresisDescription = examManager.getDiuresisDescriptionList();
+			List<String> diuresisDescription = examManager.getDiuresisDescriptionList();
 			for (String description : diuresisDescription) {
 				jComboBoxDiuresisType.addItem(description);
 			}
@@ -757,7 +758,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JComboBox getJComboBoxBowel() {
 		if (jComboBoxBowel == null) {
 			jComboBoxBowel = new JComboBox();
-			ArrayList<String> bowelDescription = examManager.getBowelDescriptionList();
+			List<String> bowelDescription = examManager.getBowelDescriptionList();
 			for (String description : bowelDescription) {
 				jComboBoxBowel.addItem(description);
 			}
@@ -1180,7 +1181,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JComboBox getJComboBoxAuscultation() {
 		if (jComboBoxAuscultation == null) {
 			jComboBoxAuscultation =  new JComboBox();
-			ArrayList<String> auscultationList = examManager.getAuscultationList();
+			List<String> auscultationList = examManager.getAuscultationList();
 			for (String description : auscultationList) {
 				jComboBoxAuscultation.addItem(description);
 			}
@@ -1948,7 +1949,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		private static final long serialVersionUID = 1L;
 
 		private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-		private ArrayList<PatientExamination> patexList = null;
+		private List<PatientExamination> patexList = null;
 
 		public JTableModelSummary() {
 			reloadData();
@@ -1963,7 +1964,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			fireTableDataChanged();
 		}
 		
-		public ArrayList<PatientExamination> getList() {
+		public List<PatientExamination> getList() {
 			return patexList;
 		}
 

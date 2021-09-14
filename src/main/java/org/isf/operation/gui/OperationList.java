@@ -233,12 +233,12 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 			AdmissionBrowserManager admManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 			OpdBrowserManager opdManager= Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
-				ArrayList<Admission> admissions = admManager.getAdmissions(myPatient);
+				List<Admission> admissions = admManager.getAdmissions(myPatient);
 				oprowData = new ArrayList<>();
 				for (Admission adm : admissions) {
 					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
 				}
-				ArrayList<Opd> opds =  opdManager.getOpdList(myPatient.getCode());
+				List<Opd> opds =  opdManager.getOpdList(myPatient.getCode());
 				for (Opd op : opds) {
 					oprowData.addAll(opeRowManager.getOperationRowByOpd(op));
 				}

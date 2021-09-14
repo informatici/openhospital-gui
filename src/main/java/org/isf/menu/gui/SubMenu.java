@@ -29,8 +29,8 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -91,7 +91,7 @@ public class SubMenu extends JDialog implements ActionListener {
 		return dimension;
 	}
 
-	private ArrayList<UserMenuItem> myMenu;
+	private List<UserMenuItem> myMenu;
 	private MainMenu mainMenu;
 
 	private int prfButtonSize;
@@ -100,19 +100,19 @@ public class SubMenu extends JDialog implements ActionListener {
 		return prfButtonSize;
 	}
 
-	public SubMenu(SubMenu parent, String code, String title, ArrayList<UserMenuItem> menu, MainMenu mainMenu) {
+	public SubMenu(SubMenu parent, String code, String title, List<UserMenuItem> menu, MainMenu mainMenu) {
 		super(parent, title, true);
 		this.prfButtonSize = parent.getMinButtonSize();
 		initialize(mainMenu, code, menu, parent.getBounds());
 	}
 
-	public SubMenu(MainMenu parent, String code, String title, ArrayList<UserMenuItem> menu) {
+	public SubMenu(MainMenu parent, String code, String title, List<UserMenuItem> menu) {
 		super(parent, title, true);
 		this.prfButtonSize = parent.getMinButtonSize();
 		initialize(parent, code, menu, parent.getBounds());
 	}
 
-	private void initialize(MainMenu mainMenu, String code, ArrayList<UserMenuItem> menu, Rectangle parentBounds) {
+	private void initialize(MainMenu mainMenu, String code, List<UserMenuItem> menu, Rectangle parentBounds) {
 
 		final int displacement = 50;
 

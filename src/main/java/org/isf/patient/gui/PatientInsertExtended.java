@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EventListener;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -1469,7 +1470,7 @@ public class PatientInsertExtended extends JDialog {
 
 			jAgeDescComboBox = new JComboBox();
 
-			ArrayList<AgeType> ageList;
+			List<AgeType> ageList;
 			try {
 				ageList = ageTypeManager.getAgeType();
 			} catch (OHServiceException e) {

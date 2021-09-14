@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -199,16 +200,16 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	//Bills & Payments
 	private BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
-	private ArrayList<Bill> billPeriod;
+	private List<Bill> billPeriod;
 	private HashMap<Integer, Bill> mapBill = new HashMap<>();
-	private ArrayList<BillPayments> paymentsPeriod;
-	private ArrayList<Bill> billFromPayments;
+	private List<BillPayments> paymentsPeriod;
+	private List<Bill> billFromPayments;
 	
 	private String currencyCod;
 	
 	//Users
 	private String user = UserBrowsingManager.getCurrentUser();
-	private ArrayList<String> users;
+	private List<String> users;
 	
 	public BillBrowser() {
 		try {
@@ -1181,8 +1182,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 	
 	private void updateTotals() {
-		ArrayList<Bill> billToday = null;
-		ArrayList<BillPayments> paymentsToday = null;
+		List<Bill> billToday = null;
+		List<BillPayments> paymentsToday = null;
 		if (UserBrowsingManager.getCurrentUser().equals("admin")) {
 			try {
 				billToday = billManager.getBills(dateToday0, dateToday24);
@@ -1261,12 +1262,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	public class BillTableModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private ArrayList<Bill> tableArray = new ArrayList<>();
+		private List<Bill> tableArray = new ArrayList<>();
 		
 		/*
 		 * All Bills
 		 */
-		private ArrayList<Bill> billAll = new ArrayList<>();
+		private List<Bill> billAll = new ArrayList<>();
 		
 		public BillTableModel(String status) {
 			loadData(status);

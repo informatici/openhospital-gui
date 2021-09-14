@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -153,7 +154,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 
 	private void initialize() {
-		ArrayList<Medical> medicals;
+		List<Medical> medicals;
 		try {
 			medicals = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e) {
@@ -482,7 +483,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private JComboBox getJComboBoxChargeType() {
 		if (jComboBoxChargeType == null) {
 			jComboBoxChargeType = new JComboBox();
-			ArrayList<MovementType> movTypes;
+			List<MovementType> movTypes;
 			try {
 				movTypes = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
 			} catch (OHServiceException e) {
@@ -641,7 +642,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 
 	protected Lot chooseLot(Medical med) {
-		ArrayList<Lot> lots;
+		List<Lot> lots;
 		try {
 			lots = movManager.getLotByMedical(med);
 		} catch (OHServiceException e) {
@@ -1007,9 +1008,9 @@ public class MovStockMultipleCharging extends JDialog {
 	class StockMovModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private ArrayList<Lot> lotList;
+		private List<Lot> lotList;
 
-		public StockMovModel(ArrayList<Lot> lots) {
+		public StockMovModel(List<Lot> lots) {
 			lotList = lots;
 		}
 

@@ -23,8 +23,8 @@ package org.isf.malnutrition.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -100,7 +100,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 	private DefaultTableModel model;
 
-	private ArrayList<Malnutrition> pMaln;
+	private List<Malnutrition> pMaln;
 
 	private int selectedrow;
 

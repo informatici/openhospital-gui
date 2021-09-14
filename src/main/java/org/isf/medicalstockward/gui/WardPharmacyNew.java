@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Optional;
 
 import javax.swing.BoxLayout;
@@ -182,7 +183,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	//Medicals (in WARD)
 	//ArrayList<MedItem> medItems = new ArrayList<MedItem>();
 	private ArrayList<Medical> medArray = new ArrayList<>();
-	private ArrayList<MedicalWard> wardDrugs = null;
+	private List<MedicalWard> wardDrugs = null;
 	private ArrayList<MedicalWard> medItems = new ArrayList<>();
 	private JRadioButton jRadioUse;
 	private JTextField jTextFieldUse;
@@ -202,7 +203,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 		private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 
-	public WardPharmacyNew(JFrame owner, Ward ward, ArrayList<MedicalWard> drugs) {
+	public WardPharmacyNew(JFrame owner, Ward ward, List<MedicalWard> drugs) {
 		super(owner, true);
 		wardDrugs = drugs;
 		for (MedicalWard elem : wardDrugs) {
@@ -353,7 +354,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return true;
 	}
 	
-	private MedicalWard automaticChoose(ArrayList<MedicalWard> drug, String me, int quantity) {
+	private MedicalWard automaticChoose(List<MedicalWard> drug, String me, int quantity) {
 		Collections.sort(drug, (o1, o2) -> {
 			if (o1.getLot().getDueDate() == null || o2.getLot().getDueDate() == null) {
 				return 0;
@@ -392,7 +393,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return medWard;
 	}
 
-	private MedicalWard chooseLot(ArrayList<MedicalWard> drug, String me, int quantity) {
+	private MedicalWard chooseLot(List<MedicalWard> drug, String me, int quantity) {
 		ArrayList<MedicalWard> dr = new ArrayList<>();
 		MedicalWard medWard = null;
 		for (MedicalWard elem : drug) {
@@ -437,7 +438,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return medWard;
 	}
 
-	protected int askQuantity(String med, ArrayList<MedicalWard> drug) {
+	protected int askQuantity(String med, List<MedicalWard> drug) {
 		int qty = 0;
 		double totalQty = 0;
 		String prodCode = null;
@@ -446,7 +447,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			if (med.equals(elem.getMedical().getDescription())) {
 				totalQty += elem.getQty();
 				prodCode = elem.getMedical().getProd_code();
-
 			}
 
 		}
@@ -873,20 +873,20 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			wardBox = new JComboBox();
 			wardBox.setPreferredSize(new Dimension(300, 30));
 			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
-			ArrayList<Ward> wardList = null;
-                        try {
-                            wardList = wbm.getWards();
-                        } catch (OHServiceException ex) {
-	                        LOGGER.error(ex.getMessage(), ex);
-                        }
+			List<Ward> wardList = null;
+			try {
+				wardList = wbm.getWards();
+			} catch (OHServiceException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 			wardBox.addItem("");
 			if (wardList != null) {
-                            for (org.isf.ward.model.Ward elem : wardList) {
-				if (!wardSelected.getCode().equals(elem.getCode())) {
-					wardBox.addItem(elem);
+				for (org.isf.ward.model.Ward elem : wardList) {
+					if (!wardSelected.getCode().equals(elem.getCode())) {
+						wardBox.addItem(elem);
+					}
 				}
-                            }
-                        }
+			}
 			wardBox.setEnabled(false);
 		}
 		return wardBox;

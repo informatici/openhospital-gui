@@ -25,7 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -66,7 +66,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener{
 	private int selectedrow;
 	private Patient patient;
 	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	private ArrayList<Patient> pPat;
+	private List<Patient> pPat;
 	
 	
 	public JTable getJTable() {

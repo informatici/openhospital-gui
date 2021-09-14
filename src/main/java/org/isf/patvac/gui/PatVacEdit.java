@@ -32,6 +32,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -101,7 +102,7 @@ public class PatVacEdit extends JDialog {
 	private Patient selectedPatient = null;
 	private String lastKey;
 	private String s;
-	private ArrayList<Patient> patientList = null;
+	private List<Patient> patientList = null;
 	private CustomJDateChooser vaccineDateFieldCal = null;
 	private GregorianCalendar dateIn = null;
 	private int patNextYProg;
@@ -408,7 +409,7 @@ public class PatVacEdit extends JDialog {
 			vaccineTypeComboBox.setPreferredSize(new Dimension(200, 30));
 			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));
 
-			ArrayList<VaccineType> types = null;
+			List<VaccineType> types = null;
 			try {
 				types = vaccineTypeManager.getVaccineType();
 			} catch (OHServiceException e1) {
@@ -449,7 +450,7 @@ public class PatVacEdit extends JDialog {
 			vaccineComboBox.setPreferredSize(new Dimension(200, 30));
 		}
 		vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
-		ArrayList<Vaccine> allVac = null;
+		List<Vaccine> allVac = null;
 		try {
 			if (((VaccineType) vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))) {
 				allVac = vaccineManager.getVaccine();

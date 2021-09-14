@@ -36,7 +36,7 @@ public class OhTableModelExam<T> implements TableModel{
 	List<Exam> dataListExam;
 	List<Exam> filteredList;
 	
-	public  OhTableModelExam(ArrayList<Exam> dataList) {
+	public  OhTableModelExam(List<Exam> dataList) {
 		this.dataListExam=dataList;
 		
 		this.filteredList= new ArrayList<>();

@@ -23,7 +23,7 @@ package org.isf.pregtreattype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -51,7 +51,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener{
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<PregnantTreatmentType> pPregnantTreatmentType;
+	private List<PregnantTreatmentType> pPregnantTreatmentType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()

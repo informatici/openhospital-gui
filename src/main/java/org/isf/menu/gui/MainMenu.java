@@ -33,6 +33,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
@@ -111,7 +112,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	}
 
 	private static User myUser;
-	private static ArrayList<UserMenuItem> myMenu;
+	private static List<UserMenuItem> myMenu;
 
 	final int menuXPosition = 10;
 	final int menuYDisplacement = 75;

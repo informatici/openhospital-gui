@@ -25,7 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -75,7 +75,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private DefaultTableModel model ;
 	private JTable table;
 	private ExamRow examRow = null;
-	private ArrayList<ExamRow> pExamRow;
+	private List<ExamRow> pExamRow;
 	private JDialog myFrame;
 
 	public ExamShow(JFrame owner, Exam aExam) {

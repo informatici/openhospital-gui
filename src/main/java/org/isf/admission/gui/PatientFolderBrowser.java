@@ -199,12 +199,12 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 	private static final String DATE_FORMAT = "dd/MM/yy";
 
-	private ArrayList<Admission> admList;
-	private ArrayList<Laboratory> labList;	
-	private ArrayList<Disease> disease;
-	private ArrayList<Ward> ward;
-	private ArrayList<Opd> opdList;
-	private ArrayList <PatientExamination> examinationList;
+	private List<Admission> admList;
+	private List<Laboratory> labList;
+	private List<Disease> disease;
+	private List<Ward> ward;
+	private List<Opd> opdList;
+	private List <PatientExamination> examinationList;
 	
     private OperationList opeList;
 

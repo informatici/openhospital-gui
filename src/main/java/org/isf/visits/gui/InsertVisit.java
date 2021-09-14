@@ -31,6 +31,7 @@ import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -117,7 +118,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	 */
 	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
-	private ArrayList<Ward> wardList = new ArrayList<>();
+	private List<Ward> wardList = new ArrayList<>();
 	
 	public InsertVisit(JFrame owner, Ward ward, Patient patient, boolean insert) {
 		super(owner, true);

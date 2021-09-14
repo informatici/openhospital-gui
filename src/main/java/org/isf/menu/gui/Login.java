@@ -30,8 +30,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -112,7 +112,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	public void keyReleased(KeyEvent event) {
 	}
 
-	private ArrayList<User> users;
+	private List<User> users;
 	private JComboBox<String> usersList;
 	private JPasswordField pwd;
 	private MainMenu parent;

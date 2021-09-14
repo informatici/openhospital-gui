@@ -29,9 +29,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -110,7 +110,7 @@ public class PatVacBrowser extends ModalJFrame {
 	private JComboBox vaccineComboBox = null;
 	private JComboBox vaccineTypeComboBox = null;
 	private int pfrmHeight;
-	private ArrayList<PatientVaccine> lPatVac;
+	private List<PatientVaccine> lPatVac;
 	
 		
 	private String[] pColumns = {
@@ -599,7 +599,7 @@ public class PatVacBrowser extends ModalJFrame {
 			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));			
 			
 			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-			ArrayList<VaccineType> types = null;
+			List<VaccineType> types = null;
 			try {
 				types = manager.getVaccineType();
 			} catch (OHServiceException e1) {
@@ -632,7 +632,7 @@ public class PatVacBrowser extends ModalJFrame {
 		}
 		VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 
-		ArrayList<Vaccine> allVac = null;
+		List<Vaccine> allVac = null;
 		vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
 		try {
 			if (((VaccineType) vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))) {

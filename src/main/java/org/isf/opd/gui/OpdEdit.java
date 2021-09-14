@@ -38,6 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -169,8 +170,8 @@ public class OpdEdit extends JDialog {
 	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private ArrayList<DiseaseType> types;
-	private ArrayList<Disease> diseasesAll;
+	private List<DiseaseType> types;
+	private List<Disease> diseasesAll;
 	
     /*
      * Adds: Textfields and buttons to enable search in diagnosis
@@ -302,7 +303,7 @@ public class OpdEdit extends JDialog {
 			diseaseBox.setMaximumSize(new Dimension(400, 50));
 		}
 		Disease thisDiseaseEdit = null;
-		ArrayList<Disease> diseases = null;
+		List<Disease> diseases = null;
 		try {
 			if (diseaseTypeBox.getSelectedIndex() == 0) {
 				diseases = diseaseManager.getDiseaseOpd();
@@ -347,7 +348,7 @@ public class OpdEdit extends JDialog {
 			diseaseBox2.setMaximumSize(new Dimension(400, 50));
 		}
 		Disease elem2=null;
-		ArrayList<Disease> diseases = null;
+		List<Disease> diseases = null;
 		try {
 			diseases = diseaseManager.getDiseaseOpd();
 		} catch(OHServiceException e) {
@@ -387,7 +388,7 @@ public class OpdEdit extends JDialog {
 			diseaseBox3.setMaximumSize(new Dimension(400, 50));
 		}
 		Disease elem2=null;
-		ArrayList<Disease> diseases = null;
+		List<Disease> diseases = null;
 		try {
 			diseases = diseaseManager.getDiseaseOpd();
 		} catch(OHServiceException e) {
@@ -674,7 +675,7 @@ public class OpdEdit extends JDialog {
             searchDiseaseButton.setPreferredSize(new Dimension(20, 20));
             searchDiseaseButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
             searchDiseaseButton.addActionListener(new ActionListener() {
-                ArrayList<Disease> diseasesOPD = null;
+	            List<Disease> diseasesOPD = null;
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
                     try {
@@ -737,7 +738,7 @@ public class OpdEdit extends JDialog {
 			searchDiseaseButton2.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			searchDiseaseButton2.addActionListener(new ActionListener() {
 
-				ArrayList<Disease> diseasesOPD = null;
+				List<Disease> diseasesOPD = null;
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -794,7 +795,7 @@ public class OpdEdit extends JDialog {
             searchDiseaseButton3.setPreferredSize(new Dimension(20, 20));
             searchDiseaseButton3.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
             searchDiseaseButton3.addActionListener(new ActionListener() {
-                ArrayList<Disease> diseasesOPD = null;
+	            List<Disease> diseasesOPD = null;
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
                     try {
@@ -918,7 +919,7 @@ public class OpdEdit extends JDialog {
 		return c;
 	}
 
-	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
+	private ArrayList<Disease> getSearchDiagnosisResults(String s, List<Disease> diseaseList) {
 		String query = s.trim();
 		ArrayList<Disease> results = new ArrayList<>();
 		for (Disease disease : diseaseList) {

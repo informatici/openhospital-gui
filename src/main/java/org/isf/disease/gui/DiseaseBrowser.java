@@ -25,7 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -88,7 +88,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	private int selectedrow;
 	private JLabel selectlabel;
 	private JComboBox pbox;
-	private ArrayList<Disease> pDisease;
+	private List<Disease> pDisease;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
@@ -125,7 +125,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		
 		pbox = new JComboBox();
 		pbox.addItem(new DiseaseType("0", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
-		ArrayList<DiseaseType> type = null;
+		List<DiseaseType> type = null;
 		try {
 			type = disTypeManager.getDiseaseType();
 		} catch(OHServiceException ohServiceException) {

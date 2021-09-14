@@ -116,8 +116,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private boolean[] patColumnsResizable = { false, true };
 
 	PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	ArrayList<Patient> patArray = new ArrayList<>();
-	ArrayList<Patient> patSearch = new ArrayList<>();
+	List<Patient> patArray = new ArrayList<>();
+	List<Patient> patSearch = new ArrayList<>();
 	private String lastKey = "";
 		
 	public SelectPatient(JFrame owner, Patient pat) {

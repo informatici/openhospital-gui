@@ -68,7 +68,7 @@ public class MedicalsrMovPatList extends JPanel {
 		
 		if (myPatient != null) {
 			try {
-				ArrayList<MovementWard> movPat = movManager.getMovementToPatient(myPatient);
+				List<MovementWard> movPat = movManager.getMovementToPatient(myPatient);
 				drugsData = new ArrayList<>();
 				drugsData.addAll(movPat);
 			} catch (OHServiceException ohServiceException) {

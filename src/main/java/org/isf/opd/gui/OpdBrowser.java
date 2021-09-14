@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.AbstractButton;
@@ -150,7 +151,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			MessageBundle.getMessage("angal.opd.diseasetype.col").toUpperCase(),
 			MessageBundle.getMessage("angal.opd.patientstatus.col").toUpperCase()
 	};
-	private ArrayList<Opd> pSur;
+	private List<Opd> pSur;
 	private JTable jTable = null;
 	private OpdBrowsingModel model;
 	private int[] pColumnWidth = {50, 50, 70, 70, 150, 30, 30, 195, 195, 50 };
@@ -169,7 +170,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JRadioButton radiom;
 	private JRadioButton radioa;
 	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-	private ArrayList<Disease> diseases = null;
+	private List<Disease> diseases = null;
 	protected AbstractButton searchButton;
 
 	public JTable getJTable() {
@@ -678,7 +679,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDiseaseTypeBox.setMaximumSize(new Dimension(300,50));
 			
 			DiseaseTypeBrowserManager diseaseTypeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
-			ArrayList<DiseaseType> types = null;
+			List<DiseaseType> types = null;
 			try {
 				types = diseaseTypeManager.getDiseaseType();
 			} catch(OHServiceException ohServiceException) {
@@ -834,7 +835,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		return searchFieldPanel;
 	}
 	
-	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
+	private ArrayList<Disease> getSearchDiagnosisResults(String s, List<Disease> diseaseList) {
 		String query = s.trim();
 		ArrayList<Disease> results = new ArrayList<>();
 		for (Disease disease : diseaseList) {

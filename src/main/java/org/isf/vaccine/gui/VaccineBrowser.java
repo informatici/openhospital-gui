@@ -25,7 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -98,7 +98,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	};
 	private int[] pColumnWidth = {100, 50, 120};
 	private int selectedrow;
-	private ArrayList<Vaccine> pVaccine;
+	private List<Vaccine> pVaccine;
 	private Vaccine vaccine;
 
 	
@@ -170,7 +170,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 			jSelectionCombo = new JComboBox();
 			jSelectionCombo.setPreferredSize(new Dimension(200, 30));
 			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-			ArrayList<VaccineType> allVacType = null;
+			List<VaccineType> allVacType = null;
 			try {
 				allVacType = manager.getVaccineType();
 			} catch (OHServiceException e1) {

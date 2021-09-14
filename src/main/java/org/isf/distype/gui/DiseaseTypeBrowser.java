@@ -23,7 +23,7 @@ package org.isf.distype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -50,7 +50,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListener{
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<DiseaseType> pDiseaseType;
+	private List<DiseaseType> pDiseaseType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()

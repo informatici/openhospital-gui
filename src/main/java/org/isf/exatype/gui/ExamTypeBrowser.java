@@ -23,7 +23,7 @@ package org.isf.exatype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -56,7 +56,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 
 	private static final long serialVersionUID = 1L;
 
-	private ArrayList<ExamType> pExamType;
+	private List<ExamType> pExamType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
