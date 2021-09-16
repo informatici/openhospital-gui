@@ -19,7 +19,7 @@
 		<oh.version>1.11.0</oh.version>
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.framework.version>4.3.28.RELEASE</spring.framework.version>
+		<spring.framework.version>5.3.10</spring.framework.version>
 		<license.maven.plugin.version>4.1</license.maven.plugin.version>
 		<spring-cloud-starter-openfeign>1.4.7.RELEASE</spring-cloud-starter-openfeign>
 	</properties>
