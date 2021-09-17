@@ -25,6 +25,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -49,7 +50,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class AgeTypeBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<AgeType> pAgeType;
+	private List<AgeType> pAgeType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.from.txt").toUpperCase(),

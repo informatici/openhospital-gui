@@ -25,7 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -52,16 +52,18 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		pGroup.add(0,group);
 		((UserGroupBrowserModel)table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 	}
 	@Override
 	public void groupUpdated(AWTEvent e) {
 		pGroup.set(selectedrow,group);
 		((UserGroupBrowserModel)table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow >-1)
+		if ((table.getRowCount() > 0) && selectedrow >-1) {
 			table.setRowSelectionInterval(selectedrow,selectedrow);
+		}
 	
 	}
 	
@@ -70,7 +72,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	private int pfrmWidth;
 	private int pfrmHeight;
 	private int selectedrow;
-	private ArrayList<UserGroup> pGroup;
+	private List<UserGroup> pGroup;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()

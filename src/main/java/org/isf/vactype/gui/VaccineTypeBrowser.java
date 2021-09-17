@@ -23,7 +23,7 @@ package org.isf.vactype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -55,7 +55,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 
 	private static final long serialVersionUID = 1L;
 
-	private ArrayList<VaccineType> pVaccineType;
+	private List<VaccineType> pVaccineType;
 	
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),

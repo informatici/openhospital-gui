@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.Box;
@@ -127,7 +128,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	public void patientSelected(Patient patient) {
 		// patientSelected = patient;
 		setPatientSelected(patient);
-        ArrayList<Bill> patientPendingBills = new ArrayList<>();
+		List<Bill> patientPendingBills = new ArrayList<>();
 		try {
 			patientPendingBills = billManager.getPendingBills(patient.getCode());
 		} catch (OHServiceException ohServiceException) {
@@ -289,20 +290,20 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	//Prices and Lists (ALL)
 	private PriceListManager prcManager = Context.getApplicationContext().getBean(PriceListManager.class);
-	private ArrayList<Price> prcArray;
-	private ArrayList<PriceList> lstArray;
+	private List<Price> prcArray;
+	private List<PriceList> lstArray;
 	
 	//PricesOthers (ALL)
 	private PricesOthersManager othManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
-	private ArrayList<PricesOthers> othPrices;
+	private List<PricesOthers> othPrices;
 
 	//Items and Payments (ALL)
 	private BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
 	private PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	
 	//Prices, Items and Payments for the tables
-	private ArrayList<BillItems> billItems = new ArrayList<>();
-	private ArrayList<BillPayments> payItems = new ArrayList<>();
+	private List<BillItems> billItems = new ArrayList<>();
+	private List<BillPayments> payItems = new ArrayList<>();
 	private ArrayList<Price> prcListArray = new ArrayList<>();
 	private int billItemsSaved;
 	private int payItemsSaved;

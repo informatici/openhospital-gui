@@ -42,6 +42,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -140,7 +141,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private int totalQti;
 	private BigDecimal totalAmount;
 	private MovBrowserModel model;
-	private ArrayList<Movement> moves;
+	private List<Movement> moves;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.medicalstock.refno.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),        //1
@@ -490,7 +491,7 @@ public class MovStockBrowser extends ModalJFrame {
 		wardBox = new JComboBox();
 		wardBox.setPreferredSize(new Dimension(130, 25));
 		wardBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
-		ArrayList<Ward> wardList;
+		List<Ward> wardList;
 		try {
 			wardList = wbm.getWards();
 		} catch (OHServiceException e) {
@@ -510,7 +511,7 @@ public class MovStockBrowser extends ModalJFrame {
 		searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 		searchButton.addActionListener(actionEvent -> {
 			medicalBox.removeAllItems();
-			ArrayList<Medical> medicals;
+			List<Medical> medicals;
 			try {
 				medicals = medicalManager.getMedicals();
 			} catch (OHServiceException e1) {
@@ -565,7 +566,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalBox.setMaximumSize(new Dimension(150, 25));
 		medicalBox.setMinimumSize(new Dimension(150, 25));
 		medicalBox.setPreferredSize(new Dimension(150, 25));
-		ArrayList<Medical> medical;
+		List<Medical> medical;
 		try {
 			medical = medicalManager.getMedicals();
 		} catch (OHServiceException e1) {
@@ -610,7 +611,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JComboBox getMedicalTypeBox() {
 		medicalTypeBox = new JComboBox();
 		medicalTypeBox.setPreferredSize(new Dimension(130, 25));
-		ArrayList<MedicalType> medical;
+		List<MedicalType> medical;
 
 		medicalTypeBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 
@@ -656,7 +657,7 @@ public class MovStockBrowser extends ModalJFrame {
 	private JComboBox getMovementTypeBox() {
 		typeBox = new JComboBox();
 		typeBox.setPreferredSize(new Dimension(130, 25));
-		ArrayList<MovementType> type;
+		List<MovementType> type;
 		try {
 			type = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
 		} catch (OHServiceException e1) {
@@ -1022,7 +1023,7 @@ public class MovStockBrowser extends ModalJFrame {
 		return filename.toString();
 	}
 
-	private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {
+	private ArrayList<Medical> getSearchMedicalsResults(String s, List<Medical> medicalsList) {
 		String query = s.trim();
 		ArrayList<Medical> results = new ArrayList<>();
 		for (Medical medoc : medicalsList) {

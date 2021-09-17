@@ -23,8 +23,8 @@ package org.isf.vaccine.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -303,7 +303,7 @@ public class VaccineEdit extends JDialog {
 		if (vaccineTypeComboBox == null) {
 			vaccineTypeComboBox = new JComboBox<>();
 			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-			ArrayList<VaccineType> types = null;
+			List<VaccineType> types = null;
 			try {
 				types = manager.getVaccineType();
 			} catch (OHServiceException e) {

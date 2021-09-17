@@ -24,9 +24,9 @@ package org.isf.menu.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -74,8 +74,9 @@ public class UserEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = userListeners.getListeners(UserListener.class);
-	    for (EventListener listener : listeners)
+	    for (EventListener listener : listeners) {
 		    ((UserListener) listener).userInserted(event);
+	    }
     }
     private void fireUserUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -83,8 +84,9 @@ public class UserEdit extends JDialog {
 		private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = userListeners.getListeners(UserListener.class);
-	    for (EventListener listener : listeners)
+	    for (EventListener listener : listeners) {
 		    ((UserListener) listener).userUpdated(event);
+	    }
     }
 
 	private JPanel jContentPane = null;
@@ -326,7 +328,7 @@ public class UserEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox();
 			if (insert) {
-                ArrayList<UserGroup> group = null;
+				List<UserGroup> group = null;
                 try {
                     group = manager.getUserGroup();
                 } catch (OHServiceException e) {

@@ -24,7 +24,7 @@ package org.isf.pricesothers.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -81,7 +81,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	
 	private PricesOthers pOthers;
 	PricesOthersManager pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
-	private ArrayList<PricesOthers> pOthersArray;
+	private List<PricesOthers> pOthersArray;
 	private JFrame myFrame;
 	
 	public PricesOthersBrowser() {

@@ -26,7 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -96,7 +96,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private int selectedrow;
 	private JLabel selectlabel;
 	private JComboBox pbox;
-	private ArrayList<Operation> pOperation;
+	private List<Operation> pOperation;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
@@ -141,7 +141,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		pbox = new JComboBox();
 		pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
-		ArrayList<OperationType> type;
+		List<OperationType> type;
 		try {
 			type = operationTypeManager.getOperationType();
 			for (OperationType elem : type) {

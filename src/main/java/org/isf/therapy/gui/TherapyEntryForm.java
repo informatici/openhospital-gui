@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.Box;
@@ -85,7 +86,7 @@ public class TherapyEntryForm extends JDialog {
 	 */
 	private MedicalBrowsingManager medBrowser = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private TherapyManager therapyManager = Context.getApplicationContext().getBean(TherapyManager.class);
-	private ArrayList<Medical> medArray = null;
+	private List<Medical> medArray = null;
 
 	/*
 	 * Constants

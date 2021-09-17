@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JButton;
@@ -77,7 +78,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 
 	private int selectedrow;
 	private JComboBox pbox;
-	private ArrayList<Exam> pExam;
+	private List<Exam> pExam;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
@@ -175,7 +176,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		if (pbox == null) {
 			pbox = new JComboBox();
 			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
-			ArrayList<ExamType> type;
+			List<ExamType> type;
 			try {
 				type = manager.getExamType();	//for efficiency in the sequent for
 			} catch (OHServiceException e1) {

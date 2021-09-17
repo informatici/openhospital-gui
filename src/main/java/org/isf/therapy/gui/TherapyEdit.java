@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -148,10 +149,10 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private TherapyManager thManager = Context.getApplicationContext().getBean(TherapyManager.class);
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	private ArrayList<Medical> medArray;
-	private ArrayList<Therapy> therapies = new ArrayList<>();
-	private ArrayList<TherapyRow> thRows = new ArrayList<>();
-	private ArrayList<Visit> visits = new ArrayList<>();
+	private List<Medical> medArray;
+	private List<Therapy> therapies = new ArrayList<>();
+	private List<TherapyRow> thRows = new ArrayList<>();
+	private List<Visit> visits = new ArrayList<>();
 	private Ward ward;
 
 	public TherapyEdit(JFrame owner, Patient patient, boolean admitted) {
@@ -890,7 +891,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			checkTherapyButton.addActionListener(actionEvent -> {
 
 				available = true;
-				ArrayList<Medical> medOutStock = null;
+				List<Medical> medOutStock = null;
 				try {
 					medOutStock = thManager.getMedicalsOutOfStock(therapies);
 				} catch (OHServiceException ex) {
@@ -917,7 +918,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		return checkTherapyButton;
 	}
 
-	protected void showMedOutOfStock(ArrayList<Medical> medOutStock) {
+	protected void showMedOutOfStock(List<Medical> medOutStock) {
 
 		if (!medOutStock.isEmpty()) {
 			StringBuilder message = new StringBuilder(MessageBundle.getMessage("angal.therapy.followingdrugsarefewornotavailable")); //$NON-NLS-1$

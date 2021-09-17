@@ -227,11 +227,11 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JComboBox deliveryResultTypeBox = null;
 	
-	private ArrayList<PregnantTreatmentType> treatmTypeList = null;
+	private List<PregnantTreatmentType> treatmTypeList = null;
 
-	private ArrayList<DeliveryType> deliveryTypeList = null;
+	private List<DeliveryType> deliveryTypeList = null;
 
-	private ArrayList<DeliveryResultType> deliveryResultTypeList = null;
+	private List<DeliveryResultType> deliveryResultTypeList = null;
 
 	private GregorianCalendar ctrl1Date = null;
 
@@ -247,7 +247,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	
 	private JComboBox wardBox;
 
-	private ArrayList<Ward> wardList = null;
+	private List<Ward> wardList = null;
 
 	// save value during a switch
 	private Ward saveWard = null;
@@ -268,11 +268,11 @@ public class AdmissionBrowser extends ModalJFrame {
 	
 	private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
-	private ArrayList<Disease> diseaseInList = null;
+	private List<Disease> diseaseInList = null;
 	
-	private ArrayList<Disease> diseaseOutList = null;
+	private List<Disease> diseaseOutList = null;
 	
-	private ArrayList<Disease> diseaseAllList = null;
+	private List<Disease> diseaseAllList = null;
 
 	private JCheckBox malnuCheck;
 
@@ -286,7 +286,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JComboBox admTypeBox = null;
 
-	private ArrayList<AdmissionType> admTypeList = null;
+	private List<AdmissionType> admTypeList = null;
 
 	private JPanel admissionDatePanel;
 
@@ -312,7 +312,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JComboBox disTypeBox = null;
 
-	private ArrayList<DischargeType> disTypeList = null;
+	private List<DischargeType> disTypeList = null;
 
 	private JPanel dischargeDatePanel;
 
@@ -1480,7 +1480,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && found == null && diseaseOut3 != null) {
 
 				// Not found: search among all diseases
-				ArrayList<Disease> diseaseAllList = null;
+				List<Disease> diseaseAllList = null;
 				try {
 					diseaseAllList = dbm.getDiseaseAll();
 				} catch (OHServiceException e) {
@@ -2018,7 +2018,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		return saveButton;
 	}
 
-	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
+	private List<Disease> getSearchDiagnosisResults(String s, List<Disease> diseaseList) {
 		String query = s.trim();
 		ArrayList<Disease> results = new ArrayList<>();
 		for (Disease disease : diseaseList) {

@@ -24,8 +24,8 @@ package org.isf.operation.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -403,7 +403,7 @@ public class OperationEdit extends JDialog {
 			typeComboBox = new JComboBox<>();
 			if (insert) {
 				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
-				ArrayList<OperationType> types;
+				List<OperationType> types;
 				try {
 					types = manager.getOperationType();
 

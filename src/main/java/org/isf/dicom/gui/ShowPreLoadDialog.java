@@ -26,7 +26,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -181,7 +180,7 @@ class ShowPreLoadDialog extends JDialog {
 			dicomTypeComboBox = new JComboBox();
 			dicomTypeComboBox.addItem("");
 			try {
-				ArrayList<DicomType> dicomTypeList = dicomTypeMan.getDicomType();
+				List<DicomType> dicomTypeList = dicomTypeMan.getDicomType();
 				for (DicomType dicomType : dicomTypeList) {
 					dicomTypeComboBox.addItem(dicomType);
 				}

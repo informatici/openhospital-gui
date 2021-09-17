@@ -44,6 +44,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -170,7 +171,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private DefaultTableModel modelIncomes;
 	private DefaultTableModel modelOutcomes;
 	private DefaultTableModel modelDrugs;
-	private ArrayList<Ward> wardList;
+	private List<Ward> wardList;
 	private Ward wardSelected;
 	// private Medical drugSelected;
 	private MovementWard movSelected;
@@ -227,12 +228,12 @@ public class WardPharmacy extends ModalJFrame implements
 	 */
 	private MovBrowserManager movManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
 	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
-	private ArrayList<Movement> listMovementCentral = new ArrayList<>();
+	private List<Movement> listMovementCentral = new ArrayList<>();
 	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
-	private ArrayList<MovementWard> listMovementWardFromTo = new ArrayList<>();
-	private ArrayList<MedicalWard> wardDrugs;
+	private List<MovementWard> listMovementWardFromTo = new ArrayList<>();
+	private List<MedicalWard> wardDrugs;
 	private ArrayList<MovementWard> wardOutcomes;
 	private ArrayList<Movement> wardIncomes;
 
@@ -569,7 +570,7 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 	}
 
-	private void showLotDetail(ArrayList<MedicalWard> drug, String me) {
+	private void showLotDetail(List<MedicalWard> drug, String me) {
 		ArrayList<MedicalWard> medicalWardList = new ArrayList<>();
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
@@ -925,7 +926,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jComboBoxTypes = new JComboBox();
 			jComboBoxTypes.setMaximumSize(new Dimension(filterWidth, 24));
 			jComboBoxTypes.setPreferredSize(new Dimension(filterWidth, 24));
-			ArrayList<MedicalType> medicalTypes;
+			List<MedicalType> medicalTypes;
 
 			jComboBoxTypes.addItem(MessageBundle.getMessage("angal.common.alltypes.txt"));
 
@@ -953,7 +954,7 @@ public class WardPharmacy extends ModalJFrame implements
 		searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 		searchButton.addActionListener(ae -> {
 			jComboBoxMedicals.removeAllItems();
-			ArrayList<Medical> medicals;
+			List<Medical> medicals;
 			try {
 				medicals = medicalManager.getMedicals();
 			} catch (OHServiceException e1) {
@@ -1021,7 +1022,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jComboBoxMedicals.setMaximumSize(new Dimension(filterWidth, 24));
 			jComboBoxMedicals.setPreferredSize(new Dimension(filterWidth, 24));
 		}
-		ArrayList<Medical> medicals;
+		List<Medical> medicals;
 		try {
 			medicals = medicalManager.getMedicals();
 		} catch (OHServiceException e) {
@@ -1468,7 +1469,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 		private static final long serialVersionUID = 1L;
 
-		private ArrayList<MedicalWard> tableModel;
+		private List<MedicalWard> tableModel;
 
 		public DrugsModel() {
 			try {
@@ -1746,7 +1747,7 @@ public class WardPharmacy extends ModalJFrame implements
 		return format.format(time.getTime());
 	}
 
-	private ArrayList<Medical> getSearchMedicalsResults(String s, ArrayList<Medical> medicalsList) {
+	private ArrayList<Medical> getSearchMedicalsResults(String s, List<Medical> medicalsList) {
 		String query = s.trim();
 		ArrayList<Medical> results = new ArrayList<>();
 		for (Medical medoc : medicalsList) {

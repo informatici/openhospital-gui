@@ -26,8 +26,8 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -386,13 +386,13 @@ public class DiseaseEdit extends JDialog {
 			typeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
 			try {
 				if (insert) {
-					ArrayList<DiseaseType> types = manager.getDiseaseType();
+					List<DiseaseType> types = manager.getDiseaseType();
 					for (DiseaseType elem : types) {
 						typeComboBox.addItem(elem);
 					}
 				} else {
 					DiseaseType selectedDiseaseType=null;
-					ArrayList<DiseaseType> types = manager.getDiseaseType();
+					List<DiseaseType> types = manager.getDiseaseType();
 					for (DiseaseType elem : types) {
 						typeComboBox.addItem(elem);
 						if (disease.getType().equals(elem)) {

@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -153,10 +154,10 @@ public class VisitView extends ModalJFrame {
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
-	private ArrayList<Visit> visits = new ArrayList<>();
-	private ArrayList<Visit> visitfirst = new ArrayList<>();
-	private ArrayList<Visit> visitSecond = new ArrayList<>();
-	private ArrayList<Ward> wardList = null;
+	private List<Visit> visits = new ArrayList<>();
+	private List<Visit> visitfirst = new ArrayList<>();
+	private List<Visit> visitSecond = new ArrayList<>();
+	private List<Ward> wardList = null;
 	private Ward ward;
 	private Date dateFirst;
 	private Date dateSecond;

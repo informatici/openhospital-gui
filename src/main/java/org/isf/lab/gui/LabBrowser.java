@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -106,7 +107,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JTable jTable = null;
 	private JComboBox comboExams = null;
 	private int pfrmHeight;
-	private ArrayList<Laboratory> pLabs;
+	private List<Laboratory> pLabs;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.patient.txt").toUpperCase(),
@@ -216,7 +217,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				}
 
 				try {
-					ArrayList<LaboratoryForPrint> labs;
+					List<LaboratoryForPrint> labs;
 					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDate(), dateTo.getDate());
 					if (!labs.isEmpty()) {
 						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
@@ -439,7 +440,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			comboExams = new JComboBox();
 			comboExams.setPreferredSize(new Dimension(200, 30));
 			comboExams.addItem(new Exam("", MessageBundle.getMessage("angal.common.all.txt"), new ExamType("", ""), 0, ""));
-			ArrayList<Exam> type;
+			List<Exam> type;
 			try {
 				type = managerExams.getExams();
 			} catch (OHServiceException e1) {

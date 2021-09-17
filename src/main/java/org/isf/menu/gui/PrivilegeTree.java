@@ -32,6 +32,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -75,13 +76,13 @@ class PrivilegeTree extends JDialog {
 		Rectangle r = parent.getBounds();
 		setBounds(new Rectangle(r.x+50, r.y+50,280, 350));
 
-        ArrayList<UserMenuItem> myMenu = null;
+		List<UserMenuItem> myMenu = null;
         try {
             myMenu = manager.getGroupMenu(aGroup);
         } catch (OHServiceException e) {
             OHServiceExceptionUtil.showMessages(e);
         }
-        ArrayList<UserMenuItem> rootMenu = null;
+		List<UserMenuItem> rootMenu = null;
         try {
             rootMenu = manager.getGroupMenu(new UserGroup("admin",""));
         } catch (OHServiceException e) {

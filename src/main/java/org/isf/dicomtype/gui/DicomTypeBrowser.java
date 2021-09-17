@@ -25,7 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -53,7 +53,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<DicomType> pDicomType;
+	private List<DicomType> pDicomType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()

@@ -141,7 +141,7 @@ public class OperationRowEdit extends JPanel {
 	private JLabel lblNewLabel;
 	private JLabel titleLabel;
 
-	private ArrayList<String> operationResults = ope.getResultDescriptionList();
+	private List<String> operationResults = ope.getResultDescriptionList();
 
 	
 	public OperationRowEdit(OperationRow opRow) {
@@ -363,7 +363,7 @@ public class OperationRowEdit extends JPanel {
 	private JComboBox getOperationsBox() {
 
 		JComboBox comboOpe = new JComboBox();
-		ArrayList<Operation> opeList = new ArrayList<>();
+		List<Operation> opeList = new ArrayList<>();
 		try {
 			opeList = ope.getOperation();
 		} catch (OHServiceException ohServiceException) {

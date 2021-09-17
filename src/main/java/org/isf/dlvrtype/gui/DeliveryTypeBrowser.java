@@ -23,7 +23,7 @@ package org.isf.dlvrtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -50,7 +50,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeListener{
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<DeliveryType> pDeliveryType;
+	private List<DeliveryType> pDeliveryType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()

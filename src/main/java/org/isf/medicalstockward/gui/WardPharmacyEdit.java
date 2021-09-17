@@ -31,6 +31,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -94,8 +95,8 @@ public class WardPharmacyEdit extends JDialog {
 	private float movSelectedWeight;
 	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
-	private ArrayList<Patient> pat = new ArrayList<>();
-	private ArrayList<MedicalWard> medList = null;
+	private List<Patient> pat = new ArrayList<>();
+	private List<MedicalWard> medList = null;
 	
 //	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel"; //$NON-NLS-1$
 	
@@ -126,7 +127,7 @@ public class WardPharmacyEdit extends JDialog {
 		}
 	}
 	
-	public WardPharmacyEdit(JFrame owner, MovementWard movWard, ArrayList<MedicalWard> drugList) {
+	public WardPharmacyEdit(JFrame owner, MovementWard movWard, List<MedicalWard> drugList) {
 		super(owner, true);
 		medList = drugList;
 		movSelected = movWard;

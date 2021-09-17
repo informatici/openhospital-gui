@@ -27,6 +27,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -164,7 +165,7 @@ public class LabEdit extends ModalJFrame {
 	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
 
 	
-	private ArrayList<ExamRow> eRows = null;
+	private List<ExamRow> eRows = null;
 	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
 	private Patient patSelected;
 
@@ -349,7 +350,7 @@ public class LabEdit extends ModalJFrame {
 			patientComboBox = new JComboBox();
 			patSelected=null;
 			PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-			ArrayList<Patient> pat = null;
+			List<Patient> pat = null;
 			try {
 				pat = patBrowser.getPatient();
 			} catch (OHServiceException e) {
@@ -406,7 +407,7 @@ public class LabEdit extends ModalJFrame {
 			examComboBox = new JComboBox();
 			Exam examSel=null;
 			ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
-			ArrayList<Exam> exams;
+			List<Exam> exams;
 			try {
 				exams = manager.getExams();
 			} catch (OHServiceException e) {
@@ -657,7 +658,7 @@ public class LabEdit extends ModalJFrame {
 		}
 		examRowComboBox.addItem(result);
 
-		ArrayList<ExamRow> rows;
+		List<ExamRow> rows;
 		try {
 			rows = rowManager.getExamRowByExamCode(examSelected.getCode());
 		} catch (OHServiceException e) {
@@ -697,7 +698,7 @@ public class LabEdit extends ModalJFrame {
 			}
 		} else {
 
-			ArrayList<LaboratoryRow> lRows;
+			List<LaboratoryRow> lRows;
 			try {
 				lRows = lRowManager.getLabRowByLabId(lab.getCode());
 			} catch (OHServiceException e) {

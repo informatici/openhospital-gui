@@ -38,6 +38,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -156,7 +157,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private String lastKey = "";
 	private ArrayList<Ward> wardList = null;
 	private JLabel rowCounter = null;
-	private ArrayList<AdmittedPatient> pPatient = new ArrayList<>();
+	private List<AdmittedPatient> pPatient = new ArrayList<>();
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
@@ -420,7 +421,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		wardPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		if (wardList == null) {
 			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
-			ArrayList<Ward> wardWithBeds;
+			List<Ward> wardWithBeds;
 			try {
 				wardWithBeds = wbm.getWards();
 			} catch (OHServiceException e) {
@@ -826,7 +827,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					OHServiceExceptionUtil.showMessages(e);
 				}
 				if (result) {
-					ArrayList<Admission> patientAdmissions;
+					List<Admission> patientAdmissions;
 					try {
 						patientAdmissions = admissionManager.getAdmissions(pat);
 					} catch (OHServiceException ex) {
@@ -906,7 +907,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			if (patient != null) {
 				Patient pat = patient.getPatient();
 				BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
-				ArrayList<Bill> patientPendingBills;
+				List<Bill> patientPendingBills;
 				try {
 					patientPendingBills = billManager.getPendingBills(pat.getCode());
 				} catch (OHServiceException e) {

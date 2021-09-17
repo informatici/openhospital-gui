@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -276,12 +277,12 @@ public class OpdEditExtended extends ModalJFrame implements
 	 */
 	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	private DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-	private ArrayList<DiseaseType> types;
-	private ArrayList<Disease> diseasesOPD;
-	private ArrayList<Disease> diseasesAll;
+	private List<DiseaseType> types;
+	private List<Disease> diseasesOPD;
+	private List<Disease> diseasesAll;
 	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	private ArrayList<Patient> pat = new ArrayList<>();
+	private List<Patient> pat = new ArrayList<>();
 	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
 	
 	private Disease lastOPDDisease1;
@@ -347,7 +348,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		super();
 		this.opd = opd;
 		opdPatient = patient;
-		insert=inserting;
+		insert = inserting;
 		try{
 			types = typeManager.getDiseaseType();
 			diseasesOPD = manager.getDiseaseOpd();
@@ -355,7 +356,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		try{
+		try {
 			if (!insert) {
 				opdPatient = opd.getPatient();
 				if (opdPatient != null && opd.getPatient().getCode() != 0) { 
@@ -1880,7 +1881,7 @@ public class OpdEditExtended extends ModalJFrame implements
 		}
 	}
 
-	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
+	private ArrayList<Disease> getSearchDiagnosisResults(String s, List<Disease> diseaseList) {
 		String query = s.trim();
 		ArrayList<Disease> results = new ArrayList<>();
 		for (Disease disease : diseaseList) {

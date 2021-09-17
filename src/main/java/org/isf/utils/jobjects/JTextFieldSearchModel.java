@@ -28,6 +28,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -84,7 +85,7 @@ public class JTextFieldSearchModel extends JPanel {
 	}
 
 	private void initializeMedical() {
-		ArrayList<Medical> medicals = null;
+		List<Medical> medicals = null;
 		medicalMap = new HashMap<>();
 		try {
 			medicals = medMan.getMedicalsSortedByCode();

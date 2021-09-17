@@ -95,7 +95,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 	private CustomJDateChooser jCalendarDate;
 	private JTable tableData;
 
-	private ArrayList<String> operationResults = opeManager.getResultDescriptionList();
+	private List<String> operationResults = opeManager.getResultDescriptionList();
 
 	
 	public OperationRowAdm(Admission adm) {

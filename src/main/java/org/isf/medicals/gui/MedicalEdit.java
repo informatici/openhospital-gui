@@ -23,7 +23,6 @@ package org.isf.medicals.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
@@ -91,8 +90,9 @@ public class MedicalEdit extends JDialog {
 		};
 
 		EventListener[] listeners = medicalListeners.getListeners(MedicalListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((MedicalListener) listener).medicalInserted(medical);
+		}
 	}
 
 	private void fireMedicalUpdated() {
@@ -102,8 +102,9 @@ public class MedicalEdit extends JDialog {
 		};
 
 		EventListener[] listeners = medicalListeners.getListeners(MedicalListener.class);
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			((MedicalListener) listener).medicalUpdated(event);
+		}
 	}
 
 	private JPanel jContentPane = null;
@@ -364,20 +365,22 @@ public class MedicalEdit extends JDialog {
 
 	private JTextField getMinQtiField() {
 		if (minQtiField == null) {
-			if (insert)
+			if (insert) {
 				minQtiField = new VoDoubleTextField(0,3);
-			else
+			} else {
 				minQtiField = new VoDoubleTextField(medical.getMinqty(),3);
+			}
 		}
 		return minQtiField;
 	}
 	
 	private JTextField getPcsperpckField() {
 		if (pcsperpckField == null) {
-			if (insert)
+			if (insert) {
 				pcsperpckField = new VoIntegerTextField(1,3);
-			else
+			} else {
 				pcsperpckField = new VoIntegerTextField(medical.getPcsperpck(),3);
+			}
 		}
 		return pcsperpckField;
 	}
@@ -391,7 +394,7 @@ public class MedicalEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox<>();
 			if (insert) {
-				ArrayList<MedicalType> types;
+				List<MedicalType> types;
 				try {
 					types = medicalTypeManager.getMedicalType();
 					for (MedicalType elem : types) {

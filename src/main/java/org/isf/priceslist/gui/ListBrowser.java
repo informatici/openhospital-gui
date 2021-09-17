@@ -23,7 +23,7 @@ package org.isf.priceslist.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -83,7 +83,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 	
 	private PriceList list;
 	PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
-	private ArrayList<PriceList> listArray;
+	private List<PriceList> listArray;
 	private JFrame myFrame;
 			
 	public ListBrowser() {

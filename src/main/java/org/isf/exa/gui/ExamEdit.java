@@ -25,8 +25,8 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -345,7 +345,7 @@ public class ExamEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox();
 			if (insert) {
-				ArrayList<ExamType> types;
+				List<ExamType> types;
 				try {
 					types = manager.getExamType();
 				} catch (OHServiceException e) {
