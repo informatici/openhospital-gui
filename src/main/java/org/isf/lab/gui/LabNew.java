@@ -366,7 +366,7 @@ public class LabNew extends JDialog implements SelectionListener {
 			jPanelResults.removeAll();
 			int selectedRow = jTableExams.getSelectedRow();
 			Exam selectedExam = selectedLab.getExam();
-                       
+
 			if (selectedExam.getProcedure() == 1) {
 				txtResultValue = new JTextField();
 				jComboBoxExamResults = new JComboBox<>();
@@ -402,66 +402,64 @@ public class LabNew extends JDialog implements SelectionListener {
 					jPanelResults.add(new JLabel(selectedExam.getDefaultResult()));
 				}
 
-			}  else if (selectedExam.getProcedure() == 2) {
-				
-				
-				
-				jPanelResults.removeAll();
-                jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
+			} else if (selectedExam.getProcedure() == 2) {
 
-                ArrayList<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
-                boolean checked;
-                JPanel resultsContainer = new JPanel();
-                resultsContainer.setLayout(new GridLayout(0,1));
-                JScrollPane resultsContainerScroll = new JScrollPane(resultsContainer);
-                resultsContainerScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                resultsContainerScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-                resultsContainerScroll.setBounds(0, 0, EAST_WIDTH, RESULT_HEIGHT);
-                jPanelResults.add(resultsContainerScroll);
+				jPanelResults.removeAll();
+				jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
+
+				ArrayList<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
+				boolean checked;
+				JPanel resultsContainer = new JPanel();
+				resultsContainer.setLayout(new GridLayout(0, 1));
+				JScrollPane resultsContainerScroll = new JScrollPane(resultsContainer);
+				resultsContainerScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				resultsContainerScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+				resultsContainerScroll.setBounds(0, 0, EAST_WIDTH, RESULT_HEIGHT);
+				jPanelResults.add(resultsContainerScroll);
 				List<ExamRow> exaRowArray;
-                try {
+				try {
 					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
-	                LOGGER.error(ex.getMessage(), ex);
+					LOGGER.error(ex.getMessage(), ex);
 				}
-                if (exaRowArray != null) {
-	                for (ExamRow exaRow : exaRowArray) {
+				if (exaRowArray != null) {
+					for (ExamRow exaRow : exaRowArray) {
 						if (selectedExam.getCode().compareTo(exaRow.getExamCode().getCode()) == 0) {
-							
+
 							checked = false;
 							LaboratoryRow labRow = new LaboratoryRow();
 							labRow.setDescription(exaRow.getDescription());
 							if (checking.contains(labRow)) {
 								checked = true;
 							}
-							
-	                        resultsContainer.add(new CheckBox(exaRow, checked));
+
+							resultsContainer.add(new CheckBox(exaRow, checked));
 						}
 					}
-                }
+				}
 			} else if (selectedExam.getProcedure() == 3) {
 				jTextFieldExamResult = new JTextField();
 				jTextFieldExamResult.setMaximumSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 				jTextFieldExamResult.setMinimumSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 				jTextFieldExamResult.setPreferredSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
-				
+
 				jTextFieldExamResult.setText(selectedLab.getResult());
-				
+
 				jTextFieldExamResult.getDocument().addDocumentListener(new DocumentListener() {
-					
+
 					@Override
 					public void removeUpdate(DocumentEvent e) {
 						selectedLab.setResult(jTextFieldExamResult.getText());
 						jTableExams.updateUI();
 					}
-					
+
 					@Override
 					public void insertUpdate(DocumentEvent e) {
 						selectedLab.setResult(jTextFieldExamResult.getText());
 						jTableExams.updateUI();
 					}
-					
+
 					@Override
 					public void changedUpdate(DocumentEvent e) {
 						// TODO Auto-generated method stub
