@@ -386,14 +386,27 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				} catch (Exception ex) {
 				}
 
-				String message = MessageBundle.formatMessage("angal.opd.deletefollowingopd.fmt.msg",
-						dateFormat.format(opd.getDate()),
-						opd.getDisease().getDescription() == null
-								? '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']'
-								: opd.getDisease().getDescription(),
-						opd.getAge(),
-						opd.getSex(),
-						dt);
+				String message;
+				if (GeneralData.OPDEXTENDED) {
+					message = MessageBundle.formatMessage("angal.opd.deletefollowingopdextended.fmt.msg",
+							opd.getPatient().getName(),
+							dateFormat.format(opd.getDate()),
+							opd.getDisease().getDescription() == null
+									? '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']'
+									: opd.getDisease().getDescription(),
+							opd.getAge(),
+							opd.getSex(),
+							dt);
+				} else {
+					message = MessageBundle.formatMessage("angal.opd.deletefollowingopd.fmt.msg",
+							dateFormat.format(opd.getDate()),
+							opd.getDisease().getDescription() == null
+									? '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']'
+									: opd.getDisease().getDescription(),
+							opd.getAge(),
+							opd.getSex(),
+							dt);
+				}
 
 				int n = JOptionPane.showConfirmDialog(null, message,
 						MessageBundle.getMessage("angal.messagedialog.question.title"), JOptionPane.YES_NO_OPTION);
