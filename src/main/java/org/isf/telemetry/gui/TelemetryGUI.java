@@ -23,7 +23,9 @@ package org.isf.telemetry.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -36,8 +38,11 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
@@ -59,16 +64,31 @@ import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
 public class TelemetryGUI extends JDialog {
 
-	private static final String KEY_TELEMETRY_TITLE = "angal.telemetry.title";
-
 	private static final long serialVersionUID = 891561833857381224L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TelemetryGUI.class);
+
+	private static final String KEY_TELEMETRY_TITLE = "angal.telemetry.title";
+	private static final String KEY_TELEMETRY_ABOUT = "angal.telemetry.about";
+	private static final String KEY_TELEMETRY_INFO = "angal.telemetry.info";
+	private static final String KEY_TELEMETRY_BODY = "angal.telemetry.body";
+	private static final String KEY_TELEMETRY_BUTTON_LABEL_CONFIRM = "angal.telemetry.button.label.confirm";
+	private static final String KEY_TELEMETRY_BUTTON_LABEL_ASK_LATER = "angal.telemetry.button.label.ask.later";
+	private static final String KEY_TELEMETRY_BUTTON_LABEL_ASK_NEVER = "angal.telemetry.button.label.ask.never";
+	private static final String KEY_TELEMETRY_CONFIRMATION_DIALOG_MESSAGE = "angal.telemetry.confirmation.dialog.message";
+
+	private static final int BUTTON_CODE_YEAH = 0;
+
 	private MainMenu parent;
 	private EventListenerList telemetryListeners = new EventListenerList();
+	private JPanel panel;
+	private TelemetryManager telemetryManager;
+	private TelemetryUtils telemetryUtils;
 
 	public TelemetryGUI() {
 		super();
+		this.telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
+		this.telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
 		init();
 	}
 
@@ -80,21 +100,22 @@ public class TelemetryGUI extends JDialog {
 	}
 
 	private void init() {
-		TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
-		TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
-
 		Telemetry telemetry = telemetryManager.retrieveSettings();
-		Map<String, Boolean> settings = telemetry != null && telemetry.getConsentMap() != null ? telemetry.getConsentMap() : new HashMap<>();
+		Map<String, Boolean> settings = telemetry != null && telemetry.getConsentMap() != null
+				? telemetry.getConsentMap()
+				: new HashMap<>();
 		List<CheckBoxWrapper> checkboxes = buildPermissionCheckboxes(Context.getApplicationContext(), settings);
-		JButton confirmButton = buildConfirmButton(checkboxes, telemetryManager, telemetryUtils);
-		JButton cancelButton = buildCancelButton(telemetryManager);
-
-		add(this.panel(checkboxes, confirmButton, cancelButton));
+		JButton confirmButton = buildConfirmButton(checkboxes);
+		JButton askMeLaterButton = buildAskMeLaterButton();
+		JButton neverAskButton = buildNeverAskButton();
+		this.panel = this.makePanel(checkboxes, confirmButton, askMeLaterButton, neverAskButton);
+		add(this.panel);
 		pack();
 
 		setLocationRelativeTo(null);
-
+		setTitle(MessageBundle.getMessage(KEY_TELEMETRY_TITLE));
 		setResizable(false);
+		setSize(new Dimension(700, 400));
 		setVisible(true);
 	}
 
@@ -107,26 +128,35 @@ public class TelemetryGUI extends JDialog {
 		telemetryListeners.add(TelemetryListener.class, listener);
 	}
 
-	private JButton buildConfirmButton(List<CheckBoxWrapper> checkboxes, TelemetryManager telemetryManager, TelemetryUtils telemetryUtils) {
-		JButton confirmButton = new JButton("Confirm");
+	private JButton buildConfirmButton(List<CheckBoxWrapper> checkboxes) {
+		JButton confirmButton = new JButton(MessageBundle.getMessage(KEY_TELEMETRY_BUTTON_LABEL_CONFIRM));
 		confirmButton.addActionListener(buildConfirmationActionListener(checkboxes, telemetryManager, telemetryUtils));
 		return confirmButton;
 	}
 
-	private JButton buildCancelButton(TelemetryManager telemetryManager) {
-		JButton cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(buildCancelButtonActionListener(telemetryManager));
+	private JButton buildAskMeLaterButton() {
+		JButton cancelButton = new JButton(MessageBundle.getMessage(KEY_TELEMETRY_BUTTON_LABEL_ASK_LATER));
+		cancelButton.addActionListener(buildAskMeLaterButtonActionListener(telemetryManager));
+		return cancelButton;
+	}
+
+	private JButton buildNeverAskButton() {
+		JButton cancelButton = new JButton(MessageBundle.getMessage(KEY_TELEMETRY_BUTTON_LABEL_ASK_NEVER));
+		cancelButton.addActionListener(buildNeverAskButtonActionListener(telemetryManager));
 		return cancelButton;
 	}
 
 	/**
-	 * We could load checkboxes information from somewhere (properties file or from other strange places)
+	 * We could load checkboxes information from somewhere (properties file or from
+	 * other strange places)
 	 * 
 	 * @return
 	 */
-	private List<CheckBoxWrapper> buildPermissionCheckboxes(ApplicationContext springSexyContext, Map<String, Boolean> consentMap) {
+	private List<CheckBoxWrapper> buildPermissionCheckboxes(ApplicationContext springSexyContext,
+			Map<String, Boolean> consentMap) {
 
-		Map<String, AbstractDataCollector> checkboxContractMap = springSexyContext.getBeansOfType(AbstractDataCollector.class);
+		Map<String, AbstractDataCollector> checkboxContractMap = springSexyContext
+				.getBeansOfType(AbstractDataCollector.class);
 		List<AbstractDataCollector> checkboxContractList = new ArrayList<>(checkboxContractMap.values());
 		Collections.sort(checkboxContractList, AnnotationAwareOrderComparator.INSTANCE);
 
@@ -134,7 +164,8 @@ public class TelemetryGUI extends JDialog {
 
 		int[] i = { 0 };
 		checkboxContractList.forEach(springCheckboxConfigurationBean -> {
-			JCheckBox chb = new JCheckBox(springCheckboxConfigurationBean.getDescription(), springCheckboxConfigurationBean.isSelected(consentMap));
+			JCheckBox chb = new JCheckBox(springCheckboxConfigurationBean.getDescription(),
+					springCheckboxConfigurationBean.isSelected(consentMap));
 			CheckBoxWrapper wrapper = new CheckBoxWrapper();
 			wrapper.setCheckbox(chb);
 			wrapper.setId(springCheckboxConfigurationBean.getId());
@@ -158,23 +189,32 @@ public class TelemetryGUI extends JDialog {
 	}
 
 	/**
-	 * Action for confirmation button: inserts for the first time in the telemetry table or updates the existing row
+	 * Action for confirmation button: inserts for the first time in the telemetry
+	 * table or updates the existing row
 	 * 
 	 * @param permissions
 	 * @param telemetryManager
 	 * @return
 	 */
-	private ActionListener buildConfirmationActionListener(List<CheckBoxWrapper> checkboxes, TelemetryManager telemetryManager, TelemetryUtils telemetryUtils) {
+	private ActionListener buildConfirmationActionListener(List<CheckBoxWrapper> checkboxes,
+			TelemetryManager telemetryManager, TelemetryUtils telemetryUtils) {
+		JPanel panel = this.panel;
 		return new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				Map<String, Boolean> consentMap = buildConsentData(checkboxes);
 				if (this.isReallyEnabled(consentMap)) {
-					Telemetry telemetry = telemetryManager.enable(consentMap);
-					fireTelemetryInserted(telemetry);
 					try {
-						GeneralData.initialize();
-						telemetryUtils.sendTelemetryData(consentMap, GeneralData.DEBUG);
+						Map<String, Map<String, String>> dataToSend = telemetryUtils.retrieveDataToSend(consentMap);
+						if (isShowDialog(dataToSend) == BUTTON_CODE_YEAH) {
+							LOGGER.debug("Trying to send a message...");
+							Telemetry telemetry = telemetryManager.enable(consentMap);
+							fireTelemetryInserted(telemetry);
+							GeneralData.initialize();
+							telemetryUtils.sendTelemetryData(dataToSend, GeneralData.DEBUG);
+						} else {
+							LOGGER.debug("User canceled action.");
+						}
 					} catch (RuntimeException | OHException f) {
 						LOGGER.error("Something strange happened: " + f.getMessage());
 						LOGGER.error(ExceptionUtils.retrieveExceptionStacktrace(f));
@@ -184,6 +224,48 @@ public class TelemetryGUI extends JDialog {
 				}
 				removeTelemetryListener(parent);
 				dispose();
+			}
+
+			private int isShowDialog(Map<String, Map<String, String>> dataToSend) {
+				List<List<String>> lists = new ArrayList<>();
+				dataToSend.keySet().forEach(function -> {
+					Map<String, String> data = dataToSend.get(function);
+					data.keySet().forEach(dataKey -> {
+						List<String> keyValue = new ArrayList<>();
+						keyValue.add(function + " | " + dataKey);
+						keyValue.add(data.get(dataKey));
+						lists.add(keyValue);
+					});
+				});
+
+				String[][] rows = convertToArray(lists);
+				Object[] cols = { "Key", "Value" };
+				JTable table = new JTable(rows, cols);
+				table.setSize(new Dimension(450, 200));
+				String message = MessageBundle.getMessage(KEY_TELEMETRY_CONFIRMATION_DIALOG_MESSAGE);
+
+				Label lb = new Label(message);
+				JScrollPane scrollableTable = new JScrollPane(table);
+
+				JPanel buttonPane = new JPanel();
+				buttonPane.add(lb);
+				buttonPane.add(scrollableTable);
+
+				String title = MessageBundle.getMessage(KEY_TELEMETRY_TITLE);
+
+				int result = JOptionPane.showConfirmDialog(panel, buttonPane, title, JOptionPane.YES_NO_OPTION,
+						JOptionPane.OK_CANCEL_OPTION);
+				LOGGER.debug("Dialog result: {}", result);
+				return result;
+			}
+
+			private String[][] convertToArray(List<List<String>> lists) {
+				String[][] rows = new String[lists.size()][];
+				String[] blankArray = new String[0];
+				for (int i = 0; i < lists.size(); i++) {
+					rows[i] = lists.get(i).toArray(blankArray);
+				}
+				return rows;
 			}
 
 			private void removeTelemetryListener(TelemetryListener listener) {
@@ -210,7 +292,7 @@ public class TelemetryGUI extends JDialog {
 		};
 	}
 
-	private ActionListener buildCancelButtonActionListener(TelemetryManager telemetryManager) {
+	private ActionListener buildAskMeLaterButtonActionListener(TelemetryManager telemetryManager) {
 		return new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -220,25 +302,51 @@ public class TelemetryGUI extends JDialog {
 
 	}
 
-	public JPanel panel(List<CheckBoxWrapper> checkboxes, JButton confirmButton, JButton cancelButton) {
+	private ActionListener buildNeverAskButtonActionListener(TelemetryManager telemetryManager) {
+		return new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				telemetryManager.disable(new HashMap<>());
+				dispose();
+			}
+		};
+
+	}
+
+	public JPanel makePanel(List<CheckBoxWrapper> checkboxes, JButton confirmButton, JButton askMeLaterButton,
+			JButton neverAskButton) {
 
 		JPanel panel = new JPanel(new SpringLayout());
 
-		panel.add(new JLabel(MessageBundle.getMessage("angal.common.userid.label")));
+		panel.add(makeTextArea(KEY_TELEMETRY_ABOUT));
+		panel.add(makeTextArea(KEY_TELEMETRY_INFO));
+		panel.add(makeTextArea(KEY_TELEMETRY_BODY));
+
 		checkboxes.forEach(chb -> {
 			panel.add(chb.getCheckbox());
 		});
-		SpringUtilities.makeCompactGrid(panel, checkboxes.size(), 1, 5, 5, 5, 5);
+
+		SpringUtilities.makeCompactGrid(panel, checkboxes.size() + 3, 1, 5, 5, 5, 5);
 
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new FlowLayout());
 		buttons.add(confirmButton);
-		buttons.add(cancelButton);
+		buttons.add(askMeLaterButton);
+		buttons.add(neverAskButton);
 
 		setLayout(new BorderLayout(10, 10));
 		add(panel, BorderLayout.NORTH);
 		add(buttons, BorderLayout.SOUTH);
 		return panel;
+	}
+
+	private JTextArea makeTextArea(String keyCode) {
+		JTextArea textArea = new JTextArea(MessageBundle.getMessage(keyCode));
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
+		textArea.setOpaque(false);
+		textArea.setEditable(false);
+		return textArea;
 	}
 
 }

@@ -72,7 +72,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener, TelemetryListener {
+public class MainMenu extends JFrame
+		implements ActionListener, Login.LoginListener, SubMenu.CommandListener, TelemetryListener {
 
 	private static final long serialVersionUID = 7620582079916035164L;
 	public static final String ADMIN_STR = "admin";
@@ -202,15 +203,18 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				}
 				new CommunicationFrame();
 				/*
-				 * Interaction communication= new Interaction(); communication.incomingChat(); communication.receiveFile();
+				 * Interaction communication= new Interaction(); communication.incomingChat();
+				 * communication.receiveFile();
 				 */
 			} catch (XMPPException e) {
 				String message = e.getMessage();
 				if (message.contains("SASL authentication DIGEST-MD5 failed")) {
 					if (ADMIN_STR.equals(myUser.getUserName())) {
-						LOGGER.error("Cannot use \"admin\" user, please consider creating another user under the admin group.");
+						LOGGER.error(
+								"Cannot use \"admin\" user, please consider creating another user under the admin group.");
 					} else {
-						LOGGER.error("Passwords do not match, please drop the XMPP user and login to OH again with the same user.");
+						LOGGER.error(
+								"Passwords do not match, please drop the XMPP user and login to OH again with the same user.");
 					}
 				} else if (message.contains("XMPPError connecting")) {
 					LOGGER.error("No XMPP Server seems to be running: set XMPPMODULEENABLED = false");
@@ -258,7 +262,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		if (!internalPharmacies) {
 			ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 			for (UserMenuItem umi : myMenu) {
-				if ("MEDICALSWARD".equalsIgnoreCase(umi.getCode()) || "MEDICALSWARD".equalsIgnoreCase(umi.getMySubmenu())) {
+				if ("MEDICALSWARD".equalsIgnoreCase(umi.getCode())
+						|| "MEDICALSWARD".equalsIgnoreCase(umi.getMySubmenu())) {
 					junkMenu.add(umi);
 				}
 			}
@@ -270,7 +275,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// remove disabled buttons
 		ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 		for (UserMenuItem umi : myMenu) {
-			// if is not active or it is a module that is not enabled (there is no point in showing a menu item)
+			// if is not active or it is a module that is not enabled (there is no point in
+			// showing a menu item)
 			if (!umi.isActive() || isMenuItemNotEnabled(umi.getCode())) {
 				junkMenu.add(umi);
 			}
@@ -333,11 +339,11 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		if (settings == null || settings.getActive() == null) {
 			// show telemetry popup
 			new TelemetryGUI(this);
-		} else if (settings != null && Boolean.TRUE.equals(settings.getActive())) {
-			// start telemetry daemon
-			Thread thread = new Thread(new TelemetryDaemon());
-			thread.start();
 		}
+
+		// start telemetry daemon
+		Thread thread = new Thread(new TelemetryDaemon());
+		thread.start();
 	}
 
 	private void actionExit(int status) {
@@ -345,7 +351,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			LOGGER.info("Login failed.");
 		}
 		String newLine = System.lineSeparator();
-		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine, newLine, newLine, newLine);
+		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine,
+				newLine, newLine, newLine);
 		System.exit(status);
 	}
 
@@ -385,7 +392,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 							}
 						}
 					} catch (InstantiationException | ClassNotFoundException | IllegalAccessException ie) {
-						LOGGER.error("Error instantiating menu item: '{}' with class '{}'.", u.getCode(), u.getMyClass());
+						LOGGER.error("Error instantiating menu item: '{}' with class '{}'.", u.getCode(),
+								u.getMyClass());
 					}
 					break;
 				}
