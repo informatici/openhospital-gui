@@ -766,8 +766,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	}
 
 	private JButton getButtonNew() {
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.newpatient.btn"));
-		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.newpatient.btn.key"));
+		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(actionEvent -> {
 			final Patient newPatient = new Patient();
 			if (GeneralData.PATIENTEXTENDED) {
