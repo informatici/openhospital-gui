@@ -188,7 +188,9 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 			try {
 				users = manager.getUser();
 			} catch (OHServiceException e1) {
+				LOGGER.error("Exiting.");
 				OHServiceExceptionUtil.showMessages(e1);
+				System.exit(1);
 			}
 
 			usersList = new JComboBox<>();
