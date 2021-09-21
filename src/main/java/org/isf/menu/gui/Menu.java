@@ -104,7 +104,13 @@ public class Menu {
 	}
 
 	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		ApplicationContext context = null;
+		try {
+			context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		} catch (Exception e) {
+			LOGGER.error("Fatal: fail to load application context. {}", e);
+			System.exit(1);
+		}
 		Context.setApplicationContext(context);
 		javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI());
 	}
