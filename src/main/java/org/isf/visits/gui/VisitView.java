@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
@@ -735,7 +736,7 @@ public class VisitView extends ModalJFrame {
 	private JButton getButtonNext() {
 		if (nextButton == null) {
 			nextButton = new JButton(MessageBundle.getMessage("angal.visit.nextarrow.btn"));
-			nextButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.nextarrow.btn.key"));
+			nextButton.setMnemonic(KeyEvent.VK_RIGHT);
 			nextButton.setMaximumSize(new Dimension(ACTIONS_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			nextButton.setHorizontalAlignment(SwingConstants.LEFT);
 			nextButton.addActionListener(actionEvent -> {
@@ -749,7 +750,7 @@ public class VisitView extends ModalJFrame {
 	private JButton getButtonBack() {
 		if (backButton == null) {
 			backButton = new JButton(MessageBundle.getMessage("angal.visit.arrowprevious.btn"));
-			backButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.arrowprevious.btn.key"));
+			backButton.setMnemonic(KeyEvent.VK_LEFT);
 			backButton.setMaximumSize(new Dimension(ACTIONS_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			backButton.setHorizontalAlignment(SwingConstants.LEFT);
 			backButton.addActionListener(actionEvent -> {
