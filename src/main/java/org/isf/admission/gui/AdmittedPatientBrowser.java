@@ -766,8 +766,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	}
 
 	private JButton getButtonNew() {
-		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.newpatient.btn"));
-		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.newpatient.btn.key"));
+		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(actionEvent -> {
 			final Patient newPatient = new Patient();
 			if (GeneralData.PATIENTEXTENDED) {
@@ -785,8 +785,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	}
 
 	private JButton getButtonEdit() {
-		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.admission.editpatient.btn"));
-		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.admission.editpatient.btn.key"));
+		JButton buttonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+		buttonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 		buttonEdit.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
@@ -808,8 +808,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	}
 
 	private JButton getButtonDelete() {
-		JButton buttonDel = new JButton(MessageBundle.getMessage("angal.admission.deletepatient.btn"));
-		buttonDel.setMnemonic(MessageBundle.getMnemonic("angal.admission.deletepatient.btn.key"));
+		JButton buttonDel = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		buttonDel.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		buttonDel.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
