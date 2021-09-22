@@ -379,11 +379,7 @@ public class LabEdit extends ModalJFrame {
 					ageTextField.setText(patSelected.getAge() + "");
 					sexTextField.setText(patSelected.getSex() + "");
 					Admission admission = null;
-					try {
-						admission = admMan.getCurrentAdmission(patSelected);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-					}
+					admission = admMan.getCurrentAdmission(patSelected);
 					inPatientCheckBox.setSelected(admission != null ? true : false);
 				}
 			});

@@ -325,15 +325,10 @@ public class LabNew extends JDialog implements SelectionListener {
 		}
 		return jButtonOK;
 	}
-	
+
 	private String getIsAdmitted() {
-		Admission adm = new Admission();
-		try {
-			adm = admissionManager.getCurrentAdmission(patientSelected);
-		} catch(OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-		}
-		return (adm==null?"O":"I");					
+		Admission adm = admissionManager.getCurrentAdmission(patientSelected);
+		return (adm == null ? "O" : "I");
 	}
 
 	private JPanel getJPanelButtons() {

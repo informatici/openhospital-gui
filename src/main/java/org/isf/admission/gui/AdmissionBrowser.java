@@ -111,23 +111,23 @@ import org.isf.xmpp.manager.Interaction;
 /**
  * This class shows essential patient data and allows to create an admission
  * record or modify an existing one.
- * 
+ *
  * release 2.5 nov-10-06
- * 
+ *
  * @author flavio
  * ----------------------------------------------------------
  * modification history
  * ====================
  * 23/10/06 - flavio - borders set to not resizable
  *                     changed Disease IN (/OUT) into Diagnosis IN (/OUT)
- *                     
+ *
  * 10/11/06 - ross - added RememberDate for admission Date
  * 				   - only diseases with flag In Patient (IPD) are displayed
  *                 - on Insert. in edit all are displayed
  *                 - the correct way should be to display the IPD + the one already registered
  * 18/08/08 - Alex/Andrea - Calendar added
  * 13/02/09 - Alex - Cosmetic changes to UI
- * 10/01/11 - Claudia - insert ward beds availability 
+ * 10/01/11 - Claudia - insert ward beds availability
  * 01/01/11 - Alex - GUI and code reengineering
  * 29/12/11 - Nicola - insert alert IN/OUT patient for communication module
  * -----------------------------------------------------------
@@ -180,7 +180,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private Admission admission = null;
 
 	private PatientSummary ps;
-	
+
 	private JTextArea textArea = null;
 
 	private JTabbedPane jTabbedPaneAdmission;
@@ -192,9 +192,9 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel jPanelDelivery;
 
 	private int pregnancyTabIndex;
-	
+
 	private JPanel jContentPane = null;
-	
+
 	// enable is if patient is female
 	private boolean enablePregnancy = false;
 
@@ -212,13 +212,13 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JComboBox treatmTypeBox = null;
 
 	private final int preferredWidthDates = 110;
-	
+
 	private final int preferredWidthDiagnosis = 550;
-	
+
 	private final int preferredWidthTypes = 220;
-	
+
 	private final int preferredHeightLine = 24;
-	
+
 	private GregorianCalendar deliveryDate = null;
 
 	private CustomJDateChooser deliveryDateFieldCal = null;
@@ -226,7 +226,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JComboBox deliveryTypeBox = null;
 
 	private JComboBox deliveryResultTypeBox = null;
-	
+
 	private List<PregnantTreatmentType> treatmTypeList = null;
 
 	private List<DeliveryType> deliveryTypeList = null;
@@ -244,7 +244,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private CustomJDateChooser ctrl2DateFieldCal = null;
 
 	private CustomJDateChooser abortDateFieldCal = null;
-	
+
 	private JComboBox wardBox;
 
 	private List<Ward> wardList = null;
@@ -263,15 +263,15 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel fhuPanel;
 
 	private JPanel yearProgPanel;
-	
+
 	private JComboBox diseaseInBox;
-	
+
 	private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 	private List<Disease> diseaseInList = null;
-	
+
 	private List<Disease> diseaseOutList = null;
-	
+
 	private List<Disease> diseaseAllList = null;
 
 	private JCheckBox malnuCheck;
@@ -279,7 +279,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel diseaseInPanel;
 
 	private JPanel malnuPanel;
-	
+
 	private GregorianCalendar dateIn;
 
 	private CustomJDateChooser dateInFieldCal = null;
@@ -291,21 +291,21 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel admissionDatePanel;
 
 	private JPanel admissionTypePanel;
-	
+
 	private JComboBox diseaseOut1Box = null;
-	
+
 	private JComboBox diseaseOut2Box = null;
-	
+
 	private JComboBox diseaseOut3Box = null;
 
 	private JPanel diseaseOutPanel;
-	
+
 	private JPanel diseaseOut1Panel;
-	
+
 	private JPanel diseaseOut2Panel;
-	
+
 	private JPanel diseaseOut3Panel;
-	
+
 	private GregorianCalendar dateOut = null;
 
 	private CustomJDateChooser dateOutFieldCal = null;
@@ -317,7 +317,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel dischargeDatePanel;
 
 	private JPanel dischargeTypePanel;
-	
+
 	private JPanel bedDaysPanel;
 
 	private JPanel buttonPanel = null;
@@ -327,7 +327,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JButton closeButton = null;
 
 	private JButton saveButton = null;
-	
+
 	private JButton jButtonExamination = null;
 
 	private JPanel visitDatePanel;
@@ -349,11 +349,11 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel abortDatePanel;
 
 	private VoLimitedTextField bedDaysTextField;
-	
+
     private OperationRowAdm operationad;
-        
+
 	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-        
+
 	private JTextField searchDiseasetextField;
 	private JTextField searchDiseaseOut1textField;
 	private JTextField searchDiseaseOut2textField;
@@ -393,11 +393,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		if (editing) {
-			try {
-				admission = admissionManager.getCurrentAdmission(patient);
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			}
+			admission = admissionManager.getCurrentAdmission(patient);
 			if (admission.getWard().getCode().equalsIgnoreCase("M")) {
 				viewingPregnancy = true;
 			}
@@ -460,11 +456,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		try {
-			admission = admissionManager.getAdmission(anAdmission.getId());
-		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-		}
+		admission = admissionManager.getAdmission(anAdmission.getId());
 		if (admission.getWard().getCode().equalsIgnoreCase("M")) {
 			viewingPregnancy = true;
 		}
@@ -552,7 +544,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			GroupLayout layout = new GroupLayout(jPanelAdmission);
 			jPanelAdmission.setLayout(layout);
-			
+
 			layout.setAutoCreateGaps(true);
 			layout.setAutoCreateContainerGaps(true);
 
@@ -605,25 +597,25 @@ public class AdmissionBrowser extends ModalJFrame {
 		return jPanelAdmission;
 	}
 
-        private JPanel getMultiOperationTab() {
+	private JPanel getMultiOperationTab() {
 		if (jPanelOperation == null) {
 			jPanelOperation = new JPanel();
 			jPanelOperation.setLayout(new BorderLayout(0, 0));
 			jPanelOperation.add(operationad);
 		}
-		return jPanelOperation; 
+		return jPanelOperation;
 	}
-        
+
 	private JPanel getDeliveryTab() {
 		if (jPanelDelivery == null) {
 			jPanelDelivery = new JPanel();
-			
+
 			GroupLayout layout = new GroupLayout(jPanelDelivery);
 			jPanelDelivery.setLayout(layout);
-			
+
 			layout.setAutoCreateGaps(true);
 			layout.setAutoCreateContainerGaps(true);
-			
+
 			layout.setHorizontalGroup(layout.createSequentialGroup()
 					.addGroup(layout.createParallelGroup(LEADING)
 							.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, preferredWidthDates, GroupLayout.PREFERRED_SIZE)
@@ -641,7 +633,7 @@ public class AdmissionBrowser extends ModalJFrame {
 							.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, preferredWidthDates, GroupLayout.PREFERRED_SIZE)
 					)
 			);
-			
+
 			layout.setVerticalGroup(layout.createSequentialGroup()
 					.addGroup(layout.createParallelGroup(BASELINE)
 							.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -663,12 +655,12 @@ public class AdmissionBrowser extends ModalJFrame {
 							.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 					)
 			);
-			
+
 			layout.linkSize(SwingConstants.VERTICAL, getDeliveryDatePanel(), getDeliveryTypePanel(), getDeliveryResultTypePanel());
 		}
 		return jPanelDelivery;
 	}
-	
+
 	private JScrollPane getJPanelNote() {
 
 		JScrollPane scrollPane = new JScrollPane(getJTextAreaNote());
@@ -692,7 +684,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		});
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		scrollPane.setPreferredSize(new Dimension(screensize.width/2, screensize.height/2));
+		scrollPane.setPreferredSize(new Dimension(screensize.width / 2, screensize.height / 2));
 		return scrollPane;
 	}
 
@@ -757,7 +749,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getVisitDatePanel() {
 		if (visitDatePanel == null) {
 			visitDatePanel = new JPanel();
-			
+
 			Date myDate = null;
 			if (editing && admission.getVisitDate() != null) {
 				visitDate = admission.getVisitDate();
@@ -768,7 +760,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			visitDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy"); // Calendar
 			visitDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			visitDateFieldCal.setDateFormatString("dd/MM/yy");
-	
+
 			visitDatePanel.add(visitDateFieldCal); // Calendar
 			visitDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.visitdate.border")));
 		}
@@ -834,16 +826,16 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getDeliveryDatePanel() {
 		if (deliveryDatePanel == null) {
 			deliveryDatePanel = new JPanel();
-			
+
 			Date myDate = null;
 			if (editing && admission.getDeliveryDate() != null) {
 				deliveryDate = admission.getDeliveryDate();
 				myDate = deliveryDate.getTime();
-			} 
+			}
 			deliveryDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy"); // Calendar
 			deliveryDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			deliveryDateFieldCal.setDateFormatString("dd/MM/yy");
-			
+
 			deliveryDatePanel.add(deliveryDateFieldCal);
 			deliveryDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliverydate.border")));
 		}
@@ -861,7 +853,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			abortDateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			abortDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			abortDateFieldCal.setDateFormatString("dd/MM/yy");
-	
+
 			abortDatePanel.add(abortDateFieldCal);
 			abortDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.abortdate.border")));
 		}
@@ -871,12 +863,12 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getControl1DatePanel() {
 		if (control1DatePanel == null) {
 			control1DatePanel = new JPanel();
-			
+
 			Date myDate = null;
 			if (editing && admission.getCtrlDate1() != null) {
 				ctrl1Date = admission.getCtrlDate1();
 				myDate = ctrl1Date.getTime();
-			} 
+			}
 			ctrl1DateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			ctrl1DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			ctrl1DateFieldCal.setDateFormatString("dd/MM/yy");
@@ -886,16 +878,16 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 		return control1DatePanel;
 	}
-	
+
 	private JPanel getControl2DatePanel() {
 		if (control2DatePanel == null) {
 			control2DatePanel = new JPanel();
-			
+
 			Date myDate = null;
 			if (editing && admission.getCtrlDate2() != null) {
 				ctrl2Date = admission.getCtrlDate2();
 				myDate = ctrl2Date.getTime();
-			} 
+			}
 			ctrl2DateFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
 			ctrl2DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			ctrl2DateFieldCal.setDateFormatString("dd/MM/yy");
@@ -909,7 +901,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getProgYearPanel() {
 		if (yearProgPanel == null) {
 			yearProgPanel = new JPanel();
-			
+
 			if (saveYProg != null) {
 				yProgTextField = new JTextField(saveYProg);
 			} else if (editing) {
@@ -918,10 +910,10 @@ public class AdmissionBrowser extends ModalJFrame {
 				yProgTextField = new JTextField("");
 			}
 			yProgTextField.setColumns(11);
-			
+
 			yearProgPanel.add(yProgTextField);
 			yearProgPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.progressiveinyear.border")));
-			
+
 		}
 		return yearProgPanel;
 	}
@@ -929,17 +921,17 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getFHUPanel() {
 		if (fhuPanel == null) {
 			fhuPanel = new JPanel();
-			
+
 			if (editing) {
 				FHUTextField = new JTextField(admission.getFHU());
 			} else {
 				FHUTextField = new JTextField();
 			}
 			FHUTextField.setColumns(20);
-			
+
 			fhuPanel.add(FHUTextField);
 			fhuPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.fromhealthunit.border")));
-			
+
 		}
 		return fhuPanel;
 	}
@@ -989,21 +981,13 @@ public class AdmissionBrowser extends ModalJFrame {
 						yProgTextField.setText("" + admission.getYProg());
 					} else {
 						int nextProg = 1;
-						try {
-							nextProg = admissionManager.getNextYProg(wardId);
-						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
-						}
+						nextProg = admissionManager.getNextYProg(wardId);
 						yProgTextField.setText("" + nextProg);
 
 						// get default selected warn default beds number
 						int nBeds = ((Ward) wardBox.getSelectedItem()).getBeds();
 						int usedBeds = 0;
-						try {
-							usedBeds = admissionManager.getUsedWardBed(wardId);
-						} catch (OHServiceException ex) {
-							OHServiceExceptionUtil.showMessages(ex);
-						}
+						usedBeds = admissionManager.getUsedWardBed(wardId);
 						int freeBeds = nBeds - usedBeds;
 						if (freeBeds <= 0) {
 							MessageDialog.info(AdmissionBrowser.this, "angal.admission.wardwithnobedsavailable.msg");
@@ -1143,17 +1127,17 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getMalnutritionPanel() {
 		if (malnuPanel == null) {
 			malnuPanel = new JPanel();
-			
+
 			malnuCheck = new JCheckBox();
 			if (editing && admission.getType().equalsIgnoreCase("M")) {
 				malnuCheck.setSelected(true);
 			} else {
 				malnuCheck.setSelected(false);
 			}
-			
+
 			malnuPanel.add(malnuCheck);
 			malnuPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.malnutrition.txt")), BorderLayout.CENTER);
-			
+
 		}
 		return malnuPanel;
 	}
@@ -1165,11 +1149,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			admTypeBox = new JComboBox();
 			admTypeBox.setPreferredSize(new Dimension(preferredWidthTypes, preferredHeightLine));
 			admTypeBox.addItem("");
-			try {
-				admTypeList = admissionManager.getAdmissionType();
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			}
+			admTypeList = admissionManager.getAdmissionType();
 			for (AdmissionType elem : admTypeList) {
 				admTypeBox.addItem(elem);
 				if (editing) {
@@ -1555,15 +1535,11 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getDischargeTypePanel() {
 		if (dischargeTypePanel == null) {
 			dischargeTypePanel = new JPanel();
-			
+
 			disTypeBox = new JComboBox();
 			disTypeBox.setPreferredSize(new Dimension(preferredWidthTypes, preferredHeightLine));
 			disTypeBox.addItem("");
-			try {
-				disTypeList = admissionManager.getDischargeType();
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			}
+			disTypeList = admissionManager.getDischargeType();
 			for (DischargeType elem : disTypeList) {
 				disTypeBox.addItem(elem);
 				if (editing) {
@@ -1572,26 +1548,26 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 				}
 			}
-			
+
 			dischargeTypePanel.add(disTypeBox);
 			dischargeTypePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.dischargetype.border")));
 		}
 		return dischargeTypePanel;
 	}
-	
+
 	private JPanel getBedDaysPanel() {
 		if (bedDaysPanel == null) {
 			bedDaysPanel = new JPanel();
-			
+
 			bedDaysTextField  = new VoLimitedTextField(10, 10);
 			bedDaysTextField.setEditable(false);
-			
+
 			bedDaysPanel.add(bedDaysTextField);
 			bedDaysPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.beddays.border")));
 		}
 		return bedDaysPanel;
 	}
-	
+
 	private void updateBedDays() {
 		try {
 			Date admission = dateInFieldCal.getDate();
@@ -1612,7 +1588,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel getDischargeDatePanel() {
 		if (dischargeDatePanel == null) {
 			dischargeDatePanel = new JPanel();
-			
+
 			Date myDate = null;
 			if (editing && admission.getDisDate() != null) {
 				dateOut = admission.getDisDate();
@@ -1630,7 +1606,7 @@ public class AdmissionBrowser extends ModalJFrame {
 	}
 
 	private JComboBox shareWith=null;
-	
+
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
@@ -1652,12 +1628,12 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 		return buttonPanel;
 	}
-	
-	private JButton getJButtonExamination() { 
+
+	private JButton getJButtonExamination() {
 		if (jButtonExamination == null) {
 			jButtonExamination = new JButton(MessageBundle.getMessage("angal.admission.examination.btn"));
 			jButtonExamination.setMnemonic(MessageBundle.getMnemonic("angal.admission.examination.btn.key"));
-			
+
 			jButtonExamination.addActionListener(actionEvent -> {
 
 				PatientExamination patex;
@@ -2042,7 +2018,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 		return results;
 	}
-        
+
     @SuppressWarnings("deprecation")
     public List<OHExceptionMessage> checkAllOperationRowDate(List<OperationRow> list, Admission admission) {
 	    DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));

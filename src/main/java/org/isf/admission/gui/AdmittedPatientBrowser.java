@@ -144,7 +144,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private CustomJDateChooser[] dateChoosers = new CustomJDateChooser[4];
 	private VoLimitedTextField patientAgeFromTextField = null;
 	private VoLimitedTextField patientAgeToTextField = null;
-	private String[] patientSexItems = { 
+	private String[] patientSexItems = {
 			MessageBundle.getMessage("angal.common.all.txt"),
 			MessageBundle.getMessage("angal.common.male.txt"),
 			MessageBundle.getMessage("angal.common.female.txt")
@@ -172,7 +172,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JTable table;
 	private JScrollPane scrollPane;
 	private AdmittedPatientBrowser myFrame;
-	
+
 	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	protected boolean altKeyReleased = true;
@@ -199,10 +199,10 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	@Override
 	public void deleteAdmissionUpdated(AWTEvent e) {
 		Admission adm = (Admission) e.getSource();
-		
+
 		//remember selected row
 		int row = table.getSelectedRow();
-		
+
 		for (AdmittedPatient elem : pPatient) {
 			if (elem.getPatient().getCode().equals(adm.getPatient().getCode())) {
 				//found same patient in the list
@@ -233,11 +233,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	@Override
 	public void admissionInserted(AWTEvent e) {
 		Admission adm = (Admission) e.getSource();
-		
+
 		//remember selected row
 		int row = table.getSelectedRow();
 		int patId = adm.getPatient().getCode();
-		
+
 		for (AdmittedPatient elem : pPatient) {
 			if (elem.getPatient().getCode() == patId) {
 				//found same patient in the list
@@ -262,12 +262,12 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	@Override
 	public void admissionUpdated(AWTEvent e) {
 		Admission adm = (Admission) e.getSource();
-		
+
 		//remember selected row
 		int row = table.getSelectedRow();
 		int admId = adm.getId();
 		int patId = adm.getPatient().getCode();
-		
+
 		for (AdmittedPatient elem : pPatient) {
 			if (elem.getPatient().getCode() == patId) {
 				//found same patient in the list
@@ -300,7 +300,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 	/*
 	 * manage PatientEdit messages
-	 * 
+	 *
 	 * mind PatientEdit return a patient patientInserted create a new
 	 * AdmittedPatient for table
 	 */
@@ -322,12 +322,12 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 	@Override
 	public void patientUpdated(AWTEvent e) {
-		
+
 		Patient u = (Patient) e.getSource();
-		
+
 		//remember selected row
 		int row = table.getSelectedRow();
-		
+
 		for (int i = 0; i < pPatient.size(); i++) {
 			if ((pPatient.get(i).getPatient().getCode()).equals(u.getCode())) {
 				Admission admission = pPatient.get(i).getAdmission();
@@ -339,7 +339,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		lastKey = "";
 		filterPatient(searchString.getText());
 		try {
-			table.setRowSelectionInterval(row,row);
+			table.setRowSelectionInterval(row, row);
 		} catch (Exception e1) {
 		}
 		searchString.requestFocus();
@@ -353,18 +353,14 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 		if (!GeneralData.ENHANCEDSEARCH) {
 			// Load the whole list of patients
-			try {
-				pPatient = admissionManager.getAdmittedPatients(null);
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			}
+			pPatient = admissionManager.getAdmittedPatients(null);
 		}
-		
+
 		initComponents();
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
-		
+
 		rowCounter.setText(MessageBundle.formatMessage("angal.admission.count.fmt.txt", pPatient.size()));
 		searchString.requestFocus();
 
@@ -395,7 +391,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		dataAndControlPanel.add(getScrollPane(), BorderLayout.CENTER);
 		return dataAndControlPanel;
 	}
-	
+
 	/*
 	 * Panel with filtering controls
 	 */
@@ -404,7 +400,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			lastKey = "";
 			filterPatient(null);
 		});
-		
+
 		patientClassBox = new JComboBox(patientClassItems);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			patientClassBox.addActionListener(listener);
@@ -436,8 +432,8 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					wardList.add(elem);
 				}
 			}
-		} 
-		
+		}
+
 		JPanel[] checkPanel = new JPanel[wardList.size()];
 		wardCheck = new JCheckBox[wardList.size()];
 
@@ -454,11 +450,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		}
 
 		wardPanel = setMyBorder(wardPanel, MessageBundle.getMessage("angal.admission.ward.border"));
-		
+
 		rowCounter = new JLabel(MessageBundle.formatMessage("angal.admission.count.fmt.txt", 0));
 		rowCounter.setAlignmentX(Component.CENTER_ALIGNMENT);
 		wardPanel.add(rowCounter);
-		
+
 		JPanel calendarPanel = getAdmissionFilterPanel();
 
 		KeyListener ageKeyListener = new KeyAdapter() {
@@ -471,13 +467,13 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		};
 
 		JLabel ageFrom = new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ':');
-		patientAgeFromTextField = new VoLimitedTextField(3,3);
+		patientAgeFromTextField = new VoLimitedTextField(3, 3);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			patientAgeFromTextField.addKeyListener(ageKeyListener);
 		}
 
 		JLabel ageTo = new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ':');
-		patientAgeToTextField = new VoLimitedTextField(3,3);
+		patientAgeToTextField = new VoLimitedTextField(3, 3);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			patientAgeToTextField.addKeyListener(ageKeyListener);
 		}
@@ -508,12 +504,13 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		searchString.setColumns(15);
 		if (GeneralData.ENHANCEDSEARCH) {
 			searchString.addKeyListener(new KeyAdapter() {
+
 				@Override
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
-				     if (key == KeyEvent.VK_ENTER) {
-				    	 jSearchButton.doClick();
-				     }
+					if (key == KeyEvent.VK_ENTER) {
+						jSearchButton.doClick();
+					}
 				}
 			});
 		} else {
@@ -529,7 +526,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 						filterPatient(searchString.getText());
 					}
 				}
-	
+
 				@Override
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
@@ -537,7 +534,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 						altKeyReleased = false;
 					}
 				}
-	
+
 				@Override
 				public void keyReleased(KeyEvent e) {
 					altKeyReleased = true;
@@ -585,29 +582,28 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		calendarPanel.setLayout(new GridBagLayout());
 		calendarPanel.setPreferredSize(new Dimension(PANEL_WIDTH, 20));
 		calendarPanel = setMyBorder(calendarPanel, MessageBundle.getMessage("angal.admission.date.border"));
-		
+
 		JLabel admissionLabel = new JLabel(MessageBundle.getMessage("angal.admission.admissiondate.txt"));
 		JLabel dischargeLabel = new JLabel(MessageBundle.getMessage("angal.admission.dischargedate.txt"));
 		for(int i = 0; i <= dateChoosers.length - 1; i++) {
-			CustomJDateChooser chooser = dateChoosers[i];
-			chooser = new CustomJDateChooser();
+			CustomJDateChooser chooser = new CustomJDateChooser();
 			chooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			chooser.setDateFormatString("dd/MM/yy");
-			chooser.setMinimumSize(new Dimension(80,20));
-			dateChoosers[i] = chooser;	
+			chooser.setMinimumSize(new Dimension(80, 20));
+			dateChoosers[i] = chooser;
 		}
-		
+
 		GridBagConstraints gbcAdmissionLabel = new GridBagConstraints();
 		gbcAdmissionLabel.gridx = 0;
 		gbcAdmissionLabel.gridwidth = 4;
 		gbcAdmissionLabel.gridy = 0;
-		gbcAdmissionLabel.insets = new Insets(0,0,5,0);
+		gbcAdmissionLabel.insets = new Insets(0, 0, 5, 0);
 		gbcAdmissionLabel.anchor = GridBagConstraints.CENTER;
 		calendarPanel.add(admissionLabel, gbcAdmissionLabel);
 		GridBagConstraints gbcDateLabel0 = new GridBagConstraints();
 		gbcDateLabel0.gridx = 0;
 		gbcDateLabel0.gridy = 1;
-		gbcDateLabel0.insets = new Insets(0,5,0,5);
+		gbcDateLabel0.insets = new Insets(0, 5, 0, 5);
 		gbcDateLabel0.weightx = 0.0;
 		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ':'), gbcDateLabel0);
 		GridBagConstraints gbcDateDateChooser0 = new GridBagConstraints();
@@ -618,7 +614,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		GridBagConstraints gbcDateLabel1 = new GridBagConstraints();
 		gbcDateLabel1.gridx = 2;
 		gbcDateLabel1.gridy = 1;
-		gbcDateLabel1.insets = new Insets(0,5,0,5);
+		gbcDateLabel1.insets = new Insets(0, 5, 0, 5);
 		gbcDateLabel1.weightx = 0.0;
 		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ':'), gbcDateLabel1);
 		GridBagConstraints gbcDateDateChooser1 = new GridBagConstraints();
@@ -626,18 +622,18 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		gbcDateDateChooser1.gridy = 1;
 		gbcDateDateChooser1.weightx = 1.0;
 		calendarPanel.add(dateChoosers[1], gbcDateDateChooser1);
-		
+
 		GridBagConstraints gbcDischargeLabel = new GridBagConstraints();
 		gbcDischargeLabel.gridx = 0;
 		gbcDischargeLabel.gridwidth = 4;
 		gbcDischargeLabel.gridy = 2;
-		gbcDischargeLabel.insets = new Insets(10,0,5,0);
+		gbcDischargeLabel.insets = new Insets(10, 0, 5, 0);
 		gbcDischargeLabel.anchor = GridBagConstraints.CENTER;
 		calendarPanel.add(dischargeLabel, gbcDischargeLabel);
 		GridBagConstraints gbcDateLabel2 = new GridBagConstraints();
 		gbcDateLabel2.gridx = 0;
 		gbcDateLabel2.gridy = 3;
-		gbcDateLabel2.insets = new Insets(0,5,0,5);
+		gbcDateLabel2.insets = new Insets(0, 5, 0, 5);
 		gbcDateLabel2.weightx = 0.0;
 		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ':'), gbcDateLabel2);
 		GridBagConstraints gbcDateDateChooser2 = new GridBagConstraints();
@@ -648,16 +644,16 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		GridBagConstraints gbcDateLabel3 = new GridBagConstraints();
 		gbcDateLabel3.gridx = 2;
 		gbcDateLabel3.gridy = 3;
-		gbcDateLabel3.insets = new Insets(0,5,0,5);
+		gbcDateLabel3.insets = new Insets(0, 5, 0, 5);
 		gbcDateLabel3.weightx = 0.0;
 		calendarPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ':'), gbcDateLabel3);
 		GridBagConstraints gbcDateDateChooser3 = new GridBagConstraints();
 		gbcDateDateChooser3.gridx = 3;
 		gbcDateDateChooser3.gridy = 3;
 		gbcDateDateChooser3.weightx = 1.0;
-		gbcDateDateChooser3.insets = new Insets(0,0,5,0);
+		gbcDateDateChooser3.insets = new Insets(0, 0, 5, 0);
 		calendarPanel.add(dateChoosers[3], gbcDateDateChooser3);
-		
+
 		calendarPanel.setVisible(GeneralData.ENHANCEDSEARCH);
 		return calendarPanel;
 	}
@@ -672,7 +668,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				table.getColumnModel().getColumn(i).setMaxWidth(pColumnWidth[i]);
 			}
 		}
-		
+
 		table.getColumnModel().getColumn(0).setCellRenderer(new CenterTableCellRenderer());
 		table.getColumnModel().getColumn(2).setCellRenderer(new CenterTableCellRenderer());
 		table.getColumnModel().getColumn(3).setCellRenderer(new CenterTableCellRenderer());
@@ -681,9 +677,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		for (int j : pColumnWidth) {
 			tableWidth += j;
 		}
-		
+
 		scrollPane = new JScrollPane(table);
-		scrollPane.setPreferredSize(new Dimension(tableWidth+200, 200));
+		scrollPane.setPreferredSize(new Dimension(tableWidth + 200, 200));
 		return scrollPane;
 	}
 
@@ -725,7 +721,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonPanel.add(getButtonClose());
 		return buttonPanel;
 	}
-	
+
 	private JButton getButtonExamination() {
 		if (jButtonExamination == null) {
 			jButtonExamination = new JButton(MessageBundle.getMessage("angal.admission.examination.btn"));
@@ -827,20 +823,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 					OHServiceExceptionUtil.showMessages(e);
 				}
 				if (result) {
-					List<Admission> patientAdmissions;
-					try {
-						patientAdmissions = admissionManager.getAdmissions(pat);
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
-						patientAdmissions = new ArrayList<>();
-					}
-
+					List<Admission> patientAdmissions = admissionManager.getAdmissions(pat);
 					for (Admission elem : patientAdmissions) {
-						try {
-							admissionManager.setDeleted(elem.getId());
-						} catch (OHServiceException e) {
-							OHServiceExceptionUtil.showMessages(e);
-						}
+						admissionManager.setDeleted(elem.getId());
 					}
 					fireMyDeletedPatient(pat);
 				}
@@ -885,15 +870,15 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
 
-			if (patient  != null) {
-				Opd opd = new Opd(0,' ', -1, new Disease());
+			if (patient != null) {
+				Opd opd = new Opd(0, ' ', -1, new Disease());
 				OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
 				newrecord.showAsModal(myFrame);
 			}
 		});
 		return buttonOpd;
 	}
-	
+
 	private JButton getButtonBill() {
 		JButton buttonBill = new JButton(MessageBundle.getMessage("angal.admission.bill.btn"));
 		buttonBill.setMnemonic(MessageBundle.getMnemonic("angal.admission.bill.btn.key"));
@@ -907,13 +892,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			if (patient != null) {
 				Patient pat = patient.getPatient();
 				BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
-				List<Bill> patientPendingBills;
-				try {
-					patientPendingBills = billManager.getPendingBills(pat.getCode());
-				} catch (OHServiceException e) {
-					patientPendingBills = new ArrayList<>();
-					OHServiceExceptionUtil.showMessages(e);
-				}
+				List<Bill> patientPendingBills = billManager.getPendingBills(pat.getCode());
 				if (patientPendingBills.isEmpty()) {
 					new PatientBillEdit(AdmittedPatientBrowser.this, pat);
 					//dispose();
@@ -1005,8 +984,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			// Select most recent patient
 			if (patient1.getCode() > patient2.getCode()) {
 				mergedPatient = patient1;
-			}
-			else {
+			} else {
 				mergedPatient = patient2;
 				patient2 = patient1;
 			}
@@ -1065,13 +1043,13 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		});
 		return buttonClose;
 	}
-	
+
 	private void filterPatient(String key) {
 		table.setModel(new AdmittedPatientBrowserModel(key));
 		rowCounter.setText(MessageBundle.formatMessage("angal.admission.count.fmt.txt", table.getRowCount()));
 		searchString.requestFocus();
 	}
-	
+
 	private void searchPatient() {
 		boolean isFilteredList = patientClassBox.getSelectedIndex() > 0 || //
 				(dateChoosers[0].getDate() != null && //
@@ -1081,7 +1059,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				!patientAgeFromTextField.getText().isEmpty() || //
 				!patientAgeToTextField.getText().isEmpty() || //
 				patientSexBox.getSelectedIndex() > 0 || //
-				!searchString.getText().isEmpty();	
+				!searchString.getText().isEmpty();
 		if (!isFilteredList) {
 			int ok = MessageDialog.okCancel(AdmittedPatientBrowser.this,
 					"angal.common.thiscouldretrievealargeamountofdataproceed.msg");
@@ -1089,9 +1067,9 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				return;
 			}
 		}
-		
+
 		GregorianCalendar[] admissionRange = new GregorianCalendar[2];
-		GregorianCalendar[] dischargeRange = new GregorianCalendar[2];	
+		GregorianCalendar[] dischargeRange = new GregorianCalendar[2];
 		for(int i = 0; i <= dateChoosers.length - 1; i++) {
 			GregorianCalendar date = (GregorianCalendar) dateChoosers[i].getCalendar();
 			switch (i) {
@@ -1110,14 +1088,10 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			}
 		}
 
-		try {
-			pPatient = admissionManager.getAdmittedPatients(admissionRange, dischargeRange, searchString.getText());
-		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-		}
+		pPatient = admissionManager.getAdmittedPatients(admissionRange, dischargeRange, searchString.getText());
 		filterPatient(null);
 	}
-	
+
 	private JButton getButtonSearch() {
 		if (jSearchButton == null) {
 			jSearchButton = new JButton();
@@ -1133,7 +1107,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		}
 		return jSearchButton;
 	}
-	
+
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(title), BorderFactory
@@ -1147,7 +1121,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		private static final long serialVersionUID = 1L;
 
 		ArrayList<AdmittedPatient> patientList = new ArrayList<>();
-		
+
 		public AdmittedPatientBrowserModel(String key) {
 			for (AdmittedPatient ap : pPatient) {
 				Admission adm = ap.getAdmission();
@@ -1191,7 +1165,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 						continue;
 					}
 				}
-				
+
 				// upper age limit
 				ageLimit = patientAgeToTextField.getText();
 				if (ageLimit.matches("\\d+")) {
@@ -1199,18 +1173,18 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 						continue;
 					}
 				}
-					
+
 				// sex patient type
 				Character sex = null;
 				switch (patientSexBox.getSelectedIndex()) {
-				case 1:
-					sex = 'M';
-					break;
-				case 2:
-					sex = 'F';
-					break;
+					case 1:
+						sex = 'M';
+						break;
+					case 2:
+						sex = 'F';
+						break;
 				}
-				
+
 				if (sex != null && !sex.equals(ap.getPatient().getSex())) {
 					continue;
 				}
@@ -1298,21 +1272,21 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			return false;
 		}
 	}
-	
-	
-	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
+
+
+	class CenterTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-				boolean hasFocus, int row, int column) {  
-		   
-			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+				boolean hasFocus, int row, int column) {
+
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			cell.setForeground(Color.BLACK);
-			setHorizontalAlignment(CENTER);	   
+			setHorizontalAlignment(CENTER);
 			return cell;
-	   }
+		}
 	}
 
 }
