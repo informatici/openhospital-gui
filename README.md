@@ -27,7 +27,7 @@ or any similar SQL database (e.g. MariaDB).
 
 Be sure to have configured properly the classpath for the project (see [7 Installing Open Hospital 1.11.0 in Eclipse EE](https://github.com/informatici/openhospital-doc/blob/develop/doc_admin/AdminManual.adoc#7-installing-open-hospital-1-11-0-in-eclipse-ee))
 
-Before running the application, you should generate the config files with the `g)` option, or manually copying and renaming the files `*.dist` files into `rsc/` folder and edit them accordingly:
+Before running the application, you should generate the config files with the `g)` option, or manually copying and renaming the files `*.dist` files in `rsc/` folder and edit them accordingly:
 
 | Dist file                | Property file       | Properties to fill in                                         |
 |--------------------------|---------------------|---------------------------------------------------------------|
