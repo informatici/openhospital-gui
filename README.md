@@ -19,12 +19,15 @@ To run the tests simply issue:
   
 ## How to launch Open Hospital
 
-To launch Open Hospital GUI, use the scripts `startup.sh` (on Linux) or `startup.cmd` (on Windows). 
+To launch Open Hospital GUI, use the scripts `oh.sh` (on Linux) or `oh.bat` (on Windows) from the maven `target` folder.
 You will need a MySQL database running locally (e.g. the Docker container available in the Core project),
-or any similar SQL database (e.g. MariaDB). 
+or any similar SQL database (e.g. MariaDB).
 
-Before running the application, you should copy the distribution files and change them accordingly
-(or use/modify `.sample` files with most common settings):
+### Launch within IDE
+
+Be sure to have configured properly the classpath for the project (see [7 Installing Open Hospital 1.11.0 in Eclipse EE](https://github.com/informatici/openhospital-doc/blob/develop/doc_admin/AdminManual.adoc#7-installing-open-hospital-1-11-0-in-eclipse-ee))
+
+Before running the application, you should generate the config files with the `g)` option, or manually copying and renaming the files `*.dist` files into `rsc/` folder and edit them accordingly:
 
 | Dist file                | Property file       | Properties to fill in                                         |
 |--------------------------|---------------------|---------------------------------------------------------------|

@@ -133,10 +133,8 @@
 							<resources>
 								<resource>
 									<directory>${project.basedir}</directory>
-									<include>oh.ico</include>
+									<include>oh.*</include>
 									<include>README.md</include>
-									<include>startup.cmd</include>
-									<include>startup.sh</include>
 								</resource>
 								<resource>
 									<directory>../openhospital-core</directory>
