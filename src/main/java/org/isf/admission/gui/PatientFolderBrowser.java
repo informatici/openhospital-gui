@@ -607,8 +607,12 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 		public AdmissionBrowserModel() {
 
-			admList = manager.getAdmissions(patient);
-			getOlderDate(admList, "admDate");
+			try {
+				admList = manager.getAdmissions(patient);
+				getOlderDate(admList, "admDate");
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
 			try {
 				disease = dbm.getDiseaseAll();
 			} catch (OHServiceException e) {
@@ -677,20 +681,26 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 					Date myDate = (admList.get(row)).getAdmDate().getTime();
-					return dateFormat.format(myDate);
+					String strDate = dateFormat.format(myDate);
+
+					return strDate;
 
 				} else if (row < opdList.size()+admList.size()) {
 					int z = row - admList.size();
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 					Date myDate = (opdList.get(z)).getVisitDate().getTime();
-					return dateFormat.format(myDate);
+					String strDate = dateFormat.format(myDate);
+
+					return strDate;
 
 				} else {
 					int f = row - (opdList.size()+admList.size());
 					GregorianCalendar cal = examinationList.get(f).getPex_date();
 					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 					Date myDate = cal.getTime();
-					return dateFormat.format(myDate);
+					String strDate = dateFormat.format(myDate);
+
+					return strDate;
 
 				}
 
@@ -734,11 +744,12 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				} else {
 					int f = row - (opdList.size() + admList.size());
-					return "<html>" +
+					String ret = "<html>" +
 							MessageBundle.getMessage("angal.common.weight.txt") + ": " + (examinationList.get(f).getPex_height())
 							+ "<br>" +
 							MessageBundle.getMessage("angal.common.height.txt") + ": " + (examinationList.get(f).getPex_weight())
 							+ "</html>";
+					return ret;
 				}
 
 			} else if (column == 3) {
@@ -775,19 +786,21 @@ public class PatientFolderBrowser extends ModalJFrame implements
 					return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				} else {
 					int f = row - (opdList.size() + admList.size());
-					return "<html>" +
+					String ret = "<html>" +
 							MessageBundle.getMessage("angal.common.arterialpressureabbr.txt") + ": " + (examinationList.get(f).getPex_ap_min())
 							+ '/' + (examinationList.get(f).getPex_ap_max())
 							+ "<br>" +
 							MessageBundle.getMessage("angal.common.temperatureabbr.txt") + ": " + (examinationList.get(f).getPex_temp()) +
 							"</html>";
+					return ret;
 				}
 			}  else if (column == 4) {
 				if (row < admList.size()) {
 					if (admList.get(row).getDisDate()==null) {
 						return MessageBundle.getMessage("angal.admission.present.txt");
 					} else {
-						return admList.get(row).getDisDate().getTime();
+						Date myDate = admList.get(row).getDisDate().getTime();
+						return myDate;
 					}
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
@@ -797,7 +810,8 @@ public class PatientFolderBrowser extends ModalJFrame implements
 							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
 				} else {
 					int f = row - (opdList.size() + admList.size());
-					return MessageBundle.getMessage("angal.admission.o2.txt") + ": " + (examinationList.get(f).getPex_sat());
+					String ret = MessageBundle.getMessage("angal.admission.o2.txt") + ": " + (examinationList.get(f).getPex_sat());
+					return ret;
 				}
 			}
 			return null;
@@ -848,7 +862,8 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			if (column == -1) {
 				return laboratory;
 			} else if (column == 0) {
-				return laboratory.getExamDate().getTime();
+				Date examDate = laboratory.getExamDate().getTime();
+				return examDate;
 			} else if (column == 1) {
 				return laboratory.getExam().getDescription();
 			}else if (column == 2) {
@@ -885,4 +900,17 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		}
 	}
 
+	private void updateRowHeights() {
+		for (int row = 0; row < admTable.getRowCount(); row++) {
+			int rowHeight = admTable.getRowHeight();
+
+			for (int column = 0; column < admTable.getColumnCount(); column++) {
+				Component comp = admTable.prepareRenderer(admTable.getCellRenderer(row, column), row, column);
+				rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+			}
+
+			admTable.setRowHeight(row, rowHeight);
+		}
+	}
+	
 }

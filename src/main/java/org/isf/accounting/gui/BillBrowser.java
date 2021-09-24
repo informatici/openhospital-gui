@@ -210,7 +210,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	//Users
 	private String user = UserBrowsingManager.getCurrentUser();
 	private List<String> users;
-
+	
 	public BillBrowser() {
 		try {
 			this.currencyCod = Context.getApplicationContext().getBean(HospitalBrowsingManager.class).getHospitalCurrencyCod();
@@ -218,8 +218,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			this.currencyCod = null;
 			MessageDialog.showExceptions(ohServiceException);
 		}
-		users = billManager.getUsers();
-
+		
+		try {
+			users = billManager.getUsers();
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
+		}
 		updateDataSet();
 		initComponents();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -701,11 +705,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						return;
 					}
 					int rowSelected = jTableClosed.getSelectedRow();
-					deleteBill = (Bill) jTableClosed.getValueAt(rowSelected, -1);
+					deleteBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
 					ok = MessageDialog.yesNo(null, "angal.billbrowser.deletetheselectedbill.msg");
 				}
 				if (ok == JOptionPane.YES_OPTION) {
-					billManager.deleteBill(deleteBill);
+					try {
+						billManager.deleteBill(deleteBill);
+					} catch(OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
+					}
 				}
 				billInserted(null);
 			});
@@ -1145,28 +1153,44 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 
 	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo) {
-		/*
-		 * Bills in the period
-		 */
-		billPeriod = billManager.getBills(dateFrom, dateTo);
+		try {
+			/*
+			 * Bills in the period
+			 */
+			billPeriod = billManager.getBills(dateFrom, dateTo);
+		} catch (OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
+		}
 
-		/*
-		 * Payments in the period
-		 */
-		paymentsPeriod = billManager.getPayments(dateFrom, dateTo);
+		try {
+			/*
+			 * Payments in the period
+			 */
+			paymentsPeriod = billManager.getPayments(dateFrom, dateTo);
+		} catch (OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
+		}
 
-		/*
-		 * Bills not in the period but with payments in the period
-		 */
-		billFromPayments = billManager.getBills(paymentsPeriod);
+		try {
+			/*
+			 * Bills not in the period but with payments in the period
+			 */
+			billFromPayments = billManager.getBills(paymentsPeriod);
+		} catch (OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
+		}
 	}
 	
 	private void updateTotals() {
 		List<Bill> billToday = null;
 		List<BillPayments> paymentsToday = null;
 		if (UserBrowsingManager.getCurrentUser().equals("admin")) {
-			billToday = billManager.getBills(dateToday0, dateToday24);
-			paymentsToday = billManager.getPayments(dateToday0, dateToday24);
+			try {
+				billToday = billManager.getBills(dateToday0, dateToday24);
+				paymentsToday = billManager.getPayments(dateToday0, dateToday24);
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
+			}
 		} else {
 			billToday = billPeriod;
 			paymentsToday = paymentsPeriod;
@@ -1275,10 +1299,14 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					billAll.add(bill);
 				}
 			}
-
+			
 			if (status.equals("O")) {
 				if (patientParent != null) {
-					tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
+					try {
+						tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
+					} catch (OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
+					}
 				} else {
 					for (Bill bill : billPeriod) {
 						if (bill.getStatus().equals(status)) {
@@ -1286,10 +1314,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						}
 					}
 				}
-			} else if (status.equals("ALL")) {
+			}
+			else if (status.equals("ALL")) {
 				Collections.sort(billAll);
 				tableArray = billAll;
-			} else if (status.equals("C")) {
+			}
+			else if (status.equals("C")) {
 				for (Bill bill : billPeriod) {
 					if (bill.getStatus().equals(status)) {
 						tableArray.add(bill);
@@ -1375,11 +1405,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 	
 	private void formatCellByBillStatus(JTable table, int row, Component cell) {
-		int statusColumn = table.getColumnModel().getColumnIndex(MessageBundle.getMessage("angal.common.status.txt").toUpperCase());
-		if (((String)table.getValueAt(row, statusColumn)).equals("C")) { //$NON-NLS-1$
+		int status_column = table.getColumnModel().getColumnIndex(MessageBundle.getMessage("angal.common.status.txt").toUpperCase());
+		if (((String)table.getValueAt(row, status_column)).equals("C")) { //$NON-NLS-1$
 			cell.setForeground(Color.GRAY);
 		}
-		if (((String)table.getValueAt(row, statusColumn)).equals("D")) { //$NON-NLS-1$
+		if (((String)table.getValueAt(row, status_column)).equals("D")) { //$NON-NLS-1$
 			cell.setForeground(Color.RED);
 		}
 	}

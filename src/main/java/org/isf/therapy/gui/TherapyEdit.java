@@ -165,7 +165,11 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		}
 		this.patient = patient;
 		if (admitted) {
-			this.ward = admMan.getCurrentAdmission(patient).getWard();
+			try {
+				this.ward = admMan.getCurrentAdmission(patient).getWard();
+			} catch (OHServiceException e1) {
+				OHServiceExceptionUtil.showMessages(e1);
+			}
 		}
 		initComponents();
 		addWindowListener(new WindowAdapter() {
