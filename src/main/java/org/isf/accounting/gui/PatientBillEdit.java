@@ -88,6 +88,8 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.RememberDates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Create a single Patient Bill
@@ -96,6 +98,8 @@ import org.isf.utils.time.RememberDates;
  * @author Mwithi
  */
 public class PatientBillEdit extends JDialog implements SelectionListener {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientBillEdit.class);
 
 //LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList patientBillListener = new EventListenerList();
@@ -124,7 +128,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	public void patientSelected(Patient patient) {
 		// patientSelected = patient;
 		setPatientSelected(patient);
-		List<Bill> patientPendingBills = billManager.getPendingBills(patient.getCode());
+		List<Bill> patientPendingBills = new ArrayList<>();
+		try {
+			patientPendingBills = billManager.getPendingBills(patient.getCode());
+		} catch (OHServiceException ohServiceException) {
+			LOGGER.error(ohServiceException.getMessage(), ohServiceException);
+		}
 		if (patientPendingBills.isEmpty()) {
 			// BILL
 			thisBill.setBillPatient(patientSelected);
@@ -1556,14 +1565,18 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				}
 
-				BillItems newItem = new BillItems(0,
-						billManager.getBill(billID),
-						false,
-						"", //$NON-NLS-1$
-						desc,
-						amount,
-						1);
-				addItem(newItem);
+				try {
+					BillItems newItem = new BillItems(0,
+							billManager.getBill(billID),
+							false,
+							"", //$NON-NLS-1$
+							desc,
+							amount,
+							1);
+					addItem(newItem);
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
+				}
 			});
 		}
 		return jButtonCustom;
@@ -1624,14 +1637,18 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private void addItem(Price prc, int qty, boolean isPrice) {
 		if (prc != null) {
 			double amount = prc.getPrice();
-			BillItems item = new BillItems(0,
-					billManager.getBill(billID),
-					isPrice,
-					prc.getGroup() + prc.getItem(),
-					prc.getDesc(),
-					amount,
-					qty);
-			billItems.add(item);
+			try {
+				BillItems item = new BillItems(0, 
+						billManager.getBill(billID), 
+						isPrice, 
+						prc.getGroup()+prc.getItem(),
+						prc.getDesc(),
+						amount,
+						qty);
+				billItems.add(item);
+			} catch(OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
+			}
 			modified = true;
 			jTableBill.updateUI();
 			updateTotals();
@@ -1668,15 +1685,19 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			updateTotals();
 		}
 	}
-
+	
 	private void addPayment(GregorianCalendar datePay, double qty) {
 		if (qty != 0) {
-			BillPayments pay = new BillPayments(0,
-					billManager.getBill(billID),
-					datePay,
-					qty,
-					user);
-			payItems.add(pay);
+			try {
+				BillPayments pay = new BillPayments(0,
+						billManager.getBill(billID),
+						datePay,
+						qty,
+						user);
+				payItems.add(pay);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
+			}
 			modified = true;
 			Collections.sort(payItems);
 			jTablePayment.updateUI();
