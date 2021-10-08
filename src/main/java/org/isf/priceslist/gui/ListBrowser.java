@@ -45,13 +45,13 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
-public class ListBrowser extends ModalJFrame  implements ListListener{
+public class ListBrowser extends ModalJFrame implements ListListener {
 
 	@Override
 	public void listInserted(AWTEvent e) {
 		try {
 			listArray = listManager.getLists();
-		} catch(OHServiceException ex) {
+		} catch (OHServiceException ex) {
 			OHServiceExceptionUtil.showMessages(ex);
 		}
 		jTablePriceLists.setModel(new ListBrowserModel());
@@ -218,7 +218,7 @@ public class ListBrowser extends ModalJFrame  implements ListListener{
 						}
 
 						// Save new list
-						if (newName.equals("")) {
+						if (newName.isEmpty()) {
 							newName = MessageBundle.getMessage("angal.priceslist.copyof").concat(" ").concat(list.getName());
 						}
 						PriceList copiedList = new PriceList(list.getId(),MessageBundle.getMessage("angal.priceslist.acode"),newName,MessageBundle.getMessage("angal.priceslist.adescription"),list.getCurrency());

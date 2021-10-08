@@ -23,7 +23,7 @@ package org.isf.malnutrition.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -165,7 +165,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 				MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(selectedrow, -1));
+				malnutrition = (Malnutrition) (model.getValueAt(selectedrow, -1));
 				InsertMalnutrition editRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, false);
 				editRecord.addMalnutritionListener(MalnutritionBrowser.this);
 				editRecord.setVisible(true);
@@ -181,7 +181,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
-				Malnutrition malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+				Malnutrition malnutrition = (Malnutrition) (model.getValueAt(table.getSelectedRow(), -1));
 				int answer = MessageDialog.yesNo(null, "angal.malnutrition.delete.msg");
 				if (answer == JOptionPane.YES_OPTION) {
 					if (malnutrition == null) {
@@ -281,15 +281,14 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			// return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
 
-	private String getConvertedString(GregorianCalendar time) {
+	private String getConvertedString(LocalDateTime time) {
 		if (time == null) {
 			return MessageBundle.getMessage("angal.malnutrition.nodate.msg");
 		}
-		return TimeTools.formatDateTime(time.getTime(), "dd/MM/yyyy");
+		return TimeTools.formatDateTime(time, "dd/MM/yyyy");
 	}
 }

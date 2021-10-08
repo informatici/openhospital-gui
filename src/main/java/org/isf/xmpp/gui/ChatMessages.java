@@ -66,14 +66,13 @@ public class ChatMessages extends JTextPane {
 	}
 
 	//print notification of file transfer
-	public void printNotification(String name, String file_transfer,
-			JButton accept, JButton reject) {
+	public void printNotification(String name, String fileTransfer, JButton accept, JButton reject) {
 
 		Document doc = getDocument();
 		int position = doc.getEndPosition().getOffset();
 		StyleConstants.setForeground(keyWord, greenColor);
 		try {
-			doc.insertString(position, "\n*** " + file_transfer + "\n", keyWord);
+			doc.insertString(position, "\n*** " + fileTransfer + "\n", keyWord);
 		} catch (BadLocationException badLocationException) {
 			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
@@ -97,7 +96,6 @@ public class ChatMessages extends JTextPane {
 		StyleConstants.setBold(keyWord, false);
 		StyleConstants.setForeground(keyWord, Color.black);
 		sDoc.insertString(sDoc.getEndPosition().getOffset(), message + "\n", keyWord);
-
 	}
 
 	public void printReport(String name, String report) {
@@ -130,7 +128,7 @@ public class ChatMessages extends JTextPane {
 		StyleConstants.setForeground(keyWord, greenColor);
 
 		try {
-			doc.insertString(position, MessageBundle.formatMessage("angal.xmpp.wantstosharewithyouthisreport.fmt.msg",name, typeReport), keyWord);
+			doc.insertString(position, MessageBundle.formatMessage("angal.xmpp.wantstosharewithyouthisreport.fmt.msg", name, typeReport), keyWord);
 		} catch (BadLocationException badLocationException) {
 			LOGGER.error(badLocationException.getMessage(), badLocationException);
 		}
@@ -142,7 +140,6 @@ public class ChatMessages extends JTextPane {
 			new GenericReportFromDateToDate(fromDate, toDate, typeReport, typeReport, false);
 			view.setEnabled(false);
 		});
-
 	}
 
 }

@@ -24,7 +24,9 @@ package org.isf.lab.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -91,10 +93,9 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	public void labUpdated() {
 		filterButton.doClick();
 	}
-	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	
+
+	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton buttonEdit = null;
@@ -218,7 +219,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 				try {
 					List<LaboratoryForPrint> labs;
-					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDate(), dateTo.getDate());
+					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
 					if (!labs.isEmpty()) {
 						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 					}
@@ -306,7 +307,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			buttonNew.addActionListener(actionEvent -> {
 				laboratory = new Laboratory(0, new Exam("", "",
 						new ExamType("", ""), 0, ""),
-						new GregorianCalendar(), "P", "", new Patient(), "");
+						LocalDateTime.now(), "P", "", new Patient(), "");
 				if (GeneralData.LABEXTENDED) {
 					if (GeneralData.LABMULTIPLEINSERT) {
 						LabNew editrecord = new LabNew(myFrame);
@@ -342,8 +343,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				} else {
 					Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(LabBrowser.this, "angal.lab.deletelabexam.fmt.msg",
-							dateFormat.format(lab.getDate().getTime()),
-							dateTimeFormat.format(lab.getExamDate().getTime()),
+							dateFormat.format(lab.getDate()),
+							dateFormat.format(lab.getExamDate()),
 							lab.getExam(),
 							lab.getPatName(),
 							lab.getResult());
@@ -530,7 +531,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
 				}
-				model = new LabBrowsingModel(typeSelected, dateFrom.getDate(), dateTo.getDate());
+				model = new LabBrowsingModel(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
 				model.fireTableDataChanged();
 				jTable.updateUI();
 			});
@@ -549,7 +550,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		private static final long serialVersionUID = 1L;
 		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
 
-		public LabBrowsingModel(String exam, GregorianCalendar dateFrom, GregorianCalendar dateTo) {
+		public LabBrowsingModel(String exam, LocalDate dateFrom, LocalDate dateTo) {
 			try {
 				pLabs = manager.getLaboratory(exam, dateFrom, dateTo);
 			} catch (OHServiceException e) {
@@ -596,7 +597,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			if (c == -1) {
 				return lab;
 			} else if (c == 0) {
-				return dateFormat.format(lab.getExamDate().getTime());
+				return dateFormat.format(lab.getExamDate());
 			} else if (c == 1) {
 				return lab.getPatName();
 			} else if (c == 2) {
@@ -609,7 +610,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			// return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}

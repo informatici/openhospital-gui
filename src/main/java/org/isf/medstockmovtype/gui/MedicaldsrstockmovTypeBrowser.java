@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements MedicaldsrstockmovTypeListener{
+public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements MedicaldsrstockmovTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<MovementType> pMedicaldsrstockmovType;
@@ -57,7 +57,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {80, 200, 40};
+	private int[] pColumnWidth = { 80, 200, 40 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;

@@ -59,7 +59,6 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 	public void wardInserted(AWTEvent e) {
 		pWard.add(0,ward);
 		((WardBrowserModel)table.getModel()).fireTableDataChanged();
-		//table.updateUI();
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
 		}
@@ -185,7 +184,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					ward = (Ward)(model.getValueAt(table.getSelectedRow(), -1));
 					WardEdit editrecord = new WardEdit(myFrame,ward,false);
 					editrecord.addWardListener(WardBrowser.this);
 					editrecord.setVisible(true);
@@ -228,7 +227,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 					MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-					Ward ward = (Ward) (((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					Ward ward = (Ward) (model.getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
 					try {
 						if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))) {
@@ -366,10 +365,11 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		public Class<?> getColumnClass(int columnIndex) {
 			return pColumnClass[columnIndex];
 		}
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
+
 }

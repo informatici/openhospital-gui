@@ -53,48 +53,50 @@ import org.isf.vactype.model.VaccineType;
  * 19/10/2011 - Cla - version is now 1.0
  * ------------------------------------------
  */
-public class VaccineTypeEdit extends JDialog{
+public class VaccineTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-    private EventListenerList vaccineTypeListeners = new EventListenerList();
+	private EventListenerList vaccineTypeListeners = new EventListenerList();
 
-    public interface VaccineTypeListener extends EventListener {
-        void vaccineTypeUpdated(AWTEvent e);
-        void vaccineTypeInserted(AWTEvent e);
-    }
-    
-    public void addVaccineTypeListener(VaccineTypeListener l) {
-        vaccineTypeListeners.add(VaccineTypeListener.class, l);
-    }
+	public interface VaccineTypeListener extends EventListener {
 
-    public void removeVaccineTypeListener(VaccineTypeListener l) {
-    	vaccineTypeListeners.remove(VaccineTypeListener.class, l);
-    }
+		void vaccineTypeUpdated(AWTEvent e);
 
-    
-    private void fireVaccineInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		void vaccineTypeInserted(AWTEvent e);
+	}
 
-			private static final long serialVersionUID = 1L;};
+	public void addVaccineTypeListener(VaccineTypeListener l) {
+		vaccineTypeListeners.add(VaccineTypeListener.class, l);
+	}
 
-        EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((VaccineTypeListener) listener).vaccineTypeInserted(event);
-	    }
-    }
+	public void removeVaccineTypeListener(VaccineTypeListener l) {
+		vaccineTypeListeners.remove(VaccineTypeListener.class, l);
+	}
 
-    
-    private void fireVaccineUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireVaccineInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
 		EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((VaccineTypeListener) listener).vaccineTypeUpdated(event);
-	    }
-    }
+		for (EventListener listener : listeners) {
+			((VaccineTypeListener) listener).vaccineTypeInserted(event);
+		}
+	}
+
+	private void fireVaccineUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = vaccineTypeListeners.getListeners(VaccineTypeListener.class);
+		for (EventListener listener : listeners) {
+			((VaccineTypeListener) listener).vaccineTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -219,7 +221,6 @@ public class VaccineTypeEdit extends JDialog{
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 						}
 					} catch (OHServiceException e1) {
-						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
 					}
 				} else { // updating
@@ -235,7 +236,6 @@ public class VaccineTypeEdit extends JDialog{
 								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
 						} catch (OHServiceException e1) {
-							result = false;
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 					}
@@ -293,4 +293,5 @@ public class VaccineTypeEdit extends JDialog{
 		}
 		return jDataPanel;
 	}
+
 }

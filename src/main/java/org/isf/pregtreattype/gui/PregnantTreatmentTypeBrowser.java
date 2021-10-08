@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener{
+public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<PregnantTreatmentType> pPregnantTreatmentType;

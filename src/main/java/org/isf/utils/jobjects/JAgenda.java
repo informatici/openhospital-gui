@@ -87,14 +87,14 @@ import javax.swing.UIManager;
  *
  * @author Mwithi
  */
-public class JAgenda extends JPanel implements ActionListener, KeyListener,	FocusListener {
-	
+public class JAgenda extends JPanel implements ActionListener, KeyListener, FocusListener {
+
 	private static final long serialVersionUID = 5876398337018781820L;
 
 	private JDialog owner;
-	
+
 	protected AgendaDayObject[] days;
-	
+
 	protected JButton[] weeks;
 
 	protected AgendaDayObject selectedDay;
@@ -108,9 +108,9 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	protected Color oldDayBackgroundColor;
 
 	protected Color selectedColor;
-	
+
 	protected Color daySundayForeground;
-	
+
 	protected Color dayForegroundColor;
 
 	protected Color sundayForeground;
@@ -118,9 +118,9 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	protected Color weekdayForeground;
 
 	protected Color decorationBackgroundColor;
-	
+
 	protected Color therapyColor;
-	
+
 	protected String[] dayNames;
 
 	protected Calendar calendar;
@@ -150,8 +150,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	protected Date defaultMaxSelectableDate;
 
 	protected int maxDayCharacters;
-	
-	protected Dimension initCellSize = new Dimension(50,50);
+
+	protected Dimension initCellSize = new Dimension(50, 50);
 
 	/**
 	 * Default JDayChooser constructor.
@@ -160,25 +160,22 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 		this(false);
 		this.owner = owner;
 	}
-	
+
 	public JAgenda(JFrame owner) {
 		this(false);
 	}
 
 	/**
 	 * JDayChooser constructor.
-	 * 
-	 * @param weekOfYearVisible
-	 *            true, if the weeks of a year shall be shown
+	 *
+	 * @param weekOfYearVisible true, if the weeks of a year shall be shown
 	 */
 	public JAgenda(boolean weekOfYearVisible) {
 		setName("JDayChooser");
 		setBackground(Color.blue);
 		this.weekOfYearVisible = weekOfYearVisible;
 		locale = Locale.getDefault();
-		//ALEX
-		days = new AgendaDayObject[49]; 
-		//ALEX
+		days = new AgendaDayObject[49];
 		selectedDay = null;
 		calendar = Calendar.getInstance(locale);
 		today = (Calendar) calendar.clone();
@@ -186,32 +183,26 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 		setLayout(new BorderLayout());
 
 		dayPanel = new JPanel();
-		//dayPanel.setLayout(new GridLayout(6, 7));
 		dayPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		
+
 		daySundayForeground = new Color(164, 0, 0, 48);
-		dayForegroundColor = new Color(0, 0 , 0, 48);
+		dayForegroundColor = new Color(0, 0, 0, 48);
 		sundayForeground = new Color(164, 0, 0);
 		weekdayForeground = new Color(0, 90, 164);
 
-		// decorationBackgroundColor = new Color(194, 211, 252);
-		// decorationBackgroundColor = new Color(206, 219, 246);
 		decorationBackgroundColor = new Color(210, 228, 238);
 		int index = 0;
 		for (int y = 0; y < 7; y++) {
 			for (int x = 0; x < 7; x++) {
 				if (y == 0) {
-					// Create a button that doesn't react on clicks or focus
-					// changes.
+					// Create a button that doesn't react on clicks or focus changes.
 					// Thanks to Thomas Schaefer for the focus hint :)
 					days[index] = new AgendaDayObject(null);
 					c.fill = GridBagConstraints.HORIZONTAL;
 					c.weightx = 1;
-					//c.weighty = 0;
 				} else {
 					days[index] = new AgendaDayObject(index);
-					//days[index].getList().addMouseListener(new MyMouseListener());
 					c.fill = GridBagConstraints.BOTH;
 					c.weightx = 1;
 					c.weighty = 1;
@@ -252,13 +243,13 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 		setDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 		add(dayPanel, BorderLayout.CENTER);
-		
+
 		if (weekOfYearVisible) {
 			add(weekPanel, BorderLayout.WEST);
 		}
 		initialized = true;
 		updateUI();
-		
+
 	}
 
 	/**
@@ -316,8 +307,6 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	 */
 	protected void initDecorations() {
 		for (int x = 0; x < 7; x++) {
-			//days[x].setContentAreaFilled(decorationBackgroundVisible);
-			//days[x].setBorderPainted(decorationBordersVisible);
 			days[x].invalidate();
 			days[x].repaint();
 			weeks[x].setContentAreaFilled(decorationBackgroundVisible);
@@ -398,8 +387,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 		Date day = tmpCalendar.getTime();
 		int n = 0;
-		//Color foregroundColor = getForeground();
-		
+
 		while (day.before(firstDayInNextMonth)) {
 			days[i + n + 7].getLabel().setText(Integer.toString(n + 1));
 			days[i + n + 7].setVisible(true);
@@ -407,7 +395,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 			if ((tmpCalendar.get(Calendar.DAY_OF_YEAR) == today
 					.get(Calendar.DAY_OF_YEAR))
 					&& (tmpCalendar.get(Calendar.YEAR) == today
-							.get(Calendar.YEAR))) {
+					.get(Calendar.YEAR))) {
 				days[i + n + 7].getLabel().setForeground(daySundayForeground);
 			} else {
 				days[i + n + 7].getLabel().setForeground(dayForegroundColor);
@@ -441,9 +429,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Returns the locale.
-	 * 
+	 *
 	 * @return the locale value
-	 * 
 	 * @see #setLocale
 	 */
 	@Override
@@ -453,10 +440,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Sets the locale.
-	 * 
-	 * @param locale
-	 *            the new locale value
-	 * 
+	 *
+	 * @param locale the new locale value
 	 * @see #getLocale
 	 */
 	@Override
@@ -499,15 +484,6 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 			selectedDay.repaint();
 		}
 
-//		for (int i = 7; i < 49; i++) {
-//			if (days[i].getText().equals(Integer.toString(day))) {
-//				selectedDay = days[i];
-//				selectedDay.setBackground(selectedColor);
-//				break;
-//			}
-//		}
-		
-		
 		if (alwaysFireDayProperty) {
 			firePropertyChange("day", 0, day);
 		} else {
@@ -516,11 +492,10 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	}
 
 	/**
-	 * this is needed for JDateChooser.
-	 * 
-	 * @param alwaysFire
-	 *            true, if day property shall be fired every time a day is
-	 *            chosen.
+	 * This is needed for JDateChooser.
+	 *
+	 * @param alwaysFire true, if day property shall be fired every time a day is
+	 * chosen.
 	 */
 	public void setAlwaysFireDayProperty(boolean alwaysFire) {
 		alwaysFireDayProperty = alwaysFire;
@@ -528,9 +503,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Returns the selected day.
-	 * 
+	 *
 	 * @return the day value
-	 * 
 	 * @see #setDay
 	 */
 	public int getDay() {
@@ -546,8 +520,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	public void setMonth(int month) {
 		calendar.set(Calendar.MONTH, month);
 		int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-		
-		int adjustedDay = day;
+
+		int adjustedDay;
 		if (day > maxDays) {
 			adjustedDay = maxDays;
 			setDay(adjustedDay);
@@ -610,7 +584,6 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 			for (int i = 7; i < 49; i++) {
 				days[i].setForeground(foreground);
 			}
-
 			drawDays();
 		}
 	}
@@ -622,10 +595,9 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	 */
 	@Override
 	public void actionPerformed(ActionEvent actionEvent) {
-
 		JButton button = (JButton) actionEvent.getSource();
 		String buttonText = button.getText();
-		int day = new Integer(buttonText);
+		int day = Integer.valueOf(buttonText);
 		setDay(day);
 	}
 
@@ -654,9 +626,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Does nothing.
-	 * 
-	 * @param e
-	 *            the FocusEvent
+	 *
+	 * @param e the FocusEvent
 	 */
 	@Override
 	public void focusLost(FocusEvent e) {
@@ -710,15 +681,15 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 
-		for (short i = 0; i < days.length; i++) {
-			if (days[i] != null) {
-				days[i].setEnabled(enabled);
+		for (AgendaDayObject agendaDayObject : days) {
+			if (agendaDayObject != null) {
+				agendaDayObject.setEnabled(enabled);
 			}
 		}
 
-		for (short i = 0; i < weeks.length; i++) {
-			if (weeks[i] != null) {
-				weeks[i].setEnabled(enabled);
+		for (JButton week : weeks) {
+			if (week != null) {
+				week.setEnabled(enabled);
 			}
 		}
 	}
@@ -726,7 +697,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	/**
 	 * In some Countries it is often useful to know in which week of the year a
 	 * date is.
-	 * 
+	 *
 	 * @return boolean true, if the weeks of the year is shown
 	 */
 	public boolean isWeekOfYearVisible() {
@@ -755,7 +726,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Returns the day panel.
-	 * 
+	 *
 	 * @return the day panel
 	 */
 	public JPanel getDayPanel() {
@@ -764,7 +735,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Returns the color of the decoration (day names and weeks).
-	 * 
+	 *
 	 * @return the color of the decoration (day names and weeks).
 	 */
 	public Color getDecorationBackgroundColor() {
@@ -794,7 +765,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Returns the Sunday foreground.
-	 * 
+	 *
 	 * @return Color the Sunday foreground.
 	 */
 	public Color getSundayForeground() {
@@ -803,7 +774,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Returns the weekday foreground.
-	 * 
+	 *
 	 * @return Color the weekday foreground.
 	 */
 	public Color getWeekdayForeground() {
@@ -812,9 +783,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Sets the Sunday foreground.
-	 * 
-	 * @param sundayForeground
-	 *            The sundayForeground to set
+	 *
+	 * @param sundayForeground The sundayForeground to set
 	 */
 	public void setSundayForeground(Color sundayForeground) {
 		this.sundayForeground = sundayForeground;
@@ -845,7 +815,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	/**
 	 * The decoration background is the background color of the day titles and
 	 * the weeks of the year.
-	 * 
+	 *
 	 * @return Returns true, if the decoration background is painted.
 	 */
 	public boolean isDecorationBackgroundVisible() {
@@ -855,9 +825,8 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	/**
 	 * The decoration background is the background color of the day titles and
 	 * the weeks of the year.
-	 * 
-	 * @param decorationBackgroundVisible
-	 *            true, if the decoration background shall be painted.
+	 *
+	 * @param decorationBackgroundVisible true, if the decoration background shall be painted.
 	 */
 	public void setDecorationBackgroundVisible(boolean decorationBackgroundVisible) {
 		this.decorationBackgroundVisible = decorationBackgroundVisible;
@@ -867,7 +836,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	/**
 	 * The decoration border is the button border of the day titles and the
 	 * weeks of the year.
-	 * 
+	 *
 	 * @return Returns true, if the decoration border is painted.
 	 */
 	public boolean isDecorationBordersVisible() {
@@ -892,17 +861,17 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	public void setDayBordersVisible(boolean dayBordersVisible) {
 		this.dayBordersVisible = dayBordersVisible;
 		if (initialized) {
-//			for (int x = 7; x < 49; x++) {
-//				if ("Windows".equals(UIManager.getLookAndFeel().getID())) {
-//					//days[x].setContentAreaFilled(dayBordersVisible);
-//					days[x].setBorder(BorderFactory.createLineBorder(Color.BLUE));
-//				} else {
-//					//days[x].setContentAreaFilled(true);
-//					days[x].setBorder(BorderFactory.createLineBorder(Color.BLUE));
-//				}
-//				//days[x].setBorderPainted(dayBordersVisible);
-//				days[x].setBorder(BorderFactory.createLineBorder(Color.BLUE));
-//			}
+			//			for (int x = 7; x < 49; x++) {
+			//				if ("Windows".equals(UIManager.getLookAndFeel().getID())) {
+			//					//days[x].setContentAreaFilled(dayBordersVisible);
+			//					days[x].setBorder(BorderFactory.createLineBorder(Color.BLUE));
+			//				} else {
+			//					//days[x].setContentAreaFilled(true);
+			//					days[x].setBorder(BorderFactory.createLineBorder(Color.BLUE));
+			//				}
+			//				//days[x].setBorderPainted(dayBordersVisible);
+			//				days[x].setBorder(BorderFactory.createLineBorder(Color.BLUE));
+			//			}
 		}
 	}
 
@@ -912,7 +881,6 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	@Override
 	public void updateUI() {
 		super.updateUI();
-		//setFont(Font.decode("Dialog Plain 11"));
 
 		if (weekPanel != null) {
 			weekPanel.updateUI();
@@ -993,7 +961,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Gets the maximum selectable date.
-	 * 
+	 *
 	 * @return the maximum selectable date
 	 */
 	public Date getMaxSelectableDate() {
@@ -1002,7 +970,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 
 	/**
 	 * Gets the minimum selectable date.
-	 * 
+	 *
 	 * @return the minimum selectable date
 	 */
 	public Date getMinSelectableDate() {
@@ -1012,7 +980,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	/**
 	 * Gets the maximum number of characters of a day name or 0. If 0 is
 	 * returned, dateFormatSymbols.getShortWeekdays() will be used.
-	 * 
+	 *
 	 * @return the maximum number of characters of a day name or 0.
 	 */
 	public int getMaxDayCharacters() {
@@ -1043,6 +1011,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 	}
 
 	class DecoratorButton extends JButton {
+
 		private static final long serialVersionUID = -5306477668406547496L;
 
 		public DecoratorButton() {
@@ -1071,11 +1040,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 					g.setColor(days[7].getBackground());
 				}
 				g.fillRect(0, 0, getWidth(), getHeight());
-				if (isBorderPainted()) {
-					setContentAreaFilled(true);
-				} else {
-					setContentAreaFilled(false);
-				}
+				setContentAreaFilled(isBorderPainted());
 			}
 			super.paint(g);
 		}
@@ -1099,12 +1064,12 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 		private JList list;
 		private JButton magnifier;
 		private int magnifierSize = 16;
-		
+
 		public AgendaDayObject() {
 		}
-		
+
 		public AgendaDayObject(Object obj) {
-			this.setLayout(new GridLayout(1,1));
+			this.setLayout(new GridLayout(1, 1));
 			label = new JLabel();
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setVerticalAlignment(SwingConstants.CENTER);
@@ -1115,26 +1080,25 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 		public AgendaDayObject(int day) {
 
 			this.day = day;
-			this.setLayout(new GridLayout(1,1));
-			
-			
+			this.setLayout(new GridLayout(1, 1));
+
 			//LABEL PANEL
 			label = new JLabel();
 			if (day != 0) {
 				label.setText(String.valueOf(day));
 			}
 			label.setForeground(dayForegroundColor);
-				
+
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setVerticalAlignment(SwingConstants.CENTER);
 			label.setOpaque(false);
-			
+
 			//JLIST
 			list = new JList();
 			list.setModel(new DefaultListModel());
 			list.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 			//JScrollPane scroll = new JScrollPane(list);
-			
+
 			//MAGNIFIER
 			magnifier = new JButton();
 			magnifier.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
@@ -1143,15 +1107,15 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 			magnifier.setFocusPainted(false);
 			magnifier.setContentAreaFilled(false);
 			magnifier.addActionListener(new MagnifierListener());
-											
+
 			//LAYER FOR OVERLAPPING
 			FilledLayeredPane layers = new FilledLayeredPane();
 			layers.add(label, JLayeredPane.PALETTE_LAYER);
 			layers.add(list, JLayeredPane.DEFAULT_LAYER);
 			layers.add(magnifier, JLayeredPane.POPUP_LAYER);
-			
+
 			this.add(layers);
-				
+
 		}
 
 		public int getDay() {
@@ -1170,7 +1134,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 		public void setList(JList list) {
 			this.list = list;
 		}
-		
+
 		public JLabel getLabel() {
 			return label;
 		}
@@ -1180,30 +1144,30 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 			private static final long serialVersionUID = 1L;
 
 			/**
-		     * Layout each of the components in this JLayeredPane so that they all fill
-		     * the entire extents of the layered pane -- from (0,0) to (getWidth(), getHeight())
-		     */
-		    @Override
-		    public void doLayout() {
-		        // Synchronizing on getTreeLock, because I see other layouts doing that.
-		        // see BorderLayout::layoutContainer(Container)
-		        synchronized(getTreeLock()) {
-		            int w = getWidth();
-		            int h = getHeight();
-		            for(Component c : getComponents()) {
-		            	c.setBounds(0, 0, w, h);
-		            	if (c instanceof JLabel) {
-		                	c.setFont(new Font("Serif", Font.PLAIN, (int) (h*0.8)));
-		                }
-		            	if (c instanceof JButton) {
-		            		c.setBounds(w-magnifierSize-5, h-magnifierSize-5, magnifierSize, magnifierSize);
-		            	}
-		            	
-		            }
-		        }
-		    }
+			 * Layout each of the components in this JLayeredPane so that they all fill
+			 * the entire extents of the layered pane -- from (0,0) to (getWidth(), getHeight())
+			 */
+			@Override
+			public void doLayout() {
+				// Synchronizing on getTreeLock, because I see other layouts doing that.
+				// see BorderLayout::layoutContainer(Container)
+				synchronized (getTreeLock()) {
+					int w = getWidth();
+					int h = getHeight();
+					for (Component c : getComponents()) {
+						c.setBounds(0, 0, w, h);
+						if (c instanceof JLabel) {
+							c.setFont(new Font("Serif", Font.PLAIN, (int) (h * 0.8)));
+						}
+						if (c instanceof JButton) {
+							c.setBounds(w - magnifierSize - 5, h - magnifierSize - 5, magnifierSize, magnifierSize);
+						}
+
+					}
+				}
+			}
 		}
-		
+
 		@Override
 		public void setVisible(boolean flag) {
 			this.label.setVisible(flag);
@@ -1211,25 +1175,26 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 			this.magnifier.setVisible(flag);
 			this.setBorder(null);
 		}
-		
+
 		public class MagnifierListener implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent actionEvent) {
-				
-				JPanel thisDay = null;
+
+				JPanel thisDay;
 				thisDay = AgendaDayObject.this.popUp();
 				final JDialog dialog = new JDialog(owner);
 				dialog.add(thisDay);
 				dialog.setUndecorated(true);
-				dialog.setSize(new Dimension(600,400));
+				dialog.setSize(new Dimension(600, 400));
 				dialog.setLocationRelativeTo(null);
 				dialog.setVisible(true);
 				dialog.setFocusable(true);
 				dialog.addFocusListener(new FocusListener() {
 
 					@Override
-					public void focusGained(FocusEvent e) {}
+					public void focusGained(FocusEvent e) {
+					}
 
 					@Override
 					public void focusLost(FocusEvent e) {
@@ -1238,46 +1203,46 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 				});
 			}
 		}
-		
+
 		private JPanel popUp() {
-			
+
 			//A NEW PANEL
 			JPanel copyPanel = new JPanel();
-			copyPanel.setLayout(new GridLayout(1,1));
+			copyPanel.setLayout(new GridLayout(1, 1));
 			JLabel label = new JLabel(this.label.getText());
-			
+
 			//LABEL
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setVerticalAlignment(SwingConstants.CENTER);
 			label.setOpaque(false);
 			label.setForeground(dayForegroundColor);
-			
+
 			//LIST WITH SCROLL
 			ListModel model = this.list.getModel();
 			JList list = new JList(model);
-			list.setFixedCellHeight( 40 );
+			list.setFixedCellHeight(40);
 			list.setCellRenderer(new ListCellRenderer() {
-				
-				protected DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
-				
+
+				DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
+
 				@Override
 				public Component getListCellRendererComponent(JList list,
 						Object value, int index, boolean isSelected,
 						boolean cellHasFocus) {
-				
+
 					JLabel cell = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 					cell.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.gray));
-					
+
 					return cell;
 				}
 			});
 			JScrollPane scroll = new JScrollPane(list);
-			
+
 			FilledLayeredPane layers = new FilledLayeredPane();
 			layers.add(label, JLayeredPane.PALETTE_LAYER);
 			layers.add(scroll, JLayeredPane.DEFAULT_LAYER);
 			copyPanel.add(layers);
-			
+
 			return copyPanel;
 		}
 	}
@@ -1303,28 +1268,28 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 		DefaultListModel model = (DefaultListModel) days[realIndex].getList().getModel();
 		model.addElement(obj);
 	}
-	
+
 	public void removeElement(int index, int day) {
-		
+
 		Calendar tmpCalendar = (Calendar) calendar.clone();
 		tmpCalendar.set(Calendar.HOUR_OF_DAY, 0);
 		tmpCalendar.set(Calendar.MINUTE, 0);
 		tmpCalendar.set(Calendar.SECOND, 0);
 		tmpCalendar.set(Calendar.MILLISECOND, 0);
-		
+
 		int firstDayOfWeek = tmpCalendar.getFirstDayOfWeek();
-		
+
 		tmpCalendar.set(Calendar.DAY_OF_MONTH, 1);
 		int firstDay = tmpCalendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
-		
+
 		int realIndex = 6 + firstDay + day;
-		
+
 		days[realIndex].getList().remove(index);
 	}
 
 	@Override
 	public void removeAll() {
-		
+
 		DefaultListModel model = new DefaultListModel();
 		for (AgendaDayObject day : days) {
 			if (day.getList() != null) {
@@ -1333,4 +1298,5 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener,	Focu
 			}
 		}
 	}
+
 }

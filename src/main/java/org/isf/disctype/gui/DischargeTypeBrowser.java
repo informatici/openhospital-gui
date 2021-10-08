@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia
  */
-public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeListener{
+public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<DischargeType> pDischargeType;

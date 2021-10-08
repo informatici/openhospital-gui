@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class OperationTypeBrowser extends ModalJFrame implements OperationTypeListener{
+public class OperationTypeBrowser extends ModalJFrame implements OperationTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<OperationType> pOperationType;

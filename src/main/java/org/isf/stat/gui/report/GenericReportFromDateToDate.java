@@ -50,46 +50,45 @@ import net.sf.jasperreports.view.JasperViewer;
  * 09/06/2007 - first version
  * -----------------------------------------------------------------
  */
-	public class GenericReportFromDateToDate {
+public class GenericReportFromDateToDate {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportFromDateToDate.class);
-    private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportFromDateToDate.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-		public  GenericReportFromDateToDate(String fromDate, String toDate, String jasperFileName, String defaultName, boolean toExcel) {
-			try{
-                File defaultFilename = new File(jasperReportsManager.compileDefaultFilename(defaultName));
-                
-				if (toExcel) {
-					JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFilename);
+	public GenericReportFromDateToDate(String fromDate, String toDate, String jasperFileName, String defaultName, boolean toExcel) {
+		try {
+			File defaultFilename = new File(jasperReportsManager.compileDefaultFilename(defaultName));
 
-                    int iRetVal = fcExcel.showSaveDialog(null);
-                    if (iRetVal == JFileChooser.APPROVE_OPTION)
-                    {
-                        File exportFile = fcExcel.getSelectedFile();
-                        FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();
-    					String extension = selectedFilter.getExtensions()[0];
-    					if (!exportFile.getName().endsWith(extension)) exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
-                        jasperReportsManager.getGenericReportFromDateToDateExcel(fromDate,toDate, jasperFileName, exportFile.getAbsolutePath());
-                    }
-                } else {
-                    JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportFromDateToDatePdf(fromDate, toDate, jasperFileName);
+			if (toExcel) {
+				JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFilename);
 
-                    //TODO: if (jasperReportResultDto.getJasperPrint().getPages().isEmpty()) show message dialog and avoid calling the viewer
-                    if (GeneralData.INTERNALVIEWER)
-                        JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
-                    else {
-                        Runtime rt = Runtime.getRuntime();
-                        rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
-                    }
+				int iRetVal = fcExcel.showSaveDialog(null);
+				if (iRetVal == JFileChooser.APPROVE_OPTION) {
+					File exportFile = fcExcel.getSelectedFile();
+					FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();
+					String extension = selectedFilter.getExtensions()[0];
+					if (!exportFile.getName().endsWith(extension)) {
+						exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
+					}
+					jasperReportsManager.getGenericReportFromDateToDateExcel(fromDate, toDate, jasperFileName, exportFile.getAbsolutePath());
 				}
-			} catch (OHReportException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			} catch (Exception e) {
-                LOGGER.error("", e);
-				MessageDialog.error(null, "angal.stat.reporterror.msg");
-			}
-		}
-		
-		
+			} else {
+				JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportFromDateToDatePdf(fromDate, toDate, jasperFileName);
 
+				//TODO: if (jasperReportResultDto.getJasperPrint().getPages().isEmpty()) show message dialog and avoid calling the viewer
+				if (GeneralData.INTERNALVIEWER) {
+					JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
+				} else {
+					Runtime rt = Runtime.getRuntime();
+					rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
+				}
+			}
+		} catch (OHReportException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		} catch (Exception e) {
+			LOGGER.error("", e);
+			MessageDialog.error(null, "angal.stat.reporterror.msg");
+		}
 	}
+
+}

@@ -50,8 +50,8 @@ public class JFromDateToDateChooserDialog extends JDialog {
 	/*
 	 * Return Value
 	 */
-	private Date dateFrom = null;
-	private Date dateTo = null;
+	private Date dateFrom;
+	private Date dateTo;
 	private boolean excel = false;
 
 	public JFromDateToDateChooserDialog(ModalJFrame owner) {
@@ -69,8 +69,8 @@ public class JFromDateToDateChooserDialog extends JDialog {
 	}
 
 	private void initComponents() {
-//		setPreferredSize(new Dimension(400, 200));
-		getContentPane().setLayout(new BorderLayout(10,10));
+		//		setPreferredSize(new Dimension(400, 200));
+		getContentPane().setLayout(new BorderLayout(10, 10));
 		getContentPane().add(getJFromDateToDateChooser(this.dateFrom, this.dateTo), BorderLayout.CENTER);
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
 		pack();
@@ -113,7 +113,7 @@ public class JFromDateToDateChooserDialog extends JDialog {
 		}
 		return buttonOK;
 	}
-	
+
 	private JButton getButtonExcel() {
 		if (buttonExcel == null) {
 			buttonExcel = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
@@ -138,11 +138,11 @@ public class JFromDateToDateChooserDialog extends JDialog {
 	public Date getDateFrom() {
 		return dateFrom;
 	}
-	
+
 	public Date getDateTo() {
 		return dateTo;
 	}
-	
+
 	public boolean isExcel() {
 		return excel;
 	}

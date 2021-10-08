@@ -45,15 +45,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class PregnantTreatmentTypeEdit extends JDialog{
+public class PregnantTreatmentTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList pregnantTreatmentTypeListeners = new EventListenerList();
 
-    public interface PregnantTreatmentTypeListener extends EventListener {
-        void pregnantTreatmentTypeUpdated(AWTEvent e);
-        void pregnantTreatmentTypeInserted(AWTEvent e);
-    }
+	public interface PregnantTreatmentTypeListener extends EventListener {
+
+		void pregnantTreatmentTypeUpdated(AWTEvent e);
+
+		void pregnantTreatmentTypeInserted(AWTEvent e);
+	}
 
     public void addPregnantTreatmentTypeListener(PregnantTreatmentTypeListener l) {
     	pregnantTreatmentTypeListeners.add(PregnantTreatmentTypeListener.class, l);
@@ -73,6 +75,7 @@ public class PregnantTreatmentTypeEdit extends JDialog{
 		    ((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeInserted(event);
 	    }
     }
+
     private void firePregnantTreatmentUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 

@@ -43,8 +43,8 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
-public class PatientBrowser extends ModalJFrame implements PatientListener{
-	
+public class PatientBrowser extends ModalJFrame implements PatientListener {
+
 	private static final long serialVersionUID = 1L;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),

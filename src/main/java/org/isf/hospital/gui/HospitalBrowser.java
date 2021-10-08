@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.VoLimitedTextField;
  *
  * @author Fin8, Furla, Thoia
  */
-public class HospitalBrowser extends ModalJFrame{
+public class HospitalBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 	private int pfrmBase = 96;
@@ -56,16 +56,16 @@ public class HospitalBrowser extends ModalJFrame{
 	private int pfrmHeight = 24;
 	private int pfrmBordX;
 	private int pfrmBordY;
-	private JPanel jContainPanel=null;
-	private JPanel jButtonPanel=null;
-	private JPanel jDataPanel=null;
-	private JPanel jNamePanel=null;
-	private JPanel jAddressPanel=null;
-	private JPanel jCityPanel=null;
-	private JPanel jTelePanel=null;
-	private JPanel jFaxPanel=null;
-	private JPanel jEmailPanel=null;	
-	private JPanel jCurrencyCodPanel=null;	
+	private JPanel jContainPanel = null;
+	private JPanel jButtonPanel = null;
+	private JPanel jDataPanel = null;
+	private JPanel jNamePanel = null;
+	private JPanel jAddressPanel = null;
+	private JPanel jCityPanel = null;
+	private JPanel jTelePanel = null;
+	private JPanel jFaxPanel = null;
+	private JPanel jEmailPanel = null;
+	private JPanel jCurrencyCodPanel = null;
 	private JTextField nameJTextField;
 	private JTextField addressJTextField;
 	private JTextField cityJTextField;
@@ -74,7 +74,7 @@ public class HospitalBrowser extends ModalJFrame{
 	private JTextField emailJTextField;
 	private JTextField currencyCodJTextField;
 	private HospitalBrowsingManager manager;
-	private Hospital hospital = null;
+	private Hospital hospital;
 	private JButton editJButton;
 	private JButton updateJButton;
 	private JButton closeJButton;

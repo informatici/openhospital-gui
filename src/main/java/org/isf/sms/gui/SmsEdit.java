@@ -31,6 +31,7 @@ import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 
@@ -67,7 +68,7 @@ import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
 public class SmsEdit extends JDialog implements SelectionListener {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private JPanel jCenterPanel;
 	private JPanel jButtonPanel;
 	private JPanel jNorthPanel;
@@ -83,11 +84,11 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	private JTextField jSchedTimeTextField;
 	private JButton JTimeButton;
 	private JButton jPatientButton;
-	
+
 	private int maxLength;
-	
+
 	private SmsManager smsManager = Context.getApplicationContext().getBean(SmsManager.class);
-	
+
 	/**
 	 * Create the dialog.
 	 */
@@ -118,70 +119,70 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		if (jNorthPanel == null) {
 			jNorthPanel = new JPanel();
 			jNorthPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[]{46, 110, 0, 0};
-			gbl_panel.rowHeights = new int[]{20, 0, 0, 0};
-			gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-			gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-			jNorthPanel.setLayout(gbl_panel);
+			GridBagLayout panel = new GridBagLayout();
+			panel.columnWidths = new int[]{46, 110, 0, 0};
+			panel.rowHeights = new int[]{20, 0, 0, 0};
+			panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+			panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+			jNorthPanel.setLayout(panel);
 			{
 				JLabel jSchedDateLabel = new JLabel(MessageBundle.getMessage("angal.sms.scheduleddate")); //$NON-NLS-1$
-				GridBagConstraints gbc_jSchedDateLabel = new GridBagConstraints();
-				gbc_jSchedDateLabel.anchor = GridBagConstraints.WEST;
-				gbc_jSchedDateLabel.insets = new Insets(0, 0, 5, 5);
-				gbc_jSchedDateLabel.gridx = 0;
-				gbc_jSchedDateLabel.gridy = 0;
-				jNorthPanel.add(jSchedDateLabel, gbc_jSchedDateLabel);
+				GridBagConstraints gbcSchedDateLabel = new GridBagConstraints();
+				gbcSchedDateLabel.anchor = GridBagConstraints.WEST;
+				gbcSchedDateLabel.insets = new Insets(0, 0, 5, 5);
+				gbcSchedDateLabel.gridx = 0;
+				gbcSchedDateLabel.gridy = 0;
+				jNorthPanel.add(jSchedDateLabel, gbcSchedDateLabel);
 			}
 			{
-				GridBagConstraints gbc_jSchedDateChooser = new GridBagConstraints();
-				gbc_jSchedDateChooser.insets = new Insets(0, 0, 5, 5);
-				gbc_jSchedDateChooser.anchor = GridBagConstraints.NORTHWEST;
-				gbc_jSchedDateChooser.gridx = 1;
-				gbc_jSchedDateChooser.gridy = 0;
-				jNorthPanel.add(getJSchedDateChooser(), gbc_jSchedDateChooser);
+				GridBagConstraints gbcSchedDateChooser = new GridBagConstraints();
+				gbcSchedDateChooser.insets = new Insets(0, 0, 5, 5);
+				gbcSchedDateChooser.anchor = GridBagConstraints.NORTHWEST;
+				gbcSchedDateChooser.gridx = 1;
+				gbcSchedDateChooser.gridy = 0;
+				jNorthPanel.add(getJSchedDateChooser(), gbcSchedDateChooser);
 			}
-			GridBagConstraints gbc_jSchedTimeLabel = new GridBagConstraints();
-			gbc_jSchedTimeLabel.anchor = GridBagConstraints.EAST;
-			gbc_jSchedTimeLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_jSchedTimeLabel.gridx = 0;
-			gbc_jSchedTimeLabel.gridy = 1;
-			jNorthPanel.add(getJSchedTimeLabel(), gbc_jSchedTimeLabel);
-			GridBagConstraints gbc_jSchedTimeTextField = new GridBagConstraints();
-			gbc_jSchedTimeTextField.anchor = GridBagConstraints.WEST;
-			gbc_jSchedTimeTextField.insets = new Insets(0, 0, 5, 5);
-			gbc_jSchedTimeTextField.gridx = 1;
-			gbc_jSchedTimeTextField.gridy = 1;
-			jNorthPanel.add(getJSchedTimeTextField(), gbc_jSchedTimeTextField);
-			GridBagConstraints gbc_JTimeButton = new GridBagConstraints();
-			gbc_JTimeButton.insets = new Insets(0, 0, 5, 0);
-			gbc_JTimeButton.gridx = 2;
-			gbc_JTimeButton.gridy = 1;
-			jNorthPanel.add(getJTimeButton(), gbc_JTimeButton);
+			GridBagConstraints gbcSchedTimeLabel = new GridBagConstraints();
+			gbcSchedTimeLabel.anchor = GridBagConstraints.EAST;
+			gbcSchedTimeLabel.insets = new Insets(0, 0, 5, 5);
+			gbcSchedTimeLabel.gridx = 0;
+			gbcSchedTimeLabel.gridy = 1;
+			jNorthPanel.add(getJSchedTimeLabel(), gbcSchedTimeLabel);
+			GridBagConstraints gbcSchedTimeTextField = new GridBagConstraints();
+			gbcSchedTimeTextField.anchor = GridBagConstraints.WEST;
+			gbcSchedTimeTextField.insets = new Insets(0, 0, 5, 5);
+			gbcSchedTimeTextField.gridx = 1;
+			gbcSchedTimeTextField.gridy = 1;
+			jNorthPanel.add(getJSchedTimeTextField(), gbcSchedTimeTextField);
+			GridBagConstraints gbcTimeButton = new GridBagConstraints();
+			gbcTimeButton.insets = new Insets(0, 0, 5, 0);
+			gbcTimeButton.gridx = 2;
+			gbcTimeButton.gridy = 1;
+			jNorthPanel.add(getJTimeButton(), gbcTimeButton);
 			{
-				JLabel JNumberLabel = new JLabel(MessageBundle.getMessage("angal.sms.number")); //$NON-NLS-1$
-				GridBagConstraints gbc_JNumberLabel = new GridBagConstraints();
-				gbc_JNumberLabel.anchor = GridBagConstraints.WEST;
-				gbc_JNumberLabel.insets = new Insets(0, 0, 0, 5);
-				gbc_JNumberLabel.gridx = 0;
-				gbc_JNumberLabel.gridy = 2;
-				jNorthPanel.add(JNumberLabel, gbc_JNumberLabel);
+				JLabel jNumberLabel = new JLabel(MessageBundle.getMessage("angal.sms.number")); //$NON-NLS-1$
+				GridBagConstraints gbcNumberLabel = new GridBagConstraints();
+				gbcNumberLabel.anchor = GridBagConstraints.WEST;
+				gbcNumberLabel.insets = new Insets(0, 0, 0, 5);
+				gbcNumberLabel.gridx = 0;
+				gbcNumberLabel.gridy = 2;
+				jNorthPanel.add(jNumberLabel, gbcNumberLabel);
 			}
 			{
 				jNumberTextField = new JTextField();
-				GridBagConstraints gbc_jNumberTextField = new GridBagConstraints();
-				gbc_jNumberTextField.fill = GridBagConstraints.HORIZONTAL;
-				gbc_jNumberTextField.insets = new Insets(0, 0, 0, 5);
-				gbc_jNumberTextField.gridx = 1;
-				gbc_jNumberTextField.gridy = 2;
-				jNorthPanel.add(jNumberTextField, gbc_jNumberTextField);
+				GridBagConstraints gbcNumberTextField = new GridBagConstraints();
+				gbcNumberTextField.fill = GridBagConstraints.HORIZONTAL;
+				gbcNumberTextField.insets = new Insets(0, 0, 0, 5);
+				gbcNumberTextField.gridx = 1;
+				gbcNumberTextField.gridy = 2;
+				jNorthPanel.add(jNumberTextField, gbcNumberTextField);
 				jNumberTextField.setColumns(15);
 			}
 			{
-				GridBagConstraints gbc_jPatientButton = new GridBagConstraints();
-				gbc_jPatientButton.gridx = 2;
-				gbc_jPatientButton.gridy = 2;
-				jNorthPanel.add(getJPatientButton(), gbc_jPatientButton);
+				GridBagConstraints gbcPatientButton = new GridBagConstraints();
+				gbcPatientButton.gridx = 2;
+				gbcPatientButton.gridy = 2;
+				jNorthPanel.add(getJPatientButton(), gbcPatientButton);
 			}
 		}
 		return jNorthPanel;
@@ -193,7 +194,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jPatientButton = new JButton();
 			jPatientButton.setIcon(new ImageIcon("./rsc/icons/other_button.png")); //$NON-NLS-1$
 			jPatientButton.addActionListener(actionEvent -> {
-				SelectPatient sp = new SelectPatient(SmsEdit.this, new String());
+				SelectPatient sp = new SelectPatient(SmsEdit.this, "");
 				sp.addSelectionListener(SmsEdit.this);
 				sp.pack();
 				sp.setVisible(true);
@@ -268,9 +269,9 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jOkButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			jOkButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jOkButton.addActionListener(actionEvent -> {
-				String number = jNumberTextField.getText().replaceAll(" ", "").trim(); //$NON-NLS-1$ //$NON-NLS-2$
+				String number = jNumberTextField.getText().replaceAll(" ", "").trim();
 				String text = jTextArea.getText();
-				Date schedDate = jSchedDateChooser.getDate();
+				LocalDateTime schedDate = jSchedDateChooser.getLocalDateTime();
 
 				Sms smsToSend = new Sms();
 				smsToSend.setSmsNumber(number);
@@ -284,7 +285,6 @@ public class SmsEdit extends JDialog implements SelectionListener {
 				} catch (OHServiceException e1) {
 
 					if (e1.getMessages().get(0).getTitle().equals("testMaxLenghtError")) {
-
 						int textLength = text.length();
 						int textParts = (textLength + maxLength - 1) / maxLength;
 						StringBuilder message = new StringBuilder();
@@ -295,7 +295,6 @@ public class SmsEdit extends JDialog implements SelectionListener {
 
 						int ok = JOptionPane.showConfirmDialog(SmsEdit.this, message.toString());
 						if (ok == JOptionPane.YES_OPTION) {
-
 							try {
 								smsManager.saveOrUpdate(smsToSend, true);
 							} catch (OHServiceException e2) {
@@ -325,26 +324,27 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		}
 		return jCancelButton;
 	}
+
 	private JPanel getPanel() {
 		if (panel == null) {
 			panel = new JPanel();
-			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[]{366, 53, 0};
-			gbl_panel.rowHeights = new int[]{14, 0};
-			gbl_panel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-			gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-			panel.setLayout(gbl_panel);
-			GridBagConstraints gbc_jCharactersLabel = new GridBagConstraints();
-			gbc_jCharactersLabel.insets = new Insets(0, 0, 0, 5);
-			gbc_jCharactersLabel.anchor = GridBagConstraints.NORTHEAST;
-			gbc_jCharactersLabel.gridx = 0;
-			gbc_jCharactersLabel.gridy = 0;
-			panel.add(getJCharactersLabel(), gbc_jCharactersLabel);
-			GridBagConstraints gbc_jLabelCount = new GridBagConstraints();
-			gbc_jLabelCount.anchor = GridBagConstraints.EAST;
-			gbc_jLabelCount.gridx = 1;
-			gbc_jLabelCount.gridy = 0;
-			panel.add(getJLabelCount(), gbc_jLabelCount);
+			GridBagLayout gridBagLayout = new GridBagLayout();
+			gridBagLayout.columnWidths = new int[]{366, 53, 0};
+			gridBagLayout.rowHeights = new int[]{14, 0};
+			gridBagLayout.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+			gridBagLayout.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+			panel.setLayout(gridBagLayout);
+			GridBagConstraints gbcCharactersLabel = new GridBagConstraints();
+			gbcCharactersLabel.insets = new Insets(0, 0, 0, 5);
+			gbcCharactersLabel.anchor = GridBagConstraints.NORTHEAST;
+			gbcCharactersLabel.gridx = 0;
+			gbcCharactersLabel.gridy = 0;
+			panel.add(getJCharactersLabel(), gbcCharactersLabel);
+			GridBagConstraints gbcLabelCount = new GridBagConstraints();
+			gbcLabelCount.anchor = GridBagConstraints.EAST;
+			gbcLabelCount.gridx = 1;
+			gbcLabelCount.gridy = 0;
+			panel.add(getJLabelCount(), gbcLabelCount);
 		}
 		return panel;
 	}
@@ -370,6 +370,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		}
 		return jSchedTimeLabel;
 	}
+
 	private JTextField getJSchedTimeTextField() {
 		if (jSchedTimeTextField == null) {
 			jSchedTimeTextField = new JTextField();

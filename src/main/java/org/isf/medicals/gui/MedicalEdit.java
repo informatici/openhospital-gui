@@ -245,7 +245,7 @@ public class MedicalEdit extends JDialog {
 						newMedical = (Medical) medical.clone();
 						newMedical.setType((MedicalType) typeComboBox.getSelectedItem());
 						newMedical.setDescription(descriptionTextField.getText());
-						newMedical.setProd_code(codeTextField.getText());
+						newMedical.setProdCode(codeTextField.getText());
 						newMedical.setPcsperpck(pcsperpckField.getValue());
 						newMedical.setMinqty(minQtiField.getValue());
 					} catch (CloneNotSupportedException cloneNotSupportedException) {
@@ -305,7 +305,7 @@ public class MedicalEdit extends JDialog {
 						if (result) {
 							medical.setType((MedicalType) typeComboBox.getSelectedItem());
 							medical.setDescription(descriptionTextField.getText());
-							medical.setProd_code(codeTextField.getText());
+							medical.setProdCode(codeTextField.getText());
 							medical.setPcsperpck(pcsperpckField.getValue());
 							medical.setMinqty(minQtiField.getValue());
 							fireMedicalUpdated();
@@ -357,7 +357,7 @@ public class MedicalEdit extends JDialog {
 				codeTextField = new VoLimitedTextField(5);
 			} else {
 				codeTextField = new VoLimitedTextField(5);
-				codeTextField.setText(medical.getProd_code());
+				codeTextField.setText(medical.getProdCode());
 			}
 		}
 		return codeTextField;

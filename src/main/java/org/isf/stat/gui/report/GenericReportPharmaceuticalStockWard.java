@@ -21,7 +21,7 @@
  */
 package org.isf.stat.gui.report;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 import org.isf.generaldata.GeneralData;
@@ -39,23 +39,23 @@ import net.sf.jasperreports.view.JasperViewer;
  * Created on 15/Jun/08
  */
 public class GenericReportPharmaceuticalStockWard {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPharmaceuticalStockWard.class);
-    private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-	public GenericReportPharmaceuticalStockWard(Date date, String jasperFileName, Ward ward) {
-		try{
-            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPharmaceuticalStockWardPdf(date, jasperFileName, ward);
-            if (GeneralData.INTERNALVIEWER)
-                JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
-            else {
-                Runtime rt = Runtime.getRuntime();
-                rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
-            }
-        } catch (Exception e) {
-            LOGGER.error("", e);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPharmaceuticalStockWard.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
+
+	public GenericReportPharmaceuticalStockWard(LocalDateTime date, String jasperFileName, Ward ward) {
+		try {
+			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPharmaceuticalStockWardPdf(date, jasperFileName, ward);
+			if (GeneralData.INTERNALVIEWER) {
+				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
+			} else {
+				Runtime rt = Runtime.getRuntime();
+				rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
+			}
+		} catch (Exception e) {
+			LOGGER.error("", e);
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
-        }
+		}
 	}
-	
+
 }

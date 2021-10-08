@@ -66,6 +66,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.time.Converters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,13 +85,13 @@ public class DicomViewGui extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DicomViewGui.class);
 
 	// status of framereader
-	private int patID = -1;
-	private Patient ohPatient = null;
-	private String serieNumber = "";
+	private int patID;
+	private Patient ohPatient;
+	private String serieNumber;
 	private Long[] frames = null;
 
 	// status of frame
-	private int frameIndex = 0;
+	private int frameIndex;
 	private BufferedImage tmpImg = null;
 	private DicomObject tmpDicom = null;
 	private FileDicom tmpDbFile = null;
@@ -205,18 +206,11 @@ public class DicomViewGui extends JPanel {
 			} else {
 				jSliderFrame.setEnabled(false);
 			}
-			
-			// center = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-			// ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			jPanelCenter = new JPanel();
 
-			// center.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
-
 			jPanelCenter.add(composeCenter(jPanelCenter.getWidth(), jPanelCenter.getHeight(), true));
 		}
-
-		// center.getViewport().setBackground(Color.BLACK);
 
 		jPanelCenter.setBackground(Color.BLACK);
 
@@ -268,11 +262,6 @@ public class DicomViewGui extends JPanel {
 			}
 
 			jPanelCenter.removeAll();
-			
-//			int perc = jSliderZoom.getValue();
-//			float value = (float) tmpImg.getWidth() * (float) perc / 100f;
-//			BufferedImage immagineResized = Scalr.resize(tmpImg, Math.round(value));
-
 			jPanelCenter.add(composeCenter(jPanelCenter.getWidth(), jPanelCenter.getHeight(), true));
 			validate();
 		}
@@ -295,16 +284,6 @@ public class DicomViewGui extends JPanel {
 		int perc = jSliderZoom.getValue();
 		float value = (float) tmpImg.getWidth() * (float) perc / 100f;
 		BufferedImage immagineResized = Scalr.resize(tmpImg, Math.round(value));
-
-		// if (immagineResized.getWidth()>immagineCanvas.getWidth())
-		// immagineResized =
-		// Scalr.resize(tmpImg,Math.round(immagineCanvas.getWidth()));
-		// immagineCanvas = new
-		// BufferedImage(immagineResized.getWidth(),immagineResized.getHeight(),BufferedImage.TYPE_INT_ARGB);
-
-		// drawQuadrant(immagineResized.getGraphics(),
-		// immagineResized.getHeight(),immagineResized.getWidth(),
-		// Color.LIGHT_GRAY);
 
 		Graphics2D canvas = (Graphics2D) imageCanvas.getGraphics();
 
@@ -364,7 +343,7 @@ public class DicomViewGui extends JPanel {
 		Color orig = canvas.getColor();
 		canvas.setColor(colScr);
 		int hi = 10;
-		String txt = "";
+		String txt;
 		canvas.drawString(MessageBundle.getMessage("angal.dicom.image.patient.oh"), 10, hi);
 		hi += VGAP;
 		txt = ohPatient.getName();
@@ -428,7 +407,7 @@ public class DicomViewGui extends JPanel {
 	private void drawStudyUpRight(Graphics2D canvas, int w, int h) {
 
 		Color orig = canvas.getColor();
-		String txt = "";
+		String txt;
 		canvas.setColor(colScr);
 		int hi = 10;
 		int ws = w - 200;
@@ -451,8 +430,7 @@ public class DicomViewGui extends JPanel {
 		canvas.drawString(txt, ws, hi);
 		hi += VGAP;
 		txt = "";
-		Date d = null;
-		d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : tmpDbFile.getDicomStudyDate();
+		Date d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : Converters.toDate(tmpDbFile.getDicomStudyDate());
 		DateFormat df = DateFormat.getDateInstance();
 		if (d != null) {
 			txt = df.format(d);
@@ -583,9 +561,6 @@ public class DicomViewGui extends JPanel {
 	private void setFrame(int frame) {
 		frameIndex = frame;
 		refreshFrame();
-
-		// center.getViewport().removeAll();
-		// center.getViewport().add(composeCenter(this.getWidth(),this.getHeight()));
 
 		resetMouseRelativePosition();
 		jPanelCenter.removeAll();

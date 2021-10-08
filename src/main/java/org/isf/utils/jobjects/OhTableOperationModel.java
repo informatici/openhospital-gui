@@ -21,9 +21,8 @@
  */
 package org.isf.utils.jobjects;
 
-import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,11 +38,11 @@ import org.isf.utils.exception.OHServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OhTableOperationModel<T> implements TableModel{
+public class OhTableOperationModel<T> implements TableModel {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OhTableOperationModel.class);
 
-	List<T> dataList;	
+	List<T> dataList;
 	List<T> filteredList;
 	OperationBrowserManager manageop = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	
@@ -52,18 +51,15 @@ public class OhTableOperationModel<T> implements TableModel{
 		this.filteredList = new ArrayList<>();
 
 		if (dataList != null) {
-			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext(); ) {
-				T t = (T) iterator.next();
-				this.filteredList.add(t);
-			}
+			this.filteredList.addAll(dataList);
 		}
 	}
 
 	public int filter(String searchQuery) {
 		this.filteredList = new ArrayList<>();
 
-		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext(); ) {
-			Object object = (Object) iterator.next();
+		for (T t : this.dataList) {
+			Object object = t;
 			if (object instanceof OperationRow) {
 				OperationRow price = (OperationRow) object;
 				String strItem = price.getOperation().getCode() + price.getOpResult();
@@ -137,13 +133,13 @@ public class OhTableOperationModel<T> implements TableModel{
 					case -1:
 						return opdObj;
 					case 0:
-						String dt = "";
+						String dt;
 						try {
-							final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
-							dt = currentDateFormat.format(opdObj.getOpDate().getTime());
+							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", Locale.FRENCH);
+							dt = currentDateFormat.format(opdObj.getOpDate());
 							value = dt;
 						} catch (Exception ex) {
-							value = opdObj.getOpDate().getTime().toString();
+							value = opdObj.getOpDate().toString();
 						}
 						break;
 					case 1:

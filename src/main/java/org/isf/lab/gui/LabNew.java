@@ -29,9 +29,9 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -119,7 +119,7 @@ public class LabNew extends JDialog implements SelectionListener {
 		//INTERFACE
 		jTextFieldPatient.setText(patientSelected.getName());
 		jTextFieldPatient.setEditable(false);
-		jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.changepatient")); //$NON-NLS-1$
+		jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.changepatient"));
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.changethepatientassociatedwiththisexams")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
 		inOut = getIsAdmitted();
@@ -197,8 +197,8 @@ public class LabNew extends JDialog implements SelectionListener {
 	private ExamRowBrowsingManager examRowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 
 	//Arrays for this Patient
-	private ArrayList<ArrayList<LaboratoryRow>> examResults = new ArrayList<>();
-	private ArrayList<Laboratory> examItems = new ArrayList<>();
+	private List<List<LaboratoryRow>> examResults = new ArrayList<>();
+	private List<Laboratory> examItems = new ArrayList<>();
 	private ExamTableModel jTableModel;
 	private JButton printLabelButton;
 	private JTextField jTextFieldExamResult;
@@ -291,9 +291,9 @@ public class LabNew extends JDialog implements SelectionListener {
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jButtonOK.addActionListener(actionEvent -> {
 
-				GregorianCalendar newDate = new GregorianCalendar();
+				LocalDateTime newDate = LocalDateTime.now();
 				try {
-					newDate.setTime(jCalendarDate.getDate());
+					newDate = jCalendarDate.getLocalDateTime();
 				} catch (Exception e1) {
 					MessageDialog.error(LabNew.this, "angal.lab.pleaseinsertavalidexamdate.msg");
 					return;
@@ -303,7 +303,7 @@ public class LabNew extends JDialog implements SelectionListener {
 
 				for (Laboratory lab : examItems) {
 					lab.setDate(newDate);
-					lab.setExamDate(newDate);
+					lab.setExamDate(newDate.toLocalDate());
 					lab.setInOutPatient(inOut);
 					lab.setPatient(patientSelected);
 					if (lab.getExam().getProcedure() == 3 && lab.getResult().isEmpty()) {
@@ -407,7 +407,7 @@ public class LabNew extends JDialog implements SelectionListener {
 				jPanelResults.removeAll();
 				jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
 
-				ArrayList<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
+				List<LaboratoryRow> checking = examResults.get(jTableExams.getSelectedRow());
 				boolean checked;
 				JPanel resultsContainer = new JPanel();
 				resultsContainer.setLayout(new GridLayout(0, 1));
@@ -560,7 +560,7 @@ public class LabNew extends JDialog implements SelectionListener {
 
 				patientSelected = null;
 				//INTERFACE
-				jTextFieldPatient.setText(""); //$NON-NLS-1$
+				jTextFieldPatient.setText("");
 				jTextFieldPatient.setEditable(false);
 				jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.findpatient.btn"));
 				jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.associateapatientwiththisexam")); //$NON-NLS-1$
@@ -627,9 +627,9 @@ public class LabNew extends JDialog implements SelectionListener {
 
 	private CustomJDateChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			jCalendarDate = new CustomJDateChooser(RememberDates.getLastLabExamDateGregorian().getTime()); //To remind last used
+			jCalendarDate = new CustomJDateChooser(RememberDates.getLastLabExamDate()); //To remind last used
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy (HH:mm:ss)"); //$NON-NLS-1$
+			jCalendarDate.setDateFormatString("dd/MM/yy (HH:mm:ss)");
 		}
 		return jCalendarDate;
 	}
@@ -743,7 +743,7 @@ public class LabNew extends JDialog implements SelectionListener {
 				dialog.setContentPane(examPicker);
 				dialog.setVisible(true);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-				ArrayList<Exam> exams = examPicker.getAllSelectedObject();
+				List<Exam> exams = examPicker.getAllSelectedObject();
 
 				Exam exa;
 				Laboratory lab;

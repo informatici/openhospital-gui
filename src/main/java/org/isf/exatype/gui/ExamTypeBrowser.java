@@ -52,7 +52,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  * 03/11/2006 - ross - version is now 1.0
  * ------------------------------------------
  */
-public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
+public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 
 	private static final long serialVersionUID = 1L;
 

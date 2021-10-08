@@ -46,19 +46,21 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
+public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList medicaldsrstockmovTypeListeners = new EventListenerList();
 
-    public interface MedicaldsrstockmovTypeListener extends EventListener {
-        void medicaldsrstockmovTypeUpdated(AWTEvent e);
-        void medicaldsrstockmovTypeInserted(AWTEvent e);
-    }
+	public interface MedicaldsrstockmovTypeListener extends EventListener {
 
-    public void addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener l) {
-    	medicaldsrstockmovTypeListeners.add(MedicaldsrstockmovTypeListener.class, l);
-    }
+		void medicaldsrstockmovTypeUpdated(AWTEvent e);
+
+		void medicaldsrstockmovTypeInserted(AWTEvent e);
+	}
+
+	public void addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener l) {
+		medicaldsrstockmovTypeListeners.add(MedicaldsrstockmovTypeListener.class, l);
+	}
 
     public void removeMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeListener listener) {
     	medicaldsrstockmovTypeListeners.remove(MedicaldsrstockmovTypeListener.class, listener);
@@ -98,19 +100,17 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog{
 	private boolean insert;
 	private JPanel jDataPanel = null;
 	private MedicaldsrstockmovTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
-	
+
 	/**
-	 * This is the default constructor; we pass the arraylist and the selectedrow
-     * because we need to update them
+	 * This is the default constructor
 	 */
-	public MedicaldsrstockmovTypeBrowserEdit(JFrame owner,MovementType old,boolean inserting) {
-		super(owner,true);
+	public MedicaldsrstockmovTypeBrowserEdit(JFrame owner, MovementType old, boolean inserting) {
+		super(owner, true);
 		insert = inserting;
 		medicaldsrstockmovType = old;//disease will be used for every operation
-		lastdescription= medicaldsrstockmovType.getDescription();
+		lastdescription = medicaldsrstockmovType.getDescription();
 		initialize();
 	}
-
 
 	/**
 	 * This method initializes this

@@ -45,15 +45,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class OperationTypeEdit extends JDialog{
+public class OperationTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList operationTypeListeners = new EventListenerList();
 
-    public interface OperationTypeListener extends EventListener {
-        void operationTypeUpdated(AWTEvent e);
-        void operationTypeInserted(AWTEvent e);
-    }
+	public interface OperationTypeListener extends EventListener {
+
+		void operationTypeUpdated(AWTEvent e);
+
+		void operationTypeInserted(AWTEvent e);
+	}
 
     public void addOperationTypeListener(OperationTypeListener l) {
         operationTypeListeners.add(OperationTypeListener.class, l);
@@ -195,7 +197,7 @@ public class OperationTypeEdit extends JDialog{
 				}
 				operationType.setDescription(descriptionTextField.getText());
 				operationType.setCode(codeTextField.getText());
-				boolean result = false;
+				boolean result;
 				if (insert) {      // inserting
 					try {
 						result = manager.newOperationType(operationType);

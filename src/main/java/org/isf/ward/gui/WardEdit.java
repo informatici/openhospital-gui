@@ -79,8 +79,8 @@ public class WardEdit extends JDialog {
 		};
 
 		EventListener[] listeners = wardListeners.getListeners(WardListener.class);
-		for (int i = 0; i < listeners.length; i++) {
-			((WardListener) listeners[i]).wardInserted(event);
+		for (EventListener listener : listeners) {
+			((WardListener) listener).wardInserted(event);
 		}
 	}
 
@@ -91,8 +91,8 @@ public class WardEdit extends JDialog {
 		};
 
 		EventListener[] listeners = wardListeners.getListeners(WardListener.class);
-		for (int i = 0; i < listeners.length; i++) {
-			((WardListener) listeners[i]).wardUpdated(event);
+		for (EventListener listener : listeners) {
+			((WardListener) listener).wardUpdated(event);
 		}
 	}
 
@@ -121,8 +121,8 @@ public class WardEdit extends JDialog {
 	private JCheckBox isPharmacyCheck = null;
 	private JCheckBox isMaleCheck = null;
 	private JCheckBox isFemaleCheck = null;
-	private Ward ward = null;
-	private boolean insert = false;
+	private Ward ward;
+	private boolean insert;
 	private int beds;
 	private int nurs;
 	private int docs;
@@ -163,8 +163,8 @@ public class WardEdit extends JDialog {
 			jContentPane = new JPanel();
 			jContentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);  // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -177,148 +177,141 @@ public class WardEdit extends JDialog {
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			dataPanel = new JPanel();
-			GridBagLayout gbl_dataPanel = new GridBagLayout();
-			gbl_dataPanel.columnWeights = new double[] { 0.0, 1.0 };
-			dataPanel.setLayout(gbl_dataPanel);
-			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.codestar"));
-			GridBagConstraints gbc_codeLabel = new GridBagConstraints();
-			gbc_codeLabel.anchor = GridBagConstraints.WEST;
-			gbc_codeLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_codeLabel.gridx = 0;
-			gbc_codeLabel.gridy = 0;
-			dataPanel.add(codeLabel, gbc_codeLabel);
-			GridBagConstraints gbc_codeTextField = new GridBagConstraints();
-			gbc_codeTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_codeTextField.insets = new Insets(0, 0, 5, 0);
-			gbc_codeTextField.gridx = 1;
-			gbc_codeTextField.gridy = 0;
-			dataPanel.add(getCodeTextField(), gbc_codeTextField);
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.ward.nameedit"));
-			GridBagConstraints gbc_descLabel = new GridBagConstraints();
-			gbc_descLabel.anchor = GridBagConstraints.WEST;
-			gbc_descLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_descLabel.gridx = 0;
-			gbc_descLabel.gridy = 1;
-			dataPanel.add(descLabel, gbc_descLabel);
-			GridBagConstraints gbc_descriptionTextField = new GridBagConstraints();
-			gbc_descriptionTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_descriptionTextField.insets = new Insets(0, 0, 5, 0);
-			gbc_descriptionTextField.gridx = 1;
-			gbc_descriptionTextField.gridy = 1;
-			dataPanel.add(getDescriptionTextField(), gbc_descriptionTextField);
-			GridBagConstraints gbc_telTextField = new GridBagConstraints();
-			gbc_telTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_telTextField.insets = new Insets(0, 0, 5, 0);
-			gbc_telTextField.gridx = 1;
-			gbc_telTextField.gridy = 2;
-			dataPanel.add(getTelTextField(), gbc_telTextField);
+			GridBagLayout gblDataPanel = new GridBagLayout();
+			gblDataPanel.columnWeights = new double[] { 0.0, 1.0 };
+			dataPanel.setLayout(gblDataPanel);
+			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.codestar"));
+			GridBagConstraints gbcCodeLabel = new GridBagConstraints();
+			gbcCodeLabel.anchor = GridBagConstraints.WEST;
+			gbcCodeLabel.insets = new Insets(0, 0, 5, 5);
+			gbcCodeLabel.gridx = 0;
+			gbcCodeLabel.gridy = 0;
+			dataPanel.add(codeLabel, gbcCodeLabel);
+			GridBagConstraints gbcCodeTextField = new GridBagConstraints();
+			gbcCodeTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcCodeTextField.insets = new Insets(0, 0, 5, 0);
+			gbcCodeTextField.gridx = 1;
+			gbcCodeTextField.gridy = 0;
+			dataPanel.add(getCodeTextField(), gbcCodeTextField);
+			descLabel = new JLabel(MessageBundle.getMessage("angal.ward.nameedit"));
+			GridBagConstraints gbcDescLabel = new GridBagConstraints();
+			gbcDescLabel.anchor = GridBagConstraints.WEST;
+			gbcDescLabel.insets = new Insets(0, 0, 5, 5);
+			gbcDescLabel.gridx = 0;
+			gbcDescLabel.gridy = 1;
+			dataPanel.add(descLabel, gbcDescLabel);
+			GridBagConstraints gbcDescriptionTextField = new GridBagConstraints();
+			gbcDescriptionTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcDescriptionTextField.insets = new Insets(0, 0, 5, 0);
+			gbcDescriptionTextField.gridx = 1;
+			gbcDescriptionTextField.gridy = 1;
+			dataPanel.add(getDescriptionTextField(), gbcDescriptionTextField);
+			GridBagConstraints gbcTelTextField = new GridBagConstraints();
+			gbcTelTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcTelTextField.insets = new Insets(0, 0, 5, 0);
+			gbcTelTextField.gridx = 1;
+			gbcTelTextField.gridy = 2;
+			dataPanel.add(getTelTextField(), gbcTelTextField);
 			telLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt"));
-			GridBagConstraints gbc_telLabel = new GridBagConstraints();
-			gbc_telLabel.anchor = GridBagConstraints.WEST;
-			gbc_telLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_telLabel.gridx = 0;
-			gbc_telLabel.gridy = 2;
-			dataPanel.add(telLabel, gbc_telLabel);
+			GridBagConstraints gbcTelLabel = new GridBagConstraints();
+			gbcTelLabel.anchor = GridBagConstraints.WEST;
+			gbcTelLabel.insets = new Insets(0, 0, 5, 5);
+			gbcTelLabel.gridx = 0;
+			gbcTelLabel.gridy = 2;
+			dataPanel.add(telLabel, gbcTelLabel);
 			faxLabel = new JLabel(MessageBundle.getMessage("angal.common.fax.txt"));
-			GridBagConstraints gbc_faxLabel = new GridBagConstraints();
-			gbc_faxLabel.anchor = GridBagConstraints.WEST;
-			gbc_faxLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_faxLabel.gridx = 0;
-			gbc_faxLabel.gridy = 3;
-			dataPanel.add(faxLabel, gbc_faxLabel);
-			GridBagConstraints gbc_faxTextField = new GridBagConstraints();
-			gbc_faxTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_faxTextField.insets = new Insets(0, 0, 5, 0);
-			gbc_faxTextField.gridx = 1;
-			gbc_faxTextField.gridy = 3;
-			dataPanel.add(getFaxTextField(), gbc_faxTextField);
-			GridBagConstraints gbc_emailTextField = new GridBagConstraints();
-			gbc_emailTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_emailTextField.insets = new Insets(0, 0, 5, 0);
-			gbc_emailTextField.gridx = 1;
-			gbc_emailTextField.gridy = 4;
-			dataPanel.add(getEmailTextField(), gbc_emailTextField);
-			emailLabel = new JLabel();
-			emailLabel.setText(MessageBundle.getMessage("angal.ward.emailedit"));
-			GridBagConstraints gbc_emailLabel = new GridBagConstraints();
-			gbc_emailLabel.anchor = GridBagConstraints.WEST;
-			gbc_emailLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_emailLabel.gridx = 0;
-			gbc_emailLabel.gridy = 4;
-			dataPanel.add(emailLabel, gbc_emailLabel);
-			bedsLabel = new JLabel();
-			bedsLabel.setText(MessageBundle.getMessage("angal.ward.bedsedit"));
-			GridBagConstraints gbc_bedsLabel = new GridBagConstraints();
-			gbc_bedsLabel.anchor = GridBagConstraints.WEST;
-			gbc_bedsLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_bedsLabel.gridx = 0;
-			gbc_bedsLabel.gridy = 5;
-			dataPanel.add(bedsLabel, gbc_bedsLabel);
-			GridBagConstraints gbc_bedsTextField = new GridBagConstraints();
-			gbc_bedsTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_bedsTextField.insets = new Insets(0, 0, 5, 0);
-			gbc_bedsTextField.gridx = 1;
-			gbc_bedsTextField.gridy = 5;
-			dataPanel.add(getBedsTextField(), gbc_bedsTextField);
-			nursLabel = new JLabel();
-			nursLabel.setText(MessageBundle.getMessage("angal.ward.nursesedit"));
-			GridBagConstraints gbc_nursLabel = new GridBagConstraints();
-			gbc_nursLabel.anchor = GridBagConstraints.WEST;
-			gbc_nursLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_nursLabel.gridx = 0;
-			gbc_nursLabel.gridy = 6;
-			dataPanel.add(nursLabel, gbc_nursLabel);
-			GridBagConstraints gbc_nursTextField = new GridBagConstraints();
-			gbc_nursTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_nursTextField.insets = new Insets(0, 0, 5, 0);
-			gbc_nursTextField.gridx = 1;
-			gbc_nursTextField.gridy = 6;
-			dataPanel.add(getNursTextField(), gbc_nursTextField);
-			docsLabel = new JLabel();
-			docsLabel.setText(MessageBundle.getMessage("angal.ward.doctorsedit"));
-			GridBagConstraints gbc_docsLabel = new GridBagConstraints();
-			gbc_docsLabel.anchor = GridBagConstraints.WEST;
-			gbc_docsLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_docsLabel.gridx = 0;
-			gbc_docsLabel.gridy = 7;
-			dataPanel.add(docsLabel, gbc_docsLabel);
-			GridBagConstraints gbc_docsTextField = new GridBagConstraints();
-			gbc_docsTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_docsTextField.insets = new Insets(0, 0, 5, 0);
-			gbc_docsTextField.gridx = 1;
-			gbc_docsTextField.gridy = 7;
-			dataPanel.add(getDocsTextField(), gbc_docsTextField);
-			GridBagConstraints gbc_isPharmacyCheck = new GridBagConstraints();
-			gbc_isPharmacyCheck.anchor = GridBagConstraints.WEST;
-			gbc_isPharmacyCheck.insets = new Insets(0, 0, 5, 0);
-			gbc_isPharmacyCheck.gridwidth = 2;
-			gbc_isPharmacyCheck.gridx = 0;
-			gbc_isPharmacyCheck.gridy = 8;
-			dataPanel.add(getIsPharmacyCheck(), gbc_isPharmacyCheck);
-			GridBagConstraints gbc_isMaleCheck = new GridBagConstraints();
-			gbc_isMaleCheck.anchor = GridBagConstraints.WEST;
-			gbc_isMaleCheck.insets = new Insets(0, 0, 5, 0);
-			gbc_isMaleCheck.gridwidth = 2;
-			gbc_isMaleCheck.gridx = 0;
-			gbc_isMaleCheck.gridy = 9;
-			dataPanel.add(getIsMaleCheck(), gbc_isMaleCheck);
-			GridBagConstraints gbc_isFemaleCheck = new GridBagConstraints();
-			gbc_isFemaleCheck.anchor = GridBagConstraints.WEST;
-			gbc_isFemaleCheck.insets = new Insets(0, 0, 5, 0);
-			gbc_isFemaleCheck.gridwidth = 2;
-			gbc_isFemaleCheck.gridx = 0;
-			gbc_isFemaleCheck.gridy = 10;
-			dataPanel.add(getIsFemaleCheck(), gbc_isFemaleCheck);
-			requiredLabel = new JLabel();
-			requiredLabel.setText(MessageBundle.getMessage("angal.ward.requiredfields"));
-			GridBagConstraints gbc_requiredLabel = new GridBagConstraints();
-			gbc_requiredLabel.gridwidth = 2;
-			gbc_requiredLabel.anchor = GridBagConstraints.EAST;
-			gbc_requiredLabel.gridx = 0;
-			gbc_requiredLabel.gridy = 11;
-			dataPanel.add(requiredLabel, gbc_requiredLabel);
+			GridBagConstraints gbcFaxLabel = new GridBagConstraints();
+			gbcFaxLabel.anchor = GridBagConstraints.WEST;
+			gbcFaxLabel.insets = new Insets(0, 0, 5, 5);
+			gbcFaxLabel.gridx = 0;
+			gbcFaxLabel.gridy = 3;
+			dataPanel.add(faxLabel, gbcFaxLabel);
+			GridBagConstraints gbcFaxTextField = new GridBagConstraints();
+			gbcFaxTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcFaxTextField.insets = new Insets(0, 0, 5, 0);
+			gbcFaxTextField.gridx = 1;
+			gbcFaxTextField.gridy = 3;
+			dataPanel.add(getFaxTextField(), gbcFaxTextField);
+			GridBagConstraints gbcEmailTextField = new GridBagConstraints();
+			gbcEmailTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcEmailTextField.insets = new Insets(0, 0, 5, 0);
+			gbcEmailTextField.gridx = 1;
+			gbcEmailTextField.gridy = 4;
+			dataPanel.add(getEmailTextField(), gbcEmailTextField);
+			emailLabel = new JLabel(MessageBundle.getMessage("angal.ward.emailedit"));
+			GridBagConstraints gbcEmailLabel = new GridBagConstraints();
+			gbcEmailLabel.anchor = GridBagConstraints.WEST;
+			gbcEmailLabel.insets = new Insets(0, 0, 5, 5);
+			gbcEmailLabel.gridx = 0;
+			gbcEmailLabel.gridy = 4;
+			dataPanel.add(emailLabel, gbcEmailLabel);
+			bedsLabel = new JLabel(MessageBundle.getMessage("angal.ward.bedsedit"));
+			GridBagConstraints gbcBedsLabel = new GridBagConstraints();
+			gbcBedsLabel.anchor = GridBagConstraints.WEST;
+			gbcBedsLabel.insets = new Insets(0, 0, 5, 5);
+			gbcBedsLabel.gridx = 0;
+			gbcBedsLabel.gridy = 5;
+			dataPanel.add(bedsLabel, gbcBedsLabel);
+			GridBagConstraints gbcBedsTextField = new GridBagConstraints();
+			gbcBedsTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcBedsTextField.insets = new Insets(0, 0, 5, 0);
+			gbcBedsTextField.gridx = 1;
+			gbcBedsTextField.gridy = 5;
+			dataPanel.add(getBedsTextField(), gbcBedsTextField);
+			nursLabel = new JLabel(MessageBundle.getMessage("angal.ward.nursesedit"));
+			GridBagConstraints gbcNursLabel = new GridBagConstraints();
+			gbcNursLabel.anchor = GridBagConstraints.WEST;
+			gbcNursLabel.insets = new Insets(0, 0, 5, 5);
+			gbcNursLabel.gridx = 0;
+			gbcNursLabel.gridy = 6;
+			dataPanel.add(nursLabel, gbcNursLabel);
+			GridBagConstraints gbcNursTextField = new GridBagConstraints();
+			gbcNursTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcNursTextField.insets = new Insets(0, 0, 5, 0);
+			gbcNursTextField.gridx = 1;
+			gbcNursTextField.gridy = 6;
+			dataPanel.add(getNursTextField(), gbcNursTextField);
+			docsLabel = new JLabel(MessageBundle.getMessage("angal.ward.doctorsedit"));
+			GridBagConstraints gbcDocsLabel = new GridBagConstraints();
+			gbcDocsLabel.anchor = GridBagConstraints.WEST;
+			gbcDocsLabel.insets = new Insets(0, 0, 5, 5);
+			gbcDocsLabel.gridx = 0;
+			gbcDocsLabel.gridy = 7;
+			dataPanel.add(docsLabel, gbcDocsLabel);
+			GridBagConstraints gbcDocsTextField = new GridBagConstraints();
+			gbcDocsTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcDocsTextField.insets = new Insets(0, 0, 5, 0);
+			gbcDocsTextField.gridx = 1;
+			gbcDocsTextField.gridy = 7;
+			dataPanel.add(getDocsTextField(), gbcDocsTextField);
+			GridBagConstraints gbcIsPharmacyCheck = new GridBagConstraints();
+			gbcIsPharmacyCheck.anchor = GridBagConstraints.WEST;
+			gbcIsPharmacyCheck.insets = new Insets(0, 0, 5, 0);
+			gbcIsPharmacyCheck.gridwidth = 2;
+			gbcIsPharmacyCheck.gridx = 0;
+			gbcIsPharmacyCheck.gridy = 8;
+			dataPanel.add(getIsPharmacyCheck(), gbcIsPharmacyCheck);
+			GridBagConstraints gbcIsMaleCheck = new GridBagConstraints();
+			gbcIsMaleCheck.anchor = GridBagConstraints.WEST;
+			gbcIsMaleCheck.insets = new Insets(0, 0, 5, 0);
+			gbcIsMaleCheck.gridwidth = 2;
+			gbcIsMaleCheck.gridx = 0;
+			gbcIsMaleCheck.gridy = 9;
+			dataPanel.add(getIsMaleCheck(), gbcIsMaleCheck);
+			GridBagConstraints gbcIsFemaleCheck = new GridBagConstraints();
+			gbcIsFemaleCheck.anchor = GridBagConstraints.WEST;
+			gbcIsFemaleCheck.insets = new Insets(0, 0, 5, 0);
+			gbcIsFemaleCheck.gridwidth = 2;
+			gbcIsFemaleCheck.gridx = 0;
+			gbcIsFemaleCheck.gridy = 10;
+			dataPanel.add(getIsFemaleCheck(), gbcIsFemaleCheck);
+			requiredLabel = new JLabel(MessageBundle.getMessage("angal.ward.requiredfields"));
+			GridBagConstraints gbcRequiredLabel = new GridBagConstraints();
+			gbcRequiredLabel.gridwidth = 2;
+			gbcRequiredLabel.anchor = GridBagConstraints.EAST;
+			gbcRequiredLabel.gridx = 0;
+			gbcRequiredLabel.gridy = 11;
+			dataPanel.add(requiredLabel, gbcRequiredLabel);
 		}
 		return dataPanel;
 	}
@@ -331,8 +324,8 @@ public class WardEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -396,7 +389,7 @@ public class WardEdit extends JDialog {
 				ward.setFemale(isFemaleCheck.isSelected());
 
 				boolean result = false;
-				Ward savedWard = null;
+				Ward savedWard;
 				if (insert) { // inserting
 					try {
 						savedWard = manager.newWard(ward);

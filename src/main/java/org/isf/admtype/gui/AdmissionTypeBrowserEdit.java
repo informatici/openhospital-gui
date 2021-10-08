@@ -45,7 +45,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class AdmissionTypeBrowserEdit extends JDialog{
+public class AdmissionTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList admissionTypeListeners = new EventListenerList();

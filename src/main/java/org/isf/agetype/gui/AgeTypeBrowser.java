@@ -232,14 +232,9 @@ public class AgeTypeBrowser extends ModalJFrame {
 		@Override
 		public boolean isCellEditable(int r, int c) {
 			if (edit) {
-				if (c == 1 || c == 2) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
+				return c == 1 || c == 2;
 			}
+			return false;
 		}
 	}
 	

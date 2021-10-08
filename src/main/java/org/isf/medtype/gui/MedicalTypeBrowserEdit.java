@@ -45,15 +45,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class MedicalTypeBrowserEdit extends JDialog{
+public class MedicalTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList medicalTypeListeners = new EventListenerList();
 
-    public interface MedicalTypeListener extends EventListener {
-        void medicalTypeUpdated(AWTEvent e);
-        void medicalTypeInserted(AWTEvent e);
-    }
+	public interface MedicalTypeListener extends EventListener {
+
+		void medicalTypeUpdated(AWTEvent e);
+
+		void medicalTypeInserted(AWTEvent e);
+	}
 
     public void addMedicalTypeListener(MedicalTypeListener l) {
         medicalTypeListeners.add(MedicalTypeListener.class, l);
@@ -98,8 +100,7 @@ public class MedicalTypeBrowserEdit extends JDialog{
 	private MedicalTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 
 	/**
-	 * This is the default constructor; we pass the arraylist and the selectedrow
-     * because we need to update them
+	 * This is the default constructor
 	 */
 	public MedicalTypeBrowserEdit(JFrame owner, MedicalType old, boolean inserting) {
 		super(owner,true);

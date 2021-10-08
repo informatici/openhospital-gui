@@ -22,9 +22,8 @@
 package org.isf.stat.gui.report;
 
 import java.io.File;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import javax.swing.JFileChooser;
@@ -48,56 +47,61 @@ import net.sf.jasperreports.view.JasperViewer;
  * Created on 15/Jun/08
  */
 public class GenericReportPharmaceuticalStockCard {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPharmaceuticalStockCard.class);
-    private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-	public GenericReportPharmaceuticalStockCard(String jasperFileName, Date dateFrom, Date dateTo, Medical medical, Ward ward, boolean toExcel) {
-		if (dateFrom == null || dateTo == null)
+	public GenericReportPharmaceuticalStockCard(String jasperFileName, LocalDateTime dateFrom, LocalDateTime dateTo, Medical medical, Ward ward,
+			boolean toExcel) {
+		if (dateFrom == null || dateTo == null) {
 			return;
-		try{
-            File defaultFilename = new File(compileStockCardFilename(jasperFileName, dateFrom, dateTo, medical, ward));
-            
-            if (toExcel) {
-				JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFilename);
+		}
+		try {
+			File defaultFilename = new File(compileStockCardFilename(jasperFileName, dateFrom, dateTo, medical, ward));
 
-                int iRetVal = fcExcel.showSaveDialog(null);
-                if (iRetVal == JFileChooser.APPROVE_OPTION)
-                {
-                    File exportFile = fcExcel.getSelectedFile();
-                    FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();
+			if (toExcel) {
+				JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFilename);
+				int iRetVal = fcExcel.showSaveDialog(null);
+				if (iRetVal == JFileChooser.APPROVE_OPTION) {
+					File exportFile = fcExcel.getSelectedFile();
+					FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();
 					String extension = selectedFilter.getExtensions()[0];
-					if (!exportFile.getName().endsWith(extension)) exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
-                    jasperReportsManager.getGenericReportPharmaceuticalStockCardExcel(jasperFileName, exportFile.getAbsolutePath(), dateFrom, dateTo, medical, ward);
-                }
-            } else {
-                JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPharmaceuticalStockCardPdf(jasperFileName, defaultFilename.getName(), dateFrom, dateTo, medical, ward);
-                if (GeneralData.INTERNALVIEWER)
-                    JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
-                else {
-                    Runtime rt = Runtime.getRuntime();
-                    rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
-                }
+					if (!exportFile.getName().endsWith(extension)) {
+						exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
+					}
+					jasperReportsManager.getGenericReportPharmaceuticalStockCardExcel(jasperFileName, exportFile.getAbsolutePath(), dateFrom, dateTo, medical,
+							ward);
+				}
+			} else {
+				JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPharmaceuticalStockCardPdf(jasperFileName,
+						defaultFilename.getName(), dateFrom, dateTo, medical, ward);
+				if (GeneralData.INTERNALVIEWER) {
+					JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
+				} else {
+					Runtime rt = Runtime.getRuntime();
+					rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
+				}
 			}
-        } catch (Exception e) {
-            LOGGER.error("", e);
+		} catch (Exception e) {
+			LOGGER.error("", e);
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
-        }
+		}
 	}
-	
-	private String compileStockCardFilename(String jasperFileName, Date dateFrom, Date dateTo, Medical medical, Ward ward) {
-		Format formatter = new SimpleDateFormat("yyyyMMdd");
-	    StringBuilder fileName = new StringBuilder(jasperFileName);
-	    if (ward != null) {
-	    	fileName.append("_").append(ward.getDescription());
-	    }
-	    if (medical != null) {
-	    	fileName.append("_").append(medical.getCode());
-	    }
-	    fileName.append("_").append(MessageBundle.getMessage("angal.common.from.txt"))
-	    		.append("_").append(formatter.format(dateFrom))
-	    		.append("_").append(MessageBundle.getMessage("angal.common.to.txt"))
-	    		.append("_").append(formatter.format(dateTo));
-        return  fileName.toString();
-    }
+
+	private String compileStockCardFilename(String jasperFileName, LocalDateTime dateFrom, LocalDateTime dateTo, Medical medical, Ward ward) {
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		StringBuilder fileName = new StringBuilder(jasperFileName);
+		if (ward != null) {
+			fileName.append('_').append(ward.getDescription());
+		}
+		if (medical != null) {
+			fileName.append('_').append(medical.getCode());
+		}
+		fileName.append('_').append(MessageBundle.getMessage("angal.common.from.txt"))
+				.append('_').append(dateTimeFormatter.format(dateFrom))
+				.append('_').append(MessageBundle.getMessage("angal.common.to.txt"))
+				.append('_').append(dateTimeFormatter.format(dateTo));
+		return fileName.toString();
+	}
+
 }

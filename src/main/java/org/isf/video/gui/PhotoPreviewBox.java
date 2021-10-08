@@ -48,14 +48,12 @@ public class PhotoPreviewBox extends Box {
 	public String resolution;
 
 	public PhotoPreviewBox(String path, String resolution)	{
-		//lstPhotoPaths.add(path);
 		super(BoxLayout.Y_AXIS) ;
 		
 		this.path = path;
 		this.resolution = resolution;
 		
 		Box.createVerticalBox();
-		//box.setLayout(new GridLayout(2,1));
 		this.setMaximumSize(new Dimension(100, 100));
 		
 		photoButton = null;

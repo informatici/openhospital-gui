@@ -28,7 +28,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -81,8 +82,8 @@ public class PatVacBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    	
+	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton buttonEdit = null;
@@ -145,14 +146,14 @@ public class PatVacBrowser extends ModalJFrame {
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-        final int pfrmBase = 20;
-        final int pfrmWidth = 17;
-        final int pfrmHeight = 12;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2,
-        		(screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase+50,
-                screensize.height * pfrmHeight / pfrmBase+20);
-        setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowser.title"));
+		final int pfrmBase = 20;
+		final int pfrmWidth = 17;
+		final int pfrmHeight = 12;
+		this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase) / 2,
+				(screensize.height - screensize.height * pfrmHeight / pfrmBase) / 2,
+				screensize.width * pfrmWidth / pfrmBase + 50,
+				screensize.height * pfrmHeight / pfrmBase + 20);
+		setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowser.title"));
 		this.setContentPane(getJContentPane());
 		updateRowCounter();
 		validate();
@@ -210,10 +211,10 @@ public class PatVacBrowser extends ModalJFrame {
 			buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			buttonNew.addActionListener(actionEvent -> {
-				patientVaccine = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(),
+				patientVaccine = new PatientVaccine(0, 0, LocalDateTime.now(), new Patient(),
 						new Vaccine("", "", new VaccineType("", "")), 0);
 
-				PatientVaccine last = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(),
+				PatientVaccine last = new PatientVaccine(0, 0, LocalDateTime.now(), new Patient(),
 						new Vaccine("", "", new VaccineType("", "")), 0);
 				new PatVacEdit(myFrame, patientVaccine, true);
 
@@ -286,14 +287,13 @@ public class PatVacBrowser extends ModalJFrame {
 				selectedrow = jTable.getSelectedRow();
 				patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
 				int answer = MessageDialog.yesNo(null, "angal.patvac.deletepatientvaccine.fmt.msg",
-						dateFormat.format(patientVaccine.getVaccineDate().getTime()),
+						dateFormat.format(patientVaccine.getVaccineDate()),
 						patientVaccine.getVaccine().getDescription(),
 						patientVaccine.getPatName());
 
 				if (answer == JOptionPane.YES_OPTION) {
 
 					boolean deleted;
-
 					try {
 						deleted = manager.deletePatientVaccine(patientVaccine);
 					} catch (OHServiceException e) {
@@ -593,11 +593,10 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private JComboBox getComboVaccineTypes() {
 		if (vaccineTypeComboBox == null) {
-			
 			vaccineTypeComboBox = new JComboBox();
 			vaccineTypeComboBox.setPreferredSize(new Dimension(200, 30));
-			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));			
-			
+			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));
+
 			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			List<VaccineType> types = null;
 			try {
@@ -610,11 +609,11 @@ public class PatVacBrowser extends ModalJFrame {
 					vaccineTypeComboBox.addItem(elem);
 				}
 			}
-            
-            vaccineTypeComboBox.addActionListener(actionEvent -> {
-	            vaccineComboBox.removeAllItems();
-	            getComboVaccines();
-            });
+
+			vaccineTypeComboBox.addActionListener(actionEvent -> {
+				vaccineComboBox.removeAllItems();
+				getComboVaccines();
+			});
 		}
 		return vaccineTypeComboBox;
 	}
@@ -733,12 +732,10 @@ public class PatVacBrowser extends ModalJFrame {
 					return;
 				}
 
-				GregorianCalendar gcFrom = new GregorianCalendar();
-				gcFrom.setTime(dateFrom.getDate());
-				GregorianCalendar gcTo = new GregorianCalendar();
-				gcTo.setTime(dateTo.getDate());
+				LocalDateTime dateFrom = PatVacBrowser.this.dateFrom.getLocalDateTime();
+				LocalDateTime dateTo = PatVacBrowser.this.dateTo.getLocalDateTime();
 
-				model = new PatVacBrowsingModel(vaccineTypeCode, vaccineCode, gcFrom, gcTo, sex, ageFrom, ageTo);
+				model = new PatVacBrowsingModel(vaccineTypeCode, vaccineCode, dateFrom, dateTo, sex, ageFrom, ageTo);
 				model.fireTableDataChanged();
 				jTable.updateUI();
 				updateRowCounter();
@@ -793,10 +790,8 @@ public class PatVacBrowser extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		
-		public PatVacBrowsingModel(String vaccineTypeCode, String vaccineCode,
-				GregorianCalendar dateFrom, GregorianCalendar dateTo, char sex,
-				int ageFrom, int ageTo) {
+
+		public PatVacBrowsingModel(String vaccineTypeCode, String vaccineCode, LocalDateTime dateFrom, LocalDateTime dateTo, char sex, int ageFrom, int ageTo) {
 			try {
 				lPatVac = manager.getPatientVaccine(vaccineTypeCode, vaccineCode, dateFrom, dateTo, sex, ageFrom, ageTo);
 			} catch (OHServiceException e) {
@@ -821,8 +816,8 @@ public class PatVacBrowser extends ModalJFrame {
 		@Override
 		public int getColumnCount() {
 			int c = 0;
-			for (int i = 0; i < columnsVisible.length; i++) {
-				if (columnsVisible[i]) {
+			for (boolean b : columnsVisible) {
+				if (b) {
 					c++;
 				}
 			}
@@ -857,7 +852,7 @@ public class PatVacBrowser extends ModalJFrame {
 			if (c == -1) {
 				return patVac;
 			} else if (getNumber(c) == 0) {
-				return dateFormat.format(patVac.getVaccineDate().getTime());
+				return dateFormat.format(patVac.getVaccineDate());
 			} else if (getNumber(c) == 1) {
 				return patVac.getPatient().getName();
 			} else if (getNumber(c) == 2) {
@@ -886,4 +881,5 @@ public class PatVacBrowser extends ModalJFrame {
 	private void updateRowCounter() {
 		rowCounter.setText(rowCounterText + lPatVac.size());
 	}
+
 }

@@ -107,9 +107,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	 */
 	public VaccineBrowser() {
 		super();
-//		myFrame = this;
 		initialize();
-        setVisible(true);
+		setVisible(true);
 	}
 
 	/**
@@ -119,11 +118,11 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		this.setTitle(MessageBundle.getMessage("angal.vaccine.vaccinebrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-        final int pfrmBase = 6;
-        final int pfrmWidth = 4;
-        final int pfrmHeight = 2;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2,
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
+		final int pfrmBase = 6;
+		final int pfrmWidth = 4;
+		final int pfrmHeight = 2;
+		this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase) / 2,
+				screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
 	}
 

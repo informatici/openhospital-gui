@@ -47,7 +47,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListener{
+public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<DiseaseType> pDiseaseType;

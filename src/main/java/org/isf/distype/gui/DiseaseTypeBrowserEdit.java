@@ -44,8 +44,8 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DiseaseTypeBrowserEdit extends JDialog{
-	
+public class DiseaseTypeBrowserEdit extends JDialog {
+
 	private static final long serialVersionUID = 1L;
 	private EventListenerList diseaseTypeListeners = new EventListenerList();
 

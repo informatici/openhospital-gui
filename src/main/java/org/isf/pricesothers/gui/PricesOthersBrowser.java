@@ -201,9 +201,6 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jTablePricesOthers == null) {
 			jTablePricesOthers = new JTable() {
 
-				/**
-				 *
-				 */
 				private static final long serialVersionUID = 1L;
 
 				// Override this method so that it returns the preferred

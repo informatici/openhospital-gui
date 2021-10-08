@@ -24,6 +24,7 @@ package org.isf.utils.time;
 import java.awt.FlowLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -39,7 +40,7 @@ import javax.swing.text.DefaultStyledDocument;
  *
  * @author Theo
  */
-public class DateTextField extends JPanel{
+public class DateTextField extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField day;
@@ -60,6 +61,10 @@ public class DateTextField extends JPanel{
 		year.setText("");
 	}
 
+	public DateTextField(LocalDateTime localDateTime) {
+		this(Converters.toCalendar(localDateTime));
+	}
+
 	/**
 	 * This is the constructor of the DateTextField object
 	 * It displays the Date of the parameter "time"
@@ -70,12 +75,12 @@ public class DateTextField extends JPanel{
 		date = time;
 		initialize();
 		if (String.valueOf(time.get(Calendar.DAY_OF_MONTH)).length() == 1) {
-			day.setText("0" + String.valueOf(time.get(Calendar.DAY_OF_MONTH)));
+			day.setText("0" + time.get(Calendar.DAY_OF_MONTH));
 		} else {
 			day.setText(String.valueOf(time.get(Calendar.DAY_OF_MONTH)));
 		}
 		if (String.valueOf(time.get(Calendar.MONTH) + 1).length() == 1) {
-			month.setText("0" + String.valueOf(time.get(Calendar.MONTH) + 1));
+			month.setText("0" + (time.get(Calendar.MONTH) + 1));
 		} else {
 			month.setText(String.valueOf(time.get(Calendar.MONTH) + 1));
 		}
@@ -186,6 +191,10 @@ public class DateTextField extends JPanel{
 		return toModify;
 	}
 
+	public LocalDateTime getCompleteLocalDateTime() {
+		return Converters.convertToLocalDateTime(getCompleteDate());
+	}
+
 	/**
 	 * This method returns the date displayed by the object
 	 * @return GregorianCalendar
@@ -216,10 +225,7 @@ public class DateTextField extends JPanel{
 			return false;
 		}
 		int num = Integer.parseInt(day);
-		if (num < 1 || num > 31) {
-			return false;
-		}
-		return true;
+		return num >= 1 && num <= 31;
 	}
 
 	/**
@@ -235,10 +241,7 @@ public class DateTextField extends JPanel{
 			return false;
 		}
 		int num = Integer.parseInt(month);
-		if (num < 1 || num > 12) {
-			return false;
-		}
-		return true;
+		return num >= 1 && num <= 12;
 	}
 
 	/**
@@ -261,11 +264,7 @@ public class DateTextField extends JPanel{
 		if ((day.getText().equals("")) || (month.getText().equals("")) || year.getText().equals("")) {
 			return false;
 		}
-		if (isValidDay(day.getText()) && isValidMonth(month.getText()) && isValidYear(year.getText())) {
-			return true;
-		} else {
-			return false;
-		}
+		return isValidDay(day.getText()) && isValidMonth(month.getText()) && isValidYear(year.getText());
 	}
 	
 	@Override

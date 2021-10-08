@@ -97,7 +97,7 @@ class PrivilegeTree extends JDialog {
 		tree = new JTree(model);
 
 		// a supporting structure
-		ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
+		List<UserMenuItem> junkMenu = new ArrayList<>();
 		
 		// cycle to process the whole rootMenu
 		while (!rootMenu.isEmpty()) {
@@ -175,7 +175,7 @@ class PrivilegeTree extends JDialog {
 
 		ActionListener addListener = actionEvent -> {
 
-			ArrayList<UserMenuItem> newUserMenu = new ArrayList<>();
+			List<UserMenuItem> newUserMenu = new ArrayList<>();
 			Enumeration<?> e = root.breadthFirstEnumeration();
 			while (e.hasMoreElements()) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();

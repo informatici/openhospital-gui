@@ -22,5 +22,7 @@
 package org.isf.utils.jobjects;
 
 public interface DelayTimerCallback {
+
 	void trigger();
+
 }

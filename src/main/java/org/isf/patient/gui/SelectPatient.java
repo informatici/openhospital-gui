@@ -389,8 +389,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	
 	private JLabel getJLabelSearch() {
 		if (jLabelSearch == null) {
-			jLabelSearch = new JLabel();
-			jLabelSearch.setText(MessageBundle.getMessage("angal.patient.searchpatient"));
+			jLabelSearch = new JLabel(MessageBundle.getMessage("angal.patient.searchpatient"));
 		}
 		return jLabelSearch;
 	}

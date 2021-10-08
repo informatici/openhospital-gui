@@ -47,7 +47,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryResultTypeListener{
+public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryResultTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<DeliveryResultType> pDeliveryResultType;

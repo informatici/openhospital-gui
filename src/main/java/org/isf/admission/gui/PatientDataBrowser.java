@@ -470,12 +470,10 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			
 			} else if (column == 0) {
 				if (row < admList.size()) {
-					Date myDate = (admList.get(row)).getAdmDate().getTime();
-					return myDate;
+					return (admList.get(row)).getAdmDate();
 				} else {
 					int z = row - admList.size();
-					Date myDate = (opdList.get(z)).getVisitDate().getTime();
-					return myDate;
+					return (opdList.get(z)).getVisitDate();
 				}
 				
 			} else if (column == 1) {				
@@ -541,8 +539,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					if (admList.get(row).getDisDate()==null) {
 						return MessageBundle.getMessage("angal.admission.present.txt");
 					} else {
-						Date myDate = admList.get(row).getDisDate().getTime();
-						return myDate;
+						return admList.get(row).getDisDate();
 					}
 				} else {
 					int z = row - admList.size();
@@ -551,8 +548,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 							? MessageBundle.getMessage("angal.opd.reattendance.txt")
 							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
 				}
-			} 
-			
+			}
 			return null;
 		}
 

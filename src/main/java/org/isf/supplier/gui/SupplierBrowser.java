@@ -58,7 +58,6 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 	public void supplierInserted(AWTEvent e) {
 		pSupplier.add(0,supplier);
 		((SupplierBrowserModel)table.getModel()).fireTableDataChanged();
-		//table.updateUI();
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
 		}
@@ -176,7 +175,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					supplier = (Supplier)(((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					supplier = (Supplier)(model.getValueAt(table.getSelectedRow(), -1));
 					SupplierEdit editrecord = new SupplierEdit(myFrame,supplier,false);
 					editrecord.addSupplierListener(SupplierBrowser.this);
 					editrecord.setVisible(true);
@@ -218,7 +217,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					Supplier m = (Supplier) (((SupplierBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					Supplier m = (Supplier) model.getValueAt(table.getSelectedRow(), -1);
 					if (m.getSupDeleted().equals('Y')) {
 						return;
 					}

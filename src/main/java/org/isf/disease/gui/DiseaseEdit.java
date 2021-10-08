@@ -88,8 +88,8 @@ public class DiseaseEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
-		for (int i = 0; i < listeners.length; i++) {
-			((DiseaseListener)listeners[i]).diseaseInserted(event);
+		for (EventListener listener : listeners) {
+			((DiseaseListener) listener).diseaseInserted(event);
 		}
 	}
 	private void fireDiseaseUpdated() {
@@ -98,8 +98,8 @@ public class DiseaseEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 		
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
-		for (int i = 0; i < listeners.length; i++) {
-			((DiseaseListener)listeners[i]).diseaseUpdated(event);
+		for (EventListener listener : listeners) {
+			((DiseaseListener) listener).diseaseUpdated(event);
 		}
 	}
 	
@@ -114,8 +114,8 @@ public class DiseaseEdit extends JDialog {
 	private JTextField codeTextField = null;
 	private JLabel typeLabel = null;
 	private JComboBox typeComboBox = null;
-	private Disease disease = null;
-	private boolean insert = false;
+	private Disease disease;
+	private boolean insert;
 	private JPanel jNewPatientPanel = null;
 	private JCheckBox includeOpdCheckBox  = null;
 	private JCheckBox includeIpdInCheckBox  = null;
@@ -159,8 +159,8 @@ public class DiseaseEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);  // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.CENTER);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -173,62 +173,60 @@ public class DiseaseEdit extends JDialog {
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
 			dataPanel = new JPanel();
-			GridBagLayout gbl_dataPanel = new GridBagLayout();
-			gbl_dataPanel.columnWidths = new int[]{0, 0, 0};
-			gbl_dataPanel.rowHeights = new int[]{31, 31, 31, 31, 0};
-			gbl_dataPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-			gbl_dataPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-			dataPanel.setLayout(gbl_dataPanel);
-			typeLabel = new JLabel();
-			typeLabel.setText(MessageBundle.getMessage("angal.disease.type"));  // Generated
-			GridBagConstraints gbc_typeLabel = new GridBagConstraints();
-			gbc_typeLabel.fill = GridBagConstraints.BOTH;
-			gbc_typeLabel.insets = new Insets(5, 5, 5, 5);
-			gbc_typeLabel.gridx = 0;
-			gbc_typeLabel.gridy = 0;
-			dataPanel.add(typeLabel, gbc_typeLabel);  // Generated
-			GridBagConstraints gbc_typeComboBox = new GridBagConstraints();
-			gbc_typeComboBox.fill = GridBagConstraints.BOTH;
-			gbc_typeComboBox.insets = new Insets(5, 5, 5, 5);
-			gbc_typeComboBox.gridx = 1;
-			gbc_typeComboBox.gridy = 0;
-			dataPanel.add(getTypeComboBox(), gbc_typeComboBox);  // Generated
-			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.code.txt"));
-			GridBagConstraints gbc_codeLabel = new GridBagConstraints();
-			gbc_codeLabel.insets = new Insets(5, 5, 5, 5);
-			gbc_codeLabel.fill = GridBagConstraints.BOTH;
-			gbc_codeLabel.gridx = 0;
-			gbc_codeLabel.gridy = 1;
-			dataPanel.add(codeLabel, gbc_codeLabel);  // Generated
+			GridBagLayout gblDataPanel = new GridBagLayout();
+			gblDataPanel.columnWidths = new int[]{0, 0, 0};
+			gblDataPanel.rowHeights = new int[]{31, 31, 31, 31, 0};
+			gblDataPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+			gblDataPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+			dataPanel.setLayout(gblDataPanel);
+			typeLabel = new JLabel(MessageBundle.getMessage("angal.disease.type"));
+			GridBagConstraints gbcTypeLabel = new GridBagConstraints();
+			gbcTypeLabel.fill = GridBagConstraints.BOTH;
+			gbcTypeLabel.insets = new Insets(5, 5, 5, 5);
+			gbcTypeLabel.gridx = 0;
+			gbcTypeLabel.gridy = 0;
+			dataPanel.add(typeLabel, gbcTypeLabel);
+			GridBagConstraints gbctypeComboBox = new GridBagConstraints();
+			gbctypeComboBox.fill = GridBagConstraints.BOTH;
+			gbctypeComboBox.insets = new Insets(5, 5, 5, 5);
+			gbctypeComboBox.gridx = 1;
+			gbctypeComboBox.gridy = 0;
+			dataPanel.add(getTypeComboBox(), gbctypeComboBox);
+			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
+			GridBagConstraints gbcCodeLabel = new GridBagConstraints();
+			gbcCodeLabel.insets = new Insets(5, 5, 5, 5);
+			gbcCodeLabel.fill = GridBagConstraints.BOTH;
+			gbcCodeLabel.gridx = 0;
+			gbcCodeLabel.gridy = 1;
+			dataPanel.add(codeLabel, gbcCodeLabel);
 			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
-			GridBagConstraints gbc_descLabel = new GridBagConstraints();
-			gbc_descLabel.fill = GridBagConstraints.BOTH;
-			gbc_descLabel.insets = new Insets(5, 5, 5, 5);
-			gbc_descLabel.gridx = 0;
-			gbc_descLabel.gridy = 2;
-			dataPanel.add(descLabel, gbc_descLabel);  // Generated
-			GridBagConstraints gbc_descTextField = new GridBagConstraints();
-			gbc_descTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_descTextField.insets = new Insets(5, 5, 5, 5);
-			gbc_descTextField.gridy = 2;
-			gbc_descTextField.gridx = 1;
-			gbc_descLabel.fill = GridBagConstraints.BOTH;
-			gbc_descLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_descLabel.gridx = 1;
-			gbc_descLabel.gridy = 3;
-			dataPanel.add(getDescriptionTextField(), gbc_descTextField);  // Generated
-			GridBagConstraints gbc_codeTextField = new GridBagConstraints();
-			gbc_codeTextField.fill = GridBagConstraints.BOTH;
-			gbc_codeTextField.insets = new Insets(5, 5, 5, 5);
-			gbc_codeTextField.gridx = 1;
-			gbc_codeTextField.gridy = 1;
-			dataPanel.add(getCodeTextField(), gbc_codeTextField);  // Generated
-			GridBagConstraints gbc_jNewPatientPanel = new GridBagConstraints();
-			gbc_jNewPatientPanel.fill = GridBagConstraints.BOTH;
-			gbc_jNewPatientPanel.gridx = 1;
-			gbc_jNewPatientPanel.gridy = 3;
-			dataPanel.add(getJFlagsPanel(), gbc_jNewPatientPanel);
+			GridBagConstraints gbcCescLabel = new GridBagConstraints();
+			gbcCescLabel.fill = GridBagConstraints.BOTH;
+			gbcCescLabel.insets = new Insets(5, 5, 5, 5);
+			gbcCescLabel.gridx = 0;
+			gbcCescLabel.gridy = 2;
+			dataPanel.add(descLabel, gbcCescLabel);
+			GridBagConstraints gbcDescriptionTextField = new GridBagConstraints();
+			gbcDescriptionTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcDescriptionTextField.insets = new Insets(5, 5, 5, 5);
+			gbcDescriptionTextField.gridy = 2;
+			gbcDescriptionTextField.gridx = 1;
+			gbcCescLabel.fill = GridBagConstraints.BOTH;
+			gbcCescLabel.insets = new Insets(0, 0, 5, 5);
+			gbcCescLabel.gridx = 1;
+			gbcCescLabel.gridy = 3;
+			dataPanel.add(getDescriptionTextField(), gbcDescriptionTextField);
+			GridBagConstraints gbcCodeTextField = new GridBagConstraints();
+			gbcCodeTextField.fill = GridBagConstraints.BOTH;
+			gbcCodeTextField.insets = new Insets(5, 5, 5, 5);
+			gbcCodeTextField.gridx = 1;
+			gbcCodeTextField.gridy = 1;
+			dataPanel.add(getCodeTextField(), gbcCodeTextField);
+			GridBagConstraints gbcNewPatientPanel = new GridBagConstraints();
+			gbcNewPatientPanel.fill = GridBagConstraints.BOTH;
+			gbcNewPatientPanel.gridx = 1;
+			gbcNewPatientPanel.gridy = 3;
+			dataPanel.add(getJFlagsPanel(), gbcNewPatientPanel);
 			
 		}
 		return dataPanel;
@@ -242,8 +240,8 @@ public class DiseaseEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -282,7 +280,7 @@ public class DiseaseEdit extends JDialog {
 				disease.setIpdOutInclude(includeIpdOutCheckBox.isSelected());
 
 				boolean result = false;
-				Disease savedDisease = null;
+				Disease savedDisease;
 				try {
 					if (insert) { // inserting
 						savedDisease = manager.newDisease(disease);
@@ -391,7 +389,7 @@ public class DiseaseEdit extends JDialog {
 						typeComboBox.addItem(elem);
 					}
 				} else {
-					DiseaseType selectedDiseaseType=null;
+					DiseaseType selectedDiseaseType = null;
 					List<DiseaseType> types = manager.getDiseaseType();
 					for (DiseaseType elem : types) {
 						typeComboBox.addItem(elem);
@@ -399,15 +397,15 @@ public class DiseaseEdit extends JDialog {
 							selectedDiseaseType = elem;
 						}
 					}
-					if (selectedDiseaseType!=null) {
+					if (selectedDiseaseType != null) {
 						typeComboBox.setSelectedItem(selectedDiseaseType);
 					}
 					//typeComboBox.setEnabled(false);
 				}
-			} catch(OHServiceException ohServiceException) {
+			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
-			
+
 		}
 		return typeComboBox;
 	}

@@ -25,6 +25,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.LayoutManager;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Locale;
 
@@ -33,15 +34,16 @@ import javax.swing.JPanel;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.time.Converters;
 
 /**
  * @author Nanni
  */
 public class JFromDateToDateChooser extends JPanel {
-	
+
 	private static final String DATE_TIME_FORMAT = "dd/MM/yyyy";
 	private static final int TEXT_SIZE = 12;
-	
+
 	private CustomJDateChooser dateFromDateChooser;
 	private CustomJDateChooser dateToDateChooser;
 	private Date dateTimeFrom;
@@ -57,7 +59,11 @@ public class JFromDateToDateChooser extends JPanel {
 		this.dateTimeTo = new Date();
 		initComponents();
 	}
-	
+
+	public JFromDateToDateChooser(LocalDateTime from, LocalDateTime to) {
+		this(Converters.toDate(from), Converters.toDate(to));
+	}
+
 	public JFromDateToDateChooser(Date dateFrom, Date dateTo) {
 		FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
 		layout.setHgap(5);
@@ -66,14 +72,14 @@ public class JFromDateToDateChooser extends JPanel {
 		this.dateTimeTo = dateTo;
 		initComponents();
 	}
-	
+
 	private void initComponents() {
-		this.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt")+":"));
+		this.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ":"));
 		this.add(getCustomJDateFrom(this.dateTimeFrom));
-		this.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt")+":"));
+		this.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ":"));
 		this.add(getCustomJDateTo(this.dateTimeTo));
 	}
-	
+
 	private CustomJDateChooser getCustomJDateFrom(Date dateFrom) {
 		if (dateFromDateChooser == null) {
 			dateFromDateChooser = new CustomJDateChooser();
@@ -86,7 +92,7 @@ public class JFromDateToDateChooser extends JPanel {
 		}
 		return dateFromDateChooser;
 	}
-	
+
 	private CustomJDateChooser getCustomJDateTo(Date dateTo) {
 		if (dateToDateChooser == null) {
 			dateToDateChooser = new CustomJDateChooser();

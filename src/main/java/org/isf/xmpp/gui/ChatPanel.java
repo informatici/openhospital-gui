@@ -41,46 +41,47 @@ public class ChatPanel extends JPanel {
 	private ChatMessages chatMessages;
 	private JTextField send;
 
-	public ChatPanel()
-	{
-		setLayout(new GridLayout(1,0));
+	public ChatPanel() {
+		setLayout(new GridLayout(1, 0));
 		createChatPanel();
 	}
 
 	protected JPanel createChatPanel() {
 
-		chatMessages= new ChatMessages();
-		send =new JTextField();
+		chatMessages = new ChatMessages();
+		send = new JTextField();
 		send.addKeyListener(new KeyListener() {
 
 			@Override
 			public void keyTyped(KeyEvent e) {
 			}
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 			}
+
 			@Override
 			public void keyPressed(KeyEvent e) {
-				int key =e.getKeyCode();
-				if (key==KeyEvent.VK_ENTER)
-				{
-					CommunicationFrame frame = (CommunicationFrame)CommunicationFrame.getFrame();
-					String receiver =frame.getSelectedUser();
-					frame.sendMessage(send.getText(), receiver,true);
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
+					String receiver = frame.getSelectedUser();
+					frame.sendMessage(send.getText(), receiver, true);
 					send.setText("");
 				}
 
 			}
 		});
 		chatMessages.setSize(new Dimension(100, 200));
-		final JScrollPane received = new JScrollPane(chatMessages, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		final JScrollPane received = new JScrollPane(chatMessages, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-		received.setPreferredSize(new Dimension(200,200));
-		received.setMaximumSize(new Dimension(10,10));
+		received.setPreferredSize(new Dimension(200, 200));
+		received.setMaximumSize(new Dimension(10, 10));
 		received.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 
 			BoundedRangeModel brm = received.getVerticalScrollBar().getModel();
-			boolean wasAtBottom = true;	
+			boolean wasAtBottom = true;
 
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -94,9 +95,9 @@ public class ChatPanel extends JPanel {
 			}
 		});
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,received,send);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, received, send);
 		splitPane.setOneTouchExpandable(true);
-		splitPane.setResizeWeight(0.5); 
+		splitPane.setResizeWeight(0.5);
 		splitPane.setDividerLocation(300);
 
 		add(splitPane);

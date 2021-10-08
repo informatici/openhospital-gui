@@ -252,7 +252,7 @@ public class SupplierEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 
 			okButton.addActionListener(actionEvent -> {
-				if (nameTextField.getText().trim().equals("")) {
+				if (nameTextField.getText().trim().isEmpty()) {
 					MessageDialog.error(null, "angal.supplier.pleaseinsertaname");
 					return;
 				}
@@ -264,11 +264,11 @@ public class SupplierEdit extends JDialog {
 				supplier.setSupFax(faxTextField.getText());
 				supplier.setSupEmail(emailTextField.getText());
 				supplier.setSupNote(noteTextField.getText());
-				if (!insert)
+				if (!insert) {
 					supplier.setSupDeleted(isDeletedCheck.isSelected() ? 'Y' : 'N');
-				else
+				} else {
 					supplier.setSupDeleted('N');
-
+				}
 				boolean result = false;
 				if (insert) { // inserting
 					try {
@@ -426,7 +426,7 @@ public class SupplierEdit extends JDialog {
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getIsDeleted() {
-		if (isDeletedCheck==null) {
+		if (isDeletedCheck == null) {
 			isDeletedCheck = new JCheckBox();
 			if (!insert) {
 				isDeletedCheck.setSelected(supplier.getSupDeleted().equals('Y'));
@@ -434,4 +434,5 @@ public class SupplierEdit extends JDialog {
 		}
 		return isDeletedCheck;
 	}
+
 }

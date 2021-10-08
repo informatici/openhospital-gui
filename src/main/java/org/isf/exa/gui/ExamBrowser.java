@@ -25,9 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -70,7 +68,7 @@ import org.slf4j.LoggerFactory;
  * 10/11/2006 - ross - corrected exam deletion, before it was never deleted
  * ------------------------------------------
  */
-public class ExamBrowser extends ModalJFrame implements ExamListener{
+public class ExamBrowser extends ModalJFrame implements ExamListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExamBrowser.class);
@@ -102,20 +100,18 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	private JPanel buttonPanel;
 	private JTextField searchTextField;
 	private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
-	
+
 	public ExamBrowser() {
-		myFrame=this;
+		myFrame = this;
 		setTitle(MessageBundle.getMessage("angal.exa.exambrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-        final int pfrmBase = 20;
-        final int pfrmWidth = 15;
-        final int pfrmHeight = 8;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		
-        
-        this.setContentPane(getJContentPanel());
+		final int pfrmBase = 20;
+		final int pfrmWidth = 15;
+		final int pfrmHeight = 8;
+		this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase) / 2,
+				screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
+		this.setContentPane(getJContentPanel());
 		setVisible(true);
 	}
 
@@ -151,7 +147,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				}
 			});
 			panelSearch.add(searchTextField);
-                        //jContentPanel.add(panelSearch);
 			validate();
 		}
 		return jContentPanel;
@@ -194,13 +189,14 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 	}
 
 	private TableRowSorter<TableModel> sorter;
+
 	private JTable getJTable() {
 		if (table == null) {
 			model = new ExamBrowsingModel();
 			table = new JTable(model);
 			table.setAutoCreateColumnsFromModel(false);
 			sorter = new TableRowSorter<>(model);
-		    table.setRowSorter(sorter);
+			table.setRowSorter(sorter);
 			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 			table.getColumnModel().getColumn(2).setMinWidth(pColumnWidth[2]);
@@ -211,11 +207,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 				if (!selectionEvent.getValueIsAdjusting()) {
 					selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 					exam = (Exam) (((ExamBrowsingModel) model).getValueAt(selectedrow, -1));
-					if (exam.getProcedure() == 3) {
-						jButtonShow.setEnabled(false);
-					} else {
-						jButtonShow.setEnabled(true);
-					}
+					jButtonShow.setEnabled(exam.getProcedure() != 3);
 				}
 			});
 		}
@@ -371,7 +363,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 		
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
@@ -391,32 +382,17 @@ public class ExamBrowser extends ModalJFrame implements ExamListener{
 			table.setRowSelectionInterval(0, 0);
 		}
 	}
-	
+
 	private void filterExam() {
 		String s = searchTextField.getText().trim();
-		if (s.length() == 0) {
-			sorter.setRowFilter(null);
-		} else {
-			try {
-				String[] tokens = s.split(" ");
-				ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
-
-				for (String value : tokens) {
-					String token = value.toLowerCase();
-
-					RowFilter<Object, Object> filter = RowFilter.regexFilter("(?i)" + token);
-					filters.add(filter);
-				}
-
-				sorter.setRowFilter(RowFilter.andFilter(filters));
-			} catch (PatternSyntaxException pse) {
-				LOGGER.error("Bad regex pattern");
-			}
+		List<RowFilter<Object, Object>> filters = new ExamFilterFactory().buildFilters(s);
+		if (!filters.isEmpty()) {
+			sorter.setRowFilter(RowFilter.andFilter(filters));
 		}
 	}
-	
+
 	private void reloadTable() {
-		pSelection=pbox.getSelectedItem().toString();
+		pSelection = pbox.getSelectedItem().toString();
 		if (pSelection.compareTo(STR_ALL) == 0) {
 			model = new ExamBrowsingModel();
 		} else {

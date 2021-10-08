@@ -44,13 +44,15 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DeliveryTypeBrowserEdit extends JDialog{
+public class DeliveryTypeBrowserEdit extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private EventListenerList deliveryTypeListeners = new EventListenerList();
 
     public interface DeliveryTypeListener extends EventListener {
+
         void deliveryTypeUpdated(AWTEvent e);
+
         void deliveryTypeInserted(AWTEvent e);
     }
 

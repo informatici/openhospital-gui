@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeListener{
+public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<AdmissionType> pAdmissionType;

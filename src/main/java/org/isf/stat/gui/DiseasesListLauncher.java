@@ -40,7 +40,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  * 
  * @author Rick
  */
-public class DiseasesListLauncher extends ModalJFrame{
+public class DiseasesListLauncher extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,15 +53,12 @@ public class DiseasesListLauncher extends ModalJFrame{
 	private JButton jCloseButton = null;
 	private JPanel jContentPanel = null;
 	private JButton jReport1Button = null;
-//	private JLabel jReport1Label = null;
-//	private final JFrame myFrame;
-	
+
 	/**
 	 * This is the default constructor
 	 */
 	public DiseasesListLauncher() {
 		super();
-//		myFrame = this;
 		this.setResizable(true);
 		initialize();
 		setVisible(true);

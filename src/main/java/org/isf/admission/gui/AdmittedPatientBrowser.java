@@ -36,8 +36,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -126,9 +126,8 @@ import org.isf.ward.model.Ward;
  * 06/12/09 - Alex - Cosmetic changes to GUI
  * -----------------------------------------------------------
  */
-public class AdmittedPatientBrowser extends ModalJFrame implements
-		PatientInsert.PatientListener,// AdmissionBrowser.AdmissionListener,
-		PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener, //by Alex
+public class AdmittedPatientBrowser extends ModalJFrame
+		implements PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener,
 		PatientDataBrowser.DeleteAdmissionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -155,7 +154,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private JButton jSearchButton = null;
 	private JButton jButtonExamination;
 	private String lastKey = "";
-	private ArrayList<Ward> wardList = null;
+	private List<Ward> wardList = null;
 	private JLabel rowCounter = null;
 	private List<AdmittedPatient> pPatient = new ArrayList<>();
 	private String[] pColumns = {
@@ -589,8 +588,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		JLabel admissionLabel = new JLabel(MessageBundle.getMessage("angal.admission.admissiondate.txt"));
 		JLabel dischargeLabel = new JLabel(MessageBundle.getMessage("angal.admission.dischargedate.txt"));
 		for(int i = 0; i <= dateChoosers.length - 1; i++) {
-			CustomJDateChooser chooser = dateChoosers[i];
-			chooser = new CustomJDateChooser();
+			CustomJDateChooser chooser = new CustomJDateChooser();
 			chooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			chooser.setDateFormatString("dd/MM/yy");
 			chooser.setMinimumSize(new Dimension(80,20));
@@ -1089,11 +1087,11 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 				return;
 			}
 		}
-		
-		GregorianCalendar[] admissionRange = new GregorianCalendar[2];
-		GregorianCalendar[] dischargeRange = new GregorianCalendar[2];	
+
+		LocalDateTime[] admissionRange = new LocalDateTime[2];
+		LocalDateTime[] dischargeRange = new LocalDateTime[2];
 		for(int i = 0; i <= dateChoosers.length - 1; i++) {
-			GregorianCalendar date = (GregorianCalendar) dateChoosers[i].getCalendar();
+			LocalDateTime date = dateChoosers[i].getLocalDateTime();
 			switch (i) {
 			case 0:
 				admissionRange[0] = date;
@@ -1146,34 +1144,30 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 		private static final long serialVersionUID = 1L;
 
-		ArrayList<AdmittedPatient> patientList = new ArrayList<>();
+		List<AdmittedPatient> patientList = new ArrayList<>();
 		
 		public AdmittedPatientBrowserModel(String key) {
 			for (AdmittedPatient ap : pPatient) {
 				Admission adm = ap.getAdmission();
 				// if not admitted stripes admitted
-				if (((String) patientClassBox.getSelectedItem())
-						.equals(patientClassItems[2])) {
+				if (patientClassBox.getSelectedItem().equals(patientClassItems[2])) {
 					if (adm != null) {
 						continue;
 					}
 				}
 				// if admitted stripes not admitted
-				else if (((String) patientClassBox.getSelectedItem())
-						.equals(patientClassItems[1])) {
+				else if (patientClassBox.getSelectedItem().equals(patientClassItems[1])) {
 					if (adm == null) {
 						continue;
 					}
 				}
 
 				// if all or admitted filters not matching ward
-				if (!((String) patientClassBox.getSelectedItem())
-						.equals(patientClassItems[2])) {
+				if (!patientClassBox.getSelectedItem().equals(patientClassItems[2])) {
 					if (adm != null) {
 						int cc = -1;
 						for (int j = 0; j < wardList.size(); j++) {
-							if (adm.getWard().getCode().equalsIgnoreCase(
-									wardList.get(j).getCode())) {
+							if (adm.getWard().getCode().equalsIgnoreCase(wardList.get(j).getCode())) {
 								cc = j;
 								break;
 							}

@@ -47,7 +47,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeListener{
+public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<DeliveryType> pDeliveryType;
@@ -55,7 +55,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {80, 200};
+	private int[] pColumnWidth = { 80, 200 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;

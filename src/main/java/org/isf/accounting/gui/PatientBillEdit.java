@@ -28,16 +28,20 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -100,8 +104,11 @@ import org.slf4j.LoggerFactory;
 public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientBillEdit.class);
+	private static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
+	private static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
+	private static final String DATE_FORMAT_DD_MM_YY_HH_MM_SS = "dd/MM/yy - HH:mm:ss";
 
-//LISTENER INTERFACE --------------------------------------------------------
+	//LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList patientBillListener = new EventListenerList();
 	
 	public interface PatientBillListener extends EventListener {
@@ -126,7 +133,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	@Override
 	public void patientSelected(Patient patient) {
-		// patientSelected = patient;
 		setPatientSelected(patient);
 		List<Bill> patientPendingBills = new ArrayList<>();
 		try {
@@ -146,7 +152,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							"angal.newbill.thispatienthasapendingbilldoyouwanttocreateanother.msg");
 					if (response == JOptionPane.YES_OPTION) {
 						insert = true;
-						//thisBill.setPatID(patientSelected.getCode());
 						thisBill.setBillPatient(patientSelected);
 						thisBill.setIsPatient(true);
 						thisBill.setPatName(patientSelected.getName());
@@ -155,7 +160,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						setBill(patientPendingBills.get(0));
 
 						/* ****** Check if it is same month ************** */
-						//checkIfsameMonth();
+						//checkIfSameMonth();
 						/* *********************************************** */
 					}
 				} else {
@@ -164,7 +169,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					setBill(patientPendingBills.get(0));
 
 					/* ****** Check if it is same month ************** */
-					//checkIfsameMonth();
+					//checkIfSameMonth();
 					/* *********************************************** */
 				}
 			} else {
@@ -185,7 +190,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							insert = false;
 							setBill(patientPendingBills.get(0));
 							/* ****** Check if it is same month ************** */
-							//checkIfsameMonth();
+							//checkIfSameMonth();
 							/* *********************************************** */
 						} else {
 							dispose();
@@ -197,7 +202,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					MessageDialog.yesNo(null, "angal.admission.thereismorethanonependingbillforthispatientcontinue.msg");
 					// TODO: the response is not checked; something needs to be done here
 					return;
-				}				
+				}
 			}
 		}
 		updateUI();
@@ -275,8 +280,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private Bill thisBill;
 	private Patient patientSelected;
 	private boolean foundList;
-	private GregorianCalendar billDate = new GregorianCalendar();
-	private GregorianCalendar today = new GregorianCalendar();
+	private LocalDateTime billDate = LocalDateTime.now();
+	private LocalDateTime today = LocalDateTime.now();
 	
 	private Object[] billClasses = {Price.class, Integer.class, Double.class};
 	private String[] billColumnNames = {
@@ -304,7 +309,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	//Prices, Items and Payments for the tables
 	private List<BillItems> billItems = new ArrayList<>();
 	private List<BillPayments> payItems = new ArrayList<>();
-	private ArrayList<Price> prcListArray = new ArrayList<>();
+	private List<Price> prcListArray = new ArrayList<>();
 	private int billItemsSaved;
 	private int payItemsSaved;
 	
@@ -404,15 +409,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		
 		foundList = false;
 		if (thisBill.isList()) {
-			for (PriceList list : lstArray) {
-				
-				if (list.getId() == thisBill.getPriceList().getId()) {
-					listSelected = list;
-					foundList = true;
-					break;
-				}
-			}
-			if (!foundList) { //PriceList not found
+			Optional<PriceList> priceList = lstArray.stream()
+					.filter(pl -> pl.getId() == thisBill.getPriceList().getId())
+					.findFirst();
+			priceList.ifPresent(pl -> listSelected = pl);
+
+			if (!priceList.isPresent()) { //PriceList not found
 				Icon icon = new ImageIcon("rsc/icons/list_dialog.png"); //$NON-NLS-1$
 				PriceList list = (PriceList)JOptionPane.showInputDialog(
 				                    PatientBillEdit.this,
@@ -489,9 +491,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jTextFieldPatient = new JTextField();
 			jTextFieldPatient.setText(""); //$NON-NLS-1$
 			jTextFieldPatient.setPreferredSize(PatientDimension);
-			//Font patientFont=new Font(jTextFieldPatient.getFont().getName(), Font.BOLD, jTextFieldPatient.getFont().getSize() + 4);
-			//jTextFieldPatient.setFont(patientFont);
-			//if (!insert) jTextFieldPatient.setText(thisBill.getPatName());
 			if (thisBill.isPatient()) {
 				jTextFieldPatient.setText(thisBill.getPatName());
 			}
@@ -507,7 +506,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		return jLabelPriceList;
 	}
 	
-	private JComboBox getJComboBoxPriceList() {
+	private JComboBox<PriceList> getJComboBoxPriceList() {
 		if (jComboBoxPriceList == null) {
 			jComboBoxPriceList = new JComboBox<>();
 			PriceList list = null;
@@ -536,20 +535,26 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	private CustomJDateChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			
 			if (insert) {
-				//To remind last used
-				billDate.set(Calendar.YEAR, RememberDates.getLastBillDateGregorian().get(Calendar.YEAR));
-				billDate.set(Calendar.MONTH, RememberDates.getLastBillDateGregorian().get(Calendar.MONTH));
-				billDate.set(Calendar.DAY_OF_MONTH, RememberDates.getLastBillDateGregorian().get(Calendar.DAY_OF_MONTH));
-				jCalendarDate = new CustomJDateChooser(billDate.getTime()); 
+				// To remind last used
+				if (RememberDates.getLastBillDate() != null) {
+					billDate = LocalDate.now()
+							.withYear(RememberDates.getLastBillDate().getYear())
+							.withMonth(RememberDates.getLastBillDate().getMonthValue())
+							.withDayOfMonth(RememberDates.getLastBillDate().getDayOfMonth())
+							.atTime(billDate.toLocalTime());
+					jCalendarDate = new CustomJDateChooser(billDate);
+				} else {
+					jCalendarDate = new CustomJDateChooser(LocalDateTime.now());
+					billDate = jCalendarDate.getLocalDateTime();
+				}
 			} else { 
-				//get BillDate
-				jCalendarDate = new CustomJDateChooser(thisBill.getDate().getTime());
-				billDate.setTime(jCalendarDate.getDate());
+				// get BillDate
+				jCalendarDate = new CustomJDateChooser(thisBill.getDate());
+				billDate = jCalendarDate.getLocalDateTime();
 			}
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
+			jCalendarDate.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS); //$NON-NLS-1$
 			jCalendarDate.getJCalendar().addPropertyChangeListener("calendar", propertyChangeEvent -> {
 
 				if (!insert) {
@@ -569,7 +574,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				} else {
 					jCalendarDate.setDate(((Calendar)propertyChangeEvent.getNewValue()).getTime());
 				}
-				billDate.setTime(jCalendarDate.getDate());
+				billDate = jCalendarDate.getLocalDateTime();
 			});
 		}
 		return jCalendarDate;
@@ -616,13 +621,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.removethepatientassociatedwiththisbill.tooltip"));
 			jButtonTrashPatient.addActionListener(actionEvent -> {
-
 				patientSelected = null;
-				//BILL
+				// BILL
 				thisBill.setIsPatient(false);
 				thisBill.getBillPatient().setCode(0);
 				thisBill.setPatName(""); //$NON-NLS-1$
-				//INTERFACE
+				// INTERFACE
 				jTextFieldPatient.setText("");
 				jTextFieldPatient.setEditable(false);
 				jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.findpatient.btn"));
@@ -731,7 +735,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						"<html><b>" + MessageBundle.getMessage("angal.newbill.topay.txt") + "</b></html>",
 						currencyCod,
 						bigTotal}
-					}, new String[] {"","", ""}) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					}, new String[] {"","", ""}) {
 				private static final long serialVersionUID = 1L;
 				Class<?>[] types = new Class<?>[] { JLabel.class, JLabel.class, Double.class, };
 	
@@ -1078,7 +1082,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			}
 			jButtonPaid.addActionListener(actionEvent -> {
 
-				GregorianCalendar datePay = new GregorianCalendar();
+				LocalDateTime datePay = LocalDateTime.now();
 
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png"); //$NON-NLS-1$
 				int ok = MessageDialog.yesNo(PatientBillEdit.this, icon,
@@ -1088,13 +1092,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				}
 
 				if (balance.compareTo(new BigDecimal(0)) > 0) {
-					if (billDate.before(today)) { //if Bill is in the past the user will be asked for PAID date
+					if (billDate.isBefore(today)) { //if Bill is in the past the user will be asked for PAID date
 
 						icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 
 						CustomJDateChooser datePayChooser = new CustomJDateChooser(new Date());
 						datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-						datePayChooser.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
+						datePayChooser.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS); //$NON-NLS-1$
 
 				        int r = JOptionPane.showConfirmDialog(PatientBillEdit.this,
 						        datePayChooser,
@@ -1104,7 +1108,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						        icon);
 
 				        if (r == JOptionPane.OK_OPTION) {
-					        datePay.setTime(datePayChooser.getDate());
+					        datePay = datePayChooser.getLocalDateTime();
 				        } else {
 				            return;
 				        }
@@ -1113,7 +1117,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					        addPayment(datePay, balance.doubleValue());
 				        }
 					} else {
-						datePay = new GregorianCalendar();
+						datePay = LocalDateTime.now();
 						addPayment(datePay, balance.doubleValue());
 					}
 				}
@@ -1160,7 +1164,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png");
 				BigDecimal amount = new BigDecimal(0);
 
-				GregorianCalendar datePay = new GregorianCalendar();
+				LocalDateTime datePay = LocalDateTime.now();
 
 				String quantity = (String) JOptionPane.showInputDialog(
 	                    PatientBillEdit.this,
@@ -1184,11 +1188,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					return;
 				}
 
-				if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
+				if (billDate.isBefore(today)) { //if is a bill in the past the user will be asked for date of payment
 
 					CustomJDateChooser datePayChooser = new CustomJDateChooser(new Date());
 					datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-					datePayChooser.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
+					datePayChooser.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS); //$NON-NLS-1$
 
 			        int r = JOptionPane.showConfirmDialog(PatientBillEdit.this,
 					        datePayChooser,
@@ -1197,7 +1201,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					        JOptionPane.PLAIN_MESSAGE);
 
 			        if (r == JOptionPane.OK_OPTION) {
-				        datePay.setTime(datePayChooser.getDate());
+				        datePay = datePayChooser.getLocalDateTime();
 			        } else {
 			            return;
 			        }
@@ -1206,7 +1210,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				        addPayment(datePay, amount.doubleValue());
 			        }
 				} else {
-					datePay = new GregorianCalendar();
+					datePay = LocalDateTime.now();
 					addPayment(datePay, amount.doubleValue());
 				}
 			});
@@ -1214,21 +1218,21 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		return jButtonAddRefund;
 	}
 
-	private boolean isValidPaymentDate(GregorianCalendar datePay) {
-		GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar lastPay;
+	private boolean isValidPaymentDate(LocalDateTime datePay) {
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime lastPay;
 		if (!payItems.isEmpty()) {
 			lastPay = payItems.get(payItems.size() - 1).getDate();
 		} else {
 			lastPay = billDate;
 		}
-		if (datePay.before(billDate)) {
+		if (datePay.isBefore(billDate)) {
 			MessageDialog.error(PatientBillEdit.this, "angal.newbill.paymentmadebeforebilldate.msg");
 			return false;
-		} else if (datePay.before(lastPay)) {
+		} else if (datePay.isBefore(lastPay)) {
 			MessageDialog.error(PatientBillEdit.this, "angal.newbill.thedateisbeforethelastpayment.msg");
 			return false;
-		} else if (datePay.after(now)) {
+		} else if (datePay.isBefore(now)) {
 			MessageDialog.error(PatientBillEdit.this, "angal.newbill.payementsinthefuturearenotallowed.msg");
 			return false;
 		}
@@ -1247,7 +1251,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png");
 				BigDecimal amount = new BigDecimal(0);
 
-				GregorianCalendar datePay = new GregorianCalendar();
+				LocalDateTime datePay = LocalDateTime.now();
 
 				String quantity = (String) JOptionPane.showInputDialog(
 	                    PatientBillEdit.this,
@@ -1271,11 +1275,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					return;
 				}
 
-				if (billDate.before(today)) { //if is a bill in the past the user will be asked for date of payment
+				if (billDate.isBefore(today)) { //if is a bill in the past the user will be asked for date of payment
 
 					CustomJDateChooser datePayChooser = new CustomJDateChooser(new Date());
 					datePayChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-					datePayChooser.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
+					datePayChooser.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS); //$NON-NLS-1$
 
 			        int r = JOptionPane.showConfirmDialog(PatientBillEdit.this,
 					        datePayChooser,
@@ -1284,7 +1288,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					        JOptionPane.PLAIN_MESSAGE);
 
 			        if (r == JOptionPane.OK_OPTION) {
-				        datePay.setTime(datePayChooser.getDate());
+				        datePay = datePayChooser.getLocalDateTime();
 			        } else {
 			            return;
 			        }
@@ -1293,7 +1297,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				        addPayment(datePay, amount.doubleValue());
 			        }
 				} else {
-					datePay = new GregorianCalendar();
+					datePay = LocalDateTime.now();
 					addPayment(datePay, amount.doubleValue());
 				}
 			});
@@ -1329,39 +1333,38 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				boolean isPrice = true;
 
-				HashMap<Integer,PricesOthers> othersHashMap = new HashMap<>();
+				Map<Integer, PricesOthers> othersHashMap = new HashMap<>();
 				for (PricesOthers other : othPrices) {
-				    othersHashMap.put(other.getId(), other);
-			    }
+					othersHashMap.put(other.getId(), other);
+				}
 
-				ArrayList<Price> othArray = new ArrayList<>();
+				List<Price> othArray = new ArrayList<>();
 				for (Price price : prcListArray) {
-					if (price.getGroup().equals("OTH")) //$NON-NLS-1$
-					{
+					if (price.getGroup().equals("OTH")) {
 						othArray.add(price);
 					}
 				}
 
 				Icon icon = new ImageIcon("rsc/icons/plus_dialog.png");
-				Price oth = (Price)JOptionPane.showInputDialog(
-				                    PatientBillEdit.this,
-				                    MessageBundle.getMessage("angal.newbill.pleaseselectanitem.txt"),
-				                    MessageBundle.getMessage("angal.newbill.item.title"),
-				                    JOptionPane.PLAIN_MESSAGE,
-				                    icon,
-				                    othArray.toArray(),
-				                    ""); //$NON-NLS-1$
+				Price oth = (Price) JOptionPane.showInputDialog(
+						PatientBillEdit.this,
+						MessageBundle.getMessage("angal.newbill.pleaseselectanitem.txt"),
+						MessageBundle.getMessage("angal.newbill.item.title"),
+						JOptionPane.PLAIN_MESSAGE,
+						icon,
+						othArray.toArray(),
+						""); //$NON-NLS-1$
 
 				if (oth != null) {
 					if (othersHashMap.get(Integer.valueOf(oth.getItem())).isUndefined()) {
 						icon = new ImageIcon("rsc/icons/money_dialog.png"); //$NON-NLS-1$
-						String price = (String)JOptionPane.showInputDialog(
-			                    PatientBillEdit.this,
-			                    MessageBundle.getMessage("angal.newbill.howmuchisit.txt"),
-			                    MessageBundle.getMessage("angal.common.undefined.txt"),
-			                    JOptionPane.PLAIN_MESSAGE,
-			                    icon,
-			                    null,
+						String price = (String) JOptionPane.showInputDialog(
+								PatientBillEdit.this,
+								MessageBundle.getMessage("angal.newbill.howmuchisit.txt"),
+								MessageBundle.getMessage("angal.common.undefined.txt"),
+								JOptionPane.PLAIN_MESSAGE,
+								icon,
+								null,
 								"0"); //$NON-NLS-1$
 						try {
 							if (price == null) {
@@ -1383,13 +1386,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						int qty = 1;
 						icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 						String quantity = (String) JOptionPane.showInputDialog(
-			                    PatientBillEdit.this,
-			                    MessageBundle.getMessage("angal.newbill.howmanydays.txt"),
-			                    MessageBundle.getMessage("angal.newbill.days.title"),
-			                    JOptionPane.PLAIN_MESSAGE,
-			                    icon,
-			                    null,
-			                    qty);
+								PatientBillEdit.this,
+								MessageBundle.getMessage("angal.newbill.howmanydays.txt"),
+								MessageBundle.getMessage("angal.newbill.days.title"),
+								JOptionPane.PLAIN_MESSAGE,
+								icon,
+								null,
+								qty);
 						try {
 							if (quantity == null || quantity.equals("")) {
 								return;
@@ -1417,24 +1420,23 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonAddExam.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddExam.addActionListener(actionEvent -> {
 
-				ArrayList<Price> exaArray = new ArrayList<>();
+				List<Price> exaArray = new ArrayList<>();
 				for (Price price : prcListArray) {
 
-					if (price.getGroup().equals("EXA")) //$NON-NLS-1$
-					{
+					if (price.getGroup().equals("EXA")) {
 						exaArray.add(price);
 					}
 				}
 
 				Icon icon = new ImageIcon("rsc/icons/exam_dialog.png"); //$NON-NLS-1$
-				Price exa = (Price)JOptionPane.showInputDialog(
-				                    PatientBillEdit.this,
-				                    MessageBundle.getMessage("angal.newbill.selectanexam.txt"),
-				                    MessageBundle.getMessage("angal.newbill.exam.title"),
-				                    JOptionPane.PLAIN_MESSAGE,
-				                    icon,
-				                    exaArray.toArray(),
-				                    ""); //$NON-NLS-1$
+				Price exa = (Price) JOptionPane.showInputDialog(
+						PatientBillEdit.this,
+						MessageBundle.getMessage("angal.newbill.selectanexam.txt"),
+						MessageBundle.getMessage("angal.newbill.exam.title"),
+						JOptionPane.PLAIN_MESSAGE,
+						icon,
+						exaArray.toArray(),
+						""); //$NON-NLS-1$
 				addItem(exa, 1, true);
 			});
 		}
@@ -1450,24 +1452,23 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonAddOperation.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddOperation.addActionListener(actionEvent -> {
 
-				ArrayList<Price> opeArray = new ArrayList<>();
+				List<Price> opeArray = new ArrayList<>();
 				for (Price price : prcListArray) {
 
-					if (price.getGroup().equals("OPE")) //$NON-NLS-1$
-					{
+					if (price.getGroup().equals("OPE")) {
 						opeArray.add(price);
 					}
 				}
 
 				Icon icon = new ImageIcon("rsc/icons/operation_dialog.png"); //$NON-NLS-1$
-				Price ope = (Price)JOptionPane.showInputDialog(
-				                    PatientBillEdit.this,
-				                    MessageBundle.getMessage("angal.newbill.selectanoperation.txt"),
-				                    MessageBundle.getMessage("angal.newbill.operation.title"),
-				                    JOptionPane.PLAIN_MESSAGE,
-				                    icon,
-				                    opeArray.toArray(),
-				                    ""); //$NON-NLS-1$
+				Price ope = (Price) JOptionPane.showInputDialog(
+						PatientBillEdit.this,
+						MessageBundle.getMessage("angal.newbill.selectanoperation.txt"),
+						MessageBundle.getMessage("angal.newbill.operation.title"),
+						JOptionPane.PLAIN_MESSAGE,
+						icon,
+						opeArray.toArray(),
+						""); //$NON-NLS-1$
 				addItem(ope, 1, true);
 			});
 		}
@@ -1483,34 +1484,33 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddMedical.addActionListener(actionEvent -> {
 
-				ArrayList<Price> medArray = new ArrayList<>();
+				List<Price> medArray = new ArrayList<>();
 				for (Price price : prcListArray) {
 
-					if (price.getGroup().equals("MED")) //$NON-NLS-1$
-					{
+					if (price.getGroup().equals("MED")) {
 						medArray.add(price);
 					}
 				}
 
 				Icon icon = new ImageIcon("rsc/icons/medical_dialog.png"); //$NON-NLS-1$
-				Price med = (Price)JOptionPane.showInputDialog(
-				                    PatientBillEdit.this,
-				                    MessageBundle.getMessage("angal.newbill.selectamedical.txt"),
-				                    MessageBundle.getMessage("angal.newbill.medical.title"),
-				                    JOptionPane.PLAIN_MESSAGE,
-				                    icon,
-				                    medArray.toArray(),
-				                    ""); //$NON-NLS-1$
+				Price med = (Price) JOptionPane.showInputDialog(
+						PatientBillEdit.this,
+						MessageBundle.getMessage("angal.newbill.selectamedical.txt"),
+						MessageBundle.getMessage("angal.newbill.medical.title"),
+						JOptionPane.PLAIN_MESSAGE,
+						icon,
+						medArray.toArray(),
+						""); //$NON-NLS-1$
 				if (med != null) {
 					int qty = 1;
 					String quantity = (String) JOptionPane.showInputDialog(
-		                    PatientBillEdit.this,
-		                    MessageBundle.getMessage("angal.newbill.insertquantity.txt"),
-		                    MessageBundle.getMessage("angal.common.quantity.txt"),
-		                    JOptionPane.PLAIN_MESSAGE,
-		                    icon,
-		                    null,
-		                    qty);
+							PatientBillEdit.this,
+							MessageBundle.getMessage("angal.newbill.insertquantity.txt"),
+							MessageBundle.getMessage("angal.common.quantity.txt"),
+							JOptionPane.PLAIN_MESSAGE,
+							icon,
+							null,
+							qty);
 					try {
 						if (quantity == null || quantity.equals("")) {
 							return;
@@ -1518,14 +1518,14 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						qty = Integer.parseInt(quantity);
 						addItem(med, qty, true);
 					} catch (Exception eee) {
-						MessageDialog.error(PatientBillEdit.this,  "angal.newbill.invalidquantitypleasetryagain.msg");
+						MessageDialog.error(PatientBillEdit.this, "angal.newbill.invalidquantitypleasetryagain.msg");
 					}
 				}
 			});
 		}
 		return jButtonAddMedical;
 	}
-	
+
 	private JButton getJButtonAddCustom() {
 		if (jButtonCustom == null) {
 			jButtonCustom = new JButton(MessageBundle.getMessage("angal.newbill.custom.btn"));
@@ -1536,25 +1536,25 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jButtonCustom.addActionListener(actionEvent -> {
 				double amount;
 				Icon icon = new ImageIcon("rsc/icons/custom_dialog.png"); //$NON-NLS-1$
-				String desc = (String)JOptionPane.showInputDialog(
-				                    PatientBillEdit.this,
-				                    MessageBundle.getMessage("angal.newbill.chooseadescription.txt"),
-				                    MessageBundle.getMessage("angal.newbill.customitem.title"),
-				                    JOptionPane.PLAIN_MESSAGE,
-				                    icon,
-				                    null,
-									MessageBundle.getMessage("angal.newbill.newdescription.txt"));
+				String desc = (String) JOptionPane.showInputDialog(
+						PatientBillEdit.this,
+						MessageBundle.getMessage("angal.newbill.chooseadescription.txt"),
+						MessageBundle.getMessage("angal.newbill.customitem.title"),
+						JOptionPane.PLAIN_MESSAGE,
+						icon,
+						null,
+						MessageBundle.getMessage("angal.newbill.newdescription.txt"));
 				if (desc == null || desc.equals("")) { //$NON-NLS-1$
 					return;
 				} else {
 					icon = new ImageIcon("rsc/icons/money_dialog.png"); //$NON-NLS-1$
-					String price = (String)JOptionPane.showInputDialog(
-		                    PatientBillEdit.this,
-		                    MessageBundle.getMessage("angal.newbill.howmuchisit.txt"),
-		                    MessageBundle.getMessage("angal.newbill.customitem.title"),
-		                    JOptionPane.PLAIN_MESSAGE,
-		                    icon,
-		                    null,
+					String price = (String) JOptionPane.showInputDialog(
+							PatientBillEdit.this,
+							MessageBundle.getMessage("angal.newbill.howmuchisit.txt"),
+							MessageBundle.getMessage("angal.newbill.customitem.title"),
+							JOptionPane.PLAIN_MESSAGE,
+							icon,
+							null,
 							"0"); //$NON-NLS-1$
 					try {
 						amount = Double.parseDouble(price);
@@ -1638,15 +1638,15 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (prc != null) {
 			double amount = prc.getPrice();
 			try {
-				BillItems item = new BillItems(0, 
-						billManager.getBill(billID), 
-						isPrice, 
-						prc.getGroup()+prc.getItem(),
+				BillItems item = new BillItems(0,
+						billManager.getBill(billID),
+						isPrice,
+						prc.getGroup() + prc.getItem(),
 						prc.getDesc(),
 						amount,
 						qty);
 				billItems.add(item);
-			} catch(OHServiceException e) {
+			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
 			}
 			modified = true;
@@ -1657,7 +1657,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	
 	private void updateUI() {
 		
-		jCalendarDate.setDate(thisBill.getDate().getTime());
+		jCalendarDate.setDate(thisBill.getDate());
 		jTextFieldPatient.setText(patientSelected.getName());
 		jTextFieldPatient.setEditable(false);
 		jButtonPickPatient.setText(MessageBundle.getMessage("angal.newbill.changepatient.btn"));
@@ -1686,7 +1686,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		}
 	}
 	
-	private void addPayment(GregorianCalendar datePay, double qty) {
+	private void addPayment(LocalDateTime datePay, double qty) {
 		if (qty != 0) {
 			try {
 				BillPayments pay = new BillPayments(0,
@@ -1731,11 +1731,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	public class BillTableModel implements TableModel {
 		
 		public BillTableModel() {
-			
-			HashMap<String,Price> priceHashTable = new HashMap<>();
+
+			Map<String, Price> priceHashTable;
 			prcListArray = new ArrayList<>();
-			//billItems = new ArrayList<BillItems>();
-			
+
 			/*
 			 * Select the prices of the selected list.
 			 * If no price list is selected (new bill) the first one is taken.
@@ -1743,33 +1742,26 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			if (listSelected == null) {
 				listSelected = lstArray.get(0);
 			}
-			for (Price price : prcArray) {
-				if (price.getList().getId() == listSelected.getId()) {
-					prcListArray.add(price);
-				}
-		    }
-			
+			prcListArray = prcArray.stream()
+					.filter(price -> price.getList().getId() == listSelected.getId())
+					.collect(Collectors.toList());
 			/*
 			 * Create a hashTable with the selected prices.
 			 */
-			for (Price price : prcListArray) {
-				priceHashTable.put(price.getList().getId()+
-  					  price.getGroup()+
-  					  price.getItem(), price);
-		    }
+			priceHashTable = prcListArray.stream().collect(
+					Collectors.toMap(price -> price.getList().getId() + price.getGroup() + price.getItem(), price -> price, (a, b) -> b, HashMap::new));
 			
 			/*
 			 * Updates the items in the bill.
 			 */
 		    for (BillItems item : billItems) {
-				
-				if (item.isPrice()) {
-					Price p = priceHashTable.get(listSelected.getId()+item.getPriceID());
-					item.setItemDescription(p.getDesc());
-					item.setItemAmount(p.getPrice());
-				}
+			    if (item.isPrice()) {
+				    Price p = priceHashTable.get(listSelected.getId() + item.getPriceID());
+				    item.setItemDescription(p.getDesc());
+				    item.setItemAmount(p.getPrice());
+			    }
 			}
-			
+
 		    /*
 		     * Updates the totals.
 		     */
@@ -1824,7 +1816,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		
 		@Override
 		public void setValueAt(Object item, int r, int c) {
-			//if (c == 1) billItems.get(r).setItemQuantity((Integer)item);
 		}
 
 		@Override
@@ -1900,45 +1891,41 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		}
 	}
 
-	public String formatDate(GregorianCalendar time) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");  //$NON-NLS-1$
-		return format.format(time.getTime());
+	public String formatDate(LocalDateTime time) {
+		DateTimeFormatter sdf = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
+		return sdf.format(time);
 	}
 	
-	public String formatDateTime(GregorianCalendar time) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");  //$NON-NLS-1$
-		return format.format(time.getTime());
+	public String formatDateTime(LocalDateTime time) {
+		DateTimeFormatter sdf = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY_HH_MM);
+		return sdf.format(time);
 	}
-	
-	public boolean isSameDay(GregorianCalendar billDate, GregorianCalendar today) {
-		return (billDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) &&
-			   (billDate.get(Calendar.MONTH) == today.get(Calendar.MONTH)) &&
-			   (billDate.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
+
+	public boolean isSameDay(LocalDateTime billDate, LocalDateTime today) {
+		return (billDate.getYear() == today.getYear()
+				&&  (billDate.getMonthValue() == today.getMonthValue()))
+				&&  (billDate.getDayOfMonth() == today.getDayOfMonth());
 	}
-	
-	public void checkIfsameMonth() {
+
+	// TODO: not used?
+	public void checkIfSameMonth() {
 		if (!insert) {
-			//GregorianCalendar thisday = TimeTools.getServerDateTime();
-			GregorianCalendar thisday = new GregorianCalendar();
-			GregorianCalendar billDate = thisBill.getDate();
-			int thisMonth = thisday.get(Calendar.MONTH);
-			int billMonth = billDate.get(Calendar.MONTH);
-			int thisYear = thisday.get(Calendar.YEAR);
-			int billBillYear = billDate.get(Calendar.YEAR);
-			if (thisYear>billBillYear || thisMonth>billMonth) {
+			LocalDateTime thisday = LocalDateTime.now();
+			LocalDateTime billDate = thisBill.getDate();
+			int thisMonth = thisday.getMonthValue();
+			int billMonth = billDate.getMonthValue();
+			int thisYear = thisday.getYear();
+			int billBillYear = billDate.getYear();
+			if (thisYear > billBillYear || thisMonth > billMonth) {
 				jButtonAddMedical.setEnabled(false);
 				jButtonAddOperation.setEnabled(false);
 				jButtonAddExam.setEnabled(false);
 				jButtonAddOther.setEnabled(false);
 				jButtonCustom.setEnabled(false);
 				jButtonRemoveItem.setEnabled(false);
-				//jTextFieldSearch.setEnabled(false);
-				//jTextFieldDescription.setEnabled(false);
-				//jTextFieldQty.setEnabled(false);
-				//jTextFieldPrice.setEnabled(false);
-				//jButtonAddPrescription.setEnabled(false);
-				jCalendarDate.grabFocus(); 
+				jCalendarDate.grabFocus();
 			}
 		}
 	}
+
 }

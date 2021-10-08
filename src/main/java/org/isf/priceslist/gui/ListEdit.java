@@ -131,7 +131,7 @@ public class ListEdit extends JDialog {
 
 				PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 				boolean result = false;
-				try{
+				try {
 					if (insert) {      // inserting
 						result = listManager.newList(list);
 						if (result) {
@@ -144,7 +144,7 @@ public class ListEdit extends JDialog {
 							fireListUpdated();
 						}
 					}
-				} catch(OHServiceException e) {
+				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
 				if (!result) {

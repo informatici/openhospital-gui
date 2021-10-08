@@ -84,12 +84,12 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private ThumbnailViewGui thumbnail = null;
 	private int patient = -1;
-	private Patient ohPatient = null;
+	private Patient ohPatient;
 	private int position = 150;
 
 	private JFrame myJFrame = null;
 
-	private PatientFolderBrowser owner = null;
+	private PatientFolderBrowser owner;
 
 	/**
 	 * Construct a GUI
@@ -106,9 +106,6 @@ public class DicomGui extends JFrame implements WindowListener {
 		setVisible(true);
 		addWindowListener(this);
 		myJFrame = this;
-
-		// TMP
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	/**
@@ -139,10 +136,10 @@ public class DicomGui extends JFrame implements WindowListener {
 	 */
 	private void loadWindowSettings() {
 
-		int x = 0;
-		int y = 0;
-		int w = 0;
-		int h = 0;
+		int x;
+		int y;
+		int w;
+		int h;
 
 		try {
 			File f = new File("rsc/dicom.user.pref");
@@ -173,11 +170,9 @@ public class DicomGui extends JFrame implements WindowListener {
 		this.setTitle(MessageBundle.getMessage("angal.dicomviewer.title"));
 
 		initComponents();
-
 	}
 
 	private void initComponents() {
-
 		jPanelMain = new JPanel();
 		jPanel1 = new JPanel();
 		jButtonLoadDicom = new JButton(MessageBundle.getMessage("angal.dicom.load.btn"));
@@ -244,18 +239,12 @@ public class DicomGui extends JFrame implements WindowListener {
 						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
 						.addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)));
 
-		addEventListener();
+		actionListenerJButtonLoadDicom();
+		actionListenerJButtonDeleteDicom();
 		this.setContentPane(jPanelMain);
-
 	}
 
 	// EVENT LISTENER
-
-	private void addEventListener() {
-		actionListenerJButtonLoadDicom();
-		actionListenerJButtonDeleteDicom();
-	}
-
 	private void actionListenerJButtonLoadDicom() {
 
 		jButtonLoadDicom.addActionListener(actionEvent -> {
@@ -363,8 +352,6 @@ public class DicomGui extends JFrame implements WindowListener {
 				}
 			}
 			thumbnail.initialize();
-			//selectedElement = null;
-			//detail();
 			((DicomViewGui) jPanelDetail).clear();
 		});
 	}

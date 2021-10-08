@@ -44,15 +44,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DeliveryResultTypeBrowserEdit extends JDialog{
+public class DeliveryResultTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList deliveryresultTypeListeners = new EventListenerList();
 
-    public interface DeliveryResultTypeListener extends EventListener {
-        void deliveryresultTypeUpdated(AWTEvent e);
-        void deliveryresultTypeInserted(AWTEvent e);
-    }
+	public interface DeliveryResultTypeListener extends EventListener {
+
+		void deliveryresultTypeUpdated(AWTEvent e);
+
+		void deliveryresultTypeInserted(AWTEvent e);
+	}
 
     public void addDeliveryResultTypeListener(DeliveryResultTypeListener l) {
         deliveryresultTypeListeners.add(DeliveryResultTypeListener.class, l);

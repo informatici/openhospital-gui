@@ -64,7 +64,7 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
 	private JButton closeButton = null;
-	private Exam exam = null;
+	private Exam exam;
 	private JButton newButton = null;
 	private JButton deleteButton = null;
 	private String[] pColumns = {

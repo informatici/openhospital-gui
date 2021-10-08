@@ -28,11 +28,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -80,13 +79,14 @@ import org.joda.time.PeriodType;
 public class TherapyEntryForm extends JDialog {
 
 	private static final long serialVersionUID = 1L;
+	public static final String PATTERN = "dd/MM/yy";
 
 	/*
 	 * Managers
 	 */
 	private MedicalBrowsingManager medBrowser = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private TherapyManager therapyManager = Context.getApplicationContext().getBean(TherapyManager.class);
-	private List<Medical> medArray = null;
+	private List<Medical> medArray;
 
 	/*
 	 * Constants
@@ -127,15 +127,15 @@ public class TherapyEntryForm extends JDialog {
 	private JPanel frequenciesPanel;
 	private JSlider jSliderQty;
 	private JSpinner jSpinnerQty;
-	private ArrayList<JRadioButton> radioButtonSet;
+	private List<JRadioButton> radioButtonSet;
 	private JSpinner jSpinnerFreqInPeriod;
 	private CustomJDateChooser therapyStartdate;
-	private GregorianCalendar therapyEndDate;
+	private LocalDateTime therapyEndDate;
 	private JSpinner jSpinnerDays;
 	private JSpinner jSpinnerWeeks;
 	private JSpinner jSpinnerMonths;
 	private JLabel endDateLabel;
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy"); //$NON-NLS-1$
+	private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(PATTERN);
 	private final String[] radioButtonLabels = {MessageBundle.getMessage("angal.therapy.one"), MessageBundle.getMessage("angal.therapy.two"), MessageBundle.getMessage("angal.therapy.three"), MessageBundle.getMessage("angal.therapy.four")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private JButton buttonCancel;
 	private JButton buttonOK;
@@ -169,7 +169,7 @@ public class TherapyEntryForm extends JDialog {
 		} else {
 			therapy = new Therapy();
 			radioButtonSet.get(0).setSelected(true);
-			endDateLabel.setText(dateFormat.format(new Date()));
+			endDateLabel.setText(dateFormat.format(LocalDateTime.now()));
 		}
 		this.pack();
 	}
@@ -217,11 +217,11 @@ public class TherapyEntryForm extends JDialog {
 	}
 
 	private void fillCalendarsFromTherapy(Therapy th) {
-		GregorianCalendar[] dates = th.getDates();
+		LocalDateTime[] dates = th.getDates();
 		int datesLength = dates.length;
-		GregorianCalendar firstDay = dates[0];
-		GregorianCalendar lastDay = dates[datesLength - 1];
-		GregorianCalendar secondDay;
+		LocalDateTime firstDay = dates[0];
+		LocalDateTime lastDay = dates[datesLength - 1];
+		LocalDateTime secondDay;
 		
 		if (datesLength > 1) {
 			secondDay = dates[1];
@@ -231,13 +231,13 @@ public class TherapyEntryForm extends JDialog {
 		int days = TimeTools.getDaysBetweenDates(firstDay, secondDay, true);
 
 		jSpinnerFreqInPeriod.setValue(days > 0 ? days : 1);
-		therapyStartdate.setDate(firstDay.getTime());
-		endDateLabel.setText(dateFormat.format(lastDay.getTime()));
+		therapyStartdate.setDate(firstDay);
+		endDateLabel.setText(dateFormat.format(lastDay));
 
 		fillDaysWeeksMonthsFromDates(firstDay, lastDay); 
 	}
 
-	private void fillDaysWeeksMonthsFromDates(GregorianCalendar firstDay, GregorianCalendar lastDay) {
+	private void fillDaysWeeksMonthsFromDates(LocalDateTime firstDay, LocalDateTime lastDay) {
 		DateTime dateFrom = new DateTime(firstDay);
 		DateTime dateTo = new DateTime(lastDay);
 		Period period = new Period(dateFrom, dateTo, PeriodType.standard());
@@ -270,14 +270,11 @@ public class TherapyEntryForm extends JDialog {
 		Double minQty = 0.;
 		Double stepQty = 0.5;
 		Double maxQty = null;
-		jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty, minQty,
-				maxQty, stepQty));
-		jSpinnerQty.setFont(new Font("Dialog", Font.BOLD, 14)); //$NON-NLS-1$
+		jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty, minQty, maxQty, stepQty));
+		jSpinnerQty.setFont(new Font("Dialog", Font.BOLD, 14));
 		jSpinnerQty.setAlignmentX(Component.LEFT_ALIGNMENT);
-		jSpinnerQty.setPreferredSize(new Dimension(preferredSpinnerWidth,
-				oneLineComponentsHeight));
-		jSpinnerQty.setMaximumSize(new Dimension(Short.MAX_VALUE,
-				oneLineComponentsHeight));
+		jSpinnerQty.setPreferredSize(new Dimension(preferredSpinnerWidth, oneLineComponentsHeight));
+		jSpinnerQty.setMaximumSize(new Dimension(Short.MAX_VALUE, oneLineComponentsHeight));
 		jSpinnerQty.addChangeListener(changeEvent -> {
 			JSpinner source = (JSpinner) changeEvent.getSource();
 			double value = (Double) source.getValue();
@@ -294,8 +291,7 @@ public class TherapyEntryForm extends JDialog {
 			dayWeeksMonthsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 			dayWeeksMonthsPanel.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.therapy.period"), //$NON-NLS-1$
 					TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			dayWeeksMonthsPanel.setMaximumSize(new Dimension(Short.MAX_VALUE,
-					Short.MAX_VALUE));
+			dayWeeksMonthsPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, Short.MAX_VALUE));
 			dayWeeksMonthsPanel.add(getPeriodSpinners());
 		}
 		return dayWeeksMonthsPanel;
@@ -308,12 +304,9 @@ public class TherapyEntryForm extends JDialog {
 		int maxQty = 99;
 		int stepQty = 1;
 
-		jSpinnerDays = new JSpinner(new SpinnerNumberModel(1, minQty,
-				maxQty, stepQty));
-		jSpinnerWeeks = new JSpinner(new SpinnerNumberModel(startQty, minQty,
-				maxQty, stepQty));
-		jSpinnerMonths = new JSpinner(new SpinnerNumberModel(startQty, minQty,
-				maxQty, stepQty));
+		jSpinnerDays = new JSpinner(new SpinnerNumberModel(1, minQty, maxQty, stepQty));
+		jSpinnerWeeks = new JSpinner(new SpinnerNumberModel(startQty, minQty, maxQty, stepQty));
+		jSpinnerMonths = new JSpinner(new SpinnerNumberModel(startQty, minQty, maxQty, stepQty));
 
 		JPanel daysPanel = new JPanel();
 		BoxLayout daysLayout = new BoxLayout(daysPanel, BoxLayout.Y_AXIS);
@@ -397,7 +390,7 @@ public class TherapyEntryForm extends JDialog {
 		return FrequencyInPeriodPanel;
 	}
 
-	private ArrayList<JRadioButton> getRadioButtonSet(int frequencyInDayOptions) {
+	private List<JRadioButton> getRadioButtonSet(int frequencyInDayOptions) {
 
 		radioButtonSet = new ArrayList<>();
 		ButtonGroup buttonGroup = new ButtonGroup();
@@ -415,8 +408,7 @@ public class TherapyEntryForm extends JDialog {
 		if (quantityPanel == null) {
 			quantityPanel = new JPanel();
 			quantityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-			quantityPanel.setLayout(new BoxLayout(quantityPanel,
-					BoxLayout.X_AXIS));
+			quantityPanel.setLayout(new BoxLayout(quantityPanel, BoxLayout.X_AXIS));
 
 			JLabel quantityLabel = new JLabel(MessageBundle.getMessage("angal.common.quantity.txt"));
 			quantityPanel.add(quantityLabel);
@@ -430,8 +422,7 @@ public class TherapyEntryForm extends JDialog {
 		if (medicalsPanel == null) {
 			medicalsPanel = new JPanel();
 			medicalsPanel.setAlignmentY(Component.TOP_ALIGNMENT);
-			medicalsPanel.setLayout(new BoxLayout(medicalsPanel,
-					BoxLayout.Y_AXIS));
+			medicalsPanel.setLayout(new BoxLayout(medicalsPanel, BoxLayout.Y_AXIS));
 			medicalsPanel.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.therapy.pharmaceutical"), //$NON-NLS-1$
 					TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			medicalsPanel.add(getMedicalListscrollPane());
@@ -444,8 +435,7 @@ public class TherapyEntryForm extends JDialog {
 	private JPanel getTherapyPanelWest() {
 		if (therapyPanelWest == null) {
 			therapyPanelWest = new JPanel();
-			therapyPanelWest.setLayout(new BoxLayout(therapyPanelWest,
-					BoxLayout.Y_AXIS));
+			therapyPanelWest.setLayout(new BoxLayout(therapyPanelWest, BoxLayout.Y_AXIS));
 
 			therapyPanelWest.add(getIconMedicalPanel());
 			therapyPanelWest.add(getIconFrequenciesPanel());
@@ -456,8 +446,7 @@ public class TherapyEntryForm extends JDialog {
 	private JPanel getTherapyPanelEast() {
 		if (therapyPanelEast == null) {
 			therapyPanelEast = new JPanel();
-			therapyPanelEast.setLayout(new BoxLayout(therapyPanelEast,
-					BoxLayout.Y_AXIS));
+			therapyPanelEast.setLayout(new BoxLayout(therapyPanelEast, BoxLayout.Y_AXIS));
 			
 			therapyPanelEast.add(getIconPeriodPanel());
 			therapyPanelEast.add(getIconNotePanel());
@@ -470,11 +459,9 @@ public class TherapyEntryForm extends JDialog {
 		Integer minQty = 1;
 		Integer stepQty = 1;
 		Integer maxQty = 100;
-		jSpinnerFreqInPeriod = new JSpinner(new SpinnerNumberModel(startQty,
-				minQty, maxQty, stepQty));
+		jSpinnerFreqInPeriod = new JSpinner(new SpinnerNumberModel(startQty, minQty, maxQty, stepQty));
 		jSpinnerFreqInPeriod.setAlignmentX(Component.LEFT_ALIGNMENT);
-		jSpinnerFreqInPeriod.setMaximumSize(new Dimension(Short.MAX_VALUE,
-				oneLineComponentsHeight));
+		jSpinnerFreqInPeriod.setMaximumSize(new Dimension(Short.MAX_VALUE, oneLineComponentsHeight));
 		jSpinnerFreqInPeriod.addChangeListener(changeEvent -> {
 		});
 		return jSpinnerFreqInPeriod;
@@ -484,7 +471,7 @@ public class TherapyEntryForm extends JDialog {
 		if (therapyStartdate == null) {
 			therapyStartdate = new CustomJDateChooser(new Date());
 			therapyStartdate.setLocale(new Locale(GeneralData.LANGUAGE));
-			therapyStartdate.setDateFormatString(dateFormat.toPattern());
+			therapyStartdate.setDateFormatString(PATTERN);
 			therapyStartdate.addPropertyChangeListener("date", propertyChangeEvent -> updateEndDateLabel());
 		}
 		return therapyStartdate;
@@ -495,14 +482,13 @@ public class TherapyEntryForm extends JDialog {
 		int days = (Integer) jSpinnerDays.getValue();
 		int weeks = (Integer) jSpinnerWeeks.getValue();
 		int months = (Integer) jSpinnerMonths.getValue();
+
+		therapyEndDate = therapyStartdate.getLocalDateTime()
+				.plusDays(days - 1)
+				.plusWeeks(weeks)
+				.plusMonths(months);
 		
-		therapyEndDate = new GregorianCalendar();
-		therapyEndDate.setTime(therapyStartdate.getDate());
-		therapyEndDate.add(Calendar.DAY_OF_YEAR, days - 1);
-		therapyEndDate.add(Calendar.WEEK_OF_YEAR, weeks);
-		therapyEndDate.add(Calendar.MONTH, months);
-		
-		endDateLabel.setText(dateFormat.format(therapyEndDate.getTime()));
+		endDateLabel.setText(dateFormat.format(therapyEndDate));
 	}
 
 	private JPanel getStartEndDatePanel() {
@@ -511,8 +497,7 @@ public class TherapyEntryForm extends JDialog {
 			startEndDatePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 			startEndDatePanel.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.therapy.startsdashend"), //$NON-NLS-1$
 					TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			startEndDatePanel
-					.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			startEndDatePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 			startEndDatePanel.add(getStartDatePanel());
 			startEndDatePanel.add(getEndDatePanel());
@@ -524,8 +509,7 @@ public class TherapyEntryForm extends JDialog {
 	private JPanel getStartDatePanel() {
 		if (startDatePanel == null) {
 			startDatePanel = new JPanel();
-			startDatePanel.setLayout(new BoxLayout(startDatePanel,
-					BoxLayout.Y_AXIS));
+			startDatePanel.setLayout(new BoxLayout(startDatePanel, BoxLayout.Y_AXIS));
 			JLabel startLabel = new JLabel(MessageBundle.getMessage("angal.therapy.start")); //$NON-NLS-1$
 			startLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			startDatePanel.add(startLabel);
@@ -579,13 +563,11 @@ public class TherapyEntryForm extends JDialog {
 		if (iconMedicalPanel == null) {
 			iconMedicalPanel = new JPanel();
 			iconMedicalPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-			iconMedicalPanel.setLayout(new BoxLayout(iconMedicalPanel,
-					BoxLayout.X_AXIS));
+			iconMedicalPanel.setLayout(new BoxLayout(iconMedicalPanel, BoxLayout.X_AXIS));
 
 			JPanel iconPanel = new JPanel();
 			iconPanel.setLayout(new BoxLayout(iconPanel, BoxLayout.X_AXIS));
-			IconButton iconButton = new IconButton(new ImageIcon(
-					"rsc/icons/medical_dialog.png")); //$NON-NLS-1$
+			IconButton iconButton = new IconButton(new ImageIcon("rsc/icons/medical_dialog.png")); //$NON-NLS-1$
 			iconButton.setAlignmentY(Component.TOP_ALIGNMENT);
 			iconPanel.add(iconButton);
 			iconMedicalPanel.add(iconPanel);
@@ -599,13 +581,11 @@ public class TherapyEntryForm extends JDialog {
 		if (iconFrequenciesPanel == null) {
 			iconFrequenciesPanel = new JPanel();
 			iconFrequenciesPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-			iconFrequenciesPanel.setLayout(new BoxLayout(iconFrequenciesPanel,
-					BoxLayout.X_AXIS));
+			iconFrequenciesPanel.setLayout(new BoxLayout(iconFrequenciesPanel, BoxLayout.X_AXIS));
 
 			JPanel iconPanel = new JPanel();
 			iconPanel.setLayout(new BoxLayout(iconPanel, BoxLayout.X_AXIS));
-			IconButton iconButton = new IconButton(new ImageIcon(
-					"rsc/icons/clock_dialog.png")); //$NON-NLS-1$
+			IconButton iconButton = new IconButton(new ImageIcon("rsc/icons/clock_dialog.png")); //$NON-NLS-1$
 			iconButton.setAlignmentY(Component.TOP_ALIGNMENT);
 			iconPanel.add(iconButton);
 			iconFrequenciesPanel.add(iconPanel);
@@ -618,13 +598,11 @@ public class TherapyEntryForm extends JDialog {
 		if (iconPeriodPanel == null) {
 			iconPeriodPanel = new JPanel();
 			iconPeriodPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-			iconPeriodPanel.setLayout(new BoxLayout(iconPeriodPanel,
-					BoxLayout.X_AXIS));
+			iconPeriodPanel.setLayout(new BoxLayout(iconPeriodPanel, BoxLayout.X_AXIS));
 
 			JPanel iconPanel = new JPanel();
 			iconPanel.setLayout(new BoxLayout(iconPanel, BoxLayout.X_AXIS));
-			IconButton iconButton = new IconButton(new ImageIcon(
-					"rsc/icons/calendar_dialog.png")); //$NON-NLS-1$
+			IconButton iconButton = new IconButton(new ImageIcon("rsc/icons/calendar_dialog.png")); //$NON-NLS-1$
 			iconButton.setAlignmentY(Component.TOP_ALIGNMENT);
 			iconPanel.add(iconButton);
 			iconPeriodPanel.add(iconPanel);
@@ -644,14 +622,12 @@ public class TherapyEntryForm extends JDialog {
 		if (iconNotePanel == null) {
 			iconNotePanel = new JPanel();
 			iconNotePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-			iconNotePanel.setLayout(new BoxLayout(iconNotePanel,
-					BoxLayout.X_AXIS));
+			iconNotePanel.setLayout(new BoxLayout(iconNotePanel, BoxLayout.X_AXIS));
 
 			JPanel iconPanel = new JPanel();
 			iconPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 			iconPanel.setLayout(new BoxLayout(iconPanel, BoxLayout.X_AXIS));
-			iconPanel.add(new IconButton(new ImageIcon(
-					"rsc/icons/list_dialog.png"))); //$NON-NLS-1$
+			iconPanel.add(new IconButton(new ImageIcon("rsc/icons/list_dialog.png"))); //$NON-NLS-1$
 			iconNotePanel.add(iconPanel);
 			iconNotePanel.add(getNotePanel());
 		}
@@ -663,8 +639,7 @@ public class TherapyEntryForm extends JDialog {
 			frequenciesPanel = new JPanel();
 			frequenciesPanel.setAlignmentY(Component.TOP_ALIGNMENT);
 			frequenciesPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-			frequenciesPanel.setLayout(new BoxLayout(frequenciesPanel,
-					BoxLayout.Y_AXIS));
+			frequenciesPanel.setLayout(new BoxLayout(frequenciesPanel, BoxLayout.Y_AXIS));
 			frequenciesPanel.add(getFrequencyInDayPanel());
 			frequenciesPanel.add(getFrequencyInPeriodPanel());
 		}
@@ -682,14 +657,14 @@ public class TherapyEntryForm extends JDialog {
 
 			jSliderQty.addChangeListener(changeEvent -> {
 				JSlider source = (JSlider) changeEvent.getSource();
-				double value = (double) source.getValue();
+				double value = source.getValue();
 				jSpinnerQty.setValue(value);
 				therapy.setQty(value);
 			});
 		}
 		return jSliderQty;
 	}
-	
+
 	private JLabel getEndDateField() {
 		if (endDateLabel == null) {
 			endDateLabel = new JLabel(""); //$NON-NLS-1$
@@ -698,7 +673,7 @@ public class TherapyEntryForm extends JDialog {
 		}
 		return endDateLabel;
 	}
-	
+
 	private JButton getButtonCancel() {
 		if (buttonCancel == null) {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
@@ -707,7 +682,7 @@ public class TherapyEntryForm extends JDialog {
 		}
 		return buttonCancel;
 	}
-	
+
 	private JButton getButtonOK() {
 		if (buttonOK == null) {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
@@ -716,13 +691,12 @@ public class TherapyEntryForm extends JDialog {
 				/*
 				 * Data extrapolation
 				 */
-				GregorianCalendar startDate = new GregorianCalendar();
-				startDate.setTime(therapyStartdate.getDate());
-				if (startDate.before(TimeTools.getDateToday0())) {
+				LocalDateTime startDate = therapyStartdate.getLocalDateTime();
+				if (startDate.isBefore(TimeTools.getDateToday0())) {
 					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.atherapycannotbedefinedforadatethatispast.msg");
 					return;
 				}
-				GregorianCalendar endDate = therapyEndDate;
+				LocalDateTime endDate = therapyEndDate;
 				Medical medical = (Medical) medicalsList.getSelectedValue();
 				if (medical == null) {
 					MessageDialog.error(TherapyEntryForm.this, "angal.therapy.selectapharmaceutical");
@@ -742,7 +716,8 @@ public class TherapyEntryForm extends JDialog {
 				boolean sms = false;
 
 				try {
-					thRow = therapyManager.getTherapyRow(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
+					thRow = therapyManager.getTherapyRow(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify,
+							sms);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
 				}
@@ -752,7 +727,7 @@ public class TherapyEntryForm extends JDialog {
 		}
 		return buttonOK;
 	}
-	
+
 	private int getFreqInDay() {
 		for (JRadioButton button : radioButtonSet) {
 			if (button.isSelected()) {
@@ -770,7 +745,7 @@ public class TherapyEntryForm extends JDialog {
 		}
 		return buttonPanel;
 	}
-	
+
 	private JPanel getTherapyPanel() {
 		if (therapyPanel == null) {
 			therapyPanel = new JPanel();
@@ -796,4 +771,5 @@ public class TherapyEntryForm extends JDialog {
 	public void setThRow(TherapyRow thRow) {
 		this.thRow = thRow;
 	}
+
 }

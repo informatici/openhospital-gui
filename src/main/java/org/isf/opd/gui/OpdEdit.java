@@ -31,8 +31,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.DateFormat;
-import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,6 +62,7 @@ import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
 import org.isf.distype.manager.DiseaseTypeBrowserManager;
 import org.isf.distype.model.DiseaseType;
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -143,7 +146,7 @@ public class OpdEdit extends JDialog {
 	private JComboBox diseaseBox = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
-	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", new Locale(GeneralData.LANGUAGE));
 	private VoDateTextField opdDateField = null;
 	private JPanel jPanel2 = null;
 	private JButton okButton = null;
@@ -444,111 +447,108 @@ public class OpdEdit extends JDialog {
 	private JButton getOkButton() {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
-            okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				boolean result;
-				GregorianCalendar gregDate = new GregorianCalendar();
-				char newPatient;
-				String referralTo;
-				String referralFrom;
-				Disease disease = null;
-				Disease disease2 = null;
-				Disease disease3 = null;
+						boolean result;
+						LocalDate gregDate = LocalDate.now();
+						char newPatient;
+						String referralTo;
+						String referralFrom;
+						Disease disease = null;
+						Disease disease2 = null;
+						Disease disease3 = null;
 
-				if (newPatientCheckBox.isSelected()) {
-					newPatient = 'N';
-				} else {
-					newPatient = 'R';
-				}
-
-				if (referralToCheckBox.isSelected()) {
-					referralTo = "R";
-				} else {
-					referralTo = "";
-				}
-
-				if (referralFromCheckBox.isSelected()) {
-					referralFrom = "R";
-				} else {
-					referralFrom = "";
-				}
-
-				// disease
-				if (diseaseBox.getSelectedIndex() > 0) {
-					disease = ((Disease)diseaseBox.getSelectedItem());
-				}
-				// disease2
-				if (diseaseBox2.getSelectedIndex() > 0) {
-					disease2 = ((Disease)diseaseBox2.getSelectedItem());
-				}
-				// disease3
-				if (diseaseBox3.getSelectedIndex() > 0) {
-					disease3 = ((Disease)diseaseBox3.getSelectedItem());
-				}
-				// visit date
-				String d = opdDateField.getText().trim();
-				if (d.equals("")) {
-					MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertattendancedate.msg");
-					return;
-				}
-				else {
-					try {
-						currentDateFormat.setLenient(false);
-						Date myDate = currentDateFormat.parse(d);
-						gregDate.setTime(myDate);
-					} catch (ParseException pe) {
-						MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertavalidattendancedate.msg");
-						return;
-					}
-				}
-
-				if (radiof.isSelected()) {
-					sex = 'F';
-				} else {
-					sex = 'M';
-				}
-
-				opd.setNewPatient(newPatient);
-				opd.setReferralFrom(referralFrom);
-				opd.setReferralTo(referralTo);
-				opd.setAge(age);
-				opd.setSex(sex);
-				opd.setDisease(disease);
-				opd.setDisease2(disease2);
-				opd.setDisease3(disease3);
-				opd.setVisitDate(gregDate);
-				opd.setNote("");
-				opd.setUserID(UserBrowsingManager.getCurrentUser());
-
-				try {
-					if (insert) {    // Insert
-						GregorianCalendar date = new GregorianCalendar();
-						opd.setProgYear(opdManager.getProgYear(date.get(Calendar.YEAR))+1);
-
-						// remember for later use
-						RememberDates.setLastOpdVisitDate(gregDate);
-
-						result = opdManager.newOpd(opd);
-						if (result) {
-							fireSurgeryInserted(opd);
-							dispose();
+						if (newPatientCheckBox.isSelected()) {
+							newPatient = 'N';
 						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							newPatient = 'R';
+						}
+
+						if (referralToCheckBox.isSelected()) {
+							referralTo = "R";
+						} else {
+							referralTo = "";
+						}
+
+						if (referralFromCheckBox.isSelected()) {
+							referralFrom = "R";
+						} else {
+							referralFrom = "";
+						}
+
+						// disease
+						if (diseaseBox.getSelectedIndex() > 0) {
+							disease = ((Disease) diseaseBox.getSelectedItem());
+						}
+						// disease2
+						if (diseaseBox2.getSelectedIndex() > 0) {
+							disease2 = ((Disease) diseaseBox2.getSelectedItem());
+						}
+						// disease3
+						if (diseaseBox3.getSelectedIndex() > 0) {
+							disease3 = ((Disease) diseaseBox3.getSelectedItem());
+						}
+						// visit date
+						String d = opdDateField.getText().trim();
+						if (d.equals("")) {
+							MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertattendancedate.msg");
+							return;
+						} else {
+							try {
+								LocalDateTime myDate = LocalDate.parse(d, currentDateFormat).atStartOfDay();
+								gregDate = myDate.toLocalDate();
+							} catch (DateTimeParseException dateTimeParseException) {
+								MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertavalidattendancedate.msg");
+								return;
+							}
+						}
+
+						if (radiof.isSelected()) {
+							sex = 'F';
+						} else {
+							sex = 'M';
+						}
+
+						opd.setNewPatient(newPatient);
+						opd.setReferralFrom(referralFrom);
+						opd.setReferralTo(referralTo);
+						opd.setAge(age);
+						opd.setSex(sex);
+						opd.setDisease(disease);
+						opd.setDisease2(disease2);
+						opd.setDisease3(disease3);
+						opd.setVisitDate(gregDate);
+						opd.setNote("");
+						opd.setUserID(UserBrowsingManager.getCurrentUser());
+
+						try {
+							if (insert) {    // Insert
+								GregorianCalendar date = new GregorianCalendar();
+								opd.setProgYear(opdManager.getProgYear(date.get(Calendar.YEAR)) + 1);
+
+								// remember for later use
+								RememberDates.setLastOpdVisitDate(gregDate.atStartOfDay());
+
+								result = opdManager.newOpd(opd);
+								if (result) {
+									fireSurgeryInserted(opd);
+									dispose();
+								} else {
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+								}
+							} else {    // Update
+								Opd updatedOpd = opdManager.updateOpd(opd);
+								if (updatedOpd != null) {
+									fireSurgeryUpdated(updatedOpd);
+									dispose();
+								} else {
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+								}
+							}
+						} catch (OHServiceException ex) {
+							OHServiceExceptionUtil.showMessages(ex);
 						}
 					}
-					else {    // Update
-						Opd updatedOpd = opdManager.updateOpd(opd);
-						if (updatedOpd != null) {
-							fireSurgeryUpdated(updatedOpd);
-							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
-					}
-				} catch(OHServiceException ex) {
-					OHServiceExceptionUtil.showMessages(ex);
-				}
-			}
 			);
 		}
 		return okButton;
@@ -899,19 +899,18 @@ public class OpdEdit extends JDialog {
 			jDatePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 3, 3));
 			String d;
 			Date myDate;
-			GregorianCalendar dateIn;
+			LocalDateTime dateIn;
 			if (insert) {
-				if (RememberDates.getLastOpdVisitDateGregorian() == null) {
-					dateIn = new GregorianCalendar();
+				if (RememberDates.getLastOpdVisitDate() == null) {
+					dateIn = LocalDateTime.now();
 				} else {
-					dateIn = RememberDates.getLastOpdVisitDateGregorian();
+					dateIn = RememberDates.getLastOpdVisitDate();
 				}
 			} else {
-				dateIn = opd.getVisitDate();
+				dateIn = opd.getVisitDate().atStartOfDay();
 			}
 			
-			myDate = dateIn.getTime();
-			d = currentDateFormat.format(myDate);
+			d = currentDateFormat.format(dateIn);
 			
 			opdDateField = new VoDateTextField("dd/mm/yy", d, 15);
 
@@ -920,7 +919,6 @@ public class OpdEdit extends JDialog {
 		}
 		return jDatePanel;
 	}
-
 	
 	/*
 	 * Set a specific border+title to a panel
@@ -933,9 +931,9 @@ public class OpdEdit extends JDialog {
 		return c;
 	}
 
-	private ArrayList<Disease> getSearchDiagnosisResults(String s, List<Disease> diseaseList) {
+	private List<Disease> getSearchDiagnosisResults(String s, List<Disease> diseaseList) {
 		String query = s.trim();
-		ArrayList<Disease> results = new ArrayList<>();
+		List<Disease> results = new ArrayList<>();
 		for (Disease disease : diseaseList) {
 			if (!query.equals("")) {
 				String[] patterns = query.split(" ");

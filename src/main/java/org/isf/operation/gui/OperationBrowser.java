@@ -66,7 +66,6 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	public void operationInserted(AWTEvent e) {
 		pOperation.add(0, operation);
 		((OperationBrowserModel) table.getModel()).fireTableDataChanged();
-		// table.updateUI();
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
 		}
@@ -80,7 +79,6 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		if ((table.getRowCount() > 0) && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
-
 	}
 	
 	//TODO: replace with mapping mnemonic / translation in OperationBrowserManager
@@ -167,8 +165,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(actionEvent -> {
-			operation = new Operation(null, "", new OperationType("", ""), 0); // operation will reference the new //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-																				// record
+			operation = new Operation(null, "", new OperationType("", ""), 0); // operation will reference the new record
 			OperationEdit newrecord = new OperationEdit(myFrame, operation, true);
 			newrecord.addOperationListener(OperationBrowser.this);
 			newrecord.setVisible(true);
@@ -182,7 +179,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+				operation = (Operation) (model.getValueAt(table.getSelectedRow(), -1));
 				OperationEdit editrecord = new OperationEdit(myFrame, operation, false);
 				editrecord.addOperationListener(OperationBrowser.this);
 				editrecord.setVisible(true);
@@ -196,7 +193,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
-				Operation operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+				Operation operation = (Operation) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg",operation.getDescription());
 				try {
 					if ((answer == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(operation))) {

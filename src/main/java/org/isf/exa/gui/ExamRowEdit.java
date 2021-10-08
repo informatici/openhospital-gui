@@ -77,9 +77,9 @@ public class ExamRowEdit extends JDialog {
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examRowListeners.getListeners(ExamRowListener.class);
-        for (int i = 0; i < listeners.length; i++) {
-	        ((ExamRowListener)listeners[i]).examRowInserted(event);
-        }
+	    for (EventListener listener : listeners) {
+		    ((ExamRowListener) listener).examRowInserted(event);
+	    }
     }
 	
 	private JPanel jContentPane = null;
@@ -90,7 +90,7 @@ public class ExamRowEdit extends JDialog {
 	private JLabel descLabel = null;
 	private VoLimitedTextField descriptionTextField = null;
     private Exam exam;
-	private ExamRow examRow = null;
+	private ExamRow examRow;
     
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -109,12 +109,11 @@ public class ExamRowEdit extends JDialog {
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-        final int pfrmBase = 10;
-//paolo: changed pfrmWidth from 3 to 4
-        final int pfrmWidth = 4;
-        final int pfrmHeight = 2;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
+		final int pfrmBase = 10;
+		final int pfrmWidth = 4;
+		final int pfrmHeight = 2;
+		this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase) / 2,
+				screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
 		this.setTitle(MessageBundle.getMessage("angal.exa.neweditresult.title"));
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -130,7 +129,7 @@ public class ExamRowEdit extends JDialog {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
 			jContentPane.add(getDataPanel(),BorderLayout.NORTH); 
-			jContentPane.add(getButtonPanel(),BorderLayout.SOUTH);  // Generated
+			jContentPane.add(getButtonPanel(),BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -158,8 +157,8 @@ public class ExamRowEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null);  // Generated
-			buttonPanel.add(getCancelButton(), null);  // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}

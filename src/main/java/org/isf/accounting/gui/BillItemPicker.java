@@ -34,6 +34,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -82,12 +83,12 @@ public class BillItemPicker extends javax.swing.JPanel {
 
 		setLayout(new BorderLayout(10, 10));
 		add(jPanel1, BorderLayout.CENTER);
-		GridBagLayout gbl_jPanel1 = new GridBagLayout();
-		gbl_jPanel1.columnWidths = new int[] { 575, 0 };
-		gbl_jPanel1.rowHeights = new int[] { 268, 0 };
-		gbl_jPanel1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_jPanel1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
-		jPanel1.setLayout(gbl_jPanel1);
+		GridBagLayout gblPanel1 = new GridBagLayout();
+		gblPanel1.columnWidths = new int[] { 575, 0 };
+		gblPanel1.rowHeights = new int[] { 268, 0 };
+		gblPanel1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gblPanel1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		jPanel1.setLayout(gblPanel1);
 		jScrollPane1 = new javax.swing.JScrollPane();
 		jTableData = new javax.swing.JTable();
 
@@ -148,40 +149,37 @@ public class BillItemPicker extends javax.swing.JPanel {
 		});
 
 		jScrollPane1.setViewportView(jTableData);
-		GridBagConstraints gbc_jScrollPane1 = new GridBagConstraints();
-		gbc_jScrollPane1.insets = new Insets(0, 15, 0, 15);
-		gbc_jScrollPane1.fill = GridBagConstraints.BOTH;
-		gbc_jScrollPane1.gridx = 0;
-		gbc_jScrollPane1.gridy = 0;
-		jPanel1.add(jScrollPane1, gbc_jScrollPane1);
+		GridBagConstraints gbcScrollPane1 = new GridBagConstraints();
+		gbcScrollPane1.insets = new Insets(0, 15, 0, 15);
+		gbcScrollPane1.fill = GridBagConstraints.BOTH;
+		gbcScrollPane1.gridx = 0;
+		gbcScrollPane1.gridy = 0;
+		jPanel1.add(jScrollPane1, gbcScrollPane1);
 		add(jPanel3, BorderLayout.NORTH);
-		GridBagLayout gbl_jPanel3 = new GridBagLayout();
-		gbl_jPanel3.columnWidths = new int[] { 90, 237, 0 };
-		gbl_jPanel3.rowHeights = new int[] { 50, 0 };
-		gbl_jPanel3.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gbl_jPanel3.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		jPanel3.setLayout(gbl_jPanel3);
+		GridBagLayout gblPanel3 = new GridBagLayout();
+		gblPanel3.columnWidths = new int[] { 90, 237, 0 };
+		gblPanel3.rowHeights = new int[] { 50, 0 };
+		gblPanel3.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gblPanel3.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		jPanel3.setLayout(gblPanel3);
 
-		jLabelImage = new javax.swing.JLabel();
-
+		jLabelImage = new JLabel(MessageBundle.getMessage("angal.billitempicker.find.txt"));
 		jLabelImage.setIcon(new javax.swing.ImageIcon("rsc/icons/operation_dialog.png"));
-
-		jLabelImage.setText(MessageBundle.getMessage("angal.billitempicker.find.txt"));
-		GridBagConstraints gbc_jLabelImage = new GridBagConstraints();
-		gbc_jLabelImage.anchor = GridBagConstraints.WEST;
-		gbc_jLabelImage.insets = new Insets(0, 15, 0, 5);
-		gbc_jLabelImage.gridx = 0;
-		gbc_jLabelImage.gridy = 0;
-		jPanel3.add(jLabelImage, gbc_jLabelImage);
+		GridBagConstraints gbcLabelImage = new GridBagConstraints();
+		gbcLabelImage.anchor = GridBagConstraints.WEST;
+		gbcLabelImage.insets = new Insets(0, 15, 0, 5);
+		gbcLabelImage.gridx = 0;
+		gbcLabelImage.gridy = 0;
+		jPanel3.add(jLabelImage, gbcLabelImage);
 		jTextFieldFind = new javax.swing.JTextField();
 
 		jTextFieldFind.setName("textRecherche");
-		GridBagConstraints gbc_jTextFieldFind = new GridBagConstraints();
-		gbc_jTextFieldFind.insets = new Insets(0, 0, 0, 15);
-		gbc_jTextFieldFind.fill = GridBagConstraints.HORIZONTAL;
-		gbc_jTextFieldFind.gridx = 1;
-		gbc_jTextFieldFind.gridy = 0;
-		jPanel3.add(jTextFieldFind, gbc_jTextFieldFind);
+		GridBagConstraints gbcTextFieldFind = new GridBagConstraints();
+		gbcTextFieldFind.insets = new Insets(0, 0, 0, 15);
+		gbcTextFieldFind.fill = GridBagConstraints.HORIZONTAL;
+		gbcTextFieldFind.gridx = 1;
+		gbcTextFieldFind.gridy = 0;
+		jPanel3.add(jTextFieldFind, gbcTextFieldFind);
 
 		jTextFieldFind.getDocument().addDocumentListener(new DocumentListener() {
 
