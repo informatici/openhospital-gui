@@ -13,8 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Checkout core
-      # TODO: revert to --branch=develop before to merge into 'develop'
-      run: git clone --depth=50 --branch=OP-282_OP-101 https://github.com/informatici/openhospital-core.git openhospital-core
+      run: git clone --depth=50 --branch=develop https://github.com/informatici/openhospital-core.git openhospital-core
     - name: Install core
       run: cd openhospital-core && mvn install -DskipTests=true && cd ..
     - name: Set up JDK 1.8
