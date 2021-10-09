@@ -67,17 +67,20 @@ public class DeliveryTypeBrowserEdit extends JDialog {
     private void fireDeliveryInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-            private static final long serialVersionUID = 1L;};
+            private static final long serialVersionUID = 1L;
+        };
 
         EventListener[] listeners = deliveryTypeListeners.getListeners(DeliveryTypeListener.class);
         for (EventListener listener : listeners) {
             ((DeliveryTypeListener) listener).deliveryTypeInserted(event);
         }
     }
+
     private void fireDeliveryUpdated() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-            private static final long serialVersionUID = 1L;};
+            private static final long serialVersionUID = 1L;
+        };
 
         EventListener[] listeners = deliveryTypeListeners.getListeners(DeliveryTypeListener.class);
         for (EventListener listener : listeners) {

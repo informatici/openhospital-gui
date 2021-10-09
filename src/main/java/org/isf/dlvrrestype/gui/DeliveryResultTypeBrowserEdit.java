@@ -64,26 +64,29 @@ public class DeliveryResultTypeBrowserEdit extends JDialog {
         deliveryresultTypeListeners.remove(DeliveryResultTypeListener.class, listener);
     }
 
-    private void fireDeliveryResultInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireDeliveryResultInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DeliveryResultTypeListener) listener).deliveryresultTypeInserted(event);
-	    }
-    }
-    private void fireDeliveryResultUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DeliveryResultTypeListener) listener).deliveryresultTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireDeliveryResultUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DeliveryResultTypeListener) listener).deliveryresultTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = deliveryresultTypeListeners.getListeners(DeliveryResultTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DeliveryResultTypeListener) listener).deliveryresultTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

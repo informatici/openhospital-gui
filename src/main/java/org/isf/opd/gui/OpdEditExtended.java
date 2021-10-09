@@ -170,22 +170,25 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	public void removeSurgeryListener(SurgeryListener listener) {
 		surgeryListeners.remove(SurgeryListener.class, listener);
 	}
-	
+
 	private void fireSurgeryInserted(Opd opd) {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
 		for (EventListener listener : listeners) {
 			((SurgeryListener) listener).surgeryInserted(event, opd);
 		}
 	}
+
 	private void fireSurgeryUpdated(Opd opd) {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = surgeryListeners.getListeners(SurgeryListener.class);
 		for (EventListener listener : listeners) {
 			((SurgeryListener) listener).surgeryUpdated(event, opd);

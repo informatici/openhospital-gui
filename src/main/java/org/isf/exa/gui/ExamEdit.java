@@ -79,26 +79,29 @@ public class ExamEdit extends JDialog {
     	examListeners.remove(ExamListener.class, listener);
     }
 
-    private void fireExamInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireExamInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamListener) listener).examInserted(event);
-	    }
-    }
-    private void fireExamUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = examListeners.getListeners(ExamListener.class);
+		for (EventListener listener : listeners) {
+			((ExamListener) listener).examInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireExamUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamListener) listener).examUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = examListeners.getListeners(ExamListener.class);
+		for (EventListener listener : listeners) {
+			((ExamListener) listener).examUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

@@ -63,26 +63,29 @@ public class AdmissionTypeBrowserEdit extends JDialog {
     	admissionTypeListeners.remove(LaboratoryTypeListener.class, listener);
     }
 
-    private void fireAdmissionInserted(AdmissionType anAdmissionType) {
-        AWTEvent event = new AWTEvent(anAdmissionType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireAdmissionInserted(AdmissionType anAdmissionType) {
+		AWTEvent event = new AWTEvent(anAdmissionType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((LaboratoryTypeListener) listener).admissionTypeInserted(event);
-	    }
-    }
-    private void fireAdmissionUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
+		for (EventListener listener : listeners) {
+			((LaboratoryTypeListener) listener).admissionTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireAdmissionUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((LaboratoryTypeListener) listener).admissionTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
+		for (EventListener listener : listeners) {
+			((LaboratoryTypeListener) listener).admissionTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

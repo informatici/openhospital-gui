@@ -70,21 +70,24 @@ public class SupplierEdit extends JDialog {
 	public void removeSupplierListener(SupplierListener listener) {
 		supplierListeners.remove(SupplierListener.class, listener);
 	}
-	
+
 	private void fireSupplierInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
 		for (EventListener listener : listeners)
 			((SupplierListener) listener).supplierInserted(event);
 	}
+
 	private void fireSupplierUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
 		for (EventListener listener : listeners)
 			((SupplierListener) listener).supplierUpdated(event);

@@ -56,26 +56,29 @@ public class ListEdit extends JDialog {
 	public void addListListener(ListListener l) {
 		listListeners.add(ListListener.class, l);
 	}
-	
+
 	public void removeListListener(ListListener listener) {
 		listListeners.remove(ListListener.class, listener);
 	}
-	
+
 	private void fireListInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
 		EventListener[] listeners = listListeners.getListeners(ListListener.class);
 		for (EventListener listener : listeners) {
 			((ListListener) listener).listInserted(event);
 		}
 	}
+
 	private void fireListUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = listListeners.getListeners(ListListener.class);
 		for (EventListener listener : listeners) {
 			((ListListener) listener).listUpdated(event);

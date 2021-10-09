@@ -101,16 +101,17 @@ public class PatientDataBrowser extends ModalJFrame implements
         deleteAdmissionListeners.remove(DeleteAdmissionListener.class, listener);
     }
 
-    
-    private void fireDeleteAdmissionUpdated(Admission admission) {
-        AWTEvent event = new AWTEvent(admission , AWTEvent.RESERVED_ID_MAX + 1) {
-		private static final long serialVersionUID = 1L;};
+	private void fireDeleteAdmissionUpdated(Admission admission) {
+		AWTEvent event = new AWTEvent(admission, AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = deleteAdmissionListeners.getListeners(DeleteAdmissionListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DeleteAdmissionListener) listener).deleteAdmissionUpdated(event);
-	    }
-    }	
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = deleteAdmissionListeners.getListeners(DeleteAdmissionListener.class);
+		for (EventListener listener : listeners) {
+			((DeleteAdmissionListener) listener).deleteAdmissionUpdated(event);
+		}
+	}
 	
 	//---------------------------------------------------------------------
 	

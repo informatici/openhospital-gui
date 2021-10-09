@@ -68,26 +68,29 @@ public class UserEdit extends JDialog {
         userListeners.remove(UserListener.class, listener);
     }
 
-    private void fireUserInserted(User aUser) {
-        AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireUserInserted(User aUser) {
+		AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = userListeners.getListeners(UserListener.class);
-	    for (EventListener listener : listeners) {
-		    ((UserListener) listener).userInserted(event);
-	    }
-    }
-    private void fireUserUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = userListeners.getListeners(UserListener.class);
+		for (EventListener listener : listeners) {
+			((UserListener) listener).userInserted(event);
+		}
+	}
 
-		private static final long serialVersionUID = 1L;};
+	private void fireUserUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = userListeners.getListeners(UserListener.class);
-	    for (EventListener listener : listeners) {
-		    ((UserListener) listener).userUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = userListeners.getListeners(UserListener.class);
+		for (EventListener listener : listeners) {
+			((UserListener) listener).userUpdated(event);
+		}
+	}
 
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

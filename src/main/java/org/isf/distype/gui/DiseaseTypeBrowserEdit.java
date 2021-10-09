@@ -62,26 +62,29 @@ public class DiseaseTypeBrowserEdit extends JDialog {
         diseaseTypeListeners.remove(DiseaseTypeListener.class, listener);
     }
 
-    private void fireDiseaseInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-        	
-			private static final long serialVersionUID = 1L;};
+	private void fireDiseaseInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DiseaseTypeListener) listener).diseaseTypeInserted(event);
-	    }
-    }
-    private void fireDiseaseUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-        	
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DiseaseTypeListener) listener).diseaseTypeUpdated(event);
-	    }
-    }
+		EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DiseaseTypeListener) listener).diseaseTypeInserted(event);
+		}
+	}
+
+	private void fireDiseaseUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DiseaseTypeListener) listener).diseaseTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

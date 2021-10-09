@@ -63,26 +63,29 @@ public class DischargeTypeBrowserEdit extends JDialog {
     	dischargeTypeListeners.remove(DischargeTypeListener.class, listener);
     }
 
-    private void fireDischargeInserted(DischargeType anDischargeType) {
-        AWTEvent event = new AWTEvent(anDischargeType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireDischargeInserted(DischargeType anDischargeType) {
+		AWTEvent event = new AWTEvent(anDischargeType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DischargeTypeListener) listener).dischargeTypeInserted(event);
-	    }
-    }
-    private void fireDischargeUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DischargeTypeListener) listener).dischargeTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireDischargeUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DischargeTypeListener) listener).dischargeTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DischargeTypeListener) listener).dischargeTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

@@ -76,24 +76,25 @@ public class PatientInsert extends JDialog implements ActionListener {
 	public void removePatientListener(PatientListener listener) {
 		patientListeners.remove(PatientListener.class, listener);
 	}
-	
-	 private void firePatientInserted(Patient aPatient) {
-	        AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
 
-				private static final long serialVersionUID = 1L;};
+	private void firePatientInserted(Patient aPatient) {
+		AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
 
-	        EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
-		 for (EventListener listener : listeners) {
-			 ((PatientListener) listener).patientInserted(event);
-		 }
-	    }
-	 
-	
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
+		for (EventListener listener : listeners) {
+			((PatientListener) listener).patientInserted(event);
+		}
+	}
+
 	private void firePatientUpdated(Patient aPatient) {
 		AWTEvent event = new AWTEvent(aPatient, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = patientListeners.getListeners(PatientListener.class);
 		for (EventListener listener : listeners) {
 			((PatientListener) listener).patientUpdated(event);

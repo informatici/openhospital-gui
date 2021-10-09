@@ -81,22 +81,25 @@ public class DiseaseEdit extends JDialog {
 	public void removeDiseaseListener(DiseaseListener listener) {
 		diseaseListeners.remove(DiseaseListener.class, listener);
 	}
-	
+
 	private void fireDiseaseInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
 		for (EventListener listener : listeners) {
 			((DiseaseListener) listener).diseaseInserted(event);
 		}
 	}
+
 	private void fireDiseaseUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = diseaseListeners.getListeners(DiseaseListener.class);
 		for (EventListener listener : listeners) {
 			((DiseaseListener) listener).diseaseUpdated(event);

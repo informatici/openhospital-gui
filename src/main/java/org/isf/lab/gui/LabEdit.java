@@ -109,17 +109,19 @@ public class LabEdit extends ModalJFrame {
 		labEditListener.add(LabEditListener.class, l);
 		
 	}
-	
+
 	private void fireLabUpdated() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = labEditListener.getListeners(LabEditListener.class);
 		for (EventListener listener : listeners) {
 			((LabEditListener) listener).labUpdated();
 		}
 	}
+
 	//---------------------------------------------------------------------------
 	
 	private boolean insert;

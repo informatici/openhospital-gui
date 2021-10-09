@@ -63,26 +63,29 @@ public class DicomTypeEdit extends JDialog {
     	dicomTypeListeners.remove(DicomTypeListener.class, listener);
     }
 
-    private void fireDicomTypeInserted(DicomType anDicomType) {
-        AWTEvent event = new AWTEvent(anDicomType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireDicomTypeInserted(DicomType anDicomType) {
+		AWTEvent event = new AWTEvent(anDicomType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DicomTypeListener) listener).dicomTypeInserted(event);
-	    }
-    }
-    private void fireDicomUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DicomTypeListener) listener).dicomTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireDicomUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DicomTypeListener) listener).dicomTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DicomTypeListener) listener).dicomTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

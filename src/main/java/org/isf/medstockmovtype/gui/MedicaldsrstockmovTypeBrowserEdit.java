@@ -66,26 +66,29 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
     	medicaldsrstockmovTypeListeners.remove(MedicaldsrstockmovTypeListener.class, listener);
     }
 
-    private void fireMedicaldsrstockmovInserted(MovementType anMedicaldsrstockmovType) {
-        AWTEvent event = new AWTEvent(anMedicaldsrstockmovType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireMedicaldsrstockmovInserted(MovementType anMedicaldsrstockmovType) {
+		AWTEvent event = new AWTEvent(anMedicaldsrstockmovType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeInserted(event);
-	    }
-    }
-    private void fireMedicaldsrstockmovUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
+		for (EventListener listener : listeners) {
+			((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireMedicaldsrstockmovUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = medicaldsrstockmovTypeListeners.getListeners(MedicaldsrstockmovTypeListener.class);
+		for (EventListener listener : listeners) {
+			((MedicaldsrstockmovTypeListener) listener).medicaldsrstockmovTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

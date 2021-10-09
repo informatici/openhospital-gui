@@ -71,16 +71,17 @@ public class ExamRowEdit extends JDialog {
     	examRowListeners.remove(ExamRowListener.class, listener);
     }
 
-    private void fireExamRowInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireExamRowInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = examRowListeners.getListeners(ExamRowListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamRowListener) listener).examRowInserted(event);
-	    }
-    }
+		EventListener[] listeners = examRowListeners.getListeners(ExamRowListener.class);
+		for (EventListener listener : listeners) {
+			((ExamRowListener) listener).examRowInserted(event);
+		}
+	}
 	
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

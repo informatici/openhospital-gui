@@ -65,26 +65,29 @@ public class OperationTypeEdit extends JDialog {
         operationTypeListeners.remove(OperationTypeListener.class, listener);
     }
 
-    private void fireOperationInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireOperationInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((OperationTypeListener) listener).operationTypeInserted(event);
-	    }
-    }
-    private void fireOperationUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
+		for (EventListener listener : listeners) {
+			((OperationTypeListener) listener).operationTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireOperationUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((OperationTypeListener) listener).operationTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
+		for (EventListener listener : listeners) {
+			((OperationTypeListener) listener).operationTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;

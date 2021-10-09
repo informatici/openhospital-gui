@@ -100,18 +100,20 @@ public class LabNew extends JDialog implements SelectionListener {
 		labListener.add(LabListener.class, l);
 		
 	}
-	
+
 	private void fireLabInserted() {
 		new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = labListener.getListeners(LabListener.class);
 		for (EventListener listener : listeners) {
 			((LabListener) listener).labInserted();
 		}
 	}
-//---------------------------------------------------------------------------
+
+	//---------------------------------------------------------------------------
 	
     @Override
 	public void patientSelected(Patient patient) {

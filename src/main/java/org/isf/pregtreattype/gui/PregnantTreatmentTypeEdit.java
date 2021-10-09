@@ -65,28 +65,30 @@ public class PregnantTreatmentTypeEdit extends JDialog {
     	pregnantTreatmentTypeListeners.remove(PregnantTreatmentTypeListener.class, listener);
     }
 
-    private void firePregnantTreatmentInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void firePregnantTreatmentInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeInserted(event);
-	    }
-    }
+		EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
+		for (EventListener listener : listeners) {
+			((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeInserted(event);
+		}
+	}
 
-    private void firePregnantTreatmentUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void firePregnantTreatmentUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeUpdated(event);
-	    }
-    }
-    
+		EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
+		for (EventListener listener : listeners) {
+			((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeUpdated(event);
+		}
+	}
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
