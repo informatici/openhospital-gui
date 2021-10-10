@@ -151,7 +151,6 @@ public class LabNew extends JDialog implements SelectionListener {
 	private CustomJDateChooser jCalendarDate;
 	private JPanel jPanelMaterial;
 	private JComboBox<String> jComboBoxMaterial;
-	private JComboBox<String> jComboBoxExamResults;
 	private JPanel jPanelResults;
 	private JPanel jPanelNote;
 	private JPanel jPanelButtons;
@@ -161,7 +160,6 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JScrollPane jScrollPaneNote;
 	private JRadioButton jRadioButtonOPD;
 	private JRadioButton jRadioButtonIPD;
-	private ButtonGroup radioGroup;
 	private JPanel jOpdIpdPanel;
 	private String inOut;
 
@@ -181,8 +179,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	
 	private Patient patientSelected = null;
 	private Laboratory selectedLab = null;
-	private JTextField txtResultValue;
-	
+
 	//Admission
 	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	
@@ -201,7 +198,6 @@ public class LabNew extends JDialog implements SelectionListener {
 	private List<List<LaboratoryRow>> examResults = new ArrayList<>();
 	private List<Laboratory> examItems = new ArrayList<>();
 	private ExamTableModel jTableModel;
-	private JButton printLabelButton;
 	private JTextField jTextFieldExamResult;
                 
 	public LabNew(JFrame owner) {
@@ -370,8 +366,8 @@ public class LabNew extends JDialog implements SelectionListener {
 			Exam selectedExam = selectedLab.getExam();
 
 			if (selectedExam.getProcedure() == 1) {
-				txtResultValue = new JTextField();
-				jComboBoxExamResults = new JComboBox<>();
+				JTextField txtResultValue = new JTextField();
+				JComboBox<String> jComboBoxExamResults = new JComboBox<>();
 				jComboBoxExamResults.setMaximumSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 				jComboBoxExamResults.setMinimumSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 				jComboBoxExamResults.setPreferredSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
@@ -505,7 +501,6 @@ public class LabNew extends JDialog implements SelectionListener {
 			jComboBoxMaterial.addActionListener(actionEvent -> {
 				selectedLab.setMaterial(labManager.getMaterialKey((String) jComboBoxMaterial.getSelectedItem()));
 				examItems.get(jTableExams.getSelectedRow()).setMaterial(selectedLab.getMaterial());
-//					jTableExams.updateUI();
 			});
 			jComboBoxMaterial.setPreferredSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 			jComboBoxMaterial.setMaximumSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
@@ -539,8 +534,8 @@ public class LabNew extends JDialog implements SelectionListener {
 			
 			jRadioButtonOPD = new JRadioButton(MessageBundle.getMessage("angal.labnew.opd.btn"));
 			jRadioButtonIPD = new JRadioButton(MessageBundle.getMessage("angal.labnew.ip.btn"));
-			
-			radioGroup = new ButtonGroup();
+
+			ButtonGroup radioGroup = new ButtonGroup();
 			radioGroup.add(jRadioButtonOPD);
 			radioGroup.add(jRadioButtonIPD);
 			
@@ -708,8 +703,8 @@ public class LabNew extends JDialog implements SelectionListener {
 		}
 		return jTableExams;
 	}
-	
-	public JPanel getJPanelExamButtons() {
+
+	private JPanel getJPanelExamButtons() {
 		if (jPanelExamButtons == null) {
 			jPanelExamButtons = new JPanel();
 			jPanelExamButtons.setLayout(new BoxLayout(jPanelExamButtons, BoxLayout.X_AXIS));

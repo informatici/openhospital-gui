@@ -190,8 +190,8 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new PregnantTreatmentTypeBrowserModel();
 			jTable = new JTable(model);

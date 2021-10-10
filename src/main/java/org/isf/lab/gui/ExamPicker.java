@@ -26,6 +26,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -153,13 +154,13 @@ public class ExamPicker extends JPanel {
 		jTableData.addMouseListener(new java.awt.event.MouseAdapter() {
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				jTableDataMouseClicked(evt);
+			public void mouseClicked(MouseEvent mouseEvent) {
+				jTableDataMouseClicked(mouseEvent);
 			}
 
 			@Override
-			public void mousePressed(java.awt.event.MouseEvent evt) {
-				if (evt.getClickCount() == 2) {
+			public void mousePressed(MouseEvent mouseEvent) {
+				if (mouseEvent.getClickCount() == 2) {
 					validateSelection();
 				}
 			}
@@ -280,8 +281,8 @@ public class ExamPicker extends JPanel {
 		jButtonSelect.addMouseListener(new java.awt.event.MouseAdapter() {
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				jButtonSelectMouseClicked(evt);
+			public void mouseClicked(MouseEvent mouseEvent) {
+				jButtonSelectMouseClicked(mouseEvent);
 			}
 		});
 		jButtonSelect.addActionListener(actionEvent -> jButtonSelectActionPerformed(actionEvent));
@@ -291,8 +292,8 @@ public class ExamPicker extends JPanel {
 		jButtonCancel.addMouseListener(new java.awt.event.MouseAdapter() {
 
 			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				jButtonQuitMouseClicked(evt);
+			public void mouseClicked(MouseEvent mouseEvent) {
+				jButtonQuitMouseClicked(mouseEvent);
 			}
 		});
 
@@ -302,7 +303,7 @@ public class ExamPicker extends JPanel {
 		jPanel2.add(jButtonCancel);
 	}
 
-	private void jTableDataMouseClicked(java.awt.event.MouseEvent mouseEvent) {
+	private void jTableDataMouseClicked(MouseEvent mouseEvent) {
 
 	}
 
@@ -312,19 +313,19 @@ public class ExamPicker extends JPanel {
 		this.getParentFrame().dispose();
 	}
 
-	private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {
+	private void jButtonSelectActionPerformed(ActionEvent actionEvent) {
 		this.setSelectedRow(this.jTableData.getSelectedRow());
 		this.setVisible(false);
 		this.getParentFrame().dispose();
 	}
 
-	private void jButtonSelectMouseClicked(java.awt.event.MouseEvent evt) {
+	private void jButtonSelectMouseClicked(MouseEvent mouseEvent) {
 		this.setSelectedRow(this.jTableData.getSelectedRow());
 		this.setVisible(false);
 		this.getParentFrame().dispose();
 	}
 
-	private void jButtonQuitMouseClicked(java.awt.event.MouseEvent evt) {
+	private void jButtonQuitMouseClicked(MouseEvent mouseEvent) {
 		this.setVisible(false);
 		this.getParentFrame().dispose();
 	}

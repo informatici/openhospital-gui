@@ -61,9 +61,7 @@ public class DiseaseFinder {
 		String[] patterns = query.trim().split(" ");
 		String description = disease.getDescription().toLowerCase();
 		return Arrays.stream(patterns)
-				.filter(pattern -> description.contains(pattern.toLowerCase()))
-				.findAny()
-				.isPresent();
+				.anyMatch(pattern -> description.contains(pattern.toLowerCase()));
 	}
 
 }

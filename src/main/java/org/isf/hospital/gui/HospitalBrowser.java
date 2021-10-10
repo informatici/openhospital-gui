@@ -75,9 +75,8 @@ public class HospitalBrowser extends ModalJFrame {
 	private JTextField currencyCodJTextField;
 	private HospitalBrowsingManager manager;
 	private Hospital hospital;
-	private JButton editJButton;
-	private JButton updateJButton;
-	private JButton closeJButton;
+	private JButton editButton;
+	private JButton updateButton;
 
 	public HospitalBrowser() {
 		super();
@@ -103,7 +102,7 @@ public class HospitalBrowser extends ModalJFrame {
 		this.setContentPane(getJContainPanel());
 	}
 
-	public JPanel getJContainPanel() {
+	private JPanel getJContainPanel() {
 		if (jContainPanel == null) {
 			jContainPanel = new JPanel();
 			jContainPanel.setLayout(new BorderLayout());
@@ -113,7 +112,7 @@ public class HospitalBrowser extends ModalJFrame {
 		return jContainPanel;
 	}
 
-	public JPanel getJDataPanel() {
+	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
 			jDataPanel = new JPanel();
 			jDataPanel.setLayout(new BoxLayout(getJDataPanel(), BoxLayout.Y_AXIS));
@@ -128,7 +127,7 @@ public class HospitalBrowser extends ModalJFrame {
 		return jDataPanel;
 	}
 
-	public JPanel getJNamePanel() {
+	private JPanel getJNamePanel() {
 		if (jNamePanel == null) {
 			jNamePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel nameJLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt") + ": ");
@@ -141,7 +140,7 @@ public class HospitalBrowser extends ModalJFrame {
 		return jNamePanel;
 	}
 
-	public JPanel getJAddressPanel() {
+	private JPanel getJAddressPanel() {
 		if (jAddressPanel == null) {
 			jAddressPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel addJLabel = new JLabel(MessageBundle.getMessage("angal.common.address.txt") + ": ");
@@ -154,7 +153,7 @@ public class HospitalBrowser extends ModalJFrame {
 		return jAddressPanel;
 	}
 
-	public JPanel getJCityPanel() {
+	private JPanel getJCityPanel() {
 		if (jCityPanel == null) {
 			jCityPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel cityJLabel = new JLabel(MessageBundle.getMessage("angal.common.city.txt") + ": ");
@@ -167,7 +166,7 @@ public class HospitalBrowser extends ModalJFrame {
 		return jCityPanel;
 	}
 
-	public JPanel getJTelePanel() {
+	private JPanel getJTelePanel() {
 		if (jTelePanel == null) {
 			jTelePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel teleJLabel = new JLabel(MessageBundle.getMessage("angal.common.telephone.txt") + ": ");
@@ -180,7 +179,7 @@ public class HospitalBrowser extends ModalJFrame {
 		return jTelePanel;
 	}
 
-	public JPanel getJFaxPanel() {
+	private JPanel getJFaxPanel() {
 		if (jFaxPanel == null) {
 			jFaxPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel faxJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.faxnumber") + ": ");
@@ -193,7 +192,7 @@ public class HospitalBrowser extends ModalJFrame {
 		return jFaxPanel;
 	}
 
-	public JPanel getJEmailPanel() {
+	private JPanel getJEmailPanel() {
 		if (jEmailPanel == null) {
 			jEmailPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel emailJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.emailaddress") + ": ");
@@ -206,7 +205,7 @@ public class HospitalBrowser extends ModalJFrame {
 		return jEmailPanel;
 	}
 
-	public JPanel getJCurrencyCodPanel() {
+	private JPanel getJCurrencyCodPanel() {
 		if (jCurrencyCodPanel == null) {
 			jCurrencyCodPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 			JLabel currencyCodJLabel = new JLabel(MessageBundle.getMessage("angal.hospital.currencycod") + ": ");
@@ -235,40 +234,40 @@ public class HospitalBrowser extends ModalJFrame {
 
 		return change;
 	}
-	
-	public void saveConfirm() {
+
+	private void saveConfirm() {
 		int response = MessageDialog.yesNo(null, "angal.hospital.savethechanges.msg");
 		if (response == JOptionPane.YES_OPTION) {
 			updateHospitalEntity();
 		}
 	}
 
-	public JPanel getJButtonPanel() {
+	private JPanel getJButtonPanel() {
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
-			editJButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
-			editJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
-			updateJButton = new JButton(MessageBundle.getMessage("angal.common.update.btn"));
-			updateJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.update.btn.key"));
-			closeJButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
-			closeJButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			updateJButton.setEnabled(false);
+			editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			editButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+			updateButton = new JButton(MessageBundle.getMessage("angal.common.update.btn"));
+			updateButton.setMnemonic(MessageBundle.getMnemonic("angal.common.update.btn.key"));
+			JButton closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			updateButton.setEnabled(false);
 
-			closeJButton.addActionListener(actionEvent -> {
+			closeButton.addActionListener(actionEvent -> {
 				if (isModified()) {
 					//open confirm save window
 					saveConfirm();
 				}
 				dispose();
 			});
-			editJButton.addActionListener(actionEvent -> setFieldsForEditing(true));
-			updateJButton.addActionListener(actionEvent -> {
+			editButton.addActionListener(actionEvent -> setFieldsForEditing(true));
+			updateButton.addActionListener(actionEvent -> {
 				setFieldsForEditing(false);
 				updateHospitalEntity();
 			});
-			jButtonPanel.add(editJButton);
-			jButtonPanel.add(updateJButton);
-			jButtonPanel.add(closeJButton);
+			jButtonPanel.add(editButton);
+			jButtonPanel.add(updateButton);
+			jButtonPanel.add(closeButton);
 		}
 		return jButtonPanel;
 	}
@@ -281,8 +280,8 @@ public class HospitalBrowser extends ModalJFrame {
 		faxJTextField.setEditable(enabled);
 		emailJTextField.setEditable(enabled);
 		currencyCodJTextField.setEditable(enabled);
-		updateJButton.setEnabled(enabled);
-		editJButton.setEnabled(!enabled);
+		updateButton.setEnabled(enabled);
+		editButton.setEnabled(!enabled);
 		nameJTextField.requestFocus(); 
 	}
 	
@@ -290,10 +289,10 @@ public class HospitalBrowser extends ModalJFrame {
 		hospital.setDescription(nameJTextField.getText());
 		hospital.setAddress(addressJTextField.getText());
 		hospital.setCity(cityJTextField.getText());
-		hospital.setTelephone(teleJTextField.getText().equals("") ? null : teleJTextField.getText());
-		hospital.setFax(faxJTextField.getText().equals("") ? null : faxJTextField.getText());
-		hospital.setEmail(emailJTextField.getText().equals("") ? null : emailJTextField.getText());
-		hospital.setCurrencyCod(currencyCodJTextField.getText().equals("") ? null : currencyCodJTextField.getText());
+		hospital.setTelephone(teleJTextField.getText().isEmpty() ? null : teleJTextField.getText());
+		hospital.setFax(faxJTextField.getText().isEmpty() ? null : faxJTextField.getText());
+		hospital.setEmail(emailJTextField.getText().isEmpty() ? null : emailJTextField.getText());
+		hospital.setCurrencyCod(currencyCodJTextField.getText().isEmpty() ? null : currencyCodJTextField.getText());
 	}
 	
 	private void updateHospitalEntity() {

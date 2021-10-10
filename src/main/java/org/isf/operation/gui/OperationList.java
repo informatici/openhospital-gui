@@ -287,7 +287,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		dialogOpe.setLocationRelativeTo(null);
 		dialogOpe.setModal(true);
 	}
-	
+
 	public void selectCorrect(LocalDateTime startDate, LocalDateTime endDate) {
 		jTableData.clearSelection();
 		for (int i = 0; i < oprowData.size(); i++) {
@@ -303,61 +303,61 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		}
 	}
 
-	public JTable getjTableData() {
+	private JTable getjTableData() {
 		return jTableData;
 	}
 
-	public void setjTableData(JTable jTableData) {
+	private void setjTableData(JTable jTableData) {
 		this.jTableData = jTableData;
 	}
 
-	public JLabel getTypeSourceLabelValue() {
+	private JLabel getTypeSourceLabelValue() {
 		return typeSourceLabelValue;
 	}
 
-	public void setTypeSourceLabelValue(JLabel typeSourceLabelValue) {
+	private void setTypeSourceLabelValue(JLabel typeSourceLabelValue) {
 		this.typeSourceLabelValue = typeSourceLabelValue;
 	}
 
-	public JLabel getCodeSourceLabelValue() {
+	private JLabel getCodeSourceLabelValue() {
 		return codeSourceLabelValue;
 	}
 
-	public void setCodeSourceLabelValue(JLabel codeSourceLabelValue) {
+	private void setCodeSourceLabelValue(JLabel codeSourceLabelValue) {
 		this.codeSourceLabelValue = codeSourceLabelValue;
 	}
 
-	public JLabel getDateLabelValue() {
+	private JLabel getDateLabelValue() {
 		return dateLabelValue;
 	}
 
-	public void setDateLabelValue(JLabel dateLabelValue) {
+	private void setDateLabelValue(JLabel dateLabelValue) {
 		this.dateLabelValue = dateLabelValue;
 	}
 
-	public JLabel getPatientLabelValue() {
+	private JLabel getPatientLabelValue() {
 		return patientLabelValue;
 	}
 
-	public void setPatientLabelValue(JLabel patientLabelValue) {
+	private void setPatientLabelValue(JLabel patientLabelValue) {
 		this.patientLabelValue = patientLabelValue;
 	}
 
-	public JDialog getParentContainer() {
+	private JDialog getParentContainer() {
 		return parentContainer;
 	}
 
-	public void setParentContainer(JDialog parentContainer) {
+	private void setParentContainer(JDialog parentContainer) {
 		this.parentContainer = parentContainer;
 	}
 
 	/* ***** functions events **** */
-	private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {
+	private void closeButtonMouseClicked(MouseEvent mouseEvent) {
 		this.setVisible(false);
 		this.parentContainer.dispose();
 	}
 
-	private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {
+	private void addButtonMouseClicked(MouseEvent mouseEvent) {
 		int idRow = this.jTableData.getSelectedRow();
 		OperationRow operationRow = null;
 		opeRowEdit = new OperationRowEdit(operationRow);
@@ -372,7 +372,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		dialogOpe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
-	private void updateButtonMouseClicked(java.awt.event.MouseEvent evt) {
+	private void updateButtonMouseClicked(MouseEvent mouseEvent) {
 		int idRow = this.jTableData.getSelectedRow();
 		OperationRow operationRow;
 		if (idRow < 0) {
@@ -393,7 +393,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		dialogOpe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
-	private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {
+	private void deleteButtonMouseClicked(MouseEvent mouseEvent) {
 		int idRow = this.jTableData.getSelectedRow();
 		OperationRow operationRow;
 		if (idRow < 0) {
@@ -429,7 +429,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		refreshJtable();
 	}
 
-	public void refreshJtable() {
+	private void refreshJtable() {
 		try {
 			oprowData = opeRowManager.getOperationRowByOpd(myOpd);
 		} catch (OHServiceException e) {
@@ -440,11 +440,11 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		jTableData.repaint();
 	}
 
-	public Admission getMyAdmission() {
+	private Admission getMyAdmission() {
 		return myAdmission;
 	}
 
-	public void setMyAdmission(Admission myAdmission) {
+	private void setMyAdmission(Admission myAdmission) {
 		this.myAdmission = myAdmission;
 	}
 
@@ -452,7 +452,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		return oprowData;
 	}
 
-	public void setOprowData(List<OperationRow> oprowData) {
+	private void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
 

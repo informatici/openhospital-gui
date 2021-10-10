@@ -255,19 +255,19 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private static final Dimension PatientDimension = new Dimension(300, 20);
 	private static final Dimension LabelsDimension = new Dimension(60, 20);
 	private static final Dimension UserDimension = new Dimension(190, 20);
-	private static final int PanelWidth = 450;
-	private static final int ButtonWidth = 190;
-	private static final int ButtonWidthBill = 190;
-	private static final int ButtonWidthPayment = 190;
-	private static final int PriceWidth = 190;
-	private static final int CurrencyCodWidth = 40;
-	private static final int QuantityWidth = 40;
-	private static final int BillHeight = 200;
-	private static final int TotalHeight = 20;
-	private static final int BigTotalHeight = 20;
-	private static final int PaymentHeight = 150;
-	private static final int BalanceHeight = 20;
-	private static final int ButtonHeight = 25;
+	private static final int PANEL_WIDTH = 450;
+	private static final int BUTTON_WIDTH = 190;
+	private static final int BUTTON_WIDTH_BILL = 190;
+	private static final int BUTTON_WIDTH_PAYMENT = 190;
+	private static final int PRICE_WIDTH = 190;
+	private static final int CURRENCY_CODE_WIDTH = 40;
+	private static final int QUANTITY_WIDTH = 40;
+	private static final int BILL_HEIGHT = 200;
+	private static final int TOTAL_HEIGHT = 20;
+	private static final int BIG_TOTAL_HEIGHT = 20;
+	private static final int PAYMENT_HEIGHT = 150;
+	private static final int BALANCE_HEIGHT = 20;
+	private static final int BUTTON_HEIGHT = 25;
 	
 	private BigDecimal total = new BigDecimal(0);
 	private BigDecimal bigTotal = new BigDecimal(0);
@@ -280,7 +280,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private boolean paid = false;
 	private Bill thisBill;
 	private Patient patientSelected;
-	private boolean foundList;
 	private LocalDateTime billDate = LocalDateTime.now();
 	private LocalDateTime today = LocalDateTime.now();
 	
@@ -407,8 +406,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	//check if PriceList and Patient still exist
 	private void checkBill() {
-		
-		foundList = false;
 		if (thisBill.isList()) {
 			Optional<PriceList> priceList = lstArray.stream()
 					.filter(pl -> pl.getId() == thisBill.getPriceList().getId())
@@ -683,9 +680,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jScrollPaneBill = new JScrollPane();
 			jScrollPaneBill.setBorder(null);
 			jScrollPaneBill.setViewportView(getJTableBill());
-			jScrollPaneBill.setMaximumSize(new Dimension(PanelWidth, BillHeight));
-			jScrollPaneBill.setMinimumSize(new Dimension(PanelWidth, BillHeight));
-			jScrollPaneBill.setPreferredSize(new Dimension(PanelWidth, BillHeight));
+			jScrollPaneBill.setMaximumSize(new Dimension(PANEL_WIDTH, BILL_HEIGHT));
+			jScrollPaneBill.setMinimumSize(new Dimension(PANEL_WIDTH, BILL_HEIGHT));
+			jScrollPaneBill.setPreferredSize(new Dimension(PANEL_WIDTH, BILL_HEIGHT));
 
 		}
 		return jScrollPaneBill;
@@ -695,10 +692,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jTableBill == null) {
 			jTableBill = new JTable();
 			jTableBill.setModel(new BillTableModel());
-			jTableBill.getColumnModel().getColumn(1).setMinWidth(QuantityWidth);
-			jTableBill.getColumnModel().getColumn(1).setMaxWidth(QuantityWidth);
-			jTableBill.getColumnModel().getColumn(2).setMinWidth(PriceWidth);
-			jTableBill.getColumnModel().getColumn(2).setMaxWidth(PriceWidth);
+			jTableBill.getColumnModel().getColumn(1).setMinWidth(QUANTITY_WIDTH);
+			jTableBill.getColumnModel().getColumn(1).setMaxWidth(QUANTITY_WIDTH);
+			jTableBill.getColumnModel().getColumn(2).setMinWidth(PRICE_WIDTH);
+			jTableBill.getColumnModel().getColumn(2).setMaxWidth(PRICE_WIDTH);
 			jTableBill.setAutoCreateColumnsFromModel(false);
 		}
 		return jTableBill;
@@ -709,9 +706,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jScrollPaneBigTotal = new JScrollPane();
 			jScrollPaneBigTotal.setViewportView(getJTableBigTotal());
 			jScrollPaneBigTotal.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-			jScrollPaneBigTotal.setMaximumSize(new Dimension(PanelWidth, BigTotalHeight));
-			jScrollPaneBigTotal.setMinimumSize(new Dimension(PanelWidth, BigTotalHeight));
-			jScrollPaneBigTotal.setPreferredSize(new Dimension(PanelWidth, BigTotalHeight));
+			jScrollPaneBigTotal.setMaximumSize(new Dimension(PANEL_WIDTH, BIG_TOTAL_HEIGHT));
+			jScrollPaneBigTotal.setMinimumSize(new Dimension(PANEL_WIDTH, BIG_TOTAL_HEIGHT));
+			jScrollPaneBigTotal.setPreferredSize(new Dimension(PANEL_WIDTH, BIG_TOTAL_HEIGHT));
 		}
 		return jScrollPaneBigTotal;
 	}
@@ -721,9 +718,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jScrollPaneTotal = new JScrollPane();
 			jScrollPaneTotal.setViewportView(getJTableTotal());
 			jScrollPaneTotal.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-			jScrollPaneTotal.setMaximumSize(new Dimension(PanelWidth, TotalHeight));
-			jScrollPaneTotal.setMinimumSize(new Dimension(PanelWidth, TotalHeight));
-			jScrollPaneTotal.setPreferredSize(new Dimension(PanelWidth, TotalHeight));
+			jScrollPaneTotal.setMaximumSize(new Dimension(PANEL_WIDTH, TOTAL_HEIGHT));
+			jScrollPaneTotal.setMinimumSize(new Dimension(PANEL_WIDTH, TOTAL_HEIGHT));
+			jScrollPaneTotal.setPreferredSize(new Dimension(PANEL_WIDTH, TOTAL_HEIGHT));
 		}
 		return jScrollPaneTotal;
 	}
@@ -750,13 +747,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					return false;
 				}
 			});
-			jTableBigTotal.getColumnModel().getColumn(1).setMinWidth(CurrencyCodWidth);
-			jTableBigTotal.getColumnModel().getColumn(1).setMaxWidth(CurrencyCodWidth);
-			jTableBigTotal.getColumnModel().getColumn(2).setMinWidth(PriceWidth);
-			jTableBigTotal.getColumnModel().getColumn(2).setMaxWidth(PriceWidth);
-			jTableBigTotal.setMaximumSize(new Dimension(PanelWidth, BigTotalHeight));
-			jTableBigTotal.setMinimumSize(new Dimension(PanelWidth, BigTotalHeight));
-			jTableBigTotal.setPreferredSize(new Dimension(PanelWidth, BigTotalHeight));
+			jTableBigTotal.getColumnModel().getColumn(1).setMinWidth(CURRENCY_CODE_WIDTH);
+			jTableBigTotal.getColumnModel().getColumn(1).setMaxWidth(CURRENCY_CODE_WIDTH);
+			jTableBigTotal.getColumnModel().getColumn(2).setMinWidth(PRICE_WIDTH);
+			jTableBigTotal.getColumnModel().getColumn(2).setMaxWidth(PRICE_WIDTH);
+			jTableBigTotal.setMaximumSize(new Dimension(PANEL_WIDTH, BIG_TOTAL_HEIGHT));
+			jTableBigTotal.setMinimumSize(new Dimension(PANEL_WIDTH, BIG_TOTAL_HEIGHT));
+			jTableBigTotal.setPreferredSize(new Dimension(PANEL_WIDTH, BIG_TOTAL_HEIGHT));
 		}
 		return jTableBigTotal;
 	}
@@ -784,13 +781,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					return false;
 				}
 			});
-			jTableTotal.getColumnModel().getColumn(1).setMinWidth(CurrencyCodWidth);
-			jTableTotal.getColumnModel().getColumn(1).setMaxWidth(CurrencyCodWidth);
-			jTableTotal.getColumnModel().getColumn(2).setMinWidth(PriceWidth);
-			jTableTotal.getColumnModel().getColumn(2).setMaxWidth(PriceWidth);
-			jTableTotal.setMaximumSize(new Dimension(PanelWidth, TotalHeight));
-			jTableTotal.setMinimumSize(new Dimension(PanelWidth, TotalHeight));
-			jTableTotal.setPreferredSize(new Dimension(PanelWidth, TotalHeight));
+			jTableTotal.getColumnModel().getColumn(1).setMinWidth(CURRENCY_CODE_WIDTH);
+			jTableTotal.getColumnModel().getColumn(1).setMaxWidth(CURRENCY_CODE_WIDTH);
+			jTableTotal.getColumnModel().getColumn(2).setMinWidth(PRICE_WIDTH);
+			jTableTotal.getColumnModel().getColumn(2).setMaxWidth(PRICE_WIDTH);
+			jTableTotal.setMaximumSize(new Dimension(PANEL_WIDTH, TOTAL_HEIGHT));
+			jTableTotal.setMinimumSize(new Dimension(PANEL_WIDTH, TOTAL_HEIGHT));
+			jTableTotal.setPreferredSize(new Dimension(PANEL_WIDTH, TOTAL_HEIGHT));
 		}
 		return jTableTotal;
 	}
@@ -800,9 +797,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jScrollPanePayment = new JScrollPane();
 			jScrollPanePayment.setBorder(null);
 			jScrollPanePayment.setViewportView(getJTablePayment());
-			jScrollPanePayment.setMaximumSize(new Dimension(PanelWidth, PaymentHeight));
-			jScrollPanePayment.setMinimumSize(new Dimension(PanelWidth, PaymentHeight));
-			jScrollPanePayment.setPreferredSize(new Dimension(PanelWidth, PaymentHeight));
+			jScrollPanePayment.setMaximumSize(new Dimension(PANEL_WIDTH, PAYMENT_HEIGHT));
+			jScrollPanePayment.setMinimumSize(new Dimension(PANEL_WIDTH, PAYMENT_HEIGHT));
+			jScrollPanePayment.setPreferredSize(new Dimension(PANEL_WIDTH, PAYMENT_HEIGHT));
 		}
 		return jScrollPanePayment;
 	}
@@ -811,8 +808,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jTablePayment == null) {
 			jTablePayment = new JTable();
 			jTablePayment.setModel(new PaymentTableModel());
-			jTablePayment.getColumnModel().getColumn(1).setMinWidth(PriceWidth);
-			jTablePayment.getColumnModel().getColumn(1).setMaxWidth(PriceWidth);
+			jTablePayment.getColumnModel().getColumn(1).setMinWidth(PRICE_WIDTH);
+			jTablePayment.getColumnModel().getColumn(1).setMaxWidth(PRICE_WIDTH);
 		}
 		return jTablePayment;
 	}
@@ -822,9 +819,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jScrollPaneBalance = new JScrollPane();
 			jScrollPaneBalance.setViewportView(getJTableBalance());
 			jScrollPaneBalance.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-			jScrollPaneBalance.setMaximumSize(new Dimension(PanelWidth, BalanceHeight));
-			jScrollPaneBalance.setMinimumSize(new Dimension(PanelWidth, BalanceHeight));
-			jScrollPaneBalance.setPreferredSize(new Dimension(PanelWidth, BalanceHeight));
+			jScrollPaneBalance.setMaximumSize(new Dimension(PANEL_WIDTH, BALANCE_HEIGHT));
+			jScrollPaneBalance.setMinimumSize(new Dimension(PANEL_WIDTH, BALANCE_HEIGHT));
+			jScrollPaneBalance.setPreferredSize(new Dimension(PANEL_WIDTH, BALANCE_HEIGHT));
 		}
 		return jScrollPaneBalance;
 	}
@@ -852,13 +849,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					return false;
 				}
 			});
-			jTableBalance.getColumnModel().getColumn(1).setMinWidth(CurrencyCodWidth);
-			jTableBalance.getColumnModel().getColumn(1).setMaxWidth(CurrencyCodWidth);
-			jTableBalance.getColumnModel().getColumn(2).setMinWidth(PriceWidth);
-			jTableBalance.getColumnModel().getColumn(2).setMaxWidth(PriceWidth);
-			jTableBalance.setMaximumSize(new Dimension(PanelWidth, BalanceHeight));
-			jTableBalance.setMinimumSize(new Dimension(PanelWidth, BalanceHeight));
-			jTableBalance.setPreferredSize(new Dimension(PanelWidth, BalanceHeight));
+			jTableBalance.getColumnModel().getColumn(1).setMinWidth(CURRENCY_CODE_WIDTH);
+			jTableBalance.getColumnModel().getColumn(1).setMaxWidth(CURRENCY_CODE_WIDTH);
+			jTableBalance.getColumnModel().getColumn(2).setMinWidth(PRICE_WIDTH);
+			jTableBalance.getColumnModel().getColumn(2).setMaxWidth(PRICE_WIDTH);
+			jTableBalance.setMaximumSize(new Dimension(PANEL_WIDTH, BALANCE_HEIGHT));
+			jTableBalance.setMinimumSize(new Dimension(PANEL_WIDTH, BALANCE_HEIGHT));
+			jTableBalance.setPreferredSize(new Dimension(PANEL_WIDTH, BALANCE_HEIGHT));
 		}
 		return jTableBalance;
 	}
@@ -885,9 +882,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jPanelButtonsBill.add(getJButtonAddOther());
 			jPanelButtonsBill.add(getJButtonAddCustom());
 			jPanelButtonsBill.add(getJButtonRemoveItem());
-			jPanelButtonsBill.setMinimumSize(new Dimension(ButtonWidth, BillHeight+TotalHeight));
-			jPanelButtonsBill.setMaximumSize(new Dimension(ButtonWidth, BillHeight+TotalHeight));
-			jPanelButtonsBill.setPreferredSize(new Dimension(ButtonWidth, BillHeight+TotalHeight));
+			jPanelButtonsBill.setMinimumSize(new Dimension(BUTTON_WIDTH, BILL_HEIGHT + TOTAL_HEIGHT));
+			jPanelButtonsBill.setMaximumSize(new Dimension(BUTTON_WIDTH, BILL_HEIGHT + TOTAL_HEIGHT));
+			jPanelButtonsBill.setPreferredSize(new Dimension(BUTTON_WIDTH, BILL_HEIGHT + TOTAL_HEIGHT));
 
 		}
 		return jPanelButtonsBill;
@@ -903,9 +900,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				jPanelButtonsPayment.add(getJButtonPrintPayment());
 			}
 			jPanelButtonsPayment.add(getJButtonRemovePayment());
-			jPanelButtonsPayment.setMinimumSize(new Dimension(ButtonWidth, PaymentHeight));
-			jPanelButtonsPayment.setMaximumSize(new Dimension(ButtonWidth, PaymentHeight));
-			//jPanelButtonsPayment.setPreferredSize(new Dimension(ButtonWidth, PaymentHeight));
+			jPanelButtonsPayment.setMinimumSize(new Dimension(BUTTON_WIDTH, PAYMENT_HEIGHT));
+			jPanelButtonsPayment.setMaximumSize(new Dimension(BUTTON_WIDTH, PAYMENT_HEIGHT));
 		}
 		return jPanelButtonsPayment;
 	}
@@ -926,7 +922,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonBalance == null) {
 			jButtonBalance = new JButton(MessageBundle.getMessage("angal.newbill.givechange.btn"));
 			jButtonBalance.setMnemonic(MessageBundle.getMnemonic("angal.newbill.givechange.btn.key"));
-			jButtonBalance.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
+			jButtonBalance.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 			jButtonBalance.setIcon(new ImageIcon("rsc/icons/money_button.png"));
 			jButtonBalance.setHorizontalAlignment(SwingConstants.LEFT);
 			if (insert)  {
@@ -969,7 +965,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonSave == null) {
 			jButtonSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
 			jButtonSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-			jButtonSave.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
+			jButtonSave.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 			jButtonSave.setIcon(new ImageIcon("rsc/icons/save_button.png"));
 			jButtonSave.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonSave.addActionListener(actionEvent -> {
@@ -1057,7 +1053,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonPrintPayment == null) {
 			jButtonPrintPayment = new JButton(MessageBundle.getMessage("angal.newbill.paymentreceipt.btn"));
 			jButtonPrintPayment.setMnemonic(MessageBundle.getMnemonic("angal.newbill.paymentreceipt.btn.key"));
-			jButtonPrintPayment.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
+			jButtonPrintPayment.setMaximumSize(new Dimension(BUTTON_WIDTH_PAYMENT, BUTTON_HEIGHT));
 			jButtonPrintPayment.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonPrintPayment.setIcon(new ImageIcon("rsc/icons/receipt_button.png"));
 			jButtonPrintPayment.addActionListener(actionEvent -> {
@@ -1075,7 +1071,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonPaid == null) {
 			jButtonPaid = new JButton(MessageBundle.getMessage("angal.newbill.paid.btn"));
 			jButtonPaid.setMnemonic(MessageBundle.getMnemonic("angal.newbill.paid.btn.key"));
-			jButtonPaid.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
+			jButtonPaid.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 			jButtonPaid.setIcon(new ImageIcon("rsc/icons/ok_button.png"));
 			jButtonPaid.setHorizontalAlignment(SwingConstants.LEFT);
 			if (insert) {
@@ -1083,7 +1079,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			}
 			jButtonPaid.addActionListener(actionEvent -> {
 
-				LocalDateTime datePay = LocalDateTime.now();
+				LocalDateTime datePay;
 
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png"); //$NON-NLS-1$
 				int ok = MessageDialog.yesNo(PatientBillEdit.this, icon,
@@ -1134,7 +1130,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonClose == null) {
 			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
-			jButtonClose.setMaximumSize(new Dimension(ButtonWidth, ButtonHeight));
+			jButtonClose.setMaximumSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
 			jButtonClose.setIcon(new ImageIcon("rsc/icons/close_button.png"));
 			jButtonClose.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonClose.addActionListener(actionEvent -> {
@@ -1157,7 +1153,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonAddRefund == null) {
 			jButtonAddRefund = new JButton(MessageBundle.getMessage("angal.newbill.refund.btn"));
 			jButtonAddRefund.setMnemonic(MessageBundle.getMnemonic("angal.newbill.refund.btn.key"));
-			jButtonAddRefund.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
+			jButtonAddRefund.setMaximumSize(new Dimension(BUTTON_WIDTH_PAYMENT, BUTTON_HEIGHT));
 			jButtonAddRefund.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddRefund.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddRefund.addActionListener(actionEvent -> {
@@ -1165,7 +1161,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png");
 				BigDecimal amount = new BigDecimal(0);
 
-				LocalDateTime datePay = LocalDateTime.now();
+				LocalDateTime datePay;
 
 				String quantity = (String) JOptionPane.showInputDialog(
 	                    PatientBillEdit.this,
@@ -1244,7 +1240,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonAddPayment == null) {
 			jButtonAddPayment = new JButton(MessageBundle.getMessage("angal.newbill.payment.btn"));
 			jButtonAddPayment.setMnemonic(MessageBundle.getMnemonic("angal.newbill.payment.btn.key"));
-			jButtonAddPayment.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
+			jButtonAddPayment.setMaximumSize(new Dimension(BUTTON_WIDTH_PAYMENT, BUTTON_HEIGHT));
 			jButtonAddPayment.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddPayment.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddPayment.addActionListener(actionEvent -> {
@@ -1252,7 +1248,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				Icon icon = new ImageIcon("rsc/icons/money_dialog.png");
 				BigDecimal amount = new BigDecimal(0);
 
-				LocalDateTime datePay = LocalDateTime.now();
+				LocalDateTime datePay;
 
 				String quantity = (String) JOptionPane.showInputDialog(
 	                    PatientBillEdit.this,
@@ -1310,7 +1306,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonRemovePayment == null) {
 			jButtonRemovePayment = new JButton(MessageBundle.getMessage("angal.newbill.removepayment.btn"));
 			jButtonRemovePayment.setMnemonic(MessageBundle.getMnemonic("angal.newbill.removepayment.btn.key"));
-			jButtonRemovePayment.setMaximumSize(new Dimension(ButtonWidthPayment, ButtonHeight));
+			jButtonRemovePayment.setMaximumSize(new Dimension(BUTTON_WIDTH_PAYMENT, BUTTON_HEIGHT));
 			jButtonRemovePayment.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonRemovePayment.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
 			jButtonRemovePayment.addActionListener(actionEvent -> {
@@ -1327,7 +1323,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonAddOther == null) {
 			jButtonAddOther = new JButton(MessageBundle.getMessage("angal.newbill.other.btn"));
 			jButtonAddOther.setMnemonic(MessageBundle.getMnemonic("angal.newbill.other.btn.key"));
-			jButtonAddOther.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
+			jButtonAddOther.setMaximumSize(new Dimension(BUTTON_WIDTH_BILL, BUTTON_HEIGHT));
 			jButtonAddOther.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddOther.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddOther.addActionListener(actionEvent -> {
@@ -1416,7 +1412,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonAddExam == null) {
 			jButtonAddExam = new JButton(MessageBundle.getMessage("angal.newbill.exam.btn"));
 			jButtonAddExam.setMnemonic(MessageBundle.getMnemonic("angal.newbill.exam.btn.key"));
-			jButtonAddExam.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
+			jButtonAddExam.setMaximumSize(new Dimension(BUTTON_WIDTH_BILL, BUTTON_HEIGHT));
 			jButtonAddExam.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddExam.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddExam.addActionListener(actionEvent -> {
@@ -1448,7 +1444,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonAddOperation == null) {
 			jButtonAddOperation = new JButton(MessageBundle.getMessage("angal.newbill.operation.btn"));
 			jButtonAddOperation.setMnemonic(MessageBundle.getMnemonic("angal.newbill.operation.btn.key"));
-			jButtonAddOperation.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
+			jButtonAddOperation.setMaximumSize(new Dimension(BUTTON_WIDTH_BILL, BUTTON_HEIGHT));
 			jButtonAddOperation.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddOperation.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddOperation.addActionListener(actionEvent -> {
@@ -1480,7 +1476,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonAddMedical == null) {
 			jButtonAddMedical = new JButton(MessageBundle.getMessage("angal.newbill.medical.btn"));
 			jButtonAddMedical.setMnemonic(MessageBundle.getMnemonic("angal.newbill.medical.btn"));
-			jButtonAddMedical.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
+			jButtonAddMedical.setMaximumSize(new Dimension(BUTTON_WIDTH_BILL, BUTTON_HEIGHT));
 			jButtonAddMedical.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonAddMedical.addActionListener(actionEvent -> {
@@ -1531,7 +1527,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonCustom == null) {
 			jButtonCustom = new JButton(MessageBundle.getMessage("angal.newbill.custom.btn"));
 			jButtonCustom.setMnemonic(MessageBundle.getMnemonic("angal.newbill.custom.btn.key"));
-			jButtonCustom.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
+			jButtonCustom.setMaximumSize(new Dimension(BUTTON_WIDTH_BILL, BUTTON_HEIGHT));
 			jButtonCustom.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonCustom.setIcon(new ImageIcon("rsc/icons/plus_button.png"));
 			jButtonCustom.addActionListener(actionEvent -> {
@@ -1587,7 +1583,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (jButtonRemoveItem == null) {
 			jButtonRemoveItem = new JButton(MessageBundle.getMessage("angal.newbill.removeitem.btn"));
 			jButtonRemoveItem.setMnemonic(MessageBundle.getMnemonic("angal.newbill.removeitem.btn.key"));
-			jButtonRemoveItem.setMaximumSize(new Dimension(ButtonWidthBill, ButtonHeight));
+			jButtonRemoveItem.setMaximumSize(new Dimension(BUTTON_WIDTH_BILL, BUTTON_HEIGHT));
 			jButtonRemoveItem.setHorizontalAlignment(SwingConstants.LEFT);
 			jButtonRemoveItem.setIcon(new ImageIcon("rsc/icons/delete_button.png"));
 			jButtonRemoveItem.addActionListener(actionEvent -> {

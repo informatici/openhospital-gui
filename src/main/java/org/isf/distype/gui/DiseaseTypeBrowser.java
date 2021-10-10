@@ -190,7 +190,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DiseaseTypeBrowserModel();
 			jTable = new JTable(model);

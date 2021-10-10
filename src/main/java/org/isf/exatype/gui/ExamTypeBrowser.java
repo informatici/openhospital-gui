@@ -205,7 +205,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new ExamTypeBrowserModel();
 			jTable = new JTable(model);

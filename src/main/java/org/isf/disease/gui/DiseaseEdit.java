@@ -111,20 +111,16 @@ public class DiseaseEdit extends JDialog {
 	private JPanel buttonPanel = null;
 	private JButton cancelButton = null;
 	private JButton okButton = null;
-	private JLabel descLabel = null;
-	private JLabel codeLabel = null;
 	private JTextField descriptionTextField = null;
 	private JTextField codeTextField = null;
-	private JLabel typeLabel = null;
-	private JComboBox typeComboBox = null;
+	private JComboBox<DiseaseType> typeComboBox = null;
 	private Disease disease;
 	private boolean insert;
 	private JPanel jNewPatientPanel = null;
 	private JCheckBox includeOpdCheckBox  = null;
 	private JCheckBox includeIpdInCheckBox  = null;
 	private JCheckBox includeIpdOutCheckBox  = null;
-	private String lastDescription;
-	
+
 	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 	/**
@@ -182,7 +178,7 @@ public class DiseaseEdit extends JDialog {
 			gblDataPanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 			gblDataPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 			dataPanel.setLayout(gblDataPanel);
-			typeLabel = new JLabel(MessageBundle.getMessage("angal.disease.type"));
+			JLabel typeLabel = new JLabel(MessageBundle.getMessage("angal.disease.type"));
 			GridBagConstraints gbcTypeLabel = new GridBagConstraints();
 			gbcTypeLabel.fill = GridBagConstraints.BOTH;
 			gbcTypeLabel.insets = new Insets(5, 5, 5, 5);
@@ -195,14 +191,14 @@ public class DiseaseEdit extends JDialog {
 			gbctypeComboBox.gridx = 1;
 			gbctypeComboBox.gridy = 0;
 			dataPanel.add(getTypeComboBox(), gbctypeComboBox);
-			codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
+			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
 			GridBagConstraints gbcCodeLabel = new GridBagConstraints();
 			gbcCodeLabel.insets = new Insets(5, 5, 5, 5);
 			gbcCodeLabel.fill = GridBagConstraints.BOTH;
 			gbcCodeLabel.gridx = 0;
 			gbcCodeLabel.gridy = 1;
 			dataPanel.add(codeLabel, gbcCodeLabel);
-			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
+			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			GridBagConstraints gbcCescLabel = new GridBagConstraints();
 			gbcCescLabel.fill = GridBagConstraints.BOTH;
 			gbcCescLabel.insets = new Insets(5, 5, 5, 5);
@@ -329,8 +325,7 @@ public class DiseaseEdit extends JDialog {
 			if (insert) {
 				descriptionTextField = new JTextField();
 			} else {
-				lastDescription = disease.getDescription();
-				descriptionTextField = new JTextField(lastDescription);
+				descriptionTextField = new JTextField(disease.getDescription());
 			}
 		}
 		return descriptionTextField;
@@ -352,7 +347,7 @@ public class DiseaseEdit extends JDialog {
 		return codeTextField;
 	}
 
-	public JPanel getJFlagsPanel() {
+	private JPanel getJFlagsPanel() {
 		if (jNewPatientPanel == null) {
 			jNewPatientPanel = new JPanel();
 			includeOpdCheckBox = new JCheckBox(MessageBundle.getMessage("angal.disease.opd"));
@@ -381,9 +376,9 @@ public class DiseaseEdit extends JDialog {
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	private JComboBox getTypeComboBox() {
+	private JComboBox<DiseaseType> getTypeComboBox() {
 		if (typeComboBox == null) {
-			typeComboBox = new JComboBox();
+			typeComboBox = new JComboBox<>();
 			typeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
 			try {
 				if (insert) {
@@ -403,7 +398,6 @@ public class DiseaseEdit extends JDialog {
 					if (selectedDiseaseType != null) {
 						typeComboBox.setSelectedItem(selectedDiseaseType);
 					}
-					//typeComboBox.setEnabled(false);
 				}
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);

@@ -68,7 +68,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener {
 	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private List<Patient> pPat;
 
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new PatientBrowserModel();
 			jTable = new JTable(model);
@@ -123,7 +123,6 @@ public class PatientBrowser extends ModalJFrame implements PatientListener {
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.patient.patientbrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
 	}
 	
 	/**
@@ -284,7 +283,6 @@ public class PatientBrowser extends ModalJFrame implements PatientListener {
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}

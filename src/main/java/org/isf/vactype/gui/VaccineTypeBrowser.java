@@ -197,8 +197,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new VaccineTypeBrowserModel();
 			jTable = new JTable(model);

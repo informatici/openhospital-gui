@@ -36,7 +36,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -114,22 +113,21 @@ public class OperationRowEdit extends JPanel {
 		}
 	}
 
-	private VoFloatTextField TransTextField;
+	private VoFloatTextField transTextField;
 
 	private JTextArea remarksTextArea;
 	private JPanel panelButtons;
 	private JLabel lblTransUnite;
-	private JComboBox resultComboBox;
+	private JComboBox<String> resultComboBox;
 	private JLabel lblResultat;
 	private JLabel lblDate;
-	private JComboBox opecomboBox;
+	private JComboBox<Operation> opeComboBox;
 	private JLabel lblOperation;
 
 	private CustomJDateChooser jCalendarDate;
-	private GregorianCalendar date;
 
 	private OperationRow opeRow;
-	private JTextField DateTextField;
+	private JTextField dateTextField;
 	private JButton btnCancel;
 	private JDialog myParent;
 	OperationBrowserManager ope;
@@ -206,15 +204,15 @@ public class OperationRowEdit extends JPanel {
 		gbcLblOperation.gridy = 2;
 		panelBody.add(lblOperation, gbcLblOperation);
 		
-		opecomboBox = getOperationsBox();
+		opeComboBox = getOperationsBox();
 		GridBagConstraints gbcOpecomboBox = new GridBagConstraints();
 		gbcOpecomboBox.insets = new Insets(0, 0, 5, 0);
 		gbcOpecomboBox.fill = GridBagConstraints.HORIZONTAL;
 		gbcOpecomboBox.gridx = 4;
 		gbcOpecomboBox.gridy = 2;
-		panelBody.add(opecomboBox, gbcOpecomboBox);
+		panelBody.add(opeComboBox, gbcOpecomboBox);
 		
-		DateTextField = new JTextField();
+		dateTextField = new JTextField();
 		
 		lblDate = new JLabel(MessageBundle.getMessage("angal.operationrowlist.date")); //$NON-NLS-1$
 		lblDate.setBorder(new EmptyBorder(0, 0, 0, 4));
@@ -230,7 +228,7 @@ public class OperationRowEdit extends JPanel {
 		gbcCalendarDate.gridx = 4;
 		gbcCalendarDate.gridy = 3;
 		panelBody.add(this.getJCalendarDate(), gbcCalendarDate);
-		DateTextField.setColumns(10);
+		dateTextField.setColumns(10);
 		
 		resultComboBox = getComboResultBox();
 		
@@ -259,14 +257,14 @@ public class OperationRowEdit extends JPanel {
 		gbcLblTransUnite.gridy = 5;
 		panelBody.add(lblTransUnite, gbcLblTransUnite);
 
-		TransTextField = new VoFloatTextField(0, 100);
+		transTextField = new VoFloatTextField(0, 100);
 		GridBagConstraints gbcTransTextField = new GridBagConstraints();
 		gbcTransTextField.insets = new Insets(0, 0, 5, 0);
 		gbcTransTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbcTransTextField.gridx = 4;
 		gbcTransTextField.gridy = 5;
-		panelBody.add(TransTextField, gbcTransTextField);
-		TransTextField.setColumns(10);
+		panelBody.add(transTextField, gbcTransTextField);
+		transTextField.setColumns(10);
 
 		remarksTextArea = new JTextArea();
 		remarksTextArea.setTabSize(5);
@@ -299,7 +297,7 @@ public class OperationRowEdit extends JPanel {
 		panelBody.add(separator1, gbcSeparator1);
 
 		if (this.opeRow != null) {
-			TransTextField.setText(opeRow.getTransUnit() + "");
+			transTextField.setText(opeRow.getTransUnit() + "");
 		}
 		
 		panelButtons = new JPanel();
@@ -355,9 +353,8 @@ public class OperationRowEdit extends JPanel {
 		return jCalendarDate;
 	}
 
-	private JComboBox getOperationsBox() {
-
-		JComboBox comboOpe = new JComboBox();
+	private JComboBox<Operation> getOperationsBox() {
+		JComboBox<Operation> comboOpe = new JComboBox<>();
 		List<Operation> opeList = new ArrayList<>();
 		try {
 			opeList = ope.getOperation();
@@ -374,14 +371,12 @@ public class OperationRowEdit extends JPanel {
 				}
 			}
 			if (!found) {
-				//comboOpe.addItem("");
 				comboOpe.addItem(null);
 			}
 			for (org.isf.operation.model.Operation elem : opeList) {
 				comboOpe.addItem(elem);
 			}
 		} else {
-			//comboOpe.addItem("");
 			comboOpe.addItem(null);
 			for (org.isf.operation.model.Operation elem : opeList) {
 				comboOpe.addItem(elem);
@@ -391,8 +386,8 @@ public class OperationRowEdit extends JPanel {
 		return comboOpe;
 	}
 
-	private JComboBox getComboResultBox() {
-		JComboBox comboResult = new JComboBox();
+	private JComboBox<String> getComboResultBox() {
+		JComboBox<String> comboResult = new JComboBox<>();
 		for (String description : operationResults) {
 			comboResult.addItem(description);
 		}
@@ -406,21 +401,18 @@ public class OperationRowEdit extends JPanel {
 				}
 			}
 			if (!found) {
-				//comboOpe.addItem("");
 				comboResult.addItem(null);
 			}
 			for (String elem : operationResults) {
-
 				comboResult.addItem(elem);
 			}
 		}
-
 		return comboResult;
 	}
 	
 	/* **************  functions events ***** */
-	private void saveButtonMouseClicked(java.awt.event.MouseEvent mouseEvent) {
-		if ((this.jCalendarDate.getDate() == null) || (this.opecomboBox.getSelectedItem() == null)) {
+	private void saveButtonMouseClicked(MouseEvent mouseEvent) {
+		if ((this.jCalendarDate.getDate() == null) || (this.opeComboBox.getSelectedItem() == null)) {
 			MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.warningdateope");
 		} else {
 			if (getMyOpd().getDate().isAfter(this.jCalendarDate.getLocalDateTime())) {
@@ -431,8 +423,8 @@ public class OperationRowEdit extends JPanel {
 				OperationRow updateOpeRow = opeRow;
 				updateOpeRow.setOpDate(jCalendarDate.getLocalDateTime());
 				updateOpeRow.setOpResult(resultComboBox.getSelectedItem().toString());
-				updateOpeRow.setTransUnit(Float.parseFloat(TransTextField.getText()));
-				Operation op = (Operation) opecomboBox.getSelectedItem();
+				updateOpeRow.setTransUnit(Float.parseFloat(transTextField.getText()));
+				Operation op = (Operation) opeComboBox.getSelectedItem();
 				updateOpeRow.setOperation(op);
 				updateOpeRow.setRemarks(remarksTextArea.getText());
 				boolean result;
@@ -453,8 +445,8 @@ public class OperationRowEdit extends JPanel {
 				OperationRow operationRow = new OperationRow();
 				operationRow.setOpDate(jCalendarDate.getLocalDateTime());
 				operationRow.setOpResult(this.resultComboBox.getSelectedItem().toString());
-				operationRow.setTransUnit(Float.parseFloat(this.TransTextField.getText()));
-				Operation op = (Operation) this.opecomboBox.getSelectedItem();
+				operationRow.setTransUnit(Float.parseFloat(this.transTextField.getText()));
+				Operation op = (Operation) this.opeComboBox.getSelectedItem();
 				operationRow.setOperation(op);
 				operationRow.setOpd(this.getMyOpd());
 				operationRow.setPrescriber(MainMenu.getUser().getUserName());
@@ -477,7 +469,7 @@ public class OperationRowEdit extends JPanel {
 		}
 	}
 
-	private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {
+	private void cancelButtonMouseClicked(MouseEvent mouseEvent) {
 		this.getMyParent().dispose();
 	}
 

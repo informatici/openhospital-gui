@@ -192,7 +192,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DeliveryResultTypeBrowserModel();
 			jTable = new JTable(model);

@@ -45,10 +45,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -161,8 +159,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JButton jButtonDelete;
 	private JButton jButtonClose;
 	private Patient patientParent;
-	private JButton jAffiliatePersonJButtonAdd = null;
-	private JButton jAffiliatePersonJButtonSupp = null;
 	private JTextField jAffiliatePersonJTextField = null;
 	private JButton jButtonReport;
 	private JComboBox<String> jComboUsers;
@@ -193,7 +189,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			MessageBundle.getMessage("angal.billbrowser.balance.col").toUpperCase()
 	};
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
-	private boolean[] columnShow = { !isSingleUser && MainMenu.checkUserGrants("cashiersfilter"), true, true, true, true, true, true, true, true };
 	private int[] columnsWidth = { 50, 50, 150, 50, 50, 100, 150, 50, 100 };
 	private int[] maxWidth = { 50, 150, 150, 150, 200, 100, 150, 50, 100 };
 	private boolean[] columnsResizable = { false, false, false, false, true, false, false, false, false };
@@ -215,7 +210,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	//Bills & Payments
 	private BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
 	private List<Bill> billPeriod;
-	private Map<Integer, Bill> mapBill = new HashMap<>();
 	private List<BillPayments> paymentsPeriod;
 	private List<Bill> billFromPayments;
 
@@ -257,7 +251,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				billPeriod.clear();
-				mapBill.clear();
 				users.clear();
 				dispose();
 			}
@@ -476,7 +469,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jButtonClose.addActionListener(actionEvent -> {
 				//to free memory
 				billPeriod.clear();
-				mapBill.clear();
 				users.clear();
 				dispose();
 			});
@@ -775,13 +767,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private JPanel getPanelChoosePatient() {
 		JPanel priceListLabelPanel = new JPanel();
-		//panelSupRange.add(priceListLabelPanel);
 		priceListLabelPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		jAffiliatePersonJButtonAdd = new JButton();
+		JButton jAffiliatePersonJButtonAdd = new JButton();
 		jAffiliatePersonJButtonAdd.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
 
-		jAffiliatePersonJButtonSupp = new JButton();
+		JButton jAffiliatePersonJButtonSupp = new JButton();
 		jAffiliatePersonJButtonSupp.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
 
 		jAffiliatePersonJTextField = new JTextField(14);
@@ -1209,8 +1200,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		/*
 		 * All Bills
 		 */
-		private List<Bill> billAll = new ArrayList<>();
-
 		public BillTableModel(String status) {
 			loadData(status);
 		}

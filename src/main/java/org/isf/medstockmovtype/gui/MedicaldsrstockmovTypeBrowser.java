@@ -200,8 +200,8 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new MedicaldsrstockmovTypeBrowserModel();
 			jTable = new JTable(model);

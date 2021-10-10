@@ -199,7 +199,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DischargeTypeBrowserModel();
 			jTable = new JTable(model);

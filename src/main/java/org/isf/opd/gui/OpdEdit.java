@@ -39,7 +39,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -144,7 +143,7 @@ public class OpdEdit extends JDialog {
 	private JPanel jDiseasePanel2 = null;
 	private JPanel jDiseasePanel3 = null;
 	private JPanel jDiseaseTypePanel = null;
-	private JComboBox diseaseTypeBox = null;
+	private JComboBox<DiseaseType> diseaseTypeBox = null;
 	private JComboBox diseaseBox = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
@@ -268,9 +267,9 @@ public class OpdEdit extends JDialog {
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	public JComboBox getDiseaseTypeBox() {
+	private JComboBox<DiseaseType> getDiseaseTypeBox() {
 		if (diseaseTypeBox == null) {
-			diseaseTypeBox = new JComboBox();
+			diseaseTypeBox = new JComboBox<>();
 			DiseaseType elem2 = null;
 			diseaseTypeBox.setMaximumSize(new Dimension(400, 50));
 			diseaseTypeBox.addItem(allType);
@@ -302,7 +301,7 @@ public class OpdEdit extends JDialog {
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	public JComboBox getDiseaseBox1() {
+	private JComboBox getDiseaseBox1() {
 		if (diseaseBox == null) {
 			diseaseBox = new JComboBox();
 			diseaseBox.setMaximumSize(new Dimension(400, 50));
@@ -346,8 +345,8 @@ public class OpdEdit extends JDialog {
 		}
 		return diseaseBox;
 	}
-	
-	public JComboBox getDiseaseBox2() {
+
+	private JComboBox getDiseaseBox2() {
 		if (diseaseBox2 == null) {
 			diseaseBox2 = new JComboBox();
 			diseaseBox2.setMaximumSize(new Dimension(400, 50));
@@ -386,8 +385,8 @@ public class OpdEdit extends JDialog {
 		}
 		return diseaseBox2;
 	}
-	
-	public JComboBox getDiseaseBox3() {
+
+	private JComboBox getDiseaseBox3() {
 		if (diseaseBox3 == null) {
 			diseaseBox3 = new JComboBox();
 			diseaseBox3.setMaximumSize(new Dimension(400, 50));
@@ -617,7 +616,7 @@ public class OpdEdit extends JDialog {
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	public JPanel getSexPanel() {
+	private JPanel getSexPanel() {
 		if (sexPanel == null) {
 			sexPanel = new JPanel();
 			ButtonGroup group = new ButtonGroup();
@@ -641,7 +640,7 @@ public class OpdEdit extends JDialog {
 		return sexPanel;
 	}
 
-	public JPanel getJAgePanel() {
+	private JPanel getJAgePanel() {
 		if (jAgePanel == null) {
 			jAgePanel = new JPanel();
 			jAgePanel.add(new JLabel(MessageBundle.getMessage("angal.common.age.label")));
@@ -650,7 +649,7 @@ public class OpdEdit extends JDialog {
 		return jAgePanel;
 	}
 
-	public JPanel getJDiseasePanel() {
+	private JPanel getJDiseasePanel() {
 		if (jDiseasePanel == null) {
 			jDiseasePanel = new JPanel();
 			jDiseasePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -714,7 +713,7 @@ public class OpdEdit extends JDialog {
 		return jDiseasePanel;
 	}
 
-	public JPanel getJDiseasePanel2() {
+	private JPanel getJDiseasePanel2() {
 		if (jDiseasePanel2 == null) {
 			jDiseasePanel2 = new JPanel();
 			jDiseasePanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -777,7 +776,7 @@ public class OpdEdit extends JDialog {
 		return jDiseasePanel2;
 	}
 
-	public JPanel getJDiseasePanel3() {
+	private JPanel getJDiseasePanel3() {
 		if (jDiseasePanel3 == null) {
 			jDiseasePanel3 = new JPanel();
 			jDiseasePanel3.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -840,7 +839,7 @@ public class OpdEdit extends JDialog {
 		return jDiseasePanel3;
 	}
 
-	public JPanel getJDiseaseTypePanel() {
+	private JPanel getJDiseaseTypePanel() {
 		if (jDiseaseTypePanel == null) {
 			jDiseaseTypePanel = new JPanel();
 			jDiseaseTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -849,7 +848,7 @@ public class OpdEdit extends JDialog {
 		return jDiseaseTypePanel;
 	}
 
-	public JPanel getJSexPanel() {
+	private JPanel getJSexPanel() {
 		if (jSexPanel == null) {
 			jSexPanel = new JPanel();
 			jSexPanel.add(new JLabel(MessageBundle.getMessage("angal.common.sex.label")));
@@ -857,8 +856,8 @@ public class OpdEdit extends JDialog {
 		}
 		return jSexPanel;
 	}
-	
-	public JPanel getJNewPatientPanel() {
+
+	private JPanel getJNewPatientPanel() {
 		String referralTo;
 		String referralFrom;
 
@@ -896,12 +895,11 @@ public class OpdEdit extends JDialog {
 		}
 		return jNewPatientPanel;
 	}
-	
-	public JPanel getJDatePanel() {
+
+	private JPanel getJDatePanel() {
 		if (jDatePanel == null) {
 			jDatePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 3, 3));
 			String d;
-			Date myDate;
 			LocalDateTime dateIn;
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDate() == null) {

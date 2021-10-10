@@ -128,7 +128,7 @@ public class JFromDateToDateChooserDialog extends JDialog {
 		return buttonExcel;
 	}
 
-	public JFromDateToDateChooser getJFromDateToDateChooser(Date dateFrom, Date dateTo) {
+	private JFromDateToDateChooser getJFromDateToDateChooser(Date dateFrom, Date dateTo) {
 		if (fromDateToDateChooser == null) {
 			fromDateToDateChooser = new JFromDateToDateChooser(dateFrom, dateTo);
 		}

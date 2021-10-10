@@ -197,8 +197,8 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new OperationTypeBrowserModel();
 			jTable = new JTable(model);

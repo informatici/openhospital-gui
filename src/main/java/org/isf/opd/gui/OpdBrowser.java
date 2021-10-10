@@ -133,7 +133,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JPanel jAgeToPanel = null;
 	private VoLimitedTextField jAgeToTextField = null;
 	private JPanel jAgePanel = null;
-	private JComboBox jDiseaseTypeBox;
+	private JComboBox<DiseaseType> jDiseaseTypeBox;
 	private JComboBox jDiseaseBox;
 	private JPanel sexPanel = null;
 	private JPanel newPatientPanel = null;
@@ -176,7 +176,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private List<Disease> diseases = null;
 	protected AbstractButton searchButton;
 
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new OpdBrowsingModel();
 			jTable = new JTable(model);
@@ -690,9 +690,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 *
 	 * @return javax.swing.JComboBox
 	 */
-	public JComboBox getDiseaseTypeBox() {
+	public JComboBox<DiseaseType> getDiseaseTypeBox() {
 		if (jDiseaseTypeBox == null) {
-			jDiseaseTypeBox = new JComboBox();
+			jDiseaseTypeBox = new JComboBox<>();
 			jDiseaseTypeBox.setMaximumSize(new Dimension(300, 50));
 
 			DiseaseTypeBrowserManager diseaseTypeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
@@ -836,8 +836,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		searchButton.addActionListener(actionEvent -> {
 			jDiseaseBox.removeAllItems();
 			jDiseaseBox.addItem("");
-			for (Disease disease :
-					getSearchDiagnosisResults(searchDiseasetextField.getText(), diseases)) {
+			for (Disease disease : getSearchDiagnosisResults(searchDiseasetextField.getText(), diseases)) {
 				jDiseaseBox.addItem(disease);
 			}
 

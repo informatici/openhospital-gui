@@ -729,12 +729,11 @@ public class PatientFolderBrowser extends ModalJFrame
 					return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				} else {
 					int f = row - (opdList.size() + admList.size());
-					String ret = "<html>" +
+					return "<html>" +
 							MessageBundle.getMessage("angal.common.weight.txt") + ": " + (examinationList.get(f).getPex_height())
 							+ "<br>" +
 							MessageBundle.getMessage("angal.common.height.txt") + ": " + (examinationList.get(f).getPex_weight())
 							+ "</html>";
-					return ret;
 				}
 
 			} else if (column == 3) {
@@ -771,13 +770,12 @@ public class PatientFolderBrowser extends ModalJFrame
 					return MessageBundle.getMessage("angal.admission.nodisease.txt");
 				} else {
 					int f = row - (opdList.size() + admList.size());
-					String ret = "<html>" +
+					return "<html>" +
 							MessageBundle.getMessage("angal.common.arterialpressureabbr.txt") + ": " + (examinationList.get(f).getPex_ap_min())
 							+ '/' + (examinationList.get(f).getPex_ap_max())
 							+ "<br>" +
 							MessageBundle.getMessage("angal.common.temperatureabbr.txt") + ": " + (examinationList.get(f).getPex_temp()) +
 							"</html>";
-					return ret;
 				}
 			} else if (column == 4) {
 				if (row < admList.size()) {
@@ -794,8 +792,7 @@ public class PatientFolderBrowser extends ModalJFrame
 							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
 				} else {
 					int f = row - (opdList.size() + admList.size());
-					String ret = MessageBundle.getMessage("angal.admission.o2.txt") + ": " + (examinationList.get(f).getPex_sat());
-					return ret;
+					return MessageBundle.getMessage("angal.admission.o2.txt") + ": " + (examinationList.get(f).getPex_sat());
 				}
 			}
 			return null;
