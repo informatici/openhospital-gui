@@ -21,6 +21,8 @@
  */
 package org.isf.utils.jobjects;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.Locale;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstockward.model.MovementWard;
@@ -100,7 +103,7 @@ public class OhTableDrugsModel<T> implements TableModel {
 					case 0:
 						String dt;
 						try {
-							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", Locale.FRENCH);
+							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
 							dt = currentDateFormat.format(drugObj.getDate());
 							value = dt;
 						} catch (Exception ex) {

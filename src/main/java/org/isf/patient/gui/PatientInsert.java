@@ -189,23 +189,17 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 * This method initializes this
 	 */
 	private void initialize() {
-		
-		
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 
-		2;
-		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * 
-		pfrmHeight)) / 2;
-		this.setBounds(pfrmBordX+10,pfrmBordY+10,screensize.width / pfrmBase * 
-		pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
+		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
+		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
+		this.setBounds(pfrmBordX + 10, pfrmBordY + 10, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContainPanel());
 		this.setTitle(MessageBundle.getMessage("angal.patient.newpatient.title"));
-		this.setSize(new java.awt.Dimension(604,445));
+		this.setSize(new java.awt.Dimension(604, 445));
 		setSize(screensize.width / pfrmBase * pfrmWidth,
 				screensize.height / pfrmBase * pfrmHeight);
 		pack();
-		//setVisible(true);
 		setResizable(false);
 	}
 	
@@ -232,7 +226,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
 			jDataPanel = new JPanel();
-			jDataPanel.setLayout(new BoxLayout(getJDataPanel(),BoxLayout.Y_AXIS));
+			jDataPanel.setLayout(new BoxLayout(getJDataPanel(), BoxLayout.Y_AXIS));
 			jDataPanel.add(getJDataContainPanel(), null);
 			pack();
 		}
@@ -706,8 +700,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 	private JPanel getJLabelPanel() {
 		if (jLabelPanel == null) {
 			jLabelPanel = new JPanel();
-			jLabelPanel.setLayout(new BoxLayout(getJLabelPanel(),BoxLayout.Y_AXIS));
-			jLabelPanel = setMyBorder(jLabelPanel,"");
+			jLabelPanel.setLayout(new BoxLayout(getJLabelPanel(), BoxLayout.Y_AXIS));
+			jLabelPanel = setMyBorder(jLabelPanel, "");
 			jLabelPanel.add(getJFirstName(), null);
 			jLabelPanel.add(getJSecondName(), null);
 			jLabelPanel.add(getJAge(), null);
@@ -1000,10 +994,9 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 * @return javax.swing.JPanel	
 	 */
 	private JPanel getJNotePanel() {
-		
 		if (jNoteScrollPane == null && (jNotePanel == null)) {
 			JScrollPane jNoteScrollPane = new JScrollPane(getJTextArea());
-			
+
 			jNoteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			jNoteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 			jNoteScrollPane.createVerticalScrollBar();
@@ -1012,7 +1005,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			jNoteScrollPane.validate();
 
 			jNotePanel = new JPanel();
-			jNotePanel= setMyBorder(jNotePanel,MessageBundle.getMessage("angal.patient.note"));
+			jNotePanel = setMyBorder(jNotePanel, MessageBundle.getMessage("angal.patient.note"));
 			jNotePanel.add(jNoteScrollPane);
 		}
 		return jNotePanel;

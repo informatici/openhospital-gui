@@ -21,6 +21,10 @@
  */
 package org.isf.accounting.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -294,9 +298,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private CustomJDateChooser getJCalendarFrom() {
 		if (jCalendarFrom == null) {
-			jCalendarFrom = new CustomJDateChooser(dateToday0, "dd/MM/yy"); // Calendar
+			jCalendarFrom = new CustomJDateChooser(dateToday0, DATE_FORMAT_DD_MM_YY); // Calendar
 			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarFrom.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jCalendarFrom.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jCalendarFrom.getCalendarButton().setMnemonic(0);
 			jCalendarFrom.addPropertyChangeListener("date", propertyChangeEvent -> {
 				dateTo = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue())
@@ -311,7 +315,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private CustomJDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
-			jCalendarTo = new CustomJDateChooser(dateToday24, "dd/MM/yy"); // Calendar
+			jCalendarTo = new CustomJDateChooser(dateToday24, DATE_FORMAT_DD_MM_YY); // Calendar
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarTo.getCalendarButton().setMnemonic(0);
 			jCalendarTo.addPropertyChangeListener("date", propertyChangeEvent -> {
@@ -579,9 +583,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 									billsIdList.add(billTemp.getId());
 								}
 							}
-							DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-							String fromDate = sdf.format(dateFrom);
-							String toDate = sdf.format(dateTo);
+							DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
+							String fromDate = dateTimeFormatter.format(dateFrom);
+							String toDate = dateTimeFormatter.format(dateTo);
 							new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList, fromDate, toDate, true, true);
 						} else {
 							throw new Exception();
@@ -612,9 +616,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 									billTemp = (Bill) jTablePending.getValueAt(idIndex, -1);
 									billsIdList.add(billTemp.getId());
 								}
-								DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-								String fromDate = sdf.format(dateFrom);
-								String toDate = sdf.format(dateTo);
+								DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
+								String fromDate = dateTimeFormatter.format(dateFrom);
+								String toDate = dateTimeFormatter.format(dateTo);
 								new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList, fromDate, toDate, true,
 										true);
 							} else {
@@ -1256,12 +1260,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				return thisBill.getId();
 			}
 			if (c == ++index) {
-				return TimeTools.formatDateTime(thisBill.getDate(), "dd/MM/yy - HH:mm:ss");
+				return TimeTools.formatDateTime(thisBill.getDate(), DATE_FORMAT_DD_MM_YY_HH_MM_SS);
 			}
 			if (c == ++index) {
 				int patID = thisBill.getBillPatient().getCode();
 				return patID == 0 ? "" : String.valueOf(patID);
-				//return thisBill.getId();
 			}
 			if (c == ++index) {
 				return thisBill.getPatName();
@@ -1270,7 +1273,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				return thisBill.getAmount();
 			}
 			if (c == ++index) {
-				return TimeTools.formatDateTime(thisBill.getUpdate(), "dd/MM/yy - HH:mm:ss");
+				return TimeTools.formatDateTime(thisBill.getUpdate(), DATE_FORMAT_DD_MM_YY_HH_MM_SS);
 			}
 			if (c == ++index) {
 				return thisBill.getStatus();

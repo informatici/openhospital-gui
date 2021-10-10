@@ -73,8 +73,7 @@ public class ExamsList1Launcher extends ModalJFrame {
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
 		pfrmBordY = (screensize.height / 3) - (pfrmExactHeight / 2);
-		this.setBounds(pfrmBordX,pfrmBordY,pfrmExactWidth,pfrmExactHeight);
-		
+		this.setBounds(pfrmBordX, pfrmBordY, pfrmExactWidth, pfrmExactHeight);
 		this.setContentPane(getJPanel());
 		pack();
 	}

@@ -24,6 +24,7 @@ package org.isf.menu.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -48,7 +49,7 @@ class SplashWindow3 extends JWindow {
         getContentPane().add(l, BorderLayout.CENTER);
         pack();
 
-        java.awt.Toolkit kit = java.awt.Toolkit.getDefaultToolkit();
+        Toolkit kit = java.awt.Toolkit.getDefaultToolkit();
         Dimension screenSize = kit.getScreenSize();
 
         Dimension labelSize = l.getPreferredSize();

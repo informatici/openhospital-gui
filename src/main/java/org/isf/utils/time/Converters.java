@@ -21,6 +21,9 @@
  */
 package org.isf.utils.time;
 
+import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD;
+import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -69,8 +72,8 @@ public class Converters {
         if (datetime == null) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(datetime);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+        return simpleDateFormat.format(datetime);
     }
 
     /**
@@ -94,8 +97,8 @@ public class Converters {
         if (date == null) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD);
+        return simpleDateFormat.format(date);
     }
 
     /**

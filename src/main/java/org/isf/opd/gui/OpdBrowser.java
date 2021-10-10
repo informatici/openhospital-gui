@@ -21,6 +21,8 @@
  */
 package org.isf.opd.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -107,7 +109,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private static final long serialVersionUID = 2372745781159245861L;
 
-	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yy");
+	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
 
 	private JPanel jButtonPanel = null;
 	private JPanel jContainPanel = null;
@@ -205,7 +207,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
-			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			setHorizontalAlignment(columnsAlignment[column]);
 			if (columnsBold[column]) {
 				cell.setFont(new Font(null, Font.BOLD, 12));
@@ -228,10 +230,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		super();
 		myFrame = this;
 		initialize();
-        setVisible(true);
-        Opd newOpd = new Opd(0,' ',-1,new Disease());
-        OpdEditExtended editrecord = new OpdEditExtended(myFrame, newOpd, patient, true);
-        editrecord.addSurgeryListener(OpdBrowser.this);
+		setVisible(true);
+		Opd newOpd = new Opd(0, ' ', -1, new Disease());
+		OpdEditExtended editrecord = new OpdEditExtended(myFrame, newOpd, patient, true);
+		editrecord.addSurgeryListener(OpdBrowser.this);
 		editrecord.showAsModal(myFrame);
 	}
 
@@ -304,7 +306,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				Opd newOpd = new Opd(0,' ',-1,new Disease());
+				Opd newOpd = new Opd(0, ' ', -1, new Disease());
 				if (GeneralData.OPDEXTENDED) {
 					OpdEditExtended newrecord = new OpdEditExtended(myFrame, newOpd, true);
 					newrecord.addSurgeryListener(OpdBrowser.this);
@@ -382,7 +384,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				Opd opd = (Opd) (model.getValueAt(jTable.getSelectedRow(), -1));
 				String dt = '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']';
 				try {
-					DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", new Locale(GeneralData.LANGUAGE));
+					DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
 					dt = currentDateFormat.format(opd.getVisitDate());
 				} catch (Exception ex) {
 				}
@@ -440,14 +442,14 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			newPatientLabelPanel.add(jLabel4);
 			JPanel diseaseLabelPanel = new JPanel();
 			JLabel jLabel = new JLabel(MessageBundle.getMessage("angal.opd.selectadisease.txt"));
-			diseaseLabelPanel.add(jLabel,null);
+			diseaseLabelPanel.add(jLabel, null);
 			JPanel filterButtonPanel = new JPanel();
 			filterButtonPanel.add(getFilterButton());
 			jSelectionPanel = new JPanel();
-			jSelectionPanel.setLayout(new BoxLayout(getJSelectionPanel(),BoxLayout.Y_AXIS));
+			jSelectionPanel.setLayout(new BoxLayout(getJSelectionPanel(), BoxLayout.Y_AXIS));
 			jSelectionPanel.setPreferredSize(new Dimension(300, pfrmHeight));
-			jSelectionPanel.add(diseaseLabelPanel,null);
-			jSelectionPanel.add(getJSelectionDiseasePanel(),null);
+			jSelectionPanel.add(diseaseLabelPanel, null);
+			jSelectionPanel.add(getJSelectionDiseasePanel(), null);
 			jSelectionPanel.add(Box.createVerticalGlue(), null);
 			jSelectionPanel.add(getDateFromPanel());
 			jSelectionPanel.add(getDateToPanel());
@@ -463,7 +465,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		}
 		return jSelectionPanel;
 	}
-
 
 	private JLabel getRowCounter() {
 		if (rowCounter == null) {
@@ -692,13 +693,13 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	public JComboBox getDiseaseTypeBox() {
 		if (jDiseaseTypeBox == null) {
 			jDiseaseTypeBox = new JComboBox();
-			jDiseaseTypeBox.setMaximumSize(new Dimension(300,50));
+			jDiseaseTypeBox.setMaximumSize(new Dimension(300, 50));
 
 			DiseaseTypeBrowserManager diseaseTypeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 			List<DiseaseType> types = null;
 			try {
 				types = diseaseTypeManager.getDiseaseType();
-			} catch(OHServiceException ohServiceException) {
+			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
 
@@ -714,7 +715,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				getDiseaseBox();
 			});
 		}
-
 		return jDiseaseTypeBox;
 	}
 
@@ -901,11 +901,12 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	private VoLimitedTextField getJAgeFromTextField() {
 		if (jAgeFromTextField == null) {
-			jAgeFromTextField = new VoLimitedTextField(3,2);
+			jAgeFromTextField = new VoLimitedTextField(3, 2);
 			jAgeFromTextField.setText("0");
 			jAgeFromTextField.setMinimumSize(new Dimension(100, 50));
-			ageFrom=0;
+			ageFrom = 0;
 			jAgeFromTextField.addFocusListener(new FocusListener() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					try {
@@ -949,16 +950,17 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	private VoLimitedTextField getJAgeToTextField() {
 		if (jAgeToTextField == null) {
-			jAgeToTextField = new VoLimitedTextField(3,2);
+			jAgeToTextField = new VoLimitedTextField(3, 2);
 			jAgeToTextField.setText("0");
 			jAgeToTextField.setMaximumSize(new Dimension(100, 50));
-			ageTo=0;
+			ageTo = 0;
 			jAgeToTextField.addFocusListener(new FocusListener() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
 					try {
 						ageTo = Integer.parseInt(jAgeToTextField.getText());
-						if (ageTo < 0 || ageTo > 200 ) {
+						if (ageTo < 0 || ageTo > 200) {
 							jAgeToTextField.setText("");
 							MessageDialog.error(OpdBrowser.this, "angal.opd.insertavalidage.msg");
 						}

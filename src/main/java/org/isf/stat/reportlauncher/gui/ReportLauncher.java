@@ -21,11 +21,14 @@
  */
 package org.isf.stat.reportlauncher.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -144,7 +147,7 @@ public class ReportLauncher extends ModalJFrame {
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
 		pfrmBordY = (screensize.height / 3) - (pfrmExactHeight / 2);
-		this.setBounds(pfrmBordX,pfrmBordY,pfrmExactWidth,pfrmExactHeight);
+		this.setBounds(pfrmBordX, pfrmBordY, pfrmExactWidth, pfrmExactHeight);
 		this.setContentPane(getJPanel());
 		selectAction();
 		pack();
@@ -175,7 +178,7 @@ public class ReportLauncher extends ModalJFrame {
 			jButtonPanel = new JPanel();
 			jButtonPanel.setLayout(new FlowLayout());
 			if (GeneralData.XMPPMODULEENABLED) {
-				jButtonPanel.add(getComboShareReport(),null);
+				jButtonPanel.add(getComboShareReport(), null);
 			}
 			jButtonPanel.add(getJLaunchReportButton(), null);
 			jButtonPanel.add(getJCSVButton(), null);
@@ -285,10 +288,10 @@ public class ReportLauncher extends ModalJFrame {
 			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.fromdate"));
 			GregorianCalendar defaultDate = new GregorianCalendar();
 			defaultDate.add(Calendar.DAY_OF_MONTH, -8);
-			jFromDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
+			jFromDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, defaultDate, 10);
 			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.todate"));
 			defaultDate.add(Calendar.DAY_OF_MONTH, 7);
-			jToDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
+			jToDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, defaultDate, 10);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
 			jFromDateLabel.setVisible(false);
@@ -385,14 +388,15 @@ public class ReportLauncher extends ModalJFrame {
 			}
 			if (sParType.equalsIgnoreCase("twodatesfrommonthyear")) {
 				GregorianCalendar d = new GregorianCalendar();
-				d.set(Calendar.DAY_OF_MONTH,1 );
-				d.set(Calendar.MONTH, month-1);
+				d.set(Calendar.DAY_OF_MONTH, 1);
+				d.set(Calendar.MONTH, month - 1);
 				d.set(Calendar.YEAR, year);
-				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-				fromDate = sdf.format(d.getTime());
+				SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
+				fromDate = simpleDateFormat.format(d.getTime());
 				d.set(Calendar.DAY_OF_MONTH, d.getActualMaximum(Calendar.DAY_OF_MONTH));
-				toDate = sdf.format(d.getTime());
-				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
+				toDate = simpleDateFormat.format(d.getTime());
+				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]),
+						toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();

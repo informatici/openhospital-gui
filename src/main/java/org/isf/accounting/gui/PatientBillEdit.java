@@ -21,6 +21,10 @@
  */
 package org.isf.accounting.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -104,9 +108,6 @@ import org.slf4j.LoggerFactory;
 public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientBillEdit.class);
-	private static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
-	private static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
-	private static final String DATE_FORMAT_DD_MM_YY_HH_MM_SS = "dd/MM/yy - HH:mm:ss";
 
 	//LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList patientBillListener = new EventListenerList();
@@ -250,10 +251,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JButton jButtonCustom;
 	private JButton jButtonPickPatient;
 	private JButton jButtonTrashPatient;
-	
-	private static final Dimension PatientDimension = new Dimension(300,20);
-	private static final Dimension LabelsDimension = new Dimension(60,20);
-	private static final Dimension UserDimension = new Dimension(190,20);
+
+	private static final Dimension PatientDimension = new Dimension(300, 20);
+	private static final Dimension LabelsDimension = new Dimension(60, 20);
+	private static final Dimension UserDimension = new Dimension(190, 20);
 	private static final int PanelWidth = 450;
 	private static final int ButtonWidth = 190;
 	private static final int ButtonWidthBill = 190;
@@ -554,7 +555,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				billDate = jCalendarDate.getLocalDateTime();
 			}
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS); //$NON-NLS-1$
+			jCalendarDate.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS);
 			jCalendarDate.getJCalendar().addPropertyChangeListener("calendar", propertyChangeEvent -> {
 
 				if (!insert) {
@@ -617,7 +618,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JButton getJButtonTrashPatient() {
 		if (jButtonTrashPatient == null) {
 			jButtonTrashPatient = new JButton();
-			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
+			jButtonTrashPatient.setPreferredSize(new Dimension(25, 25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.removethepatientassociatedwiththisbill.tooltip"));
 			jButtonTrashPatient.addActionListener(actionEvent -> {
@@ -1892,13 +1893,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	}
 
 	public String formatDate(LocalDateTime time) {
-		DateTimeFormatter sdf = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
-		return sdf.format(time);
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
+		return dateTimeFormatter.format(time);
 	}
 	
 	public String formatDateTime(LocalDateTime time) {
-		DateTimeFormatter sdf = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY_HH_MM);
-		return sdf.format(time);
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY_HH_MM);
+		return dateTimeFormatter.format(time);
 	}
 
 	public boolean isSameDay(LocalDateTime billDate, LocalDateTime today) {

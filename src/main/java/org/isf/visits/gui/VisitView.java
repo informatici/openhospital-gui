@@ -21,6 +21,9 @@
  */
 package org.isf.visits.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+import static org.isf.utils.Constants.TIME_FORMAT_HH_MM;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -108,7 +111,6 @@ public class VisitView extends ModalJFrame {
 	/*
 	 * Constants
 	 */
-	private static final String DATE_FORMAT = "dd/MM/yyyy";
 	private static final int VISIT_BUTTON_WIDTH = 200;
 	private static final int ACTIONS_BUTTON_WIDTH = 240;
 	private static final int ALL_BUTTON_HEIGHT = 30;
@@ -415,7 +417,7 @@ public class VisitView extends ModalJFrame {
 	private JPanel getDateFirstDay() {
 		if (datefirstPanel == null) {
 			datefirstPanel = new JPanel();
-			dateFirstLabel = new JLabel(TimeTools.formatDateTime(dateFirst, DATE_FORMAT));
+			dateFirstLabel = new JLabel(TimeTools.formatDateTime(dateFirst, DATE_FORMAT_DD_MM_YYYY));
 			datefirstPanel.add(dateFirstLabel);
 		}
 		return datefirstPanel;
@@ -424,7 +426,7 @@ public class VisitView extends ModalJFrame {
 	private JPanel getDateSecondDay() {
 		if (datesecondPanel == null) {
 			datesecondPanel = new JPanel();
-			datesecondLabel = new JLabel(TimeTools.formatDateTime(dateSecond, DATE_FORMAT));
+			datesecondLabel = new JLabel(TimeTools.formatDateTime(dateSecond, DATE_FORMAT_DD_MM_YYYY));
 			datesecondPanel.add(datesecondLabel);
 		}
 		return datesecondPanel;
@@ -510,7 +512,7 @@ public class VisitView extends ModalJFrame {
 	private JDateChooser getVisitDateChooser() {
 		visitDateChooser = new LocalDateSupportingJDateChooser();
 		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-		visitDateChooser.setDateFormatString(DATE_FORMAT);
+		visitDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
 		visitDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
 			setDateFirstThenSecond(visitDateChooser.getLocalDateTime());
 			updatePanels();
@@ -521,11 +523,11 @@ public class VisitView extends ModalJFrame {
 	private void updatePanels() {
 
 		visitfirst = getVisitForDate(dateFirst);
-		dateFirstLabel.setText(TimeTools.formatDateTime(dateFirst, DATE_FORMAT));
+		dateFirstLabel.setText(TimeTools.formatDateTime(dateFirst, DATE_FORMAT_DD_MM_YYYY));
 		addFirstVisitButton.setEnabled(dateFirst.isAfter(TimeTools.getDateToday0()));
 
 		visitSecond = getVisitForDate(dateSecond);
-		datesecondLabel.setText(TimeTools.formatDateTime(dateSecond, DATE_FORMAT));
+		datesecondLabel.setText(TimeTools.formatDateTime(dateSecond, DATE_FORMAT_DD_MM_YYYY));
 		addSecondVisitButton.setEnabled(dateSecond.isAfter(TimeTools.getDateToday0()));
 
 		((VisitModel) jTableFirst.getModel()).fireTableDataChanged();
@@ -644,7 +646,7 @@ public class VisitView extends ModalJFrame {
 	}
 
 	public String formatDateTime(LocalDateTime time) {
-		return DateTimeFormatter.ofPattern("HH:mm").format(time);
+		return DateTimeFormatter.ofPattern(TIME_FORMAT_HH_MM).format(time);
 	}
 
 	class VisitSecondModel extends DefaultTableModel {

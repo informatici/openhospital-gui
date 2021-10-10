@@ -105,10 +105,10 @@ public class DischargeTypeBrowserEdit extends JDialog {
 	 * because we need to update them
 	 */
 	public DischargeTypeBrowserEdit(JFrame owner, DischargeType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		dischargeType = old;//disease will be used for every operation
-		lastdescription= dischargeType.getDescription();
+		dischargeType = old; //dischargeType will be used for every operation
+		lastdescription = dischargeType.getDescription();
 		initialize();
 	}
 

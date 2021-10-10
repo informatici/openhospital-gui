@@ -105,10 +105,10 @@ public class DeliveryResultTypeBrowserEdit extends JDialog {
      * because we need to update them
 	 */
 	public DeliveryResultTypeBrowserEdit(JFrame owner, DeliveryResultType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		deliveryresultType = old;//disease will be used for every operation
-		lastdescription= deliveryresultType.getDescription();
+		deliveryresultType = old;  // deliveryResult will be used for every operation
+		lastdescription = deliveryresultType.getDescription();
 		initialize();
 	}
 

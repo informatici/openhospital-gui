@@ -104,10 +104,10 @@ public class DicomTypeEdit extends JDialog {
      * because we need to update them
 	 */
 	public DicomTypeEdit(JFrame owner, DicomType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		dicomType = old;
-		lastdescription= dicomType.getDicomTypeDescription();
+		lastdescription = dicomType.getDicomTypeDescription();
 		initialize();
 	}
 

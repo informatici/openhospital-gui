@@ -21,6 +21,8 @@
  */
 package org.isf.medicalstock.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -88,7 +90,6 @@ public class MovStockMultipleDischarging extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private static final String DATE_FORMAT_DD_MM_YYYY_HH_MM_SS = "dd/MM/yyyy HH:mm:ss"; //$NON-NLS-1$
-	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	private static final int CODE_COLUMN_WIDTH = 100;
 	private static final int UNITS = 0;
 	private static final int PACKETS = 1;

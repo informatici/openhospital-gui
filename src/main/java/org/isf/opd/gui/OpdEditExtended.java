@@ -21,6 +21,8 @@
  */
 package org.isf.opd.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -216,7 +218,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JLabel jLabelAge = null;
 	private JLabel jLabelSex = null;
 	private LocalDateTime visitDateOpd = null;
-	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", new Locale(GeneralData.LANGUAGE));
+	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
 	private CustomJDateChooser opdDateFieldCal = null;
 	private JButton okButton = null;
 	private JButton cancelButton = null;
@@ -943,9 +945,9 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			}
 			d = currentDateFormat.format(visitDateOpd);
 
-			opdDateFieldCal = new CustomJDateChooser(LocalDate.parse(d, currentDateFormat).atStartOfDay(), "dd/MM/yy");
+			opdDateFieldCal = new CustomJDateChooser(LocalDate.parse(d, currentDateFormat).atStartOfDay(), DATE_FORMAT_DD_MM_YY);
 			opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdDateFieldCal.setDateFormatString("dd/MM/yy");
+			opdDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			opdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> jOpdNumField.setText(getOpdNum()));
 		}
 		return opdDateFieldCal;
@@ -1020,19 +1022,19 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JComboBox getDiseaseTypeBox() {
 		if (diseaseTypeBox == null) {
 			diseaseTypeBox = new JComboBox();
-			
-			DiseaseType elem2=null;
-			diseaseTypeBox.setMaximumSize(new Dimension(400,50));
+
+			DiseaseType elem2 = null;
+			diseaseTypeBox.setMaximumSize(new Dimension(400, 50));
 			diseaseTypeBox.addItem(allType);
 			for (DiseaseType elem : types) {
 				if (!insert && opd.getDisease().getType() != null) {
 					if (opd.getDisease().getType().getCode().equals(elem.getCode())) {
-						elem2=elem;
+						elem2 = elem;
 					}
 				}
 				diseaseTypeBox.addItem(elem);
 			}
-			if (elem2!=null) { 
+			if (elem2 != null) {
 				diseaseTypeBox.setSelectedItem(elem2);
 			} else {
 				diseaseTypeBox.setSelectedIndex(0);
@@ -1124,21 +1126,21 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 	private VoLimitedTextField getJTextPatientSrc() {
 		if (jTextPatientSrc == null) {
-			jTextPatientSrc = new VoLimitedTextField(16,20);
+			jTextPatientSrc = new VoLimitedTextField(16, 20);
 			jTextPatientSrc.addKeyListener(new KeyListener() {
-	
+
 				@Override
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
-				     if (key == KeyEvent.VK_ENTER) {
-				    	 jSearchButton.doClick();
-				     }
+					if (key == KeyEvent.VK_ENTER) {
+						jSearchButton.doClick();
+					}
 				}
-	
+
 				@Override
 				public void keyReleased(KeyEvent e) {
 				}
-	
+
 				@Override
 				public void keyTyped(KeyEvent e) {
 				}
@@ -1231,14 +1233,11 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JComboBox getSearchBox() {
 		if (jComboPatResult == null) {
 			jComboPatResult = new JComboBox();
-			//jComboPatResult.setMaximumSize(new Dimension(400,50));
 			if (opdPatient != null) {
-
 				jComboPatResult.addItem(opdPatient);
 				jComboPatResult.setEnabled(false);
 				jTextPatientSrc.setEnabled(false);
 				jSearchButton.setEnabled(false);
-				
 				return jComboPatResult;
 			} else {
 				jComboPatResult.addItem(MessageBundle.getMessage("angal.opd.selectapatient.txt"));
@@ -1331,16 +1330,16 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		}
 		return diseaseBox3;
 	}
-	
+
 	private JTabbedPane getJTabbedPaneOpd() {
 		if (jTabbedPaneOpd == null) {
 			jTabbedPaneOpd = new JTabbedPane();
 			jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.common.patient.txt"), getJPanelPatient());
 			if ((insert && MainMenu.checkUserGrants("btnopdnewoperation"))
-							|| (!insert && MainMenu.checkUserGrants("btnopdeditoperation"))) {
+					|| (!insert && MainMenu.checkUserGrants("btnopdeditoperation"))) {
 				jTabbedPaneOpd.addTab(MessageBundle.getMessage("angal.admission.operation"), getMultiOperationTab());
 			}
-			jTabbedPaneOpd.setPreferredSize(new Dimension(200,400));
+			jTabbedPaneOpd.setPreferredSize(new Dimension(200, 400));
 		}
 		return jTabbedPaneOpd;
 	}
@@ -1892,7 +1891,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		if (opdNextVisitDate == null) {
 			opdNextVisitDate = new CustomJDateChooser();
 			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdNextVisitDate.setDateFormatString("dd/MM/yy");
+			opdNextVisitDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 
 			LocalDateTime nextDate = null;
 			String d;
@@ -1911,7 +1910,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				opdNextVisitDate.setDate(LocalDate.parse(d, currentDateFormat).atStartOfDay());
 			}
 			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdNextVisitDate.setDateFormatString("dd/MM/yy");
+			opdNextVisitDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 
 			if (opd.getPatient() == null) {
 				opdNextVisitDate.setEnabled(false);

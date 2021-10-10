@@ -21,6 +21,9 @@
  */
 package org.isf.patvac.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -82,7 +85,7 @@ public class PatVacBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
 
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
@@ -426,14 +429,14 @@ public class PatVacBrowser extends ModalJFrame {
 	private JPanel getAgePanel() {
 		if (jAgePanel == null) {
 			jAgePanel = new JPanel();
-			jAgePanel.setLayout(new BoxLayout(getAgePanel(),BoxLayout.Y_AXIS));
-			
+			jAgePanel.setLayout(new BoxLayout(getAgePanel(), BoxLayout.Y_AXIS));
+
 			JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.agefrom.label")), null);
 			jAgePanel.add(label1Panel);
 			label1Panel.add(getJAgeFromTextField(), null);
 			jAgePanel.add(label1Panel);
-			
+
 			label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.ageto.label")), null);
 			jAgePanel.add(label1Panel);
@@ -507,24 +510,25 @@ public class PatVacBrowser extends ModalJFrame {
 		rowCounterPanel.add(label1Panel);
 		return rowCounterPanel;
 	}
-	
+
 	/**
-	 * This method initializes jAgeFromTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes jAgeFromTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private VoLimitedTextField getJAgeFromTextField() {
 		if (jAgeFromTextField == null) {
-			jAgeFromTextField = new VoLimitedTextField(3,2);
+			jAgeFromTextField = new VoLimitedTextField(3, 2);
 			jAgeFromTextField.setText("0");
 			jAgeFromTextField.setMinimumSize(new Dimension(100, 50));
-			ageFrom=0;
+			ageFrom = 0;
 			jAgeFromTextField.addFocusListener(new FocusListener() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
-					try {				
+					try {
 						ageFrom = Integer.parseInt(jAgeFromTextField.getText());
-						if ((ageFrom<0)||(ageFrom>200)) {
+						if ((ageFrom < 0) || (ageFrom > 200)) {
 							jAgeFromTextField.setText("0");
 							ageFrom = Integer.parseInt(jAgeFromTextField.getText());
 							MessageDialog.error(null, "angal.patvac.insertvalidage");
@@ -534,7 +538,7 @@ public class PatVacBrowser extends ModalJFrame {
 						ageFrom = Integer.parseInt(jAgeFromTextField.getText());
 					}
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {
 				}
@@ -542,12 +546,11 @@ public class PatVacBrowser extends ModalJFrame {
 		}
 		return jAgeFromTextField;
 	}
-	
-	
+
 	/**
-	 * This method initializes jTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes jTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private VoLimitedTextField getJAgeToTextField() {
 		if (jAgeToTextField == null) {
@@ -664,10 +667,10 @@ public class PatVacBrowser extends ModalJFrame {
 				now.add(Calendar.WEEK_OF_YEAR, -1);
 			}
 			java.util.Date myDate = now.getTime();
-			dateFrom = new CustomJDateChooser(myDate, "dd/MM/yy");
+			dateFrom = new CustomJDateChooser(myDate, DATE_FORMAT_DD_MM_YY);
 			dateFrom.setDate(myDate);
 			dateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateFrom.setDateFormatString("dd/MM/yy");
+			dateFrom.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 		}
 		return dateFrom;
 	}
@@ -682,9 +685,9 @@ public class PatVacBrowser extends ModalJFrame {
 		if (dateTo == null) {
 			GregorianCalendar now = new GregorianCalendar();
 			java.util.Date myDate = now.getTime();
-			dateTo = new CustomJDateChooser(myDate, "dd/MM/yy");
+			dateTo = new CustomJDateChooser(myDate, DATE_FORMAT_DD_MM_YY);
 			dateTo.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateTo.setDateFormatString("dd/MM/yy");
+			dateTo.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			dateTo.setDate(myDate);
 		}
 		return dateTo;

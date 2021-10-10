@@ -21,6 +21,8 @@
  */
 package org.isf.lab.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -94,7 +96,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		filterButton.doClick();
 	}
 
-	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
 
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
@@ -470,7 +472,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			//04/01/2009 - ross - do not use roll, use add(week,-1)!
 			//now.roll(GregorianCalendar.WEEK_OF_YEAR, false);
 			now.add(Calendar.WEEK_OF_YEAR, -1);
-			dateFrom = new VoDateTextField("dd/mm/yyyy", now, 10);
+			dateFrom = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, now, 10);
 		}
 		return dateFrom;
 	}
@@ -494,7 +496,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private VoDateTextField getDateFieldToPanel() {
 		if (dateTo == null) {
 			GregorianCalendar now = new GregorianCalendar();
-			dateTo = new VoDateTextField("dd/mm/yyyy", now, 10);
+			dateTo = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, now, 10);
 			dateTo.setDate(now);
 		}
 		return dateTo;
@@ -548,7 +550,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	class LabBrowsingModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
+		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class, Context.getApplicationContext().getBean(LabIoOperations.class));
 
 		public LabBrowsingModel(String exam, LocalDate dateFrom, LocalDate dateTo) {
 			try {

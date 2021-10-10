@@ -104,10 +104,10 @@ public class AdmissionTypeBrowserEdit extends JDialog {
      * because we need to update them
 	 */
 	public AdmissionTypeBrowserEdit(JFrame owner, AdmissionType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		admissionType = old;//disease will be used for every operation
-		lastdescription= admissionType.getDescription();
+		admissionType = old; //admissionType will be used for every operation
+		lastdescription = admissionType.getDescription();
 		initialize();
 	}
 

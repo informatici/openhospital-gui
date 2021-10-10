@@ -231,16 +231,12 @@ public class DicomViewGui extends JPanel {
 		jPanelFooter.add(fp2);
 		setLayout(new BorderLayout());
 		setBackground(Color.BLACK);
-
-		// add(intestazione,BorderLayout.NORTH);
 		add(jPanelCenter, BorderLayout.CENTER);
 		add(jPanelFooter, BorderLayout.SOUTH);
-
 	}
 
 	void reInitComponent() {
 		if (patID <= 0) {
-			// center = new JScrollPane();
 			jPanelCenter = new JPanel();
 			jSliderFrame.setEnabled(false);
 			jSliderZoom.setEnabled(false);
@@ -386,13 +382,10 @@ public class DicomViewGui extends JPanel {
 				canvas.drawImage(Scalr.resize(bi, 100), 10, hi, this);
 			}
 		}
-
-		// canvas.drawImage(bi, 10, hi,this);
 		canvas.setColor(orig);
 	}
 
 	private void drawInfoFrameBottomLeft(Graphics2D canvas, int w, int h) {
-
 		Color orig = canvas.getColor();
 		int hi = h - 20;
 		canvas.setColor(colScr);
@@ -669,8 +662,7 @@ public class DicomViewGui extends JPanel {
 	class DicomViewGuiMouseListener implements MouseListener {
 
 		/**
-		 * Mouse pressed, enable mouse motion and set relative X,Y with the
-		 * click position
+		 * Mouse pressed, enable mouse motion and set relative X, Y with the click position
 		 */
 		@Override
 		public void mousePressed(MouseEvent e) {

@@ -131,10 +131,10 @@ public class DiseaseEdit extends JDialog {
 	 * This is the default constructor; we pass the arraylist and the selectedrow
 	 * because we need to update them
 	 */
-	public DiseaseEdit(JFrame parent,Disease old,boolean inserting) {
-		super(parent,true);
+	public DiseaseEdit(JFrame parent, Disease old, boolean inserting) {
+		super(parent, true);
 		insert = inserting;
-		disease = old;		//disease will be used for every operation
+		disease = old;        //disease will be used for every operation
 		initialize();
 	}
 	

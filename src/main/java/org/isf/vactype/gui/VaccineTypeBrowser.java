@@ -115,15 +115,14 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				vaccineType = new VaccineType("","");
-				VaccineTypeEdit newrecord = new VaccineTypeEdit(myFrame,vaccineType, true);
+				vaccineType = new VaccineType("", "");
+				VaccineTypeEdit newrecord = new VaccineTypeEdit(myFrame, vaccineType, true);
 				newrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -146,7 +145,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					vaccineType = (VaccineType) (model.getValueAt(selectedrow, -1));
-					VaccineTypeEdit editrecord = new VaccineTypeEdit(myFrame,vaccineType, false);
+					VaccineTypeEdit editrecord = new VaccineTypeEdit(myFrame, vaccineType, false);
 					editrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
 					editrecord.setVisible(true);
 				}

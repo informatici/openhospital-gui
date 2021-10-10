@@ -1145,7 +1145,7 @@ public class JAgenda extends JPanel implements ActionListener, KeyListener, Focu
 
 			/**
 			 * Layout each of the components in this JLayeredPane so that they all fill
-			 * the entire extents of the layered pane -- from (0,0) to (getWidth(), getHeight())
+			 * the entire extents of the layered pane -- from (0, 0) to (getWidth(), getHeight())
 			 */
 			@Override
 			public void doLayout() {

@@ -331,13 +331,13 @@ public class PricesBrowser extends ModalJFrame {
 	}
 
 	private PriceNode getTreeContent() {
-		
-		Map<String,Price> priceHashTable = new HashMap<>();
-	    for (Price price : priceArray) {
-	    	priceHashTable.put(price.getList().getId()+
-	    					  price.getGroup()+
-	    					  price.getItem(), price);
-	    }
+
+		Map<String, Price> priceHashTable = new HashMap<>();
+		for (Price price : priceArray) {
+			priceHashTable.put(price.getList().getId() +
+					price.getGroup() +
+					price.getItem(), price);
+		}
 
 		examNodes = new PriceNode(new Price(null, "", "", cCategoriesNames[0], null)); //$NON-NLS-1$ //$NON-NLS-2$
 		for (Exam exa : examArray) {

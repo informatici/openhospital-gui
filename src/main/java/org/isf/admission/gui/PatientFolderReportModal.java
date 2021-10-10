@@ -21,6 +21,8 @@
  */
 package org.isf.admission.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -48,8 +50,6 @@ import org.isf.utils.time.Converters;
 import com.toedter.calendar.JDateChooser;
 
 public class PatientFolderReportModal extends ModalJFrame {
-
-	private static final String DATE_FORMAT = "dd/MM/yyyy";
 
 	private JFrame parent;
 	private Integer patId;
@@ -366,7 +366,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 			jDateChooserDateFrom = new JDateChooser();
 			jDateChooserDateFrom.setPreferredSize(new Dimension(200, 40));
 			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			jDateChooserDateFrom.setDateFormatString(DATE_FORMAT);
+			jDateChooserDateFrom.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
 			jDateChooserDateFrom.setDate(Converters.toDate(date.atStartOfDay()));
 			jDateChooserDateFrom.addPropertyChangeListener("date", evt -> {
 				Date date = (Date) evt.getNewValue();
@@ -381,7 +381,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 			jDateChooserDateTo = new JDateChooser();
 			jDateChooserDateTo.setPreferredSize(new Dimension(200, 40));
 			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE));
-			jDateChooserDateTo.setDateFormatString(DATE_FORMAT);
+			jDateChooserDateTo.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
 			jDateChooserDateTo.setDate(new Date());
 			jDateChooserDateTo.addPropertyChangeListener("date", evt -> {
 				Date date = (Date) evt.getNewValue();

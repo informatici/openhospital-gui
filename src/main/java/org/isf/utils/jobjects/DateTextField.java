@@ -50,7 +50,7 @@ public class DateTextField extends JPanel {
 	/**
 	 * This is the constructor of the DateTextField object
 	 * It displays the Date of the parameter "time"
-	 * This object consists in 3 textfields (day,month,year) editable by the user
+	 * This object consists in 3 textfields (day, month, year) editable by the user
 	 */
 	public DateTextField() {
 		date = new GregorianCalendar();
@@ -63,7 +63,7 @@ public class DateTextField extends JPanel {
 	/**
 	 * This is the constructor of the DateTextField object
 	 * It displays the Date of the parameter "time"
-	 * This object consists in 3 textfields (day,month,year) editable by the user
+	 * This object consists in 3 textfields (day, month, year) editable by the user
 	 *
 	 * @param time (GregorianCalendar)
 	 */

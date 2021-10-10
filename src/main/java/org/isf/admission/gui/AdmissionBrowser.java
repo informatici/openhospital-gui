@@ -23,6 +23,7 @@ package org.isf.admission.gui;
 
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -135,7 +136,6 @@ import org.isf.xmpp.manager.Interaction;
 public class AdmissionBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
-	private static final String DATE_FORMAT = "dd/MM/yy";
 
 	private EventListenerList admissionListeners = new EventListenerList();
 
@@ -771,9 +771,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				visitDate = LocalDateTime.now();
 			}
-			visitDateFieldCal = new CustomJDateChooser(visitDate, DATE_FORMAT); // Calendar
+			visitDateFieldCal = new CustomJDateChooser(visitDate, DATE_FORMAT_DD_MM_YY); // Calendar
 			visitDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			visitDateFieldCal.setDateFormatString(DATE_FORMAT);
+			visitDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 
 			visitDatePanel.add(visitDateFieldCal); // Calendar
 			visitDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.visitdate.border")));
@@ -846,9 +846,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				deliveryDate = LocalDateTime.now();
 			}
-			deliveryDateFieldCal = new CustomJDateChooser(deliveryDate, DATE_FORMAT); // Calendar
+			deliveryDateFieldCal = new CustomJDateChooser(deliveryDate, DATE_FORMAT_DD_MM_YY); // Calendar
 			deliveryDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			deliveryDateFieldCal.setDateFormatString(DATE_FORMAT);
+			deliveryDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 
 			deliveryDatePanel.add(deliveryDateFieldCal);
 			deliveryDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliverydate.border")));
@@ -864,9 +864,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				abortDate = LocalDateTime.now();
 			}
-			abortDateFieldCal = new CustomJDateChooser(abortDate, DATE_FORMAT);
+			abortDateFieldCal = new CustomJDateChooser(abortDate, DATE_FORMAT_DD_MM_YY);
 			abortDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			abortDateFieldCal.setDateFormatString(DATE_FORMAT);
+			abortDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 
 			abortDatePanel.add(abortDateFieldCal);
 			abortDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.abortdate.border")));
@@ -883,9 +883,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				ctrl1Date = LocalDateTime.now();
 			}
-			ctrl1DateFieldCal = new CustomJDateChooser(ctrl1Date, DATE_FORMAT);
+			ctrl1DateFieldCal = new CustomJDateChooser(ctrl1Date, DATE_FORMAT_DD_MM_YY);
 			ctrl1DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			ctrl1DateFieldCal.setDateFormatString(DATE_FORMAT);
+			ctrl1DateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 
 			control1DatePanel.add(ctrl1DateFieldCal);
 			control1DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln1date.border")));
@@ -902,9 +902,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				ctrl2Date = LocalDateTime.now();
 			}
-			ctrl2DateFieldCal = new CustomJDateChooser(ctrl2Date, DATE_FORMAT);
+			ctrl2DateFieldCal = new CustomJDateChooser(ctrl2Date, DATE_FORMAT_DD_MM_YY);
 			ctrl2DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			ctrl2DateFieldCal.setDateFormatString(DATE_FORMAT);
+			ctrl2DateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 
 			control2DatePanel.add(ctrl2DateFieldCal);
 			control2DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln2date.border")));
@@ -1167,9 +1167,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				dateIn = RememberDates.getLastAdmInDate();
 			}
-			dateInFieldCal = new CustomJDateChooser(dateIn, DATE_FORMAT); // Calendar
+			dateInFieldCal = new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY); // Calendar
 			dateInFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateInFieldCal.setDateFormatString(DATE_FORMAT);
+			dateInFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			dateInFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {
 				LocalDateTime newValue = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
 				if (newValue.toLocalDate().isBefore(patient.getBirthDate())) {
@@ -1534,9 +1534,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getDisDate() != null) {
 				dateOut = admission.getDisDate();
 			}
-			dateOutFieldCal = new CustomJDateChooser(editing ? dateOut : null, DATE_FORMAT);
+			dateOutFieldCal = new CustomJDateChooser(editing ? dateOut : null, DATE_FORMAT_DD_MM_YY);
 			dateOutFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateOutFieldCal.setDateFormatString(DATE_FORMAT);
+			dateOutFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			dateOutFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> updateBedDays());
 
 			dischargeDatePanel.add(dateOutFieldCal);

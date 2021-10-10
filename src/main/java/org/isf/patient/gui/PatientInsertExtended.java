@@ -21,6 +21,8 @@
  */
 package org.isf.patient.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -754,7 +756,7 @@ public class PatientInsertExtended extends JDialog {
 			public BirthDateChooser(LocalDate localDate) {
 				super();
 				super.setLocale(new Locale(GeneralData.LANGUAGE));
-				super.setDateFormatString("dd/MM/yyyy");
+				super.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
 				super.setPreferredSize(new Dimension(150, 20));
 				if (birthDate != null) {
 					super.setCalendar(Converters.toCalendar(localDate.atStartOfDay()));
@@ -2084,24 +2086,14 @@ public class PatientInsertExtended extends JDialog {
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		/*
-		 * javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
-		 * BorderFactory.createTitledBorder(title),null);
-		 */
 		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
-
 		c.setBorder(b2);
 		return c;
 	}
 
 	private JPanel setMyBorderCenter(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		/*
-		 * javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
-		 * BorderFactory.createTitledBorder(title),null);
-		 */
 		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP);
-
 		c.setBorder(b2);
 		return c;
 	}

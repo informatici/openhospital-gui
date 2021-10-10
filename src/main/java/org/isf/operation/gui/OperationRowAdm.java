@@ -21,6 +21,8 @@
  */
 package org.isf.operation.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -288,7 +290,7 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		if (jCalendarDate == null) {
 			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jCalendarDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jCalendarDate.setDate(DateTime.now().toDate());
 		}
 		return jCalendarDate;

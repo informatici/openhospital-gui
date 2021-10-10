@@ -21,6 +21,8 @@
  */
 package org.isf.patvac.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -167,8 +169,7 @@ public class PatVacEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes dataPanel. This panel contains all items (combo
-	 * boxes,calendar) to define a vaccine
+	 * This method initializes dataPanel. This panel contains all items (comboboxes, calendar) to define a vaccine
 	 * 
 	 * @return dataPanel (JPanel)
 	 */
@@ -230,7 +231,7 @@ public class PatVacEdit extends JDialog {
 			dataPanel.add(vaccineDateLabel, gbcVaccineDateLabel);
 			vaccineDateFieldCal = getVaccineDateFieldCal();
 			vaccineDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			vaccineDateFieldCal.setDateFormatString("dd/MM/yy");
+			vaccineDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			GridBagConstraints gbcVaccineDateFieldCal = new GridBagConstraints();
 			gbcVaccineDateFieldCal.anchor = GridBagConstraints.WEST;
 			gbcVaccineDateFieldCal.insets = new Insets(5, 5, 5, 5);
@@ -370,7 +371,7 @@ public class PatVacEdit extends JDialog {
 		} else {
 			dateIn = patVac.getVaccineDate();
 		}
-		return (new CustomJDateChooser(dateIn, "dd/MM/yy"));
+		return (new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY));
 	}
 
 	/**

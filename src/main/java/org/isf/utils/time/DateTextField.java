@@ -51,7 +51,7 @@ public class DateTextField extends JPanel {
 	/**
 	 * This is the constructor of the DateTextField object
 	 * It displays the Date of the parameter "time"
-	 * This object consists in 3 textfields (day,month,year) editable by the user
+	 * This object consists in 3 textfields (day, month, year) editable by the user
 	 */
 	public DateTextField() {
 		date = new GregorianCalendar();
@@ -68,7 +68,7 @@ public class DateTextField extends JPanel {
 	/**
 	 * This is the constructor of the DateTextField object
 	 * It displays the Date of the parameter "time"
-	 * This object consists in 3 textfields (day,month,year) editable by the user
+	 * This object consists in 3 textfields (day, month, year) editable by the user
 	 * @param time (GregorianCalendar)
 	 */
 	public DateTextField(GregorianCalendar time) {
@@ -113,6 +113,7 @@ public class DateTextField extends JPanel {
 		month = new JTextField(2);
 		month.setDocument(new DocumentLimit(2));
 		month.addFocusListener(new FocusListener() {
+
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (month.getText().length() != 0) {
@@ -134,20 +135,21 @@ public class DateTextField extends JPanel {
 		year = new JTextField(4);
 		year.setDocument(new DocumentLimit(4));
 		year.addFocusListener(new FocusListener() {
+
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (year.getText().length() == 4) {
 					if (!isValidYear(year.getText())) {
 						year.setText("2006");
 					}
-				} 
+				}
 			}
 
 			@Override
 			public void focusGained(FocusEvent e) {
 			}
 		});
-		setLayout(new FlowLayout(FlowLayout.CENTER,2,0));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 2, 0));
 		add(day);
 		add(new JLabel("/"));
 		add(month);

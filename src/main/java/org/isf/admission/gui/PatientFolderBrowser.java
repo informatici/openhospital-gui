@@ -21,6 +21,8 @@
  */
 package org.isf.admission.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -114,8 +116,6 @@ public class PatientFolderBrowser extends ModalJFrame
 	private static final long serialVersionUID = -3427327158197856822L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientFolderBrowser.class);
-
-	private static final String DATE_FORMAT = "dd/MM/yy";
 
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
 
@@ -423,23 +423,23 @@ public class PatientFolderBrowser extends ModalJFrame
 
 	private JPanel getButtonPanel() {
 		JPanel buttonPanel;
-			buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,5,5));
-			if (MainMenu.checkUserGrants("btnpatfoldopdrpt")) {
-				buttonPanel.add(getOpdReportButton(), null);
-			}
-			if (MainMenu.checkUserGrants("btnpatfoldadmrpt")) {
-				buttonPanel.add(getAdmReportButton(), null);
-			}
-			if (MainMenu.checkUserGrants("btnpatfoldadmrpt")) {
-				buttonPanel.add(getDisReportButton(), null);
-			}
-			if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
-				buttonPanel.add(getLaunchReportButton(), null);
-			}
-            if (GeneralData.DICOMMODULEENABLED && MainMenu.checkUserGrants("btnpatfolddicom")) {
-	            buttonPanel.add(getDICOMButton(), null);
-            }
-			buttonPanel.add(getCloseButton(), null);
+		buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		if (MainMenu.checkUserGrants("btnpatfoldopdrpt")) {
+			buttonPanel.add(getOpdReportButton(), null);
+		}
+		if (MainMenu.checkUserGrants("btnpatfoldadmrpt")) {
+			buttonPanel.add(getAdmReportButton(), null);
+		}
+		if (MainMenu.checkUserGrants("btnpatfoldadmrpt")) {
+			buttonPanel.add(getDisReportButton(), null);
+		}
+		if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
+			buttonPanel.add(getLaunchReportButton(), null);
+		}
+		if (GeneralData.DICOMMODULEENABLED && MainMenu.checkUserGrants("btnpatfolddicom")) {
+			buttonPanel.add(getDICOMButton(), null);
+		}
+		buttonPanel.add(getCloseButton(), null);
 		return buttonPanel;
 	}
 
@@ -675,18 +675,18 @@ public class PatientFolderBrowser extends ModalJFrame
 				}
 			} else if (column == 0) {
 				if (row < admList.size()) {
-					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yy");
+					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
 					LocalDate myDate = (opdList.get(row)).getVisitDate();
 					return dateFormat.format(myDate);
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
-					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yy");
+					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
 					LocalDate myDate = (opdList.get(z)).getVisitDate();
 					return dateFormat.format(myDate);
 				} else {
 					int f = row - (opdList.size() + admList.size());
 					LocalDateTime pexDate = examinationList.get(f).getPex_date();
-					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yy");
+					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
 					return dateFormat.format(pexDate);
 				}
 			} else if (column == 1) {
@@ -873,7 +873,7 @@ public class PatientFolderBrowser extends ModalJFrame
 
 			if (value instanceof Date) {
 				// Use SimpleDateFormat class to get a formatted String from Date object.
-				String strDate = new SimpleDateFormat(DATE_FORMAT).format((Date) value);
+				String strDate = new SimpleDateFormat(DATE_FORMAT_DD_MM_YY).format((Date) value);
 
 				// Sorting algorithm will work with model value. So you dont need to worry
 				// about the renderer's display value. 

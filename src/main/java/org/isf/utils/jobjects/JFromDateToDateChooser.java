@@ -21,6 +21,8 @@
  */
 package org.isf.utils.jobjects;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -41,7 +43,6 @@ import org.isf.utils.time.Converters;
  */
 public class JFromDateToDateChooser extends JPanel {
 
-	private static final String DATE_TIME_FORMAT = "dd/MM/yyyy";
 	private static final int TEXT_SIZE = 12;
 
 	private CustomJDateChooser dateFromDateChooser;
@@ -85,7 +86,7 @@ public class JFromDateToDateChooser extends JPanel {
 			dateFromDateChooser = new CustomJDateChooser();
 			dateFromDateChooser.setDate(dateFrom);
 			dateFromDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateFromDateChooser.setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
+			dateFromDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
 			dateFromDateChooser.setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
 			dateFromDateChooser.setPreferredSize(new Dimension(100, 24));
 			dateFromDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> dateTimeFrom = dateFromDateChooser.getDate());
@@ -98,7 +99,7 @@ public class JFromDateToDateChooser extends JPanel {
 			dateToDateChooser = new CustomJDateChooser();
 			dateToDateChooser.setDate(dateTo);
 			dateToDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateToDateChooser.setDateFormatString(DATE_TIME_FORMAT); //$NON-NLS-1$
+			dateToDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
 			dateToDateChooser.setFont(new Font("Arial", Font.BOLD, TEXT_SIZE), false);
 			dateToDateChooser.setPreferredSize(new Dimension(100, 24));
 			dateToDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> dateTimeTo = dateToDateChooser.getDate());

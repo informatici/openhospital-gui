@@ -21,6 +21,8 @@
  */
 package org.isf.stat.gui.report;
 
+import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
+
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -89,7 +91,7 @@ public class GenericReportPharmaceuticalStockCard {
 	}
 
 	private String compileStockCardFilename(String jasperFileName, LocalDateTime dateFrom, LocalDateTime dateTo, Medical medical, Ward ward) {
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_YYYYMMDD);
 		StringBuilder fileName = new StringBuilder(jasperFileName);
 		if (ward != null) {
 			fileName.append('_').append(ward.getDescription());

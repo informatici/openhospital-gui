@@ -21,6 +21,9 @@
  */
 package org.isf.medicalstock.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -166,8 +169,6 @@ public class MovStockBrowser extends ModalJFrame {
 			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, true };
 
 	private int[] pColumnWidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70 };
-	private static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
-	private static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
 
 	private String currencyCod;
 

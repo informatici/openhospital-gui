@@ -106,10 +106,10 @@ public class MedicalTypeBrowserEdit extends JDialog {
 	 * This is the default constructor
 	 */
 	public MedicalTypeBrowserEdit(JFrame owner, MedicalType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		medicalType = old; //medical type will be used for every operation
-		lastdescription= medicalType.getDescription();
+		lastdescription = medicalType.getDescription();
 		initialize();
 	}
 
@@ -137,8 +137,8 @@ public class MedicalTypeBrowserEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}

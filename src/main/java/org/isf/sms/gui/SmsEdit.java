@@ -21,6 +21,9 @@
  */
 package org.isf.sms.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.TIME_FORMAT_HH_MM;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -208,7 +211,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jSchedDateChooser = new CustomJDateChooser();
 			jSchedDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			jSchedDateChooser.setDate(new Date());
-			jSchedDateChooser.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jSchedDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jSchedDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
 				Date date = (Date) propertyChangeEvent.getNewValue();
 				jSchedTimeTextField.setText(formatTime(date));
@@ -381,8 +384,8 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	}
 	
 	private String formatTime(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm"); //$NON-NLS-1$
-		return sdf.format(date);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_HH_MM);
+		return simpleDateFormat.format(date);
 	}
 
 	private JButton getJTimeButton() {

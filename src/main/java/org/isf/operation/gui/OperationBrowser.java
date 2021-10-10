@@ -194,7 +194,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				Operation operation = (Operation) model.getValueAt(table.getSelectedRow(), -1);
-				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg",operation.getDescription());
+				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg", operation.getDescription());
 				try {
 					if ((answer == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(operation))) {
 						pOperation.remove(table.getSelectedRow());
@@ -290,15 +290,15 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			return false;
 		}
 	}
-	
-	class CenterAlignmentCellRenderer extends DefaultTableCellRenderer {  
+
+	class CenterAlignmentCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-			
-			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			setHorizontalAlignment(SwingConstants.CENTER);
 			return cell;
 		}

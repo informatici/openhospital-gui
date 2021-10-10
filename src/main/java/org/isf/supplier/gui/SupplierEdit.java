@@ -132,10 +132,10 @@ public class SupplierEdit extends JDialog {
 	 * (because it is a jdialog), the arraylist and the selected
 	 * row because we need to update them
 	 */
-	public SupplierEdit(JFrame parent,Supplier old,boolean inserting) {
+	public SupplierEdit(JFrame parent, Supplier old, boolean inserting) {
 		super(parent, true);
 		insert = inserting;
-		supplier = old;		//operation will be used for every operation
+		supplier = old;        // supplier will be used for every operation
 		initialize();
 	}
 	
@@ -147,7 +147,7 @@ public class SupplierEdit extends JDialog {
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
 		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
-		this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase * pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
+		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.supplier.newsupplier.title"));
@@ -155,7 +155,7 @@ public class SupplierEdit extends JDialog {
 			this.setTitle(MessageBundle.getMessage("angal.supplier.editsupplier.title"));
 		}
 	}
-	
+
 	/**
 	 * This method initializes jContentPane
 	 * 

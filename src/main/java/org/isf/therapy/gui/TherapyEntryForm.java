@@ -21,6 +21,8 @@
  */
 package org.isf.therapy.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -79,7 +81,6 @@ import org.joda.time.PeriodType;
 public class TherapyEntryForm extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	public static final String PATTERN = "dd/MM/yy";
 
 	/*
 	 * Managers
@@ -135,7 +136,7 @@ public class TherapyEntryForm extends JDialog {
 	private JSpinner jSpinnerWeeks;
 	private JSpinner jSpinnerMonths;
 	private JLabel endDateLabel;
-	private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(PATTERN);
+	private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
 	private final String[] radioButtonLabels = {MessageBundle.getMessage("angal.therapy.one"), MessageBundle.getMessage("angal.therapy.two"), MessageBundle.getMessage("angal.therapy.three"), MessageBundle.getMessage("angal.therapy.four")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private JButton buttonCancel;
 	private JButton buttonOK;
@@ -471,7 +472,7 @@ public class TherapyEntryForm extends JDialog {
 		if (therapyStartdate == null) {
 			therapyStartdate = new CustomJDateChooser(new Date());
 			therapyStartdate.setLocale(new Locale(GeneralData.LANGUAGE));
-			therapyStartdate.setDateFormatString(PATTERN);
+			therapyStartdate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			therapyStartdate.addPropertyChangeListener("date", propertyChangeEvent -> updateEndDateLabel());
 		}
 		return therapyStartdate;

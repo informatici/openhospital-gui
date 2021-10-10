@@ -43,36 +43,36 @@ public class PhotoPreviewBox extends Box {
 
 	public JButton photoButton;
 	private ImageIcon previewIcon;
-	
+
 	public String path;
 	public String resolution;
 
-	public PhotoPreviewBox(String path, String resolution)	{
-		super(BoxLayout.Y_AXIS) ;
-		
+	public PhotoPreviewBox(String path, String resolution) {
+		super(BoxLayout.Y_AXIS);
+
 		this.path = path;
 		this.resolution = resolution;
-		
+
 		Box.createVerticalBox();
 		this.setMaximumSize(new Dimension(100, 100));
-		
+
 		photoButton = null;
-		
-		try	{
+
+		try {
 			Image img = ImageIO.read(new File(path));
-			
+
 			previewIcon = new ImageIcon(img.getScaledInstance(80, 63, Image.SCALE_SMOOTH));
 			photoButton = new JButton("", previewIcon);
-			
+
 			photoButton.setBackground(Color.white);
-			photoButton.setPreferredSize(new Dimension(90,90));			
-		}
-		catch (IOException ioe)	{
+			photoButton.setPreferredSize(new Dimension(90, 90));
+		} catch (IOException ioe) {
 			LOGGER.error("Path: {}", path);
 			LOGGER.error(ioe.getMessage(), ioe);
 		}
-		
+
 		this.add(photoButton);
 
 	}
+
 }

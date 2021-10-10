@@ -98,8 +98,8 @@ public class ExamRowEdit extends JDialog {
      * because we need to update them
 	 */
 	public ExamRowEdit(JDialog owner, ExamRow old, Exam aExam) {
-		super(owner,true);
-		examRow = old;	
+		super(owner, true);
+		examRow = old;
 		exam = aExam;
 		initialize();
 	}
@@ -129,8 +129,8 @@ public class ExamRowEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(),BorderLayout.NORTH); 
-			jContentPane.add(getButtonPanel(),BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}

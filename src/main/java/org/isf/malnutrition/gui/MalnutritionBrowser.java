@@ -21,6 +21,8 @@
  */
 package org.isf.malnutrition.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.time.LocalDateTime;
@@ -66,7 +68,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		((MalnBrowsingModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
 		if ((table.getRowCount() > 0) && selectedrow > -1) {
-			table.setRowSelectionInterval(selectedrow,selectedrow);
+			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
 
@@ -289,6 +291,6 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		if (time == null) {
 			return MessageBundle.getMessage("angal.malnutrition.nodate.msg");
 		}
-		return TimeTools.formatDateTime(time, "dd/MM/yyyy");
+		return TimeTools.formatDateTime(time, DATE_FORMAT_DD_MM_YYYY);
 	}
 }

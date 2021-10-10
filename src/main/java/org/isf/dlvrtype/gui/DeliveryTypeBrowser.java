@@ -114,8 +114,8 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				deliveryType = new DeliveryType("","");
-				DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, true);
+				deliveryType = new DeliveryType("", "");
+				DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame, deliveryType, true);
 				newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -138,7 +138,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					deliveryType = (DeliveryType) (model.getValueAt(selectedrow, -1));
-					DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, false);
+					DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame, deliveryType, false);
 					newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
 					newrecord.setVisible(true);
 				}

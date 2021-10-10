@@ -21,6 +21,8 @@
  */
 package org.isf.lab.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -183,8 +185,7 @@ public class LabEditExtended extends ModalJFrame {
 	}
 
 	private void initialize() {
-
-		this.setBounds(30,30,panelWidth+20,dataPanelHeight+dataPatientHeight+resultPanelHeight+buttonPanelHeight+30);
+		this.setBounds(30, 30, panelWidth + 20, dataPanelHeight + dataPatientHeight + resultPanelHeight + buttonPanelHeight + 30);
 		this.setContentPane(getJContentPane());
 		this.setResizable(false);
 		if (insert) {
@@ -195,7 +196,6 @@ public class LabEditExtended extends ModalJFrame {
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 	}
-
 
 	private JPanel getJContentPane() {
 		if (jContentPane == null) {
@@ -235,7 +235,7 @@ public class LabEditExtended extends ModalJFrame {
 			examDateLabel.setBounds(5, 10, labelWidth, 20);
 			examDateFieldCal = getExamDateFieldCal();
 			examDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			examDateFieldCal.setDateFormatString("dd/MM/yy");
+			examDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			examDateFieldCal.setBounds(labelWidth + 5, 10, 90, 20);
 			//material
 			matLabel = new JLabel(MessageBundle.getMessage("angal.lab.material"));
@@ -250,17 +250,17 @@ public class LabEditExtended extends ModalJFrame {
 
 			//patient (in or out) data
 			patientLabel = new JLabel(MessageBundle.getMessage("angal.lab.patientcode"));
-			patientLabel.setBounds(labelWidth+5, 60, 120, 20);
-			
+			patientLabel.setBounds(labelWidth + 5, 60, 120, 20);
+
 			inPatientCheckBox = getInPatientCheckBox();
 			inPatientCheckBox.setBounds(5, 60, labelWidth, 20);
-			jTextPatientSrc = new VoLimitedTextField(200,20);
-			jTextPatientSrc.setBounds(labelWidth+70,60,90,20);
-			
+			jTextPatientSrc = new VoLimitedTextField(200, 20);
+			jTextPatientSrc.setBounds(labelWidth + 70, 60, 90, 20);
+
 			jTextPatientSrc.addKeyListener(new KeyListener() {
+
 				@Override
-				public void keyTyped(KeyEvent e)
-				{
+				public void keyTyped(KeyEvent e) {
 					lastKey = "";
 					String s = "" + e.getKeyChar();
 					if (Character.isLetterOrDigit(e.getKeyChar())) {
@@ -268,20 +268,22 @@ public class LabEditExtended extends ModalJFrame {
 					}
 					s = jTextPatientSrc.getText() + lastKey;
 					s = s.trim();
-					
+
 					filterPatient(s);
 				}
 
 				//@Override
 				@Override
-				public void keyPressed(KeyEvent e) {}
+				public void keyPressed(KeyEvent e) {
+				}
 
 				//@Override
 				@Override
-				public void keyReleased(KeyEvent e) {}
+				public void keyReleased(KeyEvent e) {
+				}
 			});
 			patientComboBox = getPatientComboBox(s);
-			patientComboBox.setBounds(labelWidth+170, 60, 305, 20);
+			patientComboBox.setBounds(labelWidth + 170, 60, 305, 20);
 
 			//add all to the data panel
 			dataPanel.add(examDateLabel, null);
@@ -291,13 +293,12 @@ public class LabEditExtended extends ModalJFrame {
 			dataPanel.add(examLabel, null);
 			dataPanel.add(examComboBox, null);
 			dataPanel.add(patientLabel, null);
-			dataPanel.add(inPatientCheckBox,null);
+			dataPanel.add(inPatientCheckBox, null);
 			//ADDED: Alex
-			dataPanel.add(jTextPatientSrc,null);
-			dataPanel.add(patientComboBox,null);
-			
-			dataPanel.setPreferredSize(new Dimension(150,200));
-						
+			dataPanel.add(jTextPatientSrc, null);
+			dataPanel.add(patientComboBox, null);
+
+			dataPanel.setPreferredSize(new Dimension(150, 200));
 		}
 		return dataPanel;
 	}
@@ -366,7 +367,7 @@ public class LabEditExtended extends ModalJFrame {
 		} else { 
 			dateIn = lab.getExamDate().atStartOfDay();
 		}
-		return (new CustomJDateChooser(dateIn, "dd/MM/yy"));
+		return (new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY));
 	}
 	
 	private JCheckBox getInPatientCheckBox() {
@@ -468,9 +469,9 @@ public class LabEditExtended extends ModalJFrame {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.setBounds(0, dataPanelHeight+dataPatientHeight+resultPanelHeight, panelWidth, buttonPanelHeight);
+			buttonPanel.setBounds(0, dataPanelHeight + dataPatientHeight + resultPanelHeight, panelWidth, buttonPanelHeight);
 			buttonPanel.add(getOkButton(), null);
-			buttonPanel.add(getPrintButton(),null);
+			buttonPanel.add(getPrintButton(), null);
 			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;

@@ -158,7 +158,7 @@ public class AgeTypeBrowser extends ModalJFrame {
 			for (int i = 0; i < pColumns.length; i++) {
 				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
 			}
-			jTable.setDefaultRenderer(Object.class,new ColorTableCellRenderer());
+			jTable.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
 		}
 		return jTable;
 	}

@@ -103,10 +103,10 @@ public class DiseaseTypeBrowserEdit extends JDialog {
      * because we need to update them
 	 */
 	public DiseaseTypeBrowserEdit(JFrame owner, DiseaseType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		diseaseType = old;//disease will be used for every operation
-		lastdescription= diseaseType.getDescription();
+		diseaseType = old; //disease will be used for every operation
+		lastdescription = diseaseType.getDescription();
 		initialize();
 	}
 

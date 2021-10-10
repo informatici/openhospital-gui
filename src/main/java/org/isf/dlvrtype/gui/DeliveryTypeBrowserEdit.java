@@ -105,11 +105,11 @@ public class DeliveryTypeBrowserEdit extends JDialog {
      * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
      */
-    public DeliveryTypeBrowserEdit(JFrame owner,DeliveryType old,boolean inserting) {
-        super(owner,true);
+    public DeliveryTypeBrowserEdit(JFrame owner, DeliveryType old, boolean inserting) {
+        super(owner, true);
         insert = inserting;
-        deliveryType = old;//disease will be used for every operation
-        lastdescription= deliveryType.getDescription();
+        deliveryType = old; // deliveryType will be used for every operation
+        lastdescription = deliveryType.getDescription();
         initialize();
     }
     

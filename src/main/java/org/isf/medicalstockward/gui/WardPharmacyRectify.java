@@ -21,6 +21,8 @@
  */
 package org.isf.medicalstockward.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -132,7 +134,6 @@ public class WardPharmacyRectify extends JDialog {
 	private JTextField jTextFieldLotNumber;
 	private JButton jButtonChooseLot;
 	private List<MedicalWard> wardDrugs; //list of drugs available in the selected ward
-	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 	
 	private JButton jButtonNewLot;
 	private Lot selectedLot;

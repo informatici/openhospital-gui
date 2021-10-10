@@ -116,15 +116,15 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				MovementType mdsr = new MovementType("","","");
-				MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,mdsr, true);
+				MovementType mdsr = new MovementType("", "", "");
+				MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame, mdsr, true);
 				newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
 	}
-	
+
 	/**
 	 * This method initializes jEditButton	
 	 * 	
@@ -140,7 +140,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					medicaldsrstockmovType = (MovementType) (model.getValueAt(selectedrow, -1));
-					MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,medicaldsrstockmovType, false);
+					MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame, medicaldsrstockmovType, false);
 					newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
 					newrecord.setVisible(true);
 				}

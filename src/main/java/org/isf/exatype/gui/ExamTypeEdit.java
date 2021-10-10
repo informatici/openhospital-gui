@@ -113,10 +113,10 @@ public class ExamTypeEdit extends JDialog {
      * because we need to update them
 	 */
 	public ExamTypeEdit(JFrame owner, ExamType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		examType = old;//examType will be used for every operation
-		lastdescription= examType.getDescription();
+		examType = old;   //examType will be used for every operation
+		lastdescription = examType.getDescription();
 		initialize();
 	}
 

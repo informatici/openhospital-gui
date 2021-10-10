@@ -164,22 +164,21 @@ public class LabNew extends JDialog implements SelectionListener {
 	private ButtonGroup radioGroup;
 	private JPanel jOpdIpdPanel;
 	private String inOut;
-	
-	private static final Dimension PATIENT_DIMENSION = new Dimension(200,20);
-	private static final Dimension LABEL_DIMENSION = new Dimension(75,20);
+
+	private static final Dimension PATIENT_DIMENSION = new Dimension(200, 20);
+	private static final Dimension LABEL_DIMENSION = new Dimension(75, 20);
 	private static final int EAST_WIDTH = 200;
 	private static final int COMPONENT_HEIGHT = 20;
 	private static final int RESULT_HEIGHT = 200;
-	
-	private Object[] examClasses = {Exam.class, String.class};
+
+	private Object[] examClasses = { Exam.class, String.class };
 	private String[] examColumnNames = {
-            MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
-            MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
-        };
-	private int[] examColumnWidth = {200, 150};
-	private boolean[] examResizable = {true, false};
+			MessageBundle.getMessage("angal.common.exam.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
+	};
+	private int[] examColumnWidth = { 200, 150 };
+	private boolean[] examResizable = { true, false };
 	
-	//TODO private boolean modified;
 	private Patient patientSelected = null;
 	private Laboratory selectedLab = null;
 	private JTextField txtResultValue;
@@ -257,10 +256,10 @@ public class LabNew extends JDialog implements SelectionListener {
 
 	private JTextArea getJTextAreaNote() {
 		if (jTextAreaNote == null) {
-			jTextAreaNote = new JTextArea(3,50);
+			jTextAreaNote = new JTextArea(3, 50);
 			jTextAreaNote.setText("");
 			jTextAreaNote.addKeyListener(new KeyListener() {
-				
+
 				@Override
 				public void keyTyped(KeyEvent e) {
 					selectedLab.setNote(jTextAreaNote.getText().trim());
@@ -268,12 +267,13 @@ public class LabNew extends JDialog implements SelectionListener {
 				}
 
 				@Override
-				public void keyPressed(KeyEvent e) {}
+				public void keyPressed(KeyEvent e) {
+				}
 
 				@Override
-				public void keyReleased(KeyEvent e) {}
+				public void keyReleased(KeyEvent e) {
+				}
 			});
-			//jTextAreaNote.setPreferredSize(TextAreaNoteDimension);
 		}
 		return jTextAreaNote;
 	}
@@ -555,7 +555,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JButton getJButtonTrashPatient() {
 		if (jButtonTrashPatient == null) {
 			jButtonTrashPatient = new JButton();
-			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
+			jButtonTrashPatient.setPreferredSize(new Dimension(25, 25));
 			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
 			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.removepatientassociationwiththisexam")); //$NON-NLS-1$
 			jButtonTrashPatient.addActionListener(actionEvent -> {

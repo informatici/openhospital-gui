@@ -21,6 +21,10 @@
  */
 package org.isf.medicalstockward.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -450,7 +454,7 @@ public class WardPharmacy extends ModalJFrame implements
 			dateTo = dateTo.toLocalDate().atTime(23, 59, 59);
 			jCalendarTo = new CustomJDateChooser(dateTo);
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarTo.setDateFormatString("dd/MM/yy");
+			jCalendarTo.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jCalendarTo.addPropertyChangeListener("date", propertyChangeEvent -> {
 				dateTo = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
 				jTableOutcomes.setModel(new OutcomesModel());
@@ -467,7 +471,7 @@ public class WardPharmacy extends ModalJFrame implements
 			dateFrom = dateFrom.toLocalDate().atStartOfDay();
 			jCalendarFrom = new CustomJDateChooser(dateFrom); // Calendar
 			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarFrom.setDateFormatString("dd/MM/yy");
+			jCalendarFrom.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jCalendarFrom.addPropertyChangeListener("date", propertyChangeEvent -> {
 				dateFrom = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
 				jTableOutcomes.setModel(new OutcomesModel());
@@ -586,8 +590,6 @@ public class WardPharmacy extends ModalJFrame implements
 				MessageBundle.getMessage("angal.medicalstock.multipledischarging.lotinformations"), //$NON-NLS-1$
 				JOptionPane.INFORMATION_MESSAGE);
 	}
-
-	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
 
 	class StockMovModel extends DefaultTableModel {
 
@@ -1718,11 +1720,11 @@ public class WardPharmacy extends ModalJFrame implements
 	}
 
 	public String formatDate(LocalDateTime time) {
-		return DateTimeFormatter.ofPattern("dd/MM/yyyy").format(time);
+		return DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY).format(time);
 	}
 
 	public String formatDateTime(LocalDateTime time) {
-		return DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(time);
+		return DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS).format(time);
 	}
 
 	private List<Medical> getSearchMedicalsResults(String s, List<Medical> medicalsList) {

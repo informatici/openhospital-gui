@@ -107,21 +107,21 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 		}
 		return jButtonClose;
 	}
-	
+
 	private JButton getJButtonDelete() {
 		if (jButtonDelete == null) {
 			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 			jButtonDelete.addActionListener(actionEvent -> {
 				if (jTablePriceLists.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.priceslist.pleaseselectalisttodelete"));
+					JOptionPane.showMessageDialog(null, MessageBundle.getMessage("angal.priceslist.pleaseselectalisttodelete"));
 				} else {
 					if (jTablePriceLists.getRowCount() == 1) {
 						MessageDialog.error(null, "angal.priceslist.sorryatleastonelist");
 						return;
 					}
 					int selectedRow = jTablePriceLists.getSelectedRow();
-					list = (PriceList)jTablePriceLists.getModel().getValueAt(selectedRow, -1);
+					list = (PriceList) jTablePriceLists.getModel().getValueAt(selectedRow, -1);
 
 					int answer = MessageDialog.yesNo(null, "angal.priceslist.deletethislistandallitsprices.fmt.msg", list.getName());
 					try {
@@ -137,7 +137,7 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 								MessageDialog.error(null, "angal.priceslist.thedatacouldnotbedeleted");
 							}
 						}
-					} catch(OHServiceException e) {
+					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
 				}
@@ -155,7 +155,7 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 					MessageDialog.error(null, "angal.priceslist.pleaseselectalisttocopy");
 				} else {
 					int selectedRow = jTablePriceLists.getSelectedRow();
-					list = (PriceList)jTablePriceLists.getModel().getValueAt(selectedRow, -1);
+					list = (PriceList) jTablePriceLists.getModel().getValueAt(selectedRow, -1);
 
 					String newName = JOptionPane.showInputDialog(MessageBundle.getMessage("angal.priceslist.enterthenameforthenewlist"));
 
@@ -167,13 +167,13 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 						Double minQty = 0.;
 						Double maxQty = 100.;
 						Double stepQty = 0.01;
-						JSpinner jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty,minQty,maxQty,stepQty));
+						JSpinner jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty, minQty, maxQty, stepQty));
 
 						int r = JOptionPane.showConfirmDialog(ListBrowser.this,
-							new Object[] { MessageBundle.getMessage("angal.priceslist.multiplier"), jSpinnerQty },
-							MessageBundle.getMessage("angal.priceslist.multiplier"),
-					        JOptionPane.OK_CANCEL_OPTION,
-					        JOptionPane.PLAIN_MESSAGE);
+								new Object[] { MessageBundle.getMessage("angal.priceslist.multiplier"), jSpinnerQty },
+								MessageBundle.getMessage("angal.priceslist.multiplier"),
+								JOptionPane.OK_CANCEL_OPTION,
+								JOptionPane.PLAIN_MESSAGE);
 
 						if (r == JOptionPane.OK_OPTION) {
 							try {
@@ -191,13 +191,13 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 							minQty = 0.;
 							maxQty = 1.;
 							stepQty = 0.01;
-							jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty,minQty,maxQty,stepQty));
+							jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty, minQty, maxQty, stepQty));
 
 							r = JOptionPane.showConfirmDialog(ListBrowser.this,
-								new Object[] { MessageBundle.getMessage("angal.priceslist.rounduptothenearest"), jSpinnerQty },
-								MessageBundle.getMessage("angal.priceslist.roundingfactor"),
-						        JOptionPane.OK_CANCEL_OPTION,
-						        JOptionPane.PLAIN_MESSAGE);
+									new Object[] { MessageBundle.getMessage("angal.priceslist.rounduptothenearest"), jSpinnerQty },
+									MessageBundle.getMessage("angal.priceslist.roundingfactor"),
+									JOptionPane.OK_CANCEL_OPTION,
+									JOptionPane.PLAIN_MESSAGE);
 
 							if (r == JOptionPane.OK_OPTION) {
 								try {
@@ -221,7 +221,8 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 						if (newName.isEmpty()) {
 							newName = MessageBundle.getMessage("angal.priceslist.copyof").concat(" ").concat(list.getName());
 						}
-						PriceList copiedList = new PriceList(list.getId(),MessageBundle.getMessage("angal.priceslist.acode"),newName,MessageBundle.getMessage("angal.priceslist.adescription"),list.getCurrency());
+						PriceList copiedList = new PriceList(list.getId(), MessageBundle.getMessage("angal.priceslist.acode"), newName,
+								MessageBundle.getMessage("angal.priceslist.adescription"), list.getCurrency());
 
 						boolean result;
 						try {
@@ -236,7 +237,7 @@ public class ListBrowser extends ModalJFrame implements ListListener {
 							} else {
 								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 							}
-						} catch(OHServiceException e) {
+						} catch (OHServiceException e) {
 							OHServiceExceptionUtil.showMessages(e);
 						}
 					}

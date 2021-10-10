@@ -106,10 +106,10 @@ public class PregnantTreatmentTypeEdit extends JDialog {
      * because we need to update them
 	 */
 	public PregnantTreatmentTypeEdit(JFrame owner, PregnantTreatmentType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		pregnantTreatmentType = old;// PregnantTreatmentType will be used for every operation
-		lastdescription= pregnantTreatmentType.getDescription();
+		lastdescription = pregnantTreatmentType.getDescription();
 		initialize();
 	}
 

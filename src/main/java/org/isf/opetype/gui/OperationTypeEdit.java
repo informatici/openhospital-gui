@@ -106,10 +106,10 @@ public class OperationTypeEdit extends JDialog {
      * because we need to update them
 	 */
 	public OperationTypeEdit(JFrame owner, OperationType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		operationType = old;//operation will be used for every operation
-		lastdescription= operationType.getDescription();
+		lastdescription = operationType.getDescription();
 		initialize();
 	}
 

@@ -150,7 +150,6 @@ public class InsertMalnutrition extends JDialog {
 
 	private JPanel getFieldPanel() {
 		fieldPanel = new JPanel();
-		// fieldPanel.setLayout(new BoxLayout(fieldPanel,BoxLayout.Y_AXIS));
 		weightField = new JTextField();
 		weightField.setColumns(6);
 		heightField = new JTextField();

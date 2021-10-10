@@ -141,8 +141,8 @@ public class UserEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -332,24 +332,25 @@ public class UserEdit extends JDialog {
 			typeComboBox = new JComboBox();
 			if (insert) {
 				List<UserGroup> group = null;
-                try {
-                    group = manager.getUserGroup();
-                } catch (OHServiceException e) {
-                    OHServiceExceptionUtil.showMessages(e);
-                }
-                if (group != null) {
-                    for (UserGroup elem : group) {
-                        typeComboBox.addItem(elem);
-                    }
-                }
+				try {
+					group = manager.getUserGroup();
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+				}
+				if (group != null) {
+					for (UserGroup elem : group) {
+						typeComboBox.addItem(elem);
+					}
+				}
 			} else {
 				typeComboBox.addItem(user.getUserGroupName());
 				typeComboBox.setEnabled(false);
 			}
 			Dimension d = typeComboBox.getPreferredSize();
-			typeComboBox.setPreferredSize(new Dimension(150,d.height));
+			typeComboBox.setPreferredSize(new Dimension(150, d.height));
 
 		}
 		return typeComboBox;
 	}
+
 }

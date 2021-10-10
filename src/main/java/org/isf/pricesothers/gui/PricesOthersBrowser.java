@@ -168,7 +168,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jButtonNew.addActionListener(actionEvent -> {
-				PricesOthers pOther = new PricesOthers("", "", true,true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				PricesOthers pOther = new PricesOthers("", "", true, true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);
 				editOther.addOtherListener(PricesOthersBrowser.this);
 				editOther.setVisible(true);

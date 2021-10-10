@@ -84,7 +84,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			MessageBundle.getMessage("angal.exa.proc.col").toUpperCase(),
 			MessageBundle.getMessage("angal.exa.default.col").toUpperCase()
 	};
-	private int[] pColumnWidth = {60,330,160,60,130};
+	private int[] pColumnWidth = { 60, 330, 160, 60, 130 };
 	private Exam exam;
 
 	private DefaultTableModel model ;
@@ -119,8 +119,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 		if (jContentPanel == null) {
 			jContentPanel = new JPanel();
 			jContentPanel.setLayout(new BorderLayout());
-			jContentPanel.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContentPanel.add(new JScrollPane(getJTable()),BorderLayout.CENTER);
+			jContentPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContentPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
 			
 			JPanel panelSearch = new JPanel();
 			jContentPanel.add(panelSearch, BorderLayout.NORTH);

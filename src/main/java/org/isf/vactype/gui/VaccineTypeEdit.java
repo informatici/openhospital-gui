@@ -115,13 +115,12 @@ public class VaccineTypeEdit extends JDialog {
      * because we need to update them
 	 */
 	public VaccineTypeEdit(JFrame owner, VaccineType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		vaccineType = old;
-		lastdescription= vaccineType.getDescription();
+		lastdescription = vaccineType.getDescription();
 		initialize();
 	}
-
 
 	/**
 	 * This method initializes this

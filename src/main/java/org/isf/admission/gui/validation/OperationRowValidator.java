@@ -21,6 +21,8 @@
  */
 package org.isf.admission.gui.validation;
 
+import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,7 +45,7 @@ public class OperationRowValidator {
 	public final DateTimeFormatter currentDateFormat;
 
 	public OperationRowValidator() {
-		currentDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd", new Locale(GeneralData.LANGUAGE));
+		currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD, new Locale(GeneralData.LANGUAGE));
 	}
 
 	@SuppressWarnings("deprecation")

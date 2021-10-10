@@ -21,6 +21,8 @@
  */
 package org.isf.examination.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -188,8 +190,6 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER };
-
-	private static final String DATE_FORMAT = "dd/MM/yy HH:mm";
 
 	private JTable jTableSummary;
 
@@ -2039,7 +2039,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			StringBuilder ap_string = new StringBuilder();
 			ap_string.append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
 					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max());
-			String datetime = DateTimeFormatter.ofPattern(DATE_FORMAT).format(patex.getPex_date());
+			String datetime = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY_HH_MM).format(patex.getPex_date());
 			String diuresis = patex.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc());
 			String bowel = patex.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc());
 			String ausc = patex.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation());

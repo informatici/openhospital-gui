@@ -21,6 +21,10 @@
  */
 package org.isf.sms.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD_HH_MM;
+import static org.isf.utils.Constants.TIME_FORMAT_HH_MM;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -160,7 +164,7 @@ public class SmsBrowser extends ModalJFrame {
 			jFromDateChooser = new CustomJDateChooser();
 			jFromDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			jFromDateChooser.setDate(dateTimeAtStartOfToday);
-			jFromDateChooser.setDateFormatString("dd/MM/yy");
+			jFromDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jFromDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
 				dateFrom = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
 				updateModel(dateFrom, dateTo);
@@ -175,7 +179,7 @@ public class SmsBrowser extends ModalJFrame {
 			jToDateChooser = new CustomJDateChooser();
 			jToDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			jToDateChooser.setDate(dateTimeAtEndOfToday);
-			jToDateChooser.setDateFormatString("dd/MM/yy");
+			jToDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jToDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
 				dateTo = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
 				updateModel(dateFrom, dateTo);
@@ -383,7 +387,7 @@ public class SmsBrowser extends ModalJFrame {
 	}
 	
 	public String formatDateTime(LocalDateTime smsDateSent) {
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD_HH_MM);
 		if (smsDateSent != null) {
 			return dateTimeFormatter.format(smsDateSent);
 		}
@@ -391,8 +395,8 @@ public class SmsBrowser extends ModalJFrame {
 	}
 	
 	public String formatTodayDateTime(LocalDateTime smsDateSent) {
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD_HH_MM);
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMAT_HH_MM);
 		if (smsDateSent != null) {
 			if (smsDateSent.isAfter(dateTimeAtStartOfToday) && smsDateSent.isBefore(dateTimeAtEndOfToday)) {
 				return timeFormatter.format(smsDateSent);

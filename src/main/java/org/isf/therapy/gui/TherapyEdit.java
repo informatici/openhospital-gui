@@ -21,6 +21,8 @@
  */
 package org.isf.therapy.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -269,19 +271,17 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 		}
 	}
 
-	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
-		   
+	class CenterTableCellRenderer extends DefaultTableCellRenderer {
+
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-				boolean hasFocus, int row, int column) {  
-		   
-			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			cell.setForeground(Color.BLACK);
-			setHorizontalAlignment(LEFT);	   
+			setHorizontalAlignment(LEFT);
 			return cell;
-	   }
+		}
 	}
 	
 	private void showAll() {
@@ -298,7 +298,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private String getDate() {
-		return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDateTime.now());
+		return DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD).format(LocalDateTime.now());
 	}
 
 	private void showTherapies() {

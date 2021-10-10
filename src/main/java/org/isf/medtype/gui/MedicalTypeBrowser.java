@@ -108,14 +108,14 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 		}
 		return jButtonPanel;
 	}
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				medicalType = new MedicalType("","");
-				MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame,medicalType, true);
+				medicalType = new MedicalType("", "");
+				MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame, medicalType, true);
 				newrecord.addMedicalTypeListener(MedicalTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -138,7 +138,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					medicalType = (MedicalType) (model.getValueAt(selectedrow, -1));
-					MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame,medicalType, false);
+					MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame, medicalType, false);
 					newrecord.addMedicalTypeListener(MedicalTypeBrowser.this);
 					newrecord.setVisible(true);
 				}

@@ -21,6 +21,8 @@
  */
 package org.isf.operation.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -256,8 +258,8 @@ public class OperationRowEdit extends JPanel {
 		gbcLblTransUnite.gridx = 1;
 		gbcLblTransUnite.gridy = 5;
 		panelBody.add(lblTransUnite, gbcLblTransUnite);
-		
-		TransTextField = new VoFloatTextField(0,100);
+
+		TransTextField = new VoFloatTextField(0, 100);
 		GridBagConstraints gbcTransTextField = new GridBagConstraints();
 		gbcTransTextField.insets = new Insets(0, 0, 5, 0);
 		gbcTransTextField.fill = GridBagConstraints.HORIZONTAL;
@@ -265,7 +267,7 @@ public class OperationRowEdit extends JPanel {
 		gbcTransTextField.gridy = 5;
 		panelBody.add(TransTextField, gbcTransTextField);
 		TransTextField.setColumns(10);
-		
+
 		remarksTextArea = new JTextArea();
 		remarksTextArea.setTabSize(5);
 		if (this.opeRow != null) {
@@ -345,7 +347,7 @@ public class OperationRowEdit extends JPanel {
 		if (jCalendarDate == null) {
 			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy");
+			jCalendarDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			if (opeRow != null) {
 				jCalendarDate.setDate(this.opeRow.getOpDate());
 			}

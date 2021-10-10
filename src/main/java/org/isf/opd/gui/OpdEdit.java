@@ -21,6 +21,8 @@
  */
 package org.isf.opd.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -146,7 +148,7 @@ public class OpdEdit extends JDialog {
 	private JComboBox diseaseBox = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
-	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern("dd/MM/yy", new Locale(GeneralData.LANGUAGE));
+	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
 	private VoDateTextField opdDateField = null;
 	private JPanel jPanel2 = null;
 	private JButton okButton = null;
@@ -244,7 +246,7 @@ public class OpdEdit extends JDialog {
 	private JPanel getInsertPanel() {
 		if (insertPanel == null) {
 			insertPanel = new JPanel();
-			insertPanel.setLayout(new BoxLayout(getInsertPanel(),BoxLayout.Y_AXIS));
+			insertPanel.setLayout(new BoxLayout(getInsertPanel(), BoxLayout.Y_AXIS));
 			insertPanel.add(getJNewPatientPanel(), null);
 			insertPanel.add(getJDatePanel(), null);
 			insertPanel.add(getJDiseaseTypePanel(), null);
@@ -260,8 +262,7 @@ public class OpdEdit extends JDialog {
 		}
 		return insertPanel;
 	}
-	
-	
+
 	/**
 	 * This method initializes diseaseTypeBox	
 	 * 	
@@ -271,18 +272,19 @@ public class OpdEdit extends JDialog {
 		if (diseaseTypeBox == null) {
 			diseaseTypeBox = new JComboBox();
 			DiseaseType elem2 = null;
-			diseaseTypeBox.setMaximumSize(new Dimension(400,50));
+			diseaseTypeBox.setMaximumSize(new Dimension(400, 50));
 			diseaseTypeBox.addItem(allType);
 			if (types != null) {
 				for (DiseaseType elem : types) {
 					if (!insert && opd.getDisease().getType() != null) {
 						if (opd.getDisease().getType().getCode().equals(elem.getCode())) {
-							elem2=elem;}
+							elem2 = elem;
+						}
 					}
 					diseaseTypeBox.addItem(elem);
 				}
 			}
-			if (elem2 != null) { 
+			if (elem2 != null) {
 				diseaseTypeBox.setSelectedItem(elem2);
 			} else {
 				diseaseTypeBox.setSelectedIndex(0);
@@ -575,7 +577,7 @@ public class OpdEdit extends JDialog {
 	 */
 	private JTextField getAgeField() {
 		if (ageField == null) {
-			ageField = new VoLimitedTextField(3,2);
+			ageField = new VoLimitedTextField(3, 2);
 			ageField.setText("0");
 			ageField.setMaximumSize(new Dimension(50, 50));
 			if (insert) {
@@ -589,9 +591,10 @@ public class OpdEdit extends JDialog {
 			ageField.setMinimumSize(new Dimension(100, 50));
 		}
 		ageField.addFocusListener(new FocusListener() {
+
 			@Override
 			public void focusLost(FocusEvent e) {
-				try {				
+				try {
 					age = Integer.parseInt(ageField.getText());
 					if (age < 0 || age > 200) {
 						ageField.setText("");
@@ -601,7 +604,7 @@ public class OpdEdit extends JDialog {
 					ageField.setText("");
 				}
 			}
-			
+
 			@Override
 			public void focusGained(FocusEvent e) {
 			}
@@ -912,7 +915,7 @@ public class OpdEdit extends JDialog {
 			
 			d = currentDateFormat.format(dateIn);
 			
-			opdDateField = new VoDateTextField("dd/mm/yy", d, 15);
+			opdDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YY, d, 15);
 
 			jDatePanel.add(opdDateField);
 			jDatePanel = setMyBorder(jDatePanel, MessageBundle.getMessage("angal.opd.attendancedate.txt"));

@@ -149,15 +149,15 @@ public class WardPharmacyEdit extends JDialog {
 	private JTextField getJTextFieldSearchPatient() {
 		if (jTextFieldSearchPatient == null) {
 			jTextFieldSearchPatient = new JTextField();
-			jTextFieldSearchPatient.setPreferredSize(new Dimension(100,20));
+			jTextFieldSearchPatient.setPreferredSize(new Dimension(100, 20));
 			jTextFieldSearchPatient.addKeyListener(new KeyListener() {
 
 				@Override
 				public void keyPressed(KeyEvent e) {
 					int key = e.getKeyCode();
-				     if (key == KeyEvent.VK_ENTER) {
-				    	 jSearchButton.doClick();
-				     }
+					if (key == KeyEvent.VK_ENTER) {
+						jSearchButton.doClick();
+					}
 				}
 
 				@Override
@@ -376,8 +376,8 @@ public class WardPharmacyEdit extends JDialog {
 			Double startQty = 0.;
 			Double minQty = 0.;
 			Double stepQty = 0.5;
-			jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty,minQty,maxQty,stepQty));
-			jSpinnerQty.setPreferredSize(new Dimension(50,20));
+			jSpinnerQty = new JSpinner(new SpinnerNumberModel(startQty, minQty, maxQty, stepQty));
+			jSpinnerQty.setPreferredSize(new Dimension(50, 20));
 			if (movSelected != null) {
 				jSpinnerQty.setValue(movSelected.getQuantity());
 			}
@@ -402,20 +402,20 @@ public class WardPharmacyEdit extends JDialog {
 	}
 
 	private JComboBox getJComboBoxPatients(String s) {
-		
+
 		String key = s;
 		String[] s1;
-				
+
 		if (jComboBoxPatients == null) {
 			jComboBoxPatients = new JComboBox();
-			jComboBoxPatients.setPreferredSize(new Dimension(200,20));
+			jComboBoxPatients.setPreferredSize(new Dimension(200, 20));
 		}
 		if (key == null || key.compareTo("") == 0) { //$NON-NLS-1$
 			jComboBoxPatients.addItem(MessageBundle.getMessage("angal.medicalstockwardedit.selectapatient")); //$NON-NLS-1$
 		}
-		
+
 		for (Patient elem : pat) {
-			if (key != null)	{
+			if (key != null) {
 				s1 = key.split(" ");
 				int a = 0;
 				for (int i = 0; i < s1.length; i++) {
@@ -430,17 +430,17 @@ public class WardPharmacyEdit extends JDialog {
 				jComboBoxPatients.addItem(elem);
 			}
 		}
-		
+
 		//Workaround for one item only
 		if (jComboBoxPatients.getItemCount() == 1) {
-			movSelectedPatient=(Patient)jComboBoxPatients.getSelectedItem();
+			movSelectedPatient = (Patient) jComboBoxPatients.getSelectedItem();
 		}
 		//Workaround for first item
 		if (jComboBoxPatients.getItemCount() > 0) {
 			Object item = jComboBoxPatients.getItemAt(0);
 			if (item instanceof Patient) {
-				movSelectedPatient=(Patient)item;
-			} 
+				movSelectedPatient = (Patient) item;
+			}
 		}
 		jTextFieldSearchPatient.requestFocus();
 		return jComboBoxPatients;
@@ -563,10 +563,10 @@ public class WardPharmacyEdit extends JDialog {
 		if (jComboBoxDrugs == null) {
 			jComboBoxDrugs = new JComboBox();
 			jComboBoxDrugs.setDoubleBuffered(false);
-			jComboBoxDrugs.setPreferredSize(new Dimension(400,20));
+			jComboBoxDrugs.setPreferredSize(new Dimension(400, 20));
 			jComboBoxDrugs.setBorder(null);
 		}
-		
+
 		if (key == null || key.compareTo("") == 0) { //$NON-NLS-1$
 			jComboBoxDrugs.addItem(MessageBundle.getMessage("angal.medicalstockwardedit.selectadrug")); //$NON-NLS-1$
 		}
@@ -581,19 +581,18 @@ public class WardPharmacyEdit extends JDialog {
 			}
 
 		}
-		
+
 		//Workaround for one item only
 		if (jComboBoxDrugs.getItemCount() == 1) {
-			movSelectedMedical=(Medical)jComboBoxDrugs.getSelectedItem();
+			movSelectedMedical = (Medical) jComboBoxDrugs.getSelectedItem();
 		}
 		//Workaround for first item
 		if (jComboBoxDrugs.getItemCount() > 0) {
-			
+
 			if (jComboBoxDrugs.getItemAt(0) instanceof Patient) {
-				movSelectedMedical=(Medical)jComboBoxDrugs.getItemAt(0);
+				movSelectedMedical = (Medical) jComboBoxDrugs.getItemAt(0);
 			}
 		}
-		
 		return jComboBoxDrugs;
 	}
 

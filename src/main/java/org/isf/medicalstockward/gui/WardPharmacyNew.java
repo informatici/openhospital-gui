@@ -21,6 +21,8 @@
  */
 package org.isf.medicalstockward.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -150,19 +152,18 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JPanel jPanelMedicalsButtons;
 	private JButton jButtonAddMedical;
 	private JButton jButtonRemoveMedical;
-	private static final Dimension PatientDimension = new Dimension(300,20);
-	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
-	
+	private static final Dimension PatientDimension = new Dimension(300, 20);
+
 	private Patient patientSelected = null;
 	private float patientWeight;
 	private Ward wardSelected;
-	private Object[] medClasses = {Medical.class, Integer.class, String.class};
+	private Object[] medClasses = { Medical.class, Integer.class, String.class };
 	private String[] medColumnNames = {
 			MessageBundle.getMessage("angal.wardpharmacy.medical.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.wardpharmacy.lotnumber.col").toUpperCase()
 	};
-	private Integer[] medWidth = {150, 150, 50};
+	private Integer[] medWidth = { 150, 150, 50 };
 	private boolean[] medResizable = { true, false, false };
 
 	private List<Medical> medArray = new ArrayList<>();
@@ -502,8 +503,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jButtonAddMedical.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.medical.btn.key"));
 			jButtonAddMedical.setIcon(new ImageIcon("rsc/icons/plus_button.png")); //$NON-NLS-1$
 			jButtonAddMedical.addActionListener(actionEvent -> {
-				String medical=(String)jComboBoxMedicals.getSelectedItem();
-				int quantity = askQuantity(medical,wardDrugs);
+				String medical = (String) jComboBoxMedicals.getSelectedItem();
+				int quantity = askQuantity(medical, wardDrugs);
 			});
 		}
 		return jButtonAddMedical;
@@ -695,16 +696,16 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JButton getJButtonTrashPatient() {
 		if (jButtonTrashPatient == null) {
 			jButtonTrashPatient = new JButton();
-			jButtonTrashPatient.setPreferredSize(new Dimension(25,25));
-			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png")); //$NON-NLS-1$
-			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.removepatientassociationwiththismovement")); //$NON-NLS-1$
+			jButtonTrashPatient.setPreferredSize(new Dimension(25, 25));
+			jButtonTrashPatient.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
+			jButtonTrashPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.removepatientassociationwiththismovement"));
 			jButtonTrashPatient.addActionListener(actionEvent -> {
 
 				patientSelected = null;
 				jTextFieldPatient.setText(""); //$NON-NLS-1$
 				jTextFieldPatient.setEditable(true);
 				jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.pickpatient"));
-				jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement")); //$NON-NLS-1$
+				jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
 				jButtonTrashPatient.setEnabled(false);
 			});
 			jButtonTrashPatient.setEnabled(false);

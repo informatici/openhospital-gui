@@ -127,10 +127,10 @@ public class ExamEdit extends JDialog {
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
-	public ExamEdit(JFrame owner,Exam old,boolean inserting) {
-		super(owner,true);
+	public ExamEdit(JFrame owner, Exam old, boolean inserting) {
+		super(owner, true);
 		insert = inserting;
-		exam = old;		//medical will be used for every operation
+		exam = old;        // exam will be used for every operation
 		initialize();
 	}
 
@@ -164,8 +164,8 @@ public class ExamEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
