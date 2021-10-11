@@ -23,11 +23,11 @@ package org.isf.utils;
 
 public interface Constants {
 
-	public static final String DATE_FORMAT_DD_MM_YY = "dd/mm/yy";
-	public static final String DATE_FORMAT_DD_MM_YYYY = "dd/mm/yyyy";
+	public static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
+	public static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy";
 
-	public static final String DATE_FORMAT_MM_DD_YY = "mm/dd/yy";
-	public static final String DATE_FORMAT_MM_DD_YYYY = "mm/dd/yyyy";
+	public static final String DATE_FORMAT_MM_DD_YY = "MM/dd/yy";
+	public static final String DATE_FORMAT_MM_DD_YYYY = "MM/dd/yyyy";
 
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_YYYYMMDD = "yyyyMMdd";
