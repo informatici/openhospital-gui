@@ -253,9 +253,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private CustomJDateChooser abortDateFieldCal = null;
 
-	private JComboBox wardBox;
-
-	private List<Ward> wardList = null;
+	private JComboBox<Ward> wardBox;
 
 	// save value during a switch
 	private Ward saveWard = null;
@@ -955,7 +953,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			wardPanel = new JPanel();
 
 			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
-			wardBox = new JComboBox();
+			wardBox = new JComboBox<>();
 
 			new WardComboBoxInitializer(
 					wardBox,

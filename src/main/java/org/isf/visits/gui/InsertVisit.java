@@ -92,9 +92,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private JPanel servicePanel;
 	private JTextField serviceField;
 	private JPanel durationPanel;
-	private JTextField durationField;
 	private JPanel dateViPanel;
-	private JLabel dateAdm;
 	private JButton admButton;
 	private JButton jButtonPickPatient;
 	private JTextField patientTextField;
@@ -106,7 +104,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	 */
 	private LocalDateTime visitDate = null;
 	private JPanel wardPanel;
-	private JComboBox wardBox;
+	private JComboBox<Ward> wardBox;
 	private Ward ward;
 	private Visit visit;
 	private boolean insert = false;
@@ -171,30 +169,30 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		ward.gridx = 0;
 		patientParamsPanel.add(getWardPanel(), ward);
 
-		GridBagConstraints Pat = new GridBagConstraints();
-		Pat.fill = GridBagConstraints.VERTICAL;
-		Pat.anchor = GridBagConstraints.WEST;
+		GridBagConstraints gbcPatientParams = new GridBagConstraints();
+		gbcPatientParams.fill = GridBagConstraints.VERTICAL;
+		gbcPatientParams.anchor = GridBagConstraints.WEST;
 
-		Pat.gridy = 0;
-		Pat.gridx = 1;
-		Pat.gridwidth = 3;
-		patientParamsPanel.add(getPanelChoosePatient(), Pat);
+		gbcPatientParams.gridy = 0;
+		gbcPatientParams.gridx = 1;
+		gbcPatientParams.gridwidth = 3;
+		patientParamsPanel.add(getPanelChoosePatient(), gbcPatientParams);
 
-		GridBagConstraints Service = new GridBagConstraints();
-		Service.fill = GridBagConstraints.VERTICAL;
-		Service.anchor = GridBagConstraints.WEST;
+		GridBagConstraints gbcService = new GridBagConstraints();
+		gbcService.fill = GridBagConstraints.VERTICAL;
+		gbcService.anchor = GridBagConstraints.WEST;
 
-		Service.gridy = 1;
-		Service.gridx = 0;
-		patientParamsPanel.add(getServicePanel(), Service);
+		gbcService.gridy = 1;
+		gbcService.gridx = 0;
+		patientParamsPanel.add(getServicePanel(), gbcService);
 
-		GridBagConstraints Duration = new GridBagConstraints();
-		Duration.fill = GridBagConstraints.VERTICAL;
-		Duration.anchor = GridBagConstraints.WEST;
-		Duration.gridy = 2;
-		Duration.gridx = 0;
-		Duration.gridwidth = 2;
-		patientParamsPanel.add(getDurationPanel(), Duration);
+		GridBagConstraints gbcDuration = new GridBagConstraints();
+		gbcDuration.fill = GridBagConstraints.VERTICAL;
+		gbcDuration.anchor = GridBagConstraints.WEST;
+		gbcDuration.gridy = 2;
+		gbcDuration.gridx = 0;
+		gbcDuration.gridwidth = 2;
+		patientParamsPanel.add(getDurationPanel(), gbcDuration);
 
 		GridBagConstraints date = new GridBagConstraints();
 		date.fill = GridBagConstraints.VERTICAL;
@@ -211,8 +209,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private JPanel getWardPanel() {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
-			wardBox = new JComboBox();
-			wardBox.addItem("");
+			wardBox = new JComboBox<>();
+			wardBox.addItem(null);
 			try {
 				wardList = wbm.getWards();
 			} catch (OHServiceException e) {
@@ -258,7 +256,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 			JLabel durationlabel = new JLabel(MessageBundle.getMessage("angal.visit.durationinminutes"));
 
-			durationField = new JTextField(10);
+			JTextField durationField = new JTextField(10);
 			durationField.setEditable(true);
 			durationField.setFocusable(true);
 
@@ -335,14 +333,9 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	}
 
 	public JPanel getVisitDateChooser() {
-
 		if (dateViPanel == null) {
-
 			dateViPanel = new JPanel();
-
-			dateAdm = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
-
-			dateViPanel.add(dateAdm);
+			dateViPanel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt")));
 			dateViPanel.add(getVisitDateField());
 			dateViPanel.add(getAdmButton());
 		}
@@ -356,12 +349,10 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (visitDate != null) {
 			visitDateChooser.setDate(visitDate);
 		}
-
 		return visitDateChooser;
 	}
 
 	private JButton getAdmButton() {
-
 		if (admButton == null) {
 			admButton = new JButton("");
 			admButton.setIcon(new ImageIcon("./rsc/icons/clock_button.png"));

@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -133,7 +132,6 @@ public class VisitView extends ModalJFrame {
 	private JButton todayButton;
 	private JButton tomorrowButton;
 	private JPanel dateViPanel;
-	private JButton gotoDateButton;
 	private JTable jTableFirst;
 	private JScrollPane jScrollPaneFirstday;
 	private JFrame owner;
@@ -143,9 +141,8 @@ public class VisitView extends ModalJFrame {
 	private JButton backButton;
 	private JButton nextButton;
 	private JPanel todayPanel;
-	private JButton todayBtn;
-	private JComboBox wardBox;
-	private SpringLayout sl_visitParamsPanel;
+	private JComboBox<Ward> wardBox;
+	private SpringLayout slVisitParamsPanel;
 	
 	public String[] visColumns = { MessageBundle.getMessage("angal.visit.visits") };
 
@@ -158,7 +155,6 @@ public class VisitView extends ModalJFrame {
 	private List<Visit> visits = new ArrayList<>();
 	private List<Visit> visitfirst = new ArrayList<>();
 	private List<Visit> visitSecond = new ArrayList<>();
-	private List<Ward> wardList = null;
 	private Ward ward;
 	private LocalDateTime dateFirst;
 	private LocalDateTime dateSecond;
@@ -217,78 +213,78 @@ public class VisitView extends ModalJFrame {
 	}
 
 	private JPanel dayCalendar() {
-		sl_visitParamsPanel = new SpringLayout();
-		JPanel visitParamPanel = new JPanel(sl_visitParamsPanel);
+		slVisitParamsPanel = new SpringLayout();
+		JPanel visitParamPanel = new JPanel(slVisitParamsPanel);
 
-		GridBagLayout jPanelData = new GridBagLayout();
-		jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 0 };
-		jPanelData.rowHeights = new int[] { 20, 20, 20, 0, 0, 0, 0, 0 };
-		jPanelData.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-		jPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-		visitParamPanel.setLayout(jPanelData);
+		GridBagLayout gbcPanelData = new GridBagLayout();
+		gbcPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 0 };
+		gbcPanelData.rowHeights = new int[] { 20, 20, 20, 0, 0, 0, 0, 0 };
+		gbcPanelData.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		gbcPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		visitParamPanel.setLayout(gbcPanelData);
 
-		GridBagConstraints buttonback = new GridBagConstraints();
-		buttonback.fill = GridBagConstraints.VERTICAL;
-		buttonback.anchor = GridBagConstraints.WEST;
-		buttonback.gridy = 1;
-		buttonback.gridx = 0;
-		visitParamPanel.add(getButtonBack(), buttonback);
+		GridBagConstraints gbcButtonBack = new GridBagConstraints();
+		gbcButtonBack.fill = GridBagConstraints.VERTICAL;
+		gbcButtonBack.anchor = GridBagConstraints.WEST;
+		gbcButtonBack.gridy = 1;
+		gbcButtonBack.gridx = 0;
+		visitParamPanel.add(getButtonBack(), gbcButtonBack);
 
-		GridBagConstraints datelabel = new GridBagConstraints();
-		datelabel.fill = GridBagConstraints.VERTICAL;
-		datelabel.anchor = GridBagConstraints.WEST;
-		datelabel.gridy = 0;
-		datelabel.gridx = 1;
-		visitParamPanel.add(getDateFirstDay(), datelabel);
+		GridBagConstraints gbcDatelabel = new GridBagConstraints();
+		gbcDatelabel.fill = GridBagConstraints.VERTICAL;
+		gbcDatelabel.anchor = GridBagConstraints.WEST;
+		gbcDatelabel.gridy = 0;
+		gbcDatelabel.gridx = 1;
+		visitParamPanel.add(getDateFirstDay(), gbcDatelabel);
 
-		GridBagConstraints Duration = new GridBagConstraints();
-		Duration.fill = GridBagConstraints.VERTICAL;
-		Duration.anchor = GridBagConstraints.WEST;
-		Duration.gridy = 1;
-		Duration.gridx = 1;
-		visitParamPanel.add(getVisitFirstday(), Duration);
+		GridBagConstraints gbcDuration = new GridBagConstraints();
+		gbcDuration.fill = GridBagConstraints.VERTICAL;
+		gbcDuration.anchor = GridBagConstraints.WEST;
+		gbcDuration.gridy = 1;
+		gbcDuration.gridx = 1;
+		visitParamPanel.add(getVisitFirstday(), gbcDuration);
 
-		GridBagConstraints datesecond = new GridBagConstraints();
-		datesecond.fill = GridBagConstraints.VERTICAL;
-		datesecond.anchor = GridBagConstraints.WEST;
-		datesecond.gridy = 0;
-		datesecond.gridx = 2;
-		visitParamPanel.add(getDateSecondDay(), datesecond);
+		GridBagConstraints gbcDateSecond = new GridBagConstraints();
+		gbcDateSecond.fill = GridBagConstraints.VERTICAL;
+		gbcDateSecond.anchor = GridBagConstraints.WEST;
+		gbcDateSecond.gridy = 0;
+		gbcDateSecond.gridx = 2;
+		visitParamPanel.add(getDateSecondDay(), gbcDateSecond);
 
-		GridBagConstraints buttonnext = new GridBagConstraints();
-		buttonnext.fill = GridBagConstraints.VERTICAL;
-		buttonnext.anchor = GridBagConstraints.WEST;
-		buttonnext.gridy = 1;
-		buttonnext.gridx = 3;
-		visitParamPanel.add(getButtonNext(), buttonnext);
+		GridBagConstraints gbcButtonNext = new GridBagConstraints();
+		gbcButtonNext.fill = GridBagConstraints.VERTICAL;
+		gbcButtonNext.anchor = GridBagConstraints.WEST;
+		gbcButtonNext.gridy = 1;
+		gbcButtonNext.gridx = 3;
+		visitParamPanel.add(getButtonNext(), gbcButtonNext);
 
-		GridBagConstraints date = new GridBagConstraints();
-		date.fill = GridBagConstraints.VERTICAL;
-		date.anchor = GridBagConstraints.WEST;
-		date.gridy = 1;
-		date.gridx = 2;
-		visitParamPanel.add(getVisitSecondDay(), date);
+		GridBagConstraints gbcSecondDay = new GridBagConstraints();
+		gbcSecondDay.fill = GridBagConstraints.VERTICAL;
+		gbcSecondDay.anchor = GridBagConstraints.WEST;
+		gbcSecondDay.gridy = 1;
+		gbcSecondDay.gridx = 2;
+		visitParamPanel.add(getVisitSecondDay(), gbcSecondDay);
 
-		GridBagConstraints printfirst = new GridBagConstraints();
-		printfirst.fill = GridBagConstraints.CENTER;
-		printfirst.anchor = GridBagConstraints.CENTER;
-		printfirst.gridy = 2;
-		printfirst.gridx = 1;
-		visitParamPanel.add(getTodayPanel(), printfirst);
+		GridBagConstraints gbcToday = new GridBagConstraints();
+		gbcToday.fill = GridBagConstraints.CENTER;
+		gbcToday.anchor = GridBagConstraints.CENTER;
+		gbcToday.gridy = 2;
+		gbcToday.gridx = 1;
+		visitParamPanel.add(getTodayPanel(), gbcToday);
 
-		GridBagConstraints printsecond = new GridBagConstraints();
-		printsecond.fill = GridBagConstraints.CENTER;
-		printsecond.anchor = GridBagConstraints.CENTER;
-		printsecond.gridy = 2;
-		printsecond.gridx = 2;
-		visitParamPanel.add(getTomorrowPanel(), printsecond);
+		GridBagConstraints gbcTomorrow = new GridBagConstraints();
+		gbcTomorrow.fill = GridBagConstraints.CENTER;
+		gbcTomorrow.anchor = GridBagConstraints.CENTER;
+		gbcTomorrow.gridy = 2;
+		gbcTomorrow.gridx = 2;
+		visitParamPanel.add(getTomorrowPanel(), gbcTomorrow);
 
-		GridBagConstraints close = new GridBagConstraints();
-		close.fill = GridBagConstraints.WEST;
-		printfirst.anchor = GridBagConstraints.WEST;
-		close.gridy = 3;
-		close.gridx = 3;
-		visitParamPanel.add(getCloseButton(), close);
+		GridBagConstraints gbcCloseButton = new GridBagConstraints();
+		gbcCloseButton.fill = GridBagConstraints.WEST;
+		gbcToday.anchor = GridBagConstraints.WEST;
+		gbcCloseButton.gridy = 3;
+		gbcCloseButton.gridx = 3;
+		visitParamPanel.add(getCloseButton(), gbcCloseButton);
 
 		return visitParamPanel;
 
@@ -436,7 +432,7 @@ public class VisitView extends ModalJFrame {
 		if (jScrollPaneFirstday == null) {
 			jScrollPaneFirstday = new JScrollPane();
 			jScrollPaneFirstday.setViewportView(visitFirstDayPanel());
-			jScrollPaneFirstday.setAlignmentY(Box.TOP_ALIGNMENT);
+			jScrollPaneFirstday.setAlignmentY(Component.TOP_ALIGNMENT);
 			jScrollPaneFirstday.getViewport().setBackground(Color.WHITE);
 
 			jScrollPaneFirstday.setMinimumSize(new Dimension(500, 400));
@@ -462,10 +458,10 @@ public class VisitView extends ModalJFrame {
 		if (jScrollPaneSecondtday == null) {
 			jScrollPaneSecondtday = new JScrollPane();
 			jScrollPaneSecondtday.getViewport().setBackground(Color.WHITE);
-			sl_visitParamsPanel.putConstraint(SpringLayout.NORTH, jScrollPaneSecondtday, 0, SpringLayout.NORTH, getVisitFirstday());
-			sl_visitParamsPanel.putConstraint(SpringLayout.EAST, jScrollPaneSecondtday, -104, SpringLayout.WEST, getVisitFirstday());
+			slVisitParamsPanel.putConstraint(SpringLayout.NORTH, jScrollPaneSecondtday, 0, SpringLayout.NORTH, getVisitFirstday());
+			slVisitParamsPanel.putConstraint(SpringLayout.EAST, jScrollPaneSecondtday, -104, SpringLayout.WEST, getVisitFirstday());
 			jScrollPaneSecondtday.setViewportView(visitSecondDayPanel());
-			jScrollPaneSecondtday.setAlignmentY(Box.TOP_ALIGNMENT);
+			jScrollPaneSecondtday.setAlignmentY(Component.TOP_ALIGNMENT);
 			jScrollPaneSecondtday.setMinimumSize(new Dimension(500, 400));
 		}
 		return jScrollPaneSecondtday;
@@ -488,10 +484,8 @@ public class VisitView extends ModalJFrame {
 	public JPanel getVisitDateChooserPanel() {
 
 		if (dateViPanel == null) {
-
 			dateViPanel = new JPanel();
-
-			gotoDateButton = new JButton(MessageBundle.getMessage("angal.visit.gotodate.btn"));
+			JButton gotoDateButton = new JButton(MessageBundle.getMessage("angal.visit.gotodate.btn"));
 			gotoDateButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.gotodate.btn.key"));
 			gotoDateButton.addActionListener(actionEvent -> {
 				if (visitDateChooser.getDate() != null) {
@@ -504,7 +498,6 @@ public class VisitView extends ModalJFrame {
 
 			dateViPanel.add(gotoDateButton);
 			dateViPanel.add(getVisitDateChooser());
-
 		}
 		return dateViPanel;
 	}
@@ -539,11 +532,6 @@ public class VisitView extends ModalJFrame {
 	private void setDateFirstThenSecond(LocalDateTime date) {
 		dateFirst = date;
 		dateSecond = date.plusDays(1);
-	}
-
-	private void setDateSecondThenFirst(LocalDateTime date) {
-		dateSecond = date;
-		dateFirst = date.minusDays(1);
 	}
 
 	private void setDateDayAfter() {
@@ -768,7 +756,7 @@ public class VisitView extends ModalJFrame {
 	private JPanel getTodayVisit() {
 		if (todayPanel == null) {
 			todayPanel = new JPanel();
-			todayBtn = new JButton(MessageBundle.getMessage("angal.visit.today.btn"));
+			JButton todayBtn = new JButton(MessageBundle.getMessage("angal.visit.today.btn"));
 			todayBtn.setMnemonic(MessageBundle.getMnemonic("angal.visit.today.btn.key"));
 			todayBtn.addActionListener(actionEvent -> {
 				setDateFirstThenSecond(LocalDateTime.now());
@@ -783,8 +771,9 @@ public class VisitView extends ModalJFrame {
 	private JPanel getWardPanel() {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
-			wardBox = new JComboBox();
-			wardBox.addItem("");
+			wardBox = new JComboBox<>();
+			wardBox.addItem(null);
+			List<Ward> wardList;
 			try {
 				wardList = wbm.getWards();
 			} catch (OHServiceException e) {
@@ -792,9 +781,7 @@ public class VisitView extends ModalJFrame {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			for (Ward ward : wardList) {
-
 				wardBox.addItem(ward);
-
 				if (this.ward != null) {
 					if (this.ward.getCode().equalsIgnoreCase(ward.getCode())) {
 						wardBox.setSelectedItem(ward);

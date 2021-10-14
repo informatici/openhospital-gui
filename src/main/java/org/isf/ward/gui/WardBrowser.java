@@ -74,11 +74,9 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		}
 	}
 
-	private int pfrmBase = 10;
-	private int pfrmWidth = 8;
-	private int pfrmHeight = 6;
-	private int pfrmBordX;
-	private int pfrmBordY;
+	private static final int PFRM_BASE = 10;
+	private static final int PFRM_WIDTH = 8;
+	private static final int PFRM_HEIGHT = 6;
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton jEditButton = null;
@@ -132,9 +130,9 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		this.setTitle(MessageBundle.getMessage("angal.ward.wardbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
-		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
+		int pfrmBordX = (screensize.width - (screensize.width / PFRM_BASE * PFRM_WIDTH)) / 2;
+		int pfrmBordY = (screensize.height - (screensize.height / PFRM_BASE * PFRM_HEIGHT)) / 2;
+		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / PFRM_BASE * PFRM_WIDTH, screensize.height / PFRM_BASE * PFRM_HEIGHT);
 		this.setContentPane(getJContentPane());
 	}
 	

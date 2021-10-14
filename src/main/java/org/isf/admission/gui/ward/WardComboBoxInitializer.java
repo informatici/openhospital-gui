@@ -35,7 +35,7 @@ import org.isf.ward.model.Ward;
 
 public class WardComboBoxInitializer {
 
-	private final JComboBox wardBox;
+	private final JComboBox<Ward> wardBox;
 	private final WardBrowserManager wardBrowserManager;
 	private final Patient patient;
 	private final Ward saveWard;
@@ -53,7 +53,7 @@ public class WardComboBoxInitializer {
 	}
 
 	public void initialize() {
-		wardBox.addItem("");
+		wardBox.addItem(null);
 		List<Ward> wardList = fetchWards();
 		populateWardBoxWithElements(wardList);
 		selectItem(wardList);
