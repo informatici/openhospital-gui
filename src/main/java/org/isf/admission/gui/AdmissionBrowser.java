@@ -1163,6 +1163,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing) {
 				dateIn = admission.getAdmDate();
 			} else {
+				if (dateIn == null) {
+					dateIn = LocalDateTime.now();
+				}
 				dateIn = RememberDates.getLastAdmInDate();
 			}
 			dateInFieldCal = new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY); // Calendar
@@ -1642,9 +1645,8 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (wardBox.getSelectedIndex() == 0) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavalidward.msg");
 					return;
-				} else {
-					admission.setWard((Ward) (wardBox.getSelectedItem()));
 				}
+				admission.setWard((Ward) (wardBox.getSelectedItem()));
 				if (admission.getWard().getCode().equalsIgnoreCase("M")) {
 					isPregnancy = true;
 				}
@@ -1653,17 +1655,16 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (diseaseInBox.getSelectedIndex() == 0) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavaliddiseasein.msg");
 					return;
-				} else {
-					try {
-						Disease diseaseIn = (Disease) diseaseInBox.getSelectedItem();
-						admission.setDiseaseIn(diseaseIn);
-					} catch (IndexOutOfBoundsException e1) {
-						/*
-						 * Workaround in case a fake-disease is selected (ie
-						 * when previous disease has been deleted)
-						 */
-						admission.setDiseaseIn(null);
-					}
+				}
+				try {
+					Disease diseaseIn = (Disease) diseaseInBox.getSelectedItem();
+					admission.setDiseaseIn(diseaseIn);
+				} catch (IndexOutOfBoundsException e1) {
+					/*
+					 * Workaround in case a fake-disease is selected (ie
+					 * when previous disease has been deleted)
+					 */
+					admission.setDiseaseIn(null);
 				}
 
 				// get disease out id ( it can be null)
@@ -1693,7 +1694,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					admission.setDiseaseOut3(diseaseOut3);
 				}
 
-				// get year prog ( not null)
+				// get year prog (not null)
 				admission.setYProg(Integer.parseInt(yProgTextField.getText()));
 
 				// get FHU (it can be null)
@@ -1707,19 +1708,18 @@ public class AdmissionBrowser extends ModalJFrame {
 				if (dateInFieldCal.getDate() != null) {
 					dateInFieldCal.getLocalDateTime();
 					dateIn = dateInFieldCal.getLocalDateTime();
-					admission.setAdmDate(dateIn);
-					RememberDates.setLastAdmInDate(dateIn);
 				} else {
-					admission.setAdmDate(null);
+					dateIn = LocalDateTime.now();
 				}
+				admission.setAdmDate(dateIn);
+				RememberDates.setLastAdmInDate(dateIn);
 
 				// get admission type (not null)
 				if (admTypeBox.getSelectedIndex() == 0) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavalidadmissiontype.msg");
 					return;
-				} else {
-					admission.setAdmType(admTypeList.get(admTypeBox.getSelectedIndex() - 1));
 				}
+				admission.setAdmType(admTypeList.get(admTypeBox.getSelectedIndex() - 1));
 
 				// check and get date out (it can be null)
 				// if set date out, isDischarge is set
