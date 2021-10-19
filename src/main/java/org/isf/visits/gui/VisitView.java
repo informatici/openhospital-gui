@@ -527,6 +527,8 @@ public class VisitView extends ModalJFrame {
 		jTableFirst.updateUI();
 		((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
 		jTableSecond.updateUI();
+
+		visitDateChooser.setDate(dateFirst);
 	}
 
 	private void setDateFirstThenSecond(LocalDateTime date) {
