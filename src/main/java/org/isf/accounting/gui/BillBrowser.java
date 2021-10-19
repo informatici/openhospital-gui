@@ -310,6 +310,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		if (jCalendarTo == null) {
 			jCalendarTo = new CustomJDateChooser(dateToday24, DATE_FORMAT_DD_MM_YY); // Calendar
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
+			jCalendarTo.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jCalendarTo.getCalendarButton().setMnemonic(0);
 			jCalendarTo.addPropertyChangeListener("date", propertyChangeEvent -> {
 				jCalendarTo.setDate((Date) propertyChangeEvent.getNewValue());
