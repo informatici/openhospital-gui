@@ -1796,7 +1796,8 @@ public class AdmissionBrowser extends ModalJFrame {
 					admission.setAdmDate(dateIn);
 					RememberDates.setLastAdmInDate(dateIn);
 				} else {
-					admission.setAdmDate(null);
+					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseinsertavalidadmissiondate.msg");
+					return;
 				}
 
 				// get admission type (not null)
