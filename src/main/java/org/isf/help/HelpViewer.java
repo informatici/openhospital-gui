@@ -47,7 +47,7 @@ public class HelpViewer extends JDialog {
 			if (Desktop.isDesktopSupported()) { //Try to find system PDF viewer
 				try {
 					Desktop.getDesktop().open(file);
-				} catch (IOException e) {
+				} catch (IOException | IllegalArgumentException e) {
 					MessageDialog.error(HelpViewer.this, "angal.help.userguidenotfound");
 				}
 			} else if (!GeneralData.INTERNALVIEWER) { //Try specified PDF viewer, if any
