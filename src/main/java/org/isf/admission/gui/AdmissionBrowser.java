@@ -1725,7 +1725,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				boolean isPregnancy = false;
 
 				// get ward id (not null)
-				if (wardBox.getSelectedIndex() == 0) {
+				if (wardBox.getSelectedIndex() == 0 || wardBox.getSelectedItem() == null) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavalidward.msg");
 					return;
 				} else {
