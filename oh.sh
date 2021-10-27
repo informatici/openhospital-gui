@@ -622,7 +622,7 @@ while getopts ${OPTSTRING} opt; do
 	i)	# initialize/install OH database
 		# set mode to CLIENT
 		OH_MODE="CLIENT"
-		echo "Do you want to initialize/install OH database on:"
+		echo "Do you want to initialize/install the OH database on:"
 		echo ""
 		echo " Server -> $MYSQL_SERVER"
 		echo " TCP port -> $MYSQL_PORT" 
@@ -632,9 +632,9 @@ while getopts ${OPTSTRING} opt; do
 		initialize_dir_structure;
 		mysql_check;
 		# ask user for database root password
-		read -p "Please insert MySQL / MariaDB database root password (root@$MYSQL_SERVER) -> " MYSQL_ROOT_PW
+		read -p "Please insert the MySQL / MariaDB database root password (root@$MYSQL_SERVER) -> " MYSQL_ROOT_PW
 		echo ""
-		echo "Installing database....."
+		echo "Installing the database....."
 		echo ""
 		echo " Database name -> $DATABASE_NAME"
 		echo " Database user -> $DATABASE_USER"
