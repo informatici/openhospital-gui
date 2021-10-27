@@ -1163,9 +1163,6 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing) {
 				dateIn = admission.getAdmDate();
 			} else {
-				if (dateIn == null) {
-					dateIn = LocalDateTime.now();
-				}
 				dateIn = RememberDates.getLastAdmInDate();
 			}
 			dateInFieldCal = new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY); // Calendar
@@ -1642,7 +1639,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				boolean isPregnancy = false;
 
 				// get ward id (not null)
-				if (wardBox.getSelectedIndex() == 0) {
+				if (wardBox.getSelectedIndex() == 0 || wardBox.getSelectedItem() == null) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavalidward.msg");
 					return;
 				}
@@ -1709,7 +1706,8 @@ public class AdmissionBrowser extends ModalJFrame {
 					dateInFieldCal.getLocalDateTime();
 					dateIn = dateInFieldCal.getLocalDateTime();
 				} else {
-					dateIn = LocalDateTime.now();
+					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseinsertavalidadmissiondate.msg");
+					return;
 				}
 				admission.setAdmDate(dateIn);
 				RememberDates.setLastAdmInDate(dateIn);
