@@ -24,10 +24,23 @@ package org.isf.help;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
+import javax.swing.BoxLayout;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+import javax.swing.event.HyperlinkEvent;
 
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.isf.generaldata.GeneralData;
+import org.isf.generaldata.MessageBundle;
 import org.isf.utils.jobjects.MessageDialog;
 
 /**
@@ -37,10 +50,11 @@ import org.isf.utils.jobjects.MessageDialog;
  */
 public class HelpViewer extends JDialog {
 
+	
 	private static final long serialVersionUID = 1L;
 
 	private static final String MANUAL_PDF_FILE = "UserManual.pdf";
-
+	
 	public HelpViewer() {
 		GeneralData.getGeneralData();
 		String doc_file = GeneralData.DOC_DIR + File.separator + MANUAL_PDF_FILE;
@@ -50,19 +64,71 @@ public class HelpViewer extends JDialog {
 				try {
 					Desktop.getDesktop().open(file);
 				} catch (IOException | IllegalArgumentException e) {
-					MessageDialog.error(HelpViewer.this, "angal.help.userguidenotfound");
+					new HelpDialog(HelpViewer.this, MessageBundle.getMessage("angal.help.userguidenotfound"));
 				}
 			} else if (!GeneralData.INTERNALVIEWER) { //Try specified PDF viewer, if any
 				try {
 					Runtime rt = Runtime.getRuntime();
 					rt.exec(GeneralData.VIEWER + " " + file);
 				} catch (IOException e) {
-					MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfoundoruserguidenotfound");
+					new HelpDialog(HelpViewer.this, MessageBundle.getMessage("angal.help.pdfviewernotfoundoruserguidenotfound"));
 				}
 			} else { //abort operation
-				MessageDialog.error(HelpViewer.this, "angal.help.pdfviewernotfound");
+				new HelpDialog(HelpViewer.this, MessageBundle.getMessage("angal.help.pdfviewernotfound"));
 			}
 		}
+	}
+
+	public class HelpDialog extends JDialog {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private static final String URL_USER_MANUAL = "https://github.com/informatici/openhospital-doc/blob/develop/doc_user/UserManual.adoc";
+		private static final String URL_ADMIN_MANUAL = "https://github.com/informatici/openhospital-doc/blob/develop/doc_admin/AdminManual.adoc";
+
+		public HelpDialog(HelpViewer helpViewer, String title) {
+			super(helpViewer, true);
+			setTitle(title);
+			initComponents();
+		}
+
+		private void initComponents() {
+			JPanel dialogPanel = new JPanel();
+			dialogPanel.setLayout(new BoxLayout(dialogPanel, BoxLayout.Y_AXIS));
+			dialogPanel.add(new JLabel("You can check our online documentation"));
+			dialogPanel.add(createLink("Online User Manual", URL_USER_MANUAL));
+			dialogPanel.add(createLink("Online Admin Manual", URL_ADMIN_MANUAL));
+			getContentPane().add(dialogPanel);
+			setLocationRelativeTo(null);
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			setVisible(true);
+		}
+
+		private JEditorPane createLink(String text, String url) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("<html><a href='").append(url).append("'>").append(text).append("</a></html>");
+			
+			JEditorPane jep = new JEditorPane();
+			jep.setContentType("text/html");
+			jep.setText(sb.toString());
+			jep.setEditable(false);
+			jep.addHyperlinkListener(e -> {
+				if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+					System.out.println(e.getURL());
+					Desktop desktop = Desktop.getDesktop();
+					try {
+						desktop.browse(e.getURL().toURI());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+			});
+			
+			return jep;
+		}
+
 	}
 
 }
