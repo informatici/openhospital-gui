@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -126,14 +125,17 @@ public class ReportLauncher extends ModalJFrame {
 		
 	};
 
-	private JComboBox shareWith = null;
-	Interaction userOh = null;
+	private JComboBox shareWith=null;//nicola
+	Interaction userOh=null;
 	
+//	private final JFrame myFrame;
+
 	/**
 	 * This is the default constructor
 	 */
 	public ReportLauncher() {
 		super();
+//		myFrame = this;
 		this.setResizable(true);
 		initialize();
 		setVisible(true);
@@ -148,7 +150,7 @@ public class ReportLauncher extends ModalJFrame {
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
 		pfrmBordY = (screensize.height / 3) - (pfrmExactHeight / 2);
-		this.setBounds(pfrmBordX, pfrmBordY, pfrmExactWidth, pfrmExactHeight);
+		this.setBounds(pfrmBordX,pfrmBordY,pfrmExactWidth,pfrmExactHeight);
 		this.setContentPane(getJPanel());
 		selectAction();
 		pack();
@@ -179,11 +181,13 @@ public class ReportLauncher extends ModalJFrame {
 			jButtonPanel = new JPanel();
 			jButtonPanel.setLayout(new FlowLayout());
 			if (GeneralData.XMPPMODULEENABLED) {
-				jButtonPanel.add(getComboShareReport(), null);
+				jButtonPanel.add(getComboShareReport(),null);
 			}
 			jButtonPanel.add(getJLaunchReportButton(), null);
 			jButtonPanel.add(getJCSVButton(), null);
+			//jButtonPanel.add(getJShareButton(),null);
 			jButtonPanel.add(getJCloseButton(), null);
+
 		}
 		return jButtonPanel;
 	}
@@ -229,6 +233,9 @@ public class ReportLauncher extends ModalJFrame {
 			rep1 = setMyBorder(rep1, MessageBundle.getMessage("angal.stat.parametersselectionframe") + " ");
 			
 			jContentPanel.add(rep1, BorderLayout.NORTH);
+			//jContentPanel.add(rep2, BorderLayout.SOUTH);
+
+
 		}
 		return jContentPanel;
 	}
@@ -242,6 +249,11 @@ public class ReportLauncher extends ModalJFrame {
 			jMonthPanel = new JPanel();
 			jMonthPanel.setLayout(new FlowLayout());
 			
+			//final DateFormat dtf = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+			//String dt = dtf.format(new java.util.Date());
+			//Integer month = Integer.parseInt(dt.substring(3, 5));
+			//Integer year = 2000 + Integer.parseInt(dt.substring(6, 8));
+
 			java.util.GregorianCalendar gc = new java.util.GregorianCalendar();
 			int month = gc.get(Calendar.MONTH);
 			int year = gc.get(Calendar.YEAR);
@@ -249,9 +261,10 @@ public class ReportLauncher extends ModalJFrame {
 			jRptLabel = new JLabel();
 			jRptLabel.setText(MessageBundle.getMessage("angal.stat.report"));
 
+
 			jRptComboBox = new JComboBox();
-			for (String[] matrix : reportMatrix) {
-				jRptComboBox.addItem(MessageBundle.getMessage(matrix[BUNDLE]));
+			for (int i=0;i<reportMatrix.length;i++) {
+				jRptComboBox.addItem(MessageBundle.getMessage(reportMatrix[i][BUNDLE]));
 			}
 			
 			jRptComboBox.addActionListener(actionEvent -> {
@@ -318,8 +331,9 @@ public class ReportLauncher extends ModalJFrame {
 	}
 
 	protected void selectAction() {
+		String sParType = "";
 		int rptIndex = jRptComboBox.getSelectedIndex();
-		String sParType = reportMatrix[rptIndex][TYPE];
+		sParType = reportMatrix[rptIndex][TYPE];
 		if (sParType.equalsIgnoreCase("twodates")) {
 			jMonthComboBox.setVisible(false);
 			jMonthLabel.setVisible(false);
@@ -394,15 +408,14 @@ public class ReportLauncher extends ModalJFrame {
 			}
 			if (sParType.equalsIgnoreCase("twodatesfrommonthyear")) {
 				GregorianCalendar d = new GregorianCalendar();
-				d.set(Calendar.DAY_OF_MONTH, 1);
-				d.set(Calendar.MONTH, month - 1);
+				d.set(Calendar.DAY_OF_MONTH,1 );
+				d.set(Calendar.MONTH, month-1);
 				d.set(Calendar.YEAR, year);
-				SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
-				fromDate = simpleDateFormat.format(d.getTime());
+				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+				fromDate = sdf.format(d.getTime());
 				d.set(Calendar.DAY_OF_MONTH, d.getActualMaximum(Calendar.DAY_OF_MONTH));
-				toDate = simpleDateFormat.format(d.getTime());
-				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]),
-						toExcel);
+				toDate = sdf.format(d.getTime());
+				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
