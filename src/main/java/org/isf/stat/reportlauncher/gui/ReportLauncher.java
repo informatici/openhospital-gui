@@ -21,8 +21,6 @@
  */
 package org.isf.stat.reportlauncher.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -58,7 +56,7 @@ import org.isf.xmpp.manager.Interaction;
  * 16/11/2014 - eppesuig - show WAIT_CURSOR during generateReport()
  * -----------------------------------------------------------------
  */
-public class ReportLauncher extends ModalJFrame {
+public class ReportLauncher extends ModalJFrame{
 
 	private static final long serialVersionUID = 1L;
 
@@ -87,6 +85,7 @@ public class ReportLauncher extends ModalJFrame {
 	private VoDateTextField jFromDateField = null;
 	private GregorianCalendar dateFrom = new GregorianCalendar();
 	private GregorianCalendar dateTo = new GregorianCalendar();
+
 
 	private JLabel jRptLabel = null;
 	private JComboBox jRptComboBox = null;
@@ -310,7 +309,7 @@ public class ReportLauncher extends ModalJFrame {
 			jToDateLabel = new JLabel();
 			jToDateLabel.setText(MessageBundle.getMessage("angal.stat.todate"));
 			defaultDate.add(Calendar.DAY_OF_MONTH, 7);
-			jToDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, defaultDate, 10);
+			jToDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
 			jFromDateLabel.setVisible(false);
