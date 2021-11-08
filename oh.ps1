@@ -110,8 +110,8 @@ $global:ProgressPreference= 'SilentlyContinue'
 # language setting - default set to en
 #$script:OH_LANGUAGE="en" # fr es it pt
 
-# enable DICOM (default set to off)
-#$script:DICOM_ENABLE="on"
+# enable DICOM (default set to on - forces JAVA_ARCH to 32bit)
+$script:DICOM_ENABLE="on"
 
 # set log level to INFO | DEBUG - default set to INFO
 #$script:LOG_LEVEL="INFO"
