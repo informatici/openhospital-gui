@@ -100,6 +100,7 @@ public class ReportLauncher extends ModalJFrame {
 		{"angal.stat.outpatientcount", 					"OH005_opd_count_monthly_report", 									"monthyear"},
 		{"angal.stat.outpatientdiagnoses", 				"OH006_opd_dis_monthly_report", 									"monthyear"},
 		{"angal.stat.labmonthlybasic", 					"OH007_lab_monthly_report", 										"monthyear"},
+		{"angal.stat.labmonthlyresult", 				"OH007_lab_result_report", 											"twodates"},
 		{"angal.stat.labsummaryforopd", 				"OH008_lab_summary_for_opd", 										"monthyear"},
 		{"angal.stat.inpatientreport", 					"OH009_InPatientReport", 											"twodates"},
 		{"angal.stat.outpatientreport", 				"OH010_OutPatientReport", 											"twodates"},
@@ -110,7 +111,7 @@ public class ReportLauncher extends ModalJFrame {
 		{"angal.stat.pageonereferrals", 				"hmis108_referrals", 												"monthyear"},
 		{"angal.stat.pageoneoperations", 				"hmis108_operations", 												"monthyear"},
 		{"angal.stat.inpatientdiagnosisin", 			"hmis108_adm_by_diagnosisIn", 										"monthyear"},
-		{"angal.stat.inpatientdiagnosisout", 			"hmis108_adm_by_diagnosisOut", 								    	"monthyear"},
+		{"angal.stat.inpatientdiagnosisout", 			"hmis108_adm_by_diagnosisOut", 										"monthyear"},
 		{"angal.stat.opdattendance", 					"hmis105_opd_attendance", 											"monthyear"},
 		{"angal.stat.opdreferrals", 					"hmis105_opd_referrals", 											"monthyear"},
 		{"angal.stat.opdbydiagnosis", 					"hmis105_opd_by_diagnosis", 										"monthyear"},
@@ -245,7 +246,8 @@ public class ReportLauncher extends ModalJFrame {
 			int month = gc.get(Calendar.MONTH);
 			int year = gc.get(Calendar.YEAR);
 
-			jRptLabel = new JLabel(MessageBundle.getMessage("angal.stat.report"));
+			jRptLabel = new JLabel();
+			jRptLabel.setText(MessageBundle.getMessage("angal.stat.report"));
 
 			jRptComboBox = new JComboBox();
 			for (String[] matrix : reportMatrix) {
@@ -260,7 +262,8 @@ public class ReportLauncher extends ModalJFrame {
 				}
 			});
 			
-			jMonthLabel = new JLabel("        " + MessageBundle.getMessage("angal.stat.month"));
+			jMonthLabel = new JLabel();
+			jMonthLabel.setText("        " + MessageBundle.getMessage("angal.stat.month"));
 			
 			jMonthComboBox = new JComboBox();
 			jMonthComboBox.addItem(MessageBundle.getMessage("angal.stat.january"));
@@ -278,18 +281,21 @@ public class ReportLauncher extends ModalJFrame {
 
 			jMonthComboBox.setSelectedIndex(month);
 
-			jYearLabel = new JLabel("        " + MessageBundle.getMessage("angal.stat.year"));
+			jYearLabel = new JLabel();
+			jYearLabel.setText("        " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox();
 
 			for (int i = 0; i < 20; i++) {
 				jYearComboBox.addItem((year - i) + "");
 			}
 			
-			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.fromdate"));
+			jFromDateLabel = new JLabel();
+			jFromDateLabel.setText(MessageBundle.getMessage("angal.stat.fromdate"));
 			GregorianCalendar defaultDate = new GregorianCalendar();
 			defaultDate.add(Calendar.DAY_OF_MONTH, -8);
-			jFromDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, defaultDate, 10);
-			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.todate"));
+			jFromDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
+			jToDateLabel = new JLabel();
+			jToDateLabel.setText(MessageBundle.getMessage("angal.stat.todate"));
 			defaultDate.add(Calendar.DAY_OF_MONTH, 7);
 			jToDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, defaultDate, 10);
 			jToDateLabel.setVisible(false);
