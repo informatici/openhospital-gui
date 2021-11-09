@@ -127,9 +127,9 @@ public class AgeTypeBrowser extends ModalJFrame {
 						OHServiceExceptionUtil.showMessages(e);
 					}
 					edit = false;
-					jTable.updateUI();
-					jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+					jEditSaveButton.setText(MessageBundle.getMessage("angal.common.edit.btn"));
 					jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+					jTable.updateUI();
 				}
 			});
 		}
