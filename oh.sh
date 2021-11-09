@@ -156,6 +156,7 @@ function script_usage {
         echo " Usage: $SCRIPT_NAME [ -l en|fr|it|es|pt ] "
         echo ""
         echo "   -C    start OH in CLIENT mode (client / server configuration)"
+        echo "   -P    start OH in PORTABLE mode"
         echo "   -d    start OH in debug mode"
         echo "   -D    start OH with Demo data"
         echo "   -g    generate configuration files"
@@ -579,13 +580,16 @@ cd "$OH_PATH"
 # reset in case getopts has been used previously in the shell
 OPTIND=1 
 # list of arguments expected in user input (- option)
-OPTSTRING=":CdDgGhil:srtvX?" 
+OPTSTRING=":CPdDgGhil:srtvX?" 
 
 # function to parse input
 while getopts ${OPTSTRING} opt; do
 	case ${opt} in
 	C)	# start in CLIENT mode
 		OH_MODE="CLIENT"
+		;;
+	P)	# start in PORTABLE mode
+		OH_MODE="PORTABLE"
 		;;
 	d)	# debug
 		LOG_LEVEL=DEBUG

@@ -232,7 +232,8 @@ function script_menu {
 	Write-Host "               [ -manual_config on|off ] "
 	Write-Host "               [ -interactive on|off ] "
 	Write-Host ""
-	Write-Host "   C    start OH - CLIENT mode (client / server configuration)"
+	Write-Host "   C    start OH in CLIENT mode (client / server configuration)"
+	Write-Host "   P    start OH in PORTABLE mode"
 	Write-Host "   d    start OH in debug mode"
 	Write-Host "   D    start OH with Demo data"
 	Write-Host "   g    generate configuration files"
@@ -748,8 +749,11 @@ if ( $INTERACTIVE_MODE -eq "on") {
 
 	# parse_input
 	switch -casesensitive( "$opt" ) {
-	"C"	{ # start in client mode 
+	"C"	{ # start in CLIENT mode
 		$script:OH_MODE="CLIENT"
+	}
+	"P"	{ # start in PORTABLE mode
+		$script:OH_MODE="PORTABLE"
 	}
 	"d"	{ # debug 
 		$script:LOG_LEVEL="DEBUG"
