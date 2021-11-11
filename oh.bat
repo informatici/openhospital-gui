@@ -20,17 +20,18 @@ REM # You should have received a copy of the GNU General Public License
 REM # along with this program. If not, see <http://www.gnu.org/licenses/>.
 REM #
 
-REM ################### Configuration ###################
+REM ################### Script configuration ###################
 REM
 REM set LEGACYMODE=on to start with legacy oh.bat script
 REM
 REM launch oh.bat -h to see available options
-REM 
-REM default start is powershell oh.ps1 script
+REM
+REM -> default startup script called is oh.ps1 (powershell) <-
+REM
 
 set LEGACYMODE="off"
 
-REM ##############################################
+REM ############################################################
 REM check for legacy mode
 
 if %LEGACYMODE%=="on" goto legacy
@@ -77,13 +78,12 @@ goto :init
 
 :main
 	REM ################### oh.ps1 ###################
-	REM default start: oh.ps1
+	REM default startup script called: oh.ps1
 
 	echo Starting OH with oh.ps1...
 
 	REM launch powershell script
 	powershell.exe  -ExecutionPolicy Bypass -File  ./oh.ps1
-
 	goto end
 
 :legacy
@@ -91,12 +91,12 @@ REM ############################# Legacy oh.bat ############################
 
 echo Legacy mode - Starting OH with oh.bat...
 
-REM ################### Configuration ###################
-REM #                                                   
-REM #                   ___Warning___                   
+REM ################### Open Hospital Configuration ###################
+REM #
+REM #                   ___Warning___
 REM #
 REM # __this configuration parameters work ONLY for legacy mode__
-REM #                                                   
+REM #
 REM # _for normal startup, please edit oh.ps1__
 REM #
 REM ###################
@@ -123,7 +123,7 @@ set DATABASE_PASSWORD=isf123
 
 set DICOM_MAX_SIZE="4M"
 
-set OH_DIR=oh
+set OH_DIR=.
 set SQL_DIR=sql
 set DATA_DIR="data\db"
 set LOG_DIR="data\log"
@@ -141,17 +141,17 @@ set ARCH=32
 
 REM ######## MySQL Software
 REM # MariaDB 64bit
-REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.40/win32-packages/mariadb-10.2.40-winx64.zip
+REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.41/win32-packages/mariadb-10.2.41-winx64.zip
 REM # MySQL 64bit
 REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-winx64.zip
 
 REM # MariaDB 32bit
-REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.40/win32-packages/mariadb-10.2.40-win32.zip
+REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.41/win32-packages/mariadb-10.2.41-win32.zip
 REM # MySQL 32bit
 REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-win32.zip
 
 REM set MYSQL_DIR=mysql-5.7.35-win32
-set MYSQL_DIR=mariadb-10.2.40-win%ARCH%
+set MYSQL_DIR=mariadb-10.2.41-win%ARCH%
 
 REM ####### JAVA Software
 REM # JRE 11 64bit - x86_64
@@ -266,18 +266,18 @@ if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
 	start /b /min %OH_PATH%\%MYSQL_DIR%\bin\mysqld.exe --defaults-file=%OH_PATH%\etc\mysql\my.cnf --tmpdir=%OH_PATH%\%TMP_DIR% --standalone --console
 	if ERRORLEVEL 1 (goto error)
 	timeout /t 2 /nobreak >nul
-	
+
 	REM # If using MySQL root password need to be set
 	if %MYSQL_DIR:~0,5% == mysql (
 		echo Setting MySQL root password...
 		start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe -u root --skip-password --host=%MYSQL_SERVER% --port=%MYSQL_PORT% -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '%MYSQL_ROOT_PW%';" >> %OH_PATH%\%LOG_DIR%\%LOG_FILE% 2>&1
 		if ERRORLEVEL 1 (goto error)
 	)
-	
+
 	echo Creating database...
 	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe -u root -p%MYSQL_ROOT_PW% --host=%MYSQL_SERVER% --port=%MYSQL_PORT% -e "CREATE DATABASE %DATABASE_NAME%; CREATE USER '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%'; GRANT ALL PRIVILEGES ON %DATABASE_NAME%.* TO '%DATABASE_USER%'@'localhost' IDENTIFIED BY '%DATABASE_PASSWORD%';" >> %OH_PATH%\%LOG_DIR%\%LOG_FILE% 2>&1
 	if ERRORLEVEL 1 (goto error)
-	
+
 	echo Importing database schema %DB_CREATE_SQL%...
 	cd /d %OH_PATH%\%SQL_DIR%
 	start /b /min /wait %OH_PATH%\%MYSQL_DIR%\bin\mysql.exe --local-infile=1 -u root -p%MYSQL_ROOT_PW% --host=%MYSQL_SERVER% --port=%MYSQL_PORT% %DATABASE_NAME% < "%OH_PATH%\sql\%DB_CREATE_SQL%"  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
@@ -322,7 +322,7 @@ REM ###### Start Open Hospital #####
 echo Starting Open Hospital...
 
 cd /d %OH_PATH%\%OH_DIR%
-%JAVA_BIN% -client -Dsun.java2d.dpiaware=false -Djava.library.path=%NATIVE_LIB_PATH% -cp %CLASSPATH% org.isf.menu.gui.Menu
+%JAVA_BIN% -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=%NATIVE_LIB_PATH% -cp %CLASSPATH% org.isf.menu.gui.Menu
 
 REM # Shutdown MySQL
 echo Shutting down MySQL...
@@ -354,4 +354,3 @@ goto end
 	set "LEGACYMODE="
 
 	goto :eof
-
