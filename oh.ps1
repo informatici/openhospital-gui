@@ -35,57 +35,94 @@ Open Hospital CLIENT | PORTABLE
 Usage: oh.ps1 [ -lang en|fr|it|es|pt ] [default set to en]
               [ -mode PORTABLE|CLIENT ]
               [ -loglevel INFO|DEBUG ] [default set to INFO]
+              [ -dicom on|off ]
+              [ -manual_config on|off ]
+              [ -interactive on|off ]
 
 .EXAMPLE
-./oh.ps1 -lang en
+./oh.ps1 -lang it -mode PORTABLE -loglevel DEBUG -dicom off -interactive off -manual_config on
 
 .NOTES
-Developed by Informatici Senza Frontiere
+Developed by Informatici Senza Frontiere - 2021
 
 .LINK
 https://www.open-hospital.org
 
 #>
 
-######## SET DEBUG mode
+#################### Script info and configuration - Do not edit #####################
+
+######## set script DEBUG mode
 # saner programming env: these switches turn some bugs into errors
 #Set-PSDebug -Strict
 # Clean all variables in IDE
 #Remove-Variable * -ErrorAction SilentlyContinue; Remove-Module *; $error.Clear();
 
+######## set minimum PowerShell version 
+#Requires -Version 5.1
 
-######## Command line parameters
-param ($lang, $loglevel, $mode)
+######## command line parameters
+param ($lang, $mode, $loglevel, $dicom, $manual_config, $interactive)
 $script:OH_LANGUAGE=$lang
-$script:LOG_LEVEL=$loglevel
 $script:OH_MODE=$mode
+$script:LOG_LEVEL=$loglevel
+$script:DICOM_ENABLE=$dicom
+$script:MANUAL_CONFIG=$manual_config
+$script:INTERACTIVE_MODE=$interactive
 
-######## Global preferences
+######## get script info
+# determine script name and location for PowerShell
+$script:SCRIPT_DIR = Split-Path $script:MyInvocation.MyCommand.Path
+$script:SCRIPT_NAME = $MyInvocation.MyCommand.Name
+
+######## global preferences
 # disable progress bar
 $global:ProgressPreference= 'SilentlyContinue'
 
-######## Open Hospital Configuration
-# OH_PATH is the directory where Open Hospital files are located
+############## Script startup configuration - change at your own risk :-) ##############
+#
+# set MANUAL_CONFIG to "on" to setup configuration files manually
+# my.cnf and all oh/rsc/*.properties files will not be generated or
+# overwritten if already present
+#$script:MANUAL_CONFIG="off"
+
+# Interactive mode
+# set INTERACTIVE_MODE to "off" to launch oh.ps1 without calling the user
+# interaction meno (script_menu). Useful if automatic startup of OH is needed.
+# In order to use this mode, setup all the OH configuration variables in the script
+# or pass arguments via command line.
+#$script:INTERACTIVE_MODE="off"
+
+############## OH general configuration - change at your own risk :-) ##############
+
+# -> OH_PATH is the directory where Open Hospital files are located
 # OH_PATH="c:\Users\OH\OpenHospital\oh-1.11"
 
-$script:OH_MODE="PORTABLE"  # set functioning mode to PORTABLE | CLIENT
+# set OH mode to PORTABLE | CLIENT - default set to PORTABLE
+#$script:OH_MODE="PORTABLE"
 
-# set DEMO_DATA to on to enable Demo data loading
-# Warning -> __requires deletion of all portable data__
+# set DEMO_DATA to on to enable demo database loading - default set to off
+#
+# -> Warning -> __requires deletion of all portable data__
+#
 #$script:DEMO_DATA="off"
 
 # language setting - default set to en
-#$script:OH_LANGUAGE=en # fr es it pt
+#$script:OH_LANGUAGE="en" # fr es it pt
+
+# enable DICOM (default set to on - forces JAVA_ARCH to 32bit)
+$script:DICOM_ENABLE="on"
 
 # set log level to INFO | DEBUG - default set to INFO
-#$script:LOG_LEVEL=INFO
+#$script:LOG_LEVEL="INFO"
 
-# enable / disable DICOM (on|off)
-#$script:DICOM_ENABLE="off"
+# set JAVA_BIN 
+# Uncomment this if you want to use system wide JAVA
+#$script:JAVA_BIN="C:\Program Files\JAVA\bin\java.exe"
 
-######## Software configuration - change at your own risk :-)
+############## OH local configuration - change at your own risk :-) ##############
 # Database
-$script:MYSQL_SERVER="localhost"
+$script:MYSQL_SERVER="127.0.0.1"
 $script:MYSQL_PORT=3306
 $script:MYSQL_ROOT_PW="tmp2021oh111"
 $script:DATABASE_NAME="oh"
@@ -109,61 +146,46 @@ $script:DB_DEMO="create_all_demo.sql"
 # date +%Y-%m-%d_%H-%M-%S
 $script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
-######## Advanced options
-#
-# Manual config
-# set MANUAL_CONFIG to "on" to setup configuration files manually
-# my.cnf and all oh/rsc/*.properties files will not be generated or
-# overwritten if already present
-$script:MANUAL_CONFIG="off"
+# downloaded file extension
+$script:EXT="zip"
 
-# Interactive mode
-# set INTERACTIVE_MODE to "off" to launch oh.ps1 without calling the user
-# interaction meno (script_menu). Useful if automatic startup of OH is needed.
-# In order to use this mode, setup all the OH configuration variables in the script
-# or pass arguments via command line.
-$script:INTERACTIVE_MODE="on"
+# available languages - do not modify
+$script:languagearray= @("en","fr","it","es","pt") 
 
-# Set JAVA_BIN 
-# Uncomment this if you want to use system wide JAVA
-#$script:JAVA_BIN="C:\Program Files\JAVA\bin\java.exe"
+############## Architecture and external software ##############
 
-######## Define architecture
-
+######## define architecture
 $script:ARCH=$env:PROCESSOR_ARCHITECTURE
 
-switch ( "$ARCH" ){	
-	{"amd64","AMD64","x86_64"} {
-		$script:JAVA_ARCH=64;
-		$script:MYSQL_ARCH="x64";
-		$script:JAVA_PACKAGE_ARCH="x64";
-		Break }
-	{"486","586","686","x86","i86pc"} {
-		$script:JAVA_ARCH=32;
-		$script:MYSQL_ARCH=32;
-		$script:JAVA_PACKAGE_ARCH="i686";
-		Break }
-	default {
-		Write-Host "Unknown architecture: $ARCH. Exiting." -ForegroundColor Red
-		Read-Host; exit 1
-	}
+$32archarray=@("386","486","586","686","x86","i86pc")
+$64archarray=@("amd64","AMD64","x86_64")
+
+if ($64archarray -contains "$ARCH") {
+	$script:JAVA_ARCH=64;
+	$script:MYSQL_ARCH="x64";
+	$script:JAVA_PACKAGE_ARCH="x64";
+}
+elseif ($32archarray -contains "$ARCH") {
+	$script:JAVA_ARCH=32;
+	$script:MYSQL_ARCH=32;
+	$script:JAVA_PACKAGE_ARCH="i686";
+}
+else {
+	Write-Host "Unknown architecture: $ARCH. Exiting." -ForegroundColor Red
+	Read-Host; exit 1
 }
 
 # workaround to force 32bit JAVA in order to have DICOM working on 64bit arch
 if ( $DICOM_ENABLE -eq "on" ) {
+	Write-Host "DICOM_ENABLE=on, forcing JAVA architecture to 32bit" 
 	$script:JAVA_ARCH=32;
 	$script:JAVA_PACKAGE_ARCH="i686";
+	#$script:MYSQL_ARCH=32;
 }
-	
-# workaround to force 32bit JAVA and MySQL in order to have DICOM working
-#$script:JAVA_ARCH=32; $script:MYSQL_ARCH=32; $script:JAVA_PACKAGE_ARCH="i686";
 
-# archive file extension
-$script:EXT="zip"
-
-######## MySQL Software
+######## MySQL/MariaDB Software
 # MariaDB
-$script:MYSQL_VERSION="10.2.40"
+$script:MYSQL_VERSION="10.2.41"
 $script:MYSQL_URL="http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-$script:MYSQL_VERSION/win$script:MYSQL_ARCH-packages/"
 $script:MYSQL_DIR="mariadb-$script:MYSQL_VERSION-win$script:MYSQL_ARCH"
 # MySQL
@@ -186,12 +208,6 @@ $script:JAVA_DISTRO="zulu8.56.0.23-ca-fx-jre8.0.302-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin/"
 $script:JAVA_DIR=$JAVA_DISTRO
 
-
-######## get script info
-# determine script name and location for PowerShell
-$script:SCRIPT_DIR = Split-Path $script:MyInvocation.MyCommand.Path
-$script:SCRIPT_NAME = $MyInvocation.MyCommand.Name
-
 ######################## DO NOT EDIT BELOW THIS LINE ########################
 
 ######################## Functions ########################
@@ -206,18 +222,23 @@ function script_menu {
 	Write-Host "|                   Open Hospital | OH                    |"
 	Write-Host "|                                                         |"
 	Write-Host " ---------------------------------------------------------"
-	Write-Host " lang $script:OH_LANGUAGE | arch $ARCH | mode $OH_MODE"
+	Write-Host " lang $script:OH_LANGUAGE | arch $ARCH | mode $OH_MODE | log level $LOG_LEVEL "
 	Write-Host " ---------------------------------------------------------"
 	Write-Host ""
 	Write-Host " Usage: $SCRIPT_NAME [ -lang en|fr|it|es|pt ] "
 	Write-Host "               [ -mode PORTABLE|CLIENT ]"
 	Write-Host "               [ -loglevel INFO|DEBUG ] "
+	Write-Host "               [ -dicom on|off ] "
+	Write-Host "               [ -manual_config on|off ] "
+	Write-Host "               [ -interactive on|off ] "
 	Write-Host ""
-	Write-Host "   C    start OH - CLIENT mode (client / server configuration)"
+	Write-Host "   C    start OH in CLIENT mode (client / server configuration)"
+	Write-Host "   P    start OH in PORTABLE mode"
 	Write-Host "   d    start OH in debug mode"
 	Write-Host "   D    start OH with Demo data"
 	Write-Host "   g    generate configuration files"
 	Write-Host "   G    setup GSM"
+	Write-Host "   i    initialize/install OH database"
 	Write-Host "   l    set language: en|fr|it|es|pt"
 	Write-Host "   s    save OH database"
 	Write-Host "   r    restore OH database"
@@ -237,6 +258,34 @@ function get_confirmation {
 	}
 }
 
+function set_defaults {
+        # set default values for script variables
+	# interactive mode - set default to on
+	if ( [string]::IsNullOrEmpty($INTERACTIVE_MODE) ) {
+		$script:INTERACTIVE_MODE="on"
+	}
+
+	# manual config - set default to off
+	if ( [string]::IsNullOrEmpty($MANUAL_CONFIG) ) {
+		$script:MANUAL_CONFIG="off"
+	}
+
+	# OH mode - set default to PORTABLE
+	if ( [string]::IsNullOrEmpty($OH_MODE) ) {
+		$script:OH_MODE="PORTABLE"
+	}
+
+	# log level - set default to INFO
+	if ( [string]::IsNullOrEmpty($LOG_LEVEL) ) {
+		$script:LOG_LEVEL="INFO"
+	}
+	
+	# demo data - set default to off
+	if ( [string]::IsNullOrEmpty($DEMO_DATA) ) {
+		$script:DEMO_DATA="off"
+	}
+}
+
 function set_path {
 	# get current directory
 	$script:CURRENT_DIR=Get-Location | select -ExpandProperty Path
@@ -252,20 +301,18 @@ function set_path {
 }
 
 function set_language {
-	# Set OH interface language - set default to en
-	if ( ! $OH_LANGUAGE ) {
+	# set OH interface language - default to en
+	if ( [string]::IsNullOrEmpty($OH_LANGUAGE) ) {
 		$script:OH_LANGUAGE="en"
-	}	
-	switch ( "$OH_LANGUAGE" ) {
-		{"en","fr","it","es","pt"} {
-			# set database creation script in chosen language
-			$script:DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
-			break
-	        }
-		default {
-	        	Write-Host "Invalid language option: $OH_LANGUAGE. Exiting." -ForegroundColor Red
-			Read-Host; exit 1
-	        }
+	}
+	# check for valid language selection
+	if ($script:languagearray -contains "$OH_LANGUAGE") {
+		# set database creation script in chosen language
+		$script:DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
+	}
+	else {
+		Write-Host "Invalid language option: $OH_LANGUAGE. Exiting." -ForegroundColor Red
+		Read-Host; exit 1
 	}
 }
 
@@ -388,10 +435,23 @@ function config_database {
 	Write-Host "Looking for a free TCP port for MySQL database..."
 
 	$ProgressPreference = 'SilentlyContinue'
-	while ( Test-NetConnection $script:MYSQL_SERVER -Port $MYSQL_PORT -InformationLevel Quiet -ErrorAction SilentlyContinue -WarningAction SilentlyContinue ) {
-    		Write-Host "Testing TCP port $MYSQL_PORT...."
-        	$script:MYSQL_PORT++
+
+	### windows 10 only ####
+	#while ( Test-NetConnection $script:MYSQL_SERVER -Port $MYSQL_PORT -InformationLevel Quiet -ErrorAction SilentlyContinue -WarningAction SilentlyContinue ){
+	#	Write-Host "Testing TCP port $MYSQL_PORT...."
+	#      	$script:MYSQL_PORT++
+	#}
+	### end windows 10 only ###
+
+	### windows 7/10 ###
+	do {
+		$socktest = (New-Object System.Net.Sockets.TcpClient).ConnectAsync("$MYSQL_SERVER", $MYSQL_PORT).Wait(1000) 
+		Write-Host "Testing TCP port $MYSQL_PORT...."
+		$script:MYSQL_PORT++
 	}
+	while ( $socktest )
+	$script:MYSQL_PORT--
+	### end windows 7/10 ###
 
 	Write-Host "Found TCP port $MYSQL_PORT!"
 
@@ -427,7 +487,7 @@ function initialize_database {
 		}
 		"mysql" {
 			try {
-				Start-Process "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--initialize-insecure --basedir=`"$OH_PATH\$MYSQL_DIR`" --datadir=`"$OH_PATH\$DATA_DIR`" ") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"; break
+				Start-Process "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--initialize-insecure --basedir=`"$OH_PATH\$MYSQL_DIR`" --datadir=`"$OH_PATH\$DATA_DIR`" ") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"; 
 			}
 			catch {
 				Write-Host "Error: MySQL initialization failed! Exiting." -ForegroundColor Red
@@ -460,7 +520,7 @@ function set_database_root_pw {
 	# if using MySQL root password need to be set
 	switch -Regex ( $MYSQL_DIR ) {
 		"mysql" {
-		echo "Setting MySQL root password..."
+		Write-Host "Setting MySQL root password..."
         $SQLCOMMAND=@"
         -u root --skip-password -h $MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PW';"
 "@
@@ -542,12 +602,17 @@ function dump_database {
 }
 
 function shutdown_database {
-	Write-Host "Shutting down MySQL..."
-	Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqladmin.exe" -ArgumentList ("-u root -p$MYSQL_ROOT_PW --host=$MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp shutdown") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
-	# wait till the MySQL socket file is removed -> TO BE IMPLEMENTED
-	# while ( -e $OH_PATH/$MYSQL_SOCKET ); do sleep 1; done
-	Start-Sleep -Seconds 3
-	Write-Host "MySQL stopped!"
+	if ( $OH_MODE -eq "PORTABLE" ) {
+		Write-Host "Shutting down MySQL..."
+		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqladmin.exe" -ArgumentList ("-u root -p$MYSQL_ROOT_PW --host=$MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp shutdown") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+		# wait till the MySQL socket file is removed -> TO BE IMPLEMENTED
+		# while ( -e $OH_PATH/$MYSQL_SOCKET ); do sleep 1; done
+		Start-Sleep -Seconds 2
+		Write-Host "MySQL stopped!"
+	}
+
+	else { # do nothing
+	}
 }
 
 function clean_database {
@@ -664,13 +729,10 @@ function clean_files {
 #}
 # else { Write-Host "User ok — go on executing the script..." -ForegroundColor Green }
 
-# log level - set default to INFO
-if ( [string]::IsNullOrEmpty($LOG_LEVEL) ) {
-	$script:LOG_LEVEL="INFO"
-}
 
 ######## Environment setup
 
+set_defaults;
 set_path;
 set_language;
 
@@ -679,7 +741,7 @@ cd "$OH_PATH" # workaround for hard coded paths
 
 ######## User input
 
-# If INTERACTIVE_MODE is set to "off" don't ask for user input
+# If INTERACTIVE_MODE is set to "off" don't show menu for user input
 if ( $INTERACTIVE_MODE -eq "on") {
 	script_menu;
 	$opt = Read-Host "Please make a selection or press any other key to start Open Hospital in $OH_MODE mode"
@@ -687,12 +749,14 @@ if ( $INTERACTIVE_MODE -eq "on") {
 
 	# parse_input
 	switch -casesensitive( "$opt" ) {
-	"C"	{ # start in client mode 
+	"C"	{ # start in CLIENT mode
 		$script:OH_MODE="CLIENT"
 	}
+	"P"	{ # start in PORTABLE mode
+		$script:OH_MODE="PORTABLE"
+	}
 	"d"	{ # debug 
-           	Write-Host "Starting Open Hospital in debug mode..."
-		$LOG_LEVEL="DEBUG"
+		$script:LOG_LEVEL="DEBUG"
 		Write-Host "Log level set to $LOG_LEVEL"
 	}
 	"D"	{ # demo mode 
@@ -723,6 +787,31 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Read-Host;
 		exit 0;
 	}
+	"i"	{ # initialize/install OH database
+		# set mode to CLIENT
+		$OH_MODE="CLIENT"
+		Write-Host "Do you want to initialize/install the OH database on:"
+		Write-Host ""
+		Write-Host " Server -> $MYSQL_SERVER"
+		Write-Host " TCP port -> $MYSQL_PORT"
+		Write-Host ""
+		get_confirmation;
+		set_language;
+		initialize_dir_structure;
+		mysql_check;
+		# ask user for database root password
+		$script:MYSQL_ROOT_PW = Read-Host "Please insert the MySQL / MariaDB database root password (root@$MYSQL_SERVER) -> "
+		Write-Host "Installing the database....."
+		Write-Host ""
+		Write-Host " Database name -> $DATABASE_NAME"
+		Write-Host " Database user -> $DATABASE_USER"
+		Write-Host " Database password -> $DATABASE_PASSWORD"
+		Write-Host ""
+		import_database;
+		test_database_connection;
+		Write-Host "Done!"
+		exit 0
+	}
 	"l"	{ # set language 
 		$script:OH_LANGUAGE = Read-Host "Select language: en|fr|es|it|pt (default is en)"
 		set_language;
@@ -734,7 +823,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 			# check if database already exists
 			if ( Test-Path "$OH_PATH\$DATA_DIR\$DATABASE_NAME" ) {
 				mysql_check;
-				if ($MANUAL_CONFIG -eq "off" ) {
+				if ( $MANUAL_CONFIG -ne "on" ) {
 					config_database;
 				}
 			}
@@ -752,7 +841,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		}
 		# dump remote database for CLIENT mode configuration
 		test_database_connection;
-		echo "Saving Open Hospital database..."
+		Write-Host "Saving Open Hospital database..."
 		dump_database;
 		Write-Host "Done!"
                 exit 0
@@ -766,7 +855,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 			# reset database if exists
 			clean_database;
 			mysql_check;
-			if ($MANUAL_CONFIG -eq "off" ) {
+			if ( $MANUAL_CONFIG -ne "on" ) {
 				config_database;
 			}
 			initialize_dir_structure;
@@ -775,7 +864,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 			set_database_root_pw;
 			import_database;
 			shutdown_database;
-			echo "Done!"
+			Write-Host "Done!"
 			exit 0
 		}
 		else {
@@ -811,6 +900,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
  		Write-Host "Open Hospital is configured in $OH_MODE mode"
 		Write-Host "Language is set to $OH_LANGUAGE"
 		Write-Host "Demo data is set to $DEMO_DATA"
+		Write-Host "Log level is set to $LOG_LEVEL"
 		Write-Host ""
 		Write-Host "MYSQL_SERVER=$MYSQL_SERVER"
 		Write-Host "MYSQL_PORT=$MYSQL_PORT"
@@ -846,7 +936,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 
 ######################### OH start ############################
 
-Write-Host "Interactive mode set to $script:INTERACTIVE_MODE"
+Write-Host "Interactive mode is set to $script:INTERACTIVE_MODE"
 
 # check mode 
 if ( !( $OH_MODE -eq "PORTABLE" ) -And !( $OH_MODE -eq "CLIENT" ) ) {
@@ -859,7 +949,7 @@ if ( !( $OH_MODE -eq "PORTABLE" ) -And !( $OH_MODE -eq "CLIENT" ) ) {
 if ( $DEMO_DATA -eq "on" ) {
 	# exit if OH is configured in Client mode
 	if (( $OH_MODE -eq "CLIENT" )) {
-		Write-Host "Error - OH_MODE set to CLIENT mode. Cannot run with Demo data, exiting." -ForeGroundcolor Red
+		Write-Host "Error - OH_MODE is set to CLIENT mode. Cannot run with Demo data, exiting." -ForeGroundcolor Red
 		Read-Host; 
 		exit 1
 		else { $script:OH_MODE="PORTABLE" }
@@ -879,9 +969,12 @@ if ( $DEMO_DATA -eq "on" ) {
 	}
 }
 
+# display running configuration
+Write-Host "Manual config is set to $MANUAL_CONFIG"
 Write-Host "Starting Open Hospital in $OH_MODE mode..."
-Write-Host "OH_PATH set to $OH_PATH"
+Write-Host "OH_PATH is set to $OH_PATH"
 Write-Host "OH language is set to $OH_LANGUAGE"
+Write-Host "OH log level is set to $LOG_LEVEL"
 
 # check for java
 java_check;
@@ -899,7 +992,9 @@ if ( $OH_MODE -eq "PORTABLE" ) {
 	# check for MySQL software
 	mysql_check;
 	# config MySQL
-	config_database;
+	if ( $MANUAL_CONFIG -ne "on" ) {
+		config_database;
+	}
 	# check if OH database already exists
 	if ( !(Test-Path "$OH_PATH\$DATA_DIR\$DATABASE_NAME") ) {
 		Write-Host "OH database not found, starting from scratch..."
@@ -923,7 +1018,7 @@ if ( $OH_MODE -eq "PORTABLE" ) {
 test_database_connection;
 
 # generate config files
-if ($MANUAL_CONFIG -eq "off" ) {
+if ( $MANUAL_CONFIG -ne "on" ) {
 	generate_config_files;
 }
 
@@ -938,15 +1033,13 @@ cd "$OH_PATH\$OH_DIR" # workaround for hard coded paths
 #$JAVA_ARGS="-client -Dlog4j.configuration=`"`'$OH_PATH\$OH_DIR\rsc\log4j.properties`'`" -Dsun.java2d.dpiaware=false -Djava.library.path=`"`'$NATIVE_LIB_PATH`'`" -cp `"`'$OH_CLASSPATH`'`" org.isf.menu.gui.Menu"
 
 # log4j configuration is now read directly
-$JAVA_ARGS="-client -Dsun.java2d.dpiaware=false -Djava.library.path=`"$NATIVE_LIB_PATH`" -cp `"`'$OH_CLASSPATH`'`" org.isf.menu.gui.Menu"
+$JAVA_ARGS="-client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=`"$NATIVE_LIB_PATH`" -cp `"`'$OH_CLASSPATH`'`" org.isf.menu.gui.Menu"
 
 Start-Process -FilePath "$JAVA_BIN" -ArgumentList $JAVA_ARGS -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 
 Write-Host "Exiting Open Hospital..."
 
-if ( $OH_MODE -eq "PORTABLE" ) {
-	shutdown_database;
-}
+shutdown_database;
 
 # go back to starting directory
 cd "$CURRENT_DIR"
