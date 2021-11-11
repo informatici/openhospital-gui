@@ -114,7 +114,7 @@ esac
 
 ######## MySQL/MariaDB Software
 # MariaDB
-MYSQL_VERSION="10.2.40"
+MYSQL_VERSION="10.2.41"
 MYSQL_URL="https://downloads.mariadb.com/MariaDB/mariadb-$MYSQL_VERSION/bintar-linux-$MYSQL_ARCH"
 MYSQL_DIR="mariadb-$MYSQL_VERSION-linux-$MYSQL_PACKAGE_ARCH"
 # MySQL

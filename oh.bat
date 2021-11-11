@@ -141,17 +141,17 @@ set ARCH=32
 
 REM ######## MySQL Software
 REM # MariaDB 64bit
-REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.40/win32-packages/mariadb-10.2.40-winx64.zip
+REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.41/win32-packages/mariadb-10.2.41-winx64.zip
 REM # MySQL 64bit
 REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-winx64.zip
 
 REM # MariaDB 32bit
-REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.40/win32-packages/mariadb-10.2.40-win32.zip
+REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.41/win32-packages/mariadb-10.2.41-win32.zip
 REM # MySQL 32bit
 REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-win32.zip
 
 REM set MYSQL_DIR=mysql-5.7.35-win32
-set MYSQL_DIR=mariadb-10.2.40-win%ARCH%
+set MYSQL_DIR=mariadb-10.2.41-win%ARCH%
 
 REM ####### JAVA Software
 REM # JRE 11 64bit - x86_64
