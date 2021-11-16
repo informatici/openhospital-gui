@@ -123,16 +123,20 @@ set DATABASE_PASSWORD=isf123
 
 set DICOM_MAX_SIZE="4M"
 
-set OH_DIR=.
-set SQL_DIR=sql
+set OH_DIR="."
+set OH_DOC_DIR="..\doc"
+set CONF_DIR="data\conf"
 set DATA_DIR="data\db"
 set LOG_DIR="data\log"
 set DICOM_DIR="data\dicom_storage"
-set TMP_DIR=tmp
-set DB_CREATE_SQL=create_all_en.sql
-REM #-> DB_CREATE_SQL default is set to create_all_en.sql - set to "create_all_demo.sql" for demo or create_all_[lang].sql for language
+set SQL_DIR="sql"
+set TMP_DIR="tmp"
+
 set LOG_FILE=startup.log
 set OH_LOG_FILE=openhospital.log
+
+set DB_CREATE_SQL=create_all_en.sql
+REM #-> DB_CREATE_SQL default is set to create_all_en.sql - set to "create_all_demo.sql" for demo or create_all_[lang].sql for language
 
 REM ######## Architecture
 REM # ARCH can be set to 32 or x64
@@ -141,12 +145,12 @@ set ARCH=32
 
 REM ######## MySQL Software
 REM # MariaDB 64bit
-REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.41/win32-packages/mariadb-10.2.41-winx64.zip
+REM https://archive.mariadb.org/mariadb-10.2.41/winx64-packages/mariadb-10.2.41-winx64.zip
 REM # MySQL 64bit
 REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-winx64.zip
 
 REM # MariaDB 32bit
-REM http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-10.2.41/win32-packages/mariadb-10.2.41-win32.zip
+REM https://archive.mariadb.org/mariadb-10.2.41/win32-packages/mariadb-10.2.41-win32.zip
 REM # MySQL 32bit
 REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-win32.zip
 
@@ -167,7 +171,7 @@ REM set JAVA_URL="https://cdn.azul.com/zulu/bin/zulu11.50.19-ca-fx-jre11.0.12-wi
 REM set JAVA_DISTRO=zulu11.50.19-ca-fx-jre11.0.12-win_i686.zip
 
 REM # JRE 8 32bit - i686 - zulu - default
-set JAVA_DIR=zulu8.56.0.23-ca-fx-jre8.0.302-win_i686
+set JAVA_DIR=zulu8.58.0.13-ca-fx-jdk8.0.312-win_i686
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin
@@ -198,15 +202,15 @@ mkdir "%OH_PATH%\%LOG_DIR%"
 
 echo Generating MySQL config file...
 REM ### Setup MySQL configuration
-echo f | xcopy %OH_PATH%\etc\mysql\my.cnf.dist %OH_PATH%\etc\mysql\my.cnf /y > "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe OH_PATH_SUBSTITUTE %OH_PATH% -- %OH_PATH%\etc\mysql\my.cnf  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe MYSQL_SERVER %MYSQL_SERVER% -- %OH_PATH%\etc\mysql\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe MYSQL_PORT %MYSQL_PORT% -- %OH_PATH%\etc\mysql\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe MYSQL_DISTRO %MYSQL_DIR% -- %OH_PATH%\etc\mysql\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe DICOM_SIZE %DICOM_MAX_SIZE% -- %OH_PATH%\etc\mysql\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe TMP_DIR %TMP_DIR% -- %OH_PATH%\etc\mysql\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe DATA_DIR %DATA_DIR% -- %OH_PATH%\etc\mysql\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe LOG_DIR %LOG_DIR% -- %OH_PATH%\etc\mysql\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+echo f | xcopy %OH_PATH%\%CONF_DIR%\my.cnf.dist %OH_PATH%\%CONF_DIR%\my.cnf /y > "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe OH_PATH_SUBSTITUTE %OH_PATH% -- %OH_PATH%\%CONF_DIR%\my.cnf  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe MYSQL_SERVER %MYSQL_SERVER% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe MYSQL_PORT %MYSQL_PORT% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe MYSQL_DISTRO %MYSQL_DIR% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe DICOM_SIZE %DICOM_MAX_SIZE% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe TMP_DIR %TMP_DIR% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe DATA_DIR %DATA_DIR% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe LOG_DIR %LOG_DIR% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 
 echo Generating OH configuration files...
 REM ### Setup dicom.properties
@@ -225,7 +229,8 @@ echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\database.properties.dist %OH_PATH%\%OH_DIR
 
 REM ### Setup settings.properties
 echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\settings.properties.dist %OH_PATH%\%OH_DIR%\rsc\settings.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe OH_SET_LANGUAGE %OH_LANGUAGE% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe OH_LANGUAGE %OH_LANGUAGE% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe OH_DOC_DIR %OH_DOC_DIR% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 
 REM ### Setup log4j.properties
 REM # replace backslash with slash
@@ -263,7 +268,7 @@ if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
 	if ERRORLEVEL 1 (goto error)
 
 	echo Starting MySQL server on port %MYSQL_PORT%...
-	start /b /min %OH_PATH%\%MYSQL_DIR%\bin\mysqld.exe --defaults-file=%OH_PATH%\etc\mysql\my.cnf --tmpdir=%OH_PATH%\%TMP_DIR% --standalone --console
+	start /b /min %OH_PATH%\%MYSQL_DIR%\bin\mysqld.exe --defaults-file=%OH_PATH%\%CONF_DIR%\my.cnf --tmpdir=%OH_PATH%\%TMP_DIR% --standalone --console
 	if ERRORLEVEL 1 (goto error)
 	timeout /t 2 /nobreak >nul
 
@@ -287,7 +292,7 @@ if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
 ) else (
 	echo Database already initialized, trying to start...
 	echo Starting MySQL server on port %MYSQL_PORT%...
-	start /b /min %OH_PATH%\%MYSQL_DIR%\bin\mysqld.exe --defaults-file=%OH_PATH%\etc\mysql\my.cnf --tmpdir=%OH_PATH%\%TMP_DIR% --standalone --console
+	start /b /min %OH_PATH%\%MYSQL_DIR%\bin\mysqld.exe --defaults-file=%OH_PATH%\%CONF_DIR%\my.cnf --tmpdir=%OH_PATH%\%TMP_DIR% --standalone --console
 	if ERRORLEVEL 1 (goto error)
 )
 
