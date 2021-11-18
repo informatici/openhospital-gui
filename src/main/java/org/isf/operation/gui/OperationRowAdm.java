@@ -389,7 +389,6 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 				if (opeRow.getOperation().getCode().equals(elem.getCode())) {
 					found = true;
 					comboOperation.setSelectedItem(elem);
-					comboOperation.setEditable(false);
 					comboOperation.setEnabled(false);
 					break;
 				}
@@ -511,7 +510,6 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		comboResult.setSelectedIndex(-1);
 		textFieldUnit.setText(""); //$NON-NLS-1$
 		tableData.clearSelection();
-		comboOperation.setEditable(true);
 		comboOperation.setEnabled(true);
 	}
 
