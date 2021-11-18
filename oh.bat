@@ -25,9 +25,9 @@ REM
 REM set LEGACYMODE=on to start with legacy oh.bat script
 REM
 REM launch oh.bat -h to see available options
-REM
+REM 
 REM -> default startup script called is oh.ps1 (powershell) <-
-REM
+REM 
 
 set LEGACYMODE="off"
 
@@ -92,11 +92,11 @@ REM ############################# Legacy oh.bat ############################
 echo Legacy mode - Starting OH with oh.bat...
 
 REM ################### Open Hospital Configuration ###################
-REM #
-REM #                   ___Warning___
+REM #                                                   
+REM #                   ___Warning___                   
 REM #
 REM # __this configuration parameters work ONLY for legacy mode__
-REM #
+REM #                                                   
 REM # _for normal startup, please edit oh.ps1__
 REM #
 REM ###################

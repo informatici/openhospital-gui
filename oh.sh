@@ -43,7 +43,7 @@ SCRIPT_NAME=$(basename "$0")
 # OH_PATH=/usr/local/OpenHospital/oh-1.11
 
 # set OH mode to PORTABLE | CLIENT - default set to PORTABLE
-#OH_MODE=PORTABLE
+#OH_MODE=PORTABLE 
 
 # set DEMO_DATA to on to enable demo database loading - default set to off
 #
@@ -174,7 +174,7 @@ function script_usage {
 
 function get_confirmation {
 	read -p "(y/n)? " choice
-	case "$choice" in
+	case "$choice" in 
 		y|Y ) echo "yes";;
 		n|N ) echo "Exiting."; exit 0;;
 		* ) echo "Invalid choice. Exiting."; exit 1 ;;
@@ -232,8 +232,8 @@ function set_language {
 		OH_LANGUAGE=en
 	fi
 	# check for valid language selection
-	case $OH_LANGUAGE in
-		en|fr|it|es|pt)
+	case $OH_LANGUAGE in 
+		en|fr|it|es|pt) 
 			# set database creation script in chosen language
 			DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
 			;;
@@ -266,7 +266,7 @@ function java_lib_setup {
 	# CLASSPATH setup
 	# include OH jar file
 	OH_CLASSPATH="$OH_PATH"/$OH_DIR/bin/OH-gui.jar
-
+	
 	# include all needed directories
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/bundle
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt
@@ -313,7 +313,7 @@ if [ -x "$OH_PATH/$JAVA_DIR/bin/java" ]; then
 	JAVA_BIN="$OH_PATH/$JAVA_DIR/bin/java"
 	echo "JAVA found!"
 	echo "Using $JAVA_DIR"
-else
+else 
 	echo "Error: JAVA not found! Please download it or set JAVA_BIN in the script. Exiting."
 	exit 1
 fi
@@ -370,7 +370,7 @@ function initialize_database {
 	mkdir -p "./$DATA_DIR"
 	# inizialize MySQL
 	echo "Initializing MySQL database on port $MYSQL_PORT..."
-	case "$MYSQL_DIR" in
+	case "$MYSQL_DIR" in 
 	*mariadb*)
 		./$MYSQL_DIR/scripts/mysql_install_db --basedir=./$MYSQL_DIR --datadir=./"$DATA_DIR" \
 		--auth-root-authentication-method=normal >> ./$LOG_DIR/$LOG_FILE 2>&1
@@ -402,7 +402,7 @@ function set_database_root_pw {
 	# if using MySQL/MariaDB root password need to be set
 	echo "Setting MySQL root password..."
 	./$MYSQL_DIR/bin/mysql -u root --skip-password --host=$MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
-
+	
 	if [ $? -ne 0 ]; then
 		echo "Error: MySQL root password not set! Exiting."
 		shutdown_database;
@@ -417,7 +417,7 @@ function import_database {
 	-e "CREATE DATABASE $DATABASE_NAME; CREATE USER '$DATABASE_USER'@'localhost' IDENTIFIED BY '$DATABASE_PASSWORD'; \
 	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'localhost'; \
 	GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%' ; " >> ./$LOG_DIR/$LOG_FILE 2>&1
-
+	
 	if [ $? -ne 0 ]; then
 		echo "Error: Database creation failed! Exiting."
 		shutdown_database;
@@ -543,13 +543,13 @@ function generate_config_files {
 	-e "s/DBNAME/$DATABASE_NAME/g" -e "s/LOG_LEVEL/$LOG_LEVEL/g" -e "s+LOG_DEST+$OH_LOG_DEST+g" \
 	./$OH_DIR/rsc/log4j.properties.dist > ./$OH_DIR/rsc/log4j.properties
 
-	######## database.properties setup
+	######## database.properties setup 
 	[ -f ./$OH_DIR/rsc/database.properties ] && mv -f ./$OH_DIR/rsc/database.properties ./$OH_DIR/rsc/database.properties.old
 	sed -e "s/DBSERVER/$MYSQL_SERVER/g" -e "s/DBPORT/$MYSQL_PORT/g" -e "s/DBNAME/$DATABASE_NAME/g" \
 	-e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
 	./$OH_DIR/rsc/database.properties.dist > ./$OH_DIR/rsc/database.properties
 
-	######## settings.properties language setup
+	######## settings.properties language setup 
 	# set language in OH config file
 	[ -f ./$OH_DIR/rsc/settings.properties ] && mv -f ./$OH_DIR/rsc/settings.properties ./$OH_DIR/rsc/settings.properties.old
 	sed -e "s/OH_SET_LANGUAGE/$OH_LANGUAGE/g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
@@ -578,9 +578,9 @@ cd "$OH_PATH"
 ######## User input
 
 # reset in case getopts has been used previously in the shell
-OPTIND=1
+OPTIND=1 
 # list of arguments expected in user input (- option)
-OPTSTRING=":CPdDgGhil:srtvX?"
+OPTSTRING=":CPdDgGhil:srtvX?" 
 
 # function to parse input
 while getopts ${OPTSTRING} opt; do
@@ -629,7 +629,7 @@ while getopts ${OPTSTRING} opt; do
 		echo "Do you want to initialize/install the OH database on:"
 		echo ""
 		echo " Server -> $MYSQL_SERVER"
-		echo " TCP port -> $MYSQL_PORT"
+		echo " TCP port -> $MYSQL_PORT" 
 		echo ""
 		get_confirmation;
 		set_language;
@@ -680,7 +680,7 @@ while getopts ${OPTSTRING} opt; do
         	echo "Done!"
 		exit 0
 		;;
-	r)	# restore
+	r)	# restore 
         	echo "Restoring Open Hospital database...."
 		# ask user for database/sql script to restore
 		read -p "Enter SQL dump/backup file that you want to restore - (in sql/ subdirectory) -> " DB_CREATE_SQL
@@ -694,7 +694,7 @@ while getopts ${OPTSTRING} opt; do
 			fi
 			initialize_dir_structure;
 			initialize_database;
-			start_database;
+			start_database;	
 			set_database_root_pw;
 			import_database;
 			shutdown_database;
@@ -821,7 +821,7 @@ if [ $OH_MODE = "PORTABLE" ]; then
 		# prepare MySQL
 		initialize_database;
 		# start MySQL
-		start_database;
+		start_database;	
 		# set database root password
 		set_database_root_pw;
 		# create database and load data
