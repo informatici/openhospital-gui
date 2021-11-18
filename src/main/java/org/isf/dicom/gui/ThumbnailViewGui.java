@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.dicom.gui;
 
 import java.awt.BorderLayout;
@@ -13,16 +34,13 @@ import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.WindowConstants;
 
 import org.isf.dicom.manager.AbstractThumbnailViewGui;
 import org.isf.dicom.manager.DicomManagerFactory;
@@ -30,21 +48,17 @@ import org.isf.dicom.model.FileDicom;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 
 /**
- * Component for DICOM thumbnails composizion and visualizzation
- * 
+ * Component for DICOM thumbnails composition and visualization
+ *
  * @author Pietro Castellucci
  * @version 1.0.0
- * 
  */
 public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int patID = -1;
 	private DicomGui dicomViewer = null;
@@ -54,7 +68,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 	/**
 	 * Initialize Component
-	 * 
+	 *
 	 * @param patID
 	 */
 	public ThumbnailViewGui(int patID, DicomGui owner) {
@@ -76,22 +90,19 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			setCellRenderer(new CellListCellRender());
 		}
 
-		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-
-				if (thumbnailViewEnabled && e.getValueIsAdjusting() == false) {
-					DefaultListSelectionModel sel = (DefaultListSelectionModel) e.getSource();
-
-					if (sel.isSelectionEmpty())
-						disableDeleteButton();
-					else
-						enableDeleteButton((FileDicom) getModel().getElementAt(sel.getLeadSelectionIndex()));
-
+		getSelectionModel().addListSelectionListener(selectionEvent -> {
+			if (thumbnailViewEnabled && !selectionEvent.getValueIsAdjusting()) {
+				DefaultListSelectionModel sel = (DefaultListSelectionModel) selectionEvent.getSource();
+				if (sel.isSelectionEmpty()) {
+					disableDeleteButton();
+				} else {
+					enableDeleteButton((FileDicom) getModel().getElementAt(sel.getLeadSelectionIndex()));
 				}
 			}
 		});
 		addMouseListener(new MouseListener() {
 
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (thumbnailViewEnabled && 2 == e.getClickCount()) {
 					// double click
@@ -99,30 +110,35 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 				}
 			}
 
+			@Override
 			public void mousePressed(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseReleased(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseEntered(MouseEvent e) {
 			}
 
+			@Override
 			public void mouseExited(MouseEvent e) {
 			}
 		});
 	}
 
+	@Override
 	public void initialize() {
 		loadDicomFromDB();
 		dicomViewer.enableLoadButton();
 		thumbnailViewEnabled = true;
-		dicomViewer.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		dicomViewer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	public void disableLoadButton() {
 		thumbnailViewEnabled = false;
-		dicomViewer.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		dicomViewer.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		dicomViewer.disableLoadButton();
 	}
 
@@ -142,38 +158,33 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		FileDicom[] fdb = null;
 		try {
 			fdb = DicomManagerFactory.getManager().loadPatientFiles(patID);
-		}catch(OHServiceException ex){
-			if(ex.getMessages() != null){
-				for(OHExceptionMessage msg : ex.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
-		if (fdb == null)
+		if (fdb == null) {
 			fdb = new FileDicom[0];
+		}
 
 		dicomThumbsModel.clear();
 
-		for (int i = 0; i < fdb.length; i++)
+		for (int i = 0; i < fdb.length; i++) {
 			dicomThumbsModel.addInstance(fdb[i]);
-		;
+		}
 
 	}
 
 	public static class DicomThumbsModel extends AbstractListModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private LinkedList<FileDicom> thumbnailList;
 
 		public DicomThumbsModel() {
 
-			thumbnailList = new LinkedList<FileDicom>();
+			thumbnailList = new LinkedList<>();
 
 		}
 
+		@Override
 		public Object getElementAt(int index) {
 			if (index < 0) {
 				return null;
@@ -182,6 +193,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			}
 		}
 
+		@Override
 		public int getSize() {
 			return thumbnailList.size();
 		}
@@ -204,6 +216,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 	
 	private class CellListCellRender implements ListCellRenderer {
 
+		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
 			FileDicom instance = (FileDicom) value;
@@ -217,7 +230,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			JPanel header = new JPanel(new BorderLayout(), false);
 			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
 			date.setForeground(Color.LIGHT_GRAY);
-			JLabel type = new JLabel(instance.getDicomType() == null ? MessageBundle.getMessage("angal.common.notdefined") : instance.getDicomType().toString());
+			JLabel type = new JLabel(instance.getDicomType() == null ? MessageBundle.getMessage("angal.common.notdefined.txt") : instance.getDicomType().toString());
 			type.setForeground(Color.LIGHT_GRAY);
 			header.add(date, BorderLayout.NORTH);
 			header.add(type, BorderLayout.CENTER);
@@ -257,6 +270,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 	private class ImageListCellRender implements ListCellRenderer {
 
+		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 
 			FileDicom instance = (FileDicom) value;
@@ -272,7 +286,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			JPanel header = new JPanel(new BorderLayout(), false);
 			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
 			date.setForeground(Color.LIGHT_GRAY);
-			JLabel type = new JLabel(instance.getDicomType() == null? MessageBundle.getMessage("angal.common.notdefined") : instance.getDicomType().toString());
+			JLabel type = new JLabel(instance.getDicomType() == null? MessageBundle.getMessage("angal.common.notdefined.txt") : instance.getDicomType().toString());
 			type.setForeground(Color.LIGHT_GRAY);
 			JLabel top = new JLabel(instance.getDicomSeriesDescription().toUpperCase());
 			top.setForeground(Color.LIGHT_GRAY);
@@ -282,8 +296,8 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			panel.add(header, BorderLayout.NORTH);
 			
 			// Image
-			BufferedImage immagine = instance.getDicomThumbnailAsImage();
-			JLabel jLab = new JLabel(new ImageIcon(immagine));
+			BufferedImage image = instance.getDicomThumbnailAsImage();
+			JLabel jLab = new JLabel(new ImageIcon(image));
 			jLab.setPreferredSize(dim);
 			jLab.setMaximumSize(dim);
 			jLab.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -331,8 +345,9 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		String newline = " <br>";
 		StringBuilder rv = new StringBuilder("<html>");
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.patient")).append(separator).append(dicomFile.getDicomPatientName());
-		if (isValorized(dicomFile.getDicomPatientAge()))
-			rv.append("[").append(MessageBundle.getMessage("angal.dicom.thumbnail.age")).append(separator).append(sanitize(dicomFile.getDicomPatientAge())).append("]");
+		if (isValorized(dicomFile.getDicomPatientAge())) {
+			rv.append("[").append(MessageBundle.getMessage("angal.common.age.txt")).append(separator).append(sanitize(dicomFile.getDicomPatientAge())).append("]");
+		}
 		rv.append(newline);
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.modality")).append(separator).append(sanitize(dicomFile.getModality()));
 		rv.append(" <br>");
@@ -342,22 +357,24 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 		rv.append(" <br>");
 		rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.series")).append(separator).append(sanitize(dicomFile.getDicomSeriesDescription()));
 		rv.append(" <br>");
-		rv.append(MessageBundle.getMessage("angal.common.date")).append(separator).append(sanitize(TimeTools.formatDateTime(dicomFile.getDicomSeriesDate(), "dd-MM-yyyy")));
+		rv.append(MessageBundle.getMessage("angal.common.date.txt")).append(separator).append(sanitize(TimeTools.formatDateTime(dicomFile.getDicomSeriesDate(), "dd-MM-yyyy")));
 		rv.append(" <br>");
-		if (dicomFile.getDicomType() != null)
+		if (dicomFile.getDicomType() != null) {
 			rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.category")).append(separator).append(sanitize(dicomFile.getDicomType().getDicomTypeDescription()));
-		else
+		} else {
 			rv.append(MessageBundle.getMessage("angal.dicom.thumbnail.category")).append(separator).append("N/D");
+		}
 		rv.append(" <br>");
 		rv.append("</html>");
 		return rv.toString();
 	}
 
 	private String sanitize(String val) {
-		if (isValorized(val))
+		if (isValorized(val)) {
 			return val;
-		else
+		} else {
 			return "";
+		}
 	}
 
 	private boolean isValorized(String val) {

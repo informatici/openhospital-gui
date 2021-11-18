@@ -1,67 +1,46 @@
-/**
- * JLabelRequired.java - 28/gen/2014
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
-import javax.swing.Icon;
 import javax.swing.JLabel;
 
 /**
- * @author Mwithi
+ * JLabelRequired.java - 28/gen/2014
  *
+ * @author Mwithi
  */
 public class JLabelRequired extends JLabel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1519907071350395237L;
-	
-	private static String MARK = " *";
+	private static final String REQUIRED_MARK = " *";
 
 	/**
-	 * 
-	 */
-	public JLabelRequired() {
-	}
-
-	/**
-	 * @param text
+	 * Creates a <code>JLabelRequired</code> instance with the specified
+	 * text and as the <code>setText</code> method is overridden an " *"
+	 * is added after the specified text.
+	 *
+	 * @param text  The text to be displayed by the label.
 	 */
 	public JLabelRequired(String text) {
 		super(text);
-	}
-
-	/**
-	 * @param image
-	 */
-	public JLabelRequired(Icon image) {
-		super(image);
-	}
-
-	/**
-	 * @param text
-	 * @param horizontalAlignment
-	 */
-	public JLabelRequired(String text, int horizontalAlignment) {
-		super(text, horizontalAlignment);
-	}
-
-	/**
-	 * @param image
-	 * @param horizontalAlignment
-	 */
-	public JLabelRequired(Icon image, int horizontalAlignment) {
-		super(image, horizontalAlignment);
-	}
-
-	/**
-	 * @param text
-	 * @param icon
-	 * @param horizontalAlignment
-	 */
-	public JLabelRequired(String text, Icon icon, int horizontalAlignment) {
-		super(text, icon, horizontalAlignment);
 	}
 
 	/* (non-Javadoc)
@@ -69,6 +48,6 @@ public class JLabelRequired extends JLabel {
 	 */
 	@Override
 	public void setText(String text) {
-		super.setText(text + MARK);
+		super.setText(text + REQUIRED_MARK);
 	}
 }

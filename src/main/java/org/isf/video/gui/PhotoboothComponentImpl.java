@@ -1,25 +1,52 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.video.gui;
+
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.SwingUtilities;
+
+import org.isf.utils.image.ImageUtil;
+import org.isf.utils.jobjects.Cropping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.jgoodies.binding.adapter.ComboBoxAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.forms.factories.CC;
-import org.isf.utils.image.ImageUtil;
-import org.isf.utils.jobjects.Cropping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public final class PhotoboothComponentImpl extends PhotoboothComponent {
     private static final Logger LOGGER = LoggerFactory.getLogger(PhotoboothComponentImpl.class);
@@ -31,7 +58,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                                                       final boolean isSelected,
                                                       final boolean cellHasFocus) {
             final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value != null && value instanceof Dimension) {
+            if (value instanceof Dimension) {
                 final Dimension valueAsDimension = (Dimension) value;
                 setText(String.format("%d x %d", (int) valueAsDimension.getWidth(), (int) valueAsDimension.getHeight()));
             }
@@ -46,7 +73,7 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                                                       final boolean isSelected,
                                                       final boolean cellHasFocus) {
             final Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (value != null && value instanceof Webcam) {
+            if (value instanceof Webcam) {
                 final Webcam webcam = (Webcam) value;
                 setText(webcam.getName());
             }
@@ -76,9 +103,9 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         this.allWebcams = Webcam.getWebcams();
         this.webcam = Webcam.getDefault();
 
-        this.supportedResolutions = new ArrayList<Dimension>();
+        this.supportedResolutions = new ArrayList<>();
         Collections.addAll(supportedResolutions, webcam.getDevice().getResolutions());
-        dimensionSelectionInList = new SelectionInList<Dimension>(supportedResolutions);
+        dimensionSelectionInList = new SelectionInList<>(supportedResolutions);
     }
 
     @Override
@@ -119,68 +146,62 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
                 photoboothPanelPresentationModel.getModel(PhotoboothPanelModel.PROPERTY_WEBCAM)
         ));
 
-        webcamResolutionChangeListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-                final Object newValue = propertyChangeEvent.getNewValue();
-                if (newValue != null && newValue instanceof Dimension) {
-                    PhotoboothComponentImpl.this.stopWebcam();
+        webcamResolutionChangeListener = propertyChangeEvent -> {
+            final Object newValue = propertyChangeEvent.getNewValue();
+            if (newValue instanceof Dimension) {
+                PhotoboothComponentImpl.this.stopWebcam();
 
-                    LOGGER.info("Changing webcam dimension to {}", newValue);
-                    webcam.setViewSize((Dimension) newValue);
-                    PhotoboothComponentImpl.this.getStreamingPanel().setPreferredSize((Dimension) newValue);
-                    PhotoboothComponentImpl.this.getStreamingPanel().setMinimumSize((Dimension) newValue);
-                    PhotoboothComponentImpl.this.getSnapshotPanel().setPreferredSize((Dimension) newValue);
-                    PhotoboothComponentImpl.this.getSnapshotPanel().setMinimumSize((Dimension) newValue);
+                LOGGER.info("Changing webcam dimension to {}", newValue);
+                webcam.setViewSize((Dimension) newValue);
+                PhotoboothComponentImpl.this.getStreamingPanel().setPreferredSize((Dimension) newValue);
+                PhotoboothComponentImpl.this.getStreamingPanel().setMinimumSize((Dimension) newValue);
+                PhotoboothComponentImpl.this.getSnapshotPanel().setPreferredSize((Dimension) newValue);
+                PhotoboothComponentImpl.this.getSnapshotPanel().setMinimumSize((Dimension) newValue);
 
-                    LOGGER.info("Closing webcam before attaching to panel.");
-                    webcam.close();
-                    webcamPanel = new WebcamPanel(webcam);
-                    PhotoboothComponentImpl.this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
-                    owner.pack();
-                    owner.repaint();
-                    owner.validate();
-                }
+                LOGGER.info("Closing webcam before attaching to panel.");
+                webcam.close();
+                webcamPanel = new WebcamPanel(webcam);
+                PhotoboothComponentImpl.this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
+                owner.pack();
+                owner.repaint();
+                owner.validate();
             }
         };
         photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_RESOLUTION, webcamResolutionChangeListener);
 
-        webcamChangeListener = new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-                final Object newValue = propertyChangeEvent.getNewValue();
-                if (newValue != null && newValue instanceof Webcam) {
-                    PhotoboothComponentImpl.this.stopWebcam();
+        webcamChangeListener = propertyChangeEvent -> {
+            final Object newValue = propertyChangeEvent.getNewValue();
+            if (newValue instanceof Webcam) {
+                PhotoboothComponentImpl.this.stopWebcam();
 
-                    webcam = (Webcam) newValue;
-                    LOGGER.info("Webcam changed to {}", webcam.getName());
+                webcam = (Webcam) newValue;
+                LOGGER.info("Webcam changed to {}", webcam.getName());
 
-                    supportedResolutions.clear();
-                    final Dimension[] allResolutions = webcam.getDevice().getResolutions();
-                    Collections.addAll(supportedResolutions, allResolutions);
-                    dimensionSelectionInList.fireContentsChanged(0, supportedResolutions.size() - 1);
+                supportedResolutions.clear();
+                final Dimension[] allResolutions = webcam.getDevice().getResolutions();
+                Collections.addAll(supportedResolutions, allResolutions);
+                dimensionSelectionInList.fireContentsChanged(0, supportedResolutions.size() - 1);
 
-                    // set to highest resolution
-                    photoboothPanelPresentationModel.setResolution(allResolutions[allResolutions.length - 1]);
-                    LOGGER.info("Closing webcam {} before changing resolution", webcam.getName());
-                    webcam.close();
+                // set to highest resolution
+                photoboothPanelPresentationModel.setResolution(allResolutions[allResolutions.length - 1]);
+                LOGGER.info("Closing webcam {} before changing resolution", webcam.getName());
+                webcam.close();
 
-                    LOGGER.info("Changing resolution to {}", photoboothPanelPresentationModel.getResolution());
-                    webcam.setViewSize(photoboothPanelPresentationModel.getResolution());
+                LOGGER.info("Changing resolution to {}", photoboothPanelPresentationModel.getResolution());
+                webcam.setViewSize(photoboothPanelPresentationModel.getResolution());
 
-                    PhotoboothComponentImpl.this.getStreamingPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
-                    PhotoboothComponentImpl.this.getStreamingPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
-                    PhotoboothComponentImpl.this.getSnapshotPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
-                    PhotoboothComponentImpl.this.getSnapshotPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
+                PhotoboothComponentImpl.this.getStreamingPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
+                PhotoboothComponentImpl.this.getStreamingPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
+                PhotoboothComponentImpl.this.getSnapshotPanel().setPreferredSize(photoboothPanelPresentationModel.getResolution());
+                PhotoboothComponentImpl.this.getSnapshotPanel().setMinimumSize(photoboothPanelPresentationModel.getResolution());
 
-                    LOGGER.info("Attaching webcam {} to panel", webcam.getName());
-                    webcamPanel = new WebcamPanel(webcam);
-                    PhotoboothComponentImpl.this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
-                    owner.pack();
-                    owner.repaint();
-                    owner.validate();
+                LOGGER.info("Attaching webcam {} to panel", webcam.getName());
+                webcamPanel = new WebcamPanel(webcam);
+                PhotoboothComponentImpl.this.getStreamingPanel().add(webcamPanel, CC.xy(1, 1));
+                owner.pack();
+                owner.repaint();
+                owner.validate();
 
-                }
             }
         };
         photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_WEBCAM, webcamChangeListener);
@@ -212,36 +233,27 @@ public final class PhotoboothComponentImpl extends PhotoboothComponent {
         };
         getOkButton().setAction(okAction);
 
-        getCancelButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                PhotoboothComponentImpl.this.presentationModel().triggerFlush();
-                PhotoboothComponentImpl.this.cleanup();
-                owner.dispose();
-            }
+        getCancelButton().addActionListener(actionEvent -> {
+            PhotoboothComponentImpl.this.presentationModel().triggerFlush();
+            PhotoboothComponentImpl.this.cleanup();
+            owner.dispose();
         });
 
-        getCaptureButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                final Dimension currentResolution = photoboothPanelPresentationModel.getResolution();
-                // resize the image to match the current selected resolution. This is because under some circumstances, the
-                // webcam's viewSize seems to be different from the currently selected resolution. Weird. i know..
-                final BufferedImage resizedImage = ImageUtil.scaleImage(webcam.getImage(), (int) currentResolution.getWidth(), (int) currentResolution.getHeight());
+        getCaptureButton().addActionListener(actionEvent -> {
+            final Dimension currentResolution = photoboothPanelPresentationModel.getResolution();
+            // resize the image to match the current selected resolution. This is because under some circumstances, the
+            // webcam's viewSize seems to be different from the currently selected resolution. Weird. i know..
+            final BufferedImage resizedImage = ImageUtil.scaleImage(webcam.getImage(), (int) currentResolution.getWidth(), (int) currentResolution.getHeight());
 
-                // set image on the cropping panel.
-                cropping = new Cropping(resizedImage);
-                okAction.setEnabled(true);
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        PhotoboothComponentImpl.this.getSnapshotPanel().removeAll();
-                        PhotoboothComponentImpl.this.getSnapshotPanel().add(cropping, CC.xy(1, 1));
-                        PhotoboothComponentImpl.this.getPhotoBoothPanel().repaint();
-                        PhotoboothComponentImpl.this.getPhotoBoothPanel().revalidate();
-                    }
-                });
-            }
+            // set image on the cropping panel.
+            cropping = new Cropping(resizedImage);
+            okAction.setEnabled(true);
+            SwingUtilities.invokeLater(() -> {
+                PhotoboothComponentImpl.this.getSnapshotPanel().removeAll();
+                PhotoboothComponentImpl.this.getSnapshotPanel().add(cropping, CC.xy(1, 1));
+                PhotoboothComponentImpl.this.getPhotoBoothPanel().repaint();
+                PhotoboothComponentImpl.this.getPhotoBoothPanel().revalidate();
+            });
         });
     }
 

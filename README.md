@@ -1,44 +1,100 @@
-[![Build Status](https://travis-ci.org/informatici/openhospital-gui.svg?branch=master)](https://travis-ci.org/informatici/openhospital-gui)
-# OpenHospital-gui
-OpenHospital 2.0 (ISF OpenHospital web version) - WIP
+# Open Hospital - GUI
+[![Java CI](https://github.com/informatici/openhospital-gui/workflows/Java%20CI%20with%20Maven/badge.svg)](https://github.com/informatici/openhospital-gui/actions?query=workflow%3A%22Java+CI+with+Maven%22)
 
-**OpenHospital-core**
-You need the openhospital-core in order to run the gui.
+This is the GUI component of [Open Hospital][openhospital]: it contains a graphical user interface (GUI) made with Java Swing. 
+This project depends on the [Core component][openhospital-core] for the business logic and the data abstraction layer. 
+An alternative user interface based on React and currently still work-in-progress is available [here][openhospital-ui].
 
-* clone [openhospital-core](https://github.com/informatici/openhospital-core)
-* follow the instructions in the related README.md
+## How to build
 
-**How to build with Maven:**
-_(requires Maven 3.2.5 or lesser installed and configured)_
+To build this project you'll need Java JDK 8+ and Maven. 
+Additionally, you'll need to build and install locally the [Core component][openhospital-core] of Open Hospital.
+Once you do that, to build this project just issue:
 
-    mvn clean install
-    
-**How to create the DataBase**:
+  mvn package
+  
+To run the tests simply issue:
 
-You need a local (or remote) MySQL server where to run the script in mysql/db/ folder
+  mvn test
+  
+## How to launch Open Hospital
 
-    create_all_en.sql
-	
-For remote MySQL server you need to change IP (localost) and PORT (3306) in rsc/applicationContext.properties:
+To launch Open Hospital GUI, use the scripts `oh.sh` (on Linux) or `oh.bat` (on Windows) from the maven `target` folder.
+You will need a MySQL database running locally (e.g. the Docker container available in the Core project),
+or any similar SQL database (e.g. MariaDB).
 
-    <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/oh" />
+### Launch within IDE
 
-**With docker compose**
+Be sure to have configured properly the classpath for the project (see [7 Installing Open Hospital 1.11.0 in Eclipse EE](https://github.com/informatici/openhospital-doc/blob/develop/doc_admin/AdminManual.adoc#7-installing-open-hospital-1-11-0-in-eclipse-ee))
 
-Simply run (it will run on localhost:3306):
+Before running the application, you should generate the config files with the `g)` option, or manually copying and renaming the files `*.dist` files in `rsc/` folder and edit them accordingly:
 
-    docker-compose up 
+| Dist file                | Property file       | Properties to fill in                                         |
+|--------------------------|---------------------|---------------------------------------------------------------|
+| database.properties.dist | database.properties | DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS                      |
+| dicom.properties.dist    | dicom.properties    | OH_PATH_SUBSTITUTE/DICOM_DIR, DICOM_SIZE                      |
+| log4j.properties.dist    | log4j.properties    | LOG_DEST, DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS, LOG_LEVEL |
+| settings.properties.dist | settings.properties | OH_SET_LANGUAGE                                               |
 
-**How to launch the software**:
+*For further information, please refer to the Admin and User manuals in the [Doc project][openhospital-doc].*
 
-Use scripts startup.sh (Linux) or startup.cmd (Windows)
+## How to contribute
 
-**Other info**
+You can find the contribution guidelines in the [Open Hospital wiki][contribution-guide]. 
+A list of open issues is available on [Jira][jira].
 
-Please read Admin and User manuals in doc/ folder
+## Community
 
-# How to contribute
+You can reach out to the community of contributors by joining 
+our [Slack workspace][slack] or by subscribing to our [mailing list][ml].
 
-Please read the OpenHospital [Wiki](https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines)
+## Code style
 
-See the Open Issues on [Jira](https://openhospital.atlassian.net/issues/)
+This project uses a consistent code style and provides definitions for use in both IntelliJ and Eclipse IDEs.
+
+<details><summary>IntelliJ IDEA instructions</summary>
+
+For IntelliJ IDEA the process for importing the code style is:
+
+* Select *Settings* in the *File* menu
+* Select *Editor*
+* Select *Code Style*
+* Expand the menu item and select *Java*
+* Go to *Scheme* at the top, click on the setting button by the side of the drop-down list
+* Select *Import Scheme*
+* Select *IntelliJ IDE code style XML*
+* Navigate to the location of the file which relative to the project root is: `.ide-settings/idea/OpenHospital-code-style-configuration.xml`
+* Select *OK* 
+* At this point the code style is stored as part of the IDE and is used for **all** projects opened in the editor. To restrict the settings to just this project again select the setting button by the side of the *Scheme* list and select *Copy to Project...*. If successful a notice appears in the window that reads: *For current project*.
+
+</details>
+
+<details><summary>Eclipse instructions</summary>
+
+For Eclipse the process requires loading the formatting style and the import order separately.
+
+* Select *Preferences* in the *Window* menu
+* Select *Java*
+* Select *Code Style* and expand the menu
+* Select *Formatter*
+* Select the *Import...* button
+* Navigate to the location of the file which relative to the project root is: `.ide-settings/eclipse/OpenHospital-Java-CodeStyle-Formatter.xml`
+* Select *Open*
+* At this point the code style is stored and is applicable to all projects opened in the IDE. To restrict the settings just to this project select *Configure Project Specific Settings...* in the upper right. In the next dialog select the *openhospital* repository and select *OK*. In the next dialog select the *Enable project specific settings* checkbox. Finally select *Apply and Close*.
+* Back in the *Code Style* menu area, select *Organize Imports*
+* Select *Import...*
+* Navigate to the location of the file which relative to the project root is: `.ide-settings/eclipse/OpenHospital.importorder`
+* Select *Open*
+* As with the formatting styles the import order is applicable to all projects. In order to change it just for this project repeat the same steps as above for *Configure Project Specific Settings...*
+ 
+</details> 
+
+ [openhospital]: https://www.open-hospital.org/
+ [openhospital-core]: https://github.com/informatici/openhospital-core
+ [openhospital-ui]: https://github.com/informatici/openhospital-ui
+ [openhospital-doc]: https://github.com/informatici/openhospital-doc
+ [contribution-guide]: https://openhospital.atlassian.net/wiki/display/OH/Contribution+Guidelines
+ [jira]: https://openhospital.atlassian.net/jira/software/c/projects/OP/issues/
+ [database.prop]: https://github.com/informatici/openhospital-core/blob/develop/src/test/resources/database.properties
+ [slack]: https://join.slack.com/t/openhospitalworkspace/shared_invite/enQtOTc1Nzc0MzE2NjQ0LWIyMzRlZTU5NmNlMjE2MDcwM2FhMjRkNmM4YzI0MTAzYTA0YTI3NjZiOTVhMDZlNWUwNWEzMjE5ZDgzNWQ1YzE
+ [ml]: https://sourceforge.net/projects/openhospital/lists/openhospital-devel

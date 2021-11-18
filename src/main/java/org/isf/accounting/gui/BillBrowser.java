@@ -1,11 +1,26 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.accounting.gui;
 
-/**
- * Browsing of table BILLS
- * 
- * @author Mwithi
- * 
- */
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,15 +28,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +39,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -36,7 +47,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -44,13 +54,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.accounting.gui.PatientBillEdit.PatientBillListener;
 import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
-import org.isf.accounting.model.BillItems;
 import org.isf.accounting.model.BillPayments;
 import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.generaldata.GeneralData;
@@ -65,29 +75,36 @@ import org.isf.stat.gui.report.GenericReportBill;
 import org.isf.stat.gui.report.GenericReportFromDateToDate;
 import org.isf.stat.gui.report.GenericReportPatient;
 import org.isf.stat.gui.report.GenericReportUserInDate;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.isf.utils.jobjects.CustomJDateChooser;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
+/**
+ * Browsing of table BILLS
+ *
+ * @author Mwithi
+ */
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
-	public void billInserted(AWTEvent event){
-		if(patientParent!=null){
+	private static final Logger LOGGER = LoggerFactory.getLogger(BillBrowser.class);
+
+	@Override
+	public void billInserted(AWTEvent event) {
+		if (patientParent != null) {
 			try {
 				updateDataSet(dateFrom, dateTo, patientParent);
-			} catch (OHServiceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (OHServiceException ohServiceException) {
+				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
-		}else{
+		} else {
 			updateDataSet(dateFrom, dateTo);
 		}
 		updateTables();
@@ -98,12 +115,18 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				int insertedId = billInserted.getId();
 				for (int i = 0; i < jTableBills.getRowCount(); i++) {
 					Bill aBill = (Bill) jTableBills.getModel().getValueAt(i, -1);
-					if (aBill.getId() == insertedId)
-							jTableBills.getSelectionModel().setSelectionInterval(i, i);
+					if (aBill.getId() == insertedId) {
+						jTableBills.getSelectionModel().setSelectionInterval(i, i);
+					}
 				}
 			}
+			if (!users.contains(user)) {
+				jComboUsers.addItem(user);
+			}
+			jComboUsers.setSelectedItem(user);
 		}
 	}
+
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane jTabbedPaneBills;
 	private JTable jTableBills;
@@ -129,7 +152,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JButton jAffiliatePersonJButtonSupp  = null;
 	private JTextField jAffiliatePersonJTextField  = null;
 	private JButton jButtonReport;
-	private JComboBox jComboUsers;
+	private JComboBox<String> jComboUsers;
 	private JTextField medicalJTextField  = null;
 	private JMonthChooser jComboBoxMonths;
 	private JYearChooser jComboBoxYears;
@@ -145,20 +168,25 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private JButton jButtonToday;
 	
-	private String[] columsNames = {MessageBundle.getMessage("angal.billbrowser.id"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.common.date"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.patientID"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.patient"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.amount"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.lastpayment"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.status"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.billbrowser.balance")};  //$NON-NLS-1$
-	private int[] columsWidth = {50, 150, 50, 50, 100, 150, 50, 100};
-	private int[] maxWidth = {150, 150, 150, 200, 100, 150, 50, 100};
-	private boolean[] columsResizable = {false, false, false, true, false, false, false, false};
-	private Class<?>[] columsClasses = {Integer.class, String.class, String.class, String.class, Double.class, String.class, String.class, Double.class};
-	private boolean[] alignCenter = {true, true, true, false, false, true, true, false};
-	private boolean[] boldCenter = {true, false, false, false, false, false, false, false};
+	private String[] columnNames = {
+			MessageBundle.getMessage("angal.billbrowser.user.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.billbrowser.patientID.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.patient.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.amount.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.billbrowser.lastpayment.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.status.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.billbrowser.balance.col").toUpperCase()
+	};
+	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
+	private boolean[] columnShow = {!isSingleUser && MainMenu.checkUserGrants("cashiersfilter"), true, true, true, true, true, true, true, true};
+	private int[] columnWidths = {50, 50, 150, 50, 50, 100, 150, 50, 100};
+	private int[] maxWidth = {50, 150, 150, 150, 200, 100, 150, 50, 100};
+	private boolean[] columnsResizable = {false, false, false, false, true, false, false, false, false};
+	private Class<?>[] columnsClasses = {String.class, Integer.class, String.class, String.class, String.class, Double.class, String.class, String.class, Double.class};
+	private boolean[] alignCenter = {false, true, true, true, false, false, true, true, false};
+	private boolean[] boldCenter = {false, true, false, false, false, false, false, false, false};
 	
 	//Totals
 	private BigDecimal totalToday;
@@ -172,61 +200,54 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	//Bills & Payments
 	private BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
-	private ArrayList<Bill> billPeriod;
-	private HashMap<Integer, Bill> mapBill = new HashMap<Integer, Bill>();
-	private ArrayList<BillPayments> paymentsPeriod;
-	private ArrayList<Bill> billFromPayments;
+	private List<Bill> billPeriod;
+	private HashMap<Integer, Bill> mapBill = new HashMap<>();
+	private List<BillPayments> paymentsPeriod;
+	private List<Bill> billFromPayments;
 	
-	private String currencyCod = null;
+	private String currencyCod;
 	
 	//Users
 	private String user = UserBrowsingManager.getCurrentUser();
-	private ArrayList<String> users;
+	private List<String> users;
 	
 	public BillBrowser() {
 		try {
 			this.currencyCod = Context.getApplicationContext().getBean(HospitalBrowsingManager.class).getHospitalCurrencyCod();
-		} catch (OHServiceException e1) {
+		} catch (OHServiceException ohServiceException) {
 			this.currencyCod = null;
-			if(e1.getMessages() != null){
-				for(OHExceptionMessage msg : e1.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+			MessageDialog.showExceptions(ohServiceException);
 		}
 		
 		try {
 			users = billManager.getUsers();
-		}catch(OHServiceException e){
-			if(e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch(OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
 		updateDataSet();
 		initComponents();
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		//setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
+
 	private void initComponents() {
 		add(getJPanelRange(), BorderLayout.NORTH);
 		add(getJTabbedPaneBills(), BorderLayout.CENTER);
 		add(getJPanelSouth(), BorderLayout.SOUTH);
-		setTitle(MessageBundle.getMessage("angal.billbrowser.title")); //$NON-NLS-1$
-		setMinimumSize(new Dimension(900,600));
-		addWindowListener(new WindowAdapter(){
-			
+		setTitle(MessageBundle.getMessage("angal.billbrowser.patientbillmanagment.title"));
+		setMinimumSize(new Dimension(900, 600));
+		addWindowListener(new WindowAdapter() {
+
+			@Override
 			public void windowClosing(WindowEvent e) {
 				//to free memory
 				billPeriod.clear();
 				mapBill.clear();
 				users.clear();
 				dispose();
-			}			
+			}
 		});
 		pack();
 	}
@@ -247,7 +268,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jPanelTotals.setLayout(new BoxLayout(jPanelTotals, BoxLayout.Y_AXIS));
 			jPanelTotals.add(getJTableToday());
 			jPanelTotals.add(getJTablePeriod());
-			if (!GeneralData.SINGLEUSER) jPanelTotals.add(getJTableUser());
+			if (!isSingleUser) {
+				jPanelTotals.add(getJTableUser());
+			}
 			updateTotals();
 		}
 		return jPanelTotals;
@@ -255,8 +278,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private JLabel getJLabelTo() {
 		if (jLabelTo == null) {
-			jLabelTo = new JLabel();
-			jLabelTo.setText(MessageBundle.getMessage("angal.common.to")); //$NON-NLS-1$
+			jLabelTo = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
 		}
 		return jLabelTo;
 	}
@@ -267,19 +289,16 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarFrom.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarFrom.getCalendarButton().setMnemonic(0);
-			jCalendarFrom.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
-
-				public void propertyChange(PropertyChangeEvent evt) {
-					jCalendarFrom.setDate((Date) evt.getNewValue());
-					dateFrom.setTime((Date) evt.getNewValue());
-					dateFrom.set(GregorianCalendar.HOUR_OF_DAY, 0);
-					dateFrom.set(GregorianCalendar.MINUTE, 0);
-					dateFrom.set(GregorianCalendar.SECOND, 0);
-					//dateToday0.setTime(dateFrom.getTime());
-					jButtonToday.setEnabled(true);
-					//billFilter();
-					billInserted(null);
-				}
+			jCalendarFrom.addPropertyChangeListener("date", propertyChangeEvent -> {
+				jCalendarFrom.setDate((Date) propertyChangeEvent.getNewValue());
+				dateFrom.setTime((Date) propertyChangeEvent.getNewValue());
+				dateFrom.set(Calendar.HOUR_OF_DAY, 0);
+				dateFrom.set(Calendar.MINUTE, 0);
+				dateFrom.set(Calendar.SECOND, 0);
+				//dateToday0.setTime(dateFrom.getTime());
+				jButtonToday.setEnabled(true);
+				//billFilter();
+				billInserted(null);
 			});
 		}			
 		return jCalendarFrom;
@@ -291,18 +310,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarTo.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
 			jCalendarTo.getCalendarButton().setMnemonic(0);
-			jCalendarTo.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
-				
-				public void propertyChange(PropertyChangeEvent evt) {
-					jCalendarTo.setDate((Date) evt.getNewValue());
-					dateTo.setTime((Date) evt.getNewValue());
-					dateTo.set(GregorianCalendar.HOUR_OF_DAY, 23);
-					dateTo.set(GregorianCalendar.MINUTE, 59);
-					dateTo.set(GregorianCalendar.SECOND, 59);
-					//dateToday24.setTime(dateTo.getTime());
-					jButtonToday.setEnabled(true);
-					billInserted(null);
-				}
+			jCalendarTo.addPropertyChangeListener("date", propertyChangeEvent -> {
+				jCalendarTo.setDate((Date) propertyChangeEvent.getNewValue());
+				dateTo.setTime((Date) propertyChangeEvent.getNewValue());
+				dateTo.set(Calendar.HOUR_OF_DAY, 23);
+				dateTo.set(Calendar.MINUTE, 59);
+				dateTo.set(Calendar.SECOND, 59);
+				//dateToday24.setTime(dateTo.getTime());
+				jButtonToday.setEnabled(true);
+				billInserted(null);
 			});
 		}
 		return jCalendarTo;
@@ -310,143 +326,140 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JLabel getJLabelFrom() {
 		if (jLabelFrom == null) {
-			jLabelFrom = new JLabel();
-			jLabelFrom.setText(MessageBundle.getMessage("angal.common.from")); //$NON-NLS-1$
+			jLabelFrom = new JLabel(MessageBundle.getMessage("angal.common.from.txt"));
 		}
 		return jLabelFrom;
 	}
-	
+
 	private JButton getJButtonReport() {
 		if (jButtonReport == null) {
-			jButtonReport = new JButton();
-			jButtonReport.setMnemonic(KeyEvent.VK_R);
-			jButtonReport.setText(MessageBundle.getMessage("angal.billbrowser.report")); //$NON-NLS-1$
-			jButtonReport.addActionListener(new ActionListener() {
+			jButtonReport = new JButton(MessageBundle.getMessage("angal.billbrowser.report.btn"));
+			jButtonReport.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.report.btn.key"));
+			jButtonReport.addActionListener(actionEvent -> {
+				ArrayList<String> options = new ArrayList<>();
+				if (patientParent != null) {
+					options.add(MessageBundle.getMessage("angal.billbrowser.patientstatement.txt"));
+				}
+				options.add(MessageBundle.getMessage("angal.billbrowser.todayclosure.txt"));
+				options.add(MessageBundle.getMessage("angal.billbrowser.today.txt"));
+				options.add(MessageBundle.getMessage("angal.billbrowser.period.txt"));
+				options.add(MessageBundle.getMessage("angal.billbrowser.thismonth.txt"));
+				options.add(MessageBundle.getMessage("angal.billbrowser.pickmonth.txt"));
+				if (patientParent == null) {
+					options.add(MessageBundle.getMessage("angal.billbrowser.patientstatement.txt"));
+				}
+				Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png");
+				String option = (String) MessageDialog.inputDialog(BillBrowser.this,
+						icon,
+						options.toArray(),
+						options.get(0),
+						"angal.billbrowser.pleaseselectareport.msg");
+				if (option == null) {
+					return;
+				}
 
-				public void actionPerformed(ActionEvent e) {
-					
-					ArrayList<String> options = new ArrayList<String>();
-					if (patientParent != null)
-						options.add(MessageBundle.getMessage("angal.billbrowser.patientstatement"));
-					options.add(MessageBundle.getMessage("angal.billbrowser.todayclosure"));
-					options.add(MessageBundle.getMessage("angal.billbrowser.today"));
-					options.add(MessageBundle.getMessage("angal.billbrowser.period"));
-					options.add(MessageBundle.getMessage("angal.billbrowser.thismonth"));
-					options.add(MessageBundle.getMessage("angal.billbrowser.othermonth"));
-					if (patientParent == null)
-						options.add(MessageBundle.getMessage("angal.billbrowser.patientstatement"));
-					
-					Icon icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
-					String option = (String) JOptionPane.showInputDialog(BillBrowser.this, 
-							MessageBundle.getMessage("angal.billbrowser.pleaseselectareport"), 
-							MessageBundle.getMessage("angal.billbrowser.report"), 
-							JOptionPane.INFORMATION_MESSAGE, 
-							icon, 
-							options.toArray(), 
-							options.get(0));
-					
-					if (option == null) return;
-					
-					String from = null;
-					String to = null;
-					
-					int i = 0;
-					
-					if (patientParent != null && options.indexOf(option) == i) {
-						new GenericReportPatient(patientParent.getCode(), GeneralData.PATIENTBILLSTATEMENT);
-						return;
-					}
-					if (options.indexOf(option) == i) {
-							
-							from = TimeTools.formatDateTimeReport(dateToday0);
-							to = TimeTools.formatDateTimeReport(dateToday24);
-							String user;
-							if (GeneralData.SINGLEUSER) {
-								user = "admin";
-							} else {
-								user = UserBrowsingManager.getCurrentUser();
-							}
-							new GenericReportUserInDate(from, to, user, "BillsReportUserInDate");
-							return;
-						}
-					if (options.indexOf(option) == ++i) {
-						
-						from = TimeTools.formatDateTimeReport(dateToday0);
-						to = TimeTools.formatDateTimeReport(dateToday24);
-					}
-					if (options.indexOf(option) == ++i) {
-						
-						from = TimeTools.formatDateTimeReport(dateFrom);
-						to = TimeTools.formatDateTimeReport(dateTo);
-					}
-					if (options.indexOf(option) == ++i) {
-						
-						month = jComboBoxMonths.getMonth();
-						GregorianCalendar thisMonthFrom = dateFrom;
-						GregorianCalendar thisMonthTo = dateTo;
-						thisMonthFrom.set(GregorianCalendar.MONTH, month);
-						thisMonthFrom.set(GregorianCalendar.DAY_OF_MONTH, 1);
-						thisMonthTo.set(GregorianCalendar.MONTH, month);
-						thisMonthTo.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-						from = TimeTools.formatDateTimeReport(thisMonthFrom);
-						to = TimeTools.formatDateTimeReport(thisMonthTo);
-					}
-					if (options.indexOf(option) == ++i) {
-						
-						icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
-						
-						int month;
-						JMonthChooser monthChooser = new JMonthChooser();
-						monthChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-						
-				        int r = JOptionPane.showConfirmDialog(BillBrowser.this, 
-				        		monthChooser, 
-				        		MessageBundle.getMessage("angal.billbrowser.month"), 
-				        		JOptionPane.OK_CANCEL_OPTION, 
-				        		JOptionPane.PLAIN_MESSAGE,
-				        		icon);
+				GregorianCalendar from = null;
+				GregorianCalendar to = null;
 
-				        if (r == JOptionPane.OK_OPTION) {
-				        	month = monthChooser.getMonth();
-				        } else {
-				            return;
-				        }
-				        
-						GregorianCalendar thisMonthFrom = dateFrom;
-						GregorianCalendar thisMonthTo = dateTo;
-						thisMonthFrom.set(GregorianCalendar.MONTH, month);
-						thisMonthFrom.set(GregorianCalendar.DAY_OF_MONTH, 1);
-						thisMonthTo.set(GregorianCalendar.MONTH, month);
-						thisMonthTo.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-						from = TimeTools.formatDateTimeReport(thisMonthFrom);
-						to = TimeTools.formatDateTimeReport(thisMonthTo);
+				int i = 0;
+
+				if (patientParent != null && options.indexOf(option) == i) {
+					new GenericReportPatient(patientParent.getCode(), GeneralData.PATIENTBILLSTATEMENT);
+					return;
+				}
+				if (options.indexOf(option) == i) {
+
+					String fromString = TimeTools.formatDateTimeReport(dateFrom);
+					String toString = TimeTools.formatDateTimeReport(dateTo);
+					String user;
+					if (isSingleUser) {
+						user = "admin";
+					} else {
+						user = UserBrowsingManager.getCurrentUser();
 					}
-					if (patientParent == null && options.indexOf(option) == ++i) {
-						JOptionPane.showMessageDialog(BillBrowser.this, MessageBundle.getMessage("angal.billbrowser.pleaseselectapatient"));
+					new GenericReportUserInDate(fromString, toString, user, "BillsReportUserInDate");
+					return;
+				}
+				if (options.indexOf(option) == ++i) {
+
+					from = TimeTools.getDateToday0();
+					to = TimeTools.getDateToday0();
+				}
+				if (options.indexOf(option) == ++i) {
+
+					from = dateFrom;
+					to = dateTo;
+				}
+				if (options.indexOf(option) == ++i) {
+
+					month = jComboBoxMonths.getMonth();
+					from = dateFrom;
+					to = dateTo;
+					from.set(Calendar.MONTH, month);
+					from.set(Calendar.DAY_OF_MONTH, 1);
+					to.set(Calendar.MONTH, month);
+					to.set(Calendar.DAY_OF_MONTH, dateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
+				}
+				if (options.indexOf(option) == ++i) {
+
+					icon = new ImageIcon("rsc/icons/calendar_dialog.png");
+
+					int month;
+					JMonthChooser monthChooser = new JMonthChooser();
+					monthChooser.setLocale(new Locale(GeneralData.LANGUAGE));
+
+					int r = JOptionPane.showConfirmDialog(BillBrowser.this,
+							monthChooser,
+							MessageBundle.getMessage("angal.billbrowser.month.txt"),
+							JOptionPane.OK_CANCEL_OPTION,
+							JOptionPane.PLAIN_MESSAGE,
+							icon);
+
+					if (r == JOptionPane.OK_OPTION) {
+						month = monthChooser.getMonth();
+					} else {
 						return;
 					}
 
-					options = new ArrayList<String>();
-					options.add(MessageBundle.getMessage("angal.billbrowser.shortreportonlybaddebts"));
-					options.add(MessageBundle.getMessage("angal.billbrowser.fullreportallbills"));
-										
-					icon = new ImageIcon("rsc/icons/list_dialog.png"); //$NON-NLS-1$
-					option = (String) JOptionPane.showInputDialog(BillBrowser.this, 
-							MessageBundle.getMessage("angal.billbrowser.pleaseselectareport"), 
-							MessageBundle.getMessage("angal.billbrowser.report"), 
-							JOptionPane.INFORMATION_MESSAGE, 
-							icon, 
-							options.toArray(), 
-							options.get(0));
-					
-					if (option == null) return;
-					
-					if (options.indexOf(option) == 0) {
-						new GenericReportFromDateToDate(from, to, GeneralData.BILLSREPORTPENDING, MessageBundle.getMessage("angal.billbrowser.shortreportonlybaddebts"), false);
-					}
-					if (options.indexOf(option) == 1) {
-						new GenericReportFromDateToDate(from, to, GeneralData.BILLSREPORT, MessageBundle.getMessage("angal.billbrowser.fullreportallbills"), false);
-					}
+					from = dateFrom;
+					to = dateTo;
+					from.set(Calendar.MONTH, month);
+					from.set(Calendar.DAY_OF_MONTH, 1);
+					to.set(Calendar.MONTH, month);
+					to.set(Calendar.DAY_OF_MONTH, dateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
+				}
+				if (patientParent == null && options.indexOf(option) == ++i) {
+					MessageDialog.error(BillBrowser.this, "angal.common.pleaseselectapatient.msg");
+					return;
+				}
+
+				options = new ArrayList<>();
+				options.add(MessageBundle.getMessage("angal.billbrowser.shortreportonlybaddebt.txt"));
+				options.add(MessageBundle.getMessage("angal.billbrowser.fullreportallbills.txt"));
+
+				icon = new ImageIcon("rsc/icons/list_dialog.png");
+				option = (String) MessageDialog.inputDialog(BillBrowser.this,
+						icon,
+						options.toArray(),
+						options.get(0),
+						"angal.billbrowser.pleaseselectareport.msg");
+				if (option == null) {
+					return;
+				}
+
+				if (options.indexOf(option) == 0) {
+					new GenericReportFromDateToDate(
+							TimeTools.formatDateTime(from, "dd/MM/yyyy"),
+							TimeTools.formatDateTime(to, "dd/MM/yyyy"),
+							GeneralData.BILLSREPORTPENDING,
+							MessageBundle.getMessage("angal.billbrowser.shortreportonlybaddebt.txt"), false);
+				}
+				if (options.indexOf(option) == 1) {
+					new GenericReportFromDateToDate(
+							TimeTools.formatDateTime(from, "dd/MM/yyyy"),
+							TimeTools.formatDateTime(to, "dd/MM/yyyy"),
+							GeneralData.BILLSREPORT,
+							MessageBundle.getMessage("angal.billbrowser.fullreportallbills.txt"), false);
 				}
 			});
 		}
@@ -455,180 +468,179 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
-			jButtonClose = new JButton();
-			jButtonClose.setText(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonClose.setMnemonic(KeyEvent.VK_C);
-			jButtonClose.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					//to free memory
-					billPeriod.clear();
-					mapBill.clear();
-					users.clear();
-					dispose();
-				}
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			jButtonClose.addActionListener(actionEvent -> {
+				//to free memory
+				billPeriod.clear();
+				mapBill.clear();
+				users.clear();
+				dispose();
 			});
 		}
 		return jButtonClose;
 	}
+	
+	private boolean isOnlyOneSelected(JTable table) {
+		int rowsSelected = table.getSelectedRowCount();
+		if (rowsSelected > 1) {
+			MessageDialog.error(BillBrowser.this,"angal.billbrowser.pleaseselectonlyonebill.msg");
+			return false;
+		} else if (rowsSelected == 0) {
+			MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectabill.msg");
+			return false;
+		}
+		return true;
+	}
 
 	private JButton getJButtonEdit() {
 		if (jButtonEdit == null) {
-			jButtonEdit = new JButton();
-			jButtonEdit.setText(MessageBundle.getMessage("angal.billbrowser.editbill")); //$NON-NLS-1$
-			jButtonEdit.setMnemonic(KeyEvent.VK_E);
-			jButtonEdit.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					try {
-						if (jScrollPaneBills.isShowing()) {
-							int rowSelected = jTableBills.getSelectedRow();
-							Bill editBill = (Bill)jTableBills.getValueAt(rowSelected, -1);
-							if (user.equals("admin") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
-								PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
-								pbe.addPatientBillListener(BillBrowser.this);
-								pbe.setVisible(true);
-							} else {
-								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
-							}
-						}
-						if (jScrollPanePending.isShowing()) {
-							int rowSelected = jTablePending.getSelectedRow();
-							Bill editBill = (Bill)jTablePending.getValueAt(rowSelected, -1);
-							PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
-							pbe.addPatientBillListener(BillBrowser.this);
-							pbe.setVisible(true);
-						}
-						if (jScrollPaneClosed.isShowing()) {
-							int rowSelected = jTableClosed.getSelectedRow();
-							Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
-							new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
-						}
-					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(BillBrowser.this,
-								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-								JOptionPane.PLAIN_MESSAGE);
+			jButtonEdit = new JButton(MessageBundle.getMessage("angal.billbrowser.editbill.btn"));
+			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.editbill.btn.key"));
+			jButtonEdit.addActionListener(actionEvent -> {
+				if (jScrollPaneBills.isShowing()) {
+					if (!isOnlyOneSelected(jTableBills)) {
+						return;
+					}
+					int rowSelected = jTableBills.getSelectedRow();
+					Bill editBill = (Bill) jTableBills.getValueAt(rowSelected, -1);
+					if (MainMenu.checkUserGrants("editclosedbills") || editBill.getStatus().equals("O")) { //$NON-NLS-1$
+						PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
+						pbe.addPatientBillListener(BillBrowser.this);
+						pbe.setVisible(true);
+					} else {
+						MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill.msg");
+						return;
+					}
+				}
+				if (jScrollPanePending.isShowing()) {
+					if (!isOnlyOneSelected(jTablePending)) {
+						return;
+					}
+					int rowSelected = jTablePending.getSelectedRow();
+					Bill editBill = (Bill) jTablePending.getValueAt(rowSelected, -1);
+					PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
+					pbe.addPatientBillListener(BillBrowser.this);
+					pbe.setVisible(true);
+				}
+				if (jScrollPaneClosed.isShowing()) {
+					if (!isOnlyOneSelected(jTableClosed)) {
+						return;
+					}
+					int rowSelected = jTableClosed.getSelectedRow();
+					Bill editBill = (Bill) jTableClosed.getValueAt(rowSelected, -1);
+					if (user.equals("admin")) { //$NON-NLS-1$
+						PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
+						pbe.addPatientBillListener(BillBrowser.this);
+						pbe.setVisible(true);
+					} else {
+						MessageDialog.error(BillBrowser.this, "angal.billbrowser.youcannoteditaclosedbill.msg");
 					}
 				}
 			});
 		}
 		return jButtonEdit;
 	}
-	
+
 	private JButton getJButtonPrintReceipt() {
 		if (jButtonPrintReceipt == null) {
-			jButtonPrintReceipt = new JButton();
-			jButtonPrintReceipt.setText(MessageBundle.getMessage("angal.billbrowser.receipt")); //$NON-NLS-1$
-			jButtonPrintReceipt.setMnemonic(KeyEvent.VK_R);
-			jButtonPrintReceipt.addActionListener(new ActionListener() {
+			jButtonPrintReceipt = new JButton(MessageBundle.getMessage("angal.billbrowser.receipt.btn"));
+			jButtonPrintReceipt.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.receipt.btn.key"));
+			jButtonPrintReceipt.addActionListener(actionEvent -> {
+				try {
+					if (jScrollPaneBills.isShowing()) {
+						int rowsSelected = jTableBills.getSelectedRowCount();
+						if (rowsSelected == 1) {
+							int rowSelected = jTableBills.getSelectedRow();
+							Bill editBill = (Bill) jTableBills.getValueAt(rowSelected, -1);
+							if (editBill.getStatus().equals("C")) { //$NON-NLS-1$
+								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
+							} else if (editBill.getStatus().equals("D")) {
+								MessageDialog.error(BillBrowser.this, "angal.billbrowser.thebilldeleted.msg");
+								return;
+							} else if (editBill.getStatus().equals("O") && GeneralData.ALLOWPRINTOPENEDBILL) {
+								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
+							} else {
+								MessageDialog.error(BillBrowser.this, "angal.billbrowser.thebillisstillopen.msg");
+								return;
+							}
+						} else if (rowsSelected > 1) {
+							if (patientParent == null) {
+								MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectonlyonebill.msg");
+								return;
+							}
+							Bill billTemp;
+							int[] billIdIndex = jTableBills.getSelectedRows();
+							ArrayList<Integer> billsIdList = new ArrayList<>();
 
-				public void actionPerformed(ActionEvent e) {
-					try {
-						if (jScrollPaneBills.isShowing()){
-							int rowsSelected = jTableBills.getSelectedRowCount();
-							if(rowsSelected==1){
-								int rowSelected = jTableBills.getSelectedRow();
-								Bill editBill = (Bill)jTableBills.getValueAt(rowSelected, -1);
-								if (editBill.getStatus().equals("C")) { //$NON-NLS-1$
-									new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
-								} 
-								else if(editBill.getStatus().equals("D")) {
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.billdeleted"),  //$NON-NLS-1$
-											MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
-											JOptionPane.CANCEL_OPTION);
-									return;
-								} else if(editBill.getStatus().equals("O") && GeneralData.ALLOWPRINTOPENEDBILL){
-									new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
-								} else {
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.billnotyetclosed"),  //$NON-NLS-1$
-											MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
-											JOptionPane.CANCEL_OPTION);
-									return;
+							for (int idIndex : billIdIndex) {
+								billTemp = (Bill) jTableBills.getValueAt(idIndex, -1);
+								if (!billTemp.getStatus().equals("D")) {
+									billsIdList.add(billTemp.getId());
 								}
 							}
-							else if(rowsSelected>1){
-								if(patientParent==null){
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
-											MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-											JOptionPane.PLAIN_MESSAGE);
-									return;
-								}
-								Bill billTemp = null;
-								int[] billIdIndex = jTableBills.getSelectedRows();
-								ArrayList<Integer> billsIdList = new ArrayList<Integer>();
-								
-								for (int i = 0; i < billIdIndex.length; i++) {
-									billTemp = (Bill)jTableBills.getValueAt(billIdIndex[i], -1);
-									if(!billTemp.getStatus().equals("D")){
-										billsIdList.add(billTemp.getId());
-									}
+							java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+							String fromDate = sdf.format(dateFrom.getTime());
+							String toDate = sdf.format(dateTo.getTime());
+							new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList, fromDate, toDate, true, true);
+						} else {
+							throw new Exception();
+						}
+					}
+					if (jScrollPanePending.isShowing()) {
+						int rowsSelected = jTablePending.getSelectedRowCount();
+						if (rowsSelected == 1) {
+							int rowSelected = jTablePending.getSelectedRow();
+							Bill editBill = (Bill) jTablePending.getValueAt(rowSelected, -1);
+							if (editBill.getStatus().equals("O") && GeneralData.ALLOWPRINTOPENEDBILL) {
+								new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
+							} else {
+								PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
+								pbe.addPatientBillListener(BillBrowser.this);
+								pbe.setVisible(true);
+							}
+						} else if (rowsSelected > 1) {
+							if (patientParent == null) {
+								MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectonlyonebill.msg");
+								return;
+							} else if (GeneralData.ALLOWPRINTOPENEDBILL) {
+								Bill billTemp;
+								int[] billIdIndex = jTablePending.getSelectedRows();
+								ArrayList<Integer> billsIdList = new ArrayList<>();
+
+								for (int idIndex : billIdIndex) {
+									billTemp = (Bill) jTablePending.getValueAt(idIndex, -1);
+									//if (!billTemp.getStatus().equals("D")){
+									billsIdList.add(billTemp.getId());
+									//}
 								}
 								java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
 								String fromDate = sdf.format(dateFrom.getTime());
 								String toDate = sdf.format(dateTo.getTime());
-								new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList,  fromDate, toDate, true, true);
-								
+								new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList, fromDate, toDate, true,
+										true);
+							} else {
+								MessageDialog.error(BillBrowser.this, "angal.billbrowser.thebillisstillopen.msg");
+								return;
 							}
+						} else {
+							throw new Exception();
 						}
-						if (jScrollPanePending.isShowing()) {
-							int rowsSelected = jTablePending.getSelectedRowCount();					
-							if(rowsSelected==1){
-								int rowSelected = jTablePending.getSelectedRow();
-								Bill editBill = (Bill)jTablePending.getValueAt(rowSelected, -1);
-								if (editBill.getStatus().equals("O") && GeneralData.ALLOWPRINTOPENEDBILL) {
-									new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL, true, true);
-								}else{
-								
-									PatientBillEdit pbe = new PatientBillEdit(BillBrowser.this, editBill, false);
-									pbe.addPatientBillListener(BillBrowser.this);
-									pbe.setVisible(true);
-								}
-							}else if(rowsSelected > 1){
-								if(patientParent==null){
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
-											MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-											JOptionPane.PLAIN_MESSAGE);
-									return;
-								}else if(GeneralData.ALLOWPRINTOPENEDBILL) {
-									Bill billTemp = null;
-									int[] billIdIndex = jTablePending.getSelectedRows();
-									ArrayList<Integer> billsIdList = new ArrayList<Integer>();
-								
-									for (int i = 0; i < billIdIndex.length; i++) {
-										billTemp = (Bill)jTablePending.getValueAt(billIdIndex[i], -1);
-										//if(!billTemp.getStatus().equals("D")){
-											billsIdList.add(billTemp.getId());
-										//}
-									}
-									java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-									String fromDate = sdf.format(dateFrom.getTime());
-									String toDate = sdf.format(dateTo.getTime());
-									new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList,  fromDate, toDate, true, true);
-								}else {
-									JOptionPane.showMessageDialog(BillBrowser.this,
-											MessageBundle.getMessage("angal.billbrowser.billnotyetclosed"),  //$NON-NLS-1$
-											MessageBundle.getMessage("angal.hospital"),  //$NON-NLS-1$
-											JOptionPane.CANCEL_OPTION);
-									return;
-								}
-							}
-						}
-						if (jScrollPaneClosed.isShowing()) {
-							int rowSelected = jTableClosed.getSelectedRow();
-							Bill editBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
-							new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
-						}
-					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(BillBrowser.this,
-								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.billbrowser.title"), //$NON-NLS-1$
-								JOptionPane.PLAIN_MESSAGE);
 					}
+					if (jScrollPaneClosed.isShowing()) {
+						int rowsSelected = jTableClosed.getSelectedRowCount();
+						if (rowsSelected == 1) {
+							int rowSelected = jTableClosed.getSelectedRow();
+							Bill editBill = (Bill) jTableClosed.getValueAt(rowSelected, -1);
+							new GenericReportBill(editBill.getId(), GeneralData.PATIENTBILL);
+						} else if (rowsSelected > 1) {
+							MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectonlyonebill.msg");
+						} else {
+							throw new Exception();
+						}
+					}
+				} catch (Exception ex) {
+					MessageDialog.error(BillBrowser.this, "angal.billbrowser.pleaseselectabill.msg");
 				}
 			});
 		}
@@ -654,17 +666,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonNew() {
 		if (jButtonNew == null) {
-			jButtonNew = new JButton();
-			jButtonNew.setText(MessageBundle.getMessage("angal.billbrowser.newbill")); //$NON-NLS-1$
-			jButtonNew.setMnemonic(KeyEvent.VK_N);
-			jButtonNew.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					PatientBillEdit newBill = new PatientBillEdit(BillBrowser.this, new Bill(), true);
-					newBill.addPatientBillListener(BillBrowser.this);
-					newBill.setVisible(true);
-				}
-				
+			jButtonNew = new JButton(MessageBundle.getMessage("angal.billbrowser.newbill.btn"));
+			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.newbill.btn.key"));
+			jButtonNew.addActionListener(actionEvent -> {
+				PatientBillEdit newBill = new PatientBillEdit(BillBrowser.this, new Bill(), true);
+				newBill.addPatientBillListener(BillBrowser.this);
+				newBill.setVisible(true);
 			});
 		}
 		return jButtonNew;
@@ -672,59 +679,43 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonDelete() {
 		if (jButtonDelete == null) {
-			jButtonDelete = new JButton();
-			jButtonDelete.setText(MessageBundle.getMessage("angal.billbrowser.deletebill")); //$NON-NLS-1$
-			jButtonDelete.setMnemonic(KeyEvent.VK_D);
-			jButtonDelete.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					try {
-						Bill deleteBill = null;
-						int ok = JOptionPane.NO_OPTION;
-						if (jScrollPaneBills.isShowing()) {
-							int rowSelected = jTableBills.getSelectedRow();
-							deleteBill = (Bill)jTableBills.getValueAt(rowSelected, -1);
-							ok = JOptionPane.showConfirmDialog(null, 
-									MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
-									MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
-									JOptionPane.YES_NO_OPTION);
-							
-						}
-						if (jScrollPanePending != null && jScrollPanePending.isShowing()) {
-							int rowSelected = jTablePending.getSelectedRow();
-							deleteBill = (Bill)jTablePending.getValueAt(rowSelected, -1);
-							ok = JOptionPane.showConfirmDialog(null, 
-									MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
-									MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
-									JOptionPane.YES_NO_OPTION);
-						}
-						if (jScrollPaneClosed != null && jScrollPaneClosed.isShowing()) {
-							int rowSelected = jTableClosed.getSelectedRow();
-							deleteBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
-							ok = JOptionPane.showConfirmDialog(null, 
-									MessageBundle.getMessage("angal.billbrowser.doyoureallywanttodeletetheselectedbill"),  //$NON-NLS-1$
-									MessageBundle.getMessage("angal.common.delete"), //$NON-NLS-1$
-									JOptionPane.YES_NO_OPTION);
-						}
-						if (ok == JOptionPane.YES_OPTION) {
-							try{
-								billManager.deleteBill(deleteBill);
-							}catch(OHServiceException ex){
-								if(ex.getMessages() != null){
-									for(OHExceptionMessage msg : ex.getMessages()){
-										JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-									}
-								}
-							}
-						}
-					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(BillBrowser.this,
-								MessageBundle.getMessage("angal.billbrowser.pleaseselectabillfirst"), //$NON-NLS-1$
-								MessageBundle.getMessage("angal.hospital"), //$NON-NLS-1$
-								JOptionPane.PLAIN_MESSAGE);
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.billbrowser.deletebill.btn"));
+			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.deletebill.btn.key"));
+			jButtonDelete.addActionListener(actionEvent -> {
+				Bill deleteBill = null;
+				int ok = JOptionPane.NO_OPTION;
+				if (jScrollPaneBills.isShowing()) {
+					if (!isOnlyOneSelected(jTableBills)) {
+						return;
 					}
-					billInserted(null);
+					int rowSelected = jTableBills.getSelectedRow();
+					deleteBill = (Bill)jTableBills.getValueAt(rowSelected, -1);
+					ok = MessageDialog.yesNo(null, "angal.billbrowser.deletetheselectedbill.msg");
 				}
+				if (jScrollPanePending != null && jScrollPanePending.isShowing()) {
+					if (!isOnlyOneSelected(jTablePending)) {
+						return;
+					}
+					int rowSelected = jTablePending.getSelectedRow();
+					deleteBill = (Bill)jTablePending.getValueAt(rowSelected, -1);
+					ok = MessageDialog.yesNo(null, "angal.billbrowser.deletetheselectedbill.msg");
+				}
+				if (jScrollPaneClosed != null && jScrollPaneClosed.isShowing()) {
+					if (!isOnlyOneSelected(jTableClosed)) {
+						return;
+					}
+					int rowSelected = jTableClosed.getSelectedRow();
+					deleteBill = (Bill)jTableClosed.getValueAt(rowSelected, -1);
+					ok = MessageDialog.yesNo(null, "angal.billbrowser.deletetheselectedbill.msg");
+				}
+				if (ok == JOptionPane.YES_OPTION) {
+					try {
+						billManager.deleteBill(deleteBill);
+					} catch(OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
+					}
+				}
+				billInserted(null);
 			});
 		}
 		return jButtonDelete;
@@ -733,11 +724,21 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JPanel getJPanelButtons() {
 		if (jPanelButtons == null) {
 			jPanelButtons = new JPanel();
-			if (MainMenu.checkUserGrants("btnbillnew")) jPanelButtons.add(getJButtonNew());
-			if (MainMenu.checkUserGrants("btnbilledit")) jPanelButtons.add(getJButtonEdit());
-			if (MainMenu.checkUserGrants("btnbilldelete")) jPanelButtons.add(getJButtonDelete());
-			if (MainMenu.checkUserGrants("btnbillreceipt") && GeneralData.RECEIPTPRINTER) jPanelButtons.add(getJButtonPrintReceipt());
-			if (MainMenu.checkUserGrants("btnbillreport")) jPanelButtons.add(getJButtonReport());
+			if (MainMenu.checkUserGrants("btnbillnew")) {
+				jPanelButtons.add(getJButtonNew());
+			}
+			if (MainMenu.checkUserGrants("btnbilledit")) {
+				jPanelButtons.add(getJButtonEdit());
+			}
+			if (MainMenu.checkUserGrants("btnbilldelete")) {
+				jPanelButtons.add(getJButtonDelete());
+			}
+			if (MainMenu.checkUserGrants("btnbillreceipt") && GeneralData.RECEIPTPRINTER) {
+				jPanelButtons.add(getJButtonPrintReceipt());
+			}
+			if (MainMenu.checkUserGrants("btnbillreport")) {
+				jPanelButtons.add(getJButtonReport());
+			}
 			jPanelButtons.add(getJButtonClose());
 		}
 		return jPanelButtons;
@@ -746,111 +747,98 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JPanel getJPanelRange() {
 		if (jPanelRange == null) {
 			jPanelRange = new JPanel();
-
 				jPanelRange.setLayout(new BorderLayout(0, 0));
 				jPanelRange.add(getPanelSupRange(), BorderLayout.NORTH);
-				//if( Param.bool("ALLOWFILTERBILLBYMEDICAL")){
+				//if ( Param.bool("ALLOWFILTERBILLBYMEDICAL")){
 				//	jPanelRange.add(getPanelChooseMedical(), BorderLayout.SOUTH);
 				//}
 		}
 		return jPanelRange;
 	}
-	
-	
+
 	private JPanel getPanelSupRange() {
 		if (panelSupRange == null) {
 			panelSupRange = new JPanel();
-			if (!GeneralData.SINGLEUSER && user.equals("admin")) 
+			if (!isSingleUser && MainMenu.checkUserGrants("cashiersfilter")) {
 				panelSupRange.add(getJComboUsers());
-				panelSupRange.add(getJButtonToday());
-				panelSupRange.add(getJLabelFrom());
-				panelSupRange.add(getJCalendarFrom());
-				panelSupRange.add(getJLabelTo());
-				panelSupRange.add(getJCalendarTo());
-				panelSupRange.add(getJComboMonths());
-				panelSupRange.add(getJComboYears());
-				panelSupRange.add(getPanelChoosePatient());	
-						
+			}
+			panelSupRange.add(getJButtonToday());
+			panelSupRange.add(getJLabelFrom());
+			panelSupRange.add(getJCalendarFrom());
+			panelSupRange.add(getJLabelTo());
+			panelSupRange.add(getJCalendarTo());
+			panelSupRange.add(getJComboMonths());
+			panelSupRange.add(getJComboYears());
+			panelSupRange.add(getPanelChoosePatient());
 		}
 		return panelSupRange;
 	}
 
-	private JPanel getPanelChoosePatient(){
+	private JPanel getPanelChoosePatient() {
 		JPanel priceListLabelPanel = new JPanel();
 		//panelSupRange.add(priceListLabelPanel);
 		priceListLabelPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		
-		jAffiliatePersonJButtonAdd  = new JButton();
-		jAffiliatePersonJButtonAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
+
+		jAffiliatePersonJButtonAdd = new JButton();
+		jAffiliatePersonJButtonAdd.addActionListener(actionEvent -> {
 		});
 		jAffiliatePersonJButtonAdd.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
-		
-		jAffiliatePersonJButtonSupp  = new JButton();
+
+		jAffiliatePersonJButtonSupp = new JButton();
 		jAffiliatePersonJButtonSupp.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
-		
+
 		jAffiliatePersonJTextField = new JTextField(14);
 		jAffiliatePersonJTextField.setEnabled(false);
 		priceListLabelPanel.add(jAffiliatePersonJTextField);
 		priceListLabelPanel.add(jAffiliatePersonJButtonAdd);
 		priceListLabelPanel.add(jAffiliatePersonJButtonSupp);
-		
+
 		jAffiliatePersonJButtonAdd.addMouseListener(new MouseAdapter() {
-	        @Override
-	        public void mouseClicked(MouseEvent e) {
-	        	SelectPatient selectPatient = new SelectPatient(BillBrowser.this, false, true );
-					selectPatient.addSelectionListener(BillBrowser.this);
-					selectPatient.setVisible(true);	
-					Patient pat = selectPatient.getPatient();
-					
-					// get bill items
-					BillBrowserManager billmanager = new BillBrowserManager();
-					ArrayList<BillItems> itemsList = new ArrayList<BillItems>();
-					
-					try {
-						itemsList = billManager.getDistinctItems();
-						patientSelected(pat);
-					} catch (OHServiceException e1) {
-						if(e1.getMessages() != null){
-							for(OHExceptionMessage msg : e1.getMessages()){
-								JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
-						}
-					}
-					
-	        }
-		});
-		
-		jAffiliatePersonJButtonSupp.addMouseListener(new MouseAdapter() {
-	        @Override
-	        public void mouseClicked(MouseEvent e) {
-		        	patientParent = null;
-		        	//garantUserChoose = null;		    
-					//comboGaranti.setSelectedItem(null);
-					jAffiliatePersonJTextField.setText("");
-					billInserted(null);
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				SelectPatient selectPatient = new SelectPatient(BillBrowser.this, false, true);
+				selectPatient.addSelectionListener(BillBrowser.this);
+				selectPatient.setVisible(true);
+				Patient pat = selectPatient.getPatient();
+
+				try {
+					patientSelected(pat);
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
 				}
-			});
-		
+			}
+		});
+
+		jAffiliatePersonJButtonSupp.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				patientParent = null;
+				//garantUserChoose = null;
+				//comboGaranti.setSelectedItem(null);
+				jAffiliatePersonJTextField.setText("");
+				billInserted(null);
+			}
+		});
+
 		return priceListLabelPanel;
 	}
 	
 	public void patientSelected(Patient patient) throws OHServiceException {
 		patientParent = patient;
 		jAffiliatePersonJTextField.setText(patientParent != null 
-				? patientParent.getFirstName() + " " + patientParent.getFirstName() 
-				: "");
+				? patientParent.getName() : "");
 		
 		if (patientParent != null) {
-			if (medicalJTextField != null)
+			if (medicalJTextField != null) {
 				medicalJTextField.setText("");
+			}
 			updateDataSet(dateFrom, dateTo, patientParent);
 			updateTables();
 			updateTotals();
 		}
 	}
-	
 	
 	public Patient getPatientParent() {
 		return patientParent;
@@ -860,19 +848,22 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		this.patientParent = patientParent;
 	}
 	
-	private JComboBox getJComboUsers() {
+	private JComboBox<String> getJComboUsers() {
 		if (jComboUsers == null) {
-			jComboUsers = new JComboBox();
-			for (String user : users) 
+			jComboUsers = new JComboBox<>();
+		
+			for (String user : users) {
 				jComboUsers.addItem(user);
+			}
 			
-			jComboUsers.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent arg0) {
-					user = (String) jComboUsers.getSelectedItem();
-					jTableUser.setValueAt("<html><b>"+user+"</b></html>", 0, 0);
-					updateTotals();
-				}
+			if (users.contains(user)) {
+				jComboUsers.setSelectedItem(user);
+			}
+
+			jComboUsers.addActionListener(actionEvent -> {
+				user = (String) jComboUsers.getSelectedItem();
+				jTableUser.setValueAt("<html><b>"+user+"</b></html>", 0, 0);
+				updateTotals();
 			});
 		}
 		return jComboUsers;
@@ -880,19 +871,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	
 	private JButton getJButtonToday() {
 		if (jButtonToday == null) {
-			jButtonToday = new JButton();
-			jButtonToday.setText(MessageBundle.getMessage("angal.billbrowser.today")); //$NON-NLS-1$
-			jButtonToday.setMnemonic(KeyEvent.VK_T);
-			jButtonToday.addActionListener(new ActionListener() {
+			jButtonToday = new JButton(MessageBundle.getMessage("angal.billbrowser.today.btn"));
+			jButtonToday.setMnemonic(MessageBundle.getMnemonic("angal.billbrowser.today.btn.key"));
+			jButtonToday.addActionListener(actionEvent -> {
+				dateFrom.setTime(dateToday0.getTime());
+				dateTo.setTime(dateToday24.getTime());
+				jCalendarFrom.setDate(dateFrom.getTime());
+				jCalendarTo.setDate(dateTo.getTime());
 
-				public void actionPerformed(ActionEvent e) {
-					dateFrom.setTime(dateToday0.getTime());
-					dateTo.setTime(dateToday24.getTime());
-					jCalendarFrom.setDate(dateFrom.getTime());
-					jCalendarTo.setDate(dateTo.getTime());
-					
-					jButtonToday.setEnabled(false);
-				}
+				jButtonToday.setEnabled(false);
 			});
 			jButtonToday.setEnabled(false);
 		}
@@ -903,18 +890,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		if (jComboBoxMonths == null) {
 			jComboBoxMonths = new JMonthChooser();
 			jComboBoxMonths.setLocale(new Locale(GeneralData.LANGUAGE));
-			jComboBoxMonths.addPropertyChangeListener("month", new PropertyChangeListener() { //$NON-NLS-1$
+			jComboBoxMonths.addPropertyChangeListener("month", propertyChangeEvent -> {
+				month = jComboBoxMonths.getMonth();
+				dateFrom.set(Calendar.MONTH, month);
+				dateFrom.set(Calendar.DAY_OF_MONTH, 1);
+				dateTo.set(Calendar.MONTH, month);
+				dateTo.set(Calendar.DAY_OF_MONTH, dateFrom.getActualMaximum(Calendar.DAY_OF_MONTH));
 
-				public void propertyChange(PropertyChangeEvent evt) {
-					month = jComboBoxMonths.getMonth();
-					dateFrom.set(GregorianCalendar.MONTH, month);
-					dateFrom.set(GregorianCalendar.DAY_OF_MONTH, 1);
-					dateTo.set(GregorianCalendar.MONTH, month);
-					dateTo.set(GregorianCalendar.DAY_OF_MONTH, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
-					
-					jCalendarFrom.setDate(dateFrom.getTime());
-					jCalendarTo.setDate(dateTo.getTime());
-				}
+				jCalendarFrom.setDate(dateFrom.getTime());
+				jCalendarTo.setDate(dateTo.getTime());
 			});
 		}
 		return jComboBoxMonths;
@@ -924,19 +908,16 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		if (jComboBoxYears == null) {
 			jComboBoxYears = new JYearChooser();
 			jComboBoxYears.setLocale(new Locale(GeneralData.LANGUAGE));
-			jComboBoxYears.addPropertyChangeListener("year", new PropertyChangeListener() { //$NON-NLS-1$
-
-				public void propertyChange(PropertyChangeEvent evt) {
-					year = jComboBoxYears.getYear();
-					dateFrom.set(GregorianCalendar.YEAR, year);
-					dateFrom.set(GregorianCalendar.MONTH, 1);
-					dateFrom.set(GregorianCalendar.DAY_OF_YEAR, 1);
-					dateTo.set(GregorianCalendar.YEAR, year);
-					dateTo.set(GregorianCalendar.MONTH, 12);
-					dateTo.set(GregorianCalendar.DAY_OF_YEAR, dateFrom.getActualMaximum(GregorianCalendar.DAY_OF_YEAR));
-					jCalendarFrom.setDate(dateFrom.getTime());
-					jCalendarTo.setDate(dateTo.getTime());
-				}
+			jComboBoxYears.addPropertyChangeListener("year", propertyChangeEvent -> {
+				year = jComboBoxYears.getYear();
+				dateFrom.set(Calendar.YEAR, year);
+				dateFrom.set(Calendar.MONTH, 1);
+				dateFrom.set(Calendar.DAY_OF_YEAR, 1);
+				dateTo.set(Calendar.YEAR, year);
+				dateTo.set(Calendar.MONTH, 12);
+				dateTo.set(Calendar.DAY_OF_YEAR, dateFrom.getActualMaximum(Calendar.DAY_OF_YEAR));
+				jCalendarFrom.setDate(dateFrom.getTime());
+				jCalendarTo.setDate(dateTo.getTime());
 			});
 		}
 		return jComboBoxYears;
@@ -954,14 +935,21 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		if (jTableClosed == null) {
 			jTableClosed = new JTable();
 			jTableClosed.setModel(new BillTableModel("C")); //$NON-NLS-1$
-			for (int i=0;i<columsWidth.length; i++){
-				jTableClosed.getColumnModel().getColumn(i).setMinWidth(columsWidth[i]);
-				if (!columsResizable[i]) jTableClosed.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
+			for (int i = 0; i < columnWidths.length; i++) {
+				jTableClosed.getColumnModel().getColumn(i).setMinWidth(columnWidths[i]);
+				if (!columnsResizable[i]) {
+					jTableClosed.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
+				}
 				if (alignCenter[i]) {
 					jTableClosed.getColumnModel().getColumn(i).setCellRenderer(new StringCenterTableCellRenderer());
 					if (boldCenter[i]) {
 						jTableClosed.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 					}
+				}
+				if (!columnShow[i]) {
+					jTableClosed.getColumnModel().getColumn(i).setWidth(0);
+					jTableClosed.getColumnModel().getColumn(i).setMinWidth(0);
+					jTableClosed.getColumnModel().getColumn(i).setMaxWidth(0);
 				}
 			}
 			jTableClosed.setAutoCreateColumnsFromModel(false);
@@ -984,14 +972,21 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		if (jTablePending == null) {
 			jTablePending = new JTable();
 			jTablePending.setModel(new BillTableModel("O")); //$NON-NLS-1$
-			for (int i=0;i<columsWidth.length; i++){
-				jTablePending.getColumnModel().getColumn(i).setMinWidth(columsWidth[i]);
-				if (!columsResizable[i]) jTablePending.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
+			for (int i = 0; i < columnWidths.length; i++) {
+				jTablePending.getColumnModel().getColumn(i).setMinWidth(columnWidths[i]);
+				if (!columnsResizable[i]) {
+					jTablePending.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
+				}
 				if (alignCenter[i]) {
 					jTablePending.getColumnModel().getColumn(i).setCellRenderer(new StringCenterTableCellRenderer());
 					if (boldCenter[i]) {
 						jTablePending.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 					}
+				}
+				if (!columnShow[i]) {
+					jTablePending.getColumnModel().getColumn(i).setWidth(0);
+					jTablePending.getColumnModel().getColumn(i).setMinWidth(0);
+					jTablePending.getColumnModel().getColumn(i).setMaxWidth(0);
 				}
 			}
 			jTablePending.setAutoCreateColumnsFromModel(false);
@@ -1014,14 +1009,21 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		if (jTableBills == null) {
 			jTableBills = new JTable();
 			jTableBills.setModel(new BillTableModel("ALL")); //$NON-NLS-1$
-			for (int i=0;i<columsWidth.length; i++){
-				jTableBills.getColumnModel().getColumn(i).setMinWidth(columsWidth[i]);
-				if (!columsResizable[i]) jTableBills.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
+			for (int i = 0; i < columnWidths.length; i++) {
+				jTableBills.getColumnModel().getColumn(i).setMinWidth(columnWidths[i]);
+				if (!columnsResizable[i]) {
+					jTableBills.getColumnModel().getColumn(i).setMaxWidth(maxWidth[i]);
+				}
 				if (alignCenter[i]) {
 					jTableBills.getColumnModel().getColumn(i).setCellRenderer(new StringCenterTableCellRenderer());
 					if (boldCenter[i]) {
 						jTableBills.getColumnModel().getColumn(i).setCellRenderer(new CenterBoldTableCellRenderer());
 					}
+				}
+				if (!columnShow[i]) {
+					jTableBills.getColumnModel().getColumn(i).setWidth(0);
+					jTableBills.getColumnModel().getColumn(i).setMinWidth(0);
+					jTableBills.getColumnModel().getColumn(i).setMaxWidth(0);
 				}
 			}
 			jTableBills.setAutoCreateColumnsFromModel(false);
@@ -1035,9 +1037,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTabbedPane getJTabbedPaneBills() {
 		if (jTabbedPaneBills == null) {
 			jTabbedPaneBills = new JTabbedPane();
-			jTabbedPaneBills.addTab(MessageBundle.getMessage("angal.billbrowser.bills"), getJScrollPaneBills()); //$NON-NLS-1$
-			jTabbedPaneBills.addTab(MessageBundle.getMessage("angal.billbrowser.pending"), getJScrollPanePending()); //$NON-NLS-1$
-			jTabbedPaneBills.addTab(MessageBundle.getMessage("angal.billbrowser.closed"), getJScrollPaneClosed()); //$NON-NLS-1$
+			jTabbedPaneBills.addTab(MessageBundle.getMessage("angal.billbrowser.bills.title"), getJScrollPaneBills());
+			jTabbedPaneBills.addTab(MessageBundle.getMessage("angal.billbrowser.pending.title"), getJScrollPanePending());
+			jTabbedPaneBills.addTab(MessageBundle.getMessage("angal.billbrowser.closed.title"), getJScrollPaneClosed());
 		}
 		return jTabbedPaneBills;
 	}
@@ -1048,30 +1050,33 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jTableToday.setModel(
 					new DefaultTableModel(new Object[][] {
 							{
-								"<html><b>"+MessageBundle.getMessage("angal.billbrowser.todaym")+ "</b></html>",
-								currencyCod,
-								totalToday, 
-								"<html><b>"+MessageBundle.getMessage("angal.billbrowser.notpaid")+ "</b></html>", 
-								currencyCod,
-								balanceToday}
-							}, 	
-							new String[] {"", "", "", "", "", ""}) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				private static final long serialVersionUID = 1L;
-				Class<?>[] types = new Class<?>[] { JLabel.class, JLabel.class, Double.class, JLabel.class, JLabel.class, Double.class};
-	
-				public Class<?> getColumnClass(int columnIndex) {
-					return types[columnIndex];
-				}
+									"<html><b>" + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt").toUpperCase() + "</b></html>",
+									currencyCod,
+									totalToday,
+									"<html><b>" + MessageBundle.getMessage("angal.billbrowser.notpaidcolon.txt") + "</b></html>",
+									currencyCod,
+									balanceToday
+							}
+					},
+							new String[] { "", "", "", "", "", "" }) {
 
-				public boolean isCellEditable(int row, int column) {
-					return false;
-				}
-			});
-			jTableToday.getColumnModel().getColumn(1).setPreferredWidth(3);
-			jTableToday.getColumnModel().getColumn(4).setPreferredWidth(3);
+						private static final long serialVersionUID = 1L;
+						Class<?>[] types = new Class<?>[] { JLabel.class, JLabel.class, Double.class, JLabel.class, JLabel.class, Double.class };
+
+						@Override
+						public Class<?> getColumnClass(int columnIndex) {
+							return types[columnIndex];
+						}
+
+						@Override
+						public boolean isCellEditable(int row, int column) {
+							return false;
+						}
+					});
+			jTableToday.getColumnModel().getColumn(1).setMinWidth(3);
+			jTableToday.getColumnModel().getColumn(4).setMinWidth(3);
 			jTableToday.setRowSelectionAllowed(false);
 			jTableToday.setGridColor(Color.WHITE);
-
 		}
 		return jTableToday;
 	}
@@ -1082,27 +1087,29 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jTablePeriod.setModel(new DefaultTableModel(
 					new Object[][] {
 							{
-								"<html><b>"+MessageBundle.getMessage("angal.billbrowser.periodm")+"</b></html>", 
+								"<html><b>"+MessageBundle.getMessage("angal.billbrowser.periodcolon.txt").toUpperCase()+"</b></html>",
 								currencyCod,
 								totalPeriod, 
-								"<html><b>"+MessageBundle.getMessage("angal.billbrowser.notpaid")+"</b></html>", 
+								"<html><b>"+MessageBundle.getMessage("angal.billbrowser.notpaidcolon.txt")+"</b></html>",
 								currencyCod,
 								balancePeriod}
 							}, 
-							new String[] {"","","","","",""}) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							new String[] {"","","","","",""}) {
 				private static final long serialVersionUID = 1L;
 				Class<?>[] types = new Class<?>[] { JLabel.class, JLabel.class, Double.class, JLabel.class, JLabel.class, Double.class};
 	
+				@Override
 				public Class<?> getColumnClass(int columnIndex) {
 					return types[columnIndex];
 				}
 
+				@Override
 				public boolean isCellEditable(int row, int column) {
 					return false;
 				}
 			});
-			jTablePeriod.getColumnModel().getColumn(1).setPreferredWidth(3);
-			jTablePeriod.getColumnModel().getColumn(4).setPreferredWidth(3);
+			jTablePeriod.getColumnModel().getColumn(1).setMinWidth(3);
+			jTablePeriod.getColumnModel().getColumn(4).setMinWidth(3);
 			jTablePeriod.setRowSelectionAllowed(false);
 			jTablePeriod.setGridColor(Color.WHITE);
 
@@ -1113,15 +1120,19 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTable getJTableUser() {
 		if (jTableUser == null) {
 			jTableUser = new JTable();
-			jTableUser.setModel(new DefaultTableModel(new Object[][] {{"<html><b>"+user+"</b></html>", userToday, "<html><b>"+MessageBundle.getMessage("angal.billbrowser.period")+"</b></html>", userPeriod}}, new String[] {"","","",""}) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			jTableUser.setModel(new DefaultTableModel(new Object[][] {{"<html><b>"+MessageBundle.getMessage("angal.billbrowser.user.txt")+"</b></html>", userToday,
+					"<html><b>"+MessageBundle.getMessage("angal.billbrowser.period.txt")+"</b></html>", userPeriod}},
+					new String[] {"","","",""}) {
 				private static final long serialVersionUID = 1L;
 				Class<?>[] types = new Class<?>[] { JLabel.class, Double.class, JLabel.class, Double.class};
 	
+				@Override
 				public Class<?> getColumnClass(int columnIndex) {
 					return types[columnIndex];
 				}
 
-				public boolean isCellEditable(int row, int column){
+				@Override
+				public boolean isCellEditable(int row, int column) {
 					return false;
 				}
 			});
@@ -1138,64 +1149,47 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 	
 	private void updateDataSet() {
-//		System.out.println(formatDateTime(new DateTime().minusMonths(5).toDateMidnight().toGregorianCalendar()));
-//		System.out.println(formatDateTime(new DateTime().toDateMidnight().plusDays(1).toGregorianCalendar()));
 		updateDataSet(new DateTime().toDateMidnight().toGregorianCalendar(), new DateTime().toDateMidnight().plusDays(1).toGregorianCalendar());
-		
 	}
-	
-	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo){
+
+	private void updateDataSet(GregorianCalendar dateFrom, GregorianCalendar dateTo) {
 		try {
 			/*
 			 * Bills in the period
 			 */
 			billPeriod = billManager.getBills(dateFrom, dateTo);
-		}catch(OHServiceException e){
-			if(e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch (OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
+
 		try {
 			/*
 			 * Payments in the period
 			 */
 			paymentsPeriod = billManager.getPayments(dateFrom, dateTo);
-		}catch(OHServiceException e){
-			if(e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch (OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
+
 		try {
 			/*
 			 * Bills not in the period but with payments in the period
 			 */
 			billFromPayments = billManager.getBills(paymentsPeriod);
-		}catch(OHServiceException e){
-			if(e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
+		} catch (OHServiceException ohServiceException) {
+			MessageDialog.showExceptions(ohServiceException);
 		}
 	}
 	
 	private void updateTotals() {
-		ArrayList<Bill> billToday = null;
-		ArrayList<BillPayments> paymentsToday = null;
+		List<Bill> billToday = null;
+		List<BillPayments> paymentsToday = null;
 		if (UserBrowsingManager.getCurrentUser().equals("admin")) {
 			try {
 				billToday = billManager.getBills(dateToday0, dateToday24);
 				paymentsToday = billManager.getPayments(dateToday0, dateToday24);
-			}catch(OHServiceException e){
-				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 		} else {
 			billToday = billPeriod;
@@ -1209,12 +1203,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		userToday = new BigDecimal(0);
 		userPeriod = new BigDecimal(0);
 		
-		ArrayList<Integer> notDeletedBills = new ArrayList<Integer>();
 				
 		//Bills in range contribute for Not Paid (balance)
 		for (Bill bill : billPeriod) {
 			if (!bill.getStatus().equals("D")) {
-				notDeletedBills.add(bill.getId());
 				BigDecimal balance = new BigDecimal(Double.toString(bill.getBalance()));
 				balancePeriod = balancePeriod.add(balance);
 			}
@@ -1222,19 +1214,20 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		
 		//Payments in range contribute for Paid Period (total)
 		for (BillPayments payment : paymentsPeriod) {
-			if (notDeletedBills.contains(payment.getBill().getId())) {
+			if (!payment.getBill().getStatus().equals("D")) {
 				BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
 				String payUser = payment.getUser();
 				
 				totalPeriod = totalPeriod.add(payAmount);
 					
-				if (!GeneralData.SINGLEUSER && payUser.equals(user))
+				if (!isSingleUser && payUser.equals(user)) {
 					userPeriod = userPeriod.add(payAmount);
+				}
 			}
 		}
 		
 		//Bills in today contribute for Not Paid Today (balance)
-		if(billToday != null){
+		if (billToday != null) {
 			for (Bill bill : billToday) {
 				if (!bill.getStatus().equals("D")) {
 					BigDecimal balance = new BigDecimal(Double.toString(bill.getBalance()));
@@ -1244,14 +1237,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}
 		
 		//Payments in today contribute for Paid Today (total)
-		if(paymentsToday != null){
+		if (paymentsToday != null) {
 			for (BillPayments payment : paymentsToday) {
-				if (notDeletedBills.contains(payment.getBill().getId())) {
+				if (!payment.getBill().getStatus().equals("D")) {
 					BigDecimal payAmount = new BigDecimal(Double.toString(payment.getAmount()));
 					String payUser = payment.getUser();
 					totalToday = totalToday.add(payAmount);
-					if (!GeneralData.SINGLEUSER && payUser.equals(user))
+					if (!isSingleUser && payUser.equals(user)) {
 						userToday = userToday.add(payAmount);
+					}
 				}
 			}
 		}
@@ -1266,17 +1260,14 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 	
 	public class BillTableModel extends DefaultTableModel {
-		
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
-		private ArrayList<Bill> tableArray = new ArrayList<Bill>();
+		private List<Bill> tableArray = new ArrayList<>();
 		
 		/*
 		 * All Bills
 		 */
-		private ArrayList<Bill> billAll = new ArrayList<Bill>();
+		private List<Bill> billAll = new ArrayList<>();
 		
 		public BillTableModel(String status) {
 			loadData(status);
@@ -1286,7 +1277,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			
 			tableArray.clear();
 			mapBill.clear();
-			
 			mapping(status);
 		}
 		
@@ -1305,74 +1295,72 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			 */
 			billAll.addAll(billPeriod);
 			for (Bill bill : billFromPayments) {
-				if (mapBill.get(bill.getId()) == null)
+				if (mapBill.get(bill.getId()) == null) {
 					billAll.add(bill);
+				}
 			}
 			
 			if (status.equals("O")) {
 				if (patientParent != null) {
 					try {
 						tableArray = billManager.getPendingBillsAffiliate(patientParent.getCode());
-					} catch (OHServiceException e) {
-						if(e.getMessages() != null){
-							for(OHExceptionMessage msg : e.getMessages()){
-								JOptionPane.showMessageDialog(BillBrowser.this, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
-						}
+					} catch (OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
 					}
 				} else {
-					if (status.equals("O")) {
-						for (Bill bill : billPeriod) {
-
-							if (bill.getStatus().equals(status))
-								tableArray.add(bill);
+					for (Bill bill : billPeriod) {
+						if (bill.getStatus().equals(status)) {
+							tableArray.add(bill);
 						}
 					}
 				}
 			}
 			else if (status.equals("ALL")) {
-				
 				Collections.sort(billAll);
 				tableArray = billAll;
-
-			} 
+			}
 			else if (status.equals("C")) {
-				
 				for (Bill bill : billPeriod) {
-					
-					if (bill.getStatus().equals(status)) 
+					if (bill.getStatus().equals(status)) {
 						tableArray.add(bill);
+					}
 				}
 			}
-			
-			Collections.sort(tableArray, Collections.reverseOrder());
+			tableArray.sort(Collections.reverseOrder());
 		}
 		
+		@Override
 		public Class<?> getColumnClass(int columnIndex) {
-			return columsClasses[columnIndex];
+			return columnsClasses[columnIndex];
 		}
 
+		@Override
 		public int getColumnCount() {
-			return columsNames.length;
+			return columnNames.length;
 		}
 
+		@Override
 		public String getColumnName(int columnIndex) {
-			return columsNames[columnIndex];
+			return columnNames[columnIndex];
 		}
 
+		@Override
 		public int getRowCount() {
-			if (tableArray == null)
+			if (tableArray == null) {
 				return 0;
+			}
 			return tableArray.size();
 		}
 		
-		//["Date", "Patient", "Balance", "Update", "Status", "Amount"};
-
+		@Override
 		public Object getValueAt(int r, int c) {
 			int index = -1;
 			Bill thisBill = tableArray.get(r);
 			if (c == index) {
 				return thisBill;
+			}
+			if (c == ++index) {
+				return thisBill.getUser();
 			}
 			if (c == ++index) {
 				return thisBill.getId();
@@ -1381,7 +1369,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				return TimeTools.formatDateTime(thisBill.getDate(), "dd/MM/yy - HH:mm:ss");
 			}
 			if (c == ++index) {
-				int patID = thisBill.getPatient().getCode();
+				int patID = thisBill.getBillPatient().getCode();
 				return patID == 0 ? "" : String.valueOf(patID);
 				//return thisBill.getId();
 			}
@@ -1403,6 +1391,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			return null;
 		}
 
+		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return false;
 		}
@@ -1415,118 +1404,93 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			   (aDate.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
 	}
 	
-	class StringTableCellRenderer extends DefaultTableCellRenderer {  
-	   
-		/**
-		 * 
-		 */
+	private void formatCellByBillStatus(JTable table, int row, Component cell) {
+		int status_column = table.getColumnModel().getColumnIndex(MessageBundle.getMessage("angal.common.status.txt").toUpperCase());
+		if (((String)table.getValueAt(row, status_column)).equals("C")) { //$NON-NLS-1$
+			cell.setForeground(Color.GRAY);
+		}
+		if (((String)table.getValueAt(row, status_column)).equals("D")) { //$NON-NLS-1$
+			cell.setForeground(Color.RED);
+		}
+	}
+
+	class StringTableCellRenderer extends DefaultTableCellRenderer {
+
 		private static final long serialVersionUID = 1L;
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column) {  
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
 	
 	class StringCenterTableCellRenderer extends DefaultTableCellRenderer {  
-		   
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column) {  
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(CENTER);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
 	
 	class IntegerTableCellRenderer extends DefaultTableCellRenderer {  
-		   
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column) {  
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			cell.setFont(new Font(null, Font.BOLD, 12));
 			setHorizontalAlignment(CENTER);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
 	
 	class DoubleTableCellRenderer extends DefaultTableCellRenderer {  
-		   
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column) {  
 		   
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(RIGHT);
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}
 	
 	class CenterBoldTableCellRenderer extends DefaultTableCellRenderer {  
-		   
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column) {  
-		   
+		    
 			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
 			cell.setForeground(Color.BLACK);
 			setHorizontalAlignment(CENTER);
 			cell.setFont(new Font(null, Font.BOLD, 12));
-			if (((String)table.getValueAt(row, 6)).equals("C")) { //$NON-NLS-1$
-				cell.setForeground(Color.GRAY);
-			}
-			if (((String)table.getValueAt(row, 6)).equals("D")) { //$NON-NLS-1$
-				cell.setForeground(Color.RED);
-			}
+			formatCellByBillStatus(table, row, cell);
 			return cell;
 	   }
 	}

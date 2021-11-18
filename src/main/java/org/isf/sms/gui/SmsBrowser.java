@@ -1,18 +1,32 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.sms.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,17 +34,16 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
@@ -38,20 +51,17 @@ import org.isf.sms.manager.SmsManager;
 import org.isf.sms.model.Sms;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-
-import org.isf.utils.jobjects.CustomJDateChooser;
 
 /**
  * @author Mwithi
  */
 public class SmsBrowser extends ModalJFrame {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	private JTable jSmsTable;
@@ -60,7 +70,13 @@ public class SmsBrowser extends ModalJFrame {
 	private JButton jDeleteButton;
 	private JButton jNewButton;
 	
-	private String[] columnNames = {MessageBundle.getMessage("angal.common.date"), MessageBundle.getMessage("angal.sms.scheduleddatetitle"), MessageBundle.getMessage("angal.sms.telephone"), MessageBundle.getMessage("angal.sms.sms"), MessageBundle.getMessage("angal.sms.sent")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+	private String[] columnNames = {
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.sms.scheduleddate.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.telephone.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.sms.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.sms.sent.col").toUpperCase()
+	};
 	private Object[] columnClasses = {Date.class, Date.class, String.class, String.class, Date.class};
 	private int[] columnPreferredSize = {110, 110, 150, 100, 110};
 	private boolean[] columnResizable = {false, false, false, true, false};
@@ -102,8 +118,8 @@ public class SmsBrowser extends ModalJFrame {
 	}
 
 	private void initComponents() {
-		setTitle(MessageBundle.getMessage("angal.sms.title"));
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setTitle(MessageBundle.getMessage("angal.sms.smsmanager.title"));
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		getContentPane().add(getJButtonPanel(), BorderLayout.SOUTH);
 		JScrollPane scrollPane = new JScrollPane(getJSmsTable());
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
@@ -127,14 +143,14 @@ public class SmsBrowser extends ModalJFrame {
 	
 	private JLabel getJDateFromLabel() {
 		if (jDateFromLabel == null) {
-			jDateFromLabel = new JLabel(MessageBundle.getMessage("angal.common.from"));
+			jDateFromLabel = new JLabel(MessageBundle.getMessage("angal.common.from.txt"));
 		}
 		return jDateFromLabel;
 	}
 	
 	private JLabel getJDateToLabel() {
 		if (jDateToLabel == null) {
-			jDateToLabel = new JLabel(MessageBundle.getMessage("angal.common.to"));
+			jDateToLabel = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
 		}
 		return jDateToLabel;
 	}
@@ -145,15 +161,10 @@ public class SmsBrowser extends ModalJFrame {
 			jFromDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			jFromDateChooser.setDate(dateTimeAtStartOfToday.toDate());
 			jFromDateChooser.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			jFromDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
-
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					dateFrom = (Date) evt.getNewValue();
-					updateModel(dateFrom, dateTo);
-					updateGUI();
-					
-				} 
+			jFromDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
+				dateFrom = (Date) propertyChangeEvent.getNewValue();
+				updateModel(dateFrom, dateTo);
+				updateGUI();
 			});
 		}
 		return jFromDateChooser;
@@ -165,14 +176,10 @@ public class SmsBrowser extends ModalJFrame {
 			jToDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 			jToDateChooser.setDate(dateTimeAtEndOfToday.toDate());
 			jToDateChooser.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
-			jToDateChooser.addPropertyChangeListener("date", new PropertyChangeListener() { //$NON-NLS-1$
-
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					dateTo = (Date) evt.getNewValue();
-					updateModel(dateFrom, dateTo);
-					updateGUI();
-				} 
+			jToDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
+				dateTo = (Date) propertyChangeEvent.getNewValue();
+				updateModel(dateFrom, dateTo);
+				updateGUI();
 			});
 		}
 		return jToDateChooser;
@@ -186,18 +193,25 @@ public class SmsBrowser extends ModalJFrame {
 			jSmsTable.setDefaultRenderer(Date.class, new ColorTableCellRenderer());
 			for (int i = 0; i < columnNames.length; i++) {
 				jSmsTable.getColumnModel().getColumn(i).setPreferredWidth(columnPreferredSize[i]);
-				if (!columnResizable[i]) jSmsTable.getColumnModel().getColumn(i).setMaxWidth(columnPreferredSize[i]);
+				if (!columnResizable[i]) {
+					jSmsTable.getColumnModel().getColumn(i).setMaxWidth(columnPreferredSize[i]);
+				}
 			}
 			jSmsTable.addMouseListener(new MouseListener() {
 				
+				@Override
 				public void mouseReleased(MouseEvent e) {}
 				
+				@Override
 				public void mousePressed(MouseEvent e) {}
 				
+				@Override
 				public void mouseExited(MouseEvent e) {}
 				
+				@Override
 				public void mouseEntered(MouseEvent e) {}
 				
+				@Override
 				public void mouseClicked(MouseEvent e) {
 					if (e.getClickCount() == 2 && !e.isConsumed()) {
 						e.consume();
@@ -233,14 +247,12 @@ public class SmsBrowser extends ModalJFrame {
 	
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
-			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new")); //$NON-NLS-1$
-			jNewButton.setMnemonic(KeyEvent.VK_N);
-			jNewButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					new SmsEdit(SmsBrowser.this);
-					updateModel(dateFrom, dateTo);
-					updateGUI();
-				}
+			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
+			jNewButton.addActionListener(actionEvent -> {
+				new SmsEdit(SmsBrowser.this);
+				updateModel(dateFrom, dateTo);
+				updateGUI();
 			});
 		}
 		return jNewButton;
@@ -248,39 +260,29 @@ public class SmsBrowser extends ModalJFrame {
 	
 	private JButton getJDeleteButton() {
 		if (jDeleteButton == null) {
-			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
-			jDeleteButton.setMnemonic(KeyEvent.VK_D);
-			jDeleteButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int[] indexes = jSmsTable.getSelectedRows();
-					if (indexes.length == 0) {
-						JOptionPane.showMessageDialog(null, 
-								MessageBundle.getMessage("angal.common.pleaseselectarow"), 
-								MessageBundle.getMessage("angal.hospital"), 
-								JOptionPane.PLAIN_MESSAGE);
-						return;
-					} else {
-						ArrayList<Sms> smsList = new ArrayList<Sms>();
-						int n = JOptionPane.showConfirmDialog(null, 
-								MessageBundle.getMessage("angal.sms.deleteselectedsms") + " ?", 
-								MessageBundle.getMessage("angal.hospital"),
-								JOptionPane.YES_NO_OPTION);
-						
-						if (n == JOptionPane.YES_OPTION) {
-							for (int i : indexes) {
-								Sms sms = (Sms) jSmsTable.getValueAt(i, -1);
-								smsList.add(sms);
-							}
+			jDeleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jDeleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+			jDeleteButton.addActionListener(actionEvent -> {
+				int[] indexes = jSmsTable.getSelectedRows();
+				if (indexes.length == 0) {
+					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
+				} else {
+					ArrayList<Sms> smsList = new ArrayList<>();
+					int answer = MessageDialog.yesNo(null, "angal.sms.deletetheselectedsms.msg");
+					if (answer == JOptionPane.YES_OPTION) {
+						for (int i : indexes) {
+							Sms sms = (Sms) jSmsTable.getValueAt(i, -1);
+							smsList.add(sms);
 						}
-						
-						try {
-							smsManager.delete(smsList);
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1, SmsBrowser.this);
-						}
-						updateModel(dateFrom, dateTo);
-						updateGUI();
 					}
+
+					try {
+						smsManager.delete(smsList);
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1, SmsBrowser.this);
+					}
+					updateModel(dateFrom, dateTo);
+					updateGUI();
 				}
 			});
 		}
@@ -301,48 +303,47 @@ public class SmsBrowser extends ModalJFrame {
 
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					dispose();
-				}
-			});
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}
 	
 	class SmsTableModel extends DefaultTableModel {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		
 		public SmsTableModel() {
 			
 		}
 
+		@Override
 		public int getRowCount() {
 			return smsList.size();
 		}
 
+		@Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
 
+		@Override
 		public String getColumnName(int column) {
 			return columnNames[column];
 		}
 
+		@Override
 		public boolean isCellEditable(int row, int column) {
 			return false;
 		}
 
+		@Override
 		public Class<?> getColumnClass(int columnIndex) {
 			return (Class<?>) columnClasses[columnIndex];
 		}
 
+		@Override
 		public Object getValueAt(int row, int column) {
 			int c = -1;
 			Sms sms = smsList.get(row);
@@ -364,25 +365,29 @@ public class SmsBrowser extends ModalJFrame {
  	}
 	
 	class ColorTableCellRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			cell.setForeground(Color.BLACK);
 			Sms sms = smsList.get(row);
 			DateTime date = new DateTime(sms.getSmsDateSched().getTime());
-			if (sms.getSmsDateSent() != null) cell.setForeground(Color.GRAY); // sent
-			else if (date.isAfter(dateTimeAtEndOfToday) || date.isEqual(dateTimeAtEndOfToday)) cell.setForeground(Color.BLUE); // send tomorrow
+			if (sms.getSmsDateSent() != null) {
+				cell.setForeground(Color.GRAY); // sent
+			} else if (date.isAfter(dateTimeAtEndOfToday) || date.isEqual(dateTimeAtEndOfToday)) {
+				cell.setForeground(Color.BLUE); // send tomorrow
+			}
 			return cell;
 		}
 	}
 	
 	public String formatDateTime(Date smsDateSent) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		if (smsDateSent != null) return sdf.format(smsDateSent);
+		if (smsDateSent != null) {
+			return sdf.format(smsDateSent);
+		}
 		return null;
 	}
 	
@@ -392,29 +397,12 @@ public class SmsBrowser extends ModalJFrame {
 		if (smsDateSent != null) {
 			DateTime date = new DateTime(smsDateSent.getTime());
 			if (date.isAfter(dateTimeAtStartOfToday) &&
-					date.isBefore(dateTimeAtEndOfToday))
+					date.isBefore(dateTimeAtEndOfToday)) {
 				return sdfToday.format(smsDateSent);
+			}
 			return sdf.format(smsDateSent);
 		}
 		return null;
 	}
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		GeneralData.getGeneralData();
-		MessageBundle.initialize();
-		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath()); //$NON-NLS-1$
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SmsBrowser frame = new SmsBrowser();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 }

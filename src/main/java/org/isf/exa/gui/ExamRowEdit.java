@@ -1,27 +1,38 @@
-/*------------------------------
- * ExamRowEdit - add/edit Exams Result 
- * ----------------------------------
- * modification history
- * 3/11/2006 - enlarged the form width 
- * 			 - version is now 1.0 
- *------------------------------*/
-
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.exa.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.exa.manager.ExamRowBrowsingManager;
@@ -30,22 +41,26 @@ import org.isf.exa.model.ExamRow;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 
+/**
+ * ------------------------------
+ * ExamRowEdit - add/edit Exams Result
+ * ----------------------------------
+ * modification history
+ * 3/11/2006 - enlarged the form width
+ * 			 - version is now 1.0
+ * ------------------------------
+ */
 public class ExamRowEdit extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String VERSION=MessageBundle.getMessage("angal.versione");
-	
 	private EventListenerList examRowListeners = new EventListenerList();
 
     public interface ExamRowListener extends EventListener {
-        public void examRowInserted(AWTEvent e);
+        void examRowInserted(AWTEvent e);
     }
 
     public void addExamListener(ExamRowListener l) {
@@ -59,14 +74,12 @@ public class ExamRowEdit extends JDialog {
     private void fireExamRowInserted() {
         AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;};
 
         EventListener[] listeners = examRowListeners.getListeners(ExamRowListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((ExamRowListener)listeners[i]).examRowInserted(event);
+        for (int i = 0; i < listeners.length; i++) {
+	        ((ExamRowListener)listeners[i]).examRowInserted(event);
+        }
     }
 	
 	private JPanel jContentPane = null;
@@ -80,7 +93,6 @@ public class ExamRowEdit extends JDialog {
 	private ExamRow examRow = null;
     
 	/**
-     * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
@@ -93,8 +105,6 @@ public class ExamRowEdit extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
 		Toolkit kit = Toolkit.getDefaultToolkit();
@@ -106,8 +116,8 @@ public class ExamRowEdit extends JDialog {
         this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
-		this.setTitle(MessageBundle.getMessage("angal.exa.neweditresult")+" ("+VERSION+")");
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setTitle(MessageBundle.getMessage("angal.exa.neweditresult.title"));
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	/**
@@ -132,8 +142,7 @@ public class ExamRowEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {		
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.common.description"));
+			descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt"));
 			dataPanel = new JPanel();
 			dataPanel.add(descLabel); 
 			dataPanel.add(getDescriptionTextField());  
@@ -162,47 +171,35 @@ public class ExamRowEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel"));  // Generated
-            cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
 
 	/**
-	 * This method initializes okButton	
-	 * 	
-	 * @return javax.swing.JButton	
+	 * This method initializes okButton
+	 *
+	 * @return javax.swing.JButton
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok"));  // Generated
-            okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					
-					examRow.setDescription(descriptionTextField.getText().toUpperCase());
-					examRow.setExamCode(exam);
-					
-					ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-					try {
-						if (true == manager.newExamRow(examRow)) {
-							fireExamRowInserted();
-							dispose();
-						}
-					}catch(OHServiceException ex){
-						if(ex.getMessages() != null){
-							for(OHExceptionMessage msg : ex.getMessages()){
-								JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-							}
-						}
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			okButton.addActionListener(actionEvent -> {
+
+				examRow.setDescription(descriptionTextField.getText().toUpperCase());
+				examRow.setExamCode(exam);
+
+				ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+				try {
+					if (manager.newExamRow(examRow)) {
+						fireExamRowInserted();
+						dispose();
 					}
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
 				}
 			});
 		}
@@ -221,6 +218,5 @@ public class ExamRowEdit extends JDialog {
 		}
 		return descriptionTextField;
 	}
-	
 
 }

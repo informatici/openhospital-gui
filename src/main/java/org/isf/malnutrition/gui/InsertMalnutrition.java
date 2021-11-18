@@ -1,8 +1,26 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.malnutrition.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 
@@ -24,16 +42,13 @@ import org.isf.utils.time.DateTextField;
 
 public class InsertMalnutrition extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private EventListenerList malnutritionListeners = new EventListenerList();
 
     public interface MalnutritionListener extends EventListener {
-        public void malnutritionUpdated(Malnutrition maln);
-        public void malnutritionInserted();
+        void malnutritionUpdated(Malnutrition maln);
+        void malnutritionInserted();
     }
 
     public void addMalnutritionListener(MalnutritionListener l) {
@@ -47,14 +62,16 @@ public class InsertMalnutrition extends JDialog {
     private void fireMalnutritionInserted() {
 
         EventListener[] listeners = malnutritionListeners.getListeners(MalnutritionListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((MalnutritionListener)listeners[i]).malnutritionInserted();
+        for (int i = 0; i < listeners.length; i++) {
+	        ((MalnutritionListener)listeners[i]).malnutritionInserted();
+        }
     }
     private void fireMalnutritionUpdated(Malnutrition maln) {
 
         EventListener[] listeners = malnutritionListeners.getListeners(MalnutritionListener.class);
-        for (int i = 0; i < listeners.length; i++)
-            ((MalnutritionListener)listeners[i]).malnutritionUpdated(maln);
+        for (int i = 0; i < listeners.length; i++) {
+	        ((MalnutritionListener)listeners[i]).malnutritionUpdated(maln);
+        }
     }
 
 	private JPanel jContentPane;
@@ -87,7 +104,12 @@ public class InsertMalnutrition extends JDialog {
 		super(owner, true);
 		maln = malnutrition;
 		inserting = insert;
-		setTitle(MessageBundle.getMessage("angal.malnutrition.malnutrition"));
+		if (inserting) {
+			setTitle(MessageBundle.getMessage("angal.malnutrition.newmalnutrition.title"));
+		}
+		else {
+			setTitle(MessageBundle.getMessage("angal.malnutrition.editmalnutrition.title"));
+		}
 		add(getJContentPane());
 		pack();
 		setLocationRelativeTo(null);
@@ -110,7 +132,7 @@ public class InsertMalnutrition extends JDialog {
 		if (inserting) {
 			suppDate = new DateTextField(new GregorianCalendar());
 			confDate = new DateTextField();
-		}else{
+		} else {
 			suppDate = new DateTextField(maln.getDateSupp());
 			confDate = new DateTextField(maln.getDateConf());
 		}
@@ -137,8 +159,8 @@ public class InsertMalnutrition extends JDialog {
 			weightField.setText(String.valueOf(maln.getWeight()));
 			heightField.setText(String.valueOf(maln.getHeight()));
 		}
-		JLabel weightLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.weight"));
-		JLabel heightLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.height"));
+		JLabel weightLabel = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
+		JLabel heightLabel = new JLabel(MessageBundle.getMessage("angal.common.height.txt"));
 		fieldPanel.add(weightLabel);
 		fieldPanel.add(weightField);
 		fieldPanel.add(heightLabel);
@@ -154,46 +176,44 @@ public class InsertMalnutrition extends JDialog {
 	}
 
 	private JButton getOkButton() {
-		okButton = new JButton(MessageBundle.getMessage("angal.common.ok"));
-		okButton.setMnemonic(KeyEvent.VK_O);
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+		okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+		okButton.addActionListener(actionEvent -> {
+			try {
+				maln.setHeight(Float.parseFloat(heightField.getText()));
+			} catch (NumberFormatException e) {
+				maln.setHeight(0);
+			}
+			try {
+				maln.setWeight(Float.parseFloat(weightField.getText()));
+			} catch (NumberFormatException e) {
+				maln.setWeight(0);
+			}
+			maln.setDateSupp(suppDate.getCompleteDate());
+			maln.setDateConf(confDate.getCompleteDate());
+
+			if (inserting) {
+				boolean inserted = false;
 				try {
-					maln.setHeight(Float.valueOf(heightField.getText()));
-				} catch (NumberFormatException e) {
-					maln.setHeight(0);
+					inserted = manager.newMalnutrition(maln);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
+				if (inserted) {
+					fireMalnutritionInserted();
+					dispose();
+				}
+
+			} else {
+				Malnutrition updatedMaln = null;
 				try {
-					maln.setWeight(Float.valueOf(weightField.getText()));
-				} catch (NumberFormatException e) {
-					maln.setWeight(0);
+					updatedMaln = manager.updateMalnutrition(maln);
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
 				}
-				maln.setDateSupp(suppDate.getCompleteDate());
-				maln.setDateConf(confDate.getCompleteDate());
-				
-				if (inserting) {
-					boolean inserted = false;
-					try {
-						inserted = manager.newMalnutrition(maln);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-					}
-					if (true == inserted) {
-						fireMalnutritionInserted();
-						dispose();
-					}
-					
-				} else {
-					Malnutrition updatedMaln = null;
-					try {
-						updatedMaln = manager.updateMalnutrition(maln);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-					}
-					if (updatedMaln != null) {
-						fireMalnutritionUpdated(updatedMaln);
-						dispose();
-					}
+				if (updatedMaln != null) {
+					fireMalnutritionUpdated(updatedMaln);
+					dispose();
 				}
 			}
 		});
@@ -201,13 +221,9 @@ public class InsertMalnutrition extends JDialog {
 	}
 
 	private JButton getCancelButton() {
-		cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel"));
-		cancelButton.setMnemonic(KeyEvent.VK_C);
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-			}
-		});
+		cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+		cancelButton.addActionListener(actionEvent -> dispose());
 		return cancelButton;
 	}
 }

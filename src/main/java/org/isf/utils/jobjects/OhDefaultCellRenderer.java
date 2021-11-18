@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.utils.jobjects;
 
 import java.awt.Color;
@@ -11,23 +32,17 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * 
  * @author u2g
- *
  */
 public class OhDefaultCellRenderer extends DefaultTableCellRenderer{
-	
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	Color darkOrange=new Color(159, 188, 208);
 	Color lightOrange=new Color(231, 236, 240);
 	Color lightGray=new Color(242, 242, 242);
 	int hoveredRow = -1;
 	
-	List<Integer> centeredColumns=new ArrayList<Integer>();
+	List<Integer> centeredColumns= new ArrayList<>();
 	
 	public OhDefaultCellRenderer(List<Integer> centeredColumns) {
 		super();
@@ -39,44 +54,41 @@ public class OhDefaultCellRenderer extends DefaultTableCellRenderer{
 	@Override
 	public Component getTableCellRendererComponent(JTable table, java.lang.Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
-		Component cmp= super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		Component cmp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-		JLabel lbl=(JLabel)cmp;
-		
-		boolean found=false;
-		for (Iterator<Integer> iterator = this.centeredColumns.iterator(); iterator.hasNext();) {
+		JLabel lbl = (JLabel) cmp;
+
+		boolean found = false;
+		for (Iterator<Integer> iterator = this.centeredColumns.iterator(); iterator.hasNext(); ) {
 			Integer centered = (Integer) iterator.next();
-			if(centered==column){
-				
+			if (centered == column) {
+
 				lbl.setHorizontalAlignment(CENTER);
-				found=true;
+				found = true;
 				break;
 			}
-			
+
 		}
-		
-		if(!found){
+
+		if (!found) {
 			lbl.setHorizontalAlignment(LEFT);
 		}
-		if(isSelected){
+		if (isSelected) {
 			cmp.setBackground(darkOrange);
-		}
-		else{
-			if(row % 2== 0){
+		} else {
+			if (row % 2 == 0) {
 				cmp.setBackground(lightGray);
-			}
-			else{
+			} else {
 				cmp.setBackground(lightOrange);
-			}				
+			}
 		}
-		if(row == hoveredRow){
+		if (row == hoveredRow) {
 			cmp.setBackground(darkOrange);
-	    }
+		}
 		return cmp;
 	}
-	
+
 	public void setHoveredRow(int hoveredRow) {
-		// TODO Auto-generated method stub
-		this.hoveredRow=hoveredRow;
+		this.hoveredRow = hoveredRow;
 	}
 }

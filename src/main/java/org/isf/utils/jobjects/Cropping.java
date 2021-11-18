@@ -1,12 +1,26 @@
-package org.isf.utils.jobjects;
-/**
- * Cropping.java - 27/gen/2014
- */
-
-/**
- * @author Internet, Mwithi
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package org.isf.utils.jobjects;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -15,27 +29,28 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.event.MouseInputAdapter;
 
+import org.isf.generaldata.MessageBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Cropping.java - 27/gen/2014
+ *
+ * @author Internet, Mwithi
+ */
 public class Cropping extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Cropping.class);
+
 	BufferedImage image;
 	Dimension size;
 	Rectangle clip;
@@ -49,6 +64,7 @@ public class Cropping extends JPanel {
 		this.addMouseMotionListener(mover);
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
@@ -56,8 +72,9 @@ public class Cropping extends JPanel {
 		int x = 0;//(getWidth() - size.width) / 2;
 		int y = 0;//(getHeight() - size.height) / 2;
 		g2.drawImage(image, x, y, this);
-		if (clip == null)
+		if (clip == null) {
 			createClip();
+		}
 		g2.setPaint(Color.red);
 		g2.draw(clip);
 	}
@@ -66,29 +83,34 @@ public class Cropping extends JPanel {
 		// keep clip within raster
 		int x0 = (getWidth() - size.width) / 2;
 		int y0 = (getHeight() - size.height) / 2;
-		if (x < x0 || x + clip.width > x0 + size.width || y < y0 || y + clip.height > y0 + size.height)
+		if (x < x0 || x + clip.width > x0 + size.width || y < y0 || y + clip.height > y0 + size.height) {
 			return;
+		}
 		clip.setLocation(x, y);
 		repaint();
 	}
-	
+
 	public void resizeClip(int x, int y) {
 		// keep clip within raster
 		int x0 = 100;
 		int y0 = 100;
-		if (x < x0 || x > size.width || y < y0 || y > size.height)
+		if (x < x0 || x > size.width || y < y0 || y > size.height) {
 			return;
+		}
 		clip.setSize(x, y);
 		repaint();
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 		return size;
 	}
 
 	private void createClip() {
 		int min = Math.min(size.width, size.height);
-		if (min > 160) min = 160;
+		if (min > 160) {
+			min = 160;
+		}
 		clip = new Rectangle(min, min);
 		clip.x = (size.width - clip.width) / 2;
 		clip.y = (size.height - clip.height) / 2;
@@ -105,40 +127,24 @@ public class Cropping extends JPanel {
 			clipped = image.getSubimage(x, y, w, h);
 			return clipped;
 		} catch (RasterFormatException rfe) {
-			System.out.println("raster format error: " + rfe.getMessage());
+			LOGGER.error("raster format error: {}", rfe.getMessage());
 			return null;
 		}
 	}
 
 	public JPanel getUIPanel() {
-		JButton clip = new JButton("save");
-		clip.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				clipImage();
-			}
-		});
+		JButton saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+		saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
+		saveButton.addActionListener(actionEvent -> clipImage());
 		JPanel panel = new JPanel();
-		panel.add(clip);
+		panel.add(saveButton);
 		return panel;
 	}
 
-	public static void main(String[] args) throws IOException {
-		File file = new File("E:\\Users\\Nanni\\Pictures\\Fototessere\\Pausa pranzo 044 Risate.jpg");
-		Cropping test = new Cropping(ImageIO.read(file));
-		ClipMoverAndResizer mover = new ClipMoverAndResizer(test);
-		test.addMouseListener(mover);
-		test.addMouseMotionListener(mover);
-		JFrame f = new JFrame();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().add(new JScrollPane(test));
-		f.getContentPane().add(test.getUIPanel(), "South");
-		f.setSize(400, 400);
-		f.setLocation(200, 200);
-		f.setVisible(true);
-	}
 }
 
 class ClipMover extends MouseInputAdapter {
+
 	Cropping cropping;
 	Point offset;
 	boolean dragging;
@@ -149,6 +155,7 @@ class ClipMover extends MouseInputAdapter {
 		dragging = false;
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		Point p = e.getPoint();
 		if (cropping.clip.contains(p)) {
@@ -158,10 +165,12 @@ class ClipMover extends MouseInputAdapter {
 		}
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		dragging = false;
 	}
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (dragging) {
 			int x = e.getX() - offset.x;
@@ -172,6 +181,7 @@ class ClipMover extends MouseInputAdapter {
 }
 
 class ClipMoverAndResizer extends MouseInputAdapter {
+
 	Cropping cropping;
 	Point offset;
 	boolean dragging;
@@ -185,6 +195,7 @@ class ClipMoverAndResizer extends MouseInputAdapter {
 		resizing = false;
 	}
 
+	@Override
 	public void mouseMoved(MouseEvent e) {
 		Point p = e.getPoint();
 		if (Math.abs(cropping.clip.getMaxX() - p.getX()) <= precision &&
@@ -198,6 +209,7 @@ class ClipMoverAndResizer extends MouseInputAdapter {
 		super.mouseEntered(e);
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		Point p = e.getPoint();
 		if (Math.abs(cropping.clip.getMaxX() - p.getX()) <= precision &&
@@ -212,12 +224,14 @@ class ClipMoverAndResizer extends MouseInputAdapter {
 		}
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		dragging = false;
 		resizing = false;
 		cropping.setCursor(Cursor.getDefaultCursor());
 	}
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (dragging) {
 			int x = e.getX() - offset.x;
@@ -230,4 +244,3 @@ class ClipMoverAndResizer extends MouseInputAdapter {
 		}
 	}
 }
-

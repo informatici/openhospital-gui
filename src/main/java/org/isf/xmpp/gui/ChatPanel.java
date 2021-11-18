@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.xmpp.gui;
 
 import java.awt.Dimension;
@@ -12,12 +33,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 public class ChatPanel extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private ChatMessages chatMessages;
 	private JTextField send;
@@ -26,7 +45,6 @@ public class ChatPanel extends JPanel {
 	{
 		setLayout(new GridLayout(1,0));
 		createChatPanel();
-
 	}
 
 	protected JPanel createChatPanel() {
@@ -44,7 +62,7 @@ public class ChatPanel extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int key =e.getKeyCode();
-				if(key==KeyEvent.VK_ENTER)
+				if (key==KeyEvent.VK_ENTER)
 				{
 					CommunicationFrame frame = (CommunicationFrame)CommunicationFrame.getFrame();
 					String receiver =frame.getSelectedUser();
@@ -55,7 +73,7 @@ public class ChatPanel extends JPanel {
 			}
 		});
 		chatMessages.setSize(new Dimension(100, 200));
-		final JScrollPane received = new JScrollPane(chatMessages,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		final JScrollPane received = new JScrollPane(chatMessages, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		received.setPreferredSize(new Dimension(200,200));
 		received.setMaximumSize(new Dimension(10,10));
@@ -64,15 +82,15 @@ public class ChatPanel extends JPanel {
 			BoundedRangeModel brm = received.getVerticalScrollBar().getModel();
 			boolean wasAtBottom = true;	
 
+			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
 				if (!brm.getValueIsAdjusting()) {
-					if (wasAtBottom)
+					if (wasAtBottom) {
 						brm.setValue(brm.getMaximum());
-				} else
+					}
+				} else {
 					wasAtBottom = ((brm.getValue() + brm.getExtent()) == brm.getMaximum());
-
-
-
+				}
 			}
 		});
 
@@ -86,7 +104,7 @@ public class ChatPanel extends JPanel {
 		return this;
 	}
 
-	public ChatMessages getChatMessages(){
+	public ChatMessages getChatMessages() {
 		return chatMessages;
 	}
 

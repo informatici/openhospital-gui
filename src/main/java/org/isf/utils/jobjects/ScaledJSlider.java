@@ -1,5 +1,23 @@
-/**
- * 
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -10,14 +28,11 @@ import javax.swing.JSlider;
 
 /**
  * JSlider customization in order to manage decimal values and a given step
- * @author Mwithi
  *
+ * @author Mwithi
  */
 public class ScaledJSlider extends JSlider {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	/**
@@ -48,7 +63,7 @@ public class ScaledJSlider extends JSlider {
 
 	/**
 	 * JSlider customization in order to manage decimal values with a given step.
-	 * Internally the component still works with <code>int</code> values
+	 * Internally the component still works with {@code int} values
 	 * @param scaledMin - minimum value
 	 * @param scaledMax - maximum value
 	 * @param step - step between values
@@ -84,11 +99,8 @@ public class ScaledJSlider extends JSlider {
 	}
 
 	/**
-	 * New setValue() method in order to accept <code>double</code> values, range and step
+	 * New setValue() method in order to accept {@code double} values, range and step
 	 * @param doubleValue
-	 * @param scaledMin
-	 * @param step
-	 * @param scaledMax
 	 */
 	public void setValue(Double doubleValue) {
 		int value = convertFromDoubleToInt(doubleValue, scaledMin, step, scaledMax);
@@ -96,12 +108,12 @@ public class ScaledJSlider extends JSlider {
 	}
 	
 	/**
-	 * Convert from <code>Double</code> to <code>int</code> with specified range and step
+	 * Convert from {@code Double} to {@code int} with specified range and step
 	 * @param doubleValue - the value to be converted
-	 * @param scaledMin - the minimum value (implicit casting from <code>int</code> to <code>double</code>)
-	 * @param step - the step to round up the result (implicit casting from <code>int</code> to <code>double</code>)
-	 * @param scaledMax - the maximum value (implicit casting from <code>int</code> to <code>double</code>)
-	 * @return the nearest integer to the provided <code>Double</code> value, or min or max if value is out of range
+	 * @param scaledMin - the minimum value (implicit casting from {@code int} to {@code double})
+	 * @param step - the step to round up the result (implicit casting from {@code int} to {@code double})
+	 * @param scaledMax - the maximum value (implicit casting from {@code int} to {@code double})
+	 * @return the nearest integer to the provided {@code Double} value, or min or max if value is out of range
 	 */
 	private int convertFromDoubleToInt(Double doubleValue, double scaledMin, double step, double scaledMax) {
 		if (doubleValue == null) return (int) Math.round(scaledInit * (1. / step));
@@ -118,7 +130,6 @@ public class ScaledJSlider extends JSlider {
 	
 	/**
 	 * New getScaledValue() method in order to scale the internal value using step
-	 * @param step
 	 */
 	public double getScaledValue() {
 		double value = super.getValue() * step;

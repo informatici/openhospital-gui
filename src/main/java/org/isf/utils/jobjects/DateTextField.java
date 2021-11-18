@@ -1,23 +1,42 @@
-/**
- * 02-mar-2006
- * @author Theo
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
 import java.awt.FlowLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-
+/**
+ * 02-mar-2006
+ * @author Theo
+ */
 public class DateTextField extends JPanel{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JTextField day;
 	private JTextField month;
@@ -28,71 +47,91 @@ public class DateTextField extends JPanel{
 	 * This is the constructor of the DateTextField object
 	 * It displays the Date of the parameter "time"
 	 * This object consists in 3 textfields (day,month,year) editable by the user
-	 * @param time (GregorianCalendar)
 	 */
-	public DateTextField(){
-		date=new GregorianCalendar();
+	public DateTextField() {
+		date = new GregorianCalendar();
 		initialize();
 		day.setText("");
 		month.setText("");
 		year.setText("");
 	}
-	public DateTextField(GregorianCalendar time){
-		date=time;
-		initialize();
-		if(String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)).length()==1)
-			day.setText("0"+String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)));
-		else day.setText(String.valueOf(time.get(GregorianCalendar.DAY_OF_MONTH)));
-		if(String.valueOf(time.get(GregorianCalendar.MONTH)+1).length()==1)
-			month.setText("0"+String.valueOf(time.get(GregorianCalendar.MONTH)+1));
-		else month.setText(String.valueOf(time.get(GregorianCalendar.MONTH)+1));
-		year.setText(String.valueOf(time.get(GregorianCalendar.YEAR)));
 
+	/**
+	 * This is the constructor of the DateTextField object
+	 * It displays the Date of the parameter "time"
+	 * This object consists in 3 textfields (day,month,year) editable by the user
+	 * @param time (GregorianCalendar)
+	 */
+	public DateTextField(GregorianCalendar time) {
+		date = time;
+		initialize();
+		if (String.valueOf(time.get(Calendar.DAY_OF_MONTH)).length() == 1) {
+			day.setText("0" + String.valueOf(time.get(Calendar.DAY_OF_MONTH)));
+		} else {
+			day.setText(String.valueOf(time.get(Calendar.DAY_OF_MONTH)));
+		}
+		if (String.valueOf(time.get(Calendar.MONTH) + 1).length() == 1) {
+			month.setText("0" + String.valueOf(time.get(Calendar.MONTH) + 1));
+		} else {
+			month.setText(String.valueOf(time.get(Calendar.MONTH) + 1));
+		}
+		year.setText(String.valueOf(time.get(Calendar.YEAR)));
 	}
-	public void initialize(){
-		day = new VoLimitedTextField(2,2);
+
+	public void initialize() {
+		day = new VoLimitedTextField(2, 2);
 		day.addFocusListener(new FocusListener() {
+
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (day.getText().length() != 0) {
 					if (day.getText().length() == 1) {
 						String typed = day.getText();
 						day.setText("0" + typed);
 					}
-					if (!isValidDay(day.getText()))
+					if (!isValidDay(day.getText())) {
 						day.setText("01");
+					}
 				}
 				//else day.setText("01");
 			}
 
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 		});
 		month = new VoLimitedTextField(2,2);
 		month.addFocusListener(new FocusListener() {
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (month.getText().length() != 0) {
 					if (month.getText().length() == 1) {
 						String typed = month.getText();
 						month.setText("0" + typed);
 					}
-					if (!isValidMonth(month.getText()))
+					if (!isValidMonth(month.getText())) {
 						month.setText("01");
+					}
 				}
 				//else month.setText("01");
 			}
 
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 		});
 		year = new VoLimitedTextField(4,4);
 		year.addFocusListener(new FocusListener() {
+			@Override
 			public void focusLost(FocusEvent e) {
 				if (year.getText().length() == 4) {
-					if (!isValidYear(year.getText()))
+					if (!isValidYear(year.getText())) {
 						year.setText("2006");
+					}
 				} 
 			}
 
+			@Override
 			public void focusGained(FocusEvent e) {
 			}
 		});
@@ -103,54 +142,65 @@ public class DateTextField extends JPanel{
 		add(new JLabel("/"));
 		add(year);
 	}
+
 	/**
 	 * This method returns the day displayed by the object
 	 * @return int
 	 */
-	public int getDay(){
-		return Integer.valueOf(day.getText());
+	public int getDay() {
+		return Integer.parseInt(day.getText());
 	}
+
 	/**
 	 * This method returns the month displayed by the object
 	 * @return int
 	 */
-	public int getMonth(){
-		return Integer.valueOf(month.getText());
+	public int getMonth() {
+		return Integer.parseInt(month.getText());
 	}
+
 	/**
 	 * This method returns the year displayed by the object
 	 * @return int
 	 */
-	public int getYear(){
-		return Integer.valueOf(year.getText());
+	public int getYear() {
+		return Integer.parseInt(year.getText());
 	}
+
 	/**
 	 * This method update the parameter toModify setting the date displayed by the object
 	 * @param toModify (GregorianCalendar)
 	 * @return toModify (GregorianCalendar)
 	 */
-	public GregorianCalendar getCompleteDate(GregorianCalendar toModify){
-		toModify.set(GregorianCalendar.DAY_OF_MONTH,Integer.valueOf(day.getText()));
-		toModify.set(GregorianCalendar.MONTH,Integer.valueOf(month.getText()));
-		toModify.set(GregorianCalendar.YEAR,Integer.valueOf(year.getText()));
+	public GregorianCalendar getCompleteDate(GregorianCalendar toModify) {
+		toModify.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.getText()));
+		toModify.set(Calendar.MONTH, Integer.parseInt(month.getText()));
+		toModify.set(Calendar.YEAR, Integer.parseInt(year.getText()));
 		return toModify;
 	}
+
 	/**
 	 * This method returns the date displayed by the object
 	 * @return GregorianCalendar
 	 */
-	public GregorianCalendar getCompleteDate(){
-		if((day.getText().length()==0)||(month.getText().length()==0)||(year.getText().length()==0)){
+	public GregorianCalendar getCompleteDate() {
+		if ((day.getText().length() == 0) || (month.getText().length() == 0) || (year.getText().length() == 0)) {
 			day.setText("");
 			month.setText("");
 			year.setText("");
 			return null;
 		}
-		date.set(GregorianCalendar.DAY_OF_MONTH,getDay());
-		date.set(GregorianCalendar.MONTH,getMonth()-1);
-		date.set(GregorianCalendar.YEAR,getYear());
+		date.set(Calendar.DAY_OF_MONTH, getDay());
+		date.set(Calendar.MONTH, getMonth() - 1);
+		date.set(Calendar.YEAR, getYear());
+		// This is a temporary solution so the comparison is only on the "date" part of "date and time"
+		// See comments in OP-482: https://openhospital.atlassian.net/browse/OP-482
+		date.set(Calendar.HOUR_OF_DAY, 23);
+		date.set(Calendar.MINUTE, 59);
+		date.set(Calendar.SECOND, 59);
 		return date;
 	}
+
 	/**
 	 * This is a basic control for the day field input
 	 * @param day (String)
@@ -160,11 +210,13 @@ public class DateTextField extends JPanel{
 		if (day.charAt(0) < '0' || day.charAt(0) > '9' || day.charAt(1) < '0' || day.charAt(1) > '9') {
 			return false;
 		}
-		int num = Integer.valueOf(day);
-		if (num < 1 || num > 31)
+		int num = Integer.parseInt(day);
+		if (num < 1 || num > 31) {
 			return false;
+		}
 		return true;
 	}
+
 	/**
 	 * This is a basic control for the month field input
 	 * @param month (String)
@@ -174,11 +226,13 @@ public class DateTextField extends JPanel{
 		if (month.charAt(0) < '0' ||month.charAt(0) > '9' || month.charAt(1) < '0' || month.charAt(1) > '9') {
 			return false;
 		}
-		int num = Integer.valueOf(month);
-		if (num < 1 || num > 12)
+		int num = Integer.parseInt(month);
+		if (num < 1 || num > 12) {
 			return false;
+		}
 		return true;
 	}
+
 	/**
 	 * This is a basic control for the year field input
 	 * @param year (String)
@@ -191,13 +245,14 @@ public class DateTextField extends JPanel{
 		}
 		return true;
 	}
-	
-	public void setEnabled(boolean enabled){
-		if(enabled){
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		if (enabled) {
 			day.setEnabled(true);
 			month.setEnabled(true);
 			year.setEnabled(true);
-		}else{
+		} else {
 			day.setEnabled(false);
 			month.setEnabled(false);
 			year.setEnabled(false);

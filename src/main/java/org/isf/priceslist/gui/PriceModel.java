@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.priceslist.gui;
 
 /*
@@ -42,59 +63,65 @@ package org.isf.priceslist.gui;
 
 import java.util.ArrayList;
 
+import org.isf.generaldata.MessageBundle;
 import org.isf.priceslist.model.Price;
 import org.isf.utils.treetable.AbstractTreeTableModel;
 import org.isf.utils.treetable.TreeTableModel;
 
-
 /**
- * FileSystemModel is a TreeTableModel representing a hierarchical file 
- * system. Nodes in the FileSystemModel are FileNodes which, when they 
- * are directory nodes, cache their children to avoid repeatedly querying 
- * the real file system. 
- * 
- * @version %I% %G%
+ * FileSystemModel is a TreeTableModel representing a hierarchical file
+ * system. Nodes in the FileSystemModel are FileNodes which, when they
+ * are directory nodes, cache their children to avoid repeatedly querying
+ * the real file system.
  *
  * @author Philip Milne
  * @author Scott Violet
  */
+public class PriceModel extends AbstractTreeTableModel {
 
-public class PriceModel extends AbstractTreeTableModel implements TreeTableModel {
-
-     // Names of the columns.
-    static protected String[] cNames = {"Name", "Prices"};
+	// Names of the columns.
+	protected static String[] cNames = {
+			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.priceslist.prices.txt").toUpperCase()
+	};
 
     // Types of the columns.
-    static protected Class<?>[] cTypes = {TreeTableModel.class, Double.class};
+    protected static Class<?>[] cTypes = {TreeTableModel.class, Double.class};
     
-    static protected String[] cCategories = {"EXA","OPE","MED","OTH"};
+    protected static String[] cCategories = {"EXA","OPE","MED","OTH"};
       
     public PriceModel(Object root) {
 		//super(new PriceNode((Price)root));
     	super(root);
 	}
 
+	@Override
 	public int getColumnCount() {
 		return cNames.length;
 	}
 
+	@Override
 	public String getColumnName(int column) {
 		return cNames[column];
 	}
 	
+	@Override
 	public Class<?> getColumnClass(int column) {
 		return cTypes[column];
 	}
 	
+	@Override
 	public void setValueAt(Object aValue, Object node, int column) {
-		if (column == 1)
+		if (column == 1) {
 			((PriceNode)node).getPrice().setPrice((Double)aValue);
+		}
 	}
 	
+	@Override
 	public Object getValueAt(Object node, int column) {
 		
 		Price price = getPrice(node);
-		Object display_value = "Failed";
+		Object display_value = MessageBundle.getMessage("angal.priceslist.failed.txt");
 		switch (column) {
 		case 0:
 			display_value = price.getDesc();
@@ -109,8 +136,11 @@ public class PriceModel extends AbstractTreeTableModel implements TreeTableModel
 	}
 
 	
+	@Override
 	public boolean isCellEditable(Object node, int column) {
-		if (getPrice(node).isPrice() && getPrice(node).isEditable()) return true;
+		if (getPrice(node).isPrice() && getPrice(node).isEditable()) {
+			return true;
+		}
 		return super.isCellEditable(node, column);
     }
 
@@ -124,28 +154,22 @@ public class PriceModel extends AbstractTreeTableModel implements TreeTableModel
     	return priceNode.getItems(); 
     }
 
+	@Override
 	public Object getChild(Object node, int i) {
-		//System.out.println("in getChild di " + ((PriceNode)node).getPrice().getDesc());
 		return getChildren(node)[i];
 	}
 
+	@Override
 	public int getChildCount(Object node) {
 		Object[] items = getChildren(node);
-		//System.out.println("in getChildCount di " + ((PriceNode)node).getPrice().getDesc() + ": " + items.length);
 		return (items == null) ? 0 : items.length;
 	}
-	/*
-	public boolean isLeaf(Object node) { 
-		System.out.println("in isLeaf:" + ((PriceNode)node).isPrice() +  ":" + ((PriceNode)node).getPrice().getDesc());
-		return ((PriceNode)node).isPrice(); 
-		}
-	*/
 }
 
 class PriceNode {
 	
 	private Price    					price;
-	private ArrayList<PriceNode>		items = new ArrayList<PriceNode>();
+	private ArrayList<PriceNode>		items = new ArrayList<>();
 
 	
     public PriceNode(Price price) { 
@@ -156,13 +180,15 @@ class PriceNode {
     	return price.getList().getId() == 0;
 	}
 
-	public void addItem(PriceNode price){
-    	this.items.add(price);
-    }
+	public void addItem(PriceNode price) {
+		this.items.add(price);
+	}
+
 	/**
      * Returns the string to be used to display this leaf in the JTree.
      */
-    public String toString() { 
+    @Override
+    public String toString() {
     	return price.getDesc();
     }
 

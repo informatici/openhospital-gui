@@ -1,3 +1,24 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.examination.gui;
 
 import java.awt.BorderLayout;
@@ -12,21 +33,16 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.sql.Timestamp;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.AbstractAction;
@@ -38,7 +54,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -51,14 +66,12 @@ import javax.swing.OverlayLayout;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
@@ -66,22 +79,20 @@ import org.isf.generaldata.ExaminationParameters;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
+import org.isf.stat.gui.report.GenericReportExamination;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.IconButton;
+import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ScaledJSlider;
 import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.isf.utils.time.Converters;
 
-import org.isf.utils.jobjects.CustomJDateChooser;
+public class PatientExaminationEdit extends ModalJFrame {
 
-public class PatientExaminationEdit extends JDialog {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private JPanel jPanelExamination;
@@ -126,9 +137,10 @@ public class PatientExaminationEdit extends JDialog {
 	private JComboBox jComboBoxDiuresisType;
 	private JComboBox jComboBoxBowel;
 	private JComboBox jComboBoxAuscultation;
-	private JButton jButtonOK;
+	private JButton jButtonSave;
 	private JButton jButtonDelete;
-	private JButton jButtonCancel;
+	private JButton jButtonClose;
+	private JButton jButtonPrint;
 	private Action actionSavePatientExamination;
 	private Action actionToggleAP;
 	private Action actionToggleHR;
@@ -145,53 +157,36 @@ public class PatientExaminationEdit extends JDialog {
 	private JEditorPane jEditorPaneBMI;
 	private JPanel jPanelSummary;
 	private JPanel jNotePanel;
-	private JEditorPane jEditorPaneSummary;
 	
 	private PatientExamination patex;
 	private boolean isMale;
 	private double bmi;
+	private boolean modified;
 	
-	private final String PATH_FEMALE_GENDER = "rsc/images/sagoma-donna-132x300.jpg"; //$NON-NLS-1$
-	private final String PATH_MALE_GENDER = "rsc/images/sagoma-uomo-132x300.jpg"; //$NON-NLS-1$
-	private final String SUMMARY_START_ROW = "<tr align=\"center\">";
-	private final String SUMMARY_END_ROW = "</tr>";
-	private final String STD = "<td>";
-	private final String ETD = "</td>";
-	private final String SUMMARY_HEADER = "" +
-			"<html><head></head><body><table>"+
-			SUMMARY_START_ROW+
-			STD+MessageBundle.getMessage("angal.common.datem")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.height")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.weight")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.arterialpressureabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.heartrateabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.temperatureabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.saturationabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.respiratoryrateabbr")+ETD+
-			STD+MessageBundle.getMessage("angal.examination.auscultationabbr")+ETD+
-			SUMMARY_END_ROW;
-	private final String SUMMARY_FOOTER = "</table></body></html>";
+	private static final String PATH_FEMALE_GENDER = "rsc/images/sagoma-donna-132x300.jpg"; //$NON-NLS-1$
+	private static final String PATH_MALE_GENDER = "rsc/images/sagoma-uomo-132x300.jpg"; //$NON-NLS-1$
 	
 	private final String[] columnNames = { 
-			MessageBundle.getMessage("angal.common.datem"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.height"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.weight"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.arterialpressure"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.heartrate"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.temperature"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.saturation"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.hgt"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.respiratoryrateabbr"), //$NON_NLS-1$
-			MessageBundle.getMessage("angal.examination.diuresis"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.diuresis"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.bowel"), //$NON-NLS-1$
-			MessageBundle.getMessage("angal.examination.auscultation"), //$NON-NLS-1$
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.heightabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.weightabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.arterialpressureabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.heartrateabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.temperatureabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.saturationabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.hgt.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.respiratoryrateabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.diuresisvolume24habbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.diuresisabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.bowelabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.auscultationabbr.col").toUpperCase(),
+			MessageBundle.getMessage("angal.examination.note.col").toUpperCase()
 	};
-	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, String.class, String.class};
-	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70};
-	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER};
+	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class, Integer.class, Integer.class, Integer.class, String.class, String.class, String.class, JButton.class};
+	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70, 70};
+	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER,  SwingConstants.CENTER};
 	
-	private final String DATE_FORMAT = "dd/MM/yy HH:mm";
+	private static final String DATE_FORMAT = "dd/MM/yy HH:mm";
 
 	private JTable jTableSummary;
 
@@ -215,7 +210,7 @@ public class PatientExaminationEdit extends JDialog {
 	}
 
 	public PatientExaminationEdit(Frame parent, GenderPatientExamination gpatex) {
-		super(parent, true);
+		super();
 		this.patex = gpatex.getPatex();
 		this.isMale = gpatex.isMale();
 		initComponents();
@@ -223,7 +218,7 @@ public class PatientExaminationEdit extends JDialog {
 	}
 
 	public PatientExaminationEdit(Dialog parent, GenderPatientExamination gpatex) {
-		super(parent, true);
+		super();
 		this.patex = gpatex.getPatex();
 		this.isMale = gpatex.isMale();
 		initComponents();
@@ -231,7 +226,8 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	private void initComponents() {
-		ExaminationParameters.getExaminationParameters();
+		ExaminationParameters.initialize();
+		setTitle(MessageBundle.getMessage("angal.examination.title"));
 		getContentPane().add(getJPanelCenter(), BorderLayout.CENTER);
 		getContentPane().add(getJPanelButtons(), BorderLayout.SOUTH);
 		//updateSummary();
@@ -256,9 +252,10 @@ public class PatientExaminationEdit extends JDialog {
 	private JPanel getJPanelButtons() {
 		if (jPanelButtons == null) {
 			jPanelButtons = new JPanel();
-			jPanelButtons.add(getJButtonOK());
+			jPanelButtons.add(getJButtonSave());
 			jPanelButtons.add(getJButtonDelete());
-			jPanelButtons.add(getJButtonCancel());
+			jPanelButtons.add(getJButtonPrint());
+			jPanelButtons.add(getJButtonClose());
 		}
 		return jPanelButtons;
 	}
@@ -269,9 +266,9 @@ public class PatientExaminationEdit extends JDialog {
 		StringBuilder bmi = new StringBuilder();
 		bmi.append("<html><body>");
 		bmi.append("<strong>");
-		bmi.append(MessageBundle.getMessage("angal.examination.bmi") + ":");
+		bmi.append(MessageBundle.getMessage("angal.examination.bmi")).append(':');
 		bmi.append("<br />");
-		bmi.append("" + this.bmi);
+		bmi.append(this.bmi);
 		bmi.append("<br /><br />");
 		bmi.append("<font color=\"red\">");
 		bmi.append(examManager.getBMIdescription(this.bmi));
@@ -281,44 +278,8 @@ public class PatientExaminationEdit extends JDialog {
 		jEditorPaneBMI.setText(bmi.toString());
 	}
 	
-	//TODO: try to use JDOM...
-	private void updateSummary() {
-		StringBuilder summary = new StringBuilder();
-		summary.append(SUMMARY_HEADER);
-		ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-		ArrayList<PatientExamination> patexList = null;
-		try {
-			patexList = examManager.getLastNByPatID(patex.getPatient().getCode().intValue(), ExaminationParameters.LIST_SIZE);
-		}catch(OHServiceException e){
-			if(e.getMessages() != null){
-				for(OHExceptionMessage msg : e.getMessages()){
-					JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-				}
-			}
-		}
-		Collections.sort(patexList);
-		if(patexList != null){
-			for (PatientExamination patex : patexList) {
-				summary.append(SUMMARY_START_ROW);
-				summary.append(STD).append(new SimpleDateFormat(DATE_FORMAT).format(new Date(patex.getPex_date().getTime()))).append(ETD);
-				summary.append(STD).append(patex.getPex_height() == null ? "-" : patex.getPex_height()).append(ETD);
-				summary.append(STD).append(patex.getPex_weight() == null ? "-" : patex.getPex_weight()).append(ETD);
-				summary.append(STD).append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
-					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max()).append(ETD);
-				summary.append(STD).append(patex.getPex_hr() == null ? "-" : patex.getPex_hr()).append(ETD);
-				summary.append(STD).append(patex.getPex_temp() == null ? "-" : patex.getPex_temp()).append(ETD);
-				summary.append(STD).append(patex.getPex_sat() == null ? "-" : patex.getPex_sat()).append(ETD);
-				summary.append(STD).append(patex.getPex_rr() == null ? "-" : patex.getPex_rr()).append(ETD);
-				summary.append(STD).append(examManager.getAuscultationTranslated(patex.getPex_auscultation()) == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation())).append(ETD);
-				summary.append(SUMMARY_END_ROW);
-			}
-		}
-		summary.append(SUMMARY_FOOTER);
-		jEditorPaneSummary.setText(summary.toString());
-	}
-	
 	private void updateGUI() {
-		jDateChooserDate.setDate(new Date(patex.getPex_date().getTime()));
+		jDateChooserDate.setDate(patex.getPex_date().getTime());
 		jTextFieldHeight.setText(String.valueOf(patex.getPex_height()));
 		jSliderHeight.setValue(patex.getPex_height());
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
@@ -350,6 +311,7 @@ public class PatientExaminationEdit extends JDialog {
 		disableDiuresisVolume();
 		disableDiuresisType();
 		disableBowel();
+		modified = false;
 	}
 
 	private JPanel getJPanelExamination() {
@@ -363,7 +325,7 @@ public class PatientExaminationEdit extends JDialog {
 			gbl_jPanelExamination.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
 			jPanelExamination.setLayout(gbl_jPanelExamination);
 
-			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date")); //$NON-NLS-1$
+			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
 			GridBagConstraints gbc_jLabelDate = new GridBagConstraints();
 			gbc_jLabelDate.anchor = GridBagConstraints.WEST;
 			gbc_jLabelDate.insets = new Insets(10, 5, 5, 5);
@@ -379,14 +341,14 @@ public class PatientExaminationEdit extends JDialog {
 			jPanelExamination.add(getJDateChooserDate(), gbc_jDateChooserDate);
 			
 			{
-				jLabelHeightAbb = new JLabel(MessageBundle.getMessage("angal.examination.heightabbr")); //$NON-NLS-1$
+				jLabelHeightAbb = new JLabel(MessageBundle.getMessage("angal.examination.heightabbr.txt")); //$NON-NLS-1$
 				GridBagConstraints gbc_lblh = new GridBagConstraints();
 				gbc_lblh.insets = new Insets(5, 5, 5, 5);
 				gbc_lblh.gridx = 0;
 				gbc_lblh.gridy = 1;
 				jPanelExamination.add(jLabelHeightAbb, gbc_lblh);
 	
-				JLabel jLabelHeight = new JLabel(MessageBundle.getMessage("angal.examination.height")); //$NON-NLS-1$
+				JLabel jLabelHeight = new JLabel(MessageBundle.getMessage("angal.common.height.txt"));
 				GridBagConstraints gbc_jLabelHeight = new GridBagConstraints();
 				gbc_jLabelHeight.anchor = GridBagConstraints.WEST;
 				gbc_jLabelHeight.insets = new Insets(5, 5, 5, 5);
@@ -417,14 +379,14 @@ public class PatientExaminationEdit extends JDialog {
 			}
 			
 			{
-				jLabelWeightAbb = new JLabel(MessageBundle.getMessage("angal.examination.weightabbr")); //$NON-NLS-1$
+				jLabelWeightAbb = new JLabel(MessageBundle.getMessage("angal.examination.weightabbr.txt"));
 				GridBagConstraints gbc_lblw = new GridBagConstraints();
 				gbc_lblw.insets = new Insets(5, 5, 5, 5);
 				gbc_lblw.gridx = 0;
 				gbc_lblw.gridy = 2;
 				jPanelExamination.add(jLabelWeightAbb, gbc_lblw);
 	
-				JLabel jLabelWeight = new JLabel(MessageBundle.getMessage("angal.examination.weight")); //$NON-NLS-1$
+				JLabel jLabelWeight = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
 				GridBagConstraints gbc_jLabelWeight = new GridBagConstraints();
 				gbc_jLabelWeight.anchor = GridBagConstraints.WEST;
 				gbc_jLabelWeight.insets = new Insets(5, 5, 5, 5);
@@ -463,6 +425,7 @@ public class PatientExaminationEdit extends JDialog {
 	
 				JLabel jLabelAPmin = new JLabel(MessageBundle.getMessage("angal.examination.arterialpressure")); //$NON-NLS-1$
 				GridBagConstraints labelGbc_3 = new GridBagConstraints();
+				labelGbc_3.anchor = GridBagConstraints.WEST;
 				labelGbc_3.insets = new Insets(5, 5, 5, 5);
 				labelGbc_3.gridx = 1;
 				labelGbc_3.gridy = 3;
@@ -779,17 +742,13 @@ public class PatientExaminationEdit extends JDialog {
 	private JComboBox getJComboBoxDiuresisType() {
 		if (jComboBoxDiuresisType == null) {
 			jComboBoxDiuresisType = new JComboBox();
-			ArrayList<String> diuresisDescription = examManager.getDiuresisDescriptionList();
+			List<String> diuresisDescription = examManager.getDiuresisDescriptionList();
 			for (String description : diuresisDescription) {
 				jComboBoxDiuresisType.addItem(description);
 			}
-			jComboBoxDiuresisType.addItemListener(new ItemListener() {
-				
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					if (e.getStateChange() == ItemEvent.SELECTED) {
-						patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) e.getItem()));
-					}
+			jComboBoxDiuresisType.addItemListener(e -> {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) e.getItem()));
 				}
 			});
 		}
@@ -799,17 +758,13 @@ public class PatientExaminationEdit extends JDialog {
 	private JComboBox getJComboBoxBowel() {
 		if (jComboBoxBowel == null) {
 			jComboBoxBowel = new JComboBox();
-			ArrayList<String> bowelDescription = examManager.getBowelDescriptionList();
+			List<String> bowelDescription = examManager.getBowelDescriptionList();
 			for (String description : bowelDescription) {
 				jComboBoxBowel.addItem(description);
 			}
-			jComboBoxBowel.addItemListener(new ItemListener() {
-				
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					if (e.getStateChange() == ItemEvent.SELECTED) {
-						patex.setPex_bowel_desc(examManager.getBowelDescriptionKey((String) e.getItem()));
-					}
+			jComboBoxBowel.addItemListener(e -> {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					patex.setPex_bowel_desc(examManager.getBowelDescriptionKey((String) e.getItem()));
 				}
 			});
 		}
@@ -922,15 +877,11 @@ public class PatientExaminationEdit extends JDialog {
 			//jDateChooserDate.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDate.setLocale(new Locale("en")); //$NON-NLS-1$
 			jDateChooserDate.setDateFormatString("dd/MM/yyyy - HH:mm"); //$NON-NLS-1$
-			jDateChooserDate.addPropertyChangeListener("date", new PropertyChangeListener() {
-				
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					Date date = (Date) evt.getNewValue();
-					jDateChooserDate.setDate(date);
-					patex.setPex_date(new Timestamp(date.getTime()));
-					
-				}
+			jDateChooserDate.addPropertyChangeListener("date", propertyChangeEvent -> {
+				Date date = (Date) propertyChangeEvent.getNewValue();
+				jDateChooserDate.setDate(date);
+				patex.setPex_date(Converters.toCalendar(date));
+
 			});
 		}
 		return jDateChooserDate;
@@ -938,7 +889,7 @@ public class PatientExaminationEdit extends JDialog {
 
 	private VoLimitedTextArea getJTextAreaNote() {
 		if (jTextAreaNote == null) {
-			jTextAreaNote = new VoLimitedTextArea(300, 6, 20);
+			jTextAreaNote = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
 			jTextAreaNote.setLineWrap(true);
 			jTextAreaNote.setWrapStyleWord(true);
 			jTextAreaNote.setMargin(new Insets(0, 5, 0, 0));
@@ -948,6 +899,7 @@ public class PatientExaminationEdit extends JDialog {
 				public void focusLost(FocusEvent e) {
 					super.focusLost(e);
 					patex.setPex_note(jTextAreaNote.getText());
+					modified = true;
 				}
 			});
 		}
@@ -963,7 +915,7 @@ public class PatientExaminationEdit extends JDialog {
 			gbl_jNotePanel.rowWeights = new double[] { 0.0, 1.0};
 			jNotePanel.setLayout(gbl_jNotePanel);
 			
-			JLabel jLabelNote = new JLabel(MessageBundle.getMessage("angal.examination.note")); //$NON-NLS-1$
+			JLabel jLabelNote = new JLabel(MessageBundle.getMessage("angal.examination.note"), new ImageIcon("rsc/icons/list_button.png"), SwingConstants.LEFT); //$NON-NLS-1$
 			GridBagConstraints gbc_jLabelNote = new GridBagConstraints();
 			gbc_jLabelNote.anchor = GridBagConstraints.WEST;
 			gbc_jLabelNote.insets = new Insets(5, 5, 5, 5);
@@ -1016,7 +968,7 @@ public class PatientExaminationEdit extends JDialog {
 				@Override
 				public void focusLost(FocusEvent e) {
 					patex.setPex_ap_min((Integer) jSpinnerAPmin.getValue());
-					
+					modified = true;
 				}
 				
 				@Override
@@ -1037,7 +989,7 @@ public class PatientExaminationEdit extends JDialog {
 				@Override
 				public void focusLost(FocusEvent e) {
 					patex.setPex_ap_max((Integer) jSpinnerAPmax.getValue());
-					
+					modified = true;
 				}
 				
 				@Override
@@ -1060,7 +1012,7 @@ public class PatientExaminationEdit extends JDialog {
 					int hgt = Integer.parseInt(jTextFieldHGT.getText());
 					jSliderHGT.setValue(hgt);
 					patex.setPex_hgt(hgt);
-					
+					modified = true;
 				}
 				
 				@Override
@@ -1083,7 +1035,7 @@ public class PatientExaminationEdit extends JDialog {
 					int diuresisVolume = Integer.parseInt(jTextFieldDiuresisVolume.getText());
 					jSliderDiuresisVolume.setValue(diuresisVolume);
 					patex.setPex_diuresis(diuresisVolume);
-					
+					modified = true;
 				}
 				
 				@Override
@@ -1106,7 +1058,7 @@ public class PatientExaminationEdit extends JDialog {
 					int height = Integer.parseInt(jTextFieldHeight.getText());
 					jSliderHeight.setValue(height);
 					patex.setPex_height(height);
-					
+					modified = true;
 				}
 				
 				@Override
@@ -1129,6 +1081,7 @@ public class PatientExaminationEdit extends JDialog {
 					double weight = Double.parseDouble(jTextFieldWeight.getText());
 					jSliderWeight.setValue(weight);
 					patex.setPex_weight(weight);
+					modified = true;
 				}
 				
 				@Override
@@ -1151,6 +1104,7 @@ public class PatientExaminationEdit extends JDialog {
 					double temp = Double.parseDouble(jTextFieldTemp.getText());
 					jSliderTemp.setValue(temp);
 					patex.setPex_temp(temp);
+					modified = true;
 				}
 				
 				@Override
@@ -1173,6 +1127,7 @@ public class PatientExaminationEdit extends JDialog {
 					double sat = Double.parseDouble(jTextFieldSaturation.getText());
 					jSliderSaturation.setValue(sat);
 					patex.setPex_sat(sat);
+					modified = true;
 				}
 				
 				@Override
@@ -1195,6 +1150,7 @@ public class PatientExaminationEdit extends JDialog {
 					int hr = Integer.parseInt(jTextFieldHR.getText());
 					jSliderHR.setValue(hr);
 					patex.setPex_hr(hr);
+					modified = true;
 				}
 				
 				@Override
@@ -1215,6 +1171,7 @@ public class PatientExaminationEdit extends JDialog {
 					int rr = Integer.parseInt(jTextFieldRR.getText());
 					jSliderRR.setValue(rr);
 					patex.setPex_rr(rr);
+					modified = true;
 				}
 			});
 		}
@@ -1224,17 +1181,13 @@ public class PatientExaminationEdit extends JDialog {
 	private JComboBox getJComboBoxAuscultation() {
 		if (jComboBoxAuscultation == null) {
 			jComboBoxAuscultation =  new JComboBox();
-			ArrayList<String> auscultationList = examManager.getAuscultationList();
+			List<String> auscultationList = examManager.getAuscultationList();
 			for (String description : auscultationList) {
 				jComboBoxAuscultation.addItem(description);
 			}
-			jComboBoxAuscultation.addItemListener(new ItemListener() {
-				
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					if (e.getStateChange() == ItemEvent.SELECTED) {
-						patex.setPex_auscultation(examManager.getAuscultationKey((String) e.getItem()));
-					}
+			jComboBoxAuscultation.addItemListener(e -> {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					patex.setPex_auscultation(examManager.getAuscultationKey((String) e.getItem()));
 				}
 			});
 		}
@@ -1244,15 +1197,15 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider getJSliderHeight() {
 		if (jSliderHeight == null) {
 			jSliderHeight = new JSlider(ExaminationParameters.HEIGHT_MIN, ExaminationParameters.HEIGHT_MAX, ExaminationParameters.HEIGHT_INIT);
-			jSliderHeight.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
+			jSliderHeight.addChangeListener(e -> {
+				JSlider source = (JSlider)e.getSource();
+				if (!source.getValueIsAdjusting()) {
 					int value = jSliderHeight.getValue();
 					jTextFieldHeight.setText(String.valueOf(value));
 					patex.setPex_height(value);
 					updateBMI();
-				}
+					modified = true;
+				}    
 			});
 			jSliderHeight.setFocusable(false);
 		}
@@ -1262,15 +1215,14 @@ public class PatientExaminationEdit extends JDialog {
 	private ScaledJSlider getJSliderWeight() {
 		if (jSliderWeight == null) {
 			jSliderWeight = new ScaledJSlider(ExaminationParameters.WEIGHT_MIN, ExaminationParameters.WEIGHT_MAX, ExaminationParameters.WEIGHT_STEP, ExaminationParameters.WEIGHT_INIT);
-			jSliderWeight.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
+			jSliderWeight.addChangeListener(e -> {
+				JSlider source = (JSlider) e.getSource();
+				if (!source.getValueIsAdjusting()) {
 					double value = jSliderWeight.getScaledValue();
-					//double weight = (double) value / 10;
 					jTextFieldWeight.setText(String.valueOf(value));
 					patex.setPex_weight(value);
 					updateBMI();
+					modified = true;
 				}
 			});
 			jSliderWeight.setFocusable(false);
@@ -1281,14 +1233,10 @@ public class PatientExaminationEdit extends JDialog {
 	private ScaledJSlider getJSliderTemp() {
 		if (jSliderTemp == null) {
 			jSliderTemp = new ScaledJSlider(ExaminationParameters.TEMP_MIN, ExaminationParameters.TEMP_MAX, ExaminationParameters.TEMP_STEP, ExaminationParameters.TEMP_INIT);
-			jSliderTemp.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					double value = jSliderTemp.getScaledValue();
-					jTextFieldTemp.setText(String.valueOf(value));
-					patex.setPex_temp(value);
-				}
+			jSliderTemp.addChangeListener(e -> {
+				double value = jSliderTemp.getScaledValue();
+				jTextFieldTemp.setText(String.valueOf(value));
+				patex.setPex_temp(value);
 			});
 			jSliderTemp.setFocusable(false);
 		}
@@ -1298,14 +1246,10 @@ public class PatientExaminationEdit extends JDialog {
 	private ScaledJSlider getJSliderSaturation() {
 		if (jSliderSaturation == null) {
 			jSliderSaturation = new ScaledJSlider(ExaminationParameters.SAT_MIN, 100, ExaminationParameters.SAT_STEP, ExaminationParameters.SAT_INIT); //MAX / STEP
-			jSliderSaturation.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					double value = jSliderSaturation.getScaledValue();
-					jTextFieldSaturation.setText(String.valueOf(value));
-					patex.setPex_sat(value);
-				}
+			jSliderSaturation.addChangeListener(e -> {
+				double value = jSliderSaturation.getScaledValue();
+				jTextFieldSaturation.setText(String.valueOf(value));
+				patex.setPex_sat(value);
 			});
 			jSliderSaturation.setFocusable(false);
 		}
@@ -1315,14 +1259,10 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider getJSliderDiuresisVolume() {
 		if (jSliderDiuresisVolume == null) {
 			jSliderDiuresisVolume = new JSlider(ExaminationParameters.DIURESIS_MIN, ExaminationParameters.DIURESIS_MAX, ExaminationParameters.DIURESIS_INIT);
-			jSliderDiuresisVolume.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					int value = jSliderDiuresisVolume.getValue();
-					jTextFieldDiuresisVolume.setText(String.valueOf(value));
-					patex.setPex_diuresis(value);
-				}
+			jSliderDiuresisVolume.addChangeListener(e -> {
+				int value = jSliderDiuresisVolume.getValue();
+				jTextFieldDiuresisVolume.setText(String.valueOf(value));
+				patex.setPex_diuresis(value);
 			});
 			jSliderDiuresisVolume.setFocusable(false);
 		}
@@ -1332,14 +1272,10 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider getJSliderHGT() {
 		if (jSliderHGT == null) {
 			jSliderHGT = new JSlider(ExaminationParameters.HGT_MIN, ExaminationParameters.HGT_MAX, ExaminationParameters.HGT_INIT);
-			jSliderHGT.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					int value = jSliderHGT.getValue();
-					jTextFieldHGT.setText(String.valueOf(value));
-					patex.setPex_hgt(value);
-				}
+			jSliderHGT.addChangeListener(e -> {
+				int value = jSliderHGT.getValue();
+				jTextFieldHGT.setText(String.valueOf(value));
+				patex.setPex_hgt(value);
 			});
 			jSliderHGT.setFocusable(false);
 		}
@@ -1349,14 +1285,10 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider getJSliderHR() {
 		if (jSliderHR == null) {
 			jSliderHR = new JSlider(ExaminationParameters.HR_MIN, ExaminationParameters.HR_MAX, ExaminationParameters.HR_INIT);
-			jSliderHR.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					int hr = jSliderHR.getValue();
-					jTextFieldHR.setText(String.valueOf(hr));
-					patex.setPex_hr(hr);
-				}
+			jSliderHR.addChangeListener(e -> {
+				int hr = jSliderHR.getValue();
+				jTextFieldHR.setText(String.valueOf(hr));
+				patex.setPex_hr(hr);
 			});
 			jSliderHR.setFocusable(false);
 		}
@@ -1366,80 +1298,92 @@ public class PatientExaminationEdit extends JDialog {
 	private JSlider getJSliderRR() {
 		if (jSliderRR == null) {
 			jSliderRR = new JSlider(0, 100, 0);
-			jSliderRR.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					int rr = jSliderRR.getValue();
-					jTextFieldRR.setText(String.valueOf(rr));
-					patex.setPex_rr(rr);
-				}
+			jSliderRR.addChangeListener(e -> {
+				int rr = jSliderRR.getValue();
+				jTextFieldRR.setText(String.valueOf(rr));
+				patex.setPex_rr(rr);
 			});
 		}
 		return jSliderRR;
 	}
 
-	private JButton getJButtonOK() {
-		if (jButtonOK == null) {
-			jButtonOK = new JButton();
-			jButtonOK.setMnemonic(KeyEvent.VK_O);
-			jButtonOK.setAction(getActionSavePatientExamination());
+	private JButton getJButtonSave() {
+		if (jButtonSave == null) {
+			jButtonSave = new JButton();
+			jButtonSave.setAction(getActionSavePatientExamination());
 		}
-		return jButtonOK;
+		return jButtonSave;
 	}
 	
 	private JButton getJButtonDelete() {
 		if (jButtonDelete == null) {
-			jButtonDelete = new JButton();
-			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
-			jButtonDelete.setMnemonic(KeyEvent.VK_D);
-			jButtonDelete.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					int[] row = jTableSummary.getSelectedRows();
-					if (row.length == 0) {
-						JOptionPane.showMessageDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.pleaseselectarow"));
-						return;
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+			jButtonDelete.addActionListener(actionEvent -> {
+				int[] row = jTableSummary.getSelectedRows();
+				if (row.length == 0) {
+					MessageDialog.error(PatientExaminationEdit.this, "angal.common.pleaseselectarow.msg");
+					return;
+				}
+				int ok = JOptionPane.showConfirmDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.doyouwanttoproceed.msg"));
+				if (ok == JOptionPane.OK_OPTION) {
+					ArrayList<PatientExamination> patexList = new ArrayList<>();
+					for (int j : row) {
+						patexList.add((PatientExamination) jTableSummary.getModel().getValueAt(j, -1));
 					}
-					int ok = JOptionPane.showConfirmDialog(PatientExaminationEdit.this, MessageBundle.getMessage("angal.common.doyouwanttoproceed"));
-					if (ok == JOptionPane.OK_OPTION) {
-						ArrayList<PatientExamination> patexList = new ArrayList<PatientExamination>();
-						for (int i = 0; i < row.length; i++) {
-							patexList.add((PatientExamination) jTableSummary.getModel().getValueAt(row[i], -1));
-						}
-						try {
-							examManager.remove(patexList);
-						}catch(OHServiceException ex){
-							if(ex.getMessages() != null){
-								for(OHExceptionMessage msg : ex.getMessages()){
-									JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-								}
-							}
-						} finally {
-							JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
-							model.reloadData();
-						}
-					} else return;
+					try {
+						examManager.remove(patexList);
+					} catch(OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
+					} finally {
+						JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
+						model.reloadData();
+					}
 				}
 			});
 		}
 		return jButtonDelete;
 	}
 	
-	private JButton getJButtonCancel() {
-		if (jButtonCancel == null) {
-			jButtonCancel = new JButton(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonCancel.setMnemonic(KeyEvent.VK_C);
-			jButtonCancel.addActionListener(new ActionListener() {
+	private JButton getJButtonClose() {
+		if (jButtonClose == null) {
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			jButtonClose.addActionListener(actionEvent -> {
 				
-				@Override
-				public void actionPerformed(ActionEvent e) {
+				//TODO: to provide a more rigorous changes inspections logic
+				if (modified) {
+					int ok = MessageDialog.yesNoCancel(PatientExaminationEdit.this, "angal.examination.savethechanges.msg");
+					if (ok == JOptionPane.YES_OPTION) {
+						jButtonSave.doClick();
+						dispose();
+					} else if (ok == JOptionPane.NO_OPTION) {
+						dispose();
+					}
+				} else {
 					dispose();
 				}
 			});
 		}
-		return jButtonCancel;
+		return jButtonClose;
+	}
+	
+	private JButton getJButtonPrint() {
+		if (jButtonPrint == null) {
+			jButtonPrint = new JButton(MessageBundle.getMessage("angal.common.print.btn"));
+			jButtonPrint.setMnemonic(MessageBundle.getMnemonic("angal.common.print.btn.key"));
+			jButtonPrint.addActionListener(actionEvent -> {
+				int selectedrow = jTableSummary.getSelectedRow();
+				if (selectedrow < 0) {
+					selectedrow = 0;
+				}
+
+				PatientExamination	exam = (PatientExamination) jTableSummary.getValueAt(selectedrow,-1);
+				new GenericReportExamination(patex.getPatient().getCode(), exam.getPex_ID(), GeneralData.EXAMINATIONCHART);
+
+			});
+		}
+		return jButtonPrint;
 	}
 	
 	private JPanel getJPanelGender() {
@@ -1471,10 +1415,11 @@ public class PatientExaminationEdit extends JDialog {
 	private JLabel getJLabelImageGender() {
 		if (jLabelGender == null) {
 			jLabelGender = new JLabel(); //$NON-NLS-1$
-			if (isMale) 
+			if (isMale) {
 				jLabelGender.setIcon(new ImageIcon(PATH_MALE_GENDER));
-			else
+			} else {
 				jLabelGender.setIcon(new ImageIcon(PATH_FEMALE_GENDER));
+			}
 			jLabelGender.setAlignmentX(0.5f);
 			jLabelGender.setAlignmentY(0.5f);
 		}
@@ -1506,17 +1451,11 @@ public class PatientExaminationEdit extends JDialog {
 			try {
 				double value = Double.parseDouble(comp.getText());
 				if (bottom && value < min) {
-					JOptionPane.showMessageDialog(PatientExaminationEdit.this, 
-							MessageBundle.getMessage("angal.common.thisvaluecannotbelesserthan") + min,
-							MessageBundle.getMessage("angal.hospital"), 
-							JOptionPane.ERROR_MESSAGE);
+					MessageDialog.error(PatientExaminationEdit.this, "angal.common.thisvaluecannotbelessthan.fmt.msg", min);
 					return false;
 				}
 				if (ceiling && value > max) {
-					JOptionPane.showMessageDialog(PatientExaminationEdit.this, 
-							MessageBundle.getMessage("angal.common.thisvaluecannotbegreaterthan") + max,
-							MessageBundle.getMessage("angal.hospital"), 
-							JOptionPane.ERROR_MESSAGE);
+					MessageDialog.error(PatientExaminationEdit.this, "angal.common.thisvaluecannotbegreaterthan.fmt.msg", max);
 					return false;
 				}
 			} catch (NumberFormatException e) {
@@ -1527,25 +1466,23 @@ public class PatientExaminationEdit extends JDialog {
 	}
 
 	private class SwingActionSavePatientExamination extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
+
 		public SwingActionSavePatientExamination() {
-			putValue(NAME, MessageBundle.getMessage("angal.common.savem"));
-			putValue(MNEMONIC_KEY, KeyEvent.VK_O);
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.savepatientexamination")); //$NON-NLS-1$
+			putValue(NAME, MessageBundle.getMessage("angal.common.save.btn"));
+			putValue(MNEMONIC_KEY, MessageBundle.getMnemonic("angal.common.save.btn.key"));
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.savepatientexamination"));
 		}
-		public void actionPerformed(ActionEvent e) {
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			
 			try {
 				examManager.saveOrUpdate(patex);
-			}catch(OHServiceException ex){
-				if(ex.getMessages() != null){
-					for(OHExceptionMessage msg : ex.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+				modified = false;
+			} catch(OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 			JTableModelSummary model = (JTableModelSummary) jTableSummary.getModel();
 			model.reloadData();
@@ -1564,6 +1501,7 @@ public class PatientExaminationEdit extends JDialog {
 		patex.setPex_ap_min((Integer)jSpinnerAPmin.getValue());
 		jSpinnerAPmax.setEnabled(true);
 		patex.setPex_ap_max((Integer)jSpinnerAPmax.getValue());
+		modified = true;
 	}
 
 	private void disableAP() {
@@ -1574,15 +1512,14 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	private class SwingActionToggleAP extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleAP() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleAP.isSelected()) {
 				disableAP();
 			} else {
@@ -1607,6 +1544,7 @@ public class PatientExaminationEdit extends JDialog {
 		} else {
 			patex.setPex_temp(null);
 		}
+		modified = true;
 	}
 
 	private void disableTemp() {
@@ -1624,6 +1562,7 @@ public class PatientExaminationEdit extends JDialog {
 		} else {
 			patex.setPex_sat(null);
 		}
+		modified = true;
 	}
 
 	private void disableSaturation() {
@@ -1641,6 +1580,7 @@ public class PatientExaminationEdit extends JDialog {
 		} else {
 			patex.setPex_hgt(null);
 		}
+		modified = true;
 	}
 
 	private void disableHGT() {
@@ -1652,6 +1592,7 @@ public class PatientExaminationEdit extends JDialog {
 	private void enableBowel() {
 		jComboBoxBowel.setEnabled(true);
 		patex.setPex_bowel_desc(examManager.getBowelDescriptionKey((String) jComboBoxBowel.getSelectedItem()));
+		modified = true;
 	}
 
 	private void disableBowel() {
@@ -1668,6 +1609,7 @@ public class PatientExaminationEdit extends JDialog {
 		} else {
 			patex.setPex_diuresis(null);
 		}
+		modified = true;
 	}
 
 	private void disableDiuresisVolume() {
@@ -1679,6 +1621,7 @@ public class PatientExaminationEdit extends JDialog {
 	private void enableDiuresisType() {
 		jComboBoxDiuresisType.setEnabled(true);
 		patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) jComboBoxDiuresisType.getSelectedItem()));
+		modified = true;
 	}
 	
 	private void disableDiuresisType() {
@@ -1690,6 +1633,7 @@ public class PatientExaminationEdit extends JDialog {
 		jSliderHR.setEnabled(true);
 		jTextFieldHR.setEnabled(true);
 		patex.setPex_hr(Integer.parseInt(jTextFieldHR.getText()));
+		modified = true;
 	}
 
 	private void disableHR() {
@@ -1699,15 +1643,14 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	private class SwingActionToggleHGT extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleHGT() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleHGT.isSelected()) {
 				disableHGT();
 			} else {
@@ -1717,15 +1660,14 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	private class SwingActionToggleBowel extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleBowel() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleBowel.isSelected()) {
 				disableBowel();
 			} else {
@@ -1735,15 +1677,14 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	private class SwingActionToggleDiuresisVolume extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleDiuresisVolume() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleDiuresisVolume.isSelected()) {
 				disableDiuresisVolume();
 			} else {
@@ -1753,15 +1694,14 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	private class SwingActionToggleDiuresisType extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleDiuresisType() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleDiuresisType.isSelected()) {
 				disableDiuresisType();
 			} else {
@@ -1774,6 +1714,7 @@ public class PatientExaminationEdit extends JDialog {
 		jSliderRR.setEnabled(true);
 		jTextFieldRR.setEnabled(true);
 		patex.setPex_rr(Integer.parseInt(jTextFieldRR.getText()));
+		modified = true;
 	}
 
 	private void disableRR() {
@@ -1782,9 +1723,10 @@ public class PatientExaminationEdit extends JDialog {
 		patex.setPex_rr(null);
 	}
 
-	private void enableAuscultation(){
+	private void enableAuscultation() {
 		jComboBoxAuscultation.setEnabled(true);
-		patex.setPex_auscultation(examManager.getAuscultationKey((String)jComboBoxAuscultation.getSelectedItem()));
+		patex.setPex_auscultation(examManager.getAuscultationKey((String) jComboBoxAuscultation.getSelectedItem()));
+		modified = true;
 	}
 
 	private void disableAuscultation() {
@@ -1793,15 +1735,14 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	private class SwingActionToggleSaturation extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleSaturation() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleSaturation.isSelected()) {
 				disableSaturation();
 			} else {
@@ -1811,15 +1752,14 @@ public class PatientExaminationEdit extends JDialog {
 	}
 
 	private class SwingActionToggleRR extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleRR() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleRR.isSelected()) {
 				disableRR();
 			} else {
@@ -1829,15 +1769,16 @@ public class PatientExaminationEdit extends JDialog {
 	}
 
 	private class SwingActionToggleAusc extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
-		public SwingActionToggleAusc(){
+
+		public SwingActionToggleAusc() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleAusc.isSelected()) {
 				disableAuscultation();
 			} else {
@@ -1847,15 +1788,14 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	private class SwingActionToggleTemp extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleTemp() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleTemp.isSelected()) {
 				disableTemp();
 			} else {
@@ -1865,15 +1805,14 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	private class SwingActionToggleHR extends AbstractAction {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		public SwingActionToggleHR() {
 			putValue(NAME, ""); //$NON-NLS-1$
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.examination.tooltip.toggleexamination")); //$NON-NLS-1$
 		}
-		public void actionPerformed(ActionEvent e) {
+		@Override
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (!jCheckBoxToggleHR.isSelected()) {
 				disableHR();
 			} else {
@@ -1957,16 +1896,38 @@ public class PatientExaminationEdit extends JDialog {
 	
 	private JScrollPane getJTableSummary() {
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setPreferredSize(new Dimension(400, 150));
+		scrollPane.setPreferredSize(new Dimension(870, 150));
+		TableCellRenderer buttonRenderer = new JTableButtonRenderer();
 		jTableSummary = new JTable(new JTableModelSummary());
-		for (int i = 0; i < columnNames.length; i++) {
+		for (int i = 0; i < columnNames.length - 1; i++) { //last column is for JButton
 			jTableSummary.getColumnModel().getColumn(i).setCellRenderer(new EnabledTableCellRenderer());
 			jTableSummary.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
 		}
+		jTableSummary.getColumnModel().getColumn(columnNames.length - 1).setCellRenderer(buttonRenderer);
+		jTableSummary.getColumnModel().getColumn(columnNames.length - 1).setMinWidth(columnWidth[columnNames.length - 1]);
 		jTableSummary.setShowGrid(false);
 		
 		JTableHeader header = jTableSummary.getTableHeader();
 		header.setBackground(Color.white);
+		
+		jTableSummary.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent me) {
+				int column = jTableSummary.getColumnModel().getColumnIndexAtX(me.getX()); // get the column of the button
+				JTable target = (JTable) me.getSource();
+				int row = target.getSelectedRow(); // select a row
+
+				/*Checking the row or column is valid or not*/
+				if (row < jTableSummary.getRowCount() && row >= 0 && column < jTableSummary.getColumnCount() && column >= 0) {
+					Object value = jTableSummary.getValueAt(row, column);
+					if (value instanceof JButton) {
+						/*perform a click event*/
+						((JButton) value).doClick();
+					}
+				}
+			}
+		});
 		
 		scrollPane.setViewportView(jTableSummary);
 		scrollPane.getViewport().setBackground(Color.white);
@@ -1974,45 +1935,36 @@ public class PatientExaminationEdit extends JDialog {
 		return scrollPane;
 	}
 
-	private JEditorPane getJEditorPaneSummary() {
-		if (jEditorPaneSummary == null) {
-			jEditorPaneSummary = new JEditorPane();
-			jEditorPaneSummary.setFont(new Font("Arial", Font.PLAIN, 11));
-			jEditorPaneSummary.setContentType("text/html");
-			jEditorPaneSummary.setEditable(false);
-			jEditorPaneSummary.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-			
+	private static class JTableButtonRenderer implements TableCellRenderer {
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			JButton button = (JButton) value;
+			return button;
 		}
-		return jEditorPaneSummary;
 	}
 	
 	public class JTableModelSummary extends AbstractTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 		private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-		private ArrayList<PatientExamination> patexList = null;
+		private List<PatientExamination> patexList = null;
 
 		public JTableModelSummary() {
 			reloadData();
 		}
-		
+
 		public void reloadData() {
 			try {
-				patexList = examManager.getLastNByPatID(patex.getPatient().getCode().intValue(), ExaminationParameters.LIST_SIZE);
-			}catch(OHServiceException e){
-				if(e.getMessages() != null){
-					for(OHExceptionMessage msg : e.getMessages()){
-						JOptionPane.showMessageDialog(null, msg.getMessage(), msg.getTitle() == null ? "" : msg.getTitle(), msg.getLevel().getSwingSeverity());
-					}
-				}
+				patexList = examManager.getLastNByPatID(patex.getPatient().getCode(), ExaminationParameters.LIST_SIZE);
+			} catch (OHServiceException ohServiceException) {
+				MessageDialog.showExceptions(ohServiceException);
 			}
 			fireTableDataChanged();
 		}
 		
-		public ArrayList<PatientExamination> getList() {
+		public List<PatientExamination> getList() {
 			return patexList;
 		}
 
@@ -2048,7 +2000,7 @@ public class PatientExaminationEdit extends JDialog {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see javax.swing.table.TableModel#getValueAt(int, int)
 		 */
 		@Override
@@ -2057,10 +2009,11 @@ public class PatientExaminationEdit extends JDialog {
 			StringBuilder ap_string = new StringBuilder();
 			ap_string.append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
 					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max());
-			String datetime = new SimpleDateFormat(DATE_FORMAT).format(new Date(patex.getPex_date().getTime()));
+			String datetime = new SimpleDateFormat(DATE_FORMAT).format(patex.getPex_date().getTime());
 			String diuresis = patex.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc());
 			String bowel = patex.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc());
 			String ausc = patex.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation());
+			String note = patex.getPex_note();
 			if (c == -1) {
 				return patex;
 			} else if (c == 0) {
@@ -2079,7 +2032,7 @@ public class PatientExaminationEdit extends JDialog {
 				return patex.getPex_sat() == null ? "-" : patex.getPex_sat();
 			} else if (c == 7) {
 				return patex.getPex_hgt() == null ? "-" : patex.getPex_hgt();
-			} else if (c == 8){
+			} else if (c == 8) {
 				return patex.getPex_rr() == null ? "-" : patex.getPex_rr();
 			} else if (c == 9) {
 				return patex.getPex_diuresis() == null ? "-" : patex.getPex_diuresis();
@@ -2087,8 +2040,23 @@ public class PatientExaminationEdit extends JDialog {
 				return diuresis;
 			} else if (c == 11) {
 				return bowel;
-			}else if (c == 12) {
+			} else if (c == 12) {
 				return ausc;
+			} else if (c == 13) {
+				if (!note.trim().isEmpty()) {
+					final IconButton button = new IconButton(new ImageIcon("rsc/icons/list_button.png"));
+					button.addActionListener(actionEvent -> {
+						VoLimitedTextArea noteArea = new VoLimitedTextArea(PatientExamination.PEX_NOTE_LENGTH, 6, 20);
+						noteArea.setText(note);
+						noteArea.setEditable(false);
+						JOptionPane.showMessageDialog(PatientExaminationEdit.this,
+										new JScrollPane(noteArea),
+										MessageBundle.getMessage("angal.examination.note"), //$NON-NLS-1$
+										JOptionPane.INFORMATION_MESSAGE);
+					});
+					return button;
+				}
+				return null;
 			}
 			return null;
 		}
@@ -2113,11 +2081,10 @@ public class PatientExaminationEdit extends JDialog {
 	}
 	
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			setHorizontalAlignment(columnAlignment[column]);
@@ -2125,51 +2092,4 @@ public class PatientExaminationEdit extends JDialog {
 		}
 	}
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		
-		/*
-		 * Default Values
-		 */
-		final int INITIAL_HEIGHT = 170;
-		final double INITIAL_WEIGHT = 80.;
-		final int INITIAL_AP_MIN = 80;
-		final int INITIAL_AP_MAX = 120;
-		final int INITIAL_HR = 60;
-		
-		
-		PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		Context.setApplicationContext(context);
-		GeneralData.getGeneralData();
-		
-		try {
-			ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-			PatientExamination patex = examManager.getLastByPatID(500);
-			
-			
-//			PatientExamination patex = new PatientExamination();
-//			Patient patient = new Patient();
-//			patient.setCode(1);
-//			patex.setPatient(patient);
-//			patex.setPex_date(new Timestamp(new Date().getTime()));
-//			patex.setPex_height(INITIAL_HEIGHT);
-//			patex.setPex_weight(INITIAL_WEIGHT);
-//			patex.setPex_ap_min(INITIAL_AP_MIN);
-//			patex.setPex_ap_max(INITIAL_AP_MAX);
-//			patex.setPex_hr(INITIAL_HR);
-			
-			GenderPatientExamination gpatex = new GenderPatientExamination(patex, patex.getPatient().getSex() == 'M');
-			
-			PatientExaminationEdit dialog = new PatientExaminationEdit(gpatex);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.pack();
-			dialog.setLocationRelativeTo(null);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

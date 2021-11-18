@@ -1,5 +1,23 @@
-/**
- * 
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -7,12 +25,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -25,8 +41,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.log4j.PropertyConfigurator;
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
@@ -37,13 +51,9 @@ import org.isf.utils.jobjects.TextPrompt.Show;
 
 /**
  * @author Nanni
- *
  */
 public class JTextFieldSearchModel extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final int CODE_COLUMN_WIDTH = 100;
 	
@@ -65,16 +75,18 @@ public class JTextFieldSearchModel extends JPanel {
 		this.owner = owner;
 		if (model == Medical.class || model instanceof Medical) {
 			initializeMedical();
-			if (model == Medical.class)
+			if (model == Medical.class) {
 				add(getJTextFieldSearch(null), BorderLayout.CENTER);
-			if (model instanceof Medical)
+			}
+			if (model instanceof Medical) {
 				add(getJTextFieldSearch((Medical) model), BorderLayout.CENTER);
+			}
 		}
 	}
 
 	private void initializeMedical() {
-		ArrayList<Medical> medicals = null;
-		medicalMap = new HashMap<String, Medical>();
+		List<Medical> medicals = null;
+		medicalMap = new HashMap<>();
 		try {
 			medicals = medMan.getMedicalsSortedByCode();
 		} catch (OHServiceException e) {
@@ -83,18 +95,21 @@ public class JTextFieldSearchModel extends JPanel {
 		if (medicals != null) {
 			for (Medical med : medicals) {
 				String key = med.getProd_code();
-				if (key == null || key.equals("")) key = med.getType().getCode() + med.getDescription();
+				if (key == null || key.equals("")) {
+					key = med.getType().getCode() + med.getDescription();
+				}
 				medicalMap.put(key, med);
 			}
 		}
 	}
 	
 	protected Medical chooseMedical(String text) {
-		ArrayList<Medical> medList = new ArrayList<Medical>();
+		ArrayList<Medical> medList = new ArrayList<>();
 		for (Medical aMed : medicalMap.values()) {
 			if (aMed.getProd_code().toLowerCase().contains(text) 
-					|| aMed.getDescription().toLowerCase().contains(text))
+					|| aMed.getDescription().toLowerCase().contains(text)) {
 				medList.add(aMed);
+			}
 		}
 		Collections.sort(medList);
 		Medical med = null;
@@ -108,7 +123,7 @@ public class JTextFieldSearchModel extends JPanel {
 			
 			int ok = JOptionPane.showConfirmDialog(owner,
 					panel, 
-					MessageBundle.getMessage("angal.medicalstock.chooseamedical"), 
+					MessageBundle.getMessage("angal.medicalstock.multiplecharging.chooseamedical"),
 					JOptionPane.YES_NO_OPTION);
 			
 			if (ok == JOptionPane.OK_OPTION) {
@@ -128,7 +143,7 @@ public class JTextFieldSearchModel extends JPanel {
 			
 			TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.medicalstock.typeacodeoradescriptionandpressenter"), 
 					jTextFieldSearch, 
-					Show.FOCUS_LOST);
+					Show.FOCUS_GAINED);
 			{
 				suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14));
 				suggestion.setForeground(Color.GRAY);
@@ -140,23 +155,18 @@ public class JTextFieldSearchModel extends JPanel {
 				selectedObject = medical;
 				jTextFieldSearch.setText(medical.toString());
 			}
-			jTextFieldSearch.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String text = jTextFieldSearch.getText();
-					Medical med = null;
-					if (medicalMap.containsKey(text)) {
-						// Medical found
-						med = medicalMap.get(text);
-					} else {
-						
-						med = chooseMedical(text.toLowerCase());
-					}
-					if (med != null) {
-						selectedObject = med;
-						jTextFieldSearch.setText(med.toString());
-					}
+			jTextFieldSearch.addActionListener(actionEvent -> {
+				String text = jTextFieldSearch.getText();
+				Medical med = null;
+				if (medicalMap.containsKey(text)) {
+					// Medical found
+					med = medicalMap.get(text);
+				} else {
+					med = chooseMedical(text.toLowerCase());
+				}
+				if (med != null) {
+					selectedObject = med;
+					jTextFieldSearch.setText(med.toString());
 				}
 			});
 		}
@@ -164,9 +174,7 @@ public class JTextFieldSearchModel extends JPanel {
 	}
 	
 	class StockMedModel extends DefaultTableModel {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 		private ArrayList<Medical> medList;
 
@@ -174,26 +182,31 @@ public class JTextFieldSearchModel extends JPanel {
 			medList = meds;
 		}
 
+		@Override
 		public int getRowCount() {
-			if (medList == null)
+			if (medList == null) {
 				return 0;
+			}
 			return medList.size();
 		}
 
+		@Override
 		public String getColumnName(int c) {
 			if (c == 0) {
-				return MessageBundle.getMessage("angal.common.code");
+				return MessageBundle.getMessage("angal.common.code.txt").toUpperCase();
 			}
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.common.description");
+				return MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
 			}
 			return "";
 		}
 
+		@Override
 		public int getColumnCount() {
 			return 2;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			Medical med = medList.get(r);
 			if (c == -1) {
@@ -217,25 +230,6 @@ public class JTextFieldSearchModel extends JPanel {
 	 */
 	public Object getSelectedObject() {
 		return selectedObject;
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			PropertyConfigurator.configure(new File("./src/main/resources/log4j.properties").getAbsolutePath());
-			GeneralData.getGeneralData();
-			JDialog newDialog = new JDialog();
-			JTextFieldSearchModel textField = new JTextFieldSearchModel(new JDialog(), Medical.class);
-			newDialog.add(textField, BorderLayout.NORTH);
-			newDialog.setVisible(true);
-			newDialog.pack();
-			newDialog.setLocationRelativeTo(null);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }

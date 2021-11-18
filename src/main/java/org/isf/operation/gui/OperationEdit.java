@@ -1,30 +1,43 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.operation.gui;
-
-/*----------------------------------------------------------
- * modification history
- * ====================
- * 13/02/09 - Alex - added Major/Minor control
- -----------------------------------------------------------*/
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -35,26 +48,29 @@ import org.isf.opetype.manager.OperationTypeBrowserManager;
 import org.isf.opetype.model.OperationType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 /**
  * This class allows operations edits and inserts
- * 
+ *
  * @author Rick, Vero, Pupo
- * 
+ * ----------------------------------------------------------
+ * modification history
+ * ====================
+ * 13/02/09 - Alex - added Major/Minor control
+ * -----------------------------------------------------------
  */
 public class OperationEdit extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private EventListenerList operationListeners = new EventListenerList();
 
 	public interface OperationListener extends EventListener {
-		public void operationUpdated(AWTEvent e);
+		void operationUpdated(AWTEvent e);
 
-		public void operationInserted(AWTEvent e);
+		void operationInserted(AWTEvent e);
 	}
 
 	public void addOperationListener(OperationListener l) {
@@ -68,29 +84,25 @@ public class OperationEdit extends JDialog {
 	private void fireOperationInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
 		EventListener[] listeners = operationListeners.getListeners(OperationListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((OperationListener) listeners[i]).operationInserted(event);
+		for (EventListener listener : listeners) {
+			((OperationListener) listener).operationInserted(event);
+		}
 	}
 
 	private void fireOperationUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 		};
 
 		EventListener[] listeners = operationListeners.getListeners(OperationListener.class);
-		for (int i = 0; i < listeners.length; i++)
-			((OperationListener) listeners[i]).operationUpdated(event);
+		for (EventListener listener : listeners) {
+			((OperationListener) listener).operationUpdated(event);
+		}
 	}
 
 	private JPanel jContentPane = null;
@@ -98,21 +110,18 @@ public class OperationEdit extends JDialog {
 	private JPanel buttonPanel = null;
 	private JButton cancelButton = null;
 	private JButton okButton = null;
-	private JLabel descLabel = null;
-	private JLabel codeLabel = null;
 	private JTextField descriptionTextField = null;
 	private JTextField codeTextField = null;
-	private JLabel typeLabel = null;
-	private JComboBox typeComboBox = null;
+	private JComboBox<OperationType> typeComboBox = null;
 	private String lastdescription;
-	private Operation operation = null;
+	private Operation operation;
 	private JRadioButton major = null;
 	private JRadioButton minor = null;
 	private JPanel radioButtonPanel;
-	private boolean insert = false;
+	private boolean insert;
+	private JComboBox<String> operBox;
 
 	/**
-	 * 
 	 * This is the default constructor; we pass the arraylist and the selectedrow
 	 * because we need to update them
 	 */
@@ -125,26 +134,15 @@ public class OperationEdit extends JDialog {
 
 	/**
 	 * This method initializes this
-	 * 
-	 * @return void
 	 */
 	private void initialize() {
-
-		// Toolkit kit = Toolkit.getDefaultToolkit();
-		// Dimension screensize = kit.getScreenSize();
-		// pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) /
-		// 2;
-		// pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight))
-		// / 2;
-		// this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase *
-		// pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
-			this.setTitle(MessageBundle.getMessage("angal.operation.newoperationrecord")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.operation.newoperation.title"));
 		} else {
-			this.setTitle(MessageBundle.getMessage("angal.operation.editingoperationrecord")); //$NON-NLS-1$
+			this.setTitle(MessageBundle.getMessage("angal.operation.editoperation.title"));
 		}
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -158,8 +156,8 @@ public class OperationEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH); // Generated
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH); // Generated
+			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -171,26 +169,45 @@ public class OperationEdit extends JDialog {
 	 */
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			typeLabel = new JLabel();
-			typeLabel.setText(MessageBundle.getMessage("angal.operation.type")); // Generated //$NON-NLS-1$
-			typeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-			descLabel = new JLabel();
-			descLabel.setText(MessageBundle.getMessage("angal.common.description")); // Generated //$NON-NLS-1$
-			descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-			codeLabel = new JLabel();
-			codeLabel.setText(MessageBundle.getMessage("angal.common.code")); //$NON-NLS-1$
-			codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-			dataPanel = new JPanel();
-			dataPanel.setLayout(new BoxLayout(getDataPanel(), BoxLayout.Y_AXIS)); // Generated
-			dataPanel.add(typeLabel, null); // Generated
-			dataPanel.add(getTypeComboBox(), null); // Generated
-			dataPanel.add(codeLabel, null); // Generated
-			dataPanel.add(getCodeTextField(), null); // Generated
-			dataPanel.add(descLabel, null); // Generated
-			dataPanel.add(getDescriptionTextField(), null); // Generated
+			JLabel typeLabel = new JLabel(MessageBundle.getMessage("angal.operation.type") + ':');
+			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
+			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt") + ':');
+			JLabel operForLabel = new JLabel(MessageBundle.getMessage("angal.operation.operationcontext") + ':');
+
+			dataPanel = new JPanel(new SpringLayout());
+			dataPanel.add(typeLabel);
+			dataPanel.add(getTypeComboBox());
+			dataPanel.add(codeLabel);
+			dataPanel.add(getCodeTextField());
+			dataPanel.add(descLabel);
+			dataPanel.add(getDescriptionTextField());
+			dataPanel.add(new JLabel(""));
 			dataPanel.add(getRadioButtonPanel());
+			dataPanel.add(operForLabel);
+			dataPanel.add(getOperFor());
+			SpringUtilities.makeCompactGrid(dataPanel, 5, 2, 5, 5, 5, 5);
 		}
 		return dataPanel;
+	}
+
+	private JComboBox<String> getOperFor() {
+		
+		operBox = new JComboBox<>();
+		//TODO: replace integer values with mnemonic ones
+		operBox.addItem(OperationBrowser.OPD_ADMISSION); 	// = "1"
+		operBox.addItem(OperationBrowser.ADMISSION);		// = "2"
+		operBox.addItem(OperationBrowser.OPD);				// = "3"
+		
+		if (!insert) {
+			int index = operation.getOpeFor().equals("1") ? 0
+							: operation.getOpeFor().equals("2") ? 1
+											: operation.getOpeFor().equals("3") ? 2 
+															: 0; // default
+			operBox.setSelectedIndex(index);
+		}
+
+		return operBox;
+
 	}
 
 	/**
@@ -201,8 +218,8 @@ public class OperationEdit extends JDialog {
 	private JPanel getButtonPanel() {
 		if (buttonPanel == null) {
 			buttonPanel = new JPanel();
-			buttonPanel.add(getOkButton(), null); // Generated
-			buttonPanel.add(getCancelButton(), null); // Generated
+			buttonPanel.add(getOkButton(), null);
+			buttonPanel.add(getCancelButton(), null);
 		}
 		return buttonPanel;
 	}
@@ -214,14 +231,9 @@ public class OperationEdit extends JDialog {
 	 */
 	private JButton getCancelButton() {
 		if (cancelButton == null) {
-			cancelButton = new JButton();
-			cancelButton.setText(MessageBundle.getMessage("angal.common.cancel")); // Generated //$NON-NLS-1$
-			cancelButton.setMnemonic(KeyEvent.VK_C);
-			cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					dispose();
-				}
-			});
+			cancelButton = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+			cancelButton.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
+			cancelButton.addActionListener(actionEvent -> dispose());
 		}
 		return cancelButton;
 	}
@@ -233,95 +245,72 @@ public class OperationEdit extends JDialog {
 	 */
 	private JButton getOkButton() {
 		if (okButton == null) {
-			okButton = new JButton();
-			okButton.setText(MessageBundle.getMessage("angal.common.ok")); // Generated //$NON-NLS-1$
-			okButton.setMnemonic(KeyEvent.VK_O);
-			okButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					try {
-						if (insert) {
-							String key = codeTextField.getText().trim();
-							if (key.equals("")) { //$NON-NLS-1$
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.operation.pleaseinsertacode"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-								return;
-							}
-							if (key.length() > 10) {
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.common.codetoolongmaxchars"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-
-								return;
-							}
-							OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-
-							if (manager.codeControl(key)) {
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.common.codealreadyinuse"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-
-								return;
-							}
-
-							/*
-							 * if (manager.descriptionControl(descriptionTextField.getText(),
-							 * ((OperationType)typeComboBox.getSelectedItem()).getCode())){
-							 * JOptionPane.showMessageDialog( null, "Operation already present",
-							 * "St Luke Hospital", JOptionPane.PLAIN_MESSAGE);
-							 * 
-							 * return; }
-							 */
+			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			okButton.addActionListener(actionEvent -> {
+				try {
+					if (insert) {
+						String key = codeTextField.getText().trim();
+						if (key.equals("")) {
+							MessageDialog.error(null, "angal.common.pleaseinsertacode.msg");
+							return;
 						}
-						if (descriptionTextField.getText().equals("")) { //$NON-NLS-1$
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.operation.pleaseinsertavaliddescription"), //$NON-NLS-1$
-									MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
+						if (key.length() > 10) {
+							MessageDialog.error(null, "angal.common.thecodeistoolongmaxchars.fmt.msg", 10);
 							return;
 						}
 						OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-						if (descriptionTextField.getText().equals(lastdescription)) {
-						} else {
 
-							if (manager.descriptionControl(descriptionTextField.getText(),
-									((OperationType) typeComboBox.getSelectedItem()).getCode())) {
-								JOptionPane.showMessageDialog(null,
-										MessageBundle.getMessage("angal.operation.operationalreadypresent"), //$NON-NLS-1$
-										MessageBundle.getMessage("angal.hospital"), JOptionPane.PLAIN_MESSAGE); //$NON-NLS-1$
-
-								return;
-							}
+						if (manager.isCodePresent(key)) {
+							MessageDialog.error(null, "angal.common.thecodeisalreadyinuse.msg");
+							return;
 						}
-
-						operation.setType((OperationType) typeComboBox.getSelectedItem());
-						operation.setDescription(descriptionTextField.getText());
-						operation.setCode(codeTextField.getText().trim().toUpperCase());
-						if (major.isSelected()) {
-							operation.setMajor(1);
-						} else {
-							operation.setMajor(0);
-						}
-
-						boolean result = false;
-						if (insert) { // inserting
-							result = manager.newOperation(operation);
-							if (result) {
-								fireOperationInserted();
-							}
-						} else { // updating
-							result = manager.updateOperation(operation);
-							if (result) {
-								fireOperationUpdated();
-							}
-						}
-						if (!result)
-							JOptionPane.showMessageDialog(null,
-									MessageBundle.getMessage("angal.sql.thedatacouldnotbesaved")); //$NON-NLS-1$
-						else
-							dispose();
-					} catch (OHServiceException ex) {
-						OHServiceExceptionUtil.showMessages(ex);
 					}
+					if (descriptionTextField.getText().equals("")) {
+						MessageDialog.error(null, "angal.common.pleaseinsertavaliddescription.msg");
+						return;
+					}
+					OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+					if (descriptionTextField.getText().equals(lastdescription)) {
+					} else {
+
+						if (manager.descriptionControl(descriptionTextField.getText(),
+								((OperationType) typeComboBox.getSelectedItem()).getCode())) {
+							MessageDialog.error(null, "angal.operation.operationalreadypresent");
+							return;
+						}
+					}
+					String opeForSelection = String.valueOf(operBox.getSelectedIndex()+1);
+					operation.setOpeFor(opeForSelection);
+					operation.setType((OperationType) typeComboBox.getSelectedItem());
+					operation.setDescription(descriptionTextField.getText());
+					operation.setCode(codeTextField.getText().trim().toUpperCase());
+					if (major.isSelected()) {
+						operation.setMajor(1);
+					} else {
+						operation.setMajor(0);
+					}
+
+					boolean result;
+					if (insert) { // inserting
+						result = manager.newOperation(operation);
+						if (result) {
+							fireOperationInserted();
+						}
+					} else { // updating
+						result = manager.updateOperation(operation);
+						if (result) {
+							fireOperationUpdated();
+						}
+					}
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					}
+					else {
+						dispose();
+					}
+				} catch (OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
 				}
 			});
 		}
@@ -355,8 +344,8 @@ public class OperationEdit extends JDialog {
 			radioButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			if (major == null) {
 
-				major = getRadioButton(MessageBundle.getMessage("angal.operation.major"), 'a', true); //$NON-NLS-1$
-				minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), 'm', true); //$NON-NLS-1$
+				major = getRadioButton(MessageBundle.getMessage("angal.operation.major"), true);
+				minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), true);
 
 				ButtonGroup radioGroup = new ButtonGroup();
 
@@ -381,9 +370,8 @@ public class OperationEdit extends JDialog {
 		return radioButtonPanel;
 	}
 
-	private JRadioButton getRadioButton(String label, char mn, boolean active) {
+	private JRadioButton getRadioButton(String label, boolean active) {
 		JRadioButton rb = new JRadioButton(label);
-		rb.setMnemonic(KeyEvent.VK_A + (mn - 'A'));
 		rb.setSelected(active);
 		rb.setName(label);
 		return rb;
@@ -410,12 +398,12 @@ public class OperationEdit extends JDialog {
 	 * 
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox getTypeComboBox() {
+	private JComboBox<OperationType> getTypeComboBox() {
 		if (typeComboBox == null) {
-			typeComboBox = new JComboBox();
+			typeComboBox = new JComboBox<>();
 			if (insert) {
 				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
-				ArrayList<OperationType> types;
+				List<OperationType> types;
 				try {
 					types = manager.getOperationType();
 

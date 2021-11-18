@@ -1,4 +1,24 @@
-
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.accounting.gui;
 
 import java.awt.BorderLayout;
@@ -25,17 +45,12 @@ import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableModel;
 
 /**
- *
  * @author u2g
  */
 public class BillItemPicker extends javax.swing.JPanel {
 	
-	
-	
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -46,9 +61,9 @@ public class BillItemPicker extends javax.swing.JPanel {
 		OhTableModel<?> ohModel = (OhTableModel<?>) model;
 		jTextFieldFind.setText(ohModel.getSearchQuery());
 		jTextFieldFind.selectAll();
-		if(jTableData.getRowCount()>0){
+		if (jTableData.getRowCount() > 0) {
 			jTableData.setRowSelectionInterval(0, 0);
-		}		
+		}
 	}
 
 	/**
@@ -109,10 +124,12 @@ public class BillItemPicker extends javax.swing.JPanel {
 		jTableData.getColumnModel().getColumn(1).setMinWidth(500);
 		
 		jTableData.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				jTableDataMouseClicked(evt);
 			}
 
+			@Override
 			public void mousePressed(java.awt.event.MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
 					validateSelection();
@@ -149,7 +166,7 @@ public class BillItemPicker extends javax.swing.JPanel {
 
 		jLabelImage.setIcon(new javax.swing.ImageIcon("rsc/icons/operation_dialog.png"));
 
-		jLabelImage.setText(MessageBundle.getMessage("angal.patientbill.find"));
+		jLabelImage.setText(MessageBundle.getMessage("angal.billitempicker.find.txt"));
 		GridBagConstraints gbc_jLabelImage = new GridBagConstraints();
 		gbc_jLabelImage.anchor = GridBagConstraints.WEST;
 		gbc_jLabelImage.insets = new Insets(0, 15, 0, 5);
@@ -207,14 +224,15 @@ public class BillItemPicker extends javax.swing.JPanel {
 		});
 
 		jTextFieldFind.addKeyListener(new KeyAdapter() {
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					validateSelection();
 				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 					int selectedRow = jTableData.getSelectedRow();
-					if(jTableData.getRowCount() > 0 && selectedRow<0){
-						selectedRow=0;
+					if (jTableData.getRowCount() > 0 && selectedRow < 0) {
+						selectedRow = 0;
 					}
 					if (jTableData.getRowCount() > 0 && selectedRow >= 0) {
 						selectedRow++;
@@ -230,15 +248,16 @@ public class BillItemPicker extends javax.swing.JPanel {
 						selectedRow--;
 
 						jTableData.setRowSelectionInterval(selectedRow, selectedRow);
-						
+
 						jTableData.scrollRectToVisible(new Rectangle(jTableData.getCellRect(selectedRow, 0, true)));
 
 					}
 					jTableData.updateUI();
 				}
 				super.keyPressed(e);
-				
+
 			}
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -249,25 +268,22 @@ public class BillItemPicker extends javax.swing.JPanel {
 		});
 
 		jPanel2 = new javax.swing.JPanel();
-		jButtonSelect = new javax.swing.JButton();
-		jButtonQuit = new javax.swing.JButton();
-
+		jButtonSelect = new javax.swing.JButton(MessageBundle.getMessage("angal.common.select.btn"));
+		jButtonSelect.setMnemonic(MessageBundle.getMnemonic("angal.common.select.btn.key"));
+		jButtonQuit = new javax.swing.JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
+		jButtonQuit.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 		jPanel2.setBackground(new java.awt.Color(240, 240, 240));
 
-		jButtonSelect.setText(MessageBundle.getMessage("angal.ward.select"));
 		jButtonSelect.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				jButtonSelectMouseClicked(evt);
 			}
 		});
-		jButtonSelect.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButtonSelectActionPerformed(evt);
-			}
-		});
+		jButtonSelect.addActionListener(actionEvent -> jButtonSelectActionPerformed(actionEvent));
 
-		jButtonQuit.setText(MessageBundle.getMessage("angal.common.cancel"));
 		jButtonQuit.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				jButtonQuitMouseClicked(evt);
 			}
@@ -276,7 +292,6 @@ public class BillItemPicker extends javax.swing.JPanel {
 		jPanel2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		jPanel2.add(jButtonSelect);
 		jPanel2.add(jButtonQuit);
-
 	}
 
 	private void jTableDataMouseClicked(java.awt.event.MouseEvent evt) {
@@ -287,7 +302,6 @@ public class BillItemPicker extends javax.swing.JPanel {
 		this.setSelectedRow(this.jTableData.getSelectedRow());
 		this.setVisible(false);
 		this.getParentFrame().dispose();
-
 	}
 
 	private void jButtonSelectActionPerformed(java.awt.event.ActionEvent evt) {

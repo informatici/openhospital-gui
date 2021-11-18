@@ -1,31 +1,33 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.stat.reportlauncher.gui;
-
-/*--------------------------------------------------------
- * ReportLauncher - lancia tutti i report che come parametri hanno
- * 					anno e mese
- * 					la classe prevede l'inizializzazione attraverso 
- *                  anno, mese, nome del report (senza .jasper)
- *---------------------------------------------------------
- * modification history
- * 01/01/2006 - rick - prima versione. lancia HMIS1081 e HMIS1081 
- * 11/11/2006 - ross - resa barbaramente generica (ad angal)
- * 16/11/2014 - eppesuig - show WAIT_CURSOR during generateReport()
- *-----------------------------------------------------------------*/
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.swing.BorderFactory;
@@ -40,16 +42,28 @@ import org.isf.stat.gui.report.GenericReportFromDateToDate;
 import org.isf.stat.gui.report.GenericReportMY;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoDateTextField;
-import org.isf.utils.time.TimeTools;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
 
+/**
+ * --------------------------------------------------------
+ * ReportLauncher - launch all the reports that have as parameters year and month
+ * 					the class expects the initialization through year, month, name of the report (without .jasper)
+ * ---------------------------------------------------------
+ * modification history
+ * 01/01/2006 - rick - first version. launches HMIS1081 and HMIS1081
+ * 11/11/2006 - ross - rendered generic (ad angal)
+ * 16/11/2014 - eppesuig - show WAIT_CURSOR during generateReport()
+ * -----------------------------------------------------------------
+ */
 public class ReportLauncher extends ModalJFrame{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
+	private static final int BUNDLE = 0;
+	private static final int FILENAME = 1;
+	private static final int TYPE = 2;
+
 	private int pfrmExactWidth = 500;
 	private int pfrmExactHeight = 165;
 	private int pfrmBordX;
@@ -58,7 +72,7 @@ public class ReportLauncher extends ModalJFrame{
 	private JPanel jButtonPanel = null;
 	private JButton jCloseButton = null;
 	private JPanel jContentPanel = null;
-	private JButton jOkButton = null;
+	private JButton jLaunchReport = null;
 	private JButton jCSVButton = null;
 	private JPanel jMonthPanel = null;
 	private JLabel jMonthLabel = null;
@@ -75,11 +89,7 @@ public class ReportLauncher extends ModalJFrame{
 	
 	private JLabel jRptLabel = null;
 	private JComboBox jRptComboBox = null;
-	
-	private final int BUNDLE = 0;
-	private final int FILENAME = 1;
-	private final int TYPE = 2;
-	
+
 	private String[][] reportMatrix = {
 		{"angal.stat.registeredpatient", 				"OH001_RegisteredPatients", 										"twodates"},
 		{"angal.stat.registeredpatientbyprovenance", 	"OH002_RegisteredPatientsByProvenance", 							"twodates"},
@@ -97,8 +107,8 @@ public class ReportLauncher extends ModalJFrame{
 		{"angal.stat.pageonecensusinfo", 				"hmis108_cover", 													"twodatesfrommonthyear"},
 		{"angal.stat.pageonereferrals", 				"hmis108_referrals", 												"monthyear"},
 		{"angal.stat.pageoneoperations", 				"hmis108_operations", 												"monthyear"},
-		{"angal.stat.inpatientdiagnosisin", 			"hmis108_adm_by_diagnosis_in", 										"monthyear"},
-		{"angal.stat.inpatientdiagnosisout", 			"hmis108_adm_by_diagnosis_out", 									"monthyear"},
+		{"angal.stat.inpatientdiagnosisin", 			"hmis108_adm_by_diagnosisIn", 										"monthyear"},
+		{"angal.stat.inpatientdiagnosisout", 			"hmis108_adm_by_diagnosisOut", 									"monthyear"},
 		{"angal.stat.opdattendance", 					"hmis105_opd_attendance", 											"monthyear"},
 		{"angal.stat.opdreferrals", 					"hmis105_opd_referrals", 											"monthyear"},
 		{"angal.stat.opdbydiagnosis", 					"hmis105_opd_by_diagnosis", 										"monthyear"},
@@ -130,12 +140,10 @@ public class ReportLauncher extends ModalJFrame{
 	}
 
 	/**
-	 * This method initializes this	
-	 * 	
-	 * @return void	
+	 * This method initializes this
 	 */
 	private void initialize() {
-		this.setTitle(MessageBundle.getMessage("angal.stat.reportlauncher"));
+		this.setTitle(MessageBundle.getMessage("angal.stat.reportlauncher.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
@@ -170,9 +178,10 @@ public class ReportLauncher extends ModalJFrame{
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
 			jButtonPanel.setLayout(new FlowLayout());
-			if(GeneralData.XMPPMODULEENABLED)
+			if (GeneralData.XMPPMODULEENABLED) {
 				jButtonPanel.add(getComboShareReport(),null);
-			jButtonPanel.add(getJOkButton(), null);
+			}
+			jButtonPanel.add(getJLaunchReportButton(), null);
 			jButtonPanel.add(getJCSVButton(), null);
 			//jButtonPanel.add(getJShareButton(),null);
 			jButtonPanel.add(getJCloseButton(), null);
@@ -184,9 +193,10 @@ public class ReportLauncher extends ModalJFrame{
 	private JComboBox getComboShareReport() {
 		userOh= new Interaction();
 		Collection<String> contacts = userOh.getContactOnline();
-		contacts.add("-- Share report with : Nobody --");
+		String shareReport = MessageBundle.getMessage("angal.stat.sharereportwithnobody.txt");
+		contacts.add(shareReport);
 		shareWith = new JComboBox(contacts.toArray());
-		shareWith.setSelectedItem("-- Share report with : Nobody --");
+		shareWith.setSelectedItem(shareReport);
 		return shareWith;
 	}
 
@@ -197,14 +207,9 @@ public class ReportLauncher extends ModalJFrame{
 	 */
 	private JButton getJCloseButton() {
 		if (jCloseButton == null) {
-			jCloseButton = new JButton();
-			jCloseButton.setText(MessageBundle.getMessage("angal.common.close"));
-			jCloseButton.setMnemonic(KeyEvent.VK_C);
-			jCloseButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
+			jCloseButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jCloseButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			jCloseButton.addActionListener(actionEvent -> dispose());
 		}
 		return jCloseButton;
 	}
@@ -248,29 +253,25 @@ public class ReportLauncher extends ModalJFrame{
 			//Integer year = 2000 + Integer.parseInt(dt.substring(6, 8));
 
 			java.util.GregorianCalendar gc = new java.util.GregorianCalendar();
-			Integer month=gc.get(Calendar.MONTH);
-			Integer year = gc.get(Calendar.YEAR);
+			int month = gc.get(Calendar.MONTH);
+			int year = gc.get(Calendar.YEAR);
 
-			//System.out.println("m="+month +",y="+ year);
-			
 			jRptLabel = new JLabel();
 			jRptLabel.setText(MessageBundle.getMessage("angal.stat.report"));
 			
 			
 			jRptComboBox = new JComboBox();
-			for (int i=0;i<reportMatrix.length;i++)
+			for (int i=0;i<reportMatrix.length;i++) {
 				jRptComboBox.addItem(MessageBundle.getMessage(reportMatrix[i][BUNDLE]));
+			}
 			
-			jRptComboBox.addActionListener(new ActionListener() {   
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					if (e.getActionCommand()!= null) {
-						if (e.getActionCommand().equalsIgnoreCase("comboBoxChanged")) {
-							selectAction();
-						}
+			jRptComboBox.addActionListener(actionEvent -> {
+				if (actionEvent.getActionCommand()!= null) {
+					if (actionEvent.getActionCommand().equalsIgnoreCase("comboBoxChanged")) {
+						selectAction();
 					}
 				}
 			});
-			
 			
 			jMonthLabel = new JLabel();
 			jMonthLabel.setText("        " + MessageBundle.getMessage("angal.stat.month"));
@@ -295,25 +296,24 @@ public class ReportLauncher extends ModalJFrame{
 			jYearLabel.setText("        " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox();
 
-			for (int i=0;i<4;i++){
-				jYearComboBox.addItem((year-i)+"");
+			for (int i = 0; i < 20; i++) {
+				jYearComboBox.addItem((year - i) + "");
 			}
 			
 			jFromDateLabel = new JLabel();
 			jFromDateLabel.setText(MessageBundle.getMessage("angal.stat.fromdate"));
 			GregorianCalendar defaultDate = new GregorianCalendar();
-			defaultDate.add(GregorianCalendar.DAY_OF_MONTH, -8);
+			defaultDate.add(Calendar.DAY_OF_MONTH, -8);
 			jFromDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
 			jToDateLabel = new JLabel();
 			jToDateLabel.setText(MessageBundle.getMessage("angal.stat.todate"));
-			defaultDate.add(GregorianCalendar.DAY_OF_MONTH, 7);
+			defaultDate.add(Calendar.DAY_OF_MONTH, 7);
 			jToDateField = new VoDateTextField("dd/mm/yyyy", defaultDate, 10);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
 			jFromDateLabel.setVisible(false);
 			jFromDateField.setVisible(false);
 			
-			//jMonthPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 			jMonthPanel.add(jRptLabel, null);
 			jMonthPanel.add(jRptComboBox, null);
 			jMonthPanel.add(jMonthLabel, null);
@@ -328,10 +328,9 @@ public class ReportLauncher extends ModalJFrame{
 		return jMonthPanel;
 	}
 
-
 	protected void selectAction() {
-		String sParType="";
-		int rptIndex=jRptComboBox.getSelectedIndex();
+		String sParType = "";
+		int rptIndex = jRptComboBox.getSelectedIndex();
 		sParType = reportMatrix[rptIndex][TYPE];
 		if (sParType.equalsIgnoreCase("twodates")) {
 			jMonthComboBox.setVisible(false);
@@ -365,92 +364,81 @@ public class ReportLauncher extends ModalJFrame{
 		}
 	}
 
-	private JButton getJOkButton() {
-		if (jOkButton == null) {
-			jOkButton = new JButton();
-			jOkButton.setBounds(new Rectangle(15, 15, 91, 31));
-			jOkButton.setText(MessageBundle.getMessage("angal.stat.launchreport"));
-			jOkButton.addActionListener(new ActionListener() {   
-				public void actionPerformed(ActionEvent e) {
-					generateReport(false);
-				}
-			});
+	private JButton getJLaunchReportButton() {
+		if (jLaunchReport == null) {
+			jLaunchReport = new JButton(MessageBundle.getMessage("angal.common.launchreport.btn"));
+			jLaunchReport.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
+			jLaunchReport.setBounds(new Rectangle(15, 15, 91, 31));
+			jLaunchReport.addActionListener(actionEvent -> generateReport(false));
 		}
-		return jOkButton;
+		return jLaunchReport;
 	}
 	
 	private JButton getJCSVButton() {
 		if (jCSVButton == null) {
-			jCSVButton = new JButton();
+			jCSVButton = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
+			jCSVButton.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
 			jCSVButton.setBounds(new Rectangle(15, 15, 91, 31));
-			jCSVButton.setText("Excel");
-			jCSVButton.addActionListener(new ActionListener() {   
-				@Override
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					generateReport(true);
-				}
-			});
+			jCSVButton.addActionListener(actionEvent -> generateReport(true));
 		}
 		return jCSVButton;
 	}
 	
 	protected void generateReport(boolean toExcel) {
 		   
-		int rptIndex=jRptComboBox.getSelectedIndex();
-		Integer month = jMonthComboBox.getSelectedIndex()+1;
-		Integer year = (Integer.parseInt((String)jYearComboBox.getSelectedItem()));
-		String fromDate=jFromDateField.getText().trim();
-		String toDate=jToDateField.getText().trim();
-		
-		if (rptIndex>=0) {
+		int rptIndex = jRptComboBox.getSelectedIndex();
+		int month = jMonthComboBox.getSelectedIndex()+1;
+		int year = (Integer.parseInt((String)jYearComboBox.getSelectedItem()));
+		String fromDate = jFromDateField.getText().trim();
+		String toDate = jToDateField.getText().trim();
+
+		if (rptIndex >= 0) {
 			String sParType = reportMatrix[rptIndex][TYPE];
 			if (sParType.equalsIgnoreCase("twodates")) {
-				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
+				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]),
+						toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
-					String user= (String)shareWith.getSelectedItem();
-					CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 "+fromDate+" "+toDate+" "+reportMatrix[rptIndex][FILENAME],
+					String user = (String) shareWith.getSelectedItem();
+					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + " " + toDate + " " + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
 			if (sParType.equalsIgnoreCase("twodatesfrommonthyear")) {
 				GregorianCalendar d = new GregorianCalendar();
-				d.set(GregorianCalendar.DAY_OF_MONTH,1 );
-				d.set(GregorianCalendar.MONTH, month-1);
-				d.set(GregorianCalendar.YEAR, year);
+				d.set(Calendar.DAY_OF_MONTH,1 );
+				d.set(Calendar.MONTH, month-1);
+				d.set(Calendar.YEAR, year);
 				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
 				fromDate = sdf.format(d.getTime());
-				d.set(GregorianCalendar.DAY_OF_MONTH, d.getActualMaximum(GregorianCalendar.DAY_OF_MONTH));
+				d.set(Calendar.DAY_OF_MONTH, d.getActualMaximum(Calendar.DAY_OF_MONTH));
 				toDate = sdf.format(d.getTime());
 				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
-					String user= (String)shareWith.getSelectedItem();
-					CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 "+fromDate+" "+toDate+" "+reportMatrix[rptIndex][FILENAME],
+					String user = (String) shareWith.getSelectedItem();
+					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + " " + toDate + " " + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
 			if (sParType.equalsIgnoreCase("monthyear")) {
 				new GenericReportMY(month, year, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
-					String user= (String)shareWith.getSelectedItem();
-					CommunicationFrame frame= (CommunicationFrame)CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 "+month+" "+year+" "+reportMatrix[rptIndex][FILENAME],
+					String user = (String) shareWith.getSelectedItem();
+					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + " " + year + " " + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
 		}
-	
-		
 	}
 
-	/*
-	 * set a specific border+title to a panel
+	/**
+	 * Set a specific border+title to a panel
 	 */
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(title), BorderFactory
-						.createEmptyBorder(0, 0, 0, 0));
+				BorderFactory.createTitledBorder(title), BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		c.setBorder(b2);
 		return c;
 	}

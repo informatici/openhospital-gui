@@ -1,5 +1,23 @@
-/**
- * 
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.utils.jobjects;
 
@@ -12,28 +30,25 @@ import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.isf.generaldata.MessageBundle;
 
 /**
+ * JTimeTable is a JPanel showing 24 hours and 5 range of minutes.
+ * <p>
+ * It helps to select a time through a mouse listener and getters methods.
+ *
  * @author Mwithi
- * 
- * JTimeTable is a JPanel showing 24 hours and
- * 5 range of minutes.
- * 
- * It helps to select a time through a mouse
- * listner and getters methods.
- * 
  */
 public class JTimeTable extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
+	private static final int DIMENSION = 25;
+
 	private int hour;
 	private int minute;
 
@@ -42,8 +57,6 @@ public class JTimeTable extends JPanel {
 
 	private JLabel hourLabel;
 	private JLabel minuteLabel;
-	
-	private final int DIMENSION = 25;
 
 	private JLabel selectedMinute;
 	private JLabel selectedHour;
@@ -59,7 +72,7 @@ public class JTimeTable extends JPanel {
 			hours[i] = new JLabel();
 			hours[i].setText(String.valueOf(i));
 			hours[i].setPreferredSize(new Dimension(DIMENSION, DIMENSION));
-			hours[i].setHorizontalAlignment(JLabel.CENTER);
+			hours[i].setHorizontalAlignment(SwingConstants.CENTER);
 			hours[i].setBackground(Color.WHITE);
 			hours[i].setOpaque(true);
 			hours[i].setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -77,7 +90,7 @@ public class JTimeTable extends JPanel {
 			minutes[i / 10] = new JLabel();
 			minutes[i / 10].setText(String.valueOf(i));
 			minutes[i / 10].setPreferredSize(new Dimension(DIMENSION, DIMENSION));
-			minutes[i / 10].setHorizontalAlignment(JLabel.CENTER);
+			minutes[i / 10].setHorizontalAlignment(SwingConstants.CENTER);
 			minutes[i / 10].setBackground(Color.WHITE);
 			minutes[i / 10].setOpaque(true);
 			minutes[i / 10].setBorder(BorderFactory
@@ -94,17 +107,6 @@ public class JTimeTable extends JPanel {
 		this.add(minuteLabel);
 		this.add(minute);
 
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-
-		JFrame frame = new JFrame();
-		frame.add(new JTimeTable());
-		frame.setVisible(true);
-		frame.pack();
 	}
 
 	public int getHour() {
@@ -125,6 +127,7 @@ public class JTimeTable extends JPanel {
 
 	private class HourListener implements MouseListener {
 
+		@Override
 		public void mouseClicked(MouseEvent evt) {
 			JLabel thisLabel = (JLabel) evt.getSource();
 			String previousValue;
@@ -140,21 +143,26 @@ public class JTimeTable extends JPanel {
 			thisLabel.setBackground(Color.GRAY);
 		}
 
+		@Override
 		public void mouseEntered(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mouseExited(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mousePressed(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent arg0) {
 		}
 	}
 
 	private class MinuteListener implements MouseListener {
 
+		@Override
 		public void mouseClicked(MouseEvent evt) {
 			JLabel thisLabel = (JLabel) evt.getSource();
 			String previousValue;
@@ -171,15 +179,19 @@ public class JTimeTable extends JPanel {
 			
 		}
 
+		@Override
 		public void mouseEntered(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mouseExited(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mousePressed(MouseEvent arg0) {
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent arg0) {
 		}
 	}

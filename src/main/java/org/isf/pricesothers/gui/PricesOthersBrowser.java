@@ -1,12 +1,30 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.pricesothers.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
 import org.isf.generaldata.MessageBundle;
@@ -23,15 +42,18 @@ import org.isf.pricesothers.manager.PricesOthersManager;
 import org.isf.pricesothers.model.PricesOthers;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 
 public class PricesOthersBrowser extends ModalJFrame implements PricesOthersListener {
 
-	public void pOthersInserted(AWTEvent e) {
+	@Override
+	public void pricesOthersInserted(AWTEvent e) {
 		jTablePricesOthers.setModel(new PricesOthersBrowserModel());
 	}
 
-	public void pOthersUpdated(AWTEvent e) {
+	@Override
+	public void pricesOthersUpdated(AWTEvent e) {
 		jTablePricesOthers.setModel(new PricesOthersBrowserModel());
 	}
 	
@@ -44,96 +66,76 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	private JButton jButtonDelete;
 	private JButton jButtonClose;
 	private String[] columnNames = {
-			MessageBundle.getMessage("angal.common.code"), 
-			MessageBundle.getMessage("angal.common.description"), 
-			MessageBundle.getMessage("angal.pricesothers.opdm"), 
-			MessageBundle.getMessage("angal.pricesothers.ipdm"), 
-			MessageBundle.getMessage("angal.pricesothers.daily"),
-			MessageBundle.getMessage("angal.pricesothers.discharge"),
-			MessageBundle.getMessage("angal.pricesothers.undefined")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-	private int[] columWidth = {100, 100, 50, 50, 50, 100, 100};
-	private boolean[] columResizable = {false, true, false, false, false, false, false};
+			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.pricesothers.opd.col").toUpperCase(),
+			MessageBundle.getMessage("angal.pricesothers.ipd.col").toUpperCase(),
+			MessageBundle.getMessage("angal.pricesothers.daily.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.discharge.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.undefined.txt").toUpperCase()
+	};
+	private int[] columnWidth = {100, 100, 50, 50, 50, 100, 100};
+	private boolean[] columnResizable = {false, true, false, false, false, false, false};
 	
-	static protected Class<?>[] cTypes = {String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class};
+	protected static Class<?>[] cTypes = {String.class, String.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class, Boolean.class};
 	
 	private PricesOthers pOthers;
 	PricesOthersManager pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
-	private ArrayList<PricesOthers> pOthersArray;
+	private List<PricesOthers> pOthersArray;
 	private JFrame myFrame;
 	
 	public PricesOthersBrowser() {
 		myFrame = this;
 		initComponents();
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
 
 	private void initComponents() {
-		setTitle(MessageBundle.getMessage("angal.pricesothers.titlebrowser")); //$NON-NLS-1$
+		setTitle(MessageBundle.getMessage("angal.pricesothers.otherpricesbrowser.title"));
 		add(getJScrollPaneTable(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
-		//setSize(550, 240);
 		pack();
 		setLocationRelativeTo(null);
 	}
 
 	private JButton getJButtonClose() {
 		if (jButtonClose == null) {
-			jButtonClose = new JButton();
-			jButtonClose.setText(MessageBundle.getMessage("angal.common.close")); //$NON-NLS-1$
-			jButtonClose.setMnemonic(KeyEvent.VK_C);
-			jButtonClose.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-						dispose();
-				}
-			});
+			jButtonClose = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+			jButtonClose.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+			jButtonClose.addActionListener(actionEvent -> dispose());
 		}
 		return jButtonClose;
 	}
 
 	private JButton getJButtonDelete() {
 		if (jButtonDelete == null) {
-			jButtonDelete = new JButton();
-			jButtonDelete.setText(MessageBundle.getMessage("angal.common.delete")); //$NON-NLS-1$
-			jButtonDelete.setMnemonic(KeyEvent.VK_D);
-			jButtonDelete.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTablePricesOthers.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.pricesothers.pleaseselectanitemtodelete")); //$NON-NLS-1$
-						return;									
-					}else {		
-						int selectedRow = jTablePricesOthers.getSelectedRow();
-						pOthers = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
-						if (pOthers.getId() == 1) {
-							JOptionPane.showMessageDialog(null,	MessageBundle.getMessage("angal.sql.operationnotpermittedprotectedelement"));
-							return;
+			jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+			jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+			jButtonDelete.addActionListener(actionEvent -> {
+				if (jTablePricesOthers.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtodelete");
+				} else {
+					int selectedRow = jTablePricesOthers.getSelectedRow();
+					pOthers = (PricesOthers) jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
+					if (pOthers.getId() == 1) {
+						MessageDialog.error(null, "angal.sql.operationnotpermittedprotectedelement");
+						return;
+					}
+					int answer = MessageDialog.yesNo(null, "angal.pricesothers.deletethisitem.fmt.msg", pOthers.getDescription());
+					if (answer == JOptionPane.OK_OPTION) {
+
+						boolean result = false;
+						try {
+							result = pOthersManager.deleteOther(pOthers);
+						} catch (OHServiceException e) {
+							OHServiceExceptionUtil.showMessages(e);
 						}
-						int ok = JOptionPane.showConfirmDialog(
-								null,
-								MessageBundle.getMessage("angal.pricesothers.doyoureallywanttodeletethisitem"), //$NON-NLS-1$
-								pOthers.getDescription(),
-								JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE);
-						
-						if (ok == JOptionPane.OK_OPTION) {
-							
-							boolean result = false;
-							try {
-								result = pOthersManager.deleteOther(pOthers);
-							}catch(OHServiceException e){
-								OHServiceExceptionUtil.showMessages(e);
-							}
-							
-							if (result) {
-								
-								jTablePricesOthers.setModel(new PricesOthersBrowserModel());
-							} else {
-								JOptionPane.showMessageDialog(
-										null,
-										MessageBundle.getMessage("angal.pricesothers.thedatacouldnotbedeleted")); //$NON-NLS-1$
-							}
+
+						if (result) {
+							jTablePricesOthers.setModel(new PricesOthersBrowserModel());
+						} else {
+							MessageDialog.error(null, "angal.pricesothers.thedatacouldnotbedeleted");
 						}
 					}
 				}
@@ -144,22 +146,17 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonEdit() {
 		if (jButtonEdit == null) {
-			jButtonEdit = new JButton();
-			jButtonEdit.setText(MessageBundle.getMessage("angal.common.edit")); //$NON-NLS-1$
-			jButtonEdit.setMnemonic(KeyEvent.VK_E);
-			jButtonEdit.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					if (jTablePricesOthers.getSelectedRow() < 0) {
-						JOptionPane.showMessageDialog(null,MessageBundle.getMessage("angal.pricesothers.pleaseselectanitemtoedit")); //$NON-NLS-1$
-						return;									
-					}else {		
-						int selectedRow = jTablePricesOthers.getSelectedRow();
-						PricesOthers pOther = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
-						PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, false);	
-						editOther.addOtherListener(PricesOthersBrowser.this);
-						editOther.setVisible(true);
-					}
+			jButtonEdit = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+			jButtonEdit.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+			jButtonEdit.addActionListener(actionEvent -> {
+				if (jTablePricesOthers.getSelectedRow() < 0) {
+					MessageDialog.error(null, "angal.pricesothers.pleaseselectanitemtoedit");
+				} else {
+					int selectedRow = jTablePricesOthers.getSelectedRow();
+					PricesOthers pOther = (PricesOthers)jTablePricesOthers.getModel().getValueAt(selectedRow, -1);
+					PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, false);
+					editOther.addOtherListener(PricesOthersBrowser.this);
+					editOther.setVisible(true);
 				}
 			});
 		}
@@ -168,17 +165,13 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 
 	private JButton getJButtonNew() {
 		if (jButtonNew == null) {
-			jButtonNew = new JButton();
-			jButtonNew.setText(MessageBundle.getMessage("angal.common.new")); //$NON-NLS-1$
-			jButtonNew.setMnemonic(KeyEvent.VK_N);
-			jButtonNew.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent event) {
-					PricesOthers pOther = new PricesOthers("", "", true,true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);	
-					editOther.addOtherListener(PricesOthersBrowser.this);
-					editOther.setVisible(true);
-				}
+			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
+			jButtonNew.addActionListener(actionEvent -> {
+				PricesOthers pOther = new PricesOthers("", "", true,true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);
+				editOther.addOtherListener(PricesOthersBrowser.this);
+				editOther.setVisible(true);
 			});
 		}
 		return jButtonNew;
@@ -207,58 +200,65 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	private JTable getJTablePricesOthers() {
 		if (jTablePricesOthers == null) {
 			jTablePricesOthers = new JTable() {
+
 				/**
-				 * 
+				 *
 				 */
 				private static final long serialVersionUID = 1L;
 
 				// Override this method so that it returns the preferred
-			    // size of the JTable instead of the default fixed size
-			    public Dimension getPreferredScrollableViewportSize() {
-			        return new Dimension((int) getPreferredSize().getWidth(), 200);
-			    }
+				// size of the JTable instead of the default fixed size
+				@Override
+				public Dimension getPreferredScrollableViewportSize() {
+					return new Dimension((int) getPreferredSize().getWidth(), 200);
+				}
 			};
 			jTablePricesOthers.setModel(new PricesOthersBrowserModel());
-			for (int i=0;i<columWidth.length; i++){
-				jTablePricesOthers.getColumnModel().getColumn(i).setMinWidth(columWidth[i]);
-		    	if (!columResizable[i]) jTablePricesOthers.getColumnModel().getColumn(i).setMaxWidth(columWidth[i]);
+			for (int i = 0; i < columnWidth.length; i++) {
+				jTablePricesOthers.getColumnModel().getColumn(i).setMinWidth(columnWidth[i]);
+				if (!columnResizable[i]) {
+					jTablePricesOthers.getColumnModel().getColumn(i).setMaxWidth(columnWidth[i]);
+				}
 			}
 			jTablePricesOthers.setAutoCreateColumnsFromModel(false);
 		}
 		return jTablePricesOthers;
 	}
 
-class PricesOthersBrowserModel extends DefaultTableModel {
-		
-		/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	class PricesOthersBrowserModel extends DefaultTableModel {
+
+		private static final long serialVersionUID = 1L;
 
 		public PricesOthersBrowserModel() {
 			pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 			try {
 				pOthersArray = pOthersManager.getOthers();
-			}catch(OHServiceException e){
+			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
+
+		@Override
 		public int getRowCount() {
-			if (pOthersArray == null)
+			if (pOthersArray == null) {
 				return 0;
+			}
 			return pOthersArray.size();
 		}
-		
+
+		@Override
 		public String getColumnName(int c) {
 			return columnNames[c];
 		}
-		
+
+		@Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
-		
+
+		@Override
 		public Object getValueAt(int r, int c) {
-			
+
 			PricesOthers price = pOthersArray.get(r);
 			if (c == -1) {
 				return price;
@@ -272,17 +272,20 @@ class PricesOthersBrowserModel extends DefaultTableModel {
 				return price.isIpdInclude();
 			} else if (c == 4) {
 				return price.isDaily();
-			}  else if (c == 5) {
+			} else if (c == 5) {
 				return price.isDischarge();
-			}  else if (c == 6) {
+			} else if (c == 6) {
 				return price.isUndefined();
-			} return null;
+			}
+			return null;
 		}
-		
+
+		@Override
 		public Class<?> getColumnClass(int column) {
 			return cTypes[column];
 		}
-		
+
+		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
 		}

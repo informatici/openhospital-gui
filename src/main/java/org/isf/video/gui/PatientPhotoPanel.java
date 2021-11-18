@@ -1,35 +1,64 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.video.gui;
 
-import com.github.sarxos.webcam.Webcam;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.patient.gui.PatientInsertExtended;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.jobjects.Cropping;
 import org.isf.utils.jobjects.IconButton;
+import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
+import com.github.sarxos.webcam.Webcam;
 
 public class PatientPhotoPanel extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 9129641275344016618L;
 	
-	private final Logger logger = LoggerFactory.getLogger(PatientInsertExtended.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
 
 	// Photo Components:
 	private JPanel jPhotoPanel = null;
@@ -54,23 +83,16 @@ public class PatientPhotoPanel extends JPanel {
 
 			final IconButton btnDeletePhoto = new IconButton(new ImageIcon("rsc/icons/delete_button.png")); //$NON-NLS-1$
 			btnDeletePhoto.setSize(new Dimension(40, 40));
-			btnDeletePhoto.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					
-					int n = JOptionPane.showConfirmDialog(owner, 
-							MessageBundle.getMessage("angal.patient.doyoureallywanttodeletepatientsphoto"),  //$NON-NLS-1$
-							MessageBundle.getMessage("angal.patient.confirmdeletion"),  //$NON-NLS-1$
-							JOptionPane.YES_NO_OPTION);
+			btnDeletePhoto.addActionListener(actionEvent -> {
 
-					if (n == JOptionPane.YES_OPTION) {
-						btnDeletePhoto.setVisible(false);
-						patientFrame.setPatientPhoto(null);
-						externalPanel.updatePhoto(nophoto);
-						logger.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
-					} else {
-						logger.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
-						return;
-					}
+				int answer = MessageDialog.yesNo(owner, "angal.patient.doyouwanttodeletethepatientsphoto.msg");
+				if (answer == JOptionPane.YES_OPTION) {
+					btnDeletePhoto.setVisible(false);
+					patientFrame.setPatientPhoto(null);
+					externalPanel.updatePhoto(nophoto);
+					LOGGER.debug(MessageBundle.getMessage("angal.patient.photodeleted"));
+				} else {
+					LOGGER.debug(MessageBundle.getMessage("angal.patient.photonotdeleted"));
 				}
 			});
 
@@ -87,54 +109,46 @@ public class PatientPhotoPanel extends JPanel {
 			box.add(Box.createHorizontalGlue());
 
 			externalPanel.add(box, BorderLayout.NORTH);
-			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, new PropertyChangeListener() {
-				@Override
-				public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-					final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
-					if (newImage != null) {
-						externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
-						patientFrame.setPatientPhoto(newImage);
-					}
+			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
+				final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
+				if (newImage != null) {
+					externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
+					patientFrame.setPatientPhoto(newImage);
 				}
 			});
 
 			box.add(btnDeletePhoto);
 
-			if (patientHasPhoto)
+			if (patientHasPhoto) {
 				btnDeletePhoto.setVisible(true);
-			else
+			} else {
 				btnDeletePhoto.setVisible(false);
+			}
 
-			GridBagConstraints gbs = new GridBagConstraints();
-			gbs.anchor = GridBagConstraints.CENTER;
-			
 			final Box buttonBox1 = Box.createHorizontalBox();
 
-			jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patient.file"));
+			jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.file.btn"));
+			jAttachPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.file.btn.key"));
 			jAttachPhotoButton.setMinimumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
-			jAttachPhotoButton.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					JFileChooser fc = new JFileChooser();
-					String[] extensions = {"tif","tiff","jpg","jpeg","bmp","png","gif"};
-					FileFilter imageFilter = new FileNameExtensionFilter("Image files", extensions); //ImageIO.getReaderFileSuffixes());
-					fc.setFileFilter(imageFilter);
-					fc.setAcceptAllFileFilterUsed(false);
-					int returnVal = fc.showOpenDialog(patientFrame);
-					if (returnVal == JFileChooser.APPROVE_OPTION) {  
-                        File image = fc.getSelectedFile();
-                        CroppingDialog cropDiag = new CroppingDialog(patientFrame, image);
-                        cropDiag.pack();
-                        cropDiag.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                        cropDiag.setLocationRelativeTo(null);
-                        cropDiag.setVisible(true);
-                        
-                        final Image croppedImage = cropDiag.getCropped();
-						if (croppedImage != null) {
-							photoboothPanelPresentationModel.setImage(croppedImage);
-						}
+			jAttachPhotoButton.addActionListener(actionEvent -> {
+				JFileChooser fc = new JFileChooser();
+				String[] extensions = { "tif", "tiff", "jpg", "jpeg", "bmp", "png", "gif" };
+				FileFilter imageFilter = new FileNameExtensionFilter(MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
+				fc.setFileFilter(imageFilter);
+				fc.setAcceptAllFileFilterUsed(false);
+				int returnVal = fc.showOpenDialog(patientFrame);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File image = fc.getSelectedFile();
+					CroppingDialog cropDiag = new CroppingDialog(patientFrame, image);
+					cropDiag.pack();
+					cropDiag.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+					cropDiag.setLocationRelativeTo(null);
+					cropDiag.setVisible(true);
+
+					final Image croppedImage = cropDiag.getCropped();
+					if (croppedImage != null) {
+						photoboothPanelPresentationModel.setImage(croppedImage);
 					}
 				}
 			});
@@ -142,39 +156,36 @@ public class PatientPhotoPanel extends JPanel {
 			final Webcam webcam = Webcam.getDefault();
 
 			if (GeneralData.VIDEOMODULEENABLED && webcam != null) {
-				jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patient.newphoto")); //$NON-NLS-1$
+				jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.newphoto.btn"));
+				jGetPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.newphoto.btn.key"));
 				jGetPhotoButton.setMinimumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 				jGetPhotoButton.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 
 				final Dimension[] resolutions = webcam.getDevice().getResolutions();
-				jGetPhotoButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent event) {
-						photoboothPanelPresentationModel.setWebcam(webcam);
-						// start with the highest resolution.
-						photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
+				jGetPhotoButton.addActionListener(actionEvent -> {
+					photoboothPanelPresentationModel.setWebcam(webcam);
+					// start with the highest resolution.
+					photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
 
-						final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel, owner);
-						photoBoothDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-						photoBoothDialog.setVisible(true);
-						photoBoothDialog.toFront();
-						photoBoothDialog.requestFocus();
-					}
+					final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel, owner);
+					photoBoothDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+					photoBoothDialog.setVisible(true);
+					photoBoothDialog.toFront();
+					photoBoothDialog.requestFocus();
 				});
 
 				buttonBox1.add(jGetPhotoButton);
-				buttonBox1.add(jAttachPhotoButton);
 			} else {
 				jAttachPhotoButton.setText(MessageBundle.getMessage("angal.patient.loadfile"));
-				buttonBox1.add(jAttachPhotoButton);
 			}
+			buttonBox1.add(jAttachPhotoButton);
 
 			jPhotoPanel.add(externalPanel, BorderLayout.NORTH);
 			jPhotoPanel.add(buttonBox1, java.awt.BorderLayout.CENTER);
 
 			jPhotoPanel.setMinimumSize(new Dimension((int) getPreferredSize().getWidth(), 100));
 		}
-		
+
 		add(jPhotoPanel);
 	}
 
@@ -194,11 +205,10 @@ public class PatientPhotoPanel extends JPanel {
 
 class CroppingDialog extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CroppingDialog.class);
+
 	/*
 	 * Attributes
 	 */
@@ -216,7 +226,6 @@ class CroppingDialog extends JDialog {
 		super(owner, true);
 		this.image = image;
 		initComponents();
-		
 	}
 
 	private void initComponents() {
@@ -224,21 +233,18 @@ class CroppingDialog extends JDialog {
 			crop = new Cropping(ImageIO.read(image));
 			getContentPane().add(crop, BorderLayout.CENTER);
 			getContentPane().add(getSaveButton(), BorderLayout.SOUTH);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ioException) {
+			LOGGER.error(ioException.getMessage(), ioException);
 		}
-		
 	}
 
 	private JButton getSaveButton() {
 		if (saveButton == null) {
-			saveButton = new JButton("save");
-			saveButton.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e) {
-					cropped = crop.clipImage();
-					dispose();
-				}
+			saveButton = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
+			saveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
+			saveButton.addActionListener(actionEvent -> {
+				cropped = crop.clipImage();
+				dispose();
 			});
 		}
 		return saveButton;

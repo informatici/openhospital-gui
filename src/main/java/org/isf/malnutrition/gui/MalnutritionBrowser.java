@@ -1,12 +1,30 @@
+/*
+ * Open Hospital (www.open-hospital.org)
+ * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ *
+ * Open Hospital is a free and open source software for healthcare data management.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * https://www.gnu.org/licenses/gpl-3.0-standalone.html
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.isf.malnutrition.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -26,21 +44,20 @@ import org.isf.malnutrition.model.Malnutrition;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 
 public class MalnutritionBrowser extends JDialog implements MalnutritionListener {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Override
 	public void malnutritionInserted() {
 		pMaln.add(pMaln.size(), malnutrition);
 		((MalnBrowsingModel) table.getModel()).fireTableDataChanged();
-		if (table.getRowCount() > 0)
+		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
+		}
 	}
 
 	@Override
@@ -48,8 +65,9 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		pMaln.set(selectedrow, maln);
 		((MalnBrowsingModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow > -1)
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow,selectedrow);
+		}
 	}
 
 	private Malnutrition malnutrition;
@@ -71,16 +89,18 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 	private JTable table;
 
-	private String[] pColums = { MessageBundle.getMessage("angal.malnutrition.datesuppm"),
-			MessageBundle.getMessage("angal.malnutrition.dateconfm"),
-			MessageBundle.getMessage("angal.malnutrition.heightm"),
-			MessageBundle.getMessage("angal.malnutrition.weightm") };
+	private String[] pColumns = {
+			MessageBundle.getMessage("angal.malnutrition.datesupp.col").toUpperCase(),
+			MessageBundle.getMessage("angal.malnutrition.dateconf.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.height.txt").toUpperCase(),
+			MessageBundle.getMessage("angal.common.weight.txt").toUpperCase()
+	};
 
-	private int[] pColumwidth = { 200, 200, 150, 150 };
+	private int[] pColumnWidth = { 200, 200, 150, 150 };
 
 	private DefaultTableModel model;
 
-	private ArrayList<Malnutrition> pMaln;
+	private List<Malnutrition> pMaln;
 
 	private int selectedrow;
 
@@ -92,7 +112,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		super(owner, true);
 		adm = aAdm;
 		admId = String.valueOf(adm.getId());
-		setTitle(MessageBundle.getMessage("angal.malnutrition.malnutritionbrowser"));
+		setTitle(MessageBundle.getMessage("angal.malnutrition.malnutritionbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
 		final int pfrmBase = 10;
@@ -125,82 +145,60 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	}
 
 	private JButton getNewButton() {
-		newButton = new JButton(MessageBundle.getMessage("angal.common.new"));
-		newButton.setMnemonic(KeyEvent.VK_N);
-		newButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				malnutrition = new Malnutrition(0, null, null, adm, 0, 0);
-				InsertMalnutrition newRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, true);
-				newRecord.addMalnutritionListener(MalnutritionBrowser.this);
-				newRecord.setVisible(true);
-			}
+		newButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
+		newButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
+		newButton.addActionListener(actionEvent -> {
+			malnutrition = new Malnutrition(0, null, null, adm, 0, 0);
+			InsertMalnutrition newRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, true);
+			newRecord.addMalnutritionListener(MalnutritionBrowser.this);
+			newRecord.setVisible(true);
 		});
 		return newButton;
 
 	}
 
 	private JButton getEditButton() {
-		editButton = new JButton(MessageBundle.getMessage("angal.common.edit"));
-		editButton.setMnemonic(KeyEvent.VK_E);
-		editButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(
-							MalnutritionBrowser.this, 
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"), 
-							JOptionPane.PLAIN_MESSAGE);
-					return;
-				} else {
-					selectedrow = table.getSelectedRow();
-					malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(selectedrow, -1));
-					InsertMalnutrition editRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, false);
-					editRecord.addMalnutritionListener(MalnutritionBrowser.this);
-					editRecord.setVisible(true);
-				}
+		editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+		editButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+		editButton.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
+			} else {
+				selectedrow = table.getSelectedRow();
+				malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(selectedrow, -1));
+				InsertMalnutrition editRecord = new InsertMalnutrition(MalnutritionBrowser.this, malnutrition, false);
+				editRecord.addMalnutritionListener(MalnutritionBrowser.this);
+				editRecord.setVisible(true);
 			}
 		});
 		return editButton;
 	}
 
 	private JButton getDeleteButton() {
-		deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete"));
-		deleteButton.setMnemonic(KeyEvent.VK_D);
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				if (table.getSelectedRow() < 0) {
-					JOptionPane.showMessageDialog(
-							MalnutritionBrowser.this,
-							MessageBundle.getMessage("angal.common.pleaseselectarow"),
-							MessageBundle.getMessage("angal.hospital"), 
-							JOptionPane.PLAIN_MESSAGE);
-					return;
-				} else {
-					Malnutrition m = (Malnutrition) (((MalnBrowsingModel) model)
-							.getValueAt(table.getSelectedRow(), -1));
-					int n = JOptionPane.showConfirmDialog(null,
-							MessageBundle.getMessage("angal.common.delete")+"?", MessageBundle.getMessage("angal.hospital"),
-							JOptionPane.YES_NO_OPTION);
+		deleteButton = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		deleteButton.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
+		deleteButton.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
+			} else {
+				Malnutrition malnutrition = (Malnutrition) (((MalnBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
+				int answer = MessageDialog.yesNo(null, "angal.malnutrition.delete.msg");
+				if (answer == JOptionPane.YES_OPTION) {
+					if (malnutrition == null) {
+						MessageDialog.error(MalnutritionBrowser.this, "angal.common.pleaseselectarow.msg");
+					} else {
+						boolean deleted;
+						try {
+							deleted = manager.deleteMalnutrition(malnutrition);
+						} catch (OHServiceException e) {
+							deleted = false;
+							OHServiceExceptionUtil.showMessages(e);
+						}
 
-					if (n == JOptionPane.YES_OPTION) {	
-						if(m==null){
-							JOptionPane.showMessageDialog(
-									MalnutritionBrowser.this,
-									MessageBundle.getMessage("angal.common.pleaseselectarow"));
-						} else {
-							boolean deleted;
-							try {
-								deleted = manager.deleteMalnutrition(m);
-							} catch (OHServiceException e) {
-								deleted = false;
-								OHServiceExceptionUtil.showMessages(e);
-							}
-							
-							if (true == deleted) {
-								pMaln.remove(table.getSelectedRow());
-								model.fireTableDataChanged();
-								table.updateUI();
-							}
+						if (deleted) {
+							pMaln.remove(table.getSelectedRow());
+							model.fireTableDataChanged();
+							table.updateUI();
 						}
 					}
 				}
@@ -211,64 +209,60 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	}
 
 	private JButton getCloseButton() {
-		closeButton = new JButton(MessageBundle.getMessage("angal.common.close"));
-		closeButton.setMnemonic(KeyEvent.VK_C);
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			};
-		});
+		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
+		closeButton.addActionListener(actionEvent -> dispose());
 		return closeButton;
 	}
 
 	private JTable getTable() {
 		model = new MalnBrowsingModel(admId);
 		table = new JTable(model);
-		table.getColumnModel().getColumn(0).setMaxWidth(pColumwidth[0]);
-		table.getColumnModel().getColumn(1).setMaxWidth(pColumwidth[1]);
-		table.getColumnModel().getColumn(2).setMaxWidth(pColumwidth[2]);
-		table.getColumnModel().getColumn(3).setMaxWidth(pColumwidth[3]);
+		table.getColumnModel().getColumn(0).setMaxWidth(pColumnWidth[0]);
+		table.getColumnModel().getColumn(1).setMaxWidth(pColumnWidth[1]);
+		table.getColumnModel().getColumn(2).setMaxWidth(pColumnWidth[2]);
+		table.getColumnModel().getColumn(3).setMaxWidth(pColumnWidth[3]);
 		return table;
 	}
 
 	class MalnBrowsingModel extends DefaultTableModel {
-
-		/**
-		 * 
-		 */
+		
 		private static final long serialVersionUID = 1L;
 
 		public MalnBrowsingModel(String s) {
 
 			pMaln = null;
 			
-			if (null != s && false == s.isEmpty()) {
+			if (null != s && !s.isEmpty()) {
 				try {
 					pMaln = manager.getMalnutrition(s);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}				
 			} else {
-				JOptionPane.showMessageDialog(
-						MalnutritionBrowser.this,
-						MessageBundle.getMessage("angal.malnutrition.nonameselected"));
+				MessageDialog.error(MalnutritionBrowser.this, "angal.malnutrition.nonameselected");
 			}
 		}
 
+		@Override
 		public int getRowCount() {
-			if (pMaln == null)
+			if (pMaln == null) {
 				return 0;
+			}
 			return pMaln.size();
 		}
 
+		@Override
 		public String getColumnName(int c) {
-			return pColums[c];
+			return pColumns[c];
 		}
 
+		@Override
 		public int getColumnCount() {
-			return pColums.length;
+			return pColumns.length;
 		}
 
+		@Override
 		public Object getValueAt(int r, int c) {
 			Malnutrition malnutrition = pMaln.get(r);
 			if (c == -1) {
@@ -293,8 +287,9 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 	}
 
 	private String getConvertedString(GregorianCalendar time) {
-		if (time == null)
-			return MessageBundle.getMessage("angal.malnutrition.nodate");
+		if (time == null) {
+			return MessageBundle.getMessage("angal.malnutrition.nodate.msg");
+		}
 		return TimeTools.formatDateTime(time.getTime(), "dd/MM/yyyy");
 	}
 }
