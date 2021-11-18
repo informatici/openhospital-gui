@@ -210,15 +210,15 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		panelListData.add(panelActions, BorderLayout.NORTH);
 
-		JButton btnSave = new JButton(MessageBundle.getMessage("angal.common.save.btn"));
-		btnSave.setMnemonic(MessageBundle.getMnemonic("angal.common.save.btn.key"));
-		btnSave.addActionListener(actionEvent -> addToGrid());
+		JButton btnAdd = new JButton(MessageBundle.getMessage("angal.operationrowlist.add.btn"));
+		btnAdd.setMnemonic(MessageBundle.getMnemonic("angal.operationrowlist.add.btn.key"));
+		btnAdd.addActionListener(actionEvent -> addToGrid());
+		panelActions.add(btnAdd);
 
-		JButton btnNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
-		btnNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
-		btnNew.addActionListener(actionEvent -> clearForm());
-		panelActions.add(btnNew);
-		panelActions.add(btnSave);
+		JButton btnClear = new JButton(MessageBundle.getMessage("angal.operationrow.clear.btn"));
+		btnClear.setMnemonic(MessageBundle.getMnemonic("angal.operationrow.clear.btn.key"));
+		btnClear.addActionListener(actionEvent -> clearForm());
+		panelActions.add(btnClear);
 
 		JButton btnDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		btnDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
