@@ -1734,6 +1734,7 @@ public class OpdEditExtended extends ModalJFrame implements
 								Visit visit = new Visit();
 								visit.setDate(opd.getNextVisitDate());
 								visit.setPatient(opd.getPatient());
+								visit.setWard(null);
 								vstManager.newVisit(visit);
 							}
 
@@ -1750,7 +1751,7 @@ public class OpdEditExtended extends ModalJFrame implements
 
 								Visit visit = new Visit();
 								if (nextDateBackup != null && !TimeTools.isSameDay(opd.getNextVisitDate(), nextDateBackup)) {
-									Iterator<Visit> visits = vstManager.getVisits(opd.getPatient().getCode()).iterator();
+									Iterator<Visit> visits = vstManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
 
 									boolean found = false;
 									while (!found && visits.hasNext()) {

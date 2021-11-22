@@ -315,10 +315,15 @@ public class InsertVisit extends JDialog implements SelectionListener {
 					MessageDialog.error(InsertVisit.this, "angal.visit.avisitcannotbescheduledforadatethatispast.msg");
 					return;
 				}
+				Ward ward = getSelectedWard();
+				if (ward == null) {
+					MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseaward.msg");
+					return;
+				}
 
 				Visit thisVisit = new Visit();
 				thisVisit.setPatient(patientSelected);
-				thisVisit.setWard(getSelectedWard());
+				thisVisit.setWard(ward);
 				thisVisit.setDate(date);
 				thisVisit.setDuration((Integer) jSpinnerDur.getValue());
 				thisVisit.setService(serviceField.getText());
