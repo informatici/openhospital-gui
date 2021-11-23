@@ -235,6 +235,10 @@ public class LabNew extends JDialog implements SelectionListener {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.labnew.title"));
+		
+		if (patientSelected != null) {
+			patientSelected(patientSelected);
+		}
 	}
 
 	private void initComponents() {

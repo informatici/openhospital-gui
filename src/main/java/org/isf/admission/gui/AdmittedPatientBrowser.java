@@ -68,13 +68,23 @@ import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.admission.model.AdmittedPatient;
+import org.isf.dicom.gui.DicomGui;
 import org.isf.disease.model.Disease;
+import org.isf.exa.model.Exam;
 import org.isf.examination.gui.PatientExaminationEdit;
 import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
+import org.isf.exatype.model.ExamType;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.lab.gui.LabBrowser;
+import org.isf.lab.gui.LabEdit;
+import org.isf.lab.gui.LabEditExtended;
+import org.isf.lab.gui.LabNew;
+import org.isf.lab.gui.LabEdit.LabEditListener;
+import org.isf.lab.gui.LabEditExtended.LabEditExtendedListener;
+import org.isf.lab.model.Laboratory;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.opd.gui.OpdEditExtended;
@@ -127,8 +137,8 @@ import org.isf.ward.model.Ward;
  * -----------------------------------------------------------
  */
 public class AdmittedPatientBrowser extends ModalJFrame implements
-		PatientInsert.PatientListener,// AdmissionBrowser.AdmissionListener,
-		PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener, //by Alex
+		PatientInsert.PatientListener,
+		PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener,
 		PatientDataBrowser.DeleteAdmissionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -707,11 +717,23 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) {
 			buttonPanel.add(getButtonOpd());
 		}
+		/*
+		 * Extra / experimental / temporary features - see Admin Manual
+		 */
+		if (MainMenu.checkUserGrants("btnadmlab")) {
+			buttonPanel.add(getButtonLab());
+		}
 		if (MainMenu.checkUserGrants("btnadmbill")) {
 			buttonPanel.add(getButtonBill());
 		}
 		if (MainMenu.checkUserGrants("data")) {
 			buttonPanel.add(getButtonData());
+		}
+		/*
+		 * Extra / experimental / temporary features - see Admin Manual
+		 */
+		if (GeneralData.DICOMMODULEENABLED && MainMenu.checkUserGrants("btnadmdicom")) {
+			buttonPanel.add(getDICOMButton());
 		}
 		if (MainMenu.checkUserGrants("btnadmpatientfolder")) {
 			buttonPanel.add(getButtonPatientFolderBrowser());
@@ -894,6 +916,34 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		return buttonOpd;
 	}
 	
+	private JButton getButtonLab() {
+		JButton buttonLab = new JButton(MessageBundle.getMessage("angal.admission.lab.btn"));
+		buttonLab.setMnemonic(MessageBundle.getMnemonic("angal.admission.lab.btn.key"));
+		buttonLab.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
+				return;
+			}
+			patient = reloadSelectedPatient(table.getSelectedRow());
+			Laboratory laboratory = new Laboratory(0, new Exam("", "",
+					new ExamType("", ""), 0, ""),
+					new GregorianCalendar(), "P", "", new Patient(), "");
+			if (GeneralData.LABEXTENDED) {
+				if (GeneralData.LABMULTIPLEINSERT) {
+					LabNew editrecord = new LabNew(myFrame, patient.getPatient());
+					editrecord.setVisible(true);
+				} else {
+					LabEditExtended editrecord = new LabEditExtended(myFrame, laboratory, true);
+					editrecord.setVisible(true);
+				}
+			} else {
+				LabEdit editrecord = new LabEdit(myFrame, laboratory, true);
+				editrecord.setVisible(true);
+			}
+		});
+		return buttonLab;
+	}
+	
 	private JButton getButtonBill() {
 		JButton buttonBill = new JButton(MessageBundle.getMessage("angal.admission.bill.btn"));
 		buttonBill.setMnemonic(MessageBundle.getMnemonic("angal.admission.bill.btn.key"));
@@ -952,6 +1002,20 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			pdb.showAsModal(AdmittedPatientBrowser.this);
 		});
 		return buttonData;
+	}
+	
+	private JButton getDICOMButton() {
+		JButton dicomButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.dicom.btn"));
+		dicomButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.dicom.btn.key"));
+		dicomButton.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(AdmittedPatientBrowser.this, "angal.common.pleaseselectapatient.msg");
+				return;
+			}
+			patient = reloadSelectedPatient(table.getSelectedRow());
+			DicomGui dg = new DicomGui(patient.getPatient(), AdmittedPatientBrowser.this);
+		});
+		return dicomButton;
 	}
 
 	private JButton getButtonPatientFolderBrowser() {

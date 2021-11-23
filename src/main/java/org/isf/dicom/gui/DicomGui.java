@@ -56,6 +56,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.file.FileTools;
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * GUI for Dicom Viewer
@@ -89,14 +90,14 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private JFrame myJFrame = null;
 
-	private PatientFolderBrowser owner = null;
+	private ModalJFrame owner = null;
 
 	/**
 	 * Construct a GUI
 	 *
 	 * @param patient the data wrapper for OH Patient
 	 */
-	public DicomGui(Patient patient, PatientFolderBrowser owner) {
+	public DicomGui(Patient patient, ModalJFrame owner) {
 		super();
 		this.patient = patient.getCode();
 		this.ohPatient = patient;
@@ -395,7 +396,7 @@ public class DicomGui extends JFrame implements WindowListener {
 	public void windowClosed(WindowEvent e) {
 		this.setVisible(false);
 		this.dispose();
-		owner.resetDicomViewer();
+		//owner.resetDicomViewer();
 	}
 
 	/**

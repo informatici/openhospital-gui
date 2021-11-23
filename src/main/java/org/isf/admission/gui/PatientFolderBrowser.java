@@ -545,13 +545,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		return launchReportButton;
 	}
 
-    DicomGui dg = null;
-
-    public void resetDicomViewer()
-    {
-        dg = null;
-    }
-
+    private DicomGui dg = null;
 	private JButton getDICOMButton() {
 		if (dicomButton == null) {
 			dicomButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.dicom.btn"));
