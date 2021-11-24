@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="examslist" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="examslist" whenResourceMissingType="Key" uuid="6a0232c3-456b-4152-8b89-d61644c42313">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -8,11 +8,10 @@
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<queryString>
 		<![CDATA[SELECT EXC_DESC, EXA_DESC, EXR_DESC, EXA_EXC_ID_A, EXA_PROC, EXA_DEFAULT
-    FROM EXAM e, EXAMTYPE et, EXAMROW er
-where 
-er.EXR_EXA_ID_A = e.EXA_ID_A
-and et.EXC_ID_A = e.EXA_EXC_ID_A
-order by 1,2,3]]>
+    FROM EXAM e 
+    JOIN EXAMTYPE et ON et.EXC_ID_A = e.EXA_EXC_ID_A
+    LEFT JOIN EXAMROW er ON er.EXR_EXA_ID_A = e.EXA_ID_A
+order by EXC_DESC, EXA_DESC, EXR_DESC]]>
 	</queryString>
 	<field name="EXC_DESC" class="java.lang.String"/>
 	<field name="EXA_DESC" class="java.lang.String"/>
@@ -179,7 +178,8 @@ order by 1,2,3]]>
 	</columnHeader>
 	<detail>
 		<band height="11" splitType="Stretch">
-			<textField isBlankWhenNull="false">
+			<printWhenExpression><![CDATA[$F{EXR_DESC} != null]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="309" y="0" width="223" height="11" uuid="09111d8d-e9bb-421d-b0a1-3eabca5b1f9e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
