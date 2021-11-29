@@ -1871,6 +1871,15 @@ public class AdmissionBrowser extends ModalJFrame {
 
 					}
 
+					// get visit date
+					if (visitDateFieldCal.getDate() != null) {
+						visitDate = new GregorianCalendar();
+						visitDate.setTime(visitDateFieldCal.getDate());
+						admission.setVisitDate(visitDate);
+					} else {
+						admission.setVisitDate(null);
+					}
+
 					// get delivery date
 					if (deliveryDateFieldCal.getDate() != null) {
 						deliveryDate = new GregorianCalendar();
