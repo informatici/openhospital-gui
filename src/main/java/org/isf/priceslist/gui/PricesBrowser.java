@@ -209,7 +209,12 @@ public class PricesBrowser extends ModalJFrame {
 	}
 
 	private String getTextDescription() {
-		return listSelected.getDescription().toUpperCase() + " (" + listSelected.getCurrency() + ')';
+		StringBuilder sb = new StringBuilder();
+		sb.append(listSelected.getDescription().toUpperCase());
+		sb.append(" (");
+		sb.append(listSelected.getCurrency());
+		sb.append(')');
+		return sb.toString();
 	}
 
 	private JButton getJButtonCancel() {

@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -189,18 +188,11 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 * This method initializes this
 	 */
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
-		this.setBounds(pfrmBordX + 10, pfrmBordY + 10, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContainPanel());
 		this.setTitle(MessageBundle.getMessage("angal.patient.newpatient.title"));
-		this.setSize(new java.awt.Dimension(604, 445));
-		setSize(screensize.width / pfrmBase * pfrmWidth,
-				screensize.height / pfrmBase * pfrmHeight);
 		pack();
 		setResizable(false);
+		setLocationRelativeTo(null);
 	}
 	
 	/**
