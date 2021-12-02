@@ -680,7 +680,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			} else if (column == 0) {
 				if (row < admList.size()) {
 					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
-					LocalDate myDate = (opdList.get(row)).getVisitDate();
+					LocalDate myDate = (admList.get(row)).getAdmDate().toLocalDate();
 					return dateFormat.format(myDate);
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
