@@ -586,8 +586,12 @@ public class PatientFolderBrowser extends ModalJFrame
 		try {
 			PropertyDescriptor pd = new PropertyDescriptor(variableName, obj.getClass());
 			Method getter = pd.getReadMethod();
-			date = (LocalDateTime) getter.invoke(obj);
-
+			Object variable = getter.invoke(obj);
+			if (variable instanceof LocalDate) {
+				date = ((LocalDate) variable).atStartOfDay();
+			} else {
+				date = (LocalDateTime) variable;
+			}
 		} catch (IntrospectionException | InvocationTargetException | IllegalAccessException | IllegalArgumentException e) {
 			LOGGER.error(e.getMessage(), e);
 		}
