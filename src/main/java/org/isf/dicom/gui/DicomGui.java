@@ -45,7 +45,6 @@ import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
 
-import org.isf.admission.gui.PatientFolderBrowser;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
 import org.isf.dicom.model.FileDicom;
