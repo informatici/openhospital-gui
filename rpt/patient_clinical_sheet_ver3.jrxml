@@ -174,8 +174,6 @@ UNION
 		LEFT JOIN LABORATORYROW ON LABR_LAB_ID = LAB_ID
 	WHERE LAB_PAT_ID = $P{patientID} AND (DATE(LAB_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
     AND EXA_PROC = 3
-	
-GROUP BY LABR_LAB_ID
     
 ) 
 AS DETAILS
@@ -344,7 +342,7 @@ ORDER BY DATE DESC]]>
 		<band height="93" splitType="Stretch">
 			<printWhenExpression><![CDATA[!($F{TYPE}.equals( "Operations" ) && $P{All}) 
 && !($F{TYPE}.equals( "Operations" ) && $P{Admission}) 
-&& !($F{TYPE}.equals( "Operations" ) && $P{Opd}) ]]></printWhenExpression>
+&& !($F{TYPE}.equals( "Operations" ) && $P{Opd})]]></printWhenExpression>
 			<textField textAdjust="ScaleFont" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="0" y="21" width="70" height="13" uuid="e8b6c04a-0d0d-4fab-87b2-fde877b88b93"/>
 				<box>
