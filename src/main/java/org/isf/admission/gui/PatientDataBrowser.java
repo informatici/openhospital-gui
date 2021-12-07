@@ -470,20 +470,16 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			} else if (column == 0) {
 				if (row < admList.size()) {
 					
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 					Date myDate = (admList.get(row)).getAdmDate().getTime();
-					String strDate = dateFormat.format(myDate);
-
-					return strDate;
+					return dateFormat.format(myDate);
 					
 				} else {
 					
 					int z = row - admList.size();
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 					Date myDate = (opdList.get(z)).getVisitDate().getTime();
-					String strDate = dateFormat.format(myDate);
-
-					return strDate;
+					return dateFormat.format(myDate);
 				}
 				
 			} else if (column == 1) {				
