@@ -27,6 +27,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EventListener;
@@ -244,15 +245,15 @@ public class PatientDataBrowser extends ModalJFrame implements
 		sorter = new TableSorter(admModel);
 		admTable = new JTable(sorter);      
 		//sorter.addMouseListenerToHeaderInTable(admTable); no needed
-		sorter.sortByColumn(0, false); //sort by first column, descending
-				
+
 		for (int i = 0; i< pColumns.length; i++) {
 			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			if (i == 0 || i == 4) {
 				admTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
 			}
 		}
-				
+
+		sorter.sortByColumn(0, false); //sort by first column, descending
 		scrollPane = new JScrollPane(admTable);
 		scrollPane.setPreferredSize(new Dimension(500,440));
 		tablesPanel.add(scrollPane, BorderLayout.CENTER);
@@ -469,15 +470,15 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				}
 			
 			} else if (column == 0) {
+				DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 				if (row < admList.size()) {
 					Date myDate = (admList.get(row)).getAdmDate().getTime();
-					return myDate;
+					return dateFormat.format(myDate);
 				} else {
 					int z = row - admList.size();
 					Date myDate = (opdList.get(z)).getVisitDate().getTime();
-					return myDate;
+					return dateFormat.format(myDate);
 				}
-				
 			} else if (column == 1) {				
 				if (row < admList.size()) {
 					String id = admList.get(row).getWard().getCode();
