@@ -1619,7 +1619,7 @@ public class OpdEditExtended extends ModalJFrame implements
 					try {
 						opdProgYear = Integer.parseInt(jOpdNumField.getText());
 					} catch (NumberFormatException e) {
-						MessageDialog.error(null,"angal.opd.opdnumbermustbeanumber.msg");
+						MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumbermustbeanumber.msg");
 						return;
 					}
 				}
@@ -1750,7 +1750,7 @@ public class OpdEditExtended extends ModalJFrame implements
 							dispose();
 						}
 						if (updatedOpd == null) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							MessageDialog.error(OpdEditExtended.this, "angal.common.datacouldnotbesaved.msg");
 						}
 					}
 				} catch (OHServiceException ex) {
