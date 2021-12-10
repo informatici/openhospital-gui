@@ -21,7 +21,7 @@
  */
 package org.isf.stat.gui.report;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.menu.manager.Context;
@@ -34,21 +34,23 @@ import org.slf4j.LoggerFactory;
 import net.sf.jasperreports.view.JasperViewer;
 
 public class WardVisitsReport {
-	   private static final Logger LOGGER = LoggerFactory.getLogger(WardVisitsReport.class);
 
-		public WardVisitsReport(String string, Date date, String jasperFileName) {
-			try{
-	            JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
-	            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportWardVisitPdf(string, date, jasperFileName);
-				if (GeneralData.INTERNALVIEWER)
-					JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false);
-				else { 
-						Runtime rt = Runtime.getRuntime();
-						rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
-				}
-			} catch (Exception e) {
-	            LOGGER.error("", e);
-				MessageDialog.error(null, "angal.stat.reporterror.msg");
+	private static final Logger LOGGER = LoggerFactory.getLogger(WardVisitsReport.class);
+
+	public WardVisitsReport(String string, LocalDateTime date, String jasperFileName) {
+		try {
+			JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
+			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportWardVisitPdf(string, date, jasperFileName);
+			if (GeneralData.INTERNALVIEWER) {
+				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false);
+			} else {
+				Runtime rt = Runtime.getRuntime();
+				rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
 			}
+		} catch (Exception e) {
+			LOGGER.error("", e);
+			MessageDialog.error(null, "angal.stat.reporterror.msg");
 		}
+	}
+
 }

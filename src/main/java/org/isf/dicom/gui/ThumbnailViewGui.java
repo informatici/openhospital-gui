@@ -60,11 +60,11 @@ import org.isf.utils.time.TimeTools;
 public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 	private static final long serialVersionUID = 1L;
-	private int patID = -1;
-	private DicomGui dicomViewer = null;
+	private int patID;
+	private DicomGui dicomViewer;
 	private DicomThumbsModel dicomThumbsModel;
 	boolean thumbnailViewEnabled = true;
-	boolean thumbnails = false;
+	boolean thumbnails;
 
 	/**
 	 * Initialize Component
@@ -167,10 +167,9 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 		dicomThumbsModel.clear();
 
-		for (int i = 0; i < fdb.length; i++) {
-			dicomThumbsModel.addInstance(fdb[i]);
+		for (FileDicom fileDicom : fdb) {
+			dicomThumbsModel.addInstance(fileDicom);
 		}
-
 	}
 
 	public static class DicomThumbsModel extends AbstractListModel {

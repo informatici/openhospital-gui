@@ -62,16 +62,16 @@ public class InsertMalnutrition extends JDialog {
     private void fireMalnutritionInserted() {
 
         EventListener[] listeners = malnutritionListeners.getListeners(MalnutritionListener.class);
-        for (int i = 0; i < listeners.length; i++) {
-	        ((MalnutritionListener)listeners[i]).malnutritionInserted();
-        }
+	    for (EventListener listener : listeners) {
+		    ((MalnutritionListener) listener).malnutritionInserted();
+	    }
     }
     private void fireMalnutritionUpdated(Malnutrition maln) {
 
         EventListener[] listeners = malnutritionListeners.getListeners(MalnutritionListener.class);
-        for (int i = 0; i < listeners.length; i++) {
-	        ((MalnutritionListener)listeners[i]).malnutritionUpdated(maln);
-        }
+	    for (EventListener listener : listeners) {
+		    ((MalnutritionListener) listener).malnutritionUpdated(maln);
+	    }
     }
 
 	private JPanel jContentPane;
@@ -150,7 +150,6 @@ public class InsertMalnutrition extends JDialog {
 
 	private JPanel getFieldPanel() {
 		fieldPanel = new JPanel();
-		// fieldPanel.setLayout(new BoxLayout(fieldPanel,BoxLayout.Y_AXIS));
 		weightField = new JTextField();
 		weightField.setColumns(6);
 		heightField = new JTextField();
@@ -189,8 +188,8 @@ public class InsertMalnutrition extends JDialog {
 			} catch (NumberFormatException e) {
 				maln.setWeight(0);
 			}
-			maln.setDateSupp(suppDate.getCompleteDate());
-			maln.setDateConf(confDate.getCompleteDate());
+			maln.setDateSupp(suppDate.getCompleteLocalDateTime());
+			maln.setDateConf(confDate.getCompleteLocalDateTime());
 
 			if (inserting) {
 				boolean inserted = false;

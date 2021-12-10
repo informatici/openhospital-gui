@@ -63,7 +63,7 @@ public class PatientPhotoPanel extends JPanel {
 	// Photo Components:
 	private JPanel jPhotoPanel = null;
 	private PhotoPanel externalPanel = null;
-	private PatientInsertExtended owner = null;
+	private PatientInsertExtended owner;
 	
 	private JButton jGetPhotoButton = null;
 	private JButton jAttachPhotoButton = null;
@@ -119,11 +119,7 @@ public class PatientPhotoPanel extends JPanel {
 
 			box.add(btnDeletePhoto);
 
-			if (patientHasPhoto) {
-				btnDeletePhoto.setVisible(true);
-			} else {
-				btnDeletePhoto.setVisible(false);
-			}
+			btnDeletePhoto.setVisible(patientHasPhoto);
 
 			final Box buttonBox1 = Box.createHorizontalBox();
 
@@ -192,10 +188,6 @@ public class PatientPhotoPanel extends JPanel {
 	
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		/*
-		 * javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
-		 * BorderFactory.createTitledBorder(title),null);
-		 */
 		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
 
 		c.setBorder(b2);

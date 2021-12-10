@@ -40,7 +40,7 @@ public class ShadowBorder extends AbstractBorder {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param aOffset
 	 * @param aColor
 	 */
@@ -51,7 +51,6 @@ public class ShadowBorder extends AbstractBorder {
 
 	@Override
 	public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
-
 		g.setColor(color);
 		g.fillRect(x + offset, y + offset, w + offset, h + offset);
 	}
@@ -60,4 +59,5 @@ public class ShadowBorder extends AbstractBorder {
 	public boolean isBorderOpaque() {
 		return true;
 	}
+
 }

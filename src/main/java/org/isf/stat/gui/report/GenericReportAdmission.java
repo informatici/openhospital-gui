@@ -38,23 +38,23 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class GenericReportAdmission {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportAdmission.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportAdmission.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportAdmission(int admID, int patID, String jasperFileName) {
-		try{
+		try {
 			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportAdmissionPdf(admID, patID, jasperFileName);
 
-			if (GeneralData.INTERNALVIEWER)
-				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
-			else { 
-					Runtime rt = Runtime.getRuntime();
-					rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
+			if (GeneralData.INTERNALVIEWER) {
+				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
+			} else {
+				Runtime rt = Runtime.getRuntime();
+				rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
 			}
 		} catch (Exception e) {
-            LOGGER.error("", e);
+			LOGGER.error("", e);
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
-        }
+		}
 	}
-	
+
 }

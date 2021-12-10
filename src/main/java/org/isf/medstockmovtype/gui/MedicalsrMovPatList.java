@@ -45,7 +45,7 @@ public class MedicalsrMovPatList extends JPanel {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MedicalsrMovPatList.class);
 
 	private Patient myPatient;
-	private ArrayList<MovementWard> drugsData;
+	private List<MovementWard> drugsData;
 	private JDialog dialogDrug;
 	private JTable jTableData;
 	private OhTableDrugsModel<MovementWard> modelMedWard;
@@ -94,4 +94,5 @@ public class MedicalsrMovPatList extends JPanel {
 	public List<MovementWard> getDrugsData() {
 		return drugsData;
 	}
+
 }

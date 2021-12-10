@@ -21,9 +21,10 @@
  */
 package org.isf.utils.jobjects;
 
-import java.text.DateFormat;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,18 +36,15 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.medicalstockward.model.MovementWard;
 
-public class OhTableDrugsModel <T> implements TableModel {
+public class OhTableDrugsModel<T> implements TableModel {
 
 	List<T> filteredList;
 
-	public  OhTableDrugsModel(List<T> dataList) {
+	public OhTableDrugsModel(List<T> dataList) {
 		this.filteredList = new ArrayList<>();
 
 		if (dataList != null) {
-			for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
-				T t = (T) iterator.next();
-				this.filteredList.add(t);
-			}
+			this.filteredList.addAll(dataList);
 		}
 	}
 
@@ -68,20 +66,20 @@ public class OhTableDrugsModel <T> implements TableModel {
 	public String getColumnName(int columnIndex) {
 		String columnLabel = "";
 		switch (columnIndex) {
-		case 0:
-			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.date.col").toUpperCase();
-			break;
-		case 1:
-			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.drug.col").toUpperCase();
-			break;
-		case 2:
-			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.quantity.col").toUpperCase();
-			break;
-		case 3:
-			columnLabel= MessageBundle.getMessage("angal.medicalstockward.patient.units.col").toUpperCase();
-			break;
-		default:
-			break;
+			case 0:
+				columnLabel = MessageBundle.getMessage("angal.medicalstockward.patient.date.col").toUpperCase();
+				break;
+			case 1:
+				columnLabel = MessageBundle.getMessage("angal.medicalstockward.patient.drug.col").toUpperCase();
+				break;
+			case 2:
+				columnLabel = MessageBundle.getMessage("angal.medicalstockward.patient.quantity.col").toUpperCase();
+				break;
+			case 3:
+				columnLabel = MessageBundle.getMessage("angal.medicalstockward.patient.units.col").toUpperCase();
+				break;
+			default:
+				break;
 		}
 		return columnLabel;
 	}
@@ -98,38 +96,37 @@ public class OhTableDrugsModel <T> implements TableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		String value = "";
 		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
-			T obj=this.filteredList.get(rowIndex);
+			T obj = this.filteredList.get(rowIndex);
 			if (obj instanceof MovementWard) {
-				MovementWard drugObj=(MovementWard)obj;
+				MovementWard drugObj = (MovementWard) obj;
 				switch (columnIndex) {
-				case 0:
-					String dt = "";
-					try {
-						final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));
-						dt = currentDateFormat.format(drugObj.getDate().getTime());
-						value = dt;
-					}
-					catch (Exception ex) {
-						value = drugObj.getDate().getTime().toString();
-					}
+					case 0:
+						String dt;
+						try {
+							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
+							dt = currentDateFormat.format(drugObj.getDate());
+							value = dt;
+						} catch (Exception ex) {
+							value = drugObj.getDate().toString();
+						}
 
-					break;
-				case 1:
-					Medical drugsname = null;
-					drugsname = drugObj.getMedical();
-					if (drugsname != null)
-						value = drugsname.getDescription();
-					else
-						value = "";
-					break;
-				case 2:
-					value=String.valueOf(drugObj.getQuantity());
-					break;
-				case 3:
-					value=drugObj.getUnits();
-					break;
-				default:
-					break;
+						break;
+					case 1:
+						Medical drugsname;
+						drugsname = drugObj.getMedical();
+						if (drugsname != null)
+							value = drugsname.getDescription();
+						else
+							value = "";
+						break;
+					case 2:
+						value = String.valueOf(drugObj.getQuantity());
+						break;
+					case 3:
+						value = drugObj.getUnits();
+						break;
+					default:
+						break;
 				}
 			}
 		}
