@@ -218,7 +218,16 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			}
 			for (Ward ward : wardList) {
 
-				wardBox.addItem(ward);
+				// if patient is a male you don't see pregnancy case
+				if (("" + patientSelected.getSex()).equalsIgnoreCase("F") && !ward.isFemale()) {
+					continue;
+				} else if (("" + patientSelected.getSex()).equalsIgnoreCase("M") && !ward.isMale()) {
+					continue;
+				} else {
+					if (ward.getBeds() > 0) {
+						wardBox.addItem(ward);
+					}
+				}
 				if (this.ward != null) {
 					if (this.ward.getCode().equalsIgnoreCase(ward.getCode())) {
 						wardBox.setSelectedItem(ward);
