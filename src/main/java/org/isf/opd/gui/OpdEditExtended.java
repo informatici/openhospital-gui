@@ -1729,12 +1729,16 @@ public class OpdEditExtended extends ModalJFrame implements
 					} else { // Update
 						Opd updatedOpd = opdManager.updateOpd(opd);
 						if (updatedOpd != null) {
+							
+							//TODO: move the whole logic to manager
+							Visit visit = new Visit();
 							if (scheduleVisit) {
-
-								Visit visit = new Visit();
+								visit.setDate(opd.getNextVisitDate());
+								visit.setPatient(opd.getPatient());
+							
 								if (nextDateBackup != null && !TimeTools.isSameDay(opd.getNextVisitDate(), nextDateBackup)) {
 									Iterator<Visit> visits = vstManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
-
+	
 									boolean found = false;
 									while (!found && visits.hasNext()) {
 										visit = visits.next();
@@ -1742,7 +1746,23 @@ public class OpdEditExtended extends ModalJFrame implements
 									}
 									visit.setDate(opd.getNextVisitDate());
 									visit.setPatient(opd.getPatient());
-									vstManager.newVisit(visit);
+								}
+								
+								vstManager.newVisit(visit);
+								
+							} else {
+								
+								if (nextDateBackup != null) {
+									Iterator<Visit> visits = vstManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
+	
+									boolean found = false;
+									while (!found && visits.hasNext()) {
+										visit = visits.next();
+										found = TimeTools.isSameDay(visit.getDate(), nextDateBackup);
+									}
+									if (found) {
+										vstManager.deleteVisit(visit);
+									}
 								}
 							}
 
