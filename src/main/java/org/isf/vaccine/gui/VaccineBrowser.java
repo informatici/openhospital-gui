@@ -63,8 +63,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 
 	@Override
 	public void vaccineInserted(AWTEvent e) {
-		pVaccine.add(0,vaccine);
-		((VaccineBrowserModel)table.getModel()).fireTableDataChanged();
+		pVaccine.add(0, vaccine);
+		((VaccineBrowserModel) table.getModel()).fireTableDataChanged();
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
 		}
@@ -72,11 +72,11 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 
 	@Override
 	public void vaccineUpdated(AWTEvent e) {
-		pVaccine.set(selectedrow,vaccine);
-		((VaccineBrowserModel)table.getModel()).fireTableDataChanged();
+		pVaccine.set(selectedrow, vaccine);
+		((VaccineBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow >-1) {
-			table.setRowSelectionInterval(selectedrow,selectedrow);
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
+			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
 
@@ -107,9 +107,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	 */
 	public VaccineBrowser() {
 		super();
-//		myFrame = this;
 		initialize();
-        setVisible(true);
+		setVisible(true);
 	}
 
 	/**
@@ -119,11 +118,11 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		this.setTitle(MessageBundle.getMessage("angal.vaccine.vaccinebrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-        final int pfrmBase = 6;
-        final int pfrmWidth = 4;
-        final int pfrmHeight = 2;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase)/2,
-                screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
+		final int pfrmBase = 6;
+		final int pfrmWidth = 4;
+		final int pfrmHeight = 2;
+		this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase) / 2,
+				screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPane());
 	}
 
@@ -211,8 +210,8 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					vaccine = (Vaccine)(((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-					VaccineEdit editrecord = new VaccineEdit(VaccineBrowser.this, vaccine,false);
+					vaccine = (Vaccine) (((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					VaccineEdit editrecord = new VaccineEdit(VaccineBrowser.this, vaccine, false);
 					editrecord.addVaccineListener(VaccineBrowser.this);
 					editrecord.setVisible(true);
 				}
@@ -231,7 +230,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				vaccine=new Vaccine(null,"",new VaccineType("",""));	//operation will reference the new record
+				vaccine = new Vaccine(null, "", new VaccineType("", ""));    //operation will reference the new record
 				VaccineEdit newrecord = new VaccineEdit(VaccineBrowser.this, vaccine, true);
 				newrecord.addVaccineListener(VaccineBrowser.this);
 				newrecord.setVisible(true);

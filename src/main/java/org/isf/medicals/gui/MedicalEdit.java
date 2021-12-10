@@ -129,7 +129,7 @@ public class MedicalEdit extends JDialog {
 	 * selectedrow because we need to update them
 	 */
 	public MedicalEdit(Medical old, boolean inserting, JFrame owner) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		try {
 			oldMedical = (Medical) old.clone();
@@ -245,7 +245,7 @@ public class MedicalEdit extends JDialog {
 						newMedical = (Medical) medical.clone();
 						newMedical.setType((MedicalType) typeComboBox.getSelectedItem());
 						newMedical.setDescription(descriptionTextField.getText());
-						newMedical.setProd_code(codeTextField.getText());
+						newMedical.setProdCode(codeTextField.getText());
 						newMedical.setPcsperpck(pcsperpckField.getValue());
 						newMedical.setMinqty(minQtiField.getValue());
 					} catch (CloneNotSupportedException cloneNotSupportedException) {
@@ -305,7 +305,7 @@ public class MedicalEdit extends JDialog {
 						if (result) {
 							medical.setType((MedicalType) typeComboBox.getSelectedItem());
 							medical.setDescription(descriptionTextField.getText());
-							medical.setProd_code(codeTextField.getText());
+							medical.setProdCode(codeTextField.getText());
 							medical.setPcsperpck(pcsperpckField.getValue());
 							medical.setMinqty(minQtiField.getValue());
 							fireMedicalUpdated();
@@ -337,9 +337,9 @@ public class MedicalEdit extends JDialog {
 	private VoLimitedTextField getDescriptionTextField() {
 		if (descriptionTextField == null) {
 			if (insert) {
-				descriptionTextField = new VoLimitedTextField(100,50);
+				descriptionTextField = new VoLimitedTextField(100, 50);
 			} else {
-				descriptionTextField = new VoLimitedTextField(100,50);
+				descriptionTextField = new VoLimitedTextField(100, 50);
 				descriptionTextField.setText(medical.getDescription());
 			}
 		}
@@ -357,7 +357,7 @@ public class MedicalEdit extends JDialog {
 				codeTextField = new VoLimitedTextField(5);
 			} else {
 				codeTextField = new VoLimitedTextField(5);
-				codeTextField.setText(medical.getProd_code());
+				codeTextField.setText(medical.getProdCode());
 			}
 		}
 		return codeTextField;
@@ -366,20 +366,20 @@ public class MedicalEdit extends JDialog {
 	private JTextField getMinQtiField() {
 		if (minQtiField == null) {
 			if (insert) {
-				minQtiField = new VoDoubleTextField(0,3);
+				minQtiField = new VoDoubleTextField(0, 3);
 			} else {
-				minQtiField = new VoDoubleTextField(medical.getMinqty(),3);
+				minQtiField = new VoDoubleTextField(medical.getMinqty(), 3);
 			}
 		}
 		return minQtiField;
 	}
-	
+
 	private JTextField getPcsperpckField() {
 		if (pcsperpckField == null) {
 			if (insert) {
-				pcsperpckField = new VoIntegerTextField(1,3);
+				pcsperpckField = new VoIntegerTextField(1, 3);
 			} else {
-				pcsperpckField = new VoIntegerTextField(medical.getPcsperpck(),3);
+				pcsperpckField = new VoIntegerTextField(medical.getPcsperpck(), 3);
 			}
 		}
 		return pcsperpckField;

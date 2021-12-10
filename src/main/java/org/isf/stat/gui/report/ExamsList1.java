@@ -44,11 +44,11 @@ public class ExamsList1 {
 			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getExamsListPdf();
 
 			// shows at video
-			if (GeneralData.INTERNALVIEWER)
+			if (GeneralData.INTERNALVIEWER) {
 				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-			else {
+			} else {
 				Runtime rt = Runtime.getRuntime();
-				rt.exec(GeneralData.VIEWER + " " + jasperReportResultDto.getFilename());
+				rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
 			}
 		} catch (Exception e) {
 			LOGGER.error("", e);

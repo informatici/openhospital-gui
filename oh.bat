@@ -354,4 +354,3 @@ goto end
 	set "LEGACYMODE="
 
 	goto :eof
-

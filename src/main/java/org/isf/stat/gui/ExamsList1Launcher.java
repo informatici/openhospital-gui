@@ -22,10 +22,8 @@
 package org.isf.stat.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -40,7 +38,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  * 
  * @author Rick
  */
-public class ExamsList1Launcher extends ModalJFrame{
+public class ExamsList1Launcher extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,15 +51,12 @@ public class ExamsList1Launcher extends ModalJFrame{
 	private JButton jCloseButton = null;
 	private JPanel jContentPanel = null;
 	private JButton jReport1Button = null;
-//	private JLabel jReport1Label = null;
-//	private final JFrame myFrame;
-	
+
 	/**
 	 * This is the default constructor
 	 */
 	public ExamsList1Launcher() {
 		super();
-//		myFrame = this;
 		this.setResizable(true);
 		initialize();
 		setVisible(true);
@@ -72,14 +67,9 @@ public class ExamsList1Launcher extends ModalJFrame{
 	 */
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.stat.examsreport.title"));
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
-		pfrmBordY = (screensize.height / 3) - (pfrmExactHeight / 2);
-		this.setBounds(pfrmBordX,pfrmBordY,pfrmExactWidth,pfrmExactHeight);
-		
 		this.setContentPane(getJPanel());
 		pack();
+		setLocationRelativeTo(null);
 	}
 
 	/**

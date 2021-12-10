@@ -63,7 +63,6 @@ public class AgeTypeBrowser extends ModalJFrame {
 	private JButton jEditSaveButton = null;
 	private JButton jCloseButton = null;
 	private JTable jTable = null;
-	private AgeTypeBrowserModel model;
 	private boolean edit = false;
 
 	/**
@@ -151,14 +150,13 @@ public class AgeTypeBrowser extends ModalJFrame {
 		return jCloseButton;
 	}
 
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
-			model = new AgeTypeBrowserModel();
-			jTable = new JTable(model);
+			jTable = new JTable(new AgeTypeBrowserModel());
 			for (int i = 0; i < pColumns.length; i++) {
 				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
 			}
-			jTable.setDefaultRenderer(Object.class,new ColorTableCellRenderer());
+			jTable.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
 		}
 		return jTable;
 	}
@@ -232,14 +230,9 @@ public class AgeTypeBrowser extends ModalJFrame {
 		@Override
 		public boolean isCellEditable(int r, int c) {
 			if (edit) {
-				if (c == 1 || c == 2) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
+				return c == 1 || c == 2;
 			}
+			return false;
 		}
 	}
 	

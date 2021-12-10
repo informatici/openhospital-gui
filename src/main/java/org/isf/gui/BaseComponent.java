@@ -57,8 +57,7 @@ public abstract class BaseComponent<PM extends PresentationModel> {
     /**
      * Build the model for the panel.
      */
-    protected PM buildModel()
-            throws Exception {
+    protected PM buildModel() throws Exception {
         return null;
     }
 

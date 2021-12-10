@@ -21,6 +21,7 @@
  */
 package org.isf.utils.jobjects;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -28,6 +29,7 @@ import java.util.Locale;
 import javax.swing.JPanel;
 
 import org.isf.generaldata.GeneralData;
+import org.isf.utils.time.Converters;
 
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
@@ -40,38 +42,40 @@ import com.toedter.calendar.JYearChooser;
 public class JMonthYearChooser extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private GregorianCalendar gc = new GregorianCalendar();
-	
+
 	/**
 	 * Create the dialog.
 	 */
 	public JMonthYearChooser() {
-		
+
 		JMonthChooser month = new JMonthChooser();
 		month.setLocale(new Locale(GeneralData.LANGUAGE));
 		month.addPropertyChangeListener("month", propertyChangeEvent -> {
 			JMonthChooser theChooser = (JMonthChooser) propertyChangeEvent.getSource();
 			gc.set(Calendar.MONTH, theChooser.getMonth());
 		});
-		
-		
+
 		JYearChooser year = new JYearChooser();
 		year.setLocale(new Locale(GeneralData.LANGUAGE));
 		year.addPropertyChangeListener("year", propertyChangeEvent -> {
 			JYearChooser theChooser = (JYearChooser) propertyChangeEvent.getSource();
 			gc.set(Calendar.YEAR, theChooser.getYear());
 		});
-		
+
 		JPanel datePanel = new JPanel();
 		datePanel.add(month);
 		datePanel.add(year);
 		this.add(datePanel);
 	}
-	
-	
+
 	public GregorianCalendar getDate() {
 		return gc;
 	}
-	
+
+	public LocalDate getLocalDate() {
+		return Converters.convertToLocalDateTime(gc).toLocalDate();
+	}
+
 }

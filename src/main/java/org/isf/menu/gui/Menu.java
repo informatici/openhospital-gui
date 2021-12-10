@@ -108,7 +108,7 @@ public class Menu {
 		try {
 			context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		} catch (Exception e) {
-			LOGGER.error("Fatal: fail to load application context. {}", e);
+			LOGGER.error("Fatal: fail to load application context. {}", e.getMessage(), e);
 			System.exit(1);
 		}
 		Context.setApplicationContext(context);

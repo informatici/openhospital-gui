@@ -68,37 +68,37 @@ class PrivilegeTree extends JDialog {
 	private UserGroup aGroup;
 
 	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
-	
+
 	public PrivilegeTree(UserGroupBrowsing parent, UserGroup aGroup) {
-		super(parent, MessageBundle.getMessage("angal.groupsbrowser.menuitembrowser.title"),true );
+		super(parent, MessageBundle.getMessage("angal.groupsbrowser.menuitembrowser.title"), true);
 		this.aGroup = aGroup;
-		
+
 		Rectangle r = parent.getBounds();
-		setBounds(new Rectangle(r.x+50, r.y+50,280, 350));
+		setBounds(new Rectangle(r.x + 50, r.y + 50, 280, 350));
 
 		List<UserMenuItem> myMenu = null;
-        try {
-            myMenu = manager.getGroupMenu(aGroup);
-        } catch (OHServiceException e) {
-            OHServiceExceptionUtil.showMessages(e);
-        }
+		try {
+			myMenu = manager.getGroupMenu(aGroup);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
 		List<UserMenuItem> rootMenu = null;
-        try {
-            rootMenu = manager.getGroupMenu(new UserGroup("admin",""));
-        } catch (OHServiceException e) {
-            OHServiceExceptionUtil.showMessages(e);
-        }
+		try {
+			rootMenu = manager.getGroupMenu(new UserGroup("admin", ""));
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
 
-        UserMenuItem menuRoot = new UserMenuItem("main", "angal.groupsbrowser.mainmenu.txt", "angal.groupsbrowser.mainmenu.txt",
-		        "", 'M', "", "", true, 1, true);
+		UserMenuItem menuRoot = new UserMenuItem("main", "angal.groupsbrowser.mainmenu.txt", "angal.groupsbrowser.mainmenu.txt",
+				"", 'M', "", "", true, 1, true);
 		// the root 
 		root = new DefaultMutableTreeNode(menuRoot);
 		model = new DefaultTreeModel(root);
 		tree = new JTree(model);
 
 		// a supporting structure
-		ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
-		
+		List<UserMenuItem> junkMenu = new ArrayList<>();
+
 		// cycle to process the whole rootMenu
 		while (!rootMenu.isEmpty()) {
 			for (UserMenuItem umi : rootMenu) {
@@ -139,7 +139,7 @@ class PrivilegeTree extends JDialog {
 
 		// set up node icons
 		UserItemNameTreeCellRenderer renderer = new UserItemNameTreeCellRenderer();
-		
+
 		// no icon on leaves
 		renderer.setLeafIcon(new ImageIcon(""));
 		tree.setCellRenderer(renderer);
@@ -147,7 +147,7 @@ class PrivilegeTree extends JDialog {
 		add(new JScrollPane(tree), BorderLayout.CENTER);
 
 		addButton();
-		
+
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
@@ -175,7 +175,7 @@ class PrivilegeTree extends JDialog {
 
 		ActionListener addListener = actionEvent -> {
 
-			ArrayList<UserMenuItem> newUserMenu = new ArrayList<>();
+			List<UserMenuItem> newUserMenu = new ArrayList<>();
 			Enumeration<?> e = root.breadthFirstEnumeration();
 			while (e.hasMoreElements()) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
