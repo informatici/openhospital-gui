@@ -68,7 +68,7 @@ public class WardComboBoxInitializerTest {
 
 		// then:
 		assertThat(wardComboBox.getItemCount()).isEqualTo(2);
-		assertThat(wardComboBox.getItemAt(0)).isEqualTo("");
+		assertThat(wardComboBox.getItemAt(0)).isNull();
 		assertThat(((Ward) wardComboBox.getItemAt(1)).isMale()).isTrue();
 	}
 
@@ -93,7 +93,7 @@ public class WardComboBoxInitializerTest {
 
 		// then:
 		assertThat(wardComboBox.getItemCount()).isEqualTo(2);
-		assertThat(wardComboBox.getItemAt(0)).isEqualTo("");
+		assertThat(wardComboBox.getItemAt(0)).isNull();
 		assertThat(((Ward) wardComboBox.getItemAt(1)).getBeds()).isEqualTo(1);
 	}
 
@@ -117,7 +117,7 @@ public class WardComboBoxInitializerTest {
 
 		// then:
 		assertThat(wardComboBox.getItemCount()).isEqualTo(2);
-		assertThat(wardComboBox.getItemAt(0)).isEqualTo("");
+		assertThat(wardComboBox.getItemAt(0)).isNull();
 		assertThat(((Ward) wardComboBox.getItemAt(1)).isFemale()).isTrue();
 	}
 
