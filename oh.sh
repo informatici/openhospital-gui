@@ -71,15 +71,17 @@ DATABASE_USER=isf
 DATABASE_PASSWORD="isf123"
 
 DICOM_MAX_SIZE="4M"
+DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
+DICOM_DIR="data/dicom_storage"
 
-OH_DIR="."
+OH_DIR="oh"
 OH_DOC_DIR="../doc"
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
-DICOM_DIR="data/dicom_storage"
 BACKUP_DIR="data/dump"
 LOG_DIR="data/log"
 SQL_DIR="sql"
+SQL_EXTRA_DIR="sql/extra"
 TMP_DIR="tmp"
 
 LOG_FILE=startup.log
@@ -540,7 +542,7 @@ function generate_config_files {
 	######## DICOM setup
 	[ -f ./$OH_DIR/rsc/dicom.properties ] && mv -f ./$OH_DIR/rsc/dicom.properties ./$OH_DIR/rsc/dicom.properties.old
 	sed -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
-	-e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/dicom.properties.dist > ./$OH_DIR/rsc/dicom.properties
+	-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/dicom.properties.dist > ./$OH_DIR/rsc/dicom.properties
 
 	######## log4j.properties setup
 	OH_LOG_DEST="$OH_PATH_ESCAPED/$LOG_DIR/$OH_LOG_FILE"
@@ -726,7 +728,6 @@ while getopts ${OPTSTRING} opt; do
 		echo "Open Hospital version" $VER_MAJOR.$VER_MINOR.$VER_RELEASE
 		echo "MySQL version: $MYSQL_DIR"
 		echo "JAVA version: $JAVA_DISTRO"
-		echo ""
 		# show configuration
 		echo "--------- Configuration ---------"
 		echo "Architecture is $ARCH"
@@ -734,23 +735,26 @@ while getopts ${OPTSTRING} opt; do
 		echo "Language is set to $OH_LANGUAGE"
 		echo "Demo data is set to $DEMO_DATA"
 		echo "Log level is set to $LOG_LEVEL"
-		echo ""
+		echo "--- Database ---"
 		echo "MYSQL_SERVER=$MYSQL_SERVER"
 		echo "MYSQL_PORT=$MYSQL_PORT"
 		echo "DATABASE_NAME=$DATABASE_NAME"
 		echo "DATABASE_USER=$DATABASE_USER"
-		echo "DATABASE_PASSWORD=$DATABASE_PASSWORD"
+		echo "--- Dicom ---"
 		echo "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
+		echo "DICOM_STORAGE=$DICOM_STORAGE"
+		echo "DICOM_DIR=$DICOM_DIR"
+		echo "--- OH ---"
 		echo "OH_DIR=$OH_DIR"
 		echo "OH_DOC_DIR=$OH_DOC_DIR"
 		echo "CONF_DIR=$CONF_DIR"
 		echo "DATA_DIR=$DATA_DIR"
-		echo "DICOM_DIR=$DICOM_DIR"
 		echo "BACKUP_DIR=$BACKUP_DIR"
 		echo "LOG_DIR=$LOG_DIR"
 		echo "SQL_DIR=$SQL_DIR"
+		echo "SQL_EXTRA_DIR=$SQL_EXTRA_DIR"
 		echo "TMP_DIR=$TMP_DIR"
-		echo ""
+		echo "---  Logging ---"
 		echo "LOG_FILE=$LOG_FILE"
 		echo "OH_LOG_FILE=$OH_LOG_FILE"
 		echo ""
