@@ -114,7 +114,7 @@ public class SubMenu extends JDialog implements ActionListener {
 
 	private void initialize(MainMenu mainMenu, String code, List<UserMenuItem> menu, Rectangle parentBounds) {
 
-		final int displacement = 50;
+		final int displacement = 5;
 
 		this.mainMenu = mainMenu;
 
@@ -125,12 +125,19 @@ public class SubMenu extends JDialog implements ActionListener {
 		// add panel to frame
 		SubPanel panel = new SubPanel(this, code);
 		add(panel);
+		
+		// positioning submenu, slightly shifted from MainMenu
+		Rectangle r = mainMenu.getBounds();
+		r.width = getBounds().width;
+		r.height = getBounds().height;
+		r.x += displacement + mainMenu.getBounds().width;
+		int subMenuHeight = panel.calculatedHeight;
+		int mainMenuHeight = mainMenu.getRootPane().getHeight();
+		if (subMenuHeight > mainMenuHeight) {
+			r.y -= (subMenuHeight - mainMenuHeight);
+		}
 
-		// submenu slightly shifted from the menu
-		parentBounds.x += displacement;
-		parentBounds.y -= displacement;
-
-		setBounds(parentBounds);
+		setBounds(r);
 
 		setResizable(false);
 		pack();
@@ -161,6 +168,8 @@ public class SubMenu extends JDialog implements ActionListener {
 		private static final long serialVersionUID = 4338749100837551874L;
 
 		private JButton[] button;
+		
+		int calculatedHeight;
 
 		public SubPanel(SubMenu dialogFrame, String subName) {
 
@@ -196,6 +205,7 @@ public class SubMenu extends JDialog implements ActionListener {
 			final int insetsValue = 5;
 			for (int i = 0; i < button.length; i++) {
 				add(button[i], new GBC(0, i + 1).setInsets(insetsValue));
+				calculatedHeight += insetsValue * 2;
 			}
 		}
 
@@ -203,13 +213,14 @@ public class SubMenu extends JDialog implements ActionListener {
 			int maxH = 0;
 			int maxMax = 0;
 			int maxMin = 0;
-			int maxPrf = 0;
+			int maxPrf = 0;		
 
 			for (JButton value : button) {
 				maxH = Math.max(maxH, value.getMaximumSize().height);
 				maxMax = Math.max(maxMax, value.getMaximumSize().width);
 				maxMin = Math.max(maxMin, value.getMinimumSize().width);
 				maxPrf = Math.max(maxPrf, value.getPreferredSize().width);
+				calculatedHeight += maxH;
 			}
 			maxPrf = Math.max(maxPrf, prfButtonSize);
 

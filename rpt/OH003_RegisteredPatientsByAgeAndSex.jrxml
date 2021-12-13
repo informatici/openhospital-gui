@@ -13,6 +13,9 @@
 	<parameter name="City" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="Email" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="Telephone" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="LOGO_PATH" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./rsc/images/"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT PAT_SEX AS SEX, "< 5" AS AGE, COUNT(PAT_ID) AS NUMBER
 FROM PATIENT
@@ -118,7 +121,7 @@ GROUP BY PAT_SEX]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{RegisteredPatients}]]></textFieldExpression>
 			</textField>
-			<image>
+			<image hAlign="Right" vAlign="Middle" onErrorType="Icon">
 				<reportElement key="image-1" x="476" y="5" width="56" height="40" uuid="7abaa57e-3847-43cf-826d-693fb385539d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -126,7 +129,7 @@ GROUP BY PAT_SEX]]>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<imageExpression><![CDATA["./rsc/images/Splash.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{LOGO_PATH} + "logo_report.png"]]></imageExpression>
 			</image>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-4" x="0" y="49" width="535" height="22" uuid="ae4d7820-c2ab-48a4-9b3e-d0cfe4bbf666"/>
