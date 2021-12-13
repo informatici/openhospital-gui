@@ -392,7 +392,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 
 		private JPanel getLogoPanel() {
-			JLabel logo_appl = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("LogoMenuVert.png")));
+			JLabel logo_appl = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("logo_menu_vert.png")));
 			JLabel logo_hosp = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "logo_hospital.png"));
 			JPanel logoPanel = new JPanel();
 			logoPanel.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10)); // top, left, bottom, right
@@ -401,7 +401,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			logoPanel.setBackground(Color.decode("#90b6b9"));
 			if (logo_hosp.getIcon().getIconHeight() > 0) {
 				logoPanel.add(logo_hosp);
-				logo_appl = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("LogoMenu.png")));
+				logo_appl = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("logo_menu.png")));
 			} else {
 				logoPanel.add(Box.createVerticalStrut(100));
 			}

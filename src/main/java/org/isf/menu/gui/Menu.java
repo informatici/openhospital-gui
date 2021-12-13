@@ -52,7 +52,7 @@ public class Menu {
 		checkOHVersion();
 		checkJavaVersion();
 		JFrame.setDefaultLookAndFeelDecorated(false);
-		new SplashWindow3("Splash.png", null, 3000);
+		new SplashWindow3("splash.png", null, 3000);
 		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
 		Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQueue);
 	}
