@@ -63,10 +63,10 @@ import org.isf.utils.jobjects.ModalJFrame;
  * @author Pietro Castellucci
  * @version 1.0.0
  */
-public class DicomGui extends JFrame implements WindowListener {
+public class DicomGui extends ModalJFrame implements WindowListener {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	// STATUS
 	private String lastDir = ".";
 
@@ -103,12 +103,12 @@ public class DicomGui extends JFrame implements WindowListener {
 		this.owner = owner;
 
 		initialize();
-		setVisible(true);
+		//setVisible(true);
 		addWindowListener(this);
 		myJFrame = this;
 
 		// TMP
-		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	/**
@@ -395,7 +395,6 @@ public class DicomGui extends JFrame implements WindowListener {
 	public void windowClosed(WindowEvent e) {
 		this.setVisible(false);
 		this.dispose();
-		//owner.resetDicomViewer();
 	}
 
 	/**

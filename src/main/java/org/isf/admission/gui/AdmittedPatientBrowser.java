@@ -78,12 +78,9 @@ import org.isf.examination.model.PatientExamination;
 import org.isf.exatype.model.ExamType;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
-import org.isf.lab.gui.LabBrowser;
 import org.isf.lab.gui.LabEdit;
 import org.isf.lab.gui.LabEditExtended;
 import org.isf.lab.gui.LabNew;
-import org.isf.lab.gui.LabEdit.LabEditListener;
-import org.isf.lab.gui.LabEditExtended.LabEditExtendedListener;
 import org.isf.lab.model.Laboratory;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
@@ -1014,6 +1011,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			}
 			patient = reloadSelectedPatient(table.getSelectedRow());
 			DicomGui dg = new DicomGui(patient.getPatient(), AdmittedPatientBrowser.this);
+			((ModalJFrame) dg).showAsModal(this);
 		});
 		return dicomButton;
 	}
