@@ -123,15 +123,15 @@ set DATABASE_PASSWORD=isf123
 
 set DICOM_MAX_SIZE="4M"
 set DICOM_STORAGE="FileSystemDicomManager" REM SqlDicomManager
-set DICOM_DIR="data\dicom_storage"
+set DICOM_DIR="data/dicom_storage"
 
 set OH_DIR="."
-set OH_DOC_DIR="..\doc"
-set CONF_DIR="data\conf"
-set DATA_DIR="data\db"
-set LOG_DIR="data\log"
+set OH_DOC_DIR="../doc"
+set CONF_DIR="data/conf"
+set DATA_DIR="data/db"
+set LOG_DIR="data/log"
 set SQL_DIR="sql"
-set SQL_EXTRA="sql\extra"
+set SQL_EXTRA="sql/extra"
 set TMP_DIR="tmp"
 
 set LOG_FILE=startup.log
@@ -179,6 +179,10 @@ set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin
 
 REM ######## Script start
+
+REM set path variable with / in place of \ for configuration file
+set OH_PATH_SUBSTITUTE=%OH_PATH:\=/%
+
 echo Configuring Open Hospital...
 
 REM # Set mysql TCP port
@@ -205,7 +209,7 @@ mkdir "%OH_PATH%\%LOG_DIR%"
 echo Generating MySQL config file...
 REM ### Setup MySQL configuration
 echo f | xcopy %OH_PATH%\%CONF_DIR%\my.cnf.dist %OH_PATH%\%CONF_DIR%\my.cnf /y > "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe OH_PATH_SUBSTITUTE %OH_PATH% -- %OH_PATH%\%CONF_DIR%\my.cnf  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe OH_PATH_SUBSTITUTE %OH_PATH_SUBSTITUTE% -- %OH_PATH%\%CONF_DIR%\my.cnf  >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe MYSQL_SERVER %MYSQL_SERVER% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe MYSQL_PORT %MYSQL_PORT% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe MYSQL_DISTRO %MYSQL_DIR% -- %OH_PATH%\%CONF_DIR%\my.cnf >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
@@ -217,7 +221,7 @@ echo f | xcopy %OH_PATH%\%CONF_DIR%\my.cnf.dist %OH_PATH%\%CONF_DIR%\my.cnf /y >
 echo Generating OH configuration files...
 REM ### Setup dicom.properties
 echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\dicom.properties.dist %OH_PATH%\%OH_DIR%\rsc\dicom.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
-%REPLACE_PATH%\replace.exe OH_PATH_SUBSTITUTE %OH_PATH% -- %OH_PATH%\%OH_DIR%\rsc\dicom.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe OH_PATH_SUBSTITUTE %OH_PATH_SUBSTITUTE% -- %OH_PATH%\%OH_DIR%\rsc\dicom.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe DICOM_SIZE %DICOM_MAX_SIZE% -- %OH_PATH%\%OH_DIR%\rsc\dicom.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe DICOM_STORAGE %DICOM_STORAGE% -- %OH_PATH%\%OH_DIR%\rsc\dicom.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe DICOM_DIR %DICOM_DIR% -- %OH_PATH%\%OH_DIR%\rsc\dicom.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
