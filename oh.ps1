@@ -303,6 +303,8 @@ function set_path {
 			Write-Host "Error - $SCRIPT_NAME not found in the current PATH. Please browse to the directory where Open Hospital was unzipped or set up OH_PATH properly." -ForegroundColor Yellow
 			Read-Host; exit 1
 		}
+		# set path variable with / in place of \ for configuration files
+		$script:OH_PATH_SUBSTITUTE=$OH_PATH -replace "\\", "/"
 	}
 }
 
@@ -467,7 +469,7 @@ function config_database {
 		mv -Force "$OH_PATH/$CONF_DIR/my.cnf" "$OH_PATH/$CONF_DIR/my.cnf.old"
 	}
 	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("OH_PATH_SUBSTITUTE","$OH_PATH") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
 	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_SERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
 	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_PORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
 	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_DISTRO","$MYSQL_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
@@ -663,7 +665,7 @@ function generate_config_files {
 	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties" ) {
 		mv -Force $OH_PATH/$OH_DIR/rsc/dicom.properties $OH_PATH/$OH_DIR/rsc/dicom.properties.old
 	}
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
+	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
