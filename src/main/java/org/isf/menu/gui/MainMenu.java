@@ -273,6 +273,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// add panel with buttons to frame
 		MainPanel panel = new MainPanel(this);
 		add(panel);
+		setResizable(false);
 		pack();
 
 		// compute menu position
@@ -290,8 +291,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				actionExit(0);
 			}
 		});
-
-		setResizable(false);
+		
 		setVisible(true);
 	}
 
@@ -350,6 +350,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	private class MainPanel extends JPanel {
 
+		private static final String BACKGROUND_COLOR_HEX = "#90b6b9";
+
 		private static final long serialVersionUID = 4338749100837551874L;
 
 		private JButton[] button;
@@ -379,16 +381,21 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 					k++;
 				}
 			}
-
+			
 			add(getLogoPanel(), BorderLayout.WEST);
 
-			JPanel buttons = new JPanel();
-			buttons.setLayout(new SpringLayout());
+			JPanel buttonsPanel = new JPanel();
+			buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // top, left, bottom, right
+			buttonsPanel.setLayout(new SpringLayout());
 			for (JButton jButton : button) {
-				buttons.add(jButton);
+				buttonsPanel.add(jButton);
 			}
-			SpringUtilities.makeCompactGrid(buttons, button.length, 1, 0, 10, 8, 10);
-			add(buttons, BorderLayout.EAST);
+			SpringUtilities.makeCompactGrid(buttonsPanel, button.length, 1, 0, 0, 0, 10);
+			
+			JPanel centerPanel = new JPanel();
+			centerPanel.add(buttonsPanel, BorderLayout.CENTER); // to center anyway, regardless the window's size
+			
+			add(centerPanel, BorderLayout.CENTER);
 		}
 
 		private JPanel getLogoPanel() {
@@ -398,12 +405,12 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			logoPanel.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10)); // top, left, bottom, right
 			BoxLayout layout = new BoxLayout(logoPanel, BoxLayout.Y_AXIS);
 			logoPanel.setLayout(layout);
-			logoPanel.setBackground(Color.decode("#90b6b9"));
+			logoPanel.setBackground(Color.decode(BACKGROUND_COLOR_HEX));
 			if (logo_hosp.getIcon().getIconHeight() > 0) {
 				logoPanel.add(logo_hosp);
 				logo_appl = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("logo_menu.png")));
 			} else {
-				logoPanel.add(Box.createVerticalStrut(100));
+				logoPanel.add(Box.createVerticalStrut(100)); // for short menu
 			}
 			logoPanel.add(Box.createVerticalGlue());
 			logoPanel.add(logo_appl);
@@ -420,7 +427,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			int titleStringWidth = SwingUtilities.computeStringWidth(new JLabel().getFontMetrics(defaultFont), title);
 
 			// account for titlebar button widths. (estimated)
-			titleStringWidth += 40;
+			titleStringWidth += 120;
 
 			// +10 accounts for the three dots that are appended when the title is too long
 			if (dimension.getWidth() + 10 <= titleStringWidth) {
