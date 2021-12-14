@@ -84,7 +84,7 @@ $global:ProgressPreference= 'SilentlyContinue'
 # set MANUAL_CONFIG to "on" to setup configuration files manually
 # my.cnf and all oh/rsc/*.properties files will not be generated or
 # overwritten if already present
-#$script:MANUAL_CONFIG="off"
+#$script:MANUAL_CONFIG="on"
 
 # Interactive mode
 # set INTERACTIVE_MODE to "off" to launch oh.ps1 without calling the user
@@ -130,15 +130,17 @@ $script:DATABASE_USER="isf"
 $script:DATABASE_PASSWORD="isf123"
 
 $script:DICOM_MAX_SIZE="4M"
+$script:DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
+$script:DICOM_DIR="data/dicom_storage"
 
 $script:OH_DIR="."
 $script:OH_DOC_DIR="../doc"
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
-$script:DICOM_DIR="data/dicom_storage"
 $script:BACKUP_DIR="data/dump"
 $script:LOG_DIR="data/log"
 $script:SQL_DIR="sql"
+$script:SQL_EXTRA_DIR="sql/extra"
 $script:TMP_DIR="tmp"
 
 $script:LOG_FILE="startup.log"
@@ -301,6 +303,8 @@ function set_path {
 			Write-Host "Error - $SCRIPT_NAME not found in the current PATH. Please browse to the directory where Open Hospital was unzipped or set up OH_PATH properly." -ForegroundColor Yellow
 			Read-Host; exit 1
 		}
+		# set path variable with / in place of \ for configuration files
+		$script:OH_PATH_SUBSTITUTE=$OH_PATH -replace "\\", "/"
 	}
 }
 
@@ -465,7 +469,7 @@ function config_database {
 		mv -Force "$OH_PATH/$CONF_DIR/my.cnf" "$OH_PATH/$CONF_DIR/my.cnf.old"
 	}
 	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("OH_PATH_SUBSTITUTE","$OH_PATH") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
 	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_SERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
 	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_PORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
 	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_DISTRO","$MYSQL_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
@@ -661,8 +665,9 @@ function generate_config_files {
 	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties" ) {
 		mv -Force $OH_PATH/$OH_DIR/rsc/dicom.properties $OH_PATH/$OH_DIR/rsc/dicom.properties.old
 	}
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
+	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
+	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 
 	######## log4j.properties setup
@@ -906,24 +911,26 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host "Language is set to $OH_LANGUAGE"
 		Write-Host "Demo data is set to $DEMO_DATA"
 		Write-Host "Log level is set to $LOG_LEVEL"
-		Write-Host ""
+		Write-Host "--- Database ---"
 		Write-Host "MYSQL_SERVER=$MYSQL_SERVER"
 		Write-Host "MYSQL_PORT=$MYSQL_PORT"
 		Write-Host "DATABASE_NAME=$DATABASE_NAME"
 		Write-Host "DATABASE_USER=$DATABASE_USER"
-		Write-Host "DATABASE_PASSWORD=$DATABASE_PASSWORD"
+		Write-Host "--- Dicom ---"
 		Write-Host "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
+		Write-Host "DICOM_STORAGE=$DICOM_STORAGE"
 		Write-Host "DICOM_DIR=$DICOM_DIR"
+		Write-Host "--- OH ---"
 		Write-Host "OH_DIR=$OH_DIR"
 		Write-Host "OH_DOC_DIR=$OH_DOC_DIR"
 		Write-Host "CONF_DIR=$CONF_DIR"
 		Write-Host "DATA_DIR=$DATA_DIR"
-		Write-Host "DICOM_DIR=$DICOM_DIR"
 		Write-Host "BACKUP_DIR=$BACKUP_DIR"
 		Write-Host "LOG_DIR=$LOG_DIR"
 		Write-Host "SQL_DIR=$SQL_DIR"
+		Write-Host "SQL_EXTRA_DIR=$SQL_EXTRA_DIR"
 		Write-Host "TMP_DIR=$TMP_DIR"
-		Write-Host ""
+		Write-Host "--- Logging ---"
 		Write-Host "LOG_FILE=$LOG_FILE"
 		Write-Host "LOG_FILE_ERR=$LOG_FILE_ERR"
 		Write-Host "OH_LOG_FILE=$OH_LOG_FILE"
