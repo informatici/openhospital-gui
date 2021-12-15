@@ -421,20 +421,35 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension dimension = super.getPreferredSize();
-		String title = this.getTitle();
+		String title = truncate(this.getTitle(), 25);
 		if (title != null) {
 			Font defaultFont = UIManager.getDefaults().getFont("Label.font");
 			int titleStringWidth = SwingUtilities.computeStringWidth(new JLabel().getFontMetrics(defaultFont), title);
 
-			// account for titlebar button widths. (estimated)
-			titleStringWidth += 120;
+			// accounts for the three dots that are appended when the title is too long
+			int threeDotsWidth = 10;
 
-			// +10 accounts for the three dots that are appended when the title is too long
-			if (dimension.getWidth() + 10 <= titleStringWidth) {
+			// account for titlebar button widths. (estimated)
+			String os = System.getProperty("os.name").toLowerCase();
+			if (os.indexOf("win") >= 0) {
+				titleStringWidth += 170;
+				
+			} else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
+				titleStringWidth += 120;
+				
+			} else { // others, assuming unix-like
+				titleStringWidth += 120;
+			}
+
+			if (dimension.getWidth() + threeDotsWidth <= titleStringWidth) {
 				dimension = new Dimension(titleStringWidth, (int) dimension.getHeight());
 			}
 		}
 		return dimension;
+	}
+
+	private String truncate(String string, int size) {
+		return string.substring(0, Integer.min(size - 1, string.length()));
 	}
 
 	public static User getUser() {
