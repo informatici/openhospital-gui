@@ -2,7 +2,7 @@
 log4j.rootCategory=INFO,RollingFile
 
 # Null appender (off)
-log4j.appender.null=org.apache.log4j.varia.NullAppender
+log4j.appender.null=org.apache.log4j.varia.NullAppender 	
 
 # StdOut Appender (with classes) (not used)
 log4j.appender.StdOut = org.apache.log4j.ConsoleAppender
@@ -27,6 +27,9 @@ log4j.appender.DB.layout=org.apache.log4j.PatternLayout
 # Assigning appenders to packages (application loggers)
 log4j.category.org.isf=LOG_LEVEL,RollingFile
 log4j.additivity.org.isf = false
+
+# Security settings - see log4j CVE-2021-44228
+log4j.formatMsgNoLookups=true 
 
 # Assigning appenders to Hibernate packages (DB loggers)
 # - hibernate.SQL to DEBUG for SQL queries to be logged
