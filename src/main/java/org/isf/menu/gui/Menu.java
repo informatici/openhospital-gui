@@ -22,6 +22,7 @@
 package org.isf.menu.gui;
 
 import java.awt.Toolkit;
+import java.io.File;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -52,7 +53,7 @@ public class Menu {
 		checkOHVersion();
 		checkJavaVersion();
 		JFrame.setDefaultLookAndFeelDecorated(false);
-		new SplashWindow3("splash.png", null, 3000);
+		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "splash.png", null, 3000);
 		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
 		Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQueue);
 	}
