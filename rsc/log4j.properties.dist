@@ -2,7 +2,7 @@
 log4j.rootCategory=INFO,RollingFile
 
 # Null appender (off)
-log4j.appender.null=org.apache.log4j.varia.NullAppender 	
+log4j.appender.null=org.apache.log4j.varia.NullAppender
 
 # StdOut Appender (with classes) (not used)
 log4j.appender.StdOut = org.apache.log4j.ConsoleAppender
