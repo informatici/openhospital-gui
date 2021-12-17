@@ -227,9 +227,9 @@ ORDER BY EXA_DESC, LAB_RES, LAB_SEX, LAB_AGE, PAT_CITY, PAT_ADDR]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
 			</textField>
-			<image>
+			<image hAlign="Right" vAlign="Middle" onErrorType="Icon">
 				<reportElement key="image-1" x="475" y="5" width="56" height="40" uuid="7b2a49ba-3f8c-4484-a48c-782a27f5108d"/>
-				<imageExpression><![CDATA[$P{PATH_LOGO} + "Splash.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{PATH_LOGO} + "logo_report.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

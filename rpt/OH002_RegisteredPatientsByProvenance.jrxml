@@ -55,7 +55,7 @@ ORDER BY NUMBER DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{RegisteredPatients}]]></textFieldExpression>
 			</textField>
-			<image>
+			<image hAlign="Right" vAlign="Middle" onErrorType="Icon">
 				<reportElement key="image-1" x="476" y="5" width="56" height="40" uuid="c05e2136-45c3-49de-972a-af00b2d1fa06"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -63,7 +63,7 @@ ORDER BY NUMBER DESC]]>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<imageExpression><![CDATA[$P{LOGO_PATH} + "Splash.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{LOGO_PATH} + "logo_report.png"]]></imageExpression>
 			</image>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-4" x="0" y="49" width="535" height="22" uuid="215e6cc0-9928-4de5-8f33-944aa883bced"/>
