@@ -1,41 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH008_lab_summary_for_opd" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="OH008_lab_summary_for_opd.jrxml" uuid="184c3efa-2a25-4ab9-8893-8e3d600a991c">
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH008_lab_summary_for_opd" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="OH008_lab_summary_for_opd" whenResourceMissingType="Key" uuid="184c3efa-2a25-4ab9-8893-8e3d600a991c">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
-	<parameter name="year" class="java.lang.String"/>
-	<parameter name="month" class="java.lang.String"/>
+	<parameter name="year" class="java.lang.String">
+		<defaultValueExpression><![CDATA[2021]]></defaultValueExpression>
+	</parameter>
+	<parameter name="month" class="java.lang.String">
+		<defaultValueExpression><![CDATA[10]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select * from (
-select EXA_DESC EXAM,'test done' CATEGORY,lab_sex SEX ,  count(*) COUNT 
-from LABORATORY, EXAM
-where LAB_EXA_ID_A = EXA_ID_A
-and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
-and lab_pat_inout='O'
-group by LAB_EXA_ID_A,lab_sex,'test done'
-union
-select EXA_DESC,case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end,lab_sex,  count(*) from LABORATORY, EXAM
-where LAB_EXA_ID_A = EXA_ID_A
-and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
-and lab_pat_inout='O'
-group by LAB_EXA_ID_A,lab_sex,case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end
-union
-select 'all other','test done',lab_sex, count(*) from LABORATORY, EXAM
-where LAB_EXA_ID_A = EXA_ID_A
-and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
-and lab_pat_inout='O'
-group by 'all other',lab_sex,'test done'
-union
-select 'all other',case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end,lab_sex, count(*) from LABORATORY, EXAM
-where LAB_EXA_ID_A = EXA_ID_A
-and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
-and lab_pat_inout='O'
-group by 'all other',lab_sex,case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end
+	
+	select EXA_DESC AS EXAM, 'Test done' AS CATEGORY, LAB_SEX AS SEX, count(*) AS COUNT 
+	from LABORATORY, EXAM
+	where LAB_EXA_ID_A = EXA_ID_A
+	and month(LAB_EXAM_DATE) = $P{month} and year(LAB_EXAM_DATE) = $P{year}
+	and lab_pat_inout = 'O'
+	group by LAB_EXA_ID_A, lab_sex, 'Test done'
+	
+	union
+	
+	select EXA_DESC AS EXAM, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end AS CATEGORY, lab_sex AS SEX, count(*) AS COUNT
+	from LABORATORY, EXAM
+	where LAB_EXA_ID_A = EXA_ID_A
+	and month(LAB_EXAM_DATE) = $P{month} and year(LAB_EXAM_DATE) = $P{year}
+	and lab_pat_inout = 'O'
+	group by LAB_EXA_ID_A, lab_sex, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end
+	
+	union
+	
+	select 'All other' AS EXAM, 'Test done' AS CATEGORY, lab_sex AS SEX, count(*) AS COUNT
+	from LABORATORY, EXAM
+	where LAB_EXA_ID_A = EXA_ID_A
+	and month(LAB_EXAM_DATE) = $P{month} and year(LAB_EXAM_DATE) = $P{year}
+	and lab_pat_inout = 'O'
+	group by 'All other', lab_sex, 'Test done'
+	
+	union
+	
+	select 'All other' AS EXAM, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end AS CATEGORY, lab_sex AS SEX, count(*) AS COUNT
+	from LABORATORY, EXAM
+	where LAB_EXA_ID_A = EXA_ID_A
+	and month(LAB_EXAM_DATE) = $P{month} and year(LAB_EXAM_DATE) = $P{year}
+	and lab_pat_inout = 'O'
+	group by 'All other', lab_sex, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end
+	
 ) labdata
-order by 1,2,3]]>
+
+order by EXAM, CATEGORY, SEX]]>
 	</queryString>
 	<field name="EXAM" class="java.lang.String"/>
 	<field name="CATEGORY" class="java.lang.String"/>
@@ -221,7 +239,10 @@ order by 1,2,3]]>
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{CATEGORY}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{CATEGORY}.equals( "Test done" ) ? $R{TestDone} :
+	$F{CATEGORY}.equals( "Positive" ) ? $R{Positive} :
+		$F{CATEGORY}.equals( "Negative" ) ? $R{Negative} : $F{CATEGORY}
+		]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="402" y="1" width="40" height="11" uuid="41a16764-42c3-42a7-8938-35c612bd55b3"/>
@@ -234,7 +255,7 @@ order by 1,2,3]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SEX}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{SEX}.equals( "F" ) ? $R{Female} : $R{Male}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

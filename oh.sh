@@ -22,30 +22,46 @@
 #
 #
 
-######################## Configuration ########################
-
-# SET DEBUG mode
+#################### Script info and configuration - Do not edit #####################
+# set script DEBUG mode
 # saner programming env: these switches turn some bugs into errors
 #set -o errexit -o pipefail -o noclobber -o nounset
 
-######## Open Hospital Configuration
+######## get name of this shell script
+SCRIPT_NAME=$(basename "$0")
+
+############## Script startup configuration - change at your own risk :-) ##############
+#
+# set MANUAL_CONFIG to "on" to setup configuration files manually
+# my.cnf and all oh/rsc/*.properties files will not be generated or
+# overwritten if already present
+#MANUAL_CONFIG=on
+
+############## OH general configuration - change at your own risk :-) ##############
+
 # OH_PATH is the directory where Open Hospital files are located
 # OH_PATH=/usr/local/OpenHospital/oh-1.11
 
-OH_MODE=PORTABLE # set functioning mode to PORTABLE | CLIENT
+# set OH mode to PORTABLE | CLIENT - default set to PORTABLE
+#OH_MODE=PORTABLE 
 
-# set DEMO_DATA to on to enable Demo data loading
-# Warning -> __requires deletion of all portable data__
-DEMO_DATA=off
+# set DEMO_DATA to on to enable demo database loading - default set to off
+#
+# -> Warning -> __requires deletion of all portable data__
+#
+#DEMO_DATA=off
 
-# Language setting - default set to en
-#OH_LANGUAGE=en fr es it pt
-#OH_LANGUAGE=it
+# language setting - default set to en
+#OH_LANGUAGE=en # fr es it pt
 
 # set log level to INFO | DEBUG - default set to INFO
 #LOG_LEVEL=INFO
 
-######## Software configuration - change at your own risk :-)
+# set JAVA_BIN
+# Uncomment this if you want to use system wide JAVA
+#JAVA_BIN=`which java`
+
+############## OH local configuration - change at your own risk :-) ##############
 # Database
 MYSQL_SERVER=localhost
 MYSQL_PORT=3306
@@ -55,31 +71,34 @@ DATABASE_USER=isf
 DATABASE_PASSWORD="isf123"
 
 DICOM_MAX_SIZE="4M"
-
-OH_DIR=.
-SQL_DIR=sql
+DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 DICOM_DIR="data/dicom_storage"
+
+OH_DIR="."
+OH_DOC_DIR="../doc"
+CONF_DIR="data/conf"
 DATA_DIR="data/db"
-LOG_DIR="data/log"
 BACKUP_DIR="data/dump"
-TMP_DIR=tmp
-#DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
-DB_DEMO="create_all_demo.sql"
-DATE=`date +%Y-%m-%d_%H-%M-%S`
+LOG_DIR="data/log"
+SQL_DIR="sql"
+SQL_EXTRA_DIR="sql/extra"
+TMP_DIR="tmp"
+
 LOG_FILE=startup.log
 OH_LOG_FILE=openhospital.log
 
-######## Advanced options
-# set MANUAL_CONFIG to "on" to setup configuration files manually
-# my.cnf and all oh/rsc/*.properties files will not be generated or
-# overwritten if already present
-MANUAL_CONFIG=off
+#DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
+DB_DEMO="create_all_demo.sql"
 
-# Set JAVA_BIN
-# Uncomment this if you want to use system wide JAVA
-#JAVA_BIN=`which java`
+# downloaded file extension
+EXT="tar.gz"
 
-######## Define architecture
+# date format
+DATE=`date +%Y-%m-%d_%H-%M-%S`
+
+################ Architecture and external software ################
+
+######## define architecture
 
 ARCH=`uname -m`
 case $ARCH in
@@ -101,11 +120,10 @@ case $ARCH in
 		;;
 esac
 
-######## MySQL Software
-EXT="tar.gz"
+######## MySQL/MariaDB Software
 # MariaDB
-MYSQL_VERSION="10.2.40"
-MYSQL_URL="https://downloads.mariadb.com/MariaDB/mariadb-$MYSQL_VERSION/bintar-linux-$MYSQL_ARCH"
+MYSQL_VERSION="10.2.41"
+MYSQL_URL="https://archive.mariadb.org/mariadb-$MYSQL_VERSION/bintar-linux-$MYSQL_ARCH"
 MYSQL_DIR="mariadb-$MYSQL_VERSION-linux-$MYSQL_PACKAGE_ARCH"
 # MySQL
 #MYSQL_URL="https://downloads.mysql.com/archives/get/p/23/file"
@@ -125,12 +143,9 @@ MYSQL_DIR="mariadb-$MYSQL_VERSION-linux-$MYSQL_PACKAGE_ARCH"
 #JAVA_DIR="jdk-11.0.11+9-jre"
 
 ### JRE 8 - zulu distribution
-JAVA_DISTRO="zulu8.56.0.21-ca-fx-jre8.0.302-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu8.58.0.13-ca-fx-jdk8.0.312-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin/"
 JAVA_DIR=$JAVA_DISTRO
-
-######## get name of this shell script
-SCRIPT_NAME=$(basename "$0")
 
 ######################## DO NOT EDIT BELOW THIS LINE ########################
 
@@ -143,17 +158,19 @@ function script_usage {
         echo "|                   Open Hospital | OH                    |"
         echo "|                                                         |"
         echo " ---------------------------------------------------------"
-        echo " lang $OH_LANGUAGE | arch $ARCH | mode $OH_MODE           "
+        echo " lang $OH_LANGUAGE | arch $ARCH | mode $OH_MODE | log level $LOG_LEVEL "
         echo " ---------------------------------------------------------"
         echo ""
         echo " Usage: $SCRIPT_NAME [ -l en|fr|it|es|pt ] "
         echo ""
         echo "   -C    start OH in CLIENT mode (client / server configuration)"
+        echo "   -P    start OH in PORTABLE mode"
         echo "   -d    start OH in debug mode"
         echo "   -D    start OH with Demo data"
         echo "   -g    generate configuration files"
         echo "   -G    setup GSM"
         echo "   -h    show this help"
+        echo "   -i    initialize/install OH database"
         echo "   -l    set language: en|fr|it|es|pt"
         echo "   -s    save OH database"
         echo "   -r    restore OH database"
@@ -161,7 +178,6 @@ function script_usage {
         echo "   -v    show OH software version and configuration"
         echo "   -X    clean/reset OH installation"
         echo ""
-	exit 0
 }
 
 function get_confirmation {
@@ -171,6 +187,29 @@ function get_confirmation {
 		n|N ) echo "Exiting."; exit 0;;
 		* ) echo "Invalid choice. Exiting."; exit 1 ;;
 	esac
+}
+
+function set_defaults {
+	# set default values for script variables
+	# manual config - set default to off
+	if [ -z ${MANUAL_CONFIG+x} ]; then
+		MANUAL_CONFIG="off"
+	fi
+
+	# OH mode - set default to PORTABLE
+	if [ -z ${OH_MODE+x} ]; then
+		OH_MODE="PORTABLE"
+	fi
+
+	# log level - set default to INFO
+	if [ -z ${LOG_LEVEL+x} ]; then
+		LOG_LEVEL=INFO
+	fi
+
+	# demo data - set default to off
+	if [ -z ${DEMO_DATA+x} ]; then
+		DEMO_DATA=off
+	fi
 }
 
 function set_path {
@@ -196,10 +235,11 @@ function set_path {
 }
 
 function set_language {
-	# set OH interface language - set default to en
+	# set OH interface language - default to en
 	if [ -z ${OH_LANGUAGE+x} ]; then
 		OH_LANGUAGE=en
 	fi
+	# check for valid language selection
 	case $OH_LANGUAGE in 
 		en|fr|it|es|pt) 
 			# set database creation script in chosen language
@@ -327,10 +367,10 @@ function config_database {
 
 	# create MySQL configuration
 	echo "Generating MySQL config file..."
-	[ -f ./etc/mysql/my.cnf ] && mv -f ./etc/mysql/my.cnf ./etc/mysql/my.cnf.old
+	[ -f ./$CONF_DIR/my.cnf ] && mv -f ./$CONF_DIR/my.cnf ./$CONF_DIR/my.cnf.old
 	sed -e "s/MYSQL_SERVER/$MYSQL_SERVER/g" -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
 	-e "s/TMP_DIR/$TMP_DIR_ESCAPED/g" -e "s/DATA_DIR/$DATA_DIR_ESCAPED/g" -e "s/LOG_DIR/$LOG_DIR_ESCAPED/g" \
-	-e "s/MYSQL_PORT/$MYSQL_PORT/g" -e "s/MYSQL_DISTRO/$MYSQL_DIR/g" ./etc/mysql/my.cnf.dist > ./etc/mysql/my.cnf
+	-e "s/MYSQL_PORT/$MYSQL_PORT/g" -e "s/MYSQL_DISTRO/$MYSQL_DIR/g" ./$CONF_DIR/my.cnf.dist > ./$CONF_DIR/my.cnf
 }
 
 function initialize_database {
@@ -356,7 +396,7 @@ function initialize_database {
 
 function start_database {
 	echo "Starting MySQL server... "
-	./$MYSQL_DIR/bin/mysqld_safe --defaults-file=./etc/mysql/my.cnf >> ./$LOG_DIR/$LOG_FILE 2>&1 &
+	./$MYSQL_DIR/bin/mysqld_safe --defaults-file=./$CONF_DIR/my.cnf >> ./$LOG_DIR/$LOG_FILE 2>&1 &
 	if [ $? -ne 0 ]; then
 		echo "Error: MySQL server not started! Exiting."
 		exit 2
@@ -437,12 +477,16 @@ function dump_database {
 }
 
 function shutdown_database {
-	echo "Shutting down MySQL..."
-	cd "$OH_PATH"
-	./$MYSQL_DIR/bin/mysqladmin -u root -p$MYSQL_ROOT_PW --host=$MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
-	# wait till the MySQL tcp port is closed
-	until !( nc -z $MYSQL_SERVER $MYSQL_PORT ); do sleep 1; done
-	echo "MySQL stopped!"
+	if [ $OH_MODE = "PORTABLE" ]; then
+		echo "Shutting down MySQL..."
+		cd "$OH_PATH"
+		./$MYSQL_DIR/bin/mysqladmin -u root -p$MYSQL_ROOT_PW --host=$MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
+		# wait till the MySQL tcp port is closed
+		until !( nc -z $MYSQL_SERVER $MYSQL_PORT ); do sleep 1; done
+		echo "MySQL stopped!"
+	else
+		exit 1
+	fi
 }
 
 function clean_database {
@@ -479,8 +523,8 @@ function clean_files {
 	echo "Warning: do you want to remove all existing configuration and log files ?"
 	get_confirmation;
 	echo "Removing files..."
-	rm -f ./etc/mysql/my.cnf
-	rm -f ./etc/mysql/my.cnf.old
+	rm -f ./$CONF_DIR/my.cnf
+	rm -f ./$CONF_DIR/my.cnf.old
 	rm -f ./$LOG_DIR/*
 	rm -f ./$OH_DIR/rsc/settings.properties
 	rm -f ./$OH_DIR/rsc/settings.properties.old
@@ -498,7 +542,7 @@ function generate_config_files {
 	######## DICOM setup
 	[ -f ./$OH_DIR/rsc/dicom.properties ] && mv -f ./$OH_DIR/rsc/dicom.properties ./$OH_DIR/rsc/dicom.properties.old
 	sed -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
-	-e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/dicom.properties.dist > ./$OH_DIR/rsc/dicom.properties
+	-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/dicom.properties.dist > ./$OH_DIR/rsc/dicom.properties
 
 	######## log4j.properties setup
 	OH_LOG_DEST="$OH_PATH_ESCAPED/$LOG_DIR/$OH_LOG_FILE"
@@ -513,10 +557,10 @@ function generate_config_files {
 	-e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
 	./$OH_DIR/rsc/database.properties.dist > ./$OH_DIR/rsc/database.properties
 
-	######## settings.properties language setup 
-	# set language in OH config file
+	######## settings.properties setup
+	# set language and DOC_DIR in OH config file
 	[ -f ./$OH_DIR/rsc/settings.properties ] && mv -f ./$OH_DIR/rsc/settings.properties ./$OH_DIR/rsc/settings.properties.old
-	sed -e "s/OH_SET_LANGUAGE/$OH_LANGUAGE/g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
+	sed -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
 }
 
 
@@ -530,13 +574,9 @@ if [ $(id -u) -eq 0 ]; then
 	exit 1
 fi
 
-# log level - set default to INFO
-if [ -z ${LOG_LEVEL+x} ]; then
-	LOG_LEVEL=INFO
-fi	
-
 ######## Environment setup
 
+set_defaults;
 set_path;
 set_language;
 
@@ -548,7 +588,7 @@ cd "$OH_PATH"
 # reset in case getopts has been used previously in the shell
 OPTIND=1 
 # list of arguments expected in user input (- option)
-OPTSTRING=":CdDgGhl:srtvX?" 
+OPTSTRING=":CPdDgGhil:srtvX?" 
 
 # function to parse input
 while getopts ${OPTSTRING} opt; do
@@ -556,8 +596,10 @@ while getopts ${OPTSTRING} opt; do
 	C)	# start in CLIENT mode
 		OH_MODE="CLIENT"
 		;;
+	P)	# start in PORTABLE mode
+		OH_MODE="PORTABLE"
+		;;
 	d)	# debug
-        	echo "Starting Open Hospital in debug mode..."
 		LOG_LEVEL=DEBUG
 		echo "Log level set to $LOG_LEVEL"
 		;;
@@ -587,6 +629,33 @@ while getopts ${OPTSTRING} opt; do
 		;;
 	h)	# help
 		script_usage;
+		exit 0
+		;;
+	i)	# initialize/install OH database
+		# set mode to CLIENT
+		OH_MODE="CLIENT"
+		echo "Do you want to initialize/install the OH database on:"
+		echo ""
+		echo " Server -> $MYSQL_SERVER"
+		echo " TCP port -> $MYSQL_PORT" 
+		echo ""
+		get_confirmation;
+		set_language;
+		initialize_dir_structure;
+		mysql_check;
+		# ask user for database root password
+		read -p "Please insert the MySQL / MariaDB database root password (root@$MYSQL_SERVER) -> " MYSQL_ROOT_PW
+		echo ""
+		echo "Installing the database....."
+		echo ""
+		echo " Database name -> $DATABASE_NAME"
+		echo " Database user -> $DATABASE_USER"
+		echo " Database password -> $DATABASE_PASSWORD"
+		echo ""
+		import_database;
+		test_database_connection;
+		echo "Done!"
+		exit 0
 		;;
 	l)	# set language
 		OH_LANGUAGE=$OPTARG
@@ -598,7 +667,7 @@ while getopts ${OPTSTRING} opt; do
 			# check if database already exists
 			if [ -d ./"$DATA_DIR"/$DATABASE_NAME ]; then
 				mysql_check;
-				if [ $MANUAL_CONFIG = "off" ]; then
+				if [ $MANUAL_CONFIG != "on" ]; then
 					config_database;
 				fi
 			else
@@ -628,7 +697,7 @@ while getopts ${OPTSTRING} opt; do
 			# reset database if exists
 			clean_database;
 			mysql_check;
-			if [ $MANUAL_CONFIG = "off" ]; then
+			if [ $MANUAL_CONFIG != "on" ]; then
 				config_database;
 			fi
 			initialize_dir_structure;
@@ -654,32 +723,41 @@ while getopts ${OPTSTRING} opt; do
 		exit 0
 		;;
 	v)	# show version
-        	echo "--------- Software version ---------"
+		echo "--------- Software version ---------"
 		source "./$OH_DIR/rsc/version.properties"
-        	echo "Open Hospital version" $VER_MAJOR.$VER_MINOR.$VER_RELEASE
-        	echo "MySQL version: $MYSQL_DIR"
-        	echo "JAVA version:"
-		echo $JAVA_DISTRO
-        	echo ""
+		echo "Open Hospital version" $VER_MAJOR.$VER_MINOR.$VER_RELEASE
+		echo "MySQL version: $MYSQL_DIR"
+		echo "JAVA version: $JAVA_DISTRO"
 		# show configuration
-        	echo "--------- Configuration ---------"
-        	echo "Architecture is $ARCH"
+		echo "--------- Configuration ---------"
+		echo "Architecture is $ARCH"
 		echo "Open Hospital is configured in $OH_MODE mode"
 		echo "Language is set to $OH_LANGUAGE"
 		echo "Demo data is set to $DEMO_DATA"
-        	echo ""
+		echo "Log level is set to $LOG_LEVEL"
+		echo "--- Database ---"
 		echo "MYSQL_SERVER=$MYSQL_SERVER"
 		echo "MYSQL_PORT=$MYSQL_PORT"
 		echo "DATABASE_NAME=$DATABASE_NAME"
 		echo "DATABASE_USER=$DATABASE_USER"
-		echo "DATABASE_PASSWORD=$DATABASE_PASSWORD"
+		echo "--- Dicom ---"
 		echo "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
-		echo "OH_DIR=$OH_DIR"
-		echo "BACKUP_DIR=$BACKUP_DIR"
+		echo "DICOM_STORAGE=$DICOM_STORAGE"
 		echo "DICOM_DIR=$DICOM_DIR"
+		echo "--- OH ---"
+		echo "OH_DIR=$OH_DIR"
+		echo "OH_DOC_DIR=$OH_DOC_DIR"
+		echo "CONF_DIR=$CONF_DIR"
 		echo "DATA_DIR=$DATA_DIR"
+		echo "BACKUP_DIR=$BACKUP_DIR"
 		echo "LOG_DIR=$LOG_DIR"
-        	echo ""
+		echo "SQL_DIR=$SQL_DIR"
+		echo "SQL_EXTRA_DIR=$SQL_EXTRA_DIR"
+		echo "TMP_DIR=$TMP_DIR"
+		echo "---  Logging ---"
+		echo "LOG_FILE=$LOG_FILE"
+		echo "OH_LOG_FILE=$OH_LOG_FILE"
+		echo ""
 		exit 0
 		;;
 	X)	# clean
@@ -717,19 +795,22 @@ if [ $DEMO_DATA = "on" ]; then
 	fi
 
 	if [ -f ./$SQL_DIR/$DB_DEMO ]; then
-	        echo "Found SQL demo database, starting OH in demo mode..."
+		echo "Found SQL demo database, starting OH in demo mode..."
 		DB_CREATE_SQL=$DB_DEMO
 		# reset database if exists
 		clean_database;
 	else
-	      	echo "Error: no $DB_DEMO found! Exiting."
+		echo "Error: no $DB_DEMO found! Exiting."
 		exit 1
 	fi
 fi
 
+# display running configuration
+echo "Manual config is set to $MANUAL_CONFIG"
 echo "Starting Open Hospital in $OH_MODE mode..."
-echo "OH_PATH set to $OH_PATH"
+echo "OH_PATH is set to $OH_PATH"
 echo "OH language is set to $OH_LANGUAGE"
+echo "OH log level is set to $LOG_LEVEL"
 
 # check for java
 java_check;
@@ -747,7 +828,7 @@ if [ $OH_MODE = "PORTABLE" ]; then
 	# check for MySQL software
 	mysql_check;
 	# config MySQL
-	if [ $MANUAL_CONFIG = "off" ]; then
+	if [ $MANUAL_CONFIG != "on" ]; then
 		config_database;
 	fi
 	# check if OH database already exists
@@ -772,7 +853,7 @@ fi
 test_database_connection;
 
 # generate config files
-if [ $MANUAL_CONFIG = "off" ]; then
+if [ $MANUAL_CONFIG != "on" ]; then
 	generate_config_files;
 fi
 
@@ -783,7 +864,7 @@ echo "Starting Open Hospital..."
 # OH GUI launch
 cd "$OH_PATH/$OH_DIR" # workaround for hard coded paths
 
-$JAVA_BIN -client -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.menu.gui.Menu >> ../$LOG_DIR/$LOG_FILE 2>&1
+$JAVA_BIN -client -Xms64m -Xmx1024m -Dsun.java2d.dpiaware=false -Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.menu.gui.Menu >> ../$LOG_DIR/$LOG_FILE 2>&1
 
 if [ $? -ne 0 ]; then
 	echo "An error occurred while starting Open Hospital. Exiting."
@@ -794,9 +875,7 @@ fi
 
 echo "Exiting Open Hospital..."
 
-if [ $OH_MODE = "PORTABLE" ]; then
-	shutdown_database;
-fi
+shutdown_database;
 
 # go back to starting directory
 cd "$CURRENT_DIR"

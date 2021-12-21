@@ -153,6 +153,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private List<Therapy> therapies = new ArrayList<>();
 	private List<TherapyRow> thRows = new ArrayList<>();
 	private List<Visit> visits = new ArrayList<>();
+	private List<Visit> removedVisits = new ArrayList<Visit>();
 	private Ward ward;
 
 	public TherapyEdit(JFrame owner, Patient patient, boolean admitted) {
@@ -430,16 +431,20 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			removeVisitButton.setMaximumSize(new Dimension(VISIT_BUTTON_WIDTH, ALL_BUTTON_HEIGHT));
 			removeVisitButton.setHorizontalAlignment(SwingConstants.LEFT);
 			removeVisitButton.addActionListener(actionEvent -> {
+				
 				if (selectedVisit == null) {
 					return;
 				}
+				removedVisits.add(selectedVisit);
 				visits.remove(selectedVisit);
 
 				visitModified = true;
 				selectedVisit = null;
 				saveButton.setEnabled(true);
 				checked = false;
+				
 				showAll();
+				
 			});
 		}
 		return removeVisitButton;
@@ -759,7 +764,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 					} else {
 						boolean result = false;
 						try {
-							result = vstManager.newVisits(visits);
+							result = vstManager.newVisits(visits, removedVisits);
 
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex, TherapyEdit.this);

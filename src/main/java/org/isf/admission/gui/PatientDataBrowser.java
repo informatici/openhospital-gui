@@ -27,6 +27,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EventListener;
@@ -401,8 +402,6 @@ public class PatientDataBrowser extends ModalJFrame implements
 		return malnutritionButton;	
 	}
 	
-//Alex:
-// nuovo AdmissionBrowserModel con OPD
 class AdmissionBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = -453243229156512947L;
@@ -470,12 +469,17 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			
 			} else if (column == 0) {
 				if (row < admList.size()) {
+					
+					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 					Date myDate = (admList.get(row)).getAdmDate().getTime();
-					return myDate;
+					return dateFormat.format(myDate);
+					
 				} else {
+					
 					int z = row - admList.size();
+					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 					Date myDate = (opdList.get(z)).getVisitDate().getTime();
-					return myDate;
+					return dateFormat.format(myDate);
 				}
 				
 			} else if (column == 1) {				

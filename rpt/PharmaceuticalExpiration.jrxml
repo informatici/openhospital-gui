@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PharmaceuticalExpiration" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="PharmaceuticalExpiration" whenResourceMissingType="Key" uuid="b9099a0c-14d9-4ffe-a517-c8b93d5d8656">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -164,7 +164,7 @@ WHERE QTY > 0]]>
 					<pen lineWidth="0.25" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
-			<image>
+			<image hAlign="Right" vAlign="Middle" onErrorType="Icon">
 				<reportElement key="image-1" x="476" y="6" width="56" height="40" uuid="a8184997-791d-4a2d-8aa2-4b32b550f85e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -172,7 +172,7 @@ WHERE QTY > 0]]>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<imageExpression><![CDATA[$P{LOGO_PATH} + "Splash.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{LOGO_PATH} + "logo_report.png"]]></imageExpression>
 			</image>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-2" x="0" y="60" width="535" height="22" uuid="4d7b3dab-bd80-4081-b4b7-cdd4c485ce9b"/>

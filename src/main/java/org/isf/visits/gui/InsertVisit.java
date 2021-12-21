@@ -224,7 +224,16 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			}
 			for (Ward ward : wardList) {
 
-				wardBox.addItem(ward);
+				// if patient is a male you don't see pregnancy case
+				if (("" + patientSelected.getSex()).equalsIgnoreCase("F") && !ward.isFemale()) {
+					continue;
+				} else if (("" + patientSelected.getSex()).equalsIgnoreCase("M") && !ward.isMale()) {
+					continue;
+				} else {
+					if (ward.getBeds() > 0) {
+						wardBox.addItem(ward);
+					}
+				}
 				if (this.ward != null) {
 					if (this.ward.getCode().equalsIgnoreCase(ward.getCode())) {
 						wardBox.setSelectedItem(ward);
@@ -315,10 +324,15 @@ public class InsertVisit extends JDialog implements SelectionListener {
 					MessageDialog.error(InsertVisit.this, "angal.visit.avisitcannotbescheduledforadatethatispast.msg");
 					return;
 				}
+				Ward ward = getSelectedWard();
+				if (ward == null) {
+					MessageDialog.error(InsertVisit.this, "angal.visit.pleasechooseaward.msg");
+					return;
+				}
 
 				Visit thisVisit = new Visit();
 				thisVisit.setPatient(patientSelected);
-				thisVisit.setWard(getSelectedWard());
+				thisVisit.setWard(ward);
 				thisVisit.setDate(date);
 				thisVisit.setDuration((Integer) jSpinnerDur.getValue());
 				thisVisit.setService(serviceField.getText());

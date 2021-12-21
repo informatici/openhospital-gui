@@ -1725,7 +1725,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				boolean isPregnancy = false;
 
 				// get ward id (not null)
-				if (wardBox.getSelectedIndex() == 0) {
+				if (wardBox.getSelectedIndex() == 0 || wardBox.getSelectedItem() == null) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseselectavalidward.msg");
 					return;
 				} else {
@@ -1796,7 +1796,8 @@ public class AdmissionBrowser extends ModalJFrame {
 					admission.setAdmDate(dateIn);
 					RememberDates.setLastAdmInDate(dateIn);
 				} else {
-					admission.setAdmDate(null);
+					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseinsertavalidadmissiondate.msg");
+					return;
 				}
 
 				// get admission type (not null)
@@ -1868,6 +1869,15 @@ public class AdmissionBrowser extends ModalJFrame {
 					} else {
 						admission.setPregTreatmentType(treatmTypeList.get(treatmTypeBox.getSelectedIndex() - 1));
 
+					}
+
+					// get visit date
+					if (visitDateFieldCal.getDate() != null) {
+						visitDate = new GregorianCalendar();
+						visitDate.setTime(visitDateFieldCal.getDate());
+						admission.setVisitDate(visitDate);
+					} else {
+						admission.setVisitDate(null);
 					}
 
 					// get delivery date

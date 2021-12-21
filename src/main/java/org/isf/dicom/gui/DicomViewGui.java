@@ -74,9 +74,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Pietro Castellucci
  * @version 1.0.0
- * @deprecated TODO: explain
  */
-@Deprecated // what is this class???
 public class DicomViewGui extends JPanel {
 
 	private static final long serialVersionUID = 1L;

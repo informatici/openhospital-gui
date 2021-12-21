@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="examslist" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="examslist" whenResourceMissingType="Key" uuid="6a0232c3-456b-4152-8b89-d61644c42313">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<queryString>
 		<![CDATA[SELECT EXC_DESC, EXA_DESC, EXR_DESC, EXA_EXC_ID_A, EXA_PROC, EXA_DEFAULT
-    FROM EXAM e, EXAMTYPE et, EXAMROW er
-where 
-er.EXR_EXA_ID_A = e.EXA_ID_A
-and et.EXC_ID_A = e.EXA_EXC_ID_A
-order by 1,2,3]]>
+    FROM EXAM e 
+    JOIN EXAMTYPE et ON et.EXC_ID_A = e.EXA_EXC_ID_A
+    LEFT JOIN EXAMROW er ON er.EXR_EXA_ID_A = e.EXA_ID_A
+order by EXC_DESC, EXA_DESC, EXR_DESC]]>
 	</queryString>
 	<field name="EXC_DESC" class="java.lang.String"/>
 	<field name="EXA_DESC" class="java.lang.String"/>
@@ -49,9 +49,9 @@ order by 1,2,3]]>
 	<group name="EXAM">
 		<groupExpression><![CDATA[$F{EXA_DESC}]]></groupExpression>
 		<groupHeader>
-			<band height="11" splitType="Stretch">
+			<band height="26" splitType="Stretch">
 				<textField isBlankWhenNull="false">
-					<reportElement key="textField" x="3" y="0" width="256" height="11" uuid="faf89261-b136-47f3-8ab7-ac8caebc5fc4"/>
+					<reportElement key="textField" x="10" y="2" width="249" height="11" uuid="faf89261-b136-47f3-8ab7-ac8caebc5fc4"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -64,7 +64,7 @@ order by 1,2,3]]>
 					<textFieldExpression><![CDATA[$F{EXA_DESC}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="false">
-					<reportElement key="textField" x="286" y="0" width="17" height="11" uuid="0c239f0f-18bd-47fc-88b2-f4b846cf1bbd"/>
+					<reportElement key="textField" x="286" y="2" width="17" height="11" uuid="0c239f0f-18bd-47fc-88b2-f4b846cf1bbd"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -77,7 +77,7 @@ order by 1,2,3]]>
 					<textFieldExpression><![CDATA[$F{EXA_PROC}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="false">
-					<reportElement key="textField" x="308" y="0" width="223" height="11" uuid="d564f7fb-b587-4c71-afa7-d4a14789ea8c"/>
+					<reportElement key="textField" x="308" y="2" width="223" height="11" uuid="d564f7fb-b587-4c71-afa7-d4a14789ea8c"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -179,7 +179,8 @@ order by 1,2,3]]>
 	</columnHeader>
 	<detail>
 		<band height="11" splitType="Stretch">
-			<textField isBlankWhenNull="false">
+			<printWhenExpression><![CDATA[$F{EXR_DESC} != null]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="309" y="0" width="223" height="11" uuid="09111d8d-e9bb-421d-b0a1-3eabca5b1f9e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

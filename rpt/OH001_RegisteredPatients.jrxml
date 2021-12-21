@@ -95,7 +95,7 @@ GROUP BY DATE(PAT_TIMESTAMP)]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{RegisteredPatients}]]></textFieldExpression>
 			</textField>
-			<image>
+			<image hAlign="Right" vAlign="Middle" onErrorType="Icon">
 				<reportElement key="image-1" x="476" y="5" width="56" height="40" uuid="1320702c-3eb3-4b51-9f8a-51cb447915ca"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -103,7 +103,7 @@ GROUP BY DATE(PAT_TIMESTAMP)]]>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<imageExpression><![CDATA[$P{PATH_LOGO} + "Splash.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{PATH_LOGO} + "logo_report.png"]]></imageExpression>
 			</image>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-4" x="0" y="49" width="535" height="22" uuid="42172ba1-c1e7-45a4-9049-c82e4b2224f8"/>
