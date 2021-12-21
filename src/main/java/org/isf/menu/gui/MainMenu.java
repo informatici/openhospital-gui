@@ -432,7 +432,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			// account for titlebar button widths. (estimated)
 			String os = System.getProperty("os.name").toLowerCase();
 			if (os.indexOf("win") >= 0) {
-				titleStringWidth += 170;
+				titleStringWidth += 180;
 				
 			} else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
 				titleStringWidth += 120;
