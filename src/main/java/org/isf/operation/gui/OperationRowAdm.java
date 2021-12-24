@@ -21,20 +21,7 @@
  */
 package org.isf.operation.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-
 import java.awt.AWTEvent;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.isf.admission.gui.AdmissionBrowser;
@@ -47,9 +34,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhTableOperationModel;
-import org.isf.utils.jobjects.VoFloatTextField;
 import org.isf.utils.time.Converters;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

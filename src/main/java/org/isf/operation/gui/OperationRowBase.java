@@ -33,7 +33,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -62,7 +61,6 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
-import org.isf.utils.time.Converters;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
