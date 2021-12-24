@@ -21,8 +21,20 @@
  */
 package org.isf.operation.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.AWTEvent;
-import java.util.GregorianCalendar;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.isf.admission.gui.AdmissionBrowser;
@@ -35,6 +47,9 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhTableOperationModel;
+import org.isf.utils.jobjects.VoFloatTextField;
+import org.isf.utils.time.Converters;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +67,6 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 	public OperationRowAdm(Admission adm) {
 		super();
 		myAdmission = adm;
-
 		if (myAdmission != null) {
 			try {
 				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
@@ -71,20 +85,17 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateope");
 			return;
 		}
-		if ((myAdmission != null) && (myAdmission.getAdmDate().after(this.textDate.getDate()))) {
+		if ((myAdmission != null) && (myAdmission.getAdmDate().isAfter(Converters.convertToLocalDateTime(this.textDate.getDate())))) {
 			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateafter");
 			return;
 		}
 
 		OperationRow operationRow = new OperationRow();
-		GregorianCalendar dateop = new GregorianCalendar();
-		dateop.setTime(this.textDate.getDate());
-		operationRow.setOpDate(dateop);
+		operationRow.setOpDate(Converters.convertToLocalDateTime(this.textDate.getDate()));
 		if (this.comboResult.getSelectedItem() != null) {
-			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
-			operationRow.setOpResult(opResult);
+			operationRow.setOpResult(opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
 		} else {
-			operationRow.setOpResult(""); //$NON-NLS-1$
+			operationRow.setOpResult("");
 		}
 		try {
 			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
@@ -103,8 +114,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 			oprowData.add(operationRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
-			dateop.setTime(this.textDate.getDate());
-			opeInter.setOpDate(dateop);
+			opeInter.setOpDate(Converters.convertToLocalDateTime(this.textDate.getDate()));
 			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
@@ -151,7 +161,6 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 				} catch (OHServiceException e1) {
 					OHServiceExceptionUtil.showMessages(e1);
 				}
-
 			}
 			if ((opRow.getId() <= 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
 				try {

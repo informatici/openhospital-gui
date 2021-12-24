@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class OperationTypeBrowser extends ModalJFrame implements OperationTypeListener{
+public class OperationTypeBrowser extends ModalJFrame implements OperationTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<OperationType> pOperationType;
@@ -114,8 +114,8 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				operationType = new OperationType("","");
-				OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, true);
+				operationType = new OperationType("", "");
+				OperationTypeEdit newrecord = new OperationTypeEdit(myFrame, operationType, true);
 				newrecord.addOperationTypeListener(OperationTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -138,7 +138,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					operationType = (OperationType) (model.getValueAt(selectedrow, -1));
-					OperationTypeEdit newrecord = new OperationTypeEdit(myFrame,operationType, false);
+					OperationTypeEdit newrecord = new OperationTypeEdit(myFrame, operationType, false);
 					newrecord.addOperationTypeListener(OperationTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -197,8 +197,8 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new OperationTypeBrowserModel();
 			jTable = new JTable(model);

@@ -72,26 +72,29 @@ public class ExamTypeEdit extends JDialog {
         examTypeListeners.remove(ExamTypeListener.class, listener);
     }
 
-    private void fireExamTypeInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireExamTypeInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamTypeListener) listener).examTypeInserted(event);
-	    }
-    }
-    private void fireExamTypeUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
+		for (EventListener listener : listeners) {
+			((ExamTypeListener) listener).examTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireExamTypeUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamTypeListener) listener).examTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = examTypeListeners.getListeners(ExamTypeListener.class);
+		for (EventListener listener : listeners) {
+			((ExamTypeListener) listener).examTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -110,10 +113,10 @@ public class ExamTypeEdit extends JDialog {
      * because we need to update them
 	 */
 	public ExamTypeEdit(JFrame owner, ExamType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		examType = old;//examType will be used for every operation
-		lastdescription= examType.getDescription();
+		examType = old;   //examType will be used for every operation
+		lastdescription = examType.getDescription();
 		initialize();
 	}
 

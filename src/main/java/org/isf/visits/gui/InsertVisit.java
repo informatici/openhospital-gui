@@ -28,9 +28,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,14 +57,13 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
+import org.isf.utils.jobjects.LocalDateSupportingJDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -74,12 +73,11 @@ import com.toedter.calendar.JDateChooser;
 public class InsertVisit extends JDialog implements SelectionListener {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(InsertVisit.class);
 
 	/*
 	 * Constants
 	 */
-	private static final String DATE_TIME_FORMAT = "dd/MM/yy HH:mm:ss"; //$NON-NLS-1$
+	private static final String DATE_TIME_FORMAT = "dd/MM/yy HH:mm:ss";
 	private static final Integer DEFAULT_DURATION = 30;
 	private static final int PREFERRED_SPINNER_WIDTH = 100;
 	private static final int ONE_LINE_COMPONENTS_HEIGHT = 30;
@@ -87,16 +85,14 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	/*
 	 * Attributes
 	 */
-	private JDateChooser visitDateChooser;
+	private LocalDateSupportingJDateChooser visitDateChooser;
 	private JPanel buttonsPanel;
 	private JButton buttonOK;
 	private JButton buttonCancel;
 	private JPanel servicePanel;
 	private JTextField serviceField;
 	private JPanel durationPanel;
-	private JTextField durationField;
 	private JPanel dateViPanel;
-	private JLabel dateAdm;
 	private JButton admButton;
 	private JButton jButtonPickPatient;
 	private JTextField patientTextField;
@@ -106,9 +102,9 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	/*
 	 * Return Value
 	 */
-	private Date visitDate = null;
+	private LocalDateTime visitDate = null;
 	private JPanel wardPanel;
-	private JComboBox wardBox;
+	private JComboBox<Ward> wardBox;
 	private Ward ward;
 	private Visit visit;
 	private boolean insert = false;
@@ -129,24 +125,22 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		initComponents();
 	}
 
-	public InsertVisit(JDialog owner, Date date) {
+	public InsertVisit(JDialog owner, LocalDateTime date) {
 		super(owner, true);
 		this.visitDate = date;
 		initComponents();
 	}
 
-	public InsertVisit(JFrame owner, Date date, Ward ward, Patient patient, boolean insert) {
+	public InsertVisit(JFrame owner, LocalDateTime date, Ward ward, Patient patient, boolean insert) {
 		super(owner, true);
 		this.patientSelected = patient;
 		this.visitDate = date;
 		this.ward = ward;
 		this.insert = insert;
 		initComponents();
-
 	}
 
 	private void initComponents() {
-		// setSize(new Dimension(500, 250));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		getContentPane().add(getpVisitInf());
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
@@ -160,54 +154,54 @@ public class InsertVisit extends JDialog implements SelectionListener {
 
 		JPanel patientParamsPanel = new JPanel(new SpringLayout());
 
-		GridBagLayout gbl_jPanelData = new GridBagLayout();
-		gbl_jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 0 };
-		gbl_jPanelData.rowHeights = new int[] { 20, 20, 20, 0, 0, 0, 0, 0 };
-		gbl_jPanelData.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-		gbl_jPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-		patientParamsPanel.setLayout(gbl_jPanelData);
+		GridBagLayout jPanelData = new GridBagLayout();
+		jPanelData.columnWidths = new int[] { 20, 20, 20, 0, 0, 0 };
+		jPanelData.rowHeights = new int[] { 20, 20, 20, 0, 0, 0, 0, 0 };
+		jPanelData.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		jPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		patientParamsPanel.setLayout(jPanelData);
 
-		GridBagConstraints gbc_ward = new GridBagConstraints();
-		gbc_ward.fill = GridBagConstraints.VERTICAL;
-		gbc_ward.anchor = GridBagConstraints.WEST;
+		GridBagConstraints ward = new GridBagConstraints();
+		ward.fill = GridBagConstraints.VERTICAL;
+		ward.anchor = GridBagConstraints.WEST;
 
-		gbc_ward.gridy = 0;
-		gbc_ward.gridx = 0;
-		patientParamsPanel.add(getWardPanel(), gbc_ward);
+		ward.gridy = 0;
+		ward.gridx = 0;
+		patientParamsPanel.add(getWardPanel(), ward);
 
-		GridBagConstraints gbc_Pat = new GridBagConstraints();
-		gbc_Pat.fill = GridBagConstraints.VERTICAL;
-		gbc_Pat.anchor = GridBagConstraints.WEST;
+		GridBagConstraints gbcPatientParams = new GridBagConstraints();
+		gbcPatientParams.fill = GridBagConstraints.VERTICAL;
+		gbcPatientParams.anchor = GridBagConstraints.WEST;
 
-		gbc_Pat.gridy = 0;
-		gbc_Pat.gridx = 1;
-		gbc_Pat.gridwidth = 3;
-		patientParamsPanel.add(getPanelChoosePatient(), gbc_Pat);
+		gbcPatientParams.gridy = 0;
+		gbcPatientParams.gridx = 1;
+		gbcPatientParams.gridwidth = 3;
+		patientParamsPanel.add(getPanelChoosePatient(), gbcPatientParams);
 
-		GridBagConstraints gbc_Service = new GridBagConstraints();
-		gbc_Service.fill = GridBagConstraints.VERTICAL;
-		gbc_Service.anchor = GridBagConstraints.WEST;
+		GridBagConstraints gbcService = new GridBagConstraints();
+		gbcService.fill = GridBagConstraints.VERTICAL;
+		gbcService.anchor = GridBagConstraints.WEST;
 
-		gbc_Service.gridy = 1;
-		gbc_Service.gridx = 0;
-		patientParamsPanel.add(getServicePanel(), gbc_Service);
+		gbcService.gridy = 1;
+		gbcService.gridx = 0;
+		patientParamsPanel.add(getServicePanel(), gbcService);
 
-		GridBagConstraints gbc_Duration = new GridBagConstraints();
-		gbc_Duration.fill = GridBagConstraints.VERTICAL;
-		gbc_Duration.anchor = GridBagConstraints.WEST;
-		gbc_Duration.gridy = 2;
-		gbc_Duration.gridx = 0;
-		gbc_Duration.gridwidth = 2;
-		patientParamsPanel.add(getDurationPanel(), gbc_Duration);
+		GridBagConstraints gbcDuration = new GridBagConstraints();
+		gbcDuration.fill = GridBagConstraints.VERTICAL;
+		gbcDuration.anchor = GridBagConstraints.WEST;
+		gbcDuration.gridy = 2;
+		gbcDuration.gridx = 0;
+		gbcDuration.gridwidth = 2;
+		patientParamsPanel.add(getDurationPanel(), gbcDuration);
 
-		GridBagConstraints gbc_date = new GridBagConstraints();
-		gbc_date.fill = GridBagConstraints.VERTICAL;
-		gbc_date.anchor = GridBagConstraints.WEST;
+		GridBagConstraints date = new GridBagConstraints();
+		date.fill = GridBagConstraints.VERTICAL;
+		date.anchor = GridBagConstraints.WEST;
 
-		gbc_date.gridy = 3;
-		gbc_date.gridx = 0;
-		gbc_date.gridwidth = 2;
-		patientParamsPanel.add(getVisitDateChooser(), gbc_date);
+		date.gridy = 3;
+		date.gridx = 0;
+		date.gridwidth = 2;
+		patientParamsPanel.add(getVisitDateChooser(), date);
 
 		return patientParamsPanel;
 	}
@@ -215,8 +209,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private JPanel getWardPanel() {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
-			wardBox = new JComboBox();
-			wardBox.addItem(""); //$NON-NLS-1$
+			wardBox = new JComboBox<>();
+			wardBox.addItem(null);
 			try {
 				wardList = wbm.getWards();
 			} catch (OHServiceException e) {
@@ -252,7 +246,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (servicePanel == null) {
 			servicePanel = new JPanel();
 
-			JLabel servicelabel = new JLabel(MessageBundle.getMessage("angal.visit.service")); //$NON-NLS-1$
+			JLabel servicelabel = new JLabel(MessageBundle.getMessage("angal.visit.service"));
 
 			serviceField = new JTextField(10);
 			serviceField.setEditable(true);
@@ -269,9 +263,9 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (durationPanel == null) {
 			durationPanel = new JPanel();
 
-			JLabel durationlabel = new JLabel(MessageBundle.getMessage("angal.visit.durationinminutes")); //$NON-NLS-1$
+			JLabel durationlabel = new JLabel(MessageBundle.getMessage("angal.visit.durationinminutes"));
 
-			durationField = new JTextField(10);
+			JTextField durationField = new JTextField(10);
 			durationField.setEditable(true);
 			durationField.setFocusable(true);
 
@@ -287,7 +281,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		Integer stepQty = 1;
 		Integer maxQty = null;
 		jSpinnerDur = new JSpinner(new SpinnerNumberModel(DEFAULT_DURATION, minQty, maxQty, stepQty));
-		jSpinnerDur.setFont(new Font("Dialog", Font.BOLD, 14)); //$NON-NLS-1$
+		jSpinnerDur.setFont(new Font("Dialog", Font.BOLD, 14));
 		jSpinnerDur.setAlignmentX(Component.LEFT_ALIGNMENT);
 		jSpinnerDur.setPreferredSize(new Dimension(PREFERRED_SPINNER_WIDTH, ONE_LINE_COMPONENTS_HEIGHT));
 		jSpinnerDur.setMaximumSize(new Dimension(Short.MAX_VALUE, ONE_LINE_COMPONENTS_HEIGHT));
@@ -318,9 +312,8 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(actionEvent -> {
 
-				GregorianCalendar date = new GregorianCalendar();
-				date.setTime(visitDateChooser.getDate());
-				if (date.before(TimeTools.getDateToday0())) {
+				LocalDateTime date = visitDateChooser.getLocalDateTime();
+				if (date.isBefore(TimeTools.getDateToday0())) {
 					MessageDialog.error(InsertVisit.this, "angal.visit.avisitcannotbescheduledforadatethatispast.msg");
 					return;
 				}
@@ -354,15 +347,9 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	}
 
 	public JPanel getVisitDateChooser() {
-
 		if (dateViPanel == null) {
-
 			dateViPanel = new JPanel();
-
-			dateAdm = new JLabel();
-			dateAdm.setText(MessageBundle.getMessage("angal.common.date.txt"));
-
-			dateViPanel.add(dateAdm);
+			dateViPanel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt")));
 			dateViPanel.add(getVisitDateField());
 			dateViPanel.add(getAdmButton());
 		}
@@ -370,21 +357,19 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	}
 
 	private JDateChooser getVisitDateField() {
-		visitDateChooser = new JDateChooser();
+		visitDateChooser = new LocalDateSupportingJDateChooser();
 		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-		visitDateChooser.setDateFormatString(DATE_TIME_FORMAT); // $NON-NLS-1$
+		visitDateChooser.setDateFormatString(DATE_TIME_FORMAT);
 		if (visitDate != null) {
 			visitDateChooser.setDate(visitDate);
 		}
-
 		return visitDateChooser;
 	}
 
 	private JButton getAdmButton() {
-
 		if (admButton == null) {
-			admButton = new JButton(""); //$NON-NLS-1$
-			admButton.setIcon(new ImageIcon("./rsc/icons/clock_button.png")); //$NON-NLS-1$
+			admButton = new JButton("");
+			admButton.setIcon(new ImageIcon("./rsc/icons/clock_button.png"));
 			admButton.addActionListener(actionEvent -> {
 
 				JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(InsertVisit.this, visitDateChooser.getDate());
@@ -405,7 +390,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		if (jButtonPickPatient == null) {
 			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.visit.findpatient.btn"));
 			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.visit.findpatient.btn.key"));
-			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
+			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
 			jButtonPickPatient.addActionListener(actionEvent -> {
 
 				SelectPatient sp = new SelectPatient(InsertVisit.this, patientSelected);
@@ -439,12 +424,12 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	@Override
 	public void patientSelected(Patient patient) {
 		patientSelected = patient;
-		patientTextField.setText(patientSelected != null ? patientSelected.getFirstName() + " " + patientSelected.getSecondName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
-		jButtonPickPatient.setText(MessageBundle.getMessage("angal.visit.changepatient")); //$NON-NLS-1$
+		patientTextField.setText(patientSelected != null ? patientSelected.getFirstName() + " " + patientSelected.getSecondName() : ""); //$NON-NLS-2$
+		jButtonPickPatient.setText(MessageBundle.getMessage("angal.visit.changepatient"));
 		pack();
 	}
 
-	public Date getVisitDate() {
+	public LocalDateTime getVisitDate() {
 		return visitDate;
 	}
 
@@ -465,8 +450,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		Object o = jSpinnerDur.getValue();
 		Number n = (Number) o;
 		int i = n.intValue();
-		String qty = String.valueOf(i);
-		return qty;
+		return String.valueOf(i);
 	}
 
 	public Patient getPatient() {
@@ -480,4 +464,5 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	public void setVisit(Visit vsRow) {
 		this.visit = vsRow;
 	}
+
 }

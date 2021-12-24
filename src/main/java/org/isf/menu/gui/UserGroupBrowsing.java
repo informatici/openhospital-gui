@@ -49,22 +49,22 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 	@Override
 	public void groupInserted(AWTEvent e) {
-		pGroup.add(0,group);
-		((UserGroupBrowserModel)table.getModel()).fireTableDataChanged();
+		pGroup.add(0, group);
+		((UserGroupBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
 		}
 	}
+
 	@Override
 	public void groupUpdated(AWTEvent e) {
-		pGroup.set(selectedrow,group);
-		((UserGroupBrowserModel)table.getModel()).fireTableDataChanged();
+		pGroup.set(selectedrow, group);
+		((UserGroupBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow >-1) {
-			table.setRowSelectionInterval(selectedrow,selectedrow);
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
+			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
-	
 	}
 	
 	private static final int DEFAULT_WIDTH = 200;
@@ -110,7 +110,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(actionEvent -> {
 			group = new UserGroup();
-			new GroupEdit(myFrame, group,true);
+			new GroupEdit(myFrame, group, true);
 		});
 		buttonPanel.add(buttonNew);
 
@@ -121,8 +121,8 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				group = (UserGroup)(model.getValueAt(table.getSelectedRow(), -1));
-				new GroupEdit(myFrame, group,false);
+				group = (UserGroup) (model.getValueAt(table.getSelectedRow(), -1));
+				new GroupEdit(myFrame, group, false);
 			}
 		});
 		buttonPanel.add(buttonEdit);
@@ -133,7 +133,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
-				UserGroup userGroup = (UserGroup)(model.getValueAt(table.getSelectedRow(), -1));
+				UserGroup userGroup = (UserGroup) (model.getValueAt(table.getSelectedRow(), -1));
 				new PrivilegeTree(myFrame, userGroup);
 			}
 		});
@@ -170,7 +170,6 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 		setVisible(true);
 	}
 
-		
 	class UserGroupBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;

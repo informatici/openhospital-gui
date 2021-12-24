@@ -32,9 +32,8 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -70,11 +69,11 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationList.class);
 
-	private JTable JtableData;
-	private JLabel TypeSourceLabelValue;
-	private JLabel CodeSourceLabelValue;
-	private JLabel DateLabelValue;
-	private JLabel PatientLabelValue;
+	private JTable jTableData;
+	private JLabel typeSourceLabelValue;
+	private JLabel codeSourceLabelValue;
+	private JLabel dateLabelValue;
+	private JLabel patientLabelValue;
 	private JDialog parentContainer;
 	private JDialog dialogOpe;
 	private OperationRowEdit opeRowEdit;
@@ -84,12 +83,10 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 	private Patient myPatient;
 	private Image ico;
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	// private int[] pColumnWidth = { 50, 120 ,70, 70 };
 
 	OhTableOperationModel<OperationRow> modelOhOpeRow;
 	OperationRowBrowserManager opeRowManager;
 
-	// public OperationList(Opd opd) {
 	public OperationList(Object object) {
 		if (object instanceof Opd) {
 			myOpd = (Opd) object;
@@ -106,61 +103,61 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 
 		JPanel panelHeader = new JPanel();
 		add(panelHeader, BorderLayout.NORTH);
-		GridBagLayout gbl_panelHeader = new GridBagLayout();
-		gbl_panelHeader.columnWidths = new int[] { 50, 0, 65, 100, 165, 0 };
-		gbl_panelHeader.rowHeights = new int[] { 20, 0 };
-		gbl_panelHeader.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panelHeader.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-		panelHeader.setLayout(gbl_panelHeader);
+		GridBagLayout gblPanelHeader = new GridBagLayout();
+		gblPanelHeader.columnWidths = new int[] { 50, 0, 65, 100, 165, 0 };
+		gblPanelHeader.rowHeights = new int[] { 20, 0 };
+		gblPanelHeader.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gblPanelHeader.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		panelHeader.setLayout(gblPanelHeader);
 
-		TypeSourceLabelValue = new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.opd")); //$NON-NLS-1$
-		TypeSourceLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
-		GridBagConstraints gbc_TypeSourceLabelValue = new GridBagConstraints();
-		gbc_TypeSourceLabelValue.fill = GridBagConstraints.BOTH;
-		gbc_TypeSourceLabelValue.insets = new Insets(0, 0, 0, 5);
-		gbc_TypeSourceLabelValue.gridx = 1;
-		gbc_TypeSourceLabelValue.gridy = 0;
-		panelHeader.add(TypeSourceLabelValue, gbc_TypeSourceLabelValue);
-
-		if (myOpd != null) {
-			CodeSourceLabelValue = new JLabel(myOpd.getCode() + ""); //$NON-NLS-1$
-		} else {
-			CodeSourceLabelValue = new JLabel(""); //$NON-NLS-1$
-		}
-		CodeSourceLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
-		GridBagConstraints gbc_CodeSourceLabelValue = new GridBagConstraints();
-		gbc_CodeSourceLabelValue.fill = GridBagConstraints.BOTH;
-		gbc_CodeSourceLabelValue.insets = new Insets(0, 0, 0, 5);
-		gbc_CodeSourceLabelValue.gridx = 2;
-		gbc_CodeSourceLabelValue.gridy = 0;
-		panelHeader.add(CodeSourceLabelValue, gbc_CodeSourceLabelValue);
+		typeSourceLabelValue = new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.opd")); //$NON-NLS-1$
+		typeSourceLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
+		GridBagConstraints gbcTypeSourceLabelValue = new GridBagConstraints();
+		gbcTypeSourceLabelValue.fill = GridBagConstraints.BOTH;
+		gbcTypeSourceLabelValue.insets = new Insets(0, 0, 0, 5);
+		gbcTypeSourceLabelValue.gridx = 1;
+		gbcTypeSourceLabelValue.gridy = 0;
+		panelHeader.add(typeSourceLabelValue, gbcTypeSourceLabelValue);
 
 		if (myOpd != null) {
-			DateLabelValue = new JLabel(myOpd.getDate().toString());
+			codeSourceLabelValue = new JLabel(myOpd.getCode() + ""); //$NON-NLS-1$
 		} else {
-			DateLabelValue = new JLabel(""); //$NON-NLS-1$
+			codeSourceLabelValue = new JLabel(""); //$NON-NLS-1$
 		}
-		DateLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
-		GridBagConstraints gbc_DateLabelValue = new GridBagConstraints();
-		gbc_DateLabelValue.insets = new Insets(0, 0, 0, 5);
-		gbc_DateLabelValue.anchor = GridBagConstraints.WEST;
-		gbc_DateLabelValue.fill = GridBagConstraints.VERTICAL;
-		gbc_DateLabelValue.gridx = 3;
-		gbc_DateLabelValue.gridy = 0;
-		panelHeader.add(DateLabelValue, gbc_DateLabelValue);
+		codeSourceLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
+		GridBagConstraints gbcCodeSourceLabelValue = new GridBagConstraints();
+		gbcCodeSourceLabelValue.fill = GridBagConstraints.BOTH;
+		gbcCodeSourceLabelValue.insets = new Insets(0, 0, 0, 5);
+		gbcCodeSourceLabelValue.gridx = 2;
+		gbcCodeSourceLabelValue.gridy = 0;
+		panelHeader.add(codeSourceLabelValue, gbcCodeSourceLabelValue);
 
 		if (myOpd != null) {
-			PatientLabelValue = new JLabel(myOpd.getFullName());
+			dateLabelValue = new JLabel(myOpd.getDate().toString());
 		} else {
-			PatientLabelValue = new JLabel(""); //$NON-NLS-1$
+			dateLabelValue = new JLabel(""); //$NON-NLS-1$
 		}
-		PatientLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
-		GridBagConstraints gbc_PatientLabelValue = new GridBagConstraints();
-		gbc_PatientLabelValue.anchor = GridBagConstraints.EAST;
-		gbc_PatientLabelValue.fill = GridBagConstraints.VERTICAL;
-		gbc_PatientLabelValue.gridx = 4;
-		gbc_PatientLabelValue.gridy = 0;
-		panelHeader.add(PatientLabelValue, gbc_PatientLabelValue);
+		dateLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 12)); //$NON-NLS-1$
+		GridBagConstraints gbcDateLabelValue = new GridBagConstraints();
+		gbcDateLabelValue.insets = new Insets(0, 0, 0, 5);
+		gbcDateLabelValue.anchor = GridBagConstraints.WEST;
+		gbcDateLabelValue.fill = GridBagConstraints.VERTICAL;
+		gbcDateLabelValue.gridx = 3;
+		gbcDateLabelValue.gridy = 0;
+		panelHeader.add(dateLabelValue, gbcDateLabelValue);
+
+		if (myOpd != null) {
+			patientLabelValue = new JLabel(myOpd.getFullName());
+		} else {
+			patientLabelValue = new JLabel(""); //$NON-NLS-1$
+		}
+		patientLabelValue.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
+		GridBagConstraints gbcPatientLabelValue = new GridBagConstraints();
+		gbcPatientLabelValue.anchor = GridBagConstraints.EAST;
+		gbcPatientLabelValue.fill = GridBagConstraints.VERTICAL;
+		gbcPatientLabelValue.gridx = 4;
+		gbcPatientLabelValue.gridy = 0;
+		panelHeader.add(patientLabelValue, gbcPatientLabelValue);
 
 		JPanel panelData = new JPanel();
 		add(panelData);
@@ -248,19 +245,19 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 			panelHeader.setVisible(false);
 			panelButtons.setVisible(false);
 		}
-		JtableData = new JTable();
-		JtableData.addMouseListener(new MouseAdapter() {
+		jTableData = new JTable();
+		jTableData.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				cellRenderer.setHoveredRow(-1);
 			}
 		});
-		scrollPaneData.setViewportView(JtableData);
+		scrollPaneData.setViewportView(jTableData);
 
 		/* ** apply default oh cellRender **** */
-		JtableData.setDefaultRenderer(Object.class, cellRenderer);
-		JtableData.setDefaultRenderer(Double.class, cellRenderer);
-		JtableData.addMouseMotionListener(new MouseMotionListener() {
+		jTableData.setDefaultRenderer(Object.class, cellRenderer);
+		jTableData.setDefaultRenderer(Double.class, cellRenderer);
+		jTableData.addMouseMotionListener(new MouseMotionListener() {
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -282,7 +279,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 
 		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
 		
-		JtableData.setModel(modelOhOpeRow);
+		jTableData.setModel(modelOhOpeRow);
 		
 		dialogOpe = new JDialog();
 		dialogOpe.setLocationRelativeTo(null);
@@ -290,80 +287,78 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		dialogOpe.setLocationRelativeTo(null);
 		dialogOpe.setModal(true);
 	}
-	
-	public void selectCorrect(GregorianCalendar startDate, GregorianCalendar endDate) {
-		JtableData.clearSelection();
+
+	public void selectCorrect(LocalDateTime startDate, LocalDateTime endDate) {
+		jTableData.clearSelection();
 		for (int i = 0; i < oprowData.size(); i++) {
 
-			OperationRow operation = (OperationRow) JtableData.getValueAt(i, -1);
-			Date operationDate = operation.getOpDate().getTime();
+			OperationRow operation = (OperationRow) jTableData.getValueAt(i, -1);
+			LocalDateTime operationDate = operation.getOpDate();
 
 			// Check that the operation date is included between startDate and endDate (if any).
 			// On true condition select the corresponding table row.
-			if (operationDate.after(startDate.getTime())
-					&& (endDate != null && operationDate.before(endDate.getTime()))) {
-
-				JtableData.addRowSelectionInterval(i, i);
+			if (operationDate.isAfter(startDate) && (endDate != null && operationDate.isBefore(endDate))) {
+				jTableData.addRowSelectionInterval(i, i);
 			}
 		}
 	}
 
-	public JTable getJtableData() {
-		return JtableData;
+	private JTable getjTableData() {
+		return jTableData;
 	}
 
-	public void setJtableData(JTable jtableData) {
-		JtableData = jtableData;
+	private void setjTableData(JTable jTableData) {
+		this.jTableData = jTableData;
 	}
 
-	public JLabel getTypeSourceLabelValue() {
-		return TypeSourceLabelValue;
+	private JLabel getTypeSourceLabelValue() {
+		return typeSourceLabelValue;
 	}
 
-	public void setTypeSourceLabelValue(JLabel typeSourceLabelValue) {
-		TypeSourceLabelValue = typeSourceLabelValue;
+	private void setTypeSourceLabelValue(JLabel typeSourceLabelValue) {
+		this.typeSourceLabelValue = typeSourceLabelValue;
 	}
 
-	public JLabel getCodeSourceLabelValue() {
-		return CodeSourceLabelValue;
+	private JLabel getCodeSourceLabelValue() {
+		return codeSourceLabelValue;
 	}
 
-	public void setCodeSourceLabelValue(JLabel codeSourceLabelValue) {
-		CodeSourceLabelValue = codeSourceLabelValue;
+	private void setCodeSourceLabelValue(JLabel codeSourceLabelValue) {
+		this.codeSourceLabelValue = codeSourceLabelValue;
 	}
 
-	public JLabel getDateLabelValue() {
-		return DateLabelValue;
+	private JLabel getDateLabelValue() {
+		return dateLabelValue;
 	}
 
-	public void setDateLabelValue(JLabel dateLabelValue) {
-		DateLabelValue = dateLabelValue;
+	private void setDateLabelValue(JLabel dateLabelValue) {
+		this.dateLabelValue = dateLabelValue;
 	}
 
-	public JLabel getPatientLabelValue() {
-		return PatientLabelValue;
+	private JLabel getPatientLabelValue() {
+		return patientLabelValue;
 	}
 
-	public void setPatientLabelValue(JLabel patientLabelValue) {
-		PatientLabelValue = patientLabelValue;
+	private void setPatientLabelValue(JLabel patientLabelValue) {
+		this.patientLabelValue = patientLabelValue;
 	}
 
-	public JDialog getParentContainer() {
+	private JDialog getParentContainer() {
 		return parentContainer;
 	}
 
-	public void setParentContainer(JDialog parentContainer) {
+	private void setParentContainer(JDialog parentContainer) {
 		this.parentContainer = parentContainer;
 	}
 
 	/* ***** functions events **** */
-	private void closeButtonMouseClicked(java.awt.event.MouseEvent evt) {
+	private void closeButtonMouseClicked(MouseEvent mouseEvent) {
 		this.setVisible(false);
 		this.parentContainer.dispose();
 	}
 
-	private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {
-		int idRow = this.JtableData.getSelectedRow();
+	private void addButtonMouseClicked(MouseEvent mouseEvent) {
+		int idRow = this.jTableData.getSelectedRow();
 		OperationRow operationRow = null;
 		opeRowEdit = new OperationRowEdit(operationRow);
 		opeRowEdit.setMyOpd(myOpd);
@@ -377,9 +372,9 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		dialogOpe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
-	private void updateButtonMouseClicked(java.awt.event.MouseEvent evt) {
-		int idRow = this.JtableData.getSelectedRow();
-		OperationRow operationRow = null;
+	private void updateButtonMouseClicked(MouseEvent mouseEvent) {
+		int idRow = this.jTableData.getSelectedRow();
+		OperationRow operationRow;
 		if (idRow < 0) {
 			MessageDialog.error(OperationList.this, "angal.common.pleaseselectarow.msg");
 			return;
@@ -398,18 +393,17 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		dialogOpe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
-	private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {
-		int idRow = this.JtableData.getSelectedRow();
-		OperationRow operationRow = null;
+	private void deleteButtonMouseClicked(MouseEvent mouseEvent) {
+		int idRow = this.jTableData.getSelectedRow();
+		OperationRow operationRow;
 		if (idRow < 0) {
 			MessageDialog.error(OperationList.this, "angal.common.pleaseselectarow.msg");
 			return;
-		} else {
-			operationRow = oprowData.get(idRow);
 		}
+		operationRow = oprowData.get(idRow);
 		int answer = MessageDialog.yesNo(OperationList.this, "angal.operationrowlist.delete.operation.msg");
 		if (answer == JOptionPane.YES_OPTION) {
-			boolean result = false;
+			boolean result;
 			try {
 				result = opeRowManager.deleteOperationRow(operationRow);
 			} catch (OHServiceException e) {
@@ -435,22 +429,22 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		refreshJtable();
 	}
 
-	public void refreshJtable() {
+	private void refreshJtable() {
 		try {
 			oprowData = opeRowManager.getOperationRowByOpd(myOpd);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
-		JtableData.setModel(modelOhOpeRow);
-		JtableData.repaint();
+		jTableData.setModel(modelOhOpeRow);
+		jTableData.repaint();
 	}
 
-	public Admission getMyAdmission() {
+	private Admission getMyAdmission() {
 		return myAdmission;
 	}
 
-	public void setMyAdmission(Admission myAdmission) {
+	private void setMyAdmission(Admission myAdmission) {
 		this.myAdmission = myAdmission;
 	}
 
@@ -458,7 +452,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		return oprowData;
 	}
 
-	public void setOprowData(List<OperationRow> oprowData) {
+	private void setOprowData(List<OperationRow> oprowData) {
 		this.oprowData = oprowData;
 	}
 

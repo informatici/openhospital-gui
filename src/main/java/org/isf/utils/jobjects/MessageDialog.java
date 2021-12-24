@@ -118,7 +118,8 @@ public class MessageDialog {
 		);
 	}
 
-	public static Object inputDialog(Component parentComponent, Icon icon, Object[] selectionValues, Object initSelection, String messageKey, Object... additionalArgs) {
+	public static Object inputDialog(Component parentComponent, Icon icon, Object[] selectionValues, Object initSelection, String messageKey,
+			Object... additionalArgs) {
 		return JOptionPane.showInputDialog(
 				parentComponent,
 				(additionalArgs.length == 0)
@@ -164,4 +165,5 @@ public class MessageDialog {
 			}
 		}
 	}
+
 }

@@ -45,7 +45,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DischargeTypeBrowserEdit extends JDialog{
+public class DischargeTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList dischargeTypeListeners = new EventListenerList();
@@ -63,26 +63,29 @@ public class DischargeTypeBrowserEdit extends JDialog{
     	dischargeTypeListeners.remove(DischargeTypeListener.class, listener);
     }
 
-    private void fireDischargeInserted(DischargeType anDischargeType) {
-        AWTEvent event = new AWTEvent(anDischargeType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireDischargeInserted(DischargeType anDischargeType) {
+		AWTEvent event = new AWTEvent(anDischargeType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DischargeTypeListener) listener).dischargeTypeInserted(event);
-	    }
-    }
-    private void fireDischargeUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DischargeTypeListener) listener).dischargeTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireDischargeUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DischargeTypeListener) listener).dischargeTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = dischargeTypeListeners.getListeners(DischargeTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DischargeTypeListener) listener).dischargeTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -102,10 +105,10 @@ public class DischargeTypeBrowserEdit extends JDialog{
 	 * because we need to update them
 	 */
 	public DischargeTypeBrowserEdit(JFrame owner, DischargeType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		dischargeType = old;//disease will be used for every operation
-		lastdescription= dischargeType.getDescription();
+		dischargeType = old; //dischargeType will be used for every operation
+		lastdescription = dischargeType.getDescription();
 		initialize();
 	}
 

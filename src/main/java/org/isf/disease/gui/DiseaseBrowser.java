@@ -166,7 +166,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				disease = (Disease) (((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				disease = (Disease) model.getValueAt(selectedrow, -1);
 				DiseaseEdit editrecord = new DiseaseEdit(myFrame, disease, false);
 				editrecord.addDiseaseListener(DiseaseBrowser.this);
 				editrecord.setVisible(true);
@@ -181,7 +181,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				disease = (Disease) (((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				disease = (Disease) model.getValueAt(selectedrow, -1);
 				int answer = MessageDialog.yesNo(DiseaseBrowser.this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
 				try {
 					if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))) {

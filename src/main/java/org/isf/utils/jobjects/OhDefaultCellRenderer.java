@@ -24,7 +24,6 @@ package org.isf.utils.jobjects;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -34,33 +33,33 @@ import javax.swing.table.DefaultTableCellRenderer;
 /**
  * @author u2g
  */
-public class OhDefaultCellRenderer extends DefaultTableCellRenderer{
+public class OhDefaultCellRenderer extends DefaultTableCellRenderer {
 
 	private static final long serialVersionUID = 1L;
-	Color darkOrange=new Color(159, 188, 208);
-	Color lightOrange=new Color(231, 236, 240);
-	Color lightGray=new Color(242, 242, 242);
+	Color darkOrange = new Color(159, 188, 208);
+	Color lightOrange = new Color(231, 236, 240);
+	Color lightGray = new Color(242, 242, 242);
 	int hoveredRow = -1;
-	
-	List<Integer> centeredColumns= new ArrayList<>();
-	
+
+	List<Integer> centeredColumns = new ArrayList<>();
+
 	public OhDefaultCellRenderer(List<Integer> centeredColumns) {
 		super();
-		this.centeredColumns=centeredColumns;
+		this.centeredColumns = centeredColumns;
 	}
-	public  OhDefaultCellRenderer() {
+
+	public OhDefaultCellRenderer() {
 		super();
 	}
+
 	@Override
-	public Component getTableCellRendererComponent(JTable table, java.lang.Object value,
-			boolean isSelected, boolean hasFocus, int row, int column) {
+	public Component getTableCellRendererComponent(JTable table, java.lang.Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		Component cmp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 		JLabel lbl = (JLabel) cmp;
 
 		boolean found = false;
-		for (Iterator<Integer> iterator = this.centeredColumns.iterator(); iterator.hasNext(); ) {
-			Integer centered = (Integer) iterator.next();
+		for (Integer centered : this.centeredColumns) {
 			if (centered == column) {
 
 				lbl.setHorizontalAlignment(CENTER);
@@ -91,4 +90,5 @@ public class OhDefaultCellRenderer extends DefaultTableCellRenderer{
 	public void setHoveredRow(int hoveredRow) {
 		this.hoveredRow = hoveredRow;
 	}
+
 }

@@ -85,8 +85,8 @@ public class ReportLauncher extends ModalJFrame{
 	private VoDateTextField jFromDateField = null;
 	private GregorianCalendar dateFrom = new GregorianCalendar();
 	private GregorianCalendar dateTo = new GregorianCalendar();
-	
-	
+
+
 	private JLabel jRptLabel = null;
 	private JComboBox jRptComboBox = null;
 
@@ -123,12 +123,12 @@ public class ReportLauncher extends ModalJFrame{
 		{"angal.stat.dailyopdmorbiditysummaryover5", 	"MOH705B_Over_5_Years_Daily_Outpatient_Morbidity_Summary_Sheet", 	"monthyear"},
 		
 	};
-	
+
 	private JComboBox shareWith=null;//nicola
-	Interaction userOh=null;	
+	Interaction userOh=null;
 	
 //	private final JFrame myFrame;
-	
+
 	/**
 	 * This is the default constructor
 	 */
@@ -186,7 +186,7 @@ public class ReportLauncher extends ModalJFrame{
 			jButtonPanel.add(getJCSVButton(), null);
 			//jButtonPanel.add(getJShareButton(),null);
 			jButtonPanel.add(getJCloseButton(), null);
-			
+
 		}
 		return jButtonPanel;
 	}
@@ -233,8 +233,8 @@ public class ReportLauncher extends ModalJFrame{
 			
 			jContentPanel.add(rep1, BorderLayout.NORTH);
 			//jContentPanel.add(rep2, BorderLayout.SOUTH);
-			
-				
+
+
 		}
 		return jContentPanel;
 	}
@@ -259,8 +259,8 @@ public class ReportLauncher extends ModalJFrame{
 
 			jRptLabel = new JLabel();
 			jRptLabel.setText(MessageBundle.getMessage("angal.stat.report"));
-			
-			
+
+
 			jRptComboBox = new JComboBox();
 			for (int i=0;i<reportMatrix.length;i++) {
 				jRptComboBox.addItem(MessageBundle.getMessage(reportMatrix[i][BUNDLE]));
