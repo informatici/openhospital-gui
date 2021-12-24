@@ -45,7 +45,6 @@ import javax.swing.JSplitPane;
 import javax.swing.LayoutStyle;
 import javax.swing.ScrollPaneConstants;
 
-import org.isf.admission.gui.PatientFolderBrowser;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.manager.SourceFiles;
 import org.isf.dicom.model.FileDicom;
@@ -56,6 +55,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.file.FileTools;
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.jobjects.ModalJFrame;
 
 /**
  * GUI for Dicom Viewer
@@ -63,10 +63,10 @@ import org.isf.utils.jobjects.MessageDialog;
  * @author Pietro Castellucci
  * @version 1.0.0
  */
-public class DicomGui extends JFrame implements WindowListener {
+public class DicomGui extends ModalJFrame implements WindowListener {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	// STATUS
 	private String lastDir = ".";
 
@@ -89,23 +89,26 @@ public class DicomGui extends JFrame implements WindowListener {
 
 	private JFrame myJFrame = null;
 
-	private PatientFolderBrowser owner;
+	private ModalJFrame owner = null;
 
 	/**
 	 * Construct a GUI
 	 *
 	 * @param patient the data wrapper for OH Patient
 	 */
-	public DicomGui(Patient patient, PatientFolderBrowser owner) {
+	public DicomGui(Patient patient, ModalJFrame owner) {
 		super();
 		this.patient = patient.getCode();
 		this.ohPatient = patient;
 		this.owner = owner;
 
 		initialize();
-		setVisible(true);
+		//setVisible(true);
 		addWindowListener(this);
 		myJFrame = this;
+
+		// TMP
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 
 	/**
@@ -382,7 +385,6 @@ public class DicomGui extends JFrame implements WindowListener {
 	public void windowClosed(WindowEvent e) {
 		this.setVisible(false);
 		this.dispose();
-		owner.resetDicomViewer();
 	}
 
 	/**

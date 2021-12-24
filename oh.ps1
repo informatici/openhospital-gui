@@ -84,11 +84,11 @@ $global:ProgressPreference= 'SilentlyContinue'
 # set MANUAL_CONFIG to "on" to setup configuration files manually
 # my.cnf and all oh/rsc/*.properties files will not be generated or
 # overwritten if already present
-#$script:MANUAL_CONFIG="off"
+#$script:MANUAL_CONFIG="on"
 
 # Interactive mode
 # set INTERACTIVE_MODE to "off" to launch oh.ps1 without calling the user
-# interaction meno (script_menu). Useful if automatic startup of OH is needed.
+# interaction menu (script_menu). Useful if automatic startup of OH is needed.
 # In order to use this mode, setup all the OH configuration variables in the script
 # or pass arguments via command line.
 #$script:INTERACTIVE_MODE="off"
@@ -130,24 +130,30 @@ $script:DATABASE_USER="isf"
 $script:DATABASE_PASSWORD="isf123"
 
 $script:DICOM_MAX_SIZE="4M"
+$script:DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
+$script:DICOM_DIR="data/dicom_storage"
 
 $script:OH_DIR="."
-$script:SQL_DIR="sql"
+$script:OH_DOC_DIR="../doc"
+$script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
-$script:DICOM_DIR="data/dicom_storage"
+$script:BACKUP_DIR="data/dump"
 $script:LOG_DIR="data/log"
+$script:SQL_DIR="sql"
+$script:SQL_EXTRA_DIR="sql/extra"
+$script:TMP_DIR="tmp"
+
 $script:LOG_FILE="startup.log"
 $script:LOG_FILE_ERR="startup.err"
 $script:OH_LOG_FILE="openhospital.log"
-$script:TMP_DIR="tmp"
-$script:BACKUP_DIR="data/dump"
 
 $script:DB_DEMO="create_all_demo.sql"
-# date +%Y-%m-%d_%H-%M-%S
-$script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
 # downloaded file extension
 $script:EXT="zip"
+
+# date format
+$script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
 # available languages - do not modify
 $script:languagearray= @("en","fr","it","es","pt") 
@@ -186,7 +192,7 @@ if ( $DICOM_ENABLE -eq "on" ) {
 ######## MySQL/MariaDB Software
 # MariaDB
 $script:MYSQL_VERSION="10.2.41"
-$script:MYSQL_URL="http://ftp.bme.hu/pub/mirrors/mariadb/mariadb-$script:MYSQL_VERSION/win$script:MYSQL_ARCH-packages/"
+$script:MYSQL_URL="https://archive.mariadb.org/mariadb-$script:MYSQL_VERSION/win$script:MYSQL_ARCH-packages/"
 $script:MYSQL_DIR="mariadb-$script:MYSQL_VERSION-win$script:MYSQL_ARCH"
 # MySQL
 #$script:MYSQL_DIR="mysql-5.7.35-win$script:MYSQL_ARCH"
@@ -204,7 +210,7 @@ $script:MYSQL_DIR="mariadb-$script:MYSQL_VERSION-win$script:MYSQL_ARCH"
 #$script:JAVA_URL="https://cdn.azul.com/zulu/bin/"
 
 ### JRE 8 - zulu
-$script:JAVA_DISTRO="zulu8.56.0.23-ca-fx-jre8.0.302-win_$JAVA_PACKAGE_ARCH"
+$script:JAVA_DISTRO="zulu8.58.0.13-ca-fx-jdk8.0.312-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin/"
 $script:JAVA_DIR=$JAVA_DISTRO
 
@@ -297,6 +303,8 @@ function set_path {
 			Write-Host "Error - $SCRIPT_NAME not found in the current PATH. Please browse to the directory where Open Hospital was unzipped or set up OH_PATH properly." -ForegroundColor Yellow
 			Read-Host; exit 1
 		}
+		# set path variable with / in place of \ for configuration files
+		$script:OH_PATH_SUBSTITUTE=$OH_PATH -replace "\\", "/"
 	}
 }
 
@@ -457,17 +465,17 @@ function config_database {
 
 	# create MySQL configuration
 	Write-Host "Generating MySQL config file..."
-	if ( Test-Path "$OH_PATH/etc/mysql/my.cnf" ) {
-		mv -Force "$OH_PATH/etc/mysql/my.cnf" "$OH_PATH/etc/mysql/my.cnf.old"
+	if ( Test-Path "$OH_PATH/$CONF_DIR/my.cnf" ) {
+		mv -Force "$OH_PATH/$CONF_DIR/my.cnf" "$OH_PATH/$CONF_DIR/my.cnf.old"
 	}
-	(Get-Content "$OH_PATH/etc/mysql/my.cnf.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/etc/mysql/my.cnf"
-	(Get-Content "$OH_PATH/etc/mysql/my.cnf").replace("OH_PATH_SUBSTITUTE","$OH_PATH") | Set-Content "$OH_PATH/etc/mysql/my.cnf"
-	(Get-Content "$OH_PATH/etc/mysql/my.cnf").replace("MYSQL_SERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/etc/mysql/my.cnf"
-	(Get-Content "$OH_PATH/etc/mysql/my.cnf").replace("MYSQL_PORT","$MYSQL_PORT") | Set-Content "$OH_PATH/etc/mysql/my.cnf"
-	(Get-Content "$OH_PATH/etc/mysql/my.cnf").replace("MYSQL_DISTRO","$MYSQL_DIR") | Set-Content "$OH_PATH/etc/mysql/my.cnf"
-	(Get-Content "$OH_PATH/etc/mysql/my.cnf").replace("DATA_DIR","$DATA_DIR") | Set-Content "$OH_PATH/etc/mysql/my.cnf"
-	(Get-Content "$OH_PATH/etc/mysql/my.cnf").replace("TMP_DIR","$TMP_DIR") | Set-Content "$OH_PATH/etc/mysql/my.cnf"
-	(Get-Content "$OH_PATH/etc/mysql/my.cnf").replace("LOG_DIR","$LOG_DIR") | Set-Content "$OH_PATH/etc/mysql/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_SERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_PORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_DISTRO","$MYSQL_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("DATA_DIR","$DATA_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("TMP_DIR","$TMP_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("LOG_DIR","$LOG_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
 }
 
 function initialize_database {
@@ -500,7 +508,7 @@ function initialize_database {
 function start_database {
 	Write-Host "Starting MySQL server... "
 	try {
-		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--defaults-file=`"$OH_PATH\etc\mysql\my.cnf`" --tmpdir=`"$OH_PATH\$TMP_DIR`" --standalone") -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--defaults-file=`"$OH_PATH\$CONF_DIR\my.cnf`" --tmpdir=`"$OH_PATH\$TMP_DIR`" --standalone") -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 		Start-Sleep -Seconds 2
 	}
 	catch {
@@ -657,8 +665,9 @@ function generate_config_files {
 	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties" ) {
 		mv -Force $OH_PATH/$OH_DIR/rsc/dicom.properties $OH_PATH/$OH_DIR/rsc/dicom.properties.old
 	}
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
+	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
+	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 
 	######## log4j.properties setup
@@ -688,12 +697,14 @@ function generate_config_files {
 	#Add-Content -Path $OH_PATH/$OH_DIR/rsc/database.properties -Value "jdbc.username=$DATABASE_USER"
 	#Add-Content -Path $OH_PATH/$OH_DIR/rsc/database.properties -Value "jdbc.password=$DATABASE_PASSWORD"
 
-	######## settings.properties language setup 
+	######## settings.properties setup
 	# set language in OH config file
 	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties" ) {
 		mv -Force $OH_PATH/$OH_DIR/rsc/settings.properties $OH_PATH/$OH_DIR/rsc/settings.properties.old
 	}
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("OH_SET_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
+	(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
+	# set DOC_DIR in OH config file
+	(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 }
 
 function clean_files {
@@ -702,8 +713,8 @@ function clean_files {
 	get_confirmation;
 	Write-Host "Removing files..."
 
-	$filetodel="$OH_PATH\etc\mysql\my.cnf"; if (Test-Path $filetodel){ Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH\etc\mysql\my.cnf.old"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH\$CONF_DIR\my.cnf"; if (Test-Path $filetodel){ Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH\$CONF_DIR\my.cnf.old"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$LOG_DIR\*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$OH_DIR\rsc\settings.properties"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$OH_DIR\rsc\settings.properties.old"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
@@ -890,8 +901,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		}
 		Write-Host "Open Hospital version" $script:VER_MAJOR $script:VER_MINOR $script:VER_RELEASE
 		Write-Host "MySQL version: $MYSQL_DIR"
-		Write-Host "JAVA version:"
-		Write-Host "$JAVA_DISTRO"
+		Write-Host "JAVA version: $JAVA_DISTRO"
 		Write-Host ""
 
 		# show configuration
@@ -901,18 +911,29 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host "Language is set to $OH_LANGUAGE"
 		Write-Host "Demo data is set to $DEMO_DATA"
 		Write-Host "Log level is set to $LOG_LEVEL"
-		Write-Host ""
+		Write-Host "--- Database ---"
 		Write-Host "MYSQL_SERVER=$MYSQL_SERVER"
 		Write-Host "MYSQL_PORT=$MYSQL_PORT"
 		Write-Host "DATABASE_NAME=$DATABASE_NAME"
 		Write-Host "DATABASE_USER=$DATABASE_USER"
-		Write-Host "DATABASE_PASSWORD=$DATABASE_PASSWORD"
+		Write-Host "--- Dicom ---"
 		Write-Host "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
-		Write-Host "OH_DIR=$OH_DIR"
-		Write-Host "BACKUP_DIR=$BACKUP_DIR"
+		Write-Host "DICOM_STORAGE=$DICOM_STORAGE"
 		Write-Host "DICOM_DIR=$DICOM_DIR"
+		Write-Host "--- OH ---"
+		Write-Host "OH_DIR=$OH_DIR"
+		Write-Host "OH_DOC_DIR=$OH_DOC_DIR"
+		Write-Host "CONF_DIR=$CONF_DIR"
 		Write-Host "DATA_DIR=$DATA_DIR"
+		Write-Host "BACKUP_DIR=$BACKUP_DIR"
 		Write-Host "LOG_DIR=$LOG_DIR"
+		Write-Host "SQL_DIR=$SQL_DIR"
+		Write-Host "SQL_EXTRA_DIR=$SQL_EXTRA_DIR"
+		Write-Host "TMP_DIR=$TMP_DIR"
+		Write-Host "--- Logging ---"
+		Write-Host "LOG_FILE=$LOG_FILE"
+		Write-Host "LOG_FILE_ERR=$LOG_FILE_ERR"
+		Write-Host "OH_LOG_FILE=$OH_LOG_FILE"
 		Write-Host ""
 	
 		Read-Host;

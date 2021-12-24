@@ -71,22 +71,30 @@ DATABASE_USER=isf
 DATABASE_PASSWORD="isf123"
 
 DICOM_MAX_SIZE="4M"
-
-OH_DIR=.
-SQL_DIR=sql
+DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 DICOM_DIR="data/dicom_storage"
+
+OH_DIR="."
+OH_DOC_DIR="../doc"
+CONF_DIR="data/conf"
 DATA_DIR="data/db"
-LOG_DIR="data/log"
 BACKUP_DIR="data/dump"
-TMP_DIR=tmp
-#DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
-DB_DEMO="create_all_demo.sql"
-DATE=`date +%Y-%m-%d_%H-%M-%S`
+LOG_DIR="data/log"
+SQL_DIR="sql"
+SQL_EXTRA_DIR="sql/extra"
+TMP_DIR="tmp"
+
 LOG_FILE=startup.log
 OH_LOG_FILE=openhospital.log
 
+#DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
+DB_DEMO="create_all_demo.sql"
+
 # downloaded file extension
 EXT="tar.gz"
+
+# date format
+DATE=`date +%Y-%m-%d_%H-%M-%S`
 
 ################ Architecture and external software ################
 
@@ -115,7 +123,7 @@ esac
 ######## MySQL/MariaDB Software
 # MariaDB
 MYSQL_VERSION="10.2.41"
-MYSQL_URL="https://downloads.mariadb.com/MariaDB/mariadb-$MYSQL_VERSION/bintar-linux-$MYSQL_ARCH"
+MYSQL_URL="https://archive.mariadb.org/mariadb-$MYSQL_VERSION/bintar-linux-$MYSQL_ARCH"
 MYSQL_DIR="mariadb-$MYSQL_VERSION-linux-$MYSQL_PACKAGE_ARCH"
 # MySQL
 #MYSQL_URL="https://downloads.mysql.com/archives/get/p/23/file"
@@ -135,7 +143,7 @@ MYSQL_DIR="mariadb-$MYSQL_VERSION-linux-$MYSQL_PACKAGE_ARCH"
 #JAVA_DIR="jdk-11.0.11+9-jre"
 
 ### JRE 8 - zulu distribution
-JAVA_DISTRO="zulu8.56.0.21-ca-fx-jre8.0.302-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu8.58.0.13-ca-fx-jdk8.0.312-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin/"
 JAVA_DIR=$JAVA_DISTRO
 
@@ -359,10 +367,10 @@ function config_database {
 
 	# create MySQL configuration
 	echo "Generating MySQL config file..."
-	[ -f ./etc/mysql/my.cnf ] && mv -f ./etc/mysql/my.cnf ./etc/mysql/my.cnf.old
+	[ -f ./$CONF_DIR/my.cnf ] && mv -f ./$CONF_DIR/my.cnf ./$CONF_DIR/my.cnf.old
 	sed -e "s/MYSQL_SERVER/$MYSQL_SERVER/g" -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
 	-e "s/TMP_DIR/$TMP_DIR_ESCAPED/g" -e "s/DATA_DIR/$DATA_DIR_ESCAPED/g" -e "s/LOG_DIR/$LOG_DIR_ESCAPED/g" \
-	-e "s/MYSQL_PORT/$MYSQL_PORT/g" -e "s/MYSQL_DISTRO/$MYSQL_DIR/g" ./etc/mysql/my.cnf.dist > ./etc/mysql/my.cnf
+	-e "s/MYSQL_PORT/$MYSQL_PORT/g" -e "s/MYSQL_DISTRO/$MYSQL_DIR/g" ./$CONF_DIR/my.cnf.dist > ./$CONF_DIR/my.cnf
 }
 
 function initialize_database {
@@ -388,7 +396,7 @@ function initialize_database {
 
 function start_database {
 	echo "Starting MySQL server... "
-	./$MYSQL_DIR/bin/mysqld_safe --defaults-file=./etc/mysql/my.cnf >> ./$LOG_DIR/$LOG_FILE 2>&1 &
+	./$MYSQL_DIR/bin/mysqld_safe --defaults-file=./$CONF_DIR/my.cnf >> ./$LOG_DIR/$LOG_FILE 2>&1 &
 	if [ $? -ne 0 ]; then
 		echo "Error: MySQL server not started! Exiting."
 		exit 2
@@ -515,8 +523,8 @@ function clean_files {
 	echo "Warning: do you want to remove all existing configuration and log files ?"
 	get_confirmation;
 	echo "Removing files..."
-	rm -f ./etc/mysql/my.cnf
-	rm -f ./etc/mysql/my.cnf.old
+	rm -f ./$CONF_DIR/my.cnf
+	rm -f ./$CONF_DIR/my.cnf.old
 	rm -f ./$LOG_DIR/*
 	rm -f ./$OH_DIR/rsc/settings.properties
 	rm -f ./$OH_DIR/rsc/settings.properties.old
@@ -534,7 +542,7 @@ function generate_config_files {
 	######## DICOM setup
 	[ -f ./$OH_DIR/rsc/dicom.properties ] && mv -f ./$OH_DIR/rsc/dicom.properties ./$OH_DIR/rsc/dicom.properties.old
 	sed -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
-	-e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/dicom.properties.dist > ./$OH_DIR/rsc/dicom.properties
+	-e "s/DICOM_STORAGE/$DICOM_STORAGE/g" -e "s/DICOM_DIR/$DICOM_DIR_ESCAPED/g" ./$OH_DIR/rsc/dicom.properties.dist > ./$OH_DIR/rsc/dicom.properties
 
 	######## log4j.properties setup
 	OH_LOG_DEST="$OH_PATH_ESCAPED/$LOG_DIR/$OH_LOG_FILE"
@@ -549,10 +557,10 @@ function generate_config_files {
 	-e "s/DBUSER/$DATABASE_USER/g" -e "s/DBPASS/$DATABASE_PASSWORD/g" \
 	./$OH_DIR/rsc/database.properties.dist > ./$OH_DIR/rsc/database.properties
 
-	######## settings.properties language setup 
-	# set language in OH config file
+	######## settings.properties setup
+	# set language and DOC_DIR in OH config file
 	[ -f ./$OH_DIR/rsc/settings.properties ] && mv -f ./$OH_DIR/rsc/settings.properties ./$OH_DIR/rsc/settings.properties.old
-	sed -e "s/OH_SET_LANGUAGE/$OH_LANGUAGE/g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
+	sed -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
 }
 
 
@@ -715,33 +723,41 @@ while getopts ${OPTSTRING} opt; do
 		exit 0
 		;;
 	v)	# show version
-        	echo "--------- Software version ---------"
+		echo "--------- Software version ---------"
 		source "./$OH_DIR/rsc/version.properties"
-        	echo "Open Hospital version" $VER_MAJOR.$VER_MINOR.$VER_RELEASE
-        	echo "MySQL version: $MYSQL_DIR"
-        	echo "JAVA version:"
-		echo $JAVA_DISTRO
-        	echo ""
+		echo "Open Hospital version" $VER_MAJOR.$VER_MINOR.$VER_RELEASE
+		echo "MySQL version: $MYSQL_DIR"
+		echo "JAVA version: $JAVA_DISTRO"
 		# show configuration
-        	echo "--------- Configuration ---------"
-        	echo "Architecture is $ARCH"
+		echo "--------- Configuration ---------"
+		echo "Architecture is $ARCH"
 		echo "Open Hospital is configured in $OH_MODE mode"
 		echo "Language is set to $OH_LANGUAGE"
 		echo "Demo data is set to $DEMO_DATA"
 		echo "Log level is set to $LOG_LEVEL"
-        	echo ""
+		echo "--- Database ---"
 		echo "MYSQL_SERVER=$MYSQL_SERVER"
 		echo "MYSQL_PORT=$MYSQL_PORT"
 		echo "DATABASE_NAME=$DATABASE_NAME"
 		echo "DATABASE_USER=$DATABASE_USER"
-		echo "DATABASE_PASSWORD=$DATABASE_PASSWORD"
+		echo "--- Dicom ---"
 		echo "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
-		echo "OH_DIR=$OH_DIR"
-		echo "BACKUP_DIR=$BACKUP_DIR"
+		echo "DICOM_STORAGE=$DICOM_STORAGE"
 		echo "DICOM_DIR=$DICOM_DIR"
+		echo "--- OH ---"
+		echo "OH_DIR=$OH_DIR"
+		echo "OH_DOC_DIR=$OH_DOC_DIR"
+		echo "CONF_DIR=$CONF_DIR"
 		echo "DATA_DIR=$DATA_DIR"
+		echo "BACKUP_DIR=$BACKUP_DIR"
 		echo "LOG_DIR=$LOG_DIR"
-        	echo ""
+		echo "SQL_DIR=$SQL_DIR"
+		echo "SQL_EXTRA_DIR=$SQL_EXTRA_DIR"
+		echo "TMP_DIR=$TMP_DIR"
+		echo "---  Logging ---"
+		echo "LOG_FILE=$LOG_FILE"
+		echo "OH_LOG_FILE=$OH_LOG_FILE"
+		echo ""
 		exit 0
 		;;
 	X)	# clean

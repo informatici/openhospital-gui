@@ -131,10 +131,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					}
 				});
 			}
-			if (!users.contains(user)) {
-				jComboUsers.addItem(user);
+			if (!isSingleUser && MainMenu.checkUserGrants("cashiersfilter")) {
+				if (!users.contains(user)) {
+					jComboUsers.addItem(user);
+				}
+				jComboUsers.setSelectedItem(user);
 			}
-			jComboUsers.setSelectedItem(user);
 		}
 	}
 

@@ -46,6 +46,7 @@ class SplashWindow3 extends JWindow {
         super(f);
 
         JLabel l = new JLabel(new ImageIcon(filename));
+
         getContentPane().add(l, BorderLayout.CENTER);
         pack();
 

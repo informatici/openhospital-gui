@@ -543,21 +543,13 @@ public class PatientFolderBrowser extends ModalJFrame
 		return launchReportButton;
 	}
 
-    DicomGui dg = null;
-
-    public void resetDicomViewer()
-    {
-        dg = null;
-    }
-
 	private JButton getDICOMButton() {
 		if (dicomButton == null) {
 			dicomButton = new JButton(MessageBundle.getMessage("angal.admission.patientfolder.dicom.btn"));
 			dicomButton.setMnemonic(MessageBundle.getMnemonic("angal.admission.patientfolder.dicom.btn.key"));
 			dicomButton.addActionListener(actionEvent -> {
-				if (dg == null) {
-					dg = new DicomGui(patient, PatientFolderBrowser.this);
-				}
+				DicomGui dg = new DicomGui(patient, PatientFolderBrowser.this);
+				((ModalJFrame) dg).showAsModal(this);
 			});
 		}
 		return dicomButton;
