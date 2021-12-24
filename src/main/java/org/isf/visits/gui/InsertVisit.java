@@ -215,14 +215,31 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private JPanel getWardPanel() {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
-			wardBox = new JComboBox();
-			wardBox.addItem(""); //$NON-NLS-1$
 			try {
 				wardList = wbm.getWards();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			for (Ward ward : wardList) {
+
+			wardBox = getWardBox();
+
+		}
+
+		wardPanel.add(wardBox);
+		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.ward.txt")));
+
+		return wardPanel;
+	}
+
+	private JComboBox<Ward> getWardBox() {
+		JComboBox<Ward> newWardBox = new JComboBox<Ward>();
+		newWardBox.addItem(null);
+		for (Ward ward : wardList) {
+			if (patientSelected == null) {
+				if (ward.getBeds() > 0) {
+					newWardBox.addItem(ward);
+				}
+			} else {
 
 				// if patient is a male you don't see pregnancy case
 				if (("" + patientSelected.getSex()).equalsIgnoreCase("F") && !ward.isFemale()) {
@@ -231,21 +248,18 @@ public class InsertVisit extends JDialog implements SelectionListener {
 					continue;
 				} else {
 					if (ward.getBeds() > 0) {
-						wardBox.addItem(ward);
+						newWardBox.addItem(ward);
 					}
 				}
 				if (this.ward != null) {
 					if (this.ward.getCode().equalsIgnoreCase(ward.getCode())) {
-						wardBox.setSelectedItem(ward);
+						newWardBox.setSelectedItem(ward);
 					}
 				}
 			}
 		}
 
-		wardPanel.add(wardBox);
-		wardPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.common.ward.txt")));
-
-		return wardPanel;
+		return newWardBox;
 	}
 
 	private JPanel getServicePanel() {
@@ -441,6 +455,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		patientSelected = patient;
 		patientTextField.setText(patientSelected != null ? patientSelected.getFirstName() + " " + patientSelected.getSecondName() : ""); //$NON-NLS-1$ //$NON-NLS-2$
 		jButtonPickPatient.setText(MessageBundle.getMessage("angal.visit.changepatient")); //$NON-NLS-1$
+		wardBox.setModel(getWardBox().getModel());
 		pack();
 	}
 
