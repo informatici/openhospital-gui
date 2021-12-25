@@ -224,7 +224,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	}
 
 	private JComboBox<Ward> getWardBox() {
-		JComboBox<Ward> newWardBox = new JComboBox<Ward>();
+		JComboBox<Ward> newWardBox = new JComboBox<>();
 		newWardBox.addItem(null);
 		for (Ward ward : wardList) {
 			if (patientSelected == null) {
