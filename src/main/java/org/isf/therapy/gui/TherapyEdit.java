@@ -152,7 +152,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private List<Therapy> therapies = new ArrayList<>();
 	private List<TherapyRow> thRows = new ArrayList<>();
 	private List<Visit> visits = new ArrayList<>();
-	private List<Visit> removedVisits = new ArrayList<Visit>();
+	private List<Visit> removedVisits = new ArrayList<>();
 	private Ward ward;
 
 	public TherapyEdit(JFrame owner, Patient patient, boolean admitted) {
