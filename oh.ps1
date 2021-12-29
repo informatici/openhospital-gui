@@ -917,8 +917,10 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host ""
 
 		# show configuration
- 		Write-Host "--------- Configuration ---------"
+ 		Write-Host "--------- Script Configuration ---------"
  		Write-Host "Architecture is $ARCH"
+ 		Write-Host "Config file generation is set to $GENERATE_CONFIG_FILES"
+ 		Write-Host "--------- OH Configuration ---------"
  		Write-Host "Open Hospital is configured in $OH_MODE mode"
 		Write-Host "Language is set to $OH_LANGUAGE"
 		Write-Host "Demo data is set to $DEMO_DATA"
@@ -932,7 +934,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
 		Write-Host "DICOM_STORAGE=$DICOM_STORAGE"
 		Write-Host "DICOM_DIR=$DICOM_DIR"
-		Write-Host "--- OH ---"
+		Write-Host "--- OH Folders ---"
 		Write-Host "OH_DIR=$OH_DIR"
 		Write-Host "OH_DOC_DIR=$OH_DOC_DIR"
 		Write-Host "OH_SINGLE_USER=$OH_SINGLE_USER"
