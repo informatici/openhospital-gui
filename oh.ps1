@@ -935,6 +935,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host "--- OH ---"
 		Write-Host "OH_DIR=$OH_DIR"
 		Write-Host "OH_DOC_DIR=$OH_DOC_DIR"
+		Write-Host "OH_SINGLE_USER=$OH_SINGLE_USER"
 		Write-Host "CONF_DIR=$CONF_DIR"
 		Write-Host "DATA_DIR=$DATA_DIR"
 		Write-Host "BACKUP_DIR=$BACKUP_DIR"

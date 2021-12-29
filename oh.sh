@@ -766,6 +766,7 @@ while getopts ${OPTSTRING} opt; do
 		echo "--- OH ---"
 		echo "OH_DIR=$OH_DIR"
 		echo "OH_DOC_DIR=$OH_DOC_DIR"
+		echo "OH_SINGLE_USER=$OH_SINGLE_USER"
 		echo "CONF_DIR=$CONF_DIR"
 		echo "DATA_DIR=$DATA_DIR"
 		echo "BACKUP_DIR=$BACKUP_DIR"
