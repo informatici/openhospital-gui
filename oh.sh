@@ -33,7 +33,7 @@ SCRIPT_NAME=$(basename "$0")
 ############## Script startup configuration - change at your own risk :-) ##############
 #
 # set GENERATE_CONFIG_FILES=on "on" to force generation / overwriting of configuration files:
-# data/conf/my.cnf oh/rsc/*.properties files will be regenerated from the original .dist files
+# data/conf/my.cnf and oh/rsc/*.properties files will be regenerated from the original .dist files
 # with the settings defined in this script.
 #
 # Default is set to "off": configuration files will not be generated or overwritten if already present.
@@ -77,7 +77,7 @@ DICOM_MAX_SIZE="4M"
 DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 DICOM_DIR="data/dicom_storage"
 
-OH_DIR="."
+OH_DIR="oh"
 OH_DOC_DIR="../doc"
 OH_SINGLE_USER="yes" # set "no" for multiuser
 CONF_DIR="data/conf"
