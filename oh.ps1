@@ -62,12 +62,12 @@ https://www.open-hospital.org
 #Requires -Version 5.1
 
 ######## command line parameters
-param ($lang, $mode, $loglevel, $dicom, $config_file_generation, $interactive)
+param ($lang, $mode, $loglevel, $dicom, $generate_config_files, $interactive)
 $script:OH_LANGUAGE=$lang
 $script:OH_MODE=$mode
 $script:LOG_LEVEL=$loglevel
 $script:DICOM_ENABLE=$dicom
-$script:CONFIG_FILES_GENERATION=$config_file_generation
+$script:GENERATE_CONFIG_FILES=$generate_config_files
 $script:INTERACTIVE_MODE=$interactive
 
 ######## get script info
@@ -83,13 +83,13 @@ $global:ProgressPreference= 'SilentlyContinue'
 #
 ############## Script startup configuration - change at your own risk :-) ##############
 #
-# set CONFIG_FILES_GENERATION=on "on" to force generation / overwriting of configuration files:
+# set GENERATE_CONFIG_FILES=on "on" to force generation / overwriting of configuration files:
 # data/conf/my.cnf oh/rsc/*.properties files will be regenerated from the original .dist files
 # with the settings defined in this script.
 #
 # Default is set to "off": configuration files will not be generated or overwritten if already present.
 #
-#$script:CONFIG_FILES_GENERATION="off"
+#$script:GENERATE_CONFIG_FILES="off"
 
 # Interactive mode
 # set INTERACTIVE_MODE to "off" to launch oh.ps1 without calling the user
@@ -278,8 +278,8 @@ function set_defaults {
 	}
 
 	# config files generation - set default to off
-	if ( [string]::IsNullOrEmpty($CONFIG_FILES_GENERATION) ) {
-		$script:CONFIG_FILES_GENERATION="off"
+	if ( [string]::IsNullOrEmpty($GENERATE_CONFIG_FILES) ) {
+		$script:GENERATE_CONFIG_FILES="off"
 	}
 
 	# OH mode - set default to PORTABLE
@@ -447,7 +447,7 @@ function mysql_check {
 function config_database {
 	Write-Host "Checking for MySQL config file..."
 
-	if ( ($script:CONFIG_FILES_GENERATION -eq "on") -or  !(Test-Path "$OH_PATH/$CONF_DIR/my.cnf") ) {
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or  !(Test-Path "$OH_PATH/$CONF_DIR/my.cnf") ) {
 	if (Test-Path "$OH_PATH/$CONF_DIR/my.cnf" ) { mv -Force "$OH_PATH/$CONF_DIR/my.cnf" "$OH_PATH/$CONF_DIR/my.cnf.old" }
 
 		# find a free TCP port to run MySQL starting from the default port
@@ -670,7 +670,7 @@ function generate_config_files {
 	Write-Host "Checking for OH configuration files..."
 
 	######## DICOM setup
-	if ( ($script:CONFIG_FILES_GENERATION -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties") ) {
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties") ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties") { mv -Force $OH_PATH/$OH_DIR/rsc/dicom.properties $OH_PATH/$OH_DIR/rsc/dicom.properties.old }
 		Write-Host "Generating OH configuration file -> dicom.properties..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
@@ -680,7 +680,7 @@ function generate_config_files {
 	}
 
 	######## log4j.properties setup
-	if ( ($script:CONFIG_FILES_GENERATION -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties") ) {
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties") ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties") { mv -Force $OH_PATH/$OH_DIR/rsc/log4j.properties $OH_PATH/$OH_DIR/rsc/log4j.properties.old }
 		Write-Host "Generating OH configuration file -> log4j.properties..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties.dist").replace("DBSERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
@@ -693,7 +693,7 @@ function generate_config_files {
 	}
 
 	######## database.properties setup 
-	if ( ($script:CONFIG_FILES_GENERATION -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/database.properties") ) {
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/database.properties") ) {
 		Write-Host "Generating OH configuration file -> database.properties..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties.dist").replace("DBSERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBPORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
@@ -709,7 +709,7 @@ function generate_config_files {
 
 	######## settings.properties setup
 	# set language in OH config file
-	if ( ($script:CONFIG_FILES_GENERATION -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties") ) {
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties") ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties") { mv -Force $OH_PATH/$OH_DIR/rsc/settings.properties $OH_PATH/$OH_DIR/rsc/settings.properties.old }
 		Write-Host "Generating OH configuration file -> settings.properties..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
@@ -800,7 +800,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		$DEMO_DATA="on"
 	}
 	"g"	{ # generate config files and exit
-		$script:CONFIG_FILES_GENERATION="on"
+		$script:GENERATE_CONFIG_FILES="on"
 		generate_config_files;
 		Write-Host "Done!"
 		Read-Host;
@@ -1004,7 +1004,7 @@ if ( $DEMO_DATA -eq "on" ) {
 }
 
 # display running configuration
-Write-Host "Config file generation is set to $CONFIG_FILES_GENERATION"
+Write-Host "Generate config files is set to $GENERATE_CONFIG_FILES"
 Write-Host "Starting Open Hospital in $OH_MODE mode..."
 Write-Host "OH_PATH is set to $OH_PATH"
 Write-Host "OH language is set to $OH_LANGUAGE"

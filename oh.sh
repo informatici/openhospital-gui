@@ -32,13 +32,13 @@ SCRIPT_NAME=$(basename "$0")
 
 ############## Script startup configuration - change at your own risk :-) ##############
 #
-# set CONFIG_FILES_GENERATION=on "on" to force generation / overwriting of configuration files:
+# set GENERATE_CONFIG_FILES=on "on" to force generation / overwriting of configuration files:
 # data/conf/my.cnf oh/rsc/*.properties files will be regenerated from the original .dist files
 # with the settings defined in this script.
 #
 # Default is set to "off": configuration files will not be generated or overwritten if already present.
 #
-#CONFIG_FILES_GENERATION="off"
+#GENERATE_CONFIG_FILES="off"
 
 ############## OH general configuration - change at your own risk :-) ##############
 
@@ -196,8 +196,8 @@ function get_confirmation {
 function set_defaults {
 	# set default values for script variables
 	# config file generation - set default to off
-	if [ -z ${CONFIG_FILES_GENERATION+x} ]; then
-		CONFIG_FILES_GENERATION="off"
+	if [ -z ${GENERATE_CONFIG_FILES+x} ]; then
+		GENERATE_CONFIG_FILES="off"
 	fi
 
 	# OH mode - set default to PORTABLE
@@ -364,7 +364,7 @@ fi
 function config_database {
 	echo "Checking for MySQL config file..."
 	
-	if [ $CONFIG_FILES_GENERATION = "on" ] || [ ! -f ./$CONF_DIR/my.cnf ]; then
+	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$CONF_DIR/my.cnf ]; then
 		[ -f ./$CONF_DIR/my.cnf ] && mv -f ./$CONF_DIR/my.cnf ./$CONF_DIR/my.cnf.old
 
 		# find a free TCP port to run MySQL starting from the default port
@@ -553,7 +553,7 @@ function generate_config_files {
 	# set up configuration files
 	echo "Checking for OH configuration files..."
 	######## DICOM setup
-	if [ $CONFIG_FILES_GENERATION = "on" ] || [ ! -f ./$OH_DIR/rsc/dicom.properties ]; then
+	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$OH_DIR/rsc/dicom.properties ]; then
 		[ -f ./$OH_DIR/rsc/dicom.properties ] && mv -f ./$OH_DIR/rsc/dicom.properties ./$OH_DIR/rsc/dicom.properties.old
 		echo "Generating OH configuration file -> dicom.properties..."
 		sed -e "s/DICOM_SIZE/$DICOM_MAX_SIZE/g" -e "s/OH_PATH_SUBSTITUTE/$OH_PATH_ESCAPED/g" \
@@ -561,7 +561,7 @@ function generate_config_files {
 	fi
 
 	######## log4j.properties setup
-	if [ $CONFIG_FILES_GENERATION = "on" ] || [ ! -f ./$OH_DIR/rsc/log4j.properties ]; then
+	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$OH_DIR/rsc/log4j.properties ]; then
 		OH_LOG_DEST="$OH_PATH_ESCAPED/$LOG_DIR/$OH_LOG_FILE"
 		[ -f ./$OH_DIR/rsc/log4j.properties ] && mv -f ./$OH_DIR/rsc/log4j.properties ./$OH_DIR/rsc/log4j.properties.old
 		echo "Generating OH configuration file -> log4j.properties..."
@@ -571,7 +571,7 @@ function generate_config_files {
 	fi
 
 	######## database.properties setup 
-	if [ $CONFIG_FILES_GENERATION = "on" ] || [ ! -f ./$OH_DIR/rsc/database.properties ]; then
+	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$OH_DIR/rsc/database.properties ]; then
 		[ -f ./$OH_DIR/rsc/database.properties ] && mv -f ./$OH_DIR/rsc/database.properties ./$OH_DIR/rsc/database.properties.old
 		echo "Generating OH configuration file -> database.properties..."
 		sed -e "s/DBSERVER/$MYSQL_SERVER/g" -e "s/DBPORT/$MYSQL_PORT/g" -e "s/DBNAME/$DATABASE_NAME/g" \
@@ -580,7 +580,7 @@ function generate_config_files {
 	fi
 	######## settings.properties setup
 	# set language and DOC_DIR in OH config file
-	if [ $CONFIG_FILES_GENERATION = "on" ] || [ ! -f ./$OH_DIR/rsc/settings.properties ]; then
+	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$OH_DIR/rsc/settings.properties ]; then
 		[ -f ./$OH_DIR/rsc/settings.properties ] && mv -f ./$OH_DIR/rsc/settings.properties ./$OH_DIR/rsc/settings.properties.old
 		echo "Generating OH configuration file -> settings.properties..."
 		sed -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
@@ -638,7 +638,7 @@ while getopts ${OPTSTRING} opt; do
 		DEMO_DATA="on"
 		;;
 	g)	# generate config files and exit
-		CONFIG_FILES_GENERATION="on"
+		GENERATE_CONFIG_FILES="on"
 		generate_config_files;
 		echo "Done!"
 		exit 0;
@@ -826,7 +826,7 @@ if [ $DEMO_DATA = "on" ]; then
 fi
 
 # display running configuration
-echo "Config file generation is set to $CONFIG_FILES_GENERATION"
+echo "Generate config files is set to $GENERATE_CONFIG_FILES"
 echo "Starting Open Hospital in $OH_MODE mode..."
 echo "OH_PATH is set to $OH_PATH"
 echo "OH language is set to $OH_LANGUAGE"
