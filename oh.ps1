@@ -62,12 +62,12 @@ https://www.open-hospital.org
 #Requires -Version 5.1
 
 ######## command line parameters
-param ($lang, $mode, $loglevel, $dicom, $manual_config, $interactive)
+param ($lang, $mode, $loglevel, $dicom, $generate_config_files, $interactive)
 $script:OH_LANGUAGE=$lang
 $script:OH_MODE=$mode
 $script:LOG_LEVEL=$loglevel
 $script:DICOM_ENABLE=$dicom
-$script:MANUAL_CONFIG=$manual_config
+$script:GENERATE_CONFIG_FILES=$generate_config_files
 $script:INTERACTIVE_MODE=$interactive
 
 ######## get script info
@@ -81,10 +81,15 @@ $global:ProgressPreference= 'SilentlyContinue'
 
 ############## Script startup configuration - change at your own risk :-) ##############
 #
-# set MANUAL_CONFIG to "on" to setup configuration files manually
-# my.cnf and all oh/rsc/*.properties files will not be generated or
-# overwritten if already present
-#$script:MANUAL_CONFIG="on"
+############## Script startup configuration - change at your own risk :-) ##############
+#
+# set GENERATE_CONFIG_FILES=on "on" to force generation / overwriting of configuration files:
+# data/conf/my.cnf and oh/rsc/*.properties files will be regenerated from the original .dist files
+# with the settings defined in this script.
+#
+# Default is set to "off": configuration files will not be generated or overwritten if already present.
+#
+#$script:GENERATE_CONFIG_FILES="off"
 
 # Interactive mode
 # set INTERACTIVE_MODE to "off" to launch oh.ps1 without calling the user
@@ -135,6 +140,7 @@ $script:DICOM_DIR="data/dicom_storage"
 
 $script:OH_DIR="."
 $script:OH_DOC_DIR="../doc"
+$script:OH_SINGLE_USER="yes" # set "no" for multiuser
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
 $script:BACKUP_DIR="data/dump"
@@ -271,9 +277,9 @@ function set_defaults {
 		$script:INTERACTIVE_MODE="on"
 	}
 
-	# manual config - set default to off
-	if ( [string]::IsNullOrEmpty($MANUAL_CONFIG) ) {
-		$script:MANUAL_CONFIG="off"
+	# config files generation - set default to off
+	if ( [string]::IsNullOrEmpty($GENERATE_CONFIG_FILES) ) {
+		$script:GENERATE_CONFIG_FILES="off"
 	}
 
 	# OH mode - set default to PORTABLE
@@ -428,7 +434,7 @@ function mysql_check {
 	        Write-Host "MySQL unpacked successfully!"
 	}
 	# check for mysql binary
-	if ( Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" ) {
+	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe") {
         	Write-Host "MySQL found!"
 		Write-Host "Using $MYSQL_DIR"
 	}
@@ -439,43 +445,45 @@ function mysql_check {
 }
 
 function config_database {
-	# find a free TCP port to run MySQL starting from the default port
-	Write-Host "Looking for a free TCP port for MySQL database..."
+	Write-Host "Checking for MySQL config file..."
 
-	$ProgressPreference = 'SilentlyContinue'
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or  !(Test-Path "$OH_PATH/$CONF_DIR/my.cnf") ) {
+	if (Test-Path "$OH_PATH/$CONF_DIR/my.cnf" ) { mv -Force "$OH_PATH/$CONF_DIR/my.cnf" "$OH_PATH/$CONF_DIR/my.cnf.old" }
 
-	### windows 10 only ####
-	#while ( Test-NetConnection $script:MYSQL_SERVER -Port $MYSQL_PORT -InformationLevel Quiet -ErrorAction SilentlyContinue -WarningAction SilentlyContinue ){
-	#	Write-Host "Testing TCP port $MYSQL_PORT...."
-	#      	$script:MYSQL_PORT++
-	#}
-	### end windows 10 only ###
+		# find a free TCP port to run MySQL starting from the default port
+		Write-Host "Looking for a free TCP port for MySQL database..."
 
-	### windows 7/10 ###
-	do {
-		$socktest = (New-Object System.Net.Sockets.TcpClient).ConnectAsync("$MYSQL_SERVER", $MYSQL_PORT).Wait(1000) 
-		Write-Host "Testing TCP port $MYSQL_PORT...."
-		$script:MYSQL_PORT++
+		$ProgressPreference = 'SilentlyContinue'
+
+		### windows 10 only ####
+		#while ( Test-NetConnection $script:MYSQL_SERVER -Port $MYSQL_PORT -InformationLevel Quiet -ErrorAction SilentlyContinue -WarningAction SilentlyContinue ){
+		#	Write-Host "Testing TCP port $MYSQL_PORT...."
+		#      	$script:MYSQL_PORT++
+		#}
+		### end windows 10 only ###
+
+		### windows 7/10 ###
+		do {
+			$socktest = (New-Object System.Net.Sockets.TcpClient).ConnectAsync("$MYSQL_SERVER", $MYSQL_PORT).Wait(1000) 
+			Write-Host "Testing TCP port $MYSQL_PORT...."
+			$script:MYSQL_PORT++
+		}
+		while ( $socktest )
+		$script:MYSQL_PORT--
+		### end windows 7/10 ###
+
+		Write-Host "Found TCP port $MYSQL_PORT!"
+
+		Write-Host "Generating MySQL config files..."
+		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_SERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_PORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_DISTRO","$MYSQL_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("DATA_DIR","$DATA_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("TMP_DIR","$TMP_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("LOG_DIR","$LOG_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
 	}
-	while ( $socktest )
-	$script:MYSQL_PORT--
-	### end windows 7/10 ###
-
-	Write-Host "Found TCP port $MYSQL_PORT!"
-
-	# create MySQL configuration
-	Write-Host "Generating MySQL config file..."
-	if ( Test-Path "$OH_PATH/$CONF_DIR/my.cnf" ) {
-		mv -Force "$OH_PATH/$CONF_DIR/my.cnf" "$OH_PATH/$CONF_DIR/my.cnf.old"
-	}
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_SERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_PORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_DISTRO","$MYSQL_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("DATA_DIR","$DATA_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("TMP_DIR","$TMP_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-	(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("LOG_DIR","$LOG_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
 }
 
 function initialize_database {
@@ -560,7 +568,7 @@ function import_database {
 		Read-Host; exit 2
 	}
 	# check for database creation script
-	if ( Test-Path "$OH_PATH\$SQL_DIR\$DB_CREATE_SQL" ) {
+	if (Test-Path "$OH_PATH\$SQL_DIR\$DB_CREATE_SQL") {
  		Write-Host "Using SQL file $SQL_DIR\$DB_CREATE_SQL..."
 	}
 	else {
@@ -592,7 +600,7 @@ function import_database {
 
 function dump_database {
 	# save OH database if existing
-	if ( Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqldump.exe" ) {
+	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqldump.exe") {
 		[System.IO.Directory]::CreateDirectory("$OH_PATH/$BACKUP_DIR") > $null
 		Write-Host "Dumping MySQL database..."	
         $SQLCOMMAND=@"
@@ -640,7 +648,7 @@ function clean_database {
 
 function test_database_connection {
 	# test if mysql client is available
-	if ( Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" ) {
+	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysql.exe") {
 		# test connection to the OH MySQL database
 		Write-Host "Testing database connection..."
 		try {
@@ -659,63 +667,73 @@ function test_database_connection {
 
 function generate_config_files {
 	# set up configuration files
-	Write-Host "Generating OH configuration files..."
+	Write-Host "Checking for OH configuration files..."
 
 	######## DICOM setup
-	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties" ) {
-		mv -Force $OH_PATH/$OH_DIR/rsc/dicom.properties $OH_PATH/$OH_DIR/rsc/dicom.properties.old
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties") ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties") { mv -Force $OH_PATH/$OH_DIR/rsc/dicom.properties $OH_PATH/$OH_DIR/rsc/dicom.properties.old }
+		Write-Host "Generating OH configuration file -> dicom.properties..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 	}
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 
 	######## log4j.properties setup
-	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties" ) {
-		mv -Force $OH_PATH/$OH_DIR/rsc/log4j.properties $OH_PATH/$OH_DIR/rsc/log4j.properties.old
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties") ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties") { mv -Force $OH_PATH/$OH_DIR/rsc/log4j.properties $OH_PATH/$OH_DIR/rsc/log4j.properties.old }
+		Write-Host "Generating OH configuration file -> log4j.properties..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties.dist").replace("DBSERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBPORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBPASS","$DATABASE_PASSWORD") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBNAME","$DATABASE_NAME") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("LOG_LEVEL","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("LOG_DEST","../$LOG_DIR/$OH_LOG_FILE") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
 	}
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties.dist").replace("DBSERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBPORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBPASS","$DATABASE_PASSWORD") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBNAME","$DATABASE_NAME") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("LOG_LEVEL","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("LOG_DEST","../$LOG_DIR/$OH_LOG_FILE") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
 
 	######## database.properties setup 
-	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/database.properties" ) {
-		mv -Force $OH_PATH/$OH_DIR/rsc/database.properties $OH_PATH/$OH_DIR/rsc/database.properties.old
-	}
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties.dist").replace("DBSERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBPORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBPASS","$DATABASE_PASSWORD") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBNAME","$DATABASE_NAME") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/database.properties") ) {
+		Write-Host "Generating OH configuration file -> database.properties..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties.dist").replace("DBSERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBPORT","$MYSQL_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBPASS","$DATABASE_PASSWORD") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBNAME","$DATABASE_NAME") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
 
-	# direct creation of database.properties - deprecated
-	#Set-Content -Path $OH_PATH/$OH_DIR/rsc/database.properties -Value "jdbc.url=jdbc:mysql://"$MYSQL_SERVER":$MYSQL_PORT/$DATABASE_NAME"
-	#Add-Content -Path $OH_PATH/$OH_DIR/rsc/database.properties -Value "jdbc.username=$DATABASE_USER"
-	#Add-Content -Path $OH_PATH/$OH_DIR/rsc/database.properties -Value "jdbc.password=$DATABASE_PASSWORD"
+		# direct creation of database.properties - deprecated
+		#Set-Content -Path $OH_PATH/$OH_DIR/rsc/database.properties -Value "jdbc.url=jdbc:mysql://"$MYSQL_SERVER":$MYSQL_PORT/$DATABASE_NAME"
+		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/database.properties -Value "jdbc.username=$DATABASE_USER"
+		#Add-Content -Path $OH_PATH/$OH_DIR/rsc/database.properties -Value "jdbc.password=$DATABASE_PASSWORD"
+	}
 
 	######## settings.properties setup
 	# set language in OH config file
-	if ( Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties" ) {
-		mv -Force $OH_PATH/$OH_DIR/rsc/settings.properties $OH_PATH/$OH_DIR/rsc/settings.properties.old
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties") ) {
+		if (Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties") { mv -Force $OH_PATH/$OH_DIR/rsc/settings.properties $OH_PATH/$OH_DIR/rsc/settings.properties.old }
+		Write-Host "Generating OH configuration file -> settings.properties..."
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
+		# set DOC_DIR in OH config file
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
+
+		# set singleuser = yes / no
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("YES_OR_NO","$OH_SINGLE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 	}
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
-	# set DOC_DIR in OH config file
-	(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 }
 
 function clean_files {
-	# clean all configuration files - leave only .dist files
-	Write-Host "Warning: do you want to remove all existing configuration and log files ?" -ForegroundColor Red
+	# remove all log files
+	Write-Host "Warning: do you want to remove all existing log files ?" -ForegroundColor Red
 	get_confirmation;
-	Write-Host "Removing files..."
-
+	Write-Host "Removing log files..."
+	$filetodel="$OH_PATH\$LOG_DIR\*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	
+	# remove all configuration files - leave only .dist files
+	Write-Host "Warning: do you want to remove all existing configuration files ?" -ForegroundColor Red
+	get_confirmation;
+	Write-Host "Removing configuration files..."
 	$filetodel="$OH_PATH\$CONF_DIR\my.cnf"; if (Test-Path $filetodel){ Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$CONF_DIR\my.cnf.old"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH\$LOG_DIR\*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$OH_DIR\rsc\settings.properties"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$OH_DIR\rsc\settings.properties.old"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$OH_DIR\rsc\database.properties"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
@@ -782,9 +800,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		$DEMO_DATA="on"
 	}
 	"g"	{ # generate config files and exit
-		if ( Test-Path "$OH_PATH/rsc/dicom.properties.dist" ) {
-			$script:OH_DIR="."
-		}
+		$script:GENERATE_CONFIG_FILES="on"
 		generate_config_files;
 		Write-Host "Done!"
 		Read-Host;
@@ -832,11 +848,9 @@ if ( $INTERACTIVE_MODE -eq "on") {
 
 		if ( $OH_MODE -eq "PORTABLE" ) {
 			# check if database already exists
-			if ( Test-Path "$OH_PATH\$DATA_DIR\$DATABASE_NAME" ) {
+			if (Test-Path "$OH_PATH\$DATA_DIR\$DATABASE_NAME") {
 				mysql_check;
-				if ( $MANUAL_CONFIG -ne "on" ) {
-					config_database;
-				}
+				config_database;
 			}
 			else {
 		        	Write-Host "Error: no data found! Exiting." -ForegroundColor Red
@@ -861,14 +875,12 @@ if ( $INTERACTIVE_MODE -eq "on") {
 	       	Write-Host "Restoring Open Hospital database...."
 		# ask user for database to restore
 		$DB_CREATE_SQL = Read-Host -Prompt "Enter SQL dump/backup file that you want to restore - (in $script:BACKUP_DIR subdirectory) -> "
-		if ( Test-Path "$OH_PATH\$SQL_DIR\$DB_CREATE_SQL" ) {
+		if (Test-Path "$OH_PATH\$SQL_DIR\$DB_CREATE_SQL") {
 			Write-Host "Found $SQL_DIR\$DB_CREATE_SQL, restoring it..."
 			# reset database if exists
 			clean_database;
 			mysql_check;
-			if ( $MANUAL_CONFIG -ne "on" ) {
-				config_database;
-			}
+			config_database;
 			initialize_dir_structure;
 			initialize_database;
 			start_database;	
@@ -905,8 +917,10 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host ""
 
 		# show configuration
- 		Write-Host "--------- Configuration ---------"
+ 		Write-Host "--------- Script Configuration ---------"
  		Write-Host "Architecture is $ARCH"
+ 		Write-Host "Config file generation is set to $GENERATE_CONFIG_FILES"
+ 		Write-Host "--------- OH Configuration ---------"
  		Write-Host "Open Hospital is configured in $OH_MODE mode"
 		Write-Host "Language is set to $OH_LANGUAGE"
 		Write-Host "Demo data is set to $DEMO_DATA"
@@ -920,9 +934,10 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
 		Write-Host "DICOM_STORAGE=$DICOM_STORAGE"
 		Write-Host "DICOM_DIR=$DICOM_DIR"
-		Write-Host "--- OH ---"
+		Write-Host "--- OH Folders ---"
 		Write-Host "OH_DIR=$OH_DIR"
 		Write-Host "OH_DOC_DIR=$OH_DOC_DIR"
+		Write-Host "OH_SINGLE_USER=$OH_SINGLE_USER"
 		Write-Host "CONF_DIR=$CONF_DIR"
 		Write-Host "DATA_DIR=$DATA_DIR"
 		Write-Host "BACKUP_DIR=$BACKUP_DIR"
@@ -979,7 +994,7 @@ if ( $DEMO_DATA -eq "on" ) {
 	# reset database if exists
 	clean_database;
 
-	if ( Test-Path -Path "$OH_PATH\$SQL_DIR\$DB_DEMO" ) {
+	if (Test-Path -Path "$OH_PATH\$SQL_DIR\$DB_DEMO") {
 	        Write-Host "Found SQL demo database, starting OH with Demo data..."
 		$DB_CREATE_SQL=$DB_DEMO
 	}
@@ -991,7 +1006,7 @@ if ( $DEMO_DATA -eq "on" ) {
 }
 
 # display running configuration
-Write-Host "Manual config is set to $MANUAL_CONFIG"
+Write-Host "Generate config files is set to $GENERATE_CONFIG_FILES"
 Write-Host "Starting Open Hospital in $OH_MODE mode..."
 Write-Host "OH_PATH is set to $OH_PATH"
 Write-Host "OH language is set to $OH_LANGUAGE"
@@ -1013,9 +1028,7 @@ if ( $OH_MODE -eq "PORTABLE" ) {
 	# check for MySQL software
 	mysql_check;
 	# config MySQL
-	if ( $MANUAL_CONFIG -ne "on" ) {
-		config_database;
-	}
+	config_database;
 	# check if OH database already exists
 	if ( !(Test-Path "$OH_PATH\$DATA_DIR\$DATABASE_NAME") ) {
 		Write-Host "OH database not found, starting from scratch..."
@@ -1039,9 +1052,7 @@ if ( $OH_MODE -eq "PORTABLE" ) {
 test_database_connection;
 
 # generate config files
-if ( $MANUAL_CONFIG -ne "on" ) {
-	generate_config_files;
-}
+generate_config_files;
 
 
 ######## Open Hospital start
