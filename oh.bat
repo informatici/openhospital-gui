@@ -122,11 +122,12 @@ set DATABASE_USER=isf
 set DATABASE_PASSWORD=isf123
 
 set DICOM_MAX_SIZE="4M"
-set DICOM_STORAGE="FileSystemDicomManager" REM SqlDicomManager
+set DICOM_STORAGE="FileSystemDicomManager"
 set DICOM_DIR="data/dicom_storage"
 
 set OH_DIR="."
 set OH_DOC_DIR="../doc"
+set OH_SINGLE_USER="yes"
 set CONF_DIR="data/conf"
 set DATA_DIR="data/db"
 set LOG_DIR="data/log"
@@ -238,6 +239,7 @@ REM ### Setup settings.properties
 echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\settings.properties.dist %OH_PATH%\%OH_DIR%\rsc\settings.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe OH_LANGUAGE %OH_LANGUAGE% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe OH_DOC_DIR %OH_DOC_DIR% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe YES_OR_NO %OH_SINGLE_USER% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 
 REM ### Setup log4j.properties
 REM # replace backslash with slash
