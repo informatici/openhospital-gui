@@ -383,7 +383,7 @@ function download_file ($download_url,$download_file){
 
 function java_check {
 	# check if JAVA_BIN is already set and it exists
-	if ( !( $JAVA_BIN ) -or !(Test-Path $JAVA_BIN  -PathType Leaf ) ) {
+	if ( !( $JAVA_BIN ) -or !(Test-Path $JAVA_BIN -PathType Leaf ) ) {
         	# set default
         	Write-Host "Setting default JAVA..."
 		$script:JAVA_BIN="$OH_PATH\$JAVA_DIR\bin\java.exe"
@@ -391,7 +391,7 @@ function java_check {
 
 	# if JAVA_BIN is not found download JRE
 	if ( !(Test-Path $JAVA_BIN  -PathType Leaf ) ) {
-        	if ( !(Test-Path "$OH_PATH\$JAVA_DISTRO.$EXT"  -PathType Leaf ) ) {
+        	if ( !(Test-Path "$OH_PATH\$JAVA_DISTRO.$EXT" -PathType Leaf ) ) {
 			Write-Host "Warning - JAVA not found. Do you want to download it?" -ForegroundColor Yellow
 			get_confirmation;
 			# Download java binaries
@@ -415,7 +415,7 @@ function java_check {
 
 function mysql_check {
 	if (  !(Test-Path "$OH_PATH\$MYSQL_DIR") ) {
-		if ( !(Test-Path "$OH_PATH\$MYSQL_DIR.$EXT") ) {
+		if ( !(Test-Path "$OH_PATH\$MYSQL_DIR.$EXT" -PathType Leaf) ) {
 			Write-Host "Warning - MariaDB/MySQL not found. Do you want to download it?" -ForegroundColor Yellow
 			get_confirmation;
 			# Downloading mysql binary
@@ -432,7 +432,7 @@ function mysql_check {
 	        Write-Host "MySQL unpacked successfully!"
 	}
 	# check for mysql binary
-	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe") {
+	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -PathType Leaf) {
         	Write-Host "MySQL found!"
 		Write-Host "Using $MYSQL_DIR"
 	}
@@ -646,7 +646,7 @@ function clean_database {
 
 function test_database_connection {
 	# test if mysql client is available
-	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysql.exe") {
+	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -PathType Leaf) {
 		# test connection to the OH MySQL database
 		Write-Host "Testing database connection..."
 		try {
