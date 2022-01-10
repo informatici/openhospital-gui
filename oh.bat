@@ -122,7 +122,7 @@ set DATABASE_USER=isf
 set DATABASE_PASSWORD=isf123
 
 set DICOM_MAX_SIZE="4M"
-set DICOM_STORAGE="FileSystemDicomManager"
+set DICOM_STORAGE="FileSystemDicomManager" REM SqlDicomManager
 set DICOM_DIR="data/dicom_storage"
 
 set OH_DIR="."

@@ -1028,7 +1028,9 @@ if ( $OH_MODE -eq "PORTABLE" ) {
 	# check for MySQL software
 	mysql_check;
 	# config MySQL
-	config_database;
+	if ( $MANUAL_CONFIG -ne "on" ) {
+		config_database;
+	}
 	# check if OH database already exists
 	if ( !(Test-Path "$OH_PATH\$DATA_DIR\$DATABASE_NAME") ) {
 		Write-Host "OH database not found, starting from scratch..."

@@ -21,9 +21,15 @@
  */
 package org.isf.utils.jobjects;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+import static org.isf.utils.Constants.DATE_FORMAT_MM_DD_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_MM_DD_YYYY;
+
 import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -33,6 +39,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.time.Converters;
 
 /**
  * Returns a JTextField for date it can manage dates in format dd/mm/yyyy, dd/mm/yy, mm/dd/yyyy or mm/dd/yy
@@ -42,29 +49,30 @@ import org.isf.generaldata.MessageBundle;
 public class VoDateTextField extends JTextField {
 
 	private static final long serialVersionUID = 1L;
+
 	private String type;
 	private String currentDate = "nothing";
-	
+
 	private void setType(String type) {
 		this.type = type;
 	}
-	
+
 	public class ManagedData extends DefaultStyledDocument {
 
 		private static final long serialVersionUID = 1L;
 		private int maxChars = 0;
-		
+
 		private ManagedData() {
-			if (type.equals("dd/mm/yy") || type.equals("mm/dd/yy")) {
+			if (type.equals(DATE_FORMAT_DD_MM_YY) || type.equals(DATE_FORMAT_MM_DD_YY)) {
 				this.maxChars = 8;
-			} else if (type.equals("dd/mm/yyyy") || type.equals("mm/dd/yyyy") ) {
+			} else if (type.equals(DATE_FORMAT_DD_MM_YYYY) || type.equals(DATE_FORMAT_MM_DD_YYYY)) {
 				this.maxChars = 10;
 			}
 		}
-		
+
 		@Override
 		public void insertString(int off, String text2, AttributeSet att)
-		throws BadLocationException {
+				throws BadLocationException {
 			int charsInDocument = getLength();
 			int newLength = text2.length();
 			if (charsInDocument + newLength > maxChars) {
@@ -78,14 +86,14 @@ public class VoDateTextField extends JTextField {
 			}
 		}
 	}
-	
+
 	/**
 	 * Constructor with no default date
 	 */
 	public VoDateTextField(String type, int cols) throws IllegalArgumentException {
 		super(cols);
-		if (!(type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy") ||
-				type.equals("mm/dd/yy") || type.equals("mm/dd/yyyy"))) {
+		if (!(type.equals(DATE_FORMAT_DD_MM_YY) || type.equals(DATE_FORMAT_DD_MM_YYYY) ||
+				type.equals(DATE_FORMAT_MM_DD_YY) || type.equals(DATE_FORMAT_MM_DD_YYYY))) {
 			throw new IllegalArgumentException();
 		}
 		setType(type);
@@ -93,14 +101,14 @@ public class VoDateTextField extends JTextField {
 		this.setFont(new Font("monospaced", Font.PLAIN, 12));
 		check();
 	}
-	
+
 	/**
 	 * Constructor with default date
 	 */
 	public VoDateTextField(String type, String todayDate, int cols) throws IllegalArgumentException {
 		super(cols);
-		if (!(type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy") ||
-				type.equals("mm/dd/yy") || type.equals("mm/dd/yyyy"))) {
+		if (!(type.equals(DATE_FORMAT_DD_MM_YY) || type.equals(DATE_FORMAT_DD_MM_YYYY)
+				|| type.equals(DATE_FORMAT_MM_DD_YY) || type.equals(DATE_FORMAT_MM_DD_YYYY))) {
 			throw new IllegalArgumentException();
 		}
 		setType(type);
@@ -110,11 +118,11 @@ public class VoDateTextField extends JTextField {
 		this.currentDate = todayDate;
 		check();
 	}
-	
-	public VoDateTextField(String type, GregorianCalendar todayDate, int cols) throws IllegalArgumentException{
+
+	public VoDateTextField(String type, GregorianCalendar todayDate, int cols) throws IllegalArgumentException {
 		super(cols);
-		if (!(type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy") ||
-				type.equals("mm/dd/yy") || type.equals("mm/dd/yyyy"))) {
+		if (!(type.equals(DATE_FORMAT_DD_MM_YY) || type.equals(DATE_FORMAT_DD_MM_YYYY)
+				|| type.equals(DATE_FORMAT_MM_DD_YY) || type.equals(DATE_FORMAT_MM_DD_YYYY))) {
 			throw new IllegalArgumentException();
 		}
 		setType(type);
@@ -124,21 +132,22 @@ public class VoDateTextField extends JTextField {
 		this.setDate(todayDate);
 		check();
 	}
-	
+
 	/**
 	 * When focus is lost check if the date is correct or not
 	 */
 	private void check() {
-		
+
 		this.addFocusListener(new FocusListener() {
-			
+
 			@Override
-			public void focusGained(FocusEvent e) {}
-			
+			public void focusGained(FocusEvent e) {
+			}
+
 			@Override
 			public void focusLost(FocusEvent e) throws IllegalArgumentException {
 				// if date field is not mandatory, can be left empty
-				if (getText().length()==0) {
+				if (getText().length() == 0) {
 					return;
 				}
 				if (getText().length() != type.length()) {
@@ -151,31 +160,30 @@ public class VoDateTextField extends JTextField {
 					return;
 				}
 				char separator = getText().charAt(2);
-				if (((separator=='/')||(separator=='-'))&&(getText().charAt(5)==separator)) {
+				if (((separator == '/') || (separator == '-')) && (getText().charAt(5) == separator)) {
 					try {
 						GregorianCalendar gc = new GregorianCalendar();
 						gc.setLenient(false); //must do this
-						if (type.equals("dd/mm/yy") || type.equals("mm/dd/yy")) {
-							gc.set(Calendar.YEAR, Integer.parseInt(getText().substring(6,8)) + 2000);
-						} else if (type.equals("dd/mm/yyyy") || type.equals("mm/dd/yyyy") ) {
-							gc.set(Calendar.YEAR, Integer.parseInt(getText().substring(6,10)));
+						if (type.equals(DATE_FORMAT_DD_MM_YY) || type.equals(DATE_FORMAT_MM_DD_YY)) {
+							gc.set(Calendar.YEAR, Integer.parseInt(getText().substring(6, 8)) + 2000);
+						} else if (type.equals(DATE_FORMAT_DD_MM_YYYY) || type.equals(DATE_FORMAT_MM_DD_YYYY)) {
+							gc.set(Calendar.YEAR, Integer.parseInt(getText().substring(6, 10)));
 						}
-						
-						if (type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy")) {
-							gc.set(Calendar.MONTH, Integer.parseInt(getText().substring(3,5)) - 1);
+
+						if (type.equals(DATE_FORMAT_DD_MM_YY) || type.equals(DATE_FORMAT_DD_MM_YYYY)) {
+							gc.set(Calendar.MONTH, Integer.parseInt(getText().substring(3, 5)) - 1);
 						} else {
-							gc.set(Calendar.MONTH, Integer.parseInt(getText().substring(0,2)) - 1);
+							gc.set(Calendar.MONTH, Integer.parseInt(getText().substring(0, 2)) - 1);
 						}
-						
-						if (type.equals("dd/mm/yy") || type.equals("dd/mm/yyyy")) {
-							gc.set(Calendar.DATE, Integer.parseInt(getText().substring(0,2)));
+
+						if (type.equals(DATE_FORMAT_DD_MM_YY) || type.equals(DATE_FORMAT_DD_MM_YYYY)) {
+							gc.set(Calendar.DATE, Integer.parseInt(getText().substring(0, 2)));
 						} else {
-							gc.set(Calendar.DATE, Integer.parseInt(getText().substring(3,5)));
+							gc.set(Calendar.DATE, Integer.parseInt(getText().substring(3, 5)));
 						}
 						gc.getTime(); //exception thrown here (if needed)
 						currentDate = getText();
-					}
-					catch (Exception e1) {
+					} catch (Exception e1) {
 						MessageDialog.error(null, MessageBundle.formatMessage("angal.vodatetext.isnotavaliddate.fmt.msg", getText()));
 						if (currentDate.equals("nothing")) {
 							setText("");
@@ -189,23 +197,31 @@ public class VoDateTextField extends JTextField {
 			}
 		});
 	}
-	
+
 	/**
 	 * Returns a GregorianCalendar for date use
 	 */
 	public GregorianCalendar getDate() {
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setLenient(false);
-		if (type.equals("dd/mm/yyyy")) {
-			calendar.set(Integer.parseInt(getText().substring(6,10)),Integer.parseInt(getText().substring(3,5))-1,Integer.parseInt(getText().substring(0,2)));
-		} else if (type.equals("mm/dd/yyyy")) {
-			calendar.set(Integer.parseInt(getText().substring(6,10)),Integer.parseInt(getText().substring(0,2)) - 1,Integer.parseInt(getText().substring(3,5)));
-		} else if (type.equals("dd/mm/yy")) {
-			calendar.set(Integer.parseInt(getText().substring(6,8)) + 2000,Integer.parseInt(getText().substring(3,5))-1,Integer.parseInt(getText().substring(0,2)));
-		} else if (type.equals("mm/dd/yy")) {
-			calendar.set(Integer.parseInt(getText().substring(6,8)) + 2000,Integer.parseInt(getText().substring(0,2)) - 1,Integer.parseInt(getText().substring(3,5)));
+		if (type.equals(DATE_FORMAT_DD_MM_YYYY)) {
+			calendar.set(Integer.parseInt(getText().substring(6, 10)), Integer.parseInt(getText().substring(3, 5)) - 1,
+					Integer.parseInt(getText().substring(0, 2)));
+		} else if (type.equals(DATE_FORMAT_MM_DD_YYYY)) {
+			calendar.set(Integer.parseInt(getText().substring(6, 10)), Integer.parseInt(getText().substring(0, 2)) - 1,
+					Integer.parseInt(getText().substring(3, 5)));
+		} else if (type.equals(DATE_FORMAT_DD_MM_YY)) {
+			calendar.set(Integer.parseInt(getText().substring(6, 8)) + 2000, Integer.parseInt(getText().substring(3, 5)) - 1,
+					Integer.parseInt(getText().substring(0, 2)));
+		} else if (type.equals(DATE_FORMAT_MM_DD_YY)) {
+			calendar.set(Integer.parseInt(getText().substring(6, 8)) + 2000, Integer.parseInt(getText().substring(0, 2)) - 1,
+					Integer.parseInt(getText().substring(3, 5)));
 		}
 		return calendar;
+	}
+
+	public LocalDate getLocalDate() {
+		return Converters.convertToLocalDateTime(getDate()).toLocalDate();
 	}
 
 	public void setDate(GregorianCalendar time) {
@@ -213,14 +229,14 @@ public class VoDateTextField extends JTextField {
 		if (time.get(Calendar.DAY_OF_MONTH) > 9) {
 			string = String.valueOf(time.get(Calendar.DAY_OF_MONTH));
 		} else {
-			string = "0" + String.valueOf(time.get(Calendar.DAY_OF_MONTH));
+			string = "0" + time.get(Calendar.DAY_OF_MONTH);
 		}
 		if (time.get(Calendar.MONTH) + 1 > 9) {
-			string += "/" + String.valueOf(time.get(Calendar.MONTH) + 1);
+			string += "/" + (time.get(Calendar.MONTH) + 1);
 		} else {
-			string += "/0" + String.valueOf(time.get(Calendar.MONTH) + 1);
+			string += "/0" + (time.get(Calendar.MONTH) + 1);
 		}
-		string += "/" + String.valueOf(time.get(Calendar.YEAR));
+		string += "/" + time.get(Calendar.YEAR);
 		currentDate = string;
 	}
 
@@ -229,15 +245,15 @@ public class VoDateTextField extends JTextField {
 		if (time.get(Calendar.DAY_OF_MONTH) > 9) {
 			string = String.valueOf(time.get(Calendar.DAY_OF_MONTH));
 		} else {
-			string = "0" + String.valueOf(time.get(Calendar.DAY_OF_MONTH));
+			string = "0" + time.get(Calendar.DAY_OF_MONTH);
 		}
 		if (time.get(Calendar.MONTH) + 1 > 9) {
-			string += "/" + String.valueOf(time.get(Calendar.MONTH) + 1);
+			string += "/" + (time.get(Calendar.MONTH) + 1);
 		} else {
-			string += "/0" + String.valueOf(time.get(Calendar.MONTH) + 1);
+			string += "/0" + (time.get(Calendar.MONTH) + 1);
 		}
-		string += "/" + String.valueOf(time.get(Calendar.YEAR));
+		string += "/" + time.get(Calendar.YEAR);
 		return string;
 	}
-	
+
 }

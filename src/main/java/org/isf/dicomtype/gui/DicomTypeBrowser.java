@@ -94,7 +94,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.dicomtype.dicomtypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+
 	}
 	
 	
@@ -211,7 +211,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DicomTypeBrowserModel();
 			jTable = new JTable(model);
@@ -267,7 +267,6 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}

@@ -32,23 +32,23 @@ import org.slf4j.LoggerFactory;
 import net.sf.jasperreports.view.JasperViewer;
 
 public class GenericReportExamination {
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportExamination.class);
-	private JasperReportsManager jasperReportsManager = Context.getApplicationContext()
-			.getBean(JasperReportsManager.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportExamination(Integer patientID, Integer examId, String jasperFileName) {
 		try {
-			JasperReportResultDto jasperReportResultDto = jasperReportsManager
-					.getGenericReportPatientExaminationPdf(patientID, examId, jasperFileName);
-			if (GeneralData.INTERNALVIEWER)
+			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPatientExaminationPdf(patientID, examId, jasperFileName);
+			if (GeneralData.INTERNALVIEWER) {
 				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false);
-			else {
+			} else {
 				Runtime rt = Runtime.getRuntime();
-				rt.exec(GeneralData.VIEWER + " " + jasperReportResultDto.getFilename());
+				rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
 			}
 		} catch (Exception e) {
 			LOGGER.error("", e);
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
 		}
 	}
+
 }

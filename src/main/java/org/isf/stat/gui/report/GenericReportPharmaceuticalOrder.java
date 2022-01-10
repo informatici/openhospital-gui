@@ -41,19 +41,19 @@ public class GenericReportPharmaceuticalOrder {
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPharmaceuticalOrder.class);
     private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-	public GenericReportPharmaceuticalOrder(String jasperFileName) {
-        try{
+    public GenericReportPharmaceuticalOrder(String jasperFileName) {
+        try {
             JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPharmaceuticalOrderPdf(jasperFileName);
-            if (GeneralData.INTERNALVIEWER)
-                JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
-            else {
+            if (GeneralData.INTERNALVIEWER) {
+                JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
+            } else {
                 Runtime rt = Runtime.getRuntime();
-                rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
+                rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
             }
         } catch (Exception e) {
             LOGGER.error("", e);
             MessageDialog.error(null, "angal.stat.reporterror.msg");
         }
-	}
-	
+    }
+
 }

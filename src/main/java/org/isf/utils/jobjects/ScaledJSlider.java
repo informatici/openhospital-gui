@@ -34,36 +34,36 @@ import javax.swing.JSlider;
 public class ScaledJSlider extends JSlider {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Minimum value scaled
 	 */
 	private int scaledMin;
-	
+
 	/**
 	 * Maximum value scaled
 	 */
 	private int scaledMax;
-	
+
 	/**
 	 * Step (e.g. 0.1)
 	 */
 	private double step;
-	
+
 	/**
 	 * The initial value
 	 */
 	private double scaledInit;
-	
+
 	/**
 	 * Precision (number of decimals in step) (e.g. 1)
 	 */
 	private int precision;
-	
 
 	/**
 	 * JSlider customization in order to manage decimal values with a given step.
 	 * Internally the component still works with {@code int} values
+	 *
 	 * @param scaledMin - minimum value
 	 * @param scaledMax - maximum value
 	 * @param step - step between values
@@ -80,13 +80,14 @@ public class ScaledJSlider extends JSlider {
 		int max = (int) (scaledMax * (1. / step));
 		setMinimum(min);
 		setMaximum(max);
-		
+
 		setValue(scaledInit);
 
 	}
-	
+
 	/**
 	 * Extract number of digits from step
+	 *
 	 * @param step
 	 */
 	private void setPrecision(double step) {
@@ -100,15 +101,17 @@ public class ScaledJSlider extends JSlider {
 
 	/**
 	 * New setValue() method in order to accept {@code double} values, range and step
+	 *
 	 * @param doubleValue
 	 */
 	public void setValue(Double doubleValue) {
 		int value = convertFromDoubleToInt(doubleValue, scaledMin, step, scaledMax);
 		super.setValue(value);
 	}
-	
+
 	/**
 	 * Convert from {@code Double} to {@code int} with specified range and step
+	 *
 	 * @param doubleValue - the value to be converted
 	 * @param scaledMin - the minimum value (implicit casting from {@code int} to {@code double})
 	 * @param step - the step to round up the result (implicit casting from {@code int} to {@code double})
@@ -116,8 +119,9 @@ public class ScaledJSlider extends JSlider {
 	 * @return the nearest integer to the provided {@code Double} value, or min or max if value is out of range
 	 */
 	private int convertFromDoubleToInt(Double doubleValue, double scaledMin, double step, double scaledMax) {
-		if (doubleValue == null) return (int) Math.round(scaledInit * (1. / step));
-		int intValue = 0;
+		if (doubleValue == null)
+			return (int) Math.round(scaledInit * (1. / step));
+		int intValue;
 		if (doubleValue >= scaledMax) {
 			intValue = (int) (scaledMax * (1. / step));
 		} else if (doubleValue <= scaledMin) {
@@ -127,7 +131,7 @@ public class ScaledJSlider extends JSlider {
 		}
 		return intValue;
 	}
-	
+
 	/**
 	 * New getScaledValue() method in order to scale the internal value using step
 	 */
@@ -135,5 +139,5 @@ public class ScaledJSlider extends JSlider {
 		double value = super.getValue() * step;
 		return new BigDecimal(value).setScale(precision, RoundingMode.HALF_UP).doubleValue();
 	}
-	
+
 }

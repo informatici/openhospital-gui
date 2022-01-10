@@ -21,7 +21,7 @@
  */
 package org.isf.stat.gui.report;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JOptionPane;
@@ -89,7 +89,7 @@ public class GenericReportBill {
         }
 	}
 	
-	public GenericReportBill(Integer billID, String jasperFileName, Patient patient, ArrayList<Integer> billListId, String dateFrom, String dateTo, boolean show, boolean askForPrint) {
+	public GenericReportBill(Integer billID, String jasperFileName, Patient patient, List<Integer> billListId, String dateFrom, String dateTo, boolean show, boolean askForPrint) {
 		try {
 			
 			JasperReportResultDto jasperReportPDFResultDto = jasperReportsManager.getGenericReportBillGroupedPdf(billID, jasperFileName, patient, billListId, dateFrom, dateTo, show, askForPrint);

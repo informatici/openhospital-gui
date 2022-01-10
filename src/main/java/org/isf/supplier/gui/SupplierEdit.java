@@ -70,21 +70,24 @@ public class SupplierEdit extends JDialog {
 	public void removeSupplierListener(SupplierListener listener) {
 		supplierListeners.remove(SupplierListener.class, listener);
 	}
-	
+
 	private void fireSupplierInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
 		for (EventListener listener : listeners)
 			((SupplierListener) listener).supplierInserted(event);
 	}
+
 	private void fireSupplierUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = supplierListeners.getListeners(SupplierListener.class);
 		for (EventListener listener : listeners)
 			((SupplierListener) listener).supplierUpdated(event);
@@ -129,10 +132,10 @@ public class SupplierEdit extends JDialog {
 	 * (because it is a jdialog), the arraylist and the selected
 	 * row because we need to update them
 	 */
-	public SupplierEdit(JFrame parent,Supplier old,boolean inserting) {
+	public SupplierEdit(JFrame parent, Supplier old, boolean inserting) {
 		super(parent, true);
 		insert = inserting;
-		supplier = old;		//operation will be used for every operation
+		supplier = old;        // supplier will be used for every operation
 		initialize();
 	}
 	
@@ -144,7 +147,7 @@ public class SupplierEdit extends JDialog {
 		Dimension screensize = kit.getScreenSize();
 		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
 		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
-		this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase * pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
+		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / pfrmBase * pfrmWidth, screensize.height / pfrmBase * pfrmHeight);
 		this.setContentPane(getJContentPane());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.supplier.newsupplier.title"));
@@ -152,7 +155,7 @@ public class SupplierEdit extends JDialog {
 			this.setTitle(MessageBundle.getMessage("angal.supplier.editsupplier.title"));
 		}
 	}
-	
+
 	/**
 	 * This method initializes jContentPane
 	 * 
@@ -252,7 +255,7 @@ public class SupplierEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 
 			okButton.addActionListener(actionEvent -> {
-				if (nameTextField.getText().trim().equals("")) {
+				if (nameTextField.getText().trim().isEmpty()) {
 					MessageDialog.error(null, "angal.supplier.pleaseinsertaname");
 					return;
 				}
@@ -264,11 +267,11 @@ public class SupplierEdit extends JDialog {
 				supplier.setSupFax(faxTextField.getText());
 				supplier.setSupEmail(emailTextField.getText());
 				supplier.setSupNote(noteTextField.getText());
-				if (!insert)
+				if (!insert) {
 					supplier.setSupDeleted(isDeletedCheck.isSelected() ? 'Y' : 'N');
-				else
+				} else {
 					supplier.setSupDeleted('N');
-
+				}
 				boolean result = false;
 				if (insert) { // inserting
 					try {
@@ -426,7 +429,7 @@ public class SupplierEdit extends JDialog {
 	 * @return javax.swing.JCheckBox
 	 */
 	private JCheckBox getIsDeleted() {
-		if (isDeletedCheck==null) {
+		if (isDeletedCheck == null) {
 			isDeletedCheck = new JCheckBox();
 			if (!insert) {
 				isDeletedCheck.setSelected(supplier.getSupDeleted().equals('Y'));
@@ -434,4 +437,5 @@ public class SupplierEdit extends JDialog {
 		}
 		return isDeletedCheck;
 	}
+
 }

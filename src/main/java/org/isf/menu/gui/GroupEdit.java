@@ -104,10 +104,10 @@ public class GroupEdit extends JDialog {
 	public GroupEdit(UserGroupBrowsing parent, UserGroup old, boolean inserting) {
 		super(parent, inserting
 				? MessageBundle.getMessage("angal.groupsbrowser.newgroup.title")
-				: MessageBundle.getMessage("angal.groupsbrowser.editgroup.title"),true);
+				: MessageBundle.getMessage("angal.groupsbrowser.editgroup.title"), true);
 		addGroupListener(parent);
 		insert = inserting;
-		group = old;		
+		group = old;
 		initialize();
 	}
 

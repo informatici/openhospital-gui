@@ -45,15 +45,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class PregnantTreatmentTypeEdit extends JDialog{
+public class PregnantTreatmentTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList pregnantTreatmentTypeListeners = new EventListenerList();
 
-    public interface PregnantTreatmentTypeListener extends EventListener {
-        void pregnantTreatmentTypeUpdated(AWTEvent e);
-        void pregnantTreatmentTypeInserted(AWTEvent e);
-    }
+	public interface PregnantTreatmentTypeListener extends EventListener {
+
+		void pregnantTreatmentTypeUpdated(AWTEvent e);
+
+		void pregnantTreatmentTypeInserted(AWTEvent e);
+	}
 
     public void addPregnantTreatmentTypeListener(PregnantTreatmentTypeListener l) {
     	pregnantTreatmentTypeListeners.add(PregnantTreatmentTypeListener.class, l);
@@ -63,27 +65,30 @@ public class PregnantTreatmentTypeEdit extends JDialog{
     	pregnantTreatmentTypeListeners.remove(PregnantTreatmentTypeListener.class, listener);
     }
 
-    private void firePregnantTreatmentInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void firePregnantTreatmentInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeInserted(event);
-	    }
-    }
-    private void firePregnantTreatmentUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
+		for (EventListener listener : listeners) {
+			((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void firePregnantTreatmentUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeUpdated(event);
-	    }
-    }
-    
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = pregnantTreatmentTypeListeners.getListeners(PregnantTreatmentTypeListener.class);
+		for (EventListener listener : listeners) {
+			((PregnantTreatmentTypeListener) listener).pregnantTreatmentTypeUpdated(event);
+		}
+	}
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -101,10 +106,10 @@ public class PregnantTreatmentTypeEdit extends JDialog{
      * because we need to update them
 	 */
 	public PregnantTreatmentTypeEdit(JFrame owner, PregnantTreatmentType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		pregnantTreatmentType = old;// PregnantTreatmentType will be used for every operation
-		lastdescription= pregnantTreatmentType.getDescription();
+		lastdescription = pregnantTreatmentType.getDescription();
 		initialize();
 	}
 

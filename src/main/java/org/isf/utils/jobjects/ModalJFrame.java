@@ -35,19 +35,20 @@ public class ModalJFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	protected final JFrame frame = this;
-	
+
 	private final ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
-	
 
 	/**
 	 * Method to enable/disable a owner JFrame launching this ModalJFrame
+	 *
 	 * @param owner - the JFrame owner
 	 */
 	public void showAsModal(final JFrame owner) {
-		
+
 		setIconImage(img.getImage());
 
 		this.addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowOpened(WindowEvent e) {
 				owner.setEnabled(false);
@@ -67,8 +68,9 @@ public class ModalJFrame extends JFrame {
 				frame.removeWindowListener(this);
 			}
 		});
-		
+
 		owner.addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowActivated(WindowEvent e) {
 				if (frame.isShowing()) {
@@ -79,7 +81,8 @@ public class ModalJFrame extends JFrame {
 				}
 			}
 		});
-		
+
 		frame.setVisible(true);
 	}
+
 }

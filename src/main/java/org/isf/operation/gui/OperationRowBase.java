@@ -31,6 +31,7 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -74,7 +75,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected JLabel labelDate;
 	protected JTextField textFieldUnit;
-	protected JDateChooser textDate;
+	protected CustomJDateChooser textDate;
 	protected JComboBox comboOperation;
 	protected JComboBox comboResult;
 	protected JTextArea textAreaRemark;
@@ -130,7 +131,7 @@ abstract class OperationRowBase extends JPanel {
 		gbc_labelDate.gridy = 0;
 		panelForm.add(labelDate, gbc_labelDate);
 
-		textDate = getJCalendarDate();
+		textDate = new CustomJDateChooser();
 		GridBagConstraints gbc_textDate = new GridBagConstraints();
 		gbc_textDate.insets = new Insets(0, 0, 5, 0);
 		gbc_textDate.fill = GridBagConstraints.HORIZONTAL;
@@ -328,7 +329,8 @@ abstract class OperationRowBase extends JPanel {
 		}
 
 		if (opeRow != null) {
-			textDate.setDate(opeRow.getOpDate().getTime());
+			textDate.setDate(opeRow.getOpDate());
+			
 			textAreaRemark.setText(opeRow.getRemarks());
 			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
 		}
@@ -385,7 +387,7 @@ abstract class OperationRowBase extends JPanel {
 
 	public void clearForm() {
 		comboOperation.setSelectedItem(null);
-		textDate.setDate(null);
+		textDate.setDate((LocalDateTime) null);
 		textAreaRemark.setText(""); //$NON-NLS-1$
 		comboResult.setSelectedIndex(-1);
 		textFieldUnit.setText(""); //$NON-NLS-1$

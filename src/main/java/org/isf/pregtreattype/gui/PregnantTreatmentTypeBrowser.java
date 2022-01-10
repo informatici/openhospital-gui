@@ -48,7 +48,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener{
+public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<PregnantTreatmentType> pPregnantTreatmentType;
@@ -108,15 +108,14 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				pregnantTreatmentType = new PregnantTreatmentType("","");
-				PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame,pregnantTreatmentType, true);
+				pregnantTreatmentType = new PregnantTreatmentType("", "");
+				PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame, pregnantTreatmentType, true);
 				newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -139,7 +138,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					pregnantTreatmentType = (PregnantTreatmentType) (model.getValueAt(selectedrow, -1));
-					PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame,pregnantTreatmentType, false);
+					PregnantTreatmentTypeEdit newrecord = new PregnantTreatmentTypeEdit(myFrame, pregnantTreatmentType, false);
 					newrecord.addPregnantTreatmentTypeListener(PregnantTreatmentTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -191,8 +190,8 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new PregnantTreatmentTypeBrowserModel();
 			jTable = new JTable(model);
