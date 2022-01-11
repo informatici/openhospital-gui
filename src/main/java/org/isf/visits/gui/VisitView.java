@@ -630,8 +630,10 @@ public class VisitView extends ModalJFrame {
 		@Override
 		public Object getValueAt(int r, int c) {
 			Visit visit = visitfirst.get(r);
-			LocalDateTime localDateTime = visitfirst.get(r).getDate();
-			return getVisitString(visit, localDateTime);
+			if (c == -1) {
+				return visit;
+			}
+			return getVisitString(visit, visitfirst.get(r).getDate());
 		}
 	}
 
@@ -670,6 +672,9 @@ public class VisitView extends ModalJFrame {
 		@Override
 		public Object getValueAt(int r, int c) {
 			Visit visit = visitSecond.get(r);
+			if (c == -1) {
+				return visit;
+			}
 			return getVisitString(visit, visitSecond.get(r).getDate());
 		}
 	}
