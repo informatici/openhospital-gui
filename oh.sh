@@ -297,13 +297,17 @@ function java_lib_setup {
 }
 
 function java_check {
-if [ -z ${JAVA_BIN+x} ]; then
+# check if JAVA_BIN is already set and it exists
+if ( [ -z ${JAVA_BIN+x} ] || [ ! -x "$JAVA_BIN" ] ); then
+	# set default
+	echo "Setting default JAVA..."
 	JAVA_BIN="$OH_PATH/$JAVA_DIR/bin/java"
 fi
 
-if [ ! -x $JAVA_BIN ]; then
+# if JAVA_BIN is not found download JRE
+if [ ! -x "$JAVA_BIN" ]; then
 	if [ ! -f "./$JAVA_DISTRO.$EXT" ]; then
-		echo "Warning - JAVA_BIN not set or JAVA not found. Do you want to download it?"
+		echo "Warning - JAVA not found. Do you want to download it?"
 		get_confirmation;
 		# download java binaries
 		echo "Download $JAVA_DISTRO..."
@@ -315,20 +319,14 @@ if [ ! -x $JAVA_BIN ]; then
 		echo "Error unpacking Java. Exiting."
 		exit 1
 	fi
-		echo "JAVA unpacked successfully!"
-		echo "Removing downloaded file..."
-		rm ./$JAVA_DISTRO.$EXT
-		echo "Done!"
-	fi
-# check for java binary
-if [ -x "$OH_PATH/$JAVA_DIR/bin/java" ]; then
-	JAVA_BIN="$OH_PATH/$JAVA_DIR/bin/java"
-	echo "JAVA found!"
-	echo "Using $JAVA_DIR"
-else 
-	echo "Error: JAVA not found! Please download it or set JAVA_BIN in the script. Exiting."
-	exit 1
+	echo "JAVA unpacked successfully!"
+	echo "Removing downloaded file..."
+	rm ./$JAVA_DISTRO.$EXT
+	echo "Done!"
 fi
+
+echo "JAVA found!"
+echo "Using $JAVA_BIN"
 }
 
 function mysql_check {
@@ -751,20 +749,24 @@ while getopts ${OPTSTRING} opt; do
 		echo "--------- Script Configuration ---------"
 		echo "Architecture is $ARCH"
 		echo "Config file generation is set to $GENERATE_CONFIG_FILES"
+		echo ""
 		echo "--------- OH Configuration ---------"
 		echo "Open Hospital is configured in $OH_MODE mode"
 		echo "Language is set to $OH_LANGUAGE"
 		echo "Demo data is set to $DEMO_DATA"
 		echo "Log level is set to $LOG_LEVEL"
+		echo ""
 		echo "--- Database ---"
 		echo "MYSQL_SERVER=$MYSQL_SERVER"
 		echo "MYSQL_PORT=$MYSQL_PORT"
 		echo "DATABASE_NAME=$DATABASE_NAME"
 		echo "DATABASE_USER=$DATABASE_USER"
+		echo ""
 		echo "--- Dicom ---"
 		echo "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
 		echo "DICOM_STORAGE=$DICOM_STORAGE"
 		echo "DICOM_DIR=$DICOM_DIR"
+		echo ""
 		echo "--- OH folders ---"
 		echo "OH_DIR=$OH_DIR"
 		echo "OH_DOC_DIR=$OH_DOC_DIR"
@@ -776,6 +778,7 @@ while getopts ${OPTSTRING} opt; do
 		echo "SQL_DIR=$SQL_DIR"
 		echo "SQL_EXTRA_DIR=$SQL_EXTRA_DIR"
 		echo "TMP_DIR=$TMP_DIR"
+		echo ""
 		echo "---  Logging ---"
 		echo "LOG_FILE=$LOG_FILE"
 		echo "OH_LOG_FILE=$OH_LOG_FILE"
