@@ -135,8 +135,9 @@ import org.isf.ward.model.Ward;
  * 06/12/09 - Alex - Cosmetic changes to GUI
  * -----------------------------------------------------------
  */
-public class AdmittedPatientBrowser extends ModalJFrame
-		implements PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener,
+public class AdmittedPatientBrowser extends ModalJFrame implements
+		PatientInsert.PatientListener,
+		PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener,
 		PatientDataBrowser.DeleteAdmissionListener {
 
 	private static final long serialVersionUID = 1L;
