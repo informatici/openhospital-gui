@@ -311,7 +311,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	private void showTherapy(Therapy th) {
 		for (LocalDateTime localDateTime : th.getDates()) {
 			if (localDateTime.getYear() == yearChooser.getYear()) {
-				if (localDateTime.getMonthValue() == monthChooser.getMonth() + 1) {   // monthChooser is zero based
+				if (localDateTime.getMonthValue() == monthChooser.getMonth() + 1) {
 					jAgenda.addElement(th, localDateTime.getDayOfMonth());
 					notifyCheckBox.setSelected(th.isNotify());
 				}
@@ -329,7 +329,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	private void showVisit(Visit vs) {
 		if (vs.getDate().getYear() == yearChooser.getYear()) {
-			if (vs.getDate().getMonthValue() == monthChooser.getMonth() + 1) {   // getMonth() is zero based
+			if (vs.getDate().getMonthValue() == monthChooser.getMonth() + 1) {
 				jAgenda.addElement(vs, vs.getDate().getDayOfMonth());
 			}
 		}
@@ -1063,7 +1063,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			monthChooser = new JMonthChooser();
 			monthChooser.addPropertyChangeListener("month", propertyChangeEvent -> {
 				JMonthChooser thisChooser = (JMonthChooser) propertyChangeEvent.getSource();
-				jAgenda.setMonth(thisChooser.getMonth());
+				jAgenda.setMonth(thisChooser.getMonth() + 1);
 				showAll();
 			});
 			yearChooser = new JYearChooser();
