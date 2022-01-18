@@ -292,22 +292,26 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		return jLabelTo;
 	}
 
-	private CustomJDateChooser getJCalendarFrom() {
-		if (jCalendarFrom == null) {
-			jCalendarFrom = new CustomJDateChooser(dateToday0, DATE_FORMAT_DD_MM_YY); // Calendar
-			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarFrom.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			jCalendarFrom.getCalendarButton().setMnemonic(0);
-			jCalendarFrom.addPropertyChangeListener("date", propertyChangeEvent -> {
-				dateFrom = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue())
-					    .toLocalDate()
-						.atStartOfDay();
-				jButtonToday.setEnabled(true);
-				billInserted(null);
-			});
-		}
-		return jCalendarFrom;
-	}
+    private CustomJDateChooser getJCalendarFrom() {
+        if (jCalendarFrom == null) {
+            jCalendarFrom = new CustomJDateChooser(dateToday0, DATE_FORMAT_DD_MM_YY); // Calendar
+            jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
+            jCalendarFrom.setDateFormatString(DATE_FORMAT_DD_MM_YY);
+            jCalendarFrom.getCalendarButton().setMnemonic(0);
+            jCalendarFrom.addPropertyChangeListener(
+                    "date",
+                    propertyChangeEvent -> {
+                        dateFrom =
+                                Converters.convertToLocalDateTime(
+                                                (Date) propertyChangeEvent.getNewValue())
+                                        .toLocalDate()
+                                        .atStartOfDay();
+                        jButtonToday.setEnabled(true);
+                        billInserted(null);
+                    });
+        }
+        return jCalendarFrom;
+    }
 
 	private CustomJDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
