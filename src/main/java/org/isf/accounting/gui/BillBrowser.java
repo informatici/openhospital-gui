@@ -299,8 +299,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jCalendarFrom.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jCalendarFrom.getCalendarButton().setMnemonic(0);
 			jCalendarFrom.addPropertyChangeListener("date", propertyChangeEvent -> {
-				dateTo = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue())
-						.toLocalDate()
+				dateFrom = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue())
+					    .toLocalDate()
 						.atStartOfDay();
 				jButtonToday.setEnabled(true);
 				billInserted(null);
