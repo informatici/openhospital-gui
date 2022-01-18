@@ -31,6 +31,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,9 +72,6 @@ import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.IconButton;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.TimeTools;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
 
 /**
  * @author Mwithi
@@ -239,13 +237,16 @@ public class TherapyEntryForm extends JDialog {
 	}
 
 	private void fillDaysWeeksMonthsFromDates(LocalDateTime firstDay, LocalDateTime lastDay) {
-		DateTime dateFrom = new DateTime(firstDay);
-		DateTime dateTo = new DateTime(lastDay);
-		Period period = new Period(dateFrom, dateTo, PeriodType.standard());
-		
-		jSpinnerMonths.setValue(period.getMonths());
-		jSpinnerWeeks.setValue(period.getWeeks());
-		jSpinnerDays.setValue(period.getDays()+1);
+		Period period = Period.between(firstDay.toLocalDate(), lastDay.toLocalDate().plusDays(1));
+
+		int months = period.getMonths();
+		int days = period.getDays();
+		int weeks = days / 7;
+		days = days - (weeks * 7);
+
+		jSpinnerMonths.setValue(months);
+		jSpinnerWeeks.setValue(weeks);
+		jSpinnerDays.setValue(days);
 	}
 
 	private JList getMedicalsList() {
