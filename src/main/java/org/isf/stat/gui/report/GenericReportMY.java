@@ -46,7 +46,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * modification history
  * 11/11/2006 - first version
  * -----------------------------------------------------------------*/
-public class GenericReportMY {
+public class GenericReportMY extends DisplayReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportMY.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
@@ -69,12 +69,7 @@ public class GenericReportMY {
 				}
 			} else {
 				JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportMYPdf(month, year, jasperFileName);
-				if (GeneralData.INTERNALVIEWER) {
-					JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-				} else {
-					Runtime rt = Runtime.getRuntime();
-					rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
-				}
+				showReport(jasperReportResultDto);
 			}
 		} catch (Exception e) {
 			LOGGER.error("", e);

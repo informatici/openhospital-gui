@@ -33,23 +33,15 @@ import org.slf4j.LoggerFactory;
 
 import net.sf.jasperreports.view.JasperViewer;
 
-public class ExamsList1 {
+public class ExamsList1 extends DisplayReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExamsList1.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public ExamsList1() {
 		try {
-
 			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getExamsListPdf();
-
-			// shows at video
-			if (GeneralData.INTERNALVIEWER) {
-				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-			} else {
-				Runtime rt = Runtime.getRuntime();
-				rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
-			}
+			showReport(jasperReportResultDto);
 		} catch (Exception e) {
 			LOGGER.error("", e);
 			MessageDialog.error(null, "angal.stat.reporterror.msg");

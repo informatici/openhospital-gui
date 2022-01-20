@@ -22,6 +22,7 @@
 package org.isf.stat.gui.report;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 import javax.swing.JFileChooser;
@@ -50,7 +51,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * 09/06/2007 - first version
  * -----------------------------------------------------------------
  */
-public class GenericReportFromDateToDate {
+public class GenericReportFromDateToDate extends DisplayReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportFromDateToDate.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
@@ -72,17 +73,10 @@ public class GenericReportFromDateToDate {
 					}
 					jasperReportsManager.getGenericReportFromDateToDateExcel(fromDate, toDate, jasperFileName, exportFile.getAbsolutePath());
 				}
-			} else {
-				JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportFromDateToDatePdf(fromDate, toDate, jasperFileName);
-
-				//TODO: if (jasperReportResultDto.getJasperPrint().getPages().isEmpty()) show message dialog and avoid calling the viewer
-				if (GeneralData.INTERNALVIEWER) {
-					JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-				} else {
-					Runtime rt = Runtime.getRuntime();
-					rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
-				}
-			}
+            } else {
+                JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportFromDateToDatePdf(fromDate, toDate, jasperFileName);
+				showReport(jasperReportResultDto);
+            }
 		} catch (OHReportException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		} catch (Exception e) {
