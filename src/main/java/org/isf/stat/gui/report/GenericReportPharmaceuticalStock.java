@@ -42,7 +42,7 @@ import net.sf.jasperreports.view.JasperViewer;
 /*
  * Created on 15/Jun/08
  */
-public class GenericReportPharmaceuticalStock {
+public class GenericReportPharmaceuticalStock extends DisplayReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPharmaceuticalStock.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
@@ -67,12 +67,7 @@ public class GenericReportPharmaceuticalStock {
 			} else {
 				JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPharmaceuticalStockPdf(date, jasperFileName, filter, groupBy,
 						sortBy);
-				if (GeneralData.INTERNALVIEWER) {
-					JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-				} else {
-					Runtime rt = Runtime.getRuntime();
-					rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
-				}
+				showReport(jasperReportResultDto);
 			}
 		} catch (Exception e) {
 			LOGGER.error("", e);

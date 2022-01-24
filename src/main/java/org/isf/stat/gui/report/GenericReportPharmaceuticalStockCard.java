@@ -48,7 +48,7 @@ import net.sf.jasperreports.view.JasperViewer;
 /*
  * Created on 15/Jun/08
  */
-public class GenericReportPharmaceuticalStockCard {
+public class GenericReportPharmaceuticalStockCard extends DisplayReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportPharmaceuticalStockCard.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
@@ -77,12 +77,7 @@ public class GenericReportPharmaceuticalStockCard {
 			} else {
 				JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportPharmaceuticalStockCardPdf(jasperFileName,
 						defaultFilename.getName(), dateFrom, dateTo, medical, ward);
-				if (GeneralData.INTERNALVIEWER) {
-					JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-				} else {
-					Runtime rt = Runtime.getRuntime();
-					rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
-				}
+				showReport(jasperReportResultDto);
 			}
 		} catch (Exception e) {
 			LOGGER.error("", e);

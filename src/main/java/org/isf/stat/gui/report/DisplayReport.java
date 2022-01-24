@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2022 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,34 +21,31 @@
  */
 package org.isf.stat.gui.report;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import org.isf.generaldata.GeneralData;
-import org.isf.menu.manager.Context;
+import org.isf.generaldata.MessageBundle;
 import org.isf.stat.dto.JasperReportResultDto;
-import org.isf.stat.manager.JasperReportsManager;
 import org.isf.utils.jobjects.MessageDialog;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.sf.jasperreports.view.JasperViewer;
 
-/*
- * Created on 15/Jun/08
- */
-public class GenericReportOpd extends DisplayReport {
+public class DisplayReport {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportOpd.class);
-	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
-
-	public GenericReportOpd(int opdID, int patID, String jasperFileName) {
-		try {
-			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportOpdPdf(opdID, patID, jasperFileName);
-			showReport(jasperReportResultDto);
-		} catch (Exception e) {
-			LOGGER.error("", e);
-			MessageDialog.error(null, "angal.stat.reporterror.msg");
+	protected void showReport(JasperReportResultDto jasperReportResultDto) throws IOException {
+		if (jasperReportResultDto.getJasperPrint().getPages().isEmpty()) {
+			MessageDialog.info(null, MessageBundle.getMessage("angal.common.documenthasnopages.msg"));
+			return;
+		}
+		if (GeneralData.INTERNALVIEWER) {
+			JasperViewer.viewReport(
+					jasperReportResultDto.getJasperPrint(),
+					false,
+					new Locale(GeneralData.LANGUAGE));
+		} else {
+			Runtime rt = Runtime.getRuntime();
+			rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
 		}
 	}
-
 }
