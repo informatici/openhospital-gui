@@ -21,13 +21,14 @@
  */
 package org.isf.stat.reportlauncher.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -305,13 +306,12 @@ public class ReportLauncher extends ModalJFrame{
 			
 			jFromDateLabel = new JLabel();
 			jFromDateLabel.setText(MessageBundle.getMessage("angal.stat.fromdate"));
-			GregorianCalendar defaultDate = new GregorianCalendar();
-			defaultDate.add(Calendar.DAY_OF_MONTH, -8);
-			jFromDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YY, defaultDate, 10);
+			LocalDate defaultDate = LocalDate.now().minusMonths(8);
+			jFromDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, defaultDate, 10);
 			jToDateLabel = new JLabel();
 			jToDateLabel.setText(MessageBundle.getMessage("angal.stat.todate"));
-			defaultDate.add(Calendar.DAY_OF_MONTH, 7);
-			jToDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YY, defaultDate, 10);
+			defaultDate = defaultDate.plusMonths(7);
+			jToDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, defaultDate, 10);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
 			jFromDateLabel.setVisible(false);
@@ -412,7 +412,7 @@ public class ReportLauncher extends ModalJFrame{
 				d.set(Calendar.DAY_OF_MONTH,1 );
 				d.set(Calendar.MONTH, month-1);
 				d.set(Calendar.YEAR, year);
-				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(DATE_FORMAT_DD_MM_YY);
+				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY);
 				fromDate = sdf.format(d.getTime());
 				d.set(Calendar.DAY_OF_MONTH, d.getActualMaximum(Calendar.DAY_OF_MONTH));
 				toDate = sdf.format(d.getTime());

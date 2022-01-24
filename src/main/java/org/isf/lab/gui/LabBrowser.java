@@ -468,10 +468,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	private VoDateTextField getDateFieldFromPanel() {
 		if (dateFrom == null) {
-			GregorianCalendar now = new GregorianCalendar();
-			//04/01/2009 - ross - do not use roll, use add(week,-1)!
-			//now.roll(GregorianCalendar.WEEK_OF_YEAR, false);
-			now.add(Calendar.WEEK_OF_YEAR, -1);
+			LocalDate now = LocalDate.now().minusWeeks(1);
 			dateFrom = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, now, 10);
 		}
 		return dateFrom;
@@ -495,7 +492,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	private VoDateTextField getDateFieldToPanel() {
 		if (dateTo == null) {
-			GregorianCalendar now = new GregorianCalendar();
+			LocalDate now = LocalDate.now();
 			dateTo = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, now, 10);
 			dateTo.setDate(now);
 		}
