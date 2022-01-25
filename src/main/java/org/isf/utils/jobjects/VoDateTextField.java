@@ -30,6 +30,7 @@ import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -119,7 +120,7 @@ public class VoDateTextField extends JTextField {
 		check();
 	}
 
-	public VoDateTextField(String type, GregorianCalendar todayDate, int cols) throws IllegalArgumentException {
+	public VoDateTextField(String type, LocalDate todayDate, int cols) throws IllegalArgumentException {
 		super(cols);
 		if (!(type.equals(DATE_FORMAT_DD_MM_YY) || type.equals(DATE_FORMAT_DD_MM_YYYY)
 				|| type.equals(DATE_FORMAT_MM_DD_YY) || type.equals(DATE_FORMAT_MM_DD_YYYY))) {
@@ -224,36 +225,12 @@ public class VoDateTextField extends JTextField {
 		return Converters.convertToLocalDateTime(getDate()).toLocalDate();
 	}
 
-	public void setDate(GregorianCalendar time) {
-		String string;
-		if (time.get(Calendar.DAY_OF_MONTH) > 9) {
-			string = String.valueOf(time.get(Calendar.DAY_OF_MONTH));
-		} else {
-			string = "0" + time.get(Calendar.DAY_OF_MONTH);
-		}
-		if (time.get(Calendar.MONTH) + 1 > 9) {
-			string += "/" + (time.get(Calendar.MONTH) + 1);
-		} else {
-			string += "/0" + (time.get(Calendar.MONTH) + 1);
-		}
-		string += "/" + time.get(Calendar.YEAR);
-		currentDate = string;
+	public void setDate(LocalDate date) {
+		currentDate = date.format(DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY));
 	}
 
-	private String getConvertedString(GregorianCalendar time) {
-		String string;
-		if (time.get(Calendar.DAY_OF_MONTH) > 9) {
-			string = String.valueOf(time.get(Calendar.DAY_OF_MONTH));
-		} else {
-			string = "0" + time.get(Calendar.DAY_OF_MONTH);
-		}
-		if (time.get(Calendar.MONTH) + 1 > 9) {
-			string += "/" + (time.get(Calendar.MONTH) + 1);
-		} else {
-			string += "/0" + (time.get(Calendar.MONTH) + 1);
-		}
-		string += "/" + time.get(Calendar.YEAR);
-		return string;
+	private String getConvertedString(LocalDate date) {
+		return date.format(DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY));
 	}
 
 }
