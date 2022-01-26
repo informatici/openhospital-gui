@@ -279,6 +279,22 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			}
 		});
 
+        if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
+            admTable.addMouseListener(
+                    new MouseAdapter() {
+                        public void mouseClicked(MouseEvent mouseEvent) {
+                            if (mouseEvent.getClickCount() == 2) { // to detect double click events
+                                JTable target = (JTable) mouseEvent.getSource();
+                                new PatientFolderReportModal(
+                                        PatientFolderBrowser.this,
+                                        patient.getCode(),
+                                        olderDate,
+                                        (String) admTable.getValueAt(target.getSelectedRow(), 1));
+                            }
+                        }
+                    });
+        }
+
 		for (int i = 0; i < pColumns.length; i++) {
 			admTable.getColumnModel().getColumn(i).setPreferredWidth(pColumnWidth[i]);
 			if (i == 0 || i == 4) {
