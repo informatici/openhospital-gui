@@ -75,21 +75,15 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JPanel allPanel;
 	private JCheckBox allCheck;
 	private JPanel labelPanel;
-	private GregorianCalendar date;
+	private GregorianCalendar fromDate;
+	private GregorianCalendar toDate;
 	private String selectedReport;
 
-	public PatientFolderReportModal(JFrame parent, Integer code, GregorianCalendar olderDate) {
+	public PatientFolderReportModal(JFrame parent, Integer code, GregorianCalendar fromDate, GregorianCalendar toDate, String selectedReport) {
 		this.parent = parent;
 		this.patId = code;
-		this.date = olderDate;
-		this.selectedReport = "ALL";
-		initialize();
-	}
-
-	public PatientFolderReportModal(JFrame parent, Integer code, GregorianCalendar olderDate, String selectedReport) {
-		this.parent = parent;
-		this.patId = code;
-		this.date = olderDate;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
 		this.selectedReport = selectedReport.toUpperCase();
 		switch(this.selectedReport) {
 			case "ADMISSION":
@@ -99,6 +93,12 @@ public class PatientFolderReportModal extends ModalJFrame {
 			case "DRUGS":
 			case "EXAMINATION":
 				break;  // valid values
+			case "MALE WARD":
+			case "FEMALE WARD":
+			case "CHILDREN WARD":
+			case "MATERNITY WARD":
+				this.selectedReport = "ADMISSION";
+				break;
 			default:
 				this.selectedReport = "ALL";
 			}
@@ -396,7 +396,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 			jDateChooserDateFrom.setPreferredSize(new Dimension(200, 40));
 			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateFrom.setDateFormatString(DATE_FORMAT);
-			jDateChooserDateFrom.setDate(date.getTime());
+			jDateChooserDateFrom.setDate(fromDate.getTime());
 		}
 		return jDateChooserDateFrom;
 	}
@@ -407,7 +407,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 			jDateChooserDateTo.setPreferredSize(new Dimension(200, 40));
 			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateTo.setDateFormatString(DATE_FORMAT);
-			jDateChooserDateTo.setDate(new Date());
+			jDateChooserDateTo.setDate(toDate.getTime());
 		}
 		return jDateChooserDateTo;
 	}

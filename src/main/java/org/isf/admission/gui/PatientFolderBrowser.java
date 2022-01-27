@@ -34,6 +34,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -231,7 +232,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	private TableSorter sorterLab;
 	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 
-	private GregorianCalendar olderDate;
+	private GregorianCalendar fromDate;
 
 	private JTable admTable;
 	private JTable labTable;
@@ -279,17 +280,43 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			}
 		});
 
-        if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
+		// Handle double click on rows of tables generating report dialog
+		if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
             admTable.addMouseListener(
                     new MouseAdapter() {
+                        @Override
                         public void mouseClicked(MouseEvent mouseEvent) {
-                            if (mouseEvent.getClickCount() == 2) { // to detect double click events
-                                JTable target = (JTable) mouseEvent.getSource();
+                            GregorianCalendar fromDate = null;
+                            GregorianCalendar toDate = null;
+                            int admTableSelectedRow = admTable.getSelectedRow();
+                            if (mouseEvent.getClickCount() == 2) {
+                                String wardStr = (String) admTable.getValueAt(admTableSelectedRow, 1);
+                                if (wardStr.contains("WARD")) {
+                                    fromDate = getDateForRow(admList, "admDate", admTableSelectedRow);
+                                    toDate = getDateForRow(admList, "disDate", admTableSelectedRow);
+                                    if (toDate == null) {
+                                        toDate = new GregorianCalendar();
+                                    }
+                                } else {
+                                    DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+	                                Date date = null;
+	                                String dateStr = (String) admTable.getValueAt(admTableSelectedRow, 0);
+	                                try {
+		                                date = df.parse(dateStr);
+	                                } catch (ParseException e) {
+		                                LOGGER.error("Date parse error: {}", dateStr);
+		                                date = new Date();
+	                                }
+                                    fromDate = new GregorianCalendar();
+                                    fromDate.setTime(date);
+                                    toDate = fromDate;
+                                }
                                 new PatientFolderReportModal(
                                         PatientFolderBrowser.this,
                                         patient.getCode(),
-                                        olderDate,
-                                        (String) admTable.getValueAt(target.getSelectedRow(), 1));
+                                        fromDate,
+                                        toDate,
+                                        (String) admTable.getValueAt(admTableSelectedRow, 1));
                             }
                         }
                     });
@@ -360,6 +387,80 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		drugsList = new MedicalsrMovPatList(patient);
 		getOlderDate(drugsList.getDrugsData(), "date");
 		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.admission.patientfolder.drugs.title"), null, drugsList, null);
+
+		// Handle double click on rows of tables generating report dialog
+        if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
+	        labTable.addMouseListener(
+			        new MouseAdapter() {
+				        @Override
+				        public void mouseClicked(MouseEvent mouseEvent) {
+					        if (mouseEvent.getClickCount() == 2) {
+						        Date date =  (Date) labTable.getValueAt(labTable.getSelectedRow(), 0);
+						        GregorianCalendar fromDate = new GregorianCalendar();
+						        fromDate.setTime(date);
+						        new PatientFolderReportModal(
+								        PatientFolderBrowser.this,
+								        patient.getCode(), fromDate, fromDate, "LABORATORY");
+					        }
+				        }
+			        });
+
+            JTable opeTable = opeList.getJtableData();
+            opeTable.addMouseListener(
+                    new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent mouseEvent) {
+                            if (mouseEvent.getClickCount() == 2) {
+                                DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+                                Date date = null;
+                                String dateStr = (String) opeTable.getValueAt(opeTable.getSelectedRow(), 0);
+                                try {
+                                    date = df.parse(dateStr);
+                                } catch (ParseException e) {
+                                    LOGGER.error("Date parse error: {}", dateStr);
+                                    date = new Date();
+                                }
+                                GregorianCalendar fromDate = new GregorianCalendar();
+                                fromDate.setTime(date);
+                                new PatientFolderReportModal(
+                                        PatientFolderBrowser.this,
+                                        patient.getCode(),
+                                        fromDate,
+                                        fromDate,
+                                        "OPERATION");
+                            }
+                        }
+                    });
+
+            JTable drugTable = drugsList.getJTable();
+            drugTable.addMouseListener(
+                    new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent mouseEvent) {
+                            if (mouseEvent.getClickCount() == 2) {
+                                DateFormat df = new SimpleDateFormat("MM/dd/yy");
+                                Date date = null;
+                                String dateStr =
+                                        (String)
+                                                drugTable.getValueAt(drugTable.getSelectedRow(), 0);
+                                try {
+                                    date = df.parse(dateStr);
+                                } catch (ParseException e) {
+                                    LOGGER.error("Date parse error: {}", dateStr);
+                                    date = new Date();
+                                }
+                                GregorianCalendar fromDate = new GregorianCalendar();
+                                fromDate.setTime(date);
+                                new PatientFolderReportModal(
+                                        PatientFolderBrowser.this,
+                                        patient.getCode(),
+                                        fromDate,
+                                        fromDate,
+                                        "DRUGS");
+                            }
+                        }
+                    });
+        }
 
 		ListSelectionModel listSelectionModel = admTable.getSelectionModel();
 		listSelectionModel.addListSelectionListener(selectionEvent -> {
@@ -551,11 +652,11 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			launchReportButton = new JButton(MessageBundle.getMessage("angal.common.launchreport.btn"));
 			launchReportButton.setMnemonic(MessageBundle.getMnemonic("angal.common.launchreport.btn.key"));
 			launchReportButton.addActionListener(actionEvent -> {
-				if (olderDate == null) {
+				if (fromDate == null) {
 					MessageDialog.error(PatientFolderBrowser.this, "angal.admission.patientfolder.nodatatoshow.msg");
 					return;
 				}
-				new PatientFolderReportModal(PatientFolderBrowser.this, patient.getCode(),olderDate);
+				new PatientFolderReportModal(PatientFolderBrowser.this, patient.getCode(), fromDate, new GregorianCalendar(), "ALL");
 			});
 		}
 		return launchReportButton;
@@ -582,11 +683,15 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		return closeButton;
 	}
 
+	private <T> GregorianCalendar getDateForRow(List<T> list, String variableName, int row) {
+		return getDateFromObject(list.get(row), variableName);
+	}
+
 	private <T> void getOlderDate(List<T> list, String variableName) {
 		for (Object obj : list) {
 			GregorianCalendar otherDate = getDateFromObject(obj, variableName);
-			if (olderDate == null || olderDate.after(otherDate)) {
-				olderDate = otherDate;
+			if (fromDate == null || fromDate.after(otherDate)) {
+				fromDate = otherDate;
 			}
 		}
 	}
@@ -687,7 +792,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			} else if (column == 0) {
 				if (row < admList.size()) {
 
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 					Date myDate = (admList.get(row)).getAdmDate().getTime();
 					String strDate = dateFormat.format(myDate);
 
@@ -695,7 +800,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 
 				} else if (row < opdList.size()+admList.size()) {
 					int z = row - admList.size();
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 					Date myDate = (opdList.get(z)).getVisitDate().getTime();
 					String strDate = dateFormat.format(myDate);
 
@@ -704,7 +809,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				} else {
 					int f = row - (opdList.size()+admList.size());
 					GregorianCalendar cal = examinationList.get(f).getPex_date();
-					DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 					Date myDate = cal.getTime();
 					String strDate = dateFormat.format(myDate);
 
