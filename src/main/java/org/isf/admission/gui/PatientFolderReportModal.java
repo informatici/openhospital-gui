@@ -93,12 +93,6 @@ public class PatientFolderReportModal extends ModalJFrame {
 			case "DRUGS":
 			case "EXAMINATION":
 				break;  // valid values
-			case "MALE WARD":
-			case "FEMALE WARD":
-			case "CHILDREN WARD":
-			case "MATERNITY WARD":
-				this.selectedReport = "ADMISSION";
-				break;
 			default:
 				this.selectedReport = "ALL";
 			}
