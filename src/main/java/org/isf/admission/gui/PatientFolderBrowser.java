@@ -289,29 +289,29 @@ public class PatientFolderBrowser extends ModalJFrame implements
                             GregorianCalendar fromDate = null;
                             GregorianCalendar toDate = null;
                             String reportType;
-							JTable target = (JTable)mouseEvent.getSource();
+                            JTable target = (JTable) mouseEvent.getSource();
                             int targetSelectedRow = target.getSelectedRow();
                             if (mouseEvent.getClickCount() == 2) {
                                 Object objType = target.getValueAt(targetSelectedRow, -1);
                                 if (objType instanceof Admission) {
-                                    fromDate = parseDateFromTableColumn((String) target.getValueAt(targetSelectedRow, 0), DATE_FORMAT);
-									Object dateObject = target.getValueAt(targetSelectedRow, 4);
-									if (dateObject instanceof Date) {
+                                    fromDate = parseDateFromTableColumn((String)target.getValueAt(targetSelectedRow, 0), DATE_FORMAT);
+                                    Object dateObject = target.getValueAt(targetSelectedRow, 4);
+                                    if (dateObject instanceof Date) {
                                         Date dateValue = (Date) dateObject;
-	                                    toDate = new GregorianCalendar();
+                                        toDate = new GregorianCalendar();
                                         if (dateValue != null) {
-	                                        toDate.setTime(dateValue);
-									    }
+                                            toDate.setTime(dateValue);
+                                        }
                                     } else if (dateObject instanceof String) {
-										toDate = parseDateFromTableColumn((String)dateObject, DATE_FORMAT);
-									}
+                                        toDate = parseDateFromTableColumn((String) dateObject, DATE_FORMAT);
+                                    }
                                     reportType = "ADMISSION";
                                 } else if (objType instanceof Opd) {
-	                                fromDate = parseDateFromTableColumn((String) target.getValueAt(targetSelectedRow, 0), DATE_FORMAT);
+                                    fromDate = parseDateFromTableColumn((String)target.getValueAt(targetSelectedRow, 0), DATE_FORMAT);
                                     toDate = fromDate;
                                     reportType = "OPD";
                                 } else if (objType instanceof PatientExamination) {
-	                                fromDate = parseDateFromTableColumn((String) target.getValueAt(targetSelectedRow, 0), DATE_FORMAT);
+                                    fromDate = parseDateFromTableColumn((String)target.getValueAt(targetSelectedRow, 0), DATE_FORMAT);
                                     toDate = fromDate;
                                     reportType = "EXAMINATION";
                                 } else {
