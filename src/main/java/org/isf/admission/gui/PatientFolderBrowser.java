@@ -280,8 +280,8 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			}
 		});
 
-		// Handle double click on rows of tables generating report dialog
-		if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
+        // Handle double click on rows of tables generating report dialog
+        if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
             admTable.addMouseListener(
                     new MouseAdapter() {
                         @Override
@@ -396,22 +396,25 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		getOlderDate(drugsList.getDrugsData(), "date");
 		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.admission.patientfolder.drugs.title"), null, drugsList, null);
 
-		// Handle double click on rows of tables generating report dialog
+        // Handle double click on rows of tables generating report dialog
         if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
-	        labTable.addMouseListener(
-			        new MouseAdapter() {
-				        @Override
-				        public void mouseClicked(MouseEvent mouseEvent) {
-					        if (mouseEvent.getClickCount() == 2) {
-						        Date date =  (Date) labTable.getValueAt(labTable.getSelectedRow(), 0);
-						        GregorianCalendar fromDate = new GregorianCalendar();
-						        fromDate.setTime(date);
-						        new PatientFolderReportModal(
-								        PatientFolderBrowser.this,
-								        patient.getCode(), fromDate, fromDate, "LABORATORY");
-					        }
-				        }
-			        });
+            labTable.addMouseListener(
+                    new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent mouseEvent) {
+                            if (mouseEvent.getClickCount() == 2) {
+                                Date date = (Date) labTable.getValueAt(labTable.getSelectedRow(), 0);
+                                GregorianCalendar fromDate = new GregorianCalendar();
+                                fromDate.setTime(date);
+                                new PatientFolderReportModal(
+                                        PatientFolderBrowser.this,
+                                        patient.getCode(),
+                                        fromDate,
+                                        fromDate,
+                                        "LABORATORY");
+                            }
+                        }
+                    });
 
             JTable opeTable = opeList.getJtableData();
             opeTable.addMouseListener(
@@ -419,7 +422,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
                         @Override
                         public void mouseClicked(MouseEvent mouseEvent) {
                             if (mouseEvent.getClickCount() == 2) {
-	                            fromDate = parseDateFromTableColumn((String) opeTable.getValueAt(opeTable.getSelectedRow(), 0), DATE_FORMAT);
+                                fromDate = parseDateFromTableColumn((String)opeTable.getValueAt(opeTable.getSelectedRow(), 0), DATE_FORMAT);
                                 new PatientFolderReportModal(
                                         PatientFolderBrowser.this,
                                         patient.getCode(),
@@ -436,7 +439,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
                         @Override
                         public void mouseClicked(MouseEvent mouseEvent) {
                             if (mouseEvent.getClickCount() == 2) {
-	                            fromDate = parseDateFromTableColumn((String)drugTable.getValueAt(drugTable.getSelectedRow(), 0), "MM/dd/yy");
+                                fromDate = parseDateFromTableColumn((String)drugTable.getValueAt(drugTable.getSelectedRow(), 0),"MM/dd/yy");
                                 new PatientFolderReportModal(
                                         PatientFolderBrowser.this,
                                         patient.getCode(),
