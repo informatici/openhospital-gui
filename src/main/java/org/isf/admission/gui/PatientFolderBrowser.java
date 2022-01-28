@@ -306,13 +306,15 @@ public class PatientFolderBrowser extends ModalJFrame implements
                                     toDate = fromDate;
                                     reportType = "OPD";
                                 } else if (objType instanceof PatientExamination) {
-                                    fromDate = getDateForExaminationRow("pex_date", admTableSelectedRow);
+                                    fromDate =
+                                            getDateForExaminationRow(
+                                                    "pex_date", admTableSelectedRow);
                                     toDate = fromDate;
                                     reportType = "EXAMINATION";
                                 } else {
-									fromDate = new GregorianCalendar();
-									toDate = fromDate;
-									reportType = "ALL";
+                                    fromDate = new GregorianCalendar();
+                                    toDate = fromDate;
+                                    reportType = "ALL";
                                 }
                                 new PatientFolderReportModal(
                                         PatientFolderBrowser.this,
