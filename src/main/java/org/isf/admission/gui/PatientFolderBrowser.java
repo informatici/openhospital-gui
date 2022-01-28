@@ -289,23 +289,29 @@ public class PatientFolderBrowser extends ModalJFrame implements
                             GregorianCalendar fromDate = null;
                             GregorianCalendar toDate = null;
                             String reportType;
-                            int admTableSelectedRow = admTable.getSelectedRow();
+							JTable target = (JTable)mouseEvent.getSource();
+                            int targetSelectedRow = target.getSelectedRow();
                             if (mouseEvent.getClickCount() == 2) {
-                                reportType = (String) admTable.getValueAt(admTableSelectedRow, 1);
-                                Object objType = admTable.getValueAt(admTableSelectedRow, -1);
+                                Object objType = target.getValueAt(targetSelectedRow, -1);
                                 if (objType instanceof Admission) {
-                                    fromDate = getDateForAdmissionRow("admDate", admTableSelectedRow);
-                                    toDate = getDateForAdmissionRow("disDate", admTableSelectedRow);
-                                    if (toDate == null) {
-                                        toDate = new GregorianCalendar();
-                                    }
+                                    fromDate = parseDateFromTableColumn((String) target.getValueAt(targetSelectedRow, 0), DATE_FORMAT);
+									Object dateObject = target.getValueAt(targetSelectedRow, 4);
+									if (dateObject instanceof Date) {
+                                        Date dateValue = (Date) dateObject;
+	                                    toDate = new GregorianCalendar();
+                                        if (dateValue != null) {
+	                                        toDate.setTime(dateValue);
+									    }
+                                    } else if (dateObject instanceof String) {
+										toDate = parseDateFromTableColumn((String)dateObject, DATE_FORMAT);
+									}
                                     reportType = "ADMISSION";
                                 } else if (objType instanceof Opd) {
-                                    fromDate = getDateForOpdRow("visitDate", admTableSelectedRow);
+	                                fromDate = parseDateFromTableColumn((String) target.getValueAt(targetSelectedRow, 0), DATE_FORMAT);
                                     toDate = fromDate;
                                     reportType = "OPD";
                                 } else if (objType instanceof PatientExamination) {
-                                    fromDate = getDateForExaminationRow("pex_date", admTableSelectedRow);
+	                                fromDate = parseDateFromTableColumn((String) target.getValueAt(targetSelectedRow, 0), DATE_FORMAT);
                                     toDate = fromDate;
                                     reportType = "EXAMINATION";
                                 } else {
@@ -413,17 +419,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
                         @Override
                         public void mouseClicked(MouseEvent mouseEvent) {
                             if (mouseEvent.getClickCount() == 2) {
-                                DateFormat df = new SimpleDateFormat(DATE_FORMAT);
-                                Date date = null;
-                                String dateStr = (String) opeTable.getValueAt(opeTable.getSelectedRow(), 0);
-                                try {
-                                    date = df.parse(dateStr);
-                                } catch (ParseException e) {
-                                    LOGGER.error("Date parse error: {}", dateStr);
-                                    date = new Date();
-                                }
-                                GregorianCalendar fromDate = new GregorianCalendar();
-                                fromDate.setTime(date);
+	                            fromDate = parseDateFromTableColumn((String) opeTable.getValueAt(opeTable.getSelectedRow(), 0), DATE_FORMAT);
                                 new PatientFolderReportModal(
                                         PatientFolderBrowser.this,
                                         patient.getCode(),
@@ -440,19 +436,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
                         @Override
                         public void mouseClicked(MouseEvent mouseEvent) {
                             if (mouseEvent.getClickCount() == 2) {
-                                DateFormat df = new SimpleDateFormat("MM/dd/yy");
-                                Date date = null;
-                                String dateStr =
-                                        (String)
-                                                drugTable.getValueAt(drugTable.getSelectedRow(), 0);
-                                try {
-                                    date = df.parse(dateStr);
-                                } catch (ParseException e) {
-                                    LOGGER.error("Date parse error: {}", dateStr);
-                                    date = new Date();
-                                }
-                                GregorianCalendar fromDate = new GregorianCalendar();
-                                fromDate.setTime(date);
+	                            fromDate = parseDateFromTableColumn((String)drugTable.getValueAt(drugTable.getSelectedRow(), 0), "MM/dd/yy");
                                 new PatientFolderReportModal(
                                         PatientFolderBrowser.this,
                                         patient.getCode(),
@@ -540,6 +524,20 @@ public class PatientFolderBrowser extends ModalJFrame implements
 		});
 
 		return tablesPanel;
+	}
+
+	private GregorianCalendar parseDateFromTableColumn(String dateStr, String dateFormat) {
+		DateFormat df = new SimpleDateFormat(dateFormat);
+		Date date = null;
+		try {
+			date = df.parse(dateStr);
+		} catch (ParseException e) {
+			LOGGER.error("Date parse error: {}", dateStr);
+			date = new Date();
+		}
+		GregorianCalendar gregorianCalendar = new GregorianCalendar();
+		gregorianCalendar.setTime(date);
+		return gregorianCalendar;
 	}
 
 	private JPanel getButtonPanel() {
