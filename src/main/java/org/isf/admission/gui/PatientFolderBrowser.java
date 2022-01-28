@@ -839,7 +839,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			if (column == -1) {
 				return laboratory;
 			} else if (column == 0) {
-				Converters.toDate(laboratory.getExamDate().atStartOfDay());
+				return Converters.toDate(laboratory.getExamDate().atStartOfDay());
 			} else if (column == 1) {
 				return laboratory.getExam().getDescription();
 			} else if (column == 2) {
