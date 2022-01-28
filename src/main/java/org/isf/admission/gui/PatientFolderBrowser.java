@@ -294,8 +294,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
                                 reportType = (String) admTable.getValueAt(admTableSelectedRow, 1);
                                 Object objType = admTable.getValueAt(admTableSelectedRow, -1);
                                 if (objType instanceof Admission) {
-                                    fromDate =
-                                            getDateForAdmissionRow("admDate", admTableSelectedRow);
+                                    fromDate = getDateForAdmissionRow("admDate", admTableSelectedRow);
                                     toDate = getDateForAdmissionRow("disDate", admTableSelectedRow);
                                     if (toDate == null) {
                                         toDate = new GregorianCalendar();
@@ -306,9 +305,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
                                     toDate = fromDate;
                                     reportType = "OPD";
                                 } else if (objType instanceof PatientExamination) {
-                                    fromDate =
-                                            getDateForExaminationRow(
-                                                    "pex_date", admTableSelectedRow);
+                                    fromDate = getDateForExaminationRow("pex_date", admTableSelectedRow);
                                     toDate = fromDate;
                                     reportType = "EXAMINATION";
                                 } else {
@@ -693,7 +690,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 	}
 
 	private <T> GregorianCalendar getDateForOpdRow(String variableName, int row) {
-		return getDateFromObject(opdList.get(row - opdList.size()), variableName);
+		return getDateFromObject(opdList.get(row - admList.size()), variableName);
 	}
 
 	private <T> GregorianCalendar getDateForExaminationRow(String variableName, int row) {
