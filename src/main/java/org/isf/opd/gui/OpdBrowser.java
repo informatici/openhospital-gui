@@ -673,14 +673,14 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private LocalDate getDateFrom() {
 		return LocalDate.now()
 				.withYear(Integer.parseInt(yearFrom.getText()))
-				.withMonth(Integer.parseInt(monthFrom.getText()) - 1)
+				.withMonth(Integer.parseInt(monthFrom.getText()))
 				.withDayOfMonth(Integer.parseInt(dayFrom.getText()));
 	}
 
 	private LocalDate getDateTo() {
 		return LocalDate.now()
 				.withYear(Integer.parseInt(yearTo.getText()))
-				.withMonth(Integer.parseInt(monthTo.getText()) - 1)
+				.withMonth(Integer.parseInt(monthTo.getText()))
 				.withDayOfMonth(Integer.parseInt(dayTo.getText()));
 	}
 
