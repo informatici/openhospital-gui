@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_clinical_sheet_ver3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_clinical_sheet_ver3" whenResourceMissingType="Key" uuid="9d971b4c-5fa3-4819-adfb-28dfac75b382">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -28,7 +28,7 @@
 		<![CDATA[SELECT TYPE, DATE, IDS, NOTE, DETAILS_1, DETAILS_2, DETAILS_3, DETAILS_4
 FROM (
 	SELECT CONCAT("Opd", " (", OPD_PROG_YEAR, ")") AS TYPE,
-	   OPD_DATE AS DATE, OPD_ID AS IDS,
+	   OPD_DATE_VIS AS DATE, OPD_ID AS IDS,
 	   IF(OPD_NEW_PAT='N','New Attendance','Re-Attendance') AS DETAILS_1,
 	   CONCAT((SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A)) AS DETAILS_2,
 	   CONCAT(" + ", (SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_2), " & ", (SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_3)) AS DETAILS_3,
@@ -37,7 +37,7 @@ FROM (
 	FROM 
 		OPD 
 		LEFT JOIN PATIENT ON (OPD_PAT_ID = PAT_ID) 
-	WHERE OPD_PAT_ID = $P{patientID} AND (DATE(OPD_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
+	WHERE OPD_PAT_ID = $P{patientID} AND (DATE(OPD_DATE_VIS) BETWEEN $P{Date_from} AND $P{Date_to})
 	
 UNION
 
@@ -45,7 +45,7 @@ UNION
 	   ADM_DATE_ADM AS DATE, ADM_ID AS IDS,
 	   WRD_NAME AS DETAILS_1,
 	   (SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = ADM_IN_DIS_ID_A) AS DETAILS_2,
-	   CONCAT(DIST_DESC, " - ", (SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = ADM_OUT_DIS_ID_A), " - ", DATE_FORMAT(ADM_DATE_DIS, '%d/%m/%Y')) AS DETAILS_3,
+	   CONCAT(DIST_DESC, " - ", (SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = ADM_OUT_DIS_ID_A), " - ", DATE_FORMAT(ADM_DATE_DIS, '%d/%m/%Y %H:%i')) AS DETAILS_3,
 	   "" AS DETAILS_4,
 	   ADM_NOTE AS NOTE
 	FROM 
@@ -129,7 +129,7 @@ UNION
 UNION
 
 	SELECT "Laboratory" AS TYPE,
-	   LAB_DATE AS DATE, LAB_RES AS IDS,
+	   LAB_EXAM_DATE AS DATE, LAB_RES AS IDS,
 	   EXA_DESC DETAILS_1,
 	   LAB_RES AS DETAILS_2,
 	   "" AS DETAILS_3,
@@ -139,13 +139,13 @@ UNION
 		LABORATORY  
 		LEFT JOIN EXAM ON (EXA_ID_A = LAB_EXA_ID_A) 
 		LEFT JOIN LABORATORYROW ON LABR_LAB_ID = LAB_ID
-	WHERE LAB_PAT_ID = $P{patientID} AND (DATE(LAB_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
+	WHERE LAB_PAT_ID = $P{patientID} AND (DATE(LAB_EXAM_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
     AND EXA_PROC = 1
     
 UNION
 
 	SELECT "Laboratory" AS TYPE,
-	   LAB_DATE AS DATE, LAB_ID AS IDS,
+	   LAB_EXAM_DATE AS DATE, LAB_ID AS IDS,
 	   EXA_DESC DETAILS_1,
 	   GROUP_CONCAT(LABR_DESC SEPARATOR ", " ) AS DETAILS_2,
 	   "" AS DETAILS_3,
@@ -155,14 +155,14 @@ UNION
 		LABORATORY  
 		LEFT JOIN EXAM ON (EXA_ID_A = LAB_EXA_ID_A) 
 		LEFT JOIN LABORATORYROW ON LABR_LAB_ID = LAB_ID
-	WHERE LAB_PAT_ID = $P{patientID} AND (DATE(LAB_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
+	WHERE LAB_PAT_ID = $P{patientID} AND (DATE(LAB_EXAM_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
 	AND EXA_PROC = 2
 GROUP BY LABR_LAB_ID
 
 UNION
 
 	SELECT "Laboratory" AS TYPE,
-	   LAB_DATE AS DATE, LAB_RES AS IDS,
+	   LAB_EXAM_DATE AS DATE, LAB_RES AS IDS,
 	   EXA_DESC DETAILS_1,
 	   LAB_RES AS DETAILS_2,
 	   "" AS DETAILS_3,
@@ -172,7 +172,7 @@ UNION
 		LABORATORY  
 		LEFT JOIN EXAM ON (EXA_ID_A = LAB_EXA_ID_A) 
 		LEFT JOIN LABORATORYROW ON LABR_LAB_ID = LAB_ID
-	WHERE LAB_PAT_ID = $P{patientID} AND (DATE(LAB_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
+	WHERE LAB_PAT_ID = $P{patientID} AND (DATE(LAB_EXAM_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
     AND EXA_PROC = 3
     
 ) 

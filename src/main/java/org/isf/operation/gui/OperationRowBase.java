@@ -270,7 +270,7 @@ abstract class OperationRowBase extends JPanel {
 		if (jCalendarDate == null) {
 			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jCalendarDate.setDateFormatString("dd/MM/yy HH:mm:ss"); //$NON-NLS-1$
 			jCalendarDate.setDate(DateTime.now().toDate());
 		}
 		return jCalendarDate;

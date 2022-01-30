@@ -1198,9 +1198,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				dateIn = RememberDates.getLastAdmInDateGregorian();
 			}
-			dateInFieldCal = new CustomJDateChooser(dateIn.getTime(), "dd/MM/yy"); // Calendar
+			dateInFieldCal = new CustomJDateChooser(dateIn.getTime()); // Calendar
 			dateInFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateInFieldCal.setDateFormatString("dd/MM/yy");
+			dateInFieldCal.setDateFormatString("dd/MM/yy - HH:mm:ss");
 			dateInFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {
 				Date newValue = (Date) propertyChangeEvent.getNewValue();
 				if (newValue.before(patient.getBirthDate())) {
@@ -1618,9 +1618,9 @@ public class AdmissionBrowser extends ModalJFrame {
 				dateOut = admission.getDisDate();
 				myDate = dateOut.getTime();
 			}
-			dateOutFieldCal = new CustomJDateChooser(myDate, "dd/MM/yy");
+			dateOutFieldCal = new CustomJDateChooser(myDate);
 			dateOutFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateOutFieldCal.setDateFormatString("dd/MM/yy");
+			dateOutFieldCal.setDateFormatString("dd/MM/yy - HH:mm:ss");
 			dateOutFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> updateBedDays());
 
 			dischargeDatePanel.add(dateOutFieldCal);
@@ -2053,7 +2053,6 @@ public class AdmissionBrowser extends ModalJFrame {
 		return results;
 	}
         
-    @SuppressWarnings("deprecation")
     public List<OHExceptionMessage> checkAllOperationRowDate(List<OperationRow> list, Admission admission) {
 	    DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(GeneralData.LANGUAGE));
 	    List<OHExceptionMessage> errors = new ArrayList<>();
@@ -2071,12 +2070,6 @@ public class AdmissionBrowser extends ModalJFrame {
 	    }
 	    for (org.isf.operation.model.OperationRow opRow : list) {
 		    Date currentRowDate = opRow.getOpDate().getTime();
-		    /*
-		     * prevent for fails due to time
-		     */
-		    currentRowDate.setHours(23);
-		    currentRowDate.setMinutes(59);
-		    currentRowDate.setSeconds(59);
 
 		    if ((beginDate != null) && (endDate != null)) {
 			    if ((currentRowDate.before(beginDate)) || (currentRowDate.after(endDate))) {
