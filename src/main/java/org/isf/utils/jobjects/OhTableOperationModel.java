@@ -22,6 +22,7 @@
 package org.isf.utils.jobjects;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +43,7 @@ import org.slf4j.LoggerFactory;
 public class OhTableOperationModel<T> implements TableModel{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OhTableOperationModel.class);
+	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	List<T> dataList;	
 	List<T> filteredList;
@@ -139,8 +141,7 @@ public class OhTableOperationModel<T> implements TableModel{
 					case 0:
 						String dt = "";
 						try {
-							final DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
-							dt = currentDateFormat.format(opdObj.getOpDate().getTime());
+							dt = dateTimeFormat.format(opdObj.getOpDate().getTime());
 							value = dt;
 						} catch (Exception ex) {
 							value = opdObj.getOpDate().getTime().toString();

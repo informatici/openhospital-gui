@@ -218,7 +218,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JLabel jLabelAge = null;
 	private JLabel jLabelSex = null;
 	private GregorianCalendar visitDateOpd = null;
-	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
 	private CustomJDateChooser OpdDateFieldCal = null; 
 	private JButton okButton = null;
 	private JButton cancelButton = null;

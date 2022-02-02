@@ -542,7 +542,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				
 			}  else if (column == 4) {
 				if (row < admList.size()) {
-					if (admList.get(row).getDisDate()==null) {
+					if (admList.get(row).getDisDate() == null) {
 						return MessageBundle.getMessage("angal.admission.present.txt");
 					} else {
 						Date myDate = admList.get(row).getDisDate().getTime();

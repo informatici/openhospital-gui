@@ -381,7 +381,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				Opd opd = (Opd) (model.getValueAt(jTable.getSelectedRow(), -1));
 				String dt = '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']';
 				try {
-					DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+					DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
 					dt = currentDateFormat.format(opd.getVisitDate().getTime());
 				} catch (Exception ex) {
 				}

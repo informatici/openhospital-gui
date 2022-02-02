@@ -143,7 +143,7 @@ public class OpdEdit extends JDialog {
 	private JComboBox diseaseBox = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
-	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
 	private VoDateTextField opdDateField = null;
 	private JPanel jPanel2 = null;
 	private JButton okButton = null;

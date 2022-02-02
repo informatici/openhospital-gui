@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_dis_chart" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_dis_chart" whenResourceMissingType="Key" uuid="c59d52e6-c1a0-4f7a-974e-117321f8a121">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -196,7 +196,7 @@ where adm.ADM_DELETED = 'N'
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ADM_YPROG}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+			<textField pattern="dd-MMM-yyyy hh:mm:ss" isBlankWhenNull="true">
 				<reportElement key="textField-15" x="107" y="83" width="157" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="65ef08dd-d085-42ba-a28b-853733745cb0"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -287,7 +287,7 @@ where adm.ADM_DELETED = 'N'
 				</textElement>
 				<textFieldExpression><![CDATA[$R{DischargeType}+":"]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+			<textField pattern="dd-MMM-yyyy hh:mm:ss" isBlankWhenNull="true">
 				<reportElement key="textField-17" x="371" y="83" width="164" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="15e70c72-8666-4fac-822c-1a60dea214e1"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
