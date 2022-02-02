@@ -74,7 +74,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected JLabel labelDate;
 	protected JTextField textFieldUnit;
-	protected JDateChooser textDate;
+	protected CustomJDateChooser textDate;
 	protected JComboBox comboOperation;
 	protected JComboBox comboResult;
 	protected JTextArea textAreaRemark;
@@ -86,7 +86,6 @@ abstract class OperationRowBase extends JPanel {
 
 	protected List<String> operationResults = opeManager.getResultDescriptionList();
 	protected OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	protected CustomJDateChooser jCalendarDate;
 	protected JTable tableData;
 
 	private Opd myOpd;
@@ -266,14 +265,14 @@ abstract class OperationRowBase extends JPanel {
 
 	abstract void addToGrid();
 
-	protected JDateChooser getJCalendarDate() {
-		if (jCalendarDate == null) {
-			jCalendarDate = new CustomJDateChooser();
-			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy HH:mm:ss"); //$NON-NLS-1$
-			jCalendarDate.setDate(DateTime.now().toDate());
+	protected CustomJDateChooser getJCalendarDate() {
+		if (textDate == null) {
+			textDate = new CustomJDateChooser();
+			textDate.setLocale(new Locale(GeneralData.LANGUAGE));
+			textDate.setDateFormatString("dd/MM/yy HH:mm:ss"); //$NON-NLS-1$
+			textDate.setDate(DateTime.now().toDate());
 		}
-		return jCalendarDate;
+		return textDate;
 	}
 
 	protected JComboBox getOperationsBox() {
