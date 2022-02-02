@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_opd_chart" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_opd_chart" whenResourceMissingType="Key" uuid="25ced88e-7415-4de7-b271-0dd0e47d2329">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -22,7 +22,9 @@
 	<queryString>
 		<![CDATA[SELECT "ID" AS FIELD, OPD_PROG_YEAR AS DETAIL FROM OPD WHERE OPD_ID = $P{opdID}
 UNION
-SELECT "Date:" AS FIELD, OPD_DATE_VIS AS DETAIL FROM OPD WHERE OPD_ID = $P{opdID}
+SELECT "Date:" AS FIELD, DATE(OPD_DATE) AS DETAIL FROM OPD WHERE OPD_ID = $P{opdID}
+UNION
+SELECT "Time:" AS FIELD, TIME_FORMAT(TIME(OPD_DATE), "%H:%i") AS DETAIL FROM OPD WHERE OPD_ID = $P{opdID}
 UNION
 SELECT "Type:" AS FIELD, IF(OPD_NEW_PAT='N','New Attendance','Re-Attendance') AS DETAIL FROM OPD WHERE OPD_ID = $P{opdID}
 UNION

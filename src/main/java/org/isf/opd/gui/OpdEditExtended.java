@@ -219,7 +219,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JLabel jLabelSex = null;
 	private GregorianCalendar visitDateOpd = null;
 	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-	private CustomJDateChooser OpdDateFieldCal = null; 
+	private CustomJDateChooser opdDateFieldCal = null; 
 	private JButton okButton = null;
 	private JButton cancelButton = null;
 	private JButton jButtonExamination = null;
@@ -447,7 +447,7 @@ public class OpdEditExtended extends ModalJFrame implements
 
 		// TODO: this should be a formatted message in the bundle and not "appended" together
 		StringBuilder lastOPDDisease = new StringBuilder();
-		lastOPDDisease.append(MessageBundle.getMessage("angal.opd.on.txt")).append(" ").append(currentDateFormat.format(lastOpd.getVisitDate().getTime())).append(" - ");
+		lastOPDDisease.append(MessageBundle.getMessage("angal.opd.on.txt")).append(" ").append(currentDateFormat.format(lastOpd.getDate().getTime())).append(" - ");
 		if (lastOPDDisease1 != null) {
 			setAttendance();
 			lastOPDDisease.append(lastOPDDisease1.getDescription());
@@ -916,38 +916,24 @@ public class OpdEditExtended extends ModalJFrame implements
 	}
 
 	private CustomJDateChooser getOpdDateFieldCal() {
-		if (OpdDateFieldCal == null) {
+		if (opdDateFieldCal == null) {
 			String d;
 	
-			java.util.Date myDate;
 			if (insert) {
-				if (RememberDates.getLastOpdVisitDateGregorian()==null) {
+				if (RememberDates.getLastOpdVisitDateGregorian() == null) {
 					visitDateOpd = new GregorianCalendar();
-				}				
-				else {
-					visitDateOpd=RememberDates.getLastOpdVisitDateGregorian();
+				} else {
+					visitDateOpd = RememberDates.getLastOpdVisitDateGregorian();
 				}
+			} else {
+				visitDateOpd  = opd.getDate();
 			}
-			 else {
-				visitDateOpd  = opd.getVisitDate();
-			}
-			if (visitDateOpd==null) {
-				d="";
-			}
-			else {
-				myDate = visitDateOpd.getTime();
-				d = currentDateFormat.format(myDate);
-			}
-			try {
-				OpdDateFieldCal = new CustomJDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
-				OpdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-				OpdDateFieldCal.setDateFormatString("dd/MM/yy");
-				OpdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> jOpdNumField.setText(getOpdProgYear()));
-			} catch (ParseException parseException) {
-				LOGGER.error(parseException.getMessage(), parseException);
-			}
+			opdDateFieldCal = new CustomJDateChooser(visitDateOpd.getTime());
+			opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
+			opdDateFieldCal.setDateFormatString("dd/MM/yy HH:mm:ss");
+			opdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> jOpdNumField.setText(getOpdProgYear()));
 		}
-		return OpdDateFieldCal;
+		return opdDateFieldCal;
 	}
 	
 	private JPanel getJOpdNumberPanel() {
@@ -1615,7 +1601,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				int opdProgYear = 0;
 				if (!jOpdNumField.getText().equals("") || !jOpdNumField.getText().contains(" ")) {
 					GregorianCalendar gregDate = new GregorianCalendar();
-					gregDate.setTime(OpdDateFieldCal.getDate());
+					gregDate.setTime(opdDateFieldCal.getDate());
 					try {
 						opdProgYear = Integer.parseInt(jOpdNumField.getText());
 					} catch (NumberFormatException e) {
@@ -1672,18 +1658,20 @@ public class OpdEditExtended extends ModalJFrame implements
 					disease3 = ((Disease) diseaseBox3.getSelectedItem());
 				}
 
-				if (OpdDateFieldCal.getDate() != null) {
+				if (opdDateFieldCal.getDate() != null) {
 					visitDateOpd = new GregorianCalendar();
-					visitDateOpd.setTime(OpdDateFieldCal.getDate());
+					visitDateOpd.setTime(opdDateFieldCal.getDate());
 					opd.setVisitDate(visitDateOpd);
+					opd.setDate(visitDateOpd);
 				} else {
-					opd.setVisitDate(null);
+					opd.setVisitDate(visitDateOpd);
+					opd.setDate(null);
 				}
 
 				boolean scheduleVisit = false;
 				Date nextVisit = opdNextVisitDate.getDate(); // FIXME: despite the presentation dd/MM/yy the object has time when insert = true
 				if (nextVisit != null) {
-					if (nextVisit.compareTo(OpdDateFieldCal.getDate()) < 0) {
+					if (nextVisit.compareTo(opdDateFieldCal.getDate()) < 0) {
 						MessageDialog.error(OpdEditExtended.this, "angal.opd.cannotsetadateinthepastfornextvisit.msg");
 						return;
 					}

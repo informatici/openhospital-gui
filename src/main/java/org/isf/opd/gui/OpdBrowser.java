@@ -382,7 +382,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				String dt = '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']';
 				try {
 					DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
-					dt = currentDateFormat.format(opd.getVisitDate().getTime());
+					dt = currentDateFormat.format(opd.getDate().getTime());
 				} catch (Exception ex) {
 				}
 
@@ -1035,10 +1035,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				return opd.getProgYear();
 			} else if (c == 2) {
 				String sVisitDate;
-				if (opd.getVisitDate() == null) {
+				if (opd.getDate() == null) {
 					sVisitDate = "";
 				} else {
-					sVisitDate = dateFormat.format(opd.getVisitDate().getTime());
+					sVisitDate = dateFormat.format(opd.getDate().getTime());
 				}
 				return sVisitDate;
 			} else if (c == 3) {
@@ -1127,8 +1127,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					}
 				}
 
-				GregorianCalendar dateFrom = getDateFrom();
-				GregorianCalendar dateTo = getDateTo();
+				GregorianCalendar dateFrom = TimeTools.getBeginningOfDay(getDateFrom());
+				GregorianCalendar dateTo = TimeTools.getBeginningOfNextDay(getDateTo());
 
 				if (dateFrom.after(dateTo)) {
 					MessageDialog.error(OpdBrowser.this, "angal.opd.datefrommustbebefordateto.msg");
@@ -1153,7 +1153,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					}
 				}
 
-				model = new OpdBrowsingModel(diseasetype,disease,getDateFrom(), getDateTo(),ageFrom,ageTo,sex,newPatient);
+				model = new OpdBrowsingModel(diseasetype,disease,dateFrom,dateTo,ageFrom,ageTo,sex,newPatient);
 				model.fireTableDataChanged();
 				jTable.updateUI();
 				rowCounter.setText(rowCounterText + pSur.size());
