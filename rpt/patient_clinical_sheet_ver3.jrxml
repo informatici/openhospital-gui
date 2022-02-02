@@ -343,7 +343,7 @@ ORDER BY DATE DESC]]>
 			<printWhenExpression><![CDATA[!($F{TYPE}.equals( "Operations" ) && $P{All}) 
 && !($F{TYPE}.equals( "Operations" ) && $P{Admission}) 
 && !($F{TYPE}.equals( "Operations" ) && $P{Opd})]]></printWhenExpression>
-			<textField textAdjust="ScaleFont" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="0" y="21" width="70" height="13" uuid="e8b6c04a-0d0d-4fab-87b2-fde877b88b93"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -419,6 +419,19 @@ ORDER BY DATE DESC]]>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_ver3_subreport_Operation.jasper"]]></subreportExpression>
 			</subreport>
+			<textField textAdjust="ScaleFont" pattern="HH:mm" isBlankWhenNull="true">
+				<reportElement key="textField-1" x="0" y="34" width="70" height="13" uuid="294e84bf-c024-4d98-b169-ecdaf3cc470d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DATE}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
