@@ -279,7 +279,7 @@ abstract class OperationRowBase extends JPanel {
 		JComboBox comboOpe = new JComboBox();
 		ArrayList<Operation> opeList = new ArrayList<>();
 		try {
-			opeList.addAll(opeManager.getOperationOpd());
+			opeList.addAll(getOperationCollection());
 		} catch (OHServiceException ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
