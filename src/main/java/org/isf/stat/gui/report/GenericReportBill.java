@@ -42,7 +42,7 @@ import net.sf.jasperreports.view.JasperViewer;
 /*
  * Created on 15/Jun/08
  */
-public class GenericReportBill {
+public class GenericReportBill extends DisplayReport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportBill.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
@@ -59,12 +59,7 @@ public class GenericReportBill {
             JasperReportResultDto jasperReportPDFResultDto = jasperReportsManager.getGenericReportBillPdf(billID, jasperFileName, show, askForPrint);
 
 			if (show) {
-                if (GeneralData.INTERNALVIEWER) {
-                    JasperViewer.viewReport(jasperReportPDFResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-                } else {
-                    Runtime rt = Runtime.getRuntime();
-                    rt.exec(GeneralData.VIEWER + " " + jasperReportPDFResultDto.getFilename());
-                }
+                showReport(jasperReportPDFResultDto);
 			}
 			
 			if (GeneralData.RECEIPTPRINTER) {
@@ -95,16 +90,7 @@ public class GenericReportBill {
 			JasperReportResultDto jasperReportPDFResultDto = jasperReportsManager.getGenericReportBillGroupedPdf(billID, jasperFileName, patient, billListId, dateFrom, dateTo, show, askForPrint);
 			
 			if (show) {
-				if (GeneralData.INTERNALVIEWER) {	
-					JasperViewer.viewReport(jasperReportPDFResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-				} else {
-					try {
-						Runtime rt = Runtime.getRuntime();
-						rt.exec(GeneralData.VIEWER + " " + jasperReportPDFResultDto.getFilename());
-					} catch (Exception exception) {
-						LOGGER.error(exception.getMessage(), exception);
-					}
-				}
+				showReport(jasperReportPDFResultDto);
 			}
 			
 			if (GeneralData.RECEIPTPRINTER) {				

@@ -46,7 +46,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * 06/12/2011 - first version
  * -----------------------------------------------------------------
  */
-public class GenericReportUserInDate {
+public class GenericReportUserInDate extends DisplayReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportUserInDate.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
@@ -59,12 +59,7 @@ public class GenericReportUserInDate {
 		try {
 			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportUserInDatePdf(fromDate, toDate, aUser, jasperFileName);
 			if (show) {
-				if (GeneralData.INTERNALVIEWER) {
-					JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-				} else {
-					Runtime rt = Runtime.getRuntime();
-					rt.exec(GeneralData.VIEWER + " " + jasperReportResultDto.getFilename());
-				}
+				showReport(jasperReportResultDto);
 			}
 
 			if (GeneralData.RECEIPTPRINTER) {
@@ -83,4 +78,5 @@ public class GenericReportUserInDate {
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
 		}
 	}
+
 }

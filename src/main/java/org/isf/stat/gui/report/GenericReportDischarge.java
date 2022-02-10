@@ -36,22 +36,15 @@ import net.sf.jasperreports.view.JasperViewer;
 /*
  * Created on 15/Jun/08
  */
-public class GenericReportDischarge {
+public class GenericReportDischarge extends DisplayReport {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportDischarge.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportDischarge(int admID, int patID, String jasperFileName) {
 		try {
-
 			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportDischargePdf(admID, patID, jasperFileName);
-
-			if (GeneralData.INTERNALVIEWER) {
-				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-			} else {
-				Runtime rt = Runtime.getRuntime();
-				rt.exec(GeneralData.VIEWER + ' ' + jasperReportResultDto.getFilename());
-			}
+			showReport(jasperReportResultDto);
 		} catch (Exception e) {
 			LOGGER.error("", e);
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
