@@ -1153,7 +1153,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					}
 				}
 
-				model = new OpdBrowsingModel(diseasetype,disease,dateFrom,dateTo,ageFrom,ageTo,sex,newPatient);
+				model = new OpdBrowsingModel(diseasetype, disease, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient);
 				model.fireTableDataChanged();
 				jTable.updateUI();
 				rowCounter.setText(rowCounterText + pSur.size());
