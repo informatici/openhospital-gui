@@ -478,7 +478,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					
 					int z = row - admList.size();
 					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-					Date myDate = (opdList.get(z)).getVisitDate().getTime();
+					Date myDate = (opdList.get(z)).getDate().getTime();
 					return dateFormat.format(myDate);
 				}
 				

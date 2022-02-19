@@ -486,7 +486,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				} else if (selectedObject instanceof Opd) {
 
 					Opd opd = (Opd) selectedObject;
-					startDate = opd.getVisitDate();
+					startDate = opd.getDate();
 
 				} else if (selectedObject instanceof PatientExamination) {
 					PatientExamination exam = (PatientExamination) selectedObject;
@@ -494,7 +494,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				}
 
 				if (opd2 != null) {
-					endDate = opd2.getVisitDate();
+					endDate = opd2.getDate();
 				}
 				if (adm2 != null) {
 					endDate = adm2.getAdmDate();
@@ -812,7 +812,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				} else if (row < opdList.size()+admList.size()) {
 					int z = row - admList.size();
 					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-					Date myDate = (opdList.get(z)).getVisitDate().getTime();
+					Date myDate = (opdList.get(z)).getDate().getTime();
 					String strDate = dateFormat.format(myDate);
 
 					return strDate;
