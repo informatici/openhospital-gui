@@ -342,8 +342,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				} else {
 					Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(LabBrowser.this, "angal.lab.deletelabexam.fmt.msg",
-							dateFormat.format(lab.getDate().getTime()),
 							dateTimeFormat.format(lab.getCreatedDate().getTime()),
+							dateTimeFormat.format(lab.getDate().getTime()),
 							lab.getExam(),
 							lab.getPatName(),
 							lab.getResult());

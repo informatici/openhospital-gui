@@ -235,13 +235,13 @@ public class LabEdit extends ModalJFrame {
 			//examDateField.setBounds(labelWidth+5, 10, 70, 20);
 			examDateFieldCal = getExamDateFieldCal();
 			examDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			examDateFieldCal.setDateFormatString("dd/MM/yy");
-			examDateFieldCal.setBounds(labelWidth+5, 10, 90, 20);
+			examDateFieldCal.setDateFormatString("dd/MM/yyyy - HH:mm:ss");
+			examDateFieldCal.setBounds(labelWidth+5, 10, 150, 20);
 			//material
 			matLabel = new JLabel(MessageBundle.getMessage("angal.lab.material"));
-			matLabel.setBounds(175, 10, 160, 20);
+			matLabel.setBounds(235, 10, 150, 20);
 			matComboBox= getMatComboBox();
-			matComboBox.setBounds(255, 10, 270, 20);
+			matComboBox.setBounds(295, 10, 230, 20);
 
 			//exam combo
 			examLabel = new JLabel(MessageBundle.getMessage("angal.lab.exam"));
@@ -325,7 +325,7 @@ public class LabEdit extends ModalJFrame {
 		if (dateIn != null) {
 			myDate = dateIn.getTime();
 		}
-		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
+		return (new CustomJDateChooser(myDate));
 	}
 	
 	private JCheckBox getInPatientCheckBox() {
@@ -587,8 +587,8 @@ public class LabEdit extends ModalJFrame {
 				ArrayList<String> labRow = new ArrayList<>();
 				RememberDates.setLastLabExamDate(gregDate);
 
-				lab.setDate(new GregorianCalendar());
-				lab.setExamDate(gregDate);
+				lab.setDate(gregDate);
+				lab.setExamDate(new GregorianCalendar());
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
 				lab.setNote(noteTextArea.getText());
