@@ -633,7 +633,7 @@ public class LabNew extends JDialog implements SelectionListener {
 		if (jCalendarDate == null) {
 			jCalendarDate = new CustomJDateChooser(RememberDates.getLastLabExamDateGregorian().getTime()); //To remind last used
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy (HH:mm:ss)"); //$NON-NLS-1$
+			jCalendarDate.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
 		}
 		return jCalendarDate;
 	}
