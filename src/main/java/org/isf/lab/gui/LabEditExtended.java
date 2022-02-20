@@ -385,7 +385,7 @@ public class LabEditExtended extends ModalJFrame {
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDateGregorian();
 		} else { 
-			dateIn = lab.getExamDate();
+			dateIn = lab.getDate();
 		}
 		if (dateIn != null) {
 			myDate = dateIn.getTime();

@@ -510,14 +510,14 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				for (int i = 0; i < labList.size(); i++) {
 					//Laboratory laboratory = labList.get(i);
 					Laboratory laboratory = (Laboratory) sorterLab.getValueAt(i, -1);
-					Date examDate = laboratory.getExamDate().getTime();
+					Date labDate = laboratory.getDate().getTime();
 
 					// Check that the exam date is included between admission date and discharge date.
 					// If the patient has not been discharged yet (and then discharge date doesn't exist)
 					// check only that the exam date is the same or after the admission date.
 					// On true condition select the corresponding table row.
-					if (!examDate.before(startDate.getTime()) &&
-							(null == endDate ? true : !examDate.after(endDate.getTime())))  {
+					if (!labDate.before(startDate.getTime()) &&
+							(null == endDate ? true : !labDate.after(endDate.getTime())))  {
 
 						labTable.addRowSelectionInterval(i, i);
 
@@ -986,7 +986,7 @@ public class PatientFolderBrowser extends ModalJFrame implements
 			if (column == -1) {
 				return laboratory;
 			} else if (column == 0) {
-				Date examDate = laboratory.getExamDate().getTime();
+				Date examDate = laboratory.getDate().getTime();
 				return examDate;
 			} else if (column == 1) {
 				return laboratory.getExam().getDescription();
