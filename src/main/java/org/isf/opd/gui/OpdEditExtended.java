@@ -35,8 +35,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -144,6 +144,8 @@ public class OpdEditExtended extends ModalJFrame implements
         PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener{
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm:ss";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpdEditExtended.class);
 
@@ -218,7 +220,7 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JLabel jLabelAge = null;
 	private JLabel jLabelSex = null;
 	private GregorianCalendar visitDateOpd = null;
-	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+	private SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT);
 	private CustomJDateChooser opdDateFieldCal = null; 
 	private JButton okButton = null;
 	private JButton cancelButton = null;
@@ -447,7 +449,8 @@ public class OpdEditExtended extends ModalJFrame implements
 
 		// TODO: this should be a formatted message in the bundle and not "appended" together
 		StringBuilder lastOPDDisease = new StringBuilder();
-		lastOPDDisease.append(MessageBundle.getMessage("angal.opd.on.txt")).append(" ").append(currentDateFormat.format(lastOpd.getDate().getTime())).append(" - ");
+		lastOPDDisease.append(MessageBundle.getMessage("angal.opd.on.txt")).append(" ").append(
+						sdf.format(lastOpd.getDate().getTime())).append(" - ");
 		if (lastOPDDisease1 != null) {
 			setAttendance();
 			lastOPDDisease.append(lastOPDDisease1.getDescription());
@@ -1906,9 +1909,9 @@ public class OpdEditExtended extends ModalJFrame implements
 	
 	private JDateChooser getOpdNextVisitDate() {
 		if (opdNextVisitDate == null) {
-			opdNextVisitDate = new JDateChooser(null, "dd/MM/yy");
-			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdNextVisitDate.setDateFormatString("dd/MM/yy");
+			opdNextVisitDate = new JDateChooser();
+			opdNextVisitDate.setLocale(Locale.getDefault());
+			opdNextVisitDate.setDateFormatString(DATE_TIME_FORMAT);
 
 			GregorianCalendar nextDate = null;
 			Date myDate;
@@ -1920,7 +1923,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				d = "";
 			} else {
 				myDate = nextDate.getTime();
-				d = currentDateFormat.format(myDate);
+				d = sdf.format(myDate);
 				nextDateBackup = new GregorianCalendar();
 				nextDateBackup.setTime(nextDate.getTime()); // in case of changing
 														// the date during this
@@ -1928,12 +1931,12 @@ public class OpdEditExtended extends ModalJFrame implements
 			}
 			try {
 				if (!d.equals("")) {
-					opdNextVisitDate = new JDateChooser(currentDateFormat.parse(d), "dd/MM/yy");
+					opdNextVisitDate = new JDateChooser(sdf.parse(d), DATE_TIME_FORMAT);
 				} else {
 					opdNextVisitDate = new JDateChooser();
 				}
-				opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-				opdNextVisitDate.setDateFormatString("dd/MM/yy");
+				opdNextVisitDate.setLocale(Locale.getDefault());
+				opdNextVisitDate.setDateFormatString(DATE_TIME_FORMAT);
 			} catch (ParseException parseException) {
 				LOGGER.error(parseException.getMessage(), parseException);
 			}
