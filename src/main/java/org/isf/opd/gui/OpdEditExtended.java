@@ -277,15 +277,16 @@ public class OpdEditExtended extends ModalJFrame implements
 	/*
 	 * Managers and Arrays
 	 */
-	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
-	private DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+	private PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private List<DiseaseType> types;
 	private List<Disease> diseasesOPD;
 	private List<Disease> diseasesAll;
-	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private List<Patient> pat = new ArrayList<>();
-	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
+	
 	
 	private Disease lastOPDDisease1;
 	private JLabel JlabelOpd;
@@ -299,11 +300,12 @@ public class OpdEditExtended extends ModalJFrame implements
     private JButton searchDiseaseButton;
     private JButton searchDiseaseButton2;
     private JButton searchDiseaseButton3;
-
+    
+    /*
+     * Components for Operation Tab
+     */
 	private OperationRowOpd operationop;
-
 	private JTabbedPane jTabbedPaneOpd;
-
 	private JPanel jPanelOperation;
         
     /**
@@ -323,9 +325,9 @@ public class OpdEditExtended extends ModalJFrame implements
 		opd=old;
 		insert=inserting;
 		try{
-			types = typeManager.getDiseaseType();
-			diseasesOPD = manager.getDiseaseOpd();
-			diseasesAll = manager.getDiseaseAll();
+			types = diseaseTypeManager.getDiseaseType();
+			diseasesOPD = diseaseManager.getDiseaseOpd();
+			diseasesAll = diseaseManager.getDiseaseAll();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -352,9 +354,9 @@ public class OpdEditExtended extends ModalJFrame implements
 		opdPatient = patient;
 		insert = inserting;
 		try{
-			types = typeManager.getDiseaseType();
-			diseasesOPD = manager.getDiseaseOpd();
-			diseasesAll = manager.getDiseaseAll();
+			types = diseaseTypeManager.getDiseaseType();
+			diseasesOPD = diseaseManager.getDiseaseOpd();
+			diseasesAll = diseaseManager.getDiseaseAll();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -1149,7 +1151,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			jSearchButton.addActionListener(actionEvent -> {
 				jComboPatResult.removeAllItems();
 				try {
-					pat = patBrowser.getPatientsByOneOfFieldsLike(jTextPatientSrc.getText());
+					pat = patManager.getPatientsByOneOfFieldsLike(jTextPatientSrc.getText());
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 					pat = new ArrayList<>();
@@ -1708,7 +1710,7 @@ public class OpdEditExtended extends ModalJFrame implements
 								visit.setDate(opd.getNextVisitDate());
 								visit.setPatient(opd.getPatient());
 								visit.setWard(null);
-								vstManager.newVisit(visit);
+								visitManager.newVisit(visit);
 							}
 
 							fireSurgeryInserted(opd);
@@ -1728,7 +1730,7 @@ public class OpdEditExtended extends ModalJFrame implements
 								visit.setPatient(opd.getPatient());
 							
 								if (nextDateBackup != null && !TimeTools.isSameDay(opd.getNextVisitDate(), nextDateBackup)) {
-									Iterator<Visit> visits = vstManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
+									Iterator<Visit> visits = visitManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
 	
 									boolean found = false;
 									while (!found && visits.hasNext()) {
@@ -1739,12 +1741,12 @@ public class OpdEditExtended extends ModalJFrame implements
 									visit.setPatient(opd.getPatient());
 								}
 								
-								vstManager.newVisit(visit);
+								visitManager.newVisit(visit);
 								
 							} else {
 								
 								if (nextDateBackup != null) {
-									Iterator<Visit> visits = vstManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
+									Iterator<Visit> visits = visitManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
 	
 									boolean found = false;
 									while (!found && visits.hasNext()) {
@@ -1752,7 +1754,7 @@ public class OpdEditExtended extends ModalJFrame implements
 										found = TimeTools.isSameDay(visit.getDate(), nextDateBackup);
 									}
 									if (found) {
-										vstManager.deleteVisit(visit);
+										visitManager.deleteVisit(visit);
 									}
 								}
 							}
