@@ -272,7 +272,6 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JTextArea jPatientNote = null;
 	private JPanel jOpdNumberPanel = null;
 	private JTextField jOpdNumField = null;
-	private JLabel jOpdNumLabel = null;
 	
 	/*
 	 * Managers and Arrays
@@ -936,7 +935,13 @@ public class OpdEditExtended extends ModalJFrame implements
 			opdDateFieldCal = new CustomJDateChooser(visitDateOpd.getTime());
 			opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			opdDateFieldCal.setDateFormatString("dd/MM/yy HH:mm:ss");
-			opdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> jOpdNumField.setText(getOpdProgYear()));
+			opdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {
+				
+				Date newValue = (Date) propertyChangeEvent.getNewValue();
+				GregorianCalendar newDate = new GregorianCalendar();
+				newDate.setTime(newValue);
+				jOpdNumField.setText(String.valueOf(getOpdProgYear(newDate)));
+			});
 		}
 		return opdDateFieldCal;
 	}
@@ -946,21 +951,16 @@ public class OpdEditExtended extends ModalJFrame implements
 			
 			jOpdNumberPanel = new JPanel();
 			
-			jOpdNumLabel = new JLabel();
-			jOpdNumLabel.setText(MessageBundle.getMessage("angal.opd.opdnumber.txt"));
+			JLabel jOpdNumLabel = new JLabel(MessageBundle.getMessage("angal.opd.opdnumber.txt"));
 			
 			jOpdNumField = new JTextField(10);
-
-			jOpdNumField.setEditable(true);
+			
 			jOpdNumField.setFocusable(true);
 			if (insert) {
-				jOpdNumField.setText(getOpdProgYear());
+				jOpdNumField.setText(String.valueOf(getOpdProgYear(RememberDates.getLastOpdVisitDateGregorian())));
 			} else {
-				jOpdNumField.setText("" + opd.getProgYear());
+				jOpdNumField.setText(String.valueOf(opd.getProgYear()));
 			}
-			
-			
-			jOpdNumField.setColumns(11);
 
 			jOpdNumberPanel.add(jOpdNumLabel);
 			jOpdNumberPanel.add(jOpdNumField);
@@ -968,15 +968,18 @@ public class OpdEditExtended extends ModalJFrame implements
 		return jOpdNumberPanel;
 	}
 	
-	private String getOpdProgYear() {
+	private int getOpdProgYear(GregorianCalendar date) {
 		int opdNum = 0;
-		GregorianCalendar date = new GregorianCalendar();
+		if (date == null) date = new GregorianCalendar();
 		try {
-			opdNum = opdManager.getProgYear(date.get(Calendar.YEAR))+1;
+			opdNum = opdManager.getProgYear(date.get(Calendar.YEAR)) + 1;
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		return "" + opdNum;
+		if (insert) {
+			jOpdNumField.setEditable(opdNum == 1);
+		}
+		return opdNum;
 	}
 
 	private JPanel getJNotePanel() {
@@ -1603,29 +1606,36 @@ public class OpdEditExtended extends ModalJFrame implements
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
+				
+				if (opdDateFieldCal.getDate() != null) {
+					visitDateOpd = new GregorianCalendar();
+					visitDateOpd.setTime(opdDateFieldCal.getDate());
+					opd.setVisitDate(visitDateOpd);
+					opd.setDate(visitDateOpd);
+				} else {
+					opd.setVisitDate(visitDateOpd);
+					opd.setDate(null);
+				}
 				int opdProgYear = 0;
-				if (!jOpdNumField.getText().equals("") || !jOpdNumField.getText().contains(" ")) {
-					GregorianCalendar gregDate = new GregorianCalendar();
-					gregDate.setTime(opdDateFieldCal.getDate());
+				
+				if (jOpdNumField.isEditable()) {
 					try {
 						opdProgYear = Integer.parseInt(jOpdNumField.getText());
-					} catch (NumberFormatException e) {
-						MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumbermustbeanumber.msg");
-						return;
-					}
-				}
-				if (insert || opd.getProgYear() != opdProgYear) {
-					try {
-						GregorianCalendar gregDate = new GregorianCalendar();
-						if (opdManager.isExistOpdNum(opdProgYear, gregDate.get(Calendar.YEAR))) {
+						if (opdManager.isExistOpdNum(opdProgYear, visitDateOpd.get(Calendar.YEAR))) {
 							MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumberalreadyexist.msg");
-							jOpdNumField.setText(getOpdProgYear());
+							if (insert) jOpdNumField.setText(String.valueOf(getOpdProgYear(visitDateOpd)));
 							jOpdNumField.requestFocusInWindow();
 							return;
 						}
+					} catch (NumberFormatException e) {
+						MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumbermustbeanumber.msg");
+						jOpdNumField.requestFocusInWindow();
+						return;
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
+				} else {
+					opdProgYear = getOpdProgYear(visitDateOpd);
 				}
 				
 				char newPatient;
@@ -1663,15 +1673,7 @@ public class OpdEditExtended extends ModalJFrame implements
 					disease3 = ((Disease) diseaseBox3.getSelectedItem());
 				}
 
-				if (opdDateFieldCal.getDate() != null) {
-					visitDateOpd = new GregorianCalendar();
-					visitDateOpd.setTime(opdDateFieldCal.getDate());
-					opd.setVisitDate(visitDateOpd);
-					opd.setDate(visitDateOpd);
-				} else {
-					opd.setVisitDate(visitDateOpd);
-					opd.setDate(null);
-				}
+				
 
 				boolean scheduleVisit = false;
 				Date nextVisit = opdNextVisitDate.getDate(); // FIXME: despite the presentation dd/MM/yy the object has time when insert = true
