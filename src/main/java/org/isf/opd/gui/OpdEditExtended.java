@@ -1623,7 +1623,9 @@ public class OpdEditExtended extends ModalJFrame implements
 						opdProgYear = Integer.parseInt(jOpdNumField.getText());
 						if (opdManager.isExistOpdNum(opdProgYear, visitDateOpd.get(Calendar.YEAR))) {
 							MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumberalreadyexist.msg");
-							if (insert) jOpdNumField.setText(String.valueOf(getOpdProgYear(visitDateOpd)));
+							if (insert) {
+								jOpdNumField.setText(String.valueOf(getOpdProgYear(visitDateOpd)));
+							}
 							jOpdNumField.requestFocusInWindow();
 							return;
 						}
