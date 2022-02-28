@@ -21,6 +21,8 @@
  */
 package org.isf.operation.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -271,7 +273,7 @@ abstract class OperationRowBase extends JPanel {
 		if (jCalendarDate == null) {
 			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jCalendarDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jCalendarDate.setDate(new Date());
 		}
 		return jCalendarDate;
