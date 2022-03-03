@@ -148,7 +148,7 @@ set ARCH=32
 
 REM ######## MySQL Software
 REM # MariaDB 64bit
-REM https://archive.mariadb.org/mariadb-10.2.41/winx64-packages/mariadb-10.2.41-winx64.zip
+REM https://archive.mariadb.org/mariadb-10.2.43/winx64-packages/mariadb-10.2.43-winx64.zip
 REM # MySQL 64bit
 REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-winx64.zip
 
