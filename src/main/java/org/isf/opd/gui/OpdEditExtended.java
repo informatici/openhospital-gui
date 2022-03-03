@@ -272,20 +272,20 @@ public class OpdEditExtended extends ModalJFrame implements
 	private JTextArea jPatientNote = null;
 	private JPanel jOpdNumberPanel = null;
 	private JTextField jOpdNumField = null;
-	private JLabel jOpdNumLabel = null;
 	
 	/*
 	 * Managers and Arrays
 	 */
-	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
-	private DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+	private PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private List<DiseaseType> types;
 	private List<Disease> diseasesOPD;
 	private List<Disease> diseasesAll;
-	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private List<Patient> pat = new ArrayList<>();
-	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
+	
 	
 	private Disease lastOPDDisease1;
 	private JLabel JlabelOpd;
@@ -299,11 +299,12 @@ public class OpdEditExtended extends ModalJFrame implements
     private JButton searchDiseaseButton;
     private JButton searchDiseaseButton2;
     private JButton searchDiseaseButton3;
-
+    
+    /*
+     * Components for Operation Tab
+     */
 	private OperationRowOpd operationop;
-
 	private JTabbedPane jTabbedPaneOpd;
-
 	private JPanel jPanelOperation;
         
     /**
@@ -323,9 +324,9 @@ public class OpdEditExtended extends ModalJFrame implements
 		opd=old;
 		insert=inserting;
 		try{
-			types = typeManager.getDiseaseType();
-			diseasesOPD = manager.getDiseaseOpd();
-			diseasesAll = manager.getDiseaseAll();
+			types = diseaseTypeManager.getDiseaseType();
+			diseasesOPD = diseaseManager.getDiseaseOpd();
+			diseasesAll = diseaseManager.getDiseaseAll();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -352,9 +353,9 @@ public class OpdEditExtended extends ModalJFrame implements
 		opdPatient = patient;
 		insert = inserting;
 		try{
-			types = typeManager.getDiseaseType();
-			diseasesOPD = manager.getDiseaseOpd();
-			diseasesAll = manager.getDiseaseAll();
+			types = diseaseTypeManager.getDiseaseType();
+			diseasesOPD = diseaseManager.getDiseaseOpd();
+			diseasesAll = diseaseManager.getDiseaseAll();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -934,7 +935,13 @@ public class OpdEditExtended extends ModalJFrame implements
 			opdDateFieldCal = new CustomJDateChooser(visitDateOpd.getTime());
 			opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			opdDateFieldCal.setDateFormatString("dd/MM/yy HH:mm:ss");
-			opdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> jOpdNumField.setText(getOpdProgYear()));
+			opdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {
+				
+				Date newValue = (Date) propertyChangeEvent.getNewValue();
+				GregorianCalendar newDate = new GregorianCalendar();
+				newDate.setTime(newValue);
+				jOpdNumField.setText(String.valueOf(getOpdProgYear(newDate)));
+			});
 		}
 		return opdDateFieldCal;
 	}
@@ -944,21 +951,16 @@ public class OpdEditExtended extends ModalJFrame implements
 			
 			jOpdNumberPanel = new JPanel();
 			
-			jOpdNumLabel = new JLabel();
-			jOpdNumLabel.setText(MessageBundle.getMessage("angal.opd.opdnumber.txt"));
+			JLabel jOpdNumLabel = new JLabel(MessageBundle.getMessage("angal.opd.opdnumber.txt"));
 			
 			jOpdNumField = new JTextField(10);
-
-			jOpdNumField.setEditable(true);
+			
 			jOpdNumField.setFocusable(true);
 			if (insert) {
-				jOpdNumField.setText(getOpdProgYear());
+				jOpdNumField.setText(String.valueOf(getOpdProgYear(RememberDates.getLastOpdVisitDateGregorian())));
 			} else {
-				jOpdNumField.setText("" + opd.getProgYear());
+				jOpdNumField.setText(String.valueOf(opd.getProgYear()));
 			}
-			
-			
-			jOpdNumField.setColumns(11);
 
 			jOpdNumberPanel.add(jOpdNumLabel);
 			jOpdNumberPanel.add(jOpdNumField);
@@ -966,15 +968,18 @@ public class OpdEditExtended extends ModalJFrame implements
 		return jOpdNumberPanel;
 	}
 	
-	private String getOpdProgYear() {
+	private int getOpdProgYear(GregorianCalendar date) {
 		int opdNum = 0;
-		GregorianCalendar date = new GregorianCalendar();
+		if (date == null) date = new GregorianCalendar();
 		try {
-			opdNum = opdManager.getProgYear(date.get(Calendar.YEAR))+1;
+			opdNum = opdManager.getProgYear(date.get(Calendar.YEAR)) + 1;
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		return "" + opdNum;
+		if (insert) {
+			jOpdNumField.setEditable(opdNum == 1);
+		}
+		return opdNum;
 	}
 
 	private JPanel getJNotePanel() {
@@ -1149,7 +1154,7 @@ public class OpdEditExtended extends ModalJFrame implements
 			jSearchButton.addActionListener(actionEvent -> {
 				jComboPatResult.removeAllItems();
 				try {
-					pat = patBrowser.getPatientsByOneOfFieldsLike(jTextPatientSrc.getText());
+					pat = patManager.getPatientsByOneOfFieldsLike(jTextPatientSrc.getText());
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 					pat = new ArrayList<>();
@@ -1601,29 +1606,38 @@ public class OpdEditExtended extends ModalJFrame implements
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
+				
+				if (opdDateFieldCal.getDate() != null) {
+					visitDateOpd = new GregorianCalendar();
+					visitDateOpd.setTime(opdDateFieldCal.getDate());
+					opd.setVisitDate(visitDateOpd);
+					opd.setDate(visitDateOpd);
+				} else {
+					opd.setVisitDate(visitDateOpd);
+					opd.setDate(null);
+				}
 				int opdProgYear = 0;
-				if (!jOpdNumField.getText().equals("") || !jOpdNumField.getText().contains(" ")) {
-					GregorianCalendar gregDate = new GregorianCalendar();
-					gregDate.setTime(opdDateFieldCal.getDate());
+				
+				if (jOpdNumField.isEditable()) {
 					try {
 						opdProgYear = Integer.parseInt(jOpdNumField.getText());
-					} catch (NumberFormatException e) {
-						MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumbermustbeanumber.msg");
-						return;
-					}
-				}
-				if (insert || opd.getProgYear() != opdProgYear) {
-					try {
-						GregorianCalendar gregDate = new GregorianCalendar();
-						if (opdManager.isExistOpdNum(opdProgYear, gregDate.get(Calendar.YEAR))) {
+						if (opdManager.isExistOpdNum(opdProgYear, visitDateOpd.get(Calendar.YEAR))) {
 							MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumberalreadyexist.msg");
-							jOpdNumField.setText(getOpdProgYear());
+							if (insert) {
+								jOpdNumField.setText(String.valueOf(getOpdProgYear(visitDateOpd)));
+							}
 							jOpdNumField.requestFocusInWindow();
 							return;
 						}
+					} catch (NumberFormatException e) {
+						MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumbermustbeanumber.msg");
+						jOpdNumField.requestFocusInWindow();
+						return;
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
+				} else {
+					opdProgYear = getOpdProgYear(visitDateOpd);
 				}
 				
 				char newPatient;
@@ -1661,15 +1675,7 @@ public class OpdEditExtended extends ModalJFrame implements
 					disease3 = ((Disease) diseaseBox3.getSelectedItem());
 				}
 
-				if (opdDateFieldCal.getDate() != null) {
-					visitDateOpd = new GregorianCalendar();
-					visitDateOpd.setTime(opdDateFieldCal.getDate());
-					opd.setVisitDate(visitDateOpd);
-					opd.setDate(visitDateOpd);
-				} else {
-					opd.setVisitDate(visitDateOpd);
-					opd.setDate(null);
-				}
+				
 
 				boolean scheduleVisit = false;
 				Date nextVisit = opdNextVisitDate.getDate(); // FIXME: despite the presentation dd/MM/yy the object has time when insert = true
@@ -1708,7 +1714,7 @@ public class OpdEditExtended extends ModalJFrame implements
 								visit.setDate(opd.getNextVisitDate());
 								visit.setPatient(opd.getPatient());
 								visit.setWard(null);
-								vstManager.newVisit(visit);
+								visitManager.newVisit(visit);
 							}
 
 							fireSurgeryInserted(opd);
@@ -1728,7 +1734,7 @@ public class OpdEditExtended extends ModalJFrame implements
 								visit.setPatient(opd.getPatient());
 							
 								if (nextDateBackup != null && !TimeTools.isSameDay(opd.getNextVisitDate(), nextDateBackup)) {
-									Iterator<Visit> visits = vstManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
+									Iterator<Visit> visits = visitManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
 	
 									boolean found = false;
 									while (!found && visits.hasNext()) {
@@ -1739,12 +1745,12 @@ public class OpdEditExtended extends ModalJFrame implements
 									visit.setPatient(opd.getPatient());
 								}
 								
-								vstManager.newVisit(visit);
+								visitManager.newVisit(visit);
 								
 							} else {
 								
 								if (nextDateBackup != null) {
-									Iterator<Visit> visits = vstManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
+									Iterator<Visit> visits = visitManager.getVisitsOPD(opd.getPatient().getCode()).iterator();
 	
 									boolean found = false;
 									while (!found && visits.hasNext()) {
@@ -1752,7 +1758,7 @@ public class OpdEditExtended extends ModalJFrame implements
 										found = TimeTools.isSameDay(visit.getDate(), nextDateBackup);
 									}
 									if (found) {
-										vstManager.deleteVisit(visit);
+										visitManager.deleteVisit(visit);
 									}
 								}
 							}
