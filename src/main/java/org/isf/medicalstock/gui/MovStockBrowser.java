@@ -23,6 +23,7 @@ package org.isf.medicalstock.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM;
+import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -1009,8 +1010,8 @@ public class MovStockBrowser extends ModalJFrame {
 				!wardBox.getSelectedItem().equals(MessageBundle.getMessage("angal.common.all.txt"))) {
 			filename.append('_').append(wardBox.getSelectedItem());
 		}
-		filename.append('_').append(TimeTools.formatDateTime(movDateFrom.getCompleteDate(), "yyyyMMdd"))
-				.append('_').append(TimeTools.formatDateTime(movDateTo.getCompleteDate(), "yyyyMMdd"));
+		filename.append('_').append(TimeTools.formatDateTime(movDateFrom.getCompleteDate(), DATE_FORMAT_YYYYMMDD))
+				.append('_').append(TimeTools.formatDateTime(movDateTo.getCompleteDate(), DATE_FORMAT_YYYYMMDD));
 		return filename.toString();
 	}
 

@@ -24,6 +24,7 @@ package org.isf.medicalstockward.gui;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
+import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -1677,8 +1678,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 			filename.append("_").append(jComboBoxMedicals.getSelectedItem());
 		}
-		filename.append("_").append(TimeTools.formatDateTime(jCalendarFrom.getLocalDateTime(), "yyyyMMdd"))
-				.append("_").append(TimeTools.formatDateTime(jCalendarTo.getLocalDateTime(), "yyyyMMdd"));
+		filename.append("_").append(TimeTools.formatDateTime(jCalendarFrom.getLocalDateTime(), DATE_FORMAT_YYYYMMDD))
+				.append("_").append(TimeTools.formatDateTime(jCalendarTo.getLocalDateTime(), DATE_FORMAT_YYYYMMDD));
 
 		return filename.toString();
 	}
