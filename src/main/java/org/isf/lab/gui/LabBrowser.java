@@ -24,14 +24,13 @@ package org.isf.lab.gui;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -42,6 +41,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SpringLayout;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -65,9 +65,10 @@ import org.isf.serviceprinting.manager.PrintLabels;
 import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.jobjects.VoDateTextField;
+import org.isf.utils.layout.SpringUtilities;
 
 /**
  * ------------------------------------------
@@ -127,14 +128,10 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private Laboratory laboratory;
 	private int selectedrow;
 	private String typeSelected = null;
-	private VoDateTextField dateFrom = null;
-	private VoDateTextField dateTo = null;
+	private JPanel dateFilterPanel;
+	private GoodDateChooser dateFrom;
+	private GoodDateChooser dateTo;
 	private final JFrame myFrame;
-
-	private JPanel jPanelDateFrom;
-
-	private JPanel jPanelDateTo;
-
 	private JButton printLabelButton;
 
 	/**
@@ -221,7 +218,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 				try {
 					List<LaboratoryForPrint> labs;
-					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
+					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDate(), dateTo.getDate());
 					if (!labs.isEmpty()) {
 						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 					}
@@ -395,11 +392,10 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private JPanel getJSelectionPanel() {
 		if (jSelectionPanel == null) {
 			jSelectionPanel = new JPanel();
-			jSelectionPanel.setPreferredSize(new Dimension(200, pfrmHeight));
+			jSelectionPanel.setPreferredSize(new Dimension(225, pfrmHeight));
 			jSelectionPanel.add(new JLabel(MessageBundle.getMessage("angal.lab.selectanexam")));
 			jSelectionPanel.add(getComboExams());
-			jSelectionPanel.add(getDateFromPanel());
-			jSelectionPanel.add(getDateToPanel());
+			jSelectionPanel.add(getDateFilterPanel());
 			jSelectionPanel.add(getFilterButton());
 		}
 		return jSelectionPanel;
@@ -441,7 +437,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		ExamBrowsingManager managerExams = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 		if (comboExams == null) {
 			comboExams = new JComboBox();
-			comboExams.setPreferredSize(new Dimension(200, 30));
+			comboExams.setPreferredSize(new Dimension(225, 30));
 			comboExams.addItem(new Exam("", MessageBundle.getMessage("angal.common.all.txt"), new ExamType("", ""), 0, ""));
 			List<Exam> type;
 			try {
@@ -466,53 +462,18 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		return comboExams;
 	}
 
-	private VoDateTextField getDateFieldFromPanel() {
-		if (dateFrom == null) {
-			LocalDate now = LocalDate.now().minusWeeks(1);
-			dateFrom = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, now, 10);
+	private Component getDateFilterPanel() {
+		if (dateFilterPanel == null) {
+			dateFilterPanel = new JPanel(new SpringLayout());
+			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
+			dateFrom = new GoodDateChooser(LocalDate.now().minusWeeks(1));
+			dateFilterPanel.add(dateFrom);
+			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
+			dateTo = new GoodDateChooser(LocalDate.now());
+			dateFilterPanel.add(dateTo);
+			SpringUtilities.makeCompactGrid(dateFilterPanel, 2, 2, 5, 5, 5, 5);
 		}
-		return dateFrom;
-	}
-	
-	/**
-	 * This method initializes dateFrom, which is the Panel that contains the
-	 * date (From) input for the filtering
-	 * 
-	 * @return dateFrom (JPanel)
-	 */
-	private JPanel getDateFromPanel() {
-		if (jPanelDateFrom == null) {
-			jPanelDateFrom = new JPanel();
-			jPanelDateFrom.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")), null);
-			jPanelDateFrom.add(getDateFieldFromPanel());
-			
-		}
-		return jPanelDateFrom;
-	}
-
-	private VoDateTextField getDateFieldToPanel() {
-		if (dateTo == null) {
-			LocalDate now = LocalDate.now();
-			dateTo = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, now, 10);
-			dateTo.setDate(now);
-		}
-		return dateTo;
-	}
-	
-	/**
-	 * This method initializes dateTo, which is the Panel that contains the date
-	 * (To) input for the filtering
-	 * 
-	 * @return dateTo (JPanel)
-	 */
-	private JPanel getDateToPanel() {
-		if (jPanelDateTo == null) {
-			jPanelDateTo = new JPanel();
-			jPanelDateTo.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")), null);
-			jPanelDateTo.add(getDateFieldToPanel());
-			
-		}
-		return jPanelDateTo;
+		return dateFilterPanel;
 	}
 
 	/**
@@ -530,7 +491,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
 				}
-				model = new LabBrowsingModel(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
+				model = new LabBrowsingModel(typeSelected, dateFrom.getDate(), dateTo.getDate());
 				model.fireTableDataChanged();
 				jTable.updateUI();
 			});
