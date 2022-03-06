@@ -313,6 +313,11 @@
 			<artifactId>jgoodies-validation</artifactId>
 			<version>2.5.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.lgooddatepicker</groupId>
+			<artifactId>LGoodDatePicker</artifactId>
+			<version>11.2.1</version>
+		</dependency>
 		<!-- Feign -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
