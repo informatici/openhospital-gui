@@ -21,23 +21,12 @@
  */
 package org.isf.utils.jobjects;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
-
 import java.awt.Panel;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Locale;
-
-import javax.swing.BoxLayout;
-
-import org.isf.generaldata.GeneralData;
 
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DateTimePicker;
 import com.github.lgooddatepicker.components.TimePickerSettings;
-import com.github.lgooddatepicker.components.TimePickerSettings.TimeIncrement;
-import com.github.lgooddatepicker.optionalusertools.PickerUtilities;
-import com.github.lgooddatepicker.optionalusertools.TimeVetoPolicy;
 
 public class GoodDateTimeChooser extends Panel {
 
@@ -48,77 +37,77 @@ public class GoodDateTimeChooser extends Panel {
 	TimePickerSettings timeSettings;
 
 	public GoodDateTimeChooser(LocalDateTime dateTime, boolean setTimeRange) {
-		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
-		this.setLayout(layout);
-		dateSettings = new DatePickerSettings();
-		dateSettings.setLocale(new Locale(GeneralData.LANGUAGE));
-		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT_DD_MM_YYYY);
-		dateSettings.setAllowEmptyDates(false);
-		timeSettings = new TimePickerSettings();
-		timeSettings.setAllowEmptyTimes(false);
-		timeSettings.setAllowKeyboardEditing(false);
-		timeSettings.setFormatForDisplayTime(TIME_FORMAT);
-		timeSettings.setFormatForMenuTimes(TIME_FORMAT);
-		timeSettings.generatePotentialMenuTimes(getTimeIncrement(GeneralData.VISITINCREMENT), null, null);
-		if (dateTime == null) {
-			dateTime = LocalDateTime.now();
-		}
-		dateTime = dateTime.withMinute(0);
-		dateTime = dateTime.withSecond(0);
-		dateTime = dateTime.withNano(0);
-		if (setTimeRange) {
-			// ensure the hour is within the range of specified hours
-			int hour = dateTime.getHour();
-			if (hour < GeneralData.VISITSTARTHOUR || hour > GeneralData.VISITENDHOUR) {
-				dateTime = dateTime.withHour(GeneralData.VISITSTARTHOUR);
-			}
-		}
-		dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
-		dateTimePicker.getTimePicker().getSettings().setVetoPolicy(new OHVetoTimerPolicy());
-		dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
-		dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
-		add(dateTimePicker);
+//		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+//		this.setLayout(layout);
+//		dateSettings = new DatePickerSettings();
+//		dateSettings.setLocale(new Locale(GeneralData.LANGUAGE));
+//		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT_DD_MM_YYYY);
+//		dateSettings.setAllowEmptyDates(false);
+//		timeSettings = new TimePickerSettings();
+//		timeSettings.setAllowEmptyTimes(false);
+//		timeSettings.setAllowKeyboardEditing(false);
+//		timeSettings.setFormatForDisplayTime(TIME_FORMAT);
+//		timeSettings.setFormatForMenuTimes(TIME_FORMAT);
+//		timeSettings.generatePotentialMenuTimes(getTimeIncrement(GeneralData.VISITINCREMENT), null, null);
+//		if (dateTime == null) {
+//			dateTime = LocalDateTime.now();
+//		}
+//		dateTime = dateTime.withMinute(0);
+//		dateTime = dateTime.withSecond(0);
+//		dateTime = dateTime.withNano(0);
+//		if (setTimeRange) {
+//			// ensure the hour is within the range of specified hours
+//			int hour = dateTime.getHour();
+//			if (hour < GeneralData.VISITSTARTHOUR || hour > GeneralData.VISITENDHOUR) {
+//				dateTime = dateTime.withHour(GeneralData.VISITSTARTHOUR);
+//			}
+//		}
+//		dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
+//		dateTimePicker.getTimePicker().getSettings().setVetoPolicy(new OHVetoTimerPolicy());
+//		dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
+//		dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
+//		add(dateTimePicker);
 	}
 
 	public LocalDateTime getLocalDateTime() {
 		return dateTimePicker.getDateTimeStrict();
 	}
 
-	/**
-	 * OHVetoTimerPolicy, A veto policy is a way to disallow certain times from being selected in
-	 * the time picker. A vetoed time cannot be added to the time drop down menu. A vetoed time
-	 * cannot be selected by using the keyboard or the mouse.
-	 */
-	private static class OHVetoTimerPolicy implements TimeVetoPolicy {
-
-		/**
-		 * isTimeAllowed, Return true if a time should be allowed, or false if a time should be vetoed.
-		 */
-		@Override
-		public boolean isTimeAllowed(LocalTime time) {
-			// Only allow times from 5a to 7p, inclusive.
-			return PickerUtilities.isLocalTimeInRange(
-					time, LocalTime.of(GeneralData.VISITSTARTHOUR, 00), LocalTime.of(GeneralData.VISITENDHOUR, 00), true);
-		}
-	}
-
-	private TimeIncrement getTimeIncrement(int minutes) {
-		switch (minutes) {
-			case 5:
-				return TimeIncrement.FiveMinutes;
-			case 10:
-				return TimeIncrement.TenMinutes;
-			case 15:
-				return TimeIncrement.FifteenMinutes;
-			case 20:
-				return TimeIncrement.TwentyMinutes;
-			case 30:
-				return TimeIncrement.ThirtyMinutes;
-			case 60:
-				return TimeIncrement.OneHour;
-			default:
-				return TimeIncrement.ThirtyMinutes;
-		}
-	}
+//	/**
+//	 * OHVetoTimerPolicy, A veto policy is a way to disallow certain times from being selected in
+//	 * the time picker. A vetoed time cannot be added to the time drop down menu. A vetoed time
+//	 * cannot be selected by using the keyboard or the mouse.
+//	 */
+//	private static class OHVetoTimerPolicy implements TimeVetoPolicy {
+//
+//		/**
+//		 * isTimeAllowed, Return true if a time should be allowed, or false if a time should be vetoed.
+//		 */
+//		@Override
+//		public boolean isTimeAllowed(LocalTime time) {
+//			// Only allow times from 5a to 7p, inclusive.
+//			return PickerUtilities.isLocalTimeInRange(
+//					time, LocalTime.of(GeneralData.VISITSTARTHOUR, 00), LocalTime.of(GeneralData.VISITENDHOUR, 00), true);
+//		}
+//	}
+//
+//	private TimeIncrement getTimeIncrement(int minutes) {
+//		switch (minutes) {
+//			case 5:
+//				return TimeIncrement.FiveMinutes;
+//			case 10:
+//				return TimeIncrement.TenMinutes;
+//			case 15:
+//				return TimeIncrement.FifteenMinutes;
+//			case 20:
+//				return TimeIncrement.TwentyMinutes;
+//			case 30:
+//				return TimeIncrement.ThirtyMinutes;
+//			case 60:
+//				return TimeIncrement.OneHour;
+//			default:
+//				return TimeIncrement.ThirtyMinutes;
+//		}
+//	}
 
 }
