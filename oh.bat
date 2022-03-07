@@ -1,6 +1,6 @@
 @echo off
 REM # Open Hospital (www.open-hospital.org)
-REM # Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+REM # Copyright © 2006-2022 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 REM #
 REM # Open Hospital is a free and open source software for healthcare data management.
 REM #
@@ -148,7 +148,7 @@ set ARCH=32
 
 REM ######## MySQL Software
 REM # MariaDB 64bit
-REM https://archive.mariadb.org/mariadb-10.2.41/winx64-packages/mariadb-10.2.41-winx64.zip
+REM https://archive.mariadb.org/mariadb-10.2.43/winx64-packages/mariadb-10.2.43-winx64.zip
 REM # MySQL 64bit
 REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-winx64.zip
 
@@ -170,11 +170,11 @@ REM set JAVA_URL="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/do
 REM set JAVA_DISTRO="OpenJDK11U-jre_x86-32_windows_hotspot_11.0.11_9.zip"
 
 REM # JRE 11 32bit - i686 - zulu
-REM set JAVA_URL="https://cdn.azul.com/zulu/bin/zulu11.50.19-ca-fx-jre11.0.12-win_i686.zip"
-REM set JAVA_DISTRO=zulu11.50.19-ca-fx-jre11.0.12-win_i686.zip
+REM set JAVA_URL="https://cdn.azul.com/zulu/bin/zulu11.52.13-ca-fx-jre11.0.13-win_i686.zip"
+REM JAVA_DISTRO=zulu11.52.13-ca-fx-jre11.0.13-win_i686.zip
 
 REM # JRE 8 32bit - i686 - zulu - default
-set JAVA_DIR=zulu8.58.0.13-ca-fx-jdk8.0.312-win_i686
+set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin
@@ -368,4 +368,3 @@ goto end
 	set "LEGACYMODE="
 
 	goto :eof
-
