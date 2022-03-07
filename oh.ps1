@@ -29,7 +29,7 @@ Open Hospital startup script - oh.ps1
 
 .DESCRIPTION
 The script is used to setup and launch Open Hospital in PORTABLE, CLIENT  mode or with Demo data.
-It can also be used to perform some basic operation like saving or importing a database.
+It can also be used to perform some basic operations like saving or importing a database.
 
 Open Hospital CLIENT | PORTABLE
 Usage: oh.ps1 [ -lang en|fr|it|es|pt ] [default set to en]
@@ -43,7 +43,7 @@ Usage: oh.ps1 [ -lang en|fr|it|es|pt ] [default set to en]
 ./oh.ps1 -lang it -mode PORTABLE -loglevel DEBUG -dicom off -interactive off -generate_config on
 
 .NOTES
-Developed by Informatici Senza Frontiere - 2021
+Developed by Informatici Senza Frontiere - 2022
 
 .LINK
 https://www.open-hospital.org
