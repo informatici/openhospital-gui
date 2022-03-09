@@ -22,14 +22,13 @@
 package org.isf.stat.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.stat.gui.report.DiseasesList;
@@ -44,10 +43,6 @@ public class DiseasesListLauncher extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private int pfrmExactWidth = 356;
-	private int pfrmExactHeight = 165;
-	private int pfrmBordX;
-	private int pfrmBordY;
 	private JPanel jPanel = null;
 	private JPanel jButtonPanel = null;
 	private JButton jCloseButton = null;
@@ -69,13 +64,9 @@ public class DiseasesListLauncher extends ModalJFrame {
 	 */
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.stat.diseasereport.title"));
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
-		pfrmBordY = (screensize.height / 3) - (pfrmExactHeight / 2);
-		this.setBounds(pfrmBordX, pfrmBordY, pfrmExactWidth, pfrmExactHeight);
 		this.setContentPane(getJPanel());
 		pack();
+		setLocationRelativeTo(null);
 	}
 
 	/**
@@ -133,9 +124,9 @@ public class DiseasesListLauncher extends ModalJFrame {
 			jContentPanel.setLayout(new BorderLayout());
 			
 			JPanel up = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			up.add(getJReport1Button());
 			up = setMyBorder(up, MessageBundle.getMessage("angal.stat.diseaselist"));
-			
+			up.add(getJReport1Button());
+
 			jContentPanel.add(up, BorderLayout.NORTH);
 		}
 		return jContentPanel;
@@ -160,12 +151,11 @@ public class DiseasesListLauncher extends ModalJFrame {
 	/**
 	 * Set a specific border+title to a panel
 	 */
-	private JPanel setMyBorder(JPanel c, String title) {
-		javax.swing.border.Border b2 = BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(title), BorderFactory
-						.createEmptyBorder(0, 0, 0, 0));
-		c.setBorder(b2);
-		return c;
+	private JPanel setMyBorder(JPanel panel, String title) {
+		Border border = BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(title), BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		panel.setBorder(border);
+		return panel;
 	}
 
 }  

@@ -23,12 +23,10 @@ package org.isf.stat.gui.report;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.Locale;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.menu.manager.Context;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
@@ -36,8 +34,6 @@ import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.sf.jasperreports.view.JasperViewer;
 
 /*
  * Created on 15/Jun/08
