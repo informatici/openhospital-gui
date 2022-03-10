@@ -26,12 +26,10 @@ import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
 import org.isf.menu.manager.Context;
@@ -42,8 +40,6 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.sf.jasperreports.view.JasperViewer;
 
 /*
  * Created on 15/Jun/08
