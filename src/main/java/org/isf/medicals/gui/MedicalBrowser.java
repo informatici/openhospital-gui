@@ -647,8 +647,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 	private LocalDate getToDatePlusMonth(int monthsToMove) {
 		LocalDate plusMonth = LocalDate.now().plusMonths(monthsToMove);
-		return plusMonth
-				.withDayOfMonth(plusMonth.lengthOfMonth());
+		return plusMonth.withDayOfMonth(plusMonth.lengthOfMonth());
 	}
 
 	private LocalDate getFromDate() {
