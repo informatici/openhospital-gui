@@ -478,7 +478,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					
 					int z = row - admList.size();
 					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-					Date myDate = (opdList.get(z)).getVisitDate().getTime();
+					Date myDate = (opdList.get(z)).getDate().getTime();
 					return dateFormat.format(myDate);
 				}
 				
@@ -542,7 +542,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				
 			}  else if (column == 4) {
 				if (row < admList.size()) {
-					if (admList.get(row).getDisDate()==null) {
+					if (admList.get(row).getDisDate() == null) {
 						return MessageBundle.getMessage("angal.admission.present.txt");
 					} else {
 						Date myDate = admList.get(row).getDisDate().getTime();

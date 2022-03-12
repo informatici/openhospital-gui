@@ -143,7 +143,7 @@ public class OpdEdit extends JDialog {
 	private JComboBox diseaseBox = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
-	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
+	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
 	private VoDateTextField opdDateField = null;
 	private JPanel jPanel2 = null;
 	private JButton okButton = null;
@@ -517,6 +517,7 @@ public class OpdEdit extends JDialog {
 				opd.setDisease2(disease2);
 				opd.setDisease3(disease3);
 				opd.setVisitDate(gregDate);
+				opd.setDate(gregDate);
 				opd.setNote("");
 				opd.setUserID(UserBrowsingManager.getCurrentUser());
 
@@ -907,7 +908,7 @@ public class OpdEdit extends JDialog {
 					dateIn = RememberDates.getLastOpdVisitDateGregorian();
 				}
 			} else {
-				dateIn = opd.getVisitDate();
+				dateIn = opd.getDate();
 			}
 			
 			myDate = dateIn.getTime();

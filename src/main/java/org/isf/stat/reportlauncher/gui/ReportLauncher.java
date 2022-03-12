@@ -248,11 +248,6 @@ public class ReportLauncher extends ModalJFrame{
 			jMonthPanel = new JPanel();
 			jMonthPanel.setLayout(new FlowLayout());
 			
-			//final DateFormat dtf = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
-			//String dt = dtf.format(new java.util.Date());
-			//Integer month = Integer.parseInt(dt.substring(3, 5));
-			//Integer year = 2000 + Integer.parseInt(dt.substring(6, 8));
-
 			java.util.GregorianCalendar gc = new java.util.GregorianCalendar();
 			int month = gc.get(Calendar.MONTH);
 			int year = gc.get(Calendar.YEAR);

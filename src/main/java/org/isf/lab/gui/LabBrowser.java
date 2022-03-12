@@ -115,7 +115,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
 	};
 	private boolean[] columnsResizable = {false, true, true, false};
-	private int[] pColumnWidth = {100, 200, 200, 200};
+	private int[] pColumnWidth = {150, 200, 200, 200};
 	private int[] maxWidth = {150, 200, 200, 200};
 	private boolean[] columnsVisible = { true, GeneralData.LABEXTENDED, true, true};
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
@@ -342,8 +342,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				} else {
 					Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(LabBrowser.this, "angal.lab.deletelabexam.fmt.msg",
-							dateFormat.format(lab.getDate().getTime()),
-							dateTimeFormat.format(lab.getExamDate().getTime()),
+							dateTimeFormat.format(lab.getCreatedDate().getTime()),
+							dateTimeFormat.format(lab.getDate().getTime()),
 							lab.getExam(),
 							lab.getPatName(),
 							lab.getResult());
@@ -596,7 +596,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			if (c == -1) {
 				return lab;
 			} else if (c == 0) {
-				return dateFormat.format(lab.getExamDate().getTime());
+				return dateTimeFormat.format(lab.getDate().getTime());
 			} else if (c == 1) {
 				return lab.getPatName();
 			} else if (c == 2) {
