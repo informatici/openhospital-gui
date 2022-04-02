@@ -1413,7 +1413,7 @@ FROM (
 				<textElement verticalAlignment="Middle">
 					<font size="6" isBold="false" />
 				</textElement>
-				<textFieldExpression><![CDATA[$R{PhysiotherapyNumberOfTratments}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{PhysiotherapyNumberOfTreatments}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-92" x="211" y="333" width="57" height="16" uuid="a27dbdde-fac9-4ebb-a0e5-534174ddabb0"/>

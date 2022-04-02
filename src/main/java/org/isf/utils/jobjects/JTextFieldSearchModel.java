@@ -56,7 +56,7 @@ public class JTextFieldSearchModel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static final int CODE_COLUMN_WIDTH = 100;
-	
+
 	private JTextField jTextFieldSearch;
 	private Object selectedObject;
 	private HashMap<String, Medical> medicalMap;
@@ -65,8 +65,9 @@ public class JTextFieldSearchModel extends JPanel {
 	private MedicalBrowsingManager medMan = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 
 	/**
-	 * Creates a Dialog containing a JTextField 
+	 * Creates a Dialog containing a JTextField
 	 * with search capabilities over a certain model class
+	 *
 	 * @param owner - the JFrame owner for Dialog modality
 	 * @param model - the class to search
 	 */
@@ -94,7 +95,7 @@ public class JTextFieldSearchModel extends JPanel {
 		}
 		if (medicals != null) {
 			for (Medical med : medicals) {
-				String key = med.getProd_code();
+				String key = med.getProdCode();
 				if (key == null || key.equals("")) {
 					key = med.getType().getCode() + med.getDescription();
 				}
@@ -102,30 +103,30 @@ public class JTextFieldSearchModel extends JPanel {
 			}
 		}
 	}
-	
+
 	protected Medical chooseMedical(String text) {
-		ArrayList<Medical> medList = new ArrayList<>();
+		List<Medical> medList = new ArrayList<>();
 		for (Medical aMed : medicalMap.values()) {
-			if (aMed.getProd_code().toLowerCase().contains(text) 
+			if (aMed.getProdCode().toLowerCase().contains(text)
 					|| aMed.getDescription().toLowerCase().contains(text)) {
 				medList.add(aMed);
 			}
 		}
 		Collections.sort(medList);
 		Medical med = null;
-		
+
 		if (!medList.isEmpty()) {
 			JTable medTable = new JTable(new StockMedModel(medList));
 			medTable.getColumnModel().getColumn(0).setMaxWidth(CODE_COLUMN_WIDTH);
 			medTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			JPanel panel = new JPanel();
 			panel.add(new JScrollPane(medTable));
-			
+
 			int ok = JOptionPane.showConfirmDialog(owner,
-					panel, 
+					panel,
 					MessageBundle.getMessage("angal.medicalstock.multiplecharging.chooseamedical"),
 					JOptionPane.YES_NO_OPTION);
-			
+
 			if (ok == JOptionPane.OK_OPTION) {
 				int row = medTable.getSelectedRow();
 				med = medList.get(row);
@@ -140,24 +141,22 @@ public class JTextFieldSearchModel extends JPanel {
 			jTextFieldSearch = new JTextField(50);
 			jTextFieldSearch.setPreferredSize(new Dimension(300, 30));
 			jTextFieldSearch.setHorizontalAlignment(SwingConstants.LEFT);
-			
-			TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.medicalstock.typeacodeoradescriptionandpressenter"), 
-					jTextFieldSearch, 
+
+			TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.medicalstock.typeacodeoradescriptionandpressenter"),
+					jTextFieldSearch,
 					Show.FOCUS_GAINED);
-			{
-				suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14));
-				suggestion.setForeground(Color.GRAY);
-				suggestion.setHorizontalAlignment(JLabel.CENTER);
-				suggestion.changeAlpha(0.5f);
-				suggestion.changeStyle(Font.BOLD + Font.ITALIC);
-			}
+			suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			suggestion.setForeground(Color.GRAY);
+			suggestion.setHorizontalAlignment(JLabel.CENTER);
+			suggestion.changeAlpha(0.5f);
+			suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 			if (medical != null) {
 				selectedObject = medical;
 				jTextFieldSearch.setText(medical.toString());
 			}
 			jTextFieldSearch.addActionListener(actionEvent -> {
 				String text = jTextFieldSearch.getText();
-				Medical med = null;
+				Medical med;
 				if (medicalMap.containsKey(text)) {
 					// Medical found
 					med = medicalMap.get(text);
@@ -172,13 +171,13 @@ public class JTextFieldSearchModel extends JPanel {
 		}
 		return jTextFieldSearch;
 	}
-	
+
 	class StockMedModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private ArrayList<Medical> medList;
+		private List<Medical> medList;
 
-		public StockMedModel(ArrayList<Medical> meds) {
+		public StockMedModel(List<Medical> meds) {
 			medList = meds;
 		}
 
@@ -212,7 +211,7 @@ public class JTextFieldSearchModel extends JPanel {
 			if (c == -1) {
 				return med;
 			} else if (c == 0) {
-				return med.getProd_code();
+				return med.getProdCode();
 			} else if (c == 1) {
 				return med.getDescription();
 			}
@@ -224,7 +223,7 @@ public class JTextFieldSearchModel extends JPanel {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * @return the selectedObject
 	 */

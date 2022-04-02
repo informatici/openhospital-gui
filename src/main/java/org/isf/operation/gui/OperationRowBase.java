@@ -21,6 +21,8 @@
  */
 package org.isf.operation.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -31,7 +33,9 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,11 +64,8 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.toedter.calendar.JDateChooser;
 
 abstract class OperationRowBase extends JPanel {
 
@@ -86,6 +87,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected List<String> operationResults = opeManager.getResultDescriptionList();
 	protected OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
+	protected CustomJDateChooser jCalendarDate;
 	protected JTable tableData;
 
 	private Opd myOpd;
@@ -269,8 +271,8 @@ abstract class OperationRowBase extends JPanel {
 		if (textDate == null) {
 			textDate = new CustomJDateChooser();
 			textDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			textDate.setDateFormatString("dd/MM/yy HH:mm:ss"); //$NON-NLS-1$
-			textDate.setDate(DateTime.now().toDate());
+			textDate.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS);
+			textDate.setDate(new Date());
 		}
 		return textDate;
 	}
@@ -327,7 +329,8 @@ abstract class OperationRowBase extends JPanel {
 		}
 
 		if (opeRow != null) {
-			textDate.setDate(opeRow.getOpDate().getTime());
+			textDate.setDate(opeRow.getOpDate());
+
 			textAreaRemark.setText(opeRow.getRemarks());
 			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
 		}
@@ -384,7 +387,7 @@ abstract class OperationRowBase extends JPanel {
 
 	public void clearForm() {
 		comboOperation.setSelectedItem(null);
-		textDate.setDate(null);
+		textDate.setDate((LocalDateTime) null);
 		textAreaRemark.setText(""); //$NON-NLS-1$
 		comboResult.setSelectedIndex(-1);
 		textFieldUnit.setText(""); //$NON-NLS-1$

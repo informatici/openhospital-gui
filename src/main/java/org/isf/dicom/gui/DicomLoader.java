@@ -42,10 +42,10 @@ public class DicomLoader extends AbstractDicomLoader {
 
 	private static final long serialVersionUID = 1L;
 
-	private int numfiles = 0;
-	private JLabel jLabelTitle = null;
+	private int numfiles;
+	private JLabel jLabelTitle;
 	private String labelTitle = MessageBundle.getMessage("angal.dicom.loading");
-	private	JProgressBar bar = null;
+	private	JProgressBar bar;
 	private Color bkgColor = Color.BLUE;
 	private Color fgColor = Color.WHITE;
 

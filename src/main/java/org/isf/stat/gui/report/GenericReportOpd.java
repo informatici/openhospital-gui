@@ -21,9 +21,6 @@
  */
 package org.isf.stat.gui.report;
 
-import java.util.Locale;
-
-import org.isf.generaldata.GeneralData;
 import org.isf.menu.manager.Context;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
@@ -31,29 +28,22 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.jasperreports.view.JasperViewer;
-
 /*
  * Created on 15/Jun/08
  */
-public class GenericReportOpd {
+public class GenericReportOpd extends DisplayReport {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportOpd.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportOpd.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportOpd(int opdID, int patID, String jasperFileName) {
-		try{
-            JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportOpdPdf(opdID, patID, jasperFileName);
-			if (GeneralData.INTERNALVIEWER)
-				JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
-			else { 
-					Runtime rt = Runtime.getRuntime();
-					rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
-			}
+		try {
+			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportOpdPdf(opdID, patID, jasperFileName);
+			showReport(jasperReportResultDto);
 		} catch (Exception e) {
-            LOGGER.error("", e);
+			LOGGER.error("", e);
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
 		}
 	}
-	
+
 }

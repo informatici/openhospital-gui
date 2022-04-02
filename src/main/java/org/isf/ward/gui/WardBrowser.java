@@ -57,29 +57,26 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 
 	@Override
 	public void wardInserted(AWTEvent e) {
-		pWard.add(0,ward);
-		((WardBrowserModel)table.getModel()).fireTableDataChanged();
-		//table.updateUI();
+		pWard.add(0, ward);
+		((WardBrowserModel) table.getModel()).fireTableDataChanged();
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
 		}
 	}
-	
+
 	@Override
 	public void wardUpdated(AWTEvent e) {
-		pWard.set(selectedrow,ward);
-		((WardBrowserModel)table.getModel()).fireTableDataChanged();
+		pWard.set(selectedrow, ward);
+		((WardBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
-		if ((table.getRowCount() > 0) && selectedrow >-1) {
-			table.setRowSelectionInterval(selectedrow,selectedrow);
+		if ((table.getRowCount() > 0) && selectedrow > -1) {
+			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
 	}
-	
-	private int pfrmBase = 10;
-	private int pfrmWidth = 8;
-	private int pfrmHeight = 6;
-	private int pfrmBordX;
-	private int pfrmBordY;
+
+	private static final int PFRM_BASE = 10;
+	private static final int PFRM_WIDTH = 8;
+	private static final int PFRM_HEIGHT = 6;
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton jEditButton = null;
@@ -133,11 +130,10 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		this.setTitle(MessageBundle.getMessage("angal.ward.wardbrowser.title"));
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screensize = kit.getScreenSize();
-		pfrmBordX = (screensize.width - (screensize.width / pfrmBase * pfrmWidth)) / 2;
-		pfrmBordY = (screensize.height - (screensize.height / pfrmBase * pfrmHeight)) / 2;
-		this.setBounds(pfrmBordX,pfrmBordY,screensize.width / pfrmBase * pfrmWidth,screensize.height / pfrmBase * pfrmHeight);
+		int pfrmBordX = (screensize.width - (screensize.width / PFRM_BASE * PFRM_WIDTH)) / 2;
+		int pfrmBordY = (screensize.height - (screensize.height / PFRM_BASE * PFRM_HEIGHT)) / 2;
+		this.setBounds(pfrmBordX, pfrmBordY, screensize.width / PFRM_BASE * PFRM_WIDTH, screensize.height / PFRM_BASE * PFRM_HEIGHT);
 		this.setContentPane(getJContentPane());
-		
 	}
 	
 	/**
@@ -149,8 +145,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
-			jContentPane.add(getJScrollPane(), java.awt.BorderLayout.CENTER);
+			jContentPane.add(getJButtonPanel(), BorderLayout.SOUTH);
+			jContentPane.add(getJScrollPane(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -185,8 +181,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					selectedrow = table.getSelectedRow();
-					ward = (Ward)(((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-					WardEdit editrecord = new WardEdit(myFrame,ward,false);
+					ward = (Ward) (model.getValueAt(table.getSelectedRow(), -1));
+					WardEdit editrecord = new WardEdit(myFrame, ward, false);
 					editrecord.addWardListener(WardBrowser.this);
 					editrecord.setVisible(true);
 				}
@@ -205,8 +201,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				ward=new Ward(null,"","","","",null,null,null,false,false);	//operation will reference the new record
-				WardEdit newrecord = new WardEdit(myFrame,ward,true);
+				ward = new Ward(null, "", "", "", "", null, null, null, false, false);    //operation will reference the new record
+				WardEdit newrecord = new WardEdit(myFrame, ward, true);
 				newrecord.addWardListener(WardBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -228,7 +224,7 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 					MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
 					WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-					Ward ward = (Ward) (((WardBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+					Ward ward = (Ward) (model.getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
 					try {
 						if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))) {
@@ -366,10 +362,11 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		public Class<?> getColumnClass(int columnIndex) {
 			return pColumnClass[columnIndex];
 		}
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}
+
 }

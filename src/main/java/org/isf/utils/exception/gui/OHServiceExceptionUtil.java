@@ -30,18 +30,21 @@ import org.isf.utils.exception.model.OHExceptionMessage;
 
 public class OHServiceExceptionUtil {
 
-	private OHServiceExceptionUtil() {}
-	
+	private OHServiceExceptionUtil() {
+	}
+
 	/**
 	 * Iterate exception messages and show them in a JOptionPane with parentComponent = null
+	 *
 	 * @param e
 	 */
 	public static void showMessages(OHServiceException e) {
 		showMessages(e, null);
 	}
-	
+
 	/**
 	 * Iterate exception messages and show them in a JOptionPane with parentComponent specified
+	 *
 	 * @param e
 	 * @param parentComponent
 	 */
@@ -59,4 +62,5 @@ public class OHServiceExceptionUtil {
 			}
 		}
 	}
+
 }

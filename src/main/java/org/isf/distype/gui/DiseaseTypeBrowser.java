@@ -47,7 +47,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListener{
+public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListener {
 
 	private static final long serialVersionUID = 1L;
 	private List<DiseaseType> pDiseaseType;
@@ -113,8 +113,8 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				diseaseType = new DiseaseType("","");
-				DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, true);
+				diseaseType = new DiseaseType("", "");
+				DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame, diseaseType, true);
 				newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -137,7 +137,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					diseaseType = (DiseaseType) (model.getValueAt(selectedrow, -1));
-					DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame,diseaseType, false);
+					DiseaseTypeBrowserEdit newrecord = new DiseaseTypeBrowserEdit(myFrame, diseaseType, false);
 					newrecord.addDiseaseTypeListener(DiseaseTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -190,7 +190,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DiseaseTypeBrowserModel();
 			jTable = new JTable(model);

@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 
 import org.isf.generaldata.MessageBundle;
 
-public class PhotoFrame extends JFrame{
+public class PhotoFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 

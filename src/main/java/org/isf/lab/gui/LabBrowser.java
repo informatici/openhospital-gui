@@ -21,13 +21,15 @@
  */
 package org.isf.lab.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -64,6 +66,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoDateTextField;
+import org.isf.utils.time.Converters;
 
 /**
  * ------------------------------------------
@@ -91,10 +94,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	public void labUpdated() {
 		filterButton.doClick();
 	}
-	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	
+
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton buttonEdit = null;
@@ -218,7 +218,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 				try {
 					List<LaboratoryForPrint> labs;
-					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDate(), dateTo.getDate());
+					labs = labManager.getLaboratoryForPrint(typeSelected, Converters.convertToLocalDateTime(dateFrom.getDate()), Converters.convertToLocalDateTime(dateTo.getDate()));
 					if (!labs.isEmpty()) {
 						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 					}
@@ -306,7 +306,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			buttonNew.addActionListener(actionEvent -> {
 				laboratory = new Laboratory(0, new Exam("", "",
 						new ExamType("", ""), 0, ""),
-						new GregorianCalendar(), "P", "", new Patient(), "");
+						LocalDateTime.now(), "P", "", new Patient(), "");
 				if (GeneralData.LABEXTENDED) {
 					if (GeneralData.LABMULTIPLEINSERT) {
 						LabNew editrecord = new LabNew(myFrame);
@@ -342,8 +342,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				} else {
 					Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(LabBrowser.this, "angal.lab.deletelabexam.fmt.msg",
-							dateTimeFormat.format(lab.getCreatedDate().getTime()),
-							dateTimeFormat.format(lab.getDate().getTime()),
+							lab.getCreatedDate().format(DATE_TIME_FORMATTER),
+							lab.getDate().format(DATE_TIME_FORMATTER),
 							lab.getExam(),
 							lab.getPatName(),
 							lab.getResult());
@@ -465,11 +465,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	private VoDateTextField getDateFieldFromPanel() {
 		if (dateFrom == null) {
-			GregorianCalendar now = new GregorianCalendar();
-			//04/01/2009 - ross - do not use roll, use add(week,-1)!
-			//now.roll(GregorianCalendar.WEEK_OF_YEAR, false);
-			now.add(Calendar.WEEK_OF_YEAR, -1);
-			dateFrom = new VoDateTextField("dd/mm/yyyy", now, 10);
+			LocalDate now = LocalDate.now().minusWeeks(1);
+			dateFrom = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, now, 10);
 		}
 		return dateFrom;
 	}
@@ -492,8 +489,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 	private VoDateTextField getDateFieldToPanel() {
 		if (dateTo == null) {
-			GregorianCalendar now = new GregorianCalendar();
-			dateTo = new VoDateTextField("dd/mm/yyyy", now, 10);
+			LocalDate now = LocalDate.now();
+			dateTo = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, now, 10);
 			dateTo.setDate(now);
 		}
 		return dateTo;
@@ -530,7 +527,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				if (typeSelected.equalsIgnoreCase(MessageBundle.getMessage("angal.common.all.txt"))) {
 					typeSelected = null;
 				}
-				model = new LabBrowsingModel(typeSelected, dateFrom.getDate(), dateTo.getDate());
+				model = new LabBrowsingModel(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
 				model.fireTableDataChanged();
 				jTable.updateUI();
 			});
@@ -547,11 +544,11 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	class LabBrowsingModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class,Context.getApplicationContext().getBean(LabIoOperations.class));
+		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class, Context.getApplicationContext().getBean(LabIoOperations.class));
 
-		public LabBrowsingModel(String exam, GregorianCalendar dateFrom, GregorianCalendar dateTo) {
+		public LabBrowsingModel(String exam, LocalDate dateFrom, LocalDate dateTo) {
 			try {
-				pLabs = manager.getLaboratory(exam, dateFrom, dateTo);
+				pLabs = manager.getLaboratory(exam, dateFrom.atStartOfDay(), dateTo.atStartOfDay());
 			} catch (OHServiceException e) {
 				pLabs = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
@@ -596,7 +593,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			if (c == -1) {
 				return lab;
 			} else if (c == 0) {
-				return dateTimeFormat.format(lab.getDate().getTime());
+				return lab.getDate().format(DATE_TIME_FORMATTER);
 			} else if (c == 1) {
 				return lab.getPatName();
 			} else if (c == 2) {
@@ -609,7 +606,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			// return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}

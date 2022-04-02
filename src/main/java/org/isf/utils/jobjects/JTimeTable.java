@@ -69,8 +69,7 @@ public class JTimeTable extends JPanel {
 		JPanel hour = new JPanel();
 		hour.setLayout(new GridLayout(3, 8));
 		for (int i = 0; i < 24; i++) {
-			hours[i] = new JLabel();
-			hours[i].setText(String.valueOf(i));
+			hours[i] = new JLabel(String.valueOf(i));
 			hours[i].setPreferredSize(new Dimension(DIMENSION, DIMENSION));
 			hours[i].setHorizontalAlignment(SwingConstants.CENTER);
 			hours[i].setBackground(Color.WHITE);
@@ -87,8 +86,7 @@ public class JTimeTable extends JPanel {
 		minute.setLayout(new GridLayout(0, 8));
 		minute.add(Box.createHorizontalGlue());
 		for (int i = 0; i < 60; i += 10) {
-			minutes[i / 10] = new JLabel();
-			minutes[i / 10].setText(String.valueOf(i));
+			minutes[i / 10] = new JLabel(String.valueOf(i));
 			minutes[i / 10].setPreferredSize(new Dimension(DIMENSION, DIMENSION));
 			minutes[i / 10].setHorizontalAlignment(SwingConstants.CENTER);
 			minutes[i / 10].setBackground(Color.WHITE);
@@ -176,7 +174,7 @@ public class JTimeTable extends JPanel {
 			selectedMinute = thisLabel;
 			setMinute(Integer.parseInt(thisLabel.getText()));
 			thisLabel.setBackground(Color.GRAY);
-			
+
 		}
 
 		@Override
@@ -195,4 +193,5 @@ public class JTimeTable extends JPanel {
 		public void mouseReleased(MouseEvent arg0) {
 		}
 	}
+
 }
