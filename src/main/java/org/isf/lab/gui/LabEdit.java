@@ -26,6 +26,7 @@ import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -550,8 +551,8 @@ public class LabEdit extends ModalJFrame {
 				List<String> labRow = new ArrayList<>();
 				RememberDates.setLastLabExamDate(examDate);
 
-				lab.setDate(LocalDateTime.now());
-				lab.setExamDate(examDate.toLocalDate());
+				lab.setDate(examDate);
+				lab.setExamDate(LocalDate.now());
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
 				lab.setNote(noteTextArea.getText());

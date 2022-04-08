@@ -239,7 +239,7 @@ public class LabEditExtended extends ModalJFrame {
 			examDateFieldCal.setBounds(labelWidth + 5, 10, 150, 20);
 			//material
 			matLabel = new JLabel(MessageBundle.getMessage("angal.lab.material"));
-			matLabel.setBounds(255, 10, 150, 20);
+			matLabel.setBounds(235, 10, 150, 20);
 			matComboBox = getMatComboBox();
 			matComboBox.setBounds(295, 10, 230, 20);
 
