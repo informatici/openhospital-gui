@@ -45,15 +45,17 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class OperationTypeEdit extends JDialog{
+public class OperationTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList operationTypeListeners = new EventListenerList();
 
-    public interface OperationTypeListener extends EventListener {
-        void operationTypeUpdated(AWTEvent e);
-        void operationTypeInserted(AWTEvent e);
-    }
+	public interface OperationTypeListener extends EventListener {
+
+		void operationTypeUpdated(AWTEvent e);
+
+		void operationTypeInserted(AWTEvent e);
+	}
 
     public void addOperationTypeListener(OperationTypeListener l) {
         operationTypeListeners.add(OperationTypeListener.class, l);
@@ -63,26 +65,29 @@ public class OperationTypeEdit extends JDialog{
         operationTypeListeners.remove(OperationTypeListener.class, listener);
     }
 
-    private void fireOperationInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireOperationInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((OperationTypeListener) listener).operationTypeInserted(event);
-	    }
-    }
-    private void fireOperationUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
+		for (EventListener listener : listeners) {
+			((OperationTypeListener) listener).operationTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireOperationUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((OperationTypeListener) listener).operationTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = operationTypeListeners.getListeners(OperationTypeListener.class);
+		for (EventListener listener : listeners) {
+			((OperationTypeListener) listener).operationTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -101,10 +106,10 @@ public class OperationTypeEdit extends JDialog{
      * because we need to update them
 	 */
 	public OperationTypeEdit(JFrame owner, OperationType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		operationType = old;//operation will be used for every operation
-		lastdescription= operationType.getDescription();
+		lastdescription = operationType.getDescription();
 		initialize();
 	}
 
@@ -195,7 +200,7 @@ public class OperationTypeEdit extends JDialog{
 				}
 				operationType.setDescription(descriptionTextField.getText());
 				operationType.setCode(codeTextField.getText());
-				boolean result = false;
+				boolean result;
 				if (insert) {      // inserting
 					try {
 						result = manager.newOperationType(operationType);

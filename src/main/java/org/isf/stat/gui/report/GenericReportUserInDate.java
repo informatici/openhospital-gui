@@ -21,8 +21,6 @@
  */
 package org.isf.stat.gui.report;
 
-import java.util.Locale;
-
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
@@ -34,8 +32,6 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.jasperreports.view.JasperViewer;
-
 /**
  * --------------------------------------------------------
  * GenericReportUserInDate
@@ -46,41 +42,37 @@ import net.sf.jasperreports.view.JasperViewer;
  * 06/12/2011 - first version
  * -----------------------------------------------------------------
  */
-	public class GenericReportUserInDate {
+public class GenericReportUserInDate extends DisplayReport {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportUserInDate.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportUserInDate.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-		public GenericReportUserInDate(String fromDate, String toDate, String aUser, String jasperFileName) {
-			new GenericReportUserInDate(fromDate, toDate, aUser, jasperFileName, true, true);
-		}
+	public GenericReportUserInDate(String fromDate, String toDate, String aUser, String jasperFileName) {
+		new GenericReportUserInDate(fromDate, toDate, aUser, jasperFileName, true, true);
+	}
 
-		public  GenericReportUserInDate(String fromDate, String toDate, String aUser, String jasperFileName, boolean show, boolean askForPrint) {
-			try{
-                JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportUserInDatePdf(fromDate, toDate, aUser, jasperFileName);
-				if (show) {
-                    if (GeneralData.INTERNALVIEWER) {
-                        JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(), false, new Locale(GeneralData.LANGUAGE));
-                    } else {
-                        Runtime rt = Runtime.getRuntime();
-                        rt.exec(GeneralData.VIEWER + " " + jasperReportResultDto.getFilename());
-                    }
-				}
-				
-				if (GeneralData.RECEIPTPRINTER) {
-                    JasperReportResultDto jasperReportTxtResultDto = jasperReportsManager.getGenericReportUserInDateTxt(fromDate, toDate, aUser, jasperFileName);
-					int print = JOptionPane.OK_OPTION;
-					if (askForPrint) {
-						print = MessageDialog.yesNo(null, "angal.genericreportbill.doyouwanttoprintreceipt.msg");
-					}
-					if (print != JOptionPane.OK_OPTION) {
-						return; //STOP
-					}
-					new PrintReceipt(jasperReportTxtResultDto.getJasperPrint(), jasperReportTxtResultDto.getFilename());
-				}
-			} catch (Exception e) {
-                LOGGER.error("", e);
-				MessageDialog.error(null, "angal.stat.reporterror.msg");
+	public GenericReportUserInDate(String fromDate, String toDate, String aUser, String jasperFileName, boolean show, boolean askForPrint) {
+		try {
+			JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportUserInDatePdf(fromDate, toDate, aUser, jasperFileName);
+			if (show) {
+				showReport(jasperReportResultDto);
 			}
+
+			if (GeneralData.RECEIPTPRINTER) {
+				JasperReportResultDto jasperReportTxtResultDto = jasperReportsManager.getGenericReportUserInDateTxt(fromDate, toDate, aUser, jasperFileName);
+				int print = JOptionPane.OK_OPTION;
+				if (askForPrint) {
+					print = MessageDialog.yesNo(null, "angal.genericreportbill.doyouwanttoprintreceipt.msg");
+				}
+				if (print != JOptionPane.OK_OPTION) {
+					return; //STOP
+				}
+				new PrintReceipt(jasperReportTxtResultDto.getJasperPrint(), jasperReportTxtResultDto.getFilename());
+			}
+		} catch (Exception e) {
+			LOGGER.error("", e);
+			MessageDialog.error(null, "angal.stat.reporterror.msg");
 		}
 	}
+
+}

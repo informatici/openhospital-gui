@@ -64,14 +64,14 @@ public class ExamShow extends JDialog implements ExamRowListener {
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
 	private JButton closeButton = null;
-	private Exam exam = null;
+	private Exam exam;
 	private JButton newButton = null;
 	private JButton deleteButton = null;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {50,250};
+	private int[] pColumnWidth = { 50, 250 };
 	private DefaultTableModel model ;
 	private JTable table;
 	private ExamRow examRow = null;
@@ -103,21 +103,21 @@ public class ExamShow extends JDialog implements ExamRowListener {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);  
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);  
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
-	
+
 	private JPanel getDataPanel() {
 		if (dataPanel == null) {
-			dataPanel= new JPanel();
-                        
+			dataPanel = new JPanel();
+
 			model = new ExamRowBrowsingModel(exam.getCode());
 			table = new JTable(model);
 			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
-			jContentPane.add(new JScrollPane(table),BorderLayout.CENTER);
+			jContentPane.add(new JScrollPane(table), BorderLayout.CENTER);
 		}
 		return dataPanel;
 	}

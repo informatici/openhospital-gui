@@ -23,6 +23,7 @@ package org.isf.utils.jobjects;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -32,6 +33,7 @@ import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
+import org.isf.utils.time.Converters;
 
 /**
  * @author Mwithi
@@ -69,7 +71,7 @@ public class StockCardDialog extends JDialog {
 		initAndShow();
 	}
 
-	public StockCardDialog(Frame owner, Medical medical, Date dateFrom, Date dateTo) {
+	public StockCardDialog(Frame owner, Medical medical, LocalDateTime dateFrom, LocalDateTime dateTo) {
 		super(owner, true);
 		if (medical != null) {
 			textField = new JTextFieldSearchModel(this, medical);
@@ -149,11 +151,19 @@ public class StockCardDialog extends JDialog {
 		return dateFrom;
 	}
 
+	public LocalDateTime getLocalDateTimeFrom() {
+		return Converters.convertToLocalDateTime(getDateFrom());
+	}
+
 	/**
 	 * @return the dateTo
 	 */
 	public Date getDateTo() {
 		return dateTo;
+	}
+
+	public LocalDateTime getLocalDateTimeTo() {
+		return Converters.convertToLocalDateTime(getDateTo());
 	}
 
 	/**

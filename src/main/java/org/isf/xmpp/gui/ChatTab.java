@@ -70,7 +70,7 @@ public class ChatTab extends JTabbedPane {
 		ImageIcon reg = null;
 		ImageIcon over = null;
 		ChatTab tabReference;
-		JLabel user = null;
+		JLabel user;
 
 		public TabButton(String label, int index, ChatTab tab) {
 
@@ -112,4 +112,5 @@ public class ChatTab extends JTabbedPane {
 		}
 
 	}
+
 }

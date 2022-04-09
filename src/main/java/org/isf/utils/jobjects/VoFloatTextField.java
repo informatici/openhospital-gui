@@ -41,6 +41,7 @@ public class VoFloatTextField extends JTextField {
 	public VoFloatTextField(int defval, int columns) {
 		super("" + defval, columns);
 	}
+
 	public VoFloatTextField(String defval, int columns) {
 		super(defval, columns);
 	}
@@ -54,7 +55,7 @@ public class VoFloatTextField extends JTextField {
 		try {
 			return Float.parseFloat(getText());
 		} catch (NumberFormatException e) {
-			return  0;
+			return 0;
 		}
 	}
 
@@ -64,7 +65,7 @@ public class VoFloatTextField extends JTextField {
 
 		@Override
 		public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
-			
+
 			if (str == null) {
 				return;
 			}
@@ -74,12 +75,11 @@ public class VoFloatTextField extends JTextField {
 				Float.parseFloat(newString + "0");
 				super.insertString(offs, str, a);
 			} catch (NumberFormatException e) {
-				if (!str.matches("^[a-zA-Z0-9]*$"))
-					//super.insertString(offs, String.valueOf(DecimalFormatSymbols.getInstance(new Locale(GeneralData.LANGUAGE)).getDecimalSeparator()), a);
-				{
+				if (!str.matches("^[a-zA-Z0-9]*$")) {
 					super.insertString(offs, ".", a);
 				}
 			}
 		}
 	}
+
 }

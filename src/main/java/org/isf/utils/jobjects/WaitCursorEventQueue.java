@@ -25,6 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.EventQueue;
 
 public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallback {
+
 	private final CursorManager cursorManager;
 	private final DelayTimer waitTimer;
 	private final EventQueue parentQueue;
@@ -66,4 +67,5 @@ public class WaitCursorEventQueue extends EventQueue implements DelayTimerCallba
 	public void trigger() {
 		cursorManager.setCursor();
 	}
+
 }

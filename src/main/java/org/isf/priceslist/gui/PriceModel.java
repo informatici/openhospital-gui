@@ -62,6 +62,7 @@ package org.isf.priceslist.gui;
  */
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.priceslist.model.Price;
@@ -85,14 +86,13 @@ public class PriceModel extends AbstractTreeTableModel {
 			MessageBundle.getMessage("angal.priceslist.prices.txt").toUpperCase()
 	};
 
-    // Types of the columns.
-    protected static Class<?>[] cTypes = {TreeTableModel.class, Double.class};
-    
-    protected static String[] cCategories = {"EXA","OPE","MED","OTH"};
-      
-    public PriceModel(Object root) {
-		//super(new PriceNode((Price)root));
-    	super(root);
+	// Types of the columns.
+	protected static Class<?>[] cTypes = { TreeTableModel.class, Double.class };
+
+	protected static String[] cCategories = { "EXA", "OPE", "MED", "OTH" };
+
+	public PriceModel(Object root) {
+		super(root);
 	}
 
 	@Override
@@ -104,55 +104,53 @@ public class PriceModel extends AbstractTreeTableModel {
 	public String getColumnName(int column) {
 		return cNames[column];
 	}
-	
+
 	@Override
 	public Class<?> getColumnClass(int column) {
 		return cTypes[column];
 	}
-	
+
 	@Override
 	public void setValueAt(Object aValue, Object node, int column) {
 		if (column == 1) {
-			((PriceNode)node).getPrice().setPrice((Double)aValue);
+			((PriceNode) node).getPrice().setPrice((Double) aValue);
 		}
-	}
-	
-	@Override
-	public Object getValueAt(Object node, int column) {
-		
-		Price price = getPrice(node);
-		Object display_value = MessageBundle.getMessage("angal.priceslist.failed.txt");
-		switch (column) {
-		case 0:
-			display_value = price.getDesc();
-			break;
-		case 1:
-			display_value = price.getPrice();
-			break;
-			default:
-			break;
-		}
-		return display_value; 
 	}
 
-	
+	@Override
+	public Object getValueAt(Object node, int column) {
+		Price price = getPrice(node);
+		Object displayValue = MessageBundle.getMessage("angal.priceslist.failed.txt");
+		switch (column) {
+			case 0:
+				displayValue = price.getDesc();
+				break;
+			case 1:
+				displayValue = price.getPrice();
+				break;
+			default:
+				break;
+		}
+		return displayValue;
+	}
+
 	@Override
 	public boolean isCellEditable(Object node, int column) {
 		if (getPrice(node).isPrice() && getPrice(node).isEditable()) {
 			return true;
 		}
 		return super.isCellEditable(node, column);
-    }
+	}
 
 	protected Price getPrice(Object node) {
-		PriceNode priceNode = ((PriceNode)node);
+		PriceNode priceNode = ((PriceNode) node);
 		return priceNode.getPrice();
 	}
-	
+
 	protected Object[] getChildren(Object node) {
-    	PriceNode priceNode = (PriceNode)node; 
-    	return priceNode.getItems(); 
-    }
+		PriceNode priceNode = (PriceNode) node;
+		return priceNode.getItems();
+	}
 
 	@Override
 	public Object getChild(Object node, int i) {
@@ -167,17 +165,16 @@ public class PriceModel extends AbstractTreeTableModel {
 }
 
 class PriceNode {
-	
-	private Price    					price;
-	private ArrayList<PriceNode>		items = new ArrayList<>();
 
-	
-    public PriceNode(Price price) { 
-    	this.price = price; 
-    }
-    
-    public boolean isPrice() {
-    	return price.getList().getId() == 0;
+	private Price price;
+	private List<PriceNode> items = new ArrayList<>();
+
+	public PriceNode(Price price) {
+		this.price = price;
+	}
+
+	public boolean isPrice() {
+		return price.getList().getId() == 0;
 	}
 
 	public void addItem(PriceNode price) {
@@ -185,21 +182,22 @@ class PriceNode {
 	}
 
 	/**
-     * Returns the string to be used to display this leaf in the JTree.
-     */
-    @Override
-    public String toString() {
-    	return price.getDesc();
-    }
+	 * Returns the string to be used to display this leaf in the JTree.
+	 */
+	@Override
+	public String toString() {
+		return price.getDesc();
+	}
 
-    public Price getPrice() {
-    	return price; 
-    }
-    
-    /**
-     * Loads the children, caching the results in the children ivar.
-     */
-    public Object[] getItems() {
-    	return this.items.toArray();
-    }
+	public Price getPrice() {
+		return price;
+	}
+
+	/**
+	 * Loads the children, caching the results in the children ivar.
+	 */
+	public Object[] getItems() {
+		return this.items.toArray();
+	}
+
 }

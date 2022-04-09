@@ -21,9 +21,18 @@
  */
 package org.isf.utils.time;
 
+import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD;
+import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS;
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Optional;
 
 import org.joda.time.DateTime;
 
@@ -32,6 +41,17 @@ import org.joda.time.DateTime;
  * Contact: nicosalvato@gmail.com
  */
 public class Converters {
+
+    public static LocalDateTime convertToLocalDateTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static Date toDate(LocalDateTime localDateTime) {
+        return Optional.ofNullable(localDateTime)
+                .map(ldt -> ldt.atZone(ZoneId.systemDefault()).toInstant())
+                .map(Date::from)
+                .orElse(null);
+    }
 
     /**
      * Returns a {@link String} representing the date in format {@code yyyy-MM-dd HH:mm:ss}.
@@ -54,8 +74,8 @@ public class Converters {
         if (datetime == null) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(datetime);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+        return simpleDateFormat.format(datetime);
     }
 
     /**
@@ -79,8 +99,8 @@ public class Converters {
         if (date == null) {
             return null;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD);
+        return simpleDateFormat.format(date);
     }
 
     /**
@@ -115,4 +135,21 @@ public class Converters {
         calendar.setTime(date);
         return calendar;
     }
+
+    public static GregorianCalendar toCalendar(LocalDateTime localDateTime) {
+        return toCalendar(toDate(localDateTime));
+    }
+
+    public static LocalDateTime convertToLocalDateTime(Calendar gregorianCalendar) {
+        return convertToLocalDateTime(toDate((GregorianCalendar) gregorianCalendar));
+    }
+
+    public static LocalDate parseStringToLocalDate(String dateStr, String dateFormat) {
+        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(dateFormat));
+    }
+
+    public static LocalDateTime parseStringToLocalDateTime(String dateStr, String dateFormat) {
+        return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern(dateFormat));
+    }
+
 }

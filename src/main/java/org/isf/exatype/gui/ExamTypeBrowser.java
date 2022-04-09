@@ -52,7 +52,7 @@ import org.isf.utils.jobjects.ModalJFrame;
  * 03/11/2006 - ross - version is now 1.0
  * ------------------------------------------
  */
-public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
+public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -121,8 +121,8 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				examType = new ExamType("","");
-				ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, true);
+				examType = new ExamType("", "");
+				ExamTypeEdit newrecord = new ExamTypeEdit(myFrame, examType, true);
 				newrecord.addExamTypeListener(ExamTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -145,7 +145,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					examType = (ExamType) (model.getValueAt(selectedrow, -1));
-					ExamTypeEdit newrecord = new ExamTypeEdit(myFrame,examType, false);
+					ExamTypeEdit newrecord = new ExamTypeEdit(myFrame, examType, false);
 					newrecord.addExamTypeListener(ExamTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -205,7 +205,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener{
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new ExamTypeBrowserModel();
 			jTable = new JTable(model);

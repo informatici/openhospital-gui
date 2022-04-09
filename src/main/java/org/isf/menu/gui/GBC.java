@@ -46,10 +46,9 @@ import java.awt.Insets;
 /**
  * This class simplifies the use of the GridBagConstraints class.
  */
-public class GBC extends GridBagConstraints 
-{
+public class GBC extends GridBagConstraints {
 
-	private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = 1L;
 
    /**
     * Constructs a GBC with a given gridx and gridy position and
@@ -58,8 +57,7 @@ public class GBC extends GridBagConstraints
     * @param gridx the gridx position
     * @param gridy the gridy position
     */
-   public GBC(int gridx, int gridy)
-   {
+   public GBC(int gridx, int gridy) {
       this.gridx = gridx;
       this.gridy = gridy;
    }
@@ -73,12 +71,11 @@ public class GBC extends GridBagConstraints
     * @param gridwidth the cell span in x-direction
     * @param gridheight the cell span in y-direction
     */
-   public GBC(int gridx, int gridy, int gridwidth, int gridheight)
-   {
+   public GBC(int gridx, int gridy, int gridwidth, int gridheight) {
       this.gridx = gridx;
       this.gridy = gridy;
-      this.gridwidth = gridwidth; 
-      this.gridheight = gridheight; 
+      this.gridwidth = gridwidth;
+      this.gridheight = gridheight;
    }
 
    /**
@@ -153,4 +150,5 @@ public class GBC extends GridBagConstraints
       this.ipady = ipady;
       return this;
    }
+
 }

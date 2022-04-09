@@ -21,6 +21,12 @@
  */
 package org.isf.medicalstockward.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
+import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -38,12 +44,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -99,6 +104,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.StockCardDialog;
 import org.isf.utils.jobjects.StockLedgerDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -114,14 +120,12 @@ public class WardPharmacy extends ModalJFrame implements
 	public void movementInserted(AWTEvent e) {
 		jTableOutcomes.setModel(new OutcomesModel());
 		jTableDrugs.setModel(new DrugsModel());
-		//jTabbedPaneWard.setSelectedComponent(jScrollPaneOutcomes);
 	}
 
 	@Override
 	public void movementUpdated(AWTEvent e) {
 		jTableOutcomes.setModel(new OutcomesModel());
 		jTableDrugs.setModel(new DrugsModel());
-		//jTabbedPaneWard.setSelectedComponent(jScrollPaneOutcomes);
 	}
 	
 	private static final long serialVersionUID = 1L;
@@ -162,18 +166,16 @@ public class WardPharmacy extends ModalJFrame implements
 	private JButton jButtonNew;
 	private JPanel jPanelRange;
 	private JButton jButtonClose;
-	// private JButton jButtonDelete;
 	private JButton jButtonEdit;
 	private CustomJDateChooser jCalendarFrom;
-	private GregorianCalendar dateFrom = new GregorianCalendar();
-	private GregorianCalendar dateTo = new GregorianCalendar();
+	private LocalDateTime dateFrom = LocalDateTime.now();
+	private LocalDateTime dateTo = LocalDateTime.now();
 	private CustomJDateChooser jCalendarTo;
 	private DefaultTableModel modelIncomes;
 	private DefaultTableModel modelOutcomes;
 	private DefaultTableModel modelDrugs;
 	private List<Ward> wardList;
 	private Ward wardSelected;
-	// private Medical drugSelected;
 	private MovementWard movSelected;
 	private boolean added = false;
 	private String[] columnsIncomes = {
@@ -234,8 +236,8 @@ public class WardPharmacy extends ModalJFrame implements
 	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private List<MovementWard> listMovementWardFromTo = new ArrayList<>();
 	private List<MedicalWard> wardDrugs;
-	private ArrayList<MovementWard> wardOutcomes;
-	private ArrayList<Movement> wardIncomes;
+	private List<MovementWard> wardOutcomes;
+	private List<Movement> wardIncomes;
 
 	//private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel"; //$NON-NLS-1$
 
@@ -247,8 +249,7 @@ public class WardPharmacy extends ModalJFrame implements
 	private JButton searchButton;
 
 	public WardPharmacy() {
-		if (MainMenu.checkUserGrants("btnmedicalswardedit")) //$NON-NLS-1$
-		{
+		if (MainMenu.checkUserGrants("btnmedicalswardedit")) {
 			editAllowed = true;
 		}
 		initComponents();
@@ -333,14 +334,15 @@ public class WardPharmacy extends ModalJFrame implements
 					}
 				}
 
-				StockCardDialog stockCardDialog = new StockCardDialog(WardPharmacy.this, medical, dateFrom.getTime(), dateTo.getTime());
+				StockCardDialog stockCardDialog = new StockCardDialog(WardPharmacy.this, medical, dateFrom, dateTo);
 				medical = stockCardDialog.getMedical();
 				Date dateFrom = stockCardDialog.getDateFrom();
 				Date dateTo = stockCardDialog.getDateTo();
 				boolean toExcel = stockCardDialog.isExcel();
 
 				if (!stockCardDialog.isCancel()) {
-					new GenericReportPharmaceuticalStockCard("ProductLedgerWard", dateFrom, dateTo, medical, wardSelected, toExcel);
+					new GenericReportPharmaceuticalStockCard("ProductLedgerWard", Converters.convertToLocalDateTime(dateFrom),
+							Converters.convertToLocalDateTime(dateTo), medical, wardSelected, toExcel);
 				}
 			});
 		}
@@ -354,12 +356,13 @@ public class WardPharmacy extends ModalJFrame implements
 			jButtonStockLedger.setVisible(false);
 			jButtonStockLedger.addActionListener(actionEvent -> {
 
-				StockLedgerDialog stockCardDialog = new StockLedgerDialog(WardPharmacy.this, dateFrom.getTime(), dateTo.getTime());
+				StockLedgerDialog stockCardDialog = new StockLedgerDialog(WardPharmacy.this, dateFrom, dateTo);
 				Date dateFrom = stockCardDialog.getDateFrom();
 				Date dateTo = stockCardDialog.getDateTo();
 
 				if (!stockCardDialog.isCancel()) {
-					new GenericReportPharmaceuticalStockCard("ProductLedgerWard_multi", dateFrom, dateTo, null, wardSelected, false);
+					new GenericReportPharmaceuticalStockCard("ProductLedgerWard_multi", Converters.convertToLocalDateTime(dateFrom),
+							Converters.convertToLocalDateTime(dateTo), null, wardSelected, false);
 				}
 			});
 		}
@@ -450,14 +453,12 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private CustomJDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
-			dateTo.set(Calendar.HOUR_OF_DAY, 23);
-			dateTo.set(Calendar.MINUTE, 59);
-			dateTo.set(Calendar.SECOND, 59);
-			jCalendarTo = new CustomJDateChooser(dateTo.getTime()); // Calendar
+			dateTo = dateTo.toLocalDate().atTime(23, 59, 59);
+			jCalendarTo = new CustomJDateChooser(dateTo);
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarTo.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jCalendarTo.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jCalendarTo.addPropertyChangeListener("date", propertyChangeEvent -> {
-				dateTo.setTime((Date) propertyChangeEvent.getNewValue());
+				dateTo = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
 				jTableOutcomes.setModel(new OutcomesModel());
 				jTableIncomes.setModel(new IncomesModel());
 				rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
@@ -469,14 +470,12 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private CustomJDateChooser getJCalendarFrom() {
 		if (jCalendarFrom == null) {
-			dateFrom.set(Calendar.HOUR_OF_DAY, 0);
-			dateFrom.set(Calendar.MINUTE, 0);
-			dateFrom.set(Calendar.SECOND, 0);
-			jCalendarFrom = new CustomJDateChooser(dateFrom.getTime()); // Calendar
+			dateFrom = dateFrom.toLocalDate().atStartOfDay();
+			jCalendarFrom = new CustomJDateChooser(dateFrom); // Calendar
 			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarFrom.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jCalendarFrom.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			jCalendarFrom.addPropertyChangeListener("date", propertyChangeEvent -> {
-				dateFrom.setTime((Date) propertyChangeEvent.getNewValue());
+				dateFrom = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
 				jTableOutcomes.setModel(new OutcomesModel());
 				jTableIncomes.setModel(new IncomesModel());
 				rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
@@ -571,7 +570,7 @@ public class WardPharmacy extends ModalJFrame implements
 	}
 
 	private void showLotDetail(List<MedicalWard> drug, String me) {
-		ArrayList<MedicalWard> medicalWardList = new ArrayList<>();
+		List<MedicalWard> medicalWardList = new ArrayList<>();
 		for (MedicalWard elem : drug) {
 			if (elem.getMedical().getDescription().equals(me)) {
 				if (elem.getQty() != 0.0) {
@@ -594,14 +593,12 @@ public class WardPharmacy extends ModalJFrame implements
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	private static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy"; //$NON-NLS-1$
-
 	class StockMovModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private ArrayList<MedicalWard> druglist;
+		private List<MedicalWard> druglist;
 
-		public StockMovModel(ArrayList<MedicalWard> drug) {
+		public StockMovModel(List<MedicalWard> drug) {
 			druglist = drug;
 		}
 
@@ -952,7 +949,7 @@ public class WardPharmacy extends ModalJFrame implements
 		searchButton = new JButton();
 		searchButton.setPreferredSize(new Dimension(20, 20));
 		searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-		searchButton.addActionListener(ae -> {
+		searchButton.addActionListener(actionEvent -> {
 			jComboBoxMedicals.removeAllItems();
 			List<Medical> medicals;
 			try {
@@ -968,7 +965,7 @@ public class WardPharmacy extends ModalJFrame implements
 				medicalType = (MedicalType) jComboBoxTypes.getSelectedItem();
 			}
 			if (null != medicals) {
-				ArrayList<Medical> results = getSearchMedicalsResults(searchTextField.getText(), medicals);
+				List<Medical> results = getSearchMedicalsResults(searchTextField.getText(), medicals);
 				int originalSize = medicals.size();
 				int resultsSize = results.size();
 				if (originalSize == resultsSize) {
@@ -1087,8 +1084,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JLabel getJLabelTo() {
 		if (jLabelTo == null) {
-			jLabelTo = new JLabel();
-			jLabelTo.setText(MessageBundle.getMessage("angal.common.to.txt"));
+			jLabelTo = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
 			jLabelTo.setBounds(509, 15, 45, 15);
 		}
 		return jLabelTo;
@@ -1096,8 +1092,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JLabel getJLabelFrom() {
 		if (jLabelFrom == null) {
-			jLabelFrom = new JLabel();
-			jLabelFrom.setText(MessageBundle.getMessage("angal.common.from.txt")); //$NON-NLS-1$
+			jLabelFrom = new JLabel(MessageBundle.getMessage("angal.common.from.txt")); //$NON-NLS-1$
 			jLabelFrom.setBounds(365, 14, 45, 15);
 		}
 		return jLabelFrom;
@@ -1105,8 +1100,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JLabel getJLabelWard() {
 		if (jLabelWard == null) {
-			jLabelWard = new JLabel();
-			jLabelWard.setText(MessageBundle.getMessage("angal.medicalstockward.ward")); //$NON-NLS-1$
+			jLabelWard = new JLabel(MessageBundle.getMessage("angal.medicalstockward.ward")); //$NON-NLS-1$
 			jLabelWard.setBounds(148, 18, 45, 15);
 		}
 		return jLabelWard;
@@ -1164,21 +1158,16 @@ public class WardPharmacy extends ModalJFrame implements
 							jTableDrugs.setModel(new DrugsModel());
 						} else {
 							remove(jTabbedPaneWard);
-							// jButtonEdit.setVisible(false);
 							jButtonNew.setVisible(false);
-							if (MainMenu.checkUserGrants("btnmedicalswardreport")) //$NON-NLS-1$
-							{
+							if (MainMenu.checkUserGrants("btnmedicalswardreport")) {
 								jPrintTableButton.setVisible(false);
 							}
-							if (MainMenu.checkUserGrants("btnmedicalswardexcel")) //$NON-NLS-1$
-							{
+							if (MainMenu.checkUserGrants("btnmedicalswardexcel")) {
 								jExportToExcelButton.setVisible(false);
 							}
-							if (MainMenu.checkUserGrants("btnmedicalswardrectify")) //$NON-NLS-1$
-							{
+							if (MainMenu.checkUserGrants("btnmedicalswardrectify")) {
 								jRectifyButton.setVisible(false);
 							}
-							// jButtonDelete.setVisible(false);
 							added = false;
 						}
 					}
@@ -1194,11 +1183,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 	class IncomesModel extends DefaultTableModel {
 
-		/**
-		 *
-		 */
 		private static final long serialVersionUID = 1L;
-		//private ArrayList<Movement> wardIncomes; --> Global
 
 		public IncomesModel() {
 			wardIncomes = new ArrayList<>();
@@ -1305,7 +1290,6 @@ public class WardPharmacy extends ModalJFrame implements
 	class OutcomesModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		//private ArrayList<MovementWard> wardOutcomes; --> Global
 
 		public OutcomesModel() {
 			wardOutcomes = new ArrayList<>();
@@ -1586,7 +1570,7 @@ public class WardPharmacy extends ModalJFrame implements
 						OHServiceExceptionUtil.showMessages(e, WardPharmacy.this);
 					}
 				} else if (jTabbedPaneWard.getSelectedIndex() == 2) {
-					ArrayList<String> options = new ArrayList<>();
+					List<String> options = new ArrayList<>();
 					options.add(MessageBundle.getMessage("angal.medicals.today")); //$NON-NLS-1$
 					options.add(MessageBundle.getMessage("angal.common.date.txt"));
 
@@ -1621,7 +1605,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 						if (r == JOptionPane.OK_OPTION) {
 
-							new GenericReportPharmaceuticalStockWard(dateChooser.getDate(), "PharmaceuticalStockWard", wardSelected); //$NON-NLS-1$
+							new GenericReportPharmaceuticalStockWard(dateChooser.getLocalDateTime(), "PharmaceuticalStockWard", wardSelected); //$NON-NLS-1$
 						}
 					}
 				}
@@ -1661,7 +1645,7 @@ public class WardPharmacy extends ModalJFrame implements
 					} catch (IOException exc) {
 						JOptionPane.showMessageDialog(WardPharmacy.this,
 								exc.getMessage(),
-								MessageBundle.getMessage("angal.hospital"),
+								MessageBundle.getMessage("angal.messagedialog.error.title"),
 								JOptionPane.PLAIN_MESSAGE);
 						LOGGER.info("Export to excel error : {}", exc.getMessage());
 					}
@@ -1695,8 +1679,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 			filename.append("_").append(jComboBoxMedicals.getSelectedItem());
 		}
-		filename.append("_").append(TimeTools.formatDateTime(jCalendarFrom.getDate(), "yyyyMMdd"))
-				.append("_").append(TimeTools.formatDateTime(jCalendarTo.getDate(), "yyyyMMdd"));
+		filename.append("_").append(TimeTools.formatDateTime(jCalendarFrom.getLocalDateTime(), DATE_FORMAT_YYYYMMDD))
+				.append("_").append(TimeTools.formatDateTime(jCalendarTo.getLocalDateTime(), DATE_FORMAT_YYYYMMDD));
 
 		return filename.toString();
 	}
@@ -1737,23 +1721,21 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 	}
 
-	public String formatDate(GregorianCalendar time) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy"); //$NON-NLS-1$
-		return format.format(time.getTime());
+	public String formatDate(LocalDateTime time) {
+		return time.format(DATE_TIME_FORMATTER);
 	}
 
-	public String formatDateTime(GregorianCalendar time) {
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //$NON-NLS-1$
-		return format.format(time.getTime());
+	public String formatDateTime(LocalDateTime time) {
+		return DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS).format(time);
 	}
 
-	private ArrayList<Medical> getSearchMedicalsResults(String s, List<Medical> medicalsList) {
+	private List<Medical> getSearchMedicalsResults(String s, List<Medical> medicalsList) {
 		String query = s.trim();
-		ArrayList<Medical> results = new ArrayList<>();
+		List<Medical> results = new ArrayList<>();
 		for (Medical medoc : medicalsList) {
 			if (!query.equals("")) {
 				String[] patterns = query.split(" ");
-				String code = medoc.getProd_code().toLowerCase();
+				String code = medoc.getProdCode().toLowerCase();
 				String description = medoc.getDescription().toLowerCase();
 				boolean patternFound = false;
 				for (String pattern : patterns) {

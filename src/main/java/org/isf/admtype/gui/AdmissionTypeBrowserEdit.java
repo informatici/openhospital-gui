@@ -45,7 +45,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class AdmissionTypeBrowserEdit extends JDialog{
+public class AdmissionTypeBrowserEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList admissionTypeListeners = new EventListenerList();
@@ -63,26 +63,29 @@ public class AdmissionTypeBrowserEdit extends JDialog{
     	admissionTypeListeners.remove(LaboratoryTypeListener.class, listener);
     }
 
-    private void fireAdmissionInserted(AdmissionType anAdmissionType) {
-        AWTEvent event = new AWTEvent(anAdmissionType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireAdmissionInserted(AdmissionType anAdmissionType) {
+		AWTEvent event = new AWTEvent(anAdmissionType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((LaboratoryTypeListener) listener).admissionTypeInserted(event);
-	    }
-    }
-    private void fireAdmissionUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
+		for (EventListener listener : listeners) {
+			((LaboratoryTypeListener) listener).admissionTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireAdmissionUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((LaboratoryTypeListener) listener).admissionTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = admissionTypeListeners.getListeners(LaboratoryTypeListener.class);
+		for (EventListener listener : listeners) {
+			((LaboratoryTypeListener) listener).admissionTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -101,10 +104,10 @@ public class AdmissionTypeBrowserEdit extends JDialog{
      * because we need to update them
 	 */
 	public AdmissionTypeBrowserEdit(JFrame owner, AdmissionType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		admissionType = old;//disease will be used for every operation
-		lastdescription= admissionType.getDescription();
+		admissionType = old; //admissionType will be used for every operation
+		lastdescription = admissionType.getDescription();
 		initialize();
 	}
 

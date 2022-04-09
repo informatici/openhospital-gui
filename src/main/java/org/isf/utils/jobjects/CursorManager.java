@@ -26,6 +26,7 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 class CursorManager {
@@ -40,7 +41,7 @@ class CursorManager {
 	}
 
 	private void cleanUp() {
-		if (((DispatchedEvent) dispatchedEvents.peek()).resetCursor()) {
+		if (dispatchedEvents.peek().resetCursor()) {
 			clearQueueOfInputEvents();
 		}
 	}
@@ -57,8 +58,8 @@ class CursorManager {
 		}
 	}
 
-	private ArrayList<AWTEvent> gatherNonInputEvents(EventQueue systemQueue) {
-		ArrayList<AWTEvent> events = new ArrayList<>();
+	private List<AWTEvent> gatherNonInputEvents(EventQueue systemQueue) {
+		List<AWTEvent> events = new ArrayList<>();
 		while (systemQueue.peekEvent() != null) {
 			try {
 				AWTEvent nextEvent = systemQueue.getNextEvent();
@@ -96,6 +97,7 @@ class CursorManager {
 	}
 
 	public void setCursor() {
-		((DispatchedEvent) dispatchedEvents.peek()).setCursor();
+		dispatchedEvents.peek().setCursor();
 	}
+
 }
