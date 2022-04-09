@@ -21,7 +21,7 @@
  */
 package org.isf.lab.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
 
 import java.awt.AWTEvent;
 import java.awt.Color;
@@ -235,13 +235,14 @@ public class LabEditExtended extends ModalJFrame {
 			examDateLabel.setBounds(5, 10, labelWidth, 20);
 			examDateFieldCal = getExamDateFieldCal();
 			examDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			examDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			examDateFieldCal.setBounds(labelWidth + 5, 10, 90, 20);
+			examDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS);
+			examDateFieldCal.setBounds(labelWidth + 5, 10, 150, 20);
 			//material
 			matLabel = new JLabel(MessageBundle.getMessage("angal.lab.material"));
-			matLabel.setBounds(155, 10, 150, 20);
+			matLabel.setBounds(235, 10, 150, 20);
 			matComboBox = getMatComboBox();
-			matComboBox.setBounds(225, 10, 300, 20);
+			matComboBox.setBounds(295, 10, 230, 20);
+
 			//exam combo
 			examLabel = new JLabel(MessageBundle.getMessage("angal.lab.exam"));
 			examLabel.setBounds(5, 35, labelWidth, 20);
@@ -364,10 +365,10 @@ public class LabEditExtended extends ModalJFrame {
 	private CustomJDateChooser getExamDateFieldCal() {
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDate();
-		} else { 
-			dateIn = lab.getExamDate().atStartOfDay();
+		} else {
+			dateIn = lab.getDate();
 		}
-		return (new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY));
+		return (new CustomJDateChooser(dateIn));
 	}
 	
 	private JCheckBox getInPatientCheckBox() {

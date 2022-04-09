@@ -21,7 +21,7 @@
  */
 package org.isf.operation.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -66,8 +66,6 @@ import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.toedter.calendar.JDateChooser;
 
 abstract class OperationRowBase extends JPanel {
 
@@ -133,7 +131,7 @@ abstract class OperationRowBase extends JPanel {
 		gbc_labelDate.gridy = 0;
 		panelForm.add(labelDate, gbc_labelDate);
 
-		textDate = new CustomJDateChooser();
+		textDate = getJCalendarDate();
 		GridBagConstraints gbc_textDate = new GridBagConstraints();
 		gbc_textDate.insets = new Insets(0, 0, 5, 0);
 		gbc_textDate.fill = GridBagConstraints.HORIZONTAL;
@@ -269,21 +267,21 @@ abstract class OperationRowBase extends JPanel {
 
 	abstract void addToGrid();
 
-	protected JDateChooser getJCalendarDate() {
-		if (jCalendarDate == null) {
-			jCalendarDate = new CustomJDateChooser();
-			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			jCalendarDate.setDate(new Date());
+	protected CustomJDateChooser getJCalendarDate() {
+		if (textDate == null) {
+			textDate = new CustomJDateChooser();
+			textDate.setLocale(new Locale(GeneralData.LANGUAGE));
+			textDate.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS);
+			textDate.setDate(new Date());
 		}
-		return jCalendarDate;
+		return textDate;
 	}
 
 	protected JComboBox getOperationsBox() {
 		JComboBox comboOpe = new JComboBox();
 		ArrayList<Operation> opeList = new ArrayList<>();
 		try {
-			opeList.addAll(opeManager.getOperationOpd());
+			opeList.addAll(getOperationCollection());
 		} catch (OHServiceException ex) {
 			LOGGER.error(ex.getMessage(), ex);
 		}
@@ -332,7 +330,7 @@ abstract class OperationRowBase extends JPanel {
 
 		if (opeRow != null) {
 			textDate.setDate(opeRow.getOpDate());
-			
+
 			textAreaRemark.setText(opeRow.getRemarks());
 			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
 		}

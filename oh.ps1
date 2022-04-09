@@ -2,7 +2,7 @@
 #
 #!/snap/bin/pwsh
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2022 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -29,21 +29,21 @@ Open Hospital startup script - oh.ps1
 
 .DESCRIPTION
 The script is used to setup and launch Open Hospital in PORTABLE, CLIENT  mode or with Demo data.
-It can also be used to perform some basic operation like saving or importing a database.
+It can also be used to perform some basic operations like saving or importing a database.
 
 Open Hospital CLIENT | PORTABLE
 Usage: oh.ps1 [ -lang en|fr|it|es|pt ] [default set to en]
               [ -mode PORTABLE|CLIENT ]
               [ -loglevel INFO|DEBUG ] [default set to INFO]
               [ -dicom on|off ]
-              [ -manual_config on|off ]
+              [ -generate_config on|off ]
               [ -interactive on|off ]
 
 .EXAMPLE
-./oh.ps1 -lang it -mode PORTABLE -loglevel DEBUG -dicom off -interactive off -manual_config on
+./oh.ps1 -lang it -mode PORTABLE -loglevel DEBUG -dicom off -interactive off -generate_config on
 
 .NOTES
-Developed by Informatici Senza Frontiere - 2021
+Developed by Informatici Senza Frontiere - 2022
 
 .LINK
 https://www.open-hospital.org
@@ -58,16 +58,16 @@ https://www.open-hospital.org
 # Clean all variables in IDE
 #Remove-Variable * -ErrorAction SilentlyContinue; Remove-Module *; $error.Clear();
 
-######## set minimum PowerShell version 
+######## set minimum PowerShell version
 #Requires -Version 5.1
 
 ######## command line parameters
-param ($lang, $mode, $loglevel, $dicom, $generate_config_files, $interactive)
+param ($lang, $mode, $loglevel, $dicom, $generate_config, $interactive)
 $script:OH_LANGUAGE=$lang
 $script:OH_MODE=$mode
 $script:LOG_LEVEL=$loglevel
 $script:DICOM_ENABLE=$dicom
-$script:GENERATE_CONFIG_FILES=$generate_config_files
+$script:GENERATE_CONFIG_FILES=$generate_config
 $script:INTERACTIVE_MODE=$interactive
 
 ######## get script info
@@ -121,7 +121,7 @@ $script:DICOM_ENABLE="on"
 # set log level to INFO | DEBUG - default set to INFO
 #$script:LOG_LEVEL="INFO"
 
-# set JAVA_BIN 
+# set JAVA_BIN
 # Uncomment this if you want to use system wide JAVA
 #$script:JAVA_BIN="C:\Program Files\JAVA\bin\java.exe"
 
@@ -162,9 +162,14 @@ $script:EXT="zip"
 $script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
 # available languages - do not modify
-$script:languagearray= @("en","fr","it","es","pt") 
+$script:languagearray= @("en","fr","it","es","pt")
 
 ############## Architecture and external software ##############
+
+######## MySQL/MariaDB Software
+# MariaDB version
+$script:MYSQL_VERSION="10.2.43"
+$script:MYSQL32_VERSION="10.2.41"
 
 ######## define architecture
 $script:ARCH=$env:PROCESSOR_ARCHITECTURE
@@ -180,6 +185,7 @@ if ($64archarray -contains "$ARCH") {
 elseif ($32archarray -contains "$ARCH") {
 	$script:JAVA_ARCH=32;
 	$script:MYSQL_ARCH=32;
+	$script:MYSQL_VERSION=$script:MYSQL32_VERSION;
 	$script:JAVA_PACKAGE_ARCH="i686";
 }
 else {
@@ -189,7 +195,7 @@ else {
 
 # workaround to force 32bit JAVA in order to have DICOM working on 64bit arch
 if ( $DICOM_ENABLE -eq "on" ) {
-	Write-Host "DICOM_ENABLE=on, forcing JAVA architecture to 32bit" 
+	Write-Host "DICOM_ENABLE=on, forcing JAVA architecture to 32bit"
 	$script:JAVA_ARCH=32;
 	$script:JAVA_PACKAGE_ARCH="i686";
 	#$script:MYSQL_ARCH=32;
@@ -197,7 +203,6 @@ if ( $DICOM_ENABLE -eq "on" ) {
 
 ######## MySQL/MariaDB Software
 # MariaDB
-$script:MYSQL_VERSION="10.2.41"
 $script:MYSQL_URL="https://archive.mariadb.org/mariadb-$script:MYSQL_VERSION/win$script:MYSQL_ARCH-packages/"
 $script:MYSQL_DIR="mariadb-$script:MYSQL_VERSION-win$script:MYSQL_ARCH"
 # MySQL
@@ -212,11 +217,11 @@ $script:MYSQL_DIR="mariadb-$script:MYSQL_VERSION-win$script:MYSQL_ARCH"
 #$script:JAVA_DIR="jdk-11.0.11+9-jre"
 
 ### JRE 11 - zulu
-#$script:JAVA_DISTRO="zulu11.50.19-ca-fx-jre11.0.12-win_$JAVA_PACKAGE_ARCH"
+#$script:JAVA_DISTRO="zulu11.52.13-ca-fx-jre11.0.13-win_$JAVA_PACKAGE_ARCH"
 #$script:JAVA_URL="https://cdn.azul.com/zulu/bin/"
 
 ### JRE 8 - zulu
-$script:JAVA_DISTRO="zulu8.58.0.13-ca-fx-jdk8.0.312-win_$JAVA_PACKAGE_ARCH"
+$script:JAVA_DISTRO="zulu8.60.0.21-ca-jre8.0.322-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin/"
 $script:JAVA_DIR=$JAVA_DISTRO
 
@@ -241,7 +246,7 @@ function script_menu {
 	Write-Host "               [ -mode PORTABLE|CLIENT ]"
 	Write-Host "               [ -loglevel INFO|DEBUG ] "
 	Write-Host "               [ -dicom on|off ] "
-	Write-Host "               [ -manual_config on|off ] "
+	Write-Host "               [ -generate_config on|off ] "
 	Write-Host "               [ -interactive on|off ] "
 	Write-Host ""
 	Write-Host "   C    start OH in CLIENT mode (client / server configuration)"
@@ -291,7 +296,7 @@ function set_defaults {
 	if ( [string]::IsNullOrEmpty($LOG_LEVEL) ) {
 		$script:LOG_LEVEL="INFO"
 	}
-	
+
 	# demo data - set default to off
 	if ( [string]::IsNullOrEmpty($DEMO_DATA) ) {
 		$script:DEMO_DATA="off"
@@ -354,7 +359,7 @@ function java_lib_setup {
 	ForEach( $n in $jarlist ){
 		$script:OH_CLASSPATH="$n;$OH_CLASSPATH"
 	}
-	
+
 	# include all needed directories
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\bundle\"
 	$script:OH_CLASSPATH="$OH_CLASSPATH;$OH_PATH\$OH_DIR\rpt\"
@@ -382,13 +387,17 @@ function download_file ($download_url,$download_file){
 }
 
 function java_check {
-	if ( !( $JAVA_BIN ) ) {
+	# check if JAVA_BIN is already set and it exists
+	if ( !( $JAVA_BIN ) -or !(Test-Path $JAVA_BIN -PathType Leaf ) ) {
+        	# set default
+        	Write-Host "Setting default JAVA..."
 		$script:JAVA_BIN="$OH_PATH\$JAVA_DIR\bin\java.exe"
 	}
 
-	if ( !(Test-Path $JAVA_BIN) ) {
-        	if ( !(Test-Path "$OH_PATH\$JAVA_DISTRO.$EXT") ) {
-			Write-Host "Warning - JAVA_BIN not set or JAVA not found. Do you want to download it?" -ForegroundColor Yellow
+	# if JAVA_BIN is not found download JRE
+	if ( !(Test-Path $JAVA_BIN  -PathType Leaf ) ) {
+        	if ( !(Test-Path "$OH_PATH\$JAVA_DISTRO.$EXT" -PathType Leaf ) ) {
+			Write-Host "Warning - JAVA not found. Do you want to download it?" -ForegroundColor Yellow
 			get_confirmation;
 			# Download java binaries
 			download_file "$JAVA_URL" "$JAVA_DISTRO.$EXT"
@@ -402,14 +411,8 @@ function java_check {
 			Read-Host; exit 1
 		}
 		Write-Host "Java unpacked successfully!"
-		# check for java binary
-		if ( Test-Path "$OH_PATH\$JAVA_DIR\bin\java.exe" ) {
-			$script:JAVA_BIN="$OH_PATH\$JAVA_DIR\bin\java.exe"
-		}
-		else {
-			Write-Host "Error: JAVA not found! Please download it or set JAVA_BIN in the script. Exiting." -ForegroundColor Red
-			Read-Host; exit 1
-		}
+        	Write-Host "Removing downloaded file..."
+        	Write-Host "Done!"
 	}
 	Write-Host "JAVA found!"
 	Write-Host "Using $JAVA_BIN"
@@ -417,11 +420,11 @@ function java_check {
 
 function mysql_check {
 	if (  !(Test-Path "$OH_PATH\$MYSQL_DIR") ) {
-		if ( !(Test-Path "$OH_PATH\$MYSQL_DIR.$EXT") ) {
+		if ( !(Test-Path "$OH_PATH\$MYSQL_DIR.$EXT" -PathType Leaf) ) {
 			Write-Host "Warning - MariaDB/MySQL not found. Do you want to download it?" -ForegroundColor Yellow
 			get_confirmation;
 			# Downloading mysql binary
-			download_file "$MYSQL_URL" "$MYSQL_DIR.$EXT" 
+			download_file "$MYSQL_URL" "$MYSQL_DIR.$EXT"
 		}
 		Write-Host "Unpacking $MYSQL_DIR..."
 		try {
@@ -433,8 +436,8 @@ function mysql_check {
 		}
 	        Write-Host "MySQL unpacked successfully!"
 	}
-	# check for mysql binary
-	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe") {
+	# check for mysqld binary
+	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -PathType Leaf) {
         	Write-Host "MySQL found!"
 		Write-Host "Using $MYSQL_DIR"
 	}
@@ -464,7 +467,7 @@ function config_database {
 
 		### windows 7/10 ###
 		do {
-			$socktest = (New-Object System.Net.Sockets.TcpClient).ConnectAsync("$MYSQL_SERVER", $MYSQL_PORT).Wait(1000) 
+			$socktest = (New-Object System.Net.Sockets.TcpClient).ConnectAsync("$MYSQL_SERVER", $MYSQL_PORT).Wait(1000)
 			Write-Host "Testing TCP port $MYSQL_PORT...."
 			$script:MYSQL_PORT++
 		}
@@ -503,7 +506,7 @@ function initialize_database {
 		}
 		"mysql" {
 			try {
-				Start-Process "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--initialize-insecure --basedir=`"$OH_PATH\$MYSQL_DIR`" --datadir=`"$OH_PATH\$DATA_DIR`" ") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"; 
+				Start-Process "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--initialize-insecure --basedir=`"$OH_PATH\$MYSQL_DIR`" --datadir=`"$OH_PATH\$DATA_DIR`" ") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR";
 			}
 			catch {
 				Write-Host "Error: MySQL initialization failed! Exiting." -ForegroundColor Red
@@ -555,7 +558,7 @@ function set_database_root_pw {
 function import_database {
 	Write-Host "Creating OH Database..."
 	# create OH database and user
-	
+
     $SQLCOMMAND=@"
     -u root -p$MYSQL_ROOT_PW -h $MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp -e "CREATE DATABASE $DATABASE_NAME; CREATE USER '$DATABASE_USER'@'localhost' IDENTIFIED BY '$DATABASE_PASSWORD'; CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'localhost'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%';"
 "@
@@ -579,7 +582,7 @@ function import_database {
 
 	# create OH database structure
 	Write-Host "Importing database schema..."
-	
+
 	cd "./$SQL_DIR"
 
     $SQLCOMMAND=@"
@@ -602,11 +605,11 @@ function dump_database {
 	# save OH database if existing
 	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqldump.exe") {
 		[System.IO.Directory]::CreateDirectory("$OH_PATH/$BACKUP_DIR") > $null
-		Write-Host "Dumping MySQL database..."	
+		Write-Host "Dumping MySQL database..."
         $SQLCOMMAND=@"
     --skip-extended-insert -u root --password=$MYSQL_ROOT_PW -h $MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp $DATABASE_NAME
 "@
-	Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqldump.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$OH_PATH\$BACKUP_DIR\mysqldump_$DATE.sql" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"	
+	Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqldump.exe" -ArgumentList ("$SQLCOMMAND") -Wait -NoNewWindow -RedirectStandardOutput "$OH_PATH\$BACKUP_DIR\mysqldump_$DATE.sql" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 	}
 	else {
 		Write-Host "Error: No mysqldump utility found! Exiting." -ForegroundColor Red
@@ -614,7 +617,7 @@ function dump_database {
 		cd "$CURRENT_DIR"
 		Read-Host; exit 2
 	}
-	Write-Host "MySQL dump file $BACKUP_DIR\mysqldump_$DATE.sql completed!" -ForegroundColor Green
+	Write-Host "MySQL dump file $BACKUP_DIR/mysqldump_$DATE.sql completed!" -ForegroundColor Green
 }
 
 function shutdown_database {
@@ -648,20 +651,21 @@ function clean_database {
 
 function test_database_connection {
 	# test if mysql client is available
-	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysql.exe") {
+	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -PathType Leaf) {
 		# test connection to the OH MySQL database
 		Write-Host "Testing database connection..."
 		try {
 			Start-Process -FilePath ("$OH_PATH\$MYSQL_DIR\bin\mysql.exe") -ArgumentList ("--user=$DATABASE_USER --password=$DATABASE_PASSWORD --host=$MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp -e $([char]34)USE $DATABASE_NAME$([char]34) " ) -Wait -NoNewWindow
-			Write-Host "Database connection successfully established!"
 		}
 		catch {
 			Write-Host "Error: can't connect to database! Exiting." -ForegroundColor Red
 			Read-Host; exit 2
 		}
+		# temporary disabled - catch not working
+		# Write-Host "Database connection successfully established!"
 	}
 	else {
-		Write-Host "Can't test database connection..." 
+		Write-Host "Can't test database connection..."
 	}
 }
 
@@ -692,7 +696,7 @@ function generate_config_files {
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("LOG_DEST","../$LOG_DIR/$OH_LOG_FILE") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
 	}
 
-	######## database.properties setup 
+	######## database.properties setup
 	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/database.properties") ) {
 		Write-Host "Generating OH configuration file -> database.properties..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties.dist").replace("DBSERVER","$MYSQL_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
@@ -712,6 +716,7 @@ function generate_config_files {
 	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties") ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties") { mv -Force $OH_PATH/$OH_DIR/rsc/settings.properties $OH_PATH/$OH_DIR/rsc/settings.properties.old }
 		Write-Host "Generating OH configuration file -> settings.properties..."
+#		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("LANGUAGE=en","LANGUAGE=$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 		# set DOC_DIR in OH config file
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
@@ -727,7 +732,7 @@ function clean_files {
 	get_confirmation;
 	Write-Host "Removing log files..."
 	$filetodel="$OH_PATH\$LOG_DIR\*"; if (Test-Path $filetodel) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	
+
 	# remove all configuration files - leave only .dist files
 	Write-Host "Warning: do you want to remove all existing configuration files ?" -ForegroundColor Red
 	get_confirmation;
@@ -784,11 +789,11 @@ if ( $INTERACTIVE_MODE -eq "on") {
 	"P"	{ # start in PORTABLE mode
 		$script:OH_MODE="PORTABLE"
 	}
-	"d"	{ # debug 
+	"d"	{ # debug
 		$script:LOG_LEVEL="DEBUG"
 		Write-Host "Log level set to $LOG_LEVEL"
 	}
-	"D"	{ # demo mode 
+	"D"	{ # demo mode
 		Write-Host "Starting Open Hospital with Demo data..."
 		# exit if OH is configured in CLIENT mode
 		if ( $OH_MODE -eq "CLIENT" ) {
@@ -806,7 +811,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Read-Host;
 		exit 0;
 	}
-	"G"	{ # set up GSM 
+	"G"	{ # set up GSM
 		Write-Host "Setting up GSM..."
 		java_check;
 		java_lib_setup;
@@ -839,74 +844,76 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host "Done!"
 		exit 0
 	}
-	"l"	{ # set language 
+	"l"	{ # set language
 		$script:OH_LANGUAGE = Read-Host "Select language: en|fr|es|it|pt (default is en)"
 		set_language;
+		$script:GENERATE_CONFIG_FILES="on"
 	}
-	"s"	{ # save database 
+	"s"	{ # save database
+		# check if mysql utilities exist
+		mysql_check;
 		# check if portable mode is on
-
 		if ( $OH_MODE -eq "PORTABLE" ) {
 			# check if database already exists
 			if (Test-Path "$OH_PATH\$DATA_DIR\$DATABASE_NAME") {
-				mysql_check;
 				config_database;
+				start_database;
 			}
 			else {
 		        	Write-Host "Error: no data found! Exiting." -ForegroundColor Red
 				Read-Host; exit 1
 			}
-			start_database;
-			Write-Host "Saving Open Hospital database..."
-			dump_database;
-			shutdown_database;
-			Write-Host "Done!"
-			Read-Host;
-			exit 0
 		}
-		# dump remote database for CLIENT mode configuration
 		test_database_connection;
 		Write-Host "Saving Open Hospital database..."
 		dump_database;
+		if ( $OH_MODE -eq "PORTABLE" ) {
+			shutdown_database;
+		}
 		Write-Host "Done!"
-                exit 0
+		Read-Host;
+		exit 0
 	}
 	"r"	{ # restore
 	       	Write-Host "Restoring Open Hospital database...."
 		# ask user for database to restore
-		$DB_CREATE_SQL = Read-Host -Prompt "Enter SQL dump/backup file that you want to restore - (in $script:BACKUP_DIR subdirectory) -> "
-		if (Test-Path "$OH_PATH\$SQL_DIR\$DB_CREATE_SQL") {
-			Write-Host "Found $SQL_DIR\$DB_CREATE_SQL, restoring it..."
-			# reset database if exists
-			clean_database;
-			mysql_check;
-			config_database;
-			initialize_dir_structure;
-			initialize_database;
-			start_database;	
-			set_database_root_pw;
-			import_database;
-			shutdown_database;
-			Write-Host "Done!"
-			exit 0
-		}
-		else {
+		$DB_CREATE_SQL = Read-Host -Prompt "Enter SQL dump/backup file that you want to restore - (in $script:SQL_DIR subdirectory) -> "
+		if ( !(Test-Path "$OH_PATH\$SQL_DIR\$DB_CREATE_SQL")) {
 			Write-Host "Error: No SQL file found! Exiting." -ForegroundColor Red
 			Read-Host; exit 2
 		}
+		else {
+			Write-Host "Found $SQL_DIR/$DB_CREATE_SQL, restoring it..."
+			# check if mysql utilities exist
+			mysql_check;
+			if ( $OH_MODE -eq "PORTABLE" ) {
+				# reset database if exists
+				clean_database;
+				config_database;
+				initialize_dir_structure;
+				initialize_database;
+				start_database;
+				set_database_root_pw;
+			}
+			import_database;
+			}
+		if ( $OH_MODE -eq "PORTABLE" ) {
+			shutdown_database;
+		}
+		Write-Host "Done!"
         	Read-Host; exit 0
 	}
-	"t"	{ # test database connection 
+	"t"	{ # test database connection
 		if ( !($OH_MODE -eq "CLIENT") ) {
 			Write-Host "Error: Only for CLIENT mode. Exiting." -ForegroundColor Red
 			Read-Host; exit 1
 		}
+		mysql_check;
 		test_database_connection;
 		Read-Host; exit 0
 	}
 	"v"	{ # show version
         	Write-Host "--------- Software version ---------"
-	
 		Get-Content $OH_PATH\$OH_DIR\rsc\version.properties | Where-Object {$_.length -gt 0} | Where-Object {!$_.StartsWith("#")} | ForEach-Object {
 		$var = $_.Split('=',2).Trim()
 		New-Variable -Scope Script -Name $var[0] -Value $var[1]
@@ -915,25 +922,28 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host "MySQL version: $MYSQL_DIR"
 		Write-Host "JAVA version: $JAVA_DISTRO"
 		Write-Host ""
-
 		# show configuration
  		Write-Host "--------- Script Configuration ---------"
  		Write-Host "Architecture is $ARCH"
  		Write-Host "Config file generation is set to $GENERATE_CONFIG_FILES"
+		Write-Host ""
  		Write-Host "--------- OH Configuration ---------"
  		Write-Host "Open Hospital is configured in $OH_MODE mode"
 		Write-Host "Language is set to $OH_LANGUAGE"
 		Write-Host "Demo data is set to $DEMO_DATA"
 		Write-Host "Log level is set to $LOG_LEVEL"
+		Write-Host ""
 		Write-Host "--- Database ---"
 		Write-Host "MYSQL_SERVER=$MYSQL_SERVER"
 		Write-Host "MYSQL_PORT=$MYSQL_PORT"
 		Write-Host "DATABASE_NAME=$DATABASE_NAME"
 		Write-Host "DATABASE_USER=$DATABASE_USER"
+		Write-Host ""
 		Write-Host "--- Dicom ---"
 		Write-Host "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
 		Write-Host "DICOM_STORAGE=$DICOM_STORAGE"
 		Write-Host "DICOM_DIR=$DICOM_DIR"
+		Write-Host ""
 		Write-Host "--- OH Folders ---"
 		Write-Host "OH_DIR=$OH_DIR"
 		Write-Host "OH_DOC_DIR=$OH_DOC_DIR"
@@ -945,12 +955,13 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host "SQL_DIR=$SQL_DIR"
 		Write-Host "SQL_EXTRA_DIR=$SQL_EXTRA_DIR"
 		Write-Host "TMP_DIR=$TMP_DIR"
+		Write-Host ""
 		Write-Host "--- Logging ---"
 		Write-Host "LOG_FILE=$LOG_FILE"
 		Write-Host "LOG_FILE_ERR=$LOG_FILE_ERR"
 		Write-Host "OH_LOG_FILE=$OH_LOG_FILE"
 		Write-Host ""
-	
+
 		Read-Host;
 		exit 0
 	}
@@ -963,10 +974,10 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		exit 0
 	}
 	"q"	{ # quit
-		exit 0; 
+		exit 0;
 	}
 #		default { Write-Host "Invalid option: $opt. Exiting."; exit 1; }
-#		-> default is set to start with OH 
+#		-> default is set to start with OH
 	}
 }
 
@@ -974,7 +985,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 
 Write-Host "Interactive mode is set to $script:INTERACTIVE_MODE"
 
-# check mode 
+# check mode
 if ( !( $OH_MODE -eq "PORTABLE" ) -And !( $OH_MODE -eq "CLIENT" ) ) {
 	Write-Host "Error - OH_MODE not defined [CLIENT - PORTABLE]! Exiting." -ForegroundColor Red
 	Read-Host;
@@ -986,11 +997,10 @@ if ( $DEMO_DATA -eq "on" ) {
 	# exit if OH is configured in Client mode
 	if (( $OH_MODE -eq "CLIENT" )) {
 		Write-Host "Error - OH_MODE is set to CLIENT mode. Cannot run with Demo data, exiting." -ForeGroundcolor Red
-		Read-Host; 
+		Read-Host;
 		exit 1
-		else { $script:OH_MODE="PORTABLE" }
 	}
-	
+
 	# reset database if exists
 	clean_database;
 
@@ -1028,9 +1038,7 @@ if ( $OH_MODE -eq "PORTABLE" ) {
 	# check for MySQL software
 	mysql_check;
 	# config MySQL
-	if ( $MANUAL_CONFIG -ne "on" ) {
-		config_database;
-	}
+	config_database;
 	# check if OH database already exists
 	if ( !(Test-Path "$OH_PATH\$DATA_DIR\$DATABASE_NAME") ) {
 		Write-Host "OH database not found, starting from scratch..."

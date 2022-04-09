@@ -21,6 +21,7 @@
  */
 package org.isf.stat.reportlauncher.gui;
 
+import static org.isf.utils.Constants.DATE_FORMATTER;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.BorderLayout;
@@ -29,7 +30,6 @@ import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -228,7 +228,7 @@ public class ReportLauncher extends ModalJFrame{
 		if (jMonthPanel == null) {
 
 			jMonthPanel = new JPanel(new FlowLayout());
-			
+
 			LocalDate now = LocalDate.now();
 			int month = now.getMonthValue();
 			int year = now.getYear();
@@ -372,16 +372,14 @@ public class ReportLauncher extends ModalJFrame{
 				}
 			}
 			if (sParType.equalsIgnoreCase("twodatesfrommonthyear")) {
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
-
 				LocalDate now = LocalDate.now();
 				now = now.withDayOfMonth(1);
 				now = now.withMonth(month);
 				now = now.withYear(year);
-				fromDate = formatter.format(now);
+				fromDate = now.format(DATE_FORMATTER);
 
 				now = now.withDayOfMonth(now.lengthOfMonth());
-				toDate = formatter.format(now);
+				toDate = now.format(DATE_FORMATTER);
 
 				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {

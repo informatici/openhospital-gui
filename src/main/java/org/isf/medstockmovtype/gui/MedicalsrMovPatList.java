@@ -95,4 +95,8 @@ public class MedicalsrMovPatList extends JPanel {
 		return drugsData;
 	}
 
+	public JTable getJTable() {
+		return jTableData;
+	}
+
 }

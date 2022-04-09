@@ -303,7 +303,7 @@ public class OperationList extends JPanel implements OperationRowListener, Opera
 		}
 	}
 
-	private JTable getjTableData() {
+	public JTable getjTableData() {
 		return jTableData;
 	}
 

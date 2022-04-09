@@ -24,6 +24,7 @@ package org.isf.admission.gui;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -1165,7 +1166,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				dateIn = RememberDates.getLastAdmInDate();
 			}
-			dateInFieldCal = new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY); // Calendar
+			dateInFieldCal = new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY_HH_MM_SS); // Calendar
 			dateInFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateInFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			dateInFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {
@@ -1532,7 +1533,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getDisDate() != null) {
 				dateOut = admission.getDisDate();
 			}
-			dateOutFieldCal = new CustomJDateChooser(editing ? dateOut : null, DATE_FORMAT_DD_MM_YY);
+			dateOutFieldCal = new CustomJDateChooser(editing ? dateOut : null, DATE_FORMAT_DD_MM_YY_HH_MM_SS);
 			dateOutFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			dateOutFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			dateOutFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> updateBedDays());

@@ -21,8 +21,8 @@
  */
 package org.isf.patvac.gui;
 
+import static org.isf.utils.Constants.DATE_FORMATTER;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -32,7 +32,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -84,8 +83,6 @@ import org.isf.vactype.model.VaccineType;
 public class PatVacBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
 
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
@@ -290,7 +287,7 @@ public class PatVacBrowser extends ModalJFrame {
 				selectedrow = jTable.getSelectedRow();
 				patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
 				int answer = MessageDialog.yesNo(null, "angal.patvac.deletepatientvaccine.fmt.msg",
-						dateFormat.format(patientVaccine.getVaccineDate()),
+						patientVaccine.getVaccineDate().format(DATE_FORMATTER),
 						patientVaccine.getVaccine().getDescription(),
 						patientVaccine.getPatName());
 
@@ -855,7 +852,7 @@ public class PatVacBrowser extends ModalJFrame {
 			if (c == -1) {
 				return patVac;
 			} else if (getNumber(c) == 0) {
-				return dateFormat.format(patVac.getVaccineDate());
+				return patVac.getVaccineDate().format(DATE_FORMATTER);
 			} else if (getNumber(c) == 1) {
 				return patVac.getPatient().getName();
 			} else if (getNumber(c) == 2) {

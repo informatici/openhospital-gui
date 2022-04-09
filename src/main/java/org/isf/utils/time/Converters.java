@@ -25,8 +25,10 @@ import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD;
 import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -141,4 +143,13 @@ public class Converters {
     public static LocalDateTime convertToLocalDateTime(Calendar gregorianCalendar) {
         return convertToLocalDateTime(toDate((GregorianCalendar) gregorianCalendar));
     }
+
+    public static LocalDate parseStringToLocalDate(String dateStr, String dateFormat) {
+        return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(dateFormat));
+    }
+
+    public static LocalDateTime parseStringToLocalDateTime(String dateStr, String dateFormat) {
+        return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern(dateFormat));
+    }
+
 }

@@ -216,7 +216,6 @@ public class InsertVisit extends JDialog implements SelectionListener {
 			}
 
 			wardBox = getWardBox();
-
 		}
 
 		wardPanel.add(wardBox);

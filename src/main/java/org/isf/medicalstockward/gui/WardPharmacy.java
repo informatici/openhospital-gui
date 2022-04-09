@@ -25,6 +25,7 @@ import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
 import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -1721,7 +1722,7 @@ public class WardPharmacy extends ModalJFrame implements
 	}
 
 	public String formatDate(LocalDateTime time) {
-		return DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY).format(time);
+		return time.format(DATE_TIME_FORMATTER);
 	}
 
 	public String formatDateTime(LocalDateTime time) {

@@ -22,16 +22,14 @@
 package org.isf.lab.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -68,6 +66,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoDateTextField;
+import org.isf.utils.time.Converters;
 
 /**
  * ------------------------------------------
@@ -96,8 +95,6 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 		filterButton.doClick();
 	}
 
-	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
-
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton buttonEdit = null;
@@ -118,7 +115,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			MessageBundle.getMessage("angal.common.result.txt").toUpperCase()
 	};
 	private boolean[] columnsResizable = {false, true, true, false};
-	private int[] pColumnWidth = {100, 200, 200, 200};
+	private int[] pColumnWidth = {150, 200, 200, 200};
 	private int[] maxWidth = {150, 200, 200, 200};
 	private boolean[] columnsVisible = { true, GeneralData.LABEXTENDED, true, true};
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
@@ -221,7 +218,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 				try {
 					List<LaboratoryForPrint> labs;
-					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getLocalDate(), dateTo.getLocalDate());
+					labs = labManager.getLaboratoryForPrint(typeSelected, Converters.convertToLocalDateTime(dateFrom.getDate()), Converters.convertToLocalDateTime(dateTo.getDate()));
 					if (!labs.isEmpty()) {
 						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 					}
@@ -345,8 +342,8 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 				} else {
 					Laboratory lab = (Laboratory) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(LabBrowser.this, "angal.lab.deletelabexam.fmt.msg",
-							dateFormat.format(lab.getDate()),
-							dateFormat.format(lab.getExamDate()),
+							lab.getCreatedDate().format(DATE_TIME_FORMATTER),
+							lab.getDate().format(DATE_TIME_FORMATTER),
 							lab.getExam(),
 							lab.getPatName(),
 							lab.getResult());
@@ -551,7 +548,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 		public LabBrowsingModel(String exam, LocalDate dateFrom, LocalDate dateTo) {
 			try {
-				pLabs = manager.getLaboratory(exam, dateFrom, dateTo);
+				pLabs = manager.getLaboratory(exam, dateFrom.atStartOfDay(), dateTo.atStartOfDay());
 			} catch (OHServiceException e) {
 				pLabs = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
@@ -596,7 +593,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			if (c == -1) {
 				return lab;
 			} else if (c == 0) {
-				return dateFormat.format(lab.getExamDate());
+				return lab.getDate().format(DATE_TIME_FORMATTER);
 			} else if (c == 1) {
 				return lab.getPatName();
 			} else if (c == 2) {

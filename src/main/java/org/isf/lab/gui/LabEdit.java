@@ -21,11 +21,12 @@
  */
 package org.isf.lab.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
 
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -236,13 +237,13 @@ public class LabEdit extends ModalJFrame {
 			examDateLabel.setBounds(5, 10, labelWidth, 20);
 			examDateFieldCal = getExamDateFieldCal();
 			examDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			examDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			examDateFieldCal.setBounds(labelWidth+5, 10, 90, 20);
+			examDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS);
+			examDateFieldCal.setBounds(labelWidth+5, 10, 150, 20);
 			//material
 			matLabel = new JLabel(MessageBundle.getMessage("angal.lab.material"));
-			matLabel.setBounds(175, 10, 160, 20);
+			matLabel.setBounds(235, 10, 150, 20);
 			matComboBox= getMatComboBox();
-			matComboBox.setBounds(255, 10, 270, 20);
+			matComboBox.setBounds(295, 10, 230, 20);
 
 			//exam combo
 			examLabel = new JLabel(MessageBundle.getMessage("angal.lab.exam"));
@@ -321,12 +322,12 @@ public class LabEdit extends ModalJFrame {
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDate();
 		} else { 
-			dateIn = lab.getExamDate().atStartOfDay();
+			dateIn = lab.getDate();
 		}
 		if (dateIn != null) {
 			myDate = dateIn;
 		}
-		return (new CustomJDateChooser(myDate, DATE_FORMAT_DD_MM_YY));
+		return (new CustomJDateChooser(myDate));
 	}
 	
 	private JCheckBox getInPatientCheckBox() {
@@ -550,8 +551,8 @@ public class LabEdit extends ModalJFrame {
 				List<String> labRow = new ArrayList<>();
 				RememberDates.setLastLabExamDate(examDate);
 
-				lab.setDate(LocalDateTime.now());
-				lab.setExamDate(examDate.toLocalDate());
+				lab.setDate(examDate);
+				lab.setExamDate(LocalDate.now());
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
 				lab.setNote(noteTextArea.getText());

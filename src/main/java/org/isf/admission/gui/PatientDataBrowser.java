@@ -21,6 +21,7 @@
  */
 package org.isf.admission.gui;
 
+import static org.isf.utils.Constants.DATE_FORMATTER;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
 
 import java.awt.AWTEvent;
@@ -29,7 +30,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -471,17 +471,15 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			
 			} else if (column == 0) {
 				if (row < admList.size()) {
-					
-					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YY);
+
 					LocalDateTime myDate = admList.get(row).getAdmDate();
-					return dateFormat.format(myDate);
+					return myDate.format(DATE_FORMATTER);
 					
 				} else {
 					
 					int z = row - admList.size();
-					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_DD_MM_YY);
 					LocalDate myDate = opdList.get(z).getVisitDate();
-					return dateFormat.format(myDate);
+					return myDate.format(DATE_FORMATTER);
 				}
 				
 			} else if (column == 1) {				
@@ -544,7 +542,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				
 			}  else if (column == 4) {
 				if (row < admList.size()) {
-					if (admList.get(row).getDisDate()==null) {
+					if (admList.get(row).getDisDate() == null) {
 						return MessageBundle.getMessage("angal.admission.present.txt");
 					} else {
 						return admList.get(row).getDisDate();

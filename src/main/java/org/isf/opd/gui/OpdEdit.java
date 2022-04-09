@@ -451,7 +451,7 @@ public class OpdEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 						boolean result;
-						LocalDate gregDate = LocalDate.now();
+						LocalDate visitDate = LocalDate.now();
 						char newPatient;
 						String referralTo;
 						String referralFrom;
@@ -497,7 +497,7 @@ public class OpdEdit extends JDialog {
 						} else {
 							try {
 								LocalDateTime myDate = LocalDate.parse(d, currentDateFormat).atStartOfDay();
-								gregDate = myDate.toLocalDate();
+								visitDate = myDate.toLocalDate();
 							} catch (DateTimeParseException dateTimeParseException) {
 								MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertavalidattendancedate.msg");
 								return;
@@ -518,7 +518,8 @@ public class OpdEdit extends JDialog {
 						opd.setDisease(disease);
 						opd.setDisease2(disease2);
 						opd.setDisease3(disease3);
-						opd.setVisitDate(gregDate);
+						opd.setVisitDate(visitDate);
+						opd.setDate(visitDate.atStartOfDay());
 						opd.setNote("");
 						opd.setUserID(UserBrowsingManager.getCurrentUser());
 
@@ -528,7 +529,7 @@ public class OpdEdit extends JDialog {
 								opd.setProgYear(opdManager.getProgYear(date.get(Calendar.YEAR)) + 1);
 
 								// remember for later use
-								RememberDates.setLastOpdVisitDate(gregDate.atStartOfDay());
+								RememberDates.setLastOpdVisitDate(visitDate.atStartOfDay());
 
 								result = opdManager.newOpd(opd);
 								if (result) {
@@ -908,7 +909,7 @@ public class OpdEdit extends JDialog {
 					dateIn = RememberDates.getLastOpdVisitDate();
 				}
 			} else {
-				dateIn = opd.getVisitDate().atStartOfDay();
+				dateIn = opd.getDate();
 			}
 			
 			d = currentDateFormat.format(dateIn);

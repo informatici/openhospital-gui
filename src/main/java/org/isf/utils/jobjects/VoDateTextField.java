@@ -21,6 +21,7 @@
  */
 package org.isf.utils.jobjects;
 
+import static org.isf.utils.Constants.DATE_FORMATTER;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 import static org.isf.utils.Constants.DATE_FORMAT_MM_DD_YY;
@@ -30,7 +31,6 @@ import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -226,11 +226,11 @@ public class VoDateTextField extends JTextField {
 	}
 
 	public void setDate(LocalDate date) {
-		currentDate = date.format(DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY));
+		currentDate = date.format(DATE_FORMATTER);
 	}
 
 	private String getConvertedString(LocalDate date) {
-		return date.format(DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY));
+		return date.format(DATE_FORMATTER);
 	}
 
 }

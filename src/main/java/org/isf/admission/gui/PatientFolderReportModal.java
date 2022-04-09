@@ -73,15 +73,30 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JPanel allPanel;
 	private JCheckBox allCheck;
 	private JPanel labelPanel;
-	private LocalDate date;
-	
-	public PatientFolderReportModal(JFrame parent, Integer code, LocalDate olderDate) {
+	private LocalDate fromDate;
+	private LocalDate toDate;
+	private String selectedReport;
+
+	public PatientFolderReportModal(JFrame parent, Integer code, LocalDate fromDate, LocalDate toDate, String selectedReport) {
 		this.parent = parent;
 		this.patId = code;
-		this.date = olderDate;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.selectedReport = selectedReport.toUpperCase();
+		switch(this.selectedReport) {
+			case "ADMISSION":
+			case "OPD":
+			case "LABORATORY":
+			case "OPERATION":
+			case "DRUGS":
+			case "EXAMINATION":
+				break;  // valid values
+			default:
+				this.selectedReport = "ALL";
+			}
 		initialize();
 	}
-	
+
 	private void initialize() {
 		this.setLayout(new BorderLayout());
 		this.add(getJContentPane(), BorderLayout.CENTER);
@@ -242,8 +257,9 @@ public class PatientFolderReportModal extends ModalJFrame {
 			allPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
 			allPanel.setAlignmentY(LEFT_ALIGNMENT);
 			allCheck = new JCheckBox();
-
-			allCheck.setSelected(true);
+            if ("ALL".equals(selectedReport)) {
+                allCheck.setSelected(true);
+			}
 			allPanel.add(allCheck);
 			allPanel.add(new JLabel(MessageBundle.getMessage("angal.common.all.txt").toUpperCase()), BorderLayout.CENTER);
 			allCheck.addActionListener(actionEvent -> {
@@ -261,9 +277,10 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JPanel getPanelExamination() {
 		if (examinationPanel == null) {
 			examinationPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
-			
 			examinationCheck = new JCheckBox();
-
+			if ("EXAMINATION".equals(selectedReport)) {
+				examinationCheck.setSelected(true);
+			}
 			examinationPanel.add(examinationCheck);
 			examinationPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.examination.txt")), BorderLayout.CENTER);
 			examinationCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
@@ -275,9 +292,10 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JPanel getPanelOperations() {
 		if (operationsPanel == null) {
 			operationsPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
-			
 			operationCheck = new JCheckBox();
-
+			if ("OPERATION".equals(selectedReport)) {
+				operationCheck.setSelected(true);
+			}
 			operationsPanel.add(operationCheck);
 			operationsPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.operation.txt")), BorderLayout.CENTER);
 			operationCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
@@ -288,9 +306,10 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JPanel getPanelLaboratory() {
 		if (laboratoryPanel == null) {
 			laboratoryPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
-			
 			laboratoryCheck = new JCheckBox();
-
+			if ("LABORATORY".equals(selectedReport)) {
+				laboratoryCheck.setSelected(true);
+			}
 			laboratoryPanel.add(laboratoryCheck);
 			laboratoryPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.laboratory.txt")), BorderLayout.CENTER);
 			laboratoryCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
@@ -301,9 +320,10 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JPanel getPanelDrugs() {
 		if (drugsPanel == null) {
 			drugsPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
-			
 			drugsCheck = new JCheckBox();
-
+			if ("DRUGS".equals(selectedReport)) {
+				drugsCheck.setSelected(true);
+			}
 			drugsPanel.add(drugsCheck);
 			drugsPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.drugs.txt")), BorderLayout.CENTER);
 			drugsCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
@@ -314,9 +334,10 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JPanel getPanelOpd() {
 		if (opdPanel == null) {
 			opdPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
-			
 			opdCheck = new JCheckBox();
-
+			if ("OPD".equals(selectedReport)) {
+				opdCheck.setSelected(true);
+			}
 			opdPanel.add(opdCheck);
 			opdPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.opd.txt")), BorderLayout.CENTER);
 			opdCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
@@ -327,9 +348,10 @@ public class PatientFolderReportModal extends ModalJFrame {
 	private JPanel getPanelAdmission() {
 		if (admissionPanel == null) {
 			admissionPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 1, 1)));
-			
 			admissionCheck = new JCheckBox();
-
+			if ("ADMISSION".equals(selectedReport)) {
+				admissionCheck.setSelected(true);
+			}
 			admissionPanel.add(admissionCheck);
 			admissionPanel.add(new JLabel(MessageBundle.getMessage("angal.admission.patientfolder.admission.txt")), BorderLayout.CENTER);
 			admissionCheck.addActionListener(actionEvent -> allCheck.setSelected(false));
@@ -366,7 +388,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 			jDateChooserDateFrom.setPreferredSize(new Dimension(200, 40));
 			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
 			jDateChooserDateFrom.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
-			jDateChooserDateFrom.setDate(Converters.toDate(date.atStartOfDay()));
+			jDateChooserDateFrom.setDate(Converters.toDate(fromDate.atStartOfDay()));
 			jDateChooserDateFrom.addPropertyChangeListener("date", evt -> {
 				Date date = (Date) evt.getNewValue();
 				jDateChooserDateFrom.setDate(date);

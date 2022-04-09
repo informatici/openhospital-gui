@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2022 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -126,7 +126,7 @@ esac
 
 ######## MySQL/MariaDB Software
 # MariaDB
-MYSQL_VERSION="10.2.41"
+MYSQL_VERSION="10.2.43"
 MYSQL_URL="https://archive.mariadb.org/mariadb-$MYSQL_VERSION/bintar-linux-$MYSQL_ARCH"
 MYSQL_DIR="mariadb-$MYSQL_VERSION-linux-$MYSQL_PACKAGE_ARCH"
 # MySQL
@@ -136,18 +136,17 @@ MYSQL_DIR="mariadb-$MYSQL_VERSION-linux-$MYSQL_PACKAGE_ARCH"
 ######## JAVA Software
 ######## JAVA 64bit - default architecture
 
-### JRE 11 - zulu distribution
-#JAVA_DISTRO="zulu11.50.19-ca-jre11.0.12-linux_x64"
-#JAVA_URL="https://cdn.azul.com/zulu/bin"
-#JAVA_DIR="zulu11.50.19-ca-jre11.0.12-linux_x64"
-
 ### JRE 11 - openjdk distribution
 #JAVA_URL="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.11%2B9"
 #JAVA_DISTRO="OpenJDK11U-jre_x64_linux_hotspot_11.0.11_9"
 #JAVA_DIR="jdk-11.0.11+9-jre"
 
+### JRE 11 - zulu distribution
+#JAVA_DISTRO="zulu11.52.13-ca-jre11.0.13-linux_x64"
+#JAVA_URL="https://cdn.azul.com/zulu/bin"
+
 ### JRE 8 - zulu distribution
-JAVA_DISTRO="zulu8.58.0.13-ca-fx-jdk8.0.312-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu8.60.0.21-ca-jre8.0.322-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin/"
 JAVA_DIR=$JAVA_DISTRO
 
@@ -186,7 +185,7 @@ function script_usage {
 
 function get_confirmation {
 	read -p "(y/n)? " choice
-	case "$choice" in 
+	case "$choice" in
 		y|Y ) echo "yes";;
 		n|N ) echo "Exiting."; exit 0;;
 		* ) echo "Invalid choice. Exiting."; exit 1 ;;
@@ -244,8 +243,8 @@ function set_language {
 		OH_LANGUAGE=en
 	fi
 	# check for valid language selection
-	case $OH_LANGUAGE in 
-		en|fr|it|es|pt) 
+	case $OH_LANGUAGE in
+		en|fr|it|es|pt)
 			# set database creation script in chosen language
 			DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
 			;;
@@ -278,7 +277,7 @@ function java_lib_setup {
 	# CLASSPATH setup
 	# include OH jar file
 	OH_CLASSPATH="$OH_PATH"/$OH_DIR/bin/OH-gui.jar
-	
+
 	# include all needed directories
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/bundle
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt
@@ -297,13 +296,17 @@ function java_lib_setup {
 }
 
 function java_check {
-if [ -z ${JAVA_BIN+x} ]; then
+# check if JAVA_BIN is already set and it exists
+if ( [ -z ${JAVA_BIN+x} ] || [ ! -x "$JAVA_BIN" ] ); then
+	# set default
+	echo "Setting default JAVA..."
 	JAVA_BIN="$OH_PATH/$JAVA_DIR/bin/java"
 fi
 
-if [ ! -x $JAVA_BIN ]; then
+# if JAVA_BIN is not found download JRE
+if [ ! -x "$JAVA_BIN" ]; then
 	if [ ! -f "./$JAVA_DISTRO.$EXT" ]; then
-		echo "Warning - JAVA_BIN not set or JAVA not found. Do you want to download it?"
+		echo "Warning - JAVA not found. Do you want to download it?"
 		get_confirmation;
 		# download java binaries
 		echo "Download $JAVA_DISTRO..."
@@ -315,20 +318,14 @@ if [ ! -x $JAVA_BIN ]; then
 		echo "Error unpacking Java. Exiting."
 		exit 1
 	fi
-		echo "JAVA unpacked successfully!"
-		echo "Removing downloaded file..."
-		rm ./$JAVA_DISTRO.$EXT
-		echo "Done!"
-	fi
-# check for java binary
-if [ -x "$OH_PATH/$JAVA_DIR/bin/java" ]; then
-	JAVA_BIN="$OH_PATH/$JAVA_DIR/bin/java"
-	echo "JAVA found!"
-	echo "Using $JAVA_DIR"
-else 
-	echo "Error: JAVA not found! Please download it or set JAVA_BIN in the script. Exiting."
-	exit 1
+	echo "JAVA unpacked successfully!"
+	echo "Removing downloaded file..."
+	rm ./$JAVA_DISTRO.$EXT
+	echo "Done!"
 fi
+
+echo "JAVA found!"
+echo "Using $JAVA_BIN"
 }
 
 function mysql_check {
@@ -351,7 +348,7 @@ if [ ! -d "./$MYSQL_DIR" ]; then
 	rm ./$MYSQL_DIR.$EXT
 	echo "Done!"
 fi
-# check for mysql binary
+# check for mysqld binary
 if [ -x ./$MYSQL_DIR/bin/mysqld_safe ]; then
 	echo "MySQL found!"
 	echo "Using $MYSQL_DIR"
@@ -363,7 +360,7 @@ fi
 
 function config_database {
 	echo "Checking for MySQL config file..."
-	
+
 	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$CONF_DIR/my.cnf ]; then
 		[ -f ./$CONF_DIR/my.cnf ] && mv -f ./$CONF_DIR/my.cnf ./$CONF_DIR/my.cnf.old
 
@@ -386,7 +383,7 @@ function initialize_database {
 	mkdir -p "./$DATA_DIR"
 	# inizialize MySQL
 	echo "Initializing MySQL database on port $MYSQL_PORT..."
-	case "$MYSQL_DIR" in 
+	case "$MYSQL_DIR" in
 	*mariadb*)
 		./$MYSQL_DIR/scripts/mysql_install_db --basedir=./$MYSQL_DIR --datadir=./"$DATA_DIR" \
 		--auth-root-authentication-method=normal >> ./$LOG_DIR/$LOG_FILE 2>&1
@@ -418,7 +415,7 @@ function set_database_root_pw {
 	# if using MySQL/MariaDB root password need to be set
 	echo "Setting MySQL root password..."
 	./$MYSQL_DIR/bin/mysql -u root --skip-password --host=$MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
-	
+
 	if [ $? -ne 0 ]; then
 		echo "Error: MySQL root password not set! Exiting."
 		shutdown_database;
@@ -433,7 +430,7 @@ function import_database {
 	-e "CREATE DATABASE $DATABASE_NAME; CREATE USER '$DATABASE_USER'@'localhost' IDENTIFIED BY '$DATABASE_PASSWORD'; \
 	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'localhost'; \
 	GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%' ; " >> ./$LOG_DIR/$LOG_FILE 2>&1
-	
+
 	if [ $? -ne 0 ]; then
 		echo "Error: Database creation failed! Exiting."
 		shutdown_database;
@@ -570,7 +567,7 @@ function generate_config_files {
 		./$OH_DIR/rsc/log4j.properties.dist > ./$OH_DIR/rsc/log4j.properties
 	fi
 
-	######## database.properties setup 
+	######## database.properties setup
 	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$OH_DIR/rsc/database.properties ]; then
 		[ -f ./$OH_DIR/rsc/database.properties ] && mv -f ./$OH_DIR/rsc/database.properties ./$OH_DIR/rsc/database.properties.old
 		echo "Generating OH configuration file -> database.properties..."
@@ -610,9 +607,9 @@ cd "$OH_PATH"
 ######## User input
 
 # reset in case getopts has been used previously in the shell
-OPTIND=1 
+OPTIND=1
 # list of arguments expected in user input (- option)
-OPTSTRING=":CPdDgGhil:srtvX?" 
+OPTSTRING=":CPdDgGhil:srtvX?"
 
 # function to parse input
 while getopts ${OPTSTRING} opt; do
@@ -660,7 +657,7 @@ while getopts ${OPTSTRING} opt; do
 		echo "Do you want to initialize/install the OH database on:"
 		echo ""
 		echo " Server -> $MYSQL_SERVER"
-		echo " TCP port -> $MYSQL_PORT" 
+		echo " TCP port -> $MYSQL_PORT"
 		echo ""
 		get_confirmation;
 		set_language;
@@ -683,61 +680,66 @@ while getopts ${OPTSTRING} opt; do
 	l)	# set language
 		OH_LANGUAGE=$OPTARG
 		set_language;
+		GENERATE_CONFIG_FILES="on"
 		;;
 	s)	# save database
+		# check if mysql utilities exist
+		mysql_check;
 		# check if portable mode is on
 		if [ $OH_MODE = "PORTABLE" ]; then
 			# check if database already exists
 			if [ -d ./"$DATA_DIR"/$DATABASE_NAME ]; then
-				mysql_check;
 				config_database;
+				start_database;
 			else
 	        		echo "Error: no data found! Exiting."
 				exit 1
 			fi
-			start_database;
-			echo "Saving Open Hospital database..."
-			dump_database;
-			shutdown_database;
-			echo "Done!"
-			exit 0
 		fi
-		# dump remote database for CLIENT mode configuration
 		test_database_connection;
 		echo "Saving Open Hospital database..."
 		dump_database;
-        	echo "Done!"
+		if [ $OH_MODE = "PORTABLE" ]; then
+			shutdown_database;
+		fi
+		echo "Done!"
 		exit 0
 		;;
-	r)	# restore 
+	r)	# restore
         	echo "Restoring Open Hospital database...."
 		# ask user for database/sql script to restore
-		read -p "Enter SQL dump/backup file that you want to restore - (in sql/ subdirectory) -> " DB_CREATE_SQL
-		if [ -f ./$SQL_DIR/$DB_CREATE_SQL ]; then
-		        echo "Found $SQL_DIR/$DB_CREATE_SQL, restoring it..."
-			# reset database if exists
-			clean_database;
-			mysql_check;
-			config_database;
-			initialize_dir_structure;
-			initialize_database;
-			start_database;	
-			set_database_root_pw;
-			import_database;
-			shutdown_database;
-	        	echo "Done!"
-			exit 0
-		else
+		read -p "Enter SQL dump/backup file that you want to restore - (in $SQL_DIR subdirectory) -> " DB_CREATE_SQL
+		if [ ! -f ./$SQL_DIR/$DB_CREATE_SQL ]; then
 			echo "Error: No SQL file found! Exiting."
 			exit 2
+		else
+		        echo "Found $SQL_DIR/$DB_CREATE_SQL, restoring it..."
+			# check if mysql utilities exist
+			mysql_check;
+			if [ $OH_MODE = "PORTABLE" ]; then
+				# reset database if exists
+				clean_database;
+				config_database;
+				initialize_dir_structure;
+				initialize_database;
+				start_database;
+				set_database_root_pw;
+			fi
+			import_database;
+			if [ $OH_MODE = "PORTABLE" ]; then
+				shutdown_database;
+			fi
+	        	echo "Done!"
+			exit 0
 		fi
         	# normal startup from here
 		;;
 	t)	# test database connection
-		if [ $OH_MODE = "PORTABLE" ]; then
+		if [ $OH_MODE != "CLIENT" ]; then
 			echo "Error: Only for CLIENT mode. Exiting."
 			exit 1
 		fi
+		mysql_check;
 		test_database_connection;
 		exit 0
 		;;
@@ -751,20 +753,24 @@ while getopts ${OPTSTRING} opt; do
 		echo "--------- Script Configuration ---------"
 		echo "Architecture is $ARCH"
 		echo "Config file generation is set to $GENERATE_CONFIG_FILES"
+		echo ""
 		echo "--------- OH Configuration ---------"
 		echo "Open Hospital is configured in $OH_MODE mode"
 		echo "Language is set to $OH_LANGUAGE"
 		echo "Demo data is set to $DEMO_DATA"
 		echo "Log level is set to $LOG_LEVEL"
+		echo ""
 		echo "--- Database ---"
 		echo "MYSQL_SERVER=$MYSQL_SERVER"
 		echo "MYSQL_PORT=$MYSQL_PORT"
 		echo "DATABASE_NAME=$DATABASE_NAME"
 		echo "DATABASE_USER=$DATABASE_USER"
+		echo ""
 		echo "--- Dicom ---"
 		echo "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
 		echo "DICOM_STORAGE=$DICOM_STORAGE"
 		echo "DICOM_DIR=$DICOM_DIR"
+		echo ""
 		echo "--- OH folders ---"
 		echo "OH_DIR=$OH_DIR"
 		echo "OH_DOC_DIR=$OH_DOC_DIR"
@@ -776,6 +782,7 @@ while getopts ${OPTSTRING} opt; do
 		echo "SQL_DIR=$SQL_DIR"
 		echo "SQL_EXTRA_DIR=$SQL_EXTRA_DIR"
 		echo "TMP_DIR=$TMP_DIR"
+		echo ""
 		echo "---  Logging ---"
 		echo "LOG_FILE=$LOG_FILE"
 		echo "OH_LOG_FILE=$OH_LOG_FILE"

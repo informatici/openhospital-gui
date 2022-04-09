@@ -21,7 +21,8 @@
  */
 package org.isf.opd.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMATTER;
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -35,12 +36,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.AbstractButton;
 import javax.swing.Box;
@@ -109,8 +108,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private static final long serialVersionUID = 2372745781159245861L;
 
-	private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
-
 	private JPanel jButtonPanel = null;
 	private JPanel jContainPanel = null;
 	private int pfrmHeight;
@@ -157,7 +154,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private List<Opd> pSur;
 	private JTable jTable = null;
 	private OpdBrowsingModel model;
-	private int[] pColumnWidth = {50, 50, 70, 70, 150, 30, 30, 195, 195, 50 };
+	private int[] pColumnWidth = {50, 50, 130, 70, 150, 30, 30, 195, 195, 50 };
 	private boolean[] columnResizable = { false, false, false, false, true, false, false, true, true, false };
 	private boolean[] columnsVisible = { true, true, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
 	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
@@ -382,33 +379,27 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					return;
 				}
 				Opd opd = (Opd) (model.getValueAt(jTable.getSelectedRow(), -1));
-				String dt = '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']';
-				try {
-					DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
-					dt = currentDateFormat.format(opd.getVisitDate());
-				} catch (Exception ex) {
-				}
 
 				String message;
 				if (GeneralData.OPDEXTENDED) {
 					message = MessageBundle.formatMessage("angal.opd.deletefollowingopdextended.fmt.msg",
 							opd.getPatient().getName(),
-							dateFormat.format(opd.getDate()),
+							opd.getCreatedDate().format(DATE_TIME_FORMATTER),
 							opd.getDisease().getDescription() == null
 									? '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']'
 									: opd.getDisease().getDescription(),
 							opd.getAge(),
 							opd.getSex(),
-							dt);
+							opd.getDate().format(DATE_TIME_FORMATTER));
 				} else {
 					message = MessageBundle.formatMessage("angal.opd.deletefollowingopd.fmt.msg",
-							dateFormat.format(opd.getDate()),
+							opd.getCreatedDate().format(DATE_FORMATTER),
 							opd.getDisease().getDescription() == null
 									? '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']'
 									: opd.getDisease().getDescription(),
 							opd.getAge(),
 							opd.getSex(),
-							dt);
+							opd.getDate().format(DATE_FORMATTER));
 				}
 
 				int n = JOptionPane.showConfirmDialog(null, message,
@@ -1041,13 +1032,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			} else if (c == 1) {
 				return opd.getProgYear();
 			} else if (c == 2) {
-				String sVisitDate;
-				if (opd.getVisitDate() == null) {
-					sVisitDate = "";
-				} else {
-					sVisitDate = dateFormat.format(opd.getVisitDate());
+				if (GeneralData.OPDEXTENDED) {
+					return opd.getDate().format(DATE_TIME_FORMATTER);
 				}
-				return sVisitDate;
+				return opd.getDate().format(DATE_FORMATTER);
 			} else if (c == 3) {
 				return pat != null ? opd.getPatient().getCode() : null;
 			} else if (c == 4) {
@@ -1160,7 +1148,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					}
 				}
 
-				model = new OpdBrowsingModel(diseasetype, disease, getDateFrom(), getDateTo(), ageFrom, ageTo, sex, newPatient);
+				model = new OpdBrowsingModel(diseasetype, disease, dateFrom.toLocalDate(), dateTo.toLocalDate(), ageFrom, ageTo, sex, newPatient);
 				model.fireTableDataChanged();
 				jTable.updateUI();
 				rowCounter.setText(rowCounterText + pSur.size());

@@ -22,8 +22,8 @@
 package org.isf.accounting.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -41,7 +41,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -587,9 +586,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 									billsIdList.add(billTemp.getId());
 								}
 							}
-							DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
-							String fromDate = dateTimeFormatter.format(dateFrom);
-							String toDate = dateTimeFormatter.format(dateTo);
+							String fromDate = dateFrom.format(DATE_TIME_FORMATTER);
+							String toDate = dateTo.format(DATE_TIME_FORMATTER);
 							new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList, fromDate, toDate, true, true);
 						} else {
 							throw new Exception();
@@ -620,9 +618,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 									billTemp = (Bill) jTablePending.getValueAt(idIndex, -1);
 									billsIdList.add(billTemp.getId());
 								}
-								DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
-								String fromDate = dateTimeFormatter.format(dateFrom);
-								String toDate = dateTimeFormatter.format(dateTo);
+								String fromDate = dateFrom.format(DATE_TIME_FORMATTER);
+								String toDate = dateTo.format(DATE_TIME_FORMATTER);
 								new GenericReportBill(billsIdList.get(0), GeneralData.PATIENTBILLGROUPED, patientParent, billsIdList, fromDate, toDate, true,
 										true);
 							} else {

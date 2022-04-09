@@ -21,6 +21,8 @@
  */
 package org.isf.utils;
 
+import java.time.format.DateTimeFormatter;
+
 public interface Constants {
 
 	public static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
@@ -42,4 +44,8 @@ public interface Constants {
 
 	public static final String TIME_FORMAT_HH_MM = "HH:mm";
 	public static final String TIME_FORMAT_HH_MM_SS = "HH:mm:ss";
+
+	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
+	public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
+
 }
