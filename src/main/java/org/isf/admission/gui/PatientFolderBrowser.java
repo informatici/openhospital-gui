@@ -304,7 +304,11 @@ public class PatientFolderBrowser extends ModalJFrame
                                             toDate = dateValue;
                                         }
                                     } else if (dateObject instanceof String) {
-                                        toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YY).atStartOfDay();
+                                    	if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
+                                    		toDate = LocalDateTime.now();
+                                    	} else {
+                                    		toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YY).atStartOfDay();	
+                                    	}
                                     }
                                     reportType = "ADMISSION";
                                 } else if (objType instanceof Opd) {
@@ -738,7 +742,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			}
 			try {
 				opdList = opd.getOpdList(patient.getCode());
-				getOlderDate(opdList, "visitDate");
+				getOlderDate(opdList, "date");
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
