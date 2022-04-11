@@ -1604,10 +1604,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				
 				if (opdDateFieldCal.getDate() != null) {
 					visitDateOpd = LocalDateTime.now();
-					opd.setVisitDate(visitDateOpd.toLocalDate());
 					opd.setDate(visitDateOpd);
 				} else {
-					opd.setVisitDate(visitDateOpd.toLocalDate());
 					opd.setDate(null);
 				}
 				int opdProgYear = 0;

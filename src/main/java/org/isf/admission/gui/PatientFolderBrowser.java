@@ -304,7 +304,11 @@ public class PatientFolderBrowser extends ModalJFrame
                                             toDate = dateValue;
                                         }
                                     } else if (dateObject instanceof String) {
-                                        toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YY).atStartOfDay();
+                                    	if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
+                                    		toDate = LocalDateTime.now();
+                                    	} else {
+                                    		toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YY).atStartOfDay();	
+                                    	}
                                     }
                                     reportType = "ADMISSION";
                                 } else if (objType instanceof Opd) {
@@ -738,7 +742,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			}
 			try {
 				opdList = opd.getOpdList(patient.getCode());
-				getOlderDate(opdList, "visitDate");
+				getOlderDate(opdList, "date");
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -796,7 +800,7 @@ public class PatientFolderBrowser extends ModalJFrame
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
 					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
-					LocalDate myDate = (opdList.get(z)).getVisitDate();
+					LocalDateTime myDate = (opdList.get(z)).getDate();
 					return dateFormat.format(myDate);
 				} else {
 					int f = row - (opdList.size() + admList.size());

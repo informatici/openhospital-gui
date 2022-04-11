@@ -478,7 +478,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				} else {
 					
 					int z = row - admList.size();
-					LocalDate myDate = opdList.get(z).getVisitDate();
+					LocalDateTime myDate = opdList.get(z).getDate();
 					return myDate.format(DATE_FORMATTER);
 				}
 				
