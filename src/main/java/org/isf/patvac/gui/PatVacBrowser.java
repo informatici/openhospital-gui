@@ -205,10 +205,11 @@ public class PatVacBrowser extends ModalJFrame {
 			buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			buttonNew.addActionListener(actionEvent -> {
-				patientVaccine = new PatientVaccine(0, 0, LocalDateTime.now(), new Patient(),
+				LocalDateTime now = LocalDateTime.now();
+				patientVaccine = new PatientVaccine(0, 0, now, new Patient(),
 						new Vaccine("", "", new VaccineType("", "")), 0);
 
-				PatientVaccine last = new PatientVaccine(0, 0, LocalDateTime.now(), new Patient(),
+				PatientVaccine last = new PatientVaccine(0, 0, now, new Patient(),
 						new Vaccine("", "", new VaccineType("", "")), 0);
 				new PatVacEdit(myFrame, patientVaccine, true);
 

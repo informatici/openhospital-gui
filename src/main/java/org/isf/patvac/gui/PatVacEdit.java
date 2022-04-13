@@ -21,8 +21,6 @@
  */
 package org.isf.patvac.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,10 +30,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -57,7 +55,7 @@ import org.isf.patvac.manager.PatVacManager;
 import org.isf.patvac.model.PatientVaccine;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
@@ -105,7 +103,7 @@ public class PatVacEdit extends JDialog {
 	private String lastKey;
 	private String s;
 	private List<Patient> patientList = null;
-	private CustomJDateChooser vaccineDateFieldCal = null;
+	private GoodDateChooser vaccineDateFieldCal = null;
 	private LocalDateTime dateIn = null;
 	private int patNextYProg;
 
@@ -230,8 +228,6 @@ public class PatVacEdit extends JDialog {
 			gbcVaccineDateLabel.gridy = 0;
 			dataPanel.add(vaccineDateLabel, gbcVaccineDateLabel);
 			vaccineDateFieldCal = getVaccineDateFieldCal();
-			vaccineDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			vaccineDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			GridBagConstraints gbcVaccineDateFieldCal = new GridBagConstraints();
 			gbcVaccineDateFieldCal.anchor = GridBagConstraints.WEST;
 			gbcVaccineDateFieldCal.insets = new Insets(5, 5, 5, 5);
@@ -363,15 +359,18 @@ public class PatVacEdit extends JDialog {
 	/**
 	 * This method initializes getVaccineDateFieldCal
 	 * 
-	 * @return JDateChooser
+	 * @return GoodDateChooser
 	 */
-	private CustomJDateChooser getVaccineDateFieldCal() {
+	private GoodDateChooser getVaccineDateFieldCal() {
 		if (insert) {
 			dateIn = RememberDates.getLastPatientVaccineDate();
 		} else {
 			dateIn = patVac.getVaccineDate();
 		}
-		return (new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY));
+		if (dateIn == null) {
+			dateIn = LocalDateTime.now();
+		}
+		return new GoodDateChooser(dateIn.toLocalDate());
 	}
 
 	/**
@@ -713,16 +712,15 @@ public class PatVacEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 
-				LocalDateTime vaccineDate = vaccineDateFieldCal.getLocalDateTime();
-				patVac.setProgr(Integer.parseInt(progrTextField.getText()));
-
 				// check on patient
 				if (selectedPatient == null) {
 					MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
 
-				patVac.setVaccineDate(vaccineDate);
+				LocalDate vaccineDate = vaccineDateFieldCal.getDate();
+				patVac.setProgr(Integer.parseInt(progrTextField.getText()));
+				patVac.setVaccineDate(vaccineDate.atStartOfDay());
 				patVac.setVaccine((Vaccine) vaccineComboBox.getSelectedItem());
 				patVac.setPatient(selectedPatient);
 				patVac.setLock(0);
@@ -768,6 +766,7 @@ public class PatVacEdit extends JDialog {
 		}
 		return cancelButton;
 	}
+
 	private JPanel getCenterPanel() {
 		if (centerPanel == null) {
 			centerPanel = new JPanel();
