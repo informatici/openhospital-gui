@@ -28,6 +28,8 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 import org.isf.generaldata.GeneralData;
 
@@ -50,6 +52,10 @@ public class GoodDateChooser extends Panel {
 		if (date != null) {
 			datePicker.setDate(date);
 		}
+		ImageIcon calendarIcon = new ImageIcon("rsc/icons/calendar_button.png");
+		JButton datePickerButton = datePicker.getComponentToggleCalendarButton();
+		datePickerButton.setText("");
+		datePickerButton.setIcon(calendarIcon);
 		add(datePicker);
 	}
 
