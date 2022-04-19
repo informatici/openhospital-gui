@@ -35,10 +35,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.AbstractButton;
@@ -57,6 +54,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -77,9 +75,11 @@ import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.TimeTools;
 
 /**
@@ -116,14 +116,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JButton jCloseButton = null;
 	private JButton jDeleteButton = null;
 	private JPanel jSelectionPanel = null;
-	private JPanel dateFromPanel = null;
-	private JPanel dateToPanel = null;
-	private JTextField dayFrom = null;
-	private JTextField monthFrom = null;
-	private JTextField yearFrom = null;
-	private JTextField dayTo = null;
-	private JTextField monthTo = null;
-	private JTextField yearTo = null;
+	private JPanel dateFilterPanel = null;
 	private JPanel jSelectionDiseasePanel = null;
 	private JPanel jAgeFromPanel = null;
 	private VoLimitedTextField jAgeFromTextField = null;
@@ -172,6 +165,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 	private List<Disease> diseases = null;
 	protected AbstractButton searchButton;
+	private GoodDateChooser dateFrom;
+	private GoodDateChooser dateTo;
 
 	private JTable getJTable() {
 		if (jTable == null) {
@@ -425,34 +420,32 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	private JPanel getJSelectionPanel() {
 		if (jSelectionPanel == null) {
-			JLabel jLabel3 = new JLabel(MessageBundle.getMessage("angal.common.selectsex.txt"));
 			JPanel sexLabelPanel = new JPanel();
-			sexLabelPanel.add(jLabel3);
+			sexLabelPanel.add(new JLabel(MessageBundle.getMessage("angal.common.selectsex.txt")));
+			sexLabelPanel.setPreferredSize(new Dimension(300, 25));
 			JPanel newPatientLabelPanel = new JPanel();
-			JLabel jLabel4 = new JLabel(MessageBundle.getMessage("angal.common.patient.txt"));
-			newPatientLabelPanel.add(jLabel4);
+			newPatientLabelPanel.add(new JLabel(MessageBundle.getMessage("angal.common.patient.txt")));
+			newPatientLabelPanel.setPreferredSize(new Dimension(300, 25));
 			JPanel diseaseLabelPanel = new JPanel();
-			JLabel jLabel = new JLabel(MessageBundle.getMessage("angal.opd.selectadisease.txt"));
-			diseaseLabelPanel.add(jLabel, null);
+			diseaseLabelPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.selectadisease.txt")));
 			JPanel filterButtonPanel = new JPanel();
 			filterButtonPanel.add(getFilterButton());
+			filterButtonPanel.setPreferredSize(new Dimension(300, 30));
 			jSelectionPanel = new JPanel();
-			jSelectionPanel.setLayout(new BoxLayout(getJSelectionPanel(), BoxLayout.Y_AXIS));
 			jSelectionPanel.setPreferredSize(new Dimension(300, pfrmHeight));
-			jSelectionPanel.add(diseaseLabelPanel, null);
-			jSelectionPanel.add(getJSelectionDiseasePanel(), null);
-			jSelectionPanel.add(Box.createVerticalGlue(), null);
-			jSelectionPanel.add(getDateFromPanel());
-			jSelectionPanel.add(getDateToPanel());
-			jSelectionPanel.add(Box.createVerticalGlue(), null);
-			jSelectionPanel.add(getJAgePanel(), null);
-			jSelectionPanel.add(Box.createVerticalGlue(), null);
-			jSelectionPanel.add(sexLabelPanel, null);
-			jSelectionPanel.add(getSexPanel(), null);
-			jSelectionPanel.add(newPatientLabelPanel, null);
-			jSelectionPanel.add(getNewPatientPanel(), null);
-			jSelectionPanel.add(filterButtonPanel, null);
-			jSelectionPanel.add(getRowCounter(), null);
+			jSelectionPanel.add(diseaseLabelPanel);
+			jSelectionPanel.add(getJSelectionDiseasePanel());
+			jSelectionPanel.add(Box.createVerticalGlue());
+			jSelectionPanel.add(getDateFilterPanel());
+			jSelectionPanel.add(Box.createVerticalGlue());
+			jSelectionPanel.add(getJAgePanel());
+			jSelectionPanel.add(Box.createVerticalGlue());
+			jSelectionPanel.add(sexLabelPanel);
+			jSelectionPanel.add(getSexPanel());
+			jSelectionPanel.add(newPatientLabelPanel);
+			jSelectionPanel.add(getNewPatientPanel());
+			jSelectionPanel.add(filterButtonPanel);
+			jSelectionPanel.add(getRowCounter());
 		}
 		return jSelectionPanel;
 	}
@@ -465,81 +458,24 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		return rowCounter;
 	}
 
-	private JPanel getDateFromPanel() {
-		if (dateFromPanel == null) {
-			dateFromPanel = new JPanel();
-			dateFromPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")), null);
-			dayFrom = new JTextField(2);
-			dayFrom.setDocument(new DocumentLimit(2));
-			dayFrom.addFocusListener(new FocusListener() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					if (dayFrom.getText().length() != 0) {
-						if (dayFrom.getText().length() == 1) {
-							String typed = dayFrom.getText();
-							dayFrom.setText("0" + typed);
-						}
-						if (!isValidDay(dayFrom.getText())) {
-							dayFrom.setText("1");
-						}
-					}
-				}
-
-				@Override
-				public void focusGained(FocusEvent e) {
-				}
-			});
-			monthFrom = new JTextField(2);
-			monthFrom.setDocument(new DocumentLimit(2));
-			monthFrom.addFocusListener(new FocusListener() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					if (monthFrom.getText().length() != 0) {
-						if (monthFrom.getText().length() == 1) {
-							String typed = monthFrom.getText();
-							monthFrom.setText("0" + typed);
-						}
-						if (!isValidMonth(monthFrom.getText())) {
-							monthFrom.setText("1");
-						}
-					}
-				}
-
-				@Override
-				public void focusGained(FocusEvent e) {
-				}
-			});
-			yearFrom = new JTextField(4);
-			yearFrom.setDocument(new DocumentLimit(4));
-			yearFrom.addFocusListener(new FocusListener() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					if (yearFrom.getText().length() == 4) {
-						if (!isValidYear(yearFrom.getText())) {
-							yearFrom.setText("2006");
-						}
-					} else {
-						yearFrom.setText("2006");
-					}
-				}
-
-				@Override
-				public void focusGained(FocusEvent e) {
-				}
-			});
-			dateFromPanel.add(dayFrom);
-			dateFromPanel.add(monthFrom);
-			dateFromPanel.add(yearFrom);
-			GregorianCalendar now = new GregorianCalendar();
+	private Component getDateFilterPanel() {
+		if (dateFilterPanel == null) {
+			dateFilterPanel = new JPanel(new SpringLayout());
+			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
 			if (!GeneralData.ENHANCEDSEARCH) {
-				now.add(Calendar.WEEK_OF_YEAR, -1);
+				dateFrom = new GoodDateChooser(LocalDate.now().minusWeeks(1));
+			} else {
+				dateFrom = new GoodDateChooser(LocalDate.now());
 			}
-			dayFrom.setText(String.valueOf(now.get(Calendar.DAY_OF_MONTH)));
-			monthFrom.setText(String.valueOf(now.get(Calendar.MONTH) + 1));
-			yearFrom.setText(String.valueOf(now.get(Calendar.YEAR)));
+			dateFilterPanel.add(dateFrom);
+			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
+			dateTo = new GoodDateChooser(LocalDate.now());
+			dateFilterPanel.add(dateTo);
+			SpringUtilities.makeCompactGrid(dateFilterPanel, 2, 2, 5, 5, 5, 5);
 		}
-		return dateFromPanel;
+		return dateFilterPanel;
 	}
+
 
 	public class DocumentLimit extends DefaultStyledDocument {
 
@@ -566,115 +502,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			}
 		}
 	}
-
-
-	private JPanel getDateToPanel() {
-		if (dateToPanel == null) {
-			dateToPanel = new JPanel();
-			dateToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")), null);
-			dayTo = new JTextField(2);
-			dayTo.setDocument(new DocumentLimit(2));
-			dayTo.addFocusListener(new FocusListener() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					if (dayTo.getText().length() != 0) {
-						if (dayTo.getText().length() == 1) {
-							String typed = dayTo.getText();
-							dayTo.setText("0" + typed);
-						}
-						if (!isValidDay(dayTo.getText())) {
-							dayTo.setText("1");
-						}
-					}
-				}
-
-				@Override
-				public void focusGained(FocusEvent e) {
-				}
-			});
-			monthTo = new JTextField(2);
-			monthTo.setDocument(new DocumentLimit(2));
-			monthTo.addFocusListener(new FocusListener() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					if (monthTo.getText().length() != 0) {
-						if (monthTo.getText().length() == 1) {
-							String typed = monthTo.getText();
-							monthTo.setText("0" + typed);
-						}
-						if (!isValidMonth(monthTo.getText())) {
-							monthTo.setText("1");
-						}
-					}
-				}
-
-				@Override
-				public void focusGained(FocusEvent e) {
-				}
-			});
-			yearTo = new JTextField(4);
-			yearTo.setDocument(new DocumentLimit(4));
-			yearTo.addFocusListener(new FocusListener() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					if (yearTo.getText().length() == 4) {
-						if (!isValidYear(yearTo.getText())) {
-							yearTo.setText("2006");
-						}
-					} else {
-						yearTo.setText("2006");
-					}
-				}
-
-				@Override
-				public void focusGained(FocusEvent e) {
-				}
-			});
-			dateToPanel.add(dayTo);
-			dateToPanel.add(monthTo);
-			dateToPanel.add(yearTo);
-			GregorianCalendar now = new GregorianCalendar();
-			dayTo.setText(String.valueOf(now.get(Calendar.DAY_OF_MONTH)));
-			monthTo.setText(String.valueOf(now.get(Calendar.MONTH) + 1));
-			yearTo.setText(String.valueOf(now.get(Calendar.YEAR)));
-		}
-		return dateToPanel;
-	}
-
-	private boolean isValidDay(String day) {
-		if (!day.chars().allMatch(Character::isDigit)) {
-			return false;
-		}
-		int num = Integer.parseInt(day);
-		return num >= 1 && num <= 31;
-	}
-
-	private boolean isValidMonth(String month) {
-		if (!month.chars().allMatch(Character::isDigit)) {
-			return false;
-		}
-		int num = Integer.parseInt(month);
-		return num >= 1 && num <= 12;
-	}
-
-	private boolean isValidYear(String year) {
-		return year.chars().allMatch(Character::isDigit);
-	}
-
-	private LocalDate getDateFrom() {
-		return LocalDate.now()
-				.withYear(Integer.parseInt(yearFrom.getText()))
-				.withMonth(Integer.parseInt(monthFrom.getText()))
-				.withDayOfMonth(Integer.parseInt(dayFrom.getText()));
-	}
-
-	private LocalDate getDateTo() {
-		return LocalDate.now()
-				.withYear(Integer.parseInt(yearTo.getText()))
-				.withMonth(Integer.parseInt(monthTo.getText()))
-				.withDayOfMonth(Integer.parseInt(dayTo.getText()));
-	}
-
 
 	/**
 	 * This method initializes jComboBox
@@ -779,7 +606,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		}
 		return newPatientPanel;
 	}
-
 
 	/**
 	 * This method initializes jSelectionDiseasePanel
@@ -1122,10 +948,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					}
 				}
 
-				LocalDateTime dateFrom = getDateFrom().atStartOfDay();
-				LocalDateTime dateTo = getDateTo().atStartOfDay();
+				LocalDate dateFromDate = dateFrom.getDate();
+				LocalDate dateToDate = dateTo.getDate();
 
-				if (dateFrom.isAfter(dateTo)) {
+				if (dateFromDate.isAfter(dateToDate)) {
 					MessageDialog.error(OpdBrowser.this, "angal.opd.datefrommustbebefordateto.msg");
 					return;
 				}
@@ -1138,7 +964,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				}
 
 				//TODO: to retrieve resultset size instead of assuming 1 year as limit for the warning
-				if (TimeTools.getDaysBetweenDates(dateFrom, dateTo, true) >= 360) {
+				if (TimeTools.getDaysBetweenDates(dateFromDate, dateToDate, true) >= 360) {
 					int ok = JOptionPane.showConfirmDialog(OpdBrowser.this,
 							MessageBundle.getMessage("angal.common.thiscouldretrievealargeamountofdataproceed.msg"),
 							MessageBundle.getMessage("angal.messagedialog.question.title"),
@@ -1148,7 +974,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					}
 				}
 
-				model = new OpdBrowsingModel(diseasetype, disease, dateFrom.toLocalDate(), dateTo.toLocalDate(), ageFrom, ageTo, sex, newPatient);
+				model = new OpdBrowsingModel(diseasetype, disease, dateFrom.getDate(), dateTo.getDate(), ageFrom, ageTo, sex, newPatient);
 				model.fireTableDataChanged();
 				jTable.updateUI();
 				rowCounter.setText(rowCounterText + pSur.size());
