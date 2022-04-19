@@ -286,10 +286,10 @@ public class MovStockBrowser extends ModalJFrame {
 		stockLedgerButton.addActionListener(actionEvent -> {
 
 			StockLedgerDialog stockCardDialog = new StockLedgerDialog(MovStockBrowser.this, movDateFrom.getCompleteDate(), movDateTo.getCompleteDate());
-			LocalDateTime dateFrom = stockCardDialog.getLocalDateTimeTo();
-			LocalDateTime dateTo = stockCardDialog.getLocalDateTimeTo();
 
 			if (!stockCardDialog.isCancel()) {
+				LocalDateTime dateFrom = stockCardDialog.getLocalDateTimeTo();
+				LocalDateTime dateTo = stockCardDialog.getLocalDateTimeTo();
 				new GenericReportPharmaceuticalStockCard("ProductLedger_multi", dateFrom, dateTo, null, null, false);
 			}
 		});
