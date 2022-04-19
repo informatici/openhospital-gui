@@ -266,15 +266,14 @@ public class MovStockBrowser extends ModalJFrame {
 					movDateFrom.getCompleteDate(),
 					movDateTo.getCompleteDate());
 			medical = stockCardDialog.getMedical();
-			LocalDateTime dateFrom = stockCardDialog.getLocalDateTimeFrom();
-			LocalDateTime dateTo = stockCardDialog.getLocalDateTimeTo();
-			boolean toExcel = stockCardDialog.isExcel();
-
 			if (!stockCardDialog.isCancel()) {
 				if (medical == null) {
 					MessageDialog.error(MovStockBrowser.this, "angal.medicalstock.chooseamedical.msg");
 					return;
 				}
+				LocalDateTime dateFrom = stockCardDialog.getLocalDateTimeFrom();
+				LocalDateTime dateTo = stockCardDialog.getLocalDateTimeTo();
+				boolean toExcel = stockCardDialog.isExcel();
 				new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom, dateTo, medical, null, toExcel);
 			}
 		});
