@@ -215,7 +215,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 				try {
 					List<LaboratoryForPrint> labs;
-					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDate().atStartOfDay(), dateTo.getDate().atTime(23, 59, 59, 59));
+					labs = labManager.getLaboratoryForPrint(typeSelected, dateFrom.getDateStartOfDay(), dateTo.getDateEndOfDay());
 					if (!labs.isEmpty()) {
 						printManager.print(MessageBundle.getMessage("angal.common.laboratory.txt"), labs, 0);
 					}

@@ -22,18 +22,18 @@
 package org.isf.utils.jobjects;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
-import org.isf.utils.time.Converters;
 
 /**
  * @author Mwithi
@@ -41,28 +41,19 @@ import org.isf.utils.time.Converters;
 public class StockLedgerDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private JFromDateToDateChooser dateRange;
 	private JPanel buttonsPanel;
 	private JButton buttonOK;
 	private JButton buttonCancel;
-	private Date dateFrom;
-	private Date dateTo;
+	private JPanel dateFromToPanel;
+	private GoodDateChooser dateFrom;
+	private GoodDateChooser dateTo;
 	private boolean cancel = false;
 
-	public StockLedgerDialog(Frame owner) {
+	public StockLedgerDialog(Frame owner, LocalDateTime from, LocalDateTime to) {
 		super(owner, true);
-		dateRange = new JFromDateToDateChooser();
-		initAndShow();
-	}
-
-	public StockLedgerDialog(Frame owner, LocalDateTime dateFrom, LocalDateTime dateTo) {
-		super(owner, true);
-		dateRange = new JFromDateToDateChooser(dateFrom, dateTo);
-		initAndShow();
-	}
-
-	private void initAndShow() {
-		add(dateRange, BorderLayout.CENTER);
+		dateFrom = new GoodDateChooser(from.toLocalDate());
+		dateTo = new GoodDateChooser(to.toLocalDate());
+		add(getDateFromToPanel(), BorderLayout.CENTER);
 		add(getButtonsPanel(), BorderLayout.SOUTH);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
@@ -71,6 +62,19 @@ public class StockLedgerDialog extends JDialog {
 		setVisible(true);
 	}
 
+	private JPanel getDateFromToPanel() {
+		if (dateFromToPanel == null) {
+			dateFromToPanel = new JPanel();
+			FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
+			layout.setHgap(5);
+			dateFromToPanel.setLayout(layout);
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ':'));
+			dateFromToPanel.add(dateFrom);
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ':'));
+			dateFromToPanel.add(dateTo);
+		}
+		return dateFromToPanel;
+	}
 	private JPanel getButtonsPanel() {
 		if (buttonsPanel == null) {
 			buttonsPanel = new JPanel();
@@ -104,34 +108,18 @@ public class StockLedgerDialog extends JDialog {
 				if (n != JOptionPane.OK_OPTION) {
 					cancel = true;
 				}
-				dateFrom = dateRange.getDateFrom();
-				dateTo = dateRange.getDateTo();
 				dispose();
 			});
 		}
 		return buttonOK;
 	}
 
-	/**
-	 * @return the dateFrom
-	 */
-	public Date getDateFrom() {
-		return dateFrom;
-	}
-
 	public LocalDateTime getLocalDateTimeFrom() {
-		return Converters.convertToLocalDateTime(getDateFrom());
-	}
-
-	/**
-	 * @return the dateTo
-	 */
-	public Date getDateTo() {
-		return dateTo;
+		return dateFrom.getDateStartOfDay();
 	}
 
 	public LocalDateTime getLocalDateTimeTo() {
-		return Converters.convertToLocalDateTime(getDateTo());
+		return dateTo.getDateStartOfDay();
 	}
 
 	/**

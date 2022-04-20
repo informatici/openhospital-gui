@@ -25,6 +25,8 @@ import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.Panel;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -38,8 +40,12 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 
 public class GoodDateChooser extends Panel {
 
-	public DatePicker datePicker;
-	public DatePickerSettings dateSettings;
+	private DatePicker datePicker;
+	private DatePickerSettings dateSettings;
+
+	public GoodDateChooser() {
+		this(LocalDate.now());
+	}
 
 	public GoodDateChooser(LocalDate date) {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
@@ -61,6 +67,16 @@ public class GoodDateChooser extends Panel {
 
 	public LocalDate getDate() {
 		return datePicker.getDate();
+	}
+
+	public LocalDateTime getDateStartOfDay() {
+		LocalDate localDate = getDate();
+		return localDate != null ? localDate.atStartOfDay() : null;
+	}
+
+	public LocalDateTime getDateEndOfDay() {
+		LocalDate localDate = getDate();
+		return localDate != null ? localDate.atTime(LocalTime.MAX) : null;
 	}
 
 }

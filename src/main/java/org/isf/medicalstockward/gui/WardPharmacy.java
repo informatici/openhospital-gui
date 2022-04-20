@@ -45,6 +45,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -336,13 +337,11 @@ public class WardPharmacy extends ModalJFrame implements
 
 				StockCardDialog stockCardDialog = new StockCardDialog(WardPharmacy.this, medical, dateFrom, dateTo);
 				medical = stockCardDialog.getMedical();
-				Date dateFrom = stockCardDialog.getDateFrom();
-				Date dateTo = stockCardDialog.getDateTo();
 				boolean toExcel = stockCardDialog.isExcel();
 
 				if (!stockCardDialog.isCancel()) {
-					new GenericReportPharmaceuticalStockCard("ProductLedgerWard", Converters.convertToLocalDateTime(dateFrom),
-							Converters.convertToLocalDateTime(dateTo), medical, wardSelected, toExcel);
+					new GenericReportPharmaceuticalStockCard("ProductLedgerWard", stockCardDialog.getLocalDateTimeFrom(),
+							stockCardDialog.getLocalDateTimeTo(), medical, wardSelected, toExcel);
 				}
 			});
 		}
@@ -357,12 +356,9 @@ public class WardPharmacy extends ModalJFrame implements
 			jButtonStockLedger.addActionListener(actionEvent -> {
 
 				StockLedgerDialog stockCardDialog = new StockLedgerDialog(WardPharmacy.this, dateFrom, dateTo);
-				Date dateFrom = stockCardDialog.getDateFrom();
-				Date dateTo = stockCardDialog.getDateTo();
-
 				if (!stockCardDialog.isCancel()) {
-					new GenericReportPharmaceuticalStockCard("ProductLedgerWard_multi", Converters.convertToLocalDateTime(dateFrom),
-							Converters.convertToLocalDateTime(dateTo), null, wardSelected, false);
+					new GenericReportPharmaceuticalStockCard("ProductLedgerWard_multi", stockCardDialog.getLocalDateTimeFrom(),
+							stockCardDialog.getLocalDateTimeTo(), null, wardSelected, false);
 				}
 			});
 		}
@@ -453,7 +449,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private CustomJDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
-			dateTo = dateTo.toLocalDate().atTime(23, 59, 59);
+			dateTo = dateTo.toLocalDate().atTime(LocalTime.MAX);
 			jCalendarTo = new CustomJDateChooser(dateTo);
 			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
 			jCalendarTo.setDateFormatString(DATE_FORMAT_DD_MM_YY);
