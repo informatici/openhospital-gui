@@ -175,7 +175,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private LocalDateTime dateFrom = LocalDateTime.now();
 	private LocalDateTime dateTo = LocalDateTime.now();
 	private LocalDateTime dateToday0 = LocalDate.now().atStartOfDay();
-	private LocalDateTime dateToday24 = LocalDate.now().atTime(23, 59, 59);
+	private LocalDateTime dateToday24 = LocalDate.now().atTime(LocalTime.MAX);
 
 	private JButton jButtonToday;
 
@@ -322,7 +322,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				jCalendarTo.setDate((Date) propertyChangeEvent.getNewValue());
 				dateTo = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue())
 						.toLocalDate()
-						.atTime(23, 59, 59);
+						.atTime(LocalTime.MAX);
 				jButtonToday.setEnabled(true);
 				billInserted(null);
 			});

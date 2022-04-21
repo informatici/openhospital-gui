@@ -678,7 +678,7 @@ public class PatVacBrowser extends ModalJFrame {
 					return;
 				}
 
-				model = new PatVacBrowsingModel(vaccineTypeCode, vaccineCode, dateFrom.getDate().atStartOfDay(), dateTo.getDate().atTime(23, 59), sex, ageFrom, ageTo);
+				model = new PatVacBrowsingModel(vaccineTypeCode, vaccineCode, dateFrom.getDateStartOfDay(), dateTo.getDateEndOfDay(), sex, ageFrom, ageTo);
 				model.fireTableDataChanged();
 				jTable.updateUI();
 				updateRowCounter();
