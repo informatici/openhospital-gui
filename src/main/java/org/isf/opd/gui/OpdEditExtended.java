@@ -144,8 +144,6 @@ import com.toedter.calendar.JDateChooser;
 public class OpdEditExtended extends ModalJFrame implements PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	
-	private static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm:ss";
 
 	@Override
 	public void patientInserted(AWTEvent e) {

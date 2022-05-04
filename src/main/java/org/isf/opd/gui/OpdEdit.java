@@ -21,8 +21,6 @@
  */
 package org.isf.opd.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM;
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -34,14 +32,11 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -62,7 +57,6 @@ import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
 import org.isf.distype.manager.DiseaseTypeBrowserManager;
 import org.isf.distype.model.DiseaseType;
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -70,8 +64,8 @@ import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.GoodDateTimeChooser;
 import org.isf.utils.jobjects.MessageDialog;
-import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
@@ -146,8 +140,7 @@ public class OpdEdit extends JDialog {
 	private JComboBox diseaseBox = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
-	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY_HH_MM, new Locale(GeneralData.LANGUAGE));
-	private VoDateTextField opdDateField = null;
+	private GoodDateTimeChooser opdDateField = null;
 	private JPanel jPanel2 = null;
 	private JButton okButton = null;
 	private JButton cancelButton = null;
@@ -214,8 +207,7 @@ public class OpdEdit extends JDialog {
 		this.setContentPane(getPrincipalPanel());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.opd.newopdregistration.title"));
-		}
-		else {
+		} else {
 			this.setTitle(MessageBundle.getMessage("angal.opd.editopdregistration.title"));
 		}
 	}
@@ -244,7 +236,7 @@ public class OpdEdit extends JDialog {
 	private JPanel getInsertPanel() {
 		if (insertPanel == null) {
 			insertPanel = new JPanel();
-			insertPanel.setLayout(new BoxLayout(getInsertPanel(), BoxLayout.Y_AXIS));
+			insertPanel.setLayout(new BoxLayout(insertPanel, BoxLayout.Y_AXIS));
 			insertPanel.add(getJNewPatientPanel(), null);
 			insertPanel.add(getJDatePanel(), null);
 			insertPanel.add(getJDiseaseTypePanel(), null);
@@ -489,18 +481,12 @@ public class OpdEdit extends JDialog {
 							disease3 = ((Disease) diseaseBox3.getSelectedItem());
 						}
 						// visit date
-						String d = opdDateField.getText().trim();
-						if (d.equals("")) {
+						LocalDateTime localDateTime = opdDateField.getLocalDateTime();
+						if (localDateTime == null) {
 							MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertattendancedate.msg");
 							return;
-						} else {
-							try {
-								visitDate = LocalDateTime.parse(d, currentDateFormat);
-							} catch (DateTimeParseException dateTimeParseException) {
-								MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertavalidattendancedate.msg");
-								return;
-							}
 						}
+						visitDate = localDateTime;
 
 						if (radiof.isSelected()) {
 							sex = 'F';
@@ -897,7 +883,6 @@ public class OpdEdit extends JDialog {
 	private JPanel getJDatePanel() {
 		if (jDatePanel == null) {
 			jDatePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 3, 3));
-			String d;
 			LocalDateTime dateIn;
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDate() == null) {
@@ -908,11 +893,8 @@ public class OpdEdit extends JDialog {
 			} else {
 				dateIn = opd.getDate();
 			}
-			
-			d = currentDateFormat.format(dateIn);
-			
-			opdDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YY_HH_MM, d, 15);
 
+			opdDateField = new GoodDateTimeChooser(dateIn);
 			jDatePanel.add(opdDateField);
 			jDatePanel = setMyBorder(jDatePanel, MessageBundle.getMessage("angal.opd.attendancedate.txt"));
 		}

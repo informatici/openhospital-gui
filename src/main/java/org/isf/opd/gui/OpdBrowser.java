@@ -379,7 +379,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				if (GeneralData.OPDEXTENDED) {
 					message = MessageBundle.formatMessage("angal.opd.deletefollowingopdextended.fmt.msg",
 							opd.getPatient().getName(),
-							opd.getCreatedDate().format(DATE_TIME_FORMATTER),
+							opd.getCreatedDate() == null
+									? opd.getDate().format(DATE_FORMATTER)
+									: opd.getCreatedDate().format(DATE_FORMATTER),
 							opd.getDisease().getDescription() == null
 									? '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']'
 									: opd.getDisease().getDescription(),
@@ -388,7 +390,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 							opd.getDate().format(DATE_TIME_FORMATTER));
 				} else {
 					message = MessageBundle.formatMessage("angal.opd.deletefollowingopd.fmt.msg",
-							opd.getCreatedDate().format(DATE_FORMATTER),
+							opd.getCreatedDate() == null
+									? opd.getDate().format(DATE_FORMATTER)
+									: opd.getCreatedDate().format(DATE_FORMATTER),
 							opd.getDisease().getDescription() == null
 									? '[' + MessageBundle.getMessage("angal.opd.notspecified.msg") + ']'
 									: opd.getDisease().getDescription(),
