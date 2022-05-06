@@ -22,7 +22,6 @@
 package org.isf.medicalstock.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -38,7 +37,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -77,7 +75,7 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
@@ -98,7 +96,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
 	private JComboBox jComboBoxDischargeType;
-	private CustomJDateChooser jDateChooser;
+	private GoodDateTimeChooser jDateChooser;
 	private JComboBox jComboBoxDestination;
 	private JTable jTableMovements;
 	private final String[] columnNames = {
@@ -502,11 +500,9 @@ public class MovStockMultipleDischarging extends JDialog {
 		return shareWith;
 	}
 	
-	private CustomJDateChooser getJDateChooser() {
+	private GoodDateTimeChooser getJDateChooser() {
 		if (jDateChooser == null) {
-			jDateChooser = new CustomJDateChooser(new Date());
-			jDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
-			jDateChooser.setPreferredSize(new Dimension(150, 24));
+			jDateChooser = new GoodDateTimeChooser(LocalDateTime.now());
 		}
 		return jDateChooser;
 	}
