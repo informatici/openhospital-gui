@@ -46,6 +46,10 @@ public class GoodDateTimeChooser extends Panel {
 	private TimePickerSettings timeSettings;
 
 	public GoodDateTimeChooser(LocalDateTime dateTime) {
+		this(dateTime, true);
+	}
+
+	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner) {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(layout);
 		dateSettings = new DatePickerSettings();
@@ -58,19 +62,25 @@ public class GoodDateTimeChooser extends Panel {
 		timeSettings.setAllowKeyboardEditing(true);
 		timeSettings.setFormatForDisplayTime(TIME_FORMAT);
 		timeSettings.setFormatForMenuTimes(TIME_FORMAT);
+		if (useSpinner) {
+			timeSettings.setDisplayToggleTimeMenuButton(false);
+			timeSettings.setDisplaySpinnerButtons(true);
+		} else {
+			timeSettings.setDisplayToggleTimeMenuButton(true);
+			timeSettings.setDisplaySpinnerButtons(false);
+		}
 		if (dateTime == null) {
 			dateTime = LocalDateTime.now();
 		}
-		dateTime = dateTime.withMinute(0);
-		dateTime = dateTime.withSecond(0);
-		dateTime = dateTime.withNano(0);
 		dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
 		dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
 		dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
+
 		ImageIcon calendarIcon = new ImageIcon("rsc/icons/calendar_button.png");
 		JButton datePickerButton = dateTimePicker.datePicker.getComponentToggleCalendarButton();
 		datePickerButton.setText("");
 		datePickerButton.setIcon(calendarIcon);
+
 		add(dateTimePicker);
 	}
 
