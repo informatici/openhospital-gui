@@ -189,7 +189,11 @@ public class PatientInsert extends JDialog implements ActionListener {
 	 */
 	private void initialize() {
 		this.setContentPane(getJContainPanel());
-		this.setTitle(MessageBundle.getMessage("angal.patient.newpatient.title"));
+		if (insert) {
+			this.setTitle(MessageBundle.getMessage("angal.patient.newpatient.title"));
+		} else {
+			this.setTitle(MessageBundle.getMessage("angal.patient.editpatient.title"));
+		}
 		pack();
 		setResizable(false);
 		setLocationRelativeTo(null);
