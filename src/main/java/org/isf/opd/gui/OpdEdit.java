@@ -31,11 +31,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -508,8 +507,7 @@ public class OpdEdit extends JDialog {
 
 						try {
 							if (insert) {    // Insert
-								GregorianCalendar date = new GregorianCalendar();
-								opd.setProgYear(opdManager.getProgYear(date.get(Calendar.YEAR)) + 1);
+								opd.setProgYear(opdManager.getProgYear(LocalDate.now().getYear()) + 1);
 
 								// remember for later use
 								RememberDates.setLastOpdVisitDate(visitDate);
