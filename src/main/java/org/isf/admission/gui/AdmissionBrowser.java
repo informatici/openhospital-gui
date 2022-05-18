@@ -1160,6 +1160,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				dateIn = RememberDates.getLastAdmInDate();
 			}
+			if (dateIn == null) {
+				dateIn = LocalDateTime.now();
+			}
 			dateInFieldCal = new GoodDateTimeChooser(dateIn);
 
 			dateInFieldCal.addDateTimeChangeListener(new DateTimeChangeListener() {

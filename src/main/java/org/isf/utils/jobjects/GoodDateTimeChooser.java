@@ -71,12 +71,11 @@ public class GoodDateTimeChooser extends Panel {
 			timeSettings.setDisplayToggleTimeMenuButton(true);
 			timeSettings.setDisplaySpinnerButtons(false);
 		}
-		if (dateTime == null) {
-			dateTime = LocalDateTime.now();
-		}
 		dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
-		dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
-		dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
+		if (dateTime != null) {
+			dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
+			dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
+		}
 
 		ImageIcon calendarIcon = new ImageIcon("rsc/icons/calendar_button.png");
 		JButton datePickerButton = dateTimePicker.datePicker.getComponentToggleCalendarButton();
