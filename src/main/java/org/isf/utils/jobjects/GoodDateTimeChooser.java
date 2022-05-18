@@ -24,6 +24,7 @@ package org.isf.utils.jobjects;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.Panel;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
@@ -36,6 +37,7 @@ import org.isf.generaldata.GeneralData;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DateTimePicker;
 import com.github.lgooddatepicker.components.TimePickerSettings;
+import com.github.lgooddatepicker.optionalusertools.DateTimeChangeListener;
 
 public class GoodDateTimeChooser extends Panel {
 
@@ -88,4 +90,15 @@ public class GoodDateTimeChooser extends Panel {
 		return dateTimePicker.getDateTimeStrict();
 	}
 
+	public void setDateTime(LocalDateTime dateTime) {
+		dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
+		dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
+	}
+	public void setDate(LocalDate date) {
+		dateTimePicker.datePicker.setDate(date);
+	}
+
+	public void addDateTimeChangeListener(DateTimeChangeListener listener) {
+		dateTimePicker.addDateTimeChangeListener(listener);
+	}
 }
