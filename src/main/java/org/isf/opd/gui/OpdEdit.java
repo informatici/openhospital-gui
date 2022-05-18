@@ -31,7 +31,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -507,8 +506,7 @@ public class OpdEdit extends JDialog {
 
 						try {
 							if (insert) {    // Insert
-								opd.setProgYear(opdManager.getProgYear(LocalDate.now().getYear()) + 1);
-
+								opd.setProgYear(getOpdProgYear(visitDate));
 								// remember for later use
 								RememberDates.setLastOpdVisitDate(visitDate);
 
@@ -535,6 +533,19 @@ public class OpdEdit extends JDialog {
 			);
 		}
 		return okButton;
+	}
+
+	private int getOpdProgYear(LocalDateTime date) {
+		int opdNum = 0;
+		if (date == null) {
+			date = LocalDateTime.now();
+		}
+		try {
+			opdNum = opdManager.getProgYear(date.getYear()) + 1;
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
+		return opdNum;
 	}
 	
 	/**
