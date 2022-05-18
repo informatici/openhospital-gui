@@ -33,9 +33,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -508,9 +506,7 @@ public class OpdEdit extends JDialog {
 
 						try {
 							if (insert) {    // Insert
-								GregorianCalendar date = new GregorianCalendar();
-								opd.setProgYear(opdManager.getProgYear(date.get(Calendar.YEAR)) + 1);
-
+								opd.setProgYear(getOpdProgYear(visitDate));
 								// remember for later use
 								RememberDates.setLastOpdVisitDate(visitDate);
 
@@ -537,6 +533,19 @@ public class OpdEdit extends JDialog {
 			);
 		}
 		return okButton;
+	}
+
+	private int getOpdProgYear(LocalDateTime date) {
+		int opdNum = 0;
+		if (date == null) {
+			date = LocalDateTime.now();
+		}
+		try {
+			opdNum = opdManager.getProgYear(date.getYear()) + 1;
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
+		return opdNum;
 	}
 	
 	/**
