@@ -25,11 +25,10 @@ import static org.isf.utils.Constants.DATE_FORMATTER;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -43,8 +42,9 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.stat.gui.report.GenericReportFromDateToDate;
 import org.isf.stat.gui.report.GenericReportMY;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.jobjects.VoDateTextField;
+import org.isf.utils.time.TimeTools;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
 
@@ -82,8 +82,8 @@ public class ReportLauncher extends ModalJFrame{
 	private JComboBox<String> jYearComboBox = null;
 	private JLabel jFromDateLabel = null;
 	private JLabel jToDateLabel = null;
-	private VoDateTextField jToDateField = null;
-	private VoDateTextField jFromDateField = null;
+	private GoodDateChooser jToDateField = null;
+	private GoodDateChooser jFromDateField = null;
 
 	private JComboBox<String> jRptComboBox = null;
 
@@ -138,14 +138,10 @@ public class ReportLauncher extends ModalJFrame{
 	 */
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.stat.reportlauncher.title"));
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		int pfrmBordX = (screensize.width / 3) - (pfrmExactWidth / 2);
-		int pfrmBordY = (screensize.height / 3) - (pfrmExactHeight / 2);
-		this.setBounds(pfrmBordX,pfrmBordY,pfrmExactWidth,pfrmExactHeight);
 		this.setContentPane(getJPanel());
 		selectAction();
 		pack();
+		setLocationRelativeTo(null);
 	}
 
 	/**
@@ -273,10 +269,10 @@ public class ReportLauncher extends ModalJFrame{
 			
 			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.fromdate"));
 			LocalDate defaultDate = LocalDate.now().minusMonths(8);
-			jFromDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, defaultDate, 10);
+			jFromDateField = new GoodDateChooser(defaultDate);
 			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.todate"));
 			defaultDate = defaultDate.plusMonths(7);
-			jToDateField = new VoDateTextField(DATE_FORMAT_DD_MM_YYYY, defaultDate, 10);
+			jToDateField = new GoodDateChooser(defaultDate);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
 			jFromDateLabel.setVisible(false);
@@ -356,8 +352,8 @@ public class ReportLauncher extends ModalJFrame{
 		int rptIndex = jRptComboBox.getSelectedIndex();
 		int month = jMonthComboBox.getSelectedIndex()+1;
 		int year = (Integer.parseInt((String)jYearComboBox.getSelectedItem()));
-		String fromDate = jFromDateField.getText().trim();
-		String toDate = jToDateField.getText().trim();
+		String fromDate = TimeTools.formatDateTime(jFromDateField.getDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
+		String toDate = TimeTools.formatDateTime(jToDateField.getDate().atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 
 		if (rptIndex >= 0) {
 			String sParType = reportMatrix[rptIndex][TYPE];
