@@ -113,9 +113,7 @@ import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
 
 import com.github.lgooddatepicker.components.TimePicker;
-import com.github.lgooddatepicker.optionalusertools.DateTimeChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
-import com.github.lgooddatepicker.zinternaltools.DateTimeChangeEvent;
 
 /**
  * This class shows essential patient data and allows to create an admission
@@ -1177,31 +1175,21 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 			dateInFieldCal = new GoodDateTimeChooser(dateIn);
 
-			dateInFieldCal.addDateTimeChangeListener(new DateTimeChangeListener() {
-
-				@Override
-				public void dateOrTimeChanged(DateTimeChangeEvent event) {
-					DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
-					if (dateChangeEvent != null) {
-						LocalDate newDate = dateChangeEvent.getNewDate();
-						if (newDate != null && newDate.isBefore(patient.getBirthDate())) {
-							Runnable doMessage = new Runnable() {
-
-								@Override
-								public void run() {
-									MessageDialog.error(null, "angal.admission.thepatientwasnotyetbornatselecteddate.msg");
-								}
-							};
-							SwingUtilities.invokeLater(doMessage);
-							dateInFieldCal.setDate(dateChangeEvent.getOldDate());
-							return;
-						}
-						updateBedDays();
-						getDiseaseInPanel();
-						getDiseaseOut1Panel();
-						getDiseaseOut2Panel();
-						getDiseaseOut3Panel();
+			dateInFieldCal.addDateTimeChangeListener(event -> {
+				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
+				if (dateChangeEvent != null) {
+					LocalDate newDate = dateChangeEvent.getNewDate();
+					if (newDate != null && newDate.isBefore(patient.getBirthDate())) {
+						Runnable doMessage = () -> MessageDialog.error(null, "angal.admission.thepatientwasnotyetbornatselecteddate.msg");
+						SwingUtilities.invokeLater(doMessage);
+						dateInFieldCal.setDate(dateChangeEvent.getOldDate());
+						return;
 					}
+					updateBedDays();
+					getDiseaseInPanel();
+					getDiseaseOut1Panel();
+					getDiseaseOut2Panel();
+					getDiseaseOut3Panel();
 				}
 			});
 			admissionDatePanel.add(dateInFieldCal);
@@ -1553,19 +1541,15 @@ public class AdmissionBrowser extends ModalJFrame {
 				dateOut = admission.getDisDate();
 			}
 			dateOutFieldCal = new GoodDateTimeChooser(editing ? dateOut : null);
-			dateOutFieldCal.addDateTimeChangeListener(new DateTimeChangeListener() {
-
-				@Override
-				public void dateOrTimeChanged(DateTimeChangeEvent event) {
-					DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
-					if (dateChangeEvent != null) {
-						// if the time is blank set it to the current time; otherwise leave it alone
-						TimePicker timePicker = event.getTimePicker();
-						if (timePicker.getTime() == null) {
-							timePicker.setTime(LocalTime.now());
-						}
-						updateBedDays();
+			dateOutFieldCal.addDateTimeChangeListener(event -> {
+				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
+				if (dateChangeEvent != null) {
+					// if the time is blank set it to the current time; otherwise leave it alone
+					TimePicker timePicker = event.getTimePicker();
+					if (timePicker.getTime() == null) {
+						timePicker.setTime(LocalTime.now());
 					}
+					updateBedDays();
 				}
 			});
 			dischargeDatePanel.add(dateOutFieldCal);
