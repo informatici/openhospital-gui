@@ -38,6 +38,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EventListener;
@@ -111,6 +112,7 @@ import org.isf.ward.model.Ward;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
 
+import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.optionalusertools.DateTimeChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 import com.github.lgooddatepicker.zinternaltools.DateTimeChangeEvent;
@@ -961,8 +963,13 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			wardBox.addActionListener(actionEvent -> {
 				// set yProg
-				if (wardBox.getSelectedIndex() == 0) {
+				if (wardBox.getSelectedIndex() <= 0) {
 					yProgTextField.setText("");
+					// This fixes the problem of losing the top border on the date picker because of the combox
+					javax.swing.SwingUtilities.invokeLater(() -> {
+						validate();
+						repaint();
+					});
 					return;
 				} else {
 					String wardId = ((Ward) wardBox.getSelectedItem()).getCode();
@@ -1012,6 +1019,11 @@ public class AdmissionBrowser extends ModalJFrame {
 						repaint();
 					}
 				}
+				// This fixes the problem of losing the top border on the date picker because of the combox
+				javax.swing.SwingUtilities.invokeLater(() -> {
+					validate();
+					repaint();
+				});
 			});
 
 			wardPanel.add(wardBox);
@@ -1547,6 +1559,11 @@ public class AdmissionBrowser extends ModalJFrame {
 				public void dateOrTimeChanged(DateTimeChangeEvent event) {
 					DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
 					if (dateChangeEvent != null) {
+						// if the time is blank set it to the current time; otherwise leave it alone
+						TimePicker timePicker = event.getTimePicker();
+						if (timePicker.getTime() == null) {
+							timePicker.setTime(LocalTime.now());
+						}
 						updateBedDays();
 					}
 				}
