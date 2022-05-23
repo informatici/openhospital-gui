@@ -24,7 +24,6 @@ package org.isf.admission.gui;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -37,7 +36,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EventListener;
@@ -62,6 +63,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -98,17 +100,20 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ShadowBorder;
 import org.isf.utils.jobjects.VoLimitedTextField;
-import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 import org.isf.xmpp.gui.CommunicationFrame;
 import org.isf.xmpp.manager.Interaction;
+
+import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 /**
  * This class shows essential patient data and allows to create an admission
@@ -289,7 +294,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private LocalDateTime dateIn;
 
-	private CustomJDateChooser dateInFieldCal = null;
+	private GoodDateTimeChooser dateInFieldCal = null;
 
 	private JComboBox admTypeBox = null;
 
@@ -315,7 +320,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private LocalDateTime dateOut = null;
 
-	private CustomJDateChooser dateOutFieldCal = null;
+	private GoodDateTimeChooser dateOutFieldCal = null;
 
 	private JComboBox disTypeBox = null;
 
@@ -412,12 +417,6 @@ public class AdmissionBrowser extends ModalJFrame {
 			admission = new Admission();
 		}
 
-		if (editing) {
-			dateIn = admission.getAdmDate();
-		} else {
-			dateIn = LocalDateTime.now();
-		}
-
 		initialize(parentFrame);
 
 		this.addWindowListener(new WindowAdapter() {
@@ -474,12 +473,6 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 		if (admission.getWard().getCode().equalsIgnoreCase("M")) {
 			viewingPregnancy = true;
-		}
-
-		if (editing) {
-			dateIn = admission.getAdmDate();
-		} else {
-			dateIn = LocalDateTime.now();
 		}
 
 		initialize(parentFrame);
@@ -609,6 +602,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					.addComponent(getJLabelRequiredFields())
 			);
 		}
+		updateBedDays();
 		return jPanelAdmission;
 	}
 
@@ -967,8 +961,13 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			wardBox.addActionListener(actionEvent -> {
 				// set yProg
-				if (wardBox.getSelectedIndex() == 0) {
+				if (wardBox.getSelectedIndex() <= 0) {
 					yProgTextField.setText("");
+					// This fixes the problem of losing the top border on the date picker because of the combox
+					javax.swing.SwingUtilities.invokeLater(() -> {
+						validate();
+						repaint();
+					});
 					return;
 				} else {
 					String wardId = ((Ward) wardBox.getSelectedItem()).getCode();
@@ -1018,6 +1017,11 @@ public class AdmissionBrowser extends ModalJFrame {
 						repaint();
 					}
 				}
+				// This fixes the problem of losing the top border on the date picker because of the combox
+				javax.swing.SwingUtilities.invokeLater(() -> {
+					validate();
+					repaint();
+				});
 			});
 
 			wardPanel.add(wardBox);
@@ -1166,25 +1170,28 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				dateIn = RememberDates.getLastAdmInDate();
 			}
-			dateInFieldCal = new CustomJDateChooser(dateIn, DATE_FORMAT_DD_MM_YY_HH_MM_SS); // Calendar
-			dateInFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateInFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			dateInFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {
-				LocalDateTime newValue = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
-				if (newValue.toLocalDate().isBefore(patient.getBirthDate())) {
-					MessageDialog.error(AdmissionBrowser.this, "angal.admission.thepatientwasnotyetbornatselecteddate.msg");
-					dateInFieldCal.setDate((Date) propertyChangeEvent.getOldValue());
-					return;
-				}
-				dateInFieldCal.setDate(newValue);
-				dateIn = newValue;
-				updateBedDays();
-				getDiseaseInPanel();
-				getDiseaseOut1Panel();
-				getDiseaseOut2Panel();
-				getDiseaseOut3Panel();
-			});
+			if (dateIn == null) {
+				dateIn = LocalDateTime.now();
+			}
+			dateInFieldCal = new GoodDateTimeChooser(dateIn);
 
+			dateInFieldCal.addDateTimeChangeListener(event -> {
+				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
+				if (dateChangeEvent != null) {
+					LocalDate newDate = dateChangeEvent.getNewDate();
+					if (newDate != null && newDate.isBefore(patient.getBirthDate())) {
+						Runnable doMessage = () -> MessageDialog.error(null, "angal.admission.thepatientwasnotyetbornatselecteddate.msg");
+						SwingUtilities.invokeLater(doMessage);
+						dateInFieldCal.setDate(dateChangeEvent.getOldDate());
+						return;
+					}
+					updateBedDays();
+					getDiseaseInPanel();
+					getDiseaseOut1Panel();
+					getDiseaseOut2Panel();
+					getDiseaseOut3Panel();
+				}
+			});
 			admissionDatePanel.add(dateInFieldCal);
 			admissionDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.admissiondate.border")));
 		}
@@ -1533,11 +1540,18 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getDisDate() != null) {
 				dateOut = admission.getDisDate();
 			}
-			dateOutFieldCal = new CustomJDateChooser(editing ? dateOut : null, DATE_FORMAT_DD_MM_YY_HH_MM_SS);
-			dateOutFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateOutFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			dateOutFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> updateBedDays());
-
+			dateOutFieldCal = new GoodDateTimeChooser(editing ? dateOut : null);
+			dateOutFieldCal.addDateTimeChangeListener(event -> {
+				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
+				if (dateChangeEvent != null) {
+					// if the time is blank set it to the current time; otherwise leave it alone
+					TimePicker timePicker = event.getTimePicker();
+					if (timePicker.getTime() == null) {
+						timePicker.setTime(LocalTime.now());
+					}
+					updateBedDays();
+				}
+			});
 			dischargeDatePanel.add(dateOutFieldCal);
 			dischargeDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.dischargedate.border")));
 		}
@@ -1703,10 +1717,8 @@ public class AdmissionBrowser extends ModalJFrame {
 					admission.setFHU(FHUTextField.getText());
 				}
 
-				if (dateInFieldCal.getDate() != null) {
-					dateInFieldCal.getLocalDateTime();
-					dateIn = dateInFieldCal.getLocalDateTime();
-				} else {
+				dateIn = dateInFieldCal.getLocalDateTime();
+				if (dateIn == null) {
 					MessageDialog.error(AdmissionBrowser.this, "angal.admission.pleaseinsertavalidadmissiondate.msg");
 					return;
 				}
@@ -1722,7 +1734,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 				// check and get date out (it can be null)
 				// if set date out, isDischarge is set
-				if (dateOutFieldCal.getDate() != null) {
+				if (dateOutFieldCal.getLocalDateTime() != null) {
 					dateOut = dateOutFieldCal.getLocalDateTime();
 					admission.setDisDate(dateOut);
 					isDischarge = true;
