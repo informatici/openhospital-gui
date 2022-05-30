@@ -23,8 +23,6 @@ package org.isf.malnutrition.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -115,16 +113,9 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 		adm = aAdm;
 		admId = String.valueOf(adm.getId());
 		setTitle(MessageBundle.getMessage("angal.malnutrition.malnutritionbrowser.title"));
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 10;
-		final int pfrmWidth = 5;
-		final int pfrmHeight = 4;
-		this.setBounds((screensize.width - screensize.width * pfrmWidth
-				/ pfrmBase) / 2, (screensize.height - screensize.height
-				* pfrmHeight / pfrmBase) / 2, screensize.width * pfrmWidth
-				/ pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		add(getJContentPane());
+		pack();
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
