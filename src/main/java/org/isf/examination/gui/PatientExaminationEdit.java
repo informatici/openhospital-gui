@@ -21,7 +21,7 @@
  */
 package org.isf.examination.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -41,11 +41,10 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -83,7 +82,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.stat.gui.report.GenericReportExamination;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeChooser;
 import org.isf.utils.jobjects.IconButton;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -91,7 +90,9 @@ import org.isf.utils.jobjects.ScaledJSlider;
 import org.isf.utils.jobjects.VoDoubleTextField;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
-import org.isf.utils.time.Converters;
+
+import com.github.lgooddatepicker.components.TimePicker;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 public class PatientExaminationEdit extends ModalJFrame {
 
@@ -121,7 +122,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private ScaledJSlider jSliderTemp;
 	private ScaledJSlider jSliderSaturation;
 	private JScrollPane jScrollPaneNote;
-	private CustomJDateChooser jDateChooserDate;
+	private GoodDateTimeChooser jDateChooserDate;
 	private VoIntegerTextField jSpinnerAPmin;
 	private VoIntegerTextField jSpinnerAPmax;
 	private JLabel jLabelHeightAbb;
@@ -186,7 +187,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	};
 	private final Class[] columnClasses = { String.class, Integer.class, Double.class, String.class, Integer.class, Double.class, Double.class, Integer.class,
 			Integer.class, Integer.class, String.class, String.class, String.class, JButton.class };
-	private int[] columnWidth = { 100, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70, 70 };
+	private int[] columnWidth = { 120, 40, 40, 100, 70, 50, 50, 50, 40, 50, 70, 70, 70, 70 };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER };
@@ -282,7 +283,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 	}
 
 	private void updateGUI() {
-		jDateChooserDate.setDate(patex.getPex_date());
+		jDateChooserDate.setDateTime(patex.getPex_date());
 		jTextFieldHeight.setText(String.valueOf(patex.getPex_height()));
 		jSliderHeight.setValue(patex.getPex_height());
 		jTextFieldWeight.setText(String.valueOf(patex.getPex_weight()));
@@ -880,15 +881,19 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return jCheckBoxToggleAP;
 	}
 
-	private CustomJDateChooser getJDateChooserDate() {
+	private GoodDateTimeChooser getJDateChooserDate() {
 		if (jDateChooserDate == null) {
-			jDateChooserDate = new CustomJDateChooser();
-			jDateChooserDate.setLocale(new Locale("en")); //$NON-NLS-1$
-			jDateChooserDate.setDateFormatString("dd/MM/yyyy - HH:mm"); //$NON-NLS-1$
-			jDateChooserDate.addPropertyChangeListener("date", propertyChangeEvent -> {
-				Date date = (Date) propertyChangeEvent.getNewValue();
-				jDateChooserDate.setDate(date);
-				patex.setPex_date(Converters.convertToLocalDateTime(date));
+			jDateChooserDate = new GoodDateTimeChooser(null);
+			jDateChooserDate.addDateTimeChangeListener(event -> {
+				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
+				if (dateChangeEvent != null) {
+					// if the time is blank set it to the current time; otherwise leave it alone
+					TimePicker timePicker = event.getTimePicker();
+					if (timePicker.getTime() == null) {
+						timePicker.setTime(LocalTime.now());
+					}
+				}
+				patex.setPex_date(jDateChooserDate.getLocalDateTime());
 			});
 		}
 		return jDateChooserDate;
@@ -1926,7 +1931,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 	private JScrollPane getJTableSummary() {
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setPreferredSize(new Dimension(870, 150));
+		scrollPane.setPreferredSize(new Dimension(890, 150));
 		TableCellRenderer buttonRenderer = new JTableButtonRenderer();
 		jTableSummary = new JTable(new JTableModelSummary());
 		for (int i = 0; i < columnNames.length - 1; i++) { //last column is for JButton
@@ -2039,7 +2044,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			StringBuilder ap_string = new StringBuilder();
 			ap_string.append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
 					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max());
-			String datetime = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY_HH_MM).format(patex.getPex_date());
+			String datetime = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM).format(patex.getPex_date());
 			String diuresis = patex.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc());
 			String bowel = patex.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc());
 			String ausc = patex.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation());
