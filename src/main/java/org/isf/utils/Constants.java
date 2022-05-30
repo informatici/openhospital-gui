@@ -37,6 +37,8 @@ public interface Constants {
 	public static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
 	public static final String DATE_FORMAT_DD_MM_YY_HH_MM_SS = "dd/MM/yy - HH:mm:ss";
 
+	public static final String DATE_FORMAT_DD_MM_YYYY_HH_MM = "dd/MM/yyyy HH:mm";
+
 	public static final String DATE_FORMAT_DD_MM_YYYY_HH_MM_SS = "dd/MM/yyyy HH:mm:ss";
 
 	public static final String DATE_FORMAT_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";

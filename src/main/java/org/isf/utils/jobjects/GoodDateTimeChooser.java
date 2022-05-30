@@ -26,6 +26,7 @@ import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 import java.awt.Panel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -36,8 +37,10 @@ import org.isf.generaldata.GeneralData;
 
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DateTimePicker;
+import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.components.TimePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateTimeChangeListener;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 public class GoodDateTimeChooser extends Panel {
 
@@ -48,10 +51,14 @@ public class GoodDateTimeChooser extends Panel {
 	private TimePickerSettings timeSettings;
 
 	public GoodDateTimeChooser(LocalDateTime dateTime) {
-		this(dateTime, true);
+		this(dateTime, true, true);
 	}
 
 	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner) {
+		this(dateTime, useSpinner, true);
+	}
+
+	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner, boolean useDefaultTimeChangeListener) {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(layout);
 		dateSettings = new DatePickerSettings();
@@ -72,6 +79,8 @@ public class GoodDateTimeChooser extends Panel {
 			timeSettings.setDisplaySpinnerButtons(false);
 		}
 		dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
+		// This helps the manual editing of the year field not to reset to some *very* old year value
+		dateSettings.setDateRangeLimits(LocalDate.of(999, 12, 31), null);
 		if (dateTime != null) {
 			dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
 			dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
@@ -82,6 +91,19 @@ public class GoodDateTimeChooser extends Panel {
 		datePickerButton.setText("");
 		datePickerButton.setIcon(calendarIcon);
 
+		if (useDefaultTimeChangeListener) {
+			addDateTimeChangeListener(event -> {
+				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
+				if (dateChangeEvent != null) {
+					// if the time is blank set it to the current time; otherwise leave it alone
+					TimePicker timePicker = event.getTimePicker();
+					if (timePicker.getTime() == null) {
+						timePicker.setTime(LocalTime.now());
+					}
+				}
+			});
+		}
+
 		add(dateTimePicker);
 	}
 
@@ -90,9 +112,15 @@ public class GoodDateTimeChooser extends Panel {
 	}
 
 	public void setDateTime(LocalDateTime dateTime) {
-		dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
-		dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
+		if (dateTime != null) {
+			dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
+			dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
+		} else {
+			dateTimePicker.datePicker.clear();
+			dateTimePicker.timePicker.clear();
+		}
 	}
+
 	public void setDate(LocalDate date) {
 		dateTimePicker.datePicker.setDate(date);
 	}
