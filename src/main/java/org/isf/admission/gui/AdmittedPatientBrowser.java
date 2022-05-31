@@ -21,8 +21,6 @@
  */
 package org.isf.admission.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -41,7 +39,6 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -96,7 +93,7 @@ import org.isf.therapy.gui.TherapyEdit;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
@@ -150,7 +147,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			MessageBundle.getMessage("angal.admission.notadmitted.txt")
 	};
 	private JComboBox patientClassBox = new JComboBox(patientClassItems);
-	private CustomJDateChooser[] dateChoosers = new CustomJDateChooser[4];
+	private GoodDateChooser[] dateChoosers = new GoodDateChooser[4];
 	private VoLimitedTextField patientAgeFromTextField = null;
 	private VoLimitedTextField patientAgeToTextField = null;
 	private String[] patientSexItems = { 
@@ -562,14 +559,15 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		JPanel mainPanel = new JPanel();
 		GroupLayout layout = new GroupLayout(mainPanel);
 		layout.setAutoCreateContainerGaps(true);
+		int width = calendarPanel.getMinimumSize().width;
 		layout.setHorizontalGroup(layout.createSequentialGroup() //
 				.addGroup(layout.createParallelGroup() //
-						.addComponent(classPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE) //
-						.addComponent(wardPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE) //
-						.addComponent(calendarPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE) //
-						.addComponent(agePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE) //
-						.addComponent(sexPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE) //
-						.addComponent(searchPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)));
+						.addComponent(classPanel, width, width, width) //
+						.addComponent(wardPanel, width, width, width) //
+						.addComponent(calendarPanel, width, width, width) //
+						.addComponent(agePanel, width, width, width) //
+						.addComponent(sexPanel, width, width, width) //
+						.addComponent(searchPanel, width, width, width)));
 
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -598,10 +596,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		JLabel admissionLabel = new JLabel(MessageBundle.getMessage("angal.admission.admissiondate.txt"));
 		JLabel dischargeLabel = new JLabel(MessageBundle.getMessage("angal.admission.dischargedate.txt"));
 		for (int i = 0; i <= dateChoosers.length - 1; i++) {
-			CustomJDateChooser chooser = new CustomJDateChooser();
-			chooser.setLocale(new Locale(GeneralData.LANGUAGE));
-			chooser.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			chooser.setMinimumSize(new Dimension(80, 20));
+			GoodDateChooser chooser = new GoodDateChooser(null);
 			dateChoosers[i] = chooser;
 		}
 
@@ -1156,19 +1151,18 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		LocalDateTime[] admissionRange = new LocalDateTime[2];
 		LocalDateTime[] dischargeRange = new LocalDateTime[2];
 		for(int i = 0; i <= dateChoosers.length - 1; i++) {
-			LocalDateTime date = dateChoosers[i].getLocalDateTime();
 			switch (i) {
 			case 0:
-				admissionRange[0] = date;
+				admissionRange[0] = dateChoosers[i].getDateStartOfDay();
 				break;
 			case 1:
-				admissionRange[1] = date;
+				admissionRange[1] = dateChoosers[i].getDateEndOfDay();
 				break;
 			case 2:
-				dischargeRange[0] = date;
+				dischargeRange[0] = dateChoosers[i].getDateStartOfDay();
 				break;
 			case 3:
-				dischargeRange[1] = date;
+				dischargeRange[1] = dateChoosers[i].getDateEndOfDay();
 				break;
 			}
 		}
