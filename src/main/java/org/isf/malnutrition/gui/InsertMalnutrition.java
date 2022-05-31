@@ -181,7 +181,7 @@ public class InsertMalnutrition extends JDialog {
 				maln.setWeight(0);
 			}
 			maln.setDateSupp(suppDate.getDateStartOfDay());
-			maln.setDateConf(confDate.getDateEndOfDay());
+			maln.setDateConf(confDate.getDateStartOfDay());
 
 			if (inserting) {
 				boolean inserted = false;
