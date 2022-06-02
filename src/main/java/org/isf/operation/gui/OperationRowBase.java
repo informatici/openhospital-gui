@@ -21,8 +21,6 @@
  */
 package org.isf.operation.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -35,9 +33,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -50,16 +46,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
-import org.isf.opd.model.Opd;
 import org.isf.operation.manager.OperationBrowserManager;
 import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
@@ -75,7 +69,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected JLabel labelDate;
 	protected JTextField textFieldUnit;
-	protected CustomJDateChooser textDate;
+	protected GoodDateTimeChooser textDate;
 	protected JComboBox comboOperation;
 	protected JComboBox comboResult;
 	protected JTextArea textAreaRemark;
@@ -87,10 +81,8 @@ abstract class OperationRowBase extends JPanel {
 
 	protected List<String> operationResults = opeManager.getResultDescriptionList();
 	protected OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	protected CustomJDateChooser jCalendarDate;
 	protected JTable tableData;
 
-	private Opd myOpd;
 
 	protected OperationRowBase() {
 		setLayout(new BorderLayout(0, 0));
@@ -131,10 +123,11 @@ abstract class OperationRowBase extends JPanel {
 		gbc_labelDate.gridy = 0;
 		panelForm.add(labelDate, gbc_labelDate);
 
-		textDate = getJCalendarDate();
+		textDate = getDateTimeChooser();
 		GridBagConstraints gbc_textDate = new GridBagConstraints();
 		gbc_textDate.insets = new Insets(0, 0, 5, 0);
-		gbc_textDate.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textDate.anchor = GridBagConstraints.WEST;
+		gbc_textDate.fill = GridBagConstraints.NONE;
 		gbc_textDate.gridx = 3;
 		gbc_textDate.gridy = 0;
 		panelForm.add(textDate, gbc_textDate);
@@ -267,12 +260,9 @@ abstract class OperationRowBase extends JPanel {
 
 	abstract void addToGrid();
 
-	protected CustomJDateChooser getJCalendarDate() {
+	protected GoodDateTimeChooser getDateTimeChooser() {
 		if (textDate == null) {
-			textDate = new CustomJDateChooser();
-			textDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			textDate.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS);
-			textDate.setDate(new Date());
+			textDate = new GoodDateTimeChooser(LocalDateTime.now());
 		}
 		return textDate;
 	}
@@ -329,7 +319,7 @@ abstract class OperationRowBase extends JPanel {
 		}
 
 		if (opeRow != null) {
-			textDate.setDate(opeRow.getOpDate());
+			textDate.setDateTime(opeRow.getOpDate());
 
 			textAreaRemark.setText(opeRow.getRemarks());
 			textFieldUnit.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
@@ -387,7 +377,7 @@ abstract class OperationRowBase extends JPanel {
 
 	public void clearForm() {
 		comboOperation.setSelectedItem(null);
-		textDate.setDate((LocalDateTime) null);
+		textDate.setDateTime(null);
 		textAreaRemark.setText(""); //$NON-NLS-1$
 		comboResult.setSelectedIndex(-1);
 		textFieldUnit.setText(""); //$NON-NLS-1$

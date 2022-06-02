@@ -34,7 +34,6 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhTableOperationModel;
-import org.isf.utils.time.Converters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,17 +65,17 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 
 	@Override
 	public void addToGrid() {
-		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
+		if ((this.textDate.getLocalDateTime() == null) || (this.comboOperation.getSelectedItem() == null)) {
 			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateope");
 			return;
 		}
-		if ((myAdmission != null) && (myAdmission.getAdmDate().isAfter(Converters.convertToLocalDateTime(this.textDate.getDate())))) {
+		if ((myAdmission != null) && (myAdmission.getAdmDate().isAfter(this.textDate.getLocalDateTime()))) {
 			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateafter");
 			return;
 		}
 
 		OperationRow operationRow = new OperationRow();
-		operationRow.setOpDate(Converters.convertToLocalDateTime(this.textDate.getDate()));
+		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		if (this.comboResult.getSelectedItem() != null) {
 			operationRow.setOpResult(opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
 		} else {
@@ -99,7 +98,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 			oprowData.add(operationRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
-			opeInter.setOpDate(Converters.convertToLocalDateTime(this.textDate.getDate()));
+			opeInter.setOpDate(this.textDate.getLocalDateTime());
 			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
