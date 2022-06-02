@@ -22,7 +22,6 @@
 package org.isf.medicalstock.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,10 +36,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +79,8 @@ import org.isf.supplier.model.Supplier;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.RequestFocusListener;
 import org.isf.utils.jobjects.TextPrompt;
@@ -102,7 +102,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
 	private JComboBox jComboBoxChargeType;
-	private CustomJDateChooser jDateChooser;
+	private GoodDateChooser jDateChooser;
 	private JComboBox jComboBoxSupplier;
 	private JTable jTableMovements;
 	private final String[] columnNames = {
@@ -453,7 +453,7 @@ public class MovStockMultipleCharging extends JDialog {
 					}
 
 					// Date
-					LocalDateTime date = jDateChooser.getLocalDateTime();
+					LocalDateTime date = jDateChooser.getDateStartOfDay();
 
 					// RefNo
 					String refNo = jTextFieldReference.getText().trim();
@@ -471,11 +471,9 @@ public class MovStockMultipleCharging extends JDialog {
 		return jTextFieldSearch;
 	}
 
-	private CustomJDateChooser getJDateChooser() {
+	private GoodDateChooser getJDateChooser() {
 		if (jDateChooser == null) {
-			jDateChooser = new CustomJDateChooser(new Date());
-			jDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
-			jDateChooser.setPreferredSize(new Dimension(165, 24));
+			jDateChooser = new GoodDateChooser(LocalDate.now());
 		}
 		return jDateChooser;
 	}
@@ -562,10 +560,9 @@ public class MovStockMultipleCharging extends JDialog {
 		suggestion.changeAlpha(0.5f);
 		suggestion.changeStyle(Font.BOLD + Font.ITALIC);
 
-		CustomJDateChooser preparationDateChooser = new CustomJDateChooser(new Date());
-		preparationDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
-		CustomJDateChooser expireDateChooser = new CustomJDateChooser(new Date());
-		expireDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
+		LocalDate now = LocalDate.now();
+		GoodDateChooser preparationDateChooser = new GoodDateChooser(now);
+		GoodDateChooser expireDateChooser = new GoodDateChooser(now);
 		JPanel panel = new JPanel(new GridLayout(3, 2));
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotnumberabb"))); //$NON-NLS-1$
 		panel.add(lotNameTextField);
@@ -584,14 +581,14 @@ public class MovStockMultipleCharging extends JDialog {
 			if (ok == JOptionPane.OK_OPTION) {
 				String lotName = lotNameTextField.getText();
 				
-				if (expireDateChooser.getDate().before(preparationDateChooser.getDate())) {
+				if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
 					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expirydatebeforepreparationdate");
 				} 
-				else if (expireDateChooser.getDate().before(jDateChooser.getDate())) {
+				else if (expireDateChooser.getDate().isBefore(jDateChooser.getDate())) {
 					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expiringdateinthepastnotallowed");
 				} else {
-					expiringDate = expireDateChooser.getLocalDateTime();
-					preparationDate = preparationDateChooser.getLocalDateTime();
+					expiringDate = expireDateChooser.getDateEndOfDay();
+					preparationDate = preparationDateChooser.getDateStartOfDay();
 					lot = new Lot(lotName, preparationDate, expiringDate);
 				}
 			} else {
@@ -682,8 +679,7 @@ public class MovStockMultipleCharging extends JDialog {
 
 	protected LocalDateTime askExpiringDate() {
 		LocalDateTime date = LocalDateTime.now();
-		CustomJDateChooser expireDateChooser = new CustomJDateChooser(new Date());
-		expireDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
+		GoodDateTimeChooser expireDateChooser = new GoodDateTimeChooser(date);
 		JPanel panel = new JPanel(new GridLayout(1, 2));
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate"))); //$NON-NLS-1$
 		panel.add(expireDateChooser);
@@ -911,13 +907,13 @@ public class MovStockMultipleCharging extends JDialog {
 			return false;
 		}
 
-		LocalDateTime thisDate = jDateChooser.getLocalDateTime();
+		LocalDate thisDate = jDateChooser.getDate();
 		
 		// Check and set all movements
 		for (int i = 0; i < movements.size(); i++) {
 			Movement mov = movements.get(i);
 			int option = units.get(i);
-			mov.setDate(thisDate);
+			mov.setDate(thisDate.atStartOfDay());
 			mov.setRefNo(jTextFieldReference.getText());
 			mov.setQuantity(calcTotal(mov, option));
 			mov.setType((MovementType) jComboBoxChargeType.getSelectedItem());

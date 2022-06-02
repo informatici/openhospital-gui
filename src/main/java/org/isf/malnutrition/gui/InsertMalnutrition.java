@@ -22,7 +22,6 @@
 package org.isf.malnutrition.gui;
 
 import java.util.EventListener;
-import java.util.GregorianCalendar;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -30,6 +29,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
 import org.isf.generaldata.MessageBundle;
@@ -38,7 +38,8 @@ import org.isf.malnutrition.model.Malnutrition;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.time.DateTextField;
+import org.isf.utils.jobjects.GoodDateChooser;
+import org.isf.utils.layout.SpringUtilities;
 
 public class InsertMalnutrition extends JDialog {
 
@@ -76,15 +77,13 @@ public class InsertMalnutrition extends JDialog {
 
 	private JPanel jContentPane;
 
-	private JPanel timePanel;
+	private JPanel mainPanel;
 
-	private JPanel fieldPanel;
-	
 	private JPanel buttonPanel;
 
-	private DateTextField confDate;
+	private GoodDateChooser confDate;
 
-	private DateTextField suppDate;
+	private GoodDateChooser suppDate;
 	
 	private JTextField weightField;
 
@@ -106,8 +105,7 @@ public class InsertMalnutrition extends JDialog {
 		inserting = insert;
 		if (inserting) {
 			setTitle(MessageBundle.getMessage("angal.malnutrition.newmalnutrition.title"));
-		}
-		else {
+		} else {
 			setTitle(MessageBundle.getMessage("angal.malnutrition.editmalnutrition.title"));
 		}
 		add(getJContentPane());
@@ -118,38 +116,23 @@ public class InsertMalnutrition extends JDialog {
 	private JPanel getJContentPane() {
 		jContentPane = new JPanel();
 		jContentPane.setLayout(new BoxLayout(jContentPane, BoxLayout.Y_AXIS));
-		jContentPane.add(getTimePanel());
-		jContentPane.add(getFieldPanel());
+		jContentPane.add(getMainPanel());
 		jContentPane.add(getButtonPanel());
 		validate();
 		return jContentPane;
 	}
 
-	private JPanel getTimePanel() {
-		timePanel = new JPanel();
-		timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.Y_AXIS));
-		
+	private JPanel getMainPanel() {
 		if (inserting) {
-			suppDate = new DateTextField(new GregorianCalendar());
-			confDate = new DateTextField();
+			suppDate = new GoodDateChooser();
+			confDate = new GoodDateChooser(null);
 		} else {
-			suppDate = new DateTextField(maln.getDateSupp());
-			confDate = new DateTextField(maln.getDateConf());
+			suppDate = new GoodDateChooser(maln.getDateSupp().toLocalDate());
+			confDate = new GoodDateChooser(maln.getDateConf().toLocalDate());
 		}
-				
-		JLabel suppDateLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.dateofthiscontrol"));
-		suppDateLabel.setAlignmentX(CENTER_ALIGNMENT);
-		timePanel.add(suppDateLabel);
-		timePanel.add(suppDate);
-		JLabel confDateLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.dateofthenextcontrol"));
-		confDateLabel.setAlignmentX(CENTER_ALIGNMENT);
-		timePanel.add(confDateLabel);
-		timePanel.add(confDate);
-		return timePanel;
-	}
+		JLabel suppDateLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.dateofthiscontrol") + ':');
+		JLabel confDateLabel = new JLabel(MessageBundle.getMessage("angal.malnutrition.dateofthenextcontrol") + ':');
 
-	private JPanel getFieldPanel() {
-		fieldPanel = new JPanel();
 		weightField = new JTextField();
 		weightField.setColumns(6);
 		heightField = new JTextField();
@@ -158,13 +141,22 @@ public class InsertMalnutrition extends JDialog {
 			weightField.setText(String.valueOf(maln.getWeight()));
 			heightField.setText(String.valueOf(maln.getHeight()));
 		}
-		JLabel weightLabel = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
-		JLabel heightLabel = new JLabel(MessageBundle.getMessage("angal.common.height.txt"));
-		fieldPanel.add(weightLabel);
-		fieldPanel.add(weightField);
-		fieldPanel.add(heightLabel);
-		fieldPanel.add(heightField);
-		return fieldPanel;
+		JLabel weightLabel = new JLabel(MessageBundle.getMessage("angal.common.weight.txt") + ':');
+		JLabel heightLabel = new JLabel(MessageBundle.getMessage("angal.common.height.txt") + ':');
+
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new SpringLayout());
+		mainPanel.add(suppDateLabel);
+		mainPanel.add(suppDate);
+		mainPanel.add(confDateLabel);
+		mainPanel.add(confDate);
+		mainPanel.add(weightLabel);
+		mainPanel.add(weightField);
+		mainPanel.add(heightLabel);
+		mainPanel.add(heightField);
+		SpringUtilities.makeCompactGrid(mainPanel, 4, 2, 5, 5, 5, 5);
+
+		return mainPanel;
 	}
 
 	private JPanel getButtonPanel() {
@@ -188,8 +180,8 @@ public class InsertMalnutrition extends JDialog {
 			} catch (NumberFormatException e) {
 				maln.setWeight(0);
 			}
-			maln.setDateSupp(suppDate.getCompleteLocalDateTime());
-			maln.setDateConf(confDate.getCompleteLocalDateTime());
+			maln.setDateSupp(suppDate.getDateStartOfDay());
+			maln.setDateConf(confDate.getDateStartOfDay());
 
 			if (inserting) {
 				boolean inserted = false;

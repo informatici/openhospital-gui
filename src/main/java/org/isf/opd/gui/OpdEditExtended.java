@@ -144,8 +144,6 @@ import com.toedter.calendar.JDateChooser;
 public class OpdEditExtended extends ModalJFrame implements PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	
-	private static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm:ss";
 
 	@Override
 	public void patientInserted(AWTEvent e) {
@@ -932,8 +930,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 	private CustomJDateChooser getOpdDateFieldCal() {
 		if (opdDateFieldCal == null) {
-			String d;
-
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDate() == null) {
 					visitDateOpd = LocalDateTime.now();
@@ -943,8 +939,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			} else {
 				visitDateOpd  = opd.getDate();
 			}
-			d = currentDateFormat.format(visitDateOpd);
-			opdDateFieldCal = new CustomJDateChooser(LocalDate.parse(d, currentDateFormat).atStartOfDay(), DATE_FORMAT_DD_MM_YY);
+			opdDateFieldCal = new CustomJDateChooser(visitDateOpd, DATE_FORMAT_DD_MM_YY_HH_MM_SS);
 			opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 			opdDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS);
 			opdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {

@@ -21,93 +21,111 @@
  */
 package org.isf.utils.jobjects;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.Panel;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Locale;
+
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
+import org.isf.generaldata.GeneralData;
 
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DateTimePicker;
+import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.components.TimePickerSettings;
+import com.github.lgooddatepicker.optionalusertools.DateTimeChangeListener;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 public class GoodDateTimeChooser extends Panel {
 
 	private static final String TIME_FORMAT = "H:mm";
 
-	DateTimePicker dateTimePicker;
-	DatePickerSettings dateSettings;
-	TimePickerSettings timeSettings;
+	private DateTimePicker dateTimePicker;
+	private DatePickerSettings dateSettings;
+	private TimePickerSettings timeSettings;
 
-	public GoodDateTimeChooser(LocalDateTime dateTime, boolean setTimeRange) {
-//		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
-//		this.setLayout(layout);
-//		dateSettings = new DatePickerSettings();
-//		dateSettings.setLocale(new Locale(GeneralData.LANGUAGE));
-//		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT_DD_MM_YYYY);
-//		dateSettings.setAllowEmptyDates(false);
-//		timeSettings = new TimePickerSettings();
-//		timeSettings.setAllowEmptyTimes(false);
-//		timeSettings.setAllowKeyboardEditing(false);
-//		timeSettings.setFormatForDisplayTime(TIME_FORMAT);
-//		timeSettings.setFormatForMenuTimes(TIME_FORMAT);
-//		timeSettings.generatePotentialMenuTimes(getTimeIncrement(GeneralData.VISITINCREMENT), null, null);
-//		if (dateTime == null) {
-//			dateTime = LocalDateTime.now();
-//		}
-//		dateTime = dateTime.withMinute(0);
-//		dateTime = dateTime.withSecond(0);
-//		dateTime = dateTime.withNano(0);
-//		if (setTimeRange) {
-//			// ensure the hour is within the range of specified hours
-//			int hour = dateTime.getHour();
-//			if (hour < GeneralData.VISITSTARTHOUR || hour > GeneralData.VISITENDHOUR) {
-//				dateTime = dateTime.withHour(GeneralData.VISITSTARTHOUR);
-//			}
-//		}
-//		dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
-//		dateTimePicker.getTimePicker().getSettings().setVetoPolicy(new OHVetoTimerPolicy());
-//		dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
-//		dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
-//		add(dateTimePicker);
+	public GoodDateTimeChooser(LocalDateTime dateTime) {
+		this(dateTime, true, true);
+	}
+
+	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner) {
+		this(dateTime, useSpinner, true);
+	}
+
+	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner, boolean useDefaultTimeChangeListener) {
+		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
+		this.setLayout(layout);
+		dateSettings = new DatePickerSettings();
+		dateSettings.setLocale(new Locale(GeneralData.LANGUAGE));
+		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT_DD_MM_YYYY);
+		dateSettings.setAllowEmptyDates(true);
+		dateSettings.setAllowKeyboardEditing(true);
+		timeSettings = new TimePickerSettings();
+		timeSettings.setAllowEmptyTimes(true);
+		timeSettings.setAllowKeyboardEditing(true);
+		timeSettings.setFormatForDisplayTime(TIME_FORMAT);
+		timeSettings.setFormatForMenuTimes(TIME_FORMAT);
+		if (useSpinner) {
+			timeSettings.setDisplayToggleTimeMenuButton(false);
+			timeSettings.setDisplaySpinnerButtons(true);
+		} else {
+			timeSettings.setDisplayToggleTimeMenuButton(true);
+			timeSettings.setDisplaySpinnerButtons(false);
+		}
+		dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
+		// This helps the manual editing of the year field not to reset to some *very* old year value
+		dateSettings.setDateRangeLimits(LocalDate.of(999, 12, 31), null);
+		if (dateTime != null) {
+			dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
+			dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
+		}
+
+		ImageIcon calendarIcon = new ImageIcon("rsc/icons/calendar_button.png");
+		JButton datePickerButton = dateTimePicker.datePicker.getComponentToggleCalendarButton();
+		datePickerButton.setText("");
+		datePickerButton.setIcon(calendarIcon);
+
+		if (useDefaultTimeChangeListener) {
+			addDateTimeChangeListener(event -> {
+				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
+				if (dateChangeEvent != null) {
+					// if the time is blank set it to the current time; otherwise leave it alone
+					TimePicker timePicker = event.getTimePicker();
+					if (timePicker.getTime() == null) {
+						timePicker.setTime(LocalTime.now());
+					}
+				}
+			});
+		}
+
+		add(dateTimePicker);
 	}
 
 	public LocalDateTime getLocalDateTime() {
 		return dateTimePicker.getDateTimeStrict();
 	}
 
-//	/**
-//	 * OHVetoTimerPolicy, A veto policy is a way to disallow certain times from being selected in
-//	 * the time picker. A vetoed time cannot be added to the time drop down menu. A vetoed time
-//	 * cannot be selected by using the keyboard or the mouse.
-//	 */
-//	private static class OHVetoTimerPolicy implements TimeVetoPolicy {
-//
-//		/**
-//		 * isTimeAllowed, Return true if a time should be allowed, or false if a time should be vetoed.
-//		 */
-//		@Override
-//		public boolean isTimeAllowed(LocalTime time) {
-//			// Only allow times from 5a to 7p, inclusive.
-//			return PickerUtilities.isLocalTimeInRange(
-//					time, LocalTime.of(GeneralData.VISITSTARTHOUR, 00), LocalTime.of(GeneralData.VISITENDHOUR, 00), true);
-//		}
-//	}
-//
-//	private TimeIncrement getTimeIncrement(int minutes) {
-//		switch (minutes) {
-//			case 5:
-//				return TimeIncrement.FiveMinutes;
-//			case 10:
-//				return TimeIncrement.TenMinutes;
-//			case 15:
-//				return TimeIncrement.FifteenMinutes;
-//			case 20:
-//				return TimeIncrement.TwentyMinutes;
-//			case 30:
-//				return TimeIncrement.ThirtyMinutes;
-//			case 60:
-//				return TimeIncrement.OneHour;
-//			default:
-//				return TimeIncrement.ThirtyMinutes;
-//		}
-//	}
+	public void setDateTime(LocalDateTime dateTime) {
+		if (dateTime != null) {
+			dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
+			dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
+		} else {
+			dateTimePicker.datePicker.clear();
+			dateTimePicker.timePicker.clear();
+		}
+	}
 
+	public void setDate(LocalDate date) {
+		dateTimePicker.datePicker.setDate(date);
+	}
+
+	public void addDateTimeChangeListener(DateTimeChangeListener listener) {
+		dateTimePicker.addDateTimeChangeListener(listener);
+	}
 }
