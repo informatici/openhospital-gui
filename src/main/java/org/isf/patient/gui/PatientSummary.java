@@ -44,6 +44,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.utils.image.ImageUtil;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ public class PatientSummary {
 	
 	private int maximumWidth = 350;
 	private int borderThickness = 10;
-	private int imageMaxWidth = 140;
+
 
 	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
@@ -145,17 +146,6 @@ public class PatientSummary {
 		return lP;
 	}
 	
-	private Image scaleImage(int maxDim, Image photo) {
-		double scale = (double) maxDim / (double) photo.getHeight(null);
-		if (photo.getWidth(null) > photo.getHeight(null)) {
-			scale = (double) maxDim / (double) photo.getWidth(null);
-		}
-		int scaledW = (int) (scale * photo.getWidth(null));
-		int scaledH = (int) (scale * photo.getHeight(null));
-		
-		return photo.getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH);
-	}
-	
 	private JPanel getPatientCard() {
 		JPanel cardPanel = new JPanel();
 		cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.X_AXIS));
@@ -184,11 +174,11 @@ public class PatientSummary {
 		
 		JLabel patientPhoto = new JLabel();
 		if (patient.getPatientProfilePhoto() != null && patient.getPatientProfilePhoto().getPhotoAsImage() != null) {
-			patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, patient.getPatientProfilePhoto().getPhotoAsImage())));
+			patientPhoto.setIcon(new ImageIcon(ImageUtil. scaleImage(PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH, patient.getPatientProfilePhoto().getPhotoAsImage())));
 		} else {
 			try {
 				Image noPhotoImage = ImageIO.read(new File("rsc/images/nophoto.png"));
-				patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, noPhotoImage)));
+				patientPhoto.setIcon(new ImageIcon(ImageUtil. scaleImage(PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH, noPhotoImage)));
 			} catch (IOException ioe) {
 				LOGGER.error("rsc/images/nophoto.png is missing...");
 			}

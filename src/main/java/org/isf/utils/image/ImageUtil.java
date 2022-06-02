@@ -23,6 +23,7 @@ package org.isf.utils.image;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,7 +32,20 @@ import javax.imageio.ImageIO;
 
 public final class ImageUtil {
 
+
+
 	private ImageUtil() {
+	}
+
+	public static Image scaleImage(int maxDim, Image image) {
+		double scale = (double) maxDim / (double) image.getHeight(null);
+		if (image.getWidth(null) > image.getHeight(null)) {
+			scale = (double) maxDim / (double) image.getWidth(null);
+		}
+		int scaledW = (int) (scale * image.getWidth(null));
+		int scaledH = (int) (scale * image.getHeight(null));
+
+		return image.getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH);
 	}
 
 	public static BufferedImage scaleImage(final BufferedImage src, final int boundWidth, final int boundHeight) {

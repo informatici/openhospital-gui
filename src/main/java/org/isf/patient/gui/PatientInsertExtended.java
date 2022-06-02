@@ -2158,7 +2158,8 @@ public class PatientInsertExtended extends JDialog {
 
 			try {
 				final Image image = patient.getPatientProfilePhoto() != null ? patient.getPatientProfilePhoto().getPhotoAsImage() : null;
-				photoPanel = new PatientPhotoPanel(this, patient.getCode(), image);
+				Image scaledImage = image!=null ? ImageUtil. scaleImage(PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH, image) : null;
+				photoPanel = new PatientPhotoPanel(this, patient.getCode(), scaledImage);
 			} catch (IOException ioException) {
 				LOGGER.error(ioException.getMessage(), ioException);
 			}
