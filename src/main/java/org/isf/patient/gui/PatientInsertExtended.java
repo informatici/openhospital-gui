@@ -21,8 +21,6 @@
  */
 package org.isf.patient.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
-
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -34,21 +32,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -65,7 +59,6 @@ import javax.swing.event.EventListenerList;
 
 import org.isf.agetype.manager.AgeTypeBrowserManager;
 import org.isf.agetype.model.AgeType;
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
 import org.isf.menu.manager.Context;
@@ -75,13 +68,14 @@ import org.isf.patient.model.PatientProfilePhoto;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.image.ImageUtil;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
-import org.isf.utils.time.Converters;
 import org.isf.video.gui.PatientPhotoPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.toedter.calendar.JDateChooser;
+import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 /**
  * ------------------------------------------
@@ -200,8 +194,8 @@ public class PatientInsertExtended extends JDialog {
 	private JLabel jBirthDateLabel = null;
 	private JPanel jBirthDateGroupPanel = null;
 	private LocalDate birthDate = null;
-	private JButton jBirthDateReset = null;
 	private JLabel jBirthDateAge = null;
+	private GoodDateChooser jBirthDateChooser;
 
 	// AgeDescription Components:
 	private int ageType;
@@ -729,69 +723,30 @@ public class PatientInsertExtended extends JDialog {
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJBirthDateGroupPanel() {
-		class BirthDateChooser extends JDateChooser {
-
-			private static final long serialVersionUID = -78813689560070139L;
-
-			public BirthDateChooser(LocalDate localDate) {
-				super();
-				super.setLocale(new Locale(GeneralData.LANGUAGE));
-				super.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
-				super.setPreferredSize(new Dimension(150, 20));
-				if (birthDate != null) {
-					super.setCalendar(Converters.toCalendar(localDate.atStartOfDay()));
-				}
-			}
-
-			@Override
-			public void propertyChange(PropertyChangeEvent e) {
-				super.propertyChange(e);
-
-				if (super.dateSelected) {
-					birthDate = Converters.convertToLocalDateTime(super.jcalendar.getCalendar()).toLocalDate();
-					if (birthDate.isAfter(LocalDate.now())) {
-						super.setCalendar(Converters.toCalendar(LocalDateTime.now()));
-					} else {
-						calcAge(birthDate);
-					}
-				}
-
-				if (super.dateEditor.getDate() != null) {
-					birthDate = Converters.convertToLocalDateTime(super.getCalendar()).toLocalDate();
-					if (birthDate.isAfter(LocalDate.now())) {
-						super.setCalendar(Converters.toCalendar(LocalDateTime.now()));
-					} else {
-						calcAge(birthDate);
-					}
-				}
-			}
-		}
-
 		if (jBirthDateGroupPanel == null) {
-			jBirthDateGroupPanel = new JPanel();
-			jBirthDateGroupPanel.setLayout(new BorderLayout());
+			jBirthDateGroupPanel = new JPanel(new BorderLayout());
 
-			if (!insert) {
-				LocalDate sBirthDate = patient.getBirthDate();
-				if (sBirthDate != null) {
-					birthDate = sBirthDate;
+			if (!insert && patient.getBirthDate() != null) {
+				birthDate = patient.getBirthDate();
+			}
+
+			jBirthDateChooser = new GoodDateChooser(birthDate, false);
+			jBirthDateChooser.addDateChangeListener(new DateChangeListener() {
+
+				@Override
+				public void dateChanged(DateChangeEvent event) {
+					LocalDate newDate = event.getNewDate();
+					if (newDate != null) {
+						calcAge(newDate);
+						birthDate = newDate;
+					} else {
+						birthDate = null;
+						getJBirthDateAge();
+						jBirthDateAge.setText("");
+					}
 				}
-			}
-
-			final BirthDateChooser jBirthDateChooser = new BirthDateChooser(birthDate);
-			jBirthDateGroupPanel.add(jBirthDateChooser, BorderLayout.CENTER);
-
-			if (jBirthDateReset == null) {
-				jBirthDateReset = new JButton();
-				jBirthDateReset.setIcon(new ImageIcon("rsc/icons/trash_button.png"));
-				jBirthDateReset.setPreferredSize(new Dimension(20, 20));
-				jBirthDateReset.addActionListener(actionEvent -> {
-					jBirthDateChooser.getDateEditor().setDate(null);
-					birthDate = null;
-				});
-
-				jBirthDateGroupPanel.add(jBirthDateReset, BorderLayout.EAST);
-			}
+			});
+			jBirthDateGroupPanel.add(jBirthDateChooser, BorderLayout.WEST);
 		}
 		return jBirthDateGroupPanel;
 	}
@@ -1308,7 +1263,6 @@ public class PatientInsertExtended extends JDialog {
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJAgeTypeSelection() {
-
 		if (jAgeTypeAge.isSelected()) {
 			jAgeTypeSelection = getJAge();
 		} else if (jAgeTypeBirthDate.isSelected()) {
