@@ -23,7 +23,6 @@ package org.isf.operation.gui;
 
 import java.awt.AWTEvent;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.isf.menu.gui.MainMenu;
@@ -36,7 +35,6 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhTableOperationModel;
-import org.isf.utils.time.Converters;
 
 public class OperationRowOpd extends OperationRowBase implements OpdEditExtended.SurgeryListener {
 
@@ -63,13 +61,13 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 
 	@Override
 	public void addToGrid() {
-		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
+		if ((this.textDate.getLocalDateTime() == null) || (this.comboOperation.getSelectedItem() == null)) {
 			MessageDialog.error(OperationRowOpd.this, "angal.operationrowedit.warningdateope");
 			return;
 		}
 
 		OperationRow operationRow = new OperationRow();
-		operationRow.setOpDate(Converters.convertToLocalDateTime((Date) this.textDate.getDate()));
+		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		if (this.comboResult.getSelectedItem() != null) {
 			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			operationRow.setOpResult(opResult);
@@ -93,7 +91,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 			oprowData.add(operationRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
-			opeInter.setOpDate(Converters.convertToLocalDateTime((Date) this.textDate.getDate()));
+			opeInter.setOpDate(this.textDate.getLocalDateTime());
 			opeInter.setOpResult(this.comboResult.getSelectedItem().toString());
 			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
