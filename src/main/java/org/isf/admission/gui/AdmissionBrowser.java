@@ -23,7 +23,6 @@ package org.isf.admission.gui;
 
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -40,10 +39,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.EventListener;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import javax.swing.BorderFactory;
@@ -99,7 +96,6 @@ import org.isf.pregtreattype.model.PregnantTreatmentType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
-import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.GoodDateTimeChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -221,21 +217,21 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private VoLimitedTextField weightField = null;
 
-	private CustomJDateChooser visitDateFieldCal = null; // Calendar
+	private GoodDateTimeChooser visitDateFieldCal = null;
 
 	private JComboBox treatmTypeBox = null;
 
-	private final int preferredWidthDates = 110;
+	private static final int PREFERRED_WIDTH_DATES = 225;
 
-	private final int preferredWidthDiagnosis = 550;
+	private static final int PREFERRED_WIDTH_DIAGNOSIS = 550;
 
-	private final int preferredWidthTypes = 220;
+	private static final int PREFERRED_WIDTH_TYPES = 220;
 
-	private final int preferredHeightLine = 24;
+	private static final int PREFERRED_HEIGHT_LINE = 24;
 
 	private LocalDateTime deliveryDate = LocalDateTime.now();
 
-	private CustomJDateChooser deliveryDateFieldCal = null;
+	private GoodDateTimeChooser deliveryDateFieldCal = null;
 
 	private JComboBox deliveryTypeBox = null;
 
@@ -253,11 +249,11 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private LocalDateTime abortDate = null;
 
-	private CustomJDateChooser ctrl1DateFieldCal = null;
+	private GoodDateTimeChooser ctrl1DateFieldCal = null;
 
-	private CustomJDateChooser ctrl2DateFieldCal = null;
+	private GoodDateTimeChooser ctrl2DateFieldCal = null;
 
-	private CustomJDateChooser abortDateFieldCal = null;
+	private GoodDateTimeChooser abortDateFieldCal = null;
 
 	private JComboBox<Ward> wardBox;
 
@@ -627,8 +623,8 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			layout.setHorizontalGroup(layout.createSequentialGroup()
 					.addGroup(layout.createParallelGroup(LEADING)
-							.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, preferredWidthDates, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, preferredWidthDates, GroupLayout.PREFERRED_SIZE)
+							.addComponent(getVisitDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
+							.addComponent(getDeliveryDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
 					)
 					.addGroup(layout.createParallelGroup(LEADING)
 							.addComponent(getWeightPanel(), GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -637,9 +633,9 @@ public class AdmissionBrowser extends ModalJFrame {
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 							.addComponent(getTreatmentPanel())
 							.addComponent(getDeliveryResultTypePanel())
-							.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, preferredWidthDates, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, preferredWidthDates, GroupLayout.PREFERRED_SIZE)
-							.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, preferredWidthDates, GroupLayout.PREFERRED_SIZE)
+							.addComponent(getControl1DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
+							.addComponent(getControl2DatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
+							.addComponent(getAbortDatePanel(), GroupLayout.PREFERRED_SIZE, PREFERRED_WIDTH_DATES, GroupLayout.PREFERRED_SIZE)
 					)
 			);
 
@@ -764,11 +760,9 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				visitDate = LocalDateTime.now();
 			}
-			visitDateFieldCal = new CustomJDateChooser(visitDate, DATE_FORMAT_DD_MM_YY); // Calendar
-			visitDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			visitDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
+			visitDateFieldCal = new GoodDateTimeChooser(visitDate);
 
-			visitDatePanel.add(visitDateFieldCal); // Calendar
+			visitDatePanel.add(visitDateFieldCal);
 			visitDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.visitdate.border")));
 		}
 		return visitDatePanel;
@@ -836,12 +830,8 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			if (editing && admission.getDeliveryDate() != null) {
 				deliveryDate = admission.getDeliveryDate();
-			} else {
-				deliveryDate = LocalDateTime.now();
 			}
-			deliveryDateFieldCal = new CustomJDateChooser(deliveryDate, DATE_FORMAT_DD_MM_YY); // Calendar
-			deliveryDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			deliveryDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
+			deliveryDateFieldCal = new GoodDateTimeChooser(deliveryDate);
 
 			deliveryDatePanel.add(deliveryDateFieldCal);
 			deliveryDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliverydate.border")));
@@ -854,13 +844,8 @@ public class AdmissionBrowser extends ModalJFrame {
 			abortDatePanel = new JPanel();
 			if (editing && admission.getAbortDate() != null) {
 				abortDate = admission.getAbortDate();
-			} else {
-				abortDate = LocalDateTime.now();
 			}
-			abortDateFieldCal = new CustomJDateChooser(abortDate, DATE_FORMAT_DD_MM_YY);
-			abortDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			abortDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-
+			abortDateFieldCal = new GoodDateTimeChooser(abortDate);
 			abortDatePanel.add(abortDateFieldCal);
 			abortDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.abortdate.border")));
 		}
@@ -873,13 +858,8 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			if (editing && admission.getCtrlDate1() != null) {
 				ctrl1Date = admission.getCtrlDate1();
-			} else {
-				ctrl1Date = LocalDateTime.now();
 			}
-			ctrl1DateFieldCal = new CustomJDateChooser(ctrl1Date, DATE_FORMAT_DD_MM_YY);
-			ctrl1DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			ctrl1DateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-
+			ctrl1DateFieldCal = new GoodDateTimeChooser(ctrl1Date);
 			control1DatePanel.add(ctrl1DateFieldCal);
 			control1DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln1date.border")));
 		}
@@ -892,13 +872,8 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			if (editing && admission.getCtrlDate2() != null) {
 				ctrl2Date = admission.getCtrlDate2();
-			} else {
-				ctrl2Date = LocalDateTime.now();
 			}
-			ctrl2DateFieldCal = new CustomJDateChooser(ctrl2Date, DATE_FORMAT_DD_MM_YY);
-			ctrl2DateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			ctrl2DateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-
+			ctrl2DateFieldCal = new GoodDateTimeChooser(ctrl2Date);
 			control2DatePanel.add(ctrl2DateFieldCal);
 			control2DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln2date.border")));
 		}
@@ -1039,7 +1014,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			diseaseInPanel.add(Box.createHorizontalStrut(50));
 
 			diseaseInBox = new JComboBox();
-			diseaseInBox.setPreferredSize(new Dimension(preferredWidthDiagnosis, preferredHeightLine));
+			diseaseInBox.setPreferredSize(new Dimension(PREFERRED_WIDTH_DIAGNOSIS, PREFERRED_HEIGHT_LINE));
 
 			Disease diseaseIn = admission.getDiseaseIn();
 			diseaseInBox.removeAllItems();
@@ -1135,7 +1110,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			admissionTypePanel = new JPanel();
 
 			admTypeBox = new JComboBox();
-			admTypeBox.setPreferredSize(new Dimension(preferredWidthTypes, preferredHeightLine));
+			admTypeBox.setPreferredSize(new Dimension(PREFERRED_WIDTH_TYPES, PREFERRED_HEIGHT_LINE));
 			admTypeBox.addItem("");
 			try {
 				admTypeList = admissionManager.getAdmissionType();
@@ -1173,7 +1148,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (dateIn == null) {
 				dateIn = LocalDateTime.now();
 			}
-			dateInFieldCal = new GoodDateTimeChooser(dateIn);
+			dateInFieldCal = new GoodDateTimeChooser(dateIn, true, false);
 
 			dateInFieldCal.addDateTimeChangeListener(event -> {
 				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
@@ -1225,7 +1200,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			diseaseOut1Panel.add(label);
 
 			diseaseOut1Box = new JComboBox();
-			diseaseOut1Box.setPreferredSize(new Dimension(preferredWidthDiagnosis, preferredHeightLine));
+			diseaseOut1Box.setPreferredSize(new Dimension(PREFERRED_WIDTH_DIAGNOSIS, PREFERRED_HEIGHT_LINE));
 
 			Disease diseaseOut1 = admission.getDiseaseOut1();
 			diseaseOut1Box.removeAllItems();
@@ -1313,7 +1288,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			diseaseOut2Panel.add(label);
 
 			diseaseOut2Box = new JComboBox();
-			diseaseOut2Box.setPreferredSize(new Dimension(preferredWidthDiagnosis, preferredHeightLine));
+			diseaseOut2Box.setPreferredSize(new Dimension(PREFERRED_WIDTH_DIAGNOSIS, PREFERRED_HEIGHT_LINE));
 
 			Disease diseaseOut2 = admission.getDiseaseOut2();
 			diseaseOut2Box.removeAllItems();
@@ -1400,7 +1375,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			diseaseOut3Panel.add(label);
 
 			diseaseOut3Box = new JComboBox();
-			diseaseOut3Box.setPreferredSize(new Dimension(preferredWidthDiagnosis, preferredHeightLine));
+			diseaseOut3Box.setPreferredSize(new Dimension(PREFERRED_WIDTH_DIAGNOSIS, PREFERRED_HEIGHT_LINE));
 
 			Disease diseaseOut3 = admission.getDiseaseOut3();
 			diseaseOut3Box.removeAllItems();
@@ -1480,7 +1455,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			dischargeTypePanel = new JPanel();
 
 			disTypeBox = new JComboBox();
-			disTypeBox.setPreferredSize(new Dimension(preferredWidthTypes, preferredHeightLine));
+			disTypeBox.setPreferredSize(new Dimension(PREFERRED_WIDTH_TYPES, PREFERRED_HEIGHT_LINE));
 			disTypeBox.addItem("");
 			try {
 				disTypeList = admissionManager.getDischargeType();
@@ -1536,11 +1511,10 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (dischargeDatePanel == null) {
 			dischargeDatePanel = new JPanel();
 
-			Date myDate = null;
 			if (editing && admission.getDisDate() != null) {
 				dateOut = admission.getDisDate();
 			}
-			dateOutFieldCal = new GoodDateTimeChooser(editing ? dateOut : null);
+			dateOutFieldCal = new GoodDateTimeChooser(editing ? dateOut : null, true, false);
 			dateOutFieldCal.addDateTimeChangeListener(event -> {
 				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
 				if (dateChangeEvent != null) {
@@ -1552,6 +1526,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					updateBedDays();
 				}
 			});
+
 			dischargeDatePanel.add(dateOutFieldCal);
 			dischargeDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.dischargedate.border")));
 		}
@@ -1794,7 +1769,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 
 					// get visit date
-					if (visitDateFieldCal.getDate() != null) {
+					if (visitDateFieldCal.getLocalDateTime() != null) {
 						visitDate = visitDateFieldCal.getLocalDateTime();
 						admission.setVisitDate(visitDate);
 					} else {
@@ -1802,7 +1777,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 
 					// get delivery date
-					if (deliveryDateFieldCal.getDate() != null) {
+					if (deliveryDateFieldCal.getLocalDateTime() != null) {
 						deliveryDate = deliveryDateFieldCal.getLocalDateTime();
 						admission.setDeliveryDate(deliveryDate);
 					} else {
@@ -1824,7 +1799,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 
 					// get ctrl1 date
-					if (ctrl1DateFieldCal.getDate() != null) {
+					if (ctrl1DateFieldCal.getLocalDateTime() != null) {
 						ctrl1Date = ctrl1DateFieldCal.getLocalDateTime();
 						admission.setCtrlDate1(ctrl1Date);
 					} else {
@@ -1832,7 +1807,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 
 					// get ctrl2 date
-					if (ctrl2DateFieldCal.getDate() != null) {
+					if (ctrl2DateFieldCal.getLocalDateTime() != null) {
 						ctrl2Date = ctrl2DateFieldCal.getLocalDateTime();
 						admission.setCtrlDate2(ctrl2Date);
 					} else {
@@ -1840,7 +1815,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					}
 
 					// get abort date
-					if (abortDateFieldCal.getDate() != null) {
+					if (abortDateFieldCal.getLocalDateTime() != null) {
 						abortDate = abortDateFieldCal.getLocalDateTime();
 						admission.setAbortDate(abortDate);
 					} else {
