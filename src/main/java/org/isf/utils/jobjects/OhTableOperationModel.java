@@ -21,7 +21,7 @@
  */
 package org.isf.utils.jobjects;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -97,20 +97,16 @@ public class OhTableOperationModel<T> implements TableModel {
 		switch (columnIndex) {
 		case 0:
 			columnLabel= MessageBundle.getMessage("angal.operationrowlist.date").toUpperCase();
-			//columnLabel= "Date";
 			break;
 		case 1:
 			columnLabel= MessageBundle.getMessage("angal.operationrowlist.natureop").toUpperCase();
-			//columnLabel= "Nature Operation";
 			break;
 		case 2:
 			columnLabel= MessageBundle.getMessage("angal.common.result.txt").toUpperCase();
-			//columnLabel= "Resultat";
 			break;
 		case 3:
 			columnLabel= MessageBundle.getMessage("angal.operationrowedit.unitetrans").toUpperCase();
-			//columnLabel= "Unite Trans";
-			break;	
+			break;
 		default:
 			break;
 		}
@@ -136,11 +132,9 @@ public class OhTableOperationModel<T> implements TableModel {
 					case -1:
 						return opdObj;
 					case 0:
-						String dt;
 						try {
-							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
-							dt = currentDateFormat.format(opdObj.getOpDate());
-							value = dt;
+							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY, new Locale(GeneralData.LANGUAGE));
+							value = currentDateFormat.format(opdObj.getOpDate());
 						} catch (Exception ex) {
 							value = opdObj.getOpDate().toString();
 						}

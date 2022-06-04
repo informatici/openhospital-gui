@@ -46,7 +46,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
@@ -127,7 +126,6 @@ public class OperationRowEdit extends JPanel {
 	private CustomJDateChooser jCalendarDate;
 
 	private OperationRow opeRow;
-	private JTextField dateTextField;
 	private JButton btnCancel;
 	private JDialog myParent;
 	OperationBrowserManager ope;
@@ -212,8 +210,6 @@ public class OperationRowEdit extends JPanel {
 		gbcOpecomboBox.gridy = 2;
 		panelBody.add(opeComboBox, gbcOpecomboBox);
 		
-		dateTextField = new JTextField();
-		
 		lblDate = new JLabel(MessageBundle.getMessage("angal.operationrowlist.date")); //$NON-NLS-1$
 		lblDate.setBorder(new EmptyBorder(0, 0, 0, 4));
 		lblDate.setHorizontalAlignment(SwingConstants.LEFT);
@@ -228,7 +224,6 @@ public class OperationRowEdit extends JPanel {
 		gbcCalendarDate.gridx = 4;
 		gbcCalendarDate.gridy = 3;
 		panelBody.add(this.getJCalendarDate(), gbcCalendarDate);
-		dateTextField.setColumns(10);
 		
 		resultComboBox = getComboResultBox();
 		
