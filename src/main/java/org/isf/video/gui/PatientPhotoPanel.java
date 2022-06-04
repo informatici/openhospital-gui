@@ -57,20 +57,21 @@ import com.github.sarxos.webcam.Webcam;
 public class PatientPhotoPanel extends JPanel {
 
 	private static final long serialVersionUID = 9129641275344016618L;
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
 
 	// Photo Components:
 	private JPanel jPhotoPanel = null;
 	private PhotoPanel externalPanel = null;
 	private PatientInsertExtended owner;
-	
+
 	private JButton jGetPhotoButton = null;
 	private JButton jAttachPhotoButton = null;
 
 	private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
 
-	public PatientPhotoPanel(final PatientInsertExtended patientFrame, final Integer code, final Image patientPhoto) throws IOException {
+	public PatientPhotoPanel(final PatientInsertExtended patientFrame, final Integer code, final Image patientPhoto)
+			throws IOException {
 		owner = patientFrame;
 		this.photoboothPanelPresentationModel = new PhotoboothPanelPresentationModel();
 		if (jPhotoPanel == null) {
@@ -109,13 +110,20 @@ public class PatientPhotoPanel extends JPanel {
 			box.add(Box.createHorizontalGlue());
 
 			externalPanel.add(box, BorderLayout.NORTH);
-			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
-				final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
-				if (newImage != null) {
-					externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
-					patientFrame.setPatientPhoto(newImage);
-				}
-			});
+			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE,
+					propertyChangeEvent -> {
+						final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
+						if (newImage != null) {
+							externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
+							try {
+								BufferedImage autoResizedImage = ImageUtil.fixFileSize(newImage,
+										GeneralData.MAXPROFPICFILESIZEBYTES);
+								patientFrame.setPatientPhoto(autoResizedImage);
+							} catch (IOException e) {
+								LOGGER.error("Oooops! Can't resize profile picture. Sorry :(");
+							}
+						}
+					});
 
 			box.add(btnDeletePhoto);
 
@@ -125,12 +133,15 @@ public class PatientPhotoPanel extends JPanel {
 
 			jAttachPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.file.btn"));
 			jAttachPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.file.btn.key"));
-			jAttachPhotoButton.setMinimumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
-			jAttachPhotoButton.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
+			jAttachPhotoButton
+					.setMinimumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
+			jAttachPhotoButton
+					.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.addActionListener(actionEvent -> {
 				JFileChooser fc = new JFileChooser();
 				String[] extensions = { "tif", "tiff", "jpg", "jpeg", "bmp", "png", "gif" };
-				FileFilter imageFilter = new FileNameExtensionFilter(MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
+				FileFilter imageFilter = new FileNameExtensionFilter(
+						MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
 				fc.setFileFilter(imageFilter);
 				fc.setAcceptAllFileFilterUsed(false);
 				int returnVal = fc.showOpenDialog(patientFrame);
@@ -154,8 +165,10 @@ public class PatientPhotoPanel extends JPanel {
 			if (GeneralData.VIDEOMODULEENABLED && webcam != null) {
 				jGetPhotoButton = new JButton(MessageBundle.getMessage("angal.patientphoto.newphoto.btn"));
 				jGetPhotoButton.setMnemonic(MessageBundle.getMnemonic("angal.patientphoto.newphoto.btn.key"));
-				jGetPhotoButton.setMinimumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
-				jGetPhotoButton.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
+				jGetPhotoButton
+						.setMinimumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
+				jGetPhotoButton
+						.setMaximumSize(new Dimension(200, (int) jGetPhotoButton.getPreferredSize().getHeight()));
 
 				final Dimension[] resolutions = webcam.getDevice().getResolutions();
 				jGetPhotoButton.addActionListener(actionEvent -> {
@@ -163,7 +176,8 @@ public class PatientPhotoPanel extends JPanel {
 					// start with the highest resolution.
 					photoboothPanelPresentationModel.setResolution(resolutions[resolutions.length - 1]);
 
-					final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel, owner);
+					final PhotoboothDialog photoBoothDialog = new PhotoboothDialog(photoboothPanelPresentationModel,
+							owner);
 					photoBoothDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 					photoBoothDialog.setVisible(true);
 					photoBoothDialog.toFront();
@@ -185,10 +199,10 @@ public class PatientPhotoPanel extends JPanel {
 		add(jPhotoPanel);
 	}
 
-	
 	private JPanel setMyBorder(JPanel c, String title) {
 		javax.swing.border.Border b1 = BorderFactory.createLineBorder(Color.lightGray);
-		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP);
+		javax.swing.border.Border b2 = BorderFactory.createTitledBorder(b1, title, javax.swing.border.TitledBorder.LEFT,
+				javax.swing.border.TitledBorder.TOP);
 
 		c.setBorder(b2);
 		return c;
@@ -206,7 +220,7 @@ class CroppingDialog extends JDialog {
 	 */
 	private Cropping crop;
 	private File image;
-	
+
 	/*
 	 * Return Value
 	 */

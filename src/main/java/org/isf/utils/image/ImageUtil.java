@@ -26,13 +26,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
 public final class ImageUtil {
-
-
 
 	private ImageUtil() {
 	}
@@ -87,6 +86,28 @@ public final class ImageUtil {
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to convert image to byte array", e);
 		}
+	}
+
+	public static BufferedImage fixFileSize(final BufferedImage newImage, int maximumFileSize) throws IOException {
+		BufferedImage resizedImage = newImage;
+		byte[] byteImage = ImageUtil.imageToByte(resizedImage);
+
+		File tmpFile = new File("tmp.img");
+		ImageIO.write(resizedImage, "png", tmpFile);
+
+		while ((tmpFile.length() / 1024) > maximumFileSize) {
+			int newWidth = resizedImage.getWidth() - (resizedImage.getWidth() / 100) * 10;
+			int newHeight = resizedImage.getHeight() - (resizedImage.getHeight() / 100) * 10;
+
+			resizedImage = ImageUtil.scaleImage(resizedImage, newWidth, newHeight);
+			byteImage = ImageUtil.imageToByte(resizedImage);
+
+			tmpFile = new File("tmp.img");
+			ImageIO.write(resizedImage, "png", tmpFile);
+			System.out.println("Width: " + newWidth + " Height: " + newHeight + " size: " + byteImage.length
+					+ " file length: " + (tmpFile.length() / 1024));
+		}
+		return resizedImage;
 	}
 
 }
