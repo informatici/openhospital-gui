@@ -58,6 +58,8 @@ public class PatientPhotoPanel extends JPanel {
 
 	private static final long serialVersionUID = 9129641275344016618L;
 
+	private static final int MAXPROFPICFILESIZEBYTES = 4096;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
 
 	// Photo Components:
@@ -117,7 +119,7 @@ public class PatientPhotoPanel extends JPanel {
 							externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
 							try {
 								BufferedImage autoResizedImage = ImageUtil.fixFileSize(newImage,
-										GeneralData.MAXPROFPICFILESIZEBYTES);
+										MAXPROFPICFILESIZEBYTES);
 								patientFrame.setPatientPhoto(autoResizedImage);
 							} catch (IOException e) {
 								LOGGER.error("Oooops! Can't resize profile picture. Sorry :(");
