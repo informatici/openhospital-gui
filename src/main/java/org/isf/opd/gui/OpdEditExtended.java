@@ -21,8 +21,7 @@
  */
 package org.isf.opd.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -38,11 +37,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.EventListener;
 import java.util.Iterator;
 import java.util.List;
@@ -94,17 +91,14 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
-import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
-
-import com.toedter.calendar.JDateChooser;
 
 /**
  * ------------------------------------------
@@ -219,8 +213,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JLabel jLabelAge = null;
 	private JLabel jLabelSex = null;
 	private LocalDateTime visitDateOpd = null;
-	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
-	private CustomJDateChooser opdDateFieldCal = null;
+	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM, new Locale(GeneralData.LANGUAGE));
+	private GoodDateTimeChooser opdDateFieldCal = null;
 	private JButton okButton = null;
 	private JButton cancelButton = null;
 	private JButton jButtonExamination = null;
@@ -271,7 +265,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JTextArea jPatientNote = null;
 	private JPanel jOpdNumberPanel = null;
 	private JTextField jOpdNumField = null;
-	private JLabel jOpdNumLabel = null;
 
 	/*
 	 * Managers and Arrays
@@ -307,7 +300,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	 * Opd next visit fields
 	 */
 	private JLabel nextVisitLabel;
-	private CustomJDateChooser opdNextVisitDate;
+	private GoodDateTimeChooser opdNextVisitDate;
 	private LocalDateTime nextDateBackup; //TODO: Workaround for update, a better solution must be found here
 
 	/**
@@ -402,7 +395,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		jPatientNote.setText("");
 		setMyMatteBorder(jPanelPatient, MessageBundle.getMessage("angal.common.patient.txt"));
 		radiom.setSelected(true);
-		opdPatient=null;
+		opdPatient = null;
 		opdNextVisitDate.setEnabled(false);
 	}
 	
@@ -928,7 +921,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		return jPanelData;
 	}
 
-	private CustomJDateChooser getOpdDateFieldCal() {
+	private GoodDateTimeChooser getOpdDateFieldCal() {
 		if (opdDateFieldCal == null) {
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDate() == null) {
@@ -939,13 +932,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			} else {
 				visitDateOpd  = opd.getDate();
 			}
-			opdDateFieldCal = new CustomJDateChooser(visitDateOpd, DATE_FORMAT_DD_MM_YY_HH_MM_SS);
+			opdDateFieldCal = new GoodDateTimeChooser(visitDateOpd);
 			opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS);
-			opdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {
-				Date newValue = (Date) propertyChangeEvent.getNewValue();
-				jOpdNumField.setText(String.valueOf(getOpdProgYear(Converters.convertToLocalDateTime(newValue))));
-			});
 		}
 		return opdDateFieldCal;
 	}
@@ -953,9 +941,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JPanel getJOpdNumberPanel() {
 		if (jOpdNumberPanel == null) {
 			jOpdNumberPanel = new JPanel();
-			
-			JLabel jOpdNumLabel = new JLabel(MessageBundle.getMessage("angal.opd.opdnumber.txt"));
-			
+
 			jOpdNumField = new JTextField(10);
 			
 			jOpdNumField.setFocusable(true);
@@ -965,7 +951,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				jOpdNumField.setText(String.valueOf(opd.getProgYear()));
 			}
 
-			jOpdNumberPanel.add(jOpdNumLabel);
+			jOpdNumberPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.opdnumber.txt")));
 			jOpdNumberPanel.add(jOpdNumField);
 		}
 		return jOpdNumberPanel;
@@ -1597,7 +1583,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 				
-				if (opdDateFieldCal.getDate() != null) {
+				if (opdDateFieldCal.getLocalDateTime() != null) {
 					visitDateOpd = LocalDateTime.now();
 					opd.setDate(visitDateOpd);
 				} else {
@@ -1890,30 +1876,18 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		return nextVisitLabel;
 	}
 	
-	private JDateChooser getOpdNextVisitDate() {
+	private GoodDateTimeChooser getOpdNextVisitDate() {
 		if (opdNextVisitDate == null) {
-			opdNextVisitDate = new CustomJDateChooser();
-			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdNextVisitDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 
 			LocalDateTime nextDate = null;
-			String d;
 			if (!insert) {
 				nextDate = opd.getNextVisitDate();
 			}
-			if (nextDate == null) {
-				d = "";
-			} else {
-				d = currentDateFormat.format(nextDate);
+			if (nextDate != null) {
 				nextDateBackup = nextDate; // in case of changing the date during this update
 			}
 
-			opdNextVisitDate = new CustomJDateChooser();
-			if (!d.equals("")) {
-				opdNextVisitDate.setDate(LocalDate.parse(d, currentDateFormat).atStartOfDay());
-			}
-			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdNextVisitDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
+			opdNextVisitDate = new GoodDateTimeChooser(nextDate);
 
 			if (opd.getPatient() == null) {
 				opdNextVisitDate.setEnabled(false);
