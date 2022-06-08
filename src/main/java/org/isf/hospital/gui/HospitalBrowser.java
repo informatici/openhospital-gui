@@ -70,7 +70,7 @@ public class HospitalBrowser extends ModalJFrame {
 	private JButton editButton;
 	private JButton updateButton;
 
-	public HospitalBrowser()  {
+	public HospitalBrowser() {
 		super();
 		manager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 		try {
@@ -100,6 +100,7 @@ public class HospitalBrowser extends ModalJFrame {
 		}
 		return jContainPanel;
 	}
+
 	private JPanel getJDataPanel() {
 		if (jDataPanel == null) {
 			jDataPanel = new JPanel(new SpringLayout());
@@ -175,14 +176,14 @@ public class HospitalBrowser extends ModalJFrame {
 		LocalTime startTime = visitsStartField.getLocalTime();
 		LocalTime endTime = visitsEndField.getLocalTime();
 		if (!nameJTextField.getText().equalsIgnoreCase(hospital.getDescription())
-						|| !addressJTextField.getText().equalsIgnoreCase(hospital.getAddress())
-						|| !cityJTextField.getText().equalsIgnoreCase(hospital.getCity())
-						|| !teleJTextField.getText().equalsIgnoreCase(hospital.getTelephone() == null ? "" : hospital.getTelephone())
-						|| !faxJTextField.getText().equalsIgnoreCase(hospital.getFax() == null ? "" : hospital.getFax())
-						|| !emailJTextField.getText().equalsIgnoreCase(hospital.getEmail() == null ? "" : hospital.getEmail())
-						|| !currencyCodeJTextField.getText().equalsIgnoreCase(hospital.getCurrencyCod() == null ? "" : hospital.getCurrencyCod())
-						|| !startTime.equals(hospital.getVisitStartTime().toLocalTime())
-						|| !endTime.equals(hospital.getVisitEndTime().toLocalTime())) {
+				|| !addressJTextField.getText().equalsIgnoreCase(hospital.getAddress())
+				|| !cityJTextField.getText().equalsIgnoreCase(hospital.getCity())
+				|| !teleJTextField.getText().equalsIgnoreCase(hospital.getTelephone() == null ? "" : hospital.getTelephone())
+				|| !faxJTextField.getText().equalsIgnoreCase(hospital.getFax() == null ? "" : hospital.getFax())
+				|| !emailJTextField.getText().equalsIgnoreCase(hospital.getEmail() == null ? "" : hospital.getEmail())
+				|| !currencyCodeJTextField.getText().equalsIgnoreCase(hospital.getCurrencyCod() == null ? "" : hospital.getCurrencyCod())
+				|| !startTime.equals(hospital.getVisitStartTime().toLocalTime())
+				|| !endTime.equals(hospital.getVisitEndTime().toLocalTime())) {
 			return true;
 		}
 		return false;
@@ -233,7 +234,7 @@ public class HospitalBrowser extends ModalJFrame {
 		}
 		return jButtonPanel;
 	}
-	
+
 	private void setFieldsForEditing(boolean enabled) {
 		nameJTextField.setEditable(enabled);
 		addressJTextField.setEditable(enabled);
@@ -246,7 +247,7 @@ public class HospitalBrowser extends ModalJFrame {
 		visitsEndField.setEditable(enabled);
 		updateButton.setEnabled(enabled);
 		editButton.setEnabled(!enabled);
-		nameJTextField.requestFocus(); 
+		nameJTextField.requestFocus();
 	}
 
 	private boolean validationErrors() {
