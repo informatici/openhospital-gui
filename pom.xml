@@ -35,10 +35,46 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<!-- latest versions doen't work well with JUnit5 (jupiter) -->
+				<version>2.19.1</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.junit.platform</groupId>
+						<artifactId>junit-platform-surefire-provider</artifactId>
+						<version>1.0.3</version>
+					</dependency>
+		        	<dependency>
+						<groupId>org.junit.jupiter</groupId>
+						<artifactId>junit-jupiter-engine</artifactId>
+						<version>5.0.3</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<additionalClasspathElements>
+						<additionalClasspathElement>bundle/language_en.properties</additionalClasspathElement>
+					</additionalClasspathElements>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.2.0</version>
 				<executions>
+					<execution>
+						<id>add-test-resource</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>testResources</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>bundle</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 					<execution>
 						<id>copy-resources</id>
 						<phase>validate</phase>
@@ -103,10 +139,6 @@
 							</resources>
 						</configuration>
 					</execution>
-					<!-- <execution> <id>copy-doc</id> <phase>validate</phase> <goals> <goal>copy-resources</goal> 
-						</goals> <configuration> <outputDirectory>${project.basedir}/target/OpenHospital20/doc</outputDirectory> 
-						<resources> <resource> <directory>doc</directory> </resource> </resources> 
-						</configuration> </execution> -->
 					<execution>
 						<id>copy-report</id>
 						<phase>validate</phase>
