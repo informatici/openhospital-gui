@@ -50,8 +50,8 @@ public class ExamRowSubPanel extends JPanel {
 		return lRows.stream()
 				.filter(laboratoryRow -> r.getDescription().equalsIgnoreCase(laboratoryRow.getDescription()))
 				.findFirst()
-				.map(laboratoryRow -> new ExamRowSubPanel(r, "P"))
-				.orElse(new ExamRowSubPanel(r, "N"));
+				.map(laboratoryRow -> new ExamRowSubPanel(r, MessageBundle.getMessage("angal.lab.positiveabbr.btn")))
+				.orElse(new ExamRowSubPanel(r, MessageBundle.getMessage("angal.lab.negativeabbr.btn")));
 	}
 
 	private ExamRowSubPanel(ExamRow row, String result) {
@@ -67,7 +67,7 @@ public class ExamRowSubPanel extends JPanel {
 
 		this.add(radioPos);
 		this.add(radioNeg);
-		if (result.equals(MessageBundle.getMessage("angal.lab.p"))) {
+		if (result.equals(MessageBundle.getMessage("angal.lab.positiveabbr.btn"))) {
 			radioPos.setSelected(true);
 		} else {
 			radioNeg.setSelected(true);
@@ -76,9 +76,9 @@ public class ExamRowSubPanel extends JPanel {
 
 	public String getSelectedResult() {
 		if (radioPos.isSelected()) {
-			return MessageBundle.getMessage("angal.lab.p");
+			return MessageBundle.getMessage("angal.lab.positiveabbr.btn");
 		}
-		return MessageBundle.getMessage("angal.lab.n");
+		return MessageBundle.getMessage("angal.lab.negativeabbr.btn");
 	}
 
 }

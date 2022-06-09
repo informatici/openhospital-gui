@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.isf.generaldata.MessageBundle;
 import org.isf.lab.model.Laboratory;
 import org.isf.patient.model.Patient;
 import org.junit.jupiter.api.Test;
@@ -68,7 +69,7 @@ public class PatientComboBoxTest {
 		// then:
 		assertThat(patientComboBox.getItemCount()).isEqualTo(3);
 		assertThat(selectedPatient.isPresent()).isFalse();
-		assertThat(patientComboBox.getSelectedItem()).isEqualTo("angal.lab.selectapatient");
+		assertThat(patientComboBox.getSelectedItem()).isEqualTo(MessageBundle.getMessage("angal.lab.selectapatient"));
 	}
 
 }

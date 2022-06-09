@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 import org.isf.accounting.model.BillPayments;
-import org.isf.generaldata.GeneralData;
 
 public class UserTotal {
 
@@ -42,7 +41,7 @@ public class UserTotal {
 	public BigDecimal getValue() {
 		return paymentsFromPeriod.stream()
 				.filter(payment -> notDeletedBills.contains(payment.getBill().getId()))
-				.filter(payment -> !GeneralData.getGeneralData().getSINGLEUSER() && payment.getUser().equals(user))
+				.filter(payment -> payment.getUser().equals(user))
 				.map(payment -> new BigDecimal(Double.toString(payment.getAmount())))
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 	}

@@ -21,7 +21,6 @@
  */
 package org.isf.medicalstockward.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
 import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
@@ -44,12 +43,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -100,12 +98,12 @@ import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.StockCardDialog;
 import org.isf.utils.jobjects.StockLedgerDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
-import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
@@ -168,10 +166,10 @@ public class WardPharmacy extends ModalJFrame implements
 	private JPanel jPanelRange;
 	private JButton jButtonClose;
 	private JButton jButtonEdit;
-	private CustomJDateChooser jCalendarFrom;
+	private GoodDateChooser jCalendarFrom;
 	private LocalDateTime dateFrom = LocalDateTime.now();
 	private LocalDateTime dateTo = LocalDateTime.now();
-	private CustomJDateChooser jCalendarTo;
+	private GoodDateChooser jCalendarTo;
 	private DefaultTableModel modelIncomes;
 	private DefaultTableModel modelOutcomes;
 	private DefaultTableModel modelDrugs;
@@ -447,34 +445,34 @@ public class WardPharmacy extends ModalJFrame implements
 		return jPanelRange;
 	}
 
-	private CustomJDateChooser getJCalendarTo() {
+	private GoodDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
-			dateTo = dateTo.toLocalDate().atTime(LocalTime.MAX);
-			jCalendarTo = new CustomJDateChooser(dateTo);
-			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarTo.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			jCalendarTo.addPropertyChangeListener("date", propertyChangeEvent -> {
-				dateTo = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
-				jTableOutcomes.setModel(new OutcomesModel());
-				jTableIncomes.setModel(new IncomesModel());
-				rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
+			jCalendarTo = new GoodDateChooser(dateTo.toLocalDate(), false);
+			jCalendarTo.addDateChangeListener(dateChangeEvent -> {
+				LocalDate newDate = dateChangeEvent.getNewDate();
+				if (newDate != null) {
+					dateTo = newDate.atStartOfDay(); // TODO
+					jTableOutcomes.setModel(new OutcomesModel());
+					jTableIncomes.setModel(new IncomesModel());
+					rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
+				}
 			});
 			jCalendarTo.setEnabled(false);
 		}
 		return jCalendarTo;
 	}
 
-	private CustomJDateChooser getJCalendarFrom() {
+	private GoodDateChooser getJCalendarFrom() {
 		if (jCalendarFrom == null) {
-			dateFrom = dateFrom.toLocalDate().atStartOfDay();
-			jCalendarFrom = new CustomJDateChooser(dateFrom); // Calendar
-			jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarFrom.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			jCalendarFrom.addPropertyChangeListener("date", propertyChangeEvent -> {
-				dateFrom = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
-				jTableOutcomes.setModel(new OutcomesModel());
-				jTableIncomes.setModel(new IncomesModel());
-				rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
+			jCalendarFrom = new GoodDateChooser(dateFrom.toLocalDate());
+			jCalendarFrom.addDateChangeListener(dateChangeEvent -> {
+				LocalDate newDate = dateChangeEvent.getNewDate();
+				if (newDate != null) {
+					dateFrom = newDate.atStartOfDay(); // TODO
+					jTableOutcomes.setModel(new OutcomesModel());
+					jTableIncomes.setModel(new IncomesModel());
+					rowCounter.setText(rowCounterText + jTableOutcomes.getRowCount());
+				}
 			});
 			jCalendarFrom.setEnabled(false);
 		}
@@ -1675,8 +1673,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 			filename.append("_").append(jComboBoxMedicals.getSelectedItem());
 		}
-		filename.append("_").append(TimeTools.formatDateTime(jCalendarFrom.getLocalDateTime(), DATE_FORMAT_YYYYMMDD))
-				.append("_").append(TimeTools.formatDateTime(jCalendarTo.getLocalDateTime(), DATE_FORMAT_YYYYMMDD));
+		filename.append("_").append(TimeTools.formatDateTime(jCalendarFrom.getDateStartOfDay(), DATE_FORMAT_YYYYMMDD))
+				.append("_").append(TimeTools.formatDateTime(jCalendarTo.getDateStartOfDay(), DATE_FORMAT_YYYYMMDD));
 
 		return filename.toString();
 	}
