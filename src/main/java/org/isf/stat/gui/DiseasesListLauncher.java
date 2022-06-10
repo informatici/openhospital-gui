@@ -54,7 +54,7 @@ public class DiseasesListLauncher extends ModalJFrame {
 	 */
 	public DiseasesListLauncher() {
 		super();
-		this.setResizable(true);
+		this.setResizable(false);
 		initialize();
 		setVisible(true);
 	}

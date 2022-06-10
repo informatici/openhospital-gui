@@ -31,7 +31,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -99,6 +98,8 @@ import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
  * ------------------------------------------
@@ -198,19 +199,11 @@ public class MovStockBrowser extends ModalJFrame {
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 30;
-		final int pfrmWidth = 24;
-		final int pfrmHeight = 22;
-		this.setBounds((screensize.width - screensize.width * pfrmWidth
-				/ pfrmBase) / 2, (screensize.height - screensize.height
-				* pfrmHeight / pfrmBase) / 2, screensize.width * pfrmWidth
-				/ pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		setContentPane(getContentpane());
 
 		updateTotals();
+		setPreferredSize(new Dimension(1150, 655));
+		setMinimumSize(new Dimension(775, 655));
 		pack();
 		setVisible(true);
 		setLocationRelativeTo(null);
@@ -218,8 +211,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JPanel getContentpane() {
-		contentPane = new JPanel();
-		contentPane.setLayout(new BorderLayout());
+		contentPane = new JPanel(new BorderLayout());
 		contentPane.add(getFilterPanel(), BorderLayout.WEST);
 		contentPane.add(getTablesPanel(), BorderLayout.CENTER);
 		contentPane.add(getButtonPanel(), BorderLayout.SOUTH);
@@ -236,7 +228,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JPanel getButtonPanel() {
-		buttonPanel = new JPanel();
+		buttonPanel = new JPanel(new WrapLayout());
 		if (MainMenu.checkUserGrants("btnpharmstockcharge")) {
 			buttonPanel.add(getChargeButton());
 		}

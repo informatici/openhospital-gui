@@ -147,7 +147,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private List<Opd> pSur;
 	private JTable jTable = null;
 	private OpdBrowsingModel model;
-	private int[] pColumnWidth = {50, 50, 130, 70, 150, 30, 30, 195, 195, 50 };
+	private int[] pColumnWidth = {50, 100, 130, 70, 150, 30, 30, 195, 195, 50 };
 	private boolean[] columnResizable = { false, false, false, false, true, false, false, true, true, false };
 	private boolean[] columnsVisible = { true, true, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
 	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
@@ -215,6 +215,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		super();
 		myFrame = this;
 		initialize();
+		setMinimumSize(new Dimension(1340, 540));
         setVisible(true);
 	}
 
