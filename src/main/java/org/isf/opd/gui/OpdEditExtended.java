@@ -1887,7 +1887,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				nextDateBackup = nextDate; // in case of changing the date during this update
 			}
 
-			opdNextVisitDate = new GoodDateTimeChooser(nextDate);
+			opdNextVisitDate = new GoodDateTimeChooser(nextDate, false, true, true,true);
 
 			if (opd.getPatient() == null) {
 				opdNextVisitDate.setEnabled(false);

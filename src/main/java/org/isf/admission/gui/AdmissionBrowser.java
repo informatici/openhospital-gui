@@ -1148,7 +1148,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (dateIn == null) {
 				dateIn = LocalDateTime.now();
 			}
-			dateInFieldCal = new GoodDateTimeChooser(dateIn, true, false);
+			dateInFieldCal = new GoodDateTimeChooser(dateIn, true, false, false, false);
 
 			dateInFieldCal.addDateTimeChangeListener(event -> {
 				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
@@ -1514,7 +1514,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getDisDate() != null) {
 				dateOut = admission.getDisDate();
 			}
-			dateOutFieldCal = new GoodDateTimeChooser(editing ? dateOut : null, true, false);
+			dateOutFieldCal = new GoodDateTimeChooser(editing ? dateOut : null, true, false, false, false);
 			dateOutFieldCal.addDateTimeChangeListener(event -> {
 				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
 				if (dateChangeEvent != null) {
