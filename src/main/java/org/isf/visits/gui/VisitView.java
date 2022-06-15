@@ -210,6 +210,7 @@ public class VisitView extends ModalJFrame {
 		showGui(ward != null);
 
 		setSize(1350, 600);
+		setResizable(false);
 	}
 
 	private JPanel dayCalendar() {

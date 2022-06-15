@@ -110,6 +110,8 @@ import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.lgooddatepicker.zinternaltools.WrapLayout;
+
 public class WardPharmacy extends ModalJFrame implements
 		WardPharmacyEdit.MovementWardListeners,
 		WardPharmacyNew.MovementWardListeners,
@@ -252,6 +254,7 @@ public class WardPharmacy extends ModalJFrame implements
 			editAllowed = true;
 		}
 		initComponents();
+		pack();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -278,15 +281,13 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private void initComponents() {
 		add(getJPanelWardAndRange(), BorderLayout.NORTH);
-		// add(getJTabbedPaneWard(), BorderLayout.CENTER);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		setTitle(MessageBundle.getMessage("angal.medicalstock.wardpharmacy.title"));
-		setSize(800, 450);
 	}
 
 	private JPanel getJPanelButtons() {
 		if (jPanelButtons == null) {
-			jPanelButtons = new JPanel(new FlowLayout());
+			jPanelButtons = new JPanel(new WrapLayout());
 			jPanelButtons.add(getJButtonNew());
 			if (editAllowed) {
 				jPanelButtons.add(getJButtonEdit());

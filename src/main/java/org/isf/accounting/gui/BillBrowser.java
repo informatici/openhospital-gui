@@ -95,6 +95,7 @@ import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 
@@ -726,7 +727,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private JPanel getJPanelButtons() {
 		if (jPanelButtons == null) {
-			jPanelButtons = new JPanel();
+			jPanelButtons = new JPanel(new WrapLayout());
 			if (MainMenu.checkUserGrants("btnbillnew")) {
 				jPanelButtons.add(getJButtonNew());
 			}
