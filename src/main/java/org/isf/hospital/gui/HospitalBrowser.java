@@ -24,6 +24,7 @@ package org.isf.hospital.gui;
 import java.awt.BorderLayout;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -41,6 +42,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodTimeChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
@@ -58,6 +60,7 @@ public class HospitalBrowser extends ModalJFrame {
 	private JPanel jDataPanel = null;
 	private GoodTimeChooser visitsStartField;
 	private GoodTimeChooser visitsEndField;
+	private VoIntegerTextField durationField;
 	private JTextField nameJTextField;
 	private JTextField addressJTextField;
 	private JTextField cityJTextField;
@@ -148,6 +151,10 @@ public class HospitalBrowser extends ModalJFrame {
 			visitsEndField = new GoodTimeChooser(hospital.getVisitEndTime().toLocalTime());
 			visitsEndField.setEditable(false);
 
+			JLabel durationLabel = new JLabel(MessageBundle.getMessage("angal.hospital.visitsduration.txt") + ": ");
+			durationField = new VoIntegerTextField(hospital.getVisitDuration(), 2);
+			durationField.setEditable(false);
+
 			jDataPanel.add(nameJLabel);
 			jDataPanel.add(nameJTextField);
 			jDataPanel.add(addressJLabel);
@@ -166,8 +173,10 @@ public class HospitalBrowser extends ModalJFrame {
 			jDataPanel.add(visitsStartField);
 			jDataPanel.add(endHourJLabel);
 			jDataPanel.add(visitsEndField);
+			jDataPanel.add(durationLabel);
+			jDataPanel.add(durationField);
 
-			SpringUtilities.makeCompactGrid(jDataPanel, 9, 2, 5, 5, 5, 5);
+			SpringUtilities.makeCompactGrid(jDataPanel, 10, 2, 5, 5, 5, 5);
 		}
 		return jDataPanel;
 	}
@@ -183,7 +192,8 @@ public class HospitalBrowser extends ModalJFrame {
 				|| !emailJTextField.getText().equalsIgnoreCase(hospital.getEmail() == null ? "" : hospital.getEmail())
 				|| !currencyCodeJTextField.getText().equalsIgnoreCase(hospital.getCurrencyCod() == null ? "" : hospital.getCurrencyCod())
 				|| !startTime.equals(hospital.getVisitStartTime().toLocalTime())
-				|| !endTime.equals(hospital.getVisitEndTime().toLocalTime())) {
+				|| !endTime.equals(hospital.getVisitEndTime().toLocalTime())
+		        || durationField.getValue() != hospital.getVisitDuration()) {
 			return true;
 		}
 		return false;
@@ -245,6 +255,7 @@ public class HospitalBrowser extends ModalJFrame {
 		currencyCodeJTextField.setEditable(enabled);
 		visitsStartField.setEditable(enabled);
 		visitsEndField.setEditable(enabled);
+		durationField.setEditable(enabled);
 		updateButton.setEnabled(enabled);
 		editButton.setEnabled(!enabled);
 		nameJTextField.requestFocus();
@@ -266,6 +277,17 @@ public class HospitalBrowser extends ModalJFrame {
 			MessageDialog.error(null, "angal.hospital.thevisitinghourvaluesmustbeintherange0to24.msg");
 			inError = true;
 		}
+		if (durationField.getText().isEmpty()) {
+			MessageDialog.error(null, "angal.hospital.thevisitdurationcannotbeblank.msg");
+			inError = true;
+		} else {
+			long minutes = ChronoUnit.MINUTES.between(startTime, endTime);
+			if (durationField.getValue() <= 0 || durationField.getValue() >= minutes) {
+				MessageDialog.error(null, "angal.hospital.thevisitdurationmustbepositiveandlessthanthelengthofthevisitinghours.msg");
+				inError = true;
+
+			}
+		}
 		return inError;
 	}
 
@@ -279,6 +301,7 @@ public class HospitalBrowser extends ModalJFrame {
 		hospital.setCurrencyCod(currencyCodeJTextField.getText().isEmpty() ? null : currencyCodeJTextField.getText());
 		hospital.setVisitStartTime(Time.valueOf(visitsStartField.getLocalTime()));
 		hospital.setVisitEndTime(Time.valueOf(visitsEndField.getLocalTime()));
+		hospital.setVisitDuration(durationField.getValue());
 
 		try {
 			this.hospital = manager.updateHospital(hospital);
