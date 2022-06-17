@@ -25,6 +25,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -102,7 +103,9 @@ public final class ImageUtil {
 			bufferedImage = Scalr.resize(bufferedImage, newTargetSize);
 			arrSize = getArraySize(bufferedImage, fileType);
 			}
-		return bufferedImage;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, fileType, baos);
+		return ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
 	}
 	
 	
