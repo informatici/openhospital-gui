@@ -24,9 +24,11 @@ package org.isf.utils.jobjects;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.Panel;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -34,12 +36,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.isf.generaldata.GeneralData;
+import org.isf.hospital.manager.HospitalBrowsingManager;
+import org.isf.hospital.model.Hospital;
+import org.isf.menu.manager.Context;
+import org.isf.utils.exception.OHServiceException;
+import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DateTimePicker;
 import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.components.TimePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateTimeChangeListener;
+import com.github.lgooddatepicker.optionalusertools.PickerUtilities;
+import com.github.lgooddatepicker.optionalusertools.TimeVetoPolicy;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 public class GoodDateTimeChooser extends Panel {
@@ -50,15 +59,28 @@ public class GoodDateTimeChooser extends Panel {
 	private DatePickerSettings dateSettings;
 	private TimePickerSettings timeSettings;
 
+	private Time startTime;
+	private Time endTime;
+	private int increment;
+
 	public GoodDateTimeChooser(LocalDateTime dateTime) {
-		this(dateTime, true, true);
+		this(dateTime, true);
 	}
 
 	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner) {
-		this(dateTime, useSpinner, true);
+		this(dateTime, useSpinner, false);
 	}
 
-	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner, boolean useDefaultTimeChangeListener) {
+	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner, boolean useVisitTimeRange) {
+		this(dateTime, useSpinner, useVisitTimeRange, false, false);
+	}
+
+	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner, boolean useVisitTimeRange, boolean useCustomIncrement) {
+		this(dateTime, useSpinner, useVisitTimeRange, useCustomIncrement, true);
+	}
+
+	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner, boolean useVisitTimeRange,
+			boolean useCustomIncrement, boolean useDefaultTimeChangeListener) {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(layout);
 		dateSettings = new DatePickerSettings();
@@ -71,6 +93,20 @@ public class GoodDateTimeChooser extends Panel {
 		timeSettings.setAllowKeyboardEditing(true);
 		timeSettings.setFormatForDisplayTime(TIME_FORMAT);
 		timeSettings.setFormatForMenuTimes(TIME_FORMAT);
+
+		if (useVisitTimeRange || useCustomIncrement) {
+			HospitalBrowsingManager manager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
+			Hospital hospital = null;
+			try {
+				hospital = manager.getHospital();
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
+			}
+			startTime = hospital.getVisitStartTime();
+			endTime = hospital.getVisitEndTime();
+			increment = hospital.getVisitIncrement();
+		}
+
 		if (useSpinner) {
 			timeSettings.setDisplayToggleTimeMenuButton(false);
 			timeSettings.setDisplaySpinnerButtons(true);
@@ -78,6 +114,25 @@ public class GoodDateTimeChooser extends Panel {
 			timeSettings.setDisplayToggleTimeMenuButton(true);
 			timeSettings.setDisplaySpinnerButtons(false);
 		}
+
+		if (useCustomIncrement) {
+			ArrayList<LocalTime> potentialMenuTimes = new ArrayList<>();
+			LocalTime entry = LocalTime.MIDNIGHT;
+			boolean continueLoop = true;
+			LocalTime start = startTime.toLocalTime();
+			LocalTime end = endTime.toLocalTime();
+			while (continueLoop) {
+				if (PickerUtilities.isLocalTimeInRange(entry, start, end, true)) {
+					potentialMenuTimes.add(entry);
+				}
+				entry = entry.plusMinutes(increment);
+				if (entry.isAfter(end)) {
+					continueLoop = false;
+				}
+			}
+			timeSettings.generatePotentialMenuTimes(potentialMenuTimes);
+		}
+
 		dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
 		// This helps the manual editing of the year field not to reset to some *very* old year value
 		dateSettings.setDateRangeLimits(LocalDate.of(999, 12, 31), null);
@@ -90,6 +145,10 @@ public class GoodDateTimeChooser extends Panel {
 		JButton datePickerButton = dateTimePicker.datePicker.getComponentToggleCalendarButton();
 		datePickerButton.setText("");
 		datePickerButton.setIcon(calendarIcon);
+
+		if (useVisitTimeRange) {
+			timeSettings.setVetoPolicy(new VisitTimeVetoPolicy());
+		}
 
 		if (useDefaultTimeChangeListener) {
 			addDateTimeChangeListener(event -> {
@@ -128,4 +187,15 @@ public class GoodDateTimeChooser extends Panel {
 	public void addDateTimeChangeListener(DateTimeChangeListener listener) {
 		dateTimePicker.addDateTimeChangeListener(listener);
 	}
+
+	private class VisitTimeVetoPolicy implements TimeVetoPolicy {
+
+		@Override
+		public boolean isTimeAllowed(LocalTime time) {
+			// Only allow visit times as defined by the hospital, inclusive.
+			return PickerUtilities.isLocalTimeInRange(
+					time, startTime.toLocalTime(), endTime.toLocalTime(), true);
+		}
+	}
+
 }

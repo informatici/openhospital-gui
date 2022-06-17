@@ -27,7 +27,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.time.LocalDate;
@@ -67,6 +66,8 @@ import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
+
+import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
  * ------------------------------------------
@@ -139,17 +140,11 @@ public class PatVacBrowser extends ModalJFrame {
 	 * This method initializes this Frame, sets the correct Dimensions
 	 */
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 20;
-		final int pfrmWidth = 17;
-		final int pfrmHeight = 12;
-		this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase) / 2,
-				(screensize.height - screensize.height * pfrmHeight / pfrmBase) / 2,
-				screensize.width * pfrmWidth / pfrmBase + 50,
-				screensize.height * pfrmHeight / pfrmBase + 20);
 		setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowser.title"));
 		this.setContentPane(getJContentPane());
+		setPreferredSize(new Dimension(1680, 670));
+		setMinimumSize(new Dimension(880, 510));
+		pack();
 		updateRowCounter();
 		this.setLocationRelativeTo(null);
 	}
@@ -180,7 +175,7 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private JPanel getJButtonPanel() {
 		if (jButtonPanel == null) {
-			jButtonPanel = new JPanel();
+			jButtonPanel = new JPanel(new WrapLayout());
 			if (MainMenu.checkUserGrants("btnpatientvaccinenew")) {
 				jButtonPanel.add(getButtonNew(), null);
 			}

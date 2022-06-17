@@ -38,6 +38,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -298,7 +299,7 @@ public class PatientFolderBrowser extends ModalJFrame
                                     fromDate = Converters.parseStringToLocalDate((String)target.getValueAt(targetSelectedRow, 0), DATE_FORMAT_DD_MM_YY).atStartOfDay();
                                     Object dateObject = target.getValueAt(targetSelectedRow, 4);
                                     if (dateObject instanceof Date) {
-                                        LocalDateTime dateValue = LocalDateTime.now();
+                                        LocalDateTime dateValue = Converters.convertToLocalDateTime((Date)dateObject);
                                         toDate = LocalDateTime.now();
                                         if (dateValue != null) {
                                             toDate = dateValue;
@@ -307,12 +308,11 @@ public class PatientFolderBrowser extends ModalJFrame
                                     	if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
                                     		toDate = LocalDateTime.now();
                                     	} else {
-                                    		toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YY).atStartOfDay();	
+                                    		toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YY).atTime(LocalTime.MAX);
                                     	}
                                     }
                                     reportType = "ADMISSION";
                                 } else if (objType instanceof Opd) {
-									String xxxx = (String)target.getValueAt(targetSelectedRow, 0);
                                     fromDate = Converters.parseStringToLocalDate((String)target.getValueAt(targetSelectedRow, 0), DATE_FORMAT_DD_MM_YY).atStartOfDay();
                                     toDate = fromDate;
                                     reportType = "OPD";
