@@ -23,16 +23,31 @@ package org.isf.utils.image;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.imgscalr.Scalr;
+
 public final class ImageUtil {
 
 	private ImageUtil() {
 	}
+	
+	public static Image scaleImage(Image image, int maxDim) {
+		double scale = (double) maxDim / (double) image.getHeight(null);
+		if (image.getWidth(null) > image.getHeight(null)) {
+			scale = (double) maxDim / (double) image.getWidth(null);
+		}
+		int scaledW = (int) (scale * image.getWidth(null));
+		int scaledH = (int) (scale * image.getHeight(null));
+
+		return image.getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH);
+	}
+	
 
 	public static BufferedImage scaleImage(final BufferedImage src, final int boundWidth, final int boundHeight) {
 		final int originalWidth = src.getWidth();
@@ -73,6 +88,31 @@ public final class ImageUtil {
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to convert image to byte array", e);
 		}
+	}
+	
+	public static BufferedImage fixImageFileSize(BufferedImage bufferedImage, int maximumFileSize) throws IOException {
+		return fixImageFileSize(bufferedImage, maximumFileSize, "png");
+	}
+	
+	
+	public static BufferedImage fixImageFileSize(BufferedImage bufferedImage, int maximumFileSize, String fileType) throws IOException {
+		long arrSize = getArraySize(bufferedImage, fileType);
+		while (arrSize > maximumFileSize) {
+			int newTargetSize = (bufferedImage.getTileWidth()- ((bufferedImage.getTileWidth() / 100) * 10));
+			bufferedImage = Scalr.resize(bufferedImage, newTargetSize);
+			arrSize = getArraySize(bufferedImage, fileType);
+			}
+		return bufferedImage;
+	}
+	
+	
+	private static int getArraySize(BufferedImage bufferedImage, String fileType) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(bufferedImage, fileType, baos);
+		baos.flush();
+		byte[] byteImage = baos.toByteArray();
+		baos.close();
+		return byteImage.length;
 	}
 
 }
