@@ -33,7 +33,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -66,7 +65,6 @@ import org.isf.exa.manager.ExamBrowsingManager;
 import org.isf.exa.manager.ExamRowBrowsingManager;
 import org.isf.exa.model.Exam;
 import org.isf.exa.model.ExamRow;
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
@@ -78,14 +76,15 @@ import org.isf.patient.model.Patient;
 import org.isf.priceslist.model.Price;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeChooser;
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.OhTableModelExam;
 import org.isf.utils.time.RememberDates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LabNew extends JDialog implements SelectionListener {
+public class LabNew extends ModalJFrame implements SelectionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LabNew.class);
 
@@ -124,7 +123,7 @@ public class LabNew extends JDialog implements SelectionListener {
 		jButtonPickPatient.setText(MessageBundle.getMessage("angal.labnew.changepatient"));
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.labnew.tooltip.changethepatientassociatedwiththisexams")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
-		inOut = getIsAdmitted();
+		String inOut = getIsAdmitted();
 		if (inOut.equalsIgnoreCase("O")) {
 			jRadioButtonOPD.setSelected(true);
 		} else {
@@ -148,7 +147,7 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JButton jButtonPickPatient;
 	private JButton jButtonTrashPatient;
 	private JLabel jLabelDate;
-	private CustomJDateChooser jCalendarDate;
+	private GoodDateTimeChooser jCalendarDate;
 	private JPanel jPanelMaterial;
 	private JComboBox<String> jComboBoxMaterial;
 	private JPanel jPanelResults;
@@ -161,7 +160,6 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JRadioButton jRadioButtonOPD;
 	private JRadioButton jRadioButtonIPD;
 	private JPanel jOpdIpdPanel;
-	private String inOut;
 
 	private static final Dimension PATIENT_DIMENSION = new Dimension(200, 20);
 	private static final Dimension LABEL_DIMENSION = new Dimension(75, 20);
@@ -201,8 +199,6 @@ public class LabNew extends JDialog implements SelectionListener {
 	private JTextField jTextFieldExamResult;
                 
 	public LabNew(JFrame owner) {
-		super(owner, true);
-		
 		try {
 			exaArray = exaManager.getExams();
 		} catch (OHServiceException e) {
@@ -214,11 +210,10 @@ public class LabNew extends JDialog implements SelectionListener {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.labnew.title"));
+		showAsModal(owner);
 	}
 
-                
 	public LabNew(JFrame owner, Patient patient) {
-        super(owner, true);
         patientSelected = patient;
         
 		try {
@@ -232,10 +227,11 @@ public class LabNew extends JDialog implements SelectionListener {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setTitle(MessageBundle.getMessage("angal.labnew.title"));
-		
+
 		if (patientSelected != null) {
 			patientSelected(patientSelected);
 		}
+		showAsModal(owner);
 	}
 
 	private void initComponents() {
@@ -626,11 +622,13 @@ public class LabNew extends JDialog implements SelectionListener {
 		return jPanelDate;
 	}
 
-	private CustomJDateChooser getJCalendarDate() {
+	private GoodDateTimeChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			jCalendarDate = new CustomJDateChooser(RememberDates.getLastLabExamDate()); //To remind last used
-			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy - HH:mm:ss"); //$NON-NLS-1$
+			LocalDateTime labDate = RememberDates.getLastLabExamDate();
+			if (labDate == null) {
+				labDate = LocalDateTime.now();
+			}
+			jCalendarDate = new GoodDateTimeChooser(labDate);
 		}
 		return jCalendarDate;
 	}
