@@ -301,17 +301,16 @@ public class LabEdit extends ModalJFrame {
 	}
 
 	private GoodDateTimeChooser getExamDateFieldCal() {
-		LocalDateTime myDate = null;
-		LocalDateTime dateIn = null;
+		LocalDateTime dateIn;
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDate();
 		} else { 
 			dateIn = lab.getDate();
 		}
-		if (dateIn != null) {
-			myDate = dateIn;
+		if (dateIn == null) {
+			dateIn = LocalDateTime.now();
 		}
-		return new GoodDateTimeChooser(myDate);
+		return new GoodDateTimeChooser(dateIn);
 	}
 	
 	private JCheckBox getInPatientCheckBox() {
