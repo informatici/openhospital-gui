@@ -624,7 +624,11 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 
 	private GoodDateTimeChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
-			jCalendarDate = new GoodDateTimeChooser(RememberDates.getLastLabExamDate()); //To remind last used
+			LocalDateTime labDate = RememberDates.getLastLabExamDate();
+			if (labDate == null) {
+				labDate = LocalDateTime.now();
+			}
+			jCalendarDate = new GoodDateTimeChooser(labDate);
 		}
 		return jCalendarDate;
 	}
