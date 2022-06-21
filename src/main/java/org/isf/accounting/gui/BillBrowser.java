@@ -776,14 +776,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 
 	private JPanel getPanelChoosePatient() {
-		JPanel priceListLabelPanel = new JPanel();
-		priceListLabelPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		JPanel priceListLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
 		JButton jAffiliatePersonJButtonAdd = new JButton();
 		jAffiliatePersonJButtonAdd.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
+		jAffiliatePersonJButtonAdd.setToolTipText(MessageBundle.getMessage("angal.billbrowser.selectapatient.tooltip"));
 
 		JButton jAffiliatePersonJButtonSupp = new JButton();
 		jAffiliatePersonJButtonSupp.setIcon(new ImageIcon("rsc/icons/remove_patient_button.png"));
+		jAffiliatePersonJButtonSupp.setToolTipText(MessageBundle.getMessage("angal.billbrowser.removeapatient.tooltip"));
 
 		jAffiliatePersonJTextField = new JTextField(14);
 		jAffiliatePersonJTextField.setEnabled(false);
@@ -915,8 +916,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						.withDayOfMonth(1)
 						.atStartOfDay();
 				dateTo = LocalDate.now()
+						.withYear(year)
 						.withMonth(12)
-						.withDayOfMonth(YearMonth.of(LocalDate.now().getYear(), month).lengthOfMonth())
+						.withDayOfMonth(YearMonth.of(year, 12).lengthOfMonth())
 						.atStartOfDay()
 						.toLocalDate()
 						.atTime(LocalTime.MAX);
