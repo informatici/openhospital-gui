@@ -109,6 +109,7 @@ public class WardEdit extends JDialog {
 	private JTextField bedsTextField = null;
 	private JTextField nursTextField = null;
 	private JTextField docsTextField = null;
+	private JTextField durationTextField = null;
 	private JCheckBox isPharmacyCheck = null;
 	private JCheckBox isMaleCheck = null;
 	private JCheckBox isFemaleCheck = null;
@@ -117,6 +118,7 @@ public class WardEdit extends JDialog {
 	private int beds;
 	private int nurs;
 	private int docs;
+	private int duration;
 
 	/**
 	 * This is the default constructor; we pass the parent frame
@@ -184,6 +186,7 @@ public class WardEdit extends JDialog {
 			gbcCodeTextField.gridx = 1;
 			gbcCodeTextField.gridy = 0;
 			dataPanel.add(getCodeTextField(), gbcCodeTextField);
+
 			JLabel descLabel = new JLabel(MessageBundle.getMessage("angal.ward.nameedit"));
 			GridBagConstraints gbcDescLabel = new GridBagConstraints();
 			gbcDescLabel.anchor = GridBagConstraints.WEST;
@@ -191,12 +194,14 @@ public class WardEdit extends JDialog {
 			gbcDescLabel.gridx = 0;
 			gbcDescLabel.gridy = 1;
 			dataPanel.add(descLabel, gbcDescLabel);
+
 			GridBagConstraints gbcDescriptionTextField = new GridBagConstraints();
 			gbcDescriptionTextField.fill = GridBagConstraints.HORIZONTAL;
 			gbcDescriptionTextField.insets = new Insets(0, 0, 5, 0);
 			gbcDescriptionTextField.gridx = 1;
 			gbcDescriptionTextField.gridy = 1;
 			dataPanel.add(getDescriptionTextField(), gbcDescriptionTextField);
+
 			GridBagConstraints gbcTelTextField = new GridBagConstraints();
 			gbcTelTextField.fill = GridBagConstraints.HORIZONTAL;
 			gbcTelTextField.insets = new Insets(0, 0, 5, 0);
@@ -210,6 +215,7 @@ public class WardEdit extends JDialog {
 			gbcTelephoneLabel.gridx = 0;
 			gbcTelephoneLabel.gridy = 2;
 			dataPanel.add(telephoneLabel, gbcTelephoneLabel);
+
 			JLabel faxLabel = new JLabel(MessageBundle.getMessage("angal.common.fax.txt"));
 			GridBagConstraints gbcFaxLabel = new GridBagConstraints();
 			gbcFaxLabel.anchor = GridBagConstraints.WEST;
@@ -228,6 +234,7 @@ public class WardEdit extends JDialog {
 			gbcEmailTextField.insets = new Insets(0, 0, 5, 0);
 			gbcEmailTextField.gridx = 1;
 			gbcEmailTextField.gridy = 4;
+
 			dataPanel.add(getEmailTextField(), gbcEmailTextField);
 			JLabel emailLabel = new JLabel(MessageBundle.getMessage("angal.ward.emailedit"));
 			GridBagConstraints gbcEmailLabel = new GridBagConstraints();
@@ -236,6 +243,7 @@ public class WardEdit extends JDialog {
 			gbcEmailLabel.gridx = 0;
 			gbcEmailLabel.gridy = 4;
 			dataPanel.add(emailLabel, gbcEmailLabel);
+
 			JLabel bedsLabel = new JLabel(MessageBundle.getMessage("angal.ward.bedsedit"));
 			GridBagConstraints gbcBedsLabel = new GridBagConstraints();
 			gbcBedsLabel.anchor = GridBagConstraints.WEST;
@@ -249,6 +257,7 @@ public class WardEdit extends JDialog {
 			gbcBedsTextField.gridx = 1;
 			gbcBedsTextField.gridy = 5;
 			dataPanel.add(getBedsTextField(), gbcBedsTextField);
+
 			JLabel nurseLabel = new JLabel(MessageBundle.getMessage("angal.ward.nursesedit"));
 			GridBagConstraints gbcNurseLabel = new GridBagConstraints();
 			gbcNurseLabel.anchor = GridBagConstraints.WEST;
@@ -262,6 +271,7 @@ public class WardEdit extends JDialog {
 			gbcNursTextField.gridx = 1;
 			gbcNursTextField.gridy = 6;
 			dataPanel.add(getNursTextField(), gbcNursTextField);
+
 			JLabel docsLabel = new JLabel(MessageBundle.getMessage("angal.ward.doctorsedit"));
 			GridBagConstraints gbcDocsLabel = new GridBagConstraints();
 			gbcDocsLabel.anchor = GridBagConstraints.WEST;
@@ -275,33 +285,51 @@ public class WardEdit extends JDialog {
 			gbcDocsTextField.gridx = 1;
 			gbcDocsTextField.gridy = 7;
 			dataPanel.add(getDocsTextField(), gbcDocsTextField);
+
+			JLabel durationLabel = new JLabel(MessageBundle.getMessage("angal.ward.visitdurationedit"));
+			GridBagConstraints gbcDurationLabel = new GridBagConstraints();
+			gbcDurationLabel.anchor = GridBagConstraints.WEST;
+			gbcDurationLabel.insets = new Insets(0, 0, 5, 5);
+			gbcDurationLabel.gridx = 0;
+			gbcDurationLabel.gridy = 8;
+			dataPanel.add(durationLabel, gbcDurationLabel);
+			GridBagConstraints gbcDurationTextField = new GridBagConstraints();
+			gbcDurationTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcDurationTextField.insets = new Insets(0, 0, 5, 0);
+			gbcDurationTextField.gridx = 1;
+			gbcDurationTextField.gridy = 8;
+			dataPanel.add(getDurationTextField(), gbcDurationTextField);
+
 			GridBagConstraints gbcIsPharmacyCheck = new GridBagConstraints();
 			gbcIsPharmacyCheck.anchor = GridBagConstraints.WEST;
 			gbcIsPharmacyCheck.insets = new Insets(0, 0, 5, 0);
 			gbcIsPharmacyCheck.gridwidth = 2;
 			gbcIsPharmacyCheck.gridx = 0;
-			gbcIsPharmacyCheck.gridy = 8;
+			gbcIsPharmacyCheck.gridy = 9;
 			dataPanel.add(getIsPharmacyCheck(), gbcIsPharmacyCheck);
+
 			GridBagConstraints gbcIsMaleCheck = new GridBagConstraints();
 			gbcIsMaleCheck.anchor = GridBagConstraints.WEST;
 			gbcIsMaleCheck.insets = new Insets(0, 0, 5, 0);
 			gbcIsMaleCheck.gridwidth = 2;
 			gbcIsMaleCheck.gridx = 0;
-			gbcIsMaleCheck.gridy = 9;
+			gbcIsMaleCheck.gridy = 10;
 			dataPanel.add(getIsMaleCheck(), gbcIsMaleCheck);
+
 			GridBagConstraints gbcIsFemaleCheck = new GridBagConstraints();
 			gbcIsFemaleCheck.anchor = GridBagConstraints.WEST;
 			gbcIsFemaleCheck.insets = new Insets(0, 0, 5, 0);
 			gbcIsFemaleCheck.gridwidth = 2;
 			gbcIsFemaleCheck.gridx = 0;
-			gbcIsFemaleCheck.gridy = 10;
+			gbcIsFemaleCheck.gridy = 11;
 			dataPanel.add(getIsFemaleCheck(), gbcIsFemaleCheck);
+
 			JLabel requiredLabel = new JLabel(MessageBundle.getMessage("angal.ward.requiredfields"));
 			GridBagConstraints gbcRequiredLabel = new GridBagConstraints();
 			gbcRequiredLabel.gridwidth = 2;
 			gbcRequiredLabel.anchor = GridBagConstraints.EAST;
 			gbcRequiredLabel.gridx = 0;
-			gbcRequiredLabel.gridy = 11;
+			gbcRequiredLabel.gridy = 12;
 			dataPanel.add(requiredLabel, gbcRequiredLabel);
 		}
 		return dataPanel;
@@ -354,9 +382,17 @@ public class WardEdit extends JDialog {
 					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidbedsnumber");
 					return;
 				}
+				if (beds < 0) {
+					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidbedsnumber");
+					return;
+				}
 				try {
 					nurs = Integer.parseInt(nursTextField.getText());
 				} catch (NumberFormatException f) {
+					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidnursesnumber");
+					return;
+				}
+				if (nurs < 0) {
 					MessageDialog.error(WardEdit.this, "angal.ward.insertavalidnursesnumber");
 					return;
 				}
@@ -366,7 +402,20 @@ public class WardEdit extends JDialog {
 					MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddoctorsnumber");
 					return;
 				}
-
+				if (docs < 0) {
+					MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddoctorsnumber");
+					return;
+				}
+				try {
+					duration = Integer.parseInt(durationTextField.getText());
+				} catch (NumberFormatException f) {
+					MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddurationvalue.msg");
+					return;
+				}
+				if (duration <= 0) {
+					MessageDialog.error(WardEdit.this, "angal.ward.insertavaliddurationvalue.msg");
+					return;
+				}
 				ward.setDescription(descriptionTextField.getText());
 				ward.setCode(codeTextField.getText().toUpperCase().trim());
 				ward.setTelephone(telTextField.getText());
@@ -378,6 +427,7 @@ public class WardEdit extends JDialog {
 				ward.setPharmacy(isPharmacyCheck.isSelected());
 				ward.setMale(isMaleCheck.isSelected());
 				ward.setFemale(isFemaleCheck.isSelected());
+				ward.setVisitDuration(duration);
 
 				boolean result = false;
 				Ward savedWard;
@@ -538,6 +588,16 @@ public class WardEdit extends JDialog {
 			}
 		}
 		return docsTextField;
+	}
+
+	private JTextField getDurationTextField() {
+		if (durationTextField == null) {
+			durationTextField = new VoLimitedTextField(4, 20);
+			if (!insert) {
+				durationTextField.setText(Integer.toString(ward.getVisitDuration()));
+			}
+		}
+		return durationTextField;
 	}
 
 	/**
