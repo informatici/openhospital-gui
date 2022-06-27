@@ -102,7 +102,7 @@ abstract class OperationRowBase extends JPanel {
 
 		add(panelForm, BorderLayout.NORTH);
 		GridBagLayout gbl_panelForm = new GridBagLayout();
-		gbl_panelForm.columnWidths = new int[] { 70, 200, 20, 400, 0, 0 };
+		gbl_panelForm.columnWidths = new int[] { 60, 75, 0, 300, 0, 0 };
 		gbl_panelForm.rowHeights = new int[] { 0, 0, 30, 0, 0 };
 		gbl_panelForm.columnWeights = new double[] { 0.0, 1.0, 0.25, 1.0, 1.0, Double.MIN_VALUE };
 		gbl_panelForm.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
