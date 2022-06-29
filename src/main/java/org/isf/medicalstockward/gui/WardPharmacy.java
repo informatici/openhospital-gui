@@ -249,7 +249,6 @@ public class WardPharmacy extends ModalJFrame implements
 			editAllowed = true;
 		}
 		initComponents();
-		pack();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -278,6 +277,7 @@ public class WardPharmacy extends ModalJFrame implements
 		add(getJPanelWardAndRange(), BorderLayout.NORTH);
 		add(getJPanelButtons(), BorderLayout.SOUTH);
 		setTitle(MessageBundle.getMessage("angal.medicalstock.wardpharmacy.title"));
+		setSize(800, 450);
 	}
 
 	private JPanel getJPanelButtons() {
