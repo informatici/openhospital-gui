@@ -82,7 +82,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.stat.gui.report.GenericReportExamination;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.jobjects.GoodDateTimeChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.IconButton;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -114,19 +114,14 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private VoIntegerTextField jTextFieldHeight;
 	private VoDoubleTextField jTextFieldWeight;
 	private JPanel jPanelAPPanel;
-	private JLabel jLabelAPMin;
-	private JLabel jLabelAPSlash;
-	private JLabel jLabelAPMax;
 	private JSlider jSliderHR;
 	private JSlider jSliderRR;
 	private ScaledJSlider jSliderTemp;
 	private ScaledJSlider jSliderSaturation;
 	private JScrollPane jScrollPaneNote;
-	private GoodDateTimeChooser jDateChooserDate;
+	private GoodDateTimeSpinnerChooser jDateChooserDate;
 	private VoIntegerTextField jSpinnerAPmin;
 	private VoIntegerTextField jSpinnerAPmax;
-	private JLabel jLabelHeightAbb;
-	private JLabel jLabelWeightAbb;
 	private JCheckBox jCheckBoxToggleAP;
 	private JCheckBox jCheckBoxToggleHR;
 	private JCheckBox jCheckBoxToggleTemp;
@@ -137,9 +132,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JCheckBox jCheckBoxToggleBowel;
 	private JCheckBox jCheckBoxToggleRR;
 	private JCheckBox jCheckBoxToggleAusc;
-	private JComboBox jComboBoxDiuresisType;
-	private JComboBox jComboBoxBowel;
-	private JComboBox jComboBoxAuscultation;
+	private JComboBox<String> jComboBoxDiuresisType;
+	private JComboBox<String> jComboBoxBowel;
+	private JComboBox<String> jComboBoxAuscultation;
 	private JButton jButtonSave;
 	private JButton jButtonDelete;
 	private JButton jButtonClose;
@@ -163,7 +158,6 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 	private PatientExamination patex;
 	private boolean isMale;
-	private double bmi;
 	private boolean modified;
 
 	private static final String PATH_FEMALE_GENDER = "rsc/images/sagoma-donna-132x300.jpg";
@@ -266,20 +260,20 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 	//TODO: try to use JDOM...
 	private void updateBMI() {
-		this.bmi = patex.getBMI();
-		StringBuilder bmi = new StringBuilder();
-		bmi.append("<html><body>");
-		bmi.append("<strong>");
-		bmi.append(MessageBundle.getMessage("angal.examination.bmi")).append(':');
-		bmi.append("<br />");
-		bmi.append(this.bmi);
-		bmi.append("<br /><br />");
-		bmi.append("<font color=\"red\">");
-		bmi.append(examManager.getBMIdescription(this.bmi));
-		bmi.append("</font>");
-		bmi.append("</strong>");
-		bmi.append("</body></html>");
-		jEditorPaneBMI.setText(bmi.toString());
+		double bmi = patex.getBMI();
+		StringBuilder bmiStringBuilder = new StringBuilder();
+		bmiStringBuilder.append("<html><body>");
+		bmiStringBuilder.append("<strong>");
+		bmiStringBuilder.append(MessageBundle.getMessage("angal.examination.bmi")).append(':');
+		bmiStringBuilder.append("<br />");
+		bmiStringBuilder.append(bmi);
+		bmiStringBuilder.append("<br /><br />");
+		bmiStringBuilder.append("<font color=\"red\">");
+		bmiStringBuilder.append(examManager.getBMIdescription(bmi));
+		bmiStringBuilder.append("</font>");
+		bmiStringBuilder.append("</strong>");
+		bmiStringBuilder.append("</body></html>");
+		jEditorPaneBMI.setText(bmiStringBuilder.toString());
 	}
 
 	private void updateGUI() {
@@ -350,408 +344,384 @@ public class PatientExaminationEdit extends ModalJFrame {
 			gbcDateChooserDate.gridy = 0;
 			jPanelExamination.add(getJDateChooserDate(), gbcDateChooserDate);
 
-			{
-				jLabelHeightAbb = new JLabel(MessageBundle.getMessage("angal.examination.heightabbr.txt")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelHeightAbb = new GridBagConstraints();
-				gbcLabelHeightAbb.insets = new Insets(5, 5, 5, 5);
-				gbcLabelHeightAbb.gridx = 0;
-				gbcLabelHeightAbb.gridy = 1;
-				jPanelExamination.add(jLabelHeightAbb, gbcLabelHeightAbb);
+			JLabel jLabelHeightAbb = new JLabel(MessageBundle.getMessage("angal.examination.heightabbr.txt")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelHeightAbb = new GridBagConstraints();
+			gbcLabelHeightAbb.insets = new Insets(5, 5, 5, 5);
+			gbcLabelHeightAbb.gridx = 0;
+			gbcLabelHeightAbb.gridy = 1;
+			jPanelExamination.add(jLabelHeightAbb, gbcLabelHeightAbb);
 
-				JLabel jLabelHeight = new JLabel(MessageBundle.getMessage("angal.common.height.txt"));
-				GridBagConstraints gbcLabelHeight = new GridBagConstraints();
-				gbcLabelHeight.anchor = GridBagConstraints.WEST;
-				gbcLabelHeight.insets = new Insets(5, 5, 5, 5);
-				gbcLabelHeight.gridx = 1;
-				gbcLabelHeight.gridy = 1;
-				jPanelExamination.add(jLabelHeight, gbcLabelHeight);
+			JLabel jLabelHeight = new JLabel(MessageBundle.getMessage("angal.common.height.txt"));
+			GridBagConstraints gbcLabelHeight = new GridBagConstraints();
+			gbcLabelHeight.anchor = GridBagConstraints.WEST;
+			gbcLabelHeight.insets = new Insets(5, 5, 5, 5);
+			gbcLabelHeight.gridx = 1;
+			gbcLabelHeight.gridy = 1;
+			jPanelExamination.add(jLabelHeight, gbcLabelHeight);
 
-				GridBagConstraints gbcSliderHeight = new GridBagConstraints();
-				gbcSliderHeight.insets = new Insets(5, 5, 5, 5);
-				gbcSliderHeight.fill = GridBagConstraints.HORIZONTAL;
-				gbcSliderHeight.gridx = 2;
-				gbcSliderHeight.gridy = 1;
-				jPanelExamination.add(getJSliderHeight(), gbcSliderHeight);
+			GridBagConstraints gbcSliderHeight = new GridBagConstraints();
+			gbcSliderHeight.insets = new Insets(5, 5, 5, 5);
+			gbcSliderHeight.fill = GridBagConstraints.HORIZONTAL;
+			gbcSliderHeight.gridx = 2;
+			gbcSliderHeight.gridy = 1;
+			jPanelExamination.add(getJSliderHeight(), gbcSliderHeight);
 
-				JLabel jLabelHeightUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.centimeter"));
-				GridBagConstraints gbcLabelHeightUnit = new GridBagConstraints();
-				gbcLabelHeightUnit.insets = new Insets(5, 5, 5, 5);
-				gbcLabelHeightUnit.gridx = 3;
-				gbcLabelHeightUnit.gridy = 1;
-				jPanelExamination.add(jLabelHeightUnit, gbcLabelHeightUnit);
+			JLabel jLabelHeightUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.centimeter"));
+			GridBagConstraints gbcLabelHeightUnit = new GridBagConstraints();
+			gbcLabelHeightUnit.insets = new Insets(5, 5, 5, 5);
+			gbcLabelHeightUnit.gridx = 3;
+			gbcLabelHeightUnit.gridy = 1;
+			jPanelExamination.add(jLabelHeightUnit, gbcLabelHeightUnit);
 
-				GridBagConstraints gbcTextFieldHeight = new GridBagConstraints();
-				gbcTextFieldHeight.anchor = GridBagConstraints.WEST;
-				gbcTextFieldHeight.insets = new Insets(0, 0, 5, 5);
-				gbcTextFieldHeight.gridx = 4;
-				gbcTextFieldHeight.gridy = 1;
-				jPanelExamination.add(getJTextFieldHeight(), gbcTextFieldHeight);
-			}
+			GridBagConstraints gbcTextFieldHeight = new GridBagConstraints();
+			gbcTextFieldHeight.anchor = GridBagConstraints.WEST;
+			gbcTextFieldHeight.insets = new Insets(0, 0, 5, 5);
+			gbcTextFieldHeight.gridx = 4;
+			gbcTextFieldHeight.gridy = 1;
+			jPanelExamination.add(getJTextFieldHeight(), gbcTextFieldHeight);
 
-			{
-				jLabelWeightAbb = new JLabel(MessageBundle.getMessage("angal.examination.weightabbr.txt"));
-				GridBagConstraints gbcLabelWeightAbb = new GridBagConstraints();
-				gbcLabelWeightAbb.insets = new Insets(5, 5, 5, 5);
-				gbcLabelWeightAbb.gridx = 0;
-				gbcLabelWeightAbb.gridy = 2;
-				jPanelExamination.add(jLabelWeightAbb, gbcLabelWeightAbb);
+			JLabel jLabelWeightAbb = new JLabel(MessageBundle.getMessage("angal.examination.weightabbr.txt"));
+			GridBagConstraints gbcLabelWeightAbb = new GridBagConstraints();
+			gbcLabelWeightAbb.insets = new Insets(5, 5, 5, 5);
+			gbcLabelWeightAbb.gridx = 0;
+			gbcLabelWeightAbb.gridy = 2;
+			jPanelExamination.add(jLabelWeightAbb, gbcLabelWeightAbb);
 
-				JLabel jLabelWeight = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
-				GridBagConstraints gbcLabelWeight = new GridBagConstraints();
-				gbcLabelWeight.anchor = GridBagConstraints.WEST;
-				gbcLabelWeight.insets = new Insets(5, 5, 5, 5);
-				gbcLabelWeight.gridx = 1;
-				gbcLabelWeight.gridy = 2;
-				jPanelExamination.add(jLabelWeight, gbcLabelWeight);
+			JLabel jLabelWeight = new JLabel(MessageBundle.getMessage("angal.common.weight.txt"));
+			GridBagConstraints gbcLabelWeight = new GridBagConstraints();
+			gbcLabelWeight.anchor = GridBagConstraints.WEST;
+			gbcLabelWeight.insets = new Insets(5, 5, 5, 5);
+			gbcLabelWeight.gridx = 1;
+			gbcLabelWeight.gridy = 2;
+			jPanelExamination.add(jLabelWeight, gbcLabelWeight);
 
-				GridBagConstraints gbcSliderWeight = new GridBagConstraints();
-				gbcSliderWeight.insets = new Insets(5, 5, 5, 5);
-				gbcSliderWeight.fill = GridBagConstraints.HORIZONTAL;
-				gbcSliderWeight.gridx = 2;
-				gbcSliderWeight.gridy = 2;
-				jPanelExamination.add(getJSliderWeight(), gbcSliderWeight);
+			GridBagConstraints gbcSliderWeight = new GridBagConstraints();
+			gbcSliderWeight.insets = new Insets(5, 5, 5, 5);
+			gbcSliderWeight.fill = GridBagConstraints.HORIZONTAL;
+			gbcSliderWeight.gridx = 2;
+			gbcSliderWeight.gridy = 2;
+			jPanelExamination.add(getJSliderWeight(), gbcSliderWeight);
 
-				JLabel jLabelWeightUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.kg"));
-				GridBagConstraints gbcLabelWeightUnit = new GridBagConstraints();
-				gbcLabelWeightUnit.insets = new Insets(5, 5, 5, 5);
-				gbcLabelWeightUnit.gridx = 3;
-				gbcLabelWeightUnit.gridy = 2;
-				jPanelExamination.add(jLabelWeightUnit, gbcLabelWeightUnit);
+			JLabel jLabelWeightUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.kg"));
+			GridBagConstraints gbcLabelWeightUnit = new GridBagConstraints();
+			gbcLabelWeightUnit.insets = new Insets(5, 5, 5, 5);
+			gbcLabelWeightUnit.gridx = 3;
+			gbcLabelWeightUnit.gridy = 2;
+			jPanelExamination.add(jLabelWeightUnit, gbcLabelWeightUnit);
 
-				GridBagConstraints gbcTextFieldWeight = new GridBagConstraints();
-				gbcTextFieldWeight.anchor = GridBagConstraints.WEST;
-				gbcTextFieldWeight.insets = new Insets(0, 0, 5, 5);
-				gbcTextFieldWeight.gridx = 4;
-				gbcTextFieldWeight.gridy = 2;
-				jPanelExamination.add(getJTextFieldWeight(), gbcTextFieldWeight);
-			}
+			GridBagConstraints gbcTextFieldWeight = new GridBagConstraints();
+			gbcTextFieldWeight.anchor = GridBagConstraints.WEST;
+			gbcTextFieldWeight.insets = new Insets(0, 0, 5, 5);
+			gbcTextFieldWeight.gridx = 4;
+			gbcTextFieldWeight.gridy = 2;
+			jPanelExamination.add(getJTextFieldWeight(), gbcTextFieldWeight);
 
-			{
-				GridBagConstraints gbcCheckBoxAP= new GridBagConstraints();
-				gbcCheckBoxAP.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxAP.gridx = 0;
-				gbcCheckBoxAP.gridy = 3;
-				jPanelExamination.add(getJCheckBoxAP(), gbcCheckBoxAP);
+			GridBagConstraints gbcCheckBoxAP = new GridBagConstraints();
+			gbcCheckBoxAP.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxAP.gridx = 0;
+			gbcCheckBoxAP.gridy = 3;
+			jPanelExamination.add(getJCheckBoxAP(), gbcCheckBoxAP);
 
-				JLabel jLabelAPmin = new JLabel(MessageBundle.getMessage("angal.examination.arterialpressure")); //$NON-NLS-1$
-				GridBagConstraints labelGbc_3 = new GridBagConstraints();
-				labelGbc_3.anchor = GridBagConstraints.WEST;
-				labelGbc_3.insets = new Insets(5, 5, 5, 5);
-				labelGbc_3.gridx = 1;
-				labelGbc_3.gridy = 3;
-				jPanelExamination.add(jLabelAPmin, labelGbc_3);
+			JLabel jLabelAPmin = new JLabel(MessageBundle.getMessage("angal.examination.arterialpressure")); //$NON-NLS-1$
+			GridBagConstraints gbcPressure = new GridBagConstraints();
+			gbcPressure.anchor = GridBagConstraints.WEST;
+			gbcPressure.insets = new Insets(5, 5, 5, 5);
+			gbcPressure.gridx = 1;
+			gbcPressure.gridy = 3;
+			jPanelExamination.add(jLabelAPmin, gbcPressure);
 
-				GridBagConstraints gbcPanelApPanel = new GridBagConstraints();
-				gbcPanelApPanel.insets = new Insets(0, 0, 5, 5);
-				gbcPanelApPanel.fill = GridBagConstraints.BOTH;
-				gbcPanelApPanel.gridx = 2;
-				gbcPanelApPanel.gridy = 3;
-				jPanelExamination.add(getJPanelAPPanel(), gbcPanelApPanel);
+			GridBagConstraints gbcPanelApPanel = new GridBagConstraints();
+			gbcPanelApPanel.insets = new Insets(0, 0, 5, 5);
+			gbcPanelApPanel.fill = GridBagConstraints.BOTH;
+			gbcPanelApPanel.gridx = 2;
+			gbcPanelApPanel.gridy = 3;
+			jPanelExamination.add(getJPanelAPPanel(), gbcPanelApPanel);
 
-				JLabel jLabelAPUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.mmHg"));
-				GridBagConstraints gbcLabelAPUnit = new GridBagConstraints();
-				gbcLabelAPUnit.insets = new Insets(5, 5, 5, 5);
-				gbcLabelAPUnit.gridx = 3;
-				gbcLabelAPUnit.gridy = 3;
-				jPanelExamination.add(jLabelAPUnit, gbcLabelAPUnit);
-			}
+			JLabel jLabelAPUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.mmHg"));
+			GridBagConstraints gbcLabelAPUnit = new GridBagConstraints();
+			gbcLabelAPUnit.insets = new Insets(5, 5, 5, 5);
+			gbcLabelAPUnit.gridx = 3;
+			gbcLabelAPUnit.gridy = 3;
+			jPanelExamination.add(jLabelAPUnit, gbcLabelAPUnit);
 
-			{
-				GridBagConstraints gbcCheckBoxToggleHR = new GridBagConstraints();
-				gbcCheckBoxToggleHR.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxToggleHR.gridx = 0;
-				gbcCheckBoxToggleHR.gridy = 4;
-				jPanelExamination.add(getJCheckBoxToggleHR(), gbcCheckBoxToggleHR);
+			GridBagConstraints gbcCheckBoxToggleHR = new GridBagConstraints();
+			gbcCheckBoxToggleHR.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxToggleHR.gridx = 0;
+			gbcCheckBoxToggleHR.gridy = 4;
+			jPanelExamination.add(getJCheckBoxToggleHR(), gbcCheckBoxToggleHR);
 
-				JLabel jLabelHR = new JLabel(MessageBundle.getMessage("angal.examination.heartrate")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelHR = new GridBagConstraints();
-				gbcLabelHR.anchor = GridBagConstraints.WEST;
-				gbcLabelHR.insets = new Insets(5, 5, 5, 5);
-				gbcLabelHR.gridx = 1;
-				gbcLabelHR.gridy = 4;
-				jPanelExamination.add(jLabelHR, gbcLabelHR);
+			JLabel jLabelHR = new JLabel(MessageBundle.getMessage("angal.examination.heartrate")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelHR = new GridBagConstraints();
+			gbcLabelHR.anchor = GridBagConstraints.WEST;
+			gbcLabelHR.insets = new Insets(5, 5, 5, 5);
+			gbcLabelHR.gridx = 1;
+			gbcLabelHR.gridy = 4;
+			jPanelExamination.add(jLabelHR, gbcLabelHR);
 
-				GridBagConstraints gbcSliderHR = new GridBagConstraints();
-				gbcSliderHR.insets = new Insets(5, 5, 5, 5);
-				gbcSliderHR.fill = GridBagConstraints.HORIZONTAL;
-				gbcSliderHR.gridx = 2;
-				gbcSliderHR.gridy = 4;
-				jPanelExamination.add(getJSliderHR(), gbcSliderHR);
+			GridBagConstraints gbcSliderHR = new GridBagConstraints();
+			gbcSliderHR.insets = new Insets(5, 5, 5, 5);
+			gbcSliderHR.fill = GridBagConstraints.HORIZONTAL;
+			gbcSliderHR.gridx = 2;
+			gbcSliderHR.gridy = 4;
+			jPanelExamination.add(getJSliderHR(), gbcSliderHR);
 
-				JLabel jLabelHRUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.bpm"));
-				GridBagConstraints gbcLabelHRUnit = new GridBagConstraints();
-				gbcLabelHRUnit.insets = new Insets(5, 5, 5, 5);
-				gbcLabelHRUnit.gridx = 3;
-				gbcLabelHRUnit.gridy = 4;
-				jPanelExamination.add(jLabelHRUnit, gbcLabelHRUnit);
+			JLabel jLabelHRUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.bpm"));
+			GridBagConstraints gbcLabelHRUnit = new GridBagConstraints();
+			gbcLabelHRUnit.insets = new Insets(5, 5, 5, 5);
+			gbcLabelHRUnit.gridx = 3;
+			gbcLabelHRUnit.gridy = 4;
+			jPanelExamination.add(jLabelHRUnit, gbcLabelHRUnit);
 
-				GridBagConstraints gbcTextFieldHR = new GridBagConstraints();
-				gbcTextFieldHR.anchor = GridBagConstraints.WEST;
-				gbcTextFieldHR.insets = new Insets(5, 0, 5, 5);
-				gbcTextFieldHR.gridx = 4;
-				gbcTextFieldHR.gridy = 4;
-				jPanelExamination.add(getJTextFieldHR(), gbcTextFieldHR);
-			}
+			GridBagConstraints gbcTextFieldHR = new GridBagConstraints();
+			gbcTextFieldHR.anchor = GridBagConstraints.WEST;
+			gbcTextFieldHR.insets = new Insets(5, 0, 5, 5);
+			gbcTextFieldHR.gridx = 4;
+			gbcTextFieldHR.gridy = 4;
+			jPanelExamination.add(getJTextFieldHR(), gbcTextFieldHR);
 
-			{
-				GridBagConstraints gbcCheckBoxToggleTemp = new GridBagConstraints();
-				gbcCheckBoxToggleTemp.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxToggleTemp.gridx = 0;
-				gbcCheckBoxToggleTemp.gridy = 5;
-				jPanelExamination.add(getJCheckBoxToggleTemp(), gbcCheckBoxToggleTemp);
+			GridBagConstraints gbcCheckBoxToggleTemp = new GridBagConstraints();
+			gbcCheckBoxToggleTemp.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxToggleTemp.gridx = 0;
+			gbcCheckBoxToggleTemp.gridy = 5;
+			jPanelExamination.add(getJCheckBoxToggleTemp(), gbcCheckBoxToggleTemp);
 
-				JLabel jLabelTemp = new JLabel(MessageBundle.getMessage("angal.examination.temperature")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelTemp = new GridBagConstraints();
-				gbcLabelTemp.anchor = GridBagConstraints.WEST;
-				gbcLabelTemp.insets = new Insets(5, 5, 5, 5);
-				gbcLabelTemp.gridx = 1;
-				gbcLabelTemp.gridy = 5;
-				jPanelExamination.add(jLabelTemp, gbcLabelTemp);
+			JLabel jLabelTemp = new JLabel(MessageBundle.getMessage("angal.examination.temperature")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelTemp = new GridBagConstraints();
+			gbcLabelTemp.anchor = GridBagConstraints.WEST;
+			gbcLabelTemp.insets = new Insets(5, 5, 5, 5);
+			gbcLabelTemp.gridx = 1;
+			gbcLabelTemp.gridy = 5;
+			jPanelExamination.add(jLabelTemp, gbcLabelTemp);
 
-				GridBagConstraints gbcSliderTemp = new GridBagConstraints();
-				gbcSliderTemp.insets = new Insets(5, 5, 5, 5);
-				gbcSliderTemp.fill = GridBagConstraints.HORIZONTAL;
-				gbcSliderTemp.gridx = 2;
-				gbcSliderTemp.gridy = 5;
-				jPanelExamination.add(getJSliderTemp(), gbcSliderTemp);
+			GridBagConstraints gbcSliderTemp = new GridBagConstraints();
+			gbcSliderTemp.insets = new Insets(5, 5, 5, 5);
+			gbcSliderTemp.fill = GridBagConstraints.HORIZONTAL;
+			gbcSliderTemp.gridx = 2;
+			gbcSliderTemp.gridy = 5;
+			jPanelExamination.add(getJSliderTemp(), gbcSliderTemp);
 
-				JLabel jLabelTempUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.celsius"));
-				GridBagConstraints gbcLabelTempUnit = new GridBagConstraints();
-				gbcLabelTempUnit.insets = new Insets(5, 5, 5, 5);
-				gbcLabelTempUnit.gridx = 3;
-				gbcLabelTempUnit.gridy = 5;
-				jPanelExamination.add(jLabelTempUnit, gbcLabelTempUnit);
+			JLabel jLabelTempUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.celsius"));
+			GridBagConstraints gbcLabelTempUnit = new GridBagConstraints();
+			gbcLabelTempUnit.insets = new Insets(5, 5, 5, 5);
+			gbcLabelTempUnit.gridx = 3;
+			gbcLabelTempUnit.gridy = 5;
+			jPanelExamination.add(jLabelTempUnit, gbcLabelTempUnit);
 
-				GridBagConstraints gbcTextFieldTemp = new GridBagConstraints();
-				gbcTextFieldTemp.anchor = GridBagConstraints.WEST;
-				gbcTextFieldTemp.insets = new Insets(5, 0, 5, 5);
-				gbcTextFieldTemp.gridx = 4;
-				gbcTextFieldTemp.gridy = 5;
-				jPanelExamination.add(getJTextFieldTemp(), gbcTextFieldTemp);
-			}
+			GridBagConstraints gbcTextFieldTemp = new GridBagConstraints();
+			gbcTextFieldTemp.anchor = GridBagConstraints.WEST;
+			gbcTextFieldTemp.insets = new Insets(5, 0, 5, 5);
+			gbcTextFieldTemp.gridx = 4;
+			gbcTextFieldTemp.gridy = 5;
+			jPanelExamination.add(getJTextFieldTemp(), gbcTextFieldTemp);
 
-			{
-				GridBagConstraints gbcCheckBoxToggleSaturation = new GridBagConstraints();
-				gbcCheckBoxToggleSaturation.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxToggleSaturation.gridx = 0;
-				gbcCheckBoxToggleSaturation.gridy = 6;
-				jPanelExamination.add(getJCheckBoxToggleSaturation(), gbcCheckBoxToggleSaturation);
+			GridBagConstraints gbcCheckBoxToggleSaturation = new GridBagConstraints();
+			gbcCheckBoxToggleSaturation.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxToggleSaturation.gridx = 0;
+			gbcCheckBoxToggleSaturation.gridy = 6;
+			jPanelExamination.add(getJCheckBoxToggleSaturation(), gbcCheckBoxToggleSaturation);
 
-				JLabel jLabelSaturation = new JLabel(MessageBundle.getMessage("angal.examination.saturation")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelSaturation = new GridBagConstraints();
-				gbcLabelSaturation.anchor = GridBagConstraints.WEST;
-				gbcLabelSaturation.insets = new Insets(5, 5, 5, 5);
-				gbcLabelSaturation.gridx = 1;
-				gbcLabelSaturation.gridy = 6;
-				jPanelExamination.add(jLabelSaturation, gbcLabelSaturation);
+			JLabel jLabelSaturation = new JLabel(MessageBundle.getMessage("angal.examination.saturation")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelSaturation = new GridBagConstraints();
+			gbcLabelSaturation.anchor = GridBagConstraints.WEST;
+			gbcLabelSaturation.insets = new Insets(5, 5, 5, 5);
+			gbcLabelSaturation.gridx = 1;
+			gbcLabelSaturation.gridy = 6;
+			jPanelExamination.add(jLabelSaturation, gbcLabelSaturation);
 
-				GridBagConstraints gbcSliderSaturation = new GridBagConstraints();
-				gbcSliderSaturation.insets = new Insets(5, 5, 5, 5);
-				gbcSliderSaturation.fill = GridBagConstraints.HORIZONTAL;
-				gbcSliderSaturation.gridx = 2;
-				gbcSliderSaturation.gridy = 6;
-				jPanelExamination.add(getJSliderSaturation(), gbcSliderSaturation);
+			GridBagConstraints gbcSliderSaturation = new GridBagConstraints();
+			gbcSliderSaturation.insets = new Insets(5, 5, 5, 5);
+			gbcSliderSaturation.fill = GridBagConstraints.HORIZONTAL;
+			gbcSliderSaturation.gridx = 2;
+			gbcSliderSaturation.gridy = 6;
+			jPanelExamination.add(getJSliderSaturation(), gbcSliderSaturation);
 
-				JLabel jLabelSaturationUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.percentage"));
-				GridBagConstraints gbcLabelSaturationUnit = new GridBagConstraints();
-				gbcLabelSaturationUnit.insets = new Insets(5, 5, 5, 5);
-				gbcLabelSaturationUnit.gridx = 3;
-				gbcLabelSaturationUnit.gridy = 6;
-				jPanelExamination.add(jLabelSaturationUnit, gbcLabelSaturationUnit);
+			JLabel jLabelSaturationUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.percentage"));
+			GridBagConstraints gbcLabelSaturationUnit = new GridBagConstraints();
+			gbcLabelSaturationUnit.insets = new Insets(5, 5, 5, 5);
+			gbcLabelSaturationUnit.gridx = 3;
+			gbcLabelSaturationUnit.gridy = 6;
+			jPanelExamination.add(jLabelSaturationUnit, gbcLabelSaturationUnit);
 
-				GridBagConstraints gbcTextFieldSaturation = new GridBagConstraints();
-				gbcTextFieldSaturation.anchor = GridBagConstraints.WEST;
-				gbcTextFieldSaturation.insets = new Insets(5, 0, 5, 5);
-				gbcTextFieldSaturation.gridx = 4;
-				gbcTextFieldSaturation.gridy = 6;
-				jPanelExamination.add(getJTextFieldSaturation(), gbcTextFieldSaturation);
-			}
+			GridBagConstraints gbcTextFieldSaturation = new GridBagConstraints();
+			gbcTextFieldSaturation.anchor = GridBagConstraints.WEST;
+			gbcTextFieldSaturation.insets = new Insets(5, 0, 5, 5);
+			gbcTextFieldSaturation.gridx = 4;
+			gbcTextFieldSaturation.gridy = 6;
+			jPanelExamination.add(getJTextFieldSaturation(), gbcTextFieldSaturation);
 
-			{
-				GridBagConstraints gbcCheckBoxToggleHGT = new GridBagConstraints();
-				gbcCheckBoxToggleHGT.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxToggleHGT.gridx = 0;
-				gbcCheckBoxToggleHGT.gridy = 7;
-				jPanelExamination.add(getJCheckBoxToggleHGT(), gbcCheckBoxToggleHGT);
+			GridBagConstraints gbcCheckBoxToggleHGT = new GridBagConstraints();
+			gbcCheckBoxToggleHGT.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxToggleHGT.gridx = 0;
+			gbcCheckBoxToggleHGT.gridy = 7;
+			jPanelExamination.add(getJCheckBoxToggleHGT(), gbcCheckBoxToggleHGT);
 
-				JLabel jLabelHGT = new JLabel(MessageBundle.getMessage("angal.examination.hgt")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelHGT = new GridBagConstraints();
-				gbcLabelHGT.anchor = GridBagConstraints.WEST;
-				gbcLabelHGT.insets = new Insets(5, 5, 5, 5);
-				gbcLabelHGT.gridx = 1;
-				gbcLabelHGT.gridy = 7;
-				jPanelExamination.add(jLabelHGT, gbcLabelHGT);
+			JLabel jLabelHGT = new JLabel(MessageBundle.getMessage("angal.examination.hgt")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelHGT = new GridBagConstraints();
+			gbcLabelHGT.anchor = GridBagConstraints.WEST;
+			gbcLabelHGT.insets = new Insets(5, 5, 5, 5);
+			gbcLabelHGT.gridx = 1;
+			gbcLabelHGT.gridy = 7;
+			jPanelExamination.add(jLabelHGT, gbcLabelHGT);
 
-				GridBagConstraints gbcSliderHGT = new GridBagConstraints();
-				gbcSliderHGT.insets = new Insets(5, 5, 5, 5);
-				gbcSliderHGT.fill = GridBagConstraints.HORIZONTAL;
-				gbcSliderHGT.gridx = 2;
-				gbcSliderHGT.gridy = 7;
-				jPanelExamination.add(getJSliderHGT(), gbcSliderHGT);
+			GridBagConstraints gbcSliderHGT = new GridBagConstraints();
+			gbcSliderHGT.insets = new Insets(5, 5, 5, 5);
+			gbcSliderHGT.fill = GridBagConstraints.HORIZONTAL;
+			gbcSliderHGT.gridx = 2;
+			gbcSliderHGT.gridy = 7;
+			jPanelExamination.add(getJSliderHGT(), gbcSliderHGT);
 
-				JLabel jLabelHGTUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.mgdl"));
-				GridBagConstraints gbcLabelHGTUnit = new GridBagConstraints();
-				gbcLabelHGTUnit.insets = new Insets(5, 5, 5, 5);
-				gbcLabelHGTUnit.gridx = 3;
-				gbcLabelHGTUnit.gridy = 7;
-				jPanelExamination.add(jLabelHGTUnit, gbcLabelHGTUnit);
+			JLabel jLabelHGTUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.mgdl"));
+			GridBagConstraints gbcLabelHGTUnit = new GridBagConstraints();
+			gbcLabelHGTUnit.insets = new Insets(5, 5, 5, 5);
+			gbcLabelHGTUnit.gridx = 3;
+			gbcLabelHGTUnit.gridy = 7;
+			jPanelExamination.add(jLabelHGTUnit, gbcLabelHGTUnit);
 
-				GridBagConstraints gbcTextFieldHGT = new GridBagConstraints();
-				gbcTextFieldHGT.anchor = GridBagConstraints.WEST;
-				gbcTextFieldHGT.insets = new Insets(5, 0, 5, 5);
-				gbcTextFieldHGT.gridx = 4;
-				gbcTextFieldHGT.gridy = 7;
-				jPanelExamination.add(getJTextFieldHGT(), gbcTextFieldHGT);
-			}
+			GridBagConstraints gbcTextFieldHGT = new GridBagConstraints();
+			gbcTextFieldHGT.anchor = GridBagConstraints.WEST;
+			gbcTextFieldHGT.insets = new Insets(5, 0, 5, 5);
+			gbcTextFieldHGT.gridx = 4;
+			gbcTextFieldHGT.gridy = 7;
+			jPanelExamination.add(getJTextFieldHGT(), gbcTextFieldHGT);
 
-			{
-				GridBagConstraints gbcCheckBoxToggleRR = new GridBagConstraints();
-				gbcCheckBoxToggleRR.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxToggleRR.gridx = 0;
-				gbcCheckBoxToggleRR.gridy = 8;
-				jPanelExamination.add(getJCheckBoxToggleRR(), gbcCheckBoxToggleRR);
+			GridBagConstraints gbcCheckBoxToggleRR = new GridBagConstraints();
+			gbcCheckBoxToggleRR.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxToggleRR.gridx = 0;
+			gbcCheckBoxToggleRR.gridy = 8;
+			jPanelExamination.add(getJCheckBoxToggleRR(), gbcCheckBoxToggleRR);
 
-				JLabel jLabelRR = new JLabel(MessageBundle.getMessage("angal.examination.respiratoryrate")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelRR = new GridBagConstraints();
-				gbcLabelRR.anchor = GridBagConstraints.WEST;
-				gbcLabelRR.insets = new Insets(5, 5, 5, 5);
-				gbcLabelRR.gridx = 1;
-				gbcLabelRR.gridy = 8;
-				jPanelExamination.add(jLabelRR, gbcLabelRR);
+			JLabel jLabelRR = new JLabel(MessageBundle.getMessage("angal.examination.respiratoryrate")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelRR = new GridBagConstraints();
+			gbcLabelRR.anchor = GridBagConstraints.WEST;
+			gbcLabelRR.insets = new Insets(5, 5, 5, 5);
+			gbcLabelRR.gridx = 1;
+			gbcLabelRR.gridy = 8;
+			jPanelExamination.add(jLabelRR, gbcLabelRR);
 
-				GridBagConstraints gbcSliderRR = new GridBagConstraints();
-				gbcSliderRR.insets = new Insets(5, 5, 5, 5);
-				gbcSliderRR.gridx = 2;
-				gbcSliderRR.gridy = 8;
-				jPanelExamination.add(getJSliderRR(), gbcSliderRR);
+			GridBagConstraints gbcSliderRR = new GridBagConstraints();
+			gbcSliderRR.insets = new Insets(5, 5, 5, 5);
+			gbcSliderRR.gridx = 2;
+			gbcSliderRR.gridy = 8;
+			jPanelExamination.add(getJSliderRR(), gbcSliderRR);
 
-				JLabel jLabelRRUnit = new JLabel(MessageBundle.getMessage("angal.examination.respiratoryrateunit"));
-				GridBagConstraints gbcLabelRRUnit = new GridBagConstraints();
-				gbcLabelRRUnit.insets = new Insets(5, 5, 5, 5);
-				gbcLabelRRUnit.gridx = 3;
-				gbcLabelRRUnit.gridy = 8;
-				jPanelExamination.add(jLabelRRUnit, gbcLabelRRUnit);
+			JLabel jLabelRRUnit = new JLabel(MessageBundle.getMessage("angal.examination.respiratoryrateunit"));
+			GridBagConstraints gbcLabelRRUnit = new GridBagConstraints();
+			gbcLabelRRUnit.insets = new Insets(5, 5, 5, 5);
+			gbcLabelRRUnit.gridx = 3;
+			gbcLabelRRUnit.gridy = 8;
+			jPanelExamination.add(jLabelRRUnit, gbcLabelRRUnit);
 
-				GridBagConstraints gbcTextFieldRR = new GridBagConstraints();
-				gbcTextFieldRR.anchor = GridBagConstraints.WEST;
-				gbcTextFieldRR.insets = new Insets(5, 0, 5, 0);
-				gbcTextFieldRR.gridx = 4;
-				gbcTextFieldRR.gridy = 8;
-				jPanelExamination.add(getJTextFieldRR(), gbcTextFieldRR);
-			}
+			GridBagConstraints gbcTextFieldRR = new GridBagConstraints();
+			gbcTextFieldRR.anchor = GridBagConstraints.WEST;
+			gbcTextFieldRR.insets = new Insets(5, 0, 5, 0);
+			gbcTextFieldRR.gridx = 4;
+			gbcTextFieldRR.gridy = 8;
+			jPanelExamination.add(getJTextFieldRR(), gbcTextFieldRR);
 
-			{
-				GridBagConstraints gbcCheckBoxToggleDiuresisVolume = new GridBagConstraints();
-				gbcCheckBoxToggleDiuresisVolume.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxToggleDiuresisVolume.gridx = 0;
-				gbcCheckBoxToggleDiuresisVolume.gridy = 9;
-				jPanelExamination.add(getJCheckBoxToggleDiuresisVolume(), gbcCheckBoxToggleDiuresisVolume);
+			GridBagConstraints gbcCheckBoxToggleDiuresisVolume = new GridBagConstraints();
+			gbcCheckBoxToggleDiuresisVolume.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxToggleDiuresisVolume.gridx = 0;
+			gbcCheckBoxToggleDiuresisVolume.gridy = 9;
+			jPanelExamination.add(getJCheckBoxToggleDiuresisVolume(), gbcCheckBoxToggleDiuresisVolume);
 
-				JLabel jLabelDiuresisVolume = new JLabel(MessageBundle.getMessage("angal.examination.diuresisvolume24h")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelDiuresisVolume = new GridBagConstraints();
-				gbcLabelDiuresisVolume.anchor = GridBagConstraints.WEST;
-				gbcLabelDiuresisVolume.insets = new Insets(5, 5, 5, 5);
-				gbcLabelDiuresisVolume.gridx = 1;
-				gbcLabelDiuresisVolume.gridy = 9;
-				jPanelExamination.add(jLabelDiuresisVolume, gbcLabelDiuresisVolume);
+			JLabel jLabelDiuresisVolume = new JLabel(MessageBundle.getMessage("angal.examination.diuresisvolume24h")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelDiuresisVolume = new GridBagConstraints();
+			gbcLabelDiuresisVolume.anchor = GridBagConstraints.WEST;
+			gbcLabelDiuresisVolume.insets = new Insets(5, 5, 5, 5);
+			gbcLabelDiuresisVolume.gridx = 1;
+			gbcLabelDiuresisVolume.gridy = 9;
+			jPanelExamination.add(jLabelDiuresisVolume, gbcLabelDiuresisVolume);
 
-				GridBagConstraints gbcSliderDiuresisVolume = new GridBagConstraints();
-				gbcSliderDiuresisVolume.insets = new Insets(5, 5, 5, 5);
-				gbcSliderDiuresisVolume.fill = GridBagConstraints.HORIZONTAL;
-				gbcSliderDiuresisVolume.gridx = 2;
-				gbcSliderDiuresisVolume.gridy = 9;
-				jPanelExamination.add(getJSliderDiuresisVolume(), gbcSliderDiuresisVolume);
+			GridBagConstraints gbcSliderDiuresisVolume = new GridBagConstraints();
+			gbcSliderDiuresisVolume.insets = new Insets(5, 5, 5, 5);
+			gbcSliderDiuresisVolume.fill = GridBagConstraints.HORIZONTAL;
+			gbcSliderDiuresisVolume.gridx = 2;
+			gbcSliderDiuresisVolume.gridy = 9;
+			jPanelExamination.add(getJSliderDiuresisVolume(), gbcSliderDiuresisVolume);
 
-				JLabel jLabelDiuresisVolumeUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.milliliter"));
-				GridBagConstraints gbcLabelDiuresisVolumeUnit = new GridBagConstraints();
-				gbcLabelDiuresisVolumeUnit.insets = new Insets(5, 5, 5, 5);
-				gbcLabelDiuresisVolumeUnit.gridx = 3;
-				gbcLabelDiuresisVolumeUnit.gridy = 9;
-				jPanelExamination.add(jLabelDiuresisVolumeUnit, gbcLabelDiuresisVolumeUnit);
+			JLabel jLabelDiuresisVolumeUnit = new JLabel(MessageBundle.getMessage("angal.common.uom.milliliter"));
+			GridBagConstraints gbcLabelDiuresisVolumeUnit = new GridBagConstraints();
+			gbcLabelDiuresisVolumeUnit.insets = new Insets(5, 5, 5, 5);
+			gbcLabelDiuresisVolumeUnit.gridx = 3;
+			gbcLabelDiuresisVolumeUnit.gridy = 9;
+			jPanelExamination.add(jLabelDiuresisVolumeUnit, gbcLabelDiuresisVolumeUnit);
 
-				GridBagConstraints gbcTextFieldDiuresisVolume = new GridBagConstraints();
-				gbcTextFieldDiuresisVolume.anchor = GridBagConstraints.WEST;
-				gbcTextFieldDiuresisVolume.insets = new Insets(5, 0, 5, 5);
-				gbcTextFieldDiuresisVolume.gridx = 4;
-				gbcTextFieldDiuresisVolume.gridy = 9;
-				jPanelExamination.add(getJTextFieldDiuresisVolume(), gbcTextFieldDiuresisVolume);
-			}
+			GridBagConstraints gbcTextFieldDiuresisVolume = new GridBagConstraints();
+			gbcTextFieldDiuresisVolume.anchor = GridBagConstraints.WEST;
+			gbcTextFieldDiuresisVolume.insets = new Insets(5, 0, 5, 5);
+			gbcTextFieldDiuresisVolume.gridx = 4;
+			gbcTextFieldDiuresisVolume.gridy = 9;
+			jPanelExamination.add(getJTextFieldDiuresisVolume(), gbcTextFieldDiuresisVolume);
 
-			{
-				GridBagConstraints gbcCheckBoxToggleDiuresisType = new GridBagConstraints();
-				gbcCheckBoxToggleDiuresisType.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxToggleDiuresisType.gridx = 0;
-				gbcCheckBoxToggleDiuresisType.gridy = 10;
-				jPanelExamination.add(getJCheckBoxToggleDiuresisType(), gbcCheckBoxToggleDiuresisType);
+			GridBagConstraints gbcCheckBoxToggleDiuresisType = new GridBagConstraints();
+			gbcCheckBoxToggleDiuresisType.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxToggleDiuresisType.gridx = 0;
+			gbcCheckBoxToggleDiuresisType.gridy = 10;
+			jPanelExamination.add(getJCheckBoxToggleDiuresisType(), gbcCheckBoxToggleDiuresisType);
 
-				JLabel jLabelDiuresis = new JLabel(MessageBundle.getMessage("angal.examination.diuresis")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelDiuresis = new GridBagConstraints();
-				gbcLabelDiuresis.anchor = GridBagConstraints.WEST;
-				gbcLabelDiuresis.insets = new Insets(5, 5, 5, 5);
-				gbcLabelDiuresis.gridx = 1;
-				gbcLabelDiuresis.gridy = 10;
-				jPanelExamination.add(jLabelDiuresis, gbcLabelDiuresis);
+			JLabel jLabelDiuresis = new JLabel(MessageBundle.getMessage("angal.examination.diuresis")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelDiuresis = new GridBagConstraints();
+			gbcLabelDiuresis.anchor = GridBagConstraints.WEST;
+			gbcLabelDiuresis.insets = new Insets(5, 5, 5, 5);
+			gbcLabelDiuresis.gridx = 1;
+			gbcLabelDiuresis.gridy = 10;
+			jPanelExamination.add(jLabelDiuresis, gbcLabelDiuresis);
 
-				GridBagConstraints gbcComboBoxDiuresisType = new GridBagConstraints();
-				gbcComboBoxDiuresisType.anchor = GridBagConstraints.CENTER;
-				gbcComboBoxDiuresisType.insets = new Insets(5, 0, 5, 5);
-				gbcComboBoxDiuresisType.gridx = 2;
-				gbcComboBoxDiuresisType.gridy = 10;
-				jPanelExamination.add(getJComboBoxDiuresisType(), gbcComboBoxDiuresisType);
-			}
+			GridBagConstraints gbcComboBoxDiuresisType = new GridBagConstraints();
+			gbcComboBoxDiuresisType.anchor = GridBagConstraints.CENTER;
+			gbcComboBoxDiuresisType.insets = new Insets(5, 0, 5, 5);
+			gbcComboBoxDiuresisType.gridx = 2;
+			gbcComboBoxDiuresisType.gridy = 10;
+			jPanelExamination.add(getJComboBoxDiuresisType(), gbcComboBoxDiuresisType);
 
-			{
-				GridBagConstraints gbcCheckBoxToggleBowel = new GridBagConstraints();
-				gbcCheckBoxToggleBowel.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxToggleBowel.gridx = 0;
-				gbcCheckBoxToggleBowel.gridy = 11;
-				jPanelExamination.add(getJCheckBoxToggleBowel(), gbcCheckBoxToggleBowel);
+			GridBagConstraints gbcCheckBoxToggleBowel = new GridBagConstraints();
+			gbcCheckBoxToggleBowel.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxToggleBowel.gridx = 0;
+			gbcCheckBoxToggleBowel.gridy = 11;
+			jPanelExamination.add(getJCheckBoxToggleBowel(), gbcCheckBoxToggleBowel);
 
-				JLabel jLabelBowel = new JLabel(MessageBundle.getMessage("angal.examination.bowel")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelBowel = new GridBagConstraints();
-				gbcLabelBowel.anchor = GridBagConstraints.WEST;
-				gbcLabelBowel.insets = new Insets(5, 5, 5, 5);
-				gbcLabelBowel.gridx = 1;
-				gbcLabelBowel.gridy = 11;
-				jPanelExamination.add(jLabelBowel, gbcLabelBowel);
+			JLabel jLabelBowel = new JLabel(MessageBundle.getMessage("angal.examination.bowel")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelBowel = new GridBagConstraints();
+			gbcLabelBowel.anchor = GridBagConstraints.WEST;
+			gbcLabelBowel.insets = new Insets(5, 5, 5, 5);
+			gbcLabelBowel.gridx = 1;
+			gbcLabelBowel.gridy = 11;
+			jPanelExamination.add(jLabelBowel, gbcLabelBowel);
 
-				GridBagConstraints gbcComboBoxBowel = new GridBagConstraints();
-				gbcComboBoxBowel.anchor = GridBagConstraints.CENTER;
-				gbcComboBoxBowel.insets = new Insets(5, 0, 5, 5);
-				gbcComboBoxBowel.gridx = 2;
-				gbcComboBoxBowel.gridy = 11;
-				jPanelExamination.add(getJComboBoxBowel(), gbcComboBoxBowel);
-			}
+			GridBagConstraints gbcComboBoxBowel = new GridBagConstraints();
+			gbcComboBoxBowel.anchor = GridBagConstraints.CENTER;
+			gbcComboBoxBowel.insets = new Insets(5, 0, 5, 5);
+			gbcComboBoxBowel.gridx = 2;
+			gbcComboBoxBowel.gridy = 11;
+			jPanelExamination.add(getJComboBoxBowel(), gbcComboBoxBowel);
 
-			{
-				GridBagConstraints gbcCheckBoxToggleAusc = new GridBagConstraints();
-				gbcCheckBoxToggleAusc.insets = new Insets(5, 5, 5, 5);
-				gbcCheckBoxToggleAusc.gridx = 0;
-				gbcCheckBoxToggleAusc.gridy = 12;
-				jPanelExamination.add(getJCheckBoxToggleAusc(), gbcCheckBoxToggleAusc);
+			GridBagConstraints gbcCheckBoxToggleAusc = new GridBagConstraints();
+			gbcCheckBoxToggleAusc.insets = new Insets(5, 5, 5, 5);
+			gbcCheckBoxToggleAusc.gridx = 0;
+			gbcCheckBoxToggleAusc.gridy = 12;
+			jPanelExamination.add(getJCheckBoxToggleAusc(), gbcCheckBoxToggleAusc);
 
-				JLabel jLabelAusc = new JLabel(MessageBundle.getMessage("angal.examination.auscultation")); //$NON-NLS-1$
-				GridBagConstraints gbcLabelAusc = new GridBagConstraints();
-				gbcLabelAusc.anchor = GridBagConstraints.WEST;
-				gbcLabelAusc.insets = new Insets(5, 5, 5, 5);
-				gbcLabelAusc.gridx = 1;
-				gbcLabelAusc.gridy = 12;
-				jPanelExamination.add(jLabelAusc, gbcLabelAusc);
+			JLabel jLabelAusc = new JLabel(MessageBundle.getMessage("angal.examination.auscultation")); //$NON-NLS-1$
+			GridBagConstraints gbcLabelAusc = new GridBagConstraints();
+			gbcLabelAusc.anchor = GridBagConstraints.WEST;
+			gbcLabelAusc.insets = new Insets(5, 5, 5, 5);
+			gbcLabelAusc.gridx = 1;
+			gbcLabelAusc.gridy = 12;
+			jPanelExamination.add(jLabelAusc, gbcLabelAusc);
 
-				GridBagConstraints gbcComboBoxAuscultation = new GridBagConstraints();
-				gbcComboBoxAuscultation.anchor = GridBagConstraints.CENTER;
-				gbcComboBoxAuscultation.insets = new Insets(5, 0, 5, 0);
-				gbcComboBoxAuscultation.gridx = 2;
-				gbcComboBoxAuscultation.gridy = 12;
-				jPanelExamination.add(getJComboBoxAuscultation(), gbcComboBoxAuscultation);
-			}
+			GridBagConstraints gbcComboBoxAuscultation = new GridBagConstraints();
+			gbcComboBoxAuscultation.anchor = GridBagConstraints.CENTER;
+			gbcComboBoxAuscultation.insets = new Insets(5, 0, 5, 0);
+			gbcComboBoxAuscultation.gridx = 2;
+			gbcComboBoxAuscultation.gridy = 12;
+			jPanelExamination.add(getJComboBoxAuscultation(), gbcComboBoxAuscultation);
 		}
 		return jPanelExamination;
 	}
 
-	private JComboBox getJComboBoxDiuresisType() {
+	private JComboBox<String> getJComboBoxDiuresisType() {
 		if (jComboBoxDiuresisType == null) {
-			jComboBoxDiuresisType = new JComboBox();
+			jComboBoxDiuresisType = new JComboBox<>();
 			List<String> diuresisDescription = examManager.getDiuresisDescriptionList();
 			for (String description : diuresisDescription) {
 				jComboBoxDiuresisType.addItem(description);
@@ -765,9 +735,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return jComboBoxDiuresisType;
 	}
 
-	private JComboBox getJComboBoxBowel() {
+	private JComboBox<String> getJComboBoxBowel() {
 		if (jComboBoxBowel == null) {
-			jComboBoxBowel = new JComboBox();
+			jComboBoxBowel = new JComboBox<>();
 			List<String> bowelDescription = examManager.getBowelDescriptionList();
 			for (String description : bowelDescription) {
 				jComboBoxBowel.addItem(description);
@@ -881,9 +851,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return jCheckBoxToggleAP;
 	}
 
-	private GoodDateTimeChooser getJDateChooserDate() {
+	private GoodDateTimeSpinnerChooser getJDateChooserDate() {
 		if (jDateChooserDate == null) {
-			jDateChooserDate = new GoodDateTimeChooser(null);
+			jDateChooserDate = new GoodDateTimeSpinnerChooser(null);
 			jDateChooserDate.addDateTimeChangeListener(event -> {
 				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
 				if (dateChangeEvent != null) {
@@ -960,13 +930,13 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JPanel getJPanelAPPanel() {
 		if (jPanelAPPanel == null) {
 			jPanelAPPanel = new JPanel();
-			jLabelAPMin = new JLabel(MessageBundle.getMessage("angal.examination.ap.min")); //$NON-NLS-1$
+			JLabel jLabelAPMin = new JLabel(MessageBundle.getMessage("angal.examination.ap.min")); //$NON-NLS-1$
 			jPanelAPPanel.add(jLabelAPMin);
 			jPanelAPPanel.add(getJSpinnerAPmin());
-			jLabelAPSlash = new JLabel("/"); //$NON-NLS-1$
+			JLabel jLabelAPSlash = new JLabel("/"); //$NON-NLS-1$
 			jPanelAPPanel.add(jLabelAPSlash);
 			jPanelAPPanel.add(getJSpinnerAPmax());
-			jLabelAPMax = new JLabel(MessageBundle.getMessage("angal.examination.ap.max")); //$NON-NLS-1$
+			JLabel jLabelAPMax = new JLabel(MessageBundle.getMessage("angal.examination.ap.max")); //$NON-NLS-1$
 			jPanelAPPanel.add(jLabelAPMax);
 		}
 		return jPanelAPPanel;
@@ -980,7 +950,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					patex.setPex_ap_min((Integer) jSpinnerAPmin.getValue());
+					patex.setPex_ap_min(jSpinnerAPmin.getValue());
 					modified = true;
 				}
 
@@ -1001,7 +971,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					patex.setPex_ap_max((Integer) jSpinnerAPmax.getValue());
+					patex.setPex_ap_max(jSpinnerAPmax.getValue());
 					modified = true;
 				}
 
@@ -1192,9 +1162,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return jTextFieldRR;
 	}
 
-	private JComboBox getJComboBoxAuscultation() {
+	private JComboBox<String> getJComboBoxAuscultation() {
 		if (jComboBoxAuscultation == null) {
-			jComboBoxAuscultation = new JComboBox();
+			jComboBoxAuscultation = new JComboBox<>();
 			List<String> auscultationList = examManager.getAuscultationList();
 			for (String description : auscultationList) {
 				jComboBoxAuscultation.addItem(description);
@@ -1513,14 +1483,6 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return actionSavePatientExamination;
 	}
 
-	private void enableAP() {
-		jSpinnerAPmin.setEnabled(true);
-		patex.setPex_ap_min((Integer) jSpinnerAPmin.getValue());
-		jSpinnerAPmax.setEnabled(true);
-		patex.setPex_ap_max((Integer) jSpinnerAPmax.getValue());
-		modified = true;
-	}
-
 	private void disableAP() {
 		jSpinnerAPmin.setEnabled(false);
 		patex.setPex_ap_min(null);
@@ -1545,6 +1507,14 @@ public class PatientExaminationEdit extends ModalJFrame {
 				enableAP();
 			}
 		}
+
+		private void enableAP() {
+			jSpinnerAPmin.setEnabled(true);
+			patex.setPex_ap_min(jSpinnerAPmin.getValue());
+			jSpinnerAPmax.setEnabled(true);
+			patex.setPex_ap_max(jSpinnerAPmax.getValue());
+			modified = true;
+		}
 	}
 
 	private Action getActionToggleAP() {
@@ -1554,34 +1524,10 @@ public class PatientExaminationEdit extends ModalJFrame {
 		return actionToggleAP;
 	}
 
-	private void enableTemp() throws NumberFormatException {
-		jSliderTemp.setEnabled(true);
-		jTextFieldTemp.setEnabled(true);
-		String text = jTextFieldTemp.getText();
-		if (!text.equals("")) {
-			patex.setPex_temp(Double.parseDouble(text));
-		} else {
-			patex.setPex_temp(null);
-		}
-		modified = true;
-	}
-
 	private void disableTemp() {
 		jSliderTemp.setEnabled(false);
 		jTextFieldTemp.setEnabled(false);
 		patex.setPex_temp(null);
-	}
-
-	private void enableSaturation() throws NumberFormatException {
-		jSliderSaturation.setEnabled(true);
-		jTextFieldSaturation.setEnabled(true);
-		String text = jTextFieldSaturation.getText();
-		if (!text.equals("")) {
-			patex.setPex_sat(Double.parseDouble(text));
-		} else {
-			patex.setPex_sat(null);
-		}
-		modified = true;
 	}
 
 	private void disableSaturation() {
@@ -1590,45 +1536,15 @@ public class PatientExaminationEdit extends ModalJFrame {
 		patex.setPex_sat(null);
 	}
 
-	private void enableHGT() throws NumberFormatException {
-		jSliderHGT.setEnabled(true);
-		jTextFieldHGT.setEnabled(true);
-		String text = jTextFieldHGT.getText();
-		if (!text.equals("")) {
-			patex.setPex_hgt(Integer.parseInt(text));
-		} else {
-			patex.setPex_hgt(null);
-		}
-		modified = true;
-	}
-
 	private void disableHGT() {
 		jSliderHGT.setEnabled(false);
 		jTextFieldHGT.setEnabled(false);
 		patex.setPex_hgt(null);
 	}
 
-	private void enableBowel() {
-		jComboBoxBowel.setEnabled(true);
-		patex.setPex_bowel_desc(examManager.getBowelDescriptionKey((String) jComboBoxBowel.getSelectedItem()));
-		modified = true;
-	}
-
 	private void disableBowel() {
 		jComboBoxBowel.setEnabled(false);
 		patex.setPex_bowel_desc(null);
-	}
-
-	private void enableDiuresisVolume() throws NumberFormatException {
-		jSliderDiuresisVolume.setEnabled(true);
-		jTextFieldDiuresisVolume.setEnabled(true);
-		String text = jTextFieldDiuresisVolume.getText();
-		if (!text.equals("")) {
-			patex.setPex_diuresis(Integer.parseInt(text));
-		} else {
-			patex.setPex_diuresis(null);
-		}
-		modified = true;
 	}
 
 	private void disableDiuresisVolume() {
@@ -1637,22 +1553,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 		patex.setPex_diuresis(null);
 	}
 
-	private void enableDiuresisType() {
-		jComboBoxDiuresisType.setEnabled(true);
-		patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) jComboBoxDiuresisType.getSelectedItem()));
-		modified = true;
-	}
-
 	private void disableDiuresisType() {
 		jComboBoxDiuresisType.setEnabled(false);
 		patex.setPex_diuresis_desc(null);
-	}
-
-	private void enableHR() throws NumberFormatException {
-		jSliderHR.setEnabled(true);
-		jTextFieldHR.setEnabled(true);
-		patex.setPex_hr(Integer.parseInt(jTextFieldHR.getText()));
-		modified = true;
 	}
 
 	private void disableHR() {
@@ -1678,6 +1581,18 @@ public class PatientExaminationEdit extends ModalJFrame {
 				enableHGT();
 			}
 		}
+
+		private void enableHGT() throws NumberFormatException {
+			jSliderHGT.setEnabled(true);
+			jTextFieldHGT.setEnabled(true);
+			String text = jTextFieldHGT.getText();
+			if (!text.equals("")) {
+				patex.setPex_hgt(Integer.parseInt(text));
+			} else {
+				patex.setPex_hgt(null);
+			}
+			modified = true;
+		}
 	}
 
 	private class SwingActionToggleBowel extends AbstractAction {
@@ -1696,6 +1611,12 @@ public class PatientExaminationEdit extends ModalJFrame {
 			} else {
 				enableBowel();
 			}
+		}
+
+		private void enableBowel() {
+			jComboBoxBowel.setEnabled(true);
+			patex.setPex_bowel_desc(examManager.getBowelDescriptionKey((String) jComboBoxBowel.getSelectedItem()));
+			modified = true;
 		}
 	}
 
@@ -1716,6 +1637,18 @@ public class PatientExaminationEdit extends ModalJFrame {
 				enableDiuresisVolume();
 			}
 		}
+
+		private void enableDiuresisVolume() throws NumberFormatException {
+			jSliderDiuresisVolume.setEnabled(true);
+			jTextFieldDiuresisVolume.setEnabled(true);
+			String text = jTextFieldDiuresisVolume.getText();
+			if (!text.equals("")) {
+				patex.setPex_diuresis(Integer.parseInt(text));
+			} else {
+				patex.setPex_diuresis(null);
+			}
+			modified = true;
+		}
 	}
 
 	private class SwingActionToggleDiuresisType extends AbstractAction {
@@ -1735,25 +1668,18 @@ public class PatientExaminationEdit extends ModalJFrame {
 				enableDiuresisType();
 			}
 		}
-	}
 
-	private void enableRR() throws NumberFormatException {
-		jSliderRR.setEnabled(true);
-		jTextFieldRR.setEnabled(true);
-		patex.setPex_rr(Integer.parseInt(jTextFieldRR.getText()));
-		modified = true;
+		private void enableDiuresisType() {
+			jComboBoxDiuresisType.setEnabled(true);
+			patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) jComboBoxDiuresisType.getSelectedItem()));
+			modified = true;
+		}
 	}
 
 	private void disableRR() {
 		jSliderRR.setEnabled(false);
 		jTextFieldRR.setEnabled(false);
 		patex.setPex_rr(null);
-	}
-
-	private void enableAuscultation() {
-		jComboBoxAuscultation.setEnabled(true);
-		patex.setPex_auscultation(examManager.getAuscultationKey((String) jComboBoxAuscultation.getSelectedItem()));
-		modified = true;
 	}
 
 	private void disableAuscultation() {
@@ -1778,6 +1704,18 @@ public class PatientExaminationEdit extends ModalJFrame {
 				enableSaturation();
 			}
 		}
+
+		private void enableSaturation() throws NumberFormatException {
+			jSliderSaturation.setEnabled(true);
+			jTextFieldSaturation.setEnabled(true);
+			String text = jTextFieldSaturation.getText();
+			if (!text.equals("")) {
+				patex.setPex_sat(Double.parseDouble(text));
+			} else {
+				patex.setPex_sat(null);
+			}
+			modified = true;
+		}
 	}
 
 	private class SwingActionToggleRR extends AbstractAction {
@@ -1796,6 +1734,13 @@ public class PatientExaminationEdit extends ModalJFrame {
 			} else {
 				enableRR();
 			}
+		}
+
+		private void enableRR() throws NumberFormatException {
+			jSliderRR.setEnabled(true);
+			jTextFieldRR.setEnabled(true);
+			patex.setPex_rr(Integer.parseInt(jTextFieldRR.getText()));
+			modified = true;
 		}
 	}
 
@@ -1816,6 +1761,12 @@ public class PatientExaminationEdit extends ModalJFrame {
 				enableAuscultation();
 			}
 		}
+
+		private void enableAuscultation() {
+			jComboBoxAuscultation.setEnabled(true);
+			patex.setPex_auscultation(examManager.getAuscultationKey((String) jComboBoxAuscultation.getSelectedItem()));
+			modified = true;
+		}
 	}
 
 	private class SwingActionToggleTemp extends AbstractAction {
@@ -1835,6 +1786,18 @@ public class PatientExaminationEdit extends ModalJFrame {
 				enableTemp();
 			}
 		}
+
+		private void enableTemp() throws NumberFormatException {
+			jSliderTemp.setEnabled(true);
+			jTextFieldTemp.setEnabled(true);
+			String text = jTextFieldTemp.getText();
+			if (!text.equals("")) {
+				patex.setPex_temp(Double.parseDouble(text));
+			} else {
+				patex.setPex_temp(null);
+			}
+			modified = true;
+		}
 	}
 
 	private class SwingActionToggleHR extends AbstractAction {
@@ -1853,6 +1816,13 @@ public class PatientExaminationEdit extends ModalJFrame {
 			} else {
 				enableHR();
 			}
+		}
+
+		private void enableHR() throws NumberFormatException {
+			jSliderHR.setEnabled(true);
+			jTextFieldHR.setEnabled(true);
+			patex.setPex_hr(Integer.parseInt(jTextFieldHR.getText()));
+			modified = true;
 		}
 	}
 
@@ -1974,8 +1944,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-			JButton button = (JButton) value;
-			return button;
+			return (JButton) value;
 		}
 	}
 
@@ -2040,37 +2009,37 @@ public class PatientExaminationEdit extends ModalJFrame {
 		 */
 		@Override
 		public Object getValueAt(int r, int c) {
-			PatientExamination patex = patexList.get(r);
-			StringBuilder ap_string = new StringBuilder();
-			ap_string.append(patex.getPex_ap_min() == null ? "-" : patex.getPex_ap_min())
-					.append(" / ").append(patex.getPex_ap_max() == null ? "-" : patex.getPex_ap_max());
-			String datetime = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM).format(patex.getPex_date());
-			String diuresis = patex.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc());
-			String bowel = patex.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc());
-			String ausc = patex.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patex.getPex_auscultation());
-			String note = patex.getPex_note();
+			PatientExamination patientExamination = patexList.get(r);
+			StringBuilder pressure = new StringBuilder();
+			pressure.append(patientExamination.getPex_ap_min() == null ? "-" : patientExamination.getPex_ap_min())
+					.append(" / ").append(patientExamination.getPex_ap_max() == null ? "-" : patientExamination.getPex_ap_max());
+			String datetime = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM).format(patientExamination.getPex_date());
+			String diuresis = patientExamination.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patientExamination.getPex_diuresis_desc());
+			String bowel = patientExamination.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patientExamination.getPex_bowel_desc());
+			String ausc = patientExamination.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patientExamination.getPex_auscultation());
+			String note = patientExamination.getPex_note();
 			if (c == -1) {
-				return patex;
+				return patientExamination;
 			} else if (c == 0) {
 				return datetime;
 			} else if (c == 1) {
-				return patex.getPex_height();
+				return patientExamination.getPex_height();
 			} else if (c == 2) {
-				return patex.getPex_weight();
+				return patientExamination.getPex_weight();
 			} else if (c == 3) {
-				return ap_string.toString();
+				return pressure.toString();
 			} else if (c == 4) {
-				return patex.getPex_hr() == null ? "-" : patex.getPex_hr();
+				return patientExamination.getPex_hr() == null ? "-" : patientExamination.getPex_hr();
 			} else if (c == 5) {
-				return patex.getPex_temp() == null ? "-" : patex.getPex_temp();
+				return patientExamination.getPex_temp() == null ? "-" : patientExamination.getPex_temp();
 			} else if (c == 6) {
-				return patex.getPex_sat() == null ? "-" : patex.getPex_sat();
+				return patientExamination.getPex_sat() == null ? "-" : patientExamination.getPex_sat();
 			} else if (c == 7) {
-				return patex.getPex_hgt() == null ? "-" : patex.getPex_hgt();
+				return patientExamination.getPex_hgt() == null ? "-" : patientExamination.getPex_hgt();
 			} else if (c == 8) {
-				return patex.getPex_rr() == null ? "-" : patex.getPex_rr();
+				return patientExamination.getPex_rr() == null ? "-" : patientExamination.getPex_rr();
 			} else if (c == 9) {
-				return patex.getPex_diuresis() == null ? "-" : patex.getPex_diuresis();
+				return patientExamination.getPex_diuresis() == null ? "-" : patientExamination.getPex_diuresis();
 			} else if (c == 10) {
 				return diuresis;
 			} else if (c == 11) {
