@@ -214,18 +214,18 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		myFrame = this;
 		initialize();
 		setMinimumSize(new Dimension(1340, 550));
-        setVisible(true);
+		setLocationRelativeTo(null);
 	}
 
 	public OpdBrowser(Patient patient) {
 		super();
 		myFrame = this;
 		initialize();
-		setVisible(true);
 		Opd newOpd = new Opd(0, ' ', -1, new Disease());
 		OpdEditExtended editrecord = new OpdEditExtended(myFrame, newOpd, patient, true);
 		editrecord.addSurgeryListener(OpdBrowser.this);
 		editrecord.showAsModal(myFrame);
+		setLocationRelativeTo(null);
 	}
 
 	/**
@@ -259,7 +259,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		rowCounter.setText(rowCounterText + pSur.size());
 		validate();
 		pack();
-		this.setLocationRelativeTo(null);
 	}
 
 	/**

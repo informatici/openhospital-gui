@@ -187,11 +187,9 @@ public class PatientFolderBrowser extends ModalJFrame
 		}
 		return jContentPane;
 	}
-	
-	private JPanel patientData = null;
 
 	private JPanel getPatientDataPanel() {
-		patientData = new JPanel();
+		JPanel patientData = new JPanel();
 		patientData.setLayout(new BorderLayout());
 		patientData.add(getTablesPanel(), BorderLayout.EAST);
 
@@ -208,8 +206,6 @@ public class PatientFolderBrowser extends ModalJFrame
 	private List<Ward> ward;
 	private List<Opd> opdList;
 	private List <PatientExamination> examinationList;
-	
-    private OperationList opeList;
 
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
@@ -228,10 +224,7 @@ public class PatientFolderBrowser extends ModalJFrame
 	};
 	private int[] plColumnwidth = {150, 200, 50, 200};
 
-	private DefaultTableModel admModel;
-	private DefaultTableModel labModel;
 	private TableSorter sorter;
-	private TableSorter sorterLab;
 	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 
 	private LocalDateTime fromDate;
@@ -239,17 +232,10 @@ public class PatientFolderBrowser extends ModalJFrame
 	private JTable admTable;
 	private JTable labTable;
 
-	private JScrollPane scrollPane;
-	private JScrollPane scrollPaneLab;
-
-	private JPanel tablesPanel=null;
-
-	private MedicalsrMovPatList drugsList;
-
 	private JPanel getTablesPanel() {
-		tablesPanel = new JPanel(new BorderLayout());
+		JPanel tablesPanel = new JPanel(new BorderLayout());
 
-		admModel = new AdmissionBrowserModel();
+		DefaultTableModel admModel = new AdmissionBrowserModel();
 		sorter = new TableSorter(admModel);
 		admTable = new JTable(sorter);
 
@@ -288,7 +274,7 @@ public class PatientFolderBrowser extends ModalJFrame
                     new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent mouseEvent) {
-                            LocalDateTime fromDate = null;
+                            LocalDateTime fromDate;
 	                        LocalDateTime toDate = null;
                             String reportType;
                             JTable target = (JTable) mouseEvent.getSource();
@@ -343,14 +329,14 @@ public class PatientFolderBrowser extends ModalJFrame
 			}
 		}
 
-		scrollPane = new JScrollPane(admTable);
+		JScrollPane scrollPane = new JScrollPane(admTable);
 		scrollPane.setPreferredSize(new Dimension(500, 200));
 		tablesPanel.add(scrollPane, BorderLayout.NORTH);
 		sorter.sortByColumn(0, false); //sort by first column, descending
 		sorter.updateRowHeights(admTable);
 
-		labModel = new LabBrowserModel();
-		sorterLab = new TableSorter(labModel);
+		DefaultTableModel labModel = new LabBrowserModel();
+		TableSorter sorterLab = new TableSorter(labModel);
 		labTable = new JTable(sorterLab);
 		/* ** apply default oh cellRender **** */
 		labTable.setDefaultRenderer(Object.class, cellRenderer);
@@ -391,14 +377,14 @@ public class PatientFolderBrowser extends ModalJFrame
 
 		JTabbedPane tabbedPaneLabOpe = new JTabbedPane(SwingConstants.TOP);
 		tablesPanel.add(tabbedPaneLabOpe, BorderLayout.CENTER);
-		scrollPaneLab = new JScrollPane(labTable);
+		JScrollPane scrollPaneLab = new JScrollPane(labTable);
 		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.admission.patientfolder.exams.title"), null, scrollPaneLab, null);
 
-		opeList = new OperationList(patient);
+		OperationList opeList = new OperationList(patient);
 		getOlderDate(opeList.getOprowData(), "opDate");
 		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.admission.patientfolder.operations.title"), null, opeList, null);
 
-		drugsList = new MedicalsrMovPatList(patient);
+		MedicalsrMovPatList drugsList = new MedicalsrMovPatList(patient);
 		getOlderDate(drugsList.getDrugsData(), "date");
 		tabbedPaneLabOpe.addTab(MessageBundle.getMessage("angal.admission.patientfolder.drugs.title"), null, drugsList, null);
 
@@ -521,8 +507,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					// check only that the exam date is the same or after the admission date.
 					// On true condition select the corresponding table row.
 					if (!labDate.isBefore(startDate.toLocalDate()) &&
-							(null == endDate ? true : !labDate.isAfter(endDate.toLocalDate())))  {
-
+							(null == endDate || !labDate.isAfter(endDate.toLocalDate())))  {
 						labTable.addRowSelectionInterval(i, i);
 					}
 				}
@@ -675,18 +660,6 @@ public class PatientFolderBrowser extends ModalJFrame
 		return closeButton;
 	}
 
-	private <T> LocalDateTime getDateForAdmissionRow(String variableName, int row) {
-		return getDateFromObject(admList.get(row), variableName);
-	}
-
-	private <T> LocalDateTime getDateForOpdRow(String variableName, int row) {
-		return getDateFromObject(opdList.get(row - admList.size()), variableName);
-	}
-
-	private <T> LocalDateTime getDateForExaminationRow(String variableName, int row) {
-		return getDateFromObject(examinationList.get(row - (opdList.size() + admList.size())), variableName);
-	}
-
 	private <T> void getOlderDate(List<T> list, String variableName) {
 		for (Object obj : list) {
 			LocalDateTime otherDate = getDateFromObject(obj, variableName);
@@ -716,38 +689,39 @@ public class PatientFolderBrowser extends ModalJFrame
 	class AdmissionBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = -453243229156512947L;
-		private AdmissionBrowserManager manager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-		private DiseaseBrowserManager dbm = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-		private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
-		private OpdBrowserManager opd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-		private ExaminationBrowserManager examin = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+
+		private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+		private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+		private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+		private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+		private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 
 		public AdmissionBrowserModel() {
 
 			try {
-				admList = manager.getAdmissions(patient);
+				admList = admissionBrowserManager.getAdmissions(patient);
 				getOlderDate(admList, "admDate");
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				disease = dbm.getDiseaseAll();
+				disease = diseaseBrowserManager.getDiseaseAll();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				ward = wbm.getWards();
+				ward = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				opdList = opd.getOpdList(patient.getCode());
+				opdList = opdBrowserManager.getOpdList(patient.getCode());
 				getOlderDate(opdList, "date");
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				examinationList = examin.getByPatID(patient.getCode());
+				examinationList = examinationBrowserManager.getByPatID(patient.getCode());
 				getOlderDate(examinationList, "pex_date");
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
@@ -996,19 +970,6 @@ public class PatientFolderBrowser extends ModalJFrame
 				this.setText(strDate);
 			}
 			return this;
-		}
-	}
-
-	private void updateRowHeights() {
-		for (int row = 0; row < admTable.getRowCount(); row++) {
-			int rowHeight = admTable.getRowHeight();
-
-			for (int column = 0; column < admTable.getColumnCount(); column++) {
-				Component comp = admTable.prepareRenderer(admTable.getCellRenderer(row, column), row, column);
-				rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
-			}
-
-			admTable.setRowHeight(row, rowHeight);
 		}
 	}
 
