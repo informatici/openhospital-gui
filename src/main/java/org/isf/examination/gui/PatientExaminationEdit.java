@@ -2010,8 +2010,8 @@ public class PatientExaminationEdit extends ModalJFrame {
 		@Override
 		public Object getValueAt(int r, int c) {
 			PatientExamination patientExamination = patexList.get(r);
-			StringBuilder pressure = new StringBuilder();
-			pressure.append(patientExamination.getPex_ap_min() == null ? "-" : patientExamination.getPex_ap_min())
+			StringBuilder pressurStringBuilder = new StringBuilder();
+			pressurStringBuilder.append(patientExamination.getPex_ap_min() == null ? "-" : patientExamination.getPex_ap_min())
 					.append(" / ").append(patientExamination.getPex_ap_max() == null ? "-" : patientExamination.getPex_ap_max());
 			String datetime = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM).format(patientExamination.getPex_date());
 			String diuresis = patientExamination.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patientExamination.getPex_diuresis_desc());
@@ -2027,7 +2027,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			} else if (c == 2) {
 				return patientExamination.getPex_weight();
 			} else if (c == 3) {
-				return pressure.toString();
+				return pressurStringBuilder.toString();
 			} else if (c == 4) {
 				return patientExamination.getPex_hr() == null ? "-" : patientExamination.getPex_hr();
 			} else if (c == 5) {
