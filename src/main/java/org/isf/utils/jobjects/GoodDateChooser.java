@@ -99,4 +99,8 @@ public class GoodDateChooser extends Panel {
 		datePicker.addDateChangeListener(listener);
 	}
 
+	public void openPopup() {
+		datePicker.openPopup();
+	}
+
 }
