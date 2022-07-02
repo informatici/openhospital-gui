@@ -102,7 +102,7 @@ public final class ImageUtil {
 			int newTargetSize = (bufferedImage.getTileWidth()- ((bufferedImage.getTileWidth() / 100) * 10));
 			bufferedImage = Scalr.resize(bufferedImage, newTargetSize);
 			arrSize = getArraySize(bufferedImage, fileType);
-			}
+		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ImageIO.write(bufferedImage, fileType, baos);
 		return ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
