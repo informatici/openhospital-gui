@@ -207,6 +207,7 @@ public class VisitView extends ModalJFrame {
 		getContentPane().add(dayCalendar(), BorderLayout.CENTER);
 		showGui(ward != null);
 
+		setPreferredSize(new Dimension(1350, 600));
 		setSize(1350, 600);
 		setResizable(false);
 	}
