@@ -218,7 +218,7 @@ public class MainMenu extends JFrame
 					if (ADMIN_STR.equals(myUser.getUserName())) {
 						LOGGER.error("Cannot use \"admin\" user, please consider creating another user under the admin group.");
 					} else {
-						LOGGER.error("Cannot use \"admin\" user, please consider creating another user under the admin group.");
+						LOGGER.error("Passwords do not match, please drop the XMPP user and login to OH again with the same user.");
 					}
 				} else if (message.contains("XMPPError connecting")) {
 					LOGGER.error("No XMPP Server seems to be running: set XMPPMODULEENABLED = false");
@@ -266,8 +266,7 @@ public class MainMenu extends JFrame
 		if (!internalPharmacies) {
 			List<UserMenuItem> junkMenu = new ArrayList<>();
 			for (UserMenuItem umi : myMenu) {
-				if ("MEDICALSWARD".equalsIgnoreCase(umi.getCode())
-						|| "MEDICALSWARD".equalsIgnoreCase(umi.getMySubmenu())) {
+				if ("MEDICALSWARD".equalsIgnoreCase(umi.getCode()) || "MEDICALSWARD".equalsIgnoreCase(umi.getMySubmenu())) {
 					junkMenu.add(umi);
 				}
 			}
