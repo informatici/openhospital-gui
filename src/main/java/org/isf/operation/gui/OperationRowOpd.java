@@ -351,8 +351,6 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 		int index = tableData.getSelectedRow();
 		if (index < 0) {
 			oprowData.add(operationRow);
-			modelOhOpeRow = new OhTableOperationModel<>(oprowData);
-			tableData.setModel(modelOhOpeRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
 			dateop.setTime(this.textDate.getDate());
@@ -365,9 +363,9 @@ public class OperationRowOpd extends JPanel implements OpdEditExtended.SurgeryLi
 			opeInter.setPrescriber(MainMenu.getUser().getUserName());
 			opeInter.setRemarks(textAreaRemark.getText());
 			oprowData.set(index, opeInter);
-			modelOhOpeRow = new OhTableOperationModel<>(oprowData);
-			tableData.setModel(modelOhOpeRow);
 		}
+		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
+		tableData.setModel(modelOhOpeRow);
 		clearForm();
 	}
 

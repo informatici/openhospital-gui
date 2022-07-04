@@ -356,8 +356,6 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 		int index = tableData.getSelectedRow();
 		if (index < 0) {
 			oprowData.add(operationRow);
-			modelOhOpeRow = new OhTableOperationModel<>(oprowData);
-			tableData.setModel(modelOhOpeRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
 			dateop.setTime(this.textDate.getDate());
@@ -370,9 +368,9 @@ public class OperationRowAdm extends JPanel implements AdmissionBrowser.Admissio
 			opeInter.setPrescriber(MainMenu.getUser().getUserName());
 			opeInter.setRemarks(textAreaRemark.getText());
 			oprowData.set(index, opeInter);
-			modelOhOpeRow = new OhTableOperationModel<>(oprowData);
-			tableData.setModel(modelOhOpeRow);
 		}
+		modelOhOpeRow = new OhTableOperationModel<>(oprowData);
+		tableData.setModel(modelOhOpeRow);
 		clearForm();
 	}
 

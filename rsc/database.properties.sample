@@ -1,3 +1,11 @@
 jdbc.url=jdbc:mysql://localhost:3306/oh
 jdbc.username=isf
 jdbc.password=isf123
+# DB single connection configuration -> seems that currently is used only by Location data collector
+sc.jdbc.url=jdbc:mysql:
+sc.jdbc.port=3307
+sc.jdbc.db=oh
+sc.jdbc.server=localhost
+sc.jdbc.username=isf
+sc.jdbc.password=isf123
+sc.jdbc.drivers=

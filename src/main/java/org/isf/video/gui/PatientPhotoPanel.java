@@ -175,11 +175,10 @@ public class PatientPhotoPanel extends JPanel {
 				});
 
 				buttonBox1.add(jGetPhotoButton);
-				buttonBox1.add(jAttachPhotoButton);
 			} else {
 				jAttachPhotoButton.setText(MessageBundle.getMessage("angal.patient.loadfile"));
-				buttonBox1.add(jAttachPhotoButton);
 			}
+			buttonBox1.add(jAttachPhotoButton);
 
 			jPhotoPanel.add(externalPanel, BorderLayout.NORTH);
 			jPhotoPanel.add(buttonBox1, java.awt.BorderLayout.CENTER);

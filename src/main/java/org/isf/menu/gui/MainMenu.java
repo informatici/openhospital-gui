@@ -33,7 +33,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -53,6 +55,12 @@ import org.isf.menu.model.User;
 import org.isf.menu.model.UserGroup;
 import org.isf.menu.model.UserMenuItem;
 import org.isf.sms.service.SmsSender;
+import org.isf.telemetry.constants.TelemetryConst;
+import org.isf.telemetry.daemon.TelemetryDaemon;
+import org.isf.telemetry.gui.TelemetryGUI;
+import org.isf.telemetry.gui.TelemetryGUI.TelemetryListener;
+import org.isf.telemetry.manager.TelemetryManager;
+import org.isf.telemetry.model.Telemetry;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -64,12 +72,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener {
+public class MainMenu extends JFrame
+		implements ActionListener, Login.LoginListener, SubMenu.CommandListener, TelemetryListener {
 
 	private static final long serialVersionUID = 7620582079916035164L;
 	public static final String ADMIN_STR = "admin";
 	private boolean flag_Xmpp;
 	private boolean flag_Sms;
+	private Thread telemetryThread;
+	// used to understand if a module is enabled
+	private Map<String, Boolean> activableModules;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
 
@@ -129,7 +141,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	public MainMenu() {
 		myFrame = this;
 		GeneralData.initialize();
-		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); //for all fixed options YES_NO_CANCEL in dialogs
+		this.activableModules = retrieveActivatedModulesMap();
+		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); // for all fixed options YES_NO_CANCEL in dialogs
 		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
 		try {
@@ -140,11 +153,13 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			}
 			flag_Xmpp = GeneralData.XMPPMODULEENABLED;
 			flag_Sms = GeneralData.SMSENABLED;
+
 			// start connection with SMS service
 			if (flag_Sms) {
 				Thread thread = new Thread(new SmsSender());
 				thread.start();
 			}
+
 		} catch (Exception e) {
 			singleUser = true; // default for property not found
 			internalPharmacies = false; // default for property not found
@@ -160,11 +175,14 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			// get an user
 			LOGGER.info("Logging: Multi User mode.");
 			new Login(this);
-
 			if (null == myUser) {
 				// Login failed
 				actionExit(2);
 			}
+		}
+
+		if (GeneralData.TELEMETRYENABLED) {
+			runTelemetry();
 		}
 
 		// get menu items
@@ -185,16 +203,18 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				}
 				new CommunicationFrame();
 				/*
-				 * Interaction communication= new Interaction();
-				 * communication.incomingChat(); communication.receiveFile();
+				 * Interaction communication= new Interaction(); communication.incomingChat();
+				 * communication.receiveFile();
 				 */
 			} catch (XMPPException e) {
 				String message = e.getMessage();
 				if (message.contains("SASL authentication DIGEST-MD5 failed")) {
 					if (ADMIN_STR.equals(myUser.getUserName())) {
-						LOGGER.error("Cannot use \"admin\" user, please consider creating another user under the admin group.");
+						LOGGER.error(
+								"Cannot use \"admin\" user, please consider creating another user under the admin group.");
 					} else {
-						LOGGER.error("Passwords do not match, please drop the XMPP user and login to OH again with the same user.");
+						LOGGER.error(
+								"Passwords do not match, please drop the XMPP user and login to OH again with the same user.");
 					}
 				} else if (message.contains("XMPPError connecting")) {
 					LOGGER.error("No XMPP Server seems to be running: set XMPPMODULEENABLED = false");
@@ -242,7 +262,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		if (!internalPharmacies) {
 			ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 			for (UserMenuItem umi : myMenu) {
-				if ("MEDICALSWARD".equalsIgnoreCase(umi.getCode()) || "MEDICALSWARD".equalsIgnoreCase(umi.getMySubmenu())) {
+				if ("MEDICALSWARD".equalsIgnoreCase(umi.getCode())
+						|| "MEDICALSWARD".equalsIgnoreCase(umi.getMySubmenu())) {
 					junkMenu.add(umi);
 				}
 			}
@@ -254,7 +275,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// remove disabled buttons
 		ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
 		for (UserMenuItem umi : myMenu) {
-			if (!umi.isActive()) {
+			// if is not active or it is a module that is not enabled (there is no point in
+			// showing a menu item)
+			if (!umi.isActive() || isMenuItemNotEnabled(umi.getCode())) {
 				junkMenu.add(umi);
 			}
 		}
@@ -268,6 +291,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// add panel with buttons to frame
 		MainPanel panel = new MainPanel(this);
 		add(panel);
+
 		pack();
 
 		// compute menu position
@@ -280,6 +304,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		myFrame.setAlwaysOnTop(GeneralData.MAINMENUALWAYSONTOP);
 		myFrame.addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				actionExit(0);
@@ -288,6 +313,37 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		setResizable(false);
 		setVisible(true);
+
+	}
+
+	private HashMap<String, Boolean> retrieveActivatedModulesMap() {
+		return new HashMap<String, Boolean>() {
+
+			private static final long serialVersionUID = 1L;
+			{
+				put(TelemetryConst.MENU_ID, Boolean.valueOf(GeneralData.TELEMETRYENABLED));
+			}
+		};
+	}
+
+	private boolean isMenuItemNotEnabled(String menuCode) {
+		return this.activableModules.containsKey(menuCode) && !activableModules.get(menuCode).booleanValue();
+	}
+
+	private void runTelemetry() {
+		TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
+		Telemetry settings = telemetryManager.retrieveSettings();
+		// active = null => show popup
+		// active = true => start daemon
+		// active = false => do nothing
+		if (settings == null || settings.getActive() == null) {
+			// show telemetry popup
+			new TelemetryGUI(this);
+		}
+
+		// start telemetry daemon
+		Thread thread = new Thread(new TelemetryDaemon());
+		thread.start();
 	}
 
 	private void actionExit(int status) {
@@ -295,7 +351,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			LOGGER.info("Login failed.");
 		}
 		String newLine = System.lineSeparator();
-		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine, newLine, newLine, newLine);
+		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine,
+				newLine, newLine, newLine);
 		System.exit(status);
 	}
 
@@ -335,7 +392,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 							}
 						}
 					} catch (InstantiationException | ClassNotFoundException | IllegalAccessException ie) {
-						LOGGER.error("Error instantiating menu item: '{}' with class '{}'.", u.getCode(), u.getMyClass());
+						LOGGER.error("Error instantiating menu item: '{}' with class '{}'.", u.getCode(),
+								u.getMyClass());
 					}
 					break;
 				}
@@ -407,5 +465,18 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	public static User getUser() {
 		return myUser;
+	}
+
+	@Override
+	public void telemetryInserted(AWTEvent e) {
+		if (e.getSource() instanceof Telemetry) {
+			Telemetry telemetry = (Telemetry) e.getSource();
+			LOGGER.info("Telemetry: \"{}\" telemetry inserted.", telemetry);
+			if (null != this.telemetryThread) {
+				this.telemetryThread = new Thread(new TelemetryDaemon());
+				this.telemetryThread.start();
+			}
+		}
+
 	}
 }

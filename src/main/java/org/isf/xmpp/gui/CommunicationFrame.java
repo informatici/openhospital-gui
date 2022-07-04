@@ -383,9 +383,6 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			} else {
 				((TabButton) tabs.getTabComponentAt(index)).setColor(Color.black);
 			}
-
-			return ((ChatPanel) tabs.getComponentAt(index)).getChatMessages();
-
 		} else {
 			LOGGER.debug("Index creation: {}", index); //$NON-NLS-1$
 			newChat = new ChatPanel();
@@ -395,8 +392,8 @@ public class CommunicationFrame extends AbstractCommunicationFrame {
 			repaint();
 			index = tabs.indexOfTab(name);
 			LOGGER.debug("Index creation: {}", index); //$NON-NLS-1$
-			return ((ChatPanel) tabs.getComponentAt(index)).getChatMessages();
 		}
+		return ((ChatPanel) tabs.getComponentAt(index)).getChatMessages();
 	}
 
 	public String getSelectedUser() {
