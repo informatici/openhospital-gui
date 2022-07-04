@@ -22,14 +22,13 @@
 package org.isf.admission.gui;
 
 import static org.isf.utils.Constants.DATE_FORMATTER;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -162,27 +161,15 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 
 	private void initialize() {
-
 		this.setContentPane(getJContentPane());
-
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
 		setTitle(MessageBundle.getMessage("angal.admission.patientdata.title"));
-		
 		pack();
-		
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screenSize = kit.getScreenSize();
-		
-		Dimension mySize = getSize();
-		
-		setLocation((screenSize.width-mySize.width)/2,(screenSize.height-mySize.height)/2);
+		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
 	}
 
-	
-	
 	private JPanel jContentPane = null;
 
 	private JPanel getJContentPane() {
@@ -196,7 +183,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 	
 	
-	private JPanel patientData=null;
+	private JPanel patientData = null;
 	private boolean isMalnutrition = false;
 	
 	private JPanel getPatientDataPanel() {
@@ -572,7 +559,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			
 			if (value instanceof Date) {
 				// Use SimpleDateFormat class to get a formatted String from Date object.
-				String strDate = new SimpleDateFormat(DATE_FORMAT_DD_MM_YY).format((Date)value);
+				String strDate = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY).format((Date)value);
 				
 				// Sorting algorithm will work with model value. So you dont need to worry
 				// about the renderer's display value. 

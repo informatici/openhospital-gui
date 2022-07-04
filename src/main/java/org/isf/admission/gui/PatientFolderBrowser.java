@@ -21,7 +21,7 @@
  */
 package org.isf.admission.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -35,13 +35,11 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.EventListener;
 import java.util.List;
 
@@ -117,6 +115,8 @@ public class PatientFolderBrowser extends ModalJFrame
 	private static final long serialVersionUID = -3427327158197856822L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientFolderBrowser.class);
+
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
 
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
 
@@ -282,28 +282,27 @@ public class PatientFolderBrowser extends ModalJFrame
                             if (mouseEvent.getClickCount() == 2) {
                                 Object objType = target.getValueAt(targetSelectedRow, -1);
                                 if (objType instanceof Admission) {
-                                    fromDate = Converters.parseStringToLocalDate((String)target.getValueAt(targetSelectedRow, 0), DATE_FORMAT_DD_MM_YY).atStartOfDay();
+									fromDate = (LocalDateTime) target.getValueAt(targetSelectedRow, 0);
                                     Object dateObject = target.getValueAt(targetSelectedRow, 4);
-                                    if (dateObject instanceof Date) {
-                                        LocalDateTime dateValue = Converters.convertToLocalDateTime((Date)dateObject);
-                                        toDate = LocalDateTime.now();
-                                        if (dateValue != null) {
-                                            toDate = dateValue;
-                                        }
-                                    } else if (dateObject instanceof String) {
-                                    	if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
-                                    		toDate = LocalDateTime.now();
-                                    	} else {
-                                    		toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YY).atTime(LocalTime.MAX);
-                                    	}
-                                    }
+									if (dateObject instanceof LocalDateTime) {
+										toDate = (LocalDateTime) dateObject;
+										if (toDate == null) {
+											toDate = LocalDateTime.now();
+										}
+									} else if (dateObject instanceof String) {
+										if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
+											toDate = LocalDateTime.now();
+										} else {
+											toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YYYY).atTime(LocalTime.MAX);
+										}
+									}
                                     reportType = "ADMISSION";
                                 } else if (objType instanceof Opd) {
-                                    fromDate = Converters.parseStringToLocalDate((String)target.getValueAt(targetSelectedRow, 0), DATE_FORMAT_DD_MM_YY).atStartOfDay();
+                                    fromDate = (LocalDateTime) target.getValueAt(targetSelectedRow, 0);
                                     toDate = fromDate;
                                     reportType = "OPD";
                                 } else if (objType instanceof PatientExamination) {
-                                    fromDate = Converters.parseStringToLocalDate((String)target.getValueAt(targetSelectedRow, 0), DATE_FORMAT_DD_MM_YY).atStartOfDay();
+                                    fromDate = (LocalDateTime) target.getValueAt(targetSelectedRow, 0);
                                     toDate = fromDate;
                                     reportType = "EXAMINATION";
                                 } else {
@@ -395,8 +394,7 @@ public class PatientFolderBrowser extends ModalJFrame
                         @Override
                         public void mouseClicked(MouseEvent mouseEvent) {
                             if (mouseEvent.getClickCount() == 2) {
-                                Date date = (Date) labTable.getValueAt(labTable.getSelectedRow(), 0);
-                                LocalDate fromDate = Converters.convertToLocalDateTime(date).toLocalDate();
+	                            LocalDate fromDate = ((LocalDateTime)labTable.getValueAt(labTable.getSelectedRow(), 0)).toLocalDate();
                                 new PatientFolderReportModal(
                                         PatientFolderBrowser.this,
                                         patient.getCode(),
@@ -413,7 +411,7 @@ public class PatientFolderBrowser extends ModalJFrame
                         @Override
                         public void mouseClicked(MouseEvent mouseEvent) {
                             if (mouseEvent.getClickCount() == 2) {
-                                fromDate = Converters.parseStringToLocalDate((String)opeTable.getValueAt(opeTable.getSelectedRow(), 0), DATE_FORMAT_DD_MM_YY).atStartOfDay();
+                                fromDate = Converters.parseStringToLocalDate((String)opeTable.getValueAt(opeTable.getSelectedRow(), 0), DATE_FORMAT_DD_MM_YYYY).atStartOfDay();
                                 new PatientFolderReportModal(
                                         PatientFolderBrowser.this,
                                         patient.getCode(),
@@ -430,7 +428,7 @@ public class PatientFolderBrowser extends ModalJFrame
                         @Override
                         public void mouseClicked(MouseEvent mouseEvent) {
                             if (mouseEvent.getClickCount() == 2) {
-                                fromDate = Converters.parseStringToLocalDate((String)drugTable.getValueAt(drugTable.getSelectedRow(), 0), DATE_FORMAT_DD_MM_YY).atStartOfDay();
+                                fromDate = Converters.parseStringToLocalDate((String)drugTable.getValueAt(drugTable.getSelectedRow(), 0), DATE_FORMAT_DD_MM_YYYY).atStartOfDay();
                                 new PatientFolderReportModal(
                                         PatientFolderBrowser.this,
                                         patient.getCode(),
@@ -768,19 +766,13 @@ public class PatientFolderBrowser extends ModalJFrame
 				}
 			} else if (column == 0) {
 				if (row < admList.size()) {
-					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
-					LocalDate myDate = (admList.get(row)).getAdmDate().toLocalDate();
-					return dateFormat.format(myDate);
+					return (admList.get(row)).getAdmDate();
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
-					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
-					LocalDateTime myDate = (opdList.get(z)).getDate();
-					return dateFormat.format(myDate);
+					return (opdList.get(z)).getDate();
 				} else {
 					int f = row - (opdList.size() + admList.size());
-					LocalDateTime pexDate = examinationList.get(f).getPex_date();
-					DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
-					return dateFormat.format(pexDate);
+					return examinationList.get(f).getPex_date();
 				}
 			} else if (column == 1) {
 				if (row < admList.size()) {
@@ -875,7 +867,7 @@ public class PatientFolderBrowser extends ModalJFrame
 					if (admList.get(row).getDisDate() == null) {
 						return MessageBundle.getMessage("angal.admission.present.txt");
 					} else {
-						return Converters.toDate(admList.get(row).getDisDate());
+						return admList.get(row).getDisDate();
 					}
 				} else if (row < opdList.size() + admList.size()) {
 					int z = row - admList.size();
@@ -936,7 +928,7 @@ public class PatientFolderBrowser extends ModalJFrame
 			if (column == -1) {
 				return laboratory;
 			} else if (column == 0) {
-				return Converters.toDate(laboratory.getDate());
+				return laboratory.getDate();
 			} else if (column == 1) {
 				return laboratory.getExam().getDescription();
 			} else if (column == 2) {
@@ -961,12 +953,9 @@ public class PatientFolderBrowser extends ModalJFrame
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-			if (value instanceof Date) {
-				// Use SimpleDateFormat class to get a formatted String from Date object.
-				String strDate = new SimpleDateFormat(DATE_FORMAT_DD_MM_YY).format((Date) value);
-
-				// Sorting algorithm will work with model value. So you dont need to worry
-				// about the renderer's display value. 
+			if (value instanceof LocalDateTime) {
+				String strDate = ((LocalDateTime)value).format(DATE_TIME_FORMATTER);
+				// Sorting algorithm will work with model value. So you dont need to worry about the renderer's display value.
 				this.setText(strDate);
 			}
 			return this;
