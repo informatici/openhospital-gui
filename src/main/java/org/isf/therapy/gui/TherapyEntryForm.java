@@ -718,8 +718,7 @@ public class TherapyEntryForm extends JDialog {
 				boolean sms = false;
 
 				try {
-					thRow = therapyManager.getTherapyRow(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify,
-							sms);
+					thRow = therapyManager.getTherapyRow(therapyID, patID, startDate, endDate, medical, qty, unitID, freqInDay, freqInPeriod, note, notify, sms);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);
 				}
