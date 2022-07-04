@@ -268,58 +268,52 @@ public class PatientFolderBrowser extends ModalJFrame
 			}
 		});
 
-        // Handle double click on rows of tables generating report dialog
+		// Handle double click on rows of tables generating report dialog
 		if (MainMenu.checkUserGrants("btnpatfoldpatrpt")) {
-			admTable.addMouseListener(
-					new MouseAdapter() {
+			admTable.addMouseListener(new MouseAdapter() {
 
-						@Override
-						public void mouseClicked(MouseEvent mouseEvent) {
-							LocalDateTime fromDate;
-							LocalDateTime toDate = null;
-							String reportType;
-							JTable target = (JTable) mouseEvent.getSource();
-							int targetSelectedRow = target.getSelectedRow();
-							if (mouseEvent.getClickCount() == 2) {
-								Object objType = target.getValueAt(targetSelectedRow, -1);
-								if (objType instanceof Admission) {
-									fromDate = (LocalDateTime) target.getValueAt(targetSelectedRow, 0);
-									Object dateObject = target.getValueAt(targetSelectedRow, 4);
-									if (dateObject instanceof LocalDateTime) {
-										toDate = (LocalDateTime) dateObject;
-										if (toDate == null) {
-											toDate = LocalDateTime.now();
-										}
-									} else if (dateObject instanceof String) {
-										if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
-											toDate = LocalDateTime.now();
-										} else {
-											toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YYYY).atTime(LocalTime.MAX);
-										}
-									}
-									reportType = "ADMISSION";
-								} else if (objType instanceof Opd) {
-									fromDate = (LocalDateTime) target.getValueAt(targetSelectedRow, 0);
-									toDate = fromDate;
-									reportType = "OPD";
-								} else if (objType instanceof PatientExamination) {
-									fromDate = (LocalDateTime) target.getValueAt(targetSelectedRow, 0);
-									toDate = fromDate;
-									reportType = "EXAMINATION";
-								} else {
-									fromDate = LocalDateTime.now();
-									toDate = fromDate;
-									reportType = "ALL";
+				@Override
+				public void mouseClicked(MouseEvent mouseEvent) {
+					LocalDateTime fromDate;
+					LocalDateTime toDate = null;
+					String reportType;
+					JTable target = (JTable) mouseEvent.getSource();
+					int targetSelectedRow = target.getSelectedRow();
+					if (mouseEvent.getClickCount() == 2) {
+						Object objType = target.getValueAt(targetSelectedRow, -1);
+						if (objType instanceof Admission) {
+							fromDate = (LocalDateTime) target.getValueAt(targetSelectedRow, 0);
+							Object dateObject = target.getValueAt(targetSelectedRow, 4);
+							if (dateObject instanceof LocalDateTime) {
+								toDate = (LocalDateTime) dateObject;
+								if (toDate == null) {
+									toDate = LocalDateTime.now();
 								}
-								new PatientFolderReportModal(
-										PatientFolderBrowser.this,
-										patient.getCode(),
-										fromDate.toLocalDate(),
-										toDate.toLocalDate(),
-										reportType);
+							} else if (dateObject instanceof String) {
+								if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
+									toDate = LocalDateTime.now();
+								} else {
+									toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YYYY).atTime(LocalTime.MAX);
+								}
 							}
+							reportType = "ADMISSION";
+						} else if (objType instanceof Opd) {
+							fromDate = (LocalDateTime) target.getValueAt(targetSelectedRow, 0);
+							toDate = fromDate;
+							reportType = "OPD";
+						} else if (objType instanceof PatientExamination) {
+							fromDate = (LocalDateTime) target.getValueAt(targetSelectedRow, 0);
+							toDate = fromDate;
+							reportType = "EXAMINATION";
+						} else {
+							fromDate = LocalDateTime.now();
+							toDate = fromDate;
+							reportType = "ALL";
 						}
-					});
+						new PatientFolderReportModal(PatientFolderBrowser.this, patient.getCode(), fromDate.toLocalDate(), toDate.toLocalDate(), reportType);
+					}
+				}
+			});
 		}
 
 		for (int i = 0; i < pColumns.length; i++) {
