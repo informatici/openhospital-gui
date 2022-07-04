@@ -208,18 +208,17 @@ public class MainMenu extends JFrame
 				}
 				new CommunicationFrame();
 				/*
-				 * Interaction communication= new Interaction(); communication.incomingChat();
+				 * Interaction communication = new Interaction(); 
+				 * communication.incomingChat();
 				 * communication.receiveFile();
 				 */
 			} catch (XMPPException e) {
 				String message = e.getMessage();
 				if (message.contains("SASL authentication DIGEST-MD5 failed")) {
 					if (ADMIN_STR.equals(myUser.getUserName())) {
-						LOGGER.error(
-								"Cannot use \"admin\" user, please consider creating another user under the admin group.");
+						LOGGER.error("Cannot use \"admin\" user, please consider creating another user under the admin group.");
 					} else {
-						LOGGER.error(
-								"Passwords do not match, please drop the XMPP user and login to OH again with the same user.");
+						LOGGER.error("Cannot use \"admin\" user, please consider creating another user under the admin group.");
 					}
 				} else if (message.contains("XMPPError connecting")) {
 					LOGGER.error("No XMPP Server seems to be running: set XMPPMODULEENABLED = false");
@@ -366,8 +365,8 @@ public class MainMenu extends JFrame
 			LOGGER.info("Login failed.");
 		}
 		String newLine = System.lineSeparator();
-		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine,
-				newLine, newLine, newLine);
+		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine, newLine, newLine, newLine);
+				
 		System.exit(status);
 	}
 
@@ -407,8 +406,7 @@ public class MainMenu extends JFrame
 							}
 						}
 					} catch (InstantiationException | ClassNotFoundException | IllegalAccessException ie) {
-						LOGGER.error("Error instantiating menu item: '{}' with class '{}'.", u.getCode(),
-								u.getMyClass());
+						LOGGER.error("Error instantiating menu item: '{}' with class '{}'.", u.getCode(), u.getMyClass());
 					}
 					break;
 				}
