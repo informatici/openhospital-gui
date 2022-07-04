@@ -77,8 +77,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-public class MainMenu extends JFrame
-		implements ActionListener, Login.LoginListener, SubMenu.CommandListener, TelemetryListener {
+public class MainMenu extends JFrame implements ActionListener, Login.LoginListener, SubMenu.CommandListener, TelemetryListener {
 
 	private static final long serialVersionUID = 7620582079916035164L;
 	public static final String ADMIN_STR = "admin";
