@@ -23,7 +23,7 @@ package org.isf.medstockmovtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -48,16 +48,16 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements MedicaldsrstockmovTypeListener{
+public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements MedicaldsrstockmovTypeListener {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<MovementType> pMedicaldsrstockmovType;
+	private List<MovementType> pMedicaldsrstockmovType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {80, 200, 40};
+	private int[] pColumnWidth = { 80, 200, 40 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
@@ -116,15 +116,15 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				MovementType mdsr = new MovementType("","","");
-				MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,mdsr, true);
+				MovementType mdsr = new MovementType("", "", "");
+				MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame, mdsr, true);
 				newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
 		}
 		return jNewButton;
 	}
-	
+
 	/**
 	 * This method initializes jEditButton	
 	 * 	
@@ -140,7 +140,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					medicaldsrstockmovType = (MovementType) (model.getValueAt(selectedrow, -1));
-					MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame,medicaldsrstockmovType, false);
+					MedicaldsrstockmovTypeBrowserEdit newrecord = new MedicaldsrstockmovTypeBrowserEdit(myFrame, medicaldsrstockmovType, false);
 					newrecord.addMedicaldsrstockmovTypeListener(MedicaldsrstockmovTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -200,8 +200,8 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new MedicaldsrstockmovTypeBrowserModel();
 			jTable = new JTable(model);

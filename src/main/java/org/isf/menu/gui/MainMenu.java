@@ -23,6 +23,7 @@ package org.isf.menu.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -34,9 +35,13 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -123,7 +128,7 @@ public class MainMenu extends JFrame
 	}
 
 	private static User myUser;
-	private static ArrayList<UserMenuItem> myMenu;
+	private static List<UserMenuItem> myMenu;
 
 	final int menuXPosition = 10;
 	final int menuYDisplacement = 75;
@@ -228,7 +233,7 @@ public class MainMenu extends JFrame
 
 		// if in singleUser mode remove "users" and "communication" menu
 		if (singleUser) {
-			ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
+			List<UserMenuItem> junkMenu = new ArrayList<>();
 			for (UserMenuItem umi : myMenu) {
 				if ("USERS".equalsIgnoreCase(umi.getCode()) || "USERS".equalsIgnoreCase(umi.getMySubmenu())) {
 					junkMenu.add(umi);
@@ -246,7 +251,7 @@ public class MainMenu extends JFrame
 			}
 		} else { // remove only "communication" if flag_Xmpp = false
 			if (!flag_Xmpp) {
-				ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
+				List<UserMenuItem> junkMenu = new ArrayList<>();
 				for (UserMenuItem umi : myMenu) {
 					if ("communication".equalsIgnoreCase(umi.getCode())) {
 						junkMenu.add(umi);
@@ -260,7 +265,7 @@ public class MainMenu extends JFrame
 
 		// if not internalPharmacies mode remove "medicalsward" menu
 		if (!internalPharmacies) {
-			ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
+			List<UserMenuItem> junkMenu = new ArrayList<>();
 			for (UserMenuItem umi : myMenu) {
 				if ("MEDICALSWARD".equalsIgnoreCase(umi.getCode())
 						|| "MEDICALSWARD".equalsIgnoreCase(umi.getMySubmenu())) {
@@ -273,7 +278,7 @@ public class MainMenu extends JFrame
 		}
 
 		// remove disabled buttons
-		ArrayList<UserMenuItem> junkMenu = new ArrayList<>();
+		List<UserMenuItem> junkMenu = new ArrayList<>();
 		for (UserMenuItem umi : myMenu) {
 			// if is not active or it is a module that is not enabled (there is no point in
 			// showing a menu item)
@@ -291,7 +296,7 @@ public class MainMenu extends JFrame
 		// add panel with buttons to frame
 		MainPanel panel = new MainPanel(this);
 		add(panel);
-
+		setResizable(false);
 		pack();
 
 		// compute menu position
@@ -310,8 +315,7 @@ public class MainMenu extends JFrame
 				actionExit(0);
 			}
 		});
-
-		setResizable(false);
+		
 		setVisible(true);
 
 	}
@@ -403,6 +407,8 @@ public class MainMenu extends JFrame
 
 	private class MainPanel extends JPanel {
 
+		private static final String BACKGROUND_COLOR_HEX = "#90b6b9";
+
 		private static final long serialVersionUID = 4338749100837551874L;
 
 		private JButton[] button;
@@ -411,6 +417,8 @@ public class MainMenu extends JFrame
 		public MainPanel(MainMenu parentFrame) {
 			this.parentFrame = parentFrame;
 			int numItems = 0;
+			
+			setLayout(new BorderLayout());
 
 			for (UserMenuItem u : myMenu) {
 				if (u.getMySubmenu().equals("main")) {
@@ -430,37 +438,75 @@ public class MainMenu extends JFrame
 					k++;
 				}
 			}
+			
+			add(getLogoPanel(), BorderLayout.WEST);
 
-			JLabel fig = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "LogoMenu.jpg"));
-			add(fig, BorderLayout.WEST);
-
-			JPanel buttons = new JPanel();
-			buttons.setLayout(new SpringLayout());
+			JPanel buttonsPanel = new JPanel();
+			buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // top, left, bottom, right
+			buttonsPanel.setLayout(new SpringLayout());
 			for (JButton jButton : button) {
-				buttons.add(jButton);
+				buttonsPanel.add(jButton);
 			}
-			SpringUtilities.makeCompactGrid(buttons, button.length, 1, 6, 6, 8, 10);
-			add(buttons, BorderLayout.EAST);
+			SpringUtilities.makeCompactGrid(buttonsPanel, button.length, 1, 0, 0, 0, 10);
+			
+			JPanel centerPanel = new JPanel();
+			centerPanel.add(buttonsPanel, BorderLayout.CENTER); // to center anyway, regardless the window's size
+			
+			add(centerPanel, BorderLayout.CENTER);
+		}
+
+		private JPanel getLogoPanel() {
+			JLabel logo_appl = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "logo_menu_vert.png"));
+			JLabel logo_hosp = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "logo_hospital.png"));
+			JPanel logoPanel = new JPanel();
+			logoPanel.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10)); // top, left, bottom, right
+			BoxLayout layout = new BoxLayout(logoPanel, BoxLayout.Y_AXIS);
+			logoPanel.setLayout(layout);
+			logoPanel.setBackground(Color.decode(BACKGROUND_COLOR_HEX));
+			if (logo_hosp.getIcon().getIconHeight() > 0) {
+				logoPanel.add(logo_hosp);
+				logo_appl = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("logo_menu.png")));
+			} else {
+				logoPanel.add(Box.createVerticalStrut(100)); // for short menu
+			}
+			logoPanel.add(Box.createVerticalGlue());
+			logoPanel.add(logo_appl);
+			return logoPanel;
 		}
 	}
 
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension dimension = super.getPreferredSize();
-		String title = this.getTitle();
+		String title = truncate(this.getTitle(), 25);
 		if (title != null) {
 			Font defaultFont = UIManager.getDefaults().getFont("Label.font");
 			int titleStringWidth = SwingUtilities.computeStringWidth(new JLabel().getFontMetrics(defaultFont), title);
 
-			// account for titlebar button widths. (estimated)
-			titleStringWidth += 120;
+			// accounts for the three dots that are appended when the title is too long
+			int threeDotsWidth = 10;
 
-			// +10 accounts for the three dots that are appended when the title is too long
-			if (dimension.getWidth() + 10 <= titleStringWidth) {
+			// account for titlebar button widths. (estimated)
+			String os = System.getProperty("os.name").toLowerCase();
+			if (os.indexOf("win") >= 0) {
+				titleStringWidth += 180;
+				
+			} else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
+				titleStringWidth += 120;
+				
+			} else { // others, assuming unix-like
+				titleStringWidth += 120;
+			}
+
+			if (dimension.getWidth() + threeDotsWidth <= titleStringWidth) {
 				dimension = new Dimension(titleStringWidth, (int) dimension.getHeight());
 			}
 		}
 		return dimension;
+	}
+
+	private String truncate(String string, int size) {
+		return string.substring(0, Integer.min(size - 1, string.length()));
 	}
 
 	public static User getUser() {

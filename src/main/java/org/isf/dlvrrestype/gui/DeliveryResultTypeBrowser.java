@@ -23,7 +23,7 @@ package org.isf.dlvrrestype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -47,10 +47,10 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryResultTypeListener{
+public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryResultTypeListener {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<DeliveryResultType> pDeliveryResultType;
+	private List<DeliveryResultType> pDeliveryResultType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
@@ -109,15 +109,14 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				deliveryresultType = new DeliveryResultType("","");
-				DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, true);
+				deliveryresultType = new DeliveryResultType("", "");
+				DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame, deliveryresultType, true);
 				newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -140,7 +139,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					deliveryresultType = (DeliveryResultType) (model.getValueAt(selectedrow, -1));
-					DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame,deliveryresultType, false);
+					DeliveryResultTypeBrowserEdit newrecord = new DeliveryResultTypeBrowserEdit(myFrame, deliveryresultType, false);
 					newrecord.addDeliveryResultTypeListener(DeliveryResultTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -177,14 +176,14 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					DeliveryResultType resultType = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
-					int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg",resultType.getDescription());
+					int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg", resultType.getDescription());
 					try {
 						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryResultType(resultType))) {
 							pDeliveryResultType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
 						}
-					} catch(OHServiceException ohServiceException) {
+					} catch (OHServiceException ohServiceException) {
 						MessageDialog.showExceptions(ohServiceException);
 					}
 				}
@@ -193,7 +192,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DeliveryResultTypeBrowserModel();
 			jTable = new JTable(model);

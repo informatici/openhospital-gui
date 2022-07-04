@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_clinical_sheet_ver3" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="patient_clinical_sheet_ver3" whenResourceMissingType="Key" uuid="9d971b4c-5fa3-4819-adfb-28dfac75b382">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -23,7 +27,7 @@
 	<queryString>
 		<![CDATA[SELECT TYPE, DATE, IDS, NOTE, DETAILS_1, DETAILS_2, DETAILS_3, DETAILS_4
 FROM (
-SELECT CONCAT("Opd", " (", OPD_PROG_YEAR, ")") AS TYPE,
+	SELECT CONCAT("Opd", " (", OPD_PROG_YEAR, ")") AS TYPE,
 	   OPD_DATE AS DATE, OPD_ID AS IDS,
 	   IF(OPD_NEW_PAT='N','New Attendance','Re-Attendance') AS DETAILS_1,
 	   CONCAT((SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A)) AS DETAILS_2,
@@ -37,11 +41,11 @@ SELECT CONCAT("Opd", " (", OPD_PROG_YEAR, ")") AS TYPE,
 	
 UNION
 
-SELECT CONCAT("ADM", " (", ADM_YPROG, ")") AS TYPE,
+	SELECT CONCAT("ADM", " (", ADM_YPROG, ")") AS TYPE,
 	   ADM_DATE_ADM AS DATE, ADM_ID AS IDS,
 	   WRD_NAME AS DETAILS_1,
 	   (SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = ADM_IN_DIS_ID_A) AS DETAILS_2,
-	   CONCAT(DIST_DESC, " - ", (SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = ADM_OUT_DIS_ID_A), " - ", DATE_FORMAT(ADM_DATE_DIS, '%d/%m/%Y')) AS DETAILS_3,
+	   CONCAT(DIST_DESC, " - ", (SELECT DIS_DESC FROM DISEASE WHERE DIS_ID_A = ADM_OUT_DIS_ID_A), " - ", DATE_FORMAT(ADM_DATE_DIS, '%d/%m/%Y %H:%i')) AS DETAILS_3,
 	   "" AS DETAILS_4,
 	   ADM_NOTE AS NOTE
 	FROM 
@@ -53,19 +57,19 @@ SELECT CONCAT("ADM", " (", ADM_YPROG, ")") AS TYPE,
 		AND ADM_PAT_ID = $P{patientID} AND (DATE(ADM_DATE_ADM) BETWEEN $P{Date_from} AND $P{Date_to})
 
 UNION
-        SELECT "Examination" AS TYPE,
+    SELECT "Examination" AS TYPE,
 	PEX_DATE AS DATE, PEX_NOTE AS IDS, 
     CONCAT(" Height:  ", PEX_HEIGHT, " - Weight: " , PEX_WEIGHT) AS DETAILS_1,
-       CONCAT(" AP:  ", PEX_AP_MIN, "/ " , PEX_AP_MAX) AS DETAILS_2,
+		CONCAT(" AP:  ", PEX_AP_MIN, "/ " , PEX_AP_MAX) AS DETAILS_2,
 	    CONCAT(" Temperature:  ", PEX_TEMP)  AS DETAILS_3,
-	    CONCAT(" O:  ", PEX_SAT)  AS DETAILS_4,
-	   PEX_NOTE AS NOTE
+	    CONCAT(" O:  ", PEX_SAT)  AS DETAILS_4, PEX_NOTE AS NOTE
 	FROM 
 		PATIENTEXAMINATION
-WHERE PEX_PAT_ID = $P{patientID} AND (DATE(PEX_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
+	WHERE PEX_PAT_ID = $P{patientID} AND (DATE(PEX_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
+	
 UNION
 
-SELECT "Drugs" AS TYPE,
+	SELECT "Drugs" AS TYPE,
 	   MMVN_DATE AS DATE, MDSR_DESC AS IDS,
 	   GROUP_CONCAT(CONCAT(MDSR_DESC, " - ", CAST(QTY AS CHAR), " ", MMVN_MDSR_UNITS) SEPARATOR '\n') AS DETAILS_1,
 	   "" AS DETAILS_2,
@@ -74,40 +78,57 @@ SELECT "Drugs" AS TYPE,
 	   "" AS NOTE
 	FROM(
 		SELECT MMVN_DATE,
-		MDSR_DESC, SUM(MMVN_MDSR_QTY) AS QTY, MMVN_MDSR_UNITS
+			MDSR_DESC, SUM(MMVN_MDSR_QTY) AS QTY, MMVN_MDSR_UNITS
 		FROM 
 			MEDICALDSRSTOCKMOVWARD  
 			LEFT JOIN MEDICALDSR ON (MMVN_MDSR_ID = MDSR_ID) 
 		WHERE MMVN_PAT_ID = $P{patientID} AND (DATE(MMVN_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
 		GROUP BY DATE(MMVN_DATE), MMVN_MDSR_ID
-	) AS MEDICALS
+	) AS MEDICALS_TABLE
 GROUP BY DATE(DATE)
 
 UNION
 
-SELECT "Operations" AS TYPE,
+	SELECT "Operations" AS TYPE,
 	   OPER_OPDATE AS DATE, OPE_DESC AS IDS,
-	   GROUP_CONCAT(CONCAT(OPE_DESC, " - ", OPER_RESULT)) AS DETAILS_1,
-	   "" AS DETAILS_2,
+	   "OPD" AS DETAILS_1,
+	   CONCAT(OPE_DESC, " - ", OPER_RESULT) AS DETAILS_2,
 	   "" AS DETAILS_3,
 	   "" AS DETAILS_4,
-	   "" AS NOTE
+	   OPER_REMARKS AS NOTE
 	FROM(
-		SELECT OPER_OPDATE, OPE_DESC, OPER_RESULT
-		FROM 
-			OPERATIONROW  
+		SELECT OPER_OPDATE, OPE_DESC, OPER_RESULT, OPER_REMARKS, OPER_OPD_ID
+		FROM OPERATIONROW
 			LEFT JOIN OPERATION ON (OPE_ID_A = OPER_ID_A)
 			LEFT JOIN OPD ON (OPER_OPD_ID = OPD_ID) 
-			LEFT JOIN ADMISSION ON (OPER_ADMISSION_ID = ADM_ID) 
-		WHERE (OPD_PAT_ID = $P{patientID} OR ADM_PAT_ID = $P{patientID}) 
+		WHERE OPD_PAT_ID = $P{patientID}
 		  AND (DATE(OPER_OPDATE) BETWEEN $P{Date_from} AND $P{Date_to})
-		GROUP BY DATE(OPER_OPDATE)
-	) AS OPERATIONS
-GROUP BY DATE(DATE)
+		-- GROUP BY DATE(OPER_OPDATE)
+	) AS OPERATIONS_TABLE
+
+UNION
+
+	SELECT "Operations" AS TYPE,
+	   OPER_OPDATE AS DATE, OPE_DESC AS IDS,
+	   WRD_NAME AS DETAILS_1,
+	   CONCAT(OPE_DESC, " - ", OPER_RESULT) AS DETAILS_2,
+	   "" AS DETAILS_3,
+	   "" AS DETAILS_4,
+	   OPER_REMARKS AS NOTE
+	FROM(
+		SELECT OPER_OPDATE, OPE_DESC, OPER_RESULT, OPER_REMARKS, OPER_ADMISSION_ID, WRD_NAME
+		FROM OPERATIONROW
+			LEFT JOIN OPERATION ON (OPE_ID_A = OPER_ID_A)
+			LEFT JOIN ADMISSION ON (OPER_ADMISSION_ID = ADM_ID) 
+			LEFT JOIN WARD ON (ADM_WRD_ID_A = WRD_ID_A)
+		WHERE ADM_PAT_ID = $P{patientID}
+		  AND (DATE(OPER_OPDATE) BETWEEN $P{Date_from} AND $P{Date_to})
+		-- GROUP BY DATE(OPER_OPDATE)
+	) AS OPERATIONS_TABLE
 	
 UNION
 
-SELECT "Laboratory" AS TYPE,
+	SELECT "Laboratory" AS TYPE,
 	   LAB_DATE AS DATE, LAB_RES AS IDS,
 	   EXA_DESC DETAILS_1,
 	   LAB_RES AS DETAILS_2,
@@ -123,7 +144,7 @@ SELECT "Laboratory" AS TYPE,
     
 UNION
 
-SELECT "Laboratory" AS TYPE,
+	SELECT "Laboratory" AS TYPE,
 	   LAB_DATE AS DATE, LAB_ID AS IDS,
 	   EXA_DESC DETAILS_1,
 	   GROUP_CONCAT(LABR_DESC SEPARATOR ", " ) AS DETAILS_2,
@@ -140,7 +161,7 @@ GROUP BY LABR_LAB_ID
 
 UNION
 
-SELECT "Laboratory" AS TYPE,
+	SELECT "Laboratory" AS TYPE,
 	   LAB_DATE AS DATE, LAB_RES AS IDS,
 	   EXA_DESC DETAILS_1,
 	   LAB_RES AS DETAILS_2,
@@ -153,8 +174,6 @@ SELECT "Laboratory" AS TYPE,
 		LEFT JOIN LABORATORYROW ON LABR_LAB_ID = LAB_ID
 	WHERE LAB_PAT_ID = $P{patientID} AND (DATE(LAB_DATE) BETWEEN $P{Date_from} AND $P{Date_to})
     AND EXA_PROC = 3
-	
-GROUP BY LABR_LAB_ID
     
 ) 
 AS DETAILS
@@ -168,14 +187,38 @@ WHERE TYPE LIKE IF ($P!{Opd},'%Opd%','')
    OR TYPE LIKE IF ($P!{All}, '%%','')
 ORDER BY DATE DESC]]>
 	</queryString>
-	<field name="TYPE" class="java.lang.String"/>
-	<field name="DATE" class="java.sql.Timestamp"/>
-	<field name="IDS" class="java.lang.String"/>
-	<field name="NOTE" class="java.lang.String"/>
-	<field name="DETAILS_1" class="java.lang.String"/>
-	<field name="DETAILS_2" class="java.lang.String"/>
-	<field name="DETAILS_3" class="java.lang.String"/>
-	<field name="DETAILS_4" class="java.lang.String"/>
+	<field name="TYPE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="TYPE"/>
+		<property name="com.jaspersoft.studio.field.label" value="TYPE"/>
+	</field>
+	<field name="DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="DATE"/>
+	</field>
+	<field name="IDS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="IDS"/>
+		<property name="com.jaspersoft.studio.field.label" value="IDS"/>
+	</field>
+	<field name="NOTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="NOTE"/>
+		<property name="com.jaspersoft.studio.field.label" value="NOTE"/>
+	</field>
+	<field name="DETAILS_1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="DETAILS_1"/>
+		<property name="com.jaspersoft.studio.field.label" value="DETAILS_1"/>
+	</field>
+	<field name="DETAILS_2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="DETAILS_2"/>
+		<property name="com.jaspersoft.studio.field.label" value="DETAILS_2"/>
+	</field>
+	<field name="DETAILS_3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="DETAILS_3"/>
+		<property name="com.jaspersoft.studio.field.label" value="DETAILS_3"/>
+	</field>
+	<field name="DETAILS_4" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="DETAILS_4"/>
+		<property name="com.jaspersoft.studio.field.label" value="DETAILS_4"/>
+	</field>
 	<group name="DATE">
 		<groupExpression><![CDATA[$F{DATE}]]></groupExpression>
 		<groupHeader>
@@ -259,7 +302,7 @@ ORDER BY DATE DESC]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Report.From}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Report.from}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
 				<reportElement key="textField-35" x="313" y="33" width="98" height="18" uuid="2388479c-c2d5-4c85-8160-9e4e5714ce0a"/>
@@ -296,8 +339,11 @@ ORDER BY DATE DESC]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="89" splitType="Stretch">
-			<textField textAdjust="StretchHeight" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+		<band height="93" splitType="Stretch">
+			<printWhenExpression><![CDATA[!($F{TYPE}.equals( "Operations" ) && $P{All}) 
+&& !($F{TYPE}.equals( "Operations" ) && $P{Admission}) 
+&& !($F{TYPE}.equals( "Operations" ) && $P{Opd})]]></printWhenExpression>
+			<textField textAdjust="ScaleFont" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="0" y="21" width="70" height="13" uuid="e8b6c04a-0d0d-4fab-87b2-fde877b88b93"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -324,18 +370,18 @@ ORDER BY DATE DESC]]>
 				<textFieldExpression><![CDATA[$F{TYPE}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-3" x="80" y="60" width="455" height="13" isRemoveLineWhenBlank="true" uuid="8c6b7e88-2a94-4b49-b949-1b0f9ac14e54"/>
+				<reportElement key="textField-3" mode="Transparent" x="80" y="60" width="455" height="13" isRemoveLineWhenBlank="true" uuid="8c6b7e88-2a94-4b49-b949-1b0f9ac14e54"/>
 				<textElement>
 					<font fontName="DejaVu Sans" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOTE}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-4" stretchType="RelativeToBandHeight" x="80" y="8" width="455" height="13" uuid="953c5e45-2879-4d26-9db8-e2ffdf797a41"/>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-4" x="80" y="8" width="455" height="13" uuid="953c5e45-2879-4d26-9db8-e2ffdf797a41"/>
 				<textElement>
 					<font fontName="DejaVu Sans" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DETAILS_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{DETAILS_1}.equals( "OPD" ) ? $R{OPD} : $F{DETAILS_1}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-5" x="80" y="21" width="455" height="13" isRemoveLineWhenBlank="true" uuid="76b9dd4e-f6aa-421a-8577-4792fd3c2100"/>
@@ -344,22 +390,26 @@ ORDER BY DATE DESC]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DETAILS_2}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-6" x="80" y="34" width="455" height="13" isRemoveLineWhenBlank="true" uuid="2970c65b-3f79-410d-9626-31b41af81994"/>
 				<textElement>
 					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DETAILS_3}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-7" x="80" y="47" width="455" height="13" isRemoveLineWhenBlank="true" uuid="b3d2434d-c55b-48c0-aca2-edabd12aeeac"/>
 				<textElement>
 					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DETAILS_4}]]></textFieldExpression>
 			</textField>
-			<subreport isUsingCache="true">
-				<reportElement key="subreport-2" x="75" y="76" width="460" height="10" uuid="b6b8b178-370e-45eb-b8ed-5c826cb4dd37"/>
+			<subreport>
+				<reportElement key="subreport-2" positionType="Float" mode="Transparent" x="80" y="80" width="455" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="b6b8b178-370e-45eb-b8ed-5c826cb4dd37">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<subreportParameter name="id">
 					<subreportParameterExpression><![CDATA[$F{IDS}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -369,6 +419,19 @@ ORDER BY DATE DESC]]>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "patient_clinical_sheet_ver3_subreport_Operation.jasper"]]></subreportExpression>
 			</subreport>
+			<textField textAdjust="ScaleFont" pattern="HH:mm" isBlankWhenNull="true">
+				<reportElement key="textField-1" x="0" y="34" width="70" height="13" uuid="294e84bf-c024-4d98-b169-ecdaf3cc470d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DATE}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>

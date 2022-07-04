@@ -62,22 +62,25 @@ public class PricesOthersEdit extends JDialog {
 	public void removeOtherListener(PricesOthersListener listener) {
 		pricesOthersListeners.remove(PricesOthersListener.class, listener);
 	}
-	
+
 	private void fireOtherInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
 		EventListener[] listeners = pricesOthersListeners.getListeners(PricesOthersListener.class);
 		for (EventListener listener : listeners) {
 			((PricesOthersListener) listener).pricesOthersInserted(event);
 		}
 	}
+
 	private void fireOtherUpdated() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
-		
+			private static final long serialVersionUID = 1L;
+		};
+
 		EventListener[] listeners = pricesOthersListeners.getListeners(PricesOthersListener.class);
 		for (EventListener listener : listeners) {
 			((PricesOthersListener) listener).pricesOthersUpdated(event);

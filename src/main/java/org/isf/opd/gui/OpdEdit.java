@@ -31,14 +31,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.DateFormat;
-import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -66,8 +62,8 @@ import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
-import org.isf.utils.jobjects.VoDateTextField;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 
@@ -138,12 +134,11 @@ public class OpdEdit extends JDialog {
 	private JPanel jDiseasePanel2 = null;
 	private JPanel jDiseasePanel3 = null;
 	private JPanel jDiseaseTypePanel = null;
-	private JComboBox diseaseTypeBox = null;
+	private JComboBox<DiseaseType> diseaseTypeBox = null;
 	private JComboBox diseaseBox = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
-	private DateFormat currentDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALIAN);
-	private VoDateTextField opdDateField = null;
+	private GoodDateTimeSpinnerChooser opdDateField = null;
 	private JPanel jPanel2 = null;
 	private JButton okButton = null;
 	private JButton cancelButton = null;
@@ -169,8 +164,8 @@ public class OpdEdit extends JDialog {
 	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private ArrayList<DiseaseType> types;
-	private ArrayList<Disease> diseasesAll;
+	private List<DiseaseType> types;
+	private List<Disease> diseasesAll;
 	
     /*
      * Adds: Textfields and buttons to enable search in diagnosis
@@ -210,8 +205,7 @@ public class OpdEdit extends JDialog {
 		this.setContentPane(getPrincipalPanel());
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.opd.newopdregistration.title"));
-		}
-		else {
+		} else {
 			this.setTitle(MessageBundle.getMessage("angal.opd.editopdregistration.title"));
 		}
 	}
@@ -240,7 +234,7 @@ public class OpdEdit extends JDialog {
 	private JPanel getInsertPanel() {
 		if (insertPanel == null) {
 			insertPanel = new JPanel();
-			insertPanel.setLayout(new BoxLayout(getInsertPanel(),BoxLayout.Y_AXIS));
+			insertPanel.setLayout(new BoxLayout(insertPanel, BoxLayout.Y_AXIS));
 			insertPanel.add(getJNewPatientPanel(), null);
 			insertPanel.add(getJDatePanel(), null);
 			insertPanel.add(getJDiseaseTypePanel(), null);
@@ -256,29 +250,29 @@ public class OpdEdit extends JDialog {
 		}
 		return insertPanel;
 	}
-	
-	
+
 	/**
 	 * This method initializes diseaseTypeBox	
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	public JComboBox getDiseaseTypeBox() {
+	private JComboBox<DiseaseType> getDiseaseTypeBox() {
 		if (diseaseTypeBox == null) {
-			diseaseTypeBox = new JComboBox();
+			diseaseTypeBox = new JComboBox<>();
 			DiseaseType elem2 = null;
-			diseaseTypeBox.setMaximumSize(new Dimension(400,50));
+			diseaseTypeBox.setMaximumSize(new Dimension(400, 50));
 			diseaseTypeBox.addItem(allType);
 			if (types != null) {
 				for (DiseaseType elem : types) {
 					if (!insert && opd.getDisease().getType() != null) {
 						if (opd.getDisease().getType().getCode().equals(elem.getCode())) {
-							elem2=elem;}
+							elem2 = elem;
+						}
 					}
 					diseaseTypeBox.addItem(elem);
 				}
 			}
-			if (elem2 != null) { 
+			if (elem2 != null) {
 				diseaseTypeBox.setSelectedItem(elem2);
 			} else {
 				diseaseTypeBox.setSelectedIndex(0);
@@ -296,13 +290,13 @@ public class OpdEdit extends JDialog {
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	public JComboBox getDiseaseBox1() {
+	private JComboBox getDiseaseBox1() {
 		if (diseaseBox == null) {
 			diseaseBox = new JComboBox();
 			diseaseBox.setMaximumSize(new Dimension(400, 50));
 		}
 		Disease thisDiseaseEdit = null;
-		ArrayList<Disease> diseases = null;
+		List<Disease> diseases = null;
 		try {
 			if (diseaseTypeBox.getSelectedIndex() == 0) {
 				diseases = diseaseManager.getDiseaseOpd();
@@ -340,14 +334,14 @@ public class OpdEdit extends JDialog {
 		}
 		return diseaseBox;
 	}
-	
-	public JComboBox getDiseaseBox2() {
+
+	private JComboBox getDiseaseBox2() {
 		if (diseaseBox2 == null) {
 			diseaseBox2 = new JComboBox();
 			diseaseBox2.setMaximumSize(new Dimension(400, 50));
 		}
 		Disease elem2=null;
-		ArrayList<Disease> diseases = null;
+		List<Disease> diseases = null;
 		try {
 			diseases = diseaseManager.getDiseaseOpd();
 		} catch(OHServiceException e) {
@@ -380,14 +374,14 @@ public class OpdEdit extends JDialog {
 		}
 		return diseaseBox2;
 	}
-	
-	public JComboBox getDiseaseBox3() {
+
+	private JComboBox getDiseaseBox3() {
 		if (diseaseBox3 == null) {
 			diseaseBox3 = new JComboBox();
 			diseaseBox3.setMaximumSize(new Dimension(400, 50));
 		}
 		Disease elem2=null;
-		ArrayList<Disease> diseases = null;
+		List<Disease> diseases = null;
 		try {
 			diseases = diseaseManager.getDiseaseOpd();
 		} catch(OHServiceException e) {
@@ -443,114 +437,115 @@ public class OpdEdit extends JDialog {
 	private JButton getOkButton() {
 		if (okButton == null) {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
-            okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				boolean result;
-				GregorianCalendar gregDate = new GregorianCalendar();
-				char newPatient;
-				String referralTo;
-				String referralFrom;
-				Disease disease = null;
-				Disease disease2 = null;
-				Disease disease3 = null;
+						boolean result;
+						LocalDateTime visitDate;
+						char newPatient;
+						String referralTo;
+						String referralFrom;
+						Disease disease = null;
+						Disease disease2 = null;
+						Disease disease3 = null;
 
-				if (newPatientCheckBox.isSelected()) {
-					newPatient = 'N';
-				} else {
-					newPatient = 'R';
-				}
-
-				if (referralToCheckBox.isSelected()) {
-					referralTo = "R";
-				} else {
-					referralTo = "";
-				}
-
-				if (referralFromCheckBox.isSelected()) {
-					referralFrom = "R";
-				} else {
-					referralFrom = "";
-				}
-
-				// disease
-				if (diseaseBox.getSelectedIndex() > 0) {
-					disease = ((Disease)diseaseBox.getSelectedItem());
-				}
-				// disease2
-				if (diseaseBox2.getSelectedIndex() > 0) {
-					disease2 = ((Disease)diseaseBox2.getSelectedItem());
-				}
-				// disease3
-				if (diseaseBox3.getSelectedIndex() > 0) {
-					disease3 = ((Disease)diseaseBox3.getSelectedItem());
-				}
-				// visit date
-				String d = opdDateField.getText().trim();
-				if (d.equals("")) {
-					MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertattendancedate.msg");
-					return;
-				}
-				else {
-					try {
-						currentDateFormat.setLenient(false);
-						Date myDate = currentDateFormat.parse(d);
-						gregDate.setTime(myDate);
-					} catch (ParseException pe) {
-						MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertavalidattendancedate.msg");
-						return;
-					}
-				}
-
-				if (radiof.isSelected()) {
-					sex = 'F';
-				} else {
-					sex = 'M';
-				}
-
-				opd.setNewPatient(newPatient);
-				opd.setReferralFrom(referralFrom);
-				opd.setReferralTo(referralTo);
-				opd.setAge(age);
-				opd.setSex(sex);
-				opd.setDisease(disease);
-				opd.setDisease2(disease2);
-				opd.setDisease3(disease3);
-				opd.setVisitDate(gregDate);
-				opd.setNote("");
-				opd.setUserID(UserBrowsingManager.getCurrentUser());
-
-				try {
-					if (insert) {    // Insert
-						GregorianCalendar date = new GregorianCalendar();
-						opd.setProgYear(opdManager.getProgYear(date.get(Calendar.YEAR))+1);
-
-						// remember for later use
-						RememberDates.setLastOpdVisitDate(gregDate);
-
-						result = opdManager.newOpd(opd);
-						if (result) {
-							fireSurgeryInserted(opd);
-							dispose();
+						if (newPatientCheckBox.isSelected()) {
+							newPatient = 'N';
 						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							newPatient = 'R';
+						}
+
+						if (referralToCheckBox.isSelected()) {
+							referralTo = "R";
+						} else {
+							referralTo = "";
+						}
+
+						if (referralFromCheckBox.isSelected()) {
+							referralFrom = "R";
+						} else {
+							referralFrom = "";
+						}
+
+						// disease
+						if (diseaseBox.getSelectedIndex() > 0) {
+							disease = ((Disease) diseaseBox.getSelectedItem());
+						}
+						// disease2
+						if (diseaseBox2.getSelectedIndex() > 0) {
+							disease2 = ((Disease) diseaseBox2.getSelectedItem());
+						}
+						// disease3
+						if (diseaseBox3.getSelectedIndex() > 0) {
+							disease3 = ((Disease) diseaseBox3.getSelectedItem());
+						}
+						// visit date
+						LocalDateTime localDateTime = opdDateField.getLocalDateTime();
+						if (localDateTime == null) {
+							MessageDialog.error(OpdEdit.this, "angal.opd.pleaseinsertattendancedate.msg");
+							return;
+						}
+						visitDate = localDateTime;
+
+						if (radiof.isSelected()) {
+							sex = 'F';
+						} else {
+							sex = 'M';
+						}
+
+						opd.setNewPatient(newPatient);
+						opd.setReferralFrom(referralFrom);
+						opd.setReferralTo(referralTo);
+						opd.setAge(age);
+						opd.setSex(sex);
+						opd.setDisease(disease);
+						opd.setDisease2(disease2);
+						opd.setDisease3(disease3);
+						opd.setDate(visitDate);
+						opd.setNote("");
+						opd.setUserID(UserBrowsingManager.getCurrentUser());
+
+						try {
+							if (insert) {    // Insert
+								opd.setProgYear(getOpdProgYear(visitDate));
+								// remember for later use
+								RememberDates.setLastOpdVisitDate(visitDate);
+
+								result = opdManager.newOpd(opd);
+								if (result) {
+									fireSurgeryInserted(opd);
+									dispose();
+								} else {
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+								}
+							} else {    // Update
+								Opd updatedOpd = opdManager.updateOpd(opd);
+								if (updatedOpd != null) {
+									fireSurgeryUpdated(updatedOpd);
+									dispose();
+								} else {
+									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+								}
+							}
+						} catch (OHServiceException ex) {
+							OHServiceExceptionUtil.showMessages(ex);
 						}
 					}
-					else {    // Update
-						Opd updatedOpd = opdManager.updateOpd(opd);
-						if (updatedOpd != null) {
-							fireSurgeryUpdated(updatedOpd);
-							dispose();
-						} else {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						}
-					}
-				} catch(OHServiceException ex) {
-					OHServiceExceptionUtil.showMessages(ex);
-				}
-			}
 			);
 		}
 		return okButton;
+	}
+
+	private int getOpdProgYear(LocalDateTime date) {
+		int opdNum = 0;
+		if (date == null) {
+			date = LocalDateTime.now();
+		}
+		try {
+			opdNum = opdManager.getProgYear(date.getYear()) + 1;
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
+		return opdNum;
 	}
 	
 	/**
@@ -574,7 +569,7 @@ public class OpdEdit extends JDialog {
 	 */
 	private JTextField getAgeField() {
 		if (ageField == null) {
-			ageField = new VoLimitedTextField(3,2);
+			ageField = new VoLimitedTextField(3, 2);
 			ageField.setText("0");
 			ageField.setMaximumSize(new Dimension(50, 50));
 			if (insert) {
@@ -588,9 +583,10 @@ public class OpdEdit extends JDialog {
 			ageField.setMinimumSize(new Dimension(100, 50));
 		}
 		ageField.addFocusListener(new FocusListener() {
+
 			@Override
 			public void focusLost(FocusEvent e) {
-				try {				
+				try {
 					age = Integer.parseInt(ageField.getText());
 					if (age < 0 || age > 200) {
 						ageField.setText("");
@@ -600,7 +596,7 @@ public class OpdEdit extends JDialog {
 					ageField.setText("");
 				}
 			}
-			
+
 			@Override
 			public void focusGained(FocusEvent e) {
 			}
@@ -613,7 +609,7 @@ public class OpdEdit extends JDialog {
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
-	public JPanel getSexPanel() {
+	private JPanel getSexPanel() {
 		if (sexPanel == null) {
 			sexPanel = new JPanel();
 			ButtonGroup group = new ButtonGroup();
@@ -637,7 +633,7 @@ public class OpdEdit extends JDialog {
 		return sexPanel;
 	}
 
-	public JPanel getJAgePanel() {
+	private JPanel getJAgePanel() {
 		if (jAgePanel == null) {
 			jAgePanel = new JPanel();
 			jAgePanel.add(new JLabel(MessageBundle.getMessage("angal.common.age.label")));
@@ -646,64 +642,71 @@ public class OpdEdit extends JDialog {
 		return jAgePanel;
 	}
 
-	public JPanel getJDiseasePanel() {
+	private JPanel getJDiseasePanel() {
 		if (jDiseasePanel == null) {
 			jDiseasePanel = new JPanel();
-            jDiseasePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+			jDiseasePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 			jDiseasePanel.add(new JLabel(MessageBundle.getMessage("angal.opd.diagnosis.txt")));
-                        
-            searchDiseaseTextField = new JTextField();
-            jDiseasePanel.add(searchDiseaseTextField);
-            searchDiseaseTextField.setColumns(10);
-            searchDiseaseTextField.addKeyListener(new KeyListener() {
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    int key = e.getKeyCode();
-                    if (key == KeyEvent.VK_ENTER) {
-                        searchDiseaseButton.doClick();
-                    }
-                }
-                @Override
-                public void keyReleased(KeyEvent e) {}
-                @Override
-                public void keyTyped(KeyEvent e) {}
-            });
 
-            searchDiseaseButton = new JButton("");
-            jDiseasePanel.add(searchDiseaseButton);
-            searchDiseaseButton.setPreferredSize(new Dimension(20, 20));
-            searchDiseaseButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-            searchDiseaseButton.addActionListener(new ActionListener() {
-                ArrayList<Disease> diseasesOPD = null;
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    try {
-                        diseasesOPD = diseaseManager.getDiseaseOpd();
-                    } catch (OHServiceException ex) {
-                        OHServiceExceptionUtil.showMessages(ex);
-                    }
-                    diseaseBox.removeAllItems();
-                    diseaseBox.addItem("");
-                    for(Disease disease: getSearchDiagnosisResults(searchDiseaseTextField.getText(),
-                                    diseasesOPD == null? diseasesAll : diseasesOPD)) {
-                        diseaseBox.addItem(disease);
-                    }
+			searchDiseaseTextField = new JTextField();
+			jDiseasePanel.add(searchDiseaseTextField);
+			searchDiseaseTextField.setColumns(10);
+			searchDiseaseTextField.addKeyListener(new KeyListener() {
 
-                    if (diseaseBox.getItemCount() >= 2) {
-                        diseaseBox.setSelectedIndex(1);
-                    }
-                    diseaseBox.requestFocus();
-                    if (diseaseBox.getItemCount() > 2) {
-                        diseaseBox.showPopup();
-                    }
-                }
-            });
-                        
+				@Override
+				public void keyPressed(KeyEvent e) {
+					int key = e.getKeyCode();
+					if (key == KeyEvent.VK_ENTER) {
+						searchDiseaseButton.doClick();
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+				}
+			});
+
+			searchDiseaseButton = new JButton("");
+			jDiseasePanel.add(searchDiseaseButton);
+			searchDiseaseButton.setPreferredSize(new Dimension(20, 20));
+			searchDiseaseButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+			searchDiseaseButton.addActionListener(new ActionListener() {
+
+				List<Disease> diseasesOPD = null;
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						diseasesOPD = diseaseManager.getDiseaseOpd();
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
+					}
+					diseaseBox.removeAllItems();
+					diseaseBox.addItem("");
+					for (Disease disease : getSearchDiagnosisResults(searchDiseaseTextField.getText(),
+							diseasesOPD == null ? diseasesAll : diseasesOPD)) {
+						diseaseBox.addItem(disease);
+					}
+
+					if (diseaseBox.getItemCount() >= 2) {
+						diseaseBox.setSelectedIndex(1);
+					}
+					diseaseBox.requestFocus();
+					if (diseaseBox.getItemCount() > 2) {
+						diseaseBox.showPopup();
+					}
+				}
+			});
+
 		}
 		return jDiseasePanel;
 	}
 
-	public JPanel getJDiseasePanel2() {
+	private JPanel getJDiseasePanel2() {
 		if (jDiseasePanel2 == null) {
 			jDiseasePanel2 = new JPanel();
 			jDiseasePanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -737,7 +740,7 @@ public class OpdEdit extends JDialog {
 			searchDiseaseButton2.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			searchDiseaseButton2.addActionListener(new ActionListener() {
 
-				ArrayList<Disease> diseasesOPD = null;
+				List<Disease> diseasesOPD = null;
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -766,63 +769,70 @@ public class OpdEdit extends JDialog {
 		return jDiseasePanel2;
 	}
 
-	public JPanel getJDiseasePanel3() {
+	private JPanel getJDiseasePanel3() {
 		if (jDiseasePanel3 == null) {
 			jDiseasePanel3 = new JPanel();
 			jDiseasePanel3.setLayout(new FlowLayout(FlowLayout.LEFT));
 			jDiseasePanel3.add(new JLabel(MessageBundle.getMessage("angal.opd.diagnosisnfulllist3.txt")));
-                        
-            searchDiseaseTextField3 = new JTextField();
-            jDiseasePanel3.add(searchDiseaseTextField3);
-            searchDiseaseTextField3.setColumns(10);
-            searchDiseaseTextField3.addKeyListener(new KeyListener() {
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    int key = e.getKeyCode();
-                    if (key == KeyEvent.VK_ENTER) {
-                        searchDiseaseButton3.doClick();
-                    }
-                }
-                @Override
-                public void keyReleased(KeyEvent e) {}
-                @Override
-                public void keyTyped(KeyEvent e) {}
-            });
 
-            searchDiseaseButton3 = new JButton("");
-            jDiseasePanel3.add(searchDiseaseButton3);
-            searchDiseaseButton3.setPreferredSize(new Dimension(20, 20));
-            searchDiseaseButton3.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
-            searchDiseaseButton3.addActionListener(new ActionListener() {
-                ArrayList<Disease> diseasesOPD = null;
-                @Override
-                public void actionPerformed(ActionEvent arg0) {
-                    try {
-                        diseasesOPD = diseaseManager.getDiseaseOpd();
-                    } catch (OHServiceException ex) {
-                        OHServiceExceptionUtil.showMessages(ex);
-                    }
-                    diseaseBox3.removeAllItems();
-                    diseaseBox3.addItem("");
-                    for (Disease disease:getSearchDiagnosisResults(searchDiseaseTextField3.getText(),
-                                    diseasesOPD == null? diseasesAll : diseasesOPD)) {
-                        diseaseBox3.addItem(disease);
-                    }
+			searchDiseaseTextField3 = new JTextField();
+			jDiseasePanel3.add(searchDiseaseTextField3);
+			searchDiseaseTextField3.setColumns(10);
+			searchDiseaseTextField3.addKeyListener(new KeyListener() {
 
-                    if (diseaseBox3.getItemCount() >= 2) {
-                        diseaseBox3.setSelectedIndex(1);
-                    }
-                    diseaseBox3.requestFocus();
-                    if (diseaseBox3.getItemCount() > 2) {
-                        diseaseBox3.showPopup();
-                    }
-                }
-            });
+				@Override
+				public void keyPressed(KeyEvent e) {
+					int key = e.getKeyCode();
+					if (key == KeyEvent.VK_ENTER) {
+						searchDiseaseButton3.doClick();
+					}
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+				}
+			});
+
+			searchDiseaseButton3 = new JButton("");
+			jDiseasePanel3.add(searchDiseaseButton3);
+			searchDiseaseButton3.setPreferredSize(new Dimension(20, 20));
+			searchDiseaseButton3.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+			searchDiseaseButton3.addActionListener(new ActionListener() {
+
+				List<Disease> diseasesOPD = null;
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						diseasesOPD = diseaseManager.getDiseaseOpd();
+					} catch (OHServiceException ex) {
+						OHServiceExceptionUtil.showMessages(ex);
+					}
+					diseaseBox3.removeAllItems();
+					diseaseBox3.addItem("");
+					for (Disease disease : getSearchDiagnosisResults(searchDiseaseTextField3.getText(),
+							diseasesOPD == null ? diseasesAll : diseasesOPD)) {
+						diseaseBox3.addItem(disease);
+					}
+
+					if (diseaseBox3.getItemCount() >= 2) {
+						diseaseBox3.setSelectedIndex(1);
+					}
+					diseaseBox3.requestFocus();
+					if (diseaseBox3.getItemCount() > 2) {
+						diseaseBox3.showPopup();
+					}
+				}
+			});
 		}
 		return jDiseasePanel3;
 	}
 
-	public JPanel getJDiseaseTypePanel() {
+	private JPanel getJDiseaseTypePanel() {
 		if (jDiseaseTypePanel == null) {
 			jDiseaseTypePanel = new JPanel();
 			jDiseaseTypePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -831,7 +841,7 @@ public class OpdEdit extends JDialog {
 		return jDiseaseTypePanel;
 	}
 
-	public JPanel getJSexPanel() {
+	private JPanel getJSexPanel() {
 		if (jSexPanel == null) {
 			jSexPanel = new JPanel();
 			jSexPanel.add(new JLabel(MessageBundle.getMessage("angal.common.sex.label")));
@@ -839,8 +849,8 @@ public class OpdEdit extends JDialog {
 		}
 		return jSexPanel;
 	}
-	
-	public JPanel getJNewPatientPanel() {
+
+	private JPanel getJNewPatientPanel() {
 		String referralTo;
 		String referralFrom;
 
@@ -858,7 +868,7 @@ public class OpdEdit extends JDialog {
 			if (!insert) {
 				referralFrom = opd.getReferralFrom();
 				if (referralFrom == null) {
-					referralFrom="";
+					referralFrom = "";
 				}
 				if (referralFrom.equals("R")) {
 					referralFromCheckBox.setSelected(true);
@@ -878,34 +888,27 @@ public class OpdEdit extends JDialog {
 		}
 		return jNewPatientPanel;
 	}
-	
-	public JPanel getJDatePanel() {
+
+	private JPanel getJDatePanel() {
 		if (jDatePanel == null) {
 			jDatePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 3, 3));
-			String d;
-			Date myDate;
-			GregorianCalendar dateIn;
+			LocalDateTime dateIn;
 			if (insert) {
-				if (RememberDates.getLastOpdVisitDateGregorian() == null) {
-					dateIn = new GregorianCalendar();
+				if (RememberDates.getLastOpdVisitDate() == null) {
+					dateIn = LocalDateTime.now();
 				} else {
-					dateIn = RememberDates.getLastOpdVisitDateGregorian();
+					dateIn = RememberDates.getLastOpdVisitDate();
 				}
 			} else {
-				dateIn = opd.getVisitDate();
+				dateIn = opd.getDate();
 			}
-			
-			myDate = dateIn.getTime();
-			d = currentDateFormat.format(myDate);
-			
-			opdDateField = new VoDateTextField("dd/mm/yy", d, 15);
 
+			opdDateField = new GoodDateTimeSpinnerChooser(dateIn);
 			jDatePanel.add(opdDateField);
 			jDatePanel = setMyBorder(jDatePanel, MessageBundle.getMessage("angal.opd.attendancedate.txt"));
 		}
 		return jDatePanel;
 	}
-
 	
 	/*
 	 * Set a specific border+title to a panel
@@ -918,9 +921,9 @@ public class OpdEdit extends JDialog {
 		return c;
 	}
 
-	private ArrayList<Disease> getSearchDiagnosisResults(String s, ArrayList<Disease> diseaseList) {
+	private List<Disease> getSearchDiagnosisResults(String s, List<Disease> diseaseList) {
 		String query = s.trim();
-		ArrayList<Disease> results = new ArrayList<>();
+		List<Disease> results = new ArrayList<>();
 		for (Disease disease : diseaseList) {
 			if (!query.equals("")) {
 				String[] patterns = query.split(" ");

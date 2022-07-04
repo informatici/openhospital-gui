@@ -22,7 +22,6 @@
 package org.isf.utils.jobjects;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.event.TableModelListener;
@@ -31,29 +30,25 @@ import javax.swing.table.TableModel;
 import org.isf.exa.model.Exam;
 import org.isf.generaldata.MessageBundle;
 
-public class OhTableModelExam<T> implements TableModel{
+public class OhTableModelExam<T> implements TableModel {
 
 	List<Exam> dataListExam;
 	List<Exam> filteredList;
-	
-	public  OhTableModelExam(ArrayList<Exam> dataList) {
-		this.dataListExam=dataList;
-		
-		this.filteredList= new ArrayList<>();
-		
-		for (Iterator<Exam> iterator = dataList.iterator(); iterator.hasNext();) {
-			Exam t = (Exam) iterator.next();
-			this.filteredList.add(t);			
-		}
-//		Collections.copy(this.filteredList, this.dataList);
+
+	public OhTableModelExam(List<Exam> dataList) {
+		this.dataListExam = dataList;
+
+		this.filteredList = new ArrayList<>();
+
+		this.filteredList.addAll(dataList);
 	}
 
 	public int filter(String searchQuery) {
 		this.filteredList = new ArrayList<>();
 
-		for (Iterator<Exam> iterator = this.dataListExam.iterator(); iterator.hasNext(); ) {
-			Object object = (Object) iterator.next();
-			if (object instanceof Exam) {
+		for (Exam value : this.dataListExam) {
+			Object object = value;
+			if (object != null) {
 				Exam exam = (Exam) object;
 				String strItem = exam.getCode() + exam.getDescription();
 				strItem = strItem.toLowerCase();
@@ -68,7 +63,6 @@ public class OhTableModelExam<T> implements TableModel{
 
 	@Override
 	public void addTableModelListener(TableModelListener l) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -83,16 +77,16 @@ public class OhTableModelExam<T> implements TableModel{
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		String columnLabel="";
+		String columnLabel = "";
 		switch (columnIndex) {
-		case 0:
-			columnLabel= MessageBundle.getMessage("angal.common.code.txt").toUpperCase();
-			break;
-		case 1:
-			columnLabel= MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
-			break;
-		default:
-			break;
+			case 0:
+				columnLabel = MessageBundle.getMessage("angal.common.code.txt").toUpperCase();
+				break;
+			case 1:
+				columnLabel = MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
+				break;
+			default:
+				break;
 		}
 		return columnLabel;
 	}
@@ -110,8 +104,8 @@ public class OhTableModelExam<T> implements TableModel{
 		String value = "";
 		if (rowIndex >= 0 && rowIndex < this.filteredList.size()) {
 			Exam obj = this.filteredList.get(rowIndex);
-			if (obj instanceof Exam) {
-				Exam mdwObj = (Exam) obj;
+			if (obj != null) {
+				Exam mdwObj = obj;
 				if (columnIndex == 0) {
 					value = mdwObj.getCode() + "";
 				} else {
@@ -136,12 +130,10 @@ public class OhTableModelExam<T> implements TableModel{
 
 	@Override
 	public void removeTableModelListener(TableModelListener l) {
-		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub	
 	}
 
 }

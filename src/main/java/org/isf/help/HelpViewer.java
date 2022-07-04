@@ -39,15 +39,17 @@ public class HelpViewer extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String MANUAL_PDF_FILE = "doc/UserManual.pdf";
+	private static final String MANUAL_PDF_FILE = "UserManual.pdf";
 
 	public HelpViewer() {
-		File file = new File(MANUAL_PDF_FILE);
+		GeneralData.getGeneralData();
+		String doc_file = GeneralData.DOC_DIR + File.separator + MANUAL_PDF_FILE;
+		File file = new File(doc_file);
 		if (file != null) {
 			if (Desktop.isDesktopSupported()) { //Try to find system PDF viewer
 				try {
 					Desktop.getDesktop().open(file);
-				} catch (IOException e) {
+				} catch (IOException | IllegalArgumentException e) {
 					MessageDialog.error(HelpViewer.this, "angal.help.userguidenotfound");
 				}
 			} else if (!GeneralData.INTERNALVIEWER) { //Try specified PDF viewer, if any

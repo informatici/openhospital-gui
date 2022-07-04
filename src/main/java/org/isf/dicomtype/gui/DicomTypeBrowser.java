@@ -25,7 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -53,7 +53,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<DicomType> pDicomType;
+	private List<DicomType> pDicomType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
@@ -94,7 +94,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
                 screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setTitle(MessageBundle.getMessage("angal.dicomtype.dicomtypebrowser.title"));
 		this.setContentPane(getJContainPanel());
-		//pack();	
+
 	}
 	
 	
@@ -211,7 +211,7 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DicomTypeBrowserModel();
 			jTable = new JTable(model);
@@ -267,7 +267,6 @@ public class DicomTypeBrowser extends ModalJFrame implements DicomTypeListener {
 
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
-			//return super.isCellEditable(arg0, arg1);
 			return false;
 		}
 	}

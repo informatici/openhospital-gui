@@ -24,7 +24,7 @@ package org.isf.pricesothers.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -81,7 +81,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 	
 	private PricesOthers pOthers;
 	PricesOthersManager pOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
-	private ArrayList<PricesOthers> pOthersArray;
+	private List<PricesOthers> pOthersArray;
 	private JFrame myFrame;
 	
 	public PricesOthersBrowser() {
@@ -168,7 +168,7 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 			jButtonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jButtonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jButtonNew.addActionListener(actionEvent -> {
-				PricesOthers pOther = new PricesOthers("", "", true,true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+				PricesOthers pOther = new PricesOthers("", "", true, true, false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				PricesOthersEdit editOther = new PricesOthersEdit(myFrame, pOther, true);
 				editOther.addOtherListener(PricesOthersBrowser.this);
 				editOther.setVisible(true);
@@ -201,9 +201,6 @@ public class PricesOthersBrowser extends ModalJFrame implements PricesOthersList
 		if (jTablePricesOthers == null) {
 			jTablePricesOthers = new JTable() {
 
-				/**
-				 *
-				 */
 				private static final long serialVersionUID = 1L;
 
 				// Override this method so that it returns the preferred

@@ -24,7 +24,7 @@ package org.isf.menu.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -78,7 +78,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private int selectedrow;
 	private JLabel selectlabel;
 	private JComboBox pbox;
-	private ArrayList<User> pUser;
+	private List<User> pUser;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.userbrowser.user.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
@@ -115,7 +115,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		pbox = new JComboBox();
 		pbox.addItem(ALL_STR);
-		ArrayList<UserGroup> group = null;
+		List<UserGroup> group = null;
 		try {
 			group = manager.getUserGroup();
 		} catch (OHServiceException e) {

@@ -82,7 +82,7 @@ public class JDateAndTimeChooser extends JPanel {
 	public CustomJDateChooser getDateChooser() {
 		return date;
 	}
-	
+
 	/**
 	 * @return the timeTable
 	 */
@@ -93,5 +93,5 @@ public class JDateAndTimeChooser extends JPanel {
 	public Date getDateTime() {
 		return dateTime;
 	}
-	
+
 }

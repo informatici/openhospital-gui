@@ -25,6 +25,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -49,7 +50,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class AgeTypeBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<AgeType> pAgeType;
+	private List<AgeType> pAgeType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.from.txt").toUpperCase(),
@@ -62,7 +63,6 @@ public class AgeTypeBrowser extends ModalJFrame {
 	private JButton jEditSaveButton = null;
 	private JButton jCloseButton = null;
 	private JTable jTable = null;
-	private AgeTypeBrowserModel model;
 	private boolean edit = false;
 
 	/**
@@ -127,9 +127,9 @@ public class AgeTypeBrowser extends ModalJFrame {
 						OHServiceExceptionUtil.showMessages(e);
 					}
 					edit = false;
-					jTable.updateUI();
-					jEditSaveButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
+					jEditSaveButton.setText(MessageBundle.getMessage("angal.common.edit.btn"));
 					jEditSaveButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
+					jTable.updateUI();
 				}
 			});
 		}
@@ -150,14 +150,13 @@ public class AgeTypeBrowser extends ModalJFrame {
 		return jCloseButton;
 	}
 
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
-			model = new AgeTypeBrowserModel();
-			jTable = new JTable(model);
+			jTable = new JTable(new AgeTypeBrowserModel());
 			for (int i = 0; i < pColumns.length; i++) {
 				jTable.getColumnModel().getColumn(i).setMinWidth(pColumnWidth[i]);
 			}
-			jTable.setDefaultRenderer(Object.class,new ColorTableCellRenderer());
+			jTable.setDefaultRenderer(Object.class, new ColorTableCellRenderer());
 		}
 		return jTable;
 	}
@@ -231,14 +230,9 @@ public class AgeTypeBrowser extends ModalJFrame {
 		@Override
 		public boolean isCellEditable(int r, int c) {
 			if (edit) {
-				if (c == 1 || c == 2) {
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return false;
+				return c == 1 || c == 2;
 			}
+			return false;
 		}
 	}
 	

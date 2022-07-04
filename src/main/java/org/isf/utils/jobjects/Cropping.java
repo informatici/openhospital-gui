@@ -69,8 +69,8 @@ public class Cropping extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		int x = 0;//(getWidth() - size.width) / 2;
-		int y = 0;//(getHeight() - size.height) / 2;
+		int x = 0;
+		int y = 0;
 		g2.drawImage(image, x, y, this);
 		if (clip == null) {
 			createClip();
@@ -120,8 +120,8 @@ public class Cropping extends JPanel {
 		try {
 			int w = clip.width;
 			int h = clip.height;
-			int x0 = 0;//(getWidth() - size.width) / 2;
-			int y0 = 0;//(getHeight() - size.height) / 2;
+			int x0 = 0;
+			int y0 = 0;
 			int x = clip.x - x0;
 			int y = clip.y - y0;
 			clipped = image.getSubimage(x, y, w, h);
@@ -239,7 +239,6 @@ class ClipMoverAndResizer extends MouseInputAdapter {
 			cropping.setClip(x, y);
 		} else if (resizing) {
 			int x = e.getX() - cropping.clip.x;
-			//int y = e.getY() - cropping.clip.y;
 			cropping.resizeClip(x, x); //square
 		}
 	}

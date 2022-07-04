@@ -26,7 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -66,7 +66,6 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	public void operationInserted(AWTEvent e) {
 		pOperation.add(0, operation);
 		((OperationBrowserModel) table.getModel()).fireTableDataChanged();
-		// table.updateUI();
 		if (table.getRowCount() > 0) {
 			table.setRowSelectionInterval(0, 0);
 		}
@@ -80,7 +79,6 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		if ((table.getRowCount() > 0) && selectedrow > -1) {
 			table.setRowSelectionInterval(selectedrow, selectedrow);
 		}
-
 	}
 	
 	//TODO: replace with mapping mnemonic / translation in OperationBrowserManager
@@ -96,7 +94,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private int selectedrow;
 	private JLabel selectlabel;
 	private JComboBox pbox;
-	private ArrayList<Operation> pOperation;
+	private List<Operation> pOperation;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
@@ -141,7 +139,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		pbox = new JComboBox();
 		pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
-		ArrayList<OperationType> type;
+		List<OperationType> type;
 		try {
 			type = operationTypeManager.getOperationType();
 			for (OperationType elem : type) {
@@ -167,8 +165,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 		buttonNew.addActionListener(actionEvent -> {
-			operation = new Operation(null, "", new OperationType("", ""), 0); // operation will reference the new //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-																				// record
+			operation = new Operation(null, "", new OperationType("", ""), 0); // operation will reference the new record
 			OperationEdit newrecord = new OperationEdit(myFrame, operation, true);
 			newrecord.addOperationListener(OperationBrowser.this);
 			newrecord.setVisible(true);
@@ -182,7 +179,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
+				operation = (Operation) (model.getValueAt(table.getSelectedRow(), -1));
 				OperationEdit editrecord = new OperationEdit(myFrame, operation, false);
 				editrecord.addOperationListener(OperationBrowser.this);
 				editrecord.setVisible(true);
@@ -196,8 +193,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			if (table.getSelectedRow() < 0) {
 				MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 			} else {
-				Operation operation = (Operation) (((OperationBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
-				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg",operation.getDescription());
+				Operation operation = (Operation) model.getValueAt(table.getSelectedRow(), -1);
+				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg", operation.getDescription());
 				try {
 					if ((answer == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(operation))) {
 						pOperation.remove(table.getSelectedRow());
@@ -293,15 +290,15 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			return false;
 		}
 	}
-	
-	class CenterAlignmentCellRenderer extends DefaultTableCellRenderer {  
+
+	class CenterAlignmentCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-			
-			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			setHorizontalAlignment(SwingConstants.CENTER);
 			return cell;
 		}

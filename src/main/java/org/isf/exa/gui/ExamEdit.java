@@ -25,8 +25,8 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -79,26 +79,29 @@ public class ExamEdit extends JDialog {
     	examListeners.remove(ExamListener.class, listener);
     }
 
-    private void fireExamInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireExamInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamListener) listener).examInserted(event);
-	    }
-    }
-    private void fireExamUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = examListeners.getListeners(ExamListener.class);
+		for (EventListener listener : listeners) {
+			((ExamListener) listener).examInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireExamUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = examListeners.getListeners(ExamListener.class);
-	    for (EventListener listener : listeners) {
-		    ((ExamListener) listener).examUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = examListeners.getListeners(ExamListener.class);
+		for (EventListener listener : listeners) {
+			((ExamListener) listener).examUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -124,10 +127,10 @@ public class ExamEdit extends JDialog {
 	 * This is the default constructor; we pass the arraylist and the selectedrow
      * because we need to update them
 	 */
-	public ExamEdit(JFrame owner,Exam old,boolean inserting) {
-		super(owner,true);
+	public ExamEdit(JFrame owner, Exam old, boolean inserting) {
+		super(owner, true);
 		insert = inserting;
-		exam = old;		//medical will be used for every operation
+		exam = old;        // exam will be used for every operation
 		initialize();
 	}
 
@@ -161,8 +164,8 @@ public class ExamEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -345,7 +348,7 @@ public class ExamEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox();
 			if (insert) {
-				ArrayList<ExamType> types;
+				List<ExamType> types;
 				try {
 					types = manager.getExamType();
 				} catch (OHServiceException e) {

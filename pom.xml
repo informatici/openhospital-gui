@@ -13,22 +13,22 @@
 	<groupId>org.isf</groupId>
 	<artifactId>OH-gui</artifactId>
 	<packaging>jar</packaging>
-	<version>1.11.0</version>
+	<version>1.12.0-SNAPSHOT</version>
 
 	<properties>
-		<oh.version>1.11.0</oh.version>
+		<oh.version>1.12.0-SNAPSHOT</oh.version>
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.framework.version>4.3.28.RELEASE</spring.framework.version>
+		<spring.framework.version>5.3.21</spring.framework.version>
 		<license.maven.plugin.version>4.1</license.maven.plugin.version>
-		<spring-cloud-starter-openfeign>1.4.7.RELEASE</spring-cloud-starter-openfeign>
+		<spring-cloud-starter-openfeign>3.1.3</spring-cloud-starter-openfeign>
 	</properties>
 
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>3.10.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -36,9 +36,28 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.2.0</version>
 				<executions>
+					<execution>
+						<id>add-test-resource</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>testResources</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>bundle</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 					<execution>
 						<id>copy-resources</id>
 						<phase>validate</phase>
@@ -103,10 +122,6 @@
 							</resources>
 						</configuration>
 					</execution>
-					<!-- <execution> <id>copy-doc</id> <phase>validate</phase> <goals> <goal>copy-resources</goal> 
-						</goals> <configuration> <outputDirectory>${project.basedir}/target/OpenHospital20/doc</outputDirectory> 
-						<resources> <resource> <directory>doc</directory> </resource> </resources> 
-						</configuration> </execution> -->
 					<execution>
 						<id>copy-report</id>
 						<phase>validate</phase>
@@ -133,10 +148,8 @@
 							<resources>
 								<resource>
 									<directory>${project.basedir}</directory>
-									<include>oh.ico</include>
+									<include>oh.*</include>
 									<include>README.md</include>
-									<include>startup.cmd</include>
-									<include>startup.sh</include>
 								</resource>
 								<resource>
 									<directory>../openhospital-core</directory>
@@ -151,7 +164,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.3.0</version>
 				<executions>
 					<execution>
 						<id>copy-dependencies</id>
@@ -171,7 +184,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.2.2</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -246,35 +259,9 @@
 			<version>0.3.12</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>6.17.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>com.lowagie</groupId>
-					<artifactId>itext</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.lowagie</groupId>
-			<artifactId>itext</artifactId>
-			<version>2.1.7</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.jasperreports</groupId>
-			<artifactId>jasperreports-fonts</artifactId>
-			<version>6.17.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.toedter</groupId>
 			<artifactId>jcalendar</artifactId>
 			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.10.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.rxtx</groupId>
@@ -284,12 +271,12 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.31</version>
+			<version>1.7.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.31</version>
+			<artifactId>slf4j-reload4j</artifactId>
+			<version>1.7.36</version>
 		</dependency>
 		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
@@ -336,6 +323,11 @@
 			<artifactId>jgoodies-validation</artifactId>
 			<version>2.5.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.lgooddatepicker</groupId>
+			<artifactId>LGoodDatePicker</artifactId>
+			<version>11.2.1</version>
+		</dependency>
 		<!-- Feign -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -372,6 +364,28 @@
 					<artifactId>slf4j-api</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<!--<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>el-impl</artifactId>
+			<version>2.2</version>
+		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.23.1</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -6,6 +6,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -23,24 +24,24 @@ FROM (
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('I','S')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('EQ')) Disc1,
 
 	(SELECT count(*) paeDisc
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('P')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('EQ')) Disc2,
 
 	(SELECT count(*) matDisc
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('M','N')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('EQ')
 	  AND ADM_PRG_DRT_ID_A is not null) Disc3,
 
@@ -48,8 +49,8 @@ FROM (
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('Z')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('EQ')
 	  AND ADM_PRG_DRT_ID_A is null) Disc4,
 
@@ -57,24 +58,24 @@ FROM (
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('I','S')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('D')) Death1,
 
 	(SELECT count(*) paeDeath
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('P')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('D')) Death2,
 
 	(SELECT count(*) matDeath
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('M','N')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('D')
 	  AND ADM_PRG_DRT_ID_A is not null) Death3,
 
@@ -82,8 +83,8 @@ FROM (
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('Z')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('D')
 	  AND ADM_PRG_DRT_ID_A is null) Death4,
 
@@ -91,24 +92,24 @@ FROM (
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('I','S')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('ES')) Escape1,
 
 	(SELECT count(*) paeEscape
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('P')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('ES')) Escape2,
 
 	(SELECT count(*) matEscape
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('M','N')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('ES')
 	  AND ADM_PRG_DRT_ID_A is not null) Escape3,
 
@@ -116,36 +117,36 @@ FROM (
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('Z')
 	  AND ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('ES')
 	  AND ADM_PRG_DRT_ID_A is null) Escape4,
 
 	(SELECT count(*) genAdm
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('I','S')
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006) Adm1,
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}) Adm1,
 
 	(SELECT count(*) paeAdm
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('P')
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006) Adm2,
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}) Adm2,
 
 	(SELECT count(*) matAdm
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('M','N')
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('EQ')
 	  AND ADM_PRG_DRT_ID_A is not null) Adm3,
 
 	(SELECT count(*) amnAdm
 	FROM ADMISSION
 	WHERE ADM_WRD_ID_A IN ('Z')
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_DIST_ID_A in ('EQ')
 	  AND ADM_PRG_DRT_ID_A is null) Adm4,
 
@@ -153,40 +154,40 @@ FROM (
 	FROM ADMISSION A LEFT JOIN PATIENT P ON ADM_PAT_ID = PAT_ID
 	WHERE P.PAT_ESTA in ('Y')
 	  AND A.ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_WRD_ID_A IN ('I','S')) bedDays1,
 
 	(SELECT IFNULL(SUM(DATEDIFF(ADM_DATE_DIS,ADM_DATE_ADM)),0) genBedDays
 	FROM ADMISSION A LEFT JOIN PATIENT P ON ADM_PAT_ID = PAT_ID
 	WHERE P.PAT_ESTA in ('N', 'U')
 	  AND A.ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_WRD_ID_A IN ('I','S')) bedDays2,
 
 	(SELECT IFNULL(SUM(DATEDIFF(ADM_DATE_DIS,ADM_DATE_ADM)),0) paeBedDaysNHIF
 	FROM ADMISSION A LEFT JOIN PATIENT P ON ADM_PAT_ID = PAT_ID
 	WHERE P.PAT_ESTA in ('Y')
 	  AND A.ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_WRD_ID_A IN ('P')) bedDays3,
 
 	(SELECT IFNULL(SUM(DATEDIFF(ADM_DATE_DIS,ADM_DATE_ADM)),0) paeBedDays
 	FROM ADMISSION A LEFT JOIN PATIENT P ON ADM_PAT_ID = PAT_ID
 	WHERE P.PAT_ESTA in ('N', 'U')
 	  AND A.ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_WRD_ID_A IN ('P')) bedDays4,
 
 	(SELECT IFNULL(SUM(DATEDIFF(ADM_DATE_DIS,ADM_DATE_ADM)),0) matBedDaysNHIF
 	FROM ADMISSION A LEFT JOIN PATIENT P ON A.ADM_PAT_ID = P.PAT_ID
 	WHERE P.PAT_ESTA in ('Y')
 	  AND A.ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_WRD_ID_A IN ('M','N')
 	  AND ADM_PRG_DRT_ID_A is not null) bedDays5,
 
@@ -194,8 +195,8 @@ FROM (
 	FROM ADMISSION A LEFT JOIN PATIENT P ON ADM_PAT_ID = PAT_ID
 	WHERE P.PAT_ESTA in ('N', 'U')
 	  AND A.ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_WRD_ID_A IN ('M','N')
 	  AND ADM_PRG_DRT_ID_A is not null) bedDays6,
 
@@ -203,8 +204,8 @@ FROM (
 	FROM ADMISSION A LEFT JOIN PATIENT P ON A.ADM_PAT_ID = P.PAT_ID
 	WHERE P.PAT_ESTA in ('Y')
 	  AND A.ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_WRD_ID_A IN ('Z')
 	  AND ADM_PRG_DRT_ID_A is null) bedDays7,
 
@@ -212,8 +213,8 @@ FROM (
 	FROM ADMISSION A LEFT JOIN PATIENT P ON ADM_PAT_ID = PAT_ID
 	WHERE P.PAT_ESTA in ('N', 'U')
 	  AND A.ADM_DATE_DIS is not null
-	  AND MONTH(ADM_DATE_DIS) = 10
-	  AND YEAR(ADM_DATE_DIS) = 2006
+	  AND MONTH(ADM_DATE_DIS) = $P{month}
+	  AND YEAR(ADM_DATE_DIS) = $P{year}
 	  AND ADM_WRD_ID_A IN ('Z')
 	  AND ADM_PRG_DRT_ID_A is null) bedDays8,
 
@@ -614,7 +615,7 @@ FROM (
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-6" x="186" y="38" width="50" height="16" uuid="0e07a2b3-439d-4d6d-9e75-4ff7bfeff225"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -627,7 +628,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{genDisc}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-7" x="236" y="38" width="54" height="16" uuid="3c097842-f4e5-4fd0-8528-078286a48a06"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -640,7 +641,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paeDisc}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-8" x="290" y="38" width="64" height="16" uuid="1fd34e8e-7f24-4174-9a76-7a34607c6e42"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -653,7 +654,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matDisc}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-18" x="395" y="38" width="140" height="16" uuid="1be62d31-9d73-428d-b6cd-c0d2cf855e5c"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -666,7 +667,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalDisc}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-9" x="354" y="38" width="41" height="16" uuid="df3af1e2-e8f2-460e-896c-6c541d356ce6"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -679,7 +680,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amnDisc}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-10" x="186" y="54" width="50" height="16" uuid="3417b159-25c8-4adb-9171-256ba50790e1"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -692,7 +693,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{genDeath}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-11" x="236" y="54" width="54" height="16" uuid="5d14d645-7502-4482-88d4-a9e5939d19b9"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -705,7 +706,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paeDeath}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-12" x="290" y="54" width="64" height="16" uuid="0ac89cad-d9c1-4f14-a5ac-867f816104df"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -718,7 +719,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matDeath}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-13" x="354" y="54" width="41" height="16" uuid="1d7feeb6-717b-4f8e-ba34-058d51964f0c"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -731,7 +732,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amnDeath}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-19" x="395" y="54" width="140" height="16" uuid="7765e0ee-820b-4ab1-b456-ec0d05a7db02"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -744,7 +745,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalDeaths}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-14" x="186" y="70" width="50" height="16" uuid="2c058548-c18b-411a-888c-5909431f581f"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -757,7 +758,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{genEscape}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-15" x="236" y="70" width="54" height="16" uuid="fe4d4024-a86f-45de-940c-b440eac394f0"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -770,7 +771,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paeEscape}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-16" x="290" y="70" width="64" height="16" uuid="cf449670-d58b-4ef4-9f40-2fd19b0c2f13"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -783,7 +784,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matEscape}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-17" x="354" y="70" width="41" height="16" uuid="96c518cb-af2d-420f-8a5c-dcb1a4d781c1"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -796,7 +797,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amnEscape}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-20" x="395" y="70" width="140" height="16" uuid="7835ff99-1a12-4218-aadd-5bfc5dd318cf"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -809,7 +810,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalEscape}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-40" x="186" y="86" width="50" height="16" uuid="066f6947-8606-4b56-984d-6a9c8922a37a"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -822,7 +823,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$V{GenDisc}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-42" x="236" y="86" width="54" height="16" uuid="1b7358a3-f860-4e02-b512-191ab6799841"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -835,7 +836,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PaeDisc}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-43" x="290" y="86" width="64" height="16" uuid="74db70a5-b037-4688-8d26-c71f9eb35675"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -848,7 +849,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$V{MatDisc}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-44" x="354" y="86" width="41" height="16" uuid="f86ee708-b23b-4316-b896-d205dcbcc53e"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -861,7 +862,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$V{AmnDisc}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-21" x="395" y="86" width="140" height="16" uuid="d8fcd310-6716-4d8d-95fc-45b187840250"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -952,7 +953,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$R{OccupiedBedDaysNhifMembers}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-30" x="186" y="102" width="50" height="16" uuid="47d7edab-fca6-4076-954e-47e636a57bb9"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -965,7 +966,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{genAdm}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-31" x="236" y="102" width="54" height="16" uuid="7b5d1f9f-237d-42d5-bdfa-3640d8f8ace7"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -978,7 +979,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paeAdm}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-32" x="290" y="102" width="64" height="16" uuid="3fccbb31-b832-4786-9086-1e3db4f7846b"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -991,7 +992,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matAdm}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-56" x="395" y="102" width="140" height="16" uuid="ab7e6133-a637-4875-8cce-ccc15447b09a"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1004,7 +1005,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-33" x="354" y="102" width="41" height="16" uuid="5469b2d9-4501-4474-bffc-7b084340dc1c"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1017,7 +1018,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amnDeath}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-58" x="186" y="118" width="50" height="16" uuid="251a73c8-f72f-4d9a-8e36-8644d737269b"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1030,7 +1031,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-59" x="236" y="118" width="54" height="16" uuid="d58e5f13-0782-496b-afe2-64c48b0a19b4"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1043,7 +1044,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-60" x="290" y="118" width="64" height="16" uuid="cf9f26e2-9e6f-4adf-8393-518b24c108af"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1056,7 +1057,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-61" x="354" y="118" width="41" height="16" uuid="74a503ab-1bea-4b93-a05e-e828824d0ad4"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1069,7 +1070,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-62" x="395" y="118" width="140" height="16" uuid="67814ada-c108-4b21-ae0d-403607bc7966"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1082,7 +1083,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-22" x="186" y="134" width="50" height="16" uuid="690c449f-d2fa-4b80-9691-a45f60fa9169"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1095,7 +1096,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{genBedDaysNHIF}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-23" x="236" y="134" width="54" height="16" uuid="865063e4-91e5-4cf6-ad53-6cc09923446f"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1108,7 +1109,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paeBedDaysNHIF}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-24" x="290" y="134" width="64" height="16" uuid="1273105d-9209-42ba-9872-ebf787f1878a"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1121,7 +1122,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matBedDaysNHIF}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-25" x="354" y="134" width="41" height="16" uuid="030625f5-efe8-43d7-8754-f26525c7f7e4"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1134,7 +1135,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amnBedDaysNHIF}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-38" x="395" y="134" width="140" height="16" uuid="13f0fc54-0904-4a01-a727-04ea0d4af294"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1229,7 +1230,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Beds}+" - "+$R{Authorized}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-26" x="186" y="150" width="50" height="16" uuid="6cee7171-d87a-4e2a-869f-76f34153c204"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1242,7 +1243,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{genBedDays}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-27" x="236" y="150" width="54" height="16" uuid="99fb1e28-ca87-4566-8209-600f8abcd346"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1255,7 +1256,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paeBedDays}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-28" x="290" y="150" width="64" height="16" uuid="7f6b1a6f-5b4b-469c-8dc2-d1d29d8b9c67"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1268,7 +1269,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{matBedDays}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-41" x="395" y="150" width="140" height="16" uuid="66717c68-5de2-4515-bab9-949d0161e566"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1298,7 +1299,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amnBedDays}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-79" x="186" y="166" width="50" height="16" uuid="d06f7398-2467-4f12-af7a-321291fe0ba5"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1311,7 +1312,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-80" x="236" y="166" width="54" height="16" uuid="ddf10394-5fef-4891-963e-ff950552973f"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1324,7 +1325,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-81" x="290" y="166" width="64" height="16" uuid="ae3d004c-b9ae-4e1b-b36d-4270684d4235"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1337,7 +1338,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-82" x="354" y="166" width="41" height="16" uuid="599218cd-7775-4f8c-afe6-55be82981a5a"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1350,7 +1351,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-83" x="395" y="166" width="140" height="16" uuid="a0238839-965f-4d10-afc4-953f76e5279e"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1363,7 +1364,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-34" x="186" y="182" width="50" height="16" uuid="17f2606c-5086-412b-89c1-b6c04b124546"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1376,7 +1377,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{genBeds}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-35" x="236" y="182" width="54" height="16" uuid="897e3040-c69b-4398-97d8-0ca56fafe524"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1389,7 +1390,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paeBeds}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-36" x="290" y="182" width="64" height="16" uuid="9c4ced17-cc86-4b15-b465-1aa23d44965c"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1415,7 +1416,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amnBeds}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="false">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField-39" x="395" y="182" width="140" height="16" uuid="b5c6a3f5-cf78-4b7a-bda0-c4f31639197f"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1510,7 +1511,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Cots} +" - " + $R{ActualPhysical}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-95" x="186" y="198" width="50" height="16" uuid="b7c686ee-411c-4c61-b597-dcca90ebb389"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1523,7 +1524,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-96" x="236" y="198" width="54" height="16" uuid="6515dea8-0ecf-4286-b05c-a9fc92981a11"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1536,7 +1537,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-97" x="290" y="198" width="64" height="16" uuid="3460bcaf-14e6-4ced-8519-ca4c581c1879"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1549,7 +1550,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-98" x="395" y="198" width="140" height="16" uuid="92336330-5f15-43f6-8731-054ae448f034"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1562,7 +1563,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-99" x="354" y="198" width="41" height="16" uuid="b6959bfd-6dbf-4714-8e27-92a2796d0ffa"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1575,7 +1576,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-100" x="186" y="214" width="50" height="16" uuid="a286f123-e618-41d4-a2aa-1f897ac9d6fd"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1588,7 +1589,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-101" x="236" y="214" width="54" height="16" uuid="4d0069d3-090b-4169-b706-187f39302114"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1601,7 +1602,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-102" x="290" y="214" width="64" height="16" uuid="397f27ac-174b-4ba9-b0fe-23b88bc17f64"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1614,7 +1615,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-103" x="354" y="214" width="41" height="16" uuid="d8a9a2b0-e7b6-4646-b938-6d1fc62a0238"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1627,7 +1628,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-104" x="395" y="214" width="140" height="16" uuid="c2fe1c8c-c307-4bca-ac3b-50120829bae4"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1640,7 +1641,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-105" x="186" y="230" width="50" height="16" uuid="346f43d9-fbb0-42a9-87d0-663b2c20b07f"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1653,7 +1654,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-106" x="236" y="230" width="54" height="16" uuid="bde76575-adde-4f83-a927-0bf9b33a947e"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1666,7 +1667,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-107" x="290" y="230" width="64" height="16" uuid="19b005ad-7a0f-480a-b4c9-b2c49477a37c"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1679,7 +1680,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-108" x="354" y="230" width="41" height="16" uuid="c33bfeae-1d9d-428f-9f05-3850d71b8700"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1692,7 +1693,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-109" x="395" y="230" width="140" height="16" uuid="184da5b4-3e89-4c5f-839c-4f8beb51c923"/>
 				<box>
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -1770,7 +1771,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$R{PreparedBy}+":"]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-235" x="235" y="667" width="99" height="16" uuid="3f39b557-25c0-4f17-a42f-cb64ba160819"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1783,7 +1784,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-236" x="334" y="667" width="67" height="16" uuid="c0a31d66-8b5b-4251-9e36-29ac4c7fbf5b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1796,7 +1797,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-237" x="401" y="667" width="67" height="16" uuid="a5fbd9e2-dd25-419e-b61f-5779243a3185"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1809,7 +1810,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-238" x="468" y="667" width="67" height="16" uuid="059234a9-5a4f-4c2a-a96b-c057c5a254cc"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1835,7 +1836,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$R{CheckedBy}+":"]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-240" x="235" y="683" width="99" height="16" uuid="ccb29e74-8de5-4653-803c-8e06e660f217"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1848,7 +1849,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-241" x="334" y="683" width="67" height="16" uuid="27f56b7b-4bc3-4305-9f30-925e44fa8e5c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1861,7 +1862,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-242" x="401" y="683" width="67" height="16" uuid="ba30d3b6-5d23-4fd8-a63c-263534d6b6ef"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1874,7 +1875,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-243" x="468" y="683" width="67" height="16" uuid="df0487ad-91c9-4bdd-b3f8-24b2ae7f1639"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1900,7 +1901,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[$R{EnteredBy}+":"]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-245" x="235" y="699" width="99" height="16" uuid="410bc9d4-b5c2-4f22-910f-a3f1a6f4bd3e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1913,7 +1914,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-246" x="334" y="699" width="67" height="16" uuid="d4d6ce06-507a-40a3-ad09-58c9a1d497f9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1926,7 +1927,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-247" x="401" y="699" width="67" height="16" uuid="4b030840-0e70-4180-ad69-3c26075b1d67"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1939,7 +1940,7 @@ FROM (
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement key="staticText-248" x="468" y="699" width="67" height="16" uuid="c8a2a5bc-42ae-45d9-836d-145951e743a3"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

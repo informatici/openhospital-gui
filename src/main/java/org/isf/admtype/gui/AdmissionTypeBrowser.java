@@ -23,7 +23,7 @@ package org.isf.admtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -48,10 +48,10 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeListener{
+public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeListener {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<AdmissionType> pAdmissionType;
+	private List<AdmissionType> pAdmissionType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
@@ -191,7 +191,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new AdmissionTypeBrowserModel();
 			jTable = new JTable(model);
@@ -201,10 +201,10 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 		return jTable;
 	}
 
-class AdmissionTypeBrowserModel extends DefaultTableModel {
-		
-	private static final long serialVersionUID = 1L;
-	private AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
+	class AdmissionTypeBrowserModel extends DefaultTableModel {
+
+		private static final long serialVersionUID = 1L;
+		private AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
 		public AdmissionTypeBrowserModel() {
 
@@ -214,7 +214,7 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		
+
 		@Override
 		public int getRowCount() {
 			if (pAdmissionType == null) {
@@ -222,7 +222,7 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 			}
 			return pAdmissionType.size();
 		}
-		
+
 		@Override
 		public String getColumnName(int c) {
 			return pColumns[c];
@@ -241,10 +241,10 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 				return pAdmissionType.get(r);
 			} else if (c == 1) {
 				return pAdmissionType.get(r).getDescription();
-			} 
+			}
 			return null;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int arg0, int arg1) {
 			return false;
@@ -270,5 +270,5 @@ class AdmissionTypeBrowserModel extends DefaultTableModel {
 			jTable.setRowSelectionInterval(0, 0);
 		}
 	}
-	
+
 }

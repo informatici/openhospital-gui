@@ -21,18 +21,17 @@
  */
 package org.isf.patvac.gui;
 
+import static org.isf.utils.Constants.DATE_FORMATTER;
+
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -45,6 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SpringLayout;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -57,14 +57,17 @@ import org.isf.patvac.manager.PatVacManager;
 import org.isf.patvac.model.PatientVaccine;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
 import org.isf.vactype.model.VaccineType;
+
+import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
  * ------------------------------------------
@@ -81,8 +84,6 @@ public class PatVacBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    	
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton buttonEdit = null;
@@ -95,24 +96,19 @@ public class PatVacBrowser extends ModalJFrame {
 	private VoLimitedTextField jAgeFromTextField = null;
 	private VoLimitedTextField jAgeToTextField = null;
 	private Integer ageTo = 0;
-	private Integer ageFrom = 0 ;
-	private JPanel sexPanel=null;
-	private ButtonGroup group=null;
+	private Integer ageFrom = 0;
+	private JPanel sexPanel = null;
 	private JRadioButton radiom;
 	private JRadioButton radiof;
-	private JRadioButton radioa;
-	private String sexSelect = MessageBundle.getMessage("angal.common.all.txt");
 	private JLabel rowCounter = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.patvac.count") + ": ";
-	
 	
 	private JTable jTable = null;
 	private JComboBox vaccineComboBox = null;
 	private JComboBox vaccineTypeComboBox = null;
 	private int pfrmHeight;
-	private ArrayList<PatientVaccine> lPatVac;
-	
-		
+	private List<PatientVaccine> lPatVac;
+
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.patient.txt").toUpperCase(),
@@ -127,8 +123,9 @@ public class PatVacBrowser extends ModalJFrame {
 	private PatVacBrowsingModel model;
 	private PatientVaccine patientVaccine;
 	private int selectedrow;
-	private CustomJDateChooser dateFrom = null;
-	private CustomJDateChooser dateTo = null;
+	private GoodDateChooser dateFrom;
+	private GoodDateChooser dateTo;
+	private JPanel dateFilterPanel;
 	private final JFrame myFrame;
 
 	public PatVacBrowser() {
@@ -143,19 +140,12 @@ public class PatVacBrowser extends ModalJFrame {
 	 * This method initializes this Frame, sets the correct Dimensions
 	 */
 	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-        final int pfrmBase = 20;
-        final int pfrmWidth = 17;
-        final int pfrmHeight = 12;
-        this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase ) / 2,
-        		(screensize.height - screensize.height * pfrmHeight / pfrmBase)/2, 
-                screensize.width * pfrmWidth / pfrmBase+50,
-                screensize.height * pfrmHeight / pfrmBase+20);
-        setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowser.title"));
+		setTitle(MessageBundle.getMessage("angal.patvac.patientvaccinebrowser.title"));
 		this.setContentPane(getJContentPane());
+		setPreferredSize(new Dimension(1680, 670));
+		setMinimumSize(new Dimension(880, 510));
+		pack();
 		updateRowCounter();
-		validate();
 		this.setLocationRelativeTo(null);
 	}
 	
@@ -171,7 +161,7 @@ public class PatVacBrowser extends ModalJFrame {
 			jContentPane.add(getJButtonPanel(), java.awt.BorderLayout.SOUTH);
 			jContentPane.add(getJSelectionPanel(), java.awt.BorderLayout.WEST);
 			jContentPane.add(new JScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
-			updateRowCounter();
+			validate();
 		}
 		return jContentPane;
 	}
@@ -185,7 +175,7 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private JPanel getJButtonPanel() {
 		if (jButtonPanel == null) {
-			jButtonPanel = new JPanel();
+			jButtonPanel = new JPanel(new WrapLayout());
 			if (MainMenu.checkUserGrants("btnpatientvaccinenew")) {
 				jButtonPanel.add(getButtonNew(), null);
 			}
@@ -210,10 +200,11 @@ public class PatVacBrowser extends ModalJFrame {
 			buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			buttonNew.addActionListener(actionEvent -> {
-				patientVaccine = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(),
+				LocalDateTime now = LocalDateTime.now();
+				patientVaccine = new PatientVaccine(0, 0, now, new Patient(),
 						new Vaccine("", "", new VaccineType("", "")), 0);
 
-				PatientVaccine last = new PatientVaccine(0, 0, new GregorianCalendar(), new Patient(),
+				PatientVaccine last = new PatientVaccine(0, 0, now, new Patient(),
 						new Vaccine("", "", new VaccineType("", "")), 0);
 				new PatVacEdit(myFrame, patientVaccine, true);
 
@@ -286,14 +277,13 @@ public class PatVacBrowser extends ModalJFrame {
 				selectedrow = jTable.getSelectedRow();
 				patientVaccine = (PatientVaccine) (model.getValueAt(selectedrow, -1));
 				int answer = MessageDialog.yesNo(null, "angal.patvac.deletepatientvaccine.fmt.msg",
-						dateFormat.format(patientVaccine.getVaccineDate().getTime()),
+						patientVaccine.getVaccineDate().format(DATE_FORMATTER),
 						patientVaccine.getVaccine().getDescription(),
 						patientVaccine.getPatName());
 
 				if (answer == JOptionPane.YES_OPTION) {
 
 					boolean deleted;
-
 					try {
 						deleted = manager.deletePatientVaccine(patientVaccine);
 					} catch (OHServiceException e) {
@@ -334,13 +324,12 @@ public class PatVacBrowser extends ModalJFrame {
 	private JPanel getJSelectionPanel() {
 		if (jSelectionPanel == null) {
 			jSelectionPanel = new JPanel();
-			jSelectionPanel.setPreferredSize(new Dimension(220, pfrmHeight));
-			jSelectionPanel.setLayout(new BoxLayout(jSelectionPanel, BoxLayout.Y_AXIS));
-			
+			jSelectionPanel.setPreferredSize(new Dimension(225, pfrmHeight));
+
 			jSelectionPanel.add(getVaccineTypePanel());
 			jSelectionPanel.add(getVaccinePanel());
 			
-			jSelectionPanel.add(getDatePanel());
+			jSelectionPanel.add(getDateFilterPanel());
 			jSelectionPanel.add(getAgePanel());
 
 			jSelectionPanel.add(getSexPanel());
@@ -391,34 +380,6 @@ public class PatVacBrowser extends ModalJFrame {
 	}
 
 	/**
-	 * This method initializes getDatePanel
-	 * 
-	 * @return datePanel  (JPanel)
-	 */
-	private JPanel getDatePanel() {
-
-		JPanel datePanel = new JPanel();
-
-		datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.Y_AXIS));
-
-		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") + ": " + MessageBundle.getMessage("angal.common.from.txt")), null);
-		datePanel.add(label1Panel);
-
-		label1Panel.add(getDateFromPanel());
-		datePanel.add(label1Panel, null);
-
-		label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.date.txt") + ": " + MessageBundle.getMessage("angal.common.to.txt") + "     "), null);
-		datePanel.add(label1Panel);
-
-		label1Panel.add(getDateToPanel());
-		datePanel.add(label1Panel, null);
-
-		return datePanel;
-	}
-
-	/**
 	 * This method initializes getAgePanel
 	 * 
 	 * @return jAgePanel  (JPanel)
@@ -426,14 +387,14 @@ public class PatVacBrowser extends ModalJFrame {
 	private JPanel getAgePanel() {
 		if (jAgePanel == null) {
 			jAgePanel = new JPanel();
-			jAgePanel.setLayout(new BoxLayout(getAgePanel(),BoxLayout.Y_AXIS));
-			
+			jAgePanel.setLayout(new BoxLayout(getAgePanel(), BoxLayout.Y_AXIS));
+
 			JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.agefrom.label")), null);
 			jAgePanel.add(label1Panel);
 			label1Panel.add(getJAgeFromTextField(), null);
 			jAgePanel.add(label1Panel);
-			
+
 			label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			label1Panel.add(new JLabel(MessageBundle.getMessage("angal.common.ageto.label")), null);
 			jAgePanel.add(label1Panel);
@@ -457,10 +418,10 @@ public class PatVacBrowser extends ModalJFrame {
 			sexPanel.add(label1Panel);
 			
 			label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-			group=new ButtonGroup();
-			radiom= new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
-			radiof= new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
-			radioa= new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
+			ButtonGroup group = new ButtonGroup();
+			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
+			JRadioButton radioa = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
 			radioa.setSelected(true);
 			group.add(radiom);
 			group.add(radiof);
@@ -484,6 +445,7 @@ public class PatVacBrowser extends ModalJFrame {
 	private JPanel getFilterPanel() {
 
 		JPanel filterPanel = new JPanel();
+		filterPanel.setPreferredSize(new Dimension(225, 30));
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.Y_AXIS));
 		JPanel label1Panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		label1Panel.add(getFilterButton());
@@ -507,24 +469,25 @@ public class PatVacBrowser extends ModalJFrame {
 		rowCounterPanel.add(label1Panel);
 		return rowCounterPanel;
 	}
-	
+
 	/**
-	 * This method initializes jAgeFromTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes jAgeFromTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private VoLimitedTextField getJAgeFromTextField() {
 		if (jAgeFromTextField == null) {
-			jAgeFromTextField = new VoLimitedTextField(3,2);
+			jAgeFromTextField = new VoLimitedTextField(3, 2);
 			jAgeFromTextField.setText("0");
 			jAgeFromTextField.setMinimumSize(new Dimension(100, 50));
-			ageFrom=0;
+			ageFrom = 0;
 			jAgeFromTextField.addFocusListener(new FocusListener() {
+
 				@Override
 				public void focusLost(FocusEvent e) {
-					try {				
+					try {
 						ageFrom = Integer.parseInt(jAgeFromTextField.getText());
-						if ((ageFrom<0)||(ageFrom>200)) {
+						if ((ageFrom < 0) || (ageFrom > 200)) {
 							jAgeFromTextField.setText("0");
 							ageFrom = Integer.parseInt(jAgeFromTextField.getText());
 							MessageDialog.error(null, "angal.patvac.insertvalidage");
@@ -534,7 +497,7 @@ public class PatVacBrowser extends ModalJFrame {
 						ageFrom = Integer.parseInt(jAgeFromTextField.getText());
 					}
 				}
-				
+
 				@Override
 				public void focusGained(FocusEvent e) {
 				}
@@ -542,12 +505,11 @@ public class PatVacBrowser extends ModalJFrame {
 		}
 		return jAgeFromTextField;
 	}
-	
-	
+
 	/**
-	 * This method initializes jTextField	
-	 * 	
-	 * @return javax.swing.JTextField	
+	 * This method initializes jTextField
+	 *
+	 * @return javax.swing.JTextField
 	 */
 	private VoLimitedTextField getJAgeToTextField() {
 		if (jAgeToTextField == null) {
@@ -593,13 +555,12 @@ public class PatVacBrowser extends ModalJFrame {
 	 */
 	private JComboBox getComboVaccineTypes() {
 		if (vaccineTypeComboBox == null) {
-			
 			vaccineTypeComboBox = new JComboBox();
 			vaccineTypeComboBox.setPreferredSize(new Dimension(200, 30));
-			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));			
-			
+			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));
+
 			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-			ArrayList<VaccineType> types = null;
+			List<VaccineType> types = null;
 			try {
 				types = manager.getVaccineType();
 			} catch (OHServiceException e1) {
@@ -610,11 +571,11 @@ public class PatVacBrowser extends ModalJFrame {
 					vaccineTypeComboBox.addItem(elem);
 				}
 			}
-            
-            vaccineTypeComboBox.addActionListener(actionEvent -> {
-	            vaccineComboBox.removeAllItems();
-	            getComboVaccines();
-            });
+
+			vaccineTypeComboBox.addActionListener(actionEvent -> {
+				vaccineComboBox.removeAllItems();
+				getComboVaccines();
+			});
 		}
 		return vaccineTypeComboBox;
 	}
@@ -630,15 +591,15 @@ public class PatVacBrowser extends ModalJFrame {
 			vaccineComboBox = new JComboBox();
 			vaccineComboBox.setPreferredSize(new Dimension(200, 30));
 		}
-		VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+		VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 
-		ArrayList<Vaccine> allVac = null;
+		List<Vaccine> allVac = null;
 		vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
 		try {
 			if (((VaccineType) vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))) {
-				allVac = manager.getVaccine();
+				allVac = vaccineBrowserManager.getVaccine();
 			} else {
-				allVac = manager.getVaccine(((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode());
+				allVac = vaccineBrowserManager.getVaccine(((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode());
 			}
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
@@ -651,46 +612,25 @@ public class PatVacBrowser extends ModalJFrame {
 		}
 		return vaccineComboBox;
 	}
-	
-	/**
-	 * This method initializes dateFrom, which is the Panel that contains the
-	 * date (From) input for the filtering
-	 * 
-	 * @return dateFrom (JPanel)
-	 */
-	private CustomJDateChooser getDateFromPanel() {
-		if (dateFrom == null) {
-			GregorianCalendar now = new GregorianCalendar();
+
+	private Component getDateFilterPanel() {
+		if (dateFilterPanel == null) {
+			dateFilterPanel = new JPanel(new SpringLayout());
+			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
 			if (!GeneralData.ENHANCEDSEARCH) {
-				now.add(Calendar.WEEK_OF_YEAR, -1);
+				dateFrom = new GoodDateChooser(LocalDate.now().minusWeeks(1));
+			} else {
+				dateFrom = new GoodDateChooser(LocalDate.now());
 			}
-			java.util.Date myDate = now.getTime();
-			dateFrom = new CustomJDateChooser(myDate, "dd/MM/yy");
-			dateFrom.setDate(myDate);
-			dateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateFrom.setDateFormatString("dd/MM/yy");
+			dateFilterPanel.add(dateFrom);
+			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
+			dateTo = new GoodDateChooser(LocalDate.now());
+			dateFilterPanel.add(dateTo);
+			SpringUtilities.makeCompactGrid(dateFilterPanel, 2, 2, 5, 5, 5, 5);
 		}
-		return dateFrom;
+		return dateFilterPanel;
 	}
 
-	/**
-	 * This method initializes dateTo, which is the Panel that contains the
-	 * date (To) input for the filtering
-	 * 
-	 * @return dateFrom (JPanel)
-	 */
-	private CustomJDateChooser getDateToPanel() {
-		if (dateTo == null) {
-			GregorianCalendar now = new GregorianCalendar();
-			java.util.Date myDate = now.getTime();
-			dateTo = new CustomJDateChooser(myDate, "dd/MM/yy");
-			dateTo.setLocale(new Locale(GeneralData.LANGUAGE));
-			dateTo.setDateFormatString("dd/MM/yy");
-			dateTo.setDate(myDate);
-		}
-		return dateTo;
-	}
-	
 	/**
 	 * This method initializes filterButton, which is the button that performs
 	 * the filtering and calls the methods to refresh the Table
@@ -733,12 +673,7 @@ public class PatVacBrowser extends ModalJFrame {
 					return;
 				}
 
-				GregorianCalendar gcFrom = new GregorianCalendar();
-				gcFrom.setTime(dateFrom.getDate());
-				GregorianCalendar gcTo = new GregorianCalendar();
-				gcTo.setTime(dateTo.getDate());
-
-				model = new PatVacBrowsingModel(vaccineTypeCode, vaccineCode, gcFrom, gcTo, sex, ageFrom, ageTo);
+				model = new PatVacBrowsingModel(vaccineTypeCode, vaccineCode, dateFrom.getDateStartOfDay(), dateTo.getDateEndOfDay(), sex, ageFrom, ageTo);
 				model.fireTableDataChanged();
 				jTable.updateUI();
 				updateRowCounter();
@@ -785,18 +720,16 @@ public class PatVacBrowser extends ModalJFrame {
 		private PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 
 		public PatVacBrowsingModel() {
-			PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
+			PatVacManager patVacManager = Context.getApplicationContext().getBean(PatVacManager.class);
 			try {
-				lPatVac = manager.getPatientVaccine(!GeneralData.ENHANCEDSEARCH);
+				lPatVac = patVacManager.getPatientVaccine(!GeneralData.ENHANCEDSEARCH);
 			} catch (OHServiceException e) {
 				lPatVac = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
-		
-		public PatVacBrowsingModel(String vaccineTypeCode, String vaccineCode,
-				GregorianCalendar dateFrom, GregorianCalendar dateTo, char sex,
-				int ageFrom, int ageTo) {
+
+		public PatVacBrowsingModel(String vaccineTypeCode, String vaccineCode, LocalDateTime dateFrom, LocalDateTime dateTo, char sex, int ageFrom, int ageTo) {
 			try {
 				lPatVac = manager.getPatientVaccine(vaccineTypeCode, vaccineCode, dateFrom, dateTo, sex, ageFrom, ageTo);
 			} catch (OHServiceException e) {
@@ -821,8 +754,8 @@ public class PatVacBrowser extends ModalJFrame {
 		@Override
 		public int getColumnCount() {
 			int c = 0;
-			for (int i = 0; i < columnsVisible.length; i++) {
-				if (columnsVisible[i]) {
+			for (boolean b : columnsVisible) {
+				if (b) {
 					c++;
 				}
 			}
@@ -857,7 +790,7 @@ public class PatVacBrowser extends ModalJFrame {
 			if (c == -1) {
 				return patVac;
 			} else if (getNumber(c) == 0) {
-				return dateFormat.format(patVac.getVaccineDate().getTime());
+				return patVac.getVaccineDate().format(DATE_FORMATTER);
 			} else if (getNumber(c) == 1) {
 				return patVac.getPatient().getName();
 			} else if (getNumber(c) == 2) {
@@ -879,11 +812,8 @@ public class PatVacBrowser extends ModalJFrame {
 	
 	}
 
-	public void actionPerformed(ActionEvent actionEvent) {
-		sexSelect = actionEvent.getActionCommand();
-	}
-
 	private void updateRowCounter() {
 		rowCounter.setText(rowCounterText + lPatVac.size());
 	}
+
 }

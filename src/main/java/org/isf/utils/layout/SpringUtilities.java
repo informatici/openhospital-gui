@@ -95,7 +95,11 @@ public class SpringUtilities {
 				constraints.setY(y);
 				constraints.setHeight(height);
 			}
-			y = Spring.sum(y, Spring.sum(height, Spring.constant(yPad)));
+			if (r < rows - 1) {
+				y = Spring.sum(y, Spring.sum(height, Spring.constant(yPad)));
+			} else {
+				y = Spring.sum(y, height);
+			}
 		}
 
 		// Set the parent's size.

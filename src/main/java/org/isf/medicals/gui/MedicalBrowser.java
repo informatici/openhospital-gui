@@ -26,15 +26,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -73,13 +71,15 @@ import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.CustomJDateChooser;
-import org.isf.utils.jobjects.JFromDateToDateChooserDialog;
+import org.isf.utils.jobjects.GoodFromDateToDateChooser;
 import org.isf.utils.jobjects.JMonthYearChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 
 /**
  * This class shows a complete extended list of medical drugs,
@@ -123,13 +123,9 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 	}
 
-	private static final int DEFAULT_WIDTH = 500;
-	private static final int DEFAULT_HEIGHT = 400;
-	private int pfrmWidth;
-	private int pfrmHeight;
 	private int selectedrow;
 	private JComboBox pbox;
-	private ArrayList<Medical> pMedicals;
+	private List<Medical> pMedicals;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
@@ -166,13 +162,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	public MedicalBrowser() {
 		me = this;
 		setTitle(MessageBundle.getMessage("angal.medicals.pharmaceuticalbrowser.title"));
-		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		pfrmWidth = 940; //screensize.width / 2;
-		pfrmHeight = screensize.height / 2;
-		setBounds((screensize.width - pfrmWidth) / 2, screensize.height / 4, pfrmWidth,
-				pfrmHeight);
+		setPreferredSize(new Dimension(1220, 550));
+		setMinimumSize(new Dimension(940, 550));
 		setContentPane(getContentpane());
 		pack();
 		setVisible(true);
@@ -181,8 +172,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	}
 
 	private JPanel getContentpane() {
-		JPanel contentPane = new JPanel();
-		contentPane.setLayout(new BorderLayout());
+		JPanel contentPane = new JPanel(new BorderLayout());
 		contentPane.add(getScrollPane(), BorderLayout.CENTER);
 		contentPane.add(getJButtonPanel(), BorderLayout.SOUTH);
 		return contentPane;
@@ -215,7 +205,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 	}
 
 	private JPanel getJButtonPanel() {
-		JPanel buttonPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new WrapLayout());
 		buttonPanel.add(new JLabel(MessageBundle.getMessage("angal.medicals.selecttype")));
 		buttonPanel.add(getComboBoxMedicalType());
 		buttonPanel.add(getSearchBox());
@@ -308,7 +298,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		buttonStock.setMnemonic(MessageBundle.getMnemonic("angal.medicals.stock.btn.key"));
 		buttonStock.addActionListener(actionEvent -> {
 
-			ArrayList<String> dateOptions = new ArrayList<>();
+			List<String> dateOptions = new ArrayList<>();
 			dateOptions.add(MessageBundle.getMessage("angal.medicals.today"));
 			dateOptions.add(MessageBundle.getMessage("angal.common.date.txt"));
 
@@ -323,7 +313,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				return;
 			}
 
-			ArrayList<String> lotOptions = new ArrayList<>();
+			List<String> lotOptions = new ArrayList<>();
 			lotOptions.add(MessageBundle.getMessage("angal.medicals.onlyquantity"));
 			lotOptions.add(MessageBundle.getMessage("angal.medicals.withlot"));
 
@@ -334,7 +324,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 					"angal.medicals.pleaseselectareport.msg");
 
 			/* Getting Report parameters */
-			String sortBy = null;
+			String sortBy;
 			String groupBy = null;
 			String filter = "%" + searchString.getText() + "%";
 			if (pbox.getSelectedItem() instanceof MedicalType) {
@@ -392,8 +382,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 						icon);
 
 				if (r == JOptionPane.OK_OPTION) {
-					new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, false);
-					new GenericReportPharmaceuticalStock(dateChooser.getDate(), report, filter, groupBy, sortBy, true);
+					new GenericReportPharmaceuticalStock(dateChooser.getLocalDateTime(), report, filter, groupBy, sortBy, false);
+					new GenericReportPharmaceuticalStock(dateChooser.getLocalDateTime(), report, filter, groupBy, sortBy, true);
 				}
 			}
 		});
@@ -411,17 +401,18 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				Medical medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
 
 				// Select Dates
-				JFromDateToDateChooserDialog dataRange = new JFromDateToDateChooserDialog(MedicalBrowser.this);
+				GoodFromDateToDateChooser dataRange = new GoodFromDateToDateChooser(MedicalBrowser.this);
 				dataRange.setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
 				dataRange.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dataRange.setVisible(true);
 
-				Date dateFrom = dataRange.getDateFrom();
-				Date dateTo = dataRange.getDateTo();
+				LocalDate dateFrom = dataRange.getDateFrom();
+				LocalDate dateTo = dataRange.getDateTo();
 				boolean toExcel = dataRange.isExcel();
 
 				if (!dataRange.isCancel()) {
-					new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom, dateTo, medical, null, toExcel);
+					new GenericReportPharmaceuticalStockCard("ProductLedger", dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX), medical,
+							null, toExcel);
 				}
 			}
 		});
@@ -449,7 +440,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				} catch (IOException exc) {
 					JOptionPane.showMessageDialog(MedicalBrowser.this,
 							exc.getMessage(),
-							MessageBundle.getMessage("angal.hospital"),
+							MessageBundle.getMessage("angal.messagedialog.error.title"),
 							JOptionPane.PLAIN_MESSAGE);
 					LOGGER.error("Export to excel error : {}", exc.getMessage());
 				}
@@ -532,7 +523,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		if (pbox == null) {
 			pbox = new JComboBox();
 			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
-			ArrayList<MedicalType> type;
+			List<MedicalType> type;
 			try {
 				type = medicalTypeManager.getMedicalType();
 				for (MedicalType elem : type) {
@@ -558,7 +549,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 	protected void launchExpiringReport() {
 
-		ArrayList<String> options = new ArrayList<>();
+		List<String> options = new ArrayList<>();
 		options.add(MessageBundle.getMessage("angal.medicals.today"));
 		options.add(MessageBundle.getMessage("angal.medicals.thismonth"));
 		options.add(MessageBundle.getMessage("angal.medicals.nextmonth"));
@@ -577,41 +568,40 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			return;
 		}
 
-		GregorianCalendar from = new GregorianCalendar();
-		GregorianCalendar to = new GregorianCalendar();
-		to.setTime(from.getTime());
+		String from = null;
+		String to = null;
 
 		int i = 0;
 
 		if (options.indexOf(option) == i) {
-			//today, nothing to change
-			//to.setTime(from.getTime());
+			from = TimeTools.formatDateTimeReport(LocalDate.now());
+			to = from;
 		}
 		if (options.indexOf(option) == ++i) {
 			//this month
-			from.set(Calendar.DAY_OF_MONTH, 1);
-			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
+			LocalDate gc = getFromDate();
+			from = TimeTools.formatDateTimeReport(gc);
+
+			LocalDate toDate = getToDatePlusMonth(0);
+			to = TimeTools.formatDateTimeReport(toDate);
 		}
 		if (options.indexOf(option) == ++i) {
-			from.set(Calendar.DAY_OF_MONTH, 1);
+			from = TimeTools.formatDateTimeReport(getFromDate());
 			//next month
-			to.add(Calendar.MONTH, 1);
-			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
+			to = TimeTools.formatDateTimeReport(getToDatePlusMonth(1));
 		}
 		if (options.indexOf(option) == ++i) {
-			from.set(Calendar.DAY_OF_MONTH, 1);
+			from = TimeTools.formatDateTimeReport(getFromDate());
 			//next two month
-			to.add(Calendar.MONTH, 2);
-			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
+			to = TimeTools.formatDateTimeReport(getToDatePlusMonth(2));
 		}
 		if (options.indexOf(option) == ++i) {
-			from.set(Calendar.DAY_OF_MONTH, 1);
+			from = TimeTools.formatDateTimeReport(getFromDate());
 			//next three month
-			to.add(Calendar.MONTH, 3);
-			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
+			to = TimeTools.formatDateTimeReport(getToDatePlusMonth(3));
 		}
 		if (options.indexOf(option) == ++i) {
-			GregorianCalendar monthYear;
+			LocalDate monthYear;
 			icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 			JMonthYearChooser monthYearChooser = new JMonthYearChooser();
 			int r = JOptionPane.showConfirmDialog(MedicalBrowser.this,
@@ -622,30 +612,43 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 					icon);
 
 			if (r == JOptionPane.OK_OPTION) {
-				monthYear = monthYearChooser.getDate();
+				monthYear = monthYearChooser.getLocalDate();
 			} else {
 				return;
 			}
 
-			from.set(Calendar.DAY_OF_MONTH, 1);
-			//other month
-			to.set(Calendar.MONTH, monthYear.get(Calendar.MONTH));
-			to.set(Calendar.YEAR, monthYear.get(Calendar.YEAR));
-			to.set(Calendar.DAY_OF_MONTH, to.getActualMaximum(Calendar.DAY_OF_MONTH));
+			LocalDate fromDate = getFromDate();
+			from = TimeTools.formatDateTimeReport(fromDate);
+
+			LocalDate toDate = LocalDate.of(
+					monthYear.getYear(),
+					monthYear.getMonth(),
+					monthYear.getMonth().maxLength()
+			);
+			to = TimeTools.formatDateTimeReport(toDate);
 		}
 		new GenericReportFromDateToDate(
-				TimeTools.formatDateTime(from, "dd/MM/yyyy"),
-				TimeTools.formatDateTime(to, "dd/MM/yyyy"),
+				from,
+				to,
 				"PharmaceuticalExpiration",
 				MessageBundle.getMessage("angal.medicals.expiringreport"),
 				false);
+	}
+
+	private LocalDate getToDatePlusMonth(int monthsToMove) {
+		LocalDate plusMonth = LocalDate.now().plusMonths(monthsToMove);
+		return plusMonth.withDayOfMonth(plusMonth.lengthOfMonth());
+	}
+
+	private LocalDate getFromDate() {
+		return LocalDate.now().withDayOfMonth(1);
 	}
 
 	class MedicalBrowsingModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
 
-		ArrayList<Medical> medicalList = new ArrayList<>();
+		List<Medical> medicalList = new ArrayList<>();
 
 		public MedicalBrowsingModel(String key, boolean isType) {
 			if (isType) {
@@ -664,7 +667,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 						String[] tokens = s.split(" ");
 
 						if (!s.equals("")) {
-							String description = med.getProd_code() + med.getDescription();
+							String description = med.getProdCode() + med.getDescription();
 							int a = 0;
 							for (String value : tokens) {
 								String token = value.toLowerCase();
@@ -742,7 +745,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			} else if (c == 0) {
 				return med.getType().getDescription();
 			} else if (c == 1) {
-				return med.getProd_code();
+				return med.getProdCode();
 			} else if (c == 2) {
 				return med.getDescription();
 			} else if (c == 3) {
@@ -752,12 +755,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			} else if (c == 5) {
 				return minQuantity;
 			} else if (c == 6) {
-				//if (actualQty<=minQuantity)return true;
-				if (actualQty == 0) {
-					return true;
-				} else {
-					return false;
-				}
+				return actualQty == 0;
 			}
 			return null;
 		}

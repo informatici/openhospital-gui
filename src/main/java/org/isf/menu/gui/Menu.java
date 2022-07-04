@@ -53,7 +53,7 @@ public class Menu {
 		checkOHVersion();
 		checkJavaVersion();
 		JFrame.setDefaultLookAndFeelDecorated(false);
-		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "Splash.jpg", null, 3000);
+		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "splash.png", null, 3000);
 		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
 		Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQueue);
 	}
@@ -104,7 +104,13 @@ public class Menu {
 	}
 
 	public static void main(String[] args) {
-		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		ApplicationContext context = null;
+		try {
+			context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		} catch (Exception e) {
+			LOGGER.error("Fatal: fail to load application context. {}", e.getMessage(), e);
+			System.exit(1);
+		}
 		Context.setApplicationContext(context);
 		javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI());
 	}

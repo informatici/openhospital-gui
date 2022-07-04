@@ -21,6 +21,8 @@
  */
 package org.isf.operation.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -34,8 +36,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,7 +46,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
@@ -98,8 +97,7 @@ public class OperationRowEdit extends JPanel {
 
 			private static final long serialVersionUID = 1L;
 		};
-		for (Iterator<OperationList> iterator = operationRowListener.iterator(); iterator.hasNext(); ) {
-			OperationList opelist = (OperationList) iterator.next();
+		for (OperationList opelist : operationRowListener) {
 			opelist.operationRowInserted(event);
 		}
 	}
@@ -109,39 +107,36 @@ public class OperationRowEdit extends JPanel {
 
 			private static final long serialVersionUID = 1L;
 		};
-		for (Iterator<OperationList> iterator = operationRowListener.iterator(); iterator.hasNext(); ) {
-			OperationList opelist = (OperationList) iterator.next();
+		for (OperationList opelist : operationRowListener) {
 			opelist.operationRowEdited(event);
 		}
 	}
 
-	private VoFloatTextField TransTextField;
+	private VoFloatTextField transTextField;
 
-	private JTextArea remarkstextArea;
+	private JTextArea remarksTextArea;
 	private JPanel panelButtons;
 	private JLabel lblTransUnite;
-	private JComboBox resultComboBox;
+	private JComboBox<String> resultComboBox;
 	private JLabel lblResultat;
 	private JLabel lblDate;
-	private JComboBox OpecomboBox;
+	private JComboBox<Operation> opeComboBox;
 	private JLabel lblOperation;
 
 	private CustomJDateChooser jCalendarDate;
-	private GregorianCalendar date;
 
 	private OperationRow opeRow;
-	private JTextField DateTextField;
 	private JButton btnCancel;
 	private JDialog myParent;
 	OperationBrowserManager ope;
 	OperationRowBrowserManager opeManageRow;
 	private Opd myOpd;
 	private JSeparator separator;
-	private JSeparator separator_1;
+	private JSeparator separator1;
 	private JLabel lblNewLabel;
 	private JLabel titleLabel;
 
-	private ArrayList<String> operationResults = ope.getResultDescriptionList();
+	private List<String> operationResults;
 
 	
 	public OperationRowEdit(OperationRow opRow) {
@@ -154,157 +149,150 @@ public class OperationRowEdit extends JPanel {
 		JPanel panelHeader = new JPanel();
 		panelHeader.setBorder(new EmptyBorder(7, 0, 0, 0));
 		add(panelHeader, BorderLayout.NORTH);
-		GridBagLayout gbl_panelHeader = new GridBagLayout();
-		gbl_panelHeader.columnWidths = new int[]{55, 267, 0};
-		gbl_panelHeader.rowHeights = new int[]{14, 0};
-		gbl_panelHeader.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-		gbl_panelHeader.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-		panelHeader.setLayout(gbl_panelHeader);
+		GridBagLayout gblPanelHeader = new GridBagLayout();
+		gblPanelHeader.columnWidths = new int[]{55, 267, 0};
+		gblPanelHeader.rowHeights = new int[]{14, 0};
+		gblPanelHeader.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gblPanelHeader.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panelHeader.setLayout(gblPanelHeader);
 		
 		titleLabel = new JLabel(MessageBundle.getMessage("angal.operationrowlist.addupdate"));
 		titleLabel.setFont(new Font("Tahoma", Font.PLAIN, 15)); //$NON-NLS-1$
-		GridBagConstraints gbc_titleLabel = new GridBagConstraints();
-		gbc_titleLabel.anchor = GridBagConstraints.NORTH;
-		gbc_titleLabel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_titleLabel.gridx = 1;
-		gbc_titleLabel.gridy = 0;
-		panelHeader.add(titleLabel, gbc_titleLabel);
+		GridBagConstraints gbcTitleLabel = new GridBagConstraints();
+		gbcTitleLabel.anchor = GridBagConstraints.NORTH;
+		gbcTitleLabel.fill = GridBagConstraints.HORIZONTAL;
+		gbcTitleLabel.gridx = 1;
+		gbcTitleLabel.gridy = 0;
+		panelHeader.add(titleLabel, gbcTitleLabel);
 		
 		JPanel panelBody = new JPanel();
 		panelBody.setBorder(new EmptyBorder(3, 15, 3, 15));
 		panelBody.setMaximumSize(new Dimension(32767, 30000));
 		add(panelBody, BorderLayout.CENTER);
-		GridBagLayout gbl_panelBody = new GridBagLayout();
-		gbl_panelBody.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
-		gbl_panelBody.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panelBody.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_panelBody.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-		panelBody.setLayout(gbl_panelBody);
+		GridBagLayout gblPanelBody = new GridBagLayout();
+		gblPanelBody.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
+		gblPanelBody.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gblPanelBody.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gblPanelBody.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		panelBody.setLayout(gblPanelBody);
 		
 		separator = new JSeparator();
 		separator.setBackground(Color.GRAY);
-		GridBagConstraints gbc_separator = new GridBagConstraints();
-		gbc_separator.gridwidth = 5;
-		gbc_separator.fill = GridBagConstraints.HORIZONTAL;
-		gbc_separator.insets = new Insets(0, 0, 5, 0);
-		gbc_separator.gridx = 0;
-		gbc_separator.gridy = 0;
-		panelBody.add(separator, gbc_separator);
+		GridBagConstraints gbcSeparator = new GridBagConstraints();
+		gbcSeparator.gridwidth = 5;
+		gbcSeparator.fill = GridBagConstraints.HORIZONTAL;
+		gbcSeparator.insets = new Insets(0, 0, 5, 0);
+		gbcSeparator.gridx = 0;
+		gbcSeparator.gridy = 0;
+		panelBody.add(separator, gbcSeparator);
 		
 		lblNewLabel = new JLabel("    "); //$NON-NLS-1$
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.gridx = 1;
-		gbc_lblNewLabel.gridy = 1;
-		panelBody.add(lblNewLabel, gbc_lblNewLabel);
+		GridBagConstraints gbcLblNewLabel = new GridBagConstraints();
+		gbcLblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbcLblNewLabel.gridx = 1;
+		gbcLblNewLabel.gridy = 1;
+		panelBody.add(lblNewLabel, gbcLblNewLabel);
 		
 		lblOperation = new JLabel(MessageBundle.getMessage("angal.operationrowedit.operation")); //$NON-NLS-1$
 		lblOperation.setBorder(new EmptyBorder(0, 0, 0, 4));
 		lblOperation.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_lblOperation = new GridBagConstraints();
-		gbc_lblOperation.insets = new Insets(0, 0, 5, 5);
-		gbc_lblOperation.gridx = 1;
-		gbc_lblOperation.gridy = 2;
-		panelBody.add(lblOperation, gbc_lblOperation);
+		GridBagConstraints gbcLblOperation = new GridBagConstraints();
+		gbcLblOperation.insets = new Insets(0, 0, 5, 5);
+		gbcLblOperation.gridx = 1;
+		gbcLblOperation.gridy = 2;
+		panelBody.add(lblOperation, gbcLblOperation);
 		
-		//OpecomboBox = new JComboBox();
-		OpecomboBox = getOperationsBox();
-		GridBagConstraints gbc_OpecomboBox = new GridBagConstraints();
-		gbc_OpecomboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_OpecomboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_OpecomboBox.gridx = 4;
-		gbc_OpecomboBox.gridy = 2;
-		panelBody.add(OpecomboBox, gbc_OpecomboBox);
-		
-		DateTextField = new JTextField();
-		
+		opeComboBox = getOperationsBox();
+		GridBagConstraints gbcOpecomboBox = new GridBagConstraints();
+		gbcOpecomboBox.insets = new Insets(0, 0, 5, 0);
+		gbcOpecomboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbcOpecomboBox.gridx = 4;
+		gbcOpecomboBox.gridy = 2;
+		panelBody.add(opeComboBox, gbcOpecomboBox);
 		
 		lblDate = new JLabel(MessageBundle.getMessage("angal.operationrowlist.date")); //$NON-NLS-1$
 		lblDate.setBorder(new EmptyBorder(0, 0, 0, 4));
 		lblDate.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_lblDate = new GridBagConstraints();
-		gbc_lblDate.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDate.gridx = 1;
-		gbc_lblDate.gridy = 3;
-		panelBody.add(lblDate, gbc_lblDate);
-		GridBagConstraints gbc_DateTextField = new GridBagConstraints();
-		gbc_DateTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_DateTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_DateTextField.gridx = 4;
-		gbc_DateTextField.gridy = 3;
-		panelBody.add(this.getJCalendarDate(), gbc_DateTextField);
-		//panelBody.add(DateTextField, gbc_DateTextField);
-		DateTextField.setColumns(10);
+		GridBagConstraints gbcLblDate = new GridBagConstraints();
+		gbcLblDate.insets = new Insets(0, 0, 5, 5);
+		gbcLblDate.gridx = 1;
+		gbcLblDate.gridy = 3;
+		panelBody.add(lblDate, gbcLblDate);
+		GridBagConstraints gbcCalendarDate = new GridBagConstraints();
+		gbcCalendarDate.insets = new Insets(0, 0, 5, 0);
+		gbcCalendarDate.fill = GridBagConstraints.HORIZONTAL;
+		gbcCalendarDate.gridx = 4;
+		gbcCalendarDate.gridy = 3;
+		panelBody.add(this.getJCalendarDate(), gbcCalendarDate);
 		
 		resultComboBox = getComboResultBox();
 		
 		lblResultat = new JLabel(MessageBundle.getMessage("angal.common.result.txt"));
 		lblResultat.setBorder(new EmptyBorder(0, 0, 0, 4));
 		lblResultat.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_lblResultat = new GridBagConstraints();
-		gbc_lblResultat.insets = new Insets(0, 0, 5, 5);
-		gbc_lblResultat.gridx = 1;
-		gbc_lblResultat.gridy = 4;
-		panelBody.add(lblResultat, gbc_lblResultat);
+		GridBagConstraints gbcLblResultat = new GridBagConstraints();
+		gbcLblResultat.insets = new Insets(0, 0, 5, 5);
+		gbcLblResultat.gridx = 1;
+		gbcLblResultat.gridy = 4;
+		panelBody.add(lblResultat, gbcLblResultat);
 		
-		GridBagConstraints gbc_ResultatcomboBox = new GridBagConstraints();
-		gbc_ResultatcomboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_ResultatcomboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_ResultatcomboBox.gridx = 4;
-		gbc_ResultatcomboBox.gridy = 4;
-		panelBody.add(resultComboBox, gbc_ResultatcomboBox);
+		GridBagConstraints gbcResultatComboBox = new GridBagConstraints();
+		gbcResultatComboBox.insets = new Insets(0, 0, 5, 0);
+		gbcResultatComboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbcResultatComboBox.gridx = 4;
+		gbcResultatComboBox.gridy = 4;
+		panelBody.add(resultComboBox, gbcResultatComboBox);
 		
 		lblTransUnite = new JLabel(MessageBundle.getMessage("angal.operationrowedit.unitetrans")); //$NON-NLS-1$
 		lblTransUnite.setBorder(new EmptyBorder(0, 0, 0, 4));
 		lblTransUnite.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_lblTransUnite = new GridBagConstraints();
-		gbc_lblTransUnite.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTransUnite.gridx = 1;
-		gbc_lblTransUnite.gridy = 5;
-		panelBody.add(lblTransUnite, gbc_lblTransUnite);
-		
-		//TransTextField = new JTextField();
-		TransTextField = new VoFloatTextField(0,100);
-		GridBagConstraints gbc_TransTextField = new GridBagConstraints();
-		gbc_TransTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_TransTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_TransTextField.gridx = 4;
-		gbc_TransTextField.gridy = 5;
-		panelBody.add(TransTextField, gbc_TransTextField);
-		TransTextField.setColumns(10);
-		
-		remarkstextArea = new JTextArea();
-		remarkstextArea.setTabSize(5);
+		GridBagConstraints gbcLblTransUnite = new GridBagConstraints();
+		gbcLblTransUnite.insets = new Insets(0, 0, 5, 5);
+		gbcLblTransUnite.gridx = 1;
+		gbcLblTransUnite.gridy = 5;
+		panelBody.add(lblTransUnite, gbcLblTransUnite);
+
+		transTextField = new VoFloatTextField(0, 100);
+		GridBagConstraints gbcTransTextField = new GridBagConstraints();
+		gbcTransTextField.insets = new Insets(0, 0, 5, 0);
+		gbcTransTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbcTransTextField.gridx = 4;
+		gbcTransTextField.gridy = 5;
+		panelBody.add(transTextField, gbcTransTextField);
+		transTextField.setColumns(10);
+
+		remarksTextArea = new JTextArea();
+		remarksTextArea.setTabSize(5);
 		if (this.opeRow != null) {
-			remarkstextArea.setText(opeRow.getRemarks());
+			remarksTextArea.setText(opeRow.getRemarks());
 		}
 		
 		JLabel remarksLabel = new JLabel(MessageBundle.getMessage("angal.operationrowedit.remark")); //$NON-NLS-1$
 		remarksLabel.setVerticalAlignment(SwingConstants.TOP);
 		remarksLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_remarksLabel = new GridBagConstraints();
-		gbc_remarksLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_remarksLabel.gridx = 1;
-		gbc_remarksLabel.gridy = 6;
-		panelBody.add(remarksLabel, gbc_remarksLabel);
-		GridBagConstraints gbc_remarkstextArea = new GridBagConstraints();
-		gbc_remarkstextArea.insets = new Insets(0, 0, 5, 0);
-		gbc_remarkstextArea.fill = GridBagConstraints.BOTH;
-		gbc_remarkstextArea.gridx = 4;
-		gbc_remarkstextArea.gridy = 6;
-		panelBody.add(remarkstextArea, gbc_remarkstextArea);
+		GridBagConstraints gbcRemarksLabel = new GridBagConstraints();
+		gbcRemarksLabel.insets = new Insets(0, 0, 5, 5);
+		gbcRemarksLabel.gridx = 1;
+		gbcRemarksLabel.gridy = 6;
+		panelBody.add(remarksLabel, gbcRemarksLabel);
+		GridBagConstraints gbcRemarksTextArea = new GridBagConstraints();
+		gbcRemarksTextArea.insets = new Insets(0, 0, 5, 0);
+		gbcRemarksTextArea.fill = GridBagConstraints.BOTH;
+		gbcRemarksTextArea.gridx = 4;
+		gbcRemarksTextArea.gridy = 6;
+		panelBody.add(remarksTextArea, gbcRemarksTextArea);
 		
-		separator_1 = new JSeparator();
-		separator_1.setBackground(Color.GRAY);
-		GridBagConstraints gbc_separator_1 = new GridBagConstraints();
-		gbc_separator_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_separator_1.insets = new Insets(0, 0, 0, 5);
-		gbc_separator_1.gridx = 0;
-		gbc_separator_1.gridy = 7;
-		panelBody.add(separator_1, gbc_separator_1);
+		separator1 = new JSeparator();
+		separator1.setBackground(Color.GRAY);
+		GridBagConstraints gbcSeparator1 = new GridBagConstraints();
+		gbcSeparator1.fill = GridBagConstraints.HORIZONTAL;
+		gbcSeparator1.insets = new Insets(0, 0, 0, 5);
+		gbcSeparator1.gridx = 0;
+		gbcSeparator1.gridy = 7;
+		panelBody.add(separator1, gbcSeparator1);
 
 		if (this.opeRow != null) {
-			TransTextField.setText(opeRow.getTransUnit() + ""); //$NON-NLS-1$
+			transTextField.setText(opeRow.getTransUnit() + "");
 		}
 		
 		panelButtons = new JPanel();
@@ -352,18 +340,17 @@ public class OperationRowEdit extends JPanel {
 		if (jCalendarDate == null) {
 			jCalendarDate = new CustomJDateChooser();
 			jCalendarDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarDate.setDateFormatString("dd/MM/yy"); //$NON-NLS-1$
+			jCalendarDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 			if (opeRow != null) {
-				jCalendarDate.setDate(this.opeRow.getOpDate().getTime());
+				jCalendarDate.setDate(this.opeRow.getOpDate());
 			}
 		}
 		return jCalendarDate;
 	}
 
-	private JComboBox getOperationsBox() {
-
-		JComboBox comboOpe = new JComboBox();
-		ArrayList<Operation> opeList = new ArrayList<>();
+	private JComboBox<Operation> getOperationsBox() {
+		JComboBox<Operation> comboOpe = new JComboBox<>();
+		List<Operation> opeList = new ArrayList<>();
 		try {
 			opeList = ope.getOperation();
 		} catch (OHServiceException ohServiceException) {
@@ -379,14 +366,12 @@ public class OperationRowEdit extends JPanel {
 				}
 			}
 			if (!found) {
-				//comboOpe.addItem("");
 				comboOpe.addItem(null);
 			}
 			for (org.isf.operation.model.Operation elem : opeList) {
 				comboOpe.addItem(elem);
 			}
 		} else {
-			//comboOpe.addItem("");
 			comboOpe.addItem(null);
 			for (org.isf.operation.model.Operation elem : opeList) {
 				comboOpe.addItem(elem);
@@ -396,8 +381,8 @@ public class OperationRowEdit extends JPanel {
 		return comboOpe;
 	}
 
-	private JComboBox getComboResultBox() {
-		JComboBox comboResult = new JComboBox();
+	private JComboBox<String> getComboResultBox() {
+		JComboBox<String> comboResult = new JComboBox<>();
 		for (String description : operationResults) {
 			comboResult.addItem(description);
 		}
@@ -411,41 +396,33 @@ public class OperationRowEdit extends JPanel {
 				}
 			}
 			if (!found) {
-				//comboOpe.addItem("");
 				comboResult.addItem(null);
 			}
 			for (String elem : operationResults) {
-
 				comboResult.addItem(elem);
 			}
 		}
-
 		return comboResult;
 	}
 	
 	/* **************  functions events ***** */
-	private void saveButtonMouseClicked(java.awt.event.MouseEvent mouseEvent) {
-		if ((this.jCalendarDate.getDate() == null) || (this.OpecomboBox.getSelectedItem() == null)) {
+	private void saveButtonMouseClicked(MouseEvent mouseEvent) {
+		if ((this.jCalendarDate.getDate() == null) || (this.opeComboBox.getSelectedItem() == null)) {
 			MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.warningdateope");
 		} else {
-			if (getMyOpd().getDate().after(this.jCalendarDate.getDate())) {
+			if (getMyOpd().getDate().isAfter(this.jCalendarDate.getLocalDateTime())) {
 				MessageDialog.error(OperationRowEdit.this, "angal.operationrowedit.warningdateafter");
 				return;
 			}
 			if (opeRow != null) {
 				OperationRow updateOpeRow = opeRow;
-				GregorianCalendar dateop = new GregorianCalendar();
-				dateop.setTime(jCalendarDate.getDate());
-				updateOpeRow.setOpDate(dateop);
-
-				String opResult = ope.getResultDescriptionKey((String) this.resultComboBox.getSelectedItem());
-				updateOpeRow.setOpResult(opResult);
-
-				updateOpeRow.setTransUnit(Float.parseFloat(TransTextField.getText()));
-				Operation op = (Operation) OpecomboBox.getSelectedItem();
+				updateOpeRow.setOpDate(jCalendarDate.getLocalDateTime());
+				updateOpeRow.setOpResult(resultComboBox.getSelectedItem().toString());
+				updateOpeRow.setTransUnit(Float.parseFloat(transTextField.getText()));
+				Operation op = (Operation) opeComboBox.getSelectedItem();
 				updateOpeRow.setOperation(op);
-				updateOpeRow.setRemarks(remarkstextArea.getText());
-				boolean result = false;
+				updateOpeRow.setRemarks(remarksTextArea.getText());
+				boolean result;
 				try {
 					result = opeManageRow.updateOperationRow(updateOpeRow);
 				} catch (OHServiceException e) {
@@ -461,20 +438,15 @@ public class OperationRowEdit extends JPanel {
 				}
 			} else {
 				OperationRow operationRow = new OperationRow();
-				GregorianCalendar dateop = new GregorianCalendar();
-				dateop.setTime(this.jCalendarDate.getDate());
-				operationRow.setOpDate(dateop);
-
-				String opResult = ope.getResultDescriptionKey((String) this.resultComboBox.getSelectedItem());
-				operationRow.setOpResult(opResult);
-
-				operationRow.setTransUnit(Float.parseFloat(this.TransTextField.getText()));
-				Operation op = (Operation) this.OpecomboBox.getSelectedItem();
+				operationRow.setOpDate(jCalendarDate.getLocalDateTime());
+				operationRow.setOpResult(this.resultComboBox.getSelectedItem().toString());
+				operationRow.setTransUnit(Float.parseFloat(this.transTextField.getText()));
+				Operation op = (Operation) this.opeComboBox.getSelectedItem();
 				operationRow.setOperation(op);
 				operationRow.setOpd(this.getMyOpd());
 				operationRow.setPrescriber(MainMenu.getUser().getUserName());
-				operationRow.setRemarks(remarkstextArea.getText());
-				boolean result = false;
+				operationRow.setRemarks(remarksTextArea.getText());
+				boolean result;
 				try {
 					result = opeManageRow.newOperationRow(operationRow);
 				} catch (OHServiceException e) {
@@ -491,10 +463,10 @@ public class OperationRowEdit extends JPanel {
 			}
 		}
 	}
-	
-	private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {
-        this.getMyParent().dispose();
-    }
+
+	private void cancelButtonMouseClicked(MouseEvent mouseEvent) {
+		this.getMyParent().dispose();
+	}
 
 	public Opd getMyOpd() {
 		return myOpd;
@@ -511,5 +483,5 @@ public class OperationRowEdit extends JPanel {
 	public void setTitleLabel(JLabel titleLabel) {
 		this.titleLabel = titleLabel;
 	}
-	
+
 }

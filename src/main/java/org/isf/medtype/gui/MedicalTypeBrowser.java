@@ -23,7 +23,7 @@ package org.isf.medtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -48,10 +48,10 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListener{
+public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListener {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<MedicalType> pMedicalType;
+	private List<MedicalType> pMedicalType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
@@ -108,14 +108,14 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 		}
 		return jButtonPanel;
 	}
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				medicalType = new MedicalType("","");
-				MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame,medicalType, true);
+				medicalType = new MedicalType("", "");
+				MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame, medicalType, true);
 				newrecord.addMedicalTypeListener(MedicalTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -138,7 +138,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					medicalType = (MedicalType) (model.getValueAt(selectedrow, -1));
-					MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame,medicalType, false);
+					MedicalTypeBrowserEdit newrecord = new MedicalTypeBrowserEdit(myFrame, medicalType, false);
 					newrecord.addMedicalTypeListener(MedicalTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -190,8 +190,8 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new MedicalTypeBrowserModel();
 			jTable = new JTable(model);

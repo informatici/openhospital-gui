@@ -24,8 +24,11 @@ log4j.appender.DB.password=DBPASS
 log4j.appender.DB.sql=INSERT INTO LOG (LOG_TYPE, LOG_CLASS, LOG_METHOD, LOG_TIME, LOG_MESS, LOG_USER) VALUES (1, '%C', '%M', '%d{yyyy-MM-dd HH:mm:ss}', LEFT('%m', 1024), '%X{OHUser}')
 log4j.appender.DB.layout=org.apache.log4j.PatternLayout
 
+# Security settings - see log4j CVE-2021-44228
+log4j.formatMsgNoLookups=true 
+
 # Assigning appenders to packages (application loggers)
-log4j.category.org.isf=DEBUG_LEVEL,RollingFile
+log4j.category.org.isf=LOG_LEVEL,RollingFile
 log4j.additivity.org.isf = false
 
 # Assigning appenders to Hibernate packages (DB loggers)

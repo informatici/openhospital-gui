@@ -24,9 +24,9 @@ package org.isf.menu.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -68,24 +68,29 @@ public class UserEdit extends JDialog {
         userListeners.remove(UserListener.class, listener);
     }
 
-    private void fireUserInserted(User aUser) {
-        AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireUserInserted(User aUser) {
+		AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = userListeners.getListeners(UserListener.class);
-	    for (EventListener listener : listeners)
-		    ((UserListener) listener).userInserted(event);
-    }
-    private void fireUserUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = userListeners.getListeners(UserListener.class);
+		for (EventListener listener : listeners) {
+			((UserListener) listener).userInserted(event);
+		}
+	}
 
-		private static final long serialVersionUID = 1L;};
+	private void fireUserUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = userListeners.getListeners(UserListener.class);
-	    for (EventListener listener : listeners)
-		    ((UserListener) listener).userUpdated(event);
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = userListeners.getListeners(UserListener.class);
+		for (EventListener listener : listeners) {
+			((UserListener) listener).userUpdated(event);
+		}
+	}
 
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -136,8 +141,8 @@ public class UserEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -326,25 +331,26 @@ public class UserEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox();
 			if (insert) {
-                ArrayList<UserGroup> group = null;
-                try {
-                    group = manager.getUserGroup();
-                } catch (OHServiceException e) {
-                    OHServiceExceptionUtil.showMessages(e);
-                }
-                if (group != null) {
-                    for (UserGroup elem : group) {
-                        typeComboBox.addItem(elem);
-                    }
-                }
+				List<UserGroup> group = null;
+				try {
+					group = manager.getUserGroup();
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+				}
+				if (group != null) {
+					for (UserGroup elem : group) {
+						typeComboBox.addItem(elem);
+					}
+				}
 			} else {
 				typeComboBox.addItem(user.getUserGroupName());
 				typeComboBox.setEnabled(false);
 			}
 			Dimension d = typeComboBox.getPreferredSize();
-			typeComboBox.setPreferredSize(new Dimension(150,d.height));
+			typeComboBox.setPreferredSize(new Dimension(150, d.height));
 
 		}
 		return typeComboBox;
 	}
+
 }

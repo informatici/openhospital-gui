@@ -25,7 +25,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -88,7 +88,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	private int selectedrow;
 	private JLabel selectlabel;
 	private JComboBox pbox;
-	private ArrayList<Disease> pDisease;
+	private List<Disease> pDisease;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
@@ -125,7 +125,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		
 		pbox = new JComboBox();
 		pbox.addItem(new DiseaseType("0", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
-		ArrayList<DiseaseType> type = null;
+		List<DiseaseType> type = null;
 		try {
 			type = disTypeManager.getDiseaseType();
 		} catch(OHServiceException ohServiceException) {
@@ -166,7 +166,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				disease = (Disease) (((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				disease = (Disease) model.getValueAt(selectedrow, -1);
 				DiseaseEdit editrecord = new DiseaseEdit(myFrame, disease, false);
 				editrecord.addDiseaseListener(DiseaseBrowser.this);
 				editrecord.setVisible(true);
@@ -181,7 +181,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				MessageDialog.error(DiseaseBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.getSelectedRow();
-				disease = (Disease) (((DiseaseBrowserModel) model).getValueAt(selectedrow, -1));
+				disease = (Disease) model.getValueAt(selectedrow, -1);
 				int answer = MessageDialog.yesNo(DiseaseBrowser.this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
 				try {
 					if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))) {

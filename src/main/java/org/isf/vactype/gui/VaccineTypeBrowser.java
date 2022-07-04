@@ -23,7 +23,7 @@ package org.isf.vactype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -55,7 +55,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 
 	private static final long serialVersionUID = 1L;
 
-	private ArrayList<VaccineType> pVaccineType;
+	private List<VaccineType> pVaccineType;
 	
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
@@ -115,15 +115,14 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		}
 		return jButtonPanel;
 	}
-	
-	
+
 	private JButton getJNewButton() {
 		if (jNewButton == null) {
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				vaccineType = new VaccineType("","");
-				VaccineTypeEdit newrecord = new VaccineTypeEdit(myFrame,vaccineType, true);
+				vaccineType = new VaccineType("", "");
+				VaccineTypeEdit newrecord = new VaccineTypeEdit(myFrame, vaccineType, true);
 				newrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -146,7 +145,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					vaccineType = (VaccineType) (model.getValueAt(selectedrow, -1));
-					VaccineTypeEdit editrecord = new VaccineTypeEdit(myFrame,vaccineType, false);
+					VaccineTypeEdit editrecord = new VaccineTypeEdit(myFrame, vaccineType, false);
 					editrecord.addVaccineTypeListener(VaccineTypeBrowser.this);
 					editrecord.setVisible(true);
 				}
@@ -198,8 +197,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		}
 		return jDeleteButton;
 	}
-	
-	public JTable getJTable() {
+
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new VaccineTypeBrowserModel();
 			jTable = new JTable(model);

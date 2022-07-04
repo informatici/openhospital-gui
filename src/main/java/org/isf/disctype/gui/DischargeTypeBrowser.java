@@ -23,7 +23,7 @@ package org.isf.disctype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -48,10 +48,10 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia
  */
-public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeListener{
+public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeListener {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<DischargeType> pDischargeType;
+	private List<DischargeType> pDischargeType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
@@ -115,8 +115,8 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				DischargeType mdsr = new DischargeType("","");
-				DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,mdsr, true);
+				DischargeType mdsr = new DischargeType("", "");
+				DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame, mdsr, true);
 				newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -139,7 +139,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					dischargeType = (DischargeType) (model.getValueAt(selectedrow, -1));
-					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame,dischargeType, false);
+					DischargeTypeBrowserEdit newrecord = new DischargeTypeBrowserEdit(myFrame, dischargeType, false);
 					newrecord.addDischargeTypeListener(DischargeTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -199,7 +199,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DischargeTypeBrowserModel();
 			jTable = new JTable(model);

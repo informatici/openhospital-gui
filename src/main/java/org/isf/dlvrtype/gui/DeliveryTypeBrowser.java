@@ -23,7 +23,7 @@ package org.isf.dlvrtype.gui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -47,15 +47,15 @@ import org.isf.utils.jobjects.ModalJFrame;
  *
  * @author Furlanetto, Zoia, Finotto
  */
-public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeListener{
+public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeListener {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<DeliveryType> pDeliveryType;
+	private List<DeliveryType> pDeliveryType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.description.txt").toUpperCase()
 	};
-	private int[] pColumnWidth = {80, 200};
+	private int[] pColumnWidth = { 80, 200 };
 
 	private JPanel jContainPanel = null;
 	private JPanel jButtonPanel = null;
@@ -114,8 +114,8 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 			jNewButton = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			jNewButton.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			jNewButton.addActionListener(actionEvent -> {
-				deliveryType = new DeliveryType("","");
-				DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, true);
+				deliveryType = new DeliveryType("", "");
+				DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame, deliveryType, true);
 				newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
 				newrecord.setVisible(true);
 			});
@@ -138,7 +138,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 				} else {
 					selectedrow = jTable.getSelectedRow();
 					deliveryType = (DeliveryType) (model.getValueAt(selectedrow, -1));
-					DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame,deliveryType, false);
+					DeliveryTypeBrowserEdit newrecord = new DeliveryTypeBrowserEdit(myFrame, deliveryType, false);
 					newrecord.addDeliveryTypeListener(DeliveryTypeBrowser.this);
 					newrecord.setVisible(true);
 				}
@@ -191,7 +191,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 		return jDeleteButton;
 	}
 	
-	public JTable getJTable() {
+	private JTable getJTable() {
 		if (jTable == null) {
 			model = new DeliveryTypeBrowserModel();
 			jTable = new JTable(model);

@@ -74,4 +74,5 @@ public final class ImageUtil {
 			throw new RuntimeException("Unable to convert image to byte array", e);
 		}
 	}
+
 }

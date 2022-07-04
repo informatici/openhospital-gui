@@ -116,8 +116,8 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private boolean[] patColumnsResizable = { false, true };
 
 	PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-	ArrayList<Patient> patArray = new ArrayList<>();
-	ArrayList<Patient> patSearch = new ArrayList<>();
+	List<Patient> patArray = new ArrayList<>();
+	List<Patient> patSearch = new ArrayList<>();
 	private String lastKey = "";
 		
 	public SelectPatient(JFrame owner, Patient pat) {
@@ -298,31 +298,31 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 	private JTextField getJTextFieldSearchPatient() {
 		if (jTextFieldSearchPatient == null) {
-			jTextFieldSearchPatient = new VoLimitedTextField(100,20);
+			jTextFieldSearchPatient = new VoLimitedTextField(100, 20);
 			jTextFieldSearchPatient.setText("");
 			jTextFieldSearchPatient.selectAll();
 			if (GeneralData.ENHANCEDSEARCH) {
 				jTextFieldSearchPatient.addKeyListener(new KeyListener() {
-	
+
 					@Override
 					public void keyPressed(KeyEvent e) {
 						int key = e.getKeyCode();
-					     if (key == KeyEvent.VK_ENTER) {
-					    	 jSearchButton.doClick();
-					     }
+						if (key == KeyEvent.VK_ENTER) {
+							jSearchButton.doClick();
+						}
 					}
-	
+
 					@Override
 					public void keyReleased(KeyEvent e) {
 					}
-	
+
 					@Override
 					public void keyTyped(KeyEvent e) {
 					}
 				});
 			} else {
 				jTextFieldSearchPatient.addKeyListener(new KeyListener() {
-					
+
 					@Override
 					public void keyTyped(KeyEvent e) {
 						lastKey = "";
@@ -332,11 +332,11 @@ public class SelectPatient extends JDialog implements PatientListener {
 						}
 						filterPatient();
 					}
-	
+
 					@Override
 					public void keyPressed(KeyEvent e) {
 					}
-	
+
 					@Override
 					public void keyReleased(KeyEvent e) {
 					}
@@ -389,8 +389,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	
 	private JLabel getJLabelSearch() {
 		if (jLabelSearch == null) {
-			jLabelSearch = new JLabel();
-			jLabelSearch.setText(MessageBundle.getMessage("angal.patient.searchpatient"));
+			jLabelSearch = new JLabel(MessageBundle.getMessage("angal.patient.searchpatient"));
 		}
 		return jLabelSearch;
 	}
@@ -504,7 +503,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		jPanelCenter.validate();
 		jPanelCenter.repaint();
 	}
-	
+
 	private JPanel getJPanelCenter() {
 		if (jPanelCenter == null) {
 			jPanelCenter = new JPanel();
@@ -518,9 +517,9 @@ public class SelectPatient extends JDialog implements PatientListener {
 						jTablePatient.addRowSelectionInterval(i, i);
 						int j = 0;
 						if (i > 10) {
-							j = i-10; //to center the selected row
+							j = i - 10; //to center the selected row
 						}
-						jTablePatient.scrollRectToVisible(jTablePatient.getCellRect(j,i,true));
+						jTablePatient.scrollRectToVisible(jTablePatient.getCellRect(j, i, true));
 						break;
 					}
 				}
@@ -640,20 +639,20 @@ public class SelectPatient extends JDialog implements PatientListener {
 			return false;
 		}
 	}
-	
-	class CenterTableCellRenderer extends DefaultTableCellRenderer {  
+
+	class CenterTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-				boolean hasFocus, int row, int column) {  
-		   
-			Component cell=super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
+				boolean hasFocus, int row, int column) {
+
+			Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			cell.setForeground(Color.BLACK);
-			setHorizontalAlignment(CENTER);	   
+			setHorizontalAlignment(CENTER);
 			return cell;
-	   }
+		}
 	}
 
 	public void setButtonNew(JButton buttonNew) {
