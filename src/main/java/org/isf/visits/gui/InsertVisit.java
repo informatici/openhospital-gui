@@ -88,10 +88,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	private JPanel servicePanel;
 	private JTextField serviceField;
 	private JPanel durationPanel;
-	private JTextField durationField;
 	private JPanel dateViPanel;
-	private JLabel dateAdm;
-	private JButton admButton;
 	private JButton jButtonPickPatient;
 	private JTextField patientTextField;
 	private Patient patientSelected;
