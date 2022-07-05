@@ -21,6 +21,8 @@
  */
 package org.isf.medicals.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -31,7 +33,9 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -574,31 +578,31 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		int i = 0;
 
 		if (options.indexOf(option) == i) {
-			from = TimeTools.formatDateTimeReport(LocalDate.now());
+			from = TimeTools.formatDateTime(LocalDateTime.now(), DATE_FORMAT_DD_MM_YYYY);
 			to = from;
 		}
 		if (options.indexOf(option) == ++i) {
 			//this month
 			LocalDate gc = getFromDate();
-			from = TimeTools.formatDateTimeReport(gc);
+			from = TimeTools.formatDateTime(gc.atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
 
 			LocalDate toDate = getToDatePlusMonth(0);
-			to = TimeTools.formatDateTimeReport(toDate);
+			to = TimeTools.formatDateTime(toDate.atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 		}
 		if (options.indexOf(option) == ++i) {
-			from = TimeTools.formatDateTimeReport(getFromDate());
+			from = TimeTools.formatDateTime(getFromDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
 			//next month
-			to = TimeTools.formatDateTimeReport(getToDatePlusMonth(1));
+			to = TimeTools.formatDateTime(getToDatePlusMonth(1).atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 		}
 		if (options.indexOf(option) == ++i) {
-			from = TimeTools.formatDateTimeReport(getFromDate());
+			from = TimeTools.formatDateTime(getFromDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
 			//next two month
-			to = TimeTools.formatDateTimeReport(getToDatePlusMonth(2));
+			to = TimeTools.formatDateTime(getToDatePlusMonth(2).atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 		}
 		if (options.indexOf(option) == ++i) {
-			from = TimeTools.formatDateTimeReport(getFromDate());
+			from = TimeTools.formatDateTime(getFromDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
 			//next three month
-			to = TimeTools.formatDateTimeReport(getToDatePlusMonth(3));
+			to = TimeTools.formatDateTime(getToDatePlusMonth(3).atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 		}
 		if (options.indexOf(option) == ++i) {
 			LocalDate monthYear;
@@ -618,15 +622,12 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			}
 
 			LocalDate fromDate = getFromDate();
-			from = TimeTools.formatDateTimeReport(fromDate);
-
-			LocalDate toDate = LocalDate.of(
-					monthYear.getYear(),
-					monthYear.getMonth(),
-					monthYear.getMonth().maxLength()
-			);
-			to = TimeTools.formatDateTimeReport(toDate);
+			from = TimeTools.formatDateTime(fromDate.atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
+			LocalDate toDate = monthYear;
+			toDate = toDate.with (TemporalAdjusters.lastDayOfMonth());
+			to = TimeTools.formatDateTime(toDate.atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 		}
+
 		new GenericReportFromDateToDate(
 				from,
 				to,
