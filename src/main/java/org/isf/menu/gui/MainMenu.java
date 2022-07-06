@@ -408,10 +408,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		private static final long serialVersionUID = 4338749100837551874L;
 
 		private JButton[] button;
-		private MainMenu parentFrame;
 
 		public MainPanel(MainMenu parentFrame) {
-			this.parentFrame = parentFrame;
 			int numItems = 0;
 			
 			setLayout(new BorderLayout());
