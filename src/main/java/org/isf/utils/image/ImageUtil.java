@@ -27,7 +27,10 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.imageio.ImageIO;
 
@@ -37,7 +40,7 @@ public final class ImageUtil {
 
 	private ImageUtil() {
 	}
-	
+
 	public static Image scaleImage(Image image, int maxDim) {
 		double scale = (double) maxDim / (double) image.getHeight(null);
 		if (image.getWidth(null) > image.getHeight(null)) {
@@ -48,7 +51,6 @@ public final class ImageUtil {
 
 		return image.getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH);
 	}
-	
 
 	public static BufferedImage scaleImage(final BufferedImage src, final int boundWidth, final int boundHeight) {
 		final int originalWidth = src.getWidth();
@@ -84,38 +86,63 @@ public final class ImageUtil {
 	public static byte[] imageToByte(final BufferedImage bufferedImage) {
 		try {
 			final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-			ImageIO.write(bufferedImage, "jpg", outStream);
+			ImageIO.write(bufferedImage, "png", outStream);
 			return outStream.toByteArray();
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to convert image to byte array", e);
 		}
 	}
-	
+
 	public static BufferedImage fixImageFileSize(BufferedImage bufferedImage, int maximumFileSize) throws IOException {
 		return fixImageFileSize(bufferedImage, maximumFileSize, "png");
 	}
-	
-	
-	public static BufferedImage fixImageFileSize(BufferedImage bufferedImage, int maximumFileSize, String fileType) throws IOException {
+
+	public static BufferedImage fixImageFileSize(BufferedImage bufferedImage, int maximumFileSize, String fileType)
+			throws IOException {
 		long arrSize = getArraySize(bufferedImage, fileType);
 		while (arrSize > maximumFileSize) {
-			int newTargetSize = (bufferedImage.getTileWidth()- ((bufferedImage.getTileWidth() / 100) * 10));
+			int newTargetSize = (bufferedImage.getTileWidth() - ((bufferedImage.getTileWidth() / 100) * 10));
 			bufferedImage = Scalr.resize(bufferedImage, newTargetSize);
 			arrSize = getArraySize(bufferedImage, fileType);
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ImageIO.write(bufferedImage, fileType, baos);
 		return ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
-	}
-	
-	
-	private static int getArraySize(BufferedImage bufferedImage, String fileType) throws IOException {
+	}	
+
+	private static long getArraySize(BufferedImage bufferedImage, String fileType) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ImageIO.write(bufferedImage, fileType, baos);
 		baos.flush();
 		byte[] byteImage = baos.toByteArray();
+		long size = byteImage.length;
 		baos.close();
-		return byteImage.length;
+		return size;	
+	}
+	
+	/**
+	 * Converts a given Image into a BufferedImage
+	 *
+	 * @param img The Image to be converted
+	 * @return The converted BufferedImage
+	 */
+	public static BufferedImage toBufferedImage(Image img)
+	{
+	    if (img instanceof BufferedImage)
+	    {
+	        return (BufferedImage) img;
+	    }
+
+	    // Create a buffered image with transparency
+	    BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+	    // Draw the image on to the buffered image
+	    Graphics2D bGr = bimage.createGraphics();
+	    bGr.drawImage(img, 0, 0, null);
+	    bGr.dispose();
+
+	    // Return the buffered image
+	    return bimage;
 	}
 
 }

@@ -26,6 +26,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -56,7 +58,7 @@ import com.github.sarxos.webcam.Webcam;
 
 public class PatientPhotoPanel extends JPanel {
 
-	private static final String JPG_FORMAT = "jpg";
+	private static final String JPEG_FORMAT = "jpeg";
 
 	private static final long serialVersionUID = 9129641275344016618L;
 	
@@ -72,7 +74,7 @@ public class PatientPhotoPanel extends JPanel {
 
 	private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
 
-	private static final int MAXPROFPICFILESIZEBYTES = 4096;
+	private static final int MAXPROFPICFILESIZEBYTES = 4194304;
 	
 	public PatientPhotoPanel(final PatientInsertExtended patientFrame, final Integer code, final Image patientPhoto) throws IOException {
 		owner = patientFrame;
@@ -114,16 +116,24 @@ public class PatientPhotoPanel extends JPanel {
 
 			externalPanel.add(box, BorderLayout.NORTH);
 			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
-				final BufferedImage newImage = (BufferedImage) propertyChangeEvent.getNewValue();
-				if (newImage != null) {
-					externalPanel.updatePhoto(ImageUtil.scaleImage(newImage, 160, 160));
-					try {
-						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(newImage, MAXPROFPICFILESIZEBYTES, JPG_FORMAT));
-					} catch (IOException e) {
-						LOGGER.error("Oooops! Can't resize profile picture.");
-					}
-					
+				
+				//ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				//BufferedImage bia = (BufferedImage) propertyChangeEvent.getNewValue();
+				try {
+					//ImageIO.write(bia, "jpg", baos);
+					//BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
+					//BufferedImage buffImg = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage.getType());
+					BufferedImage bi = (BufferedImage) propertyChangeEvent.getNewValue();
+				if (bi != null) {
+					externalPanel.updatePhoto(ImageUtil.scaleImage(bi, 160, 160));
+						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, MAXPROFPICFILESIZEBYTES, "png"));
+				} }catch (IOException e1) {
+					LOGGER.error("Oooops! Can't resize profile picture.");
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
+					
+				
 			});
 
 			box.add(btnDeletePhoto);
@@ -138,7 +148,7 @@ public class PatientPhotoPanel extends JPanel {
 			jAttachPhotoButton.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.addActionListener(actionEvent -> {
 				JFileChooser fc = new JFileChooser();
-				String[] extensions = { "tif", "tiff", JPG_FORMAT, "jpeg", "bmp", "png", "gif" };
+				String[] extensions = { "tif", "tiff", JPEG_FORMAT, "jpeg", "bmp", "png", "gif" };
 				FileFilter imageFilter = new FileNameExtensionFilter(MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
 				fc.setFileFilter(imageFilter);
 				fc.setAcceptAllFileFilterUsed(false);
