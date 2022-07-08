@@ -82,16 +82,14 @@ public class TelemetryGUI extends JDialog {
 	private MainMenu parent;
 	private EventListenerList telemetryListeners = new EventListenerList();
 	private JPanel panel;
-	private TelemetryManager telemetryManager;
-	private TelemetryUtils telemetryUtils;
+	private TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
+	private TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
 
 	public TelemetryGUI() {
 		super();
-		this.telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
-		this.telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
 		init();
 	}
-
+	
 	public TelemetryGUI(MainMenu parent) {
 		super(parent, MessageBundle.getMessage(KEY_TELEMETRY_TITLE), true);
 		this.parent = parent;
