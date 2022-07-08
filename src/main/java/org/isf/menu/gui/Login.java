@@ -199,7 +199,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				System.exit(1);
 			}
 			
-			if(usersListLogin) {
+			if (usersListLogin) {
 				usersList = new JComboBox<>();
 				for (User u : users) {
 					usersList.addItem(u.getUserName());
@@ -207,8 +207,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	
 				Dimension preferredSize = usersList.getPreferredSize();
 				usersList.setPreferredSize(new Dimension(120, preferredSize.height));
-			}
-			else {
+			} else {
 				login = new JTextField();
 				Dimension preferredSize = login.getPreferredSize();
 				login.setPreferredSize(new Dimension(120, preferredSize.height));
