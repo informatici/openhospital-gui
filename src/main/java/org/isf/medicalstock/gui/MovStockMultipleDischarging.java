@@ -75,7 +75,7 @@ import org.isf.menu.manager.Context;
 import org.isf.utils.db.NormalizeString;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.GoodDateTimeChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.jobjects.TextPrompt.Show;
@@ -95,8 +95,8 @@ public class MovStockMultipleDischarging extends JDialog {
 	private JPanel mainPanel;
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
-	private JComboBox jComboBoxDischargeType;
-	private GoodDateTimeChooser jDateChooser;
+	private JComboBox<MovementType> jComboBoxDischargeType;
+	private GoodDateTimeSpinnerChooser jDateChooser;
 	private JComboBox jComboBoxDestination;
 	private JTable jTableMovements;
 	private final String[] columnNames = {
@@ -128,7 +128,6 @@ public class MovStockMultipleDischarging extends JDialog {
 	private int optionSelected = UNITS;
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
 	private JComboBox shareWith = null;
-	private Interaction share;
 	private List<Medical> pool = new ArrayList<>();
 	
 	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
@@ -416,100 +415,92 @@ public class MovStockMultipleDischarging extends JDialog {
 		gblHeaderPanel.columnWeights = new double[] { 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE };
 		gblHeaderPanel.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		headerPanel.setLayout(gblHeaderPanel);
-		{
-			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
-			GridBagConstraints gbcLabelDate = new GridBagConstraints();
-			gbcLabelDate.anchor = GridBagConstraints.WEST;
-			gbcLabelDate.insets = new Insets(5, 5, 5, 5);
-			gbcLabelDate.gridx = 0;
-			gbcLabelDate.gridy = 0;
-			headerPanel.add(jLabelDate, gbcLabelDate);
-		}
-		{
-			GridBagConstraints gbcDateChooser = new GridBagConstraints();
-			gbcDateChooser.anchor = GridBagConstraints.WEST;
-			gbcDateChooser.insets = new Insets(5, 0, 5, 5);
-			gbcDateChooser.fill = GridBagConstraints.VERTICAL;
-			gbcDateChooser.gridx = 1;
-			gbcDateChooser.gridy = 0;
-			headerPanel.add(getJDateChooser(), gbcDateChooser);
-		}
-		{
-			JLabel jLabelReferenceNo = new JLabel(MessageBundle.getMessage("angal.medicalstock.multipledischarging.referencenumber")); //$NON-NLS-1$
-			GridBagConstraints gbcLabelReferenceNo = new GridBagConstraints();
-			gbcLabelReferenceNo.anchor = GridBagConstraints.EAST;
-			gbcLabelReferenceNo.insets = new Insets(5, 0, 5, 5);
-			gbcLabelReferenceNo.gridx = 2;
-			gbcLabelReferenceNo.gridy = 0;
-			headerPanel.add(jLabelReferenceNo, gbcLabelReferenceNo);
-		}
-		{
-			jTextFieldReference = new JTextField();
-			GridBagConstraints gbcTextFieldReference = new GridBagConstraints();
-			gbcTextFieldReference.insets = new Insets(5, 0, 5, 0);
-			gbcTextFieldReference.fill = GridBagConstraints.HORIZONTAL;
-			gbcTextFieldReference.gridx = 3;
-			gbcTextFieldReference.gridy = 0;
-			headerPanel.add(jTextFieldReference, gbcTextFieldReference);
-			jTextFieldReference.setColumns(10);
-		}
-		{
-			JLabel jLabelChargeType = new JLabel(MessageBundle.getMessage("angal.medicalstock.multipledischarging.dischargetype")); //$NON-NLS-1$
-			GridBagConstraints gbcLabelChargeType = new GridBagConstraints();
-			gbcLabelChargeType.anchor = GridBagConstraints.EAST;
-			gbcLabelChargeType.insets = new Insets(0, 5, 5, 5);
-			gbcLabelChargeType.gridx = 0;
-			gbcLabelChargeType.gridy = 1;
-			headerPanel.add(jLabelChargeType, gbcLabelChargeType);
-		}
-		{
-			GridBagConstraints gbcComboBoxChargeType = new GridBagConstraints();
-			gbcComboBoxChargeType.anchor = GridBagConstraints.WEST;
-			gbcComboBoxChargeType.insets = new Insets(0, 0, 5, 5);
-			gbcComboBoxChargeType.gridx = 1;
-			gbcComboBoxChargeType.gridy = 1;
-			headerPanel.add(getJComboBoxChargeType(), gbcComboBoxChargeType);
-		}
-		{
-			JLabel jLabelSupplier = new JLabel(MessageBundle.getMessage("angal.medicalstock.multipledischarging.destination")); //$NON-NLS-1$
-			GridBagConstraints gbcLabelSupplier = new GridBagConstraints();
-			gbcLabelSupplier.anchor = GridBagConstraints.WEST;
-			gbcLabelSupplier.insets = new Insets(0, 5, 0, 5);
-			gbcLabelSupplier.gridx = 0;
-			gbcLabelSupplier.gridy = 3;
-			headerPanel.add(jLabelSupplier, gbcLabelSupplier);
-		}
-		{
-			GridBagConstraints gbcComboBoxDestination = new GridBagConstraints();
-			gbcComboBoxDestination.anchor = GridBagConstraints.WEST;
-			gbcComboBoxDestination.insets = new Insets(0, 0, 0, 5);
-			gbcComboBoxDestination.gridx = 1;
-			gbcComboBoxDestination.gridy = 3;
-			headerPanel.add(getJComboBoxDestination(), gbcComboBoxDestination);
-		}
+
+		JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
+		GridBagConstraints gbcLabelDate = new GridBagConstraints();
+		gbcLabelDate.anchor = GridBagConstraints.WEST;
+		gbcLabelDate.insets = new Insets(5, 5, 5, 5);
+		gbcLabelDate.gridx = 0;
+		gbcLabelDate.gridy = 0;
+		headerPanel.add(jLabelDate, gbcLabelDate);
+
+		GridBagConstraints gbcDateChooser = new GridBagConstraints();
+		gbcDateChooser.anchor = GridBagConstraints.WEST;
+		gbcDateChooser.insets = new Insets(5, 0, 5, 5);
+		gbcDateChooser.fill = GridBagConstraints.VERTICAL;
+		gbcDateChooser.gridx = 1;
+		gbcDateChooser.gridy = 0;
+		headerPanel.add(getJDateChooser(), gbcDateChooser);
+
+		JLabel jLabelReferenceNo = new JLabel(MessageBundle.getMessage("angal.medicalstock.multipledischarging.referencenumber")); //$NON-NLS-1$
+		GridBagConstraints gbcLabelReferenceNo = new GridBagConstraints();
+		gbcLabelReferenceNo.anchor = GridBagConstraints.EAST;
+		gbcLabelReferenceNo.insets = new Insets(5, 0, 5, 5);
+		gbcLabelReferenceNo.gridx = 2;
+		gbcLabelReferenceNo.gridy = 0;
+		headerPanel.add(jLabelReferenceNo, gbcLabelReferenceNo);
+
+		jTextFieldReference = new JTextField();
+		GridBagConstraints gbcTextFieldReference = new GridBagConstraints();
+		gbcTextFieldReference.insets = new Insets(5, 0, 5, 0);
+		gbcTextFieldReference.fill = GridBagConstraints.HORIZONTAL;
+		gbcTextFieldReference.gridx = 3;
+		gbcTextFieldReference.gridy = 0;
+		headerPanel.add(jTextFieldReference, gbcTextFieldReference);
+		jTextFieldReference.setColumns(10);
+
+		JLabel jLabelChargeType = new JLabel(MessageBundle.getMessage("angal.medicalstock.multipledischarging.dischargetype")); //$NON-NLS-1$
+		GridBagConstraints gbcLabelChargeType = new GridBagConstraints();
+		gbcLabelChargeType.anchor = GridBagConstraints.EAST;
+		gbcLabelChargeType.insets = new Insets(0, 5, 5, 5);
+		gbcLabelChargeType.gridx = 0;
+		gbcLabelChargeType.gridy = 1;
+		headerPanel.add(jLabelChargeType, gbcLabelChargeType);
+
+		GridBagConstraints gbcComboBoxChargeType = new GridBagConstraints();
+		gbcComboBoxChargeType.anchor = GridBagConstraints.WEST;
+		gbcComboBoxChargeType.insets = new Insets(0, 0, 5, 5);
+		gbcComboBoxChargeType.gridx = 1;
+		gbcComboBoxChargeType.gridy = 1;
+		headerPanel.add(getJComboBoxChargeType(), gbcComboBoxChargeType);
+
+		JLabel jLabelSupplier = new JLabel(MessageBundle.getMessage("angal.medicalstock.multipledischarging.destination")); //$NON-NLS-1$
+		GridBagConstraints gbcLabelSupplier = new GridBagConstraints();
+		gbcLabelSupplier.anchor = GridBagConstraints.WEST;
+		gbcLabelSupplier.insets = new Insets(0, 5, 0, 5);
+		gbcLabelSupplier.gridx = 0;
+		gbcLabelSupplier.gridy = 3;
+		headerPanel.add(jLabelSupplier, gbcLabelSupplier);
+
+		GridBagConstraints gbcComboBoxDestination = new GridBagConstraints();
+		gbcComboBoxDestination.anchor = GridBagConstraints.WEST;
+		gbcComboBoxDestination.insets = new Insets(0, 0, 0, 5);
+		gbcComboBoxDestination.gridx = 1;
+		gbcComboBoxDestination.gridy = 3;
+		headerPanel.add(getJComboBoxDestination(), gbcComboBoxDestination);
 		return headerPanel;
 	}
 
 	private JComboBox getShareUser() {
-		share = new Interaction();
+		Interaction share = new Interaction();
 		Collection<String> contacts = share.getContactOnline();
 		contacts.add(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody")); //$NON-NLS-1$
-		shareWith = new JComboBox(contacts.toArray());
+		shareWith = new JComboBox<>(contacts.toArray());
 		shareWith.setSelectedItem(MessageBundle.getMessage("angal.medicalstock.multipledischarging.sharealertwithnobody")); //$NON-NLS-1$
 
 		return shareWith;
 	}
 	
-	private GoodDateTimeChooser getJDateChooser() {
+	private GoodDateTimeSpinnerChooser getJDateChooser() {
 		if (jDateChooser == null) {
-			jDateChooser = new GoodDateTimeChooser(LocalDateTime.now());
+			jDateChooser = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
 		}
 		return jDateChooser;
 	}
 
-	private JComboBox getJComboBoxChargeType() {
+	private JComboBox<MovementType> getJComboBoxChargeType() {
 		if (jComboBoxDischargeType == null) {
-			jComboBoxDischargeType = new JComboBox();
+			jComboBoxDischargeType = new JComboBox<>();
 			List<MovementType> movTypes;
 			try {
 				movTypes = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
@@ -614,7 +605,7 @@ public class MovStockMultipleDischarging extends JDialog {
 			List<Movement> movements = model.getMovements();
 			ListIterator<Lot> lotIterator = lots.listIterator();
 			while (lotIterator.hasNext()) {
-				Lot aLot = (Lot) lotIterator.next();
+				Lot aLot = lotIterator.next();
 				for (Movement mov : movements) {
 					if (aLot.getCode().equals(mov.getLot().getCode())) {
 						int aLotQty = aLot.getMainStoreQuantity();
@@ -648,33 +639,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		newTotalQty = totalQty - usedQty;
 		return checkQuantity(med, newTotalQty, qty);
 	}
-	
-	private boolean checkQuantityInMovement(Movement movement, double qty) {
-		Medical med = movement.getMedical();
-		double totalQty = med.getTotalQuantity();
-		double newTotalQty;
-		
-		// update remaining quantity with already inserted movements 
-		// but not the current one
-		List<Movement> movements = model.getMovements();
-		double usedQty = 0;
-		for (int i = 0; i < movements.size(); i++) {
-			Movement mov = movements.get(i);
-			if (mov.getCode() == movement.getCode()) {
-				continue;
-			}
-			if (mov.getMedical() == med) {
-				usedQty += calcTotal(mov, units.get(i));
-			}
-		}
-		
-		newTotalQty = totalQty - usedQty;
-		if (!isAutomaticLot() && !checkQuantityInLot(movement.getLot(), qty)) {
-			return false;
-		}
-		return checkQuantity(med, newTotalQty, qty);
-	}
-	
+
 	private boolean checkQuantity(Medical med, double totalQty, double qty) {
 		double criticalLevel = med.getMinqty();
 		if (qty > totalQty) {
@@ -797,9 +762,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		Medical medical = mov.getMedical();
 		int qty = mov.getQuantity();
 		int ppp = medical.getPcsperpck() == 0 ? 1 : medical.getPcsperpck();
-		int total = option == UNITS ? qty : ppp * qty;
-
-		return total;
+		return option == UNITS ? qty : ppp * qty;
 	}
 
 	public class JTableModel extends AbstractTableModel {
@@ -915,6 +878,32 @@ public class MovStockMultipleDischarging extends JDialog {
 			}
 			movements.set(r, movement);
 			fireTableDataChanged();
+		}
+
+		private boolean checkQuantityInMovement(Movement movement, double qty) {
+			Medical med = movement.getMedical();
+			double totalQty = med.getTotalQuantity();
+			double newTotalQty;
+
+			// update remaining quantity with already inserted movements
+			// but not the current one
+			List<Movement> movements = model.getMovements();
+			double usedQty = 0;
+			for (int i = 0; i < movements.size(); i++) {
+				Movement mov = movements.get(i);
+				if (mov.getCode() == movement.getCode()) {
+					continue;
+				}
+				if (mov.getMedical() == med) {
+					usedQty += calcTotal(mov, units.get(i));
+				}
+			}
+
+			newTotalQty = totalQty - usedQty;
+			if (!isAutomaticLot() && !checkQuantityInLot(movement.getLot(), qty)) {
+				return false;
+			}
+			return checkQuantity(med, newTotalQty, qty);
 		}
 	}
 	

@@ -22,7 +22,9 @@
 package org.isf.accounting.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
+import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS;
 import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
 import java.awt.AWTEvent;
@@ -376,8 +378,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				}
 				if (options.indexOf(option) == i) {
 
-					from = TimeTools.formatDateTimeReport(dateToday0);
-					to = TimeTools.formatDateTimeReport(dateToday24);
+					from = TimeTools.formatDateTime(dateToday0, DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+					to = TimeTools.formatDateTime(dateToday24, DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
 					String user;
 					if (isSingleUser) {
 						user = "admin";
@@ -388,12 +390,12 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					return;
 				}
 				if (options.indexOf(option) == ++i) {
-					from = TimeTools.formatDateTimeReport(dateToday0);
-					to = TimeTools.formatDateTimeReport(dateToday24);
+					from = TimeTools.formatDateTime(dateToday0, DATE_FORMAT_DD_MM_YYYY);
+					to = TimeTools.formatDateTime(dateToday24, DATE_FORMAT_DD_MM_YYYY);
 				}
 				if (options.indexOf(option) == ++i) {
-					from = TimeTools.formatDateTimeReport(dateFrom);
-					to = TimeTools.formatDateTimeReport(dateTo);
+					from = TimeTools.formatDateTime(dateFrom, DATE_FORMAT_DD_MM_YYYY);
+					to = TimeTools.formatDateTime(dateTo, DATE_FORMAT_DD_MM_YYYY);
 				}
 				if (options.indexOf(option) == ++i) {
 					month = jComboBoxMonths.getMonth() + 1;
@@ -407,8 +409,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							.atStartOfDay()
 							.toLocalDate()
 							.atTime(LocalTime.MAX);
-					from = TimeTools.formatDateTimeReport(thisMonthFrom);
-					to = TimeTools.formatDateTimeReport(thisMonthTo);
+					from = TimeTools.formatDateTime(thisMonthFrom, DATE_FORMAT_DD_MM_YYYY);
+					to = TimeTools.formatDateTime(thisMonthTo, DATE_FORMAT_DD_MM_YYYY);
 				}
 				if (options.indexOf(option) == ++i) {
 					icon = new ImageIcon("rsc/icons/calendar_dialog.png");
@@ -439,8 +441,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 							.atStartOfDay()
 							.toLocalDate()
 							.atTime(LocalTime.MAX);
-					from = TimeTools.formatDateTimeReport(thisMonthFrom);
-					to = TimeTools.formatDateTimeReport(thisMonthTo);
+					from = TimeTools.formatDateTime(thisMonthFrom, DATE_FORMAT_DD_MM_YYYY);
+					to = TimeTools.formatDateTime(thisMonthTo, DATE_FORMAT_DD_MM_YYYY);
 				}
 				if (patientParent == null && options.indexOf(option) == ++i) {
 					MessageDialog.error(BillBrowser.this, "angal.common.pleaseselectapatient.msg");
@@ -1265,7 +1267,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				return thisBill.getId();
 			}
 			if (c == ++index) {
-				return TimeTools.formatDateTime(thisBill.getDate(), DATE_FORMAT_DD_MM_YY_HH_MM_SS);
+				return TimeTools.formatDateTime(thisBill.getDate(), DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
 			}
 			if (c == ++index) {
 				int patID = thisBill.getBillPatient().getCode();
@@ -1278,7 +1280,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				return thisBill.getAmount();
 			}
 			if (c == ++index) {
-				return TimeTools.formatDateTime(thisBill.getUpdate(), DATE_FORMAT_DD_MM_YY_HH_MM_SS);
+				return TimeTools.formatDateTime(thisBill.getUpdate(), DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
 			}
 			if (c == ++index) {
 				return thisBill.getStatus();
