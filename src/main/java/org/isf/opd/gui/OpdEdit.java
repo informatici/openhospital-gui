@@ -62,7 +62,7 @@ import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.GoodDateTimeChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
@@ -138,7 +138,7 @@ public class OpdEdit extends JDialog {
 	private JComboBox diseaseBox = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
-	private GoodDateTimeChooser opdDateField = null;
+	private GoodDateTimeSpinnerChooser opdDateField = null;
 	private JPanel jPanel2 = null;
 	private JButton okButton = null;
 	private JButton cancelButton = null;
@@ -440,7 +440,7 @@ public class OpdEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 						boolean result;
-						LocalDateTime visitDate = LocalDateTime.now();
+						LocalDateTime visitDate;
 						char newPatient;
 						String referralTo;
 						String referralFrom;
@@ -868,7 +868,7 @@ public class OpdEdit extends JDialog {
 			if (!insert) {
 				referralFrom = opd.getReferralFrom();
 				if (referralFrom == null) {
-					referralFrom="";
+					referralFrom = "";
 				}
 				if (referralFrom.equals("R")) {
 					referralFromCheckBox.setSelected(true);
@@ -903,7 +903,7 @@ public class OpdEdit extends JDialog {
 				dateIn = opd.getDate();
 			}
 
-			opdDateField = new GoodDateTimeChooser(dateIn);
+			opdDateField = new GoodDateTimeSpinnerChooser(dateIn);
 			jDatePanel.add(opdDateField);
 			jDatePanel = setMyBorder(jDatePanel, MessageBundle.getMessage("angal.opd.attendancedate.txt"));
 		}

@@ -157,6 +157,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 
 	public TherapyEdit(JFrame owner, Patient patient, boolean admitted) {
 		super();
+		setIconImage(new ImageIcon("./rsc/icons/oh.png").getImage());
 		try {
 			this.medArray = medBrowser.getMedicals();
 		} catch (OHServiceException e1) {

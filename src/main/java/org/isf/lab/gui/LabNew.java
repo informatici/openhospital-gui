@@ -76,7 +76,7 @@ import org.isf.patient.model.Patient;
 import org.isf.priceslist.model.Price;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.GoodDateTimeChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.OhTableModelExam;
@@ -147,7 +147,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 	private JButton jButtonPickPatient;
 	private JButton jButtonTrashPatient;
 	private JLabel jLabelDate;
-	private GoodDateTimeChooser jCalendarDate;
+	private GoodDateTimeSpinnerChooser jCalendarDate;
 	private JPanel jPanelMaterial;
 	private JComboBox<String> jComboBoxMaterial;
 	private JPanel jPanelResults;
@@ -289,7 +289,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 			jButtonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			jButtonOK.addActionListener(actionEvent -> {
 
-				LocalDateTime newDate = LocalDateTime.now();
+				LocalDateTime newDate;
 				try {
 					newDate = jCalendarDate.getLocalDateTime();
 				} catch (Exception e1) {
@@ -622,13 +622,13 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 		return jPanelDate;
 	}
 
-	private GoodDateTimeChooser getJCalendarDate() {
+	private GoodDateTimeSpinnerChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
 			LocalDateTime labDate = RememberDates.getLastLabExamDate();
 			if (labDate == null) {
 				labDate = LocalDateTime.now();
 			}
-			jCalendarDate = new GoodDateTimeChooser(labDate);
+			jCalendarDate = new GoodDateTimeSpinnerChooser(labDate);
 		}
 		return jCalendarDate;
 	}

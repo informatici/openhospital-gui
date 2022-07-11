@@ -58,7 +58,7 @@ import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.GoodDateTimeChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
@@ -74,7 +74,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected JLabel labelDate;
 	protected JTextField textFieldUnit;
-	protected GoodDateTimeChooser textDate;
+	protected GoodDateTimeSpinnerChooser textDate;
 	protected JComboBox<Operation> comboOperation;
 	protected JTextField searchOperationTextField;
 	protected JButton searchOperationButton;
@@ -335,9 +335,9 @@ abstract class OperationRowBase extends JPanel {
 
 	abstract void addToGrid();
 
-	protected GoodDateTimeChooser getDateTimeChooser() {
+	protected GoodDateTimeSpinnerChooser getDateTimeChooser() {
 		if (textDate == null) {
-			textDate = new GoodDateTimeChooser(LocalDateTime.now());
+			textDate = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
 		}
 		return textDate;
 	}
