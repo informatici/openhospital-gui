@@ -39,9 +39,11 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.event.EventListenerList;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -114,13 +116,17 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 	private List<User> users;
 	private JComboBox<String> usersList;
+	protected JTextField login;
 	private JPasswordField pwd;
 	private MainMenu parent;
 	private User returnUser;
+	private boolean usersListLogin;
 
 	public Login(MainMenu parent) {
 		super(parent, MessageBundle.getMessage("angal.login.title"), true);
 
+		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
+		
 		this.parent = parent;
 
 		addLoginListener(parent);
@@ -147,7 +153,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	}
 
 	private void acceptPwd() {
-		String userName = (String) usersList.getSelectedItem();
+		String userName = usersListLogin ? (String) usersList.getSelectedItem() : login.getText();
 		String passwd = new String(pwd.getPassword());
 		boolean found = false;
 		for (User u : users) {
@@ -192,14 +198,20 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 				OHServiceExceptionUtil.showMessages(e1);
 				System.exit(1);
 			}
-
-			usersList = new JComboBox<>();
-			for (User u : users) {
-				usersList.addItem(u.getUserName());
+			
+			if (usersListLogin) {
+				usersList = new JComboBox<>();
+				for (User u : users) {
+					usersList.addItem(u.getUserName());
+				}
+	
+				Dimension preferredSize = usersList.getPreferredSize();
+				usersList.setPreferredSize(new Dimension(120, preferredSize.height));
+			} else {
+				login = new JTextField();
+				Dimension preferredSize = login.getPreferredSize();
+				login.setPreferredSize(new Dimension(120, preferredSize.height));
 			}
-
-			Dimension preferredSize = usersList.getPreferredSize();
-			usersList.setPreferredSize(new Dimension(120, preferredSize.height));
 
 			pwd = new JPasswordField(25);
 			pwd.setName("pwd");
@@ -212,7 +224,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 			JPanel body = new JPanel(new SpringLayout());
 			body.add(new JLabel(MessageBundle.getMessage("angal.common.userid.label")));
-			body.add(usersList);
+			body.add(usersListLogin ? usersList : login);
 			body.add(new JLabel(MessageBundle.getMessage("angal.login.password.label")));
 			body.add(pwd);
 			SpringUtilities.makeCompactGrid(body,
