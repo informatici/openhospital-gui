@@ -25,9 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Optional;
 
 /**
@@ -45,22 +43,6 @@ public class Converters {
                 .map(ldt -> ldt.atZone(ZoneId.systemDefault()).toInstant())
                 .map(Date::from)
                 .orElse(null);
-    }
-
-    /**
-     * Converts a {@link GregorianCalendar} to a {@link Date}.
-     * @param calendar the calendar to convert.
-     * @return the converted value or {@code null} if the passed value is {@code null}.
-     */
-    public static Date toDate(GregorianCalendar calendar) {
-        if (calendar == null) {
-            return null;
-        }
-        return new Date(calendar.getTimeInMillis());
-    }
-
-    public static LocalDateTime convertToLocalDateTime(Calendar gregorianCalendar) {
-        return convertToLocalDateTime(toDate((GregorianCalendar) gregorianCalendar));
     }
 
     public static LocalDate parseStringToLocalDate(String dateStr, String dateFormat) {

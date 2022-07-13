@@ -21,7 +21,6 @@
  */
 package org.isf.accounting.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
 import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS;
@@ -44,11 +43,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -89,17 +84,16 @@ import org.isf.stat.gui.report.GenericReportFromDateToDate;
 import org.isf.stat.gui.report.GenericReportPatient;
 import org.isf.stat.gui.report.GenericReportUserInDate;
 import org.isf.utils.exception.OHServiceException;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
+import org.isf.utils.jobjects.JMonthChooser;
+import org.isf.utils.jobjects.JYearChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.time.Converters;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.lgooddatepicker.zinternaltools.WrapLayout;
-import com.toedter.calendar.JMonthChooser;
-import com.toedter.calendar.JYearChooser;
 
 /**
  * Browsing of table BILLS
@@ -171,10 +165,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JMonthChooser jComboBoxMonths;
 	private JYearChooser jComboBoxYears;
 	private JPanel panelSupRange;
-	private JLabel jLabelTo;
-	private JLabel jLabelFrom;
-	private CustomJDateChooser jCalendarTo;
-	private CustomJDateChooser jCalendarFrom;
+	private GoodDateChooser jCalendarTo;
+	private GoodDateChooser jCalendarFrom;
 	private LocalDateTime dateFrom = LocalDateTime.now();
 	private LocalDateTime dateTo = LocalDateTime.now();
 	private LocalDateTime dateToday0 = LocalDate.now().atStartOfDay();
@@ -287,57 +279,34 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		return jPanelTotals;
 	}
 
-	private JLabel getJLabelTo() {
-		if (jLabelTo == null) {
-			jLabelTo = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
-		}
-		return jLabelTo;
-	}
-
-    private CustomJDateChooser getJCalendarFrom() {
+    private GoodDateChooser getJCalendarFrom() {
         if (jCalendarFrom == null) {
-            jCalendarFrom = new CustomJDateChooser(dateToday0, DATE_FORMAT_DD_MM_YY); // Calendar
-            jCalendarFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-            jCalendarFrom.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-            jCalendarFrom.getCalendarButton().setMnemonic(0);
-            jCalendarFrom.addPropertyChangeListener(
-                    "date",
-                    propertyChangeEvent -> {
-                        dateFrom =
-                                Converters.convertToLocalDateTime(
-                                                (Date) propertyChangeEvent.getNewValue())
-                                        .toLocalDate()
-                                        .atStartOfDay();
-                        jButtonToday.setEnabled(true);
-                        billInserted(null);
-                    });
+            jCalendarFrom = new GoodDateChooser(LocalDate.now());
+	        jCalendarFrom.addDateChangeListener(event -> {
+		        LocalDate newDate = event.getNewDate();
+		        if (newDate != null) {
+					dateFrom = newDate.atStartOfDay();
+					jButtonToday.setEnabled(true);
+					billInserted(null);
+		        }
+	        });
         }
         return jCalendarFrom;
     }
 
-	private CustomJDateChooser getJCalendarTo() {
+	private GoodDateChooser getJCalendarTo() {
 		if (jCalendarTo == null) {
-			jCalendarTo = new CustomJDateChooser(dateToday24, DATE_FORMAT_DD_MM_YY); // Calendar
-			jCalendarTo.setLocale(new Locale(GeneralData.LANGUAGE));
-			jCalendarTo.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			jCalendarTo.getCalendarButton().setMnemonic(0);
-			jCalendarTo.addPropertyChangeListener("date", propertyChangeEvent -> {
-				jCalendarTo.setDate((Date) propertyChangeEvent.getNewValue());
-				dateTo = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue())
-						.toLocalDate()
-						.atTime(LocalTime.MAX);
-				jButtonToday.setEnabled(true);
-				billInserted(null);
+			jCalendarTo = new GoodDateChooser(LocalDate.now());
+			jCalendarTo.addDateChangeListener(event -> {
+				LocalDate newDate = event.getNewDate();
+				if (newDate != null) {
+					dateTo = newDate.atTime(LocalTime.MAX);
+					jButtonToday.setEnabled(true);
+					billInserted(null);
+				}
 			});
 		}
 		return jCalendarTo;
-	}
-
-	private JLabel getJLabelFrom() {
-		if (jLabelFrom == null) {
-			jLabelFrom = new JLabel(MessageBundle.getMessage("angal.common.from.txt"));
-		}
-		return jLabelFrom;
 	}
 
 	private JButton getJButtonReport() {
@@ -416,7 +385,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					icon = new ImageIcon("rsc/icons/calendar_dialog.png");
 					int month;
 					JMonthChooser monthChooser = new JMonthChooser();
-					monthChooser.setLocale(new Locale(GeneralData.LANGUAGE));
 
 					int r = JOptionPane.showConfirmDialog(BillBrowser.this,
 							monthChooser,
@@ -766,9 +734,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				panelSupRange.add(getJComboUsers());
 			}
 			panelSupRange.add(getJButtonToday());
-			panelSupRange.add(getJLabelFrom());
+			panelSupRange.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt")));
 			panelSupRange.add(getJCalendarFrom());
-			panelSupRange.add(getJLabelTo());
+			panelSupRange.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt")));
 			panelSupRange.add(getJCalendarTo());
 			panelSupRange.add(getJComboMonths());
 			panelSupRange.add(getJComboYears());
@@ -874,8 +842,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jButtonToday.addActionListener(actionEvent -> {
 				dateFrom = dateToday0;
 				dateTo = dateToday24;
-				jCalendarFrom.setDate(dateFrom);
-				jCalendarTo.setDate(dateTo);
+				jCalendarFrom.setDate(dateFrom.toLocalDate());
+				jCalendarTo.setDate(dateTo.toLocalDate());
 				jButtonToday.setEnabled(false);
 			});
 			jButtonToday.setEnabled(false);
@@ -886,7 +854,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JMonthChooser getJComboMonths() {
 		if (jComboBoxMonths == null) {
 			jComboBoxMonths = new JMonthChooser();
-			jComboBoxMonths.setLocale(new Locale(GeneralData.LANGUAGE));
 			jComboBoxMonths.addPropertyChangeListener("month", propertyChangeEvent -> {
 				month = jComboBoxMonths.getMonth() + 1;
 				dateFrom = dateFrom.toLocalDate()
@@ -899,8 +866,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						.atStartOfDay()
 						.toLocalDate()
 						.atTime(LocalTime.MAX);
-				jCalendarFrom.setDate(dateFrom);
-				jCalendarTo.setDate(dateTo);
+				jCalendarFrom.setDate(dateFrom.toLocalDate());
+				jCalendarTo.setDate(dateTo.toLocalDate());
 			});
 		}
 		return jComboBoxMonths;
@@ -909,8 +876,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JYearChooser getJComboYears() {
 		if (jComboBoxYears == null) {
 			jComboBoxYears = new JYearChooser();
-			jComboBoxYears.setLocale(new Locale(GeneralData.LANGUAGE));
-			jComboBoxYears.addPropertyChangeListener("year", propertyChangeEvent -> {
+			jComboBoxYears.getModel().addChangeListener(e -> {
 				year = jComboBoxYears.getYear();
 				dateFrom = LocalDate.now()
 						.withYear(year)
@@ -924,8 +890,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 						.atStartOfDay()
 						.toLocalDate()
 						.atTime(LocalTime.MAX);
-				jCalendarFrom.setDate(dateFrom);
-				jCalendarTo.setDate(dateTo);
+				jCalendarFrom.setDate(dateFrom.toLocalDate());
+				jCalendarTo.setDate(dateTo.toLocalDate());
 			});
 		}
 		return jComboBoxYears;
@@ -1296,12 +1262,6 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			return false;
 		}
 
-	}
-
-	public boolean isSameDay(GregorianCalendar aDate, GregorianCalendar today) {
-		return (aDate.get(Calendar.YEAR) == today.get(Calendar.YEAR)) &&
-				(aDate.get(Calendar.MONTH) == today.get(Calendar.MONTH)) &&
-				(aDate.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH));
 	}
 
 	private void formatCellByBillStatus(JTable table, int row, Component cell) {
