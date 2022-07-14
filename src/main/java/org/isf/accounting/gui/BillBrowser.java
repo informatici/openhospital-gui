@@ -241,7 +241,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		add(getJTabbedPaneBills(), BorderLayout.CENTER);
 		add(getJPanelSouth(), BorderLayout.SOUTH);
 		setTitle(MessageBundle.getMessage("angal.billbrowser.patientbillmanagment.title"));
-		setMinimumSize(new Dimension(900, 600));
+		setMinimumSize(new Dimension(1150, 600));
 		addWindowListener(new WindowAdapter() {
 
 			@Override
@@ -828,7 +828,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 			jComboUsers.addActionListener(actionEvent -> {
 				user = (String) jComboUsers.getSelectedItem();
-				jTableUser.setValueAt("<html><b>" + user + "</b></html>", 0, 0);
+				jTableUser.setValueAt("<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>", 0, 0);
+				jTableUser.setValueAt("<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>", 0, 2);
 				updateTotals();
 			});
 		}
@@ -991,7 +992,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jTableToday.setModel(
 					new DefaultTableModel(new Object[][] {
 							{
-									"<html><b>" + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt").toUpperCase() + "</b></html>",
+									"<html><b>" + MessageBundle.getMessage("angal.billbrowser.paidtodaycolon.txt") + "</b></html>",
 									currencyCod,
 									totalToday,
 									"<html><b>" + MessageBundle.getMessage("angal.billbrowser.notpaidcolon.txt") + "</b></html>",
@@ -1028,7 +1029,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jTablePeriod.setModel(new DefaultTableModel(
 					new Object[][] {
 							{
-									"<html><b>" + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt").toUpperCase() + "</b></html>",
+									"<html><b>" + MessageBundle.getMessage("angal.billbrowser.paidperiodcolon.txt") + "</b></html>",
 									currencyCod,
 									totalPeriod,
 									"<html><b>" + MessageBundle.getMessage("angal.billbrowser.notpaidcolon.txt") + "</b></html>",
@@ -1063,8 +1064,13 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		if (jTableUser == null) {
 			jTableUser = new JTable();
 			jTableUser.setModel(
-					new DefaultTableModel(new Object[][] { { "<html><b>" + MessageBundle.getMessage("angal.billbrowser.user.txt") + "</b></html>", userToday,
-							"<html><b>" + MessageBundle.getMessage("angal.billbrowser.period.txt") + "</b></html>", userPeriod } },
+					new DefaultTableModel(new Object[][]
+						{ {
+								"<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>",
+								userToday,
+								"<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>",
+								userPeriod
+						} },
 							new String[] { "", "", "", "" }) {
 
 						private static final long serialVersionUID = 1L;
