@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2022 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -21,31 +21,32 @@
  */
 package org.isf.utils.jobjects;
 
-import java.time.LocalDate;
+import java.awt.Dimension;
+import java.util.Calendar;
+import java.util.Date;
 
-import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 
-/**
- * MonthYearChooser.java - 14/dic/2012
- *
- * @author Mwithi
- */
-public class JMonthYearChooser extends JPanel {
+public class JYearChooser extends JSpinner {
 
-	private JMonthChooser month;
-	private JYearChooser year;
-
-	public JMonthYearChooser() {
-		month = new JMonthChooser();
-		year = new JYearChooser();
-		JPanel datePanel = new JPanel();
-		datePanel.add(month);
-		datePanel.add(year);
-		this.add(datePanel);
+	public JYearChooser() {
+		SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
+		spinnerDateModel.setCalendarField(Calendar.YEAR);
+		setModel(spinnerDateModel);
+		setEditor(new JSpinner.DateEditor(this, "yyyy"));
+		setPreferredSize(new Dimension(60, getPreferredSize().height));
 	}
 
-	public LocalDate getLocalDate() {
-		return LocalDate.of(year.getYear(), month.getMonth() + 1, 1);
+	/**
+	 * Returns the year.
+	 *
+	 * @return the year
+	 */
+	public int getYear() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime((Date) getValue());
+		return calendar.get(Calendar.YEAR);
 	}
 
 }
