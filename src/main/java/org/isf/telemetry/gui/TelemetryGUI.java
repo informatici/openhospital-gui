@@ -37,7 +37,7 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -56,13 +56,14 @@ import org.isf.telemetry.model.Telemetry;
 import org.isf.telemetry.util.TelemetryUtils;
 import org.isf.utils.ExceptionUtils;
 import org.isf.utils.exception.OHException;
+import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.layout.SpringUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
-public class TelemetryGUI extends JDialog {
+public class TelemetryGUI extends ModalJFrame {
 
 	private static final long serialVersionUID = 891561833857381224L;
 
@@ -84,17 +85,13 @@ public class TelemetryGUI extends JDialog {
 	private JPanel panel;
 	private TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
 	private TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
-
-	public TelemetryGUI() {
-		super();
-		init();
-	}
 	
 	public TelemetryGUI(MainMenu parent) {
-		super(parent, MessageBundle.getMessage(KEY_TELEMETRY_TITLE), true);
+		super();
 		this.parent = parent;
 		this.addTelemetryListener(parent);
 		init();
+		super.showAsModal(this.parent);
 	}
 
 	private void init() {
