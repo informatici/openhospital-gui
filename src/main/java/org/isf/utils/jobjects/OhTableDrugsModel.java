@@ -21,7 +21,7 @@
  */
 package org.isf.utils.jobjects;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -103,7 +103,7 @@ public class OhTableDrugsModel<T> implements TableModel {
 					case 0:
 						String dt;
 						try {
-							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
+							final DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY, new Locale(GeneralData.LANGUAGE));
 							dt = currentDateFormat.format(drugObj.getDate());
 							value = dt;
 						} catch (Exception ex) {
@@ -114,10 +114,11 @@ public class OhTableDrugsModel<T> implements TableModel {
 					case 1:
 						Medical drugsname;
 						drugsname = drugObj.getMedical();
-						if (drugsname != null)
+						if (drugsname != null) {
 							value = drugsname.getDescription();
-						else
+						} else {
 							value = "";
+						}
 						break;
 					case 2:
 						value = String.valueOf(drugObj.getQuantity());
