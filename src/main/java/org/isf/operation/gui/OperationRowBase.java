@@ -28,6 +28,10 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -35,6 +39,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -53,7 +58,7 @@ import org.isf.operation.manager.OperationRowBrowserManager;
 import org.isf.operation.model.Operation;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.GoodDateTimeChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
@@ -69,10 +74,15 @@ abstract class OperationRowBase extends JPanel {
 
 	protected JLabel labelDate;
 	protected JTextField textFieldUnit;
-	protected GoodDateTimeChooser textDate;
-	protected JComboBox comboOperation;
-	protected JComboBox comboResult;
+	protected GoodDateTimeSpinnerChooser textDate;
+	protected JComboBox<Operation> comboOperation;
+	protected JTextField searchOperationTextField;
+	protected JButton searchOperationButton;
+	protected JComboBox<String> comboResult;
 	protected JTextArea textAreaRemark;
+	
+	protected List<Operation> operationsOPD;
+	protected List<Operation> operationsAll;
 
 	protected OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	protected OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
@@ -92,34 +102,97 @@ abstract class OperationRowBase extends JPanel {
 
 		add(panelForm, BorderLayout.NORTH);
 		GridBagLayout gbl_panelForm = new GridBagLayout();
-		gbl_panelForm.columnWidths = new int[] { 0, 0, 0, 0, 0 };
+		gbl_panelForm.columnWidths = new int[] { 60, 75, 0, 300, 0, 0 };
 		gbl_panelForm.rowHeights = new int[] { 0, 0, 30, 0, 0 };
-		gbl_panelForm.columnWeights = new double[] { 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_panelForm.columnWeights = new double[] { 0.0, 1.0, 0.25, 1.0, 1.0, Double.MIN_VALUE };
 		gbl_panelForm.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		panelForm.setLayout(gbl_panelForm);
 
 		JLabel labelOperation = new JLabel(MessageBundle.getMessage("angal.operationrowedit.operation")); //$NON-NLS-1$
 		GridBagConstraints gbc_labelOperation = new GridBagConstraints();
-		gbc_labelOperation.anchor = GridBagConstraints.EAST;
+		gbc_labelOperation.anchor = GridBagConstraints.WEST;
 		gbc_labelOperation.insets = new Insets(0, 0, 5, 5);
 		gbc_labelOperation.gridx = 0;
 		gbc_labelOperation.gridy = 0;
 		panelForm.add(labelOperation, gbc_labelOperation);
 
+		searchOperationTextField = new JTextField();
+		GridBagConstraints gbc_searchOperation = new GridBagConstraints();
+		gbc_searchOperation.insets = new Insets(0, 0, 5, 5);
+		gbc_searchOperation.fill = GridBagConstraints.HORIZONTAL;
+		gbc_labelOperation.gridx = 1;
+		gbc_labelOperation.gridy = 0;
+		searchOperationTextField.setColumns(20);
+		searchOperationTextField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					searchOperationButton.doClick();
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+		});
+		panelForm.add(searchOperationTextField, gbc_searchOperation);
+		
+		searchOperationButton = new JButton("");
+		GridBagConstraints gbc_searchOperationButton = new GridBagConstraints();
+		gbc_searchOperationButton.insets = new Insets(0, 5, 5, 5);
+		gbc_searchOperationButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_labelOperation.gridx = 2;
+		gbc_labelOperation.gridy = 0;
+		searchOperationButton.setPreferredSize(new Dimension(20, 20));
+		searchOperationButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+		searchOperationButton.addActionListener(new ActionListener() {
+
+			List<Operation> operationsOPD = null;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					operationsOPD = opeManager.getOperation();
+				} catch (OHServiceException ex) {
+					OHServiceExceptionUtil.showMessages(ex);
+				}
+				comboOperation.removeAllItems();
+				comboOperation.addItem(null);
+				for (Operation ope : getSearchOperationsResults(searchOperationTextField.getText(),
+								operationsOPD == null ? operationsAll : operationsOPD)) {
+					comboOperation.addItem(ope);
+				}
+
+				if (comboOperation.getItemCount() >= 2) {
+					comboOperation.setSelectedIndex(1);
+				}
+				comboOperation.requestFocus();
+				if (comboOperation.getItemCount() > 2) {
+					comboOperation.showPopup();
+				}
+			}
+		});
+		panelForm.add(searchOperationButton, gbc_searchOperationButton);
+
 		comboOperation = getOperationsBox();
-
-		GridBagConstraints gbc_comboOperation = new GridBagConstraints();
-		gbc_comboOperation.insets = new Insets(0, 0, 5, 5);
-		gbc_comboOperation.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboOperation.gridx = 1;
-		gbc_comboOperation.gridy = 0;
-		panelForm.add(comboOperation, gbc_comboOperation);
-
+		GridBagConstraints gbcOperationBox = new GridBagConstraints();
+		gbcOperationBox.insets = new Insets(0, 5, 5, 5);
+		gbcOperationBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_labelOperation.gridx = 3;
+		gbc_labelOperation.gridy = 0;
+		panelForm.add(comboOperation, gbcOperationBox);
+		
 		labelDate = new JLabel(MessageBundle.getMessage("angal.operationrowlist.date")); //$NON-NLS-1$
 		GridBagConstraints gbc_labelDate = new GridBagConstraints();
-		gbc_labelDate.anchor = GridBagConstraints.EAST;
+		gbc_labelDate.anchor = GridBagConstraints.WEST;
 		gbc_labelDate.insets = new Insets(0, 0, 5, 5);
-		gbc_labelDate.gridx = 2;
+		gbc_labelDate.gridx = 4;
 		gbc_labelDate.gridy = 0;
 		panelForm.add(labelDate, gbc_labelDate);
 
@@ -128,13 +201,13 @@ abstract class OperationRowBase extends JPanel {
 		gbc_textDate.insets = new Insets(0, 0, 5, 0);
 		gbc_textDate.anchor = GridBagConstraints.WEST;
 		gbc_textDate.fill = GridBagConstraints.NONE;
-		gbc_textDate.gridx = 3;
+		gbc_textDate.gridx = 5;
 		gbc_textDate.gridy = 0;
 		panelForm.add(textDate, gbc_textDate);
 
 		JLabel labelResultat = new JLabel(MessageBundle.getMessage("angal.common.result.txt"));
 		GridBagConstraints gbc_labelResultat = new GridBagConstraints();
-		gbc_labelResultat.anchor = GridBagConstraints.EAST;
+		gbc_labelResultat.anchor = GridBagConstraints.WEST;
 		gbc_labelResultat.insets = new Insets(0, 0, 5, 5);
 		gbc_labelResultat.gridx = 0;
 		gbc_labelResultat.gridy = 1;
@@ -144,15 +217,16 @@ abstract class OperationRowBase extends JPanel {
 		GridBagConstraints gbc_comboResult = new GridBagConstraints();
 		gbc_comboResult.insets = new Insets(0, 0, 5, 5);
 		gbc_comboResult.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboResult.gridwidth = 3;
 		gbc_comboResult.gridx = 1;
 		gbc_comboResult.gridy = 1;
 		panelForm.add(comboResult, gbc_comboResult);
 
 		JLabel lblUniteTrans = new JLabel(MessageBundle.getMessage("angal.operationrowedit.unitetrans")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblUniteTrans = new GridBagConstraints();
-		gbc_lblUniteTrans.anchor = GridBagConstraints.EAST;
+		gbc_lblUniteTrans.anchor = GridBagConstraints.WEST;
 		gbc_lblUniteTrans.insets = new Insets(0, 0, 5, 5);
-		gbc_lblUniteTrans.gridx = 2;
+		gbc_lblUniteTrans.gridx = 4;
 		gbc_lblUniteTrans.gridy = 1;
 		panelForm.add(lblUniteTrans, gbc_lblUniteTrans);
 
@@ -160,13 +234,14 @@ abstract class OperationRowBase extends JPanel {
 		GridBagConstraints gbc_textFieldUnit = new GridBagConstraints();
 		gbc_textFieldUnit.insets = new Insets(0, 0, 5, 0);
 		gbc_textFieldUnit.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldUnit.gridx = 3;
+		gbc_textFieldUnit.gridx = 5;
 		gbc_textFieldUnit.gridy = 1;
 		panelForm.add(textFieldUnit, gbc_textFieldUnit);
 		textFieldUnit.setColumns(10);
 
 		JLabel lblRemarques = new JLabel(MessageBundle.getMessage("angal.operationrowedit.remark")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblRemarques = new GridBagConstraints();
+		gbc_lblRemarques.anchor = GridBagConstraints.WEST;
 		gbc_lblRemarques.insets = new Insets(0, 0, 5, 5);
 		gbc_lblRemarques.gridx = 0;
 		gbc_lblRemarques.gridy = 2;
@@ -176,7 +251,7 @@ abstract class OperationRowBase extends JPanel {
 		textAreaRemark.setLineWrap(true);
 		GridBagConstraints gbc_textAreaRemark = new GridBagConstraints();
 		gbc_textAreaRemark.insets = new Insets(0, 0, 5, 0);
-		gbc_textAreaRemark.gridwidth = 3;
+		gbc_textAreaRemark.gridwidth = 5;
 		gbc_textAreaRemark.fill = GridBagConstraints.BOTH;
 		gbc_textAreaRemark.gridx = 1;
 		gbc_textAreaRemark.gridy = 2;
@@ -260,15 +335,41 @@ abstract class OperationRowBase extends JPanel {
 
 	abstract void addToGrid();
 
-	protected GoodDateTimeChooser getDateTimeChooser() {
+	protected GoodDateTimeSpinnerChooser getDateTimeChooser() {
 		if (textDate == null) {
-			textDate = new GoodDateTimeChooser(LocalDateTime.now());
+			textDate = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
 		}
 		return textDate;
 	}
+	
+	private List<Operation> getSearchOperationsResults(String s, List<Operation> opeList) {
+		String query = s.trim();
+		List<Operation> results = new ArrayList<>();
+		for (Operation ope : opeList) {
+			if (!query.equals("")) {
+				String[] patterns = query.split(" ");
+				String name = ope.getDescription().toLowerCase();
+				boolean patternFound = false;
+				for (String pattern : patterns) {
+					if (name.contains(pattern.toLowerCase())) {
+						patternFound = true;
+						//It is sufficient that only one pattern matches the query
+						break;
+					}
+				}
+				if (patternFound) {
+					results.add(ope);
+				}
+			} else {
+				results.add(ope);
+			}
+		}
+		return results;
+	}
+	
 
-	protected JComboBox getOperationsBox() {
-		JComboBox comboOpe = new JComboBox();
+	protected JComboBox<Operation> getOperationsBox() {
+		JComboBox<Operation> comboOpe = new JComboBox<>();
 		ArrayList<Operation> opeList = new ArrayList<>();
 		try {
 			opeList.addAll(getOperationCollection());
@@ -283,8 +384,8 @@ abstract class OperationRowBase extends JPanel {
 		return comboOpe;
 	}
 
-	protected JComboBox getComboResultBox() {
-		JComboBox comboResult = new JComboBox();
+	protected JComboBox<String> getComboResultBox() {
+		JComboBox<String> comboResult = new JComboBox<>();
 		for (String description : operationResults) {
 			comboResult.addItem(description);
 		}

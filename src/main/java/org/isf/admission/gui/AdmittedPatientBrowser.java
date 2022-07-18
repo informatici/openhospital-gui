@@ -101,6 +101,8 @@ import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 
+import com.github.lgooddatepicker.zinternaltools.WrapLayout;
+
 /**
  * This class shows a list of all known patients and for each if (and where) they are actually admitted,
  * you can:
@@ -367,6 +369,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		}
 		
 		initComponents();
+		setMinimumSize(new Dimension(1020, 570));
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -691,7 +694,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	}
 
 	private JPanel getButtonPanel() {
-		JPanel buttonPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new WrapLayout());
 		if (MainMenu.checkUserGrants("btnadmnew")) {
 			buttonPanel.add(getButtonNew());
 		}

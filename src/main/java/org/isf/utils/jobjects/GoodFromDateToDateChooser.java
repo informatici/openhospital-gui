@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2022 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -22,46 +22,37 @@
 package org.isf.utils.jobjects;
 
 import java.awt.BorderLayout;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.isf.generaldata.MessageBundle;
 
-/**
- * @author Mwithi
- */
-public class JFromDateToDateChooserDialog extends JDialog {
+public class GoodFromDateToDateChooser extends JDialog {
 
-	private static final long serialVersionUID = 1L;
-
-	/*
-	 * Attributes
-	 */
-	private JFromDateToDateChooser fromDateToDateChooser;
+	private GoodDateChooser fromDateChooser;
+	private GoodDateChooser toDateChooser;
 	private JPanel buttonsPanel;
 	private JButton buttonOK;
 	private JButton buttonExcel;
 	private JButton buttonCancel;
-	private boolean cancel = false;
+	private boolean isCancel = false;
+	private JPanel datesChooserPanel;
+	private LocalDate dateFrom;
+	private LocalDate dateTo;
+	private boolean isExcel = false;
 
-	/*
-	 * Return Value
-	 */
-	private Date dateFrom;
-	private Date dateTo;
-	private boolean excel = false;
-
-	public JFromDateToDateChooserDialog(ModalJFrame owner) {
+	public GoodFromDateToDateChooser(ModalJFrame owner) {
 		super(owner, true);
-		this.dateFrom = new Date();
-		this.dateTo = new Date();
+		this.dateFrom = LocalDate.now();
+		this.dateTo = LocalDate.now();
 		initComponents();
 	}
 
-	public JFromDateToDateChooserDialog(JDialog owner, Date dateFrom, Date dateTo) {
+	public GoodFromDateToDateChooser(JDialog owner, LocalDate dateFrom, LocalDate dateTo) {
 		super(owner, true);
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;
@@ -69,14 +60,12 @@ public class JFromDateToDateChooserDialog extends JDialog {
 	}
 
 	private void initComponents() {
-		//		setPreferredSize(new Dimension(400, 200));
 		getContentPane().setLayout(new BorderLayout(10, 10));
-		getContentPane().add(getJFromDateToDateChooser(this.dateFrom, this.dateTo), BorderLayout.CENTER);
+		getContentPane().add(getDatesChoosers(dateFrom, dateTo), BorderLayout.CENTER);
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
 		pack();
 		setResizable(false);
 		setLocationRelativeTo(null);
-
 	}
 
 	private JPanel getButtonsPanel() {
@@ -94,7 +83,7 @@ public class JFromDateToDateChooserDialog extends JDialog {
 			buttonCancel = new JButton(MessageBundle.getMessage("angal.common.cancel.btn"));
 			buttonCancel.setMnemonic(MessageBundle.getMnemonic("angal.common.cancel.btn.key"));
 			buttonCancel.addActionListener(actionEvent -> {
-				cancel = true;
+				isCancel = true;
 				dispose();
 			});
 		}
@@ -106,8 +95,8 @@ public class JFromDateToDateChooserDialog extends JDialog {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(actionEvent -> {
-				dateFrom = fromDateToDateChooser.getDateFrom();
-				dateTo = fromDateToDateChooser.getDateTo();
+				dateFrom = fromDateChooser.getDate();
+				dateTo = toDateChooser.getDate();
 				dispose();
 			});
 		}
@@ -119,36 +108,42 @@ public class JFromDateToDateChooserDialog extends JDialog {
 			buttonExcel = new JButton(MessageBundle.getMessage("angal.common.excel.btn"));
 			buttonExcel.setMnemonic(MessageBundle.getMnemonic("angal.common.excel.btn.key"));
 			buttonExcel.addActionListener(actionEvent -> {
-				dateFrom = fromDateToDateChooser.getDateFrom();
-				dateTo = fromDateToDateChooser.getDateTo();
-				excel = true;
+				dateFrom = fromDateChooser.getDate();
+				dateTo = toDateChooser.getDate();
+				isExcel = true;
 				dispose();
 			});
 		}
 		return buttonExcel;
 	}
 
-	private JFromDateToDateChooser getJFromDateToDateChooser(Date dateFrom, Date dateTo) {
-		if (fromDateToDateChooser == null) {
-			fromDateToDateChooser = new JFromDateToDateChooser(dateFrom, dateTo);
+	private JPanel getDatesChoosers(LocalDate dateFrom, LocalDate dateTo) {
+		if (datesChooserPanel == null) {
+			datesChooserPanel = new JPanel();
+			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ":"));
+			fromDateChooser = new GoodDateChooser(dateFrom);
+			datesChooserPanel.add(fromDateChooser);
+			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ":"));
+			toDateChooser = new GoodDateChooser(dateTo);
+			datesChooserPanel.add(toDateChooser);
 		}
-		return fromDateToDateChooser;
+		return datesChooserPanel;
 	}
 
-	public Date getDateFrom() {
+	public LocalDate getDateFrom() {
 		return dateFrom;
 	}
 
-	public Date getDateTo() {
+	public LocalDate getDateTo() {
 		return dateTo;
 	}
 
 	public boolean isExcel() {
-		return excel;
+		return isExcel;
 	}
 
 	public boolean isCancel() {
-		return cancel;
+		return isCancel;
 	}
 
 }

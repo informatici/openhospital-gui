@@ -21,18 +21,14 @@
  */
 package org.isf.admission.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
-
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDateTime;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -43,18 +39,16 @@ import javax.swing.JPanel;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.stat.gui.report.GenericReportPatientVersion2;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.time.Converters;
-
-import com.toedter.calendar.JDateChooser;
 
 public class PatientFolderReportModal extends ModalJFrame {
 
 	private JFrame parent;
 	private Integer patId;
 	private JPanel jPanelChooser;
-	private JDateChooser jDateChooserDateFrom;
-	private JDateChooser jDateChooserDateTo;
+	private GoodDateChooser jDateChooserDateFrom;
+	private GoodDateChooser jDateChooserDateTo;
 	private JPanel choosePanel;
 	private JButton launchReportButton;
 	private JButton closeButton;
@@ -180,7 +174,7 @@ public class PatientFolderReportModal extends ModalJFrame {
 			launchReportButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					new GenericReportPatientVersion2(patId, getParameterString(), Converters.convertToLocalDateTime(getDateFromValue()), Converters.convertToLocalDateTime(getDateToValue()), GeneralData.PATIENTSHEET);
+					new GenericReportPatientVersion2(patId, getParameterString(), getDateFromValue(), getDateToValue(), GeneralData.PATIENTSHEET);
 				}
 				
 				protected String getParameterString() {
@@ -382,51 +376,33 @@ public class PatientFolderReportModal extends ModalJFrame {
 		return examinationCheck.isSelected();
 	}
 
-	private JDateChooser getJDateChooserDateFrom() {
+	private GoodDateChooser getJDateChooserDateFrom() {
 		if (jDateChooserDateFrom == null) {
-			jDateChooserDateFrom = new JDateChooser();
-			jDateChooserDateFrom.setPreferredSize(new Dimension(200, 40));
-			jDateChooserDateFrom.setLocale(new Locale(GeneralData.LANGUAGE));
-			jDateChooserDateFrom.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
-			jDateChooserDateFrom.setDate(Converters.toDate(fromDate.atStartOfDay()));
-			jDateChooserDateFrom.addPropertyChangeListener("date", evt -> {
-				Date date = (Date) evt.getNewValue();
-				jDateChooserDateFrom.setDate(date);
-			});
+			jDateChooserDateFrom = new GoodDateChooser(fromDate);
 		}
 		return jDateChooserDateFrom;
 	}
 
-	private JDateChooser getJDateChooserDateTo() {
+	private GoodDateChooser getJDateChooserDateTo() {
 		if (jDateChooserDateTo == null) {
-			jDateChooserDateTo = new JDateChooser();
-			jDateChooserDateTo.setPreferredSize(new Dimension(200, 40));
-			jDateChooserDateTo.setLocale(new Locale(GeneralData.LANGUAGE));
-			jDateChooserDateTo.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
-			jDateChooserDateTo.setDate(new Date());
-			jDateChooserDateTo.addPropertyChangeListener("date", evt -> {
-				Date date = (Date) evt.getNewValue();
-				jDateChooserDateTo.setDate(date);
-			});
+			jDateChooserDateTo = new GoodDateChooser(LocalDate.now());
 		}
 		return jDateChooserDateTo;
 	}
 
-	public Date getDateToValue() {
-
-		Date date = jDateChooserDateTo.getDate();
+	public LocalDateTime getDateToValue() {
+		LocalDate date = jDateChooserDateTo.getDate();
 		if (date == null) {
-			jDateChooserDateTo.setDate(new Date());
+			jDateChooserDateTo.setDate(LocalDate.now());
 		}
-		return jDateChooserDateTo.getDate();
+		return jDateChooserDateTo.getDateEndOfDay();
 	}
 
-	public Date getDateFromValue() {
-
-		Date date = jDateChooserDateFrom.getDate();
+	public LocalDateTime getDateFromValue() {
+		LocalDate date = jDateChooserDateFrom.getDate();
 		if (date == null) {
-			jDateChooserDateFrom.setDate(new Date());
+			jDateChooserDateFrom.setDate(LocalDate.now());
 		}
-		return jDateChooserDateFrom.getDate();
+		return jDateChooserDateFrom.getDateStartOfDay();
 	}
 }

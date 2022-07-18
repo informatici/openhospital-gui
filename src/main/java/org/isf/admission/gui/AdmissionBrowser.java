@@ -96,7 +96,7 @@ import org.isf.pregtreattype.model.PregnantTreatmentType;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.exception.model.OHExceptionMessage;
-import org.isf.utils.jobjects.GoodDateTimeChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.ShadowBorder;
@@ -138,6 +138,11 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 public class AdmissionBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final int PREFERRED_WIDTH_DATES = 225;
+	private static final int PREFERRED_WIDTH_DIAGNOSIS = 550;
+	private static final int PREFERRED_WIDTH_TYPES = 220;
+	private static final int PREFERRED_HEIGHT_LINE = 24;
 
 	private EventListenerList admissionListeners = new EventListenerList();
 
@@ -213,25 +218,15 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private LocalDateTime visitDate = null;
 
-	private float weight = 0.0f;
-
 	private VoLimitedTextField weightField = null;
 
-	private GoodDateTimeChooser visitDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser visitDateFieldCal = null;
 
 	private JComboBox treatmTypeBox = null;
 
-	private static final int PREFERRED_WIDTH_DATES = 225;
-
-	private static final int PREFERRED_WIDTH_DIAGNOSIS = 550;
-
-	private static final int PREFERRED_WIDTH_TYPES = 220;
-
-	private static final int PREFERRED_HEIGHT_LINE = 24;
-
 	private LocalDateTime deliveryDate = LocalDateTime.now();
 
-	private GoodDateTimeChooser deliveryDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser deliveryDateFieldCal = null;
 
 	private JComboBox deliveryTypeBox = null;
 
@@ -249,11 +244,11 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private LocalDateTime abortDate = null;
 
-	private GoodDateTimeChooser ctrl1DateFieldCal = null;
+	private GoodDateTimeSpinnerChooser ctrl1DateFieldCal = null;
 
-	private GoodDateTimeChooser ctrl2DateFieldCal = null;
+	private GoodDateTimeSpinnerChooser ctrl2DateFieldCal = null;
 
-	private GoodDateTimeChooser abortDateFieldCal = null;
+	private GoodDateTimeSpinnerChooser abortDateFieldCal = null;
 
 	private JComboBox<Ward> wardBox;
 
@@ -290,7 +285,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private LocalDateTime dateIn;
 
-	private GoodDateTimeChooser dateInFieldCal = null;
+	private GoodDateTimeSpinnerChooser dateInFieldCal = null;
 
 	private JComboBox admTypeBox = null;
 
@@ -316,7 +311,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private LocalDateTime dateOut = null;
 
-	private GoodDateTimeChooser dateOutFieldCal = null;
+	private GoodDateTimeSpinnerChooser dateOutFieldCal = null;
 
 	private JComboBox disTypeBox = null;
 
@@ -362,10 +357,6 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 
-	private JTextField searchDiseasetextField;
-	private JTextField searchDiseaseOut1textField;
-	private JTextField searchDiseaseOut2textField;
-	private JTextField searchDiseaseOut3textField;
 	private JButton searchButton;
 	private JButton searchDiseaseOut1Button;
 	private JButton searchDiseaseOut2Button;
@@ -741,7 +732,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			weightField = new VoLimitedTextField(5, 5);
 			if (editing && admission.getWeight() != null) {
-				weight = admission.getWeight();
+				float weight = admission.getWeight();
 				weightField.setText(String.valueOf(weight));
 			}
 
@@ -760,7 +751,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			} else {
 				visitDate = LocalDateTime.now();
 			}
-			visitDateFieldCal = new GoodDateTimeChooser(visitDate);
+			visitDateFieldCal = new GoodDateTimeSpinnerChooser(visitDate);
 
 			visitDatePanel.add(visitDateFieldCal);
 			visitDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.visitdate.border")));
@@ -831,7 +822,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getDeliveryDate() != null) {
 				deliveryDate = admission.getDeliveryDate();
 			}
-			deliveryDateFieldCal = new GoodDateTimeChooser(deliveryDate);
+			deliveryDateFieldCal = new GoodDateTimeSpinnerChooser(deliveryDate);
 
 			deliveryDatePanel.add(deliveryDateFieldCal);
 			deliveryDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.deliverydate.border")));
@@ -845,7 +836,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getAbortDate() != null) {
 				abortDate = admission.getAbortDate();
 			}
-			abortDateFieldCal = new GoodDateTimeChooser(abortDate);
+			abortDateFieldCal = new GoodDateTimeSpinnerChooser(abortDate);
 			abortDatePanel.add(abortDateFieldCal);
 			abortDatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.abortdate.border")));
 		}
@@ -859,7 +850,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getCtrlDate1() != null) {
 				ctrl1Date = admission.getCtrlDate1();
 			}
-			ctrl1DateFieldCal = new GoodDateTimeChooser(ctrl1Date);
+			ctrl1DateFieldCal = new GoodDateTimeSpinnerChooser(ctrl1Date);
 			control1DatePanel.add(ctrl1DateFieldCal);
 			control1DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln1date.border")));
 		}
@@ -873,7 +864,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getCtrlDate2() != null) {
 				ctrl2Date = admission.getCtrlDate2();
 			}
-			ctrl2DateFieldCal = new GoodDateTimeChooser(ctrl2Date);
+			ctrl2DateFieldCal = new GoodDateTimeSpinnerChooser(ctrl2Date);
 			control2DatePanel.add(ctrl2DateFieldCal);
 			control2DatePanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.admission.controln2date.border")));
 		}
@@ -1018,7 +1009,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 			Disease diseaseIn = admission.getDiseaseIn();
 			diseaseInBox.removeAllItems();
-			diseaseInBox.addItem("");
+			diseaseInBox.addItem(null);
 			Optional<Disease> found = diseaseFinder.findAndSelectDisease(diseaseIn, diseaseInList, diseaseInBox);
 
 			if (editing && !found.isPresent() && diseaseIn != null) {
@@ -1041,7 +1032,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				}
 			}
 
-			searchDiseasetextField = new JTextField();
+			JTextField searchDiseasetextField = new JTextField();
 			diseaseInPanel.add(searchDiseasetextField);
 			searchDiseasetextField.setColumns(10);
 			searchDiseasetextField.addKeyListener(new KeyListener() {
@@ -1148,7 +1139,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (dateIn == null) {
 				dateIn = LocalDateTime.now();
 			}
-			dateInFieldCal = new GoodDateTimeChooser(dateIn, true, false);
+			dateInFieldCal = new GoodDateTimeSpinnerChooser(dateIn, false);
 
 			dateInFieldCal.addDateTimeChangeListener(event -> {
 				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
@@ -1227,7 +1218,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 
 			/////////////
-			searchDiseaseOut1textField = new JTextField();
+			JTextField searchDiseaseOut1textField = new JTextField();
 			diseaseOut1Panel.add(searchDiseaseOut1textField);
 			searchDiseaseOut1textField.setColumns(10);
 			searchDiseaseOut1textField.addKeyListener(new KeyListener() {
@@ -1315,7 +1306,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 
 			/////////////
-			searchDiseaseOut2textField = new JTextField();
+			JTextField searchDiseaseOut2textField = new JTextField();
 			diseaseOut2Panel.add(searchDiseaseOut2textField);
 			searchDiseaseOut2textField.setColumns(10);
 			searchDiseaseOut2textField.addKeyListener(new KeyListener() {
@@ -1402,7 +1393,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 
 			/////////////
-			searchDiseaseOut3textField = new JTextField();
+			JTextField searchDiseaseOut3textField = new JTextField();
 			diseaseOut3Panel.add(searchDiseaseOut3textField);
 			searchDiseaseOut3textField.setColumns(10);
 			searchDiseaseOut3textField.addKeyListener(new KeyListener() {
@@ -1514,7 +1505,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getDisDate() != null) {
 				dateOut = admission.getDisDate();
 			}
-			dateOutFieldCal = new GoodDateTimeChooser(editing ? dateOut : null, true, false);
+			dateOutFieldCal = new GoodDateTimeSpinnerChooser(editing ? dateOut : null, false);
 			dateOutFieldCal.addDateTimeChangeListener(event -> {
 				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
 				if (dateChangeEvent != null) {

@@ -21,8 +21,7 @@
  */
 package org.isf.opd.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM_SS;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -38,11 +37,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.EventListener;
 import java.util.Iterator;
 import java.util.List;
@@ -94,17 +91,15 @@ import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
+import org.isf.utils.jobjects.GoodDateTimeVisitChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
-import org.isf.utils.time.Converters;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
-
-import com.toedter.calendar.JDateChooser;
 
 /**
  * ------------------------------------------
@@ -144,6 +139,8 @@ import com.toedter.calendar.JDateChooser;
 public class OpdEditExtended extends ModalJFrame implements PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final int DEFAULT_VISIT_DURATION = 30;
 
 	@Override
 	public void patientInserted(AWTEvent e) {
@@ -206,21 +203,14 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JPanel jPanelCentral;
 	private JPanel jPanelData = null;
 	private JPanel jPanelButtons = null;
-	private JLabel jLabelDate = null;
-	private JLabel jLabelDiseaseType1 = null;
-	private JLabel jLabelDisease1 = null;
-	private JLabel jLabelDis2 = null;
-	private JLabel jLabelDis3 = null;
 
 	private JComboBox diseaseTypeBox = null;
 	private JComboBox diseaseBox1 = null;
 	private JComboBox diseaseBox2 = null;
 	private JComboBox diseaseBox3 = null;
-	private JLabel jLabelAge = null;
-	private JLabel jLabelSex = null;
 	private LocalDateTime visitDateOpd = null;
-	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY, new Locale(GeneralData.LANGUAGE));
-	private CustomJDateChooser opdDateFieldCal = null;
+	private DateTimeFormatter currentDateFormat = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM, new Locale(GeneralData.LANGUAGE));
+	private GoodDateTimeSpinnerChooser opdDateFieldCal = null;
 	private JButton okButton = null;
 	private JButton cancelButton = null;
 	private JButton jButtonExamination = null;
@@ -228,14 +218,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JCheckBox newPatientCheckBox = null;
 	private JCheckBox referralToCheckBox = null;
 	private JCheckBox referralFromCheckBox = null;
-	private JPanel jPanelSex = null;
-	private ButtonGroup group = null;
-
-	private JLabel jLabelFirstName = null;
-	private JLabel jLabelSecondName = null;
-	private JLabel jLabelAddress = null;
-	private JLabel jLabelCity = null;
-	private JLabel jLabelNextKin = null;
 
 	private JPanel jPanelPatient = null;
 
@@ -252,7 +234,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 	private VoLimitedTextField jTextPatientSrc;
 	private JComboBox jComboPatResult;
-	private JLabel jSearchLabel = null;
 	private JRadioButton radiof;
 	private JRadioButton radiom;
 	private JButton jPatientEditButton = null;
@@ -264,14 +245,11 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 	private Patient opdPatient = null;
 	private JPanel jNotePanel = null;
-	private JScrollPane jNoteScrollPane = null;
 	private JTextArea jNoteTextArea = null;
 	private JPanel jPatientNotePanel = null;
-	private JScrollPane jPatientScrollNote = null;
 	private JTextArea jPatientNote = null;
 	private JPanel jOpdNumberPanel = null;
 	private JTextField jOpdNumField = null;
-	private JLabel jOpdNumLabel = null;
 
 	/*
 	 * Managers and Arrays
@@ -287,7 +265,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private List<Patient> pat = new ArrayList<>();
 
 	private Disease lastOPDDisease1;
-	private JLabel JlabelOpd;
+	private JLabel jLabelOpd;
 
 	/*
 	 * Adds: Textfields and buttons to enable search in diagnosis
@@ -299,7 +277,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JButton searchDiseaseButton2;
 	private JButton searchDiseaseButton3;
 
-	private OperationRowOpd operationop;
 	private JTabbedPane jTabbedPaneOpd;
 	private JPanel jPanelOperation;
 
@@ -307,7 +284,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	 * Opd next visit fields
 	 */
 	private JLabel nextVisitLabel;
-	private CustomJDateChooser opdNextVisitDate;
+	private GoodDateTimeVisitChooser opdNextVisitDate;
 	private LocalDateTime nextDateBackup; //TODO: Workaround for update, a better solution must be found here
 
 	/**
@@ -402,13 +379,12 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		jPatientNote.setText("");
 		setMyMatteBorder(jPanelPatient, MessageBundle.getMessage("angal.common.patient.txt"));
 		radiom.setSelected(true);
-		opdPatient=null;
+		opdPatient = null;
 		opdNextVisitDate.setEnabled(false);
 	}
 	
 	//Alex: Resetting history from the last OPD visit for the patient
-	private boolean getLastOpd(int code)
-	{
+	private boolean getLastOpd(int code) {
 		Opd lastOpd = null;
 		try {
 			lastOpd = opdManager.getLastOpd(code);
@@ -633,7 +609,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gblPanelData.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 			jPanelData.setLayout(gblPanelData);
 
-			jLabelDate = new JLabel(MessageBundle.getMessage("angal.opd.attendancedate.txt"));
+			JLabel jLabelDate = new JLabel(MessageBundle.getMessage("angal.opd.attendancedate.txt"));
 			GridBagConstraints gbcLabelDate = new GridBagConstraints();
 			gbcLabelDate.fill = GridBagConstraints.VERTICAL;
 			gbcLabelDate.anchor = GridBagConstraints.WEST;
@@ -660,8 +636,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcLabelOpd.insets = new Insets(0, 0, 5, 0);
 			gbcLabelOpd.gridx = 4;
 			gbcLabelOpd.gridy = 0;
-			jPanelData.add(getJlabelOpd(), gbcLabelOpd);
-			jSearchLabel = new JLabel(MessageBundle.getMessage("angal.common.search.txt"));
+			jPanelData.add(getJLabelOpd(), gbcLabelOpd);
+			JLabel jSearchLabel = new JLabel(MessageBundle.getMessage("angal.common.search.txt"));
 			GridBagConstraints gbcSearchLabel = new GridBagConstraints();
 			gbcSearchLabel.fill = GridBagConstraints.VERTICAL;
 			gbcSearchLabel.anchor = GridBagConstraints.WEST;
@@ -694,7 +670,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcPatientEditButton.gridx = 4;
 			jPanelData.add(getJPatientEditButton(), gbcPatientEditButton);
 
-			jLabelDiseaseType1 = new JLabel(MessageBundle.getMessage("angal.opd.diseasetype.txt"));
+			JLabel jLabelDiseaseType1 = new JLabel(MessageBundle.getMessage("angal.opd.diseasetype.txt"));
 			GridBagConstraints gbcLabelDiseaseType1 = new GridBagConstraints();
 			gbcLabelDiseaseType1.fill = GridBagConstraints.VERTICAL;
 			gbcLabelDiseaseType1.insets = new Insets(5, 5, 5, 5);
@@ -710,7 +686,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcDiseaseTypeBox.gridx = 1;
 			jPanelData.add(getDiseaseTypeBox(), gbcDiseaseTypeBox);
 
-			jLabelDisease1 = new JLabel(MessageBundle.getMessage("angal.opd.diagnosis.txt"));
+			JLabel jLabelDisease1 = new JLabel(MessageBundle.getMessage("angal.opd.diagnosis.txt"));
 			GridBagConstraints gbcLabelDisease1 = new GridBagConstraints();
 			gbcLabelDisease1.fill = GridBagConstraints.VERTICAL;
 			gbcLabelDisease1.insets = new Insets(5, 5, 5, 5);
@@ -764,7 +740,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcDiseaseBox1.gridx = 3;
 			jPanelData.add(getDiseaseBox1(), gbcDiseaseBox1);
 
-			jLabelDis2 = new JLabel(MessageBundle.getMessage("angal.opd.diagnosisnfulllist2.txt"));
+			JLabel jLabelDis2 = new JLabel(MessageBundle.getMessage("angal.opd.diagnosisnfulllist2.txt"));
 			GridBagConstraints gbcLabelDis2 = new GridBagConstraints();
 			gbcLabelDis2.fill = GridBagConstraints.VERTICAL;
 			gbcLabelDis2.insets = new Insets(5, 5, 5, 5);
@@ -818,7 +794,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcDiseaseBox2.gridx = 3;
 			jPanelData.add(getDiseaseBox2(), gbcDiseaseBox2);
 
-			jLabelDis3 = new JLabel(MessageBundle.getMessage("angal.opd.diagnosisnfulllist3.txt"));
+			JLabel jLabelDis3 = new JLabel(MessageBundle.getMessage("angal.opd.diagnosisnfulllist3.txt"));
 			GridBagConstraints gbcLabelDisBox3 = new GridBagConstraints();
 			gbcLabelDisBox3.fill = GridBagConstraints.VERTICAL;
 			gbcLabelDisBox3.insets = new Insets(5, 5, 5, 5);
@@ -928,7 +904,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		return jPanelData;
 	}
 
-	private CustomJDateChooser getOpdDateFieldCal() {
+	private GoodDateTimeSpinnerChooser getOpdDateFieldCal() {
 		if (opdDateFieldCal == null) {
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDate() == null) {
@@ -939,13 +915,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			} else {
 				visitDateOpd  = opd.getDate();
 			}
-			opdDateFieldCal = new CustomJDateChooser(visitDateOpd, DATE_FORMAT_DD_MM_YY_HH_MM_SS);
+			opdDateFieldCal = new GoodDateTimeSpinnerChooser(visitDateOpd);
 			opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdDateFieldCal.setDateFormatString(DATE_FORMAT_DD_MM_YY_HH_MM_SS);
-			opdDateFieldCal.addPropertyChangeListener("date", propertyChangeEvent -> {
-				Date newValue = (Date) propertyChangeEvent.getNewValue();
-				jOpdNumField.setText(String.valueOf(getOpdProgYear(Converters.convertToLocalDateTime(newValue))));
-			});
 		}
 		return opdDateFieldCal;
 	}
@@ -953,9 +924,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JPanel getJOpdNumberPanel() {
 		if (jOpdNumberPanel == null) {
 			jOpdNumberPanel = new JPanel();
-			
-			JLabel jOpdNumLabel = new JLabel(MessageBundle.getMessage("angal.opd.opdnumber.txt"));
-			
+
 			jOpdNumField = new JTextField(10);
 			
 			jOpdNumField.setFocusable(true);
@@ -965,7 +934,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				jOpdNumField.setText(String.valueOf(opd.getProgYear()));
 			}
 
-			jOpdNumberPanel.add(jOpdNumLabel);
+			jOpdNumberPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.opdnumber.txt")));
 			jOpdNumberPanel.add(jOpdNumField);
 		}
 		return jOpdNumberPanel;
@@ -991,7 +960,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		if (jNotePanel == null) {
 			jNotePanel = new JPanel();
 			jNotePanel = setMyBorder(jNotePanel, MessageBundle.getMessage("angal.opd.notessymptom.txt"));
-			jNoteScrollPane = new JScrollPane(getJTextArea());
+			JScrollPane jNoteScrollPane = new JScrollPane(getJTextArea());
 			jNoteScrollPane.setVerticalScrollBar(new JScrollBar());
 			jNoteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			jNoteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -1349,7 +1318,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		if (jPanelOperation == null) {
 			jPanelOperation = new JPanel();
 			jPanelOperation.setLayout(new BorderLayout(0, 0));
-			operationop = new OperationRowOpd(opd);
+			OperationRowOpd operationop = new OperationRowOpd(opd);
 			addSurgeryListener(operationop);
 			jPanelOperation.add(operationop);
 		}
@@ -1367,7 +1336,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			jPanelPatient.setLayout(gblPanelPatient);
 			setMyMatteBorder(jPanelPatient, MessageBundle.getMessage("angal.common.patient.txt"));
 
-			jLabelFirstName = new JLabel(MessageBundle.getMessage("angal.opd.firstname.txt") + "\t");
+			JLabel jLabelFirstName = new JLabel(MessageBundle.getMessage("angal.opd.firstname.txt") + "\t");
 			GridBagConstraints gbcLabelFirstName = new GridBagConstraints();
 			gbcLabelFirstName.fill = GridBagConstraints.BOTH;
 			gbcLabelFirstName.insets = new Insets(5, 5, 5, 5);
@@ -1383,7 +1352,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcFieldFirstName.gridx = 1;
 			gbcFieldFirstName.gridy = 0;
 			jPanelPatient.add(jFieldFirstName, gbcFieldFirstName);
-			jLabelSecondName = new JLabel(MessageBundle.getMessage("angal.opd.secondname.txt") + "\t");
+			JLabel jLabelSecondName = new JLabel(MessageBundle.getMessage("angal.opd.secondname.txt") + "\t");
 			GridBagConstraints gbcLabelSecondName = new GridBagConstraints();
 			gbcLabelSecondName.insets = new Insets(5, 5, 5, 5);
 			gbcLabelSecondName.fill = GridBagConstraints.BOTH;
@@ -1399,7 +1368,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcFieldSecondName.gridx = 1;
 			gbcFieldSecondName.gridy = 1;
 			jPanelPatient.add(jFieldSecondName, gbcFieldSecondName);
-			jLabelAddress = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
+			JLabel jLabelAddress = new JLabel(MessageBundle.getMessage("angal.common.address.txt"));
 			GridBagConstraints gbcLabelAddress = new GridBagConstraints();
 			gbcLabelAddress.fill = GridBagConstraints.BOTH;
 			gbcLabelAddress.insets = new Insets(5, 5, 5, 5);
@@ -1415,7 +1384,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcFieldAddress.gridx = 1;
 			gbcFieldAddress.gridy = 2;
 			jPanelPatient.add(jFieldAddress, gbcFieldAddress);
-			jLabelCity = new JLabel(MessageBundle.getMessage("angal.common.city.txt"));
+			JLabel jLabelCity = new JLabel(MessageBundle.getMessage("angal.common.city.txt"));
 			GridBagConstraints gbcLabelCity = new GridBagConstraints();
 			gbcLabelCity.fill = GridBagConstraints.BOTH;
 			gbcLabelCity.insets = new Insets(5, 5, 5, 5);
@@ -1431,7 +1400,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcFieldCity.gridx = 1;
 			gbcFieldCity.gridy = 3;
 			jPanelPatient.add(jFieldCity, gbcFieldCity);
-			jLabelNextKin = new JLabel(MessageBundle.getMessage("angal.opd.nextofkin.txt"));
+			JLabel jLabelNextKin = new JLabel(MessageBundle.getMessage("angal.opd.nextofkin.txt"));
 			GridBagConstraints gbcLabelNextKin = new GridBagConstraints();
 			gbcLabelNextKin.fill = GridBagConstraints.BOTH;
 			gbcLabelNextKin.insets = new Insets(5, 5, 5, 5);
@@ -1447,7 +1416,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcFieldNextKin.gridx = 1;
 			gbcFieldNextKin.gridy = 4;
 			jPanelPatient.add(jFieldNextKin, gbcFieldNextKin);
-			jLabelAge = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
+			JLabel jLabelAge = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
 			GridBagConstraints gbcLabelAge = new GridBagConstraints();
 			gbcLabelAge.fill = GridBagConstraints.BOTH;
 			gbcLabelAge.insets = new Insets(5, 5, 5, 5);
@@ -1463,7 +1432,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcFieldAge.gridx = 1;
 			gbcFieldAge.gridy = 5;
 			jPanelPatient.add(jFieldAge, gbcFieldAge);
-			jLabelSex = new JLabel(MessageBundle.getMessage("angal.common.sex.txt"));
+			JLabel jLabelSex = new JLabel(MessageBundle.getMessage("angal.common.sex.txt"));
 			GridBagConstraints gbcLabelSex = new GridBagConstraints();
 			gbcLabelSex.fill = GridBagConstraints.HORIZONTAL;
 			gbcLabelSex.insets = new Insets(5, 5, 5, 5);
@@ -1472,7 +1441,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			jPanelPatient.add(jLabelSex, gbcLabelSex);
 			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
 			radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
-			jPanelSex = new JPanel();
+			JPanel jPanelSex = new JPanel();
 			jPanelSex.add(radiom);
 			jPanelSex.add(radiof);
 			GridBagConstraints gbcPanelSex = new GridBagConstraints();
@@ -1489,7 +1458,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcPatientNote.gridheight = 7;
 			jPanelPatient.add(getJPatientNote(), gbcPatientNote);
 
-			group = new ButtonGroup();
+			ButtonGroup group = new ButtonGroup();
 			group.add(radiom);
 			group.add(radiof);
 			radiom.setSelected(true);
@@ -1508,7 +1477,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JPanel getJPatientNote() {
 		if (jPatientNotePanel == null) {
 			jPatientNotePanel = new JPanel(new BorderLayout());
-			jPatientScrollNote = new JScrollPane(getJPatientNoteArea());
+			JScrollPane jPatientScrollNote = new JScrollPane(getJPatientNoteArea());
 			jPatientScrollNote.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			jPatientScrollNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			jPatientScrollNote.setAutoscrolls(false);
@@ -1597,7 +1566,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 				
-				if (opdDateFieldCal.getDate() != null) {
+				if (opdDateFieldCal.getLocalDateTime() != null) {
 					visitDateOpd = LocalDateTime.now();
 					opd.setDate(visitDateOpd);
 				} else {
@@ -1806,11 +1775,11 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		return c;
 	}
 
-	private JLabel getJlabelOpd() {
-		if (JlabelOpd == null) {
-			JlabelOpd = new JLabel("");
+	private JLabel getJLabelOpd() {
+		if (jLabelOpd == null) {
+			jLabelOpd = new JLabel("");
 		}
-		return JlabelOpd;
+		return jLabelOpd;
 	}
 
 	@Override
@@ -1890,30 +1859,18 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		return nextVisitLabel;
 	}
 	
-	private JDateChooser getOpdNextVisitDate() {
+	private GoodDateTimeVisitChooser getOpdNextVisitDate() {
 		if (opdNextVisitDate == null) {
-			opdNextVisitDate = new CustomJDateChooser();
-			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdNextVisitDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
 
 			LocalDateTime nextDate = null;
-			String d;
 			if (!insert) {
 				nextDate = opd.getNextVisitDate();
 			}
-			if (nextDate == null) {
-				d = "";
-			} else {
-				d = currentDateFormat.format(nextDate);
+			if (nextDate != null) {
 				nextDateBackup = nextDate; // in case of changing the date during this update
 			}
 
-			opdNextVisitDate = new CustomJDateChooser();
-			if (!d.equals("")) {
-				opdNextVisitDate.setDate(LocalDate.parse(d, currentDateFormat).atStartOfDay());
-			}
-			opdNextVisitDate.setLocale(new Locale(GeneralData.LANGUAGE));
-			opdNextVisitDate.setDateFormatString(DATE_FORMAT_DD_MM_YY);
+			opdNextVisitDate = new GoodDateTimeVisitChooser(nextDate, DEFAULT_VISIT_DURATION);  // TODO change when OPD becomes a Ward
 
 			if (opd.getPatient() == null) {
 				opdNextVisitDate.setEnabled(false);

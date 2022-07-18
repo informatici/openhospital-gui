@@ -21,8 +21,8 @@
  */
 package org.isf.medicalstock.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY_HH_MM;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
 
 import java.awt.BorderLayout;
@@ -31,7 +31,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -100,6 +99,8 @@ import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.lgooddatepicker.zinternaltools.WrapLayout;
+
 /**
  * ------------------------------------------
  * MovStockBrowser - list medicals movement. let the user search for movements
@@ -117,20 +118,14 @@ public class MovStockBrowser extends ModalJFrame {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(MovStockBrowser.class);
 
-	private static String FROM_LABEL = MessageBundle.getMessage("angal.common.from.txt") + ':';
-	private static String TO_LABEL = MessageBundle.getMessage("angal.common.to.txt") + ':';
+	private static final String FROM_LABEL = MessageBundle.getMessage("angal.common.from.txt") + ':';
+	private static final String TO_LABEL = MessageBundle.getMessage("angal.common.to.txt") + ':';
+
+	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM);
 
 	private final JFrame myFrame;
-	private JPanel contentPane;
-	private JPanel buttonPanel;
-	private JPanel tablePanel;
-	private JButton closeButton;
-	private JButton chargeButton;
-	private JButton dischargeButton;
 	private JButton filterButton;
-	private JButton exportToExcel;
-	private JButton stockCardButton;
-	private JButton stockLedgerButton;
 	private JPanel filterPanel;
 	private JCheckBox jCheckBoxKeepFilter;
 	private JComboBox medicalBox;
@@ -171,12 +166,11 @@ public class MovStockBrowser extends ModalJFrame {
 	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
 			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, true };
 
-	private int[] pColumnWidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70 };
+	private int[] pColumnWidth = { 50, 90, 45, 130, 50, 150, 70, 70, 80, 80, 50, 50, 70 };
 
 	/*
 	 * Adds to facilitate the selection of products
 	 */
-	private JPanel searchPanel;
 	private JTextField searchTextField;
 	private JButton searchButton;
 
@@ -198,19 +192,10 @@ public class MovStockBrowser extends ModalJFrame {
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
-
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 30;
-		final int pfrmWidth = 24;
-		final int pfrmHeight = 22;
-		this.setBounds((screensize.width - screensize.width * pfrmWidth
-				/ pfrmBase) / 2, (screensize.height - screensize.height
-				* pfrmHeight / pfrmBase) / 2, screensize.width * pfrmWidth
-				/ pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		setContentPane(getContentpane());
 
 		updateTotals();
+		setMinimumSize(new Dimension(775, 655));
 		pack();
 		setVisible(true);
 		setLocationRelativeTo(null);
@@ -218,8 +203,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JPanel getContentpane() {
-		contentPane = new JPanel();
-		contentPane.setLayout(new BorderLayout());
+		JPanel contentPane = new JPanel(new BorderLayout());
 		contentPane.add(getFilterPanel(), BorderLayout.WEST);
 		contentPane.add(getTablesPanel(), BorderLayout.CENTER);
 		contentPane.add(getButtonPanel(), BorderLayout.SOUTH);
@@ -236,7 +220,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JPanel getButtonPanel() {
-		buttonPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new WrapLayout());
 		if (MainMenu.checkUserGrants("btnpharmstockcharge")) {
 			buttonPanel.add(getChargeButton());
 		}
@@ -251,7 +235,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JButton getStockCardButton() {
-		stockCardButton = new JButton(MessageBundle.getMessage("angal.common.stockcard.btn"));
+		JButton stockCardButton = new JButton(MessageBundle.getMessage("angal.common.stockcard.btn"));
 		stockCardButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockcard.btn.key"));
 		stockCardButton.addActionListener(actionEvent -> {
 			Medical medical = null;
@@ -280,7 +264,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JButton getStockLedgerButton() {
-		stockLedgerButton = new JButton(MessageBundle.getMessage("angal.common.stockledger.btn"));
+		JButton stockLedgerButton = new JButton(MessageBundle.getMessage("angal.common.stockledger.btn"));
 		stockLedgerButton.setMnemonic(MessageBundle.getMnemonic("angal.common.stockledger.btn.key"));
 		stockLedgerButton.addActionListener(actionEvent -> {
 
@@ -293,7 +277,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JPanel getTablesPanel() {
-		tablePanel = new JPanel();
+		JPanel tablePanel = new JPanel();
 		tablePanel.setLayout(new BorderLayout());
 		tablePanel.add(getTable(), BorderLayout.CENTER);
 		tablePanel.add(getTableTotal(), BorderLayout.SOUTH);
@@ -549,7 +533,7 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 		});
 
-		searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		searchPanel.add(searchTextField);
 		searchPanel.add(searchButton);
 		searchPanel.setMaximumSize(new Dimension(150, 25));
@@ -903,7 +887,7 @@ public class MovStockBrowser extends ModalJFrame {
 	 * @return
 	 */
 	private JButton getCloseButton() {
-		closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
+		JButton closeButton = new JButton(MessageBundle.getMessage("angal.common.close.btn"));
 		closeButton.setMnemonic(MessageBundle.getMnemonic("angal.common.close.btn.key"));
 		closeButton.addActionListener(actionEvent -> dispose());
 		return closeButton;
@@ -915,7 +899,7 @@ public class MovStockBrowser extends ModalJFrame {
 	 * @return
 	 */
 	private JButton getChargeButton() {
-		chargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.charge.btn"));
+		JButton chargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.charge.btn"));
 		chargeButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.charge.btn.key"));
 		chargeButton.addActionListener(actionEvent -> {
 			new MovStockMultipleCharging(myFrame);
@@ -935,7 +919,7 @@ public class MovStockBrowser extends ModalJFrame {
 	 * @return
 	 */
 	private JButton getDischargeButton() {
-		dischargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.discharge.btn"));
+		JButton dischargeButton = new JButton(MessageBundle.getMessage("angal.medicalstock.discharge.btn"));
 		dischargeButton.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.discharge.btn.key"));
 		dischargeButton.addActionListener(actionEvent -> {
 			new MovStockMultipleDischarging(myFrame);
@@ -950,7 +934,7 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JButton getExportToExcelButton() {
-		exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
+		JButton exportToExcel = new JButton(MessageBundle.getMessage("angal.medicalstock.exporttoexcel.btn"));
 		exportToExcel.setMnemonic(MessageBundle.getMnemonic("angal.medicalstock.exporttoexcel.btn.key"));
 		exportToExcel.addActionListener(actionEvent -> {
 
@@ -1141,16 +1125,14 @@ public class MovStockBrowser extends ModalJFrame {
 		if (time == null) {
 			return MessageBundle.getMessage("angal.medicalstock.nodate");
 		}
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY);
-		return dateTimeFormatter.format(time);
+		return DATE_FORMATTER.format(time);
 	}
 
 	private String formatDateTime(LocalDateTime time) {
 		if (time == null) {
 			return MessageBundle.getMessage("angal.medicalstock.nodate");
 		}
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YY_HH_MM);
-		return dateTimeFormatter.format(time);
+		return DATE_TIME_FORMATTER.format(time);
 	}
 
 	class EnabledTableCellRenderer extends DefaultTableCellRenderer {

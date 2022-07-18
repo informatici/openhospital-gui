@@ -35,12 +35,12 @@ import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -67,7 +67,7 @@ import org.isf.patient.model.Patient;
 import org.isf.stat.gui.report.WardVisitsReport;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.LocalDateSupportingJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.time.TimeTools;
@@ -75,8 +75,6 @@ import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
-
-import com.toedter.calendar.JDateChooser;
 
 /**
  * @author Mwithi
@@ -137,7 +135,7 @@ public class VisitView extends ModalJFrame {
 	private JFrame owner;
 	private JScrollPane jScrollPaneSecondtday;
 	private JTable jTableSecond;
-	private LocalDateSupportingJDateChooser visitDateChooser;
+	private GoodDateChooser visitDateChooser;
 	private JButton backButton;
 	private JButton nextButton;
 	private JPanel todayPanel;
@@ -209,7 +207,9 @@ public class VisitView extends ModalJFrame {
 		getContentPane().add(dayCalendar(), BorderLayout.CENTER);
 		showGui(ward != null);
 
+		setPreferredSize(new Dimension(1350, 600));
 		setSize(1350, 600);
+		setResizable(false);
 	}
 
 	private JPanel dayCalendar() {
@@ -489,10 +489,10 @@ public class VisitView extends ModalJFrame {
 			gotoDateButton.setMnemonic(MessageBundle.getMnemonic("angal.visit.gotodate.btn.key"));
 			gotoDateButton.addActionListener(actionEvent -> {
 				if (visitDateChooser.getDate() != null) {
-					setDateFirstThenSecond(visitDateChooser.getLocalDateTime());
+					setDateFirstThenSecond(visitDateChooser.getDateStartOfDay());
 					updatePanels();
 				} else {
-					visitDateChooser.getCalendarButton().doClick();
+					visitDateChooser.openPopup();
 				}
 			});
 
@@ -502,13 +502,14 @@ public class VisitView extends ModalJFrame {
 		return dateViPanel;
 	}
 
-	private JDateChooser getVisitDateChooser() {
-		visitDateChooser = new LocalDateSupportingJDateChooser();
-		visitDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-		visitDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YYYY);
-		visitDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
-			setDateFirstThenSecond(visitDateChooser.getLocalDateTime());
-			updatePanels();
+	private GoodDateChooser getVisitDateChooser() {
+		visitDateChooser = new GoodDateChooser(LocalDate.now());
+		visitDateChooser.addDateChangeListener(dateChangeEvent -> {
+			LocalDate newDate = dateChangeEvent.getNewDate();
+			if (newDate != null) {
+				setDateFirstThenSecond(visitDateChooser.getDateStartOfDay());
+				updatePanels();
+			}
 		});
 		return visitDateChooser;
 	}
@@ -528,7 +529,7 @@ public class VisitView extends ModalJFrame {
 		((VisitSecondModel) jTableSecond.getModel()).fireTableDataChanged();
 		jTableSecond.updateUI();
 
-		visitDateChooser.setDate(dateFirst);
+		visitDateChooser.setDate(dateFirst.toLocalDate());
 	}
 
 	private void setDateFirstThenSecond(LocalDateTime date) {

@@ -29,7 +29,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Locale;
 
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -40,27 +39,23 @@ import com.github.lgooddatepicker.components.DateTimePicker;
 import com.github.lgooddatepicker.components.TimePicker;
 import com.github.lgooddatepicker.components.TimePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateTimeChangeListener;
+import com.github.lgooddatepicker.optionalusertools.PickerUtilities;
+import com.github.lgooddatepicker.optionalusertools.TimeVetoPolicy;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
-public class GoodDateTimeChooser extends Panel {
+public abstract class GoodDateTimeChooserBase extends Panel {
 
-	private static final String TIME_FORMAT = "H:mm";
+	protected static final String TIME_FORMAT = "H:mm";
 
-	private DateTimePicker dateTimePicker;
-	private DatePickerSettings dateSettings;
-	private TimePickerSettings timeSettings;
+	protected DateTimePicker dateTimePicker;
+	protected DatePickerSettings dateSettings;
+	protected TimePickerSettings timeSettings;
 
-	public GoodDateTimeChooser(LocalDateTime dateTime) {
-		this(dateTime, true, true);
-	}
+	protected LocalTime startTime;
+	protected LocalTime endTime;
+	protected int increment;
 
-	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner) {
-		this(dateTime, useSpinner, true);
-	}
-
-	public GoodDateTimeChooser(LocalDateTime dateTime, boolean useSpinner, boolean useDefaultTimeChangeListener) {
-		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
-		this.setLayout(layout);
+	public void setBaseSettings() {
 		dateSettings = new DatePickerSettings();
 		dateSettings.setLocale(new Locale(GeneralData.LANGUAGE));
 		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT_DD_MM_YYYY);
@@ -71,41 +66,27 @@ public class GoodDateTimeChooser extends Panel {
 		timeSettings.setAllowKeyboardEditing(true);
 		timeSettings.setFormatForDisplayTime(TIME_FORMAT);
 		timeSettings.setFormatForMenuTimes(TIME_FORMAT);
-		if (useSpinner) {
-			timeSettings.setDisplayToggleTimeMenuButton(false);
-			timeSettings.setDisplaySpinnerButtons(true);
-		} else {
-			timeSettings.setDisplayToggleTimeMenuButton(true);
-			timeSettings.setDisplaySpinnerButtons(false);
-		}
-		dateTimePicker = new DateTimePicker(dateSettings, timeSettings);
-		// This helps the manual editing of the year field not to reset to some *very* old year value
-		dateSettings.setDateRangeLimits(LocalDate.of(999, 12, 31), null);
-		if (dateTime != null) {
-			dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
-			dateTimePicker.timePicker.setTime(dateTime.toLocalTime());
-		}
+	}
 
+	public void setIcon() {
 		ImageIcon calendarIcon = new ImageIcon("rsc/icons/calendar_button.png");
 		JButton datePickerButton = dateTimePicker.datePicker.getComponentToggleCalendarButton();
 		datePickerButton.setText("");
 		datePickerButton.setIcon(calendarIcon);
-
-		if (useDefaultTimeChangeListener) {
-			addDateTimeChangeListener(event -> {
-				DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
-				if (dateChangeEvent != null) {
-					// if the time is blank set it to the current time; otherwise leave it alone
-					TimePicker timePicker = event.getTimePicker();
-					if (timePicker.getTime() == null) {
-						timePicker.setTime(LocalTime.now());
-					}
-				}
-			});
-		}
-
-		add(dateTimePicker);
 	}
+
+	public void setDefaultListener() {
+		addDateTimeChangeListener(event -> {
+			DateChangeEvent dateChangeEvent = event.getDateChangeEvent();
+			if (dateChangeEvent != null) {
+				// if the time is blank set it to the current time; otherwise leave it alone
+				TimePicker timePicker = event.getTimePicker();
+				if (timePicker.getTime() == null) {
+					timePicker.setTime(LocalTime.now());
+				}
+			}
+		});
+		}
 
 	public LocalDateTime getLocalDateTime() {
 		return dateTimePicker.getDateTimeStrict();
@@ -128,4 +109,15 @@ public class GoodDateTimeChooser extends Panel {
 	public void addDateTimeChangeListener(DateTimeChangeListener listener) {
 		dateTimePicker.addDateTimeChangeListener(listener);
 	}
+
+	protected class VisitTimeVetoPolicy implements TimeVetoPolicy {
+
+		@Override
+		public boolean isTimeAllowed(LocalTime time) {
+			// Only allow visit times as defined by the hospital, inclusive.
+			return PickerUtilities.isLocalTimeInRange(
+					time, startTime, endTime, true);
+		}
+	}
+
 }

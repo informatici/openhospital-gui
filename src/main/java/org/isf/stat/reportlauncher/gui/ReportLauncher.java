@@ -128,7 +128,7 @@ public class ReportLauncher extends ModalJFrame{
 	 */
 	public ReportLauncher() {
 		super();
-		this.setResizable(true);
+		this.setResizable(false);
 		initialize();
 		setVisible(true);
 	}

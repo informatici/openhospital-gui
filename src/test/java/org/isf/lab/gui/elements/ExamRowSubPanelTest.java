@@ -50,7 +50,7 @@ public class ExamRowSubPanelTest {
 		ExamRowSubPanel result = ExamRowSubPanel.forExamRow(examRow);
 
 		// then:
-		assertThat(result.getSelectedResult()).isEqualTo("N");
+		assertThat(result.getSelectedResult()).isEqualTo(MessageBundle.getMessage("angal.lab.negativeabbr.btn"));
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class ExamRowSubPanelTest {
 		ExamRowSubPanel result = ExamRowSubPanel.forExamRowAndLaboratoryRows(examRow, laboratoryRows);
 
 		// then:
-		assertThat(result.getSelectedResult()).isEqualTo("P");
+		assertThat(result.getSelectedResult()).isEqualTo(MessageBundle.getMessage("angal.lab.positiveabbr.btn"));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class ExamRowSubPanelTest {
 		ExamRowSubPanel result = ExamRowSubPanel.forExamRowAndLaboratoryRows(examRow, laboratoryRows);
 
 		// then:
-		assertThat(result.getSelectedResult()).isEqualTo("N");
+		assertThat(result.getSelectedResult()).isEqualTo(MessageBundle.getMessage("angal.lab.negativeabbr.btn"));
 	}
 
 }

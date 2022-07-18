@@ -54,7 +54,7 @@ public class ExamsList1Launcher extends ModalJFrame {
 	 */
 	public ExamsList1Launcher() {
 		super();
-		this.setResizable(true);
+		this.setResizable(false);
 		initialize();
 		setVisible(true);
 	}

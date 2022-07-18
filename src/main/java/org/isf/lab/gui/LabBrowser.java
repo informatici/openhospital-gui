@@ -26,7 +26,6 @@ import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -137,26 +136,12 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	public LabBrowser() {
 		super();
 		myFrame = this;
-		initialize();
+		this.setTitle(MessageBundle.getMessage("angal.lab.laboratorybrowser.title"));
+		this.setContentPane(getJContentPane());
+		setSize(new Dimension(1345, 650));
 		setResizable(false);
 		setVisible(true);
-	}
-
-	/**
-	 * This method initializes this Frame, sets the correct Dimensions
-	 */
-	private void initialize() {
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 20;
-		final int pfrmWidth = 14;
-		final int pfrmHeight = 12;
-		this.setBounds((screensize.width - screensize.width * pfrmWidth
-				/ pfrmBase) / 2, (screensize.height - screensize.height
-				* pfrmHeight / pfrmBase) / 2, screensize.width * pfrmWidth
-				/ pfrmBase, screensize.height * pfrmHeight / pfrmBase);
-		this.setContentPane(getJContentPane());
-		this.setTitle(MessageBundle.getMessage("angal.lab.laboratorybrowser.title"));
+		setLocationRelativeTo(null);
 	}
 
 	/**
