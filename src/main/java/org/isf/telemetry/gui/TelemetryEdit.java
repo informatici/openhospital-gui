@@ -85,6 +85,12 @@ public class TelemetryEdit extends ModalJFrame {
 	private TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
 	private TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
 	
+	public TelemetryEdit() {
+		super();
+		this.addTelemetryListener(parent);
+		init();
+	}
+	
 	public TelemetryEdit(MainMenu parent) {
 		super();
 		this.parent = parent;
