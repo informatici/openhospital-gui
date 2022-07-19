@@ -1,2 +1,1 @@
-freegeoip-remote-service.ribbon.base-url=https://freegeoip.app:443
 geoiplookup-remote-service.ribbon.base-url=https://json.geoiplookup.io
