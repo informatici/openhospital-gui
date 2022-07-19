@@ -21,9 +21,6 @@
  */
 package org.isf.sms.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-import static org.isf.utils.Constants.TIME_FORMAT_HH_MM;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -33,10 +30,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -51,7 +45,6 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -62,8 +55,8 @@ import org.isf.sms.manager.SmsManager;
 import org.isf.sms.model.Sms;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
-import org.isf.utils.jobjects.JDateAndTimeChooserDialog;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
+import org.isf.utils.jobjects.MessageDialog;
 
 /**
  * @author Mwithi
@@ -82,10 +75,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	private JLabel jCharactersLabel;
 	private JLabel jLabelCount;
 	private JTextArea jTextArea;
-	private CustomJDateChooser jSchedDateChooser;
-	private JLabel jSchedTimeLabel;
-	private JTextField jSchedTimeTextField;
-	private JButton JTimeButton;
+	private GoodDateTimeSpinnerChooser jSchedDateChooser;
 	private JButton jPatientButton;
 
 	private int maxLength;
@@ -117,79 +107,54 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
+
 	private JPanel getJNorthPanel() {
 		if (jNorthPanel == null) {
 			jNorthPanel = new JPanel();
 			jNorthPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 			GridBagLayout panel = new GridBagLayout();
-			panel.columnWidths = new int[]{46, 110, 0, 0};
-			panel.rowHeights = new int[]{20, 0, 0, 0};
-			panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-			panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+			panel.columnWidths = new int[] { 46, 110, 0, 0 };
+			panel.rowHeights = new int[] { 20, 0, 0, 0 };
+			panel.columnWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
+			panel.rowWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
 			jNorthPanel.setLayout(panel);
-			{
-				JLabel jSchedDateLabel = new JLabel(MessageBundle.getMessage("angal.sms.scheduleddate")); //$NON-NLS-1$
-				GridBagConstraints gbcSchedDateLabel = new GridBagConstraints();
-				gbcSchedDateLabel.anchor = GridBagConstraints.WEST;
-				gbcSchedDateLabel.insets = new Insets(0, 0, 5, 5);
-				gbcSchedDateLabel.gridx = 0;
-				gbcSchedDateLabel.gridy = 0;
-				jNorthPanel.add(jSchedDateLabel, gbcSchedDateLabel);
-			}
-			{
-				GridBagConstraints gbcSchedDateChooser = new GridBagConstraints();
-				gbcSchedDateChooser.insets = new Insets(0, 0, 5, 5);
-				gbcSchedDateChooser.anchor = GridBagConstraints.NORTHWEST;
-				gbcSchedDateChooser.gridx = 1;
-				gbcSchedDateChooser.gridy = 0;
-				jNorthPanel.add(getJSchedDateChooser(), gbcSchedDateChooser);
-			}
-			GridBagConstraints gbcSchedTimeLabel = new GridBagConstraints();
-			gbcSchedTimeLabel.anchor = GridBagConstraints.EAST;
-			gbcSchedTimeLabel.insets = new Insets(0, 0, 5, 5);
-			gbcSchedTimeLabel.gridx = 0;
-			gbcSchedTimeLabel.gridy = 1;
-			jNorthPanel.add(getJSchedTimeLabel(), gbcSchedTimeLabel);
-			GridBagConstraints gbcSchedTimeTextField = new GridBagConstraints();
-			gbcSchedTimeTextField.anchor = GridBagConstraints.WEST;
-			gbcSchedTimeTextField.insets = new Insets(0, 0, 5, 5);
-			gbcSchedTimeTextField.gridx = 1;
-			gbcSchedTimeTextField.gridy = 1;
-			jNorthPanel.add(getJSchedTimeTextField(), gbcSchedTimeTextField);
-			GridBagConstraints gbcTimeButton = new GridBagConstraints();
-			gbcTimeButton.insets = new Insets(0, 0, 5, 0);
-			gbcTimeButton.gridx = 2;
-			gbcTimeButton.gridy = 1;
-			jNorthPanel.add(getJTimeButton(), gbcTimeButton);
-			{
-				JLabel jNumberLabel = new JLabel(MessageBundle.getMessage("angal.sms.number")); //$NON-NLS-1$
-				GridBagConstraints gbcNumberLabel = new GridBagConstraints();
-				gbcNumberLabel.anchor = GridBagConstraints.WEST;
-				gbcNumberLabel.insets = new Insets(0, 0, 0, 5);
-				gbcNumberLabel.gridx = 0;
-				gbcNumberLabel.gridy = 2;
-				jNorthPanel.add(jNumberLabel, gbcNumberLabel);
-			}
-			{
-				jNumberTextField = new JTextField();
-				GridBagConstraints gbcNumberTextField = new GridBagConstraints();
-				gbcNumberTextField.fill = GridBagConstraints.HORIZONTAL;
-				gbcNumberTextField.insets = new Insets(0, 0, 0, 5);
-				gbcNumberTextField.gridx = 1;
-				gbcNumberTextField.gridy = 2;
-				jNorthPanel.add(jNumberTextField, gbcNumberTextField);
-				jNumberTextField.setColumns(15);
-			}
-			{
-				GridBagConstraints gbcPatientButton = new GridBagConstraints();
-				gbcPatientButton.gridx = 2;
-				gbcPatientButton.gridy = 2;
-				jNorthPanel.add(getJPatientButton(), gbcPatientButton);
-			}
+
+			JLabel jSchedDateLabel = new JLabel(MessageBundle.getMessage("angal.sms.scheduleddate")); //$NON-NLS-1$
+			GridBagConstraints gbcSchedDateLabel = new GridBagConstraints();
+			gbcSchedDateLabel.anchor = GridBagConstraints.WEST;
+			gbcSchedDateLabel.insets = new Insets(0, 0, 5, 5);
+			gbcSchedDateLabel.gridx = 0;
+			gbcSchedDateLabel.gridy = 0;
+			jNorthPanel.add(jSchedDateLabel, gbcSchedDateLabel);
+
+			GridBagConstraints gbcSchedDateChooser = new GridBagConstraints();
+			gbcSchedDateChooser.insets = new Insets(0, 0, 5, 5);
+			gbcSchedDateChooser.anchor = GridBagConstraints.NORTHWEST;
+			gbcSchedDateChooser.gridx = 1;
+			gbcSchedDateChooser.gridy = 0;
+			jNorthPanel.add(getJSchedDateChooser(), gbcSchedDateChooser);
+
+			JLabel jNumberLabel = new JLabel(MessageBundle.getMessage("angal.sms.number")); //$NON-NLS-1$
+			GridBagConstraints gbcNumberLabel = new GridBagConstraints();
+			gbcNumberLabel.anchor = GridBagConstraints.WEST;
+			gbcNumberLabel.insets = new Insets(0, 0, 0, 5);
+			gbcNumberLabel.gridx = 0;
+			gbcNumberLabel.gridy = 2;
+			jNorthPanel.add(jNumberLabel, gbcNumberLabel);
+			jNumberTextField = new JTextField();
+			GridBagConstraints gbcNumberTextField = new GridBagConstraints();
+			gbcNumberTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcNumberTextField.insets = new Insets(0, 0, 0, 5);
+			gbcNumberTextField.gridx = 1;
+			gbcNumberTextField.gridy = 2;
+			jNorthPanel.add(jNumberTextField, gbcNumberTextField);
+			jNumberTextField.setColumns(15);
+			GridBagConstraints gbcPatientButton = new GridBagConstraints();
+			gbcPatientButton.gridx = 2;
+			gbcPatientButton.gridy = 2;
+			jNorthPanel.add(getJPatientButton(), gbcPatientButton);
 		}
 		return jNorthPanel;
-		
 	}
 	
 	private JButton getJPatientButton() {
@@ -206,16 +171,9 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		return jPatientButton;
 	}
 	
-	private CustomJDateChooser getJSchedDateChooser() {
+	private GoodDateTimeSpinnerChooser getJSchedDateChooser() {
 		if (jSchedDateChooser == null) {
-			jSchedDateChooser = new CustomJDateChooser();
-			jSchedDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-			jSchedDateChooser.setDate(new Date());
-			jSchedDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			jSchedDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
-				Date date = (Date) propertyChangeEvent.getNewValue();
-				jSchedTimeTextField.setText(formatTime(date));
-			});
+			jSchedDateChooser = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
 		}
 		return jSchedDateChooser;
 	}
@@ -260,7 +218,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
 			jButtonPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-			jButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			jButtonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 			jButtonPanel.add(getJOkButton());
 			jButtonPanel.add(getJCancelButton());
 		}
@@ -275,6 +233,11 @@ public class SmsEdit extends JDialog implements SelectionListener {
 				String number = jNumberTextField.getText().replaceAll(" ", "").trim();
 				String text = jTextArea.getText();
 				LocalDateTime schedDate = jSchedDateChooser.getLocalDateTime();
+				if (schedDate == null) {
+
+					MessageDialog.error(this, "angal.sms.pleaseenteravaliddateandtime.msg");
+					return;
+				}
 
 				Sms smsToSend = new Sms();
 				smsToSend.setSmsNumber(number);
@@ -366,47 +329,6 @@ public class SmsEdit extends JDialog implements SelectionListener {
 			jLabelCount.setForeground(Color.GRAY);
 		}
 		return jLabelCount;
-	}
-	private JLabel getJSchedTimeLabel() {
-		if (jSchedTimeLabel == null) {
-			jSchedTimeLabel = new JLabel(MessageBundle.getMessage("angal.sms.scheduledtime")); //$NON-NLS-1$
-		}
-		return jSchedTimeLabel;
-	}
-
-	private JTextField getJSchedTimeTextField() {
-		if (jSchedTimeTextField == null) {
-			jSchedTimeTextField = new JTextField();
-			jSchedTimeTextField.setColumns(5);
-			jSchedTimeTextField.setEditable(false);
-		}
-		return jSchedTimeTextField;
-	}
-	
-	private String formatTime(Date date) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIME_FORMAT_HH_MM);
-		return simpleDateFormat.format(date);
-	}
-
-	private JButton getJTimeButton() {
-		if (JTimeButton == null) {
-			JTimeButton = new JButton(""); //$NON-NLS-1$
-			JTimeButton.setIcon(new ImageIcon("./rsc/icons/clock_button.png")); //$NON-NLS-1$
-			JTimeButton.addActionListener(actionEvent -> {
-
-				JDateAndTimeChooserDialog schedDate = new JDateAndTimeChooserDialog(SmsEdit.this, jSchedDateChooser.getDate());
-				schedDate.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-				schedDate.setVisible(true);
-
-				Date date = schedDate.getDate();
-
-				if (date != null) {
-					jSchedDateChooser.setDate(date);
-					jSchedTimeTextField.setText(formatTime(date));
-				}
-			});
-		}
-		return JTimeButton;
 	}
 
 	@Override
