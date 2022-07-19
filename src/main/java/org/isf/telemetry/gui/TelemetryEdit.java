@@ -63,11 +63,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 
-public class TelemetryGUI extends ModalJFrame {
+public class TelemetryEdit extends ModalJFrame {
 
 	private static final long serialVersionUID = 891561833857381224L;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TelemetryGUI.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TelemetryEdit.class);
 
 	private static final String KEY_TELEMETRY_TITLE = "angal.telemetry.title";
 	private static final String KEY_TELEMETRY_ABOUT = "angal.telemetry.about";
@@ -86,7 +86,7 @@ public class TelemetryGUI extends ModalJFrame {
 	private TelemetryManager telemetryManager = Context.getApplicationContext().getBean(TelemetryManager.class);
 	private TelemetryUtils telemetryUtils = Context.getApplicationContext().getBean(TelemetryUtils.class);
 	
-	public TelemetryGUI(MainMenu parent) {
+	public TelemetryEdit(MainMenu parent) {
 		super();
 		this.parent = parent;
 		this.addTelemetryListener(parent);

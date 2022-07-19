@@ -62,8 +62,8 @@ import org.isf.menu.model.UserMenuItem;
 import org.isf.sms.service.SmsSender;
 import org.isf.telemetry.constants.TelemetryConst;
 import org.isf.telemetry.daemon.TelemetryDaemon;
-import org.isf.telemetry.gui.TelemetryGUI;
-import org.isf.telemetry.gui.TelemetryGUI.TelemetryListener;
+import org.isf.telemetry.gui.TelemetryEdit;
+import org.isf.telemetry.gui.TelemetryEdit.TelemetryListener;
 import org.isf.telemetry.manager.TelemetryManager;
 import org.isf.telemetry.model.Telemetry;
 import org.isf.utils.exception.OHServiceException;
@@ -350,7 +350,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		// active = false => do nothing
 		if (settings == null || settings.getActive() == null) {
 			// show telemetry popup
-			new TelemetryGUI(this);
+			new TelemetryEdit(this);
 		}
 
 		// start telemetry daemon
