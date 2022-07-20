@@ -55,7 +55,7 @@ import org.isf.sms.manager.SmsManager;
 import org.isf.sms.model.Sms;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
+import org.isf.utils.jobjects.GoodDateTimeToggleChooser;
 import org.isf.utils.jobjects.MessageDialog;
 
 /**
@@ -75,7 +75,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	private JLabel jCharactersLabel;
 	private JLabel jLabelCount;
 	private JTextArea jTextArea;
-	private GoodDateTimeSpinnerChooser jSchedDateChooser;
+	private GoodDateTimeToggleChooser jSchedDateChooser;
 	private JButton jPatientButton;
 
 	private int maxLength;
@@ -171,9 +171,9 @@ public class SmsEdit extends JDialog implements SelectionListener {
 		return jPatientButton;
 	}
 	
-	private GoodDateTimeSpinnerChooser getJSchedDateChooser() {
+	private GoodDateTimeToggleChooser getJSchedDateChooser() {
 		if (jSchedDateChooser == null) {
-			jSchedDateChooser = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
+			jSchedDateChooser = new GoodDateTimeToggleChooser(LocalDateTime.now());
 		}
 		return jSchedDateChooser;
 	}
