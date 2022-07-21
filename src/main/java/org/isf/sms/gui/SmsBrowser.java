@@ -21,8 +21,7 @@
  */
 package org.isf.sms.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YY;
-import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD_HH_MM;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 import static org.isf.utils.Constants.TIME_FORMAT_HH_MM;
 
 import java.awt.BorderLayout;
@@ -33,11 +32,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -50,17 +49,15 @@ import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.sms.manager.SmsManager;
 import org.isf.sms.model.Sms;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.isf.utils.time.Converters;
 
 /**
  * @author Mwithi
@@ -83,7 +80,7 @@ public class SmsBrowser extends ModalJFrame {
 			MessageBundle.getMessage("angal.sms.sent.col").toUpperCase()
 	};
 	private Object[] columnClasses = {Date.class, Date.class, String.class, String.class, Date.class};
-	private int[] columnPreferredSize = {110, 110, 150, 100, 110};
+	private int[] columnPreferredSize = {130, 130, 150, 200, 130};
 	private boolean[] columnResizable = {false, false, false, true, false};
 	private int width;
 	private int eight;
@@ -96,8 +93,8 @@ public class SmsBrowser extends ModalJFrame {
 
 	private SmsTableModel model;
 	private JPanel jFilterPanel;
-	private CustomJDateChooser jFromDateChooser;
-	private CustomJDateChooser jToDateChooser;
+	private GoodDateChooser jFromDateChooser;
+	private GoodDateChooser jToDateChooser;
 
 	private LocalDateTime dateFrom;
 	private LocalDateTime dateTo;
@@ -159,31 +156,31 @@ public class SmsBrowser extends ModalJFrame {
 		return jDateToLabel;
 	}
 	
-	private CustomJDateChooser getJFromDateChooser() {
+	private GoodDateChooser getJFromDateChooser() {
 		if (jFromDateChooser == null) {
-			jFromDateChooser = new CustomJDateChooser();
-			jFromDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-			jFromDateChooser.setDate(dateTimeAtStartOfToday);
-			jFromDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			jFromDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
-				dateFrom = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
-				updateModel(dateFrom, dateTo);
-				updateGUI();
+			jFromDateChooser = new GoodDateChooser(LocalDate.now());
+			jFromDateChooser.addDateChangeListener(dateChangeEvent -> {
+				LocalDate newDate = dateChangeEvent.getNewDate();
+				if (newDate != null) {
+					dateFrom = newDate.atStartOfDay();
+					updateModel(dateFrom, dateTo);
+					updateGUI();
+				}
 			});
 		}
 		return jFromDateChooser;
 	}
 	
-	private CustomJDateChooser getJToDateChooser() {
+	private GoodDateChooser getJToDateChooser() {
 		if (jToDateChooser == null) {
-			jToDateChooser = new CustomJDateChooser();
-			jToDateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-			jToDateChooser.setDate(dateTimeAtEndOfToday);
-			jToDateChooser.setDateFormatString(DATE_FORMAT_DD_MM_YY);
-			jToDateChooser.addPropertyChangeListener("date", propertyChangeEvent -> {
-				dateTo = Converters.convertToLocalDateTime((Date) propertyChangeEvent.getNewValue());
-				updateModel(dateFrom, dateTo);
-				updateGUI();
+			jToDateChooser = new GoodDateChooser(LocalDate.now());
+			jToDateChooser.addDateChangeListener(dateChangeEvent -> {
+				LocalDate newDate = dateChangeEvent.getNewDate();
+				if (newDate != null) {
+					dateTo = newDate.atTime(LocalTime.MAX);
+					updateModel(dateFrom, dateTo);
+					updateGUI();
+				}
 			});
 		}
 		return jToDateChooser;
@@ -386,16 +383,16 @@ public class SmsBrowser extends ModalJFrame {
 		}
 	}
 	
-	public String formatDateTime(LocalDateTime smsDateSent) {
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD_HH_MM);
+	private String formatDateTime(LocalDateTime smsDateSent) {
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM);
 		if (smsDateSent != null) {
 			return dateTimeFormatter.format(smsDateSent);
 		}
 		return null;
 	}
 	
-	public String formatTodayDateTime(LocalDateTime smsDateSent) {
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD_HH_MM);
+	private String formatTodayDateTime(LocalDateTime smsDateSent) {
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM);
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMAT_HH_MM);
 		if (smsDateSent != null) {
 			if (smsDateSent.isAfter(dateTimeAtStartOfToday) && smsDateSent.isBefore(dateTimeAtEndOfToday)) {
