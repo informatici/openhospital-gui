@@ -53,12 +53,20 @@ public class GoodDateChooser extends Panel {
 	}
 
 	public GoodDateChooser(LocalDate date, boolean futureDates) {
+		this(date, true, true);
+	}
+
+	public GoodDateChooser(LocalDate date, boolean futureDates, boolean emptyAllowed) {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(layout);
 		dateSettings = new DatePickerSettings();
 		dateSettings.setLocale(new Locale(GeneralData.LANGUAGE));
 		dateSettings.setFormatForDatesCommonEra(DATE_FORMAT_DD_MM_YYYY);
-		dateSettings.setAllowEmptyDates(true);
+		if (emptyAllowed) {
+			dateSettings.setAllowEmptyDates(true);
+		} else {
+			dateSettings.setAllowEmptyDates(false);
+		}
 		datePicker = new DatePicker(dateSettings);
 		// This helps the manual editing of the year field not to reset to some *very* old year value
 		if (futureDates) {
@@ -97,6 +105,10 @@ public class GoodDateChooser extends Panel {
 
 	public void addDateChangeListener(DateChangeListener listener) {
 		datePicker.addDateChangeListener(listener);
+	}
+
+	public void openPopup() {
+		datePicker.openPopup();
 	}
 
 }

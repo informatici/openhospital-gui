@@ -72,7 +72,7 @@ import org.isf.patient.model.Patient;
 import org.isf.serviceprinting.manager.PrintManager;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.GoodDateTimeChooser;
+import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
@@ -145,8 +145,6 @@ public class LabEdit extends ModalJFrame {
 	private VoLimitedTextField patTextField = null;
 	private VoLimitedTextField ageTextField = null;
 	private VoLimitedTextField sexTextField = null;
-
-	private GoodDateTimeChooser examDateFieldCal = null;
 
 	private static final int PANEL_WIDTH = 550;
 	private static final int LABEL_WIDTH = 70;
@@ -222,7 +220,7 @@ public class LabEdit extends ModalJFrame {
 			//exam date
 			JLabel examDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
 			examDateLabel.setBounds(5, 10, LABEL_WIDTH, 25);
-			examDateFieldCal = getExamDateFieldCal();
+			GoodDateTimeSpinnerChooser examDateFieldCal = getExamDateFieldCal();
 			examDateFieldCal.setBounds(LABEL_WIDTH + 5, 10, 200, 25);
 			//material
 			JLabel materialLabel = new JLabel(MessageBundle.getMessage("angal.lab.material"));
@@ -300,7 +298,7 @@ public class LabEdit extends ModalJFrame {
 		return dataPanel;
 	}
 
-	private GoodDateTimeChooser getExamDateFieldCal() {
+	private GoodDateTimeSpinnerChooser getExamDateFieldCal() {
 		LocalDateTime dateIn;
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDate();
@@ -310,7 +308,7 @@ public class LabEdit extends ModalJFrame {
 		if (dateIn == null) {
 			dateIn = LocalDateTime.now();
 		}
-		return new GoodDateTimeChooser(dateIn);
+		return new GoodDateTimeSpinnerChooser(dateIn);
 	}
 	
 	private JCheckBox getInPatientCheckBox() {

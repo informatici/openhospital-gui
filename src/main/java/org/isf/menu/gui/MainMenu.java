@@ -242,6 +242,17 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				}
 			}
 		}
+		if (!flag_Sms) {  // remove SMS Manager if not enabled
+			List<UserMenuItem> junkMenu = new ArrayList<>();
+			for (UserMenuItem umi : myMenu) {
+				if ("smsmanager".equalsIgnoreCase(umi.getCode())) {
+					junkMenu.add(umi);
+				}
+			}
+			for (UserMenuItem umi : junkMenu) {
+				myMenu.remove(umi);
+			}
+		}
 
 		// if not internalPharmacies mode remove "medicalsward" menu
 		if (!internalPharmacies) {
