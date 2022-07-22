@@ -50,7 +50,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -76,7 +75,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.manager.MedicalBrowsingManager;
 import org.isf.medicals.model.Medical;
@@ -98,7 +96,6 @@ import org.isf.stat.gui.report.GenericReportPharmaceuticalStockWard;
 import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
@@ -1583,8 +1580,7 @@ public class WardPharmacy extends ModalJFrame implements
 
 						icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 
-						CustomJDateChooser dateChooser = new CustomJDateChooser();
-						dateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
+						GoodDateChooser dateChooser = new GoodDateChooser(LocalDate.now(), true, false);
 
 						int r = JOptionPane.showConfirmDialog(WardPharmacy.this,
 								dateChooser,
@@ -1594,8 +1590,7 @@ public class WardPharmacy extends ModalJFrame implements
 								icon);
 
 						if (r == JOptionPane.OK_OPTION) {
-
-							new GenericReportPharmaceuticalStockWard(dateChooser.getLocalDateTime(), "PharmaceuticalStockWard", wardSelected); //$NON-NLS-1$
+							new GenericReportPharmaceuticalStockWard(dateChooser.getDateEndOfDay(), "PharmaceuticalStockWard", wardSelected); //$NON-NLS-1$
 						}
 					}
 				}
