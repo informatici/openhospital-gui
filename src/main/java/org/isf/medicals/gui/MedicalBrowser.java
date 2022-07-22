@@ -38,7 +38,6 @@ import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -74,7 +73,7 @@ import org.isf.stat.gui.report.GenericReportPharmaceuticalStockCard;
 import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.GoodFromDateToDateChooser;
 import org.isf.utils.jobjects.JMonthYearChooser;
 import org.isf.utils.jobjects.MessageDialog;
@@ -375,9 +374,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 
 				icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 
-				CustomJDateChooser dateChooser = new CustomJDateChooser();
-				dateChooser.setLocale(new Locale(GeneralData.LANGUAGE));
-
+				GoodDateChooser dateChooser = new GoodDateChooser(LocalDate.now(), true, false);
 				int r = JOptionPane.showConfirmDialog(MedicalBrowser.this,
 						dateChooser,
 						MessageBundle.getMessage("angal.common.date.txt"),
@@ -386,8 +383,8 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 						icon);
 
 				if (r == JOptionPane.OK_OPTION) {
-					new GenericReportPharmaceuticalStock(dateChooser.getLocalDateTime(), report, filter, groupBy, sortBy, false);
-					new GenericReportPharmaceuticalStock(dateChooser.getLocalDateTime(), report, filter, groupBy, sortBy, true);
+					new GenericReportPharmaceuticalStock(dateChooser.getDateEndOfDay(), report, filter, groupBy, sortBy, false);
+					new GenericReportPharmaceuticalStock(dateChooser.getDateEndOfDay(), report, filter, groupBy, sortBy, true);
 				}
 			}
 		});
