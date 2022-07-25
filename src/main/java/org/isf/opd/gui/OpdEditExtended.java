@@ -916,7 +916,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				visitDateOpd  = opd.getDate();
 			}
 			opdDateFieldCal = new GoodDateTimeSpinnerChooser(visitDateOpd);
-			opdDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
 		}
 		return opdDateFieldCal;
 	}
@@ -1567,10 +1566,9 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			okButton.addActionListener(actionEvent -> {
 				
 				if (opdDateFieldCal.getLocalDateTime() != null) {
-					visitDateOpd = LocalDateTime.now();
-					opd.setDate(visitDateOpd);
+					opd.setDate(opdDateFieldCal.getLocalDateTime());
 				} else {
-					opd.setDate(null);
+					opd.setDate(LocalDateTime.now());
 				}
 				int opdProgYear = 0;
 				
