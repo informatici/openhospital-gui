@@ -931,6 +931,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				jOpdNumField.setText(String.valueOf(getOpdProgYear(RememberDates.getLastOpdVisitDate())));
 			} else {
 				jOpdNumField.setText(String.valueOf(opd.getProgYear()));
+				jOpdNumField.setEditable(false);
 			}
 
 			jOpdNumberPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.opdnumber.txt")));
