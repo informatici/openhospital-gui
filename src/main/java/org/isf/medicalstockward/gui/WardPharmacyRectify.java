@@ -330,7 +330,7 @@ public class WardPharmacyRectify extends JDialog {
 			Medical med;
 
 			/*
-			 *  To override MovWardBrowserManager.validateMovementWard() behavior
+			 *  TODO: to refactor all this part by extracting in separated method all this logic
 			 */
 			try {
 				item = jComboBoxMedical.getSelectedItem();
