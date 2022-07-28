@@ -960,6 +960,7 @@ public class OpdEditExtended extends ModalJFrame implements
 				jOpdNumField.setText(String.valueOf(getOpdProgYear(RememberDates.getLastOpdVisitDateGregorian())));
 			} else {
 				jOpdNumField.setText(String.valueOf(opd.getProgYear()));
+				jOpdNumField.setEditable(false);
 			}
 
 			jOpdNumberPanel.add(jOpdNumLabel);
@@ -970,7 +971,9 @@ public class OpdEditExtended extends ModalJFrame implements
 	
 	private int getOpdProgYear(GregorianCalendar date) {
 		int opdNum = 0;
-		if (date == null) date = new GregorianCalendar();
+		if (date == null) {
+			date = new GregorianCalendar();
+		}
 		try {
 			opdNum = opdManager.getProgYear(date.get(Calendar.YEAR)) + 1;
 		} catch (OHServiceException e) {
