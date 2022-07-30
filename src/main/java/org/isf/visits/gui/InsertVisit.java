@@ -114,16 +114,9 @@ public class InsertVisit extends JDialog implements SelectionListener {
 	
 	public InsertVisit(JFrame owner, Ward ward, Patient patient, boolean insert) {
 		super(owner, true);
-		setTitle(MessageBundle.getMessage("angal.visit.addvisit.title"));
 		this.patientSelected = patient;
 		this.ward = ward;
 		this.insert = insert;
-		initComponents();
-	}
-
-	public InsertVisit(JDialog owner, LocalDateTime date) {
-		super(owner, true);
-		this.visitDate = date;
 		initComponents();
 	}
 
@@ -141,6 +134,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		getContentPane().add(getpVisitInf());
 		getContentPane().add(getButtonsPanel(), BorderLayout.SOUTH);
 
+		setTitle(MessageBundle.getMessage("angal.visit.addvisit.title"));
 		setResizable(false);
 		pack();
 		setLocationRelativeTo(null);
@@ -223,22 +217,7 @@ public class InsertVisit extends JDialog implements SelectionListener {
 		JComboBox<Ward> newWardBox = new JComboBox<>();
 		newWardBox.addItem(null);
 		for (Ward aWard : wardList) {
-			if (patientSelected == null) {
-				if (aWard.getBeds() > 0) {
-					newWardBox.addItem(aWard);
-				}
-			} else {
-				// if patient is a male you don't see pregnancy case
-				if (("" + patientSelected.getSex()).equalsIgnoreCase("F") && !aWard.isFemale()) {
-					continue;
-				} else if (("" + patientSelected.getSex()).equalsIgnoreCase("M") && !aWard.isMale()) {
-					continue;
-				} else {
-					if (aWard.getBeds() > 0) {
-						newWardBox.addItem(aWard);
-					}
-				}
-			}
+			newWardBox.addItem(aWard);
 			if (this.ward != null) {
 				if (this.ward.getCode().equalsIgnoreCase(aWard.getCode())) {
 					newWardBox.setSelectedItem(aWard);
