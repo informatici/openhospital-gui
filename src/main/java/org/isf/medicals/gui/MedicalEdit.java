@@ -241,18 +241,18 @@ public class MedicalEdit extends JDialog {
 				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					Medical newMedical = null;
-					try {
-						newMedical = (Medical) medical.clone();
-						newMedical.setType((MedicalType) typeComboBox.getSelectedItem());
-						newMedical.setDescription(descriptionTextField.getText());
-						newMedical.setProd_code(codeTextField.getText());
-						newMedical.setPcsperpck(pcsperpckField.getValue());
-						newMedical.setMinqty(minQtiField.getValue());
-					} catch (CloneNotSupportedException cloneNotSupportedException) {
-						LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
-					}
 					boolean result = false;
 					if (insert) { // inserting
+						try {
+							newMedical = (Medical) medical.clone();
+							newMedical.setType((MedicalType) typeComboBox.getSelectedItem());
+							newMedical.setDescription(descriptionTextField.getText());
+							newMedical.setProd_code(codeTextField.getText());
+							newMedical.setPcsperpck(pcsperpckField.getValue());
+							newMedical.setMinqty(minQtiField.getValue());
+						} catch (CloneNotSupportedException cloneNotSupportedException) {
+							LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
+						}
 						try {
 							result = medicalBrowsingManager.newMedical(newMedical);
 						} catch (OHServiceException e1) {
@@ -280,8 +280,13 @@ public class MedicalEdit extends JDialog {
 							dispose();
 						}
 					} else { // updating
+						oldMedical.setType((MedicalType) typeComboBox.getSelectedItem());
+						oldMedical.setDescription(descriptionTextField.getText());
+						oldMedical.setProd_code(codeTextField.getText());
+						oldMedical.setPcsperpck(pcsperpckField.getValue());
+						oldMedical.setMinqty(minQtiField.getValue());
 						try {
-							result = medicalBrowsingManager.updateMedical(newMedical);
+							result = medicalBrowsingManager.updateMedical(oldMedical);
 						} catch (OHServiceException e1) {
 							List<OHExceptionMessage> errors = e1.getMessages();
 
