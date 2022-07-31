@@ -125,7 +125,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	public Login(MainMenu parent) {
 		super(parent, MessageBundle.getMessage("angal.login.title"), true);
 
-		//usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
+		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
 		
 		this.parent = parent;
 
