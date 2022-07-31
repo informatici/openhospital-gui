@@ -124,7 +124,6 @@ abstract class OperationRowBase extends JPanel {
 		gbc_searchOperation.fill = GridBagConstraints.HORIZONTAL;
 		gbc_labelOperation.gridx = 1;
 		gbc_labelOperation.gridy = 0;
-		//searchOperationTextField.setColumns(120);
 		searchOperationTextField.addKeyListener(new KeyListener() {
 
 			@Override
