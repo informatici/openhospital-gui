@@ -1637,7 +1637,7 @@ public class WardPharmacy extends ModalJFrame implements
 							} else if (index == 1) {
 								xlsExport.exportTableToExcelOLD(jTableIncomes, exportFile);
 							} else if (index == 2) {
-								// TODO: ignore the last column in the table as it is a button object
+								// ignore the last column in the table as it is a button object
 								xlsExport.exportTableToExcelOLD(jTableDrugs, exportFile, 3);
 							}
 						}
