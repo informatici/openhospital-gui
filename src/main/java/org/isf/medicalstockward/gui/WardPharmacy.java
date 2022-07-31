@@ -1644,19 +1644,34 @@ public class WardPharmacy extends ModalJFrame implements
 				if (iRetVal == JFileChooser.APPROVE_OPTION) {
 					try {
 						File exportFile = fcExcel.getSelectedFile();
-						if (!exportFile.getName().endsWith("xls")) {
-							exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
+						if (!exportFile.getName().endsWith(".xls") && !exportFile.getName().endsWith(".xlsx")) {
+							if (fcExcel.getFileFilter().getDescription().contains("*.xls")) {
+								exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
+							} else {
+								exportFile = new File(exportFile.getAbsoluteFile() + ".xlsx");
+							}
 						}
 
 						ExcelExporter xlsExport = new ExcelExporter();
 						int index = jTabbedPaneWard.getSelectedIndex();
-						if (index == 0) {
-							xlsExport.exportTableToExcel(jTableOutcomes, exportFile);
-						} else if (index == 1) {
-							xlsExport.exportTableToExcel(jTableIncomes, exportFile);
-						} else if (index == 2) {
-							// ignore the last column in the table as it is a button object
-							xlsExport.exportTableToExcel(jTableDrugs, exportFile, 3);
+						if (exportFile.getName().endsWith(".xlsx")) {
+							if (index == 0) {
+								xlsExport.exportTableToExcel(jTableOutcomes, exportFile);
+							} else if (index == 1) {
+								xlsExport.exportTableToExcel(jTableIncomes, exportFile);
+							} else if (index == 2) {
+								// ignore the last column in the table as it is a button object
+								xlsExport.exportTableToExcel(jTableDrugs, exportFile, 3);
+							}
+						} else {
+							if (index == 0) {
+								xlsExport.exportTableToExcelOLD(jTableOutcomes, exportFile);
+							} else if (index == 1) {
+								xlsExport.exportTableToExcelOLD(jTableIncomes, exportFile);
+							} else if (index == 2) {
+								// ignore the last column in the table as it is a button object
+								xlsExport.exportTableToExcelOLD(jTableDrugs, exportFile, 3);
+							}
 						}
 
 					} catch (IOException exc) {
