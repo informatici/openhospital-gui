@@ -76,6 +76,7 @@ import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.RequestFocusListener;
+import org.isf.utils.jobjects.TextPrompt;
 import org.isf.utils.time.TimeTools;
 import org.isf.ward.model.Ward;
 
@@ -536,6 +537,14 @@ public class WardPharmacyRectify extends JDialog {
 		LocalDateTime expiringDate = LocalDateTime.now();
 		Lot lot = null;
 		JTextField lotNameTextField = new JTextField(15);
+
+		TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotid"), lotNameTextField);
+		suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
+		suggestion.setForeground(Color.GRAY);
+		suggestion.setHorizontalAlignment(SwingConstants.CENTER);
+		suggestion.changeAlpha(0.5f);
+		suggestion.changeStyle(Font.BOLD + Font.ITALIC);
+
 		lotNameTextField.addAncestorListener(new RequestFocusListener());
 		if (isAutomaticLot()) {
 			lotNameTextField.setEnabled(false);
