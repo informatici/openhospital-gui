@@ -102,8 +102,8 @@ abstract class OperationRowBase extends JPanel {
 
 		add(panelForm, BorderLayout.NORTH);
 		GridBagLayout gbl_panelForm = new GridBagLayout();
-		gbl_panelForm.columnWidths = new int[] { 60, 75, 0, 300, 0, 0 };
-		gbl_panelForm.rowHeights = new int[] { 0, 0, 30, 0, 0 };
+		gbl_panelForm.columnWidths = new int[] { 60, 150, 20, 500, 0, 0 };
+		gbl_panelForm.rowHeights = new int[] { 30, 30, 30, 0, 0 };
 		gbl_panelForm.columnWeights = new double[] { 0.0, 1.0, 0.25, 1.0, 1.0, Double.MIN_VALUE };
 		gbl_panelForm.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		panelForm.setLayout(gbl_panelForm);
@@ -117,12 +117,14 @@ abstract class OperationRowBase extends JPanel {
 		panelForm.add(labelOperation, gbc_labelOperation);
 
 		searchOperationTextField = new JTextField();
+		searchOperationTextField.setPreferredSize(new Dimension(150, 20));
 		GridBagConstraints gbc_searchOperation = new GridBagConstraints();
+		gbc_searchOperation.anchor = GridBagConstraints.WEST;
 		gbc_searchOperation.insets = new Insets(0, 0, 5, 5);
 		gbc_searchOperation.fill = GridBagConstraints.HORIZONTAL;
 		gbc_labelOperation.gridx = 1;
 		gbc_labelOperation.gridy = 0;
-		searchOperationTextField.setColumns(20);
+		//searchOperationTextField.setColumns(120);
 		searchOperationTextField.addKeyListener(new KeyListener() {
 
 			@Override
@@ -144,12 +146,11 @@ abstract class OperationRowBase extends JPanel {
 		panelForm.add(searchOperationTextField, gbc_searchOperation);
 		
 		searchOperationButton = new JButton("");
+		searchOperationButton.setPreferredSize(new Dimension(20, 20));
 		GridBagConstraints gbc_searchOperationButton = new GridBagConstraints();
 		gbc_searchOperationButton.insets = new Insets(0, 5, 5, 5);
-		gbc_searchOperationButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_labelOperation.gridx = 2;
 		gbc_labelOperation.gridy = 0;
-		searchOperationButton.setPreferredSize(new Dimension(20, 20));
 		searchOperationButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 		searchOperationButton.addActionListener(new ActionListener() {
 
@@ -181,17 +182,19 @@ abstract class OperationRowBase extends JPanel {
 		panelForm.add(searchOperationButton, gbc_searchOperationButton);
 
 		comboOperation = getOperationsBox();
-		GridBagConstraints gbcOperationBox = new GridBagConstraints();
-		gbcOperationBox.insets = new Insets(0, 5, 5, 5);
-		gbcOperationBox.fill = GridBagConstraints.HORIZONTAL;
+		comboOperation.setPreferredSize(new Dimension(500, 25));
+		GridBagConstraints gbc_operationBox = new GridBagConstraints();
+		gbc_operationBox.insets = new Insets(0, 5, 5, 5);
+		gbc_operationBox.fill = GridBagConstraints.HORIZONTAL;
 		gbc_labelOperation.gridx = 3;
 		gbc_labelOperation.gridy = 0;
-		panelForm.add(comboOperation, gbcOperationBox);
+		panelForm.add(comboOperation, gbc_operationBox);
 		
 		labelDate = new JLabel(MessageBundle.getMessage("angal.operationrowlist.date")); //$NON-NLS-1$
+		labelDate.setPreferredSize(new Dimension(50, 20));
 		GridBagConstraints gbc_labelDate = new GridBagConstraints();
 		gbc_labelDate.anchor = GridBagConstraints.WEST;
-		gbc_labelDate.insets = new Insets(0, 0, 5, 5);
+		gbc_labelDate.insets = new Insets(5, 5, 5, 5);
 		gbc_labelDate.gridx = 4;
 		gbc_labelDate.gridy = 0;
 		panelForm.add(labelDate, gbc_labelDate);
