@@ -446,10 +446,10 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			if (iRetVal == JFileChooser.APPROVE_OPTION) {
 				File exportFile = fcExcel.getSelectedFile();
 				if (!exportFile.getName().endsWith(".xls") && !exportFile.getName().endsWith(".xlsx")) {
-					if (fcExcel.getFileFilter().getDescription().contains("*.xls")) {
-						exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
-					} else {
+					if (fcExcel.getFileFilter().getDescription().contains("*.xlsx")) {
 						exportFile = new File(exportFile.getAbsoluteFile() + ".xlsx");
+					} else {
+						exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
 					}
 				}
 				ExcelExporter xlsExport = new ExcelExporter();
