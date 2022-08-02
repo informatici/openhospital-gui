@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -82,6 +83,10 @@ import org.isf.ward.model.Ward;
 
 public class WardPharmacyRectify extends JDialog {
 
+	private static final Font FONT_BOLD = new Font("Tahoma", Font.BOLD, 14);
+	private static final Font FONT_PLAIN_14 = new Font("Tahoma", Font.PLAIN, 14);
+	private static final Font FONT_PLAIN_28 = new Font("Tahoma", Font.PLAIN, 28);
+
 	// LISTENER INTERFACE --------------------------------------------------------
     private EventListenerList movementWardListeners = new EventListenerList();
 	
@@ -116,10 +121,11 @@ public class WardPharmacyRectify extends JDialog {
 	
 	private Ward selectedWard;
 	private JComboBox jComboBoxMedical;
-	private JLabel jLabelStockQty;
+	private JTextField jTextFieldStockQty;
 	private JLabel jLabelLotQty;
 	private JLabel jLabelInLot;
 	private JSpinner jSpinnerNewQty;
+	private SpinnerNumberModel spinnerNewQtyModel;
 
 	private MedicalBrowsingManager medManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
@@ -212,7 +218,7 @@ public class WardPharmacyRectify extends JDialog {
 
 		JLabel jLabelRectifyTitle = new JLabel(MessageBundle.getMessage("angal.medicalstockward.rectify.title")); //$NON-NLS-1$
 		jLabelRectifyTitle.setForeground(Color.RED);
-		jLabelRectifyTitle.setFont(new Font("Tahoma", Font.PLAIN, 28)); //$NON-NLS-1$
+		jLabelRectifyTitle.setFont(FONT_PLAIN_28);
 		GridBagConstraints gbcLabelRectifyTitle = new GridBagConstraints();
 		gbcLabelRectifyTitle.insets = new Insets(0, 0, 5, 5);
 		gbcLabelRectifyTitle.gridx = 1;
@@ -366,19 +372,15 @@ public class WardPharmacyRectify extends JDialog {
 			} catch (OHServiceException e2) {
 				OHServiceExceptionUtil.showMessages(e2);
 			}
-			double newQty = (Double) jSpinnerNewQty.getValue();
+			double newQty = (Double) spinnerNewQtyModel.getNumber().doubleValue();
 			double movQuantity = lotQty - newQty;
 
 			if (movQuantity == 0. || newQty < 0) {
-				StringBuilder message = new StringBuilder();
-				message.append(MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseinsertavalidvalue"));
-				JOptionPane.showMessageDialog(WardPharmacyRectify.this, message.toString());
+				JOptionPane.showMessageDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.pleaseinsertavalidvalue"));
 				return;
 			}
 			if (newQty == 0.) {
-				StringBuilder message = new StringBuilder();
-				message.append(MessageBundle.getMessage("angal.medicalstockward.rectify.thiswillemptythelotproceed"));
-				int ok = JOptionPane.showConfirmDialog(WardPharmacyRectify.this, message.toString());
+				int ok = JOptionPane.showConfirmDialog(WardPharmacyRectify.this, MessageBundle.getMessage("angal.medicalstockward.rectify.thiswillemptythelotproceed"));
 				if (ok != JOptionPane.OK_OPTION) {
 					return;
 				}
@@ -539,7 +541,7 @@ public class WardPharmacyRectify extends JDialog {
 		JTextField lotNameTextField = new JTextField(15);
 
 		TextPrompt suggestion = new TextPrompt(MessageBundle.getMessage("angal.medicalstock.multiplecharging.lotid"), lotNameTextField);
-		suggestion.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
+		suggestion.setFont(FONT_PLAIN_14);
 		suggestion.setForeground(Color.GRAY);
 		suggestion.setHorizontalAlignment(SwingConstants.CENTER);
 		suggestion.changeAlpha(0.5f);
@@ -648,11 +650,12 @@ public class WardPharmacyRectify extends JDialog {
 	 */
 	private JSpinner getJSpinnerNewQty() {
 		if (jSpinnerNewQty == null) {
-			jSpinnerNewQty = new JSpinner(new SpinnerNumberModel(0.0, 0.0, null, 1));
-			jSpinnerNewQty.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+			spinnerNewQtyModel = new SpinnerNumberModel(0.0d, 0.0d, null, 0.5d);
+			jSpinnerNewQty = new JSpinner(spinnerNewQtyModel);
+			jSpinnerNewQty.setFont(FONT_BOLD);
 			jSpinnerNewQty.addChangeListener(changeEvent -> {
-				Double stock = Double.parseDouble(jLabelStockQty.getText());
-				Double newQty = (Double) jSpinnerNewQty.getValue();
+				Double stock = Double.parseDouble(jTextFieldStockQty.getText());
+				Double newQty = (Double) spinnerNewQtyModel.getNumber().doubleValue();
 				if (stock > 0) {
 					jButtonChooseLot.setEnabled(true);
 				}
@@ -669,14 +672,17 @@ public class WardPharmacyRectify extends JDialog {
 	/**
 	 * @return
 	 */
-	private JLabel getJLabelStockQty() {
-		if (jLabelStockQty == null) {
-			jLabelStockQty = new JLabel(""); //$NON-NLS-1$
-			jLabelStockQty.setHorizontalAlignment(SwingConstants.CENTER);
-			jLabelStockQty.setPreferredSize(new Dimension(100, 25));
-			jLabelStockQty.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+	private JTextField getJLabelStockQty() {
+		if (jTextFieldStockQty == null) {
+			jTextFieldStockQty = new JTextField(""); //$NON-NLS-1$
+			jTextFieldStockQty.setHorizontalAlignment(SwingConstants.CENTER);
+			jTextFieldStockQty.setPreferredSize(new Dimension(100, 25));
+			jTextFieldStockQty.setFont(FONT_BOLD);
+			jTextFieldStockQty.setForeground(Color.BLACK);
+			jTextFieldStockQty.setEditable(false);
+			jTextFieldStockQty.setBorder(BorderFactory.createEmptyBorder());
 		}
-		return jLabelStockQty;
+		return jTextFieldStockQty;
 	}
 	
 	/**
@@ -687,7 +693,7 @@ public class WardPharmacyRectify extends JDialog {
 			jLabelLotQty = new JLabel(""); //$NON-NLS-1$
 			jLabelLotQty.setHorizontalAlignment(SwingConstants.CENTER);
 			jLabelLotQty.setPreferredSize(new Dimension(100, 25));
-			jLabelLotQty.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+			jLabelLotQty.setFont(FONT_BOLD);
 			jLabelLotQty.setForeground(Color.BLUE);
 		}
 		return jLabelLotQty;
@@ -719,10 +725,10 @@ public class WardPharmacyRectify extends JDialog {
 					if (qty == null) {
 						qty = 0.0D;
 					}
-					jLabelStockQty.setText(qty.toString());
+					jTextFieldStockQty.setText(qty.toString());
 					jSpinnerNewQty.setValue(qty);
 				} catch (ClassCastException ex) {
-					jLabelStockQty.setText(""); //$NON-NLS-1$
+					jTextFieldStockQty.setText(""); //$NON-NLS-1$
 					jSpinnerNewQty.setValue(0.0D);
 				}
 			});
