@@ -214,6 +214,7 @@ public class TelemetryEdit extends ModalJFrame {
 							telemetryUtils.sendTelemetryData(dataToSend, GeneralData.DEBUG);
 						} else {
 							LOGGER.debug("User canceled action.");
+							return;
 						}
 					} catch (RuntimeException | OHException f) {
 						LOGGER.error("Something strange happened: " + f.getMessage());
