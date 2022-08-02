@@ -251,11 +251,11 @@ public class WardPharmacyRectify extends JDialog {
 		gbcComboBoxMedical.gridwidth = 2;
 		contentPanel.add(getJComboBoxMedical(), gbcComboBoxMedical);
 
-		GridBagConstraints gbcLabelStockQty = new GridBagConstraints();
-		gbcLabelStockQty.insets = new Insets(0, 0, 5, 0);
-		gbcLabelStockQty.gridx = 4;
-		gbcLabelStockQty.gridy = 2;
-		contentPanel.add(getJLabelStockQty(), gbcLabelStockQty);
+		GridBagConstraints gbcTextFieldStockQty = new GridBagConstraints();
+		gbcTextFieldStockQty.insets = new Insets(0, 0, 5, 0);
+		gbcTextFieldStockQty.gridx = 4;
+		gbcTextFieldStockQty.gridy = 2;
+		contentPanel.add(getJTextFieldStockQty(), gbcTextFieldStockQty);
 
 		JLabel jLabelLot = new JLabel(MessageBundle.getMessage("angal.medicalstockward.lotnumberabb")); //$NON-NLS-1$
 		jLabelLot.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -672,7 +672,7 @@ public class WardPharmacyRectify extends JDialog {
 	/**
 	 * @return
 	 */
-	private JTextField getJLabelStockQty() {
+	private JTextField getJTextFieldStockQty() {
 		if (jTextFieldStockQty == null) {
 			jTextFieldStockQty = new JTextField(""); //$NON-NLS-1$
 			jTextFieldStockQty.setHorizontalAlignment(SwingConstants.CENTER);
