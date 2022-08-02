@@ -121,7 +121,7 @@ public class WardPharmacyRectify extends JDialog {
 	
 	private Ward selectedWard;
 	private JComboBox jComboBoxMedical;
-	private JTextField jLabelStockQty;
+	private JTextField jTextFieldStockQty;
 	private JLabel jLabelLotQty;
 	private JLabel jLabelInLot;
 	private JSpinner jSpinnerNewQty;
@@ -372,7 +372,7 @@ public class WardPharmacyRectify extends JDialog {
 			} catch (OHServiceException e2) {
 				OHServiceExceptionUtil.showMessages(e2);
 			}
-			double newQty = (Double)spinnerNewQtyModel.getNumber().doubleValue();
+			double newQty = (Double) spinnerNewQtyModel.getNumber().doubleValue();
 			double movQuantity = lotQty - newQty;
 
 			if (movQuantity == 0. || newQty < 0) {
@@ -654,7 +654,7 @@ public class WardPharmacyRectify extends JDialog {
 			jSpinnerNewQty = new JSpinner(spinnerNewQtyModel);
 			jSpinnerNewQty.setFont(FONT_BOLD);
 			jSpinnerNewQty.addChangeListener(changeEvent -> {
-				Double stock = Double.parseDouble(jLabelStockQty.getText());
+				Double stock = Double.parseDouble(jTextFieldStockQty.getText());
 				Double newQty = (Double) spinnerNewQtyModel.getNumber().doubleValue();
 				if (stock > 0) {
 					jButtonChooseLot.setEnabled(true);
@@ -673,16 +673,16 @@ public class WardPharmacyRectify extends JDialog {
 	 * @return
 	 */
 	private JTextField getJLabelStockQty() {
-		if (jLabelStockQty == null) {
-			jLabelStockQty = new JTextField(""); //$NON-NLS-1$
-			jLabelStockQty.setHorizontalAlignment(SwingConstants.CENTER);
-			jLabelStockQty.setPreferredSize(new Dimension(100, 25));
-			jLabelStockQty.setFont(FONT_BOLD);
-			jLabelStockQty.setForeground(Color.BLACK);
-			jLabelStockQty.setEditable(false);
-			jLabelStockQty.setBorder(BorderFactory.createEmptyBorder());
+		if (jTextFieldStockQty == null) {
+			jTextFieldStockQty = new JTextField(""); //$NON-NLS-1$
+			jTextFieldStockQty.setHorizontalAlignment(SwingConstants.CENTER);
+			jTextFieldStockQty.setPreferredSize(new Dimension(100, 25));
+			jTextFieldStockQty.setFont(FONT_BOLD);
+			jTextFieldStockQty.setForeground(Color.BLACK);
+			jTextFieldStockQty.setEditable(false);
+			jTextFieldStockQty.setBorder(BorderFactory.createEmptyBorder());
 		}
-		return jLabelStockQty;
+		return jTextFieldStockQty;
 	}
 	
 	/**
@@ -725,10 +725,10 @@ public class WardPharmacyRectify extends JDialog {
 					if (qty == null) {
 						qty = 0.0D;
 					}
-					jLabelStockQty.setText(qty.toString());
+					jTextFieldStockQty.setText(qty.toString());
 					jSpinnerNewQty.setValue(qty);
 				} catch (ClassCastException ex) {
-					jLabelStockQty.setText(""); //$NON-NLS-1$
+					jTextFieldStockQty.setText(""); //$NON-NLS-1$
 					jSpinnerNewQty.setValue(0.0D);
 				}
 			});
