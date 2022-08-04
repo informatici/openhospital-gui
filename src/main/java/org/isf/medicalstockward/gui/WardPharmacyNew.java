@@ -291,10 +291,10 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			}
 			
 			if (c == 1) {
-				return MessageBundle.getMessage("angal.medicalstock.duedate").toUpperCase();
+				return MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase();
 			}
 			if (c == 2) {
-				return MessageBundle.getMessage("angal.common.quantity.txt").toUpperCase();
+				return MessageBundle.getMessage("angal.medicalstock.duedate").toUpperCase();
 			}
 			return ""; //$NON-NLS-1$
 		}
