@@ -118,13 +118,15 @@ public class WardPharmacy extends ModalJFrame implements
 	@Override
 	public void movementInserted(AWTEvent e) {
 		jTableOutcomes.setModel(new OutcomesModel());
-		jTableDrugs.setModel(new DrugsModel());
+		jTableDrugs = null;
+		jScrollPaneDrugs.setViewportView(getJTableDrugs());
 	}
 
 	@Override
 	public void movementUpdated(AWTEvent e) {
 		jTableOutcomes.setModel(new OutcomesModel());
-		jTableDrugs.setModel(new DrugsModel());
+		jTableDrugs = null;
+		jScrollPaneDrugs.setViewportView(getJTableDrugs());
 	}
 	
 	private static final long serialVersionUID = 1L;
