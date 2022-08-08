@@ -39,6 +39,7 @@ import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -236,6 +237,10 @@ public class UserEdit extends JDialog {
 					}
 					if (Arrays.equals(repeatPassword, new char[0])) {
 						MessageDialog.error(null, "angal.userbrowser.pleaseprovidetheretypepassword.msg");
+						return;
+					}
+					if (password.length < GeneralData.STRONGLENGTH) {
+						MessageDialog.error(null, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 						return;
 					}
 					if (!Arrays.equals(password, repeatPassword)) {
