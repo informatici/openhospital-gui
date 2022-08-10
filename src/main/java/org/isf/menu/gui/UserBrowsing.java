@@ -223,7 +223,15 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
 					return;
 				}
+
+				if (!manager.isPasswordStrong(newPassword)) {
+					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+					return;
+				}
+
 				String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+				newPassword = null;
+				newPassword2 = null;
 				user.setPasswd(hashed);
 				try {
 					if (manager.updatePassword(user)) {

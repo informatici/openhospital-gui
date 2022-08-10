@@ -242,7 +242,15 @@ public class UserEdit extends JDialog {
 						MessageDialog.error(null, "angal.userbrowser.passwordsdonotmatchpleasecorrect.msg");
 						return;
 					}
-					String hashed = BCrypt.hashpw(new String(password), BCrypt.gensalt());
+					String passwordStr = new String(password);
+					if (!manager.isPasswordStrong(passwordStr)) {
+						MessageDialog.error(null, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+						return;
+					}
+					String hashed = BCrypt.hashpw(passwordStr, BCrypt.gensalt());
+					passwordStr = "";
+					Arrays.fill(password, '0');
+					Arrays.fill(repeatPassword, '0');
 					user.setPasswd(hashed);
 					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());
 					try {
@@ -252,8 +260,6 @@ public class UserEdit extends JDialog {
 					}
 					if (result) {
 						fireUserInserted(user);
-						Arrays.fill(password, '0');
-						Arrays.fill(repeatPassword, '0');
 					}
 				} else {
 					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());
