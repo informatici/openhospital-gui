@@ -247,6 +247,12 @@ public class UserEdit extends JDialog {
 						MessageDialog.error(null, "angal.userbrowser.passwordsdonotmatchpleasecorrect.msg");
 						return;
 					}
+					// BCrypt has a maximum length of 72 characters
+					// see for example, https://security.stackexchange.com/questions/152430/what-maximum-password-length-to-choose-when-using-bcrypt
+					if (password.length > 72) {
+						MessageDialog.error(null, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+						return;
+					}
 					String hashed = BCrypt.hashpw(new String(password), BCrypt.gensalt());
 					user.setPasswd(hashed);
 					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());

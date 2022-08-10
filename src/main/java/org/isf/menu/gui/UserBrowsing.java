@@ -224,6 +224,12 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
 					return;
 				}
+				// BCrypt has a maximum length of 72 characters
+				// see for example, https://security.stackexchange.com/questions/152430/what-maximum-password-length-to-choose-when-using-bcrypt
+				if (newPassword.length() > 72) {
+					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+					return;
+				}
 				String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 				user.setPasswd(hashed);
 				try {
