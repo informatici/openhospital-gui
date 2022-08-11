@@ -78,6 +78,8 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.JAgenda;
 import org.isf.utils.jobjects.JAgenda.AgendaDayObject;
+import org.isf.utils.jobjects.JMonthChooser;
+import org.isf.utils.jobjects.JYearChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.visits.gui.InsertVisit;
@@ -86,9 +88,6 @@ import org.isf.visits.gui.VisitView.VisitListener;
 import org.isf.visits.manager.VisitManager;
 import org.isf.visits.model.Visit;
 import org.isf.ward.model.Ward;
-
-import com.toedter.calendar.JMonthChooser;
-import com.toedter.calendar.JYearChooser;
 
 public class TherapyEdit extends ModalJFrame implements VisitListener {
 
@@ -1064,12 +1063,12 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 			monthChooser = new JMonthChooser();
 			monthChooser.addPropertyChangeListener("month", propertyChangeEvent -> {
 				JMonthChooser thisChooser = (JMonthChooser) propertyChangeEvent.getSource();
-				jAgenda.setMonth(thisChooser.getMonth() + 1);
+				jAgenda.setMonth(thisChooser.getMonth());
 				showAll();
 			});
 			yearChooser = new JYearChooser();
-			yearChooser.addPropertyChangeListener("year", propertyChangeEvent -> {
-				JYearChooser thisChooser = (JYearChooser) propertyChangeEvent.getSource();
+			yearChooser.addChangeListener(changeEvent -> {
+				JYearChooser thisChooser = (JYearChooser) changeEvent.getSource();
 				jAgenda.setYear(thisChooser.getYear());
 				showAll();
 			});
