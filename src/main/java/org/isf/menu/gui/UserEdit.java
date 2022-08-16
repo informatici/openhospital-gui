@@ -39,6 +39,7 @@ import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -238,6 +239,10 @@ public class UserEdit extends JDialog {
 						MessageDialog.error(null, "angal.userbrowser.pleaseprovidetheretypepassword.msg");
 						return;
 					}
+					if (password.length < GeneralData.STRONGLENGTH) {
+						MessageDialog.error(null, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
+						return;
+					}
 					if (!Arrays.equals(password, repeatPassword)) {
 						MessageDialog.error(null, "angal.userbrowser.passwordsdonotmatchpleasecorrect.msg");
 						return;
@@ -251,6 +256,14 @@ public class UserEdit extends JDialog {
 					passwordStr = "";
 					Arrays.fill(password, '0');
 					Arrays.fill(repeatPassword, '0');
+          
+					// BCrypt has a maximum length of 72 characters
+					// see for example, https://security.stackexchange.com/questions/152430/what-maximum-password-length-to-choose-when-using-bcrypt
+					if (password.length > 72) {
+						MessageDialog.error(null, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+						return;
+					}
+					String hashed = BCrypt.hashpw(new String(password), BCrypt.gensalt());
 					user.setPasswd(hashed);
 					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());
 					try {

@@ -38,6 +38,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -187,7 +188,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				});
 				String newPassword = "";
 				JPanel stepPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-				stepPanel.add(new JLabel(MessageBundle.getMessage("angal.userbrowser.step1.pleaseinsertanew.password.label")));
+				stepPanel.add(new JLabel(MessageBundle.formatMessage("angal.userbrowser.step1.pleaseinsertanew.password.fmt.msg", GeneralData.STRONGLENGTH)));
 				stepPanel.add(pwd);
 
 				while (newPassword.isEmpty()) {
@@ -198,8 +199,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 						return;
 					}
 					newPassword = new String(pwd.getPassword());
-					if (newPassword.isEmpty() || newPassword.length() < 6) {
-						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleast6characters.msg");
+					if (newPassword.isEmpty() || newPassword.length() < GeneralData.STRONGLENGTH) {
+						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 						newPassword = "";
 						pwd.setText("");
 					}
@@ -229,6 +230,12 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 					return;
 				}
 
+				// BCrypt has a maximum length of 72 characters
+				// see for example, https://security.stackexchange.com/questions/152430/what-maximum-password-length-to-choose-when-using-bcrypt
+				if (newPassword.length() > 72) {
+					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+					return;
+				}
 				String hashed = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 				newPassword = null;
 				newPassword2 = null;
