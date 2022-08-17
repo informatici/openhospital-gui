@@ -206,7 +206,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 					} else {
 						if (!manager.isPasswordStrong(newPassword)) {
 							MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
-							newPassword = null;
+							newPassword = "";
 							pwd.setText("");
 						}
 					}
