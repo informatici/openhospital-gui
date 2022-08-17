@@ -118,15 +118,13 @@ public class WardPharmacy extends ModalJFrame implements
 	@Override
 	public void movementInserted(AWTEvent e) {
 		jTableOutcomes.setModel(new OutcomesModel());
-		jTableDrugs = null;
-		jScrollPaneDrugs.setViewportView(getJTableDrugs());
+		jTableDrugs.setModel(new DrugsModel());
 	}
 
 	@Override
 	public void movementUpdated(AWTEvent e) {
 		jTableOutcomes.setModel(new OutcomesModel());
-		jTableDrugs = null;
-		jScrollPaneDrugs.setViewportView(getJTableDrugs());
+		jTableDrugs.setModel(new DrugsModel());
 	}
 	
 	private static final long serialVersionUID = 1L;
@@ -513,6 +511,7 @@ public class WardPharmacy extends ModalJFrame implements
 		if (jTableDrugs == null) {
 			DefaultTableModel modelDrugs = new DrugsModel();
 			jTableDrugs = new JTable(modelDrugs);
+			jTableDrugs.setAutoCreateColumnsFromModel(false);
 			TableCellRenderer buttonRenderer = new JTableButtonRenderer();
 			jTableDrugs.getColumn("").setCellRenderer(buttonRenderer);
 			for (int i = 0; i < columnWidthDrugs.length; i++) {
