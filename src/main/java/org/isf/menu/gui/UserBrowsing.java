@@ -203,6 +203,12 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 						MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
 						newPassword = "";
 						pwd.setText("");
+					} else {
+						if (!manager.isPasswordStrong(newPassword)) {
+							MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+							newPassword = null;
+							pwd.setText("");
+						}
 					}
 				}
 
@@ -222,13 +228,6 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				// 3. Check & Save
 				if (!newPassword.equals(newPassword2)) {
 					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsdonotmatchpleaseretry.msg");
-					newPassword = null;
-					newPassword2 = null;
-					return;
-				}
-
-				if (!manager.isPasswordStrong(newPassword)) {
-					MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
 					newPassword = null;
 					newPassword2 = null;
 					return;
