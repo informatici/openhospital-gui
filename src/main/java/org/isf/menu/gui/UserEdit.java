@@ -233,24 +233,42 @@ public class UserEdit extends JDialog {
 
 					if (Arrays.equals(password, new char[0])) {
 						MessageDialog.error(null, "angal.userbrowser.pleaseprovideapassword.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
 						return;
 					}
 					if (Arrays.equals(repeatPassword, new char[0])) {
 						MessageDialog.error(null, "angal.userbrowser.pleaseprovidetheretypepassword.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
 						return;
 					}
 					if (password.length < GeneralData.STRONGLENGTH) {
 						MessageDialog.error(null, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
 						return;
 					}
 					if (!Arrays.equals(password, repeatPassword)) {
 						MessageDialog.error(null, "angal.userbrowser.passwordsdonotmatchpleasecorrect.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
+						return;
+					}
+					String passwordStr = new String(password);
+					if (!manager.isPasswordStrong(passwordStr)) {
+						MessageDialog.error(null, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
+						passwordStr = null;
 						return;
 					}
 					// BCrypt has a maximum length of 72 characters
 					// see for example, https://security.stackexchange.com/questions/152430/what-maximum-password-length-to-choose-when-using-bcrypt
 					if (password.length > 72) {
 						MessageDialog.error(null, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
 						return;
 					}
 					String hashed = BCrypt.hashpw(new String(password), BCrypt.gensalt());
@@ -263,9 +281,9 @@ public class UserEdit extends JDialog {
 					}
 					if (result) {
 						fireUserInserted(user);
-						Arrays.fill(password, '0');
-						Arrays.fill(repeatPassword, '0');
 					}
+					Arrays.fill(password, '0');
+					Arrays.fill(repeatPassword, '0');
 				} else {
 					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());
 					try {
