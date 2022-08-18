@@ -1486,8 +1486,6 @@ public class WardPharmacy extends ModalJFrame implements
 					WardPharmacyRectify wardRectify = new WardPharmacyRectify(WardPharmacy.this, wardSelected, medic);
 					wardRectify.addMovementWardListener(WardPharmacy.this);
 					wardRectify.setVisible(true);
-					TableCellRenderer buttonRenderer = new JTableButtonRenderer();
-					jTableDrugs.getColumn("").setCellRenderer(buttonRenderer);
 				});
 				return button;
 			}
@@ -1530,9 +1528,6 @@ public class WardPharmacy extends ModalJFrame implements
 					wardRectify.addMovementWardListener(WardPharmacy.this);
 					wardRectify.setVisible(true);
 				}
-
-				TableCellRenderer buttonRenderer = new JTableButtonRenderer();
-				jTableDrugs.getColumn("").setCellRenderer(buttonRenderer);
 			});
 		}
 		return jRectifyButton;
