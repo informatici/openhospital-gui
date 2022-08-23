@@ -47,8 +47,9 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.time.Converters;
 
 /**
  * @author Mwithi
@@ -64,7 +65,7 @@ class ShowPreLoadDialog extends JDialog {
 	private JList datesList;
 	private JButton buttonCancel;
 	private JButton buttonOK;
-	private CustomJDateChooser dateChooser;
+	private GoodDateChooser dateChooser;
 	private VoLimitedTextField descriptionTextField;
 	private JComboBox dicomTypeComboBox;
 
@@ -113,7 +114,7 @@ class ShowPreLoadDialog extends JDialog {
 		gbcDateLabel.gridx = 0;
 		gbcDateLabel.gridy = 0;
 		gbcDateLabel.anchor = GridBagConstraints.WEST;
-		JLabel dateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt") + ":");
+		JLabel dateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt") + ':');
 		centerPanel.add(dateLabel, gbcDateLabel);
 
 		GridBagConstraints gbcDateChooser = new GridBagConstraints();
@@ -121,7 +122,11 @@ class ShowPreLoadDialog extends JDialog {
 		gbcDateChooser.gridx = 1;
 		gbcDateChooser.gridy = 0;
 		gbcDateChooser.fill = GridBagConstraints.HORIZONTAL;
-		dateChooser = new CustomJDateChooser(this.dicomDate);
+		if (dicomDate != null) {
+			dateChooser = new GoodDateChooser(this.dicomDate.toLocalDate());
+		} else {
+			dateChooser = new GoodDateChooser(null);
+		}
 		centerPanel.add(dateChooser, gbcDateChooser);
 
 		if (!dates.isEmpty()) {
@@ -130,7 +135,7 @@ class ShowPreLoadDialog extends JDialog {
 			gbcDateListLabel.gridx = 0;
 			gbcDateListLabel.gridy = 1;
 			gbcDateListLabel.anchor = GridBagConstraints.NORTHWEST;
-			JLabel dateListLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.otherdates.txt") + ":");
+			JLabel dateListLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.otherdates.txt") + ':');
 			centerPanel.add(dateListLabel, gbcDateListLabel);
 
 			GridBagConstraints gbcDateList = new GridBagConstraints();
@@ -146,7 +151,7 @@ class ShowPreLoadDialog extends JDialog {
 		gbcCategoryLabel.gridx = 0;
 		gbcCategoryLabel.gridy = 2;
 		gbcCategoryLabel.anchor = GridBagConstraints.WEST;
-		JLabel categoryLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.category.txt") + ":");
+		JLabel categoryLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.category.txt") + ':');
 		centerPanel.add(categoryLabel, gbcCategoryLabel);
 
 		GridBagConstraints gbcCategoryComboBox = new GridBagConstraints();
@@ -161,7 +166,7 @@ class ShowPreLoadDialog extends JDialog {
 		gbcDescriptionLabel.gridx = 0;
 		gbcDescriptionLabel.gridy = 3;
 		gbcDescriptionLabel.anchor = GridBagConstraints.WEST;
-		JLabel descriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ":");
+		JLabel descriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
 		centerPanel.add(descriptionLabel, gbcDescriptionLabel);
 
 		GridBagConstraints gbcDescriptionTextField = new GridBagConstraints();
@@ -208,7 +213,7 @@ class ShowPreLoadDialog extends JDialog {
 			datesList.addListSelectionListener(selectionEvent -> {
 				if (!selectionEvent.getValueIsAdjusting()) {
 					Date selectedDate = (Date) ((JList) selectionEvent.getSource()).getSelectedValue();
-					dateChooser.setDate(selectedDate);
+					dateChooser.setDate(Converters.convertToLocalDate(selectedDate));
 				}
 			});
 		}
@@ -238,7 +243,7 @@ class ShowPreLoadDialog extends JDialog {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(actionEvent -> {
-				dicomDate = dateChooser.getLocalDateTime();
+				dicomDate = dateChooser.getDateEndOfDay();
 				dicomDescription = descriptionTextField.getText().trim();
 				save = true;
 				dispose();
