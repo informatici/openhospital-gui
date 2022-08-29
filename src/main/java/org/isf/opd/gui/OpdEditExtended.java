@@ -69,6 +69,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.EventListenerList;
 
+import org.apache.log4j.Logger;
 import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
 import org.isf.distype.manager.DiseaseTypeBrowserManager;
@@ -139,6 +140,8 @@ import org.isf.visits.model.Visit;
 public class OpdEditExtended extends ModalJFrame implements PatientInsertExtended.PatientListener, PatientInsert.PatientListener, ActionListener {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger LOGGER = Logger.getLogger(OpdEditExtended.class);
 
 	public static final int DEFAULT_VISIT_DURATION = 30;
 
@@ -1643,6 +1646,15 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 					opd.setNextVisitDate(null);
 				}
 
+				if (!insert) {
+					try {
+						// get the latest version of the OPD just in case it has been previously updated; set the lock variable so it will be correct
+						Opd lockOpd = opdManager.getLastOpd(opd.getPatient().getCode());
+						opd.setLock(lockOpd.getLock());
+					} catch(OHServiceException ohServiceException) {
+						LOGGER.error(ohServiceException.getMessage(), ohServiceException);
+					}
+				}
 				opd.setNote(jNoteTextArea.getText());
 				opd.setPatient(opdPatient);
 				opd.setNewPatient(newPatient);

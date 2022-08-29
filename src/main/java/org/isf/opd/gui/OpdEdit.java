@@ -51,6 +51,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.event.EventListenerList;
 
+import org.apache.log4j.Logger;
 import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
 import org.isf.distype.manager.DiseaseTypeBrowserManager;
@@ -86,6 +87,8 @@ import org.isf.utils.time.RememberDates;
 public class OpdEdit extends JDialog {
 	
 	private static final long serialVersionUID = -7369841416710920082L;
+
+	private static final Logger LOGGER = Logger.getLogger(OpdEdit.class);
 
 	private EventListenerList surgeryListeners = new EventListenerList();
 	
@@ -492,6 +495,15 @@ public class OpdEdit extends JDialog {
 							sex = 'M';
 						}
 
+						if (!insert) {
+							try {
+								// get the latest version of the OPD just in case it has been previously updated; set the lock variable so it will be correct
+								Opd lockOpd = opdManager.getLastOpd(opd.getPatient().getCode());
+								opd.setLock(lockOpd.getLock());
+							} catch(OHServiceException ohServiceException) {
+								LOGGER.error(ohServiceException.getMessage(), ohServiceException);
+							}
+						}
 						opd.setNewPatient(newPatient);
 						opd.setReferralFrom(referralFrom);
 						opd.setReferralTo(referralTo);
