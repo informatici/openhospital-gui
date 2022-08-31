@@ -25,16 +25,12 @@ import java.awt.AWTEvent;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 
 import org.isf.generaldata.Version;
 import org.isf.menu.manager.Context;
-import org.isf.utils.jobjects.DelayTimer;
-import org.isf.utils.jobjects.DelayTimerCallback;
 import org.isf.utils.jobjects.WaitCursorEventQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
