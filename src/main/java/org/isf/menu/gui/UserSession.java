@@ -1,6 +1,9 @@
 package org.isf.menu.gui;
 
+import java.awt.Window;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -56,12 +59,13 @@ public class UserSession {
 		JFrame tmp = getMainMenu();
 		removeUser();
 		getMainMenu().clearUser();
+		List<Window> windows = Arrays.asList(Window.getWindows());
 		Runnable waitRunner = () -> {
 			try {
 				SwingUtilities.invokeAndWait(() -> {
 					MainMenu mainMenu = new MainMenu();
 					setMainMenu(mainMenu);
-					tmp.dispose();
+					windows.forEach(win -> win.dispose());
 				});
 			} catch (Exception exception) {
 				LOGGER.error(exception.getMessage(), exception);
