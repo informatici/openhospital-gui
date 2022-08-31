@@ -57,6 +57,7 @@ import org.isf.disease.model.Disease;
 import org.isf.distype.manager.DiseaseTypeBrowserManager;
 import org.isf.distype.model.DiseaseType;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.opd.manager.OpdBrowserManager;
@@ -497,9 +498,13 @@ public class OpdEdit extends JDialog {
 
 						if (!insert) {
 							try {
-								// get the latest version of the OPD just in case it has been previously updated; set the lock variable so it will be correct
+								// get the latest version of the OPD in case it has been previously updated;
+								// if the last modified user is the same user and the lock values differ then reset the lock variable so the save works
+								// otherwise the user will get the message about data being updated by another user
 								Opd lockOpd = opdManager.getLastOpd(opd.getPatient().getCode());
-								opd.setLock(lockOpd.getLock());
+								if (MainMenu.getUser().getUserName().equals(lockOpd.getLastModifiedBy()) && opd.getLock() != lockOpd.getLock()) {
+									opd.setLock(lockOpd.getLock());
+								}
 							} catch(OHServiceException ohServiceException) {
 								LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 							}
