@@ -98,7 +98,7 @@ class SplashWindow3 extends JWindow {
 		if (UserSession.getTimer() != null) {
 			UserSession.getTimer().quit();
 		}
-		UserSession.setTimer(new DelayTimer(new LogoutEventListener(), UserSession.SESSION_TIME));
+		UserSession.setTimer(new DelayTimer(new LogoutEventListener(), GeneralData.SESSIONTIMEOUT));
 		UserSession.getTimer().startTimer();
 	}
 

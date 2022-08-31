@@ -41,8 +41,6 @@ public class UserSession {
 	private static final String LOGOUT_TIMER = "logoutTimer";
 	private static final String USER = "user";
 
-	public static final int SESSION_TIME = 15000;
-
 	private static Map<String, Object> map = new HashMap<>();
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserSession.class);
