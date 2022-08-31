@@ -256,16 +256,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 		
 		
-		if (singleUser) {  // remove SMS Manager if not enabled
-			List<UserMenuItem> junkMenu = new ArrayList<>();
-			for (UserMenuItem umi : myMenu) {
-				if ("logout".equalsIgnoreCase(umi.getCode())) {
-					junkMenu.add(umi);
-				}
-			}
-			for (UserMenuItem umi : junkMenu) {
-				myMenu.remove(umi);
-			}
+		if (singleUser) {
+			myMenu.removeIf(item -> "logout".equalsIgnoreCase( item.getCode()));
 		}
 
 		// if not internalPharmacies mode remove "medicalsward" menu
@@ -405,14 +397,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 					LOGGER.info(u.getCode());
 					if ("logout".equals(u.getCode())) {
-						button[k].addActionListener(new ActionListener(){
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								UserSession.restartSession();
-							}
-						});
-					}
-					else
+						addLogoutButtonListener(k);
+					} else
 						{
 							button[k].addActionListener(parentFrame);
 						}
@@ -435,6 +421,15 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			centerPanel.add(buttonsPanel, BorderLayout.CENTER); // to center anyway, regardless the window's size
 			
 			add(centerPanel, BorderLayout.CENTER);
+		}
+
+		private void addLogoutButtonListener(int k) {
+			button[k].addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					UserSession.restartSession();
+				}
+			});
 		}
 
 		private JPanel getLogoPanel() {
