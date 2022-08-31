@@ -21,15 +21,20 @@
  */
 package org.isf.menu.gui;
 
+import java.awt.AWTEvent;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 
 import org.isf.generaldata.Version;
 import org.isf.menu.manager.Context;
+import org.isf.utils.jobjects.DelayTimer;
+import org.isf.utils.jobjects.DelayTimerCallback;
 import org.isf.utils.jobjects.WaitCursorEventQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +51,7 @@ public class Menu {
 	/**
 	 * Create the GUI and show it.
 	 */
-	private static void createAndShowGUI() {
+	public static void createAndShowGUI() {
 		String newLine = System.lineSeparator();
 		LOGGER.info("{}{}====================={}Starting Open Hospital{}====================={}", newLine, newLine, newLine, newLine, newLine);
 
@@ -55,7 +60,11 @@ public class Menu {
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "splash.png", null, 3000);
 		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
+		
+		Toolkit.getDefaultToolkit().addAWTEventListener(new LogoutEventListener(), AWTEvent.MOUSE_MOTION_EVENT_MASK + AWTEvent.KEY_EVENT_MASK);
 		Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQueue);
+	
+
 	}
 
 	private static void checkOHVersion() {

@@ -39,6 +39,7 @@ public class DelayTimer extends Thread {
 	public DelayTimer(DelayTimerCallback callback, long delay) {
 		this.callback = callback;
 		this.delay = delay;
+		this.setName("DelayTimerThread_" + this.delay + "ms");
 		setDaemon(true);
 		start();
 	}

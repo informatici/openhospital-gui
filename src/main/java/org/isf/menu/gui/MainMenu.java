@@ -76,6 +76,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private boolean flag_Xmpp;
 	private boolean flag_Sms;
 
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
 
 	@Override
@@ -131,7 +132,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
-	public MainMenu() {
+	public MainMenu() {		
 		myFrame = this;
 		GeneralData.initialize();
 		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); //for all fixed options YES_NO_CANCEL in dialogs
@@ -253,6 +254,19 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				myMenu.remove(umi);
 			}
 		}
+		
+		
+		if (singleUser) {  // remove SMS Manager if not enabled
+			List<UserMenuItem> junkMenu = new ArrayList<>();
+			for (UserMenuItem umi : myMenu) {
+				if ("logout".equalsIgnoreCase(umi.getCode())) {
+					junkMenu.add(umi);
+				}
+			}
+			for (UserMenuItem umi : junkMenu) {
+				myMenu.remove(umi);
+			}
+		}
 
 		// if not internalPharmacies mode remove "medicalsward" menu
 		if (!internalPharmacies) {
@@ -302,7 +316,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				actionExit(0);
 			}
 		});
-		
+		if (!singleUser) {
+           UserSession.setMainMenu(this);
+		}
 		setVisible(true);
 	}
 
@@ -387,7 +403,19 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 					button[k] = new JButton(u.getButtonLabel());
 					button[k].setMnemonic(KeyEvent.VK_A + (u.getShortcut() - 'A'));
 
-					button[k].addActionListener(parentFrame);
+					LOGGER.info(u.getCode());
+					if ("logout".equals(u.getCode())) {
+						button[k].addActionListener(new ActionListener(){
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								UserSession.restartSession();
+							}
+						});
+					}
+					else
+						{
+							button[k].addActionListener(parentFrame);
+						}
 					button[k].setActionCommand(u.getCode());
 					k++;
 				}
@@ -465,6 +493,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	public static User getUser() {
 		return myUser;
+	}
+	
+	public static void clearUser() {
+		myUser = null;
 	}
 	
 }

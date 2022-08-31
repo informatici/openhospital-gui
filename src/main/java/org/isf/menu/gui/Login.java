@@ -170,6 +170,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		} else {
 			fireLoginInserted(returnUser);
 			removeLoginListener(parent);
+			UserSession.setUser(returnUser);
 			dispose();
 		}
 	}
