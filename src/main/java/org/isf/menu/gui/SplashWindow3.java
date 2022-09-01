@@ -33,6 +33,8 @@ import javax.swing.JLabel;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
+import org.isf.generaldata.GeneralData;
+import org.isf.utils.jobjects.DelayTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +71,11 @@ class SplashWindow3 extends JWindow {
         final Runnable closerRunner = () -> {
             setVisible(false);
             dispose();
-            new MainMenu();
+            MainMenu mainMenu = new MainMenu();
+            
+            if (!GeneralData.getGeneralData().getSINGLEUSER()) {
+            	startLogoutTimer(mainMenu);
+            }
         };
         Runnable waitRunner = () -> {
             try {
@@ -85,5 +91,13 @@ class SplashWindow3 extends JWindow {
         Thread splashThread = new Thread(waitRunner, "SplashThread");
         splashThread.start();
     }
+    
+    private void startLogoutTimer(MainMenu mainMenu) {
+		if (UserSession.getTimer() != null) {
+			UserSession.getTimer().quit();
+		}
+		UserSession.setTimer(new DelayTimer(new LogoutEventListener(), GeneralData.SESSIONTIMEOUT));
+		UserSession.getTimer().startTimer();
+	}
 
 }

@@ -266,6 +266,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				myMenu.remove(umi);
 			}
 		}
+		
+		if (singleUser) {
+			myMenu.removeIf(item -> "logout".equalsIgnoreCase( item.getCode()));
+		}
 
 		// remove disabled buttons
 		List<UserMenuItem> junkMenu = new ArrayList<>();
@@ -302,6 +306,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				actionExit(0);
 			}
 		});
+		
+		if (!singleUser) {
+	           UserSession.setMainMenu(this);
+			}
 		
 		setVisible(true);
 	}
@@ -386,8 +394,11 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				if (u.getMySubmenu().equals("main")) {
 					button[k] = new JButton(u.getButtonLabel());
 					button[k].setMnemonic(KeyEvent.VK_A + (u.getShortcut() - 'A'));
-
-					button[k].addActionListener(parentFrame);
+					if ("logout".equals(u.getCode())) {
+						addLogoutButtonListener(k);
+					} else {
+						button[k].addActionListener(parentFrame);
+					}
 					button[k].setActionCommand(u.getCode());
 					k++;
 				}
@@ -407,6 +418,15 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			centerPanel.add(buttonsPanel, BorderLayout.CENTER); // to center anyway, regardless the window's size
 			
 			add(centerPanel, BorderLayout.CENTER);
+		}
+		
+		private void addLogoutButtonListener(int k) {
+			button[k].addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					UserSession.restartSession();
+				}
+			});
 		}
 
 		private JPanel getLogoPanel() {
@@ -465,6 +485,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	public static User getUser() {
 		return myUser;
+	}
+	
+	public static void clearUser() {
+		myUser = null;
 	}
 	
 }
