@@ -869,9 +869,9 @@ public class PatientFolderBrowser extends ModalJFrame implements
 				} else {
 					int f = row - (opdList.size() + admList.size());
 					String ret = "<html>" +
-							MessageBundle.getMessage("angal.common.weight.txt") + ": " + (examinationList.get(f).getPex_height())
+							MessageBundle.getMessage("angal.common.height.txt") + ": " + (examinationList.get(f).getPex_height())
 							+ "<br>" +
-							MessageBundle.getMessage("angal.common.height.txt") + ": " + (examinationList.get(f).getPex_weight())
+							MessageBundle.getMessage("angal.common.weight.txt") + ": " + (examinationList.get(f).getPex_weight())
 							+ "</html>";
 					return ret;
 				}
