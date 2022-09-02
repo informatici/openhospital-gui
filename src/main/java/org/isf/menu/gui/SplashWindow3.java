@@ -92,9 +92,9 @@ class SplashWindow3 extends JWindow {
         setVisible(true);
         Thread splashThread = new Thread(waitRunner, "SplashThread");
         splashThread.start();
-    }
-    
-    private void startLogoutTimer(MainMenu mainMenu) {
+	}
+
+	private void startLogoutTimer(MainMenu mainMenu) {
 		if (UserSession.getTimer() != null) {
 			UserSession.getTimer().quit();
 		}

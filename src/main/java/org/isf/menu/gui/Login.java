@@ -129,8 +129,6 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
 		
-
-
 		// add panel to frame
 		LoginPanel panel = new LoginPanel(this);
 		add(panel);
