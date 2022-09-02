@@ -63,7 +63,10 @@ public class UserSession {
 
 	public static void setUser(User myUser) {
 		map.put(USER, myUser);
+	}
 
+	public static User getUser() {
+		return (User) map.get(USER);
 	}
 
 	public static boolean isLoggedIn() {
@@ -76,14 +79,28 @@ public class UserSession {
 
 	public static void restartSession() {
 		List<Window> windows = Arrays.asList(Window.getWindows());
-		removeUser();
-		getMainMenu().clearUser();
 		Runnable waitRunner = () -> {
 			try {
 				SwingUtilities.invokeAndWait(() -> {
-					MainMenu mainMenu = new MainMenu();
+
+					UserSession.removeUser();
+
+					JFrame jf = new JFrame();
+
+					windows.forEach(win -> {
+						win.dispose();
+					});
+
+					new Login(jf);
+
+					if (!UserSession.isLoggedIn()) {
+						// Login failed
+						System.exit(2);
+					}
+
+					MainMenu mainMenu = new MainMenu(getUser());
 					setMainMenu(mainMenu);
-					windows.forEach(win -> win.dispose());
+
 				});
 			} catch (Exception exception) {
 				LOGGER.error(exception.getMessage(), exception);
