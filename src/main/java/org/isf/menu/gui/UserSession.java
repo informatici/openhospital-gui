@@ -100,6 +100,8 @@ public class UserSession {
 
 					MainMenu mainMenu = new MainMenu(getUser());
 					setMainMenu(mainMenu);
+					getTimer().startTimer();
+					LOGGER.debug("Session refreshed...");
 
 				});
 			} catch (Exception exception) {

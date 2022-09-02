@@ -21,36 +21,40 @@
  */
 package org.isf.menu.gui;
 
-import java.awt.AWTEvent;
+import java.awt.MouseInfo;
 
-import org.isf.generaldata.GeneralData;
-import org.isf.menu.model.User;
-import org.isf.utils.jobjects.DelayTimerCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LogoutEventListener implements Login.LoginListener, DelayTimerCallback {
+public class SessionRefreshedRunnable implements Runnable {
 
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(LogoutEventListener.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRefreshedRunnable.class);
 	
-	@Override
-	public void loginInserted(AWTEvent e) {
-		if (e.getSource() instanceof User) {
-			User myUser = (User) e.getSource();
-			UserSession.setUser(myUser);
-			UserSession.getTimer().startTimer();
-		}
-
-	}
+	private double x;
+	private double y;
 
 	@Override
-	public void trigger() {
-		if (!GeneralData.getGeneralData().getSINGLEUSER() && UserSession.isLoggedIn()) {
-				UserSession.restartSession();
+	public void run() {
+		try {
+			while (true) {
+				Thread.sleep(5000);
+				double x = MouseInfo.getPointerInfo().getLocation().getX();
+				double y = MouseInfo.getPointerInfo().getLocation().getY();
+
+				if (x != this.x || y != this.y) {
+					if (UserSession.getTimer() != null) {
+						UserSession.getTimer().startTimer();
+						LOGGER.debug("Mouse moved...session refreshed");
+					}
+					this.x = x;
+					this.y = y;
+				}
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
 
 }
-
