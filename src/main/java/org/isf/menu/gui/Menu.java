@@ -21,7 +21,6 @@
  */
 package org.isf.menu.gui;
 
-import java.awt.AWTEvent;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.Scanner;
@@ -56,7 +55,6 @@ public class Menu {
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		new SplashWindow3("rsc" + File.separator + "images" + File.separator + "splash.png", null, 3000);
 		WaitCursorEventQueue waitQueue = new WaitCursorEventQueue(10, Toolkit.getDefaultToolkit().getSystemEventQueue());
-		Toolkit.getDefaultToolkit().addAWTEventListener(new LogoutEventListener(), AWTEvent.MOUSE_MOTION_EVENT_MASK + AWTEvent.KEY_EVENT_MASK);
 		Toolkit.getDefaultToolkit().getSystemEventQueue().push(waitQueue);
 	}
 
