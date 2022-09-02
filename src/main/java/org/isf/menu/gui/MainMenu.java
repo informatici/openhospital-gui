@@ -131,7 +131,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
-	public MainMenu() {
+	public MainMenu(User myUserIn) {
+		myUser = myUserIn;
 		myFrame = this;
 		GeneralData.initialize();
 		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); //for all fixed options YES_NO_CANCEL in dialogs
@@ -164,7 +165,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		} else {
 			// get an user
 			LOGGER.info("Logging: Multi User mode.");
-			new Login(this);
+			
+			if (null==myUser) {
+				new Login(this);
+			}
 
 			if (null == myUser) {
 				// Login failed

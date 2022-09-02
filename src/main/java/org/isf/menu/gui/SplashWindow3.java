@@ -71,7 +71,7 @@ class SplashWindow3 extends JWindow {
         final Runnable closerRunner = () -> {
             setVisible(false);
             dispose();
-            MainMenu mainMenu = new MainMenu();
+            MainMenu mainMenu = new MainMenu(null);
             
             if (!GeneralData.getGeneralData().getSINGLEUSER()) {
             	startLogoutTimer(mainMenu);

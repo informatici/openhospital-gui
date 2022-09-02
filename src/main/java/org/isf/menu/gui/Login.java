@@ -36,6 +36,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -122,6 +123,31 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	private User returnUser;
 	private boolean usersListLogin;
 
+	
+	public Login(JFrame parent) {
+		super(parent, MessageBundle.getMessage("angal.login.title"), true);
+
+		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
+		
+
+
+		// add panel to frame
+		LoginPanel panel = new LoginPanel(this);
+		add(panel);
+		pack();
+
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Dimension screensize = kit.getScreenSize();
+
+		Dimension mySize = getSize();
+
+		setLocation((screensize.width - mySize.width) / 2,
+				(screensize.height - mySize.height) / 2);
+
+		setResizable(false);
+		setVisible(true);
+	}
+	
 	public Login(MainMenu parent) {
 		super(parent, MessageBundle.getMessage("angal.login.title"), true);
 
