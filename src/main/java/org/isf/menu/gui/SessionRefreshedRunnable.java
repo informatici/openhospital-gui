@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class SessionRefreshedRunnable implements Runnable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRefreshedRunnable.class);
-	
+
 	private double x;
 	private double y;
 
