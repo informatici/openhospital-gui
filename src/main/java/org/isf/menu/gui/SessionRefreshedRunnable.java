@@ -22,6 +22,7 @@
 package org.isf.menu.gui;
 
 import java.awt.MouseInfo;
+import java.awt.Point;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,8 @@ public class SessionRefreshedRunnable implements Runnable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRefreshedRunnable.class);
 
+	private static final long THREAD_SLEEP_TIME = 5000;
+
 	private double x;
 	private double y;
 
@@ -37,22 +40,25 @@ public class SessionRefreshedRunnable implements Runnable {
 	public void run() {
 		try {
 			while (true) {
-				Thread.sleep(5000);
-				double x = MouseInfo.getPointerInfo().getLocation().getX();
-				double y = MouseInfo.getPointerInfo().getLocation().getY();
+
+				Thread.sleep(THREAD_SLEEP_TIME);
+
+				Point point = MouseInfo.getPointerInfo().getLocation();
+
+				double x = point.getX();
+				double y = point.getY();
 
 				if (x != this.x || y != this.y) {
 					if (UserSession.getTimer() != null) {
 						UserSession.getTimer().startTimer();
-						LOGGER.debug("Mouse moved...session refreshed");
+						LOGGER.debug("Mouse moved. Session refreshed.");
 					}
 					this.x = x;
 					this.y = y;
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 
 	}
