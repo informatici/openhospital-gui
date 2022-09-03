@@ -27,10 +27,9 @@ import java.awt.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SessionRefreshedRunnable implements Runnable {
+public class SessionRefresheTimerRunnable implements Runnable {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRefreshedRunnable.class);
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRefresheTimerRunnable.class);
 	private static final long THREAD_SLEEP_TIME = 5000;
 
 	private double x;
@@ -58,7 +57,7 @@ public class SessionRefreshedRunnable implements Runnable {
 				}
 			}
 		} catch (InterruptedException e) {
-			LOGGER.error(e.getMessage());
+			LOGGER.error(e.getMessage(), e);
 		}
 
 	}
