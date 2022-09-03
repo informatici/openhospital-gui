@@ -87,7 +87,7 @@ import org.isf.ward.model.Ward;
  * ------------------------------------------
  */
 public class PatientDataBrowser extends ModalJFrame implements 
-				PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener, OpdEditExtended.SurgeryListener {
+				PatientInsert.PatientListener, PatientInsertExtended.PatientListener, AdmissionBrowser.AdmissionListener, OpdEditExtended.SurgeryListener, OpdEdit.SurgeryListener {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList deleteAdmissionListeners = new EventListenerList();
@@ -302,9 +302,11 @@ public class PatientDataBrowser extends ModalJFrame implements
 					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 					if (GeneralData.OPDEXTENDED) {
 						OpdEditExtended newrecord = new OpdEditExtended(PatientDataBrowser.this, opd, false);
+						newrecord.addSurgeryListener(PatientDataBrowser.this);
 						newrecord.showAsModal(PatientDataBrowser.this);
 					} else {
 						OpdEdit newrecord = new OpdEdit(PatientDataBrowser.this, opd, false);
+						newrecord.addSurgeryListener(PatientDataBrowser.this);
 						newrecord.setVisible(true);
 					}
 				}
