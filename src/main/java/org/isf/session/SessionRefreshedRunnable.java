@@ -19,38 +19,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.isf.menu.gui;
+package org.isf.session;
 
-import java.awt.AWTEvent;
+import java.awt.MouseInfo;
+import java.awt.Point;
 
-import org.isf.generaldata.GeneralData;
-import org.isf.menu.model.User;
-import org.isf.utils.jobjects.DelayTimerCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LogoutEventListener implements Login.LoginListener, DelayTimerCallback {
+public class SessionRefreshedRunnable implements Runnable {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(SessionRefreshedRunnable.class);
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LogoutEventListener.class);
-	
-	@Override
-	public void loginInserted(AWTEvent e) {
-		if (e.getSource() instanceof User) {
-			User myUser = (User) e.getSource();
-			UserSession.setUser(myUser);
-			UserSession.getTimer().startTimer();
-		}
+	private static final long THREAD_SLEEP_TIME = 5000;
 
-	}
+	private double x;
+	private double y;
 
 	@Override
-	public void trigger() {
-		if (!GeneralData.getGeneralData().getSINGLEUSER() && UserSession.isLoggedIn()) {
-				UserSession.restartSession();
+	public void run() {
+		try {
+			while (true) {
+
+				Thread.sleep(THREAD_SLEEP_TIME);
+
+				Point point = MouseInfo.getPointerInfo().getLocation();
+
+				double x = point.getX();
+				double y = point.getY();
+
+				if (x != this.x || y != this.y) {
+					if (UserSession.getTimer() != null) {
+						UserSession.getTimer().startTimer();
+						LOGGER.debug("Mouse moved. Session refreshed.");
+					}
+					this.x = x;
+					this.y = y;
+				}
+			}
+		} catch (InterruptedException e) {
+			LOGGER.error(e.getMessage());
 		}
 
 	}
 
 }
-
