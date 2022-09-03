@@ -22,37 +22,34 @@
 package org.isf.session;
 
 import java.awt.AWTEvent;
+import java.awt.event.AWTEventListener;
+import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 import org.isf.generaldata.GeneralData;
-import org.isf.menu.gui.Login;
-import org.isf.menu.gui.Login.LoginListener;
-import org.isf.menu.model.User;
 import org.isf.utils.jobjects.DelayTimerCallback;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class LogoutEventListener implements Login.LoginListener, DelayTimerCallback {
+public class LogoutEventListener implements DelayTimerCallback, AWTEventListener {
 
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(LogoutEventListener.class);
-	
 	@Override
-	public void loginInserted(AWTEvent e) {
-		if (e.getSource() instanceof User) {
-			User myUser = (User) e.getSource();
-			UserSession.setUser(myUser);
-			UserSession.getTimer().startTimer();
+	public void trigger() {
+		if (!GeneralData.getGeneralData().getSINGLEUSER() && UserSession.isLoggedIn()) {
+			UserSession.restartSession();
 		}
 
 	}
 
 	@Override
-	public void trigger() {
-		if (!GeneralData.getGeneralData().getSINGLEUSER() && UserSession.isLoggedIn()) {
-				UserSession.restartSession();
+	public void eventDispatched(AWTEvent e) {
+		if (!GeneralData.getGeneralData().getSINGLEUSER() && e instanceof KeyEvent) {
+			KeyEvent key = (KeyEvent) e;
+			if (Arrays.asList(KeyEvent.KEY_PRESSED).contains(key.getID())) {
+				if (UserSession.getTimer() != null) {
+					UserSession.getTimer().startTimer();
+				}
+			}
 		}
 
 	}
 
 }
-
