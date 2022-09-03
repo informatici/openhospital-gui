@@ -87,13 +87,13 @@ public class UserSession {
 
 					UserSession.removeUser();
 
-					JFrame jf = new JFrame();
+					JFrame tmpJFrame = new JFrame();
 
 					windows.forEach(win -> {
 						win.dispose();
 					});
 
-					new Login(jf);
+					new Login(tmpJFrame);
 
 					if (!UserSession.isLoggedIn()) {
 						// Login failed
@@ -113,7 +113,7 @@ public class UserSession {
 			}
 		};
 
-		Thread newThread = new Thread(waitRunner, "Logout");
+		Thread newThread = new Thread(waitRunner, "newSession");
 		newThread.start();
 	}
 
