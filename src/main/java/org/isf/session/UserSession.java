@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.isf.menu.gui;
+package org.isf.session;
 
 import java.awt.Window;
 import java.util.Arrays;
@@ -30,6 +30,8 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import org.isf.menu.gui.Login;
+import org.isf.menu.gui.MainMenu;
 import org.isf.menu.model.User;
 import org.isf.utils.jobjects.DelayTimer;
 import org.slf4j.Logger;
