@@ -21,6 +21,7 @@
  */
 package org.isf.menu.gui;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -79,6 +80,7 @@ class SplashWindow3 extends JWindow {
 
 			if (!GeneralData.getGeneralData().getSINGLEUSER()) {
 				startLogoutTimer(mainMenu);
+				Toolkit.getDefaultToolkit().addAWTEventListener(new LogoutEventListener(), AWTEvent.KEY_EVENT_MASK);
 			}
 		};
 		Runnable waitRunner = () -> {
