@@ -21,7 +21,6 @@
  */
 package org.isf.menu.gui;
 
-import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -36,7 +35,7 @@ import javax.swing.SwingUtilities;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.session.LogoutEventListener;
-import org.isf.session.SessionRefreshedRunnable;
+import org.isf.session.SessionRefresheTimerRunnable;
 import org.isf.session.UserSession;
 import org.isf.utils.jobjects.DelayTimer;
 import org.slf4j.Logger;
@@ -76,11 +75,8 @@ class SplashWindow3 extends JWindow {
 			dispose();
 			MainMenu mainMenu = new MainMenu(null);
 
-			new Thread(new SessionRefreshedRunnable()).start();
-
 			if (!GeneralData.getGeneralData().getSINGLEUSER()) {
 				startLogoutTimer(mainMenu);
-				Toolkit.getDefaultToolkit().addAWTEventListener(new LogoutEventListener(), AWTEvent.KEY_EVENT_MASK);
 			}
 		};
 		Runnable waitRunner = () -> {
@@ -99,6 +95,7 @@ class SplashWindow3 extends JWindow {
 	}
 
 	private void startLogoutTimer(MainMenu mainMenu) {
+		new Thread(new SessionRefresheTimerRunnable()).start();
 		if (UserSession.getTimer() != null) {
 			UserSession.getTimer().quit();
 		}
