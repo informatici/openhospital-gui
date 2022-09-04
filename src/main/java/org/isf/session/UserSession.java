@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 public class UserSession {
 
+	private static final int LOGIN_FAILED = 2;
 	private static final String LOGOUT_TIMER = "logoutTimer";
 	private static final String USER = "user";
 
@@ -87,8 +88,7 @@ public class UserSession {
 					new Login(tmpJFrame);
 
 					if (!UserSession.isLoggedIn()) {
-						// Login failed
-						System.exit(2);
+						System.exit(LOGIN_FAILED);
 					}
 
 					tmpJFrame.dispose();
