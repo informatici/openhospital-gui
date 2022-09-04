@@ -39,21 +39,12 @@ import org.slf4j.LoggerFactory;
 
 public class UserSession {
 
-	private static final String MAIN_MENU = "mainMenu";
 	private static final String LOGOUT_TIMER = "logoutTimer";
 	private static final String USER = "user";
 
 	private static Map<String, Object> map = new HashMap<>();
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserSession.class);
-
-	public static MainMenu getMainMenu() {
-		return (MainMenu) map.get(MAIN_MENU);
-	}
-
-	public static void setMainMenu(JFrame mainMenu) {
-		map.put(MAIN_MENU, mainMenu);
-	}
 
 	public static DelayTimer getTimer() {
 		return (DelayTimer) map.get(LOGOUT_TIMER);
@@ -100,8 +91,7 @@ public class UserSession {
 						System.exit(2);
 					}
 
-					MainMenu mainMenu = new MainMenu(getUser());
-					setMainMenu(mainMenu);
+					new MainMenu(getUser());
 					getTimer().startTimer();
 					LOGGER.debug("Session refreshed...");
 
