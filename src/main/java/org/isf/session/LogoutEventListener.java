@@ -33,7 +33,8 @@ public class LogoutEventListener implements DelayTimerCallback, AWTEventListener
 	@Override
 	public void trigger() {
 		boolean isNotSingleUserMode = !GeneralData.getGeneralData().getSINGLEUSER();
-		if (isNotSingleUserMode && UserSession.isLoggedIn()) {
+		boolean loggedIn = UserSession.isLoggedIn();
+		if (isNotSingleUserMode && loggedIn) {
 			UserSession.restartSession();
 		}
 	}
