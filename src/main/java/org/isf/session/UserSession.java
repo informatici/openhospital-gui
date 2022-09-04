@@ -91,6 +91,8 @@ public class UserSession {
 						System.exit(2);
 					}
 
+					tmpJFrame.dispose();
+					
 					new MainMenu(getUser());
 					getTimer().startTimer();
 					LOGGER.debug("Session refreshed...");
