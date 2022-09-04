@@ -312,10 +312,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			}
 		});
 
-		if (!singleUser) {
-			UserSession.setMainMenu(this);
-		}
-
 		setVisible(true);
 	}
 
