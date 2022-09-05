@@ -400,12 +400,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
-				// get the latest version of the medical just in case it has been previously updated; thus the lock variable will be correct
-				try {
-					medical = medicalBrowsingManager.getMedical(medical.getCode());
-				} catch(OHServiceException exception) {
-					LOGGER.error(exception.getMessage(), exception);
-				}
 				// Select Dates
 				GoodFromDateToDateChooser dataRange = new GoodFromDateToDateChooser(MedicalBrowser.this);
 				dataRange.setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
@@ -483,12 +477,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
-				// get the latest version of the medical just in case it has been previously updated; thus the lock variable will be correct
-				try {
-					medical = medicalBrowsingManager.getMedical(this.medical.getCode());
-				} catch(OHServiceException exception) {
-					LOGGER.error(exception.getMessage(), exception);
-				}
 				int answer = MessageDialog.yesNo(MedicalBrowser.this, "angal.medicals.deletemedical.fmt.msg", medical.getDescription());
 				if (answer == JOptionPane.YES_OPTION) {
 					boolean deleted;
@@ -518,12 +506,6 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
 				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
-				// get the latest version of the medical just in case it has been previously updated; thus the lock variable will be correct
-				try {
-					medical = medicalBrowsingManager.getMedical(medical.getCode());
-				} catch(OHServiceException exception) {
-					LOGGER.error(exception.getMessage(), exception);
-				}
 				MedicalEdit editrecord = new MedicalEdit(medical, false, me);
 				editrecord.addMedicalListener(MedicalBrowser.this);
 				editrecord.setVisible(true);
