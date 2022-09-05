@@ -308,11 +308,19 @@ public class MedicalEdit extends JDialog {
 							}
 						}
 						if (result) {
+							Medical updatedMedical = null;
+							try {
+								updatedMedical = medicalBrowsingManager.getMedical(oldMedical.getCode());
+							} catch (OHServiceException exception) {
+								LOGGER.error(exception.getMessage(), exception);
+								updatedMedical = medical;
+							}
 							medical.setType((MedicalType) typeComboBox.getSelectedItem());
 							medical.setDescription(descriptionTextField.getText());
 							medical.setProdCode(codeTextField.getText());
 							medical.setPcsperpck(pcsperpckField.getValue());
 							medical.setMinqty(minQtiField.getValue());
+							medical.setLock(updatedMedical.getLock());
 							fireMedicalUpdated();
 							dispose();
 						}
