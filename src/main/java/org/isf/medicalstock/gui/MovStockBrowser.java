@@ -974,12 +974,20 @@ public class MovStockBrowser extends ModalJFrame {
 			int iRetVal = fcExcel.showSaveDialog(MovStockBrowser.this);
 			if (iRetVal == JFileChooser.APPROVE_OPTION) {
 				File exportFile = fcExcel.getSelectedFile();
-				if (!exportFile.getName().endsWith("xls")) {
-					exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
+				if (!exportFile.getName().endsWith(".xls") && !exportFile.getName().endsWith(".xlsx")) {
+					if (fcExcel.getFileFilter().getDescription().contains("*.xlsx")) {
+						exportFile = new File(exportFile.getAbsoluteFile() + ".xlsx");
+					} else {
+						exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
+					}
 				}
 				ExcelExporter xlsExport = new ExcelExporter();
 				try {
-					xlsExport.exportTableToExcel(movTable, exportFile);
+					if (exportFile.getName().endsWith(".xlsx")) {
+						xlsExport.exportTableToExcel(movTable, exportFile);
+					} else {
+						xlsExport.exportTableToExcelOLD(movTable, exportFile);
+					}
 				} catch (IOException exc) {
 					JOptionPane.showMessageDialog(MovStockBrowser.this,
 							exc.getMessage(),

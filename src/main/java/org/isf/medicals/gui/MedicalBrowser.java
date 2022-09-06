@@ -408,8 +408,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				Medical medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
-
+				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
 				// Select Dates
 				JFromDateToDateChooserDialog dataRange = new JFromDateToDateChooserDialog(MedicalBrowser.this);
 				dataRange.setTitle(MessageBundle.getMessage("angal.messagedialog.question.title"));
@@ -440,12 +439,20 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 			int iRetVal = fcExcel.showSaveDialog(MedicalBrowser.this);
 			if (iRetVal == JFileChooser.APPROVE_OPTION) {
 				File exportFile = fcExcel.getSelectedFile();
-				if (!exportFile.getName().endsWith("xls")) {
-					exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
+				if (!exportFile.getName().endsWith(".xls") && !exportFile.getName().endsWith(".xlsx")) {
+					if (fcExcel.getFileFilter().getDescription().contains("*.xlsx")) {
+						exportFile = new File(exportFile.getAbsoluteFile() + ".xlsx");
+					} else {
+						exportFile = new File(exportFile.getAbsoluteFile() + ".xls");
+					}
 				}
 				ExcelExporter xlsExport = new ExcelExporter();
 				try {
-					xlsExport.exportTableToExcel(table, exportFile);
+					if (exportFile.getName().endsWith(".xlsx")) {
+						xlsExport.exportTableToExcel(table, exportFile);
+					} else {
+						xlsExport.exportTableToExcelOLD(table, exportFile);
+					}
 				} catch (IOException exc) {
 					JOptionPane.showMessageDialog(MedicalBrowser.this,
 							exc.getMessage(),
@@ -477,12 +484,12 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 				MessageDialog.error(MedicalBrowser.this, "angal.common.pleaseselectarow.msg");
 			} else {
 				selectedrow = table.convertRowIndexToModel(table.getSelectedRow());
-				Medical med = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
-				int answer = MessageDialog.yesNo(MedicalBrowser.this, "angal.medicals.deletemedical.fmt.msg", med.getDescription());
+				medical = (Medical) (((MedicalBrowsingModel) model).getValueAt(selectedrow, -1));
+				int answer = MessageDialog.yesNo(MedicalBrowser.this, "angal.medicals.deletemedical.fmt.msg", medical.getDescription());
 				if (answer == JOptionPane.YES_OPTION) {
 					boolean deleted;
 					try {
-						deleted = medicalBrowsingManager.deleteMedical(med);
+						deleted = medicalBrowsingManager.deleteMedical(medical);
 					} catch (OHServiceException e) {
 						deleted = false;
 						OHServiceExceptionUtil.showMessages(e);
