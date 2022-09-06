@@ -22,7 +22,6 @@
 package org.isf.utils.jobjects;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.event.TableModelListener;
@@ -40,42 +39,34 @@ import org.isf.utils.exception.OHException;
  *
  * @author u2g
  */
-public class OhTableModel<T> implements TableModel{
+public class OhTableModel<T> implements TableModel {
 
-	List<T> dataList;	
+	List<T> dataList;
 	List<T> filteredList;
-	String searchQuery="";
-	boolean allowSearchByCode=false;
-	
-	public  OhTableModel(List<T> dataList) {
-		this.dataList=dataList;
-		this.filteredList= new ArrayList<>();
-		
-		for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
-			T t = (T) iterator.next();
-			this.filteredList.add(t);			
-		}
-//		Collections.copy(this.filteredList, this.dataList);
+	String searchQuery = "";
+	boolean allowSearchByCode = false;
+
+	public OhTableModel(List<T> dataList) {
+		this.dataList = dataList;
+		this.filteredList = new ArrayList<>();
+
+		this.filteredList.addAll(dataList);
 	}
 
-	public  OhTableModel(List<T> dataList, boolean allowSearchByCode) {
-		this.allowSearchByCode=allowSearchByCode;
-		this.dataList=dataList;
-		this.filteredList= new ArrayList<>();
-		
-		for (Iterator<T> iterator = dataList.iterator(); iterator.hasNext();) {
-			T t = (T) iterator.next();
-			this.filteredList.add(t);			
-		}
+	public OhTableModel(List<T> dataList, boolean allowSearchByCode) {
+		this.allowSearchByCode = allowSearchByCode;
+		this.dataList = dataList;
+		this.filteredList = new ArrayList<>();
+
+		this.filteredList.addAll(dataList);
 	}
 
 	public T filter(String searchQuery) throws OHException {
-
 		this.searchQuery = searchQuery;
 		this.filteredList = new ArrayList<>();
 
-		for (Iterator<T> iterator = this.dataList.iterator(); iterator.hasNext(); ) {
-			Object object = (Object) iterator.next();
+		for (T t : this.dataList) {
+			Object object = t;
 			if (object instanceof Price) {
 				Price price = (Price) object;
 				String strItem = price.getItem() + price.getDesc();
@@ -94,9 +85,9 @@ public class OhTableModel<T> implements TableModel{
 
 			if (object instanceof MedicalWard) {
 				MedicalWard mdw = (MedicalWard) object;
-				String strItem = mdw.getMedical().getProd_code() + mdw.getMedical().getDescription();
+				String strItem = mdw.getMedical().getProdCode() + mdw.getMedical().getDescription();
 
-				if (allowSearchByCode && searchQuery.equalsIgnoreCase(mdw.getMedical().getProd_code())) {
+				if (allowSearchByCode && searchQuery.equalsIgnoreCase(mdw.getMedical().getProdCode())) {
 					T resPbj = (T) object;
 					filteredList.clear();
 					filteredList.add(resPbj);
@@ -152,11 +143,9 @@ public class OhTableModel<T> implements TableModel{
 		}
 		return null;
 	}
-	
-	
+
 	@Override
 	public void addTableModelListener(TableModelListener l) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -171,16 +160,16 @@ public class OhTableModel<T> implements TableModel{
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		String columnLabel="";
+		String columnLabel = "";
 		switch (columnIndex) {
-		case 0:
-			columnLabel= MessageBundle.getMessage("angal.disctype.codem").toUpperCase();
-			break;
-		case 1:
-			columnLabel= MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
-			break;
-		default:
-			break;
+			case 0:
+				columnLabel = MessageBundle.getMessage("angal.disctype.codem").toUpperCase();
+				break;
+			case 1:
+				columnLabel = MessageBundle.getMessage("angal.common.description.txt").toUpperCase();
+				break;
+			default:
+				break;
 		}
 		return columnLabel;
 	}
@@ -210,7 +199,7 @@ public class OhTableModel<T> implements TableModel{
 			if (obj instanceof MedicalWard) {
 				MedicalWard mdwObj = (MedicalWard) obj;
 				if (columnIndex == 0) {
-					value = mdwObj.getMedical().getProd_code() != null ? mdwObj.getMedical().getProd_code() : mdwObj.getMedical().getCode() + "";
+					value = mdwObj.getMedical().getProdCode() != null ? mdwObj.getMedical().getProdCode() : mdwObj.getMedical().getCode() + "";
 				} else {
 					value = mdwObj.getMedical().getDescription();
 				}

@@ -21,14 +21,16 @@
  */
 package org.isf.admission.gui;
 
+import static org.isf.utils.Constants.DATE_FORMATTER;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
+
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.List;
@@ -102,16 +104,17 @@ public class PatientDataBrowser extends ModalJFrame implements
         deleteAdmissionListeners.remove(DeleteAdmissionListener.class, listener);
     }
 
-    
-    private void fireDeleteAdmissionUpdated(Admission admission) {
-        AWTEvent event = new AWTEvent(admission , AWTEvent.RESERVED_ID_MAX + 1) {
-		private static final long serialVersionUID = 1L;};
+	private void fireDeleteAdmissionUpdated(Admission admission) {
+		AWTEvent event = new AWTEvent(admission, AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = deleteAdmissionListeners.getListeners(DeleteAdmissionListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DeleteAdmissionListener) listener).deleteAdmissionUpdated(event);
-	    }
-    }	
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = deleteAdmissionListeners.getListeners(DeleteAdmissionListener.class);
+		for (EventListener listener : listeners) {
+			((DeleteAdmissionListener) listener).deleteAdmissionUpdated(event);
+		}
+	}
 	
 	//---------------------------------------------------------------------
 	
@@ -158,27 +161,15 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 
 	private void initialize() {
-
 		this.setContentPane(getJContentPane());
-
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
 		setTitle(MessageBundle.getMessage("angal.admission.patientdata.title"));
-		
 		pack();
-		
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screenSize = kit.getScreenSize();
-		
-		Dimension mySize = getSize();
-		
-		setLocation((screenSize.width-mySize.width)/2,(screenSize.height-mySize.height)/2);
+		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
 	}
 
-	
-	
 	private JPanel jContentPane = null;
 
 	private JPanel getJContentPane() {
@@ -192,7 +183,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	}
 	
 	
-	private JPanel patientData=null;
+	private JPanel patientData = null;
 	private boolean isMalnutrition = false;
 	
 	private JPanel getPatientDataPanel() {
@@ -212,8 +203,6 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 		return patientData;
 	}
-
-	private static final String DATE_FORMAT = "dd/MM/yy";
 
 	private List<Admission> admList;
 	private List<Disease> disease;
@@ -253,28 +242,27 @@ public class PatientDataBrowser extends ModalJFrame implements
 				admTable.getColumnModel().getColumn(i).setCellRenderer(new DateCellRenderer());
 			}
 		}
-				
+
 		scrollPane = new JScrollPane(admTable);
-		scrollPane.setPreferredSize(new Dimension(500,440));
+		scrollPane.setPreferredSize(new Dimension(500, 440));
 		tablesPanel.add(scrollPane, BorderLayout.CENTER);
-		
+
 		return tablesPanel;
 	}
-	
-	
+
 	private JPanel getButtonPanel() {
-		JPanel buttonPanel; 
-			buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,5,5));
-			if (MainMenu.checkUserGrants("btndataedit")) {
-				buttonPanel.add(getEditButton(), null);
-			}
-			if (MainMenu.checkUserGrants("btndatadel")) {
-				buttonPanel.add(getDeleteButton(), null);
-			}
-			if (MainMenu.checkUserGrants("btndatamalnut")) {
-				buttonPanel.add(getMalnutritionButton(), null);
-			}
-			buttonPanel.add(getCloseButton(), null);
+		JPanel buttonPanel;
+		buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		if (MainMenu.checkUserGrants("btndataedit")) {
+			buttonPanel.add(getEditButton(), null);
+		}
+		if (MainMenu.checkUserGrants("btndatadel")) {
+			buttonPanel.add(getDeleteButton(), null);
+		}
+		if (MainMenu.checkUserGrants("btndatamalnut")) {
+			buttonPanel.add(getMalnutritionButton(), null);
+		}
+		buttonPanel.add(getCloseButton(), null);
 		return buttonPanel;
 	}
 
@@ -292,9 +280,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 		}
 		return closeButton;
 	}
-	
+
 	private JButton getEditButton() {
-		if (editButton == null) {			
+		if (editButton == null) {
 			editButton = new JButton(MessageBundle.getMessage("angal.common.edit.btn"));
 			editButton.setMnemonic(MessageBundle.getMnemonic("angal.common.edit.btn.key"));
 			editButton.addActionListener(actionEvent -> {
@@ -308,10 +296,10 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 				if (selectedObj instanceof Admission) {
 					Admission ad = (Admission) sorter.getValueAt(selectedRow, -1);
-					new AdmissionBrowser(PatientDataBrowser.this,admittedPatientWindow, patient, ad);
+					new AdmissionBrowser(PatientDataBrowser.this, admittedPatientWindow, patient, ad);
 				} else {
 
-					Opd opd = (Opd)sorter.getValueAt(selectedRow, -1);
+					Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
 					if (GeneralData.OPDEXTENDED) {
 						OpdEditExtended newrecord = new OpdEditExtended(PatientDataBrowser.this, opd, false);
 						newrecord.addSurgeryListener(PatientDataBrowser.this);
@@ -324,7 +312,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 				}
 			});
 		}
-		return editButton;	
+		return editButton;
 	}
 
 	private JButton getDeleteButton() {
@@ -471,17 +459,15 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			
 			} else if (column == 0) {
 				if (row < admList.size()) {
-					
-					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-					Date myDate = (admList.get(row)).getAdmDate().getTime();
-					return dateFormat.format(myDate);
+
+					LocalDateTime myDate = admList.get(row).getAdmDate();
+					return myDate.format(DATE_FORMATTER);
 					
 				} else {
 					
 					int z = row - admList.size();
-					DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-					Date myDate = (opdList.get(z)).getDate().getTime();
-					return dateFormat.format(myDate);
+					LocalDateTime myDate = opdList.get(z).getDate();
+					return myDate.format(DATE_FORMATTER);
 				}
 				
 			} else if (column == 1) {				
@@ -547,8 +533,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					if (admList.get(row).getDisDate() == null) {
 						return MessageBundle.getMessage("angal.admission.present.txt");
 					} else {
-						Date myDate = admList.get(row).getDisDate().getTime();
-						return myDate;
+						return admList.get(row).getDisDate();
 					}
 				} else {
 					int z = row - admList.size();
@@ -557,8 +542,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 							? MessageBundle.getMessage("angal.opd.reattendance.txt")
 							: MessageBundle.getMessage("angal.opd.newattendance.txt"));
 				}
-			} 
-			
+			}
 			return null;
 		}
 
@@ -577,7 +561,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 			
 			if (value instanceof Date) {
 				// Use SimpleDateFormat class to get a formatted String from Date object.
-				String strDate = new SimpleDateFormat(DATE_FORMAT).format((Date)value);
+				String strDate = new SimpleDateFormat(DATE_FORMAT_DD_MM_YYYY).format((Date)value);
 				
 				// Sorting algorithm will work with model value. So you dont need to worry
 				// about the renderer's display value. 

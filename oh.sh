@@ -185,7 +185,7 @@ function script_usage {
 
 function get_confirmation {
 	read -p "(y/n)? " choice
-	case "$choice" in 
+	case "$choice" in
 		y|Y ) echo "yes";;
 		n|N ) echo "Exiting."; exit 0;;
 		* ) echo "Invalid choice. Exiting."; exit 1 ;;
@@ -243,8 +243,8 @@ function set_language {
 		OH_LANGUAGE=en
 	fi
 	# check for valid language selection
-	case $OH_LANGUAGE in 
-		en|fr|it|es|pt) 
+	case $OH_LANGUAGE in
+		en|fr|it|es|pt)
 			# set database creation script in chosen language
 			DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
 			;;
@@ -277,7 +277,7 @@ function java_lib_setup {
 	# CLASSPATH setup
 	# include OH jar file
 	OH_CLASSPATH="$OH_PATH"/$OH_DIR/bin/OH-gui.jar
-	
+
 	# include all needed directories
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/bundle
 	OH_CLASSPATH=$OH_CLASSPATH:"$OH_PATH"/$OH_DIR/rpt
@@ -360,7 +360,7 @@ fi
 
 function config_database {
 	echo "Checking for MySQL config file..."
-	
+
 	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$CONF_DIR/my.cnf ]; then
 		[ -f ./$CONF_DIR/my.cnf ] && mv -f ./$CONF_DIR/my.cnf ./$CONF_DIR/my.cnf.old
 
@@ -383,7 +383,7 @@ function initialize_database {
 	mkdir -p "./$DATA_DIR"
 	# inizialize MySQL
 	echo "Initializing MySQL database on port $MYSQL_PORT..."
-	case "$MYSQL_DIR" in 
+	case "$MYSQL_DIR" in
 	*mariadb*)
 		./$MYSQL_DIR/scripts/mysql_install_db --basedir=./$MYSQL_DIR --datadir=./"$DATA_DIR" \
 		--auth-root-authentication-method=normal >> ./$LOG_DIR/$LOG_FILE 2>&1
@@ -415,7 +415,7 @@ function set_database_root_pw {
 	# if using MySQL/MariaDB root password need to be set
 	echo "Setting MySQL root password..."
 	./$MYSQL_DIR/bin/mysql -u root --skip-password --host=$MYSQL_SERVER --port=$MYSQL_PORT --protocol=tcp -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PW';" >> ./$LOG_DIR/$LOG_FILE 2>&1
-	
+
 	if [ $? -ne 0 ]; then
 		echo "Error: MySQL root password not set! Exiting."
 		shutdown_database;
@@ -430,7 +430,7 @@ function import_database {
 	-e "CREATE DATABASE $DATABASE_NAME; CREATE USER '$DATABASE_USER'@'localhost' IDENTIFIED BY '$DATABASE_PASSWORD'; \
 	CREATE USER '$DATABASE_USER'@'%' IDENTIFIED BY '$DATABASE_PASSWORD'; GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'localhost'; \
 	GRANT ALL PRIVILEGES ON $DATABASE_NAME.* TO '$DATABASE_USER'@'%' ; " >> ./$LOG_DIR/$LOG_FILE 2>&1
-	
+
 	if [ $? -ne 0 ]; then
 		echo "Error: Database creation failed! Exiting."
 		shutdown_database;
@@ -567,7 +567,7 @@ function generate_config_files {
 		./$OH_DIR/rsc/log4j.properties.dist > ./$OH_DIR/rsc/log4j.properties
 	fi
 
-	######## database.properties setup 
+	######## database.properties setup
 	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$OH_DIR/rsc/database.properties ]; then
 		[ -f ./$OH_DIR/rsc/database.properties ] && mv -f ./$OH_DIR/rsc/database.properties ./$OH_DIR/rsc/database.properties.old
 		echo "Generating OH configuration file -> database.properties..."
@@ -607,9 +607,9 @@ cd "$OH_PATH"
 ######## User input
 
 # reset in case getopts has been used previously in the shell
-OPTIND=1 
+OPTIND=1
 # list of arguments expected in user input (- option)
-OPTSTRING=":CPdDgGhil:srtvX?" 
+OPTSTRING=":CPdDgGhil:srtvX?"
 
 # function to parse input
 while getopts ${OPTSTRING} opt; do
@@ -657,7 +657,7 @@ while getopts ${OPTSTRING} opt; do
 		echo "Do you want to initialize/install the OH database on:"
 		echo ""
 		echo " Server -> $MYSQL_SERVER"
-		echo " TCP port -> $MYSQL_PORT" 
+		echo " TCP port -> $MYSQL_PORT"
 		echo ""
 		get_confirmation;
 		set_language;
@@ -705,7 +705,7 @@ while getopts ${OPTSTRING} opt; do
 		echo "Done!"
 		exit 0
 		;;
-	r)	# restore 
+	r)	# restore
         	echo "Restoring Open Hospital database...."
 		# ask user for database/sql script to restore
 		read -p "Enter SQL dump/backup file that you want to restore - (in $SQL_DIR subdirectory) -> " DB_CREATE_SQL

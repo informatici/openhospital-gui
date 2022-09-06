@@ -44,8 +44,8 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DiseaseTypeBrowserEdit extends JDialog{
-	
+public class DiseaseTypeBrowserEdit extends JDialog {
+
 	private static final long serialVersionUID = 1L;
 	private EventListenerList diseaseTypeListeners = new EventListenerList();
 
@@ -62,26 +62,29 @@ public class DiseaseTypeBrowserEdit extends JDialog{
         diseaseTypeListeners.remove(DiseaseTypeListener.class, listener);
     }
 
-    private void fireDiseaseInserted() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-        	
-			private static final long serialVersionUID = 1L;};
+	private void fireDiseaseInserted() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DiseaseTypeListener) listener).diseaseTypeInserted(event);
-	    }
-    }
-    private void fireDiseaseUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
-        	
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DiseaseTypeListener) listener).diseaseTypeUpdated(event);
-	    }
-    }
+		EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DiseaseTypeListener) listener).diseaseTypeInserted(event);
+		}
+	}
+
+	private void fireDiseaseUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = diseaseTypeListeners.getListeners(DiseaseTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DiseaseTypeListener) listener).diseaseTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -100,10 +103,10 @@ public class DiseaseTypeBrowserEdit extends JDialog{
      * because we need to update them
 	 */
 	public DiseaseTypeBrowserEdit(JFrame owner, DiseaseType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
-		diseaseType = old;//disease will be used for every operation
-		lastdescription= diseaseType.getDescription();
+		diseaseType = old; //disease will be used for every operation
+		lastdescription = diseaseType.getDescription();
 		initialize();
 	}
 

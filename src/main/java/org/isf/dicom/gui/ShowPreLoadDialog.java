@@ -26,6 +26,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -46,9 +47,9 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.VoLimitedTextField;
-
-import com.toedter.calendar.JDateChooser;
+import org.isf.utils.time.Converters;
 
 /**
  * @author Mwithi
@@ -64,14 +65,14 @@ class ShowPreLoadDialog extends JDialog {
 	private JList datesList;
 	private JButton buttonCancel;
 	private JButton buttonOK;
-	private JDateChooser dateChooser;
+	private GoodDateChooser dateChooser;
 	private VoLimitedTextField descriptionTextField;
 	private JComboBox dicomTypeComboBox;
 
 	/*
 	 * Attributes
 	 */
-	private Date dicomDate;
+	private LocalDateTime dicomDate;
 	private DicomType dicomType;
 	private String dicomDescription;
 	private List<Date> dates;
@@ -108,69 +109,73 @@ class ShowPreLoadDialog extends JDialog {
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridBagLayout());
 
-		GridBagConstraints gbc_dateLabel = new GridBagConstraints();
-		gbc_dateLabel.insets = new Insets(5, 5, 5, 5);
-		gbc_dateLabel.gridx = 0;
-		gbc_dateLabel.gridy = 0;
-		gbc_dateLabel.anchor = GridBagConstraints.WEST;
-		JLabel dateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt") + ":");
-		centerPanel.add(dateLabel, gbc_dateLabel);
+		GridBagConstraints gbcDateLabel = new GridBagConstraints();
+		gbcDateLabel.insets = new Insets(5, 5, 5, 5);
+		gbcDateLabel.gridx = 0;
+		gbcDateLabel.gridy = 0;
+		gbcDateLabel.anchor = GridBagConstraints.WEST;
+		JLabel dateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt") + ':');
+		centerPanel.add(dateLabel, gbcDateLabel);
 
-		GridBagConstraints gbc_date = new GridBagConstraints();
-		gbc_date.insets = new Insets(5, 5, 5, 5);
-		gbc_date.gridx = 1;
-		gbc_date.gridy = 0;
-		gbc_date.fill = GridBagConstraints.HORIZONTAL;
-		dateChooser = new JDateChooser(this.dicomDate);
-		centerPanel.add(dateChooser, gbc_date);
+		GridBagConstraints gbcDateChooser = new GridBagConstraints();
+		gbcDateChooser.insets = new Insets(5, 5, 5, 5);
+		gbcDateChooser.gridx = 1;
+		gbcDateChooser.gridy = 0;
+		gbcDateChooser.fill = GridBagConstraints.HORIZONTAL;
+		if (dicomDate != null) {
+			dateChooser = new GoodDateChooser(this.dicomDate.toLocalDate());
+		} else {
+			dateChooser = new GoodDateChooser(null);
+		}
+		centerPanel.add(dateChooser, gbcDateChooser);
 
 		if (!dates.isEmpty()) {
-			GridBagConstraints gbc_dateListLabel = new GridBagConstraints();
-			gbc_dateListLabel.insets = new Insets(5, 5, 5, 5);
-			gbc_dateListLabel.gridx = 0;
-			gbc_dateListLabel.gridy = 1;
-			gbc_dateListLabel.anchor = GridBagConstraints.NORTHWEST;
-			JLabel dateListLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.otherdates.txt") + ":");
-			centerPanel.add(dateListLabel, gbc_dateListLabel);
+			GridBagConstraints gbcDateListLabel = new GridBagConstraints();
+			gbcDateListLabel.insets = new Insets(5, 5, 5, 5);
+			gbcDateListLabel.gridx = 0;
+			gbcDateListLabel.gridy = 1;
+			gbcDateListLabel.anchor = GridBagConstraints.NORTHWEST;
+			JLabel dateListLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.otherdates.txt") + ':');
+			centerPanel.add(dateListLabel, gbcDateListLabel);
 
-			GridBagConstraints gbc_dateList = new GridBagConstraints();
-			gbc_dateList.insets = new Insets(5, 5, 5, 5);
-			gbc_dateList.gridx = 1;
-			gbc_dateList.gridy = 1;
-			gbc_dateList.fill = GridBagConstraints.HORIZONTAL;
-			centerPanel.add(getDatesList(), gbc_dateList);
+			GridBagConstraints gbcDateList = new GridBagConstraints();
+			gbcDateList.insets = new Insets(5, 5, 5, 5);
+			gbcDateList.gridx = 1;
+			gbcDateList.gridy = 1;
+			gbcDateList.fill = GridBagConstraints.HORIZONTAL;
+			centerPanel.add(getDatesList(), gbcDateList);
 		}
 
-		GridBagConstraints gbc_categoryLabel = new GridBagConstraints();
-		gbc_categoryLabel.insets = new Insets(5, 5, 5, 5);
-		gbc_categoryLabel.gridx = 0;
-		gbc_categoryLabel.gridy = 2;
-		gbc_categoryLabel.anchor = GridBagConstraints.WEST;
-		JLabel categoryLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.category.txt") + ":");
-		centerPanel.add(categoryLabel, gbc_categoryLabel);
+		GridBagConstraints gbcCategoryLabel = new GridBagConstraints();
+		gbcCategoryLabel.insets = new Insets(5, 5, 5, 5);
+		gbcCategoryLabel.gridx = 0;
+		gbcCategoryLabel.gridy = 2;
+		gbcCategoryLabel.anchor = GridBagConstraints.WEST;
+		JLabel categoryLabel = new JLabel(MessageBundle.getMessage("angal.showpreload.category.txt") + ':');
+		centerPanel.add(categoryLabel, gbcCategoryLabel);
 
-		GridBagConstraints gbc_categoryComboBox = new GridBagConstraints();
-		gbc_categoryComboBox.insets = new Insets(5, 5, 5, 5);
-		gbc_categoryComboBox.gridx = 1;
-		gbc_categoryComboBox.gridy = 2;
-		gbc_categoryComboBox.fill = GridBagConstraints.HORIZONTAL;
-		centerPanel.add(getDicomTypeComboBox(), gbc_categoryComboBox);
+		GridBagConstraints gbcCategoryComboBox = new GridBagConstraints();
+		gbcCategoryComboBox.insets = new Insets(5, 5, 5, 5);
+		gbcCategoryComboBox.gridx = 1;
+		gbcCategoryComboBox.gridy = 2;
+		gbcCategoryComboBox.fill = GridBagConstraints.HORIZONTAL;
+		centerPanel.add(getDicomTypeComboBox(), gbcCategoryComboBox);
 
-		GridBagConstraints gbc_descriptionLabel = new GridBagConstraints();
-		gbc_descriptionLabel.insets = new Insets(5, 5, 5, 5);
-		gbc_descriptionLabel.gridx = 0;
-		gbc_descriptionLabel.gridy = 3;
-		gbc_descriptionLabel.anchor = GridBagConstraints.WEST;
-		JLabel descriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ":");
-		centerPanel.add(descriptionLabel, gbc_descriptionLabel);
+		GridBagConstraints gbcDescriptionLabel = new GridBagConstraints();
+		gbcDescriptionLabel.insets = new Insets(5, 5, 5, 5);
+		gbcDescriptionLabel.gridx = 0;
+		gbcDescriptionLabel.gridy = 3;
+		gbcDescriptionLabel.anchor = GridBagConstraints.WEST;
+		JLabel descriptionLabel = new JLabel(MessageBundle.getMessage("angal.common.description.txt") + ':');
+		centerPanel.add(descriptionLabel, gbcDescriptionLabel);
 
-		GridBagConstraints gbc_descriptionTextField = new GridBagConstraints();
-		gbc_descriptionTextField.insets = new Insets(5, 5, 5, 5);
-		gbc_descriptionTextField.gridx = 1;
-		gbc_descriptionTextField.gridy = 3;
-		gbc_descriptionTextField.fill = GridBagConstraints.HORIZONTAL;
+		GridBagConstraints gbcDescriptionTextField = new GridBagConstraints();
+		gbcDescriptionTextField.insets = new Insets(5, 5, 5, 5);
+		gbcDescriptionTextField.gridx = 1;
+		gbcDescriptionTextField.gridy = 3;
+		gbcDescriptionTextField.fill = GridBagConstraints.HORIZONTAL;
 		descriptionTextField = new VoLimitedTextField(255, 20);
-		centerPanel.add(descriptionTextField, gbc_descriptionTextField);
+		centerPanel.add(descriptionTextField, gbcDescriptionTextField);
 
 		return centerPanel;
 	}
@@ -208,7 +213,7 @@ class ShowPreLoadDialog extends JDialog {
 			datesList.addListSelectionListener(selectionEvent -> {
 				if (!selectionEvent.getValueIsAdjusting()) {
 					Date selectedDate = (Date) ((JList) selectionEvent.getSource()).getSelectedValue();
-					dateChooser.setDate(selectedDate);
+					dateChooser.setDate(Converters.convertToLocalDate(selectedDate));
 				}
 			});
 		}
@@ -238,7 +243,7 @@ class ShowPreLoadDialog extends JDialog {
 			buttonOK = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			buttonOK.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			buttonOK.addActionListener(actionEvent -> {
-				dicomDate = dateChooser.getDate();
+				dicomDate = dateChooser.getDateEndOfDay();
 				dicomDescription = descriptionTextField.getText().trim();
 				save = true;
 				dispose();
@@ -247,7 +252,7 @@ class ShowPreLoadDialog extends JDialog {
 		return buttonOK;
 	}
 
-	public Date getDicomDate() {
+	public LocalDateTime getDicomDate() {
 		return dicomDate;
 	}
 
@@ -262,4 +267,5 @@ class ShowPreLoadDialog extends JDialog {
 	public boolean isSave() {
 		return save;
 	}
+
 }

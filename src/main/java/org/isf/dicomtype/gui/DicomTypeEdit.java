@@ -45,7 +45,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
 
-public class DicomTypeEdit extends JDialog{
+public class DicomTypeEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private EventListenerList dicomTypeListeners = new EventListenerList();
@@ -63,26 +63,29 @@ public class DicomTypeEdit extends JDialog{
     	dicomTypeListeners.remove(DicomTypeListener.class, listener);
     }
 
-    private void fireDicomTypeInserted(DicomType anDicomType) {
-        AWTEvent event = new AWTEvent(anDicomType, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireDicomTypeInserted(DicomType anDicomType) {
+		AWTEvent event = new AWTEvent(anDicomType, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DicomTypeListener) listener).dicomTypeInserted(event);
-	    }
-    }
-    private void fireDicomUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DicomTypeListener) listener).dicomTypeInserted(event);
+		}
+	}
 
-			private static final long serialVersionUID = 1L;};
+	private void fireDicomUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
-	    for (EventListener listener : listeners) {
-		    ((DicomTypeListener) listener).dicomTypeUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = dicomTypeListeners.getListeners(DicomTypeListener.class);
+		for (EventListener listener : listeners) {
+			((DicomTypeListener) listener).dicomTypeUpdated(event);
+		}
+	}
     
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -101,10 +104,10 @@ public class DicomTypeEdit extends JDialog{
      * because we need to update them
 	 */
 	public DicomTypeEdit(JFrame owner, DicomType old, boolean inserting) {
-		super(owner,true);
+		super(owner, true);
 		insert = inserting;
 		dicomType = old;
-		lastdescription= dicomType.getDicomTypeDescription();
+		lastdescription = dicomType.getDicomTypeDescription();
 		initialize();
 	}
 

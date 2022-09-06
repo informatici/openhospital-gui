@@ -22,12 +22,10 @@
 package org.isf.stat.gui.report;
 
 import java.io.File;
-import java.util.Locale;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.menu.manager.Context;
 import org.isf.stat.dto.JasperReportResultDto;
 import org.isf.stat.manager.JasperReportsManager;
@@ -35,8 +33,6 @@ import org.isf.utils.excel.ExcelExporter;
 import org.isf.utils.jobjects.MessageDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * --------------------------------------------------------
@@ -46,38 +42,33 @@ import net.sf.jasperreports.view.JasperViewer;
  * modification history
  * 11/11/2006 - first version
  * -----------------------------------------------------------------*/
-public class GenericReportMY {
+public class GenericReportMY extends DisplayReport {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportMY.class);
-    private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportMY.class);
+	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
 	public GenericReportMY(Integer month, Integer year, String jasperFileName, String defaultName, boolean toExcel) {
-		try{
-            File defaultFilename = new File(jasperReportsManager.compileDefaultFilename(defaultName));
-			
+		try {
+			File defaultFilename = new File(jasperReportsManager.compileDefaultFilename(defaultName));
+
 			if (toExcel) {
 				JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFilename);
-
-                int iRetVal = fcExcel.showSaveDialog(null);
-                if (iRetVal == JFileChooser.APPROVE_OPTION)
-                {
-                    File exportFile = fcExcel.getSelectedFile();
-                    FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();
+				int iRetVal = fcExcel.showSaveDialog(null);
+				if (iRetVal == JFileChooser.APPROVE_OPTION) {
+					File exportFile = fcExcel.getSelectedFile();
+					FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();
 					String extension = selectedFilter.getExtensions()[0];
-					if (!exportFile.getName().endsWith(extension)) exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
-                    jasperReportsManager.getGenericReportMYExcel(month,year,jasperFileName,exportFile.getAbsolutePath());
-                }
+					if (!exportFile.getName().endsWith(extension)) {
+						exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
+					}
+					jasperReportsManager.getGenericReportMYExcel(month, year, jasperFileName, exportFile.getAbsolutePath());
+				}
 			} else {
-                JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportMYPdf(month,year,jasperFileName);
-                if (GeneralData.INTERNALVIEWER)
-                    JasperViewer.viewReport(jasperReportResultDto.getJasperPrint(),false, new Locale(GeneralData.LANGUAGE));
-                else {
-                    Runtime rt = Runtime.getRuntime();
-                    rt.exec(GeneralData.VIEWER +" "+ jasperReportResultDto.getFilename());
-                }
+				JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportMYPdf(month, year, jasperFileName);
+				showReport(jasperReportResultDto);
 			}
 		} catch (Exception e) {
-            LOGGER.error("", e);
+			LOGGER.error("", e);
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
 		}
 	}

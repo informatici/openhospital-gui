@@ -22,7 +22,6 @@
 package org.isf.operation.gui;
 
 import java.awt.AWTEvent;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.isf.admission.gui.AdmissionBrowser;
@@ -52,7 +51,6 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 	public OperationRowAdm(Admission adm) {
 		super();
 		myAdmission = adm;
-
 		if (myAdmission != null) {
 			try {
 				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
@@ -67,24 +65,21 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 
 	@Override
 	public void addToGrid() {
-		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
+		if ((this.textDate.getLocalDateTime() == null) || (this.comboOperation.getSelectedItem() == null)) {
 			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateope");
 			return;
 		}
-		if ((myAdmission != null) && (myAdmission.getAdmDate().after(this.textDate.getDate()))) {
+		if ((myAdmission != null) && (myAdmission.getAdmDate().isAfter(this.textDate.getLocalDateTime()))) {
 			MessageDialog.error(OperationRowAdm.this, "angal.operationrowedit.warningdateafter");
 			return;
 		}
 
 		OperationRow operationRow = new OperationRow();
-		GregorianCalendar dateop = new GregorianCalendar();
-		dateop.setTime(this.textDate.getDate());
-		operationRow.setOpDate(dateop);
+		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		if (this.comboResult.getSelectedItem() != null) {
-			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
-			operationRow.setOpResult(opResult);
+			operationRow.setOpResult(opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
 		} else {
-			operationRow.setOpResult(""); //$NON-NLS-1$
+			operationRow.setOpResult("");
 		}
 		try {
 			operationRow.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
@@ -103,8 +98,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 			oprowData.add(operationRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
-			dateop.setTime(this.textDate.getDate());
-			opeInter.setOpDate(dateop);
+			opeInter.setOpDate(this.textDate.getLocalDateTime());
 			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
@@ -151,7 +145,6 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 				} catch (OHServiceException e1) {
 					OHServiceExceptionUtil.showMessages(e1);
 				}
-
 			}
 			if ((opRow.getId() <= 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
 				try {

@@ -37,7 +37,7 @@ public class JLabelRequired extends JLabel {
 	 * text and as the <code>setText</code> method is overridden an " *"
 	 * is added after the specified text.
 	 *
-	 * @param text  The text to be displayed by the label.
+	 * @param text The text to be displayed by the label.
 	 */
 	public JLabelRequired(String text) {
 		super(text);
@@ -50,4 +50,5 @@ public class JLabelRequired extends JLabel {
 	public void setText(String text) {
 		super.setText(text + REQUIRED_MARK);
 	}
+
 }

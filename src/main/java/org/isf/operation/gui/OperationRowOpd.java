@@ -23,7 +23,6 @@ package org.isf.operation.gui;
 
 import java.awt.AWTEvent;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.isf.menu.gui.MainMenu;
@@ -62,15 +61,13 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 
 	@Override
 	public void addToGrid() {
-		if ((this.textDate.getDate() == null) || (this.comboOperation.getSelectedItem() == null)) {
+		if ((this.textDate.getLocalDateTime() == null) || (this.comboOperation.getSelectedItem() == null)) {
 			MessageDialog.error(OperationRowOpd.this, "angal.operationrowedit.warningdateope");
 			return;
 		}
 
 		OperationRow operationRow = new OperationRow();
-		GregorianCalendar dateop = new GregorianCalendar();
-		dateop.setTime(this.textDate.getDate());
-		operationRow.setOpDate(dateop);
+		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		if (this.comboResult.getSelectedItem() != null) {
 			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			operationRow.setOpResult(opResult);
@@ -94,8 +91,8 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 			oprowData.add(operationRow);
 		} else {
 			OperationRow opeInter = oprowData.get(index);
-			dateop.setTime(this.textDate.getDate());
-			opeInter.setOpDate(dateop);
+			opeInter.setOpDate(this.textDate.getLocalDateTime());
+			opeInter.setOpResult(this.comboResult.getSelectedItem().toString());
 			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));

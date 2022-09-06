@@ -70,9 +70,7 @@ public class VoDoubleTextField extends JTextField {
 				Double.parseDouble(newString + "0");
 				super.insertString(offs, str, a);
 			} catch (NumberFormatException e) {
-				if (!str.matches("^[a-zA-Z0-9]*$"))
-					//super.insertString(offs, String.valueOf(DecimalFormatSymbols.getInstance(new Locale(GeneralData.LANGUAGE)).getDecimalSeparator()), a);
-				{
+				if (!str.matches("^[a-zA-Z0-9]*$")) {
 					super.insertString(offs, ".", a);
 				}
 			}

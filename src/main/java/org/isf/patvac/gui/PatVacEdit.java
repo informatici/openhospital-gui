@@ -30,10 +30,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -55,7 +55,7 @@ import org.isf.patvac.manager.PatVacManager;
 import org.isf.patvac.model.PatientVaccine;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.jobjects.CustomJDateChooser;
+import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
@@ -77,9 +77,9 @@ import org.isf.vactype.model.VaccineType;
 public class PatVacEdit extends JDialog {
 
 	private static final long serialVersionUID = -4271389493861772053L;
-	private boolean insert = false;
+	private boolean insert;
 
-	private PatientVaccine patVac = null;
+	private PatientVaccine patVac;
 	private JPanel jContentPane = null;
 	private JPanel buttonPanel = null;
 	private JPanel dataPanel = null;
@@ -99,17 +99,16 @@ public class PatVacEdit extends JDialog {
 	private VoLimitedTextField progrTextField = null;
 
 	private JTextField jTextPatientSrc;
-	private Patient selectedPatient = null;
+	private Patient selectedPatient;
 	private String lastKey;
 	private String s;
 	private List<Patient> patientList = null;
-	private CustomJDateChooser vaccineDateFieldCal = null;
-	private GregorianCalendar dateIn = null;
+	private GoodDateChooser vaccineDateFieldCal = null;
+	private LocalDateTime dateIn = null;
 	private int patNextYProg;
 
 	private JPanel centerPanel;
-	private JPanel patientPanel;
-	
+
 	private VaccineBrowserManager vaccineManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 	private PatVacManager patientVaccineManager = Context.getApplicationContext().getBean(PatVacManager.class);
 	private VaccineTypeBrowserManager vaccineTypeManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
@@ -168,8 +167,7 @@ public class PatVacEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes dataPanel. This panel contains all items (combo
-	 * boxes,calendar) to define a vaccine
+	 * This method initializes dataPanel. This panel contains all items (comboboxes, calendar) to define a vaccine
 	 * 
 	 * @return dataPanel (JPanel)
 	 */
@@ -177,45 +175,44 @@ public class PatVacEdit extends JDialog {
 		if (dataPanel == null) {
 			// initialize data panel
 			dataPanel = new JPanel();
-			GridBagLayout gbl_dataPanel = new GridBagLayout();
-			gbl_dataPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0};
-			dataPanel.setLayout(gbl_dataPanel);
-			
-			
+			GridBagLayout gblDataPanel = new GridBagLayout();
+			gblDataPanel.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0};
+			dataPanel.setLayout(gblDataPanel);
+
 			//patient search fields
 			JLabel patientLabel = new JLabel(MessageBundle.getMessage("angal.patvac.searchpatient"));
-			GridBagConstraints gbc_jPatientLabel = new GridBagConstraints();
-			gbc_jPatientLabel.anchor = GridBagConstraints.WEST;
-			gbc_jPatientLabel.fill = GridBagConstraints.VERTICAL;
-			gbc_jPatientLabel.insets = new Insets(5, 5, 5, 5);
-			gbc_jPatientLabel.gridx = 0;
-			gbc_jPatientLabel.gridy = 1;
-			dataPanel.add(patientLabel, gbc_jPatientLabel);
+			GridBagConstraints gbcPatientLabel = new GridBagConstraints();
+			gbcPatientLabel.anchor = GridBagConstraints.WEST;
+			gbcPatientLabel.fill = GridBagConstraints.VERTICAL;
+			gbcPatientLabel.insets = new Insets(5, 5, 5, 5);
+			gbcPatientLabel.gridx = 0;
+			gbcPatientLabel.gridy = 1;
+			dataPanel.add(patientLabel, gbcPatientLabel);
 			
-			GridBagConstraints gbc_jPatientSearchField = new GridBagConstraints();
-			gbc_jPatientSearchField.fill = GridBagConstraints.BOTH;
-			gbc_jPatientSearchField.insets = new Insets(5, 5, 5, 5);
-			gbc_jPatientSearchField.gridx = 1;
-			gbc_jPatientSearchField.gridy = 1;
-			dataPanel.add(getJTextFieldSearchPatient(), gbc_jPatientSearchField);
+			GridBagConstraints gbcTextFieldSearchPatient = new GridBagConstraints();
+			gbcTextFieldSearchPatient.fill = GridBagConstraints.BOTH;
+			gbcTextFieldSearchPatient.insets = new Insets(5, 5, 5, 5);
+			gbcTextFieldSearchPatient.gridx = 1;
+			gbcTextFieldSearchPatient.gridy = 1;
+			dataPanel.add(getJTextFieldSearchPatient(), gbcTextFieldSearchPatient);
 			
 			if (GeneralData.ENHANCEDSEARCH) {
 				
-				GridBagConstraints gbc_jPatientSearchButton = new GridBagConstraints();
-				gbc_jPatientSearchButton.insets = new Insets(5, 5, 5, 5);
-				gbc_jPatientSearchButton.anchor = GridBagConstraints.WEST;
-				gbc_jPatientSearchButton.gridx = 2;
-				gbc_jPatientSearchButton.gridy = 1;
-				dataPanel.add(getJSearchButton(), gbc_jPatientSearchButton);
+				GridBagConstraints gbcSearchButton = new GridBagConstraints();
+				gbcSearchButton.insets = new Insets(5, 5, 5, 5);
+				gbcSearchButton.anchor = GridBagConstraints.WEST;
+				gbcSearchButton.gridx = 2;
+				gbcSearchButton.gridy = 1;
+				dataPanel.add(getJSearchButton(), gbcSearchButton);
 			}
 			
-			GridBagConstraints gbc_jPatientComboBox = new GridBagConstraints();
-			gbc_jPatientComboBox.gridwidth = 2;
-			gbc_jPatientComboBox.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jPatientComboBox.insets = new Insets(5, 5, 5, 5);
-			gbc_jPatientComboBox.gridx = 3;
-			gbc_jPatientComboBox.gridy = 1;
-			dataPanel.add(getPatientComboBox(s), gbc_jPatientComboBox);
+			GridBagConstraints gbcPatientComboBox = new GridBagConstraints();
+			gbcPatientComboBox.gridwidth = 2;
+			gbcPatientComboBox.fill = GridBagConstraints.HORIZONTAL;
+			gbcPatientComboBox.insets = new Insets(5, 5, 5, 5);
+			gbcPatientComboBox.gridx = 3;
+			gbcPatientComboBox.gridy = 1;
+			dataPanel.add(getPatientComboBox(s), gbcPatientComboBox);
 			
 			if (!insert) {
 				patientComboBox.setEnabled(false);
@@ -224,72 +221,69 @@ public class PatVacEdit extends JDialog {
 
 			// vaccine date
 			JLabel vaccineDateLabel = new JLabel(MessageBundle.getMessage("angal.common.date.txt"));
-			GridBagConstraints gbc_vaccineDateLabel = new GridBagConstraints();
-			gbc_vaccineDateLabel.anchor = GridBagConstraints.NORTHWEST;
-			gbc_vaccineDateLabel.insets = new Insets(5, 5, 5, 5);
-			gbc_vaccineDateLabel.gridx = 0;
-			gbc_vaccineDateLabel.gridy = 0;
-			dataPanel.add(vaccineDateLabel, gbc_vaccineDateLabel);
+			GridBagConstraints gbcVaccineDateLabel = new GridBagConstraints();
+			gbcVaccineDateLabel.anchor = GridBagConstraints.NORTHWEST;
+			gbcVaccineDateLabel.insets = new Insets(5, 5, 5, 5);
+			gbcVaccineDateLabel.gridx = 0;
+			gbcVaccineDateLabel.gridy = 0;
+			dataPanel.add(vaccineDateLabel, gbcVaccineDateLabel);
 			vaccineDateFieldCal = getVaccineDateFieldCal();
-			vaccineDateFieldCal.setLocale(new Locale(GeneralData.LANGUAGE));
-			vaccineDateFieldCal.setDateFormatString("dd/MM/yy");
-			GridBagConstraints gbc_vaccineDateFieldCal = new GridBagConstraints();
-			gbc_vaccineDateFieldCal.anchor = GridBagConstraints.WEST;
-			gbc_vaccineDateFieldCal.insets = new Insets(5, 5, 5, 5);
-			gbc_vaccineDateFieldCal.gridx = 1;
-			gbc_vaccineDateFieldCal.gridy = 0;
-			dataPanel.add(vaccineDateFieldCal, gbc_vaccineDateFieldCal);
+			GridBagConstraints gbcVaccineDateFieldCal = new GridBagConstraints();
+			gbcVaccineDateFieldCal.anchor = GridBagConstraints.WEST;
+			gbcVaccineDateFieldCal.insets = new Insets(5, 5, 5, 5);
+			gbcVaccineDateFieldCal.gridx = 1;
+			gbcVaccineDateFieldCal.gridy = 0;
+			dataPanel.add(vaccineDateFieldCal, gbcVaccineDateFieldCal);
 
 			// progressive
 			JLabel progrLabel = new JLabel(MessageBundle.getMessage("angal.patvac.progressive"));
-			GridBagConstraints gbc_progrLabel = new GridBagConstraints();
-			gbc_progrLabel.anchor = GridBagConstraints.NORTHEAST;
-			gbc_progrLabel.insets = new Insets(5, 5, 5, 5);
-			gbc_progrLabel.gridx = 3;
-			gbc_progrLabel.gridy = 0;
-			dataPanel.add(progrLabel, gbc_progrLabel);
-			GridBagConstraints gbc_progrTextField = new GridBagConstraints();
-			gbc_progrTextField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_progrTextField.anchor = GridBagConstraints.NORTHEAST;
-			gbc_progrTextField.insets = new Insets(5, 5, 5, 5);
-			gbc_progrTextField.gridx = 4;
-			gbc_progrTextField.gridy = 0;
-			dataPanel.add(getProgrTextField(), gbc_progrTextField);
+			GridBagConstraints gbcProgrLabel = new GridBagConstraints();
+			gbcProgrLabel.anchor = GridBagConstraints.NORTHEAST;
+			gbcProgrLabel.insets = new Insets(5, 5, 5, 5);
+			gbcProgrLabel.gridx = 3;
+			gbcProgrLabel.gridy = 0;
+			dataPanel.add(progrLabel, gbcProgrLabel);
+			GridBagConstraints gbcProgrTextField = new GridBagConstraints();
+			gbcProgrTextField.fill = GridBagConstraints.HORIZONTAL;
+			gbcProgrTextField.anchor = GridBagConstraints.NORTHEAST;
+			gbcProgrTextField.insets = new Insets(5, 5, 5, 5);
+			gbcProgrTextField.gridx = 4;
+			gbcProgrTextField.gridy = 0;
+			dataPanel.add(getProgrTextField(), gbcProgrTextField);
 
 			// vaccineType combo box
 			JLabel vaccineTypeLabel = new JLabel(MessageBundle.getMessage("angal.patvac.vaccinetype"));
-			GridBagConstraints gbc_vaccineTypeLabel = new GridBagConstraints();
-			gbc_vaccineTypeLabel.anchor = GridBagConstraints.WEST;
-			gbc_vaccineTypeLabel.fill = GridBagConstraints.VERTICAL;
-			gbc_vaccineTypeLabel.insets = new Insets(5, 5, 5, 5);
-			gbc_vaccineTypeLabel.gridx = 0;
-			gbc_vaccineTypeLabel.gridy = 2;
-			dataPanel.add(vaccineTypeLabel, gbc_vaccineTypeLabel);
-			GridBagConstraints gbc_vaccineTypeComboBox = new GridBagConstraints();
-			gbc_vaccineTypeComboBox.fill = GridBagConstraints.BOTH;
-			gbc_vaccineTypeComboBox.insets = new Insets(5, 5, 5, 5);
-			gbc_vaccineTypeComboBox.gridwidth = 4;
-			gbc_vaccineTypeComboBox.gridx = 1;
-			gbc_vaccineTypeComboBox.gridy = 2;
-			dataPanel.add(getVaccineTypeComboBox(), gbc_vaccineTypeComboBox);
+			GridBagConstraints gbcVaccineTypeLabel = new GridBagConstraints();
+			gbcVaccineTypeLabel.anchor = GridBagConstraints.WEST;
+			gbcVaccineTypeLabel.fill = GridBagConstraints.VERTICAL;
+			gbcVaccineTypeLabel.insets = new Insets(5, 5, 5, 5);
+			gbcVaccineTypeLabel.gridx = 0;
+			gbcVaccineTypeLabel.gridy = 2;
+			dataPanel.add(vaccineTypeLabel, gbcVaccineTypeLabel);
+			GridBagConstraints gbcVaccineTypeComboBox = new GridBagConstraints();
+			gbcVaccineTypeComboBox.fill = GridBagConstraints.BOTH;
+			gbcVaccineTypeComboBox.insets = new Insets(5, 5, 5, 5);
+			gbcVaccineTypeComboBox.gridwidth = 4;
+			gbcVaccineTypeComboBox.gridx = 1;
+			gbcVaccineTypeComboBox.gridy = 2;
+			dataPanel.add(getVaccineTypeComboBox(), gbcVaccineTypeComboBox);
 
 			// vaccine combo box
 			JLabel vaccineLabel = new JLabel(MessageBundle.getMessage("angal.patvac.vaccine"));
-			GridBagConstraints gbc_vaccineLabel = new GridBagConstraints();
-			gbc_vaccineLabel.anchor = GridBagConstraints.WEST;
-			gbc_vaccineLabel.fill = GridBagConstraints.VERTICAL;
-			gbc_vaccineLabel.insets = new Insets(5, 5, 5, 5);
-			gbc_vaccineLabel.gridx = 0;
-			gbc_vaccineLabel.gridy = 3;
-			dataPanel.add(vaccineLabel, gbc_vaccineLabel);
-			GridBagConstraints gbc_vaccineComboBox = new GridBagConstraints();
-			gbc_vaccineComboBox.fill = GridBagConstraints.BOTH;
-			gbc_vaccineComboBox.insets = new Insets(5, 5, 5, 5);
-			gbc_vaccineComboBox.gridwidth = 4;
-			gbc_vaccineComboBox.gridx = 1;
-			gbc_vaccineComboBox.gridy = 3;
-			dataPanel.add(getVaccineComboBox(), gbc_vaccineComboBox);
-			
+			GridBagConstraints gbcVaccineLabel = new GridBagConstraints();
+			gbcVaccineLabel.anchor = GridBagConstraints.WEST;
+			gbcVaccineLabel.fill = GridBagConstraints.VERTICAL;
+			gbcVaccineLabel.insets = new Insets(5, 5, 5, 5);
+			gbcVaccineLabel.gridx = 0;
+			gbcVaccineLabel.gridy = 3;
+			dataPanel.add(vaccineLabel, gbcVaccineLabel);
+			GridBagConstraints gbcVaccineComboBox = new GridBagConstraints();
+			gbcVaccineComboBox.fill = GridBagConstraints.BOTH;
+			gbcVaccineComboBox.insets = new Insets(5, 5, 5, 5);
+			gbcVaccineComboBox.gridwidth = 4;
+			gbcVaccineComboBox.gridx = 1;
+			gbcVaccineComboBox.gridy = 3;
+			dataPanel.add(getVaccineComboBox(), gbcVaccineComboBox);
 		}
 		return dataPanel;
 	}
@@ -365,19 +359,18 @@ public class PatVacEdit extends JDialog {
 	/**
 	 * This method initializes getVaccineDateFieldCal
 	 * 
-	 * @return JDateChooser
+	 * @return GoodDateChooser
 	 */
-	private CustomJDateChooser getVaccineDateFieldCal() {
-		java.util.Date myDate = null;
+	private GoodDateChooser getVaccineDateFieldCal() {
 		if (insert) {
-			dateIn = RememberDates.getLastPatientVaccineDateGregorian();
+			dateIn = RememberDates.getLastPatientVaccineDate();
 		} else {
 			dateIn = patVac.getVaccineDate();
 		}
-		if (dateIn != null) {
-			myDate = dateIn.getTime();
+		if (dateIn == null) {
+			dateIn = LocalDateTime.now();
 		}
-		return (new CustomJDateChooser(myDate, "dd/MM/yy"));
+		return new GoodDateChooser(dateIn.toLocalDate());
 	}
 
 	/**
@@ -719,45 +712,42 @@ public class PatVacEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 
-					GregorianCalendar gregDate = new GregorianCalendar();
-					gregDate.setTime(vaccineDateFieldCal.getDate());
-                    patVac.setProgr(Integer.parseInt(progrTextField.getText()));
+				// check on patient
+				if (selectedPatient == null) {
+					MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
+					return;
+				}
 
-					// check on patient
-					if (selectedPatient == null) {
-						MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
+				LocalDate vaccineDate = vaccineDateFieldCal.getDate();
+				patVac.setProgr(Integer.parseInt(progrTextField.getText()));
+				patVac.setVaccineDate(vaccineDate.atStartOfDay());
+				patVac.setVaccine((Vaccine) vaccineComboBox.getSelectedItem());
+				patVac.setPatient(selectedPatient);
+				patVac.setLock(0);
+
+				boolean result;
+				// handling db insert/update
+				if (insert) {
+					try {
+						result = patientVaccineManager.newPatientVaccine(patVac);
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1);
 						return;
 					}
-
-					patVac.setVaccineDate(gregDate);
-					patVac.setVaccine((Vaccine) vaccineComboBox.getSelectedItem());
-					patVac.setPatient(selectedPatient);
-					patVac.setLock(0);
-
-					boolean result;
-					// handling db insert/update
-					if (insert) {
-						try {
-							result = patientVaccineManager.newPatientVaccine(patVac);
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-							return;
-						}
-					} else {
-						try {
-							result = patientVaccineManager.updatePatientVaccine(patVac);
-						} catch (OHServiceException e1) {
-							OHServiceExceptionUtil.showMessages(e1);
-							return;
-						}
-					}
-
-					if (!result) {
-						MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
+				} else {
+					try {
+						result = patientVaccineManager.updatePatientVaccine(patVac);
+					} catch (OHServiceException e1) {
+						OHServiceExceptionUtil.showMessages(e1);
 						return;
-					} else {
-						dispose();
 					}
+				}
+
+				if (!result) {
+					MessageDialog.error(null, "angal.patvac.thedatacouldnobesaved");
+				} else {
+					dispose();
+				}
 			});
 		}
 		return okButton;
@@ -776,6 +766,7 @@ public class PatVacEdit extends JDialog {
 		}
 		return cancelButton;
 	}
+
 	private JPanel getCenterPanel() {
 		if (centerPanel == null) {
 			centerPanel = new JPanel();
@@ -785,16 +776,5 @@ public class PatVacEdit extends JDialog {
 		}
 		return centerPanel;
 	}
-	private JPanel getPatientPanel() {
-		if (patientPanel == null) {
-			patientPanel = new JPanel();
-			GridBagLayout gbl_patientPanel = new GridBagLayout();
-			gbl_patientPanel.columnWidths = new int[]{0};
-			gbl_patientPanel.rowHeights = new int[]{0};
-			gbl_patientPanel.columnWeights = new double[]{Double.MIN_VALUE};
-			gbl_patientPanel.rowWeights = new double[]{Double.MIN_VALUE};
-			patientPanel.setLayout(gbl_patientPanel);
-		}
-		return patientPanel;
-	}
+
 }

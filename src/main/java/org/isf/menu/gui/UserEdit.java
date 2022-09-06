@@ -39,6 +39,7 @@ import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -68,26 +69,29 @@ public class UserEdit extends JDialog {
         userListeners.remove(UserListener.class, listener);
     }
 
-    private void fireUserInserted(User aUser) {
-        AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
+	private void fireUserInserted(User aUser) {
+		AWTEvent event = new AWTEvent(aUser, AWTEvent.RESERVED_ID_MAX + 1) {
 
-			private static final long serialVersionUID = 1L;};
+			private static final long serialVersionUID = 1L;
+		};
 
-        EventListener[] listeners = userListeners.getListeners(UserListener.class);
-	    for (EventListener listener : listeners) {
-		    ((UserListener) listener).userInserted(event);
-	    }
-    }
-    private void fireUserUpdated() {
-        AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
+		EventListener[] listeners = userListeners.getListeners(UserListener.class);
+		for (EventListener listener : listeners) {
+			((UserListener) listener).userInserted(event);
+		}
+	}
 
-		private static final long serialVersionUID = 1L;};
+	private void fireUserUpdated() {
+		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
 
-        EventListener[] listeners = userListeners.getListeners(UserListener.class);
-	    for (EventListener listener : listeners) {
-		    ((UserListener) listener).userUpdated(event);
-	    }
-    }
+			private static final long serialVersionUID = 1L;
+		};
+
+		EventListener[] listeners = userListeners.getListeners(UserListener.class);
+		for (EventListener listener : listeners) {
+			((UserListener) listener).userUpdated(event);
+		}
+	}
 
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
@@ -138,8 +142,8 @@ public class UserEdit extends JDialog {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getDataPanel(), java.awt.BorderLayout.NORTH);
-			jContentPane.add(getButtonPanel(), java.awt.BorderLayout.SOUTH);
+			jContentPane.add(getDataPanel(), BorderLayout.NORTH);
+			jContentPane.add(getButtonPanel(), BorderLayout.SOUTH);
 		}
 		return jContentPane;
 	}
@@ -229,14 +233,42 @@ public class UserEdit extends JDialog {
 
 					if (Arrays.equals(password, new char[0])) {
 						MessageDialog.error(null, "angal.userbrowser.pleaseprovideapassword.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
 						return;
 					}
 					if (Arrays.equals(repeatPassword, new char[0])) {
 						MessageDialog.error(null, "angal.userbrowser.pleaseprovidetheretypepassword.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
+						return;
+					}
+					if (password.length < GeneralData.STRONGLENGTH) {
+						MessageDialog.error(null, "angal.userbrowser.passwordmustbeatleastncharacters.fmt.msg", GeneralData.STRONGLENGTH);
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
 						return;
 					}
 					if (!Arrays.equals(password, repeatPassword)) {
 						MessageDialog.error(null, "angal.userbrowser.passwordsdonotmatchpleasecorrect.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
+						return;
+					}
+					String passwordStr = new String(password);
+					if (!manager.isPasswordStrong(passwordStr)) {
+						MessageDialog.error(null, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
+						passwordStr = null;
+						return;
+					}
+					// BCrypt has a maximum length of 72 characters
+					// see for example, https://security.stackexchange.com/questions/152430/what-maximum-password-length-to-choose-when-using-bcrypt
+					if (password.length > 72) {
+						MessageDialog.error(null, "angal.userbrowser.passwordistoolongmaximumof72characters.msg");
+						Arrays.fill(password, '0');
+						Arrays.fill(repeatPassword, '0');
 						return;
 					}
 					String hashed = BCrypt.hashpw(new String(password), BCrypt.gensalt());
@@ -249,9 +281,9 @@ public class UserEdit extends JDialog {
 					}
 					if (result) {
 						fireUserInserted(user);
-						Arrays.fill(password, '0');
-						Arrays.fill(repeatPassword, '0');
 					}
+					Arrays.fill(password, '0');
+					Arrays.fill(repeatPassword, '0');
 				} else {
 					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());
 					try {
@@ -329,24 +361,25 @@ public class UserEdit extends JDialog {
 			typeComboBox = new JComboBox();
 			if (insert) {
 				List<UserGroup> group = null;
-                try {
-                    group = manager.getUserGroup();
-                } catch (OHServiceException e) {
-                    OHServiceExceptionUtil.showMessages(e);
-                }
-                if (group != null) {
-                    for (UserGroup elem : group) {
-                        typeComboBox.addItem(elem);
-                    }
-                }
+				try {
+					group = manager.getUserGroup();
+				} catch (OHServiceException e) {
+					OHServiceExceptionUtil.showMessages(e);
+				}
+				if (group != null) {
+					for (UserGroup elem : group) {
+						typeComboBox.addItem(elem);
+					}
+				}
 			} else {
 				typeComboBox.addItem(user.getUserGroupName());
 				typeComboBox.setEnabled(false);
 			}
 			Dimension d = typeComboBox.getPreferredSize();
-			typeComboBox.setPreferredSize(new Dimension(150,d.height));
+			typeComboBox.setPreferredSize(new Dimension(150, d.height));
 
 		}
 		return typeComboBox;
 	}
+
 }

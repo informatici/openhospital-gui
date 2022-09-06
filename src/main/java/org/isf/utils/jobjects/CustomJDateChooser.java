@@ -22,11 +22,13 @@
 package org.isf.utils.jobjects;
 
 import java.awt.Font;
+import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.isf.utils.time.Converters;
 
 import com.toedter.calendar.IDateEditor;
 import com.toedter.calendar.JCalendar;
-import com.toedter.calendar.JDateChooser;
 
 /**
  * JDateChooser override, needs JCalendar(r)
@@ -34,11 +36,12 @@ import com.toedter.calendar.JDateChooser;
  *
  * @author Mwithi
  */
-public class CustomJDateChooser extends JDateChooser {
+public class CustomJDateChooser extends LocalDateSupportingJDateChooser {
 
 	private static final long serialVersionUID = 1L;
 
-	public CustomJDateChooser() {}
+	public CustomJDateChooser() {
+	}
 
 	/**
 	 * @param dateEditor
@@ -65,24 +68,32 @@ public class CustomJDateChooser extends JDateChooser {
 		this.setMnemonic(0);
 	}
 
+	public CustomJDateChooser(LocalDateTime date, String dateFormatString) {
+		super(Converters.toDate(date), dateFormatString);
+		this.setMnemonic(0);
+	}
+
+	public CustomJDateChooser(LocalDateTime date) {
+		super(date);
+		this.setMnemonic(0);
+	}
+
 	/**
 	 * @param date
 	 * @param dateFormatString
 	 * @param dateEditor
 	 */
-	public CustomJDateChooser(Date date, String dateFormatString,
-			IDateEditor dateEditor) {
+	public CustomJDateChooser(Date date, String dateFormatString, IDateEditor dateEditor) {
 		super(date, dateFormatString, dateEditor);
 		this.setMnemonic(0);
 	}
-	
+
 	/**
 	 * @param datePattern
 	 * @param maskPattern
 	 * @param placeholder
 	 */
-	public CustomJDateChooser(String datePattern, String maskPattern,
-			char placeholder) {
+	public CustomJDateChooser(String datePattern, String maskPattern, char placeholder) {
 		super(datePattern, maskPattern, placeholder);
 		this.setMnemonic(0);
 	}
@@ -93,24 +104,23 @@ public class CustomJDateChooser extends JDateChooser {
 	 * @param dateFormatString
 	 * @param dateEditor
 	 */
-	public CustomJDateChooser(JCalendar jcal, Date date,
-			String dateFormatString, IDateEditor dateEditor) {
+	public CustomJDateChooser(JCalendar jcal, Date date, String dateFormatString, IDateEditor dateEditor) {
 		super(jcal, date, dateFormatString, dateEditor);
 		this.setMnemonic(0);
 	}
-	
+
 	/**
-	 * @author Mwithi
-	 * 
 	 * Override
-	 * 
+	 *
 	 * @param font
 	 * @param calendar - if true, set Font for the popup calendar also
 	 */
 	public void setFont(Font font, boolean calendar) {
 		if (isInitialized) {
 			dateEditor.getUiComponent().setFont(font);
-			if (calendar) jcalendar.setFont(font);
+			if (calendar) {
+				jcalendar.setFont(font);
+			}
 		}
 	}
 
@@ -118,12 +128,13 @@ public class CustomJDateChooser extends JDateChooser {
 	public void setFont(Font font) {
 		setFont(font, true);
 	}
-	
+
 	public void setMnemonic(char keyChar) {
 		this.calendarButton.setMnemonic(keyChar);
 	}
-	
+
 	public void setMnemonic(int keyChar) {
 		this.calendarButton.setMnemonic(keyChar);
 	}
+
 }

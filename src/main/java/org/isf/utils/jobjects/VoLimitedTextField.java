@@ -39,14 +39,14 @@ public class VoLimitedTextField extends JTextField {
 
 		private static final long serialVersionUID = 1L;
 		private final int maxChars;
-		
+
 		public LimitedDimension(int maxChars) {
 			this.maxChars = maxChars;
 		}
-		
+
 		@Override
 		public void insertString(int off, String text, AttributeSet att)
-		throws BadLocationException {
+				throws BadLocationException {
 			int charsInDocument = getLength();
 			int newLength = text.length();
 			if (charsInDocument + newLength > maxChars) {
@@ -60,7 +60,6 @@ public class VoLimitedTextField extends JTextField {
 			}
 		}
 	}
-
 
 	public VoLimitedTextField(int maxChars) {
 		super();

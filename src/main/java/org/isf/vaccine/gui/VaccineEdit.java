@@ -61,18 +61,20 @@ public class VaccineEdit extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private EventListenerList vaccineListeners = new EventListenerList();
 
-    public interface VaccineListener extends EventListener {
-        void vaccineUpdated(AWTEvent e);
-        void vaccineInserted(AWTEvent e);
-    }
+	public interface VaccineListener extends EventListener {
 
-    public void addVaccineListener(VaccineListener l) {
-        vaccineListeners.add(VaccineListener.class, l);
-    }
+		void vaccineUpdated(AWTEvent e);
 
-    public void removeVaccineListener(VaccineListener listener) {
-        vaccineListeners.remove(VaccineListener.class, listener);
-    }
+		void vaccineInserted(AWTEvent e);
+	}
+
+	public void addVaccineListener(VaccineListener l) {
+		vaccineListeners.add(VaccineListener.class, l);
+	}
+
+	public void removeVaccineListener(VaccineListener listener) {
+		vaccineListeners.remove(VaccineListener.class, listener);
+	}
 
 	private void fireVaccineInserted() {
 		AWTEvent event = new AWTEvent(new Object(), AWTEvent.RESERVED_ID_MAX + 1) {
@@ -111,12 +113,12 @@ public class VaccineEdit extends JDialog {
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selected row
-     * because we need to update them
+	 * because we need to update them
 	 */
 	public VaccineEdit(JFrame owner, Vaccine old, boolean inserting) {
 		super(owner, true);
 		insert = inserting;
-		vaccine = old;		//operation will be used for every operation
+		vaccine = old;        //operation will be used for every operation
 		initialize();
 	}
 
@@ -321,4 +323,5 @@ public class VaccineEdit extends JDialog {
 		}
 		return vaccineTypeComboBox;
 	}
+
 }
