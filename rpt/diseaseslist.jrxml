@@ -10,7 +10,7 @@
 		<![CDATA[select DCL_DESC, DIS_DESC,
 case when DIS_OPD_INCLUDE is null or DIS_OPD_INCLUDE =1 then 'OPD'  else '' end as OPD,
 case when DIS_IPD_OUT_INCLUDE is null or DIS_IPD_OUT_INCLUDE =1 then 'IPD'  else '' end as IPD
-from DISEASE, DISEASETYPE
+from OH_DISEASE, OH_DISEASETYPE
 where DIS_DCL_ID_A = DCL_ID_A
 order by DCL_DESC, DIS_DESC]]>
 	</queryString>

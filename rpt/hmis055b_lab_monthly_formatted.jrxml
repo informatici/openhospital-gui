@@ -33,7 +33,7 @@ from (
            (select 
                count(*) 
             from 
-               LABORATORY l
+               OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(l.LAB_EXAM_DATE)=$P{month} and year(l.LAB_EXAM_DATE)=$P{year}
@@ -43,7 +43,7 @@ from (
            (select 
                count(*) 
            from 
-               LABORATORY l
+               OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
@@ -54,7 +54,7 @@ from (
            (select 
                count(*) 
             from 
-               LABORATORY l
+               OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(l.LAB_EXAM_DATE)=$P{month} and year(l.LAB_EXAM_DATE)=$P{year}
@@ -64,7 +64,7 @@ from (
            ( select 
                count(*) 
            from 
-               LABORATORY l
+               OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
@@ -75,7 +75,7 @@ from (
            (select 
                count(*) 
             from 
-               LABORATORY l
+               OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(l.LAB_EXAM_DATE)=$P{month} and year(l.LAB_EXAM_DATE)=$P{year}
@@ -85,7 +85,7 @@ from (
            ( select 
                count(*) 
            from 
-               LABORATORY l
+               OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
@@ -96,7 +96,7 @@ from (
            (select 
                count(*) 
             from 
-               LABORATORY l
+               OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(l.LAB_EXAM_DATE)=$P{month} and year(l.LAB_EXAM_DATE)=$P{year}
@@ -106,7 +106,7 @@ from (
            ( select 
                count(*) 
            from 
-               LABORATORY l
+               OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
@@ -117,7 +117,7 @@ from (
           (select 
                count(*) 
            from 
-               LABORATORY l
+               OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(l.LAB_EXAM_DATE)=$P{month} and year(l.LAB_EXAM_DATE)=$P{year}
@@ -127,7 +127,7 @@ from (
            ( select 
                count(*) 
            from 
-               LABORATORY l
+               OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
@@ -138,7 +138,7 @@ from (
            (select 
                count(*) 
             from 
-               LABORATORY l
+               OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(l.LAB_EXAM_DATE)=$P{month} and year(l.LAB_EXAM_DATE)=$P{year}
@@ -148,7 +148,7 @@ from (
            ( select 
                count(*) 
            from 
-               LABORATORY l
+               OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
@@ -159,7 +159,7 @@ from (
            (select 
                count(*) 
             from 
-               LABORATORY l
+               OH_LABORATORY l
              where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(l.LAB_EXAM_DATE)=$P{month} and year(l.LAB_EXAM_DATE)=$P{year}
@@ -169,7 +169,7 @@ from (
            ( select 
                count(*) 
              from 
-               LABORATORY l
+               OH_LABORATORY l
              where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(LAB_EXAM_DATE)=$P{month} and year(LAB_EXAM_DATE)=$P{year}
@@ -180,7 +180,7 @@ from (
            (select 
                count(*)  
            from 
-               LABORATORY l
+               OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(LAB_EXAM_DATE)=$P{month} 
@@ -192,7 +192,7 @@ from (
           (select 
                count(*)  
            from 
-               LABORATORY l
+               OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
                and month(l.LAB_EXAM_DATE)=$P{month} 
@@ -205,7 +205,7 @@ from (
 
         
         
-        from EXAM ex, EXAMTYPE et
+        from OH_EXAM ex, OH_EXAMTYPE et
         where et.EXC_ID_A = ex.EXA_EXC_ID_A
         order by 1,2
 ) final]]>

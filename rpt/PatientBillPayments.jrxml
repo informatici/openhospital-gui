@@ -8,7 +8,7 @@
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<parameter name="billID" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT BLP_DATE, BLP_AMOUNT FROM BILLPAYMENTS
+		<![CDATA[SELECT BLP_DATE, BLP_AMOUNT FROM OH_BILLPAYMENTS
 WHERE BLP_ID_BILL = $P{billID} ORDER BY BLP_DATE ASC]]>
 	</queryString>
 	<field name="BLP_DATE" class="java.sql.Timestamp"/>

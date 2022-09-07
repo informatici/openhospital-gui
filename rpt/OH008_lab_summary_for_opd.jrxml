@@ -18,7 +18,7 @@
 		<![CDATA[select * from (
 	
 	select EXA_DESC AS EXAM, 'Test done' AS CATEGORY, LAB_SEX AS SEX, count(*) AS COUNT 
-	from LABORATORY, EXAM
+	from OH_LABORATORY, OH_EXAM
 	where LAB_EXA_ID_A = EXA_ID_A
 	and month(LAB_EXAM_DATE) = $P{month} and year(LAB_EXAM_DATE) = $P{year}
 	and lab_pat_inout = 'O'
@@ -27,7 +27,7 @@
 	union
 	
 	select EXA_DESC AS EXAM, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end AS CATEGORY, lab_sex AS SEX, count(*) AS COUNT
-	from LABORATORY, EXAM
+	from OH_LABORATORY, OH_EXAM
 	where LAB_EXA_ID_A = EXA_ID_A
 	and month(LAB_EXAM_DATE) = $P{month} and year(LAB_EXAM_DATE) = $P{year}
 	and lab_pat_inout = 'O'
@@ -36,7 +36,7 @@
 	union
 	
 	select 'All other' AS EXAM, 'Test done' AS CATEGORY, lab_sex AS SEX, count(*) AS COUNT
-	from LABORATORY, EXAM
+	from OH_LABORATORY, OH_EXAM
 	where LAB_EXA_ID_A = EXA_ID_A
 	and month(LAB_EXAM_DATE) = $P{month} and year(LAB_EXAM_DATE) = $P{year}
 	and lab_pat_inout = 'O'
@@ -45,7 +45,7 @@
 	union
 	
 	select 'All other' AS EXAM, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end AS CATEGORY, lab_sex AS SEX, count(*) AS COUNT
-	from LABORATORY, EXAM
+	from OH_LABORATORY, OH_EXAM
 	where LAB_EXA_ID_A = EXA_ID_A
 	and month(LAB_EXAM_DATE) = $P{month} and year(LAB_EXAM_DATE) = $P{year}
 	and lab_pat_inout = 'O'

@@ -18,8 +18,8 @@
 	<parameter name="id" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="type" class="java.lang.String" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT * FROM OPERATIONROW
-LEFT JOIN OPERATION ON OPER_ID=OPE_ID_A
+		<![CDATA[SELECT * FROM OH_OPERATIONROW
+LEFT JOIN OH_OPERATION ON OPER_ID=OPE_ID_A
 WHERE ($P{type} like 'Opd%' AND OPER_OPD_ID = $P{id}) 
    OR ($P{type} like 'ADM%' AND OPER_ADMISSION_ID = $P{id})]]>
 	</queryString>

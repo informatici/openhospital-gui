@@ -18,7 +18,7 @@ from (
         case when ifnull(ADM_RESOP,'unknown')='P' then 1 else null end resultOk,
         case when ifnull(ADM_RESOP,'unknown')='N' then 1 else null end resultKo,
         case when ADM_RESOP is null then 1 else null end resultNull
-    FROM OPERATIONROW opr, ADMISSION a, OPERATION o, OPERATIONTYPE ot
+    FROM OH_OPERATIONROW opr, OH_ADMISSION a, OH_OPERATION o, OH_OPERATIONTYPE ot
     where a.ADM_ID = opr.OPER_ADMISSION_ID
     and opr.OPER_ID = o.OPE_ID_A
     and o.OPE_OCL_ID_A = ot.OCL_ID_A

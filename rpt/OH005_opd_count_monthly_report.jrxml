@@ -14,7 +14,7 @@
     (case when OPD_AGE <5 then '0-4 Years' else '5 and over' end) as AGE,
     opd_sex 'SEX',
     count(*) as COUNT
-from OPD
+from OH_OPD
 where month(OPD_DATE_VIS) = $P{month} and year(OPD_DATE_VIS)=$P{year}
 group by case when OPD_NEW_PAT='N' then 'new attendance' else 'reattendance' end,
     (case when OPD_AGE <5 then '0-4 Years' else '5 and over' end),
@@ -25,7 +25,7 @@ select
     (case when OPD_AGE <5 then '0-4 Years' else '5 and over' end) as AGE,
     opd_sex 'SEX',
     count(*) as COUNT
-from OPD
+from OH_OPD
 where month(OPD_DATE_VIS) = $P{month} and year(OPD_DATE_VIS)=$P{year}
 group by 'total',
     (case when OPD_AGE <5 then '0-4 Years' else '5 and over' end),

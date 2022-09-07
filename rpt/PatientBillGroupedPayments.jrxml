@@ -10,7 +10,7 @@
 	<parameter name="collectionbillsId" class="java.util.Collection" isForPrompting="false"/>
 	<parameter name="totalToPaid" class="java.math.BigDecimal" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT BLP_DATE, SUM(BLP_AMOUNT) AS BLP_AMOUNT FROM BILLPAYMENTS
+		<![CDATA[SELECT BLP_DATE, SUM(BLP_AMOUNT) AS BLP_AMOUNT FROM OH_BILLPAYMENTS
 WHERE $X{IN ,BLP_ID_BILL, collectionbillsId } ORDER BY BLP_DATE ASC]]>
 	</queryString>
 	<field name="BLP_DATE" class="java.sql.Timestamp"/>

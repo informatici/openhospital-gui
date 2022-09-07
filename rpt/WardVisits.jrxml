@@ -19,9 +19,9 @@
 		<defaultValueExpression><![CDATA["./rpt/"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT V.*, P.PAT_ID, PAT_NAME, W.* FROM VISITS V
-LEFT JOIN PATIENT P on PAT_ID=VST_PAT_ID
-LEFT JOIN WARD W on VST_WRD_ID_A = WRD_ID_A
+		<![CDATA[SELECT V.*, P.PAT_ID, PAT_NAME, W.* FROM OH_VISITS V
+LEFT JOIN OH_PATIENT P on PAT_ID=VST_PAT_ID
+LEFT JOIN OH_WARD W on VST_WRD_ID_A = WRD_ID_A
 WHERE VST_WRD_ID_A = $P{wardID} 
 AND DATE(VST_DATE)=$P{date}
 ORDER BY VST_DATE ASC]]>

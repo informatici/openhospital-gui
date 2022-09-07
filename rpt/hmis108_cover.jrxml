@@ -25,22 +25,22 @@ SELECT 	WRD_ID_A wardid,
 	WRD_NAME ward,
 	WRD_NBEDS beds,
 	(select count(*)
-          from ADMISSION a
+          from OH_ADMISSION a
           where a.ADM_WRD_ID_A = w.WRD_ID_A
             and DATE(a.ADM_DATE_DIS) between DATE($P{fromdate}) and DATE($P{todate})
             and a.ADM_DELETED='N') admissions,
     (select count(*)
-          from ADMISSION a
+          from OH_ADMISSION a
           where a.ADM_WRD_ID_A = w.WRD_ID_A
             and a.ADM_DIST_ID_A='D'
             and DATE(a.ADM_DATE_DIS) between DATE($P{fromdate}) and DATE($P{todate})
             and a.ADM_DELETED='N')  deads,
 	(select sum(DATEDIFF(a.ADM_DATE_DIS, a.ADM_DATE_ADM))
-          from ADMISSION a
+          from OH_ADMISSION a
           where DATE(a.ADM_DATE_DIS) between DATE($P{fromdate}) and DATE($P{todate})
             and a.ADM_WRD_ID_A = w.WRD_ID_A
             and a.ADM_DELETED = 'N' )  patient_days
-    FROM WARD w
+    FROM OH_WARD w
 	where w.WRD_NBEDS > 0) dati]]>
 	</queryString>
 	<field name="wardid" class="java.lang.String"/>

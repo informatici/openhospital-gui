@@ -19,7 +19,7 @@
 	<parameter name="user" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT BLP_USR_ID_A, SUM(BLP_AMOUNT) AS AMOUNT
-FROM BILLPAYMENTS
+FROM OH_BILLPAYMENTS
 WHERE DATE(BLP_DATE) >= $P{fromdate}
 AND DATE(BLP_DATE) <= $P{todate}
 AND BLP_USR_ID_A like $P{user}]]>

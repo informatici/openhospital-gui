@@ -15,7 +15,7 @@
 			when OPE_FOR = 3 then 'OPD'
 			else ''
 		end as OPEFOR		
-		from OPERATION, OPERATIONTYPE
+		from OH_OPERATION, OH_OPERATIONTYPE
 		where OPE_OCL_ID_A = OCL_ID_A
 		order by OCL_DESC, OPE_DESC]]>
 	</queryString>

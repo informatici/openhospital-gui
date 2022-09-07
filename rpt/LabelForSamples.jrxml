@@ -13,7 +13,7 @@
 	<parameter name="patientID" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT PAT_ID, PAT_SEX, PAT_AGE
-FROM PATIENT
+FROM OH_PATIENT
 WHERE PAT_ID Like $P{patientID}]]>
 	</queryString>
 	<field name="PAT_ID" class="java.lang.Integer">
