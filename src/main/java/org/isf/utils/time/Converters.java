@@ -38,10 +38,6 @@ public class Converters {
         return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    public static LocalDateTime convertToLocalDateTime(Date date) {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
-
     public static Date toDate(LocalDateTime localDateTime) {
         return Optional.ofNullable(localDateTime)
                 .map(ldt -> ldt.atZone(ZoneId.systemDefault()).toInstant())
