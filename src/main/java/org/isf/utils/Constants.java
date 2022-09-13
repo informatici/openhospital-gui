@@ -25,29 +25,19 @@ import java.time.format.DateTimeFormatter;
 
 public interface Constants {
 
-	public static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd/MM/yyyy";
-
-	public static final String DATE_FORMAT_MM_DD_YY = "MM/dd/yy";
-	public static final String DATE_FORMAT_MM_DD_YYYY = "MM/dd/yyyy";
 
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_YYYYMMDD = "yyyyMMdd";
 
-	public static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
-	public static final String DATE_FORMAT_DD_MM_YY_HH_MM_SS = "dd/MM/yy - HH:mm:ss";
-
 	public static final String DATE_FORMAT_DD_MM_YYYY_HH_MM = "dd/MM/yyyy HH:mm";
 
-	public static final String DATE_FORMAT_DD_MM_YYYY_HH_MM_SS = "dd/MM/yyyy HH:mm:ss";
-
-	public static final String DATE_FORMAT_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
 	public static final String DATE_FORMAT_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
 	public static final String TIME_FORMAT_HH_MM = "HH:mm";
 	public static final String TIME_FORMAT_HH_MM_SS = "HH:mm:ss";
 
 	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
-	public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
+	public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM);
 
 }
