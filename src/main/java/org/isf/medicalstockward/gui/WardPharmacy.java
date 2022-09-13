@@ -22,7 +22,7 @@
 package org.isf.medicalstockward.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
 import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
@@ -1721,7 +1721,7 @@ public class WardPharmacy extends ModalJFrame implements
 	}
 
 	public String formatDateTime(LocalDateTime time) {
-		return DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM_SS).format(time);
+		return DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM).format(time);
 	}
 
 	private List<Medical> getSearchMedicalsResults(String s, List<Medical> medicalsList) {

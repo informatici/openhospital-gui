@@ -22,7 +22,7 @@
 package org.isf.accounting.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM_SS;
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 import static org.isf.utils.Constants.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS;
 import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
@@ -1239,7 +1239,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				return thisBill.getId();
 			}
 			if (c == ++index) {
-				return TimeTools.formatDateTime(thisBill.getDate(), DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
+				return TimeTools.formatDateTime(thisBill.getDate(), DATE_FORMAT_DD_MM_YYYY_HH_MM);
 			}
 			if (c == ++index) {
 				int patID = thisBill.getBillPatient().getCode();
@@ -1252,7 +1252,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				return thisBill.getAmount();
 			}
 			if (c == ++index) {
-				return TimeTools.formatDateTime(thisBill.getUpdate(), DATE_FORMAT_DD_MM_YYYY_HH_MM_SS);
+				return TimeTools.formatDateTime(thisBill.getUpdate(), DATE_FORMAT_DD_MM_YYYY_HH_MM);
 			}
 			if (c == ++index) {
 				return thisBill.getStatus();

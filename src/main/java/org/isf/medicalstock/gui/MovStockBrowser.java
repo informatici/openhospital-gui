@@ -22,8 +22,8 @@
 package org.isf.medicalstock.gui;
 
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY;
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 import static org.isf.utils.Constants.DATE_FORMAT_YYYYMMDD;
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -122,7 +122,6 @@ public class MovStockBrowser extends ModalJFrame {
 	private static final String TO_LABEL = MessageBundle.getMessage("angal.common.to.txt") + ':';
 
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY);
-	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM);
 
 	private final JFrame myFrame;
 	private JButton filterButton;

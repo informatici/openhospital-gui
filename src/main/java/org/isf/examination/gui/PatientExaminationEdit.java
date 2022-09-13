@@ -21,7 +21,7 @@
  */
 package org.isf.examination.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -42,7 +42,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -2013,7 +2012,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 			StringBuilder pressurStringBuilder = new StringBuilder();
 			pressurStringBuilder.append(patientExamination.getPex_ap_min() == null ? "-" : patientExamination.getPex_ap_min())
 					.append(" / ").append(patientExamination.getPex_ap_max() == null ? "-" : patientExamination.getPex_ap_max());
-			String datetime = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM).format(patientExamination.getPex_date());
+			String datetime = DATE_TIME_FORMATTER.format(patientExamination.getPex_date());
 			String diuresis = patientExamination.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patientExamination.getPex_diuresis_desc());
 			String bowel = patientExamination.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patientExamination.getPex_bowel_desc());
 			String ausc = patientExamination.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patientExamination.getPex_auscultation());

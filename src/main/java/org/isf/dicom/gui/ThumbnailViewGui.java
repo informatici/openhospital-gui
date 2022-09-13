@@ -21,6 +21,8 @@
  */
 package org.isf.dicom.gui;
 
+import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -227,7 +229,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 			
 			// Header of thumbnail
 			JPanel header = new JPanel(new BorderLayout(), false);
-			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
+			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), DATE_FORMAT_DD_MM_YYYY_HH_MM));
 			date.setForeground(Color.LIGHT_GRAY);
 			JLabel type = new JLabel(instance.getDicomType() == null ? MessageBundle.getMessage("angal.common.notdefined.txt") : instance.getDicomType().toString());
 			type.setForeground(Color.LIGHT_GRAY);
@@ -283,7 +285,7 @@ public class ThumbnailViewGui extends AbstractThumbnailViewGui {
 
 			// Header of thumbnail
 			JPanel header = new JPanel(new BorderLayout(), false);
-			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), "dd-MM-yyyy HH:mm"));
+			JLabel date = new JLabel(TimeTools.formatDateTime(instance.getDicomStudyDate(), DATE_FORMAT_DD_MM_YYYY_HH_MM));
 			date.setForeground(Color.LIGHT_GRAY);
 			JLabel type = new JLabel(instance.getDicomType() == null? MessageBundle.getMessage("angal.common.notdefined.txt") : instance.getDicomType().toString());
 			type.setForeground(Color.LIGHT_GRAY);

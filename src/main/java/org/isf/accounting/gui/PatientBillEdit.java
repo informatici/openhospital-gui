@@ -21,7 +21,7 @@
  */
 package org.isf.accounting.gui;
 
-import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
+import static org.isf.utils.Constants.DATE_TIME_FORMATTER;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -32,7 +32,6 @@ import java.awt.Font;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -1886,8 +1885,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	}
 
 	public String formatDateTime(LocalDateTime time) {
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_DD_MM_YYYY_HH_MM);
-		return dateTimeFormatter.format(time);
+		return DATE_TIME_FORMATTER.format(time);
 	}
 
 }
