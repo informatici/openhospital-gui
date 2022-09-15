@@ -21,7 +21,7 @@ SELECT  case when OPD_NEW_PAT = 'N' then 'New Attendance' else 'Re-attendance' e
         case when OPD_AGE<5 and OPD_SEX = 'F' then 1 else null end femaleupto4,
         case when OPD_AGE>=5 and OPD_SEX = 'M' then 1 else null end maleover4,
         case when OPD_AGE>=5 and OPD_SEX = 'F' then 1 else null end femaleover4
-    FROM OPD o
+    FROM OH_OPD o
 where year(OPD_DATE_VIS)=$P{year}
   and month(OPD_DATE_VIS)=$P{month}) detaildata
 group by category

@@ -17,8 +17,8 @@
 	<parameter name="examId" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT *
-FROM PATIENT
-LEFT JOIN PATIENTEXAMINATION ON PAT_ID = PEX_PAT_ID
+FROM OH_PATIENT
+LEFT JOIN OH_PATIENTEXAMINATION ON PAT_ID = PEX_PAT_ID
 WHERE PEX_ID = $P{examId}]]>
 	</queryString>
 	<field name="PAT_ID" class="java.lang.Integer">

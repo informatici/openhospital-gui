@@ -9,18 +9,18 @@
 	<parameter name="year" class="java.lang.String"/>
 	<parameter name="month" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select 'Total admissions' as Description,count(*) as Number from ADMISSION
+		<![CDATA[select 'Total admissions' as Description,count(*) as Number from OH_ADMISSION
 where year(ADM_DATE_ADM) = $P{year}
 and month(ADM_DATE_ADM) = $P{month}
 and ADM_DELETED = 'N'
 union
-select 'Number inpatients referred TO this unit (admission date, see *Note)',count(*) from ADMISSION
+select 'Number inpatients referred TO this unit (admission date, see *Note)',count(*) from OH_ADMISSION
 where year(ADM_DATE_ADM) = $P{year}
 and month(ADM_DATE_ADM) = $P{month}
 and ADM_DELETED = 'N'
 and ADM_ADMT_ID_A_ADM = 'R'
 union
-select 'Number inpatients referred FROM this unit (discharged date, see *Note)',count(*) from ADMISSION
+select 'Number inpatients referred FROM this unit (discharged date, see *Note)',count(*) from OH_ADMISSION
 where year(ADM_DATE_DIS) = $P{year}
 and month(ADM_DATE_DIS) = $P{month}
 and ADM_DELETED = 'N'

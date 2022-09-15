@@ -9,9 +9,9 @@
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<queryString>
 		<![CDATA[SELECT EXC_DESC, EXA_DESC, EXR_DESC, EXA_EXC_ID_A, EXA_PROC, EXA_DEFAULT
-    FROM EXAM e 
-    JOIN EXAMTYPE et ON et.EXC_ID_A = e.EXA_EXC_ID_A
-    LEFT JOIN EXAMROW er ON er.EXR_EXA_ID_A = e.EXA_ID_A
+    FROM OH_EXAM e
+    JOIN OH_EXAMTYPE et ON et.EXC_ID_A = e.EXA_EXC_ID_A
+    LEFT JOIN OH_EXAMROW er ON er.EXR_EXA_ID_A = e.EXA_ID_A
 order by EXC_DESC, EXA_DESC, EXR_DESC]]>
 	</queryString>
 	<field name="EXC_DESC" class="java.lang.String"/>

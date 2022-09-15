@@ -14,7 +14,7 @@
 	<parameter name="Telephone" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="Date" class="java.lang.String" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT M.*, SUM(MDSR_INI_STOCK_QTI + MDSR_IN_QTI - MDSR_OUT_QTI) QTY FROM MEDICALDSR M
+		<![CDATA[SELECT M.*, SUM(MDSR_INI_STOCK_QTI + MDSR_IN_QTI - MDSR_OUT_QTI) QTY FROM OH_MEDICALDSR M
 GROUP BY MDSR_ID
 ORDER BY MDSR_DESC]]>
 	</queryString>
