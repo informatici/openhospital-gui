@@ -157,13 +157,11 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			}
 			flag_Xmpp = GeneralData.XMPPMODULEENABLED;
 			flag_Sms = GeneralData.SMSENABLED;
-
 			// start connection with SMS service
 			if (flag_Sms) {
 				Thread thread = new Thread(new SmsSender());
 				thread.start();
 			}
-
 		} catch (Exception e) {
 			singleUser = true; // default for property not found
 			internalPharmacies = false; // default for property not found
@@ -179,6 +177,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			// get an user
 			LOGGER.info("Logging: Multi User mode.");
 			new Login(this);
+
 			if (null == myUser) {
 				// Login failed
 				actionExit(2);
@@ -317,7 +316,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		myFrame.setAlwaysOnTop(GeneralData.MAINMENUALWAYSONTOP);
 		myFrame.addWindowListener(new WindowAdapter() {
-
 			@Override
 			public void windowClosing(WindowEvent e) {
 				actionExit(0);
@@ -325,7 +323,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		});
 		
 		setVisible(true);
-
 	}
 
 	private HashMap<String, Boolean> retrieveActivatedModulesMap() {
@@ -364,7 +361,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		}
 		String newLine = System.lineSeparator();
 		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine, newLine, newLine, newLine);
-				
 		System.exit(status);
 	}
 
