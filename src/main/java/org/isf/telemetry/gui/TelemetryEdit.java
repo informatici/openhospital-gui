@@ -77,8 +77,6 @@ public class TelemetryEdit extends ModalJFrame {
 	private static final String KEY_TELEMETRY_BUTTON_LABEL_ASK_NEVER = "angal.telemetry.button.label.ask.never";
 	private static final String KEY_TELEMETRY_CONFIRMATION_DIALOG_MESSAGE = "angal.telemetry.confirmation.dialog.message";
 
-	private static final int BUTTON_CODE_YEAH = 0;
-
 	private MainMenu parent;
 	private EventListenerList telemetryListeners = new EventListenerList();
 	private JPanel panel;
@@ -152,11 +150,10 @@ public class TelemetryEdit extends ModalJFrame {
 	 * 
 	 * @return
 	 */
-	private List<CheckBoxWrapper> buildPermissionCheckboxes(ApplicationContext springSexyContext,
+	private List<CheckBoxWrapper> buildPermissionCheckboxes(ApplicationContext applicationContext,
 			Map<String, Boolean> consentMap) {
 
-		Map<String, AbstractDataCollector> checkboxContractMap = springSexyContext
-				.getBeansOfType(AbstractDataCollector.class);
+		Map<String, AbstractDataCollector> checkboxContractMap = applicationContext.getBeansOfType(AbstractDataCollector.class);
 		List<AbstractDataCollector> checkboxContractList = new ArrayList<>(checkboxContractMap.values());
 		Collections.sort(checkboxContractList, AnnotationAwareOrderComparator.INSTANCE);
 
@@ -206,7 +203,7 @@ public class TelemetryEdit extends ModalJFrame {
 				if (this.isReallyEnabled(consentMap)) {
 					try {
 						Map<String, Map<String, String>> dataToSend = telemetryUtils.retrieveDataToSend(consentMap);
-						if (isShowDialog(dataToSend) == BUTTON_CODE_YEAH) {
+						if (isShowDialog(dataToSend) == JOptionPane.OK_OPTION) {
 							LOGGER.debug("Trying to send a message...");
 							Telemetry telemetry = telemetryManager.enable(consentMap);
 							fireTelemetryInserted(telemetry);
