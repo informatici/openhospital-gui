@@ -728,9 +728,6 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		if (GeneralData.DICOMMODULEENABLED && MainMenu.checkUserGrants("btnadmdicom")) {
 			buttonPanel.add(getDICOMButton());
 		}
-		/*
-		 * Extra / experimental / temporary features - see Admin Manual
-		 */
 		if (MainMenu.checkUserGrants("btnadmpatientfolder")) {
 			buttonPanel.add(getButtonPatientFolderBrowser());
 		}
