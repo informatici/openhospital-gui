@@ -590,7 +590,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				boolean isPatient;
 				String description;
 				int age = 0;
-				LocalDateTime newDate = LocalDateTime.now();
+				LocalDateTime newDate = TimeTools.getNow();
 				Ward wardTo = null; //
 				if (jRadioPatient.isSelected()) {
 					isPatient = true;

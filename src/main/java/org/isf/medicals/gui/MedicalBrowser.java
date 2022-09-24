@@ -33,7 +33,6 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -582,7 +581,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		int i = 0;
 
 		if (options.indexOf(option) == i) {
-			from = TimeTools.formatDateTime(LocalDateTime.now(), DATE_FORMAT_DD_MM_YYYY);
+			from = TimeTools.formatDateTime(TimeTools.getNow(), DATE_FORMAT_DD_MM_YYYY);
 			to = from;
 		}
 		if (options.indexOf(option) == ++i) {

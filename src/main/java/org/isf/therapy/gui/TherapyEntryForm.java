@@ -171,7 +171,7 @@ public class TherapyEntryForm extends JDialog {
 		} else {
 			therapy = new Therapy();
 			radioButtonSet.get(0).setSelected(true);
-			endDateLabel.setText(dateFormat.format(LocalDateTime.now()));
+			endDateLabel.setText(dateFormat.format(TimeTools.getNow()));
 		}
 		this.pack();
 	}

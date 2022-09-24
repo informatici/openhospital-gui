@@ -76,6 +76,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 
 /** ------------------------------------------
  * LabEditExtended - Add/edit a laboratory exam
@@ -349,7 +350,7 @@ public class LabEditExtended extends ModalJFrame {
 		if (insert) {
 			dateIn = RememberDates.getLastLabExamDate();
 			if (dateIn == null) {
-				dateIn = LocalDateTime.now();
+				dateIn = TimeTools.getNow();
 			}
 		} else {
 			dateIn = lab.getDate();
@@ -613,7 +614,7 @@ public class LabEditExtended extends ModalJFrame {
 					MessageDialog.error(LabEditExtended.this, "angal.common.pleaseselectapatient.msg");
 					return;
 				}
-				LocalDateTime examDate = LocalDateTime.now();
+				LocalDateTime examDate = TimeTools.getNow();
 				try {
 					examDate = examDateFieldCal.getLocalDateTime();
 				} catch (Exception e1) {
@@ -625,7 +626,7 @@ public class LabEditExtended extends ModalJFrame {
 					return;
 				}
 				List<String> labRow = new ArrayList<>();
-				lab.setDate(LocalDateTime.now());
+				lab.setDate(TimeTools.getNow());
 				lab.setExamDate(examDate.toLocalDate());
 				RememberDates.setLastLabExamDate(examDate);
 				lab.setMaterial(labManager.getMaterialKey(matSelected));

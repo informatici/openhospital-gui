@@ -493,7 +493,7 @@ public class MovStockMultipleDischarging extends JDialog {
 	
 	private GoodDateTimeSpinnerChooser getJDateChooser() {
 		if (jDateChooser == null) {
-			jDateChooser = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
+			jDateChooser = new GoodDateTimeSpinnerChooser(TimeTools.getNow());
 		}
 		return jDateChooser;
 	}

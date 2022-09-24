@@ -159,7 +159,7 @@ public class VisitView extends ModalJFrame {
 
 
 	private void initialize() {
-		setDateFirstThenSecond(LocalDateTime.now());
+		setDateFirstThenSecond(TimeTools.getNow());
 	}
 
 	private void loadDataForWard(Ward ward) {
@@ -767,7 +767,7 @@ public class VisitView extends ModalJFrame {
 			JButton todayBtn = new JButton(MessageBundle.getMessage("angal.visit.today.btn"));
 			todayBtn.setMnemonic(MessageBundle.getMnemonic("angal.visit.today.btn.key"));
 			todayBtn.addActionListener(actionEvent -> {
-				setDateFirstThenSecond(LocalDateTime.now());
+				setDateFirstThenSecond(TimeTools.getNow());
 				updatePanels();
 			});
 			todayPanel.add(todayBtn);

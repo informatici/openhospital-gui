@@ -908,7 +908,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		if (opdDateFieldCal == null) {
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDate() == null) {
-					visitDateOpd = LocalDateTime.now();
+					visitDateOpd = TimeTools.getNow();
 				} else {
 					visitDateOpd = RememberDates.getLastOpdVisitDate();
 				}
@@ -943,7 +943,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private int getOpdProgYear(LocalDateTime date) {
 		int opdNum = 0;
 		if (date == null) {
-			date = LocalDateTime.now();
+			date = TimeTools.getNow();
 		}
 		try {
 			opdNum = opdManager.getProgYear(date.getYear()) + 1;
@@ -1569,7 +1569,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				if (opdDateFieldCal.getLocalDateTime() != null) {
 					opd.setDate(opdDateFieldCal.getLocalDateTime());
 				} else {
-					opd.setDate(LocalDateTime.now());
+					opd.setDate(TimeTools.getNow());
 				}
 				int opdProgYear = 0;
 				

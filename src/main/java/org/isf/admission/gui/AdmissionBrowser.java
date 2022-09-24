@@ -224,7 +224,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private JComboBox treatmTypeBox = null;
 
-	private LocalDateTime deliveryDate = LocalDateTime.now();
+	private LocalDateTime deliveryDate = TimeTools.getNow();
 
 	private GoodDateTimeSpinnerChooser deliveryDateFieldCal = null;
 
@@ -749,7 +749,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			if (editing && admission.getVisitDate() != null) {
 				visitDate = admission.getVisitDate();
 			} else {
-				visitDate = LocalDateTime.now();
+				visitDate = TimeTools.getNow();
 			}
 			visitDateFieldCal = new GoodDateTimeSpinnerChooser(visitDate);
 
@@ -1137,7 +1137,7 @@ public class AdmissionBrowser extends ModalJFrame {
 				dateIn = RememberDates.getLastAdmInDate();
 			}
 			if (dateIn == null) {
-				dateIn = LocalDateTime.now();
+				dateIn = TimeTools.getNow();
 			}
 			dateInFieldCal = new GoodDateTimeSpinnerChooser(dateIn, false);
 

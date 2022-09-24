@@ -77,6 +77,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 
 /**
  * ------------------------------------------
@@ -306,7 +307,7 @@ public class LabEdit extends ModalJFrame {
 			dateIn = lab.getDate();
 		}
 		if (dateIn == null) {
-			dateIn = LocalDateTime.now();
+			dateIn = TimeTools.getNow();
 		}
 		return new GoodDateTimeSpinnerChooser(dateIn);
 	}
@@ -528,7 +529,7 @@ public class LabEdit extends ModalJFrame {
 					return;
 				}
 				// exam date
-				LocalDateTime examDate = LocalDateTime.now();
+				LocalDateTime examDate = TimeTools.getNow();
 				List<String> labRow = new ArrayList<>();
 				RememberDates.setLastLabExamDate(examDate);
 

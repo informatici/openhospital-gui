@@ -408,7 +408,7 @@ public class MovStockMultipleCharging extends JDialog {
 					Lot lot;
 					boolean isNewLot = false;
 					if (isAutomaticLot()) {
-						LocalDateTime preparationDate = LocalDateTime.now();
+						LocalDateTime preparationDate = TimeTools.getNow();
 						LocalDateTime expiringDate = askExpiringDate();
 						lot = new Lot("", preparationDate, expiringDate); //$NON-NLS-1$
 						// Cost
@@ -669,7 +669,7 @@ public class MovStockMultipleCharging extends JDialog {
 	}
 
 	protected LocalDateTime askExpiringDate() {
-		LocalDateTime date = LocalDateTime.now();
+		LocalDateTime date = TimeTools.getNow();
 		GoodDateTimeSpinnerChooser expireDateChooser = new GoodDateTimeSpinnerChooser(date);
 		JPanel panel = new JPanel(new GridLayout(1, 2));
 		panel.add(new JLabel(MessageBundle.getMessage("angal.medicalstock.multiplecharging.expiringdate"))); //$NON-NLS-1$

@@ -82,6 +82,7 @@ import org.isf.utils.jobjects.JMonthChooser;
 import org.isf.utils.jobjects.JYearChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
+import org.isf.utils.time.TimeTools;
 import org.isf.visits.gui.InsertVisit;
 import org.isf.visits.gui.VisitView;
 import org.isf.visits.gui.VisitView.VisitListener;
@@ -299,7 +300,7 @@ public class TherapyEdit extends ModalJFrame implements VisitListener {
 	}
 
 	private String getDate() {
-		return DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD).format(LocalDateTime.now());
+		return DateTimeFormatter.ofPattern(DATE_FORMAT_YYYY_MM_DD).format(TimeTools.getNow());
 	}
 
 	private void showTherapies() {

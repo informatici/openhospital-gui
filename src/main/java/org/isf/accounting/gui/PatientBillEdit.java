@@ -93,6 +93,7 @@ import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.GoodDateTimeToggleChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -281,8 +282,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private boolean paid = false;
 	private Bill thisBill;
 	private Patient patientSelected;
-	private LocalDateTime billDate = LocalDateTime.now();
-	private LocalDateTime today = LocalDateTime.now();
+	private LocalDateTime billDate = TimeTools.getNow();
+	private LocalDateTime today = TimeTools.getNow();
 
 	private Object[] billClasses = {Price.class, Integer.class, Double.class};
 	private String[] billColumnNames = {
@@ -538,7 +539,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				// To remind last used
 				billDate = RememberDates.getLastBillDate();
 				if (RememberDates.getLastBillDate() == null) {
-					billDate = LocalDateTime.now();
+					billDate = TimeTools.getNow();
 				}
 			} else {
 				// get BillDate
@@ -1097,7 +1098,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 						icon = new ImageIcon("rsc/icons/calendar_dialog.png"); //$NON-NLS-1$
 
-						GoodDateTimeSpinnerChooser datePayChooser = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
+						GoodDateTimeSpinnerChooser datePayChooser = new GoodDateTimeSpinnerChooser(TimeTools.getNow());
 
 						int r = JOptionPane.showConfirmDialog(PatientBillEdit.this,
 								datePayChooser,
@@ -1116,7 +1117,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							addPayment(datePay, balance.doubleValue());
 						}
 					} else {
-						datePay = LocalDateTime.now();
+						datePay = TimeTools.getNow();
 						addPayment(datePay, balance.doubleValue());
 					}
 				}
@@ -1189,7 +1190,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				if (billDate.isBefore(today)) { //if is a bill in the past the user will be asked for date of payment
 
-					GoodDateTimeSpinnerChooser datePayChooser = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
+					GoodDateTimeSpinnerChooser datePayChooser = new GoodDateTimeSpinnerChooser(TimeTools.getNow());
 					int r = JOptionPane.showConfirmDialog(PatientBillEdit.this,
 							datePayChooser,
 							MessageBundle.getMessage("angal.newbill.dateofpayment.title"),
@@ -1206,7 +1207,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						addPayment(datePay, amount.doubleValue());
 					}
 				} else {
-					datePay = LocalDateTime.now();
+					datePay = TimeTools.getNow();
 					addPayment(datePay, amount.doubleValue());
 				}
 			});
@@ -1215,7 +1216,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	}
 
 	private boolean isValidPaymentDate(LocalDateTime datePay) {
-		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime now = TimeTools.getNow();
 		LocalDateTime lastPay;
 		if (!payItems.isEmpty()) {
 			lastPay = payItems.get(payItems.size() - 1).getDate();
@@ -1273,7 +1274,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				if (billDate.isBefore(today)) { //if is a bill in the past the user will be asked for date of payment
 
-					GoodDateTimeSpinnerChooser datePayChooser = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
+					GoodDateTimeSpinnerChooser datePayChooser = new GoodDateTimeSpinnerChooser(TimeTools.getNow());
 					int r = JOptionPane.showConfirmDialog(PatientBillEdit.this,
 							datePayChooser,
 							MessageBundle.getMessage("angal.newbill.dateofpayment.title"),
@@ -1290,7 +1291,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						addPayment(datePay, amount.doubleValue());
 					}
 				} else {
-					datePay = LocalDateTime.now();
+					datePay = TimeTools.getNow();
 					addPayment(datePay, amount.doubleValue());
 				}
 			});

@@ -66,6 +66,7 @@ import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 
 /**
  * ------------------------------------------
@@ -538,7 +539,7 @@ public class OpdEdit extends JDialog {
 	private int getOpdProgYear(LocalDateTime date) {
 		int opdNum = 0;
 		if (date == null) {
-			date = LocalDateTime.now();
+			date = TimeTools.getNow();
 		}
 		try {
 			opdNum = opdManager.getProgYear(date.getYear()) + 1;
@@ -895,7 +896,7 @@ public class OpdEdit extends JDialog {
 			LocalDateTime dateIn;
 			if (insert) {
 				if (RememberDates.getLastOpdVisitDate() == null) {
-					dateIn = LocalDateTime.now();
+					dateIn = TimeTools.getNow();
 				} else {
 					dateIn = RememberDates.getLastOpdVisitDate();
 				}

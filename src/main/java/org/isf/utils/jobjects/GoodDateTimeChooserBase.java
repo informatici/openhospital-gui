@@ -27,6 +27,7 @@ import java.awt.Panel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
@@ -89,7 +90,7 @@ public abstract class GoodDateTimeChooserBase extends Panel {
 		}
 
 	public LocalDateTime getLocalDateTime() {
-		return dateTimePicker.getDateTimeStrict();
+		return dateTimePicker.getDateTimeStrict().truncatedTo(ChronoUnit.SECONDS);
 	}
 
 	public void setDateTime(LocalDateTime dateTime) {
