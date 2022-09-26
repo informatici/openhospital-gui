@@ -42,6 +42,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -167,10 +168,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JPanel panelSupRange;
 	private GoodDateChooser jCalendarTo;
 	private GoodDateChooser jCalendarFrom;
-	private LocalDateTime dateFrom = LocalDateTime.now();
-	private LocalDateTime dateTo = LocalDateTime.now();
-	private LocalDateTime dateToday0 = LocalDate.now().atStartOfDay();
-	private LocalDateTime dateToday24 = LocalDate.now().atTime(LocalTime.MAX);
+	private LocalDateTime dateFrom = TimeTools.getNow();
+	private LocalDateTime dateTo = TimeTools.getNow();
+	private LocalDateTime dateToday0 = TimeTools.getDateToday0();
+	private LocalDateTime dateToday24 = TimeTools.getDateToday24();
 
 	private JButton jButtonToday;
 
@@ -371,13 +372,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					LocalDateTime thisMonthFrom = dateFrom.toLocalDate()
 							.withMonth(month)
 							.withDayOfMonth(1)
-							.atStartOfDay();
+							.atStartOfDay()
+							.truncatedTo(ChronoUnit.SECONDS);
 					LocalDateTime thisMonthTo = dateTo.toLocalDate()
 							.withMonth(month)
 							.withDayOfMonth(YearMonth.of(dateFrom.getYear(), month).lengthOfMonth())
 							.atStartOfDay()
 							.toLocalDate()
-							.atTime(LocalTime.MAX);
+							.atTime(LocalTime.MAX)
+							.truncatedTo(ChronoUnit.SECONDS);
 					from = TimeTools.formatDateTime(thisMonthFrom, DATE_FORMAT_DD_MM_YYYY);
 					to = TimeTools.formatDateTime(thisMonthTo, DATE_FORMAT_DD_MM_YYYY);
 				}
@@ -402,13 +405,15 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					LocalDateTime thisMonthFrom = dateFrom.toLocalDate()
 							.withMonth(month)
 							.withDayOfMonth(1)
-							.atStartOfDay();
+							.atStartOfDay()
+							.truncatedTo(ChronoUnit.SECONDS);
 					LocalDateTime thisMonthTo = dateTo.toLocalDate()
 							.withMonth(month)
 							.withDayOfMonth(YearMonth.of(dateFrom.getYear(), month).lengthOfMonth())
 							.atStartOfDay()
 							.toLocalDate()
-							.atTime(LocalTime.MAX);
+							.atTime(LocalTime.MAX)
+							.truncatedTo(ChronoUnit.SECONDS);
 					from = TimeTools.formatDateTime(thisMonthFrom, DATE_FORMAT_DD_MM_YYYY);
 					to = TimeTools.formatDateTime(thisMonthTo, DATE_FORMAT_DD_MM_YYYY);
 				}

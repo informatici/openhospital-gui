@@ -81,6 +81,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.OhTableModelExam;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -626,7 +627,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 		if (jCalendarDate == null) {
 			LocalDateTime labDate = RememberDates.getLastLabExamDate();
 			if (labDate == null) {
-				labDate = LocalDateTime.now();
+				labDate = TimeTools.getNow();
 			}
 			jCalendarDate = new GoodDateTimeSpinnerChooser(labDate);
 		}

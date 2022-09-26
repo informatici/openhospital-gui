@@ -668,8 +668,8 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JTable getMovTable() {
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime old = LocalDateTime.now().minusWeeks(1);
+		LocalDateTime now = TimeTools.getNow();
+		LocalDateTime old = now.minusWeeks(1);
 
 		model = new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 		movTable = new JTable(model);
@@ -1031,7 +1031,7 @@ public class MovStockBrowser extends ModalJFrame {
 		private static final long serialVersionUID = 1L;
 
 		public MovBrowserModel() {
-			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime now = TimeTools.getNow();
 			LocalDateTime old = now.minusWeeks(1);
 
 			new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);

@@ -57,6 +57,7 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.GoodDateTimeToggleChooser;
 import org.isf.utils.jobjects.MessageDialog;
+import org.isf.utils.time.TimeTools;
 
 /**
  * @author Mwithi
@@ -173,7 +174,7 @@ public class SmsEdit extends JDialog implements SelectionListener {
 	
 	private GoodDateTimeToggleChooser getJSchedDateChooser() {
 		if (jSchedDateChooser == null) {
-			jSchedDateChooser = new GoodDateTimeToggleChooser(LocalDateTime.now());
+			jSchedDateChooser = new GoodDateTimeToggleChooser(TimeTools.getNow());
 		}
 		return jSchedDateChooser;
 	}

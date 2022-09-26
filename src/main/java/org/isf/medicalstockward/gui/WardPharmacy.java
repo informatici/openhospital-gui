@@ -168,8 +168,8 @@ public class WardPharmacy extends ModalJFrame implements
 	private JButton jButtonClose;
 	private JButton jButtonEdit;
 	private GoodDateChooser jCalendarFrom;
-	private LocalDateTime dateFrom = LocalDateTime.now().with(LocalTime.MIN);
-	private LocalDateTime dateTo = LocalDateTime.now().with(LocalTime.MAX);
+	private LocalDateTime dateFrom = TimeTools.getDateToday0();
+	private LocalDateTime dateTo = TimeTools.getDateToday24();
 	private GoodDateChooser jCalendarTo;
 	private Ward wardSelected;
 	private MovementWard movSelected;

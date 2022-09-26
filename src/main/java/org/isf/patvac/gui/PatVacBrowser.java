@@ -62,6 +62,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.layout.SpringUtilities;
+import org.isf.utils.time.TimeTools;
 import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
@@ -200,7 +201,7 @@ public class PatVacBrowser extends ModalJFrame {
 			buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 			buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
 			buttonNew.addActionListener(actionEvent -> {
-				LocalDateTime now = LocalDateTime.now();
+				LocalDateTime now = TimeTools.getNow();
 				patientVaccine = new PatientVaccine(0, 0, now, new Patient(),
 						new Vaccine("", "", new VaccineType("", "")), 0);
 

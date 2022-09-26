@@ -35,7 +35,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +62,7 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.jobjects.OhTableOperationModel;
 import org.isf.utils.jobjects.VoFloatTextField;
+import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -339,7 +339,7 @@ abstract class OperationRowBase extends JPanel {
 
 	protected GoodDateTimeSpinnerChooser getDateTimeChooser() {
 		if (textDate == null) {
-			textDate = new GoodDateTimeSpinnerChooser(LocalDateTime.now());
+			textDate = new GoodDateTimeSpinnerChooser(TimeTools.getNow());
 		}
 		return textDate;
 	}

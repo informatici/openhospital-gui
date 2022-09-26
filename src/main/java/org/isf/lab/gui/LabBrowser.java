@@ -27,7 +27,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +66,7 @@ import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.layout.SpringUtilities;
+import org.isf.utils.time.TimeTools;
 
 /**
  * ------------------------------------------
@@ -288,7 +288,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 			buttonNew.addActionListener(actionEvent -> {
 				laboratory = new Laboratory(0, new Exam("", "",
 						new ExamType("", ""), 0, ""),
-						LocalDateTime.now(), "P", "", new Patient(), "");
+						TimeTools.getNow(), "P", "", new Patient(), "");
 				if (GeneralData.LABEXTENDED) {
 					if (GeneralData.LABMULTIPLEINSERT) {
 						LabNew editrecord = new LabNew(myFrame);

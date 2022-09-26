@@ -388,7 +388,7 @@ public class WardPharmacyRectify extends JDialog {
 
 			try {
 				movStockInsertingManager.storeLot(selectedLot.getCode(), selectedLot, med);
-				movWardBrowserManager.newMovementWard(new MovementWard(selectedWard, LocalDateTime.now(), false, null, 0, 0, reason, med, movQuantity,
+				movWardBrowserManager.newMovementWard(new MovementWard(selectedWard, TimeTools.getNow(), false, null, 0, 0, reason, med, movQuantity,
 						MessageBundle.getMessage("angal.medicalstockward.rectify.pieces"), selectedLot));
 				fireMovementWardInserted();
 				dispose();
@@ -535,8 +535,8 @@ public class WardPharmacyRectify extends JDialog {
 	}
 
 	protected Lot askLot() {
-		LocalDateTime preparationDate = LocalDateTime.now();
-		LocalDateTime expiringDate = LocalDateTime.now();
+		LocalDateTime preparationDate = TimeTools.getNow();
+		LocalDateTime expiringDate = TimeTools.getNow();
 		Lot lot = null;
 		JTextField lotNameTextField = new JTextField(15);
 

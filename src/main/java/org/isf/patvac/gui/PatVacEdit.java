@@ -59,6 +59,7 @@ import org.isf.utils.jobjects.GoodDateChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
+import org.isf.utils.time.TimeTools;
 import org.isf.vaccine.manager.VaccineBrowserManager;
 import org.isf.vaccine.model.Vaccine;
 import org.isf.vactype.manager.VaccineTypeBrowserManager;
@@ -368,7 +369,7 @@ public class PatVacEdit extends JDialog {
 			dateIn = patVac.getVaccineDate();
 		}
 		if (dateIn == null) {
-			dateIn = LocalDateTime.now();
+			dateIn = TimeTools.getNow();
 		}
 		return new GoodDateChooser(dateIn.toLocalDate());
 	}

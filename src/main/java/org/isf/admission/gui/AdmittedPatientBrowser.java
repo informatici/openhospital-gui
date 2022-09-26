@@ -920,7 +920,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			patient = reloadSelectedPatient(table.getSelectedRow());
 			Laboratory laboratory = new Laboratory(0, new Exam("", "",
 					new ExamType("", ""), 0, ""),
-					LocalDateTime.now(), "P", "", new Patient(), "");
+					TimeTools.getNow(), "P", "", new Patient(), "");
 			if (GeneralData.LABEXTENDED) {
 				if (GeneralData.LABMULTIPLEINSERT) {
 					LabNew editrecord = new LabNew(myFrame, patient.getPatient());

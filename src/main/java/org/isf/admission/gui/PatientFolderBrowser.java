@@ -87,6 +87,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.OhDefaultCellRenderer;
 import org.isf.utils.table.TableSorter;
 import org.isf.utils.time.Converters;
+import org.isf.utils.time.TimeTools;
 import org.isf.ward.manager.WardBrowserManager;
 import org.isf.ward.model.Ward;
 import org.slf4j.Logger;
@@ -287,11 +288,11 @@ public class PatientFolderBrowser extends ModalJFrame
 							if (dateObject instanceof LocalDateTime) {
 								toDate = (LocalDateTime) dateObject;
 								if (toDate == null) {
-									toDate = LocalDateTime.now();
+									toDate = TimeTools.getNow();
 								}
 							} else if (dateObject instanceof String) {
 								if (dateObject.equals(MessageBundle.getMessage("angal.admission.present.txt"))) {
-									toDate = LocalDateTime.now();
+									toDate = TimeTools.getNow();
 								} else {
 									toDate = Converters.parseStringToLocalDate((String) dateObject, DATE_FORMAT_DD_MM_YYYY).atTime(LocalTime.MAX);
 								}
@@ -306,7 +307,7 @@ public class PatientFolderBrowser extends ModalJFrame
 							toDate = fromDate;
 							reportType = "EXAMINATION";
 						} else {
-							fromDate = LocalDateTime.now();
+							fromDate = TimeTools.getNow();
 							toDate = fromDate;
 							reportType = "ALL";
 						}
