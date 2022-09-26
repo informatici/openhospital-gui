@@ -369,7 +369,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		}
 		
 		initComponents();
-		setMinimumSize(new Dimension(1020, 570));
+		setMinimumSize(new Dimension(1270, 570));
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -713,9 +713,6 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) {
 			buttonPanel.add(getButtonOpd());
 		}
-		/*
-		 * Extra / experimental / temporary features - see Admin Manual
-		 */
 		if (MainMenu.checkUserGrants("btnadmlab")) {
 			buttonPanel.add(getButtonLab());
 		}
