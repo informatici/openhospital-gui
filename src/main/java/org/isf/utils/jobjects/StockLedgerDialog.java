@@ -25,6 +25,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -34,7 +35,6 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
-import org.isf.utils.time.TimeTools;
 
 /**
  * @author Mwithi
@@ -116,11 +116,11 @@ public class StockLedgerDialog extends JDialog {
 	}
 
 	public LocalDateTime getLocalDateTimeFrom() {
-		return TimeTools.truncateToSeconds(dateFrom.getDateStartOfDay());
+		return dateFrom.getDateStartOfDay().truncatedTo(ChronoUnit.SECONDS);
 	}
 
 	public LocalDateTime getLocalDateTimeTo() {
-		return TimeTools.truncateToSeconds(dateTo.getDateStartOfDay());
+		return dateTo.getDateStartOfDay().truncatedTo(ChronoUnit.SECONDS);
 	}
 
 	/**
