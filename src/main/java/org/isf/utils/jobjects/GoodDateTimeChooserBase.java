@@ -27,13 +27,13 @@ import java.awt.Panel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.isf.generaldata.GeneralData;
+import org.isf.utils.time.TimeTools;
 
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.components.DateTimePicker;
@@ -90,7 +90,7 @@ public abstract class GoodDateTimeChooserBase extends Panel {
 		}
 
 	public LocalDateTime getLocalDateTime() {
-		return dateTimePicker.getDateTimeStrict().truncatedTo(ChronoUnit.SECONDS);
+		return TimeTools.truncateToSeconds(dateTimePicker.getDateTimeStrict());
 	}
 
 	public void setDateTime(LocalDateTime dateTime) {
