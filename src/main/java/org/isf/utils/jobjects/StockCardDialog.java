@@ -25,7 +25,6 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -35,6 +34,7 @@ import javax.swing.WindowConstants;
 
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
+import org.isf.utils.time.TimeTools;
 
 /**
  * @author Mwithi
@@ -160,11 +160,11 @@ public class StockCardDialog extends JDialog {
 	}
 
 	public LocalDateTime getLocalDateTimeFrom() {
-		return dateFrom.getDateStartOfDay().truncatedTo(ChronoUnit.SECONDS);
+		return TimeTools.truncateToSeconds(dateFrom.getDateStartOfDay());
 	}
 
 	public LocalDateTime getLocalDateTimeTo() {
-		return dateTo.getDateStartOfDay().truncatedTo(ChronoUnit.SECONDS);
+		return TimeTools.truncateToSeconds(dateTo.getDateStartOfDay());
 	}
 
 }
