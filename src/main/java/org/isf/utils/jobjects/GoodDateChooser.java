@@ -27,6 +27,7 @@ import java.awt.Panel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -34,7 +35,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.isf.generaldata.GeneralData;
-import org.isf.utils.time.TimeTools;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
@@ -95,11 +95,13 @@ public class GoodDateChooser extends Panel {
 	}
 
 	public LocalDateTime getDateStartOfDay() {
-		return TimeTools.truncateToSeconds(getDate().atStartOfDay());
+		LocalDate localDate = getDate();
+		return localDate != null ? localDate.atStartOfDay().truncatedTo(ChronoUnit.SECONDS) : null;
 	}
 
 	public LocalDateTime getDateEndOfDay() {
-		return TimeTools.truncateToSeconds(getDate().atTime(LocalTime.MAX));
+		LocalDate localDate = getDate();
+		return localDate != null ? localDate.atTime(LocalTime.MAX).truncatedTo(ChronoUnit.SECONDS) : null;
 	}
 
 	public void addDateChangeListener(DateChangeListener listener) {
