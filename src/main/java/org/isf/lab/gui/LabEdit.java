@@ -24,7 +24,6 @@ package org.isf.lab.gui;
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -534,7 +533,6 @@ public class LabEdit extends ModalJFrame {
 				RememberDates.setLastLabExamDate(examDate);
 
 				lab.setDate(examDate);
-				lab.setExamDate(LocalDate.now());
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
 				lab.setNote(noteTextArea.getText());

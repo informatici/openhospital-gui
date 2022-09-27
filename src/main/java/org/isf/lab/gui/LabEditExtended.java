@@ -627,7 +627,6 @@ public class LabEditExtended extends ModalJFrame {
 				}
 				List<String> labRow = new ArrayList<>();
 				lab.setDate(TimeTools.getNow());
-				lab.setExamDate(examDate.toLocalDate());
 				RememberDates.setLastLabExamDate(examDate);
 				lab.setMaterial(labManager.getMaterialKey(matSelected));
 				lab.setExam(examSelected);
