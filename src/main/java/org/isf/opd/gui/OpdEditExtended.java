@@ -94,6 +94,8 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.db.RememberData;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
+import org.isf.utils.exception.model.OHExceptionMessage;
+import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.GoodDateTimeVisitChooser;
 import org.isf.utils.jobjects.MessageDialog;
@@ -1761,13 +1763,19 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 						MessageDialog.error(OpdEditExtended.this, "angal.opd.cannotsetadateinthepastfornextvisit.msg");
 						return;
 					}
+					Ward ward = (Ward) nextVisitWardBox.getSelectedItem();
+					if (ward == null) {
+						MessageDialog.error(OpdEditExtended.this, "angal.opd.pleasechooseawardforthenextvisit.msg");
+						return;
+					}
 					isNextVisit = true;
 					if (nextVisit == null) {
 						nextVisit = new Visit();
 					}
 					nextVisit.setPatient(opd.getPatient());
 					nextVisit.setDate(nextVisitDateTime);
-					nextVisit.setWard((Ward) nextVisitWardBox.getSelectedItem()); //duration set upon validate
+					nextVisit.setWard(ward);
+					nextVisit.setDuration(ward.getVisitDuration());
 					nextVisit.setService(""); // future developments
 					//nextVisit.setNote(); // future developments
 					
