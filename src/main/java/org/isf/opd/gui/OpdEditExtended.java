@@ -650,7 +650,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcOpdNumberPanel.gridx = 2;
 			gbcOpdNumberPanel.gridy = 0;
 			jPanelData.add(getJOpdNumberPanel(), gbcOpdNumberPanel);
-			JLabel jLabelOpdWard = new JLabel(MessageBundle.getMessage("angal.opd.ward.txt"));
+			JLabel jLabelOpdWard = new JLabel(MessageBundle.getMessage("angal.common.ward.txt"));
 			GridBagConstraints gbcLabelOpdWard = new GridBagConstraints();
 			gbcLabelOpdWard.insets = new Insets(0, 0, 5, 0);
 			gbcLabelOpdWard.anchor = GridBagConstraints.EAST;

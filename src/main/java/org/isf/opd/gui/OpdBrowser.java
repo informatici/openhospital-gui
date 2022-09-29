@@ -133,6 +133,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.opd.opdnumber.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.opd.patientid.col").toUpperCase(),
 			MessageBundle.getMessage("angal.opd.fullname.col").toUpperCase(),
@@ -145,11 +146,11 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private List<Opd> pSur;
 	private JTable jTable = null;
 	private OpdBrowsingModel model;
-	private int[] pColumnWidth = {50, 100, 130, 70, 150, 30, 30, 195, 195, 50 };
-	private boolean[] columnResizable = { false, false, false, false, true, false, false, true, true, false };
-	private boolean[] columnsVisible = { true, true, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
-	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
-	private boolean[] columnsBold = { true, true, false, true, false, false, false, false, false, false };
+	private int[] pColumnWidth = {50, 80, 100, 130, 70, 150, 30, 30, 195, 195, 50};
+	private boolean[] columnResizable = { false, false, false, false, false, true, false, false, true, true, false };
+	private boolean[] columnsVisible = { true, true, true, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
+	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
+	private boolean[] columnsBold = { true, true, false, false, true, false, false, false, false, false, false };
 	private int selectedrow;
 	private OpdBrowserManager manager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 	private JButton filterButton = null;
@@ -213,7 +214,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		super();
 		myFrame = this;
 		initialize();
-		setMinimumSize(new Dimension(1340, 550));
+		setMinimumSize(new Dimension(1410, 550));
 		setLocationRelativeTo(null);
 	}
 
@@ -845,30 +846,33 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public Object getValueAt(int r, int c) {
 			Opd opd = pSur.get(pSur.size() - r - 1);
 			Patient pat = opd.getPatient();
+			int i = 0;
 			if (c == -1) {
 				return opd;
-			} else if (c == 0) {
+			} else if (c == i) {
 				return opd.getCode();
-			} else if (c == 1) {
+			}  else if (c == ++i) {
 				return opd.getProgYear();
-			} else if (c == 2) {
+			} else if (c == ++i) {
+				return opd.getWard().getDescription();
+			} else if (c == ++i) {
 				if (GeneralData.OPDEXTENDED) {
 					return opd.getDate().format(DATE_TIME_FORMATTER);
 				}
 				return opd.getDate().format(DATE_FORMATTER);
-			} else if (c == 3) {
+			} else if (c == ++i) {
 				return pat != null ? opd.getPatient().getCode() : null;
-			} else if (c == 4) {
+			} else if (c == ++i) {
 				return pat != null ? opd.getFullName() : null;
-			} else if (c == 5) {
+			} else if (c == ++i) {
 				return opd.getSex();
-			} else if (c == 6) {
+			} else if (c == ++i) {
 				return opd.getAge();
-			} else if (c == 7) {
+			} else if (c == ++i) {
 				return opd.getDisease().getDescription();
-			} else if (c == 8) {
+			} else if (c == ++i) {
 				return opd.getDisease().getType().getDescription();
-			} else if (c == 9) {
+			} else if (c == ++i) {
 				String patientStatus;
 				if (opd.getNewPatient() == 'N') {
 					patientStatus = MessageBundle.getMessage("angal.opd.new.btn");
