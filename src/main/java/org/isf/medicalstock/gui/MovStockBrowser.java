@@ -478,7 +478,7 @@ public class MovStockBrowser extends ModalJFrame {
 			wardList = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		for (org.isf.ward.model.Ward elem : wardList) {
+		for (Ward elem : wardList) {
 			wardBox.addItem(elem);
 		}
 		wardBox.setEnabled(false);
