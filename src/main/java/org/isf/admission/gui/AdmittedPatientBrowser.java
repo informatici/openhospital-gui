@@ -431,12 +431,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		if (wardList == null) {
 			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			List<Ward> wardWithBeds;
-			try {
-				wardWithBeds = wbm.getWards();
-			} catch (OHServiceException e) {
-				wardWithBeds = new ArrayList<>();
-				OHServiceExceptionUtil.showMessages(e);
-			}
+			wardWithBeds = wbm.getIpdWards();
 
 			wardList = new ArrayList<>();
 			for (Ward elem : wardWithBeds) {
