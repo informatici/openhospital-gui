@@ -36,7 +36,7 @@ from (
                OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(l.LAB_CREATED_DATE)=$P{month} and year(l.LAB_CREATED_DATE)=$P{year}
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
                and l.LAB_MATERIAL = 'Blood'
             ) blood_done,
         
@@ -46,7 +46,7 @@ from (
                OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(LAB_CREATED_DATE)=$P{month} and year(LAB_CREATED_DATE)=$P{year}
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
                and l.LAB_RES=ex.EXA_DEFAULT
                and l.LAB_MATERIAL = 'Blood'
            ) blood_negative, 
@@ -57,7 +57,7 @@ from (
                OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(l.LAB_CREATED_DATE)=$P{month} and year(l.LAB_CREATED_DATE)=$P{year}
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
                and l.LAB_MATERIAL = 'Urine'
            ) urine_done,
         
@@ -67,7 +67,7 @@ from (
                OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(LAB_CREATED_DATE)=$P{month} and year(LAB_CREATED_DATE)=$P{year}
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
                and l.LAB_RES=ex.EXA_DEFAULT
                and l.LAB_MATERIAL = 'Urine'
            ) urine_negative, 
@@ -78,7 +78,7 @@ from (
                OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(l.LAB_CREATED_DATE)=$P{month} and year(l.LAB_CREATED_DATE)=$P{year}
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
                and l.LAB_MATERIAL = 'Stool'   
             ) stool_done,
         
@@ -88,7 +88,7 @@ from (
                OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(LAB_CREATED_DATE)=$P{month} and year(LAB_CREATED_DATE)=$P{year}
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
                and l.LAB_RES=ex.EXA_DEFAULT
                and l.LAB_MATERIAL = 'Stool'
            ) stool_negative, 
@@ -99,7 +99,7 @@ from (
                OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(l.LAB_CREATED_DATE)=$P{month} and year(l.LAB_CREATED_DATE)=$P{year}
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
                and l.LAB_MATERIAL = 'Sputum'
             ) sputum_done,
         
@@ -109,7 +109,7 @@ from (
                OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(LAB_CREATED_DATE)=$P{month} and year(LAB_CREATED_DATE)=$P{year}
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
                and l.LAB_RES=ex.EXA_DEFAULT
                and l.LAB_MATERIAL = 'Sputum'   
            ) sputum_negative, 
@@ -120,7 +120,7 @@ from (
                OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(l.LAB_CREATED_DATE)=$P{month} and year(l.LAB_CREATED_DATE)=$P{year}
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
                and l.LAB_MATERIAL = 'CSF'
            ) csf_done, 
         
@@ -130,7 +130,7 @@ from (
                OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(LAB_CREATED_DATE)=$P{month} and year(LAB_CREATED_DATE)=$P{year}
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
                and l.LAB_RES=ex.EXA_DEFAULT
                and l.LAB_MATERIAL = 'CSF'
            ) csf_negative, 
@@ -141,7 +141,7 @@ from (
                OH_LABORATORY l
             where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(l.LAB_CREATED_DATE)=$P{month} and year(l.LAB_CREATED_DATE)=$P{year}
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
                and l.LAB_MATERIAL = 'Swabs'
            ) swabs_done,
         
@@ -151,7 +151,7 @@ from (
                OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(LAB_CREATED_DATE)=$P{month} and year(LAB_CREATED_DATE)=$P{year}
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
                and l.LAB_RES=ex.EXA_DEFAULT
                and l.LAB_MATERIAL = 'Swabs'   
            ) swabs_negative, 
@@ -162,7 +162,7 @@ from (
                OH_LABORATORY l
              where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(l.LAB_CREATED_DATE)=$P{month} and year(l.LAB_CREATED_DATE)=$P{year}
+               and month(l.LAB_DATE)=$P{month} and year(l.LAB_DATE)=$P{year}
                and l.LAB_MATERIAL = 'Tissues'
            ) tissues_done,
         
@@ -172,7 +172,7 @@ from (
                OH_LABORATORY l
              where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(LAB_CREATED_DATE)=$P{month} and year(LAB_CREATED_DATE)=$P{year}
+               and month(LAB_DATE)=$P{month} and year(LAB_DATE)=$P{year}
                and l.LAB_RES=ex.EXA_DEFAULT
                and l.LAB_MATERIAL = 'Tissues'
            ) tissues_negative, 
@@ -183,8 +183,8 @@ from (
                OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(LAB_CREATED_DATE)=$P{month} 
-               and year(LAB_CREATED_DATE)=$P{year}
+               and month(LAB_DATE)=$P{month} 
+               and year(LAB_DATE)=$P{year}
            group by 
                EXA_DESC
            ) row_total, 
@@ -195,8 +195,8 @@ from (
                OH_LABORATORY l
            where 
                l.LAB_EXA_ID_A = ex.EXA_ID_A
-               and month(l.LAB_CREATED_DATE)=$P{month} 
-               and year(l.LAB_CREATED_DATE)=$P{year}
+               and month(l.LAB_DATE)=$P{month} 
+               and year(l.LAB_DATE)=$P{year}
                and (l.LAB_MATERIAL not in ('Blood' , 'Urine' , 'Stool' , 'Sputum' , 'CSF' , 'Swabs' , 'Tissues')
                or l.LAB_MATERIAL is null)     
            group by 

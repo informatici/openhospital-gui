@@ -20,7 +20,7 @@
 	select EXA_DESC AS EXAM, 'Test done' AS CATEGORY, LAB_SEX AS SEX, count(*) AS COUNT 
 	from OH_LABORATORY, OH_EXAM
 	where LAB_EXA_ID_A = EXA_ID_A
-	and month(LAB_CREATED_DATE) = $P{month} and year(LAB_CREATED_DATE) = $P{year}
+	and month(LAB_DATE) = $P{month} and year(LAB_DATE) = $P{year}
 	and lab_pat_inout = 'O'
 	group by LAB_EXA_ID_A, lab_sex, 'Test done'
 	
@@ -29,7 +29,7 @@
 	select EXA_DESC AS EXAM, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end AS CATEGORY, lab_sex AS SEX, count(*) AS COUNT
 	from OH_LABORATORY, OH_EXAM
 	where LAB_EXA_ID_A = EXA_ID_A
-	and month(LAB_CREATED_DATE) = $P{month} and year(LAB_CREATED_DATE) = $P{year}
+	and month(LAB_DATE) = $P{month} and year(LAB_DATE) = $P{year}
 	and lab_pat_inout = 'O'
 	group by LAB_EXA_ID_A, lab_sex, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end
 	
@@ -38,7 +38,7 @@
 	select 'All other' AS EXAM, 'Test done' AS CATEGORY, lab_sex AS SEX, count(*) AS COUNT
 	from OH_LABORATORY, OH_EXAM
 	where LAB_EXA_ID_A = EXA_ID_A
-	and month(LAB_CREATED_DATE) = $P{month} and year(LAB_CREATED_DATE) = $P{year}
+	and month(LAB_DATE) = $P{month} and year(LAB_DATE) = $P{year}
 	and lab_pat_inout = 'O'
 	group by 'All other', lab_sex, 'Test done'
 	
@@ -47,7 +47,7 @@
 	select 'All other' AS EXAM, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end AS CATEGORY, lab_sex AS SEX, count(*) AS COUNT
 	from OH_LABORATORY, OH_EXAM
 	where LAB_EXA_ID_A = EXA_ID_A
-	and month(LAB_CREATED_DATE) = $P{month} and year(LAB_CREATED_DATE) = $P{year}
+	and month(LAB_DATE) = $P{month} and year(LAB_DATE) = $P{year}
 	and lab_pat_inout = 'O'
 	group by 'All other', lab_sex, case when (LAB_RES=EXA_DEFAULT) then 'Negative' else 'Positive' end
 	
