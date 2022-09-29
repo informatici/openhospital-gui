@@ -1812,23 +1812,33 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 							dispose();
 						} else {
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							return;
 						}
 					} else { // Update
 						if (isNextVisit) {
 							nextVisit = visitManager.updateVisit(nextVisit);
 							opd.setNextVisit(nextVisit);
+							Opd updatedOpd = opdManager.updateOpd(opd);
+							if (updatedOpd == null) {
+								MessageDialog.error(OpdEditExtended.this, "angal.common.datacouldnotbesaved.msg");
+								return;
+							} else {
+								fireSurgeryUpdated(updatedOpd);
+								dispose();
+							}
 						} else {
 							if (nextVisit != null) {
-								visitManager.deleteVisit(nextVisit);
+								opd.setNextVisit(null);
+								Opd updatedOpd = opdManager.updateOpd(opd);
+								if (updatedOpd != null) {
+									visitManager.deleteVisit(nextVisit);
+									fireSurgeryUpdated(updatedOpd);
+									dispose();
+								} else {
+									MessageDialog.error(OpdEditExtended.this, "angal.common.datacouldnotbesaved.msg");
+									return;
+								}
 							}
-							opd.setNextVisit(null);
-						}
-						Opd updatedOpd = opdManager.updateOpd(opd);
-						if (updatedOpd == null) {
-							MessageDialog.error(OpdEditExtended.this, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							fireSurgeryUpdated(updatedOpd);
-							dispose();
 						}
 					}
 				} catch (OHServiceException ex) {

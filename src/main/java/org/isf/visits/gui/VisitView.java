@@ -342,9 +342,13 @@ public class VisitView extends ModalJFrame {
 				Visit visit = (Visit) jTableFirst.getModel().getValueAt(row, -1);
 				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
-					vstManager.deleteVisit(visit);
-					loadDataForWard(ward);
-					updatePanels();
+					try {
+						vstManager.deleteVisit(visit);
+						loadDataForWard(ward);
+						updatePanels();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
 				}
 			});
 		}
@@ -387,9 +391,13 @@ public class VisitView extends ModalJFrame {
 				Visit visit = (Visit) jTableSecond.getModel().getValueAt(row, -1);
 				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
-					vstManager.deleteVisit(visit);
-					loadDataForWard(ward);
-					updatePanels();
+					try {
+						vstManager.deleteVisit(visit);
+						loadDataForWard(ward);
+						updatePanels();
+					} catch (OHServiceException e) {
+						OHServiceExceptionUtil.showMessages(e);
+					}
 				}
 			});
 		}
