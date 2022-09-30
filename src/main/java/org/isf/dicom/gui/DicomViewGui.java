@@ -34,6 +34,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -420,7 +421,6 @@ public class DicomViewGui extends JPanel {
 		}
 		canvas.drawString(txt, ws, hi);
 		hi += VGAP;
-		txt = "";
 		Date d = tmpDicom != null ? tmpDicom.getDate(Tag.StudyDate) : Converters.toDate(tmpDbFile.getDicomStudyDate());
 		DateFormat df = DateFormat.getDateInstance();
 		if (d != null) {
@@ -437,7 +437,7 @@ public class DicomViewGui extends JPanel {
 		int ws = w - 200;
 		int hi = h - 20;
 		canvas.setColor(colScr);
-		String txt = "";
+		String txt;
 		txt = tmpDicom != null ? tmpDicom.getString(Tag.SeriesDescription) : tmpDbFile.getDicomSeriesDescription();
 		if (txt == null) {
 			txt = "";
@@ -478,20 +478,14 @@ public class DicomViewGui extends JPanel {
 	private void getImageFromJPG(FileDicom dett) {
 		try {
 			tmpImg = null;
-			Iterator<?> iter = ImageIO.getImageReadersByFormatName("jpg");
-			ImageReader reader = (ImageReader) new com.sun.imageio.plugins.jpeg.JPEGImageReader(null);
-			//JPEGImageReadParam param = new JPEGImageReadParam();
 			ImageInputStream imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
-			reader.setInput(imageInputStream, false);
-
 			try {
-				tmpImg = reader.read(0);//, param);
-			} catch (DicomCodingException dce) {
+				tmpImg = ImageIO.read(imageInputStream);
+			} catch (IOException ioException) {
 				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"), 
 						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
 						OHSeverityLevel.ERROR));
 			}
-
 			imageInputStream.close();
 			this.tmpDicom = null;
 		} catch (Exception exception) {
