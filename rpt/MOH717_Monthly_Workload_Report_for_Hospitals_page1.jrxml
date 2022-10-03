@@ -33,8 +33,8 @@ FROM (
 	    AND o.OPD_SEX = 'M' 
 	    AND o.OPD_AGE >= 5
 	    AND o.OPD_DIS_ID_A NOT IN (18, 74, 17, 73, 50, 48, 49, 22, 23, 24, 25, 117, 81, 59, 44, 38, 57, 33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) total1,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) total1,
 
 	(SELECT COUNT(*) remaleover5 
 	  FROM OH_OPD o
@@ -42,8 +42,8 @@ FROM (
 	    AND o.OPD_SEX = 'M' 
 	    AND o.OPD_AGE >= 5
 	    AND o.OPD_DIS_ID_A NOT IN (18, 74, 17, 73, 50, 48, 49, 22, 23, 24, 25, 117, 81, 59, 44, 38, 57, 33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) total2,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) total2,
 
 	(SELECT COUNT(*) newfemaleover5 
 	  FROM OH_OPD o
@@ -51,8 +51,8 @@ FROM (
 	    AND o.OPD_SEX = 'F' 
 	    AND o.OPD_AGE >= 5
 	    AND o.OPD_DIS_ID_A NOT IN (18, 74, 17, 73, 50, 48, 49, 22, 23, 24, 25, 117, 81, 59, 44, 38, 57, 33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) total3,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) total3,
 
 	(SELECT COUNT(*) refemaleover5 
 	  FROM OH_OPD o
@@ -60,8 +60,8 @@ FROM (
 	    AND o.OPD_SEX = 'F' 
 	    AND o.OPD_AGE >= 5
 	    AND o.OPD_DIS_ID_A NOT IN (18, 74, 17, 73, 50, 48, 49, 22, 23, 24, 25, 117, 81, 59, 44, 38, 57, 33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) total4,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) total4,
 
 	(SELECT COUNT(*) newmaleunder5 
 	  FROM OH_OPD o
@@ -69,8 +69,8 @@ FROM (
 	    AND o.OPD_SEX = 'M' 
 	    AND o.OPD_AGE < 5
 	    AND o.OPD_DIS_ID_A NOT IN (18, 74, 17, 73, 50, 48, 49, 22, 23, 24, 25, 117, 81, 59, 44, 38, 57, 33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) total5,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) total5,
 
 	(SELECT COUNT(*) remaleunder5 
 	  FROM OH_OPD o
@@ -78,8 +78,8 @@ FROM (
 	    AND o.OPD_SEX = 'M' 
 	    AND o.OPD_AGE < 5
 	    AND o.OPD_DIS_ID_A NOT IN (18, 74, 17, 73, 50, 48, 49, 22, 23, 24, 25, 117, 81, 59, 44, 38, 57, 33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) total6,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) total6,
 
 	(SELECT COUNT(*) newfemaleunder5 
 	  FROM OH_OPD o
@@ -87,8 +87,8 @@ FROM (
 	    AND o.OPD_SEX = 'F' 
 	    AND o.OPD_AGE < 5
 	    AND o.OPD_DIS_ID_A NOT IN (18, 74, 17, 73, 50, 48, 49, 22, 23, 24, 25, 117, 81, 59, 44, 38, 57, 33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) total7,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) total7,
 
 	(SELECT COUNT(*) refemaleunder5 
 	  FROM OH_OPD o
@@ -96,134 +96,134 @@ FROM (
 	    AND o.OPD_SEX = 'F' 
 	    AND o.OPD_AGE < 5
 	    AND o.OPD_DIS_ID_A NOT IN (18, 74, 17, 73, 50, 48, 49, 22, 23, 24, 25, 117, 81, 59, 44, 38, 57, 33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) total8,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) total8,
 
  	(SELECT COUNT(*) newENTclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'N' 
 	    AND o.OPD_DIS_ID_A IN (57)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics1,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics1,
 
 	(SELECT COUNT(*) reENTclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'R' 
 	    AND o.OPD_DIS_ID_A IN (57)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics2,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics2,
 
 	(SELECT COUNT(*) newEYEclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'N' 
 	    AND o.OPD_DIS_ID_A IN (33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics3,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics3,
 
 	(SELECT COUNT(*) reEYEclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'R' 
 	    AND o.OPD_DIS_ID_A IN (33, 58)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics4,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics4,
 
 	(SELECT COUNT(*) newTBLclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'N' 
 	    AND o.OPD_DIS_ID_A IN (44, 38)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics5,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics5,
 
 	(SELECT COUNT(*) reTBLclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'R' 
 	    AND o.OPD_DIS_ID_A IN (44, 38)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics6,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics6,
 
 	(SELECT COUNT(*) newSEXclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'N' 
 	    AND o.OPD_DIS_ID_A IN (59)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics7,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics7,
 
 	(SELECT COUNT(*) reSEXclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'R' 
 	    AND o.OPD_DIS_ID_A IN (59)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics8,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics8,
 
 	(SELECT COUNT(*) newORTclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'N' 
 	    AND o.OPD_DIS_ID_A IN (22, 23, 24, 25, 117, 81)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics9,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics9,
 
 	(SELECT COUNT(*) reORTclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'R' 
 	    AND o.OPD_DIS_ID_A IN (22, 23, 24, 25, 117, 81)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics10,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics10,
 
 	(SELECT COUNT(*) newOTHclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'N' 
 	    AND o.OPD_DIS_ID_A IN (50, 48, 49)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics11,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics11,
 
 	(SELECT COUNT(*) reOTHclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'R' 
 	    AND o.OPD_DIS_ID_A IN (50, 48, 49)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics12,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics12,
 
 	(SELECT COUNT(*) newPSYclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'N' 
 	    AND o.OPD_DIS_ID_A IN (18, 74, 17, 73)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics13,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics13,
 
 	(SELECT COUNT(*) rePSYclinic 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'R' 
 	    AND o.OPD_DIS_ID_A IN (18, 74, 17, 73)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) clinics14,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) clinics14,
 
        (SELECT COUNT(*) newAttDental 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'N' 
 	    AND o.OPD_DIS_ID_A IN (13)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) dental1,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) dental1,
 
 	(SELECT COUNT(*) reAttDental 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'R' 
 	    AND o.OPD_DIS_ID_A IN (13)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) dental2,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) dental2,
 
 	(SELECT COUNT(*) newANCattend 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'N' 
 	    AND o.OPD_DIS_ID_A IN (200)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) ANC1,
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) ANC1,
 
 	(SELECT COUNT(*) reANCattend 
 	  FROM OH_OPD o
 	  WHERE o.OPD_NEW_PAT = 'R' 
 	    AND o.OPD_DIS_ID_A IN (200)
-	    AND MONTH(o.OPD_DATE_VIS) = $P{month}
- 	    AND YEAR(o.OPD_DATE_VIS) = $P{year}) ANC2
+	    AND MONTH(o.OPD_DATE) = $P{month}
+ 	    AND YEAR(o.OPD_DATE) = $P{year}) ANC2
 
 )]]>
 	</queryString>
