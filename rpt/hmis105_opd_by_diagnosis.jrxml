@@ -25,8 +25,8 @@ from (
 	where  d.DIS_DCL_ID_A = dt.DCL_ID_A
 	  and o.OPD_DIS_ID_A = d.DIS_ID_A
 	  and OPD_NEW_PAT = 'N'
-	  and year(OPD_DATE_VIS)=$P{year}
-	  and month(OPD_DATE_VIS)=$P{month}
+	  and year(OPD_DATE)=$P{year}
+	  and month(OPD_DATE)=$P{month}
   	union all
 	SELECT  dt.DCL_DESC diseasetype, d.DIS_DESC disease,
         	case when OPD_AGE<5 and OPD_SEX = 'M' then 1 else null end maleupto4,
@@ -37,8 +37,8 @@ from (
 	where  d.DIS_DCL_ID_A = dt.DCL_ID_A
 	  and o.OPD_DIS_ID_A_2 = d.DIS_ID_A
 	  and OPD_NEW_PAT = 'N'
-	  and year(OPD_DATE_VIS)=$P{year}
-	  and month(OPD_DATE_VIS)=$P{month}
+	  and year(OPD_DATE)=$P{year}
+	  and month(OPD_DATE)=$P{month}
 	union all
 	SELECT  dt.DCL_DESC diseasetype, d.DIS_DESC disease,
         	case when OPD_AGE<5 and OPD_SEX = 'M' then 1 else null end maleupto4,
@@ -49,8 +49,8 @@ from (
 	where  d.DIS_DCL_ID_A = dt.DCL_ID_A
 	  and o.OPD_DIS_ID_A_3 = d.DIS_ID_A
 	  and OPD_NEW_PAT = 'N'
-	  and year(OPD_DATE_VIS)=$P{year}
-	  and month(OPD_DATE_VIS)=$P{month}
+	  and year(OPD_DATE)=$P{year}
+	  and month(OPD_DATE)=$P{month}
 	) detaildata
 group by diseasetype, disease
 order by diseasetype, disease]]>
