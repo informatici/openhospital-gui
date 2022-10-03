@@ -53,7 +53,6 @@ import org.isf.lab.gui.LabNew.LabListener;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryForPrint;
-import org.isf.lab.service.LabIoOperations;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.patient.gui.SelectPatient;
@@ -490,7 +489,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	class LabBrowsingModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class, Context.getApplicationContext().getBean(LabIoOperations.class));
+		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class);
 
 		public LabBrowsingModel(String exam, LocalDate dateFrom, LocalDate dateTo) {
 			try {
