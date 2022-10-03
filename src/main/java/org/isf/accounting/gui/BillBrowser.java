@@ -206,7 +206,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private int year;
 
 	//Bills & Payments
-	private BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
+	private BillBrowserManager billManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
 	private List<Bill> billPeriod;
 	private List<BillPayments> paymentsPeriod;
 	private List<Bill> billFromPayments;

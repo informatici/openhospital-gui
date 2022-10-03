@@ -305,7 +305,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private List<PricesOthers> othPrices;
 
 	//Items and Payments (ALL)
-	private BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
+	private BillBrowserManager billManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
 	private PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	//Prices, Items and Payments for the tables

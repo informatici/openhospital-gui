@@ -946,7 +946,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 			if (patient != null) {
 				Patient pat = patient.getPatient();
-				BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
+				BillBrowserManager billManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
 				List<Bill> patientPendingBills;
 				try {
 					patientPendingBills = billManager.getPendingBills(pat.getCode());
