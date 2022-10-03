@@ -62,7 +62,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 
-import org.aspectj.weaver.ClassAnnotationValue;
 import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
 import org.isf.distype.manager.DiseaseTypeBrowserManager;
@@ -153,7 +152,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private OpdBrowsingModel model;
 	private int[] pColumnWidth = {50, 80, 100, 130, 70, 150, 30, 30, 195, 195, 50};
 	private boolean[] columnResizable = { false, false, false, false, false, true, false, false, true, true, false };
-	private boolean[] columnsVisible = { true, true, true, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
+	private boolean[] columnsVisible = { true, true, GeneralData.OPDEXTENDED, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
 	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
 	private boolean[] columnsBold = { true, true, false, false, true, false, false, false, false, false, false };
 	private int selectedrow;
@@ -902,7 +901,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			}  else if (c == ++i) {
 				return opd.getProgYear();
 			} else if (c == ++i) {
-				return opd.getWard().getDescription();
+				if (GeneralData.OPDEXTENDED) {
+					return opd.getWard().getDescription();
+				}
 			} else if (c == ++i) {
 				if (GeneralData.OPDEXTENDED) {
 					return opd.getDate().format(DATE_TIME_FORMATTER);
