@@ -26,7 +26,7 @@
             and OPD_NEW_PAT = 'N'
             and month(OPD_DATE) = $P{month} and year(OPD_DATE)=$P{year}
             ) as OPDALLDIAG
-            , DISEASE , DISEASETYPE
+            , OH_DISEASE , OH_DISEASETYPE
 where  OPDALLDIAG.OPD_DIS_ID_A = DIS_ID_A
 and DIS_DCL_ID_A = DCL_ID_A
 group by
