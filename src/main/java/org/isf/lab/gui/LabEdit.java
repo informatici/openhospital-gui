@@ -64,7 +64,6 @@ import org.isf.lab.manager.LabRowManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryForPrint;
 import org.isf.lab.model.LaboratoryRow;
-import org.isf.lab.service.LabIoOperations;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
@@ -153,7 +152,7 @@ public class LabEdit extends ModalJFrame {
 	private static final int BUTTON_PANEL_HEIGHT = 40;
 
 	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class, Context.getApplicationContext().getBean(LabIoOperations.class));
+	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
 	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
 
 	private List<ExamRow> eRows = null;
@@ -409,8 +408,7 @@ public class LabEdit extends ModalJFrame {
 	private JComboBox getMatComboBox() {
 		return Optional.ofNullable(matComboBox)
 				.orElseGet(() -> {
-					LabManager labMan = Context.getApplicationContext().getBean(LabManager.class);
-					List<String> materialList = labMan.getMaterialList();
+					List<String> materialList = labManager.getMaterialList();
 					return MatComboBox.withMaterialsAndMaterialFromLabSelected(materialList, lab, insert, labManager::getMaterialTranslated);
 				});
 	}

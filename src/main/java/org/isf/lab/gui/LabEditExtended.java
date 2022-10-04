@@ -503,8 +503,7 @@ public class LabEditExtended extends ModalJFrame {
 	private JComboBox getMatComboBox() {
 		return Optional.ofNullable(matComboBox)
 				.orElseGet(() -> {
-					LabManager labMan = Context.getApplicationContext().getBean(LabManager.class);
-					List<String> materialList = labMan.getMaterialList();
+					List<String> materialList = labManager.getMaterialList();
 					return MatComboBox.withMaterialsAndMaterialFromLabSelected(materialList, lab, insert, labManager::getMaterialTranslated);
 				});
 	}

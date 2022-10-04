@@ -60,7 +60,6 @@ import org.isf.examination.manager.ExaminationBrowserManager;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.medicals.model.Medical;
-import org.isf.medicalstock.manager.MovStockInsertingManager;
 import org.isf.medicalstockward.manager.MovWardBrowserManager;
 import org.isf.medicalstockward.model.MedicalWard;
 import org.isf.medicalstockward.model.MovementWard;
@@ -265,8 +264,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return jRadioUse;
 	}
 
-	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
-	
 	class StockMovModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;

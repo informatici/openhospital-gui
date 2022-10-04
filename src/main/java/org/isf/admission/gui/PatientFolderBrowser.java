@@ -66,7 +66,6 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
-import org.isf.lab.service.LabIoOperations;
 import org.isf.medstockmovtype.gui.MedicalsrMovPatList;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
@@ -890,7 +889,7 @@ public class PatientFolderBrowser extends ModalJFrame
 		private static final long serialVersionUID = -8245833681073162426L;
 
 		public LabBrowserModel() {
-			LabManager lbm = Context.getApplicationContext().getBean(LabManager.class, Context.getApplicationContext().getBean(LabIoOperations.class));
+			LabManager lbm = Context.getApplicationContext().getBean(LabManager.class);
 			try {
 				labList = lbm.getLaboratory(patient);
 				getOlderDate(labList, "examDate");

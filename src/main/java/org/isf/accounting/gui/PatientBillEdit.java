@@ -1025,7 +1025,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							user);                                       //User
 
 					try {
-						BillBrowserManager billManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
 						billManager.updateBill(updateBill, billItems, payItems);
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex, PatientBillEdit.this);
