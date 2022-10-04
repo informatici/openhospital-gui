@@ -63,7 +63,6 @@ import javax.swing.table.DefaultTableModel;
 import org.isf.accounting.gui.PatientBillEdit;
 import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
-import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.admission.model.AdmittedPatient;
@@ -946,7 +945,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 
 			if (patient != null) {
 				Patient pat = patient.getPatient();
-				BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
+				BillBrowserManager billManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
 				List<Bill> patientPendingBills;
 				try {
 					patientPendingBills = billManager.getPendingBills(pat.getCode());
