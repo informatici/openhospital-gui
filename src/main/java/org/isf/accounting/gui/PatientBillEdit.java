@@ -380,7 +380,10 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		this.thisBill = bill;
 		billDate = bill.getDate();
 		try {
-			billItems = billBrowserManager.getItems(thisBill.getId());
+			billItems = 
+      
+      
+      .getItems(thisBill.getId());
 			payItems = billBrowserManager.getPayments(thisBill.getId());
 			othPrices = pricesOthersManager.getOthers();
 		} catch (OHServiceException e) {

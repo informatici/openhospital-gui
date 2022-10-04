@@ -891,6 +891,7 @@ public class PatientFolderBrowser extends ModalJFrame
 		private static final long serialVersionUID = -8245833681073162426L;
 
 		public LabBrowserModel() {
+
 			try {
 				labList = labManager.getLaboratory(patient);
 				getOlderDate(labList, "examDate");
