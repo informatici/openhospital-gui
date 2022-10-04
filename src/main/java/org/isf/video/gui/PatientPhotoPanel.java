@@ -26,8 +26,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -132,8 +130,6 @@ public class PatientPhotoPanel extends JPanel {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-					
-				
 			});
 
 			box.add(btnDeletePhoto);
