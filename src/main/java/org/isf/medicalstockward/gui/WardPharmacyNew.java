@@ -136,8 +136,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private	ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
-	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
-
+	
 	private JLabel jLabelPatient;
 	private JTextField jTextFieldPatient;
 	private JButton jButtonPickPatient;
