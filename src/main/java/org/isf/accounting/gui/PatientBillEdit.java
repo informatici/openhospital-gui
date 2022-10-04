@@ -69,7 +69,6 @@ import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
 import org.isf.accounting.model.BillItems;
 import org.isf.accounting.model.BillPayments;
-import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.TxtPrinter;
@@ -1026,7 +1025,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							user);                                       //User
 
 					try {
-						BillBrowserManager billManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
 						billManager.updateBill(updateBill, billItems, payItems);
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex, PatientBillEdit.this);
