@@ -97,7 +97,7 @@ public class InsertMalnutrition extends JDialog {
 
 	private boolean inserting;
 	
-	private MalnutritionManager manager = Context.getApplicationContext().getBean(MalnutritionManager.class);
+	private MalnutritionManager malnutritionManager = Context.getApplicationContext().getBean(MalnutritionManager.class);
 
 	InsertMalnutrition(JDialog owner, Malnutrition malnutrition, boolean insert) {
 		super(owner, true);
@@ -186,7 +186,7 @@ public class InsertMalnutrition extends JDialog {
 			if (inserting) {
 				boolean inserted = false;
 				try {
-					inserted = manager.newMalnutrition(maln);
+					inserted = malnutritionManager.newMalnutrition(maln);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
@@ -198,7 +198,7 @@ public class InsertMalnutrition extends JDialog {
 			} else {
 				Malnutrition updatedMaln = null;
 				try {
-					updatedMaln = manager.updateMalnutrition(maln);
+					updatedMaln = malnutritionManager.updateMalnutrition(maln);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}

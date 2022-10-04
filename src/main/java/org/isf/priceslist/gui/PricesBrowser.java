@@ -87,37 +87,37 @@ public class PricesBrowser extends ModalJFrame {
 	private boolean[] columnsResizable = { true, false };
 	private int[] columnWidth = { 400, 150 };
 
-	private PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
+	private PriceListManager priceListManager = Context.getApplicationContext().getBean(PriceListManager.class);
+	private PricesOthersManager pricesOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+	private OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
+
 	private List<PriceList> listArray;
 	private List<Price> priceArray;
 	private PriceList listSelected;
 
 	private PriceNode examNodes;
-	private ExamBrowsingManager examManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 	private List<Exam> examArray;
 
 	private PriceNode opeNodes;
-	private OperationBrowserManager operManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	private List<Operation> operArray;
 
 	private PriceNode medNodes;
-	private MedicalBrowsingManager mediManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private List<Medical> mediArray;
 
 	private PriceNode othNodes;
-	private PricesOthersManager othManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 	private List<PricesOthers> othArray;
-
-	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
 
 	public PricesBrowser() {
 		try {
-			mediArray = mediManager.getMedicals();
-			examArray = examManager.getExams();
-			operArray = operManager.getOperation();
-			listArray = listManager.getLists();
-			priceArray = listManager.getPrices();
-			othArray = othManager.getOthers();
+			mediArray = medicalBrowsingManager.getMedicals();
+			examArray = examBrowsingManager.getExams();
+			operArray = operationBrowserManager.getOperation();
+			listArray = priceListManager.getLists();
+			priceArray = priceListManager.getPrices();
+			othArray = pricesOthersManager.getOthers();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -156,7 +156,7 @@ public class PricesBrowser extends ModalJFrame {
 			jPrintTableButton.addActionListener(actionEvent -> {
 
 				try {
-					printManager.print("PriceList", listManager.convertPrice(listSelected, priceArray), 0);
+					printManager.print("PriceList", priceListManager.convertPrice(listSelected, priceArray), 0);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e, PricesBrowser.this);
 				}
@@ -241,7 +241,7 @@ public class PricesBrowser extends ModalJFrame {
 					List<Price> updateList = convertTreeToArray();
 					boolean updated = false;
 					try {
-						updated = listManager.updatePrices(listSelected, updateList);
+						updated = priceListManager.updatePrices(listSelected, updateList);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -324,12 +324,12 @@ public class PricesBrowser extends ModalJFrame {
 	private void updateFromDB() {
 
 		try {
-			listArray = listManager.getLists();
-			priceArray = listManager.getPrices();
-			examArray = examManager.getExams();
-			operArray = operManager.getOperation();
-			mediArray = mediManager.getMedicals();
-			othArray = othManager.getOthers();
+			listArray = priceListManager.getLists();
+			priceArray = priceListManager.getPrices();
+			examArray = examBrowsingManager.getExams();
+			operArray = operationBrowserManager.getOperation();
+			mediArray = medicalBrowsingManager.getMedicals();
+			othArray = pricesOthersManager.getOthers();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

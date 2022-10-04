@@ -105,6 +105,9 @@ public class OperationEdit extends JDialog {
 		}
 	}
 
+	private OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -259,9 +262,8 @@ public class OperationEdit extends JDialog {
 							MessageDialog.error(null, "angal.common.thecodeistoolongmaxchars.fmt.msg", 10);
 							return;
 						}
-						OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 
-						if (manager.isCodePresent(key)) {
+						if (operationBrowserManager.isCodePresent(key)) {
 							MessageDialog.error(null, "angal.common.thecodeisalreadyinuse.msg");
 							return;
 						}
@@ -270,11 +272,10 @@ public class OperationEdit extends JDialog {
 						MessageDialog.error(null, "angal.common.pleaseinsertavaliddescription.msg");
 						return;
 					}
-					OperationBrowserManager manager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 					if (descriptionTextField.getText().equals(lastdescription)) {
 					} else {
 
-						if (manager.descriptionControl(descriptionTextField.getText(),
+						if (operationBrowserManager.descriptionControl(descriptionTextField.getText(),
 								((OperationType) typeComboBox.getSelectedItem()).getCode())) {
 							MessageDialog.error(null, "angal.operation.operationalreadypresent");
 							return;
@@ -293,12 +294,12 @@ public class OperationEdit extends JDialog {
 
 					boolean result;
 					if (insert) { // inserting
-						result = manager.newOperation(operation);
+						result = operationBrowserManager.newOperation(operation);
 						if (result) {
 							fireOperationInserted();
 						}
 					} else { // updating
-						result = manager.updateOperation(operation);
+						result = operationBrowserManager.updateOperation(operation);
 						if (result) {
 							fireOperationUpdated();
 						}
@@ -402,10 +403,9 @@ public class OperationEdit extends JDialog {
 		if (typeComboBox == null) {
 			typeComboBox = new JComboBox<>();
 			if (insert) {
-				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 				List<OperationType> types;
 				try {
-					types = manager.getOperationType();
+					types = operationTypeBrowserManager.getOperationType();
 
 					for (OperationType elem : types) {
 						typeComboBox.addItem(elem);

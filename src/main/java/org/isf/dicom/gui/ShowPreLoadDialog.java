@@ -81,7 +81,7 @@ class ShowPreLoadDialog extends JDialog {
 	/*
 	 * Managers
 	 */
-	private DicomTypeBrowserManager dicomTypeMan = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
+	private DicomTypeBrowserManager dicomTypeBrowserManager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 
 	public ShowPreLoadDialog(JFrame owner, int numfiles, FileDicom fileDicom, List<Date> dates) {
 		super(owner, true);
@@ -185,7 +185,7 @@ class ShowPreLoadDialog extends JDialog {
 			dicomTypeComboBox = new JComboBox();
 			dicomTypeComboBox.addItem("");
 			try {
-				List<DicomType> dicomTypeList = dicomTypeMan.getDicomType();
+				List<DicomType> dicomTypeList = dicomTypeBrowserManager.getDicomType();
 				for (DicomType dicomType : dicomTypeList) {
 					dicomTypeComboBox.addItem(dicomType);
 				}

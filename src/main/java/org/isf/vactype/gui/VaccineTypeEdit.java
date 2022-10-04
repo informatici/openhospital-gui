@@ -97,7 +97,9 @@ public class VaccineTypeEdit extends JDialog {
 			((VaccineTypeListener) listener).vaccineTypeUpdated(event);
 		}
 	}
-    
+
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -209,10 +211,9 @@ public class VaccineTypeEdit extends JDialog {
 				vaccineType.setCode(codeTextField.getText());
 
 				boolean result;
-				VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 				if (insert) {// inserting
 					try {
-						result = manager.newVaccineType(vaccineType);
+						result = vaccineTypeBrowserManager.newVaccineType(vaccineType);
 						if (result) {
 							fireVaccineInserted();
 							dispose();
@@ -227,7 +228,7 @@ public class VaccineTypeEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = manager.updateVaccineType(vaccineType);
+							result = vaccineTypeBrowserManager.updateVaccineType(vaccineType);
 							if (result) {
 								fireVaccineUpdated();
 								dispose();

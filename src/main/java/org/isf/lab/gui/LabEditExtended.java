@@ -157,9 +157,11 @@ public class LabEditExtended extends ModalJFrame {
 	
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
 	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
-	private LabRowManager lRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
-	private AdmissionBrowserManager admMan = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-	private ExamRowBrowsingManager rowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+	private LabRowManager labRowManager = Context.getApplicationContext().getBean(LabRowManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 
 	private JTextField examTextField;
 
@@ -374,11 +376,10 @@ public class LabEditExtended extends ModalJFrame {
 	 */
 	private PatientComboBox getPatientComboBox(String s) {
 		
-		PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 		try {
 			if (insert) {
 				// TODO: Investigate whether this should be deprecated in favor of getPatient(int page, int size)
-				pat = patBrowser.getPatient();
+				pat = patientBrowserManager.getPatient();
 			}
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
@@ -389,7 +390,7 @@ public class LabEditExtended extends ModalJFrame {
 
 			if (!insert && lab.getPatient() != null) {
 				try {
-					labPat = patBrowser.getPatientAll(lab.getPatient().getCode());
+					labPat = patientBrowserManager.getPatientAll(lab.getPatient().getCode());
 					patientComboBox.addItem(labPat);
 					patientComboBox.setSelectedItem(labPat);
 					patientComboBox.setEnabled(false);
@@ -410,7 +411,7 @@ public class LabEditExtended extends ModalJFrame {
 					setPatient(labPat);
 					Admission admission = null;
 					try {
-						admission = admMan.getCurrentAdmission(labPat);
+						admission = admissionBrowserManager.getCurrentAdmission(labPat);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -468,10 +469,9 @@ public class LabEditExtended extends ModalJFrame {
 	private ExamComboBox getExamComboBox() {
 		if (examComboBox == null) {
 
-			ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 			List<Exam> exams;
 			try {
-				exams = manager.getExams();
+				exams = examBrowsingManager.getExams();
 			} catch (OHServiceException e) {
 				exams = null;
 				OHServiceExceptionUtil.showMessages(e);
@@ -503,8 +503,7 @@ public class LabEditExtended extends ModalJFrame {
 	private JComboBox getMatComboBox() {
 		return Optional.ofNullable(matComboBox)
 				.orElseGet(() -> {
-					LabManager labMan = Context.getApplicationContext().getBean(LabManager.class);
-					List<String> materialList = labMan.getMaterialList();
+					List<String> materialList = labManager.getMaterialList();
 					return MatComboBox.withMaterialsAndMaterialFromLabSelected(materialList, lab, insert, labManager::getMaterialTranslated);
 				});
 	}
@@ -694,7 +693,7 @@ public class LabEditExtended extends ModalJFrame {
 
 		List<ExamRow> rows;
 		try {
-			rows = rowManager.getExamRowByExamCode(examSelected.getCode());
+			rows = examRowBrowsingManager.getExamRowByExamCode(examSelected.getCode());
 		} catch (OHServiceException e) {
 			rows = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -714,7 +713,7 @@ public class LabEditExtended extends ModalJFrame {
 		eRows = null;
 
 		try {
-			eRows = rowManager.getExamRowByExamCode(examId);
+			eRows = examRowBrowsingManager.getExamRowByExamCode(examId);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
@@ -724,7 +723,7 @@ public class LabEditExtended extends ModalJFrame {
 		} else {
 			List<LaboratoryRow> lRows;
 			try {
-				lRows = lRowManager.getLabRowByLabId(lab.getCode());
+				lRows = labRowManager.getLabRowByLabId(lab.getCode());
 			} catch (OHServiceException e) {
 				lRows = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);

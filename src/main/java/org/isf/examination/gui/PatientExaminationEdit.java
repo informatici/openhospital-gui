@@ -187,7 +187,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 	private JTable jTableSummary;
 
-	private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 
 	/**
 	 * Create the dialog.
@@ -268,7 +268,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		bmiStringBuilder.append(bmi);
 		bmiStringBuilder.append("<br /><br />");
 		bmiStringBuilder.append("<font color=\"red\">");
-		bmiStringBuilder.append(examManager.getBMIdescription(bmi));
+		bmiStringBuilder.append(examinationBrowserManager.getBMIdescription(bmi));
 		bmiStringBuilder.append("</font>");
 		bmiStringBuilder.append("</strong>");
 		bmiStringBuilder.append("</body></html>");
@@ -293,16 +293,16 @@ public class PatientExaminationEdit extends ModalJFrame {
 		jTextFieldHGT.setText(patex.getPex_hgt() != null ? String.valueOf(patex.getPex_hgt()) : "" + ExaminationParameters.HGT_INIT);
 		jTextFieldDiuresisVolume.setText(patex.getPex_diuresis() != null ? String.valueOf(patex.getPex_diuresis()) : "" + ExaminationParameters.DIURESIS_INIT);
 		jComboBoxDiuresisType.setSelectedItem(patex.getPex_diuresis_desc() != null ?
-				examManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) :
-				examManager.getDiuresisDescriptionTranslated(ExaminationParameters.DIURESIS_DESC_INIT));
+				examinationBrowserManager.getDiuresisDescriptionTranslated(patex.getPex_diuresis_desc()) :
+				examinationBrowserManager.getDiuresisDescriptionTranslated(ExaminationParameters.DIURESIS_DESC_INIT));
 		jComboBoxBowel.setSelectedItem(patex.getPex_bowel_desc() != null ?
-				examManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc()) :
-				examManager.getBowelDescriptionTranslated(ExaminationParameters.BOWEL_DESC_INIT));
+				examinationBrowserManager.getBowelDescriptionTranslated(patex.getPex_bowel_desc()) :
+				examinationBrowserManager.getBowelDescriptionTranslated(ExaminationParameters.BOWEL_DESC_INIT));
 		jSliderRR.setValue(patex.getPex_rr() != null ? patex.getPex_rr() : ExaminationParameters.RR_INIT);
 		jTextFieldRR.setText(patex.getPex_rr() != null ? String.valueOf(patex.getPex_rr()) : "" + ExaminationParameters.RR_INIT);
 		jComboBoxAuscultation.setSelectedItem(patex.getPex_auscultation() != null ?
-				examManager.getAuscultationTranslated(patex.getPex_auscultation()) :
-				examManager.getAuscultationTranslated(ExaminationParameters.AUSCULTATION_INIT));
+				examinationBrowserManager.getAuscultationTranslated(patex.getPex_auscultation()) :
+				examinationBrowserManager.getAuscultationTranslated(ExaminationParameters.AUSCULTATION_INIT));
 		jTextAreaNote.setText(patex.getPex_note());
 		disableAP();
 		disableHR();
@@ -721,13 +721,13 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JComboBox<String> getJComboBoxDiuresisType() {
 		if (jComboBoxDiuresisType == null) {
 			jComboBoxDiuresisType = new JComboBox<>();
-			List<String> diuresisDescription = examManager.getDiuresisDescriptionList();
+			List<String> diuresisDescription = examinationBrowserManager.getDiuresisDescriptionList();
 			for (String description : diuresisDescription) {
 				jComboBoxDiuresisType.addItem(description);
 			}
 			jComboBoxDiuresisType.addItemListener(itemEvent -> {
 				if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-					patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) itemEvent.getItem()));
+					patex.setPex_diuresis_desc(examinationBrowserManager.getDiuresisDescriptionKey((String) itemEvent.getItem()));
 				}
 			});
 		}
@@ -737,13 +737,13 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JComboBox<String> getJComboBoxBowel() {
 		if (jComboBoxBowel == null) {
 			jComboBoxBowel = new JComboBox<>();
-			List<String> bowelDescription = examManager.getBowelDescriptionList();
+			List<String> bowelDescription = examinationBrowserManager.getBowelDescriptionList();
 			for (String description : bowelDescription) {
 				jComboBoxBowel.addItem(description);
 			}
 			jComboBoxBowel.addItemListener(itemEvent -> {
 				if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-					patex.setPex_bowel_desc(examManager.getBowelDescriptionKey((String) itemEvent.getItem()));
+					patex.setPex_bowel_desc(examinationBrowserManager.getBowelDescriptionKey((String) itemEvent.getItem()));
 				}
 			});
 		}
@@ -1164,13 +1164,13 @@ public class PatientExaminationEdit extends ModalJFrame {
 	private JComboBox<String> getJComboBoxAuscultation() {
 		if (jComboBoxAuscultation == null) {
 			jComboBoxAuscultation = new JComboBox<>();
-			List<String> auscultationList = examManager.getAuscultationList();
+			List<String> auscultationList = examinationBrowserManager.getAuscultationList();
 			for (String description : auscultationList) {
 				jComboBoxAuscultation.addItem(description);
 			}
 			jComboBoxAuscultation.addItemListener(e -> {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					patex.setPex_auscultation(examManager.getAuscultationKey((String) e.getItem()));
+					patex.setPex_auscultation(examinationBrowserManager.getAuscultationKey((String) e.getItem()));
 				}
 			});
 		}
@@ -1318,7 +1318,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 						patexList.add((PatientExamination) jTableSummary.getModel().getValueAt(j, -1));
 					}
 					try {
-						examManager.remove(patexList);
+						examinationBrowserManager.remove(patexList);
 					} catch (OHServiceException ohServiceException) {
 						MessageDialog.showExceptions(ohServiceException);
 					} finally {
@@ -1465,7 +1465,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 		public void actionPerformed(ActionEvent actionEvent) {
 
 			try {
-				examManager.saveOrUpdate(patex);
+				examinationBrowserManager.saveOrUpdate(patex);
 				modified = false;
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
@@ -1614,7 +1614,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		private void enableBowel() {
 			jComboBoxBowel.setEnabled(true);
-			patex.setPex_bowel_desc(examManager.getBowelDescriptionKey((String) jComboBoxBowel.getSelectedItem()));
+			patex.setPex_bowel_desc(examinationBrowserManager.getBowelDescriptionKey((String) jComboBoxBowel.getSelectedItem()));
 			modified = true;
 		}
 	}
@@ -1670,7 +1670,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		private void enableDiuresisType() {
 			jComboBoxDiuresisType.setEnabled(true);
-			patex.setPex_diuresis_desc(examManager.getDiuresisDescriptionKey((String) jComboBoxDiuresisType.getSelectedItem()));
+			patex.setPex_diuresis_desc(examinationBrowserManager.getDiuresisDescriptionKey((String) jComboBoxDiuresisType.getSelectedItem()));
 			modified = true;
 		}
 	}
@@ -1763,7 +1763,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		private void enableAuscultation() {
 			jComboBoxAuscultation.setEnabled(true);
-			patex.setPex_auscultation(examManager.getAuscultationKey((String) jComboBoxAuscultation.getSelectedItem()));
+			patex.setPex_auscultation(examinationBrowserManager.getAuscultationKey((String) jComboBoxAuscultation.getSelectedItem()));
 			modified = true;
 		}
 	}
@@ -1951,7 +1951,6 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		private static final long serialVersionUID = 1L;
 
-		private ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 		private List<PatientExamination> patexList = null;
 
 		public JTableModelSummary() {
@@ -1960,7 +1959,7 @@ public class PatientExaminationEdit extends ModalJFrame {
 
 		public void reloadData() {
 			try {
-				patexList = examManager.getLastNByPatID(patex.getPatient().getCode(), ExaminationParameters.LIST_SIZE);
+				patexList = examinationBrowserManager.getLastNByPatID(patex.getPatient().getCode(), ExaminationParameters.LIST_SIZE);
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -2013,9 +2012,9 @@ public class PatientExaminationEdit extends ModalJFrame {
 			pressurStringBuilder.append(patientExamination.getPex_ap_min() == null ? "-" : patientExamination.getPex_ap_min())
 					.append(" / ").append(patientExamination.getPex_ap_max() == null ? "-" : patientExamination.getPex_ap_max());
 			String datetime = DATE_TIME_FORMATTER.format(patientExamination.getPex_date());
-			String diuresis = patientExamination.getPex_diuresis_desc() == null ? "-" : examManager.getDiuresisDescriptionTranslated(patientExamination.getPex_diuresis_desc());
-			String bowel = patientExamination.getPex_bowel_desc() == null ? "-" : examManager.getBowelDescriptionTranslated(patientExamination.getPex_bowel_desc());
-			String ausc = patientExamination.getPex_auscultation() == null ? "-" : examManager.getAuscultationTranslated(patientExamination.getPex_auscultation());
+			String diuresis = patientExamination.getPex_diuresis_desc() == null ? "-" : examinationBrowserManager.getDiuresisDescriptionTranslated(patientExamination.getPex_diuresis_desc());
+			String bowel = patientExamination.getPex_bowel_desc() == null ? "-" : examinationBrowserManager.getBowelDescriptionTranslated(patientExamination.getPex_bowel_desc());
+			String ausc = patientExamination.getPex_auscultation() == null ? "-" : examinationBrowserManager.getAuscultationTranslated(patientExamination.getPex_auscultation());
 			String note = patientExamination.getPex_note();
 			if (c == -1) {
 				return patientExamination;

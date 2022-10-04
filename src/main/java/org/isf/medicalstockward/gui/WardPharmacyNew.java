@@ -120,10 +120,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.changethepatientassociatedwiththismovement")); //$NON-NLS-1$
 		jButtonTrashPatient.setEnabled(true);
 		
-		ExaminationBrowserManager exm = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-		
 		try {
-			Optional.ofNullable(exm.getLastByPatID(patientSelected.getCode()))
+			Optional.ofNullable(examinationBrowserManager.getLastByPatID(patientSelected.getCode()))
 			.map(lastExam -> lastExam.getPex_weight())
 			.map(weight -> weight.floatValue())
 			.ifPresent(w -> patientWeight = w);
@@ -135,6 +133,12 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	}
 	
 	private static final long serialVersionUID = 1L;
+
+	private	ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
+	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
+
 	private JLabel jLabelPatient;
 	private JTextField jTextFieldPatient;
 	private JButton jButtonPickPatient;
@@ -183,8 +187,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 	private JTextField searchTextField;
 	private JButton searchButton;
 	private JComboBox jComboBoxMedicals;
-
-	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 
 	public WardPharmacyNew(JFrame owner, Ward ward, List<MedicalWard> drugs) {
 		super(owner, true);
@@ -265,8 +267,6 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		return jRadioUse;
 	}
 
-	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
-	
 	class StockMovModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
@@ -624,7 +624,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 								MessageBundle.getMessage("angal.medicalstockwardedit.pieces"), wardTo, null, medItem.getLot()));
 					}
 
-					wardManager.newMovementWard(manyMovementWard);
+					movWardBrowserManager.newMovementWard(manyMovementWard);
 					fireMovementWardInserted();
 					dispose();
 				} catch (OHServiceException ex) {
@@ -841,10 +841,9 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 		if (wardBox == null) {
 			wardBox = new JComboBox();
 			wardBox.setPreferredSize(new Dimension(300, 30));
-			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			List<Ward> wardList = null;
 			try {
-				wardList = wbm.getWards();
+				wardList = wardBrowserManager.getWards();
 			} catch (OHServiceException ex) {
 				LOGGER.error(ex.getMessage(), ex);
 			}

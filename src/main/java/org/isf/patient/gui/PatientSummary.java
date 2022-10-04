@@ -64,7 +64,7 @@ public class PatientSummary {
 	private int borderThickness = 10;
 	private int imageMaxWidth = 140;
 
-	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	public PatientSummary(Patient patient) {
 		super();
@@ -314,7 +314,7 @@ public class PatientSummary {
 		if (patient.getMaritalStatus().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getMaritalStatus().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
+			l = new JLabel(patientBrowserManager.getMaritalTranslated(patient.getMaritalStatus()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
@@ -326,7 +326,7 @@ public class PatientSummary {
 		if (patient.getProfession().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getProfession().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel(patientManager.getProfessionTranslated(patient.getProfession()));
+			l = new JLabel(patientBrowserManager.getProfessionTranslated(patient.getProfession()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);

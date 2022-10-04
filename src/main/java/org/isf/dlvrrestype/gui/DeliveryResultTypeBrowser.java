@@ -66,7 +66,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	private JTable jTable = null;
 	private DeliveryResultTypeBrowserModel model;
 	private int selectedrow;
-	private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
+	private DeliveryResultTypeBrowserManager deliveryResultTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 	private DeliveryResultType deliveryresultType = null;
 	private final JFrame myFrame;
 	
@@ -178,7 +178,7 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 					DeliveryResultType resultType = (DeliveryResultType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.dlvrrestype.deletedeliveryresulttype.fmt.msg", resultType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryResultType(resultType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (deliveryResultTypeBrowserManager.deleteDeliveryResultType(resultType))) {
 							pDeliveryResultType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -205,11 +205,10 @@ public class DeliveryResultTypeBrowser extends ModalJFrame implements DeliveryRe
 	class DeliveryResultTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 
 		public DeliveryResultTypeBrowserModel() {
 			try {
-				pDeliveryResultType = manager.getDeliveryResultType();
+				pDeliveryResultType = deliveryResultTypeBrowserManager.getDeliveryResultType();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

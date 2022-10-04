@@ -81,7 +81,7 @@ public class TherapyEntryForm extends JDialog {
 	/*
 	 * Managers
 	 */
-	private MedicalBrowsingManager medBrowser = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private TherapyManager therapyManager = Context.getApplicationContext().getBean(TherapyManager.class);
 
 	/*
@@ -156,7 +156,7 @@ public class TherapyEntryForm extends JDialog {
 		setIconImage(new ImageIcon("./rsc/icons/oh.png").getImage());
 		inserting = th == null;
 		try {
-			this.medArray = medBrowser.getMedicals();
+			this.medArray = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e) {
 			this.medArray = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e, TherapyEntryForm.this);

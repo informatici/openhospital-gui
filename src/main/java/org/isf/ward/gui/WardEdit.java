@@ -96,6 +96,8 @@ public class WardEdit extends JDialog {
 		}
 	}
 
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -374,7 +376,6 @@ public class WardEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 
 			okButton.addActionListener(actionEvent -> {
-				WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 				try {
 					beds = Integer.parseInt(bedsTextField.getText());
@@ -433,7 +434,7 @@ public class WardEdit extends JDialog {
 				Ward savedWard;
 				if (insert) { // inserting
 					try {
-						savedWard = manager.newWard(ward);
+						savedWard = wardBrowserManager.newWard(ward);
 						if (savedWard != null) {
 							ward.setLock(savedWard.getLock());
 							result = true;
@@ -446,7 +447,7 @@ public class WardEdit extends JDialog {
 					}
 				} else {
 					try { // updating
-						savedWard = manager.updateWard(ward);
+						savedWard = wardBrowserManager.updateWard(ward);
 						if (savedWard != null) {
 							ward.setLock(savedWard.getLock());
 							result = true;

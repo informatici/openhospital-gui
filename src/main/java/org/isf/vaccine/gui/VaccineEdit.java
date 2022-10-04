@@ -100,6 +100,9 @@ public class VaccineEdit extends JDialog {
 		}
 	}
 
+	private VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -224,10 +227,9 @@ public class VaccineEdit extends JDialog {
 
 				boolean result = false;
 				Vaccine savedVaccine;
-				VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 				if (insert) {
 					try {
-						savedVaccine = manager.newVaccine(vaccine);
+						savedVaccine = vaccineBrowserManager.newVaccine(vaccine);
 						if (savedVaccine != null) {
 							vaccine.setLock(savedVaccine.getLock());
 							result = true;
@@ -244,7 +246,7 @@ public class VaccineEdit extends JDialog {
 					}
 				} else {
 					try {
-						savedVaccine = manager.updateVaccine(vaccine);
+						savedVaccine = vaccineBrowserManager.updateVaccine(vaccine);
 						if (savedVaccine != null) {
 							vaccine.setLock(savedVaccine.getLock());
 							result = true;
@@ -304,10 +306,9 @@ public class VaccineEdit extends JDialog {
 	private JComboBox<VaccineType> getvaccineTypeComboBox() {
 		if (vaccineTypeComboBox == null) {
 			vaccineTypeComboBox = new JComboBox<>();
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			List<VaccineType> types = null;
 			try {
-				types = manager.getVaccineType();
+				types = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

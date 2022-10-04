@@ -82,7 +82,9 @@ public class ExamRowEdit extends JDialog {
 			((ExamRowListener) listener).examRowInserted(event);
 		}
 	}
-	
+
+	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -192,9 +194,8 @@ public class ExamRowEdit extends JDialog {
 				examRow.setDescription(descriptionTextField.getText().toUpperCase());
 				examRow.setExamCode(exam);
 
-				ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 				try {
-					if (manager.newExamRow(examRow)) {
+					if (examRowBrowsingManager.newExamRow(examRow)) {
 						fireExamRowInserted();
 						dispose();
 					}

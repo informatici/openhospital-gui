@@ -68,7 +68,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 	private JTable jTable = null;
 	private MedicaldsrstockmovTypeBrowserModel model;
 	private int selectedrow;
-	private MedicaldsrstockmovTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 	private MovementType medicaldsrstockmovType = null;
 	private final JFrame myFrame;
 	
@@ -183,7 +183,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 						boolean deleted;
 
 						try {
-							deleted = manager.deleteMedicaldsrstockmovType(movType);
+							deleted = medicaldsrstockmovTypeBrowserManager.deleteMedicaldsrstockmovType(movType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -217,7 +217,7 @@ public class MedicaldsrstockmovTypeBrowser extends ModalJFrame implements Medica
 
 		public MedicaldsrstockmovTypeBrowserModel() {
 			try {
-				pMedicaldsrstockmovType = manager.getMedicaldsrstockmovType();
+				pMedicaldsrstockmovType = medicaldsrstockmovTypeBrowserManager.getMedicaldsrstockmovType();
 			} catch (OHServiceException e) {
 				pMedicaldsrstockmovType = null;
 				OHServiceExceptionUtil.showMessages(e);

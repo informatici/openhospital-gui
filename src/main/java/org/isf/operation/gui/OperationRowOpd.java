@@ -49,7 +49,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 		if (myOpd != null) {
 			List<OperationRow> res = new ArrayList<>();
 			try {
-				res = opeRowManager.getOperationRowByOpd(myOpd);
+				res = operationRowBrowserManager.getOperationRowByOpd(myOpd);
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
@@ -69,7 +69,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 		OperationRow operationRow = new OperationRow();
 		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		if (this.comboResult.getSelectedItem() != null) {
-			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			operationRow.setOpResult(opResult);
 		} else {
 			operationRow.setOpResult(""); //$NON-NLS-1$
@@ -93,7 +93,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 			OperationRow opeInter = oprowData.get(index);
 			opeInter.setOpDate(this.textDate.getLocalDateTime());
 			opeInter.setOpResult(this.comboResult.getSelectedItem().toString());
-			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
@@ -110,13 +110,13 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 	// used by addToForm()
 	@Override
 	public List<Operation> getOperationCollection() throws OHServiceException {
-		return opeManager.getOperationOpd();
+		return operationBrowserManager.getOperationOpd();
 	}
 
 	@Override
 	public void surgeryUpdated(AWTEvent e, Opd opd) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, opd);
+			saveAllOpeRow(oprowData, operationRowBrowserManager, opd);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
@@ -125,7 +125,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 	@Override
 	public void surgeryInserted(AWTEvent e, Opd opd) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, opd);
+			saveAllOpeRow(oprowData, operationRowBrowserManager, opd);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}

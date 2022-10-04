@@ -67,7 +67,7 @@ class PrivilegeTree extends JDialog {
 
 	private UserGroup aGroup;
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public PrivilegeTree(UserGroupBrowsing parent, UserGroup aGroup) {
 		super(parent, MessageBundle.getMessage("angal.groupsbrowser.menuitembrowser.title"), true);
@@ -78,13 +78,13 @@ class PrivilegeTree extends JDialog {
 
 		List<UserMenuItem> myMenu = null;
 		try {
-			myMenu = manager.getGroupMenu(aGroup);
+			myMenu = userBrowsingManager.getGroupMenu(aGroup);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		List<UserMenuItem> rootMenu = null;
 		try {
-			rootMenu = manager.getGroupMenu(new UserGroup("admin", ""));
+			rootMenu = userBrowsingManager.getGroupMenu(new UserGroup("admin", ""));
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -185,7 +185,7 @@ class PrivilegeTree extends JDialog {
 				}
 			}
 			try {
-				manager.setGroupMenu(aGroup, newUserMenu);
+				userBrowsingManager.setGroupMenu(aGroup, newUserMenu);
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}

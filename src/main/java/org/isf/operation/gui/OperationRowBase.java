@@ -84,12 +84,13 @@ abstract class OperationRowBase extends JPanel {
 	protected List<Operation> operationsOPD;
 	protected List<Operation> operationsAll;
 
-	protected OperationBrowserManager opeManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-	protected OperationRowBrowserManager opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
+	protected OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	protected OperationRowBrowserManager operationRowBrowserManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
+
 	protected OhTableOperationModel<org.isf.operation.model.OperationRow> modelOhOpeRow;
 	protected List<org.isf.operation.model.OperationRow> oprowData = new ArrayList<>();
 
-	protected List<String> operationResults = opeManager.getResultDescriptionList();
+	protected List<String> operationResults = operationBrowserManager.getResultDescriptionList();
 	protected OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 	protected JTable tableData;
 
@@ -158,7 +159,7 @@ abstract class OperationRowBase extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					operationsOPD = opeManager.getOperation();
+					operationsOPD = operationBrowserManager.getOperation();
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 				}
@@ -431,7 +432,7 @@ abstract class OperationRowBase extends JPanel {
 		/* ***** resultat **** */
 		int index = 0;
 		for (int i = 0; i < operationResults.size(); i++) {
-			if (opeRow.getOpResult() != null && (opeManager.getResultDescriptionKey(operationResults.get(i) + "")).equals(opeRow.getOpResult())) { //$NON-NLS-1$
+			if (opeRow.getOpResult() != null && (operationBrowserManager.getResultDescriptionKey(operationResults.get(i) + "")).equals(opeRow.getOpResult())) { //$NON-NLS-1$
 				index = i;
 			}
 		}
@@ -451,7 +452,7 @@ abstract class OperationRowBase extends JPanel {
 				if (idOpe > 0) {
 					boolean result;
 					try {
-						result = opeRowManager.deleteOperationRow(operationRow);
+						result = operationRowBrowserManager.deleteOperationRow(operationRow);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 						return;

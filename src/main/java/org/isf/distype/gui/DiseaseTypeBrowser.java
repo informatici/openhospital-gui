@@ -65,7 +65,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 	private JTable jTable = null;
 	private DiseaseTypeBrowserModel model;
 	private int selectedrow;
-	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	private DiseaseType diseaseType = null;
 	private final JFrame myFrame;
 	
@@ -176,7 +176,7 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 					DiseaseType diseaseType = (DiseaseType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.distype.deletediseasetype.fmt.msg", diseaseType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDiseaseType(diseaseType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (diseaseTypeBrowserManager.deleteDiseaseType(diseaseType))) {
 							pDiseaseType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -203,11 +203,10 @@ public class DiseaseTypeBrowser extends ModalJFrame implements DiseaseTypeListen
 	class DiseaseTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 		public DiseaseTypeBrowserModel() {
 			try {
-				pDiseaseType = manager.getDiseaseType();
+				pDiseaseType = diseaseTypeBrowserManager.getDiseaseType();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

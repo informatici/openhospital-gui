@@ -72,7 +72,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 	private JTable jTable = null;
 	private ExamTypeBrowserModel model;
 	private int selectedrow;
-	private ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
+	private ExamTypeBrowserManager examTypeBrowserManager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
 	private ExamType examType = null;
 	private final JFrame myFrame;
 	
@@ -187,7 +187,7 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 
 						boolean deleted;
 						try {
-							deleted = manager.deleteExamType(examType);
+							deleted = examTypeBrowserManager.deleteExamType(examType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -220,9 +220,8 @@ public class ExamTypeBrowser extends ModalJFrame implements ExamTypeListener {
 		private static final long serialVersionUID = 1L;
 
 		public ExamTypeBrowserModel() {
-			ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
 			try {
-				pExamType = manager.getExamType();
+				pExamType = examTypeBrowserManager.getExamType();
 			} catch (OHServiceException e) {
 				pExamType = null;
 				OHServiceExceptionUtil.showMessages(e);

@@ -66,7 +66,9 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 	private JTable jTable = null;
 	private OperationTypeBrowserModel model;
 	private int selectedrow;
-	private OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
+	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
 	private OperationType operationType = null;
 	private final JFrame myFrame;
 
@@ -180,7 +182,7 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 
 						boolean deleted;
 						try {
-							deleted = manager.deleteOperationType(opType);
+							deleted = operationTypeBrowserManager.deleteOperationType(opType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -213,9 +215,8 @@ public class OperationTypeBrowser extends ModalJFrame implements OperationTypeLi
 		private static final long serialVersionUID = 1L;
 
 		public OperationTypeBrowserModel() {
-			OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 			try {
-				pOperationType = manager.getOperationType();
+				pOperationType = operationTypeBrowserManager.getOperationType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 				pOperationType = null;

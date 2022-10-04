@@ -110,10 +110,10 @@ public class PatVacEdit extends JDialog {
 
 	private JPanel centerPanel;
 
-	private VaccineBrowserManager vaccineManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
-	private PatVacManager patientVaccineManager = Context.getApplicationContext().getBean(PatVacManager.class);
-	private VaccineTypeBrowserManager vaccineTypeManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
-	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+	private PatVacManager patVacManager = Context.getApplicationContext().getBean(PatVacManager.class);
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	public PatVacEdit(JFrame myFrameIn, PatientVaccine patientVaccineIn, boolean action) {
 		super(myFrameIn, true);
@@ -127,7 +127,7 @@ public class PatVacEdit extends JDialog {
 	private int getPatientVaccineYMaxProg() {
 		
 		try {
-			return patientVaccineManager.getProgYear(0);
+			return patVacManager.getProgYear(0);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 			return 0;
@@ -405,7 +405,7 @@ public class PatVacEdit extends JDialog {
 
 			List<VaccineType> types = null;
 			try {
-				types = vaccineTypeManager.getVaccineType();
+				types = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
@@ -447,9 +447,9 @@ public class PatVacEdit extends JDialog {
 		List<Vaccine> allVac = null;
 		try {
 			if (((VaccineType) vaccineTypeComboBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.patvac.allvaccinetype"))) {
-				allVac = vaccineManager.getVaccine();
+				allVac = vaccineBrowserManager.getVaccine();
 			} else {
-				allVac = vaccineManager.getVaccine(((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode());
+				allVac = vaccineBrowserManager.getVaccine(((VaccineType) vaccineTypeComboBox.getSelectedItem()).getCode());
 			}
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
@@ -554,14 +554,14 @@ public class PatVacEdit extends JDialog {
 
 		if (GeneralData.ENHANCEDSEARCH) {
 			try {
-				patientList = patientManager.getPatientsByOneOfFieldsLike(regExp);
+				patientList = patientBrowserManager.getPatientsByOneOfFieldsLike(regExp);
 			} catch (OHServiceException ex) {
 				OHServiceExceptionUtil.showMessages(ex);
 				patientList = new ArrayList<>();
 			}
 		} else {
 			try {
-				patientList = patientManager.getPatient();
+				patientList = patientBrowserManager.getPatient();
 			} catch (OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
 			}
@@ -730,14 +730,14 @@ public class PatVacEdit extends JDialog {
 				// handling db insert/update
 				if (insert) {
 					try {
-						result = patientVaccineManager.newPatientVaccine(patVac);
+						result = patVacManager.newPatientVaccine(patVac);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 						return;
 					}
 				} else {
 					try {
-						result = patientVaccineManager.updatePatientVaccine(patVac);
+						result = patVacManager.updatePatientVaccine(patVac);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 						return;

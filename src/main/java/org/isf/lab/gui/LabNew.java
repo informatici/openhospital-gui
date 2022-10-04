@@ -180,18 +180,18 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 	private Laboratory selectedLab = null;
 
 	//Admission
-	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	
 	//Materials
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
 	private List<String> matList = labManager.getMaterialList();
 	
 	//Exams (ALL)
-	private ExamBrowsingManager exaManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 	private List<Exam> exaArray;
 	
 	//Results (ALL)
-	private ExamRowBrowsingManager examRowManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 
 	//Arrays for this Patient
 	private List<List<LaboratoryRow>> examResults = new ArrayList<>();
@@ -201,7 +201,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
                 
 	public LabNew(JFrame owner) {
 		try {
-			exaArray = exaManager.getExams();
+			exaArray = examBrowsingManager.getExams();
 		} catch (OHServiceException e) {
 			exaArray = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -218,7 +218,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
         patientSelected = patient;
         
 		try {
-			exaArray = exaManager.getExams();
+			exaArray = examBrowsingManager.getExams();
 		} catch (OHServiceException e) {
 			exaArray = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -327,7 +327,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 	private String getIsAdmitted() {
 		Admission adm = new Admission();
 		try {
-			adm = admissionManager.getCurrentAdmission(patientSelected);
+			adm = admissionBrowserManager.getCurrentAdmission(patientSelected);
 		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -376,7 +376,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 				txtResultValue.setPreferredSize(new Dimension(EAST_WIDTH, COMPONENT_HEIGHT));
 				List<ExamRow> exaRowArray;
 				try {
-					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
+					exaRowArray = examRowBrowsingManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
 					LOGGER.error(ex.getMessage(), ex);
@@ -416,7 +416,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 				jPanelResults.add(resultsContainerScroll);
 				List<ExamRow> exaRowArray;
 				try {
-					exaRowArray = examRowManager.getExamRowByExamCode(selectedExam.getCode());
+					exaRowArray = examRowBrowsingManager.getExamRowByExamCode(selectedExam.getCode());
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
 					LOGGER.error(ex.getMessage(), ex);

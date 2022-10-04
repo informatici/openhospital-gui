@@ -99,7 +99,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 	private JPanel jContentPanel;
 	private JPanel buttonPanel;
 	private JTextField searchTextField;
-	private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 
 	public ExamBrowser() {
 		myFrame = this;
@@ -173,7 +173,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
 			List<ExamType> type;
 			try {
-				type = manager.getExamType();	//for efficiency in the sequent for
+				type = examBrowsingManager.getExamType();	//for efficiency in the sequent for
 			} catch (OHServiceException e1) {
 				type = null;
 				OHServiceExceptionUtil.showMessages(e1);
@@ -229,7 +229,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 				boolean deleted;
 
 				try {
-					deleted = manager.deleteExam(examToDelete);
+					deleted = examBrowsingManager.deleteExam(examToDelete);
 				} catch (OHServiceException e1) {
 					deleted = false;
 					OHServiceExceptionUtil.showMessages(e1);
@@ -309,7 +309,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 		
 		public ExamBrowsingModel(String s) {
 			try {
-				pExam = manager.getExamsByTypeDescription(s);
+				pExam = examBrowsingManager.getExamsByTypeDescription(s);
                                 
 			} catch (OHServiceException e) {
 				pExam = null;
@@ -318,7 +318,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 		}
 		public ExamBrowsingModel() {
 			try {
-				pExam = manager.getExams();
+				pExam = examBrowsingManager.getExams();
 			} catch (OHServiceException e) {
 				pExam = null;
 				OHServiceExceptionUtil.showMessages(e);
