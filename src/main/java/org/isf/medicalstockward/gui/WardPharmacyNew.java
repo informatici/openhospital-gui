@@ -216,7 +216,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 			jPanelNorth.setLayout(new BoxLayout(jPanelNorth, BoxLayout.Y_AXIS));
 			jPanelNorth.add(getJPanelPatient());
 			jPanelNorth.add(getJPanelUse());
-                        jPanelNorth.add(getPanelWard());
+			jPanelNorth.add(getPanelWard());
 			ButtonGroup group = new ButtonGroup();
 			group.add(jRadioPatient);
 			group.add(jRadioUse);

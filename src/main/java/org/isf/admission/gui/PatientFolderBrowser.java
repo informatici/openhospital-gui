@@ -773,14 +773,9 @@ public class PatientFolderBrowser extends ModalJFrame
 				}
 			} else if (column == 1) {
 				if (row < admList.size()) {
-					String id = admList.get(row).getWard().getCode();
-					for (Ward elem : ward) {
-						if (elem.getCode().equalsIgnoreCase(id)) {
-							return elem.getDescription();
-						}
-					}
+					return admList.get(row).getWard().getDescription();
 				} else if (row < opdList.size() + admList.size()) {
-					return MessageBundle.getMessage("angal.admission.patientfolder.opd.txt");
+					return opdList.get(row).getWard().getDescription();
 				} else {
 					return MessageBundle.getMessage("angal.admission.patientfolder.examination.txt");
 				}

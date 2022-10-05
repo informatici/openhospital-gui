@@ -471,14 +471,9 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				
 			} else if (column == 1) {				
 				if (row < admList.size()) {
-					String id = admList.get(row).getWard().getCode();
-					for (Ward elem : ward) {
-						if (elem.getCode().equalsIgnoreCase(id)) {
-							return elem.getDescription();
-						}
-					}
+					return admList.get(row).getWard().getDescription();
 				} else {
-					return "OPD";
+					return opdList.get(row).getWard().getDescription();
 				}
 			}
 			else if (column == 2) {

@@ -67,6 +67,8 @@ import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.VoLimitedTextField;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
+import org.isf.ward.manager.WardBrowserManager;
+import org.isf.ward.model.Ward;
 
 /**
  * ------------------------------------------
@@ -165,7 +167,7 @@ public class OpdEdit extends JDialog {
 	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private List<DiseaseType> types;
 	private List<Disease> diseasesAll;
 	
@@ -449,6 +451,7 @@ public class OpdEdit extends JDialog {
 						Disease disease = null;
 						Disease disease2 = null;
 						Disease disease3 = null;
+						Ward ward = null;
 
 						if (newPatientCheckBox.isSelected()) {
 							newPatient = 'N';
@@ -505,6 +508,18 @@ public class OpdEdit extends JDialog {
 						opd.setDate(visitDate);
 						opd.setNote("");
 						opd.setUserID(UserBrowsingManager.getCurrentUser());
+						
+						if (insert) {
+							try {
+								if (wardBrowserManager.opdControl(true)) {
+									ward = wardBrowserManager.findWard("OPD");
+									opd.setWard(ward);
+								}
+							} catch (OHServiceException e) {
+								OHServiceExceptionUtil.showMessages(e);
+								return;
+							}
+						}
 
 						try {
 							if (insert) {    // Insert

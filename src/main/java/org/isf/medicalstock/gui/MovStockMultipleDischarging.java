@@ -738,21 +738,15 @@ public class MovStockMultipleDischarging extends JDialog {
 		if (jComboBoxDestination == null) {
 			jComboBoxDestination = new JComboBox();
 			jComboBoxDestination.addItem(""); //$NON-NLS-1$
-			List<Ward> wards;
+			List<Ward> wardsList;
 			try {
-				wards = wardBrowserManager.getWards();
+				wardsList = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
-				wards = new ArrayList<>();
+				wardsList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			for (Ward ward : wards) {
-				if (GeneralData.INTERNALPHARMACIES) {
-					if (ward.isPharmacy()) {
-						jComboBoxDestination.addItem(ward);
-					}
-				} else {
-					jComboBoxDestination.addItem(ward);
-				}
+			for (Ward elem : wardsList) {
+				jComboBoxDestination.addItem(elem);
 			}
 		}
 		return jComboBoxDestination;
