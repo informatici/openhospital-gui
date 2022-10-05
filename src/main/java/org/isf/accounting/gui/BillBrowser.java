@@ -71,7 +71,6 @@ import org.isf.accounting.gui.totals.UserTotal;
 import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
 import org.isf.accounting.model.BillPayments;
-import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.hospital.manager.HospitalBrowsingManager;
@@ -206,7 +205,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private int year;
 
 	//Bills & Payments
-	private BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
+	private BillBrowserManager billBrowserManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
 	private List<Bill> billPeriod;
 	private List<BillPayments> paymentsPeriod;
 	private List<Bill> billFromPayments;
@@ -226,7 +225,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}
 
 		try {
-			users = billManager.getUsers();
+			users = billBrowserManager.getUsers();
 		} catch (OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
@@ -630,17 +629,17 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		/*
 		 * Bills in the period
 		 */
-		billPeriod = billManager.getBills(dateFrom, dateTo, patient);
+		billPeriod = billBrowserManager.getBills(dateFrom, dateTo, patient);
 
 		/*
 		 * Payments in the period
 		 */
-		paymentsPeriod = billManager.getPayments(dateFrom, dateTo, patient);
+		paymentsPeriod = billBrowserManager.getPayments(dateFrom, dateTo, patient);
 
 		/*
 		 * Bills not in the period but with payments in the period
 		 */
-		billFromPayments = billManager.getBills(paymentsPeriod);
+		billFromPayments = billBrowserManager.getBills(paymentsPeriod);
 	}
 
 	private JButton getJButtonNew() {
@@ -689,7 +688,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				}
 				if (ok == JOptionPane.YES_OPTION) {
 					try {
-						billManager.deleteBill(deleteBill);
+						billBrowserManager.deleteBill(deleteBill);
 					} catch (OHServiceException ohServiceException) {
 						MessageDialog.showExceptions(ohServiceException);
 					}
@@ -1112,7 +1111,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			/*
 			 * Bills in the period
 			 */
-			billPeriod = billManager.getBills(dateFrom, dateTo);
+			billPeriod = billBrowserManager.getBills(dateFrom, dateTo);
 		} catch (OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
@@ -1121,7 +1120,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			/*
 			 * Payments in the period
 			 */
-			paymentsPeriod = billManager.getPayments(dateFrom, dateTo);
+			paymentsPeriod = billBrowserManager.getPayments(dateFrom, dateTo);
 		} catch (OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
@@ -1130,7 +1129,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			/*
 			 * Bills not in the period but with payments in the period
 			 */
-			billFromPayments = billManager.getBills(paymentsPeriod);
+			billFromPayments = billBrowserManager.getBills(paymentsPeriod);
 		} catch (OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
@@ -1141,8 +1140,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		List<BillPayments> paymentsToday = null;
 		if (UserBrowsingManager.getCurrentUser().equals("admin")) {
 			try {
-				billToday = billManager.getBills(dateToday0, dateToday24);
-				paymentsToday = billManager.getPayments(dateToday0, dateToday24);
+				billToday = billBrowserManager.getBills(dateToday0, dateToday24);
+				paymentsToday = billBrowserManager.getPayments(dateToday0, dateToday24);
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -1201,7 +1200,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 		private void loadData(String status) {
 			try {
-				tableArray = new BillDataLoader(billPeriod, billFromPayments, patientParent, billManager).loadBills(status);
+				tableArray = new BillDataLoader(billPeriod, billFromPayments, patientParent, billBrowserManager).loadBills(status);
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error("BillDataLoader error: ", ohServiceException);
 			}

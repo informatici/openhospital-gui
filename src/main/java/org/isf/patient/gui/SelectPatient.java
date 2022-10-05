@@ -115,7 +115,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 	private int[] patColumnsWidth = { 100, 250 };
 	private boolean[] patColumnsResizable = { false, true };
 
-	PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	List<Patient> patArray = new ArrayList<>();
 	List<Patient> patSearch = new ArrayList<>();
 	private String lastKey = "";
@@ -124,7 +124,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			try {
-				patArray = patManager.getPatientsByOneOfFieldsLike(null);
+				patArray = patientBrowserManager.getPatientsByOneOfFieldsLike(null);
 			} catch(OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 				patArray = new ArrayList<>();
@@ -155,7 +155,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			try {
-				patArray = patManager.getPatientsByOneOfFieldsLike(null);
+				patArray = patientBrowserManager.getPatientsByOneOfFieldsLike(null);
 			} catch(OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 				patArray = new ArrayList<>();
@@ -186,7 +186,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 		super(owner, true);
 		if (!GeneralData.ENHANCEDSEARCH) {
 			try {
-				patArray = patManager.getPatientsByOneOfFieldsLike(null);
+				patArray = patientBrowserManager.getPatientsByOneOfFieldsLike(null);
 			} catch(OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 				patArray = new ArrayList<>();
@@ -217,13 +217,13 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (!GeneralData.ENHANCEDSEARCH) {
 			if (!full) {
 				try {
-					patArray = patManager.getPatientsByOneOfFieldsLike(null);
+					patArray = patientBrowserManager.getPatientsByOneOfFieldsLike(null);
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 				}
 			} else {
 				try {
-					patArray = patManager.getPatient();
+					patArray = patientBrowserManager.getPatient();
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 				}
@@ -251,13 +251,13 @@ public class SelectPatient extends JDialog implements PatientListener {
 		if (!GeneralData.ENHANCEDSEARCH) {
 			if (!full) {
 				try {
-					patArray = patManager.getPatientsByOneOfFieldsLike(null);
+					patArray = patientBrowserManager.getPatientsByOneOfFieldsLike(null);
 				} catch (OHServiceException e2) {
 					OHServiceExceptionUtil.showMessages(e2);
 				}
 			} else {
 				try {
-					patArray = patManager.getPatient();
+					patArray = patientBrowserManager.getPatient();
 				} catch (OHServiceException e1) {
 					OHServiceExceptionUtil.showMessages(e1);
 				}
@@ -487,7 +487,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 
 	private Patient reloadSelectedPatient(Integer code) {
 		try {
-			return patManager.getPatientById(code);
+			return patientBrowserManager.getPatientById(code);
 		} catch (OHServiceException ex) {
 			throw new RuntimeException("Unable to load patient");
 		}
@@ -550,7 +550,7 @@ public class SelectPatient extends JDialog implements PatientListener {
 			jSearchButton.setPreferredSize(new Dimension(20, 20));
 			jSearchButton.addActionListener(actionEvent -> {
 				try {
-					patArray = patManager.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
+					patArray = patientBrowserManager.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 				} catch(OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
 					patArray = new ArrayList<>();

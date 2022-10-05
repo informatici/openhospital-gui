@@ -47,7 +47,7 @@ public class OhTableOperationModel<T> implements TableModel {
 
 	List<T> dataList;
 	List<T> filteredList;
-	OperationBrowserManager manageop = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
 	
 	public  OhTableOperationModel(List<T> dataList) {
 		this.dataList = dataList;
@@ -142,7 +142,7 @@ public class OhTableOperationModel<T> implements TableModel {
 					case 1:
 						Operation ope = null;
 						try {
-							ope = manageop.getOperationByCode(opdObj.getOperation().getCode());
+							ope = operationBrowserManager.getOperationByCode(opdObj.getOperation().getCode());
 						} catch (OHServiceException ohServiceException) {
 							LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 						}
@@ -153,7 +153,7 @@ public class OhTableOperationModel<T> implements TableModel {
 						}
 						break;
 					case 2:
-						value = manageop.getResultDescriptionTranslated(opdObj.getOpResult());
+						value = operationBrowserManager.getResultDescriptionTranslated(opdObj.getOpResult());
 						break;
 					case 3:
 						value = opdObj.getTransUnit() + "";

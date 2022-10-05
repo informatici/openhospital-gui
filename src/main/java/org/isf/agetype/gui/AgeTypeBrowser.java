@@ -65,6 +65,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 	private JTable jTable = null;
 	private boolean edit = false;
 
+	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
+
 	/**
 	 * This method initializes
 	 */
@@ -120,9 +122,8 @@ public class AgeTypeBrowser extends ModalJFrame {
 					if (jTable.isEditing()) {
 						jTable.getCellEditor().stopCellEditing();
 					}
-					AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 					try {
-						manager.updateAgeType(pAgeType);
+						ageTypeBrowserManager.updateAgeType(pAgeType);
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e);
 					}
@@ -164,11 +165,10 @@ public class AgeTypeBrowser extends ModalJFrame {
 	class AgeTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private AgeTypeBrowserManager manager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
-		
+
 		public AgeTypeBrowserModel() {
 			try {
-				pAgeType = manager.getAgeType();
+				pAgeType = ageTypeBrowserManager.getAgeType();
 			} catch (OHServiceException e) {
 				pAgeType = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);

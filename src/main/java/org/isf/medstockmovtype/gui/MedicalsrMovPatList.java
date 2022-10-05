@@ -50,7 +50,7 @@ public class MedicalsrMovPatList extends JPanel {
 	private JTable jTableData;
 	private OhTableDrugsModel<MovementWard> modelMedWard;
 	private OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
-	private MovWardBrowserManager movManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
+	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 
 	public MedicalsrMovPatList(Object object) {
 
@@ -68,7 +68,7 @@ public class MedicalsrMovPatList extends JPanel {
 		
 		if (myPatient != null) {
 			try {
-				List<MovementWard> movPat = movManager.getMovementToPatient(myPatient);
+				List<MovementWard> movPat = movWardBrowserManager.getMovementToPatient(myPatient);
 				drugsData = new ArrayList<>();
 				drugsData.addAll(movPat);
 			} catch (OHServiceException ohServiceException) {

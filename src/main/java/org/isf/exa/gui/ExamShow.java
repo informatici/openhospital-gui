@@ -60,6 +60,8 @@ public class ExamShow extends JDialog implements ExamRowListener {
 
 	private static final long serialVersionUID = 1L;
 
+	private ExamRowBrowsingManager examRowBrowsingManager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -163,12 +165,11 @@ public class ExamShow extends JDialog implements ExamRowListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
 					ExamRow row = (ExamRow) (((ExamRowBrowsingModel) model).getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.exa.deleteexamresult.fmt.msg", row.getDescription());
 					if ((answer == JOptionPane.YES_OPTION)) {
 						try {
-							boolean deleted = manager.deleteExamRow(row);
+							boolean deleted = examRowBrowsingManager.deleteExamRow(row);
 
 							if (deleted) {
 								examRowDeleted();
@@ -187,12 +188,10 @@ public class ExamShow extends JDialog implements ExamRowListener {
 
 		private static final long serialVersionUID = 1L;
 
-		private ExamRowBrowsingManager manager = Context.getApplicationContext().getBean(ExamRowBrowsingManager.class);
-
 		public ExamRowBrowsingModel(String aCode) {
 
 			try {
-				pExamRow = manager.getExamRowByExamCode(aCode);
+				pExamRow = examRowBrowsingManager.getExamRowByExamCode(aCode);
 			} catch (OHServiceException e) {
 				pExamRow = null;
 				OHServiceExceptionUtil.showMessages(e);

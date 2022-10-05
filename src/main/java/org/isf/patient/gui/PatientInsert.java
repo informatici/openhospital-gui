@@ -130,7 +130,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 	private JLabel jNextKinLabel = null;
 	private JTextField jNextKinTextField = null;
 	//	private int oldAge;
-	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private JLabel jLabel1 = null;
 	private JLabel jLabel = null;
 	private JLabel jAgeLabel = null;
@@ -269,7 +269,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 								bdate = bdate.minusYears(age);
 								String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
 								try {
-									if (manager.isNamePresent(name)) {
+									if (patientBrowserManager.isNamePresent(name)) {
 										switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
 											case JOptionPane.OK_OPTION:
 												ok = true;
@@ -311,7 +311,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 									patient.setParentTogether('U');
 
 									try {
-										patient = manager.savePatient(patient);
+										patient = patientBrowserManager.savePatient(patient);
 										firePatientInserted(patient);
 										dispose();
 									} catch (OHServiceException ex) {
@@ -326,7 +326,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 					String name = jFirstNameTextField.getText() + " " + jSecondNameTextField.getText();
 					if (!(patient.getName().equals(name))) {
 						try {
-							if (manager.isNamePresent(name)) {
+							if (patientBrowserManager.isNamePresent(name)) {
 								switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
 									case JOptionPane.OK_OPTION:
 										ok = true;
@@ -362,7 +362,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 						patient.setNote(jNoteTextArea.getText());
 
 						try {
-							patient = manager.savePatient(patient);
+							patient = patientBrowserManager.savePatient(patient);
 							firePatientUpdated(patient);
 							dispose();
 						} catch (OHServiceException ex) {

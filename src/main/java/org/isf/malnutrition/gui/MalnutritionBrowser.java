@@ -106,7 +106,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 
 	private Admission adm;
 
-	private MalnutritionManager manager = Context.getApplicationContext().getBean(MalnutritionManager.class);
+	private MalnutritionManager malnutritionManager = Context.getApplicationContext().getBean(MalnutritionManager.class);
 
 	public MalnutritionBrowser(JFrame owner, Admission aAdm) {
 		super(owner, true);
@@ -182,7 +182,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 					} else {
 						boolean deleted;
 						try {
-							deleted = manager.deleteMalnutrition(malnutrition);
+							deleted = malnutritionManager.deleteMalnutrition(malnutrition);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -228,7 +228,7 @@ public class MalnutritionBrowser extends JDialog implements MalnutritionListener
 			
 			if (null != s && !s.isEmpty()) {
 				try {
-					pMaln = manager.getMalnutrition(s);
+					pMaln = malnutritionManager.getMalnutrition(s);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}				

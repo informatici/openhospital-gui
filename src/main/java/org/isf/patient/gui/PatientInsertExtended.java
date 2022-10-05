@@ -146,7 +146,9 @@ public class PatientInsertExtended extends JDialog {
 	private boolean insert;
 	private boolean justSave;
 	private Patient patient;
-	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private AgeTypeBrowserManager ageTypeBrowserManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 
 	// COMPONENTS: Data
 	private JPanel jDataPanel = null;
@@ -177,7 +179,6 @@ public class PatientInsertExtended extends JDialog {
 	private JRadioButton jAgeTypeAge = null;
 	private JRadioButton jAgeTypeBirthDate = null;
 	private JRadioButton jAgeTypeDescription = null;
-	private AgeTypeBrowserManager ageTypeManager = Context.getApplicationContext().getBean(AgeTypeBrowserManager.class);
 
 	// Age Components:
 	private JPanel jAge = null;
@@ -416,7 +417,7 @@ public class PatientInsertExtended extends JDialog {
 				if (insert) {
 					String name = firstName + " " + secondName;
 					try {
-						if (patientManager.isNamePresent(name)) {
+						if (patientBrowserManager.isNamePresent(name)) {
 							switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
 								case JOptionPane.OK_OPTION:
 									ok = true;
@@ -467,8 +468,8 @@ public class PatientInsertExtended extends JDialog {
 							}
 						}
 						patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
-						patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
-						patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
+						patient.setMaritalStatus(patientBrowserManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
+						patient.setProfession(patientBrowserManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
 						if (jInsuranceYes.isSelected()) {
 							patient.setHasInsurance('Y');
 						} else {
@@ -492,7 +493,7 @@ public class PatientInsertExtended extends JDialog {
 						patient.setNote(jNoteTextArea.getText().trim());
 
 						try {
-							patient = patientManager.savePatient(patient);
+							patient = patientBrowserManager.savePatient(patient);
 							firePatientInserted(patient);
 							if (justSave) {
 								insert = false;
@@ -546,8 +547,8 @@ public class PatientInsertExtended extends JDialog {
 						}
 					}
 					patient.setBloodType(jBloodTypeComboBox.getSelectedItem().toString());
-					patient.setMaritalStatus(patientManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
-					patient.setProfession(patientManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
+					patient.setMaritalStatus(patientBrowserManager.getMaritalKey(jMaritalStatusComboBox.getSelectedItem().toString()));
+					patient.setProfession(patientBrowserManager.getProfessionKey(jProfessionComboBox.getSelectedItem().toString()));
 
 					if (jInsuranceYes.isSelected()) {
 						patient.setHasInsurance('Y');
@@ -571,7 +572,7 @@ public class PatientInsertExtended extends JDialog {
 					patient.setNote(jNoteTextArea.getText().trim());
 
 					try {
-						patient = patientManager.savePatient(patient);
+						patient = patientBrowserManager.savePatient(patient);
 						firePatientUpdated(patient);
 						dispose();
 					} catch (final OHServiceException ex) {
@@ -623,7 +624,7 @@ public class PatientInsertExtended extends JDialog {
 
 			if (index > 0) {
 				try {
-					ageType = ageTypeManager.getTypeByCode(index);
+					ageType = ageTypeBrowserManager.getTypeByCode(index);
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
@@ -1021,11 +1022,11 @@ public class PatientInsertExtended extends JDialog {
 		if (jMaritalPanel == null) {
 			jMaritalPanel = new JPanel();
 			jMaritalPanel = setMyBorder(jMaritalPanel, MessageBundle.getMessage("angal.patient.maritalstatus"));
-			jMaritalStatusComboBox = new JComboBox(patientManager.getMaritalList());
+			jMaritalStatusComboBox = new JComboBox(patientBrowserManager.getMaritalList());
 			jMaritalPanel.add(jMaritalStatusComboBox);
 
 			if (!insert) {
-				jMaritalStatusComboBox.setSelectedItem(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
+				jMaritalStatusComboBox.setSelectedItem(patientBrowserManager.getMaritalTranslated(patient.getMaritalStatus()));
 			}
 		}
 		return jMaritalPanel;
@@ -1377,7 +1378,7 @@ public class PatientInsertExtended extends JDialog {
 
 			List<AgeType> ageList;
 			try {
-				ageList = ageTypeManager.getAgeType();
+				ageList = ageTypeBrowserManager.getAgeType();
 			} catch (OHServiceException e) {
 				ageList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
@@ -1678,11 +1679,11 @@ public class PatientInsertExtended extends JDialog {
 		if (jProfessionPanel == null) {
 			jProfessionPanel = new JPanel();
 			jProfessionPanel = setMyBorder(jProfessionPanel, MessageBundle.getMessage("angal.patient.profession"));
-			jProfessionComboBox = new JComboBox(patientManager.getProfessionList());
+			jProfessionComboBox = new JComboBox(patientBrowserManager.getProfessionList());
 			jProfessionPanel.add(jProfessionComboBox);
 
 			if (!insert) {
-				jProfessionComboBox.setSelectedItem(patientManager.getProfessionTranslated(patient.getProfession()));
+				jProfessionComboBox.setSelectedItem(patientBrowserManager.getProfessionTranslated(patient.getProfession()));
 			}
 		}
 		return jProfessionPanel;
@@ -2111,10 +2112,15 @@ public class PatientInsertExtended extends JDialog {
 			jRightPanel = new JPanel(new BorderLayout());
 
 			try {
-				final Image image = patient.getPatientProfilePhoto() != null ? patient.getPatientProfilePhoto().getPhotoAsImage() : null;
-				photoPanel = new PatientPhotoPanel(this, patient.getCode(), image);
+				PatientProfilePhoto photo = this.patientBrowserManager.retrievePatientProfilePhoto(patient);
+				final Image image = photo != null ? photo.getPhotoAsImage() : null;
+				Image scaledImage = image != null ? ImageUtil.scaleImage(image, PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH) : null;
+				photoPanel = new PatientPhotoPanel(this, patient.getCode(), scaledImage);
+
 			} catch (IOException ioException) {
 				LOGGER.error(ioException.getMessage(), ioException);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
 			if (photoPanel != null) {
 				jRightPanel.add(photoPanel, BorderLayout.NORTH);

@@ -69,7 +69,6 @@ import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
 import org.isf.accounting.model.BillItems;
 import org.isf.accounting.model.BillPayments;
-import org.isf.accounting.service.AccountingIoOperations;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.TxtPrinter;
@@ -139,7 +138,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		setPatientSelected(patient);
 		List<Bill> patientPendingBills = new ArrayList<>();
 		try {
-			patientPendingBills = billManager.getPendingBills(patient.getCode());
+			patientPendingBills = billBrowserManager.getPendingBills(patient.getCode());
 		} catch (OHServiceException ohServiceException) {
 			LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 		}
@@ -296,17 +295,17 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private String currencyCod;
 
 	//Prices and Lists (ALL)
-	private PriceListManager prcManager = Context.getApplicationContext().getBean(PriceListManager.class);
+	private PriceListManager priceListManager = Context.getApplicationContext().getBean(PriceListManager.class);
 	private List<Price> prcArray;
 	private List<PriceList> lstArray;
 
 	//PricesOthers (ALL)
-	private PricesOthersManager othManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
+	private PricesOthersManager pricesOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 	private List<PricesOthers> othPrices;
 
 	//Items and Payments (ALL)
-	private BillBrowserManager billManager = new BillBrowserManager(Context.getApplicationContext().getBean(AccountingIoOperations.class));
-	private PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private BillBrowserManager billBrowserManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	//Prices, Items and Payments for the tables
 	private List<BillItems> billItems = new ArrayList<>();
@@ -323,9 +322,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		PatientBillEdit newBill = new PatientBillEdit(null, new Bill(), true);
 		newBill.setVisible(true);
 		try {
-			prcArray = prcManager.getPrices();
-			lstArray = prcManager.getLists();
-			othPrices = othManager.getOthers();
+			prcArray = priceListManager.getPrices();
+			lstArray = priceListManager.getLists();
+			othPrices = pricesOthersManager.getOthers();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
 		}
@@ -341,9 +340,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		newBill.setPatientSelected(patient);
 		newBill.setVisible(true);
 		try {
-			prcArray = prcManager.getPrices();
-			lstArray = prcManager.getLists();
-			othPrices = othManager.getOthers();
+			prcArray = priceListManager.getPrices();
+			lstArray = priceListManager.getLists();
+			othPrices = pricesOthersManager.getOthers();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
 		}
@@ -354,9 +353,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		initCurrencyCod();
 		this.insert = inserting;
 		try {
-			prcArray = prcManager.getPrices();
-			lstArray = prcManager.getLists();
-			othPrices = othManager.getOthers();
+			prcArray = priceListManager.getPrices();
+			lstArray = priceListManager.getLists();
+			othPrices = pricesOthersManager.getOthers();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
 		}
@@ -381,9 +380,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		this.thisBill = bill;
 		billDate = bill.getDate();
 		try {
-			billItems = billManager.getItems(thisBill.getId());
-			payItems = billManager.getPayments(thisBill.getId());
-			othPrices = othManager.getOthers();
+			billItems = billBrowserManager.getItems(thisBill.getId());
+			payItems = billBrowserManager.getPayments(thisBill.getId());
+			othPrices = pricesOthersManager.getOthers();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
 		}
@@ -438,7 +437,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 			Patient patient = null;
 			try {
-				patient = patManager.getPatientById(thisBill.getBillPatient().getCode());
+				patient = patientBrowserManager.getPatientById(thisBill.getBillPatient().getCode());
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -998,7 +997,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							balance.doubleValue(),                       //Balance
 							user);                                       //User
 					try {
-						billManager.newBill(newBill, billItems, payItems);
+						billBrowserManager.newBill(newBill, billItems, payItems);
 						thisBill.setId(newBill.getId());
 					} catch(OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex, PatientBillEdit.this);
@@ -1026,8 +1025,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							user);                                       //User
 
 					try {
-						BillBrowserManager billManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
-						billManager.updateBill(updateBill, billItems, payItems);
+						billBrowserManager.updateBill(updateBill, billItems, payItems);
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex, PatientBillEdit.this);
 						return;
@@ -1561,7 +1559,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 				try {
 					BillItems newItem = new BillItems(0,
-							billManager.getBill(billID),
+							billBrowserManager.getBill(billID),
 							false,
 							"", //$NON-NLS-1$
 							desc,
@@ -1633,7 +1631,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			double amount = prc.getPrice();
 			try {
 				BillItems item = new BillItems(0,
-						billManager.getBill(billID),
+						billBrowserManager.getBill(billID),
 						isPrice,
 						prc.getGroup() + prc.getItem(),
 						prc.getDesc(),
@@ -1684,7 +1682,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		if (qty != 0) {
 			try {
 				BillPayments pay = new BillPayments(0,
-						billManager.getBill(billID),
+						billBrowserManager.getBill(billID),
 						datePay,
 						qty,
 						user);

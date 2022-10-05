@@ -66,7 +66,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 	private JTable jTable = null;
 	private AdmissionTypeBrowserModel model;
 	private int selectedrow;
-	private AdmissionTypeBrowserManager admissionTypeManager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
+	private AdmissionTypeBrowserManager admissionTypeBrowserManager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 	private AdmissionType admissionType = null;
 	private final JFrame myFrame;
 
@@ -177,7 +177,7 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 					AdmissionType admType = (AdmissionType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.admtype.delete.fmt.msg", admType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (admissionTypeManager.deleteAdmissionType(admType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (admissionTypeBrowserManager.deleteAdmissionType(admType))) {
 							pAdmissionType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -204,12 +204,11 @@ public class AdmissionTypeBrowser extends ModalJFrame implements LaboratoryTypeL
 	class AdmissionTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
 		public AdmissionTypeBrowserModel() {
 
 			try {
-				pAdmissionType = manager.getAdmissionType();
+				pAdmissionType = admissionTypeBrowserManager.getAdmissionType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

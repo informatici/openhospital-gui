@@ -84,7 +84,9 @@ public class ListEdit extends JDialog {
 			((ListListener) listener).listUpdated(event);
 		}
 	}
-	
+
+	private PriceListManager priceListManager = Context.getApplicationContext().getBean(PriceListManager.class);
+
 	private static final long serialVersionUID = 1L;
 	private JPanel jPanelData;
 	private JPanel jPanelButtons;
@@ -132,17 +134,16 @@ public class ListEdit extends JDialog {
 				list.setDescription(jTextFieldDescription.getText());
 				list.setCurrency(jTextFieldCurrency.getText());
 
-				PriceListManager listManager = Context.getApplicationContext().getBean(PriceListManager.class);
 				boolean result = false;
 				try {
 					if (insert) {      // inserting
-						result = listManager.newList(list);
+						result = priceListManager.newList(list);
 						if (result) {
 							fireListInserted();
 						}
 					}
 					else {             // updating
-						result = listManager.updateList(list);
+						result = priceListManager.updateList(list);
 						if (result) {
 							fireListUpdated();
 						}

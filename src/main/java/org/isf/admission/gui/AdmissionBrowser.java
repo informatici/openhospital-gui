@@ -185,6 +185,14 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 	}
 
+	private PregnantTreatmentTypeBrowserManager pregnantTreatmentTypeBrowserManager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
+	private DeliveryResultTypeBrowserManager deliveryResultTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
+	private DeliveryTypeBrowserManager deliveryTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+
 	private final OperationRowValidator operationRowValidator = new OperationRowValidator();
 	private final DiseaseFinder diseaseFinder = new DiseaseFinder();
 
@@ -268,8 +276,6 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JPanel yearProgPanel;
 
 	private JComboBox diseaseInBox;
-
-	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 	private List<Disease> diseaseInList = null;
 
@@ -355,8 +361,6 @@ public class AdmissionBrowser extends ModalJFrame {
 
 	private OperationRowAdm operationad;
 
-	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-
 	private JButton searchButton;
 	private JButton searchDiseaseOut1Button;
 	private JButton searchDiseaseOut2Button;
@@ -379,7 +383,7 @@ public class AdmissionBrowser extends ModalJFrame {
 
 		try {
 			diseaseOutList = diseaseBrowserManager.getDiseaseIpdOut();
-			Admission admiss = admissionManager.getCurrentAdmission(patient);
+			Admission admiss = admissionBrowserManager.getCurrentAdmission(patient);
 			//TODO: remove this anti-pattern OperationRowAdm
 			operationad = new OperationRowAdm(admiss);
 			addAdmissionListener(operationad);
@@ -393,7 +397,7 @@ public class AdmissionBrowser extends ModalJFrame {
 		}
 		if (editing) {
 			try {
-				admission = admissionManager.getCurrentAdmission(patient);
+				admission = admissionBrowserManager.getCurrentAdmission(patient);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -454,7 +458,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		try {
-			admission = admissionManager.getAdmission(anAdmission.getId());
+			admission = admissionBrowserManager.getAdmission(anAdmission.getId());
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -701,11 +705,10 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (treatmentPanel == null) {
 			treatmentPanel = new JPanel();
 
-			PregnantTreatmentTypeBrowserManager abm = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 			treatmTypeBox = new JComboBox();
 			treatmTypeBox.addItem("");
 			try {
-				treatmTypeList = abm.getPregnantTreatmentType();
+				treatmTypeList = pregnantTreatmentTypeBrowserManager.getPregnantTreatmentType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -763,11 +766,10 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (deliveryResultTypePanel == null) {
 			deliveryResultTypePanel = new JPanel();
 
-			DeliveryResultTypeBrowserManager drtbm = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 			deliveryResultTypeBox = new JComboBox();
 			deliveryResultTypeBox.addItem("");
 			try {
-				deliveryResultTypeList = drtbm.getDeliveryResultType();
+				deliveryResultTypeList = deliveryResultTypeBrowserManager.getDeliveryResultType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -791,11 +793,10 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (deliveryTypePanel == null) {
 			deliveryTypePanel = new JPanel();
 
-			DeliveryTypeBrowserManager dtbm = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 			deliveryTypeBox = new JComboBox();
 			deliveryTypeBox.addItem("");
 			try {
-				deliveryTypeList = dtbm.getDeliveryType();
+				deliveryTypeList = deliveryTypeBrowserManager.getDeliveryType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -913,12 +914,11 @@ public class AdmissionBrowser extends ModalJFrame {
 		if (wardPanel == null) {
 			wardPanel = new JPanel();
 
-			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			wardBox = new JComboBox<>();
 
 			new WardComboBoxInitializer(
 					wardBox,
-					wbm,
+					wardBrowserManager,
 					patient,
 					saveWard,
 					editing,
@@ -942,7 +942,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					} else {
 						int nextProg = 1;
 						try {
-							nextProg = admissionManager.getNextYProg(wardId);
+							nextProg = admissionBrowserManager.getNextYProg(wardId);
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -952,7 +952,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						int nBeds = ((Ward) wardBox.getSelectedItem()).getBeds();
 						int usedBeds = 0;
 						try {
-							usedBeds = admissionManager.getUsedWardBed(wardId);
+							usedBeds = admissionBrowserManager.getUsedWardBed(wardId);
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -1104,7 +1104,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			admTypeBox.setPreferredSize(new Dimension(PREFERRED_WIDTH_TYPES, PREFERRED_HEIGHT_LINE));
 			admTypeBox.addItem("");
 			try {
-				admTypeList = admissionManager.getAdmissionType();
+				admTypeList = admissionBrowserManager.getAdmissionType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -1449,7 +1449,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			disTypeBox.setPreferredSize(new Dimension(PREFERRED_WIDTH_TYPES, PREFERRED_HEIGHT_LINE));
 			disTypeBox.addItem("");
 			try {
-				disTypeList = admissionManager.getDischargeType();
+				disTypeList = admissionBrowserManager.getDischargeType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -1556,18 +1556,17 @@ public class AdmissionBrowser extends ModalJFrame {
 			jButtonExamination.addActionListener(actionEvent -> {
 
 				PatientExamination patex;
-				ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 
 				PatientExamination lastPatex = null;
 				try {
-					lastPatex = examManager.getLastByPatID(patient.getCode());
+					lastPatex = examinationBrowserManager.getLastByPatID(patient.getCode());
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 				}
 				if (lastPatex != null) {
-					patex = examManager.getFromLastPatientExamination(lastPatex);
+					patex = examinationBrowserManager.getFromLastPatientExamination(lastPatex);
 				} else {
-					patex = examManager.getDefaultPatientExamination(patient);
+					patex = examinationBrowserManager.getDefaultPatientExamination(patient);
 				}
 
 				GenderPatientExamination gpatex = new GenderPatientExamination(patex, patient.getSex() == 'M');
@@ -1844,7 +1843,7 @@ public class AdmissionBrowser extends ModalJFrame {
 					} else {
 						int newKey = -1;
 						try {
-							newKey = admissionManager.newAdmissionReturnKey(admission);
+							newKey = admissionBrowserManager.newAdmissionReturnKey(admission);
 						} catch (OHServiceException exc) {
 							OHServiceExceptionUtil.showMessages(exc);
 						}
@@ -1868,7 +1867,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 					} else {
 						try {
-							result = admissionManager.newAdmission(admission);
+							result = admissionBrowserManager.newAdmission(admission);
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}
@@ -1884,7 +1883,7 @@ public class AdmissionBrowser extends ModalJFrame {
 						OHServiceExceptionUtil.showMessages(new OHServiceException(errors));
 					} else {
 						try {
-							result = admissionManager.updateAdmission(admission);
+							result = admissionBrowserManager.updateAdmission(admission);
 						} catch (OHServiceException ex) {
 							OHServiceExceptionUtil.showMessages(ex);
 						}

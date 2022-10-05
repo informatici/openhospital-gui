@@ -121,7 +121,7 @@ public class ExamEdit extends JDialog {
 	private Exam exam;
 	private boolean insert;
 	
-	private ExamBrowsingManager manager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
     
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -251,7 +251,7 @@ public class ExamEdit extends JDialog {
 					boolean result = false;
 					if (insert) {
 						try {
-							if (manager.isKeyPresent(exam)) {
+							if (examBrowsingManager.isKeyPresent(exam)) {
 								MessageDialog.error(ExamEdit.this, "angal.exa.changethecodebecauseisalreadyinuse");
 								return;
 							}
@@ -259,7 +259,7 @@ public class ExamEdit extends JDialog {
 							OHServiceExceptionUtil.showMessages(e1);
 						}
 						try {
-							result = manager.newExam(exam);
+							result = examBrowsingManager.newExam(exam);
 							if (result) {
 								fireExamInserted();
 							}
@@ -268,7 +268,7 @@ public class ExamEdit extends JDialog {
 						}
 					} else {
 						try {
-							result = manager.updateExam(exam);
+							result = examBrowsingManager.updateExam(exam);
 							if (result) {
 								fireExamUpdated();
 							}
@@ -350,7 +350,7 @@ public class ExamEdit extends JDialog {
 			if (insert) {
 				List<ExamType> types;
 				try {
-					types = manager.getExamType();
+					types = examBrowsingManager.getExamType();
 				} catch (OHServiceException e) {
 					types = null;
 					OHServiceExceptionUtil.showMessages(e);

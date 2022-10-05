@@ -164,10 +164,10 @@ public class OpdEdit extends JDialog {
 	/*
 	 * Managers and Arrays
 	 */
-	private DiseaseTypeBrowserManager typeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
-	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private WardBrowserManager wrdManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private List<DiseaseType> types;
 	private List<Disease> diseasesAll;
 	
@@ -189,8 +189,8 @@ public class OpdEdit extends JDialog {
 		opd = old;
 		insert = inserting;
 		try {
-			types = typeManager.getDiseaseType();
-			diseasesAll = diseaseManager.getDiseaseAll();
+			types = diseaseTypeBrowserManager.getDiseaseType();
+			diseasesAll = diseaseBrowserManager.getDiseaseAll();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -303,10 +303,10 @@ public class OpdEdit extends JDialog {
 		List<Disease> diseases = null;
 		try {
 			if (diseaseTypeBox.getSelectedIndex() == 0) {
-				diseases = diseaseManager.getDiseaseOpd();
+				diseases = diseaseBrowserManager.getDiseaseOpd();
 			} else {
 				String code = ((DiseaseType)diseaseTypeBox.getSelectedItem()).getCode();
-				diseases = diseaseManager.getDiseaseOpd(code);
+				diseases = diseaseBrowserManager.getDiseaseOpd(code);
 			}
 		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
@@ -347,7 +347,7 @@ public class OpdEdit extends JDialog {
 		Disease elem2=null;
 		List<Disease> diseases = null;
 		try {
-			diseases = diseaseManager.getDiseaseOpd();
+			diseases = diseaseBrowserManager.getDiseaseOpd();
 		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -387,7 +387,7 @@ public class OpdEdit extends JDialog {
 		Disease elem2=null;
 		List<Disease> diseases = null;
 		try {
-			diseases = diseaseManager.getDiseaseOpd();
+			diseases = diseaseBrowserManager.getDiseaseOpd();
 		} catch(OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -511,8 +511,8 @@ public class OpdEdit extends JDialog {
 						
 						if (insert) {
 							try {
-								if (wrdManager.opdControl(true)) {
-									ward = wrdManager.findWard("OPD");
+								if (wardBrowserManager.opdControl(true)) {
+									ward = wardBrowserManager.findWard("OPD");
 									opd.setWard(ward);
 								}
 							} catch (OHServiceException e) {
@@ -527,7 +527,7 @@ public class OpdEdit extends JDialog {
 								// remember for later use
 								RememberDates.setLastOpdVisitDate(visitDate);
 
-								result = opdManager.newOpd(opd);
+								result = opdBrowserManager.newOpd(opd);
 								if (result) {
 									fireSurgeryInserted(opd);
 									dispose();
@@ -535,7 +535,7 @@ public class OpdEdit extends JDialog {
 									MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
 								}
 							} else {    // Update
-								Opd updatedOpd = opdManager.updateOpd(opd);
+								Opd updatedOpd = opdBrowserManager.updateOpd(opd);
 								if (updatedOpd != null) {
 									fireSurgeryUpdated(updatedOpd);
 									dispose();
@@ -558,7 +558,7 @@ public class OpdEdit extends JDialog {
 			date = TimeTools.getNow();
 		}
 		try {
-			opdNum = opdManager.getProgYear(date.getYear()) + 1;
+			opdNum = opdBrowserManager.getProgYear(date.getYear()) + 1;
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -698,7 +698,7 @@ public class OpdEdit extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						diseasesOPD = diseaseManager.getDiseaseOpd();
+						diseasesOPD = diseaseBrowserManager.getDiseaseOpd();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -762,7 +762,7 @@ public class OpdEdit extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						diseasesOPD = diseaseManager.getDiseaseOpd();
+						diseasesOPD = diseaseBrowserManager.getDiseaseOpd();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}
@@ -825,7 +825,7 @@ public class OpdEdit extends JDialog {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						diseasesOPD = diseaseManager.getDiseaseOpd();
+						diseasesOPD = diseaseBrowserManager.getDiseaseOpd();
 					} catch (OHServiceException ex) {
 						OHServiceExceptionUtil.showMessages(ex);
 					}

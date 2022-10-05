@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 class PhotoPanel extends JPanel {
 
 	private static final long serialVersionUID = 7684416938326266810L;
-	
+
 	public Image img;
 	private Dimension dimension;
 
@@ -50,8 +50,8 @@ class PhotoPanel extends JPanel {
 
 	public void updatePhoto(Image img) {
 		this.img = img;
-		
-		if (this.img != null)	{
+
+		if (this.img != null) {
 			dimension = new Dimension(img.getWidth(null), img.getHeight(null));
 			refreshPanel(dimension);
 		}
@@ -65,5 +65,5 @@ class PhotoPanel extends JPanel {
 		if (img != null) {
 			g.drawImage(img, x, y, null);
 		}
-	}	
+	}
 }

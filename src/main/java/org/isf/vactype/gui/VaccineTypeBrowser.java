@@ -55,6 +55,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 
 	private static final long serialVersionUID = 1L;
 
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+
 	private List<VaccineType> pVaccineType;
 	
 	private String[] pColumns = {
@@ -72,7 +74,6 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 	private JTable jTable = null;
 	private VaccineTypeBrowserModel model;
 	private int selectedrow;
-	private VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 	private VaccineType vaccineType = null;
 	
 	private final JFrame myFrame;
@@ -184,7 +185,7 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 					VaccineType vacType = (VaccineType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.vactype.deletevaccinetype.fmt.msg", vacType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteVaccineType(vacType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (vaccineTypeBrowserManager.deleteVaccineType(vacType))) {
 							pVaccineType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -213,9 +214,8 @@ public class VaccineTypeBrowser extends ModalJFrame implements VaccineTypeListen
 		private static final long serialVersionUID = 1L;
 
 		public VaccineTypeBrowserModel() {
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			try {
-				pVaccineType = manager.getVaccineType();
+				pVaccineType = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

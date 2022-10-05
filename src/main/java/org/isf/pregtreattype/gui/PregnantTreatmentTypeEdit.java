@@ -89,6 +89,8 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 		}
 	}
 
+	private PregnantTreatmentTypeBrowserManager pregnantTreatmentTypeBrowserManager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -195,7 +197,6 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 
 				try {
 					if (descriptionTextField.getText().equals(lastdescription)) {
@@ -205,7 +206,7 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 					pregnantTreatmentType.setCode(codeTextField.getText());
 					boolean result;
 					if (insert) {      // inserting
-						result = manager.newPregnantTreatmentType(pregnantTreatmentType);
+						result = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
 						if (result) {
 							firePregnantTreatmentInserted();
 						}
@@ -218,7 +219,7 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							result = manager.updatePregnantTreatmentType(pregnantTreatmentType);
+							result = pregnantTreatmentTypeBrowserManager.updatePregnantTreatmentType(pregnantTreatmentType);
 							if (result) {
 								firePregnantTreatmentUpdated();
 							}

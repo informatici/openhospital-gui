@@ -49,10 +49,10 @@ public class GoodDateTimeVisitChooser extends GoodDateTimeChooserBase {
 
 		setBaseSettings();
 
-		HospitalBrowsingManager manager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
+		HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 		Hospital hospital = null;
 		try {
-			hospital = manager.getHospital();
+			hospital = hospitalBrowsingManager.getHospital();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

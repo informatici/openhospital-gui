@@ -129,7 +129,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private boolean debug;
 	private MainMenu myFrame;
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public MainMenu() {
 		myFrame = this;
@@ -174,7 +174,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		// get menu items
 		try {
-			myMenu = manager.getMenu(myUser);
+			myMenu = userBrowsingManager.getMenu(myUser);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

@@ -65,7 +65,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
@@ -94,8 +93,6 @@ import org.isf.patient.model.Patient;
 import org.isf.utils.db.RememberData;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
-import org.isf.utils.exception.model.OHExceptionMessage;
-import org.isf.utils.exception.model.OHSeverityLevel;
 import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.GoodDateTimeVisitChooser;
 import org.isf.utils.jobjects.MessageDialog;
@@ -263,12 +260,14 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	/*
 	 * Managers and Arrays
 	 */
-	private DiseaseTypeBrowserManager diseaseTypeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
-	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-	private OpdBrowserManager opdManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
-	private PatientBrowserManager patManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
-	private WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	
 	private List<DiseaseType> types;
 	private List<Disease> diseasesOPD;
 	private List<Disease> diseasesAll;
@@ -310,11 +309,11 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		opd = old;
 		insert = inserting;
 		try {
-			types = diseaseTypeManager.getDiseaseType();
-			diseasesOPD = diseaseManager.getDiseaseOpd();
-			diseasesAll = diseaseManager.getDiseaseAll();
-			wardsOPDList = wardManager.getOpdWards();
-			wardsList = wardManager.getWards();
+			types = diseaseTypeBrowserManager.getDiseaseType();
+			diseasesOPD = diseaseBrowserManager.getDiseaseOpd();
+			diseasesAll = diseaseBrowserManager.getDiseaseAll();
+			wardsOPDList = wardBrowserManager.getOpdWards();
+			wardsList = wardBrowserManager.getWards();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -322,8 +321,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			if (!insert) {
 				opdPatient = opd.getPatient();
 				if (opdPatient != null && opd.getPatient().getCode() != 0) {
-					PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-					opdPatient = patBrowser.getPatientAll(opd.getPatient().getCode());
+					opdPatient = patientBrowserManager.getPatientAll(opd.getPatient().getCode());
 				} else { //old OPD has no PAT_ID => Create Patient from OPD
 					opdPatient = new Patient(opd);
 					opdPatient.setCode(0);
@@ -341,11 +339,11 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		opdPatient = patient;
 		insert = inserting;
 		try {
-			types = diseaseTypeManager.getDiseaseType();
-			diseasesOPD = diseaseManager.getDiseaseOpd();
-			diseasesAll = diseaseManager.getDiseaseAll();
-			wardsOPDList = wardManager.getOpdWards();
-			wardsList = wardManager.getWards();
+			types = diseaseTypeBrowserManager.getDiseaseType();
+			diseasesOPD = diseaseBrowserManager.getDiseaseOpd();
+			diseasesAll = diseaseBrowserManager.getDiseaseAll();
+			wardsOPDList = wardBrowserManager.getOpdWards();
+			wardsList = wardBrowserManager.getWards();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -353,8 +351,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			if (!insert) {
 				opdPatient = opd.getPatient();
 				if (opdPatient != null && opd.getPatient().getCode() != 0) { 
-					PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
-					opdPatient = patBrowser.getPatientAll(opd.getPatient().getCode());
+					opdPatient = patientBrowserManager.getPatientAll(opd.getPatient().getCode());
 				} else { //old OPD has no PAT_ID => Create Patient from OPD
 					opdPatient = new Patient(opd);
 					opdPatient.setCode(0);
@@ -406,7 +403,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private boolean getLastOpd(int code) {
 		Opd lastOpd = null;
 		try {
-			lastOpd = opdManager.getLastOpd(code);
+			lastOpd = opdBrowserManager.getLastOpd(code);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -1068,7 +1065,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			date = TimeTools.getNow();
 		}
 		try {
-			opdNum = opdManager.getProgYear(date.getYear()) + 1;
+			opdNum = opdBrowserManager.getProgYear(date.getYear()) + 1;
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -1250,7 +1247,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			jSearchButton.addActionListener(actionEvent -> {
 				jComboPatResult.removeAllItems();
 				try {
-					pat = patManager.getPatientsByOneOfFieldsLike(jTextPatientSrc.getText());
+					pat = patientBrowserManager.getPatientsByOneOfFieldsLike(jTextPatientSrc.getText());
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 					pat = new ArrayList<>();
@@ -1651,18 +1648,17 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 					return;
 				}
 
-				ExaminationBrowserManager examManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 				PatientExamination patex;
 				PatientExamination lastPatex = null;
 				try {
-					lastPatex = examManager.getLastByPatID(opdPatient.getCode());
+					lastPatex = examinationBrowserManager.getLastByPatID(opdPatient.getCode());
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 				}
 				if (lastPatex != null) {
-					patex = examManager.getFromLastPatientExamination(lastPatex);
+					patex = examinationBrowserManager.getFromLastPatientExamination(lastPatex);
 				} else {
-					patex = examManager.getDefaultPatientExamination(opdPatient);
+					patex = examinationBrowserManager.getDefaultPatientExamination(opdPatient);
 				}
 
 				GenderPatientExamination gpatex = new GenderPatientExamination(patex, opdPatient.getSex() == 'M');
@@ -1699,7 +1695,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				if (jOpdNumField.isEditable()) {
 					try {
 						opdProgYear = Integer.parseInt(jOpdNumField.getText());
-						if (opdManager.isExistOpdNum(opdProgYear, visitDateOpd.getYear())) {
+						if (opdBrowserManager.isExistOpdNum(opdProgYear, visitDateOpd.getYear())) {
 							MessageDialog.error(OpdEditExtended.this, "angal.opd.opdnumberalreadyexist.msg");
 							if (insert) {
 								jOpdNumField.setText(String.valueOf(getOpdProgYear(visitDateOpd)));
@@ -1804,7 +1800,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 							}
 							opd.setNextVisit(nextVisit);
 						}
-						boolean result = opdManager.newOpd(opd);
+						boolean result = opdBrowserManager.newOpd(opd);
 						if (result) {
 							RememberDates.setLastOpdVisitDate(visitDateOpd);
 							RememberData.setLastOpdWard(opdWard);
@@ -1818,7 +1814,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 						if (isNextVisit) {
 							nextVisit = visitManager.updateVisit(nextVisit);
 							opd.setNextVisit(nextVisit);
-							Opd updatedOpd = opdManager.updateOpd(opd);
+							Opd updatedOpd = opdBrowserManager.updateOpd(opd);
 							if (updatedOpd == null) {
 								MessageDialog.error(OpdEditExtended.this, "angal.common.datacouldnotbesaved.msg");
 								return;
@@ -1829,7 +1825,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 						} else {
 							if (nextVisit != null) {
 								opd.setNextVisit(null);
-								Opd updatedOpd = opdManager.updateOpd(opd);
+								Opd updatedOpd = opdBrowserManager.updateOpd(opd);
 								if (updatedOpd != null) {
 									visitManager.deleteVisit(nextVisit);
 									fireSurgeryUpdated(updatedOpd);
