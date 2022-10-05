@@ -89,7 +89,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	private JButton jNewButton = null;
 	private JButton jDeleteButton = null;
 	private JButton jCloseButton = null;
-	private JComboBox  jSelectionCombo = null;
+	private JComboBox<VaccineType> vaccineTypeFilter = null;
 	
 	private JScrollPane jScrollPane = null;
 	private JTable table = null;
@@ -153,7 +153,7 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(new JLabel(MessageBundle.getMessage("angal.vaccine.selectavaccinetype")), null);
-			jButtonPanel.add(getJVaccineTypeComboBox(), null);
+			jButtonPanel.add(getVaccineTypeFilter(), null);
 			jButtonPanel.add(getJNewButton(), null);
 			jButtonPanel.add(getJEditButton(), null);
 			jButtonPanel.add(getJDeleteButton(), null);
@@ -163,39 +163,38 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 	}
 
 	/**
-	 * This method initializes getJVaccineTypeComboBox
+	 * This method initializes vaccineTypeFilter
 	 *
 	 * @return JComboBox
 	 */
-	private JComboBox getJVaccineTypeComboBox() {
-		if (jSelectionCombo == null) {
-			jSelectionCombo = new JComboBox();
-			jSelectionCombo.setPreferredSize(new Dimension(200, 30));
+	private JComboBox<VaccineType> getVaccineTypeFilter() {
+		if (vaccineTypeFilter == null) {
+			vaccineTypeFilter = new JComboBox<>();
+			vaccineTypeFilter.setPreferredSize(new Dimension(200, 30));
 			List<VaccineType> allVacType = null;
 			try {
 				allVacType = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
-			jSelectionCombo
-					.addItem(new Vaccine("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase(), new VaccineType("", "")));
+			vaccineTypeFilter.addItem(new VaccineType("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
 			if (allVacType != null) {
 				for (VaccineType elem : allVacType) {
-					jSelectionCombo.addItem(elem);
+					vaccineTypeFilter.addItem(elem);
 				}
 			}
-			jSelectionCombo.addActionListener(actionEvent -> {
-				String pSelectionVaccineType = jSelectionCombo.getSelectedItem().toString();
+			vaccineTypeFilter.addActionListener(actionEvent -> {
+				String pSelectionVaccineType = vaccineTypeFilter.getSelectedItem().toString();
 				if (pSelectionVaccineType.equals(STR_ALL)) {
 					model = new VaccineBrowserModel();
 				} else {
-					model = new VaccineBrowserModel(((VaccineType) jSelectionCombo.getSelectedItem()).getCode());
+					model = new VaccineBrowserModel(((VaccineType) vaccineTypeFilter.getSelectedItem()).getCode());
 				}
 				model.fireTableDataChanged();
 				table.updateUI();
 			});
 		}
-		return jSelectionCombo;
+		return vaccineTypeFilter;
 	}
 
 	/**

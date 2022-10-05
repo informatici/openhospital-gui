@@ -58,7 +58,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	@Override
 	public void userInserted(AWTEvent e) {
 		User u = (User) e.getSource();
-		pUser.add(0, u);
+		userList.add(0, u);
 		((UserBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
 		if (table.getRowCount() > 0) {
@@ -68,7 +68,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 	@Override
 	public void userUpdated(AWTEvent e) {
-		pUser.set(selectedrow, user);
+		userList.set(selectedrow, user);
 		((UserBrowserModel) table.getModel()).fireTableDataChanged();
 		table.updateUI();
 		if ((table.getRowCount() > 0) && (selectedrow > -1)) {
@@ -78,8 +78,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 	private int selectedrow;
 	private JLabel selectlabel;
-	private JComboBox pbox;
-	private List<User> pUser;
+	private JComboBox<UserGroup> userGroupFilter;
+	private List<User> userList;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.userbrowser.user.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.group.txt").toUpperCase(),
@@ -114,8 +114,8 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		selectlabel = new JLabel(MessageBundle.getMessage("angal.userbrowser.selectgroup.label"));
 		buttonPanel.add(selectlabel);
 
-		pbox = new JComboBox();
-		pbox.addItem(ALL_STR);
+		userGroupFilter = new JComboBox<>();
+		userGroupFilter.addItem(new UserGroup(ALL_STR, ALL_STR));
 		List<UserGroup> group = null;
 		try {
 			group = userBrowsingManager.getUserGroup();
@@ -124,11 +124,11 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		}
 		if (group != null) {
 			for (UserGroup elem : group) {
-				pbox.addItem(elem);
+				userGroupFilter.addItem(elem);
 			}
 		}
-		pbox.addActionListener(actionEvent -> {
-			pSelection = pbox.getSelectedItem().toString();
+		userGroupFilter.addActionListener(actionEvent -> {
+			pSelection = userGroupFilter.getSelectedItem().toString();
 			if (pSelection.compareTo(ALL_STR) == 0) {
 				model = new UserBrowserModel();
 			} else {
@@ -137,7 +137,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 			model.fireTableDataChanged();
 			table.updateUI();
 		});
-		buttonPanel.add(pbox);
+		buttonPanel.add(userGroupFilter);
 
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
@@ -266,7 +266,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				int answer = MessageDialog.yesNo(null, "angal.userbrowser.deleteuser.fmt.msg", selectedUser.getUserName());
 				try {
 					if ((JOptionPane.YES_OPTION == answer) && userBrowsingManager.deleteUser(selectedUser)) {
-						pUser.remove(table.getSelectedRow());
+						userList.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
 					}
@@ -295,7 +295,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		public UserBrowserModel(String s) {
 			try {
-				pUser = userBrowsingManager.getUser(s);
+				userList = userBrowsingManager.getUser(s);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -303,7 +303,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		public UserBrowserModel() {
 			try {
-				pUser = userBrowsingManager.getUser();
+				userList = userBrowsingManager.getUser();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -311,10 +311,10 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		@Override
 		public int getRowCount() {
-			if (pUser == null) {
+			if (userList == null) {
 				return 0;
 			}
-			return pUser.size();
+			return userList.size();
 		}
 
 		@Override
@@ -330,13 +330,13 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		@Override
 		public Object getValueAt(int r, int c) {
 			if (c == 0) {
-				return pUser.get(r).getUserName();
+				return userList.get(r).getUserName();
 			} else if (c == -1) {
-				return pUser.get(r);
+				return userList.get(r);
 			} else if (c == 1) {
-				return pUser.get(r).getUserGroupName();
+				return userList.get(r).getUserGroupName();
 			} else if (c == 2) {
-				return pUser.get(r).getDesc();
+				return userList.get(r).getDesc();
 			}
 			return null;
 		}

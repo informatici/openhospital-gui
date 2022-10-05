@@ -113,7 +113,7 @@ public class DiseaseEdit extends JDialog {
 	private JButton okButton = null;
 	private JTextField descriptionTextField = null;
 	private JTextField codeTextField = null;
-	private JComboBox<DiseaseType> typeComboBox = null;
+	private JComboBox<DiseaseType> diseaseTypeComboBox = null;
 	private Disease disease;
 	private boolean insert;
 	private JPanel jNewPatientPanel = null;
@@ -191,7 +191,7 @@ public class DiseaseEdit extends JDialog {
 			gbctypeComboBox.insets = new Insets(5, 5, 5, 5);
 			gbctypeComboBox.gridx = 1;
 			gbctypeComboBox.gridy = 0;
-			dataPanel.add(getTypeComboBox(), gbctypeComboBox);
+			dataPanel.add(getDiseaseTypeComboBox(), gbctypeComboBox);
 			JLabel codeLabel = new JLabel(MessageBundle.getMessage("angal.common.code.txt"));
 			GridBagConstraints gbcCodeLabel = new GridBagConstraints();
 			gbcCodeLabel.insets = new Insets(5, 5, 5, 5);
@@ -271,7 +271,7 @@ public class DiseaseEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
 
-				disease.setType((DiseaseType) typeComboBox.getSelectedItem());
+				disease.setType((DiseaseType) diseaseTypeComboBox.getSelectedItem());
 				disease.setDescription(descriptionTextField.getText());
 				disease.setCode(codeTextField.getText().trim().toUpperCase());
 				disease.setOpdInclude(includeOpdCheckBox.isSelected());
@@ -372,39 +372,41 @@ public class DiseaseEdit extends JDialog {
 	}
 	
 	/**
-	 * This method initializes typeComboBox	
+	 * This method initializes diseaseTypeComboBox
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	private JComboBox<DiseaseType> getTypeComboBox() {
-		if (typeComboBox == null) {
-			typeComboBox = new JComboBox<>();
-			typeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
+	private JComboBox<DiseaseType> getDiseaseTypeComboBox() {
+		if (diseaseTypeComboBox == null) {
+			diseaseTypeComboBox = new JComboBox<>();
+			diseaseTypeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
 			try {
+				List<DiseaseType> types = diseaseTypeBrowserManager.getDiseaseType();
 				if (insert) {
-					List<DiseaseType> types = diseaseTypeBrowserManager.getDiseaseType();
-					for (DiseaseType elem : types) {
-						typeComboBox.addItem(elem);
+					if (types != null) {
+						for (DiseaseType elem : types) {
+							diseaseTypeComboBox.addItem(elem);
+						}
 					}
 				} else {
 					DiseaseType selectedDiseaseType = null;
-					List<DiseaseType> types = diseaseTypeBrowserManager.getDiseaseType();
-					for (DiseaseType elem : types) {
-						typeComboBox.addItem(elem);
-						if (disease.getType().equals(elem)) {
-							selectedDiseaseType = elem;
+					if (types != null) {
+						for (DiseaseType elem : types) {
+							diseaseTypeComboBox.addItem(elem);
+							if (disease.getType().equals(elem)) {
+								selectedDiseaseType = elem;
+							}
 						}
 					}
 					if (selectedDiseaseType != null) {
-						typeComboBox.setSelectedItem(selectedDiseaseType);
+						diseaseTypeComboBox.setSelectedItem(selectedDiseaseType);
 					}
 				}
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
-
 		}
-		return typeComboBox;
+		return diseaseTypeComboBox;
 	}
 	
 }
