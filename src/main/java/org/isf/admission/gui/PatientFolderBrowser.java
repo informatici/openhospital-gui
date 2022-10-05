@@ -200,6 +200,8 @@ public class PatientFolderBrowser extends ModalJFrame
 		return patientData;
 	}
 
+	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
+
 	private List<Admission> admList;
 	private List<Laboratory> labList;
 	private List<Disease> disease;
@@ -889,9 +891,9 @@ public class PatientFolderBrowser extends ModalJFrame
 		private static final long serialVersionUID = -8245833681073162426L;
 
 		public LabBrowserModel() {
-			LabManager lbm = Context.getApplicationContext().getBean(LabManager.class);
+
 			try {
-				labList = lbm.getLaboratory(patient);
+				labList = labManager.getLaboratory(patient);
 				getOlderDate(labList, "examDate");
 			} catch (OHServiceException e) {
 				labList = new ArrayList<>();

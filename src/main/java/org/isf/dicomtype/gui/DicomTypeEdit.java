@@ -86,7 +86,9 @@ public class DicomTypeEdit extends JDialog {
 			((DicomTypeListener) listener).dicomTypeUpdated(event);
 		}
 	}
-    
+
+	private DicomTypeBrowserManager dicomTypeBrowserManager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -193,14 +195,13 @@ public class DicomTypeEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DicomTypeBrowserManager manager = Context.getApplicationContext().getBean(DicomTypeBrowserManager.class);
 
 				dicomType.setDicomTypeDescription(descriptionTextField.getText());
 				dicomType.setDicomTypeID(codeTextField.getText());
 				boolean result;
 				if (insert) {    // inserting
 					try {
-						result = manager.newDicomType(dicomType);
+						result = dicomTypeBrowserManager.newDicomType(dicomType);
 						if (result) {
 							fireDicomTypeInserted(dicomType);
 						}
@@ -217,7 +218,7 @@ public class DicomTypeEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = manager.updateDicomType(dicomType);
+							result = dicomTypeBrowserManager.updateDicomType(dicomType);
 							if (result) {
 								fireDicomUpdated();
 							}

@@ -53,7 +53,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 		myAdmission = adm;
 		if (myAdmission != null) {
 			try {
-				List<OperationRow> res = opeRowManager.getOperationRowByAdmission(myAdmission);
+				List<OperationRow> res = operationRowBrowserManager.getOperationRowByAdmission(myAdmission);
 				oprowData.addAll(res);
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
@@ -77,7 +77,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 		OperationRow operationRow = new OperationRow();
 		operationRow.setOpDate(this.textDate.getLocalDateTime());
 		if (this.comboResult.getSelectedItem() != null) {
-			operationRow.setOpResult(opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
+			operationRow.setOpResult(operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem()));
 		} else {
 			operationRow.setOpResult("");
 		}
@@ -99,7 +99,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 		} else {
 			OperationRow opeInter = oprowData.get(index);
 			opeInter.setOpDate(this.textDate.getLocalDateTime());
-			String opResult = opeManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
+			String opResult = operationBrowserManager.getResultDescriptionKey((String) comboResult.getSelectedItem());
 			opeInter.setOpResult(opResult);
 			opeInter.setTransUnit(Float.parseFloat(this.textFieldUnit.getText()));
 			op = (Operation) this.comboOperation.getSelectedItem();
@@ -116,13 +116,13 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 	// used by addToForm()
 	@Override
 	public List<Operation> getOperationCollection() throws OHServiceException {
-		return opeManager.getOperationAdm();
+		return operationBrowserManager.getOperationAdm();
 	}
 
 	@Override
 	public void admissionUpdated(AWTEvent e) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, e);
+			saveAllOpeRow(oprowData, operationRowBrowserManager, e);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}
@@ -131,7 +131,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 	@Override
 	public void admissionInserted(AWTEvent e) {
 		try {
-			saveAllOpeRow(oprowData, opeRowManager, e);
+			saveAllOpeRow(oprowData, operationRowBrowserManager, e);
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
 		}

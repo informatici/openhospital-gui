@@ -135,7 +135,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private JComboBox comboBoxUnits = new JComboBox(qtyOption);
 	private int optionSelected = UNITS;
 	
-	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
+	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
@@ -625,7 +625,7 @@ public class MovStockMultipleCharging extends JDialog {
 	protected Lot chooseLot(Medical med) {
 		List<Lot> lots;
 		try {
-			lots = movManager.getLotByMedical(med);
+			lots = movStockInsertingManager.getLotByMedical(med);
 		} catch (OHServiceException e) {
 			lots = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
@@ -924,7 +924,7 @@ public class MovStockMultipleCharging extends JDialog {
 		boolean ok = true;
 		List<Movement> movements = model.getMovements();
 		try {
-			movManager.newMultipleChargingMovements(movements, movements.get(0).getRefNo());
+			movStockInsertingManager.newMultipleChargingMovements(movements, movements.get(0).getRefNo());
 		} catch (OHServiceException e) {
 			ok = false;
 			OHServiceExceptionUtil.showMessages(e);

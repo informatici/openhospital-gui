@@ -76,6 +76,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		}
 	}
 
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton jEditButton = null;
@@ -113,9 +115,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		super();
 		myFrame = this;
 		//check if in the db maternity ward exists
-		WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 		try {
-			manager.maternityControl(true);
+			wardBrowserManager.maternityControl(true);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -214,11 +215,10 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(WardBrowser.this, "angal.common.pleaseselectarow.msg");
 				} else {
-					WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 					Ward ward = (Ward) (model.getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(WardBrowser.this, "angal.ward.deleteward.fmt.msg", ward.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (wardManager.deleteWard(ward))) {
+						if ((answer == JOptionPane.YES_OPTION) && (wardBrowserManager.deleteWard(ward))) {
 							pWard.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();
@@ -290,9 +290,8 @@ public class WardBrowser extends ModalJFrame implements WardEdit.WardListener {
 		private static final long serialVersionUID = 1L;
 
 		public WardBrowserModel() {
-			WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			try {
-				pWard = manager.getWards();
+				pWard = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				pWard = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);

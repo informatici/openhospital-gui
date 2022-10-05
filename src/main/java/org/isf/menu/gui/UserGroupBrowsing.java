@@ -84,7 +84,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 	
 	private UserGroupBrowsing myFrame;
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public UserGroupBrowsing() {
 		myFrame = this;
@@ -148,7 +148,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 				UserGroup userGroup = (UserGroup) (model.getValueAt(table.getSelectedRow(), -1));
 				int answer = MessageDialog.yesNo(null, "angal.groupsbrowser.deletegroup.fmt.msg", userGroup.getCode());
 				try {
-					if ((answer == JOptionPane.YES_OPTION) && (manager.deleteGroup(userGroup))) {
+					if ((answer == JOptionPane.YES_OPTION) && (userBrowsingManager.deleteGroup(userGroup))) {
 						pGroup.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
@@ -176,7 +176,7 @@ public class UserGroupBrowsing extends ModalJFrame implements GroupEdit.GroupLis
 
 		public UserGroupBrowserModel() {
             try {
-                pGroup = manager.getUserGroup();
+                pGroup = userBrowsingManager.getUserGroup();
             } catch (OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
             }

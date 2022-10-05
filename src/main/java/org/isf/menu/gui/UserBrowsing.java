@@ -93,7 +93,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 	private String pSelection;
 
 	private UserBrowsing myFrame;
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public UserBrowsing() {
 
@@ -118,7 +118,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 		pbox.addItem(ALL_STR);
 		List<UserGroup> group = null;
 		try {
-			group = manager.getUserGroup();
+			group = userBrowsingManager.getUserGroup();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -204,7 +204,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 						newPassword = "";
 						pwd.setText("");
 					} else {
-						if (!manager.isPasswordStrong(newPassword)) {
+						if (!userBrowsingManager.isPasswordStrong(newPassword)) {
 							MessageDialog.error(UserBrowsing.this, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
 							newPassword = "";
 							pwd.setText("");
@@ -246,7 +246,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				newPassword2 = null;
 				user.setPasswd(hashed);
 				try {
-					if (manager.updatePassword(user)) {
+					if (userBrowsingManager.updatePassword(user)) {
 						MessageDialog.info(UserBrowsing.this, "angal.userbrowser.thepasswordhasbeenchanged.msg");
 					}
 				} catch (OHServiceException e) {
@@ -265,7 +265,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 				User selectedUser = (User) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.userbrowser.deleteuser.fmt.msg", selectedUser.getUserName());
 				try {
-					if ((JOptionPane.YES_OPTION == answer) && manager.deleteUser(selectedUser)) {
+					if ((JOptionPane.YES_OPTION == answer) && userBrowsingManager.deleteUser(selectedUser)) {
 						pUser.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
@@ -295,7 +295,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		public UserBrowserModel(String s) {
 			try {
-				pUser = manager.getUser(s);
+				pUser = userBrowsingManager.getUser(s);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -303,7 +303,7 @@ public class UserBrowsing extends ModalJFrame implements UserEdit.UserListener {
 
 		public UserBrowserModel() {
 			try {
-				pUser = manager.getUser();
+				pUser = userBrowsingManager.getUser();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

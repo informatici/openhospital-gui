@@ -86,7 +86,9 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 			((LaboratoryTypeListener) listener).admissionTypeUpdated(event);
 		}
 	}
-    
+
+	private AdmissionTypeBrowserManager admissionTypeBrowserManager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -192,7 +194,6 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				AdmissionTypeBrowserManager manager = Context.getApplicationContext().getBean(AdmissionTypeBrowserManager.class);
 
 				if (descriptionTextField.getText().equals(lastdescription)) {
 					dispose();
@@ -203,7 +204,7 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 				boolean result;
 				if (insert) {      // inserting
 					try {
-						result = manager.newAdmissionType(admissionType);
+						result = admissionTypeBrowserManager.newAdmissionType(admissionType);
 						if (result) {
 							fireAdmissionInserted(admissionType);
 						}
@@ -220,7 +221,7 @@ public class AdmissionTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = manager.updateAdmissionType(admissionType);
+							result = admissionTypeBrowserManager.updateAdmissionType(admissionType);
 							if (result) {
 								fireAdmissionUpdated();
 							}

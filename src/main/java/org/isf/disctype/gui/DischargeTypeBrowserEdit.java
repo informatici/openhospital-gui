@@ -86,7 +86,9 @@ public class DischargeTypeBrowserEdit extends JDialog {
 			((DischargeTypeListener) listener).dischargeTypeUpdated(event);
 		}
 	}
-    
+
+	private DischargeTypeBrowserManager dischargeTypeBrowserManager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -194,14 +196,13 @@ public class DischargeTypeBrowserEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 
 				dischargeType.setDescription(descriptionTextField.getText());
 				dischargeType.setCode(codeTextField.getText());
 				boolean result;
 				if (insert) {      // inserting
 					try {
-						result = manager.newDischargeType(dischargeType);
+						result = dischargeTypeBrowserManager.newDischargeType(dischargeType);
 						if (result) {
 							fireDischargeInserted(dischargeType);
 						}
@@ -218,7 +219,7 @@ public class DischargeTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = manager.updateDischargeType(dischargeType);
+							result = dischargeTypeBrowserManager.updateDischargeType(dischargeType);
 							if (result) {
 								fireDischargeUpdated();
 							}

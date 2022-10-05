@@ -108,8 +108,8 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private JFrame myFrame;
 	private String pSelection;
 	
-	private OperationBrowserManager operationManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
-	private OperationTypeBrowserManager operationTypeManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+	private OperationBrowserManager operationBrowserManager = Context.getApplicationContext().getBean(OperationBrowserManager.class);
+	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 	
 	public OperationBrowser() {
 
@@ -141,7 +141,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
 		List<OperationType> type;
 		try {
-			type = operationTypeManager.getOperationType();
+			type = operationTypeBrowserManager.getOperationType();
 			for (OperationType elem : type) {
 				pbox.addItem(elem);
 			}
@@ -196,7 +196,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 				Operation operation = (Operation) model.getValueAt(table.getSelectedRow(), -1);
 				int answer = MessageDialog.yesNo(null, "angal.operation.deleteoperation.fmt.msg", operation.getDescription());
 				try {
-					if ((answer == JOptionPane.YES_OPTION) && (operationManager.deleteOperation(operation))) {
+					if ((answer == JOptionPane.YES_OPTION) && (operationBrowserManager.deleteOperation(operation))) {
 						pOperation.remove(table.getSelectedRow());
 						model.fireTableDataChanged();
 						table.updateUI();
@@ -223,7 +223,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		public OperationBrowserModel(String s) {
 			try {
-				pOperation = operationManager.getOperationByTypeDescription(s);
+				pOperation = operationBrowserManager.getOperationByTypeDescription(s);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -231,7 +231,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 
 		public OperationBrowserModel() {
 			try {
-				pOperation = operationManager.getOperation();
+				pOperation = operationBrowserManager.getOperation();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

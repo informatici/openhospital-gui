@@ -85,7 +85,9 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 			((DiseaseTypeListener) listener).diseaseTypeUpdated(event);
 		}
 	}
-    
+
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -192,7 +194,6 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 
 				try {
 					if (descriptionTextField.getText().equals(lastdescription)) {
@@ -202,7 +203,7 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 					diseaseType.setCode(codeTextField.getText());
 					boolean result;
 					if (insert) {      // inserting
-						result = manager.newDiseaseType(diseaseType);
+						result = diseaseTypeBrowserManager.newDiseaseType(diseaseType);
 						if (result) {
 							fireDiseaseInserted();
 						}
@@ -215,7 +216,7 @@ public class DiseaseTypeBrowserEdit extends JDialog {
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							result = manager.updateDiseaseType(diseaseType);
+							result = diseaseTypeBrowserManager.updateDiseaseType(diseaseType);
 							if (result) {
 								fireDiseaseUpdated();
 							}

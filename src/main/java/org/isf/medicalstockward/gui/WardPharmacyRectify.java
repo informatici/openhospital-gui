@@ -127,11 +127,10 @@ public class WardPharmacyRectify extends JDialog {
 	private JSpinner jSpinnerNewQty;
 	private SpinnerNumberModel spinnerNewQtyModel;
 
-	private MedicalBrowsingManager medManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
-	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
-	
+
 	private List<Medical> medicals; //list of all medicals available in the application
 	private Map<Integer, Double> wardMap; //map quantities by their medical_id
 	private JTextField jTextFieldLotNumber;
@@ -148,7 +147,7 @@ public class WardPharmacyRectify extends JDialog {
 	
 	private void initMedicals() {
 		try {
-			this.medicals = medManager.getMedicals();
+			this.medicals = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e) {
 			this.medicals = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -162,7 +161,7 @@ public class WardPharmacyRectify extends JDialog {
 		super(owner, true);
 		selectedWard = ward;
 		try {
-			wardDrugs= wardManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
+			wardDrugs= movWardBrowserManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
@@ -184,7 +183,7 @@ public class WardPharmacyRectify extends JDialog {
 		super(owner, true);
 		selectedWard = ward;
 		try {
-			wardDrugs = wardManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
+			wardDrugs = movWardBrowserManager.getMedicalsWard(selectedWard.getCode().charAt(0), false);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

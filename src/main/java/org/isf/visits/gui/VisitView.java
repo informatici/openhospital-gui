@@ -147,8 +147,8 @@ public class VisitView extends ModalJFrame {
 	/*
 	 * Managers
 	 */
-	private VisitManager vstManager = Context.getApplicationContext().getBean(VisitManager.class);
-	private WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 	private List<Visit> visits = new ArrayList<>();
 	private List<Visit> visitfirst = new ArrayList<>();
@@ -165,9 +165,9 @@ public class VisitView extends ModalJFrame {
 	private void loadDataForWard(Ward ward) {
 		try {
 			if (ward != null) {
-				visits = vstManager.getVisitsWard(ward.getCode());
+				visits = visitManager.getVisitsWard(ward.getCode());
 			} else {
-				visits = vstManager.getVisitsWard(null);
+				visits = visitManager.getVisitsWard(null);
 			}
 		} catch (OHServiceException e1) {
 			OHServiceExceptionUtil.showMessages(e1);
@@ -342,7 +342,7 @@ public class VisitView extends ModalJFrame {
 				Visit visit = (Visit) jTableFirst.getModel().getValueAt(row, -1);
 				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
-					vstManager.deleteVisit(visit);
+					visitManager.deleteVisit(visit);
 					loadDataForWard(ward);
 					updatePanels();
 				}
@@ -387,7 +387,7 @@ public class VisitView extends ModalJFrame {
 				Visit visit = (Visit) jTableSecond.getModel().getValueAt(row, -1);
 				int ok = MessageDialog.okCancel(VisitView.this, "angal.visit.removevisit.msg");
 				if (ok == JOptionPane.YES_OPTION) {
-					vstManager.deleteVisit(visit);
+					visitManager.deleteVisit(visit);
 					loadDataForWard(ward);
 					updatePanels();
 				}
@@ -783,7 +783,7 @@ public class VisitView extends ModalJFrame {
 			wardBox.addItem(null);
 			List<Ward> wardList;
 			try {
-				wardList = wbm.getWards();
+				wardList = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				wardList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);

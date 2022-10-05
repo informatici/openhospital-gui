@@ -121,7 +121,8 @@ public class DiseaseEdit extends JDialog {
 	private JCheckBox includeIpdInCheckBox  = null;
 	private JCheckBox includeIpdOutCheckBox  = null;
 
-	private DiseaseTypeBrowserManager manager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -269,7 +270,6 @@ public class DiseaseEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 				disease.setType((DiseaseType) typeComboBox.getSelectedItem());
 				disease.setDescription(descriptionTextField.getText());
@@ -282,7 +282,7 @@ public class DiseaseEdit extends JDialog {
 				Disease savedDisease;
 				try {
 					if (insert) { // inserting
-						savedDisease = manager.newDisease(disease);
+						savedDisease = diseaseBrowserManager.newDisease(disease);
 						if (savedDisease != null) {
 							disease.setLock(savedDisease.getLock());
 							result = true;
@@ -292,7 +292,7 @@ public class DiseaseEdit extends JDialog {
 							fireDiseaseInserted();
 						}
 					} else { // updating
-						savedDisease = manager.updateDisease(disease);
+						savedDisease = diseaseBrowserManager.updateDisease(disease);
 						if (savedDisease != null) {
 							disease.setLock(savedDisease.getLock());
 							result = true;
@@ -382,13 +382,13 @@ public class DiseaseEdit extends JDialog {
 			typeComboBox.setBorder(new EmptyBorder(5, 5, 5, 5));
 			try {
 				if (insert) {
-					List<DiseaseType> types = manager.getDiseaseType();
+					List<DiseaseType> types = diseaseTypeBrowserManager.getDiseaseType();
 					for (DiseaseType elem : types) {
 						typeComboBox.addItem(elem);
 					}
 				} else {
 					DiseaseType selectedDiseaseType = null;
-					List<DiseaseType> types = manager.getDiseaseType();
+					List<DiseaseType> types = diseaseTypeBrowserManager.getDiseaseType();
 					for (DiseaseType elem : types) {
 						typeComboBox.addItem(elem);
 						if (disease.getType().equals(elem)) {

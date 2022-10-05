@@ -142,6 +142,11 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			MessageBundle.getMessage("angal.opd.diseasetype.col").toUpperCase(),
 			MessageBundle.getMessage("angal.opd.patientstatus.col").toUpperCase()
 	};
+
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+
 	private List<Opd> pSur;
 	private JTable jTable = null;
 	private OpdBrowsingModel model;
@@ -151,7 +156,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
 	private boolean[] columnsBold = { true, true, false, true, false, false, false, false, false, false };
 	private int selectedrow;
-	private OpdBrowserManager manager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 	private JButton filterButton = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.common.count.label") + ' ';
 	private JLabel rowCounter = null;
@@ -160,7 +164,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private final JFrame myFrame;
 	private JRadioButton radiom;
 	private JRadioButton radioa;
-	private DiseaseBrowserManager diseaseManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 	private List<Disease> diseases = null;
 	protected AbstractButton searchButton;
 	private GoodDateChooser dateFrom;
@@ -394,7 +397,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				int n = JOptionPane.showConfirmDialog(null, message,
 						MessageBundle.getMessage("angal.messagedialog.question.title"), JOptionPane.YES_NO_OPTION);
 				try {
-					if ((n == JOptionPane.YES_OPTION) && (manager.deleteOpd(opd))) {
+					if ((n == JOptionPane.YES_OPTION) && (opdBrowserManager.deleteOpd(opd))) {
 						pSur.remove(pSur.size() - jTable.getSelectedRow() - 1);
 						model.fireTableDataChanged();
 						jTable.updateUI();
@@ -507,10 +510,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			jDiseaseTypeBox = new JComboBox<>();
 			jDiseaseTypeBox.setMaximumSize(new Dimension(300, 50));
 
-			DiseaseTypeBrowserManager diseaseTypeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 			List<DiseaseType> types = null;
 			try {
-				types = diseaseTypeManager.getDiseaseType();
+				types = diseaseTypeBrowserManager.getDiseaseType();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -543,9 +545,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		}
 		try {
 			if (((DiseaseType) jDiseaseTypeBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.common.alltypes.txt"))) {
-				diseases = diseaseManager.getDiseaseOpd();
+				diseases = diseaseBrowserManager.getDiseaseOpd();
 			} else {
-				diseases = diseaseManager.getDiseaseOpd(((DiseaseType) jDiseaseTypeBox.getSelectedItem()).getCode());
+				diseases = diseaseBrowserManager.getDiseaseOpd(((DiseaseType) jDiseaseTypeBox.getSelectedItem()).getCode());
 			}
 		} catch (OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
@@ -809,7 +811,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public OpdBrowsingModel(String diseaseTypeCode, String diseaseCode, LocalDate dateFrom, LocalDate dateTo, int ageFrom, int ageTo,
 				char sex, char newPatient) {
 			try {
-				pSur = manager.getOpd(diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient);
+				pSur = opdBrowserManager.getOpd(diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient);
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -817,7 +819,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 		public OpdBrowsingModel() {
 			try {
-				pSur = manager.getOpd(!GeneralData.ENHANCEDSEARCH);
+				pSur = opdBrowserManager.getOpd(!GeneralData.ENHANCEDSEARCH);
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
