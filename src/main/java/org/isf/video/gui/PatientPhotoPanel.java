@@ -115,19 +115,14 @@ public class PatientPhotoPanel extends JPanel {
 			externalPanel.add(box, BorderLayout.NORTH);
 			photoboothPanelPresentationModel.addBeanPropertyChangeListener(PhotoboothPanelModel.PROPERTY_IMAGE, propertyChangeEvent -> {
 				
-				//ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				//BufferedImage bia = (BufferedImage) propertyChangeEvent.getNewValue();
 				try {
-					//ImageIO.write(bia, "jpg", baos);
-					//BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
-					//BufferedImage buffImg = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(), bufferedImage.getType());
 					BufferedImage bi = (BufferedImage) propertyChangeEvent.getNewValue();
-				if (bi != null) {
-					externalPanel.updatePhoto(ImageUtil.scaleImage(bi, 160, 160));
+					if (bi != null) {
+						externalPanel.updatePhoto(ImageUtil.scaleImage(bi, 160, 160));
 						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, MAXPROFPICFILESIZEBYTES, "png"));
-				} }catch (IOException e1) {
+					} 
+				} catch (IOException e1) {
 					LOGGER.error("Oooops! Can't resize profile picture.");
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			});
