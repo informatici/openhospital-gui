@@ -56,8 +56,6 @@ import com.github.sarxos.webcam.Webcam;
 
 public class PatientPhotoPanel extends JPanel {
 
-	private static final String JPEG_FORMAT = "jpeg";
-
 	private static final long serialVersionUID = 9129641275344016618L;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientPhotoPanel.class);
@@ -139,7 +137,7 @@ public class PatientPhotoPanel extends JPanel {
 			jAttachPhotoButton.setMaximumSize(new Dimension(200, (int) jAttachPhotoButton.getPreferredSize().getHeight()));
 			jAttachPhotoButton.addActionListener(actionEvent -> {
 				JFileChooser fc = new JFileChooser();
-				String[] extensions = { "tif", "tiff", JPEG_FORMAT, "jpeg", "bmp", "png", "gif" };
+				String[] extensions = { "tif", "tiff", "jpg", "jpeg", "bmp", "png", "gif" };
 				FileFilter imageFilter = new FileNameExtensionFilter(MessageBundle.getMessage("angal.patientphoto.imagefiles.txt"), extensions);
 				fc.setFileFilter(imageFilter);
 				fc.setAcceptAllFileFilterUsed(false);

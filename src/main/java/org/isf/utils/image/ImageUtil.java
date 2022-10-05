@@ -27,10 +27,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import javax.imageio.ImageIO;
 
@@ -126,10 +123,9 @@ public final class ImageUtil {
 	 * @param img The Image to be converted
 	 * @return The converted BufferedImage
 	 */
-	public static BufferedImage toBufferedImage(Image img)
-	{
-	    if (img instanceof BufferedImage)
-	    {
+	public static BufferedImage toBufferedImage(Image img) {
+		
+	    if (img instanceof BufferedImage) {
 	        return (BufferedImage) img;
 	    }
 
