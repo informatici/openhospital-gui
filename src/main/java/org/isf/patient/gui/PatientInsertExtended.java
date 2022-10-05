@@ -2112,10 +2112,15 @@ public class PatientInsertExtended extends JDialog {
 			jRightPanel = new JPanel(new BorderLayout());
 
 			try {
-				final Image image = patient.getPatientProfilePhoto() != null ? patient.getPatientProfilePhoto().getPhotoAsImage() : null;
-				photoPanel = new PatientPhotoPanel(this, patient.getCode(), image);
+				PatientProfilePhoto photo = this.patientManager.retrievePatientProfilePhoto(patient);
+				final Image image = photo != null ? photo.getPhotoAsImage() : null;
+				Image scaledImage = image != null ? ImageUtil.scaleImage(image, PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH) : null;
+				photoPanel = new PatientPhotoPanel(this, patient.getCode(), scaledImage);
+
 			} catch (IOException ioException) {
 				LOGGER.error(ioException.getMessage(), ioException);
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 			}
 			if (photoPanel != null) {
 				jRightPanel.add(photoPanel, BorderLayout.NORTH);
