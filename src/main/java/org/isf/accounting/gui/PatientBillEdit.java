@@ -69,6 +69,8 @@ import org.isf.accounting.manager.BillBrowserManager;
 import org.isf.accounting.model.Bill;
 import org.isf.accounting.model.BillItems;
 import org.isf.accounting.model.BillPayments;
+import org.isf.admission.manager.AdmissionBrowserManager;
+import org.isf.admission.model.Admission;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.TxtPrinter;
@@ -147,6 +149,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			thisBill.setBillPatient(patientSelected);
 			thisBill.setIsPatient(true);
 			thisBill.setPatName(patientSelected.getName());
+			thisBill.setAdmission(patientAdmission);
 		} else {
 			if (patientPendingBills.size() == 1) {
 				if (GeneralData.ALLOWMULTIPLEOPENEDBILL) {
@@ -157,6 +160,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						thisBill.setBillPatient(patientSelected);
 						thisBill.setIsPatient(true);
 						thisBill.setPatName(patientSelected.getName());
+						thisBill.setAdmission(patientAdmission);
 					} else {
 						insert = false;
 						setBill(patientPendingBills.get(0));
@@ -184,6 +188,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						thisBill.setBillPatient(patientSelected);
 						thisBill.setIsPatient(true);
 						thisBill.setPatName(patientSelected.getName());
+						thisBill.setAdmission(patientAdmission);
 					} else if (response == JOptionPane.NO_OPTION) {
 						// something must be proposed
 						int resp = MessageDialog.yesNo(PatientBillEdit.this,
@@ -281,6 +286,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private boolean paid = false;
 	private Bill thisBill;
 	private Patient patientSelected;
+	private Admission patientAdmission;
 	private LocalDateTime billDate = TimeTools.getNow();
 	private LocalDateTime today = TimeTools.getNow();
 
@@ -306,6 +312,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	//Items and Payments (ALL)
 	private BillBrowserManager billBrowserManager = Context.getApplicationContext().getBean(BillBrowserManager.class);
 	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 
 	//Prices, Items and Payments for the tables
 	private List<BillItems> billItems = new ArrayList<>();
@@ -442,11 +449,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				MessageDialog.showExceptions(ohServiceException);
 			}
 			if (patient != null) {
-				patientSelected = patient;
+				setPatientSelected(patient);
 			} else {  //Patient not found
 				MessageDialog.warning(PatientBillEdit.this, "angal.newbill.patientassociatedwiththisbillnolongerexists.msg");
 				thisBill.setIsPatient(false);
 				thisBill.getBillPatient().setCode(0);
+				thisBill.setAdmission(patientAdmission);
 			}
 		}
 	}
@@ -628,6 +636,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				thisBill.setIsPatient(false);
 				thisBill.getBillPatient().setCode(0);
 				thisBill.setPatName(""); //$NON-NLS-1$
+				thisBill.setAdmission(null);
 				// INTERFACE
 				jTextFieldPatient.setText("");
 				jTextFieldPatient.setEditable(false);
@@ -667,6 +676,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	public void setPatientSelected(Patient patientSelected) {
 		this.patientSelected = patientSelected;
+		try {
+			this.patientAdmission = admissionBrowserManager.getCurrentAdmission(patientSelected);
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		}
 	}
 
 	private JPanel getJPanelTop() {
@@ -995,7 +1009,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							paid ? "C" : "O",                            //CLOSED or OPEN
 							total.doubleValue(),                         //Total
 							balance.doubleValue(),                       //Balance
-							user);                                       //User
+							user,                                       //User
+							patientAdmission);							//Admission
+									
 					try {
 						billBrowserManager.newBill(newBill, billItems, payItems);
 						thisBill.setId(newBill.getId());
@@ -1022,7 +1038,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							paid ? "C" : "O",                            //CLOSED or OPEN
 							total.doubleValue(),                         //Total
 							balance.doubleValue(),                       //Balance
-							user);                                       //User
+							user,                                       //User
+							patientAdmission);							//Admission
 
 					try {
 						billBrowserManager.updateBill(updateBill, billItems, payItems);
