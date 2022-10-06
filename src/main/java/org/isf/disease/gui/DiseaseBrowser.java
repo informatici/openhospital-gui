@@ -96,12 +96,12 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 	};
 	private int[] pColumnWidth = {50, 180, 200};
 	private Disease disease;
-	private DefaultTableModel model ;
+	private DefaultTableModel model;
 	private JTable table;
 	private JFrame myFrame;
 	private DiseaseType pSelection;
-	private DiseaseBrowserManager manager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
-	private DiseaseTypeBrowserManager disTypeManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
+	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	
 	
 	public DiseaseBrowser() {
@@ -127,7 +127,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		pbox.addItem(new DiseaseType("0", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
 		List<DiseaseType> type = null;
 		try {
-			type = disTypeManager.getDiseaseType();
+			type = diseaseTypeBrowserManager.getDiseaseType();
 		} catch(OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
@@ -184,7 +184,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 				disease = (Disease) model.getValueAt(selectedrow, -1);
 				int answer = MessageDialog.yesNo(DiseaseBrowser.this, "angal.disease.deletedisease.fmt.msg", disease.getDescription());
 				try {
-					if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDisease(disease))) {
+					if ((answer == JOptionPane.YES_OPTION) && (diseaseBrowserManager.deleteDisease(disease))) {
 						disease.setIpdInInclude(false);
 						disease.setIpdOutInclude(false);
 						disease.setOpdInclude(false);
@@ -215,14 +215,14 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 
 		public DiseaseBrowserModel(String s) {
 			try {
-				pDisease = manager.getDisease(s);
+				pDisease = diseaseBrowserManager.getDisease(s);
 			} catch(OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
 		}
 		public DiseaseBrowserModel() {
 			try {
-				pDisease = manager.getDiseaseAll();
+				pDisease = diseaseBrowserManager.getDiseaseAll();
 			} catch(OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

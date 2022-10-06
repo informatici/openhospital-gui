@@ -175,13 +175,13 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private Map<Integer, String> supMap = new HashMap<>();
 
-	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
-	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext()
-			.getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 	private MovBrowserManager movBrowserManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
-	private HospitalBrowsingManager hospitalManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
+	private HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 	private SupplierBrowserManager supplierBrowserManager = Context.getApplicationContext().getBean(SupplierBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 	public MovStockBrowser() {
 		myFrame = this;
@@ -467,18 +467,17 @@ public class MovStockBrowser extends ModalJFrame {
 	}
 
 	private JComboBox getWardBox() {
-		WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
 		wardBox = new JComboBox();
 		wardBox.setPreferredSize(new Dimension(130, 25));
 		wardBox.addItem(MessageBundle.getMessage("angal.common.all.txt"));
 		List<Ward> wardList;
 		try {
-			wardList = wbm.getWards();
+			wardList = wardBrowserManager.getWards();
 		} catch (OHServiceException e) {
 			wardList = new ArrayList<>();
 			OHServiceExceptionUtil.showMessages(e);
 		}
-		for (org.isf.ward.model.Ward elem : wardList) {
+		for (Ward elem : wardList) {
 			wardBox.addItem(elem);
 		}
 		wardBox.setEnabled(false);
@@ -493,7 +492,7 @@ public class MovStockBrowser extends ModalJFrame {
 			medicalBox.removeAllItems();
 			List<Medical> medicals;
 			try {
-				medicals = medicalManager.getMedicals();
+				medicals = medicalBrowsingManager.getMedicals();
 			} catch (OHServiceException e1) {
 				medicals = null;
 				OHServiceExceptionUtil.showMessages(e1);
@@ -548,7 +547,7 @@ public class MovStockBrowser extends ModalJFrame {
 		medicalBox.setPreferredSize(new Dimension(150, 25));
 		List<Medical> medical;
 		try {
-			medical = medicalManager.getMedicals();
+			medical = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e1) {
 			medical = null;
 			OHServiceExceptionUtil.showMessages(e1);
@@ -699,7 +698,7 @@ public class MovStockBrowser extends ModalJFrame {
 
 			String currencyCod;
 			try {
-				currencyCod = hospitalManager.getHospitalCurrencyCod();
+				currencyCod = hospitalBrowsingManager.getHospitalCurrencyCod();
 			} catch (OHServiceException e) {
 				currencyCod = null;
 				OHServiceExceptionUtil.showMessages(e);

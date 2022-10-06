@@ -130,9 +130,10 @@ public class MovStockMultipleDischarging extends JDialog {
 	private JComboBox shareWith = null;
 	private List<Medical> pool = new ArrayList<>();
 	
-	private MovStockInsertingManager movManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
+	private MovStockInsertingManager movStockInsertingManager = Context.getApplicationContext().getBean(MovStockInsertingManager.class);
 	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 	private boolean isAutomaticLot() {
 		return GeneralData.AUTOMATICLOT_OUT;
@@ -291,7 +292,7 @@ public class MovStockMultipleDischarging extends JDialog {
 					// Lot (PreparationDate && ExpiringDate)
 					List<Lot> lots;
 					try {
-						lots = movManager.getLotByMedical(med);
+						lots = movStockInsertingManager.getLotByMedical(med);
 					} catch (OHServiceException e1) {
 						lots = null;
 						OHServiceExceptionUtil.showMessages(e1);
@@ -737,22 +738,15 @@ public class MovStockMultipleDischarging extends JDialog {
 		if (jComboBoxDestination == null) {
 			jComboBoxDestination = new JComboBox();
 			jComboBoxDestination.addItem(""); //$NON-NLS-1$
-			WardBrowserManager wardMan = Context.getApplicationContext().getBean(WardBrowserManager.class);
-			List<Ward> wards;
+			List<Ward> wardsList;
 			try {
-				wards = wardMan.getWards();
+				wardsList = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
-				wards = new ArrayList<>();
+				wardsList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
 			}
-			for (Ward ward : wards) {
-				if (GeneralData.INTERNALPHARMACIES) {
-					if (ward.isPharmacy()) {
-						jComboBoxDestination.addItem(ward);
-					}
-				} else {
-					jComboBoxDestination.addItem(ward);
-				}
+			for (Ward elem : wardsList) {
+				jComboBoxDestination.addItem(elem);
 			}
 		}
 		return jComboBoxDestination;
@@ -955,7 +949,7 @@ public class MovStockMultipleDischarging extends JDialog {
 		boolean ok = true;
 		List<Movement> movements = model.getMovements();
 		try {
-			movManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
+			movStockInsertingManager.newMultipleDischargingMovements(movements, movements.get(0).getRefNo());
 
 			if (isXmpp()) {
 				if (shareWith.isEnabled() && (!(((String) shareWith.getSelectedItem())

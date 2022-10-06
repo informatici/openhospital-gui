@@ -80,6 +80,9 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		}
 	}
 
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+	private VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton jEditButton = null;
@@ -168,10 +171,9 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		if (jSelectionCombo == null) {
 			jSelectionCombo = new JComboBox();
 			jSelectionCombo.setPreferredSize(new Dimension(200, 30));
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			List<VaccineType> allVacType = null;
 			try {
-				allVacType = manager.getVaccineType();
+				allVacType = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
@@ -252,11 +254,10 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 				if (table.getSelectedRow() < 0) {
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
-					VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 					Vaccine vaccine = (Vaccine) (((VaccineBrowserModel) model).getValueAt(table.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.vaccine.deletevaccine.fmt.msg", vaccine.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteVaccine(vaccine))) {
+						if ((answer == JOptionPane.YES_OPTION) && (vaccineBrowserManager.deleteVaccine(vaccine))) {
 							pVaccine.remove(table.getSelectedRow());
 							model.fireTableDataChanged();
 							table.updateUI();
@@ -318,18 +319,16 @@ public class VaccineBrowser extends ModalJFrame implements VaccineEdit.VaccineLi
 		private static final long serialVersionUID = 1L;
 
 		public VaccineBrowserModel() {
-			VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
             try {
-                pVaccine  = manager.getVaccine();
+                pVaccine  = vaccineBrowserManager.getVaccine();
             } catch (OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
             }
         }
 		
 		public VaccineBrowserModel(String vaccineType) {
-			VaccineBrowserManager manager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
             try {
-                pVaccine = manager.getVaccine(vaccineType);
+                pVaccine = vaccineBrowserManager.getVaccine(vaccineType);
             } catch (OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
             }

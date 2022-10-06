@@ -51,6 +51,9 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class PregnantTreatmentTypeBrowser extends ModalJFrame implements PregnantTreatmentTypeListener {
 
 	private static final long serialVersionUID = 1L;
+
+	private PregnantTreatmentTypeBrowserManager pregnantTreatmentTypeBrowserManager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
+
 	private List<PregnantTreatmentType> pPregnantTreatmentType;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
@@ -66,7 +69,6 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 	private JTable jTable = null;
 	private PregnantTreatmentTypeBrowserModel model;
 	private int selectedrow;
-	private PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 	private PregnantTreatmentType pregnantTreatmentType = null;
 	private final JFrame myFrame;
 
@@ -177,7 +179,7 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 					PregnantTreatmentType preTreatmentType = (PregnantTreatmentType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.preagtreattype.deletetreatmenttype.fmt.msg", preTreatmentType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deletePregnantTreatmentType(preTreatmentType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (pregnantTreatmentTypeBrowserManager.deletePregnantTreatmentType(preTreatmentType))) {
 							pPregnantTreatmentType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -206,9 +208,8 @@ public class PregnantTreatmentTypeBrowser extends ModalJFrame implements Pregnan
 		private static final long serialVersionUID = 1L;
 
 		public PregnantTreatmentTypeBrowserModel() {
-			PregnantTreatmentTypeBrowserManager manager = Context.getApplicationContext().getBean(PregnantTreatmentTypeBrowserManager.class);
 			try {
-				pPregnantTreatmentType = manager.getPregnantTreatmentType();
+				pPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.getPregnantTreatmentType();
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}

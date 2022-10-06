@@ -85,6 +85,10 @@ public class PatVacBrowser extends ModalJFrame {
 
 	private static final long serialVersionUID = 1L;
 
+	private VaccineTypeBrowserManager vaccineTypeBrowserManager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
+	private	VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
+	private PatVacManager patVacManager = Context.getApplicationContext().getBean(PatVacManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel jButtonPanel = null;
 	private JButton buttonEdit = null;
@@ -120,7 +124,6 @@ public class PatVacBrowser extends ModalJFrame {
 	};
 	private int[] pColumnWidth = {100, 150, 50, 50, 150, 150};
 	private boolean[] columnsVisible = {true, GeneralData.PATIENTVACCINEEXTENDED, true, true, true, true};
-	private PatVacManager manager;
 	private PatVacBrowsingModel model;
 	private PatientVaccine patientVaccine;
 	private int selectedrow;
@@ -132,7 +135,6 @@ public class PatVacBrowser extends ModalJFrame {
 	public PatVacBrowser() {
 		super();
 		myFrame = this;
-		manager = Context.getApplicationContext().getBean(PatVacManager.class);
 		initialize();
 		setVisible(true);
 	}
@@ -286,7 +288,7 @@ public class PatVacBrowser extends ModalJFrame {
 
 					boolean deleted;
 					try {
-						deleted = manager.deletePatientVaccine(patientVaccine);
+						deleted = patVacManager.deletePatientVaccine(patientVaccine);
 					} catch (OHServiceException e) {
 						deleted = false;
 						OHServiceExceptionUtil.showMessages(e);
@@ -560,10 +562,9 @@ public class PatVacBrowser extends ModalJFrame {
 			vaccineTypeComboBox.setPreferredSize(new Dimension(200, 30));
 			vaccineTypeComboBox.addItem(new VaccineType("", MessageBundle.getMessage("angal.patvac.allvaccinetype")));
 
-			VaccineTypeBrowserManager manager = Context.getApplicationContext().getBean(VaccineTypeBrowserManager.class);
 			List<VaccineType> types = null;
 			try {
-				types = manager.getVaccineType();
+				types = vaccineTypeBrowserManager.getVaccineType();
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
@@ -592,7 +593,6 @@ public class PatVacBrowser extends ModalJFrame {
 			vaccineComboBox = new JComboBox();
 			vaccineComboBox.setPreferredSize(new Dimension(200, 30));
 		}
-		VaccineBrowserManager vaccineBrowserManager = Context.getApplicationContext().getBean(VaccineBrowserManager.class);
 
 		List<Vaccine> allVac = null;
 		vaccineComboBox.addItem(new Vaccine("", MessageBundle.getMessage("angal.patvac.allvaccine"), new VaccineType("", "")));
@@ -718,10 +718,8 @@ public class PatVacBrowser extends ModalJFrame {
 	class PatVacBrowsingModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private PatVacManager manager = Context.getApplicationContext().getBean(PatVacManager.class);
 
 		public PatVacBrowsingModel() {
-			PatVacManager patVacManager = Context.getApplicationContext().getBean(PatVacManager.class);
 			try {
 				lPatVac = patVacManager.getPatientVaccine(!GeneralData.ENHANCEDSEARCH);
 			} catch (OHServiceException e) {
@@ -732,7 +730,7 @@ public class PatVacBrowser extends ModalJFrame {
 
 		public PatVacBrowsingModel(String vaccineTypeCode, String vaccineCode, LocalDateTime dateFrom, LocalDateTime dateTo, char sex, int ageFrom, int ageTo) {
 			try {
-				lPatVac = manager.getPatientVaccine(vaccineTypeCode, vaccineCode, dateFrom, dateTo, sex, ageFrom, ageTo);
+				lPatVac = patVacManager.getPatientVaccine(vaccineTypeCode, vaccineCode, dateFrom, dateTo, sex, ageFrom, ageTo);
 			} catch (OHServiceException e) {
 				lPatVac = null;
 				OHServiceExceptionUtil.showMessages(e);

@@ -68,16 +68,15 @@ public class HospitalBrowser extends ModalJFrame {
 	private JTextField faxJTextField;
 	private JTextField emailJTextField;
 	private JTextField currencyCodeJTextField;
-	private HospitalBrowsingManager manager;
+	private HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 	private Hospital hospital;
 	private JButton editButton;
 	private JButton updateButton;
 
 	public HospitalBrowser() {
 		super();
-		manager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
 		try {
-			hospital = manager.getHospital();
+			hospital = hospitalBrowsingManager.getHospital();
 		} catch (OHServiceException e) {
 			this.hospital = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -304,7 +303,7 @@ public class HospitalBrowser extends ModalJFrame {
 		hospital.setVisitDuration(durationField.getValue());
 
 		try {
-			this.hospital = manager.updateHospital(hospital);
+			this.hospital = hospitalBrowsingManager.updateHospital(hospital);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

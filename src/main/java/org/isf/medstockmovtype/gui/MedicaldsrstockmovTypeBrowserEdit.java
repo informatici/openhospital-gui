@@ -102,7 +102,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 	private MovementType medicaldsrstockmovType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private MedicaldsrstockmovTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
+	private MedicaldsrstockmovTypeBrowserManager medicaldsrstockmovTypeBrowserManager = Context.getApplicationContext().getBean(MedicaldsrstockmovTypeBrowserManager.class);
 
 	/**
 	 * This is the default constructor
@@ -206,7 +206,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 				boolean result;
 				if (insert) { // inserting
 					try {
-						result = manager.newMedicaldsrstockmovType(medicaldsrstockmovType);
+						result = medicaldsrstockmovTypeBrowserManager.newMedicaldsrstockmovType(medicaldsrstockmovType);
 						if (result) {
 							fireMedicaldsrstockmovInserted(medicaldsrstockmovType);
 							dispose();
@@ -221,7 +221,7 @@ public class MedicaldsrstockmovTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = manager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
+							result = medicaldsrstockmovTypeBrowserManager.updateMedicaldsrstockmovType(medicaldsrstockmovType);
 							if (result) {
 								fireMedicaldsrstockmovUpdated();
 								dispose();

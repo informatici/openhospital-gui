@@ -96,6 +96,8 @@ public class WardEdit extends JDialog {
 		}
 	}
 
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -110,6 +112,7 @@ public class WardEdit extends JDialog {
 	private JTextField nursTextField = null;
 	private JTextField docsTextField = null;
 	private JTextField durationTextField = null;
+	private JCheckBox isOpdCheck = null;
 	private JCheckBox isPharmacyCheck = null;
 	private JCheckBox isMaleCheck = null;
 	private JCheckBox isFemaleCheck = null;
@@ -300,12 +303,20 @@ public class WardEdit extends JDialog {
 			gbcDurationTextField.gridy = 8;
 			dataPanel.add(getDurationTextField(), gbcDurationTextField);
 
+			GridBagConstraints gbcIsOpdCheck = new GridBagConstraints();
+			gbcIsOpdCheck.anchor = GridBagConstraints.WEST;
+			gbcIsOpdCheck.insets = new Insets(0, 0, 5, 0);
+			gbcIsOpdCheck.gridwidth = 2;
+			gbcIsOpdCheck.gridx = 0;
+			gbcIsOpdCheck.gridy = 9;
+			dataPanel.add(getIsOpdCheck(), gbcIsOpdCheck);
+			
 			GridBagConstraints gbcIsPharmacyCheck = new GridBagConstraints();
 			gbcIsPharmacyCheck.anchor = GridBagConstraints.WEST;
 			gbcIsPharmacyCheck.insets = new Insets(0, 0, 5, 0);
 			gbcIsPharmacyCheck.gridwidth = 2;
 			gbcIsPharmacyCheck.gridx = 0;
-			gbcIsPharmacyCheck.gridy = 9;
+			gbcIsPharmacyCheck.gridy = 10;
 			dataPanel.add(getIsPharmacyCheck(), gbcIsPharmacyCheck);
 
 			GridBagConstraints gbcIsMaleCheck = new GridBagConstraints();
@@ -313,7 +324,7 @@ public class WardEdit extends JDialog {
 			gbcIsMaleCheck.insets = new Insets(0, 0, 5, 0);
 			gbcIsMaleCheck.gridwidth = 2;
 			gbcIsMaleCheck.gridx = 0;
-			gbcIsMaleCheck.gridy = 10;
+			gbcIsMaleCheck.gridy = 11;
 			dataPanel.add(getIsMaleCheck(), gbcIsMaleCheck);
 
 			GridBagConstraints gbcIsFemaleCheck = new GridBagConstraints();
@@ -321,7 +332,7 @@ public class WardEdit extends JDialog {
 			gbcIsFemaleCheck.insets = new Insets(0, 0, 5, 0);
 			gbcIsFemaleCheck.gridwidth = 2;
 			gbcIsFemaleCheck.gridx = 0;
-			gbcIsFemaleCheck.gridy = 11;
+			gbcIsFemaleCheck.gridy = 12;
 			dataPanel.add(getIsFemaleCheck(), gbcIsFemaleCheck);
 
 			JLabel requiredLabel = new JLabel(MessageBundle.getMessage("angal.ward.requiredfields"));
@@ -329,7 +340,7 @@ public class WardEdit extends JDialog {
 			gbcRequiredLabel.gridwidth = 2;
 			gbcRequiredLabel.anchor = GridBagConstraints.EAST;
 			gbcRequiredLabel.gridx = 0;
-			gbcRequiredLabel.gridy = 12;
+			gbcRequiredLabel.gridy = 13;
 			dataPanel.add(requiredLabel, gbcRequiredLabel);
 		}
 		return dataPanel;
@@ -374,7 +385,6 @@ public class WardEdit extends JDialog {
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 
 			okButton.addActionListener(actionEvent -> {
-				WardBrowserManager manager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 
 				try {
 					beds = Integer.parseInt(bedsTextField.getText());
@@ -424,6 +434,7 @@ public class WardEdit extends JDialog {
 				ward.setBeds(beds);
 				ward.setNurs(nurs);
 				ward.setDocs(docs);
+				ward.setOpd(isOpdCheck.isSelected());
 				ward.setPharmacy(isPharmacyCheck.isSelected());
 				ward.setMale(isMaleCheck.isSelected());
 				ward.setFemale(isFemaleCheck.isSelected());
@@ -433,7 +444,7 @@ public class WardEdit extends JDialog {
 				Ward savedWard;
 				if (insert) { // inserting
 					try {
-						savedWard = manager.newWard(ward);
+						savedWard = wardBrowserManager.newWard(ward);
 						if (savedWard != null) {
 							ward.setLock(savedWard.getLock());
 							result = true;
@@ -446,7 +457,7 @@ public class WardEdit extends JDialog {
 					}
 				} else {
 					try { // updating
-						savedWard = manager.updateWard(ward);
+						savedWard = wardBrowserManager.updateWard(ward);
 						if (savedWard != null) {
 							ward.setLock(savedWard.getLock());
 							result = true;
@@ -491,7 +502,7 @@ public class WardEdit extends JDialog {
 	 */
 	private JTextField getCodeTextField() {
 		if (codeTextField == null) {
-			codeTextField = new VoLimitedTextField(1, 20);
+			codeTextField = new VoLimitedTextField(3, 20);
 			if (!insert) {
 				codeTextField.setText(ward.getCode());
 				codeTextField.setEnabled(false);
@@ -598,6 +609,21 @@ public class WardEdit extends JDialog {
 			}
 		}
 		return durationTextField;
+	}
+	
+	/**
+	 * This method initializes isPharmacyCheck
+	 *
+	 * @return javax.swing.JCheckBox
+	 */
+	private JCheckBox getIsOpdCheck() {
+		if (isOpdCheck == null) {
+			isOpdCheck = new JCheckBox(MessageBundle.getMessage("angal.ward.wardwithopd"));
+			if (!insert) {
+				isOpdCheck.setSelected(ward.isOpd());
+			}
+		}
+		return isOpdCheck;
 	}
 
 	/**

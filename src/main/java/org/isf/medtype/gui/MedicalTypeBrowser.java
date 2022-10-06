@@ -66,7 +66,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 	private JTable jTable = null;
 	private MedicalTypeBrowserModel model;
 	private int selectedrow;
-	private MedicalTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
+	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 	private MedicalType medicalType = null;
 	private final JFrame myFrame;
 	
@@ -177,7 +177,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 					MedicalType medType = (MedicalType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.medtype.deletemedicaltype.fmt.msg", medType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteMedicalType(medType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (medicalTypeBrowserManager.deleteMedicalType(medType))) {
 							pMedicalType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -208,7 +208,7 @@ public class MedicalTypeBrowser extends ModalJFrame implements MedicalTypeListen
 
 		public MedicalTypeBrowserModel() {
 			try {
-				pMedicalType = manager.getMedicalType();
+				pMedicalType = medicalTypeBrowserManager.getMedicalType();
 			} catch (OHServiceException e) {
 				pMedicalType = null;
 				OHServiceExceptionUtil.showMessages(e);

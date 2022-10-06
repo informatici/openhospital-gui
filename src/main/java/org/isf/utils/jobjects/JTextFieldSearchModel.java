@@ -62,7 +62,7 @@ public class JTextFieldSearchModel extends JPanel {
 	private HashMap<String, Medical> medicalMap;
 	private JDialog owner;
 
-	private MedicalBrowsingManager medMan = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
 
 	/**
 	 * Creates a Dialog containing a JTextField
@@ -89,7 +89,7 @@ public class JTextFieldSearchModel extends JPanel {
 		List<Medical> medicals = null;
 		medicalMap = new HashMap<>();
 		try {
-			medicals = medMan.getMedicalsSortedByCode();
+			medicals = medicalBrowsingManager.getMedicalsSortedByCode();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

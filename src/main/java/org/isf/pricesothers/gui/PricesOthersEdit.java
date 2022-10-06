@@ -86,8 +86,9 @@ public class PricesOthersEdit extends JDialog {
 			((PricesOthersListener) listener).pricesOthersUpdated(event);
 		}
 	}
-	
-	
+
+	private PricesOthersManager pricesOthersManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
+
 	private static final long serialVersionUID = 1L;
 	private JPanel jPanelData;
 	private JPanel jPanelCodeDescription;
@@ -147,16 +148,15 @@ public class PricesOthersEdit extends JDialog {
 				pOther.setDischarge(jCheckBoxDischarge.isSelected());
 				pOther.setUndefined(jCheckBoxUndefined.isSelected());
 
-				PricesOthersManager pOtherManager = Context.getApplicationContext().getBean(PricesOthersManager.class);
 				boolean result = false;
 				try {
 					if (insert) {      // inserting
-						result = pOtherManager.newOther(pOther);
+						result = pricesOthersManager.newOther(pOther);
 						if (result) {
 							fireOtherInserted();
 						}
 					} else {             // updating
-						result = pOtherManager.updateOther(pOther);
+						result = pricesOthersManager.updateOther(pOther);
 						if (result) {
 							fireOtherUpdated();
 						}

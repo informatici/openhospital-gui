@@ -66,7 +66,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 	private EventListenerList loginListeners = new EventListenerList();
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	public interface LoginListener extends EventListener {
 
@@ -192,7 +192,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		public LoginPanel(Login myFrame) {
 
 			try {
-				users = manager.getUser();
+				users = userBrowsingManager.getUser();
 			} catch (OHServiceException e1) {
 				LOGGER.error("Exiting.");
 				OHServiceExceptionUtil.showMessages(e1);

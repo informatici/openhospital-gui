@@ -95,7 +95,9 @@ public class ExamTypeEdit extends JDialog {
 			((ExamTypeListener) listener).examTypeUpdated(event);
 		}
 	}
-    
+
+	private ExamTypeBrowserManager examTypeBrowserManager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -202,13 +204,12 @@ public class ExamTypeEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				ExamTypeBrowserManager manager = Context.getApplicationContext().getBean(ExamTypeBrowserManager.class);
 				try {
 					examType.setDescription(descriptionTextField.getText());
 					examType.setCode(codeTextField.getText());
 
 					if (insert) {     // inserting
-						if (manager.newExamType(examType)) {
+						if (examTypeBrowserManager.newExamType(examType)) {
 							fireExamTypeInserted();
 							dispose();
 						} else {
@@ -218,7 +219,7 @@ public class ExamTypeEdit extends JDialog {
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							if (manager.updateExamType(examType)) {
+							if (examTypeBrowserManager.updateExamType(examType)) {
 								fireExamTypeUpdated();
 								dispose();
 							} else {

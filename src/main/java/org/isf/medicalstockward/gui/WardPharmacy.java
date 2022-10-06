@@ -222,12 +222,14 @@ public class WardPharmacy extends ModalJFrame implements
 	/*
 	 * Managers and datas
 	 */
-	private MovBrowserManager movManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
+	private MovBrowserManager movBrowserManager = Context.getApplicationContext().getBean(MovBrowserManager.class);
 	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
-	private List<Movement> listMovementCentral = new ArrayList<>();
-	private MovWardBrowserManager wardManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
-	private MedicalBrowsingManager medicalManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+	private MedicalBrowsingManager medicalBrowsingManager = Context.getApplicationContext().getBean(MedicalBrowsingManager.class);
+
+	private List<Movement> listMovementCentral = new ArrayList<>();
 	private List<MovementWard> listMovementWardFromTo = new ArrayList<>();
 	private List<MedicalWard> wardDrugs;
 	private List<MovementWard> wardOutcomes;
@@ -940,7 +942,7 @@ public class WardPharmacy extends ModalJFrame implements
 			jComboBoxMedicals.removeAllItems();
 			List<Medical> medicals;
 			try {
-				medicals = medicalManager.getMedicals();
+				medicals = medicalBrowsingManager.getMedicals();
 			} catch (OHServiceException e1) {
 				medicals = null;
 				OHServiceExceptionUtil.showMessages(e1);
@@ -1008,7 +1010,7 @@ public class WardPharmacy extends ModalJFrame implements
 		}
 		List<Medical> medicals;
 		try {
-			medicals = medicalManager.getMedicals();
+			medicals = medicalBrowsingManager.getMedicals();
 		} catch (OHServiceException e) {
 			medicals = null;
 			OHServiceExceptionUtil.showMessages(e);
@@ -1096,10 +1098,9 @@ public class WardPharmacy extends ModalJFrame implements
 	private JComboBox getJComboBoxWard() {
 		if (jComboBoxWard == null) {
 			jComboBoxWard = new JComboBox();
-			WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			List<Ward> wardList;
 			try {
-				wardList = wardManager.getWards();
+				wardList = wardBrowserManager.getWards();
 			} catch (OHServiceException e) {
 				wardList = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
@@ -1176,7 +1177,7 @@ public class WardPharmacy extends ModalJFrame implements
 		public IncomesModel() {
 			wardIncomes = new ArrayList<>();
 			try {
-				listMovementCentral = movManager.getMovements(wardSelected.getCode(), dateFrom, dateTo);
+				listMovementCentral = movBrowserManager.getMovements(wardSelected.getCode(), dateFrom, dateTo);
 
 				for (Movement mov : listMovementCentral) {
 					if (mov.getWard().getDescription() != null) {
@@ -1187,7 +1188,7 @@ public class WardPharmacy extends ModalJFrame implements
 				}
 
 				//List movements from other wards 
-				for (MovementWard wMvnt : wardManager.getWardMovementsToWard(wardSelected.getCode(), dateFrom, dateTo)) {
+				for (MovementWard wMvnt : movWardBrowserManager.getWardMovementsToWard(wardSelected.getCode(), dateFrom, dateTo)) {
 					if (wMvnt.getWardTo().getDescription() != null) {
 						if (wMvnt.getWardTo().equals(wardSelected)) {
 							MovementType typeCharge = new MovementType("fromward", wMvnt.getWard().getDescription(), "*");
@@ -1282,7 +1283,7 @@ public class WardPharmacy extends ModalJFrame implements
 		public OutcomesModel() {
 			wardOutcomes = new ArrayList<>();
 			try {
-				listMovementWardFromTo = wardManager.getMovementWard(wardSelected.getCode(), dateFrom, dateTo);
+				listMovementWardFromTo = movWardBrowserManager.getMovementWard(wardSelected.getCode(), dateFrom, dateTo);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 				listMovementWardFromTo = new ArrayList<>();
@@ -1445,8 +1446,8 @@ public class WardPharmacy extends ModalJFrame implements
 
 		public DrugsModel() {
 			try {
-				tableModel = wardManager.getMedicalsWardTotalQuantity(wardSelected.getCode().charAt(0));
-				wardDrugs = wardManager.getMedicalsWard(wardSelected.getCode().charAt(0), true);
+				tableModel = movWardBrowserManager.getMedicalsWardTotalQuantity(wardSelected.getCode().charAt(0));
+				wardDrugs = movWardBrowserManager.getMedicalsWard(wardSelected.getCode().charAt(0), true);
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 				tableModel = new ArrayList<>();
@@ -1542,13 +1543,13 @@ public class WardPharmacy extends ModalJFrame implements
 
 				if (jTabbedPaneWard.getSelectedIndex() == 0) {
 					try {
-						printManager.print("WardPharmacyOutcomes", wardManager.convertMovementWardForPrint(wardOutcomes), 0); //$NON-NLS-1$
+						printManager.print("WardPharmacyOutcomes", movWardBrowserManager.convertMovementWardForPrint(wardOutcomes), 0); //$NON-NLS-1$
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e, WardPharmacy.this);
 					}
 				} else if (jTabbedPaneWard.getSelectedIndex() == 1) {
 					try {
-						printManager.print("WardPharmacyIncomes", wardManager.convertMovementForPrint(wardIncomes), 0); //$NON-NLS-1$
+						printManager.print("WardPharmacyIncomes", movWardBrowserManager.convertMovementForPrint(wardIncomes), 0); //$NON-NLS-1$
 					} catch (OHServiceException e) {
 						OHServiceExceptionUtil.showMessages(e, WardPharmacy.this);
 					}

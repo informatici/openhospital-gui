@@ -100,7 +100,7 @@ public class MedicalTypeBrowserEdit extends JDialog {
 	private MedicalType medicalType;
 	private boolean insert;
 	private JPanel jDataPanel = null;
-	private MedicalTypeBrowserManager manager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
+	private MedicalTypeBrowserManager medicalTypeBrowserManager = Context.getApplicationContext().getBean(MedicalTypeBrowserManager.class);
 
 	/**
 	 * This is the default constructor
@@ -201,7 +201,7 @@ public class MedicalTypeBrowserEdit extends JDialog {
 				boolean result;
 				if (insert) { // inserting
 					try {
-						result = manager.newMedicalType(medicalType);
+						result = medicalTypeBrowserManager.newMedicalType(medicalType);
 						if (result) {
 							fireMedicalInserted();
 							dispose();
@@ -216,7 +216,7 @@ public class MedicalTypeBrowserEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = manager.updateMedicalType(medicalType);
+							result = medicalTypeBrowserManager.updateMedicalType(medicalType);
 							if (result) {
 								fireMedicalUpdated();
 								dispose();

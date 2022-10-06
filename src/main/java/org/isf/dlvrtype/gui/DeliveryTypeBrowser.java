@@ -66,7 +66,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	private JTable jTable = null;
 	private DeliveryTypeBrowserModel model;
 	private int selectedrow;
-	private DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
+	private DeliveryTypeBrowserManager deliveryTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 	private DeliveryType deliveryType = null;
 	private final JFrame myFrame;
 	
@@ -177,7 +177,7 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 					DeliveryType delType = (DeliveryType) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.dlvrtype.deletedeliverytype.fmt.msg", delType.getDescription());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deleteDeliveryType(delType))) {
+						if ((answer == JOptionPane.YES_OPTION) && (deliveryTypeBrowserManager.deleteDeliveryType(delType))) {
 							pDeliveryType.remove(jTable.getSelectedRow());
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -204,11 +204,10 @@ public class DeliveryTypeBrowser extends ModalJFrame implements DeliveryTypeList
 	class DeliveryTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DeliveryTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryTypeBrowserManager.class);
 
 		public DeliveryTypeBrowserModel() {
 			try {
-				pDeliveryType = manager.getDeliveryType();
+				pDeliveryType = deliveryTypeBrowserManager.getDeliveryType();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

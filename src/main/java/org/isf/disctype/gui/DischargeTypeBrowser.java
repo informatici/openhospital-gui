@@ -66,7 +66,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 	private JTable jTable = null;
 	private DischargeTypeBrowserModel model;
 	private int selectedrow;
-	private DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
+	private DischargeTypeBrowserManager dischargeTypeBrowserManager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 	private DischargeType dischargeType = null;
 	private final JFrame myFrame;
 
@@ -181,7 +181,7 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 
 						boolean deleted;
 						try {
-							deleted = manager.deleteDischargeType(disType);
+							deleted = dischargeTypeBrowserManager.deleteDischargeType(disType);
 						} catch (OHServiceException e) {
 							deleted = false;
 							OHServiceExceptionUtil.showMessages(e);
@@ -212,11 +212,10 @@ public class DischargeTypeBrowser extends ModalJFrame implements DischargeTypeLi
 	class DischargeTypeBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private DischargeTypeBrowserManager manager = Context.getApplicationContext().getBean(DischargeTypeBrowserManager.class);
 
 		public DischargeTypeBrowserModel() {
 			try {
-				pDischargeType = manager.getDischargeType();
+				pDischargeType = dischargeTypeBrowserManager.getDischargeType();
 			} catch (OHServiceException e) {
 				pDischargeType = null;
 				OHServiceExceptionUtil.showMessages(e);

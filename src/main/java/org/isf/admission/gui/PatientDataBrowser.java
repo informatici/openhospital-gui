@@ -151,8 +151,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 	private Patient patient;
 	private JFrame admittedPatientWindow;
 	
-	private AdmissionBrowserManager admissionManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-	
+
 	public PatientDataBrowser(AdmittedPatientBrowser parentWindow,  Patient myPatient) {
 		super();
 		patient = myPatient;
@@ -203,6 +202,11 @@ public class PatientDataBrowser extends ModalJFrame implements
 
 		return patientData;
 	}
+
+	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
+	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
+	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 	private List<Admission> admList;
 	private List<Disease> disease;
@@ -334,7 +338,7 @@ public class PatientDataBrowser extends ModalJFrame implements
 						Admission adm = (Admission) sorter.getValueAt(selectedRow, -1);
 
 						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedadmission.msg");
-						if ((n == JOptionPane.YES_OPTION) && admissionManager.setDeleted(adm.getId())) {
+						if ((n == JOptionPane.YES_OPTION) && admissionBrowserManager.setDeleted(adm.getId())) {
 							admList.remove(adm);
 							admModel.fireTableDataChanged();
 							admTable.updateUI();
@@ -346,10 +350,9 @@ public class PatientDataBrowser extends ModalJFrame implements
 						}
 					} else {
 						Opd opd = (Opd) sorter.getValueAt(selectedRow, -1);
-						OpdBrowserManager delOpd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 
 						int n = MessageDialog.yesNo(null,"angal.admission.deleteselectedopd.msg");
-						if ((n == JOptionPane.YES_OPTION) && (delOpd.deleteOpd(opd))) {
+						if ((n == JOptionPane.YES_OPTION) && (opdBrowserManager.deleteOpd(opd))) {
 							opdList.remove(opd);
 							admModel.fireTableDataChanged();
 							admTable.updateUI();
@@ -395,14 +398,10 @@ public class PatientDataBrowser extends ModalJFrame implements
 class AdmissionBrowserModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = -453243229156512947L;
-		private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-		private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
 		public AdmissionBrowserModel() {
-			WardBrowserManager wbm = Context.getApplicationContext().getBean(WardBrowserManager.class);
-			OpdBrowserManager opd = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
-				opdList = opd.getOpdList(patient.getCode());
+				opdList = opdBrowserManager.getOpdList(patient.getCode());
 			} catch(OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
 			}
@@ -412,7 +411,7 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				OHServiceExceptionUtil.showMessages(e);
 			}
 			try {
-				ward = wbm.getWards();
+				ward = wardBrowserManager.getWards();
 			} catch(OHServiceException e) {
                 OHServiceExceptionUtil.showMessages(e);
 			}
@@ -472,14 +471,9 @@ class AdmissionBrowserModel extends DefaultTableModel {
 				
 			} else if (column == 1) {				
 				if (row < admList.size()) {
-					String id = admList.get(row).getWard().getCode();
-					for (Ward elem : ward) {
-						if (elem.getCode().equalsIgnoreCase(id)) {
-							return elem.getDescription();
-						}
-					}
+					return admList.get(row).getWard().getDescription();
 				} else {
-					return "OPD";
+					return opdList.get(row).getWard().getDescription();
 				}
 			}
 			else if (column == 2) {

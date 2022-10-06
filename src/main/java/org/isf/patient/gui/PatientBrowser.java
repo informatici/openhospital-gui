@@ -65,7 +65,9 @@ public class PatientBrowser extends ModalJFrame implements PatientListener {
 	private int[] pColumnWidth = { 200, 30, 25, 100, 100, 50 };
 	private int selectedrow;
 	private Patient patient;
-	private PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+
 	private List<Patient> pPat;
 
 	private JTable getJTable() {
@@ -215,7 +217,7 @@ public class PatientBrowser extends ModalJFrame implements PatientListener {
 					Patient pat = (Patient) (model.getValueAt(jTable.getSelectedRow(), -1));
 					int answer = MessageDialog.yesNo(null, "angal.patient.deletepatient.fmt.msg", pat.getName());
 					try {
-						if ((answer == JOptionPane.YES_OPTION) && (manager.deletePatient(pat))) {
+						if ((answer == JOptionPane.YES_OPTION) && (patientBrowserManager.deletePatient(pat))) {
 							pPat.remove(pPat.size() - jTable.getSelectedRow() - 1);
 							model.fireTableDataChanged();
 							jTable.updateUI();
@@ -234,9 +236,8 @@ public class PatientBrowser extends ModalJFrame implements PatientListener {
 		private static final long serialVersionUID = 1L;
 
 		public PatientBrowserModel() {
-			PatientBrowserManager manager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 			try {
-				pPat = manager.getPatient();
+				pPat = patientBrowserManager.getPatient();
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}

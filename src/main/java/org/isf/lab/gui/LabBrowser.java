@@ -53,7 +53,6 @@ import org.isf.lab.gui.LabNew.LabListener;
 import org.isf.lab.manager.LabManager;
 import org.isf.lab.model.Laboratory;
 import org.isf.lab.model.LaboratoryForPrint;
-import org.isf.lab.service.LabIoOperations;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.patient.gui.SelectPatient;
@@ -120,6 +119,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	private boolean[] columnsVisible = { true, GeneralData.LABEXTENDED, true, true};
 	private LabManager labManager = Context.getApplicationContext().getBean(LabManager.class);
 	private PrintManager printManager = Context.getApplicationContext().getBean(PrintManager.class);
+	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 	private LabBrowsingModel model;
 	private Laboratory laboratory;
 	private int selectedrow;
@@ -416,14 +416,13 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	 * @return comboExams (JComboBox)
 	 */
 	private JComboBox getComboExams() {
-		ExamBrowsingManager managerExams = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 		if (comboExams == null) {
 			comboExams = new JComboBox();
 			comboExams.setPreferredSize(new Dimension(225, 30));
 			comboExams.addItem(new Exam("", MessageBundle.getMessage("angal.common.all.txt"), new ExamType("", ""), 0, ""));
 			List<Exam> type;
 			try {
-				type = managerExams.getExams();
+				type = examBrowsingManager.getExams();
 			} catch (OHServiceException e1) {
 				type = null;
 				OHServiceExceptionUtil.showMessages(e1);
@@ -490,11 +489,10 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 	class LabBrowsingModel extends DefaultTableModel {
 
 		private static final long serialVersionUID = 1L;
-		private LabManager manager = Context.getApplicationContext().getBean(LabManager.class, Context.getApplicationContext().getBean(LabIoOperations.class));
 
 		public LabBrowsingModel(String exam, LocalDate dateFrom, LocalDate dateTo) {
 			try {
-				pLabs = manager.getLaboratory(exam, dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+				pLabs = labManager.getLaboratory(exam, dateFrom.atStartOfDay(), dateTo.atStartOfDay());
 			} catch (OHServiceException e) {
 				pLabs = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);
@@ -503,7 +501,7 @@ public class LabBrowser extends ModalJFrame implements LabListener, LabEditListe
 
 		public LabBrowsingModel() {
 			try {
-				pLabs = manager.getLaboratory();
+				pLabs = labManager.getLaboratory();
 			} catch (OHServiceException e) {
 				pLabs = new ArrayList<>();
 				OHServiceExceptionUtil.showMessages(e);

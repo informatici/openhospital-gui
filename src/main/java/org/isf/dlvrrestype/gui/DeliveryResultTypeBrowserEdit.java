@@ -87,7 +87,9 @@ public class DeliveryResultTypeBrowserEdit extends JDialog {
 			((DeliveryResultTypeListener) listener).deliveryresultTypeUpdated(event);
 		}
 	}
-    
+
+	private DeliveryResultTypeBrowserManager deliveryResultTypeBrowserManager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -194,14 +196,13 @@ public class DeliveryResultTypeBrowserEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				DeliveryResultTypeBrowserManager manager = Context.getApplicationContext().getBean(DeliveryResultTypeBrowserManager.class);
 				try {
 
 					deliveryresultType.setDescription(descriptionTextField.getText());
 					deliveryresultType.setCode(codeTextField.getText());
 
 					if (insert) {     // inserting
-						if (manager.newDeliveryResultType(deliveryresultType)) {
+						if (deliveryResultTypeBrowserManager.newDeliveryResultType(deliveryresultType)) {
 							fireDeliveryResultInserted();
 							dispose();
 						} else {
@@ -211,7 +212,7 @@ public class DeliveryResultTypeBrowserEdit extends JDialog {
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							if (manager.updateDeliveryResultType(deliveryresultType)) {
+							if (deliveryResultTypeBrowserManager.updateDeliveryResultType(deliveryresultType)) {
 								fireDeliveryResultUpdated();
 								dispose();
 							} else {

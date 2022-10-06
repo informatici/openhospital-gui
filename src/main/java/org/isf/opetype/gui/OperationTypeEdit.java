@@ -88,7 +88,9 @@ public class OperationTypeEdit extends JDialog {
 			((OperationTypeListener) listener).operationTypeUpdated(event);
 		}
 	}
-    
+
+	private OperationTypeBrowserManager operationTypeBrowserManager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
+
 	private JPanel jContentPane = null;
 	private JPanel dataPanel = null;
 	private JPanel buttonPanel = null;
@@ -194,7 +196,6 @@ public class OperationTypeEdit extends JDialog {
 			okButton = new JButton(MessageBundle.getMessage("angal.common.ok.btn"));
 			okButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			okButton.addActionListener(actionEvent -> {
-				OperationTypeBrowserManager manager = Context.getApplicationContext().getBean(OperationTypeBrowserManager.class);
 				if (descriptionTextField.getText().equals(lastdescription)) {
 					dispose();
 				}
@@ -203,7 +204,7 @@ public class OperationTypeEdit extends JDialog {
 				boolean result;
 				if (insert) {      // inserting
 					try {
-						result = manager.newOperationType(operationType);
+						result = operationTypeBrowserManager.newOperationType(operationType);
 					} catch (OHServiceException e1) {
 						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
@@ -221,7 +222,7 @@ public class OperationTypeEdit extends JDialog {
 						dispose();
 					} else {
 						try {
-							result = manager.updateOperationType(operationType);
+							result = operationTypeBrowserManager.updateOperationType(operationType);
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
 							result = false;

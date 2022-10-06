@@ -74,7 +74,10 @@ public class OperationList extends JPanel {
 	OhDefaultCellRenderer cellRenderer = new OhDefaultCellRenderer();
 
 	OhTableOperationModel<OperationRow> modelOhOpeRow;
-	OperationRowBrowserManager opeRowManager;
+
+	OperationRowBrowserManager operationRowBrowserManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
+	AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
+	OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 
 	public OperationList(Object object) {
 		if (object instanceof Opd) {
@@ -86,7 +89,6 @@ public class OperationList extends JPanel {
 		if (object instanceof Patient) {
 			myPatient = (Patient) object;
 		}
-		opeRowManager = Context.getApplicationContext().getBean(OperationRowBrowserManager.class);
 		setLayout(new BorderLayout(0, 0));
 
 		JPanel panelData = new JPanel();
@@ -99,30 +101,28 @@ public class OperationList extends JPanel {
 		/* *** getting data *** */
 		if (myOpd != null) {
 			try {
-				oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+				oprowData = operationRowBrowserManager.getOperationRowByOpd(myOpd);
 			} catch (OHServiceException e1) {
 				OHServiceExceptionUtil.showMessages(e1);
 			}
 		}
 		if (myAdmission != null) {
 			try {
-				oprowData = opeRowManager.getOperationRowByAdmission(myAdmission);
+				oprowData = operationRowBrowserManager.getOperationRowByAdmission(myAdmission);
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
 			}
 		}
 		if (myPatient != null) {
-			AdmissionBrowserManager admManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
-			OpdBrowserManager opdManager= Context.getApplicationContext().getBean(OpdBrowserManager.class);
 			try {
-				List<Admission> admissions = admManager.getAdmissions(myPatient);
+				List<Admission> admissions = admissionBrowserManager.getAdmissions(myPatient);
 				oprowData = new ArrayList<>();
 				for (Admission adm : admissions) {
-					oprowData.addAll(opeRowManager.getOperationRowByAdmission(adm));
+					oprowData.addAll(operationRowBrowserManager.getOperationRowByAdmission(adm));
 				}
-				List<Opd> opds =  opdManager.getOpdList(myPatient.getCode());
+				List<Opd> opds =  opdBrowserManager.getOpdList(myPatient.getCode());
 				for (Opd op : opds) {
-					oprowData.addAll(opeRowManager.getOperationRowByOpd(op));
+					oprowData.addAll(operationRowBrowserManager.getOperationRowByOpd(op));
 				}
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error(ohServiceException.getMessage(), ohServiceException);
@@ -196,7 +196,7 @@ public class OperationList extends JPanel {
 
 	private void refreshJtable() {
 		try {
-			oprowData = opeRowManager.getOperationRowByOpd(myOpd);
+			oprowData = operationRowBrowserManager.getOperationRowByOpd(myOpd);
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}

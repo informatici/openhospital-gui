@@ -93,7 +93,7 @@ public class WardPharmacyEdit extends JDialog {
 	private Double maxQty;
 	private int movSelectedAge;
 	private float movSelectedWeight;
-	private PatientBrowserManager patBrowser = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 	private MovWardBrowserManager movWardBrowserManager = Context.getApplicationContext().getBean(MovWardBrowserManager.class);
 	private List<Patient> pat = new ArrayList<>();
 	private List<MedicalWard> medList;
@@ -180,7 +180,7 @@ public class WardPharmacyEdit extends JDialog {
 			jSearchButton.addActionListener(actionEvent -> {
 				jComboBoxPatients.removeAllItems();
 				try {
-					pat = patBrowser.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
+					pat = patientBrowserManager.getPatientsByOneOfFieldsLike(jTextFieldSearchPatient.getText());
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
 					pat = new ArrayList<>();

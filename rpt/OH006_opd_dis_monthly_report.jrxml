@@ -14,19 +14,19 @@
         FROM (
             select OPD_DIS_ID_A, OPD_AGE, OPD_SEX FROM OH_OPD
             where OPD_NEW_PAT = 'N'
-            and month(OPD_DATE_VIS) = $P{month} and year(OPD_DATE_VIS)=$P{year}
+            and month(OPD_DATE) = $P{month} and year(OPD_DATE)=$P{year}
             union all 
             select OPD_DIS_ID_A_2 as OPD_DIS_ID_A, OPD_AGE, OPD_SEX FROM OH_OPD
             where not OPD_DIS_ID_A_2 is null
             and OPD_NEW_PAT = 'N'
-            and month(OPD_DATE_VIS) = $P{month} and year(OPD_DATE_VIS)=$P{year}
+            and month(OPD_DATE) = $P{month} and year(OPD_DATE)=$P{year}
             union all 
             select OPD_DIS_ID_A_3 as OPD_DIS_ID_A, OPD_AGE, OPD_SEX FROM OH_OPD
             where not OPD_DIS_ID_A_3 is null
             and OPD_NEW_PAT = 'N'
-            and month(OPD_DATE_VIS) = $P{month} and year(OPD_DATE_VIS)=$P{year}
+            and month(OPD_DATE) = $P{month} and year(OPD_DATE)=$P{year}
             ) as OPDALLDIAG
-            , DISEASE , DISEASETYPE
+            , OH_DISEASE , OH_DISEASETYPE
 where  OPDALLDIAG.OPD_DIS_ID_A = DIS_ID_A
 and DIS_DCL_ID_A = DCL_ID_A
 group by

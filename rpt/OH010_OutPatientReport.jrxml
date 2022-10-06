@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final utlizzo versione della libreria JasperReports6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OH010_OutPatientReport" pageWidth="1133" pageHeight="793" orientation="Landscape" columnWidth="1073" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" resourceBundle="OH010_OutPatientReport" whenResourceMissingType="Key" uuid="1ae95539-9794-4bfc-954e-7879664f4181">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="344"/>
@@ -10,6 +10,10 @@
 	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -24,55 +28,103 @@
 		<defaultValueExpression><![CDATA["./rsc/images/"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT OPD_PROG_YEAR, PAT_ID, OPD_DATE, PAT_CITY, PAT_ADDR, COALESCE(PAT_SEX, OPD_SEX) AS PAT_SEX, COALESCE(PAT_AGE, OPD_AGE) AS PAT_AGE, DATEDIFF(OPD_DATE,PAT_BDATE) AS DAYS,
+		<![CDATA[SELECT OPD_PROG_YEAR, WRD_NAME, PAT_ID, OPD_DATE, PAT_CITY, PAT_ADDR, COALESCE(PAT_SEX, OPD_SEX) AS PAT_SEX, COALESCE(PAT_AGE, OPD_AGE) AS PAT_AGE, DATEDIFF(OPD_DATE,PAT_BDATE) AS DAYS,
 		IF(PAT_AGE < 5, "UNDER 5", "OVER 5") AS AGETYPE,
 		(SELECT DCL_ID_A FROM OH_DISEASE JOIN OH_DISEASETYPE ON DIS_DCL_ID_A = DCL_ID_A WHERE DIS_ID_A = OPD_DIS_ID_A) AS TYPE1,
-        	(SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A) AS DISEASE1,
-		(SELECT DCL_ID_A FROM OH_DISEASE JOIN OH_DISEASETYPE ON DIS_DCL_ID_A = DCL_ID_A WHERE DIS_ID_A = OPD_DIS_ID_A_2) AS TYPE2,
+        (SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A) AS DISEASE1,
 		(SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_2) AS DISEASE2,
-		(SELECT DCL_ID_A FROM OH_DISEASE JOIN OH_DISEASETYPE ON DIS_DCL_ID_A = DCL_ID_A WHERE DIS_ID_A = OPD_DIS_ID_A_3) AS TYPE3,
 		(SELECT DIS_DESC FROM OH_DISEASE WHERE DIS_ID_A = OPD_DIS_ID_A_3) AS DISEASE3,
-       		IF(OPD_NEW_PAT='N','New','Re') AS ATTENDANCE,
+       	IF(OPD_NEW_PAT='N','New','Re') AS ATTENDANCE,
 		OPD_REFERRAL_FROM,
 		OPD_REFERRAL_TO
 FROM OH_OPD LEFT JOIN OH_PATIENT ON PAT_ID = OPD_PAT_ID
+LEFT JOIN OH_WARD ON OPD_WRD_ID_A = WRD_ID_A
 WHERE DATE(OPD_DATE) BETWEEN DATE($P{fromdate}) AND DATE($P{todate})
 ORDER BY OPD_DATE ASC]]>
 	</queryString>
 	<field name="OPD_PROG_YEAR" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="OPD_PROG_YEAR"/>
+		<property name="com.jaspersoft.studio.field.label" value="OPD_PROG_YEAR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_opd"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="WRD_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_NAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_ward"/>
+	</field>
 	<field name="PAT_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="OPD_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="OPD_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="OPD_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_opd"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="PAT_CITY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_CITY"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_CITY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="PAT_ADDR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_ADDR"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_ADDR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="PAT_SEX" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_SEX"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_SEX"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="PAT_AGE" class="java.lang.Integer">
+	<field name="PAT_AGE" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_AGE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_AGE"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="DAYS" class="java.lang.Long"/>
-	<field name="AGETYPE" class="java.lang.String"/>
-	<field name="TYPE1" class="java.lang.String"/>
-	<field name="DISEASE1" class="java.lang.String"/>
-	<field name="TYPE2" class="java.lang.String"/>
-	<field name="DISEASE2" class="java.lang.String"/>
-	<field name="TYPE3" class="java.lang.String"/>
-	<field name="DISEASE3" class="java.lang.String"/>
-	<field name="ATTENDANCE" class="java.lang.String"/>
+	<field name="DAYS" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="DAYS"/>
+		<property name="com.jaspersoft.studio.field.label" value="DAYS"/>
+	</field>
+	<field name="AGETYPE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="AGETYPE"/>
+		<property name="com.jaspersoft.studio.field.label" value="AGETYPE"/>
+	</field>
+	<field name="TYPE1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="TYPE1"/>
+		<property name="com.jaspersoft.studio.field.label" value="TYPE1"/>
+	</field>
+	<field name="DISEASE1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="DISEASE1"/>
+		<property name="com.jaspersoft.studio.field.label" value="DISEASE1"/>
+	</field>
+	<field name="DISEASE2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="DISEASE2"/>
+		<property name="com.jaspersoft.studio.field.label" value="DISEASE2"/>
+	</field>
+	<field name="DISEASE3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="DISEASE3"/>
+		<property name="com.jaspersoft.studio.field.label" value="DISEASE3"/>
+	</field>
+	<field name="ATTENDANCE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ATTENDANCE"/>
+		<property name="com.jaspersoft.studio.field.label" value="ATTENDANCE"/>
+	</field>
 	<field name="OPD_REFERRAL_FROM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="OPD_REFERRAL_FROM"/>
+		<property name="com.jaspersoft.studio.field.label" value="OPD_REFERRAL_FROM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_opd"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="OPD_REFERRAL_TO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="OPD_REFERRAL_TO"/>
+		<property name="com.jaspersoft.studio.field.label" value="OPD_REFERRAL_TO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_opd"/>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<variable name="DAY_UNDER_FIVE" class="java.lang.Integer" calculation="Sum">
@@ -276,10 +328,10 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[OPD]]></text>
+				<text><![CDATA[ID]]></text>
 			</staticText>
 			<textField>
-				<reportElement key="staticText-6" mode="Opaque" x="174" y="0" width="78" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="bc0561c1-b5b3-4391-a7af-6180ab551ab3"/>
+				<reportElement key="staticText-6" mode="Opaque" x="258" y="0" width="78" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="bc0561c1-b5b3-4391-a7af-6180ab551ab3"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -292,7 +344,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{City}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-7" mode="Opaque" x="252" y="0" width="78" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="d164705d-a41b-4dd2-ad74-7e4cbe9f6135"/>
+				<reportElement key="staticText-7" mode="Opaque" x="336" y="0" width="78" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="d164705d-a41b-4dd2-ad74-7e4cbe9f6135"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -305,7 +357,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{Address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-8" mode="Opaque" x="330" y="0" width="40" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="5bd0c5c1-546a-4490-8012-916b4dda9da2"/>
+				<reportElement key="staticText-8" mode="Opaque" x="414" y="0" width="40" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="5bd0c5c1-546a-4490-8012-916b4dda9da2"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -318,7 +370,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{Sex}+"	"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-9" mode="Opaque" x="370" y="0" width="40" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="8f680fd6-98d1-462f-8d23-5b10aa294f59"/>
+				<reportElement key="staticText-9" mode="Opaque" x="454" y="0" width="40" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="8f680fd6-98d1-462f-8d23-5b10aa294f59"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -331,7 +383,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{Age}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-10" mode="Opaque" x="531" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="d22aed07-f11b-4d64-a7f8-a0fb7e4c6525"/>
+				<reportElement key="staticText-10" mode="Opaque" x="615" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="d22aed07-f11b-4d64-a7f8-a0fb7e4c6525"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -344,33 +396,20 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{Type}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-11" mode="Opaque" x="573" y="0" width="115" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="8ee666ef-cff4-4273-bbd7-91081b6447e6"/>
+				<reportElement key="staticText-11" mode="Opaque" x="657" y="0" width="115" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="8ee666ef-cff4-4273-bbd7-91081b6447e6"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Disease}+" 1"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-12" mode="Opaque" x="688" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="895500d7-6426-400b-b7b7-d94834427a5f"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{Type}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement key="staticText-13" mode="Opaque" x="730" y="0" width="115" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="ae226bd3-2291-4af8-bb38-c38c6b19e892"/>
+				<reportElement key="staticText-13" mode="Opaque" x="772" y="0" width="115" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="ae226bd3-2291-4af8-bb38-c38c6b19e892"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -381,19 +420,6 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Disease}+" 2"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement key="staticText-14" mode="Opaque" x="845" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="bd1c5885-c510-4907-996f-897113ad5fe8"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{Type}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-15" mode="Opaque" x="887" y="0" width="115" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="581830ce-a0c4-43fb-a775-6a1166596c65"/>
@@ -435,7 +461,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{ToUppercase}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-18" mode="Opaque" x="99" y="0" width="75" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="852aa98c-36f2-4986-9978-e36fb603a2b2"/>
+				<reportElement key="staticText-18" mode="Opaque" x="183" y="0" width="75" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="852aa98c-36f2-4986-9978-e36fb603a2b2"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -448,7 +474,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{DateUppercase}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-19" mode="Opaque" x="452" y="0" width="79" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="d4efaf93-378e-4e09-bb67-65eea2af1e9f"/>
+				<reportElement key="staticText-19" mode="Opaque" x="536" y="0" width="79" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="d4efaf93-378e-4e09-bb67-65eea2af1e9f"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -461,7 +487,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{Attendance}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-28" mode="Opaque" x="410" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="6b747df1-5fc5-4e8d-a4fe-cc95c81f1516"/>
+				<reportElement key="staticText-28" mode="Opaque" x="494" y="0" width="42" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="6b747df1-5fc5-4e8d-a4fe-cc95c81f1516"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -474,7 +500,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$R{Days}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-29" mode="Opaque" x="50" y="0" width="49" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="f7b20011-daa4-488b-8264-2b908b713f41"/>
+				<reportElement key="staticText-29" mode="Opaque" x="134" y="0" width="49" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="f7b20011-daa4-488b-8264-2b908b713f41"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -486,13 +512,26 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				</textElement>
 				<textFieldExpression><![CDATA[$R{Patid}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement key="staticText-3" mode="Opaque" x="50" y="0" width="84" height="19" forecolor="#FFFFFF" backcolor="#FF3333" uuid="3bcdf690-e3ed-40b2-b55a-6d6b5c921888"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Ward}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="0" y="0" width="50" height="18" uuid="3e6868c4-beb2-4fe3-91d7-dd7d540de6a2"/>
 				<box>
@@ -507,7 +546,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{OPD_PROG_YEAR}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField" x="174" y="0" width="78" height="18" uuid="1ba73110-ceab-48ff-8a1b-6df84caf9b98"/>
+				<reportElement key="textField" x="258" y="0" width="78" height="18" uuid="1ba73110-ceab-48ff-8a1b-6df84caf9b98"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -520,7 +559,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{PAT_CITY}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField" x="252" y="0" width="78" height="18" uuid="f0b16423-0788-4d46-8189-e276350ef8de"/>
+				<reportElement key="textField" x="336" y="0" width="78" height="18" uuid="f0b16423-0788-4d46-8189-e276350ef8de"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -533,7 +572,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{PAT_ADDR}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="330" y="0" width="40" height="18" uuid="7a829868-6be2-47d9-b0f6-659b2351ffc7"/>
+				<reportElement key="textField" x="414" y="0" width="40" height="18" uuid="7a829868-6be2-47d9-b0f6-659b2351ffc7"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -546,7 +585,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{PAT_SEX}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="370" y="0" width="40" height="18" uuid="d0b3eb2f-fb82-412f-9310-531c3e6ad474"/>
+				<reportElement key="textField" x="454" y="0" width="40" height="18" uuid="d0b3eb2f-fb82-412f-9310-531c3e6ad474"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -559,7 +598,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{PAT_AGE}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" mode="Opaque" x="531" y="0" width="42" height="18" backcolor="#FFFFFF" uuid="f6de2d61-897d-4bff-8714-11c6f8d6c833"/>
+				<reportElement key="textField" mode="Opaque" x="615" y="0" width="42" height="18" backcolor="#FFFFFF" uuid="f6de2d61-897d-4bff-8714-11c6f8d6c833"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -572,7 +611,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{TYPE1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="573" y="0" width="115" height="18" uuid="6bc55602-c253-4586-9e44-fc678172d77b"/>
+				<reportElement key="textField" x="657" y="0" width="115" height="18" uuid="6bc55602-c253-4586-9e44-fc678172d77b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -598,20 +637,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{OPD_REFERRAL_FROM}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField-12" mode="Transparent" x="688" y="0" width="42" height="18" backcolor="#FFFFFF" uuid="e3cd08e1-0c42-4255-8999-c8688c9d2231"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{TYPE2}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement key="textField-13" x="730" y="0" width="115" height="18" uuid="c3032ba0-8b21-4952-9c58-0776d9785fdf"/>
+				<reportElement key="textField-13" x="772" y="0" width="115" height="18" uuid="c3032ba0-8b21-4952-9c58-0776d9785fdf"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -622,19 +648,6 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DISEASE2}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement key="textField-14" mode="Opaque" x="845" y="0" width="42" height="18" backcolor="#FFFFFF" uuid="944a573d-8624-4d5a-a56a-0442c5611ac7"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{TYPE3}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField-15" x="887" y="0" width="115" height="18" uuid="1c4a488c-8aba-4d8d-9144-25cedff35dab"/>
@@ -663,7 +676,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{OPD_REFERRAL_TO}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
-				<reportElement key="textField-17" x="99" y="0" width="75" height="18" uuid="840274a7-9074-46df-8857-97c3d4a1c4e2"/>
+				<reportElement key="textField-17" x="183" y="0" width="75" height="18" uuid="840274a7-9074-46df-8857-97c3d4a1c4e2"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -676,7 +689,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{OPD_DATE}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField-18" x="452" y="0" width="79" height="18" uuid="02fabd5d-3821-446b-9108-3c8d48ea2c2c"/>
+				<reportElement key="textField-18" x="536" y="0" width="79" height="18" uuid="02fabd5d-3821-446b-9108-3c8d48ea2c2c"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -689,7 +702,7 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textFieldExpression><![CDATA[$F{ATTENDANCE}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField-32" x="410" y="0" width="42" height="18" uuid="8994a9e6-50f0-42cc-83cc-070d27113933"/>
+				<reportElement key="textField-32" x="494" y="0" width="42" height="18" uuid="8994a9e6-50f0-42cc-83cc-070d27113933"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -699,12 +712,12 @@ $F{ATTENDANCE}.equals( "Re" ) ? new Integer(1) : new Integer(0)]]></variableExpr
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PAT_AGE}.compareTo( new Integer(0) ) != 0 ?
+				<textFieldExpression><![CDATA[$F{PAT_AGE}.compareTo( new Long(0) ) != 0 ?
 null :
 $F{DAYS}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField-33" x="50" y="0" width="49" height="18" uuid="1e22b41e-849d-474d-8f64-701b29f88b71"/>
+				<reportElement key="textField-33" x="134" y="0" width="49" height="18" uuid="1e22b41e-849d-474d-8f64-701b29f88b71"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -715,6 +728,19 @@ $F{DAYS}]]></textFieldExpression>
 					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAT_ID}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="50" y="0" width="84" height="18" uuid="4651e7cb-6205-4184-8a50-37e649757c73"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{WRD_NAME}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

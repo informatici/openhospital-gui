@@ -44,6 +44,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.utils.image.ImageUtil;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +65,7 @@ public class PatientSummary {
 	private int borderThickness = 10;
 	private int imageMaxWidth = 140;
 
-	private PatientBrowserManager patientManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
 
 	public PatientSummary(Patient patient) {
 		super();
@@ -184,11 +185,11 @@ public class PatientSummary {
 		
 		JLabel patientPhoto = new JLabel();
 		if (patient.getPatientProfilePhoto() != null && patient.getPatientProfilePhoto().getPhotoAsImage() != null) {
-			patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, patient.getPatientProfilePhoto().getPhotoAsImage())));
+			patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(patient.getPatientProfilePhoto().getPhotoAsImage(), PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH)));
 		} else {
 			try {
 				Image noPhotoImage = ImageIO.read(new File("rsc/images/nophoto.png"));
-				patientPhoto.setIcon(new ImageIcon(scaleImage(imageMaxWidth, noPhotoImage)));
+				patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(noPhotoImage, PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH)));
 			} catch (IOException ioe) {
 				LOGGER.error("rsc/images/nophoto.png is missing...");
 			}
@@ -314,7 +315,7 @@ public class PatientSummary {
 		if (patient.getMaritalStatus().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getMaritalStatus().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel(patientManager.getMaritalTranslated(patient.getMaritalStatus()));
+			l = new JLabel(patientBrowserManager.getMaritalTranslated(patient.getMaritalStatus()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);
@@ -326,7 +327,7 @@ public class PatientSummary {
 		if (patient.getProfession().equalsIgnoreCase(MessageBundle.getMessage("angal.common.unknown.txt")) || patient.getProfession().equalsIgnoreCase("")) {
 			l = new JLabel(" ");
 		} else {
-			l = new JLabel(patientManager.getProfessionTranslated(patient.getProfession()));
+			l = new JLabel(patientBrowserManager.getProfessionTranslated(patient.getProfession()));
 		}
 		JPanel lP = new JPanel(new FlowLayout(FlowLayout.LEFT, insetSize, insetSize));
 		lP.add(l);

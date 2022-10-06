@@ -107,7 +107,7 @@ public class UserEdit extends JDialog {
 	private User user;
 	private boolean insert;
 
-	private UserBrowsingManager manager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
+	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
 	/**
 	 * This is the default constructor; we pass the arraylist and the selectedrow
@@ -256,7 +256,7 @@ public class UserEdit extends JDialog {
 						return;
 					}
 					String passwordStr = new String(password);
-					if (!manager.isPasswordStrong(passwordStr)) {
+					if (!userBrowsingManager.isPasswordStrong(passwordStr)) {
 						MessageDialog.error(null, "angal.userbrowser.passwordsmustcontainatleastonealphabeticnumericandspecialcharacter.msg");
 						Arrays.fill(password, '0');
 						Arrays.fill(repeatPassword, '0');
@@ -275,7 +275,7 @@ public class UserEdit extends JDialog {
 					user.setPasswd(hashed);
 					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());
 					try {
-						result = manager.newUser(user);
+						result = userBrowsingManager.newUser(user);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
@@ -287,7 +287,7 @@ public class UserEdit extends JDialog {
 				} else {
 					user.setUserGroupName((UserGroup) typeComboBox.getSelectedItem());
 					try {
-						result = manager.updateUser(user);
+						result = userBrowsingManager.updateUser(user);
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
@@ -362,7 +362,7 @@ public class UserEdit extends JDialog {
 			if (insert) {
 				List<UserGroup> group = null;
 				try {
-					group = manager.getUserGroup();
+					group = userBrowsingManager.getUserGroup();
 				} catch (OHServiceException e) {
 					OHServiceExceptionUtil.showMessages(e);
 				}
