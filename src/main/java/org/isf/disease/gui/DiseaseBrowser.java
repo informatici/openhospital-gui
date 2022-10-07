@@ -63,6 +63,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final DiseaseType ALL_DISEASETYPES = new DiseaseType("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
 
 	@Override
 	public void diseaseInserted(AWTEvent e) {
@@ -124,7 +125,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		buttonPanel.add(selectlabel);
 		
 		pbox = new JComboBox();
-		pbox.addItem(new DiseaseType("0", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
+		pbox.addItem(ALL_DISEASETYPES);
 		List<DiseaseType> type = null;
 		try {
 			type = diseaseTypeBrowserManager.getDiseaseType();
@@ -139,7 +140,7 @@ public class DiseaseBrowser extends ModalJFrame implements DiseaseEdit.DiseaseLi
 		}
 		pbox.addActionListener(actionEvent -> {
 			pSelection = (DiseaseType) pbox.getSelectedItem();
-			if (pSelection.getDescription().compareTo(MessageBundle.getMessage("angal.common.all.txt").toLowerCase()) == 0) {
+			if (pSelection.getDescription().compareTo(ALL_DISEASETYPES.getDescription()) == 0) {
 				model = new DiseaseBrowserModel();
 			} else {
 				model = new DiseaseBrowserModel(pSelection.getCode());
