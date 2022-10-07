@@ -348,7 +348,7 @@ ORDER BY WARD, YEAR(DATE), MONTH(DATE)]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Periodical.Incomes.Billed.And.Receivables.Report}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Periodic.Incomes.Billed.And.Receivables.Report}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
 				<reportElement key="textField-55" x="0" y="39" width="782" height="17" uuid="39e67273-3f1f-4e36-8abf-4e70e564f313"/>

@@ -186,7 +186,7 @@ ORDER BY BLL_DATE]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{Periodical.Incomes.Billed.And.Receivables.Report}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{Periodic.Incomes.Billed.And.Receivables.Report}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-13" x="0" y="104" width="535" height="21" uuid="3f108e98-466a-4818-be05-11d032f06e62"/>
