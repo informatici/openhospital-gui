@@ -102,6 +102,7 @@ public class ReportLauncher extends ModalJFrame{
 		{"angal.stat.allIncomes",						"BillsReport",														"twodates"},
 		{"angal.stat.allIncomespending",				"BillsReportPending",												"twodates"},
 		{"angal.stat.allIncomesmonth",					"BillsReportMonthly",												"twodates"},
+		{"angal.stat.allIncomesmonthward",				"BillsReportMonthlyWard",												"twodates"},
 		{"angal.stat.pageonecensusinfo", 				"hmis108_cover", 													"twodatesfrommonthyear"},
 		{"angal.stat.pageonereferrals", 				"hmis108_referrals", 												"monthyear"},
 		{"angal.stat.pageoneoperations", 				"hmis108_operations", 												"monthyear"},
