@@ -410,11 +410,7 @@ public class LabEditExtended extends ModalJFrame {
 					labPat = (Patient) patientComboBox.getSelectedItem();
 					setPatient(labPat);
 					Admission admission = null;
-					try {
-						admission = admissionBrowserManager.getCurrentAdmission(labPat);
-					} catch (OHServiceException e) {
-						OHServiceExceptionUtil.showMessages(e);
-					}
+					admission = admissionBrowserManager.getCurrentAdmission(labPat);
 					inPatientCheckBox.setSelected(admission != null);
 				}
 			});

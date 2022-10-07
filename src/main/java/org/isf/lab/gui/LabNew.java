@@ -325,13 +325,8 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 	}
 	
 	private String getIsAdmitted() {
-		Admission adm = new Admission();
-		try {
-			adm = admissionBrowserManager.getCurrentAdmission(patientSelected);
-		} catch(OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-		}
-		return (adm==null?"O":"I");					
+		Admission adm = admissionBrowserManager.getCurrentAdmission(patientSelected);
+		return (adm == null ? "O" : "I");				
 	}
 
 	private JPanel getJPanelButtons() {

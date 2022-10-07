@@ -396,12 +396,8 @@ public class AdmissionBrowser extends ModalJFrame {
 			OHServiceExceptionUtil.showMessages(e);
 		}
 		if (editing) {
-			try {
-				admission = admissionBrowserManager.getCurrentAdmission(patient);
-			} catch (OHServiceException e) {
-				OHServiceExceptionUtil.showMessages(e);
-			}
-			if (admission.getWard().getCode().equalsIgnoreCase("M")) {
+			admission = admissionBrowserManager.getCurrentAdmission(patient);
+			if (admission != null && admission.getWard().getCode().equalsIgnoreCase("M")) {
 				viewingPregnancy = true;
 			}
 		} else {
