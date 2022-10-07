@@ -115,11 +115,10 @@ public class OperationEdit extends JDialog {
 	private JButton okButton = null;
 	private JTextField descriptionTextField = null;
 	private JTextField codeTextField = null;
-	private JComboBox<OperationType> typeComboBox = null;
+	private JComboBox<OperationType> operationTypeComboBox = null;
 	private String lastdescription;
 	private Operation operation;
 	private JRadioButton major = null;
-	private JRadioButton minor = null;
 	private JPanel radioButtonPanel;
 	private boolean insert;
 	private JComboBox<String> operBox;
@@ -179,7 +178,7 @@ public class OperationEdit extends JDialog {
 
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(typeLabel);
-			dataPanel.add(getTypeComboBox());
+			dataPanel.add(getOperationTypeComboBox());
 			dataPanel.add(codeLabel);
 			dataPanel.add(getCodeTextField());
 			dataPanel.add(descLabel);
@@ -276,14 +275,14 @@ public class OperationEdit extends JDialog {
 					} else {
 
 						if (operationBrowserManager.descriptionControl(descriptionTextField.getText(),
-								((OperationType) typeComboBox.getSelectedItem()).getCode())) {
+								((OperationType) operationTypeComboBox.getSelectedItem()).getCode())) {
 							MessageDialog.error(null, "angal.operation.operationalreadypresent");
 							return;
 						}
 					}
 					String opeForSelection = String.valueOf(operBox.getSelectedIndex()+1);
 					operation.setOpeFor(opeForSelection);
-					operation.setType((OperationType) typeComboBox.getSelectedItem());
+					operation.setType((OperationType) operationTypeComboBox.getSelectedItem());
 					operation.setDescription(descriptionTextField.getText());
 					operation.setCode(codeTextField.getText().trim().toUpperCase());
 					if (major.isSelected()) {
@@ -346,7 +345,7 @@ public class OperationEdit extends JDialog {
 			if (major == null) {
 
 				major = getRadioButton(MessageBundle.getMessage("angal.operation.major"), true);
-				minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), true);
+				JRadioButton minor = getRadioButton(MessageBundle.getMessage("angal.operation.minor"), true);
 
 				ButtonGroup radioGroup = new ButtonGroup();
 
@@ -395,32 +394,40 @@ public class OperationEdit extends JDialog {
 	}
 
 	/**
-	 * This method initializes typeComboBox
+	 * This method initializes operationTypeComboBox
 	 * 
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox<OperationType> getTypeComboBox() {
-		if (typeComboBox == null) {
-			typeComboBox = new JComboBox<>();
-			if (insert) {
-				List<OperationType> types;
-				try {
-					types = operationTypeBrowserManager.getOperationType();
-
-					for (OperationType elem : types) {
-						typeComboBox.addItem(elem);
+	private JComboBox<OperationType> getOperationTypeComboBox() {
+		if (operationTypeComboBox == null) {
+			operationTypeComboBox = new JComboBox<>();
+			try {
+				List<OperationType> types = operationTypeBrowserManager.getOperationType();
+				if (insert) {
+					if (types != null) {
+						for (OperationType elem : types) {
+							operationTypeComboBox.addItem(elem);
+						}
 					}
-				} catch (OHServiceException e) {
-					OHServiceExceptionUtil.showMessages(e);
-					types = null;
+				} else {
+					OperationType selectedOperationType = null;
+					if (types != null) {
+						for (OperationType elem : types) {
+							operationTypeComboBox.addItem(elem);
+							if (operation.getType().equals(elem)) {
+								selectedOperationType = elem;
+							}
+						}
+					} if (selectedOperationType != null) {
+						operationTypeComboBox.setSelectedItem(selectedOperationType);
+					}
 				}
-			} else {
-				typeComboBox.addItem(operation.getType());
-				typeComboBox.setEnabled(false);
-			}
+			} catch (OHServiceException e) {
+				OHServiceExceptionUtil.showMessages(e);
 
+			}
 		}
-		return typeComboBox;
+		return operationTypeComboBox;
 	}
 
 }

@@ -171,7 +171,7 @@ public class VaccineEdit extends JDialog {
 			dataPanel = new JPanel();
 			dataPanel.setLayout(new SpringLayout());
 			dataPanel.add(vaccineTypeDescLabel);
-			dataPanel.add(getvaccineTypeComboBox());
+			dataPanel.add(getVaccineTypeComboBox());
 			dataPanel.add(codeLabel);
 			dataPanel.add(getCodeTextField());
 			dataPanel.add(descLabel);
@@ -303,23 +303,33 @@ public class VaccineEdit extends JDialog {
 	 *
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox<VaccineType> getvaccineTypeComboBox() {
+	private JComboBox<VaccineType> getVaccineTypeComboBox() {
 		if (vaccineTypeComboBox == null) {
 			vaccineTypeComboBox = new JComboBox<>();
-			List<VaccineType> types = null;
 			try {
-				types = vaccineTypeBrowserManager.getVaccineType();
+				List<VaccineType> types = vaccineTypeBrowserManager.getVaccineType();
+				if (insert) {
+					if (types != null) {
+						for (VaccineType elem : types) {
+							vaccineTypeComboBox.addItem(elem);
+						}
+					}
+				} else {
+					VaccineType selectedVaccineType = null;
+					if (types != null) {
+						for (VaccineType elem : types) {
+							vaccineTypeComboBox.addItem(elem);
+							if (vaccine.getVaccineType().equals(elem)) {
+								selectedVaccineType = elem;
+							}
+						}
+						if (selectedVaccineType != null) {
+							vaccineTypeComboBox.setSelectedItem(vaccine.getVaccineType());
+						}
+					}
+				}
 			} catch (OHServiceException e) {
 				OHServiceExceptionUtil.showMessages(e);
-			}
-			if (types != null) {
-				for (VaccineType elem : types) {
-					vaccineTypeComboBox.addItem(elem);
-				}
-			}
-			if (!insert) {
-				vaccineTypeComboBox.setSelectedItem(vaccine.getVaccineType());
-				vaccineTypeComboBox.setEnabled(false);				
 			}
 		}
 		return vaccineTypeComboBox;

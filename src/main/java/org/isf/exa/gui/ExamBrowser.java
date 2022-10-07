@@ -54,8 +54,6 @@ import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * ------------------------------------------
@@ -71,11 +69,10 @@ import org.slf4j.LoggerFactory;
 public class ExamBrowser extends ModalJFrame implements ExamListener {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExamBrowser.class);
 	private static final String STR_ALL = MessageBundle.getMessage("angal.common.all.txt").toUpperCase();
 
 	private int selectedrow;
-	private JComboBox pbox;
+	private JComboBox<ExamType> examTypeFilter;
 	private List<Exam> pExam;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
@@ -90,12 +87,10 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 	private DefaultTableModel model ;
 	private JTable table;
 	private final JFrame myFrame;
-	private String pSelection;
 	private JButton jButtonNew;
 	private JButton jButtonEdit;
 	private JButton jButtonClose;
 	private JButton jButtonShow;
-	private JButton jButtonDelete;
 	private JPanel jContentPanel;
 	private JPanel buttonPanel;
 	private JTextField searchTextField;
@@ -167,25 +162,25 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 		return buttonPanel;
 	}
 
-	private JComboBox getJComboBoxExamType() {
-		if (pbox == null) {
-			pbox = new JComboBox();
-			pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
+	private JComboBox<ExamType> getJComboBoxExamType() {
+		if (examTypeFilter == null) {
+			examTypeFilter = new JComboBox<>();
+			examTypeFilter.addItem(new ExamType("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
 			List<ExamType> type;
 			try {
-				type = examBrowsingManager.getExamType();	//for efficiency in the sequent for
+				type = examBrowsingManager.getExamType();
 			} catch (OHServiceException e1) {
 				type = null;
 				OHServiceExceptionUtil.showMessages(e1);
 			}
 			if (null != type) {
 				for (ExamType elem : type) {
-					pbox.addItem(elem);
+					examTypeFilter.addItem(elem);
 				}
 			}
-			pbox.addActionListener(actionEvent -> reloadTable());
+			examTypeFilter.addActionListener(actionEvent -> reloadTable());
 		}
-		return pbox;
+		return examTypeFilter;
 	}
 
 	private TableRowSorter<TableModel> sorter;
@@ -215,7 +210,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 	}
 
 	private JButton getJButtonDelete() {
-		jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
+		JButton jButtonDelete = new JButton(MessageBundle.getMessage("angal.common.delete.btn"));
 		jButtonDelete.setMnemonic(MessageBundle.getMnemonic("angal.common.delete.btn.key"));
 		jButtonDelete.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {
@@ -392,7 +387,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 	}
 
 	private void reloadTable() {
-		pSelection = pbox.getSelectedItem().toString();
+		String pSelection = examTypeFilter.getSelectedItem().toString();
 		if (pSelection.compareTo(STR_ALL) == 0) {
 			model = new ExamBrowsingModel();
 		} else {

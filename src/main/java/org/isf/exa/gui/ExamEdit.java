@@ -117,7 +117,7 @@ public class ExamEdit extends JDialog {
 	private JComboBox<String> procComboBox = null;
 	private VoLimitedTextField defTextField = null;
 	private JLabel typeLabel = null;
-	private JComboBox typeComboBox = null;
+	private JComboBox<ExamType> examTypeComboBox = null;
 	private Exam exam;
 	private boolean insert;
 	
@@ -184,7 +184,7 @@ public class ExamEdit extends JDialog {
 			defLabel = new JLabel(MessageBundle.getMessage("angal.exa.default") + ':');
 			dataPanel = new JPanel(new SpringLayout());
 			dataPanel.add(typeLabel);
-			dataPanel.add(getTypeComboBox());
+			dataPanel.add(getExamTypeComboBox());
 			dataPanel.add(codeLabel);
 			dataPanel.add(getCodeTextField());
 			dataPanel.add(descLabel);
@@ -241,7 +241,7 @@ public class ExamEdit extends JDialog {
 				} else {
 					int procedure = Integer.parseInt(procComboBox.getSelectedItem().toString());
 
-					exam.setExamtype((ExamType) typeComboBox.getSelectedItem());
+					exam.setExamtype((ExamType) examTypeComboBox.getSelectedItem());
 					exam.setDescription(descriptionTextField.getText());
 
 					exam.setCode(codeTextField.getText().toUpperCase());
@@ -340,33 +340,40 @@ public class ExamEdit extends JDialog {
 	}
 	
 	/**
-	 * This method initializes typeComboBox	
+	 * This method initializes examTypeComboBox
 	 * 	
 	 * @return javax.swing.JComboBox	
 	 */
-	private JComboBox getTypeComboBox() {
-		if (typeComboBox == null) {
-			typeComboBox = new JComboBox();
-			if (insert) {
-				List<ExamType> types;
-				try {
-					types = examBrowsingManager.getExamType();
-				} catch (OHServiceException e) {
-					types = null;
-					OHServiceExceptionUtil.showMessages(e);
-				}
-				if (null != types) {
-					for (ExamType elem : types) {
-						typeComboBox.addItem(elem);
+	private JComboBox<ExamType> getExamTypeComboBox() {
+		if (examTypeComboBox == null) {
+			examTypeComboBox = new JComboBox<>();
+			try {
+				List<ExamType> types = examBrowsingManager.getExamType();
+				if (insert) {
+					if (null != types) {
+						for (ExamType elem : types) {
+							examTypeComboBox.addItem(elem);
+						}
+					}
+				} else {
+					ExamType selectExamType = null;
+					if (null != types) {
+						for (ExamType elem : types) {
+							examTypeComboBox.addItem(elem);
+							if (exam.getExamtype().equals(elem)) {
+								selectExamType = elem;
+							}
+						}
+					}
+					if (selectExamType != null) {
+						examTypeComboBox.setSelectedItem(selectExamType);
 					}
 				}
-			} else {
-				typeComboBox.addItem(exam.getExamtype());
-				typeComboBox.setEnabled(false);
+			} catch (OHServiceException ohServiceException) {
+				OHServiceExceptionUtil.showMessages(ohServiceException);
 			}
-			
 		}
-		return typeComboBox;
+		return examTypeComboBox;
 	}
 
 }

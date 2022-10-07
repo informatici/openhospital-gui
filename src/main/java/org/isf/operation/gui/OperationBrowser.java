@@ -93,7 +93,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 	private int pfrmBordY;
 	private int selectedrow;
 	private JLabel selectlabel;
-	private JComboBox pbox;
+	private JComboBox<OperationType> diseaseTypeFilter;
 	private List<Operation> pOperation;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.id.txt").toUpperCase(),
@@ -137,21 +137,21 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 		selectlabel = new JLabel(MessageBundle.getMessage("angal.operation.selecttype")); //$NON-NLS-1$
 		buttonPanel.add(selectlabel);
 
-		pbox = new JComboBox();
-		pbox.addItem(MessageBundle.getMessage("angal.common.all.txt").toUpperCase());
+		diseaseTypeFilter = new JComboBox<>();
+		diseaseTypeFilter.addItem(new OperationType("", MessageBundle.getMessage("angal.common.all.txt").toUpperCase()));
 		List<OperationType> type;
 		try {
 			type = operationTypeBrowserManager.getOperationType();
 			for (OperationType elem : type) {
-				pbox.addItem(elem);
+				diseaseTypeFilter.addItem(elem);
 			}
 		} catch (OHServiceException e1) {
 			type = null;
 			OHServiceExceptionUtil.showMessages(e1);
 		}
 
-		pbox.addActionListener(actionEvent -> {
-			pSelection = pbox.getSelectedItem().toString();
+		diseaseTypeFilter.addActionListener(actionEvent -> {
+			pSelection = diseaseTypeFilter.getSelectedItem().toString();
 			if (pSelection.compareTo(STR_ALL) == 0) {
 				model = new OperationBrowserModel();
 			} else {
@@ -160,7 +160,7 @@ public class OperationBrowser extends ModalJFrame implements OperationEdit.Opera
 			model.fireTableDataChanged();
 			table.updateUI();
 		});
-		buttonPanel.add(pbox);
+		buttonPanel.add(diseaseTypeFilter);
 
 		JButton buttonNew = new JButton(MessageBundle.getMessage("angal.common.new.btn"));
 		buttonNew.setMnemonic(MessageBundle.getMnemonic("angal.common.new.btn.key"));
