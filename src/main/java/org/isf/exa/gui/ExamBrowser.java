@@ -394,6 +394,8 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			model = new ExamBrowsingModel(pSelection);
 		}
 		model.fireTableDataChanged();
+		sorter = new TableRowSorter<>(model);
+		table.setRowSorter(sorter);
 		table.updateUI();
 	}
 
