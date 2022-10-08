@@ -469,11 +469,12 @@ class AdmissionBrowserModel extends DefaultTableModel {
 					return myDate.format(DATE_FORMATTER);
 				}
 				
-			} else if (column == 1) {				
+			} else if (column == 1) {
 				if (row < admList.size()) {
 					return admList.get(row).getWard().getDescription();
 				} else {
-					return opdList.get(row).getWard().getDescription();
+					int z = row - admList.size();
+					return opdList.get(z).getWard().getDescription();
 				}
 			}
 			else if (column == 2) {
