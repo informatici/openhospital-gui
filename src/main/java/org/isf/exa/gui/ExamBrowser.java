@@ -24,7 +24,7 @@ package org.isf.exa.gui;
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.FlowLayout;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -35,14 +35,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.RowFilter;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 import org.isf.exa.gui.ExamEdit.ExamListener;
 import org.isf.exa.manager.ExamBrowsingManager;
@@ -73,7 +68,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 
 	private int selectedrow;
 	private JComboBox<ExamType> examTypeFilter;
-	private List<Exam> pExam;
+	private List<Exam> examList;
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),
@@ -81,7 +76,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			MessageBundle.getMessage("angal.exa.proc.col").toUpperCase(),
 			MessageBundle.getMessage("angal.exa.default.col").toUpperCase()
 	};
-	private int[] pColumnWidth = { 60, 330, 160, 60, 130 };
+	private int[] pColumnWidth = { 60, 330, 160, 60, 200 };
 	private Exam exam;
 
 	private DefaultTableModel model ;
@@ -93,20 +88,16 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 	private JButton jButtonShow;
 	private JPanel jContentPanel;
 	private JPanel buttonPanel;
-	private JTextField searchTextField;
 	private ExamBrowsingManager examBrowsingManager = Context.getApplicationContext().getBean(ExamBrowsingManager.class);
 
 	public ExamBrowser() {
 		myFrame = this;
 		setTitle(MessageBundle.getMessage("angal.exa.exambrowser.title"));
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screensize = kit.getScreenSize();
-		final int pfrmBase = 20;
-		final int pfrmWidth = 15;
-		final int pfrmHeight = 8;
-		this.setBounds((screensize.width - screensize.width * pfrmWidth / pfrmBase) / 2, (screensize.height - screensize.height * pfrmHeight / pfrmBase) / 2,
-				screensize.width * pfrmWidth / pfrmBase, screensize.height * pfrmHeight / pfrmBase);
 		this.setContentPane(getJContentPanel());
+		setMinimumSize(new Dimension(800, 400));
+		pack();
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
 
@@ -116,33 +107,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			jContentPanel.setLayout(new BorderLayout());
 			jContentPanel.add(getJButtonPanel(), BorderLayout.SOUTH);
 			jContentPanel.add(new JScrollPane(getJTable()), BorderLayout.CENTER);
-			
-			JPanel panelSearch = new JPanel();
-			jContentPanel.add(panelSearch, BorderLayout.NORTH);
-			
-			JLabel searchLabel = new JLabel(MessageBundle.getMessage("angal.exams.find"));
-			panelSearch.add(searchLabel);
-			
-			searchTextField = new JTextField();
-			searchTextField.setColumns(20);
-			searchTextField.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					filterExam();
-				}
-
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					filterExam();
-				}
-
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					filterExam();
-				}
-			});
-			panelSearch.add(searchTextField);
-			validate();
 		}
 		return jContentPanel;
 	}
@@ -150,7 +114,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 	
 	private JPanel getJButtonPanel() {
 		if (buttonPanel == null) {
-			buttonPanel = new JPanel();
+			buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 			buttonPanel.add(new JLabel(MessageBundle.getMessage("angal.exa.selecttype")));
 			buttonPanel.add(getJComboBoxExamType());
 			buttonPanel.add(getJButtonNew());
@@ -183,15 +147,11 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 		return examTypeFilter;
 	}
 
-	private TableRowSorter<TableModel> sorter;
-
 	private JTable getJTable() {
 		if (table == null) {
 			model = new ExamBrowsingModel();
 			table = new JTable(model);
 			table.setAutoCreateColumnsFromModel(false);
-			sorter = new TableRowSorter<>(model);
-			table.setRowSorter(sorter);
 			table.getColumnModel().getColumn(0).setMinWidth(pColumnWidth[0]);
 			table.getColumnModel().getColumn(1).setMinWidth(pColumnWidth[1]);
 			table.getColumnModel().getColumn(2).setMinWidth(pColumnWidth[2]);
@@ -304,27 +264,27 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 		
 		public ExamBrowsingModel(String s) {
 			try {
-				pExam = examBrowsingManager.getExamsByTypeDescription(s);
+				examList = examBrowsingManager.getExamsByTypeDescription(s);
                                 
 			} catch (OHServiceException e) {
-				pExam = null;
+				examList = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 		public ExamBrowsingModel() {
 			try {
-				pExam = examBrowsingManager.getExams();
+				examList = examBrowsingManager.getExams();
 			} catch (OHServiceException e) {
-				pExam = null;
+				examList = null;
 				OHServiceExceptionUtil.showMessages(e);
 			}
 		}
 		@Override
 		public int getRowCount() {
-			if (pExam == null) {
+			if (examList == null) {
 				return 0;
 			}
-			return pExam.size();
+			return examList.size();
 		}
 		
 		@Override
@@ -339,7 +299,7 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 
 		@Override
 		public Object getValueAt(int r, int c) {
-			Exam exam = pExam.get(r);
+			Exam exam = examList.get(r);
 			if (c == -1) {
 				return exam;
 			} else if (c == 0) {
@@ -378,14 +338,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 		}
 	}
 
-	private void filterExam() {
-		String s = searchTextField.getText().trim();
-		List<RowFilter<Object, Object>> filters = new ExamFilterFactory().buildFilters(s);
-		if (!filters.isEmpty()) {
-			sorter.setRowFilter(RowFilter.andFilter(filters));
-		}
-	}
-
 	private void reloadTable() {
 		String pSelection = examTypeFilter.getSelectedItem().toString();
 		if (pSelection.compareTo(STR_ALL) == 0) {
@@ -394,8 +346,6 @@ public class ExamBrowser extends ModalJFrame implements ExamListener {
 			model = new ExamBrowsingModel(pSelection);
 		}
 		model.fireTableDataChanged();
-		sorter = new TableRowSorter<>(model);
-		table.setRowSorter(sorter);
 		table.updateUI();
 	}
 
