@@ -775,7 +775,8 @@ public class PatientFolderBrowser extends ModalJFrame
 				if (row < admList.size()) {
 					return admList.get(row).getWard().getDescription();
 				} else if (row < opdList.size() + admList.size()) {
-					return opdList.get(row).getWard().getDescription();
+					int z = row - admList.size();
+					return opdList.get(z).getWard().getDescription();
 				} else {
 					return MessageBundle.getMessage("angal.admission.patientfolder.examination.txt");
 				}
