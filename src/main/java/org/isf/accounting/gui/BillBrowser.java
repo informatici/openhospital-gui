@@ -103,6 +103,7 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillBrowser.class);
+	private static final ImageIcon admissionIcon = new ImageIcon("rsc/icons/bed_icon.png");
 
 	@Override
 	public void billInserted(AWTEvent event) {
@@ -183,16 +184,17 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			MessageBundle.getMessage("angal.common.amount.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.billbrowser.lastpayment.col").toUpperCase(),
 			MessageBundle.getMessage("angal.common.status.txt").toUpperCase(),
-			MessageBundle.getMessage("angal.billbrowser.balance.col").toUpperCase()
+			MessageBundle.getMessage("angal.billbrowser.balance.col").toUpperCase(),
+			MessageBundle.getMessage("angal.billbrowser.inout.col").toUpperCase()
 	};
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
-	private int[] columnsWidth = { 50, 50, 150, 50, 50, 100, 150, 50, 100 };
-	private int[] maxWidth = { 50, 150, 150, 150, 200, 100, 150, 50, 100 };
-	private boolean[] columnsResizable = { false, false, false, false, true, false, false, false, false };
+	private int[] columnsWidth = { 50, 50, 150, 50, 50, 100, 150, 50, 100, 50 };
+	private int[] maxWidth = { 50, 150, 150, 150, 200, 100, 150, 50, 100, 50 };
+	private boolean[] columnsResizable = { false, false, false, false, true, false, false, false, false, false };
 	private Class<?>[] columnsClasses = { String.class, Integer.class, String.class, String.class, String.class, Double.class, String.class, String.class,
-			Double.class };
-	private boolean[] alignCenter = { false, true, true, true, false, false, true, true, false };
-	private boolean[] boldCenter = { false, true, false, false, false, false, false, false, false };
+			Double.class, ImageIcon.class };
+	private boolean[] alignStringCenter = { false, true, true, true, false, false, true, true, false, false };
+	private boolean[] alingStringBoldCenter = { false, true, false, false, false, false, false, false, false, false };
 
 	//Totals
 	private BigDecimal totalToday;
@@ -971,10 +973,10 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			if (!columnsResizable[idx]) {
 				table.getColumnModel().getColumn(idx).setMaxWidth(maxWidth[idx]);
 			}
-			if (alignCenter[idx]) {
+			if (alignStringCenter[idx]) {
 				table.getColumnModel().getColumn(idx).setCellRenderer(new StringCenterTableCellRenderer());
-				if (boldCenter[idx]) {
-					table.getColumnModel().getColumn(idx).setCellRenderer(new CenterBoldTableCellRenderer());
+				if (alingStringBoldCenter[idx]) {
+					table.getColumnModel().getColumn(idx).setCellRenderer(new StringCenterBoldTableCellRenderer());
 				}
 			}
 		});
@@ -1264,6 +1266,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			if (c == ++index) {
 				return thisBill.getBalance();
 			}
+			if (c == ++index) {
+				return thisBill.getAdmission() != null ? admissionIcon : null;
+			}
 			return null;
 		}
 
@@ -1344,7 +1349,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}
 	}
 
-	class CenterBoldTableCellRenderer extends DefaultTableCellRenderer {
+	class StringCenterBoldTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = 1L;
 
