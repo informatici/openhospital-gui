@@ -161,6 +161,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			thisBill.setIsPatient(true);
 			thisBill.setPatName(patientSelected.getName());
 			thisBill.setAdmission(patientAdmission);
+			modified = true;
 		} else {
 			if (patientPendingBills.size() == 1) {
 				if (GeneralData.ALLOWMULTIPLEOPENEDBILL) {
