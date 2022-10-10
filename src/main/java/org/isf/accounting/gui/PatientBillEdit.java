@@ -112,6 +112,7 @@ import com.github.lgooddatepicker.zinternaltools.TimeChangeEvent;
 public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientBillEdit.class);
+	private static final ImageIcon admissionIcon = new ImageIcon("rsc/icons/bed_icon.png");
 
 	//LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList patientBillListener = new EventListenerList();
@@ -141,6 +142,13 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		setPatientSelected(patient);
 		List<Bill> patientPendingBills = new ArrayList<>();
 		Admission patientAdmission = admissionBrowserManager.getCurrentAdmission(patient);
+		if (patientAdmission != null) {
+			jLabelWard.setText(patientAdmission.getWard().getDescription());
+			jLabelWard.setIcon(admissionIcon);
+		} else {
+			jLabelWard.setText("");
+			jLabelWard.setIcon(null);
+		}
 		try {
 			patientPendingBills = billBrowserManager.getPendingBills(patient.getCode());
 		} catch (OHServiceException ohServiceException) {
@@ -246,6 +254,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JLabel jLabelPatient;
 	private JButton jButtonRemoveItem;
 	private JLabel jLabelPriceList;
+	private JLabel jLabelWard;
 	private JButton jButtonRemovePayment;
 	private JButton jButtonAddRefund;
 	private JPanel jPanelButtonsPayment;
@@ -263,6 +272,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private static final Dimension PatientDimension = new Dimension(300, 20);
 	private static final Dimension LabelsDimension = new Dimension(60, 20);
 	private static final Dimension UserDimension = new Dimension(190, 20);
+	private static final Dimension WardDimension = new Dimension(150, 20);
 	private static final int PANEL_WIDTH = 450;
 	private static final int BUTTON_WIDTH = 190;
 	private static final int BUTTON_WIDTH_BILL = 190;
@@ -290,6 +300,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private Patient patientSelected;
 	private LocalDateTime billDate = TimeTools.getNow();
 	private LocalDateTime today = TimeTools.getNow();
+	private String patientSelectedWard = "";
 
 	private Object[] billClasses = {Price.class, Integer.class, Double.class};
 	private String[] billColumnNames = {
@@ -474,6 +485,12 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					}
 				}
 				
+				if (thisBill.getAdmission() != null) {
+					patientSelectedWard = thisBill.getAdmission().getWard().getDescription();
+				} else {
+					patientSelectedWard = "";
+				}
+				
 			} else {  //Patient not found
 				MessageDialog.warning(PatientBillEdit.this, "angal.newbill.patientassociatedwiththisbillnolongerexists.msg");
 				thisBill.setIsPatient(false);
@@ -504,6 +521,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jPanelPatient.add(getJTextFieldPatient());
 			jPanelPatient.add(getJLabelPriceList());
 			jPanelPatient.add(getJComboBoxPriceList());
+			jPanelPatient.add(getJLabelWard());
 		}
 		return jPanelPatient;
 	}
@@ -536,7 +554,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		}
 		return jLabelPriceList;
 	}
-
+	
 	private JComboBox<PriceList> getJComboBoxPriceList() {
 		if (jComboBoxPriceList == null) {
 			jComboBoxPriceList = new JComboBox<>();
@@ -563,7 +581,20 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		}
 		return jComboBoxPriceList;
 	}
-
+	
+	private JLabel getJLabelWard() {
+		if (jLabelWard == null) {
+			jLabelWard = new JLabel();
+			jLabelWard.setPreferredSize(WardDimension); //TODO: improve Layout
+			jLabelWard.setHorizontalAlignment(SwingConstants.RIGHT);
+			if (!patientSelectedWard.isEmpty()) {
+				jLabelWard.setText(patientSelectedWard);
+				jLabelWard.setIcon(admissionIcon);
+			}
+		}
+		return jLabelWard;
+	}
+	
 	private GoodDateTimeToggleChooser getJCalendarDate() {
 		if (jCalendarDate == null) {
 			if (this.insert) {
@@ -640,7 +671,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JLabel getJLabelUser() {
 		if (jLabelUser == null) {
 			jLabelUser = new JLabel(MainMenu.getUser().getUserName());
-			jLabelUser.setPreferredSize(UserDimension);
+			jLabelUser.setPreferredSize(UserDimension);  //TODO: improve Layout
 			jLabelUser.setHorizontalAlignment(SwingConstants.RIGHT);
 			jLabelUser.setForeground(Color.BLUE);
 			jLabelUser.setFont(new Font(jLabelUser.getFont().getName(), Font.BOLD, jLabelUser.getFont().getSize() + 2));
