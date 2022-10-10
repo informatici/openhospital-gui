@@ -9,3 +9,6 @@ logs
 *.iml
 *.bak
 *.pdf
+/data/
+/rsc/*.properties
+/rsc/*.pref
