@@ -103,7 +103,7 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillBrowser.class);
-	private static final ImageIcon admissionIcon = new ImageIcon("rsc/icons/bed_icon.png");
+	private static final ImageIcon ADMISSION_ICON = new ImageIcon("rsc/icons/bed_icon.png");
 
 	@Override
 	public void billInserted(AWTEvent event) {
@@ -1267,7 +1267,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				return thisBill.getBalance();
 			}
 			if (c == ++index) {
-				return thisBill.getAdmission() != null ? admissionIcon : null;
+				return thisBill.getAdmission() != null ? ADMISSION_ICON : null;
 			}
 			return null;
 		}

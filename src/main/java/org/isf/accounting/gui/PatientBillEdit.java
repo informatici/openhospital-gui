@@ -112,8 +112,8 @@ import com.github.lgooddatepicker.zinternaltools.TimeChangeEvent;
 public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientBillEdit.class);
-	private static final ImageIcon admissionIcon = new ImageIcon("rsc/icons/bed_icon.png");
-	private static final String textOPD = MessageBundle.getMessage("angal.common.opd.txt");
+	private static final ImageIcon ADMISSION_ICON = new ImageIcon("rsc/icons/bed_icon.png");
+	private static final String OPD_TEXT = MessageBundle.getMessage("angal.common.opd.txt");
 
 	//LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList patientBillListener = new EventListenerList();
@@ -145,9 +145,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		Admission patientAdmission = admissionBrowserManager.getCurrentAdmission(patient);
 		if (patientAdmission != null) {
 			jLabelWard.setText(patientAdmission.getWard().getDescription());
-			jLabelWard.setIcon(admissionIcon);
+			jLabelWard.setIcon(ADMISSION_ICON);
 		} else {
-			jLabelWard.setText(textOPD);
+			jLabelWard.setText(OPD_TEXT);
 			jLabelWard.setIcon(null);
 		}
 		try {
@@ -605,9 +605,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jLabelWard.setHorizontalAlignment(SwingConstants.RIGHT);
 			if (!patientSelectedWard.isEmpty()) {
 				jLabelWard.setText(patientSelectedWard);
-				jLabelWard.setIcon(admissionIcon);
+				jLabelWard.setIcon(ADMISSION_ICON);
 			} else {
-				jLabelWard.setText(textOPD);
+				jLabelWard.setText(OPD_TEXT);
 				jLabelWard.setIcon(null);
 			}
 		}
