@@ -172,6 +172,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						thisBill.setIsPatient(true);
 						thisBill.setPatName(patientSelected.getName());
 						thisBill.setAdmission(patientAdmission);
+						modified = true;
 					} else {
 						this.insert = false;
 						setBill(patientPendingBills.get(0));
@@ -200,6 +201,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 						thisBill.setIsPatient(true);
 						thisBill.setPatName(patientSelected.getName());
 						thisBill.setAdmission(patientAdmission);
+						modified = true;
 					} else if (response == JOptionPane.NO_OPTION) {
 						// something must be proposed
 						int resp = MessageDialog.yesNo(PatientBillEdit.this,
@@ -400,6 +402,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private void setBill(Bill bill) {
 		try {
 			this.thisBill = (Bill) bill.clone();
+			this.thisBill.setAdmission(bill.getAdmission());
+			this.thisBill.setBillPatient(bill.getBillPatient());
+			this.thisBill.setPriceList(bill.getPriceList());
 		} catch (CloneNotSupportedException cnse) {
 			cnse.printStackTrace();
 		}
@@ -455,6 +460,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				}
 				thisBill.setPriceList(list);
 				thisBill.setListName(list.getName());
+				modified = true;
 			}
 		}
 
@@ -475,18 +481,21 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					int ok = MessageDialog.yesNo(PatientBillEdit.this, icon, "angal.newbill.thispatientisadmittednowdoyouwanttolinkthisbilltothecurrentadmission.msg");
 					if (ok == JOptionPane.OK_OPTION) {
 						thisBill.setAdmission(currentAdmission);
+						modified = true;
 					}
 				}
 				if (thisBill.getAdmission() != null && currentAdmission == null) {
 					int ok = MessageDialog.yesNo(PatientBillEdit.this, icon, "angal.newbill.thispatientisnolongeradmitteddoyouwanttounlinkthisbillfromthepreviousadmission.msg");
 					if (ok == JOptionPane.OK_OPTION) {
 						thisBill.setAdmission(currentAdmission);
+						modified = true;
 					}
 				}
 				if (thisBill.getAdmission() != null && currentAdmission != null && thisBill.getAdmission().getId() != currentAdmission.getId()) {
 					int ok = MessageDialog.yesNo(PatientBillEdit.this, icon, "angal.newbill.thisbillwaslinkedtoapreviousadmissiondoyouwanttolinkittothecurrentadmissioninstead.msg");
 					if (ok == JOptionPane.OK_OPTION) {
 						thisBill.setAdmission(currentAdmission);
+						modified = true;
 					}
 				}
 				
@@ -501,6 +510,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				thisBill.setIsPatient(false);
 				thisBill.getBillPatient().setCode(0);
 				thisBill.setAdmission(null);
+				modified = true;
 			}
 		}
 	}
@@ -1061,7 +1071,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							listSelected.getName(),                      //List name
 							thisBill.isPatient(),                        //is a Patient?
 							thisBill.isPatient() ?
-									thisBill.getBillPatient() : null,    //Patient ID
+									patientSelected : null,    //Patient ID
 							thisBill.isPatient() ?
 									patientSelected.getName() :
 									jTextFieldPatient.getText(),         //Patient Name
@@ -1090,7 +1100,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 							listSelected.getName(),                      //List name
 							thisBill.isPatient(),                        //is a Patient?
 							thisBill.isPatient() ?
-									thisBill.getBillPatient() : null,    //Patient ID
+									patientSelected : null,    //Patient ID
 							thisBill.isPatient() ?
 									thisBill.getPatName() :
 									jTextFieldPatient.getText(),         //Patient Name
