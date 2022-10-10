@@ -113,6 +113,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientBillEdit.class);
 	private static final ImageIcon admissionIcon = new ImageIcon("rsc/icons/bed_icon.png");
+	private static final String textOPD = MessageBundle.getMessage("angal.common.opd.txt");
 
 	//LISTENER INTERFACE --------------------------------------------------------
 	private EventListenerList patientBillListener = new EventListenerList();
@@ -146,7 +147,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jLabelWard.setText(patientAdmission.getWard().getDescription());
 			jLabelWard.setIcon(admissionIcon);
 		} else {
-			jLabelWard.setText("");
+			jLabelWard.setText(textOPD);
 			jLabelWard.setIcon(null);
 		}
 		try {
@@ -271,8 +272,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 	private static final Dimension PatientDimension = new Dimension(300, 20);
 	private static final Dimension LabelsDimension = new Dimension(60, 20);
-	private static final Dimension UserDimension = new Dimension(190, 20);
-	private static final Dimension WardDimension = new Dimension(150, 20);
+	private static final Dimension UserDimension = new Dimension(220, 20);
+	private static final Dimension WardDimension = new Dimension(195, 20);
 	private static final int PANEL_WIDTH = 450;
 	private static final int BUTTON_WIDTH = 190;
 	private static final int BUTTON_WIDTH_BILL = 190;
@@ -397,7 +398,11 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	}
 
 	private void setBill(Bill bill) {
-		this.thisBill = bill;
+		try {
+			this.thisBill = (Bill) bill.clone();
+		} catch (CloneNotSupportedException cnse) {
+			cnse.printStackTrace();
+		}
 		billDate = bill.getDate();
 		try {
 			billItems = billBrowserManager.getItems(thisBill.getId());
@@ -590,6 +595,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			if (!patientSelectedWard.isEmpty()) {
 				jLabelWard.setText(patientSelectedWard);
 				jLabelWard.setIcon(admissionIcon);
+			} else {
+				jLabelWard.setText(textOPD);
+				jLabelWard.setIcon(null);
 			}
 		}
 		return jLabelWard;
@@ -709,6 +717,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
 			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.newbill.findpatient.btn"));
+			jButtonPickPatient.setPreferredSize(new Dimension(150, 25));
 			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.newbill.findpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png"));
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.newbill.associateapatientwiththisbill.tooltip"));
