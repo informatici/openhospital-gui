@@ -300,16 +300,19 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 				RememberDates.setLastLabExamDate(newDate);
 				String inOut = jRadioButtonOPD.isSelected() ? "O" : "I";
 
+				int row = 0;
 				for (Laboratory lab : examItems) {
 					lab.setDate(newDate);
 					lab.setInOutPatient(inOut);
 					lab.setPatient(patientSelected);
-					if (lab.getExam().getProcedure() == 3 && lab.getResult().isEmpty()) {
+					int procedure = lab.getExam().getProcedure();
+					if ((procedure == 1 || procedure == 3) && lab.getResult().isEmpty()) {
 						MessageDialog.error(LabNew.this, "angal.labnew.pleaseinsertavalidvalue");
 						//select the first exam with the missing value
-						jTableExams.setRowSelectionInterval(examItems.indexOf(lab), examItems.indexOf(lab));
+						jTableExams.setRowSelectionInterval(row, row);
 						return;
 					}
+					row++;
 				}
 
 				try {
@@ -375,6 +378,10 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 				} catch (OHServiceException ex) {
 					exaRowArray = null;
 					LOGGER.error(ex.getMessage(), ex);
+				}
+				// no default result
+				if (selectedExam.getDefaultResult().isEmpty()) {
+					jComboBoxExamResults.addItem(" ");
 				}
 				if (exaRowArray != null) {
 					for (ExamRow exaRow : exaRowArray) {
@@ -763,6 +770,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 					}
 
 					if (exa.getProcedure() == 1 || exa.getProcedure() == 3) {
+						// The exam may not have a default value
 						lab.setResult(exa.getDefaultResult());
 					} else { // exa.getProcedure() == 2
 						lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));
