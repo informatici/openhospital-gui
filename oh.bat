@@ -148,20 +148,16 @@ set ARCH=32
 
 REM ######## MySQL Software
 REM # MariaDB 64bit
-REM https://archive.mariadb.org/mariadb-10.2.43/winx64-packages/mariadb-10.2.43-winx64.zip
-REM # MySQL 64bit
-REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-winx64.zip
+REM https://archive.mariadb.org/mariadb-10.4.24/winx64-packages/mariadb-10.4.24-winx64.zip
 
 REM # MariaDB 32bit
-REM https://archive.mariadb.org/mariadb-10.2.41/win32-packages/mariadb-10.2.41-win32.zip
-REM # MySQL 32bit
-REM https://downloads.mysql.com/archives/get/p/23/file/mysql-5.7.35-win32.zip
+REM https://archive.mariadb.org/mariadb-10.4.22/win32-packages/mariadb-10.4.22-win32.zip
 
-REM set MYSQL_DIR=mysql-5.7.35-win32
+REM set MYSQL_DIR=mariadb-10.4.24-win%ARCH%
 set MYSQL_DIR=mariadb-10.2.41-win%ARCH%
 
 REM ####### JAVA Software
-REM # JRE 11 64bit - x86_64
+REM # JRE 11 64bit - x86_64 - openjdk
 REM set JAVA_URL="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.11%2B9/"
 REM set JAVA_DISTRO="OpenJDK11U-jre_x64_windows_hotspot_11.0.11_9.zip"
 
@@ -169,12 +165,12 @@ REM # JRE 11 32bit - i686 - openjdk
 REM set JAVA_URL="https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.11%2B9/"
 REM set JAVA_DISTRO="OpenJDK11U-jre_x86-32_windows_hotspot_11.0.11_9.zip"
 
-REM # JRE 11 32bit - i686 - zulu
-REM set JAVA_URL="https://cdn.azul.com/zulu/bin/zulu11.52.13-ca-fx-jre11.0.13-win_i686.zip"
-REM JAVA_DISTRO=zulu11.52.13-ca-fx-jre11.0.13-win_i686.zip
+REM # JRE 8 32bit - i686 - zulu
+REM set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
+REM set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
-REM # JRE 8 32bit - i686 - zulu - default
-set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
+REM # JRE 11 32bit - i686 - zulu - default
+set JAVA_DIR=zulu11.58.25-ca-jre11.0.16.1-win_i686
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin
@@ -368,3 +364,4 @@ goto end
 	set "LEGACYMODE="
 
 	goto :eof
+
