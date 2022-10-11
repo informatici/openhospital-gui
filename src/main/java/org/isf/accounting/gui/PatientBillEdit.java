@@ -407,7 +407,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			this.thisBill.setBillPatient(bill.getBillPatient());
 			this.thisBill.setPriceList(bill.getPriceList());
 		} catch (CloneNotSupportedException cnse) {
-			cnse.printStackTrace();
+			LOGGER.debug("CloneNotSupportedException", cnse);
 		}
 		billDate = bill.getDate();
 		try {
