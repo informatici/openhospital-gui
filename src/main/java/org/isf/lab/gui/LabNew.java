@@ -770,7 +770,7 @@ public class LabNew extends ModalJFrame implements SelectionListener {
 					}
 
 					if (exa.getProcedure() == 1 || exa.getProcedure() == 3) {
-						// Typically procedure type 1 doesn't have a default value
+						// The exam may not have a default value
 						lab.setResult(exa.getDefaultResult());
 					} else { // exa.getProcedure() == 2
 						lab.setResult(MessageBundle.getMessage("angal.labnew.multipleresults"));
