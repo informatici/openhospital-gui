@@ -82,6 +82,7 @@ OH_DOC_DIR="../doc"
 OH_SINGLE_USER="yes" # set "no" for multiuser
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
+PHOTO_DIR="data/photo"
 BACKUP_DIR="data/dump"
 LOG_DIR="data/log"
 SQL_DIR="sql"
@@ -257,6 +258,7 @@ function initialize_dir_structure {
 	mkdir -p "./$TMP_DIR"
 	mkdir -p "./$LOG_DIR"
 	mkdir -p "./$DICOM_DIR"
+	mkdir -p "./$PHOTO_DIR"
 	mkdir -p "./$BACKUP_DIR"
 }
 
@@ -589,7 +591,8 @@ function generate_config_files {
 	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$OH_DIR/rsc/settings.properties ]; then
 		[ -f ./$OH_DIR/rsc/settings.properties ] && mv -f ./$OH_DIR/rsc/settings.properties ./$OH_DIR/rsc/settings.properties.old
 		echo "Generating OH configuration file -> settings.properties..."
-		sed -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
+		sed -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
+		-e "s&PHOTO_DIR&$PHOTO_DIR&g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
 	fi
 }
 

@@ -130,6 +130,7 @@ set OH_DOC_DIR="../doc"
 set OH_SINGLE_USER="yes"
 set CONF_DIR="data/conf"
 set DATA_DIR="data/db"
+set PHOTO_DIR="data/photo"
 set LOG_DIR="data/log"
 set SQL_DIR="sql"
 set SQL_EXTRA="sql/extra"
@@ -235,6 +236,7 @@ REM ### Setup settings.properties
 echo f | xcopy %OH_PATH%\%OH_DIR%\rsc\settings.properties.dist %OH_PATH%\%OH_DIR%\rsc\settings.properties /y >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe OH_LANGUAGE %OH_LANGUAGE% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe OH_DOC_DIR %OH_DOC_DIR% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
+%REPLACE_PATH%\replace.exe PHOTO_DIR %PHOTO_DIR% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 %REPLACE_PATH%\replace.exe YES_OR_NO %OH_SINGLE_USER% -- %OH_PATH%\%OH_DIR%\rsc\settings.properties >> "%OH_PATH%\%LOG_DIR%\%LOG_FILE%" 2>&1
 
 REM ### Setup log4j.properties
@@ -260,6 +262,7 @@ if not EXIST %OH_PATH%\%DATA_DIR%\%DATABASE_NAME% (
 	mkdir "%OH_PATH%\%TMP_DIR%"
 	mkdir "%OH_PATH%\%LOG_DIR%"
 	mkdir "%OH_PATH%\%DICOM_DIR%"
+	mkdir "%OH_PATH%\%PHOTO_DIR%"
 	del /s /q %OH_PATH%\%TMP_DIR%\*
 
 	if %MYSQL_DIR:~0,5% == maria (
