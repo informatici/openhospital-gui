@@ -125,7 +125,7 @@ set DICOM_MAX_SIZE="4M"
 set DICOM_STORAGE="FileSystemDicomManager"
 set DICOM_DIR="data/dicom_storage"
 
-set OH_DIR="oh"
+set OH_DIR="."
 set OH_DOC_DIR="../doc"
 set OH_SINGLE_USER="yes"
 set CONF_DIR="data/conf"
