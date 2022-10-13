@@ -77,7 +77,7 @@ DICOM_MAX_SIZE="4M"
 DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 DICOM_DIR="data/dicom_storage"
 
-OH_DIR="oh"
+OH_DIR="."
 OH_DOC_DIR="../doc"
 OH_SINGLE_USER="yes" # set "no" for multiuser
 CONF_DIR="data/conf"
@@ -537,6 +537,7 @@ function test_database_connection {
 function clean_files {
 	# remove all log files
 	echo "Warning: do you want to remove all existing log files ?"
+<<<<<<< HEAD
 	get_confirmation;
 	echo "Removing log files..."
 	rm -f ./$LOG_DIR/*
@@ -544,6 +545,15 @@ function clean_files {
 	# remove configuration files - leave only .dist files
 	echo "Warning: do you want to remove all existing configuration files ?"
 	get_confirmation;
+=======
+	get_confirmation;
+	echo "Removing log files..."
+	rm -f ./$LOG_DIR/*
+
+	# remove configuration files - leave only .dist files
+	echo "Warning: do you want to remove all existing configuration files ?"
+	get_confirmation;
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 	echo "Removing configuration files..."
 	rm -f ./$CONF_DIR/my.cnf
 	rm -f ./$CONF_DIR/my.cnf.old
@@ -591,8 +601,12 @@ function generate_config_files {
 	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$OH_DIR/rsc/settings.properties ]; then
 		[ -f ./$OH_DIR/rsc/settings.properties ] && mv -f ./$OH_DIR/rsc/settings.properties ./$OH_DIR/rsc/settings.properties.old
 		echo "Generating OH configuration file -> settings.properties..."
+<<<<<<< HEAD
 		sed -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
 		-e "s&PHOTO_DIR&$PHOTO_DIR&g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
+=======
+		sed -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 	fi
 }
 
@@ -701,8 +715,13 @@ while getopts ${OPTSTRING} opt; do
 		if [ $OH_MODE = "PORTABLE" ]; then
 			# check if database already exists
 			if [ -d ./"$DATA_DIR"/$DATABASE_NAME ]; then
+<<<<<<< HEAD
 				config_database;
 				start_database;
+=======
+				mysql_check;
+				config_database;
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 			else
 	        		echo "Error: no data found! Exiting."
 				exit 1
@@ -728,6 +747,7 @@ while getopts ${OPTSTRING} opt; do
 		        echo "Found $SQL_DIR/$DB_CREATE_SQL, restoring it..."
 			# check if mysql utilities exist
 			mysql_check;
+<<<<<<< HEAD
 			if [ $OH_MODE = "PORTABLE" ]; then
 				# reset database if exists
 				clean_database;
@@ -737,6 +757,13 @@ while getopts ${OPTSTRING} opt; do
 				start_database;
 				set_database_root_pw;
 			fi
+=======
+			config_database;
+			initialize_dir_structure;
+			initialize_database;
+			start_database;	
+			set_database_root_pw;
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 			import_database;
 			if [ $OH_MODE = "PORTABLE" ]; then
 				shutdown_database;
@@ -765,7 +792,10 @@ while getopts ${OPTSTRING} opt; do
 		echo "--------- Script Configuration ---------"
 		echo "Architecture is $ARCH"
 		echo "Config file generation is set to $GENERATE_CONFIG_FILES"
+<<<<<<< HEAD
 		echo ""
+=======
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 		echo "--------- OH Configuration ---------"
 		echo "Open Hospital is configured in $OH_MODE mode"
 		echo "Language is set to $OH_LANGUAGE"
@@ -782,7 +812,10 @@ while getopts ${OPTSTRING} opt; do
 		echo "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
 		echo "DICOM_STORAGE=$DICOM_STORAGE"
 		echo "DICOM_DIR=$DICOM_DIR"
+<<<<<<< HEAD
 		echo ""
+=======
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 		echo "--- OH folders ---"
 		echo "OH_DIR=$OH_DIR"
 		echo "OH_DOC_DIR=$OH_DOC_DIR"

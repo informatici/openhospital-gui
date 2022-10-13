@@ -62,12 +62,20 @@ https://www.open-hospital.org
 #Requires -Version 5.1
 
 ######## command line parameters
+<<<<<<< HEAD
 param ($lang, $mode, $loglevel, $dicom, $generate_config, $interactive)
+=======
+param ($lang, $mode, $loglevel, $dicom, $generate_config_files, $interactive)
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 $script:OH_LANGUAGE=$lang
 $script:OH_MODE=$mode
 $script:LOG_LEVEL=$loglevel
 $script:DICOM_ENABLE=$dicom
+<<<<<<< HEAD
 $script:GENERATE_CONFIG_FILES=$generate_config
+=======
+$script:GENERATE_CONFIG_FILES=$generate_config_files
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 $script:INTERACTIVE_MODE=$interactive
 
 ######## get script info
@@ -138,7 +146,7 @@ $script:DICOM_MAX_SIZE="4M"
 $script:DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 $script:DICOM_DIR="data/dicom_storage"
 
-$script:OH_DIR="oh"
+$script:OH_DIR="."
 $script:OH_DOC_DIR="../doc"
 $script:OH_SINGLE_USER="yes" # set "no" for multiuser
 $script:CONF_DIR="data/conf"
@@ -442,8 +450,13 @@ function mysql_check {
 		}
 	        Write-Host "MySQL unpacked successfully!"
 	}
+<<<<<<< HEAD
 	# check for mysqld binary
 	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -PathType Leaf) {
+=======
+	# check for mysql binary
+	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe") {
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
         	Write-Host "MySQL found!"
 		Write-Host "Using $MYSQL_DIR"
 	}
@@ -458,12 +471,21 @@ function config_database {
 
 	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or  !(Test-Path "$OH_PATH/$CONF_DIR/my.cnf") ) {
 	if (Test-Path "$OH_PATH/$CONF_DIR/my.cnf" ) { mv -Force "$OH_PATH/$CONF_DIR/my.cnf" "$OH_PATH/$CONF_DIR/my.cnf.old" }
+<<<<<<< HEAD
 
 		# find a free TCP port to run MySQL starting from the default port
 		Write-Host "Looking for a free TCP port for MySQL database..."
 
 		$ProgressPreference = 'SilentlyContinue'
 
+=======
+
+		# find a free TCP port to run MySQL starting from the default port
+		Write-Host "Looking for a free TCP port for MySQL database..."
+
+		$ProgressPreference = 'SilentlyContinue'
+
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 		### windows 10 only ####
 		#while ( Test-NetConnection $script:MYSQL_SERVER -Port $MYSQL_PORT -InformationLevel Quiet -ErrorAction SilentlyContinue -WarningAction SilentlyContinue ){
 		#	Write-Host "Testing TCP port $MYSQL_PORT...."
@@ -657,7 +679,11 @@ function clean_database {
 
 function test_database_connection {
 	# test if mysql client is available
+<<<<<<< HEAD
 	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysql.exe" -PathType Leaf) {
+=======
+	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysql.exe") {
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 		# test connection to the OH MySQL database
 		Write-Host "Testing database connection..."
 		try {
@@ -722,12 +748,19 @@ function generate_config_files {
 	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties") ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties") { mv -Force $OH_PATH/$OH_DIR/rsc/settings.properties $OH_PATH/$OH_DIR/rsc/settings.properties.old }
 		Write-Host "Generating OH configuration file -> settings.properties..."
+<<<<<<< HEAD
 #		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("LANGUAGE=en","LANGUAGE=$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 		# set DOC_DIR in OH config file
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 		# set PHOTO_DIR in OH config file
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("PHOTO_DIR","$PHOTO_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
+=======
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
+		# set DOC_DIR in OH config file
+		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
+
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 		# set singleuser = yes / no
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("YES_OR_NO","$OH_SINGLE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 	}
@@ -863,8 +896,13 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		if ( $OH_MODE -eq "PORTABLE" ) {
 			# check if database already exists
 			if (Test-Path "$OH_PATH\$DATA_DIR\$DATABASE_NAME") {
+<<<<<<< HEAD
 				config_database;
 				start_database;
+=======
+				mysql_check;
+				config_database;
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 			}
 			else {
 		        	Write-Host "Error: no data found! Exiting." -ForegroundColor Red
@@ -884,6 +922,7 @@ if ( $INTERACTIVE_MODE -eq "on") {
 	"r"	{ # restore
 	       	Write-Host "Restoring Open Hospital database...."
 		# ask user for database to restore
+<<<<<<< HEAD
 		$DB_CREATE_SQL = Read-Host -Prompt "Enter SQL dump/backup file that you want to restore - (in $script:SQL_DIR subdirectory) -> "
 		if ( !(Test-Path "$OH_PATH\$SQL_DIR\$DB_CREATE_SQL")) {
 			Write-Host "Error: No SQL file found! Exiting." -ForegroundColor Red
@@ -902,6 +941,19 @@ if ( $INTERACTIVE_MODE -eq "on") {
 				start_database;	
 				set_database_root_pw;
 			}
+=======
+		$DB_CREATE_SQL = Read-Host -Prompt "Enter SQL dump/backup file that you want to restore - (in $script:BACKUP_DIR subdirectory) -> "
+		if (Test-Path "$OH_PATH\$SQL_DIR\$DB_CREATE_SQL") {
+			Write-Host "Found $SQL_DIR\$DB_CREATE_SQL, restoring it..."
+			# reset database if exists
+			clean_database;
+			mysql_check;
+			config_database;
+			initialize_dir_structure;
+			initialize_database;
+			start_database;	
+			set_database_root_pw;
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 			import_database;
 			}
 		if ( $OH_MODE -eq "PORTABLE" ) {
@@ -933,7 +985,10 @@ if ( $INTERACTIVE_MODE -eq "on") {
  		Write-Host "--------- Script Configuration ---------"
  		Write-Host "Architecture is $ARCH"
  		Write-Host "Config file generation is set to $GENERATE_CONFIG_FILES"
+<<<<<<< HEAD
 		Write-Host ""
+=======
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
  		Write-Host "--------- OH Configuration ---------"
  		Write-Host "Open Hospital is configured in $OH_MODE mode"
 		Write-Host "Language is set to $OH_LANGUAGE"
@@ -950,7 +1005,10 @@ if ( $INTERACTIVE_MODE -eq "on") {
 		Write-Host "DICOM_MAX_SIZE=$DICOM_MAX_SIZE"
 		Write-Host "DICOM_STORAGE=$DICOM_STORAGE"
 		Write-Host "DICOM_DIR=$DICOM_DIR"
+<<<<<<< HEAD
 		Write-Host ""
+=======
+>>>>>>> b687d4f391f59c868d82caf33442a075330b8c4c
 		Write-Host "--- OH Folders ---"
 		Write-Host "OH_DIR=$OH_DIR"
 		Write-Host "OH_DOC_DIR=$OH_DOC_DIR"
