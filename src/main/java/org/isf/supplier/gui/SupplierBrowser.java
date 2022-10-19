@@ -217,12 +217,12 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					Supplier m = (Supplier) model.getValueAt(table.getSelectedRow(), -1);
-					if (m.getSupDeleted().equals('Y')) {
+					if (m.getActive().equals(0)) {
 						return;
 					}
 					int answer = MessageDialog.yesNo(null, "angal.supplier.deletesupplier.fmt.msg", m.getSupName());
 					if (answer == JOptionPane.YES_OPTION) {
-						m.setSupDeleted('Y');
+						//m.setSupDeleted('Y');
 						try {
 							supplierBrowserManager.saveOrUpdate(m);
 						} catch (OHServiceException e) {
@@ -337,7 +337,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 			} else if (c == 7) {
 				return sup.getSupNote();
 			} else if (c == 8) {
-				return sup.getSupDeleted().equals('Y');
+				return sup.getActive().equals(0);
 			}
 			return null;
 		}

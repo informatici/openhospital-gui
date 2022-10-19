@@ -268,9 +268,9 @@ public class SupplierEdit extends JDialog {
 				supplier.setSupEmail(emailTextField.getText());
 				supplier.setSupNote(noteTextField.getText());
 				if (!insert) {
-					supplier.setSupDeleted(isDeletedCheck.isSelected() ? 'Y' : 'N');
+					supplier.setActive(isDeletedCheck.isSelected() ? 0 : 1);
 				} else {
-					supplier.setSupDeleted('N');
+					supplier.setActive(1);
 				}
 				boolean result = false;
 				if (insert) { // inserting
@@ -432,7 +432,7 @@ public class SupplierEdit extends JDialog {
 		if (isDeletedCheck == null) {
 			isDeletedCheck = new JCheckBox();
 			if (!insert) {
-				isDeletedCheck.setSelected(supplier.getSupDeleted().equals('Y'));
+				isDeletedCheck.setSelected(supplier.getActive().equals(0));
 			}
 		}
 		return isDeletedCheck;
