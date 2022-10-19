@@ -432,7 +432,7 @@ public class SupplierEdit extends JDialog {
 		if (isDeletedCheck == null) {
 			isDeletedCheck = new JCheckBox();
 			if (!insert) {
-				isDeletedCheck.setSelected(supplier.getActive().equals(0));
+				isDeletedCheck.setSelected(supplier.getActive() == 0);
 			}
 		}
 		return isDeletedCheck;

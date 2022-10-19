@@ -217,7 +217,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 					MessageDialog.error(null, "angal.common.pleaseselectarow.msg");
 				} else {
 					Supplier m = (Supplier) model.getValueAt(table.getSelectedRow(), -1);
-					if (m.getActive().equals(0)) {
+					if (m.getActive() == 0) {
 						return;
 					}
 					int answer = MessageDialog.yesNo(null, "angal.supplier.deletesupplier.fmt.msg", m.getSupName());
@@ -337,7 +337,7 @@ public class SupplierBrowser extends ModalJFrame implements SupplierEdit.Supplie
 			} else if (c == 7) {
 				return sup.getSupNote();
 			} else if (c == 8) {
-				return sup.getActive().equals(0);
+				return sup.getActive() == 0;
 			}
 			return null;
 		}
