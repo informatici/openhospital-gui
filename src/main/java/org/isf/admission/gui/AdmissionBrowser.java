@@ -114,7 +114,7 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 /**
  * This class shows essential patient data and allows to create an admission
  * record or modify an existing one.
- *
+ * <p>
  * release 2.5 nov-10-06
  *
  * @author flavio
@@ -123,7 +123,7 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
  * ====================
  * 23/10/06 - flavio - borders set to not resizable
  *                     changed Disease IN (/OUT) into Dignosis IN (/OUT)
- *
+ * <p>
  * 10/11/06 - ross - added RememberDate for admission Date
  * 				   - only diseses with flag In Patient (IPD) are displayed
  *                 - on Insert. in edit all are displayed
