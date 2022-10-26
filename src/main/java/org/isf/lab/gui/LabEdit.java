@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -44,6 +43,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.EventListenerList;
@@ -74,6 +74,7 @@ import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 
@@ -350,8 +351,7 @@ public class LabEdit extends ModalJFrame {
 					patTextField.setText(patSelected.getName());
 					ageTextField.setText(patSelected.getAge() + "");
 					sexTextField.setText(patSelected.getSex() + "");
-					Admission admission = null;
-					admission = admissionBrowserManager.getCurrentAdmission(patSelected);
+					Admission admission = admissionBrowserManager.getCurrentAdmission(patSelected);
 					inPatientCheckBox.setSelected(admission != null);
 				}
 			});
@@ -616,7 +616,7 @@ public class LabEdit extends ModalJFrame {
 
 	private JPanel getSecondPanel() {
 		resultPanel.removeAll();
-		resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
+		resultPanel.setLayout(new SpringLayout());
 		String examId = examSelected.getCode();
 		eRows = null;
 		try {
@@ -640,6 +640,9 @@ public class LabEdit extends ModalJFrame {
 			List<LaboratoryRow> finalLRows = lRows;
 			Optional.ofNullable(eRows).ifPresent(examRows ->
 					examRows.forEach(r -> resultPanel.add(ExamRowSubPanel.forExamRowAndLaboratoryRows(r, finalLRows))));
+		}
+		if (eRows != null) {
+			SpringUtilities.makeCompactGrid(resultPanel, eRows.size(), 1, 5, 5, 5, 5);
 		}
 		return resultPanel;
 	}

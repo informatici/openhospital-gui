@@ -21,9 +21,9 @@
  */
 package org.isf.lab.gui.elements;
 
+import java.awt.Dimension;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,6 +36,9 @@ import org.isf.lab.model.LaboratoryRow;
 public class ExamRowSubPanel extends JPanel {
 
 	private static final long serialVersionUID = -8847689740511562992L;
+
+	private static final String POSITIVE_ABBR_TXT = MessageBundle.getMessage("angal.lab.positiveabbr.btn");
+	private static final String NEGATIVE_ABBR_TXT = MessageBundle.getMessage("angal.lab.negativeabbr.btn");
 
 	private JLabel label;
 	private JRadioButton radioPos;
@@ -50,24 +53,25 @@ public class ExamRowSubPanel extends JPanel {
 		return lRows.stream()
 				.filter(laboratoryRow -> r.getDescription().equalsIgnoreCase(laboratoryRow.getDescription()))
 				.findFirst()
-				.map(laboratoryRow -> new ExamRowSubPanel(r, MessageBundle.getMessage("angal.lab.positiveabbr.btn")))
-				.orElse(new ExamRowSubPanel(r, MessageBundle.getMessage("angal.lab.negativeabbr.btn")));
+				.map(laboratoryRow -> new ExamRowSubPanel(r, POSITIVE_ABBR_TXT))
+				.orElse(new ExamRowSubPanel(r, NEGATIVE_ABBR_TXT));
 	}
 
 	private ExamRowSubPanel(ExamRow row, String result) {
-		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		label = new JLabel(row.getDescription());
+		label.setPreferredSize(new Dimension(150, 15));
+		label.setMinimumSize(new Dimension(150, 15));
 		this.add(label);
 
 		group = new ButtonGroup();
-		radioPos = new JRadioButton(MessageBundle.getMessage("angal.lab.positiveabbr.btn"));
-		radioNeg = new JRadioButton(MessageBundle.getMessage("angal.lab.negativeabbr.btn"));
+		radioPos = new JRadioButton(POSITIVE_ABBR_TXT);
+		radioNeg = new JRadioButton(NEGATIVE_ABBR_TXT);
 		group.add(radioPos);
 		group.add(radioNeg);
 
 		this.add(radioPos);
 		this.add(radioNeg);
-		if (result.equals(MessageBundle.getMessage("angal.lab.positiveabbr.btn"))) {
+		if (result.equals(POSITIVE_ABBR_TXT)) {
 			radioPos.setSelected(true);
 		} else {
 			radioNeg.setSelected(true);
@@ -76,9 +80,9 @@ public class ExamRowSubPanel extends JPanel {
 
 	public String getSelectedResult() {
 		if (radioPos.isSelected()) {
-			return MessageBundle.getMessage("angal.lab.positiveabbr.btn");
+			return POSITIVE_ABBR_TXT;
 		}
-		return MessageBundle.getMessage("angal.lab.negativeabbr.btn");
+		return NEGATIVE_ABBR_TXT;
 	}
 
 }
