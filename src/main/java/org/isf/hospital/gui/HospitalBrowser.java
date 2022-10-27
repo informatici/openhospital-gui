@@ -272,10 +272,6 @@ public class HospitalBrowser extends ModalJFrame {
 			MessageDialog.error(null, "angal.hospital.thestartofvisitinghoursislaterthantheendhour.msg");
 			inError = true;
 		}
-		if (startTime.getHour() < 0 || endTime.getHour() > 24) {
-			MessageDialog.error(null, "angal.hospital.thevisitinghourvaluesmustbeintherange0to24.msg");
-			inError = true;
-		}
 		if (durationField.getText().isEmpty()) {
 			MessageDialog.error(null, "angal.hospital.thevisitdurationcannotbeblank.msg");
 			inError = true;
