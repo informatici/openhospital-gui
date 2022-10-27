@@ -44,6 +44,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SpringLayout;
 import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.EventListenerList;
@@ -75,6 +76,7 @@ import org.isf.utils.jobjects.GoodDateTimeSpinnerChooser;
 import org.isf.utils.jobjects.MessageDialog;
 import org.isf.utils.jobjects.ModalJFrame;
 import org.isf.utils.jobjects.VoLimitedTextField;
+import org.isf.utils.layout.SpringUtilities;
 import org.isf.utils.time.RememberDates;
 import org.isf.utils.time.TimeTools;
 
@@ -151,7 +153,7 @@ public class LabEditExtended extends ModalJFrame {
 	private static final int DATA_PANEL_HEIGHT = 90;
 	private static final int DATA_PATIENT_HEIGHT = 100;
 	private static final int RESULT_PANEL_HEIGHT = 350;
-	private static final int BUTTON_PANEL_HEIGHT = 40;
+	private static final int BUTTON_PANEL_HEIGHT = 45;
 
 	private List<ExamRow> eRows = null;
 	
@@ -300,7 +302,7 @@ public class LabEditExtended extends ModalJFrame {
 			JLabel nameLabel = new JLabel(MessageBundle.getMessage("angal.common.name.txt"));
 			nameLabel.setBounds(10, 20, LABEL_WIDTH, 20);
 			patTextField = getPatientTextField();
-			patTextField.setBounds(LABEL_WIDTH +5, 20, 200, 20);
+			patTextField.setBounds(LABEL_WIDTH + 5, 20, 200, 20);
 			JLabel ageLabel = new JLabel(MessageBundle.getMessage("angal.common.age.txt"));
 			ageLabel.setBounds(300, 20, 35, 20);
 			ageTextField = getAgeTextField();
@@ -409,8 +411,7 @@ public class LabEditExtended extends ModalJFrame {
 				if (patientComboBox.getSelectedIndex() > 0) {
 					labPat = (Patient) patientComboBox.getSelectedItem();
 					setPatient(labPat);
-					Admission admission = null;
-					admission = admissionBrowserManager.getCurrentAdmission(labPat);
+					Admission admission = admissionBrowserManager.getCurrentAdmission(labPat);
 					inPatientCheckBox.setSelected(admission != null);
 				}
 			});
@@ -705,9 +706,9 @@ public class LabEditExtended extends ModalJFrame {
 	private JPanel getSecondPanel() {
 		resultPanel.removeAll();
 		resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
+		JPanel innerPanel = new JPanel(new SpringLayout());
 		String examId = examSelected.getCode();
 		eRows = null;
-
 		try {
 			eRows = examRowBrowsingManager.getExamRowByExamCode(examId);
 		} catch (OHServiceException e1) {
@@ -726,7 +727,12 @@ public class LabEditExtended extends ModalJFrame {
 			}
 			List<LaboratoryRow> finalLRows = lRows;
 			Optional.ofNullable(eRows).ifPresent(examRows ->
-					examRows.forEach(r -> resultPanel.add(ExamRowSubPanel.forExamRowAndLaboratoryRows(r, finalLRows))));
+					examRows.forEach(r -> innerPanel.add(ExamRowSubPanel.forExamRowAndLaboratoryRows(r, finalLRows))));
+		}
+		if (eRows != null) {
+			SpringUtilities.makeCompactGrid(innerPanel, eRows.size(), 1, 0, 0, 0, 0);
+			JScrollPane scrollPane = new JScrollPane(innerPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			resultPanel.add(scrollPane);
 		}
 		return resultPanel;
 	}
