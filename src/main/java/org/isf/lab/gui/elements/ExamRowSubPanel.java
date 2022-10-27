@@ -39,6 +39,8 @@ public class ExamRowSubPanel extends JPanel {
 
 	private static final String POSITIVE_ABBR_TXT = MessageBundle.getMessage("angal.lab.positiveabbr.btn");
 	private static final String NEGATIVE_ABBR_TXT = MessageBundle.getMessage("angal.lab.negativeabbr.btn");
+	private static final Dimension LABEL_SIZE = new Dimension(175, 20);
+	private static final Dimension SUBPANEL_SIZE = new Dimension(500, 25);
 
 	private JLabel label;
 	private JRadioButton radioPos;
@@ -46,7 +48,7 @@ public class ExamRowSubPanel extends JPanel {
 	private ButtonGroup group;
 
 	public static ExamRowSubPanel forExamRow(ExamRow r) {
-		return new ExamRowSubPanel(r, "N");
+		return new ExamRowSubPanel(r, NEGATIVE_ABBR_TXT);
 	}
 
 	public static ExamRowSubPanel forExamRowAndLaboratoryRows(ExamRow r, List<LaboratoryRow> lRows) {
@@ -59,8 +61,8 @@ public class ExamRowSubPanel extends JPanel {
 
 	private ExamRowSubPanel(ExamRow row, String result) {
 		label = new JLabel(row.getDescription());
-		label.setPreferredSize(new Dimension(150, 15));
-		label.setMinimumSize(new Dimension(150, 15));
+		label.setMinimumSize(LABEL_SIZE);
+		label.setPreferredSize(LABEL_SIZE);
 		this.add(label);
 
 		group = new ButtonGroup();
@@ -76,6 +78,8 @@ public class ExamRowSubPanel extends JPanel {
 		} else {
 			radioNeg.setSelected(true);
 		}
+		setMaximumSize(SUBPANEL_SIZE);
+		setPreferredSize(SUBPANEL_SIZE);
 	}
 
 	public String getSelectedResult() {

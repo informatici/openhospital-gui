@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -158,7 +159,7 @@ public class LabEdit extends ModalJFrame {
 	private static final int LABEL_WIDTH = 70;
 	private static final int DATA_PANEL_HEIGHT = 170;
 	private static final int RESULT_PANEL_HEIGHT = 350;
-	private static final int BUTTON_PANEL_HEIGHT = 40;
+	private static final int BUTTON_PANEL_HEIGHT = 45;
 
 	private List<ExamRow> eRows = null;
 	private Patient patSelected;
@@ -290,7 +291,7 @@ public class LabEdit extends ModalJFrame {
 			 */
 			if (noteScrollPane == null) {
 				noteScrollPane = new JScrollPane(noteTextArea);
-				noteScrollPane.setBounds(LABEL_WIDTH +5, 120, 470, 40);
+				noteScrollPane.setBounds(LABEL_WIDTH + 5, 120, 470, 40);
 				noteScrollPane.createVerticalScrollBar();
 				noteScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 				noteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -616,7 +617,8 @@ public class LabEdit extends ModalJFrame {
 
 	private JPanel getSecondPanel() {
 		resultPanel.removeAll();
-		resultPanel.setLayout(new SpringLayout());
+		resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
+		JPanel innerPanel = new JPanel(new SpringLayout());
 		String examId = examSelected.getCode();
 		eRows = null;
 		try {
@@ -639,10 +641,12 @@ public class LabEdit extends ModalJFrame {
 			}
 			List<LaboratoryRow> finalLRows = lRows;
 			Optional.ofNullable(eRows).ifPresent(examRows ->
-					examRows.forEach(r -> resultPanel.add(ExamRowSubPanel.forExamRowAndLaboratoryRows(r, finalLRows))));
+					examRows.forEach(r -> innerPanel.add(ExamRowSubPanel.forExamRowAndLaboratoryRows(r, finalLRows))));
 		}
 		if (eRows != null) {
-			SpringUtilities.makeCompactGrid(resultPanel, eRows.size(), 1, 5, 5, 5, 5);
+			SpringUtilities.makeCompactGrid(innerPanel, eRows.size(), 1, 0, 0, 0, 0);
+			JScrollPane scrollPane = new JScrollPane(innerPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			resultPanel.add(scrollPane);
 		}
 		return resultPanel;
 	}
