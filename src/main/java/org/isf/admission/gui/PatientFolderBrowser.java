@@ -94,7 +94,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class shows patient data and the list of admissions and lab exams.
- *
+ * <p>
  * last release  jun-14-08
  * @author chiara
  *
@@ -102,7 +102,7 @@ import org.slf4j.LoggerFactory;
  * modification history
  * ====================
  * 14/06/08 - chiara - first version
- *                     
+ * <p>
  * 30/06/08 - fabrizio - implemented automatic selection of exams within the admission period
  * 05/09/08 - alessandro - second version:
  * 						 - same PatientSummary than PatientDataBrowser

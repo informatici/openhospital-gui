@@ -73,7 +73,7 @@ import org.isf.ward.model.Ward;
 
 /**
  * This class shows and allows to modify all patient data and all patient admissions.
- *
+ * <p>
  * last release  oct-23-06
  * @author flavio
  * ----------------------------------------------------
