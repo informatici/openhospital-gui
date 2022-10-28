@@ -240,9 +240,9 @@ public class MedicalEdit extends JDialog {
 			okButton.addActionListener(new java.awt.event.ActionListener() {
 				@Override
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					Medical newMedical = null;
 					boolean result = false;
 					if (insert) { // inserting
+						Medical newMedical = null;
 						try {
 							newMedical = (Medical) medical.clone();
 							newMedical.setType((MedicalType) typeComboBox.getSelectedItem());
@@ -298,7 +298,7 @@ public class MedicalEdit extends JDialog {
 
 										if (ok == JOptionPane.OK_OPTION) {
 											try {
-												result = medicalBrowsingManager.updateMedical(newMedical, true);
+												result = medicalBrowsingManager.updateMedical(oldMedical, true);
 											} catch (OHServiceException e2) {
 												OHServiceExceptionUtil.showMessages(e2);
 											}
