@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<!-- Created with Jaspersoft Studio version 6.19.0.final using JasperReports Library version 6.19.0-646c68931cebf1a58bc65c4359d1f0ca223c5e94  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="patient_clinical_sheet_patsubreport" pageWidth="535" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="patient_clinical_sheet_patsubreport" whenResourceMissingType="Key" uuid="dfd8ed2e-99db-4e93-bf8b-45a42f8a6dbf">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
@@ -11,49 +11,211 @@
 	<import value="org.joda.time.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<parameter name="patientID" class="java.lang.String"/>
-	<parameter name="age" class="java.lang.Integer" isForPrompting="false">
-		<parameterDescription><![CDATA[age in days]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new Integer( (int) ( (new Date().getTime() - $F{PAT_BDATE}.getTime()) / (1000*60*60*24) ))]]></defaultValueExpression>
-	</parameter>
 	<queryString>
 		<![CDATA[SELECT * 
-FROM OH_PATIENT
-LEFT JOIN OH_PATIENT_PROFILE_PHOTO ON PROFILE_PHOTO_ID = PAT_PROFILE_PHOTO_ID
+FROM OH_PATIENT p
+LEFT JOIN OH_PATIENT_PROFILE_PHOTO f ON f.PAT_PROFILE_PHOTO_ID = p.PAT_PROFILE_PHOTO_ID
 LEFT JOIN (SELECT PEX_PAT_ID, PEX_HEIGHT, PEX_WEIGHT FROM OH_PATIENTEXAMINATION WHERE PEX_PAT_ID = $P{patientID} ORDER BY PEX_DATE DESC LIMIT 1) AS HW
 ON PAT_ID = PEX_PAT_ID
 WHERE PAT_ID = $P{patientID}]]>
 	</queryString>
-	<field name="PAT_ID" class="java.lang.Integer"/>
-	<field name="PAT_FNAME" class="java.lang.String"/>
-	<field name="PAT_SNAME" class="java.lang.String"/>
-	<field name="PAT_NAME" class="java.lang.String"/>
-	<field name="PAT_BDATE" class="java.sql.Date"/>
-	<field name="PAT_AGE" class="java.lang.Integer"/>
-	<field name="PAT_AGETYPE" class="java.lang.String"/>
-	<field name="PAT_SEX" class="java.lang.String"/>
-	<field name="PAT_ADDR" class="java.lang.String"/>
-	<field name="PAT_CITY" class="java.lang.String"/>
-	<field name="PAT_NEXT_KIN" class="java.lang.String"/>
-	<field name="PAT_TELE" class="java.lang.String"/>
-	<field name="PAT_MOTH_NAME" class="java.lang.String"/>
-	<field name="PAT_MOTH" class="java.lang.String"/>
-	<field name="PAT_FATH_NAME" class="java.lang.String"/>
-	<field name="PAT_FATH" class="java.lang.String"/>
-	<field name="PAT_LEDU" class="java.lang.String"/>
-	<field name="PAT_ESTA" class="java.lang.String"/>
-	<field name="PAT_PTOGE" class="java.lang.String"/>
-	<field name="PAT_NOTE" class="java.lang.String"/>
-	<field name="PAT_DELETED" class="java.lang.String"/>
-	<field name="PAT_LOCK" class="java.lang.Integer"/>
-	<field name="PAT_BTYPE" class="java.lang.String"/>
-	<field name="PAT_PHOTO" class="java.lang.Object"/>
-	<field name="PAT_TAXCODE" class="java.lang.String"/>
-	<field name="PAT_TIMESTAMP" class="java.sql.Timestamp"/>
-	<field name="PEX_PAT_ID" class="java.lang.Integer"/>
-	<field name="PEX_HEIGHT" class="java.lang.Integer"/>
-	<field name="PEX_WEIGHT" class="java.lang.Double"/>
+	<field name="PAT_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_FNAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_FNAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_FNAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_SNAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_SNAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_SNAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_NAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_BDATE" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_BDATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_BDATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_AGE" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_AGE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_AGE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_AGETYPE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_AGETYPE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_AGETYPE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_SEX" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_SEX"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_SEX"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_ADDR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_ADDR"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_ADDR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_CITY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_CITY"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_CITY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_NEXT_KIN" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_NEXT_KIN"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_NEXT_KIN"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_TELE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_TELE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_TELE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_MOTH_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_MOTH_NAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_MOTH_NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_MOTH" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_MOTH"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_MOTH"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_FATH_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_FATH_NAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_FATH_NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_FATH" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_FATH"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_FATH"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_LEDU" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_LEDU"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_LEDU"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_ESTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_ESTA"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_ESTA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_PTOGE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_PTOGE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_PTOGE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_NOTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_NOTE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_NOTE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_DELETED" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_DELETED"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_DELETED"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_LOCK" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_LOCK"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_LOCK"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_BTYPE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_BTYPE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_BTYPE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_TAXCODE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_TAXCODE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_TAXCODE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_TIMESTAMP" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_TIMESTAMP"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_TIMESTAMP"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_CREATED_BY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_CREATED_BY"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_CREATED_BY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_CREATED_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_CREATED_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_CREATED_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_LAST_MODIFIED_BY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_LAST_MODIFIED_BY"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_LAST_MODIFIED_BY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_LAST_MODIFIED_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_LAST_MODIFIED_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_LAST_MODIFIED_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_ACTIVE" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_ACTIVE"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_ACTIVE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_PROFESSION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_PROFESSION"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_PROFESSION"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_MAR_STAT" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_MAR_STAT"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_MAR_STAT"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="PAT_PROFILE_PHOTO_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_PROFILE_PHOTO_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_PROFILE_PHOTO_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient"/>
+	</field>
+	<field name="COLUMN_34" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_PROFILE_PHOTO_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_PROFILE_PHOTO_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient_profile_photo"/>
+	</field>
+	<field name="PAT_PHOTO" class="byte[]">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_PHOTO"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_PHOTO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patient_profile_photo"/>
+	</field>
+	<field name="PEX_PAT_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PEX_PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="PEX_PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patientexamination"/>
+	</field>
+	<field name="PEX_HEIGHT" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PEX_HEIGHT"/>
+		<property name="com.jaspersoft.studio.field.label" value="PEX_HEIGHT"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patientexamination"/>
+		<fieldDescription><![CDATA[Height in cm]]></fieldDescription>
+	</field>
+	<field name="PEX_WEIGHT" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="PEX_WEIGHT"/>
+		<property name="com.jaspersoft.studio.field.label" value="PEX_WEIGHT"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="oh_patientexamination"/>
+		<fieldDescription><![CDATA[Weight in Kg]]></fieldDescription>
+	</field>
 	<variable name="now" class="java.util.Date">
 		<variableExpression><![CDATA[new Date()]]></variableExpression>
+	</variable>
+	<variable name="age" class="java.lang.String">
+		<variableExpression><![CDATA[new Integer( (int) ( (new Date().getTime() - $F{PAT_BDATE}.getTime()) / (1000*60*60*24) ))]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
