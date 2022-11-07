@@ -277,6 +277,7 @@ public class DicomViewGui extends JPanel {
 		BufferedImage imageCanvas = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		centerPanel.setBackground(Color.BLACK);
 		int perc = jSliderZoom.getValue();
+		System.out.println("composeCenter:" + tmpImg);
 		float value = (float) tmpImg.getWidth() * (float) perc / 100f;
 		BufferedImage immagineResized = Scalr.resize(tmpImg, Math.round(value));
 
@@ -510,16 +511,18 @@ public class DicomViewGui extends JPanel {
 			try {
 				tmpImg = reader.read(0, param);
 			} catch (IOException ioException) {
+				System.out.println("getImageFromDicom: 1 " + tmpImg);
 				throw new OHDicomException(new OHExceptionMessage(MessageBundle.getMessage("angal.dicom.err"),
 						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
 						OHSeverityLevel.ERROR));
 			}
-
 			imageInputStream.close();
 
 			DicomInputStream dicomInputStream = new DicomInputStream(new File(dett.getFileName()));
-			Attributes attributes = dicomInputStream.readDataset();
+			this.attributes = dicomInputStream.readDataset();
+			System.out.println("getImageFromDicom:" + tmpImg);
 		} catch (Exception exception) {
+			System.out.println("getImageFromDicom: 3 " + tmpImg + ">>>> " + exception.getMessage());
 			LOGGER.error(exception.getMessage(), exception);
 		}
 	}
