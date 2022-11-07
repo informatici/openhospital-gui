@@ -32,8 +32,6 @@ import javax.imageio.ImageIO;
 
 import org.imgscalr.Scalr;
 
-import com.twelvemonkeys.image.ResampleOp;
-
 public final class ImageUtil {
 
 	private ImageUtil() {
@@ -50,15 +48,13 @@ public final class ImageUtil {
 		return image.getScaledInstance(scaledW, scaledH, Image.SCALE_SMOOTH);
 	}
 
-	public static BufferedImage scaleImage(BufferedImage image, int boundWidth, int boundHeight) {
-		int originalWidth = image.getWidth();
-		int originalHeight = image.getHeight();
-		if (originalWidth > boundWidth || originalHeight > boundHeight) {
-			// FILTER_LANCZOS is a high quality interpolation method
-			ResampleOp resampler = new ResampleOp(boundWidth, boundWidth, ResampleOp.FILTER_LANCZOS);
-			return resampler.filter(image, null);
+	public static BufferedImage scaleImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+		int originalWidth = originalImage.getWidth();
+		int originalHeight = originalImage.getHeight();
+		if (originalWidth > targetWidth || originalHeight > targetHeight) {
+			return Scalr.resize(originalImage, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, targetWidth, targetHeight, Scalr.OP_ANTIALIAS);
 		}
-		return image;
+		return originalImage;
 	}
 
 	public static byte[] imageToByte(final BufferedImage bufferedImage) {
