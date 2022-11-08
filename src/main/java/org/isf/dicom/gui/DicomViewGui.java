@@ -34,7 +34,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
@@ -57,6 +56,7 @@ import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.imageio.plugins.dcm.DicomImageReadParam;
 import org.dcm4che3.io.DicomInputStream;
+import org.dcm4che3.util.SafeClose;
 import org.imgscalr.Scalr;
 import org.isf.dicom.manager.DicomManagerFactory;
 import org.isf.dicom.model.FileDicom;
@@ -499,12 +499,14 @@ public class DicomViewGui extends JPanel {
 	 * @param dett
 	 */
 	private void getImageFromDicom(FileDicom dett) {
+		ImageInputStream imageInputStream = null;
+		DicomInputStream dicomInputStream = null;
 		try {
 			tmpImg = null;
 			Iterator<?> iter = ImageIO.getImageReadersByFormatName("DICOM");
 			ImageReader reader = (ImageReader) iter.next();
 			DicomImageReadParam param = (DicomImageReadParam) reader.getDefaultReadParam();
-			ImageInputStream imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
+			imageInputStream = ImageIO.createImageInputStream(dett.getDicomData().getBinaryStream());
 			reader.setInput(imageInputStream, false);
 
 			try {
@@ -514,12 +516,13 @@ public class DicomViewGui extends JPanel {
 						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
 						OHSeverityLevel.ERROR));
 			}
-			imageInputStream.close();
-
-			DicomInputStream dicomInputStream = new DicomInputStream(new File(dett.getFileName()));
+			dicomInputStream = new DicomInputStream(dett.getDicomData().getBinaryStream());
 			this.attributes = dicomInputStream.readDataset();
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
+		} finally {
+			SafeClose.close(imageInputStream);
+			SafeClose.close(dicomInputStream);
 		}
 	}
 
