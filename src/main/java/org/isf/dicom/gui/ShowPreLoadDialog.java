@@ -125,7 +125,7 @@ class ShowPreLoadDialog extends JDialog {
 		if (dicomDate != null) {
 			dateChooser = new GoodDateChooser(this.dicomDate.toLocalDate());
 		} else {
-			dateChooser = new GoodDateChooser(null);
+			dateChooser = new GoodDateChooser();
 		}
 		centerPanel.add(dateChooser, gbcDateChooser);
 
