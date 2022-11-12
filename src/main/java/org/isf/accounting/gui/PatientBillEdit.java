@@ -1200,6 +1200,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 
 						if (isValidPaymentDate(datePay)) {
 							addPayment(datePay, balance.doubleValue());
+						} else {
+							return;
 						}
 					} else {
 						datePay = TimeTools.getNow();
@@ -1314,7 +1316,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		} else if (datePay.isBefore(lastPay)) {
 			MessageDialog.error(PatientBillEdit.this, "angal.newbill.thedateisbeforethelastpayment.msg");
 			return false;
-		} else if (datePay.isBefore(now)) {
+		} else if (datePay.isAfter(now)) {
 			MessageDialog.error(PatientBillEdit.this, "angal.newbill.payementsinthefuturearenotallowed.msg");
 			return false;
 		}
