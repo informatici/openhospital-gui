@@ -25,28 +25,20 @@ import java.awt.AWTEvent;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 
-import org.isf.generaldata.GeneralData;
 import org.isf.utils.jobjects.DelayTimerCallback;
 
 public class LogoutEventListener implements DelayTimerCallback, AWTEventListener {
 
 	@Override
 	public void trigger() {
-		boolean isNotSingleUserMode = !GeneralData.getGeneralData().getSINGLEUSER();
-		boolean loggedIn = UserSession.isLoggedIn();
-		if (isNotSingleUserMode && loggedIn) {
+		if (UserSession.isLoggedIn()) {
 			UserSession.restartSession();
 		}
 	}
 
 	@Override
 	public void eventDispatched(AWTEvent e) {
-		boolean isNotSingleUserMode = !GeneralData.getGeneralData().getSINGLEUSER();
-		boolean isLoggedIn = UserSession.isLoggedIn();
-		boolean isKeyEvent = e instanceof KeyEvent;
-		boolean isKeyPressed = KeyEvent.KEY_PRESSED == ((KeyEvent) e).getID();
-		boolean isTimerAvailable = UserSession.getTimer() != null;
-		if (isNotSingleUserMode && isLoggedIn && isKeyEvent && isKeyPressed && isTimerAvailable) {
+		if (UserSession.isLoggedIn() && e instanceof KeyEvent && KeyEvent.KEY_PRESSED == ((KeyEvent) e).getID() && UserSession.getTimer() != null ) {
 			UserSession.getTimer().startTimer();
 		}
 	}
