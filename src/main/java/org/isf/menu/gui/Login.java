@@ -140,9 +140,8 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 
 		Dimension mySize = getSize();
 
-		setLocation((screensize.width - mySize.width) / 2,
-				(screensize.height - mySize.height) / 2);
-
+		pack();
+		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
 	}
