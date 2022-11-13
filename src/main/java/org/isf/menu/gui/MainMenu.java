@@ -271,10 +271,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			}
 		}
 
-		if (singleUser) {
-			myMenu.removeIf(item -> "logout".equalsIgnoreCase(item.getCode()));
-		}
-
 		// remove disabled buttons
 		List<UserMenuItem> junkMenu = new ArrayList<>();
 		for (UserMenuItem umi : myMenu) {
