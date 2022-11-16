@@ -419,8 +419,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		
 		
 		public void addLogoutButton(JButton[] button, int k) {
-				button[k] = new JButton(MessageBundle.getMessage("angal.menu.btn.logout"));
-				button[k].setMnemonic(KeyEvent.VK_A + ('L' - 'A'));
+				button[k] = new JButton(MessageBundle.getMessage("angal.menu.logout.btn"));
+				button[k].setMnemonic(KeyEvent.VK_A + (MessageBundle.getMnemonic("angal.menu.logout.btn.key") - 'A'));
 				button[k].addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
