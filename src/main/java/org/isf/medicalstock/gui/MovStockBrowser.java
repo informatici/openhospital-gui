@@ -689,8 +689,9 @@ public class MovStockBrowser extends ModalJFrame {
 
 	private JTable getMovTable() {
 		GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar old = new GregorianCalendar();
+		GregorianCalendar old = TimeTools.getDateToday0();
 		old.add(Calendar.WEEK_OF_YEAR, -1);
+		
 
 		model = new MovBrowserModel(null, null, null, null, old, now, null, null, null, null);
 		movTable = new JTable(model);
@@ -820,7 +821,7 @@ public class MovStockBrowser extends ModalJFrame {
 			String wardSelected = null;
 			boolean dateOk = true;
 
-			GregorianCalendar movFrom = movDateFrom.getCompleteDate();
+			GregorianCalendar movFrom = movDateFrom.getCompleteDate(true);
 			GregorianCalendar movTo = movDateTo.getCompleteDate();
 			if ((movFrom == null) || (movTo == null)) {
 				if (!((movFrom == null) && (movTo == null))) {
@@ -833,7 +834,7 @@ public class MovStockBrowser extends ModalJFrame {
 			}
 
 			if (!isAutomaticLot()) {
-				GregorianCalendar prepFrom = lotPrepFrom.getCompleteDate();
+				GregorianCalendar prepFrom = lotPrepFrom.getCompleteDate(true);
 				GregorianCalendar prepTo = lotPrepTo.getCompleteDate();
 				if ((prepFrom == null) || (prepTo == null)) {
 					if (!((prepFrom == null) && (prepTo == null))) {
@@ -846,7 +847,7 @@ public class MovStockBrowser extends ModalJFrame {
 				}
 			}
 
-			GregorianCalendar dueFrom = lotDueFrom.getCompleteDate();
+			GregorianCalendar dueFrom = lotDueFrom.getCompleteDate(true);
 			GregorianCalendar dueTo = lotDueTo.getCompleteDate();
 			if ((dueFrom == null) || (dueTo == null)) {
 				if (!((dueFrom == null) && (dueTo == null))) {
@@ -881,20 +882,20 @@ public class MovStockBrowser extends ModalJFrame {
 				if (!isAutomaticLot()) {
 					model = new MovBrowserModel(medicalSelected,
 							medicalTypeSelected, wardSelected, typeSelected,
-							movDateFrom.getCompleteDate(),
+							movDateFrom.getCompleteDate(true),
 							movDateTo.getCompleteDate(),
-							lotPrepFrom.getCompleteDate(),
+							lotPrepFrom.getCompleteDate(true),
 							lotPrepTo.getCompleteDate(),
-							lotDueFrom.getCompleteDate(),
+							lotDueFrom.getCompleteDate(true),
 							lotDueTo.getCompleteDate());
 				} else {
 					model = new MovBrowserModel(medicalSelected,
 							medicalTypeSelected, wardSelected, typeSelected,
-							movDateFrom.getCompleteDate(),
+							movDateFrom.getCompleteDate(true),
 							movDateTo.getCompleteDate(),
 							null,
 							null,
-							lotDueFrom.getCompleteDate(),
+							lotDueFrom.getCompleteDate(true),
 							lotDueTo.getCompleteDate());
 				}
 

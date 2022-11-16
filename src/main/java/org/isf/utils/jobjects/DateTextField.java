@@ -178,12 +178,16 @@ public class DateTextField extends JPanel{
 		toModify.set(Calendar.YEAR, Integer.parseInt(year.getText()));
 		return toModify;
 	}
+	
+	public GregorianCalendar getCompleteDate() {
+		return getCompleteDate(false);
+	}
 
 	/**
 	 * This method returns the date displayed by the object
 	 * @return GregorianCalendar
 	 */
-	public GregorianCalendar getCompleteDate() {
+	public GregorianCalendar getCompleteDate(boolean begin) {
 		if ((day.getText().length() == 0) || (month.getText().length() == 0) || (year.getText().length() == 0)) {
 			day.setText("");
 			month.setText("");
@@ -195,9 +199,15 @@ public class DateTextField extends JPanel{
 		date.set(Calendar.YEAR, getYear());
 		// This is a temporary solution so the comparison is only on the "date" part of "date and time"
 		// See comments in OP-482: https://openhospital.atlassian.net/browse/OP-482
-		date.set(Calendar.HOUR_OF_DAY, 23);
-		date.set(Calendar.MINUTE, 59);
-		date.set(Calendar.SECOND, 59);
+		if (begin) {
+			date.set(Calendar.HOUR_OF_DAY, 0);
+			date.set(Calendar.MINUTE, 0);
+			date.set(Calendar.SECOND, 0);			
+		} else {
+			date.set(Calendar.HOUR_OF_DAY, 23);
+			date.set(Calendar.MINUTE, 59);
+			date.set(Calendar.SECOND, 59);
+		}
 		return date;
 	}
 
