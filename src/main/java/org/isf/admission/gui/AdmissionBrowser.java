@@ -1826,6 +1826,8 @@ public class AdmissionBrowser extends ModalJFrame {
 					admission.setType("N");
 				}
 
+				admission.setDeleted("N");
+
 				// IOoperation result
 				boolean result = false;
 

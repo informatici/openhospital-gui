@@ -680,7 +680,9 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			jPanelDate.add(getJCalendarDate());
 			jPanelDate.add(getJButtonPickPatient());
 			jPanelDate.add(getJButtonTrashPatient());
-			jPanelDate.add(getJLabelUser());
+			if (!GeneralData.getGeneralData().getSINGLEUSER()) {
+				jPanelDate.add(getJLabelUser());
+			}
 		}
 		return jPanelDate;
 	}

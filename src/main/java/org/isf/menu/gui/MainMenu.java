@@ -377,7 +377,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		public MainPanel(MainMenu parentFrame) {
 			this.parentFrame = parentFrame;
-			int numItems = 0;
+			int numItems = 1;
 
 			setLayout(new BorderLayout());
 
@@ -393,16 +393,14 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				if (u.getMySubmenu().equals("main")) {
 					button[k] = new JButton(u.getButtonLabel());
 					button[k].setMnemonic(KeyEvent.VK_A + (u.getShortcut() - 'A'));
-					if ("logout".equals(u.getCode())) {
-						addLogoutButtonListener(k);
-					} else {
-						button[k].addActionListener(parentFrame);
-					}
+				    button[k].addActionListener(parentFrame);
 					button[k].setActionCommand(u.getCode());
 					k++;
 				}
 			}
-
+			
+			addLogoutButton(button, k);
+			
 			add(getLogoPanel(), BorderLayout.WEST);
 
 			JPanel buttonsPanel = new JPanel();
@@ -418,16 +416,20 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 			add(centerPanel, BorderLayout.CENTER);
 		}
-
-		private void addLogoutButtonListener(int k) {
-			button[k].addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					UserSession.restartSession();
-				}
-			});
+		
+		
+		public void addLogoutButton(JButton[] button, int k) {
+				button[k] = new JButton(MessageBundle.getMessage("angal.menu.btn.logout"));
+				button[k].setMnemonic(KeyEvent.VK_A + ('L' - 'A'));
+				button[k].addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						UserSession.restartSession();
+					}
+				});
+				button[k].setActionCommand("logout");
 		}
+
 
 		private JPanel getLogoPanel() {
 			JLabel logo_appl = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "logo_menu_vert.png"));
