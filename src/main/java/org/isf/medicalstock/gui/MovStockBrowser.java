@@ -155,16 +155,18 @@ public class MovStockBrowser extends ModalJFrame {
 			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),        //9
 			MessageBundle.getMessage("angal.medicalstock.origin.col").toUpperCase(),            //10
 			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(),            //11
-			MessageBundle.getMessage("angal.common.total.txt").toUpperCase()            //12
+			MessageBundle.getMessage("angal.common.total.txt").toUpperCase(),            //12
+			MessageBundle.getMessage("angal.common.user").toUpperCase()            //13
 	};
-	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false };
+	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
 			SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
-			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT };
+			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.CENTER };
+	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
 	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
-			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, true };
+			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, true, !isSingleUser };
 
-	private int[] pColumnWidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70 };
+	private int[] pColumnWidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70, 70 };
 	private static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
 	private static final String DATE_FORMAT_DD_MM_YY_HH_MM = "dd/MM/yy HH:mm";
 
@@ -1157,6 +1159,8 @@ public class MovStockBrowser extends ModalJFrame {
 				return cost;
 			} else if (c == ++col && cost != null) {
 				return cost.multiply(new BigDecimal(qty));
+			} else if (c == ++col) {
+				return movement.getCreatedBy();
 			}
 			return null;
 		}
