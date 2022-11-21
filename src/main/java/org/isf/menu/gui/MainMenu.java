@@ -57,6 +57,7 @@ import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
 import org.isf.menu.model.UserGroup;
 import org.isf.menu.model.UserMenuItem;
+import org.isf.session.UserSession;
 import org.isf.sms.service.SmsSender;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -131,10 +132,11 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	private UserBrowsingManager userBrowsingManager = Context.getApplicationContext().getBean(UserBrowsingManager.class);
 
-	public MainMenu() {
+	public MainMenu(User myUserIn) {
+		myUser = myUserIn;
 		myFrame = this;
 		GeneralData.initialize();
-		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); //for all fixed options YES_NO_CANCEL in dialogs
+		Locale.setDefault(new Locale(GeneralData.LANGUAGE)); // for all fixed options YES_NO_CANCEL in dialogs
 		singleUser = GeneralData.getGeneralData().getSINGLEUSER();
 		MessageBundle.getBundle();
 		try {
@@ -164,7 +166,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		} else {
 			// get an user
 			LOGGER.info("Logging: Multi User mode.");
-			new Login(this);
+
+			if (null == myUser) {
+				new Login(this);
+			}
 
 			if (null == myUser) {
 				// Login failed
@@ -190,8 +195,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				}
 				new CommunicationFrame();
 				/*
-				 * Interaction communication= new Interaction();
-				 * communication.incomingChat(); communication.receiveFile();
+				 * Interaction communication= new Interaction(); 
+				 * communication.incomingChat(); 
+				 * communication.receiveFile();
 				 */
 			} catch (XMPPException e) {
 				String message = e.getMessage();
@@ -242,7 +248,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				}
 			}
 		}
-		if (!flag_Sms) {  // remove SMS Manager if not enabled
+		if (!flag_Sms) { // remove SMS Manager if not enabled
 			List<UserMenuItem> junkMenu = new ArrayList<>();
 			for (UserMenuItem umi : myMenu) {
 				if ("smsmanager".equalsIgnoreCase(umi.getCode())) {
@@ -297,12 +303,13 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		myFrame.setAlwaysOnTop(GeneralData.MAINMENUALWAYSONTOP);
 		myFrame.addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				actionExit(0);
 			}
 		});
-		
+
 		setVisible(true);
 	}
 
@@ -370,8 +377,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 		public MainPanel(MainMenu parentFrame) {
 			this.parentFrame = parentFrame;
-			int numItems = 0;
-			
+			int numItems = 1;
+
 			setLayout(new BorderLayout());
 
 			for (UserMenuItem u : myMenu) {
@@ -386,12 +393,13 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				if (u.getMySubmenu().equals("main")) {
 					button[k] = new JButton(u.getButtonLabel());
 					button[k].setMnemonic(KeyEvent.VK_A + (u.getShortcut() - 'A'));
-
-					button[k].addActionListener(parentFrame);
+				    button[k].addActionListener(parentFrame);
 					button[k].setActionCommand(u.getCode());
 					k++;
 				}
 			}
+			
+			addLogoutButton(button, k);
 			
 			add(getLogoPanel(), BorderLayout.WEST);
 
@@ -402,12 +410,26 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				buttonsPanel.add(jButton);
 			}
 			SpringUtilities.makeCompactGrid(buttonsPanel, button.length, 1, 0, 0, 0, 10);
-			
+
 			JPanel centerPanel = new JPanel();
 			centerPanel.add(buttonsPanel, BorderLayout.CENTER); // to center anyway, regardless the window's size
-			
+
 			add(centerPanel, BorderLayout.CENTER);
 		}
+		
+		
+		public void addLogoutButton(JButton[] button, int k) {
+				button[k] = new JButton(MessageBundle.getMessage("angal.menu.logout.btn"));
+				button[k].setMnemonic(MessageBundle.getMnemonic("angal.menu.logout.btn.key"));
+				button[k].addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						UserSession.restartSession();
+					}
+				});
+				button[k].setActionCommand("logout");
+		}
+
 
 		private JPanel getLogoPanel() {
 			JLabel logo_appl = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "logo_menu_vert.png"));
@@ -444,10 +466,10 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			String os = System.getProperty("os.name").toLowerCase();
 			if (os.indexOf("win") >= 0) {
 				titleStringWidth += 180;
-				
+
 			} else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
 				titleStringWidth += 120;
-				
+
 			} else { // others, assuming unix-like
 				titleStringWidth += 120;
 			}
@@ -466,5 +488,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	public static User getUser() {
 		return myUser;
 	}
-	
+
+	public static void clearUser() {
+		myUser = null;
+	}
+
 }
