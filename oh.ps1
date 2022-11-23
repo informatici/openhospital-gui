@@ -170,12 +170,10 @@ $script:languagearray= @("en","fr","it","es","pt","ar")
 
 ######## MySQL/MariaDB Software
 # MariaDB version
-#$script:MYSQL_VERSION="10.2.44"
-#$script:MYSQL32_VERSION="10.2.41"
 $script:MYSQL_VERSION="10.6.11"
 $script:MYSQL32_VERSION="10.6.5"
 
-######## define architecture
+######## define system architecture
 $script:ARCH=$env:PROCESSOR_ARCHITECTURE
 
 $32archarray=@("386","486","586","686","x86","i86pc")
@@ -209,8 +207,7 @@ else {
 #	#$script:MYSQL_ARCH=32;
 #}
 
-######## MySQL/MariaDB Software
-# MariaDB
+# set MariaDB download URL / package
 $script:MYSQL_URL="https://archive.mariadb.org/mariadb-$script:MYSQL_VERSION/win$script:MYSQL_ARCH-packages/"
 $script:MYSQL_DIR="mariadb-$script:MYSQL_VERSION-win$script:MYSQL_ARCH"
 
@@ -223,7 +220,6 @@ $script:MYSQL_DIR="mariadb-$script:MYSQL_VERSION-win$script:MYSQL_ARCH"
 
 ### JRE 11 - zulu
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
-#$script:JAVA_DISTRO="zulu11.58.23-ca-jre11.0.16.1-win_$JAVA_PACKAGE_ARCH"
 $script:JAVA_DISTRO="zulu11.60.19-ca-fx-jre11.0.17-win_$JAVA_PACKAGE_ARCH"
 
 # workaround for JRE 11 - 32bit

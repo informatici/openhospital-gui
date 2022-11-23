@@ -104,20 +104,27 @@ DATE=`date +%Y-%m-%d_%H-%M-%S`
 
 ################ Architecture and external software ################
 
-######## define architecture
+######## MySQL/MariaDB Software
+# MariaDB version
+MYSQL_VERSION="10.6.11"
+MYSQL32_VERSION="10.5.18"
+PACKAGE_TYPE="systemd" 
 
+######## define system and software architecture
 ARCH=`uname -m`
+
 case $ARCH in
 	x86_64|amd64|AMD64)
 		JAVA_ARCH=64
 		MYSQL_ARCH=x86_64
-		MYSQL_PACKAGE_ARCH=x86_64
+		MYSQL_PACKAGE_ARCH=$MYSQL_ARCH
 		JAVA_PACKAGE_ARCH=x64
 		;;
 	i[3456789]86|x86|i86pc)
 		JAVA_ARCH=32
-		MYSQL_ARCH=x86
-		MYSQL_PACKAGE_ARCH=i686
+		MYSQL_ARCH=i686
+		MYSQL_VERSION=$MYSQL32_VERSION;
+		MYSQL_PACKAGE_ARCH=x86
 		JAVA_PACKAGE_ARCH=i686
 		;;
 	*)
@@ -126,14 +133,9 @@ case $ARCH in
 		;;
 esac
 
-######## MySQL/MariaDB Software
-# MariaDB
-#MYSQL_VERSION="10.2.44"
-#MYSQL_VERSION="10.4.26"
-MYSQL_VERSION="10.6.11"
-MYSQL_PACKAGE_ARCH="systemd-$MYSQL_ARCH"
-MYSQL_URL="https://archive.mariadb.org/mariadb-$MYSQL_VERSION/bintar-linux-$MYSQL_PACKAGE_ARCH"
-MYSQL_DIR="mariadb-$MYSQL_VERSION-linux-$MYSQL_PACKAGE_ARCH"
+# set MariaDB download URL / package 
+MYSQL_URL="https://archive.mariadb.org/mariadb-$MYSQL_VERSION/bintar-linux-$PACKAGE_TYPE-$MYSQL_PACKAGE_ARCH"
+MYSQL_DIR="mariadb-$MYSQL_VERSION-linux-$PACKAGE_TYPE-$MYSQL_ARCH"
 
 ######## JAVA Software
 ######## JAVA 64bit - default architecture
