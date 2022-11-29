@@ -44,6 +44,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
+import org.isf.patient.service.PatientGuiConst;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.time.TimeTools;
 import org.slf4j.Logger;

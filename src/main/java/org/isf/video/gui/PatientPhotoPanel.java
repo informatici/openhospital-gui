@@ -45,6 +45,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.patient.gui.PatientInsertExtended;
+import org.isf.patient.service.PatientGuiConst;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.jobjects.Cropping;
 import org.isf.utils.jobjects.IconButton;
@@ -70,8 +71,6 @@ public class PatientPhotoPanel extends JPanel {
 
 	private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
 
-	private static final int MAXPROFPICFILESIZEBYTES = 32768;
-	
 	public PatientPhotoPanel(final PatientInsertExtended patientFrame, final Integer code, final Image patientPhoto) throws IOException {
 		owner = patientFrame;
 		this.photoboothPanelPresentationModel = new PhotoboothPanelPresentationModel();
@@ -117,7 +116,7 @@ public class PatientPhotoPanel extends JPanel {
 					BufferedImage bi = (BufferedImage) propertyChangeEvent.getNewValue();
 					if (bi != null) {
 						externalPanel.updatePhoto(ImageUtil.scaleImage(bi, 160, 160));
-						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, MAXPROFPICFILESIZEBYTES, "png"));
+						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, PatientGuiConst.MAXPROFPICFILESIZEBYTES, PatientGuiConst.PROFILE_PICTURE_FORMAT));
 					} 
 				} catch (IOException e1) {
 					LOGGER.error("Oooops! Can't resize profile picture.");
