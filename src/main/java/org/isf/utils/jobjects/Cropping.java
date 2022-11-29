@@ -32,12 +32,12 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.image.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,13 +57,39 @@ public class Cropping extends JPanel {
 	BufferedImage clipped;
 
 	public Cropping(BufferedImage image) {
-		this.image = image;
-		size = new Dimension(image.getWidth(), image.getHeight());
+		size = calculateDimension(image);
+		this.image = ImageUtil.scaleImage(image, size.width, size.height);
 		ClipMoverAndResizer mover = new ClipMoverAndResizer(this);
 		this.addMouseListener(mover);
 		this.addMouseMotionListener(mover);
 	}
 
+	private Dimension calculateDimension(BufferedImage image) {
+		// TODO ask Alessandro if these settings should be hard coded or loaded from configuration file
+		int maxWidth = 800;
+		int maxHeight = 800;
+		int currentWidth = image.getWidth();
+		int currentHeight = image.getHeight();
+		if (currentWidth > maxWidth || currentHeight > maxHeight) {
+			if (currentWidth == currentHeight) {
+				return new Dimension(maxWidth, maxHeight);
+			}
+			if (currentWidth > currentHeight) {
+				double ratio = (float) currentHeight / currentWidth;
+				int newWidth = maxWidth;
+				int newHeigth = (int) (newWidth * ratio);
+				return new Dimension(newWidth, newHeigth);
+			} 
+			if (currentHeight > currentWidth) {
+				double ratio = (float) currentWidth / currentHeight;
+				int newHeight = maxHeight;
+				int newWidth = (int) (newHeight * ratio);
+				return new Dimension(newWidth, newHeight);
+			}
+		} 
+		return new Dimension(currentWidth, currentHeight);
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
