@@ -69,8 +69,8 @@ public class Cropping extends JPanel {
 
 	private Dimension calculateDimension(BufferedImage image) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		final int image_max_width = (int) screenSize.getWidth() - 48;
-		final int image_max_height = (int) screenSize.getHeight() - 48;
+		final int image_max_width = (int) screenSize.getWidth() - 54;
+		final int image_max_height = (int) screenSize.getHeight() - 88;
 		
 		final int currentWidth = image.getWidth();
 		final int currentHeight = image.getHeight();
@@ -93,10 +93,12 @@ public class Cropping extends JPanel {
 				int newWidth = (int) (newHeight * ratio);
 				return new Dimension(newWidth, newHeight);
 			}
+			
 			if (currentWidth == currentHeight) {
 				return new Dimension(currentWidth, currentHeight);
 			}
 		} 
+		
 		return new Dimension(currentWidth, currentHeight);
 	}
 	
