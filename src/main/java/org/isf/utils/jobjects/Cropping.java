@@ -76,9 +76,11 @@ public class Cropping extends JPanel {
 		final int currentHeight = image.getHeight();
 		
 		if (currentWidth > image_max_width || currentHeight > image_max_height) {
-			if (currentWidth == currentHeight) {
-				return new Dimension(currentWidth, currentHeight);
+
+			if (currentWidth == currentHeight && currentHeight > image_max_height) {
+				return new Dimension(image_max_height, image_max_height);
 			}
+			
 			if (currentWidth > currentHeight) {
 				double ratio = (float) currentHeight / currentWidth;
 				int newWidth = image_max_width;
@@ -90,6 +92,9 @@ public class Cropping extends JPanel {
 				int newHeight = image_max_height;
 				int newWidth = (int) (newHeight * ratio);
 				return new Dimension(newWidth, newHeight);
+			}
+			if (currentWidth == currentHeight) {
+				return new Dimension(currentWidth, currentHeight);
 			}
 		} 
 		return new Dimension(currentWidth, currentHeight);
