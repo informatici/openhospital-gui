@@ -70,7 +70,7 @@ public class PatientPhotoPanel extends JPanel {
 
 	private final PhotoboothPanelPresentationModel photoboothPanelPresentationModel;
 
-	private static final int MAXPROFPICFILESIZEBYTES = 4194304;
+	private static final int MAXPROFPICFILESIZEBYTES = 32768;
 	
 	public PatientPhotoPanel(final PatientInsertExtended patientFrame, final Integer code, final Image patientPhoto) throws IOException {
 		owner = patientFrame;
