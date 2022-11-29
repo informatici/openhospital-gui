@@ -29,9 +29,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
@@ -40,6 +42,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.utils.image.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * Cropping.java - 27/gen/2014
@@ -50,7 +53,7 @@ public class Cropping extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Cropping.class);
-
+	
 	BufferedImage image;
 	Dimension size;
 	Rectangle clip;
@@ -65,24 +68,26 @@ public class Cropping extends JPanel {
 	}
 
 	private Dimension calculateDimension(BufferedImage image) {
-		// TODO ask Alessandro if these settings should be hard coded or loaded from configuration file
-		int maxWidth = 800;
-		int maxHeight = 800;
-		int currentWidth = image.getWidth();
-		int currentHeight = image.getHeight();
-		if (currentWidth > maxWidth || currentHeight > maxHeight) {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		final int image_max_width = (int) screenSize.getWidth() - 48;
+		final int image_max_height = (int) screenSize.getHeight() - 48;
+		
+		final int currentWidth = image.getWidth();
+		final int currentHeight = image.getHeight();
+		
+		if (currentWidth > image_max_width || currentHeight > image_max_height) {
 			if (currentWidth == currentHeight) {
-				return new Dimension(maxWidth, maxHeight);
+				return new Dimension(image_max_width, image_max_height);
 			}
 			if (currentWidth > currentHeight) {
 				double ratio = (float) currentHeight / currentWidth;
-				int newWidth = maxWidth;
+				int newWidth = image_max_width;
 				int newHeigth = (int) (newWidth * ratio);
 				return new Dimension(newWidth, newHeigth);
 			} 
 			if (currentHeight > currentWidth) {
 				double ratio = (float) currentWidth / currentHeight;
-				int newHeight = maxHeight;
+				int newHeight = image_max_height;
 				int newWidth = (int) (newHeight * ratio);
 				return new Dimension(newWidth, newHeight);
 			}
