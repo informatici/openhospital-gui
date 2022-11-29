@@ -28,7 +28,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import org.isf.patient.service.PatientGuiConst;
+import org.isf.utils.gui.PatientGuiConst;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

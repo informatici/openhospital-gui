@@ -45,7 +45,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.patient.gui.PatientInsertExtended;
-import org.isf.patient.service.PatientGuiConst;
+import org.isf.utils.gui.PatientGuiConst;
 import org.isf.utils.image.ImageUtil;
 import org.isf.utils.jobjects.Cropping;
 import org.isf.utils.jobjects.IconButton;
