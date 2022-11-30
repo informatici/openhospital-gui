@@ -144,28 +144,30 @@ public class MovStockBrowser extends ModalJFrame {
 	private MovBrowserModel model;
 	private List<Movement> moves;
 	private String[] pColumns = {
-			MessageBundle.getMessage("angal.medicalstock.refno.col").toUpperCase(),
-			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),        //1
-			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),       //2
-			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(),            //3
-			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(),            //4
-			MessageBundle.getMessage("angal.medicalstock.pharmaceutical.col").toUpperCase(),    //5
-			MessageBundle.getMessage("angal.medicalstock.medtype.col").toUpperCase(),        //6
-			MessageBundle.getMessage("angal.medicalstock.lot.col").toUpperCase(),            //7
-			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(),        //8
-			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),        //9
-			MessageBundle.getMessage("angal.medicalstock.origin.col").toUpperCase(),            //10
-			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(),            //11
-			MessageBundle.getMessage("angal.common.total.txt").toUpperCase()            //12
+			MessageBundle.getMessage("angal.medicalstock.refno.col").toUpperCase(), //1
+			MessageBundle.getMessage("angal.common.date.txt").toUpperCase(),        //2
+			MessageBundle.getMessage("angal.common.type.txt").toUpperCase(),       //3
+			MessageBundle.getMessage("angal.common.ward.txt").toUpperCase(),            //4
+			MessageBundle.getMessage("angal.common.qty.txt").toUpperCase(),            //5
+			MessageBundle.getMessage("angal.medicalstock.pharmaceutical.col").toUpperCase(),    //6
+			MessageBundle.getMessage("angal.medicalstock.medtype.col").toUpperCase(),        //7
+			MessageBundle.getMessage("angal.medicalstock.lot.col").toUpperCase(),            //8
+			MessageBundle.getMessage("angal.medicalstock.prepdate.col").toUpperCase(),        //9
+			MessageBundle.getMessage("angal.medicalstock.duedate.col").toUpperCase(),        //10
+			MessageBundle.getMessage("angal.medicalstock.origin.col").toUpperCase(),            //11
+			MessageBundle.getMessage("angal.medicalstock.cost.col").toUpperCase(),            //12
+			MessageBundle.getMessage("angal.common.total.txt").toUpperCase(),            //13
+			MessageBundle.getMessage("angal.common.userid").toUpperCase()					//14
 	};
-	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false };
+	private boolean[] pColumnBold = { true, false, false, false, false, false, false, false, false, false, false, false, false, false };
 	private int[] columnAlignment = { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
 			SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER,
-			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT };
+			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.CENTER };
+	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
 	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
-			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, true };
+			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, !isSingleUser };
 
-	private int[] pColumnWidth = { 50, 90, 45, 130, 50, 150, 70, 70, 80, 80, 50, 50, 70 };
+	private int[] pColumnWidth = { 50, 90, 45, 130, 50, 150, 70, 70, 80, 80, 50, 50, 70, 70 };
 
 	/*
 	 * Adds to facilitate the selection of products
@@ -1117,6 +1119,8 @@ public class MovStockBrowser extends ModalJFrame {
 				return cost;
 			} else if (c == ++col && cost != null) {
 				return cost.multiply(new BigDecimal(qty));
+			} else if (c == ++col) {
+				return movement.getCreatedBy();
 			}
 			return null;
 		}
