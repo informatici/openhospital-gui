@@ -164,7 +164,7 @@ public class MovStockBrowser extends ModalJFrame {
 			SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.CENTER };
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
 	private boolean[] pColumnVisible = { true, true, true, true, true, true, true, !GeneralData.AUTOMATICLOT_IN, !GeneralData.AUTOMATICLOT_IN, true, true,
-			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, true, !isSingleUser };
+			GeneralData.LOTWITHCOST, GeneralData.LOTWITHCOST, !isSingleUser };
 
 	private int[] pColumnWidth = { 50, 80, 45, 130, 50, 150, 70, 70, 80, 65, 50, 50, 70, 70 };
 	private static final String DATE_FORMAT_DD_MM_YY = "dd/MM/yy";
