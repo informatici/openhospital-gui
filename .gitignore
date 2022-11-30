@@ -12,4 +12,3 @@ logs
 /data/
 /rsc/*.properties
 /rsc/*.pref
-/LOG_DEST
