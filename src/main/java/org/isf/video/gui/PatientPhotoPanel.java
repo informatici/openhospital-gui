@@ -115,7 +115,7 @@ public class PatientPhotoPanel extends JPanel {
 					BufferedImage bi = (BufferedImage) propertyChangeEvent.getNewValue();
 					if (bi != null) {
 						externalPanel.updatePhoto(ImageUtil.scaleImage(bi, 160, 160));
-						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, GeneralData.MAXPROFPICFILESIZEBYTES, PROFILE_PICTURE_FORMAT));
+						patientFrame.setPatientPhoto(ImageUtil.fixImageFileSize(bi, GeneralData.MAX_PROFILE_IMAGE_FILE_SIZE_BYTES, PROFILE_PICTURE_FORMAT));
 					} 
 				} catch (IOException e1) {
 					LOGGER.error("Oooops! Can't resize profile picture.");
