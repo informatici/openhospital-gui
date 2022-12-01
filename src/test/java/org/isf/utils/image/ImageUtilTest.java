@@ -28,7 +28,7 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import org.isf.patient.gui.PatientGuiConst;
+import org.isf.generaldata.GeneralData;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -41,8 +41,8 @@ public class ImageUtilTest {
 		BufferedImage image = ImageIO.read(file);
 		int originalWidth = image.getWidth();
 		int originalHeight = image.getHeight();
-		int newWidth = PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH;
-		int newHeight = PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH;
+		int newWidth = GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH;
+		int newHeight = GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH;
 		BufferedImage newImage = ImageUtil.scaleImage(image, newWidth, newHeight);
 
 		// Uncomment these next 4 lines to save the scaled image back into the same directory as the source image
