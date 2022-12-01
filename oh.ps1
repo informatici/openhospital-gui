@@ -173,7 +173,7 @@ $script:languagearray= @("en","fr","it","es","pt","ar")
 $script:MYSQL_VERSION="10.6.11"
 $script:MYSQL32_VERSION="10.6.5"
 
-######## define system architecture
+######## define system and software architecture
 $script:ARCH=$env:PROCESSOR_ARCHITECTURE
 
 $32archarray=@("386","486","586","686","x86","i86pc")
@@ -465,9 +465,15 @@ function mysql_check {
 }
 
 function config_database {
+	Write-Host "Checking if MySQL is running..."
+	if ( ( Test-Path "$OH_PATH/$TMP_DIR/mysql.sock" ) -or ( Test-Path "$OH_PATH/$TMP_DIR/mysql.pid" ) ) {
+		Write-Host "MySQL already running ! Exiting."
+		exit 1
+	}
+
 	Write-Host "Checking for MySQL config file..."
 
-	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or  !(Test-Path "$OH_PATH/$CONF_DIR/my.cnf") ) {
+	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$CONF_DIR/my.cnf") ) {
 	if (Test-Path "$OH_PATH/$CONF_DIR/my.cnf" ) { mv -Force "$OH_PATH/$CONF_DIR/my.cnf" "$OH_PATH/$CONF_DIR/my.cnf.old" }
 
 		# find a free TCP port to run MySQL starting from the default port
@@ -790,7 +796,7 @@ set_language;
 # set working dir to OH base dir
 cd "$OH_PATH" # workaround for hard coded paths
 
-######## User input
+######## Parse user input
 
 # If INTERACTIVE_MODE is set to "off" don't show menu for user input
 if ( $INTERACTIVE_MODE -eq "on" ) {
@@ -1079,13 +1085,12 @@ if ( ($OH_MODE -eq "PORTABLE") -Or ($OH_MODE -eq "SERVER") ){
 }
 
 
-
-
 # if SERVER mode is selected, wait for CTRL-C input to exit
 if ( $OH_MODE -eq "SERVER" ) {
 
 	Write-Host "Open Hospital - SERVER mode started"
-	Write-Host "Database server listening on $DATABASE_SERVER port $DATABASE_PORT"
+#	Write-Host "Database server listening on $DATABASE_SERVER port $DATABASE_PORT"
+	Write-Host "Database server ready for connections..."
 	
 	while ($true) {
 		$choice = Read-Host -Prompt "Press Q to exit"
