@@ -533,8 +533,9 @@ function clean_database {
 	echo "--->>> Are you sure ?"
 	get_confirmation;
 	echo "Removing data..."
-	# remove databases
+	# remove database files
 	rm -rf ./"$DATA_DIR"/*
+	# remove socket and pid file
 	rm -rf ./$TMP_DIR/*
 }
 
