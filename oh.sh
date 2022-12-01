@@ -386,12 +386,6 @@ fi
 }
 
 function config_database {
-	echo "Checking if MySQL is running..."
-	if [ -f "$OH_PATH/$TMP_DIR/mysql.sock" ] || [ -f "$OH_PATH/$TMP_DIR/mysql.pid" ] ; then
-		echo "MySQL already running ! Exiting."
-		exit 1
-	fi
-
 	echo "Checking for MySQL config file..."
 	if [ $GENERATE_CONFIG_FILES = "on" ] || [ ! -f ./$CONF_DIR/my.cnf ]; then
 		[ -f ./$CONF_DIR/my.cnf ] && mv -f ./$CONF_DIR/my.cnf ./$CONF_DIR/my.cnf.old
@@ -432,6 +426,12 @@ function initialize_database {
 }
 
 function start_database {
+	echo "Checking if MySQL is running..."
+	if [ -f "$OH_PATH/$TMP_DIR/mysql.sock" ] || [ -f "$OH_PATH/$TMP_DIR/mysql.pid" ] ; then
+		echo "MySQL already running ! Exiting."
+		exit 1
+	fi
+
 	echo "Starting MySQL server... "
 	./$MYSQL_DIR/bin/mysqld_safe --defaults-file=./$CONF_DIR/my.cnf >> ./$LOG_DIR/$LOG_FILE 2>&1 &
 	if [ $? -ne 0 ]; then

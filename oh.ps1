@@ -465,12 +465,6 @@ function mysql_check {
 }
 
 function config_database {
-	Write-Host "Checking if MySQL is running..."
-	if ( ( Test-Path "$OH_PATH/$TMP_DIR/mysql.sock" ) -or ( Test-Path "$OH_PATH/$TMP_DIR/mysql.pid" ) ) {
-		Write-Host "MySQL already running ! Exiting."
-		exit 1
-	}
-
 	Write-Host "Checking for MySQL config file..."
 
 	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$CONF_DIR/my.cnf") ) {
@@ -540,6 +534,12 @@ function initialize_database {
 }
 
 function start_database {
+	Write-Host "Checking if MySQL is running..."
+	if ( ( Test-Path "$OH_PATH/$TMP_DIR/mysql.sock" ) -or ( Test-Path "$OH_PATH/$TMP_DIR/mysql.pid" ) ) {
+		Write-Host "MySQL already running ! Exiting."
+		exit 1
+	}
+
 	Write-Host "Starting MySQL server... "
 	try {
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--defaults-file=`"$OH_PATH\$CONF_DIR\my.cnf`" --tmpdir=`"$OH_PATH\$TMP_DIR`" --standalone") -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
