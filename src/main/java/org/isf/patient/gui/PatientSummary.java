@@ -40,6 +40,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.manager.PatientBrowserManager;
@@ -185,11 +186,11 @@ public class PatientSummary {
 		
 		JLabel patientPhoto = new JLabel();
 		if (patient.getPatientProfilePhoto() != null && patient.getPatientProfilePhoto().getPhotoAsImage() != null) {
-			patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(patient.getPatientProfilePhoto().getPhotoAsImage(), PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH)));
+			patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(patient.getPatientProfilePhoto().getPhotoAsImage(), GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH)));
 		} else {
 			try {
 				Image noPhotoImage = ImageIO.read(new File("rsc/images/nophoto.png"));
-				patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(noPhotoImage, PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH)));
+				patientPhoto.setIcon(new ImageIcon(ImageUtil.scaleImage(noPhotoImage, GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH)));
 			} catch (IOException ioe) {
 				LOGGER.error("rsc/images/nophoto.png is missing...");
 			}

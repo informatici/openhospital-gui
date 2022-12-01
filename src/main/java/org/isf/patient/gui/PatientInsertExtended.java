@@ -59,6 +59,7 @@ import javax.swing.event.EventListenerList;
 
 import org.isf.agetype.manager.AgeTypeBrowserManager;
 import org.isf.agetype.model.AgeType;
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
 import org.isf.menu.manager.Context;
@@ -2114,7 +2115,7 @@ public class PatientInsertExtended extends JDialog {
 			try {
 				PatientProfilePhoto photo = this.patientBrowserManager.retrievePatientProfilePhoto(patient);
 				final Image image = photo != null ? photo.getPhotoAsImage() : null;
-				Image scaledImage = image != null ? ImageUtil.scaleImage(image, PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH) : null;
+				Image scaledImage = image != null ? ImageUtil.scaleImage(image, GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH) : null;
 				photoPanel = new PatientPhotoPanel(this, patient.getCode(), scaledImage);
 
 			} catch (IOException ioException) {
