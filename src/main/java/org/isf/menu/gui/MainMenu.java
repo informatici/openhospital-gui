@@ -284,7 +284,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			myMenu.remove(umi);
 		}
 
-		setTitle(MessageBundle.formatMessage("angal.mainmenu.fmt.title", myUser.getUserName()));
 		ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
 		setIconImage(img.getImage());
 		// add panel with buttons to frame
@@ -412,6 +411,16 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			SpringUtilities.makeCompactGrid(buttonsPanel, button.length, 1, 0, 0, 0, 10);
 
 			JPanel centerPanel = new JPanel();
+			centerPanel.setLayout(new BorderLayout());
+
+			JLabel userName = new JLabel(MessageBundle.formatMessage("angal.mainmenu.username.fmt", myUser.getUserName()));
+			userName.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+			userName.setToolTipText(myUser.getUserName());
+			int nameWidth = buttonsPanel.getLayout().minimumLayoutSize(buttonsPanel).getSize().width;
+			userName.setMaximumSize(new Dimension(nameWidth, 20));
+			userName.setPreferredSize(new Dimension(nameWidth, 20));
+
+			centerPanel.add(userName, BorderLayout.NORTH);
 			centerPanel.add(buttonsPanel, BorderLayout.CENTER); // to center anyway, regardless the window's size
 
 			add(centerPanel, BorderLayout.CENTER);
