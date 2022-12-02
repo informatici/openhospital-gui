@@ -534,9 +534,9 @@ function initialize_database {
 }
 
 function start_database {
-	Write-Host "Checking if MySQL server is running..."
+	Write-Host "Checking if MySQL is running..."
 	if ( ( Test-Path "$OH_PATH/$TMP_DIR/mysql.sock" ) -or ( Test-Path "$OH_PATH/$TMP_DIR/mysql.pid" ) ) {
-		Write-Host "MySQL server already running! Exiting."
+		Write-Host "MySQL already running ! Exiting."
 		exit 1
 	}
 
@@ -556,6 +556,14 @@ function start_database {
 	# until nc -z $DATABASE_SERVER $DATABASE_PORT; do sleep 1; done
 
 	Write-Host "MySQL server started! "
+	
+	# show MySQL server running configuration
+	Write-Host "****************************"
+	Write-Host "* Database server IP address:"
+	Get-Content "$OH_PATH/$CONF_DIR/my.cnf" | Select-String -Pattern "bind-address" | Select-Object -First 1 -Unique
+	Write-Host "* TCP port: "
+	Get-Content "$OH_PATH/$CONF_DIR/my.cnf" | Select-String -Pattern "port" | Select-Object -First 1 -Unique
+	Write-Host "****************************"
 }
 
 function set_database_root_pw {
@@ -645,12 +653,12 @@ function dump_database {
 
 function shutdown_database {
 	if ( !( $OH_MODE -eq "CLIENT" ) ) {
-		Write-Host "Shutting down MySQL server ..."
+		Write-Host "Shutting down MySQL..."
 		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqladmin.exe" -ArgumentList ("-u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown") -Wait -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 		# wait till the MySQL socket file is removed -> TO BE IMPLEMENTED
 		# while ( -e $OH_PATH/$MYSQL_SOCKET ); do sleep 1; done
 		Start-Sleep -Seconds 2
-		Write-Host "MySQL server stopped!"
+		Write-Host "MySQL stopped!"
 	}
 
 	else { # do nothing

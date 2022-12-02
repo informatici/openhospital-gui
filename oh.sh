@@ -426,9 +426,9 @@ function initialize_database {
 }
 
 function start_database {
-	echo "Checking if MySQL server is running..."
+	echo "Checking if MySQL is running..."
 	if [ -f "$OH_PATH/$TMP_DIR/mysql.sock" ] || [ -f "$OH_PATH/$TMP_DIR/mysql.pid" ] ; then
-		echo "MySQL server already running! Exiting."
+		echo "MySQL already running ! Exiting."
 		exit 1
 	fi
 
@@ -441,6 +441,12 @@ function start_database {
 	# wait till the MySQL tcp port is open
 	until nc -z $DATABASE_SERVER $DATABASE_PORT; do sleep 1; done
 	echo "MySQL server started! "
+
+	# show MySQL server running configuration
+	echo "****************************"
+	echo "* Database server IP address:" && cat ./$CONF_DIR/my.cnf | grep bind-address
+	echo "* TCP port: " && cat ./$CONF_DIR/my.cnf | grep port | head -1
+	echo "****************************"
 }
 
 function set_database_root_pw {
@@ -515,12 +521,12 @@ function dump_database {
 
 function shutdown_database {
 	if [ $OH_MODE != "CLIENT" ]; then
-		echo "Shutting down MySQL server..."
+		echo "Shutting down MySQL..."
 		cd "$OH_PATH"
 		./$MYSQL_DIR/bin/mysqladmin -u root -p$DATABASE_ROOT_PW --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp shutdown >> ./$LOG_DIR/$LOG_FILE 2>&1
 		# wait till the MySQL tcp port is closed
 		until !( nc -z $DATABASE_SERVER $DATABASE_PORT ); do sleep 1; done
-		echo "MySQL server stopped!"
+		echo "MySQL stopped!"
 	else
 		exit 1
 	fi
