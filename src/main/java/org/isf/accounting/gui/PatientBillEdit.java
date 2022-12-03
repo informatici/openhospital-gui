@@ -353,6 +353,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		}
 	}
 
+	//TODO: to harmonize constructors
 	public PatientBillEdit(JFrame owner, Patient patient) {
 		initCurrencyCod();
 		Bill bill = new Bill();
@@ -363,13 +364,6 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		PatientBillEdit newBill = new PatientBillEdit(owner, bill, true);
 		newBill.setPatientSelected(patient);
 		newBill.setVisible(true);
-		try {
-			prcArray = priceListManager.getPrices();
-			lstArray = priceListManager.getLists();
-			othPrices = pricesOthersManager.getOthers();
-		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e, PatientBillEdit.this);
-		}
 	}
 
 	public PatientBillEdit(JFrame owner, Bill bill, boolean inserting) {
@@ -404,6 +398,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 		try {
 			this.thisBill = (Bill) bill.clone();
 			this.thisBill.setAdmission(bill.getAdmission());
+			setAdmissionWard(bill.getAdmission());
 			this.thisBill.setBillPatient(bill.getBillPatient());
 			this.thisBill.setPriceList(bill.getPriceList());
 		} catch (CloneNotSupportedException cnse) {
@@ -500,11 +495,7 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 					}
 				}
 				
-				if (thisBill.getAdmission() != null) {
-					patientSelectedWard = thisBill.getAdmission().getWard().getDescription();
-				} else {
-					patientSelectedWard = "";
-				}
+				setAdmissionWard(thisBill.getAdmission());
 				
 			} else {  //Patient not found
 				MessageDialog.warning(PatientBillEdit.this, "angal.newbill.patientassociatedwiththisbillnolongerexists.msg");
@@ -513,6 +504,14 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				thisBill.setAdmission(null);
 				modified = true;
 			}
+		}
+	}
+
+	private void setAdmissionWard(Admission admission) {
+		if (admission != null) {
+			patientSelectedWard = thisBill.getAdmission().getWard().getDescription();
+		} else {
+			patientSelectedWard = "";
 		}
 	}
 
