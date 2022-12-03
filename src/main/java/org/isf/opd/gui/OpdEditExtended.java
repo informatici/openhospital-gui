@@ -33,8 +33,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -997,21 +995,17 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				nextVisitWardBox.setSelectedItem(RememberData.getLastOpdWard());
 			}
 			
-			nextVisitWardBox.addItemListener(new ItemListener() {
-				
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					LocalDateTime date = opdNextVisitDate.getLocalDateTime();
-					Ward wardSelected = (Ward) e.getItem();
-					int duration = wardSelected.getVisitDuration();
-					
-					nextVisitWardBox.setSelectedItem(wardSelected);
-					jPanelData.remove(opdNextVisitDate);
-					opdNextVisitDate = new GoodDateTimeVisitChooser(date, duration);
-					jPanelData.add(opdNextVisitDate, gbcOpdNextVisitDate);
-					jPanelData.validate();
-					jPanelData.repaint();
-				}
+			nextVisitWardBox.addItemListener(itemEvent -> {
+				LocalDateTime date = opdNextVisitDate.getLocalDateTime();
+				Ward wardSelected = (Ward) itemEvent.getItem();
+				int duration = wardSelected.getVisitDuration();
+
+				nextVisitWardBox.setSelectedItem(wardSelected);
+				jPanelData.remove(opdNextVisitDate);
+				opdNextVisitDate = new GoodDateTimeVisitChooser(date, duration);
+				jPanelData.add(opdNextVisitDate, gbcOpdNextVisitDate);
+				jPanelData.validate();
+				jPanelData.repaint();
 			});
 			
 			if (opdPatient == null) {
@@ -1029,30 +1023,33 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				opdWardBox.addItem(elem);
 			}
 			if (insert) {
-				opdWardBox.setSelectedItem(RememberData.getLastOpdWard());
+				Ward lastOpdWard = RememberData.getLastOpdWard();
+				if (lastOpdWard != null) {
+					opdWardBox.setSelectedItem(lastOpdWard);
+				} else {
+					if (opdWardBox.getItemCount() == 1) {
+						opdWardBox.setSelectedIndex(0);
+					}
+				}
 			} else {
 				if (opd.getWard() != null) {
 					opdWardBox.setSelectedItem(opd.getWard());
 				}
 			}
 			
-			opdWardBox.addItemListener(new ItemListener() {
-				
-				@Override
-				public void itemStateChanged(ItemEvent e) {
-					LocalDateTime date = opdNextVisitDate.getLocalDateTime();
-					Ward wardSelected = (Ward) e.getItem();
-					int duration = wardSelected.getVisitDuration();
-					
-					opdWardBox.setSelectedItem(wardSelected);
-					if (date == null) {
-						nextVisitWardBox.setSelectedItem(wardSelected);
-						jPanelData.remove(opdNextVisitDate);
-						opdNextVisitDate = new GoodDateTimeVisitChooser(date, duration);
-						jPanelData.add(opdNextVisitDate, gbcOpdNextVisitDate);
-						jPanelData.validate();
-						jPanelData.repaint();
-					}
+			opdWardBox.addItemListener(itemEvent -> {
+				LocalDateTime date = opdNextVisitDate.getLocalDateTime();
+				Ward wardSelected = (Ward) itemEvent.getItem();
+				int duration = wardSelected.getVisitDuration();
+
+				opdWardBox.setSelectedItem(wardSelected);
+				if (date == null) {
+					nextVisitWardBox.setSelectedItem(wardSelected);
+					jPanelData.remove(opdNextVisitDate);
+					opdNextVisitDate = new GoodDateTimeVisitChooser(date, duration);
+					jPanelData.add(opdNextVisitDate, gbcOpdNextVisitDate);
+					jPanelData.validate();
+					jPanelData.repaint();
 				}
 			});
 		}
