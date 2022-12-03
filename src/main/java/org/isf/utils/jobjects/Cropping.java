@@ -29,6 +29,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
@@ -38,8 +39,10 @@ import javax.swing.JPanel;
 import javax.swing.event.MouseInputAdapter;
 
 import org.isf.generaldata.MessageBundle;
+import org.isf.utils.image.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * Cropping.java - 27/gen/2014
@@ -50,20 +53,55 @@ public class Cropping extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(Cropping.class);
-
+	
 	BufferedImage image;
 	Dimension size;
 	Rectangle clip;
 	BufferedImage clipped;
 
 	public Cropping(BufferedImage image) {
-		this.image = image;
-		size = new Dimension(image.getWidth(), image.getHeight());
+		size = calculateDimension(image);
+		this.image = ImageUtil.scaleImage(image, size.width, size.height);
 		ClipMoverAndResizer mover = new ClipMoverAndResizer(this);
 		this.addMouseListener(mover);
 		this.addMouseMotionListener(mover);
 	}
 
+	private Dimension calculateDimension(BufferedImage image) {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		final int image_max_width = (int) screenSize.getWidth() - 54;
+		final int image_max_height = (int) screenSize.getHeight() - 88;
+		
+		final int currentWidth = image.getWidth();
+		final int currentHeight = image.getHeight();
+		
+		if (currentWidth > image_max_width || currentHeight > image_max_height) {
+
+			if (currentWidth == currentHeight && currentHeight > image_max_height) {
+				return new Dimension(image_max_height, image_max_height);
+			}
+			
+			if (currentWidth > currentHeight) {
+				double ratio = (float) currentHeight / currentWidth;
+				int newWidth = image_max_width;
+				int newHeigth = (int) (newWidth * ratio);
+				return new Dimension(newWidth, newHeigth);
+			} 
+			if (currentHeight > currentWidth) {
+				double ratio = (float) currentWidth / currentHeight;
+				int newHeight = image_max_height;
+				int newWidth = (int) (newHeight * ratio);
+				return new Dimension(newWidth, newHeight);
+			}
+			
+			if (currentWidth == currentHeight) {
+				return new Dimension(currentWidth, currentHeight);
+			}
+		} 
+		
+		return new Dimension(currentWidth, currentHeight);
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);

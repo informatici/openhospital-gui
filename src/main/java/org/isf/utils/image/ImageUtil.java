@@ -75,9 +75,13 @@ public final class ImageUtil {
 			throws IOException {
 		long arrSize = getArraySize(bufferedImage, fileType);
 		while (arrSize > maximumFileSize) {
+			long lastSize = arrSize;
 			int newTargetSize = (bufferedImage.getTileWidth() - ((bufferedImage.getTileWidth() / 100) * 10));
 			bufferedImage = Scalr.resize(bufferedImage, newTargetSize);
 			arrSize = getArraySize(bufferedImage, fileType);
+			if (arrSize == lastSize) {
+				break;
+			} 
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ImageIO.write(bufferedImage, fileType, baos);

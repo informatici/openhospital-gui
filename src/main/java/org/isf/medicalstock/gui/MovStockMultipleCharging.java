@@ -102,7 +102,7 @@ public class MovStockMultipleCharging extends JDialog {
 	private JTextField jTextFieldReference;
 	private JTextField jTextFieldSearch;
 	private JComboBox<MovementType> jComboBoxChargeType;
-	private GoodDateChooser jDateChooser;
+	private GoodDateTimeSpinnerChooser jDateChooser;
 	private JComboBox jComboBoxSupplier;
 	private JTable jTableMovements;
 	private final String[] columnNames = {
@@ -444,7 +444,7 @@ public class MovStockMultipleCharging extends JDialog {
 					}
 
 					// Date
-					LocalDateTime date = jDateChooser.getDateStartOfDay();
+					LocalDateTime date = jDateChooser.getLocalDateTime();
 
 					// RefNo
 					String refNo = jTextFieldReference.getText().trim();
@@ -462,9 +462,9 @@ public class MovStockMultipleCharging extends JDialog {
 		return jTextFieldSearch;
 	}
 
-	private GoodDateChooser getJDateChooser() {
+	private GoodDateTimeSpinnerChooser getJDateChooser() {
 		if (jDateChooser == null) {
-			jDateChooser = new GoodDateChooser(LocalDate.now());
+			jDateChooser = new GoodDateTimeSpinnerChooser(TimeTools.getNow());
 		}
 		return jDateChooser;
 	}
@@ -575,7 +575,7 @@ public class MovStockMultipleCharging extends JDialog {
 				if (expireDateChooser.getDate().isBefore(preparationDateChooser.getDate())) {
 					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expirydatebeforepreparationdate");
 				} 
-				else if (expireDateChooser.getDate().isBefore(jDateChooser.getDate())) {
+				else if (expireDateChooser.getDate().isBefore(jDateChooser.getLocalDateTime().toLocalDate())) {
 					MessageDialog.error(MovStockMultipleCharging.this, "angal.medicalstock.multiplecharging.expiringdateinthepastnotallowed");
 				} else {
 					expiringDate = expireDateChooser.getDateEndOfDay();
@@ -898,13 +898,11 @@ public class MovStockMultipleCharging extends JDialog {
 			return false;
 		}
 
-		LocalDate thisDate = jDateChooser.getDate();
-		
 		// Check and set all movements
 		for (int i = 0; i < movements.size(); i++) {
 			Movement mov = movements.get(i);
 			int option = units.get(i);
-			mov.setDate(thisDate.atStartOfDay());
+			mov.setDate(jDateChooser.getLocalDateTime());
 			mov.setRefNo(jTextFieldReference.getText());
 			mov.setQuantity(calcTotal(mov, option));
 			mov.setType((MovementType) jComboBoxChargeType.getSelectedItem());
