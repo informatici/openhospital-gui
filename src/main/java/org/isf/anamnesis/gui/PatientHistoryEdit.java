@@ -374,56 +374,56 @@ public class PatientHistoryEdit extends JDialog {
 		path.setFamilyOther(jCheckBoxFamilyOther.isSelected());
 		path.setFamilyNote(jTextAreaFamilyNote.getText());
 		//Closed
-		path.setPat_closed_hypertension(jCheckBoxPathClosedHypertension.isSelected());
-		path.setPat_closed_drugAddiction(jCheckBoxPathClosedDrugsAddiction.isSelected());
-		path.setPat_closed_cardiovascular(jCheckBoxPathClosedCardio.isSelected());
-		path.setPat_closed_infective(jCheckBoxPathClosedInfective.isSelected());
-		path.setPat_closed_endocrinometabol(jCheckBoxPathClosedEndo.isSelected());
-		path.setPat_closed_respiratory(jCheckBoxPathClosedRespiratory.isSelected());
-		path.setPat_closed_cancer(jCheckBoxPathClosedCancer.isSelected());
-		path.setPat_closed_orto(jCheckBoxPathClosedOrto.isSelected());
-		path.setPat_closed_gyno(jCheckBoxPathClosedGyno.isSelected());
-		path.setPat_closed_other(jCheckBoxPathClosedOther.isSelected());
-		path.setPat_closed_note(jTextAreaPathClosedNote.getText());
+		path.setPatClosedHypertension(jCheckBoxPathClosedHypertension.isSelected());
+		path.setPatClosedDrugaddiction(jCheckBoxPathClosedDrugsAddiction.isSelected());
+		path.setPatClosedCardiovascular(jCheckBoxPathClosedCardio.isSelected());
+		path.setPatClosedInfective(jCheckBoxPathClosedInfective.isSelected());
+		path.setPatClosedEndocrinometabol(jCheckBoxPathClosedEndo.isSelected());
+		path.setPatClosedRespiratory(jCheckBoxPathClosedRespiratory.isSelected());
+		path.setPatClosedCancer(jCheckBoxPathClosedCancer.isSelected());
+		path.setPatClosedOrto(jCheckBoxPathClosedOrto.isSelected());
+		path.setPatClosedGyno(jCheckBoxPathClosedGyno.isSelected());
+		path.setPatClosedOther(jCheckBoxPathClosedOther.isSelected());
+		path.setPatClosedNote(jTextAreaPathClosedNote.getText());
 		//Open
-		path.setPat_open_hypertension(jCheckBoxPathOpenHypertension.isSelected());
-		path.setPat_open_drugAddiction(jCheckBoxPathOpenDrugsAddiction.isSelected());
-		path.setPat_open_cardiovascular(jCheckBoxPathOpenCardio.isSelected());
-		path.setPat_open_infective(jCheckBoxPathOpenInfective.isSelected());
-		path.setPat_open_endocrinometabol(jCheckBoxPathOpenEndo.isSelected());
-		path.setPat_open_respiratory(jCheckBoxPathOpenRespiratory.isSelected());
-		path.setPat_open_cancer(jCheckBoxPathOpenCancer.isSelected());
-		path.setPat_open_orto(jCheckBoxPathOpenOrto.isSelected());
-		path.setPat_open_gyno(jCheckBoxPathOpenGyno.isSelected());
-		path.setPat_open_other(jCheckBoxPathOpenOther.isSelected());
-		path.setPat_open_note(jTextAreaPathOpenNote.getText());
+		path.setPatOpenHypertension(jCheckBoxPathOpenHypertension.isSelected());
+		path.setPatOpenDrugaddiction(jCheckBoxPathOpenDrugsAddiction.isSelected());
+		path.setPatOpenCardiovascular(jCheckBoxPathOpenCardio.isSelected());
+		path.setPatOpenInfective(jCheckBoxPathOpenInfective.isSelected());
+		path.setPatOpenEndocrinometabol(jCheckBoxPathOpenEndo.isSelected());
+		path.setPatOpenRespiratory(jCheckBoxPathOpenRespiratory.isSelected());
+		path.setPatOpenCancer(jCheckBoxPathOpenCancer.isSelected());
+		path.setPatOpenOrto(jCheckBoxPathOpenOrto.isSelected());
+		path.setPatOpenGyno(jCheckBoxPathOpenGyno.isSelected());
+		path.setPatOpenOther(jCheckBoxPathOpenOther.isSelected());
+		path.setPatOpenNote(jTextAreaPathOpenNote.getText());
 		// Extra
-		path.setPat_surgery(jTextAreaPathExtraSurgery.getText());
-		path.setPat_allergy(jTextAreaPathExtraAllergy.getText());
-		path.setPat_therapy(jTextAreaPathExtraTherapy.getText());
-		path.setPat_medicine(jTextAreaPathExtraUsualMedicines.getText());
-		path.setPat_note(jTextAreaPathExtraNote.getText());
+		path.setPatSurgery(jTextAreaPathExtraSurgery.getText());
+		path.setPatAllergy(jTextAreaPathExtraAllergy.getText());
+		path.setPatTherapy(jTextAreaPathExtraTherapy.getText());
+		path.setPatMedicine(jTextAreaPathExtraUsualMedicines.getText());
+		path.setPatNote(jTextAreaPathExtraNote.getText());
 		// Physiologic Unisex
-		path.setPhy_nutrition_normal(jCheckBoxPhyDietNormal.isSelected());
-		path.setPhy_nutrition_abnormal(jTextFieldPhyDietAbnormalText.getText());
-		path.setPhy_alvo_normal(jCheckBoxPhyAlvoNormal.isSelected());
-		path.setPhy_alvo_abnormal(jTextFieldPhyAlvoAbnormalText.getText());
-		path.setPhy_diuresis_normal(jCheckBoxPhyDiuresisNormal.isSelected());
-		path.setPhy_diuresis_abnormal(jTextFieldPhyDiuresisAbnormalText.getText());
-		path.setPhy_alcool(jCheckBoxPhyAlcoolYes.isSelected());
-		path.setPhy_smoke(jCheckBoxPhySmokeYes.isSelected());
-		path.setPhy_drug(jCheckBoxPhyDrugsYes.isSelected());
+		path.setPhyNutritionNormal(jCheckBoxPhyDietNormal.isSelected());
+		path.setPhyNutritionAbnormal(jTextFieldPhyDietAbnormalText.getText());
+		path.setPhyAlvoNormal(jCheckBoxPhyAlvoNormal.isSelected());
+		path.setPhyAlvoAbnormal(jTextFieldPhyAlvoAbnormalText.getText());
+		path.setPhyDiuresisNormal(jCheckBoxPhyDiuresisNormal.isSelected());
+		path.setPhyDiuresisAbnormal(jTextFieldPhyDiuresisAbnormalText.getText());
+		path.setPhyAlcool(jCheckBoxPhyAlcoolYes.isSelected());
+		path.setPhySmoke(jCheckBoxPhySmokeYes.isSelected());
+		path.setPhyDrug(jCheckBoxPhyDrugsYes.isSelected());
 		// Physiologic Female
-		path.setPhy_period_normal(jCheckBoxPhyPeriodNormal.isSelected());
-		path.setPhy_period_abnormal(jTextFieldPhyPeriodAbnormalText.getText());
-		path.setPhy_menopause(jCheckBoxPhyMenopauseYes.isSelected());
-		path.setPhy_menopause_years(Integer.parseInt(jTextFieldPhyMenopauseYesYears.getText()));
-		path.setPhy_hrt_normal(jCheckBoxPhyHRTNo.isSelected());
-		path.setPhy_hrt_abnormal(jTextFieldPhyHRTYesText.getText());
-		path.setPhy_pregnancy(jCheckBoxPhyPregnancyYes.isSelected());
-		path.setPhy_pregnancy_number(Integer.parseInt(jTextFieldPhyPregnancyNumber.getText()));
-		path.setPhy_pregnancy_birth(Integer.parseInt(jTextFieldPhyPregnancyDeliveryNumber.getText()));
-		path.setPhy_pregnancy_abort(Integer.parseInt(jTextFieldPhyPregnancyAbortNumber.getText()));
+		path.setPhyPeriodNormal(jCheckBoxPhyPeriodNormal.isSelected());
+		path.setPhyPeriodAbnormal(jTextFieldPhyPeriodAbnormalText.getText());
+		path.setPhyMenopause(jCheckBoxPhyMenopauseYes.isSelected());
+		path.setPhyMenopauseYears(Integer.parseInt(jTextFieldPhyMenopauseYesYears.getText()));
+		path.setPhyHrtNormal(jCheckBoxPhyHRTNo.isSelected());
+		path.setPhyHrtAbnormal(jTextFieldPhyHRTYesText.getText());
+		path.setPhyPregnancy(jCheckBoxPhyPregnancyYes.isSelected());
+		path.setPhyPregnancyNumber(Integer.parseInt(jTextFieldPhyPregnancyNumber.getText()));
+		path.setPhyPregnancyBirth(Integer.parseInt(jTextFieldPhyPregnancyDeliveryNumber.getText()));
+		path.setPhyPregnancyAbort(Integer.parseInt(jTextFieldPhyPregnancyAbortNumber.getText()));
 	}
 
 	private VoLimitedTextArea getJTextAreaPathExtraNote() {
@@ -435,7 +435,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraNote.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPat_note(jTextAreaPathExtraNote.getText());
+					path.setPatNote(jTextAreaPathExtraNote.getText());
 				}
 			});
 		}
@@ -495,7 +495,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraTherapy.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPat_therapy(jTextAreaPathExtraTherapy.getText());
+					path.setPatTherapy(jTextAreaPathExtraTherapy.getText());
 				}
 			});
 		}
@@ -522,7 +522,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraUsualMedicines.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPat_medicine(jTextAreaPathExtraUsualMedicines.getText());
+					path.setPatMedicine(jTextAreaPathExtraUsualMedicines.getText());
 				}
 			});
 		}
@@ -538,7 +538,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraAllergy.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPat_allergy(jTextAreaPathExtraAllergy.getText());
+					path.setPatAllergy(jTextAreaPathExtraAllergy.getText());
 				}
 			});
 		}
@@ -554,7 +554,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathExtraSurgery.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPat_surgery(jTextAreaPathExtraSurgery.getText());
+					path.setPatSurgery(jTextAreaPathExtraSurgery.getText());
 				}
 			});
 		}
@@ -570,7 +570,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathOpenNote.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPat_open_note(jTextAreaPathOpenNote.getText());
+					path.setPatOpenNote(jTextAreaPathOpenNote.getText());
 				}
 			});
 		}
@@ -704,7 +704,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaPathClosedNote.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPat_closed_note(jTextAreaPathClosedNote.getText());
+					path.setPatClosedNote(jTextAreaPathClosedNote.getText());
 				}
 			});
 		}
@@ -839,7 +839,7 @@ public class PatientHistoryEdit extends JDialog {
 			jTextAreaFamilyNote.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setFamily_note(jTextAreaFamilyNote.getText());
+					path.setFamilyNote(jTextAreaFamilyNote.getText());
 				}
 			});
 		}
