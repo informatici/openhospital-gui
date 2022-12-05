@@ -1623,7 +1623,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_nutrition_normal(true);
+					path.setPhyNutritionNormal(true);
 				}
 			});
 		}
@@ -1638,7 +1638,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_nutrition_normal(false);
+					path.setPhyNutritionNormal(false);
 					jTextFieldPhyDietAbnormalText.requestFocus();
 				}
 			});
@@ -1654,7 +1654,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_alvo_normal(true);
+					path.setPhyAlvoNormal(true);
 				}
 			});
 		}
@@ -1669,7 +1669,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_alvo_normal(false);
+					path.setPhyAlvoNormal(false);
 					jTextFieldPhyAlvoAbnormalText.requestFocus();
 				}
 			});
@@ -1685,7 +1685,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_diuresis_normal(true);
+					path.setPhyDiuresisNormal(true);
 				}
 			});
 		}
@@ -1700,7 +1700,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_diuresis_normal(false);
+					path.setPhyDiuresisNormal(false);
 					jTextFieldPhyDiuresisAbnormalText.requestFocus();
 				}
 			});
@@ -1717,7 +1717,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_alcool(false);
+					path.setPhyAlcool(false);
 				}
 			});
 		}
@@ -1732,7 +1732,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_smoke(false);
+					path.setPhySmoke(false);
 				}
 			});
 		}
@@ -1747,7 +1747,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_drug(false);
+					path.setPhyDrug(false);
 				}
 			});
 		}
@@ -1764,7 +1764,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_alcool(true);
+					path.setPhyAlcool(true);
 				}
 			});
 		}
@@ -1779,7 +1779,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_smoke(true);
+					path.setPhySmoke(true);
 				}
 			});
 		}
@@ -1794,7 +1794,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_drug(true);
+					path.setPhyDrug(true);
 				}
 			});
 		}
@@ -1808,13 +1808,13 @@ public class PatientHistoryEdit extends JDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhy_nutrition_normal(false);
+					path.setPhyNutritionNormal(false);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhy_nutrition_abnormal(jTextFieldPhyDietAbnormalText.getText());
+					path.setPhyNutritionAbnormal(jTextFieldPhyDietAbnormalText.getText());
 				}
 			});
 		}
@@ -1828,13 +1828,13 @@ public class PatientHistoryEdit extends JDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhy_alvo_normal(false);
+					path.setPhyAlvoNormal(false);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhy_alvo_abnormal(jTextFieldPhyAlvoAbnormalText.getText());
+					path.setPhyAlvoAbnormal(jTextFieldPhyAlvoAbnormalText.getText());
 				}
 			});
 		}
@@ -1848,13 +1848,13 @@ public class PatientHistoryEdit extends JDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhy_diuresis_normal(false);
+					path.setPhyDiuresisNormal(false);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhy_diuresis_abnormal(jTextFieldPhyDiuresisAbnormalText.getText());
+					path.setPhyDiuresisAbnormal(jTextFieldPhyDiuresisAbnormalText.getText());
 				}
 			});
 		}
@@ -2014,7 +2014,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_period_normal(true);
+					path.setPhyPeriodNormal(true);
 				}
 			});
 		}
@@ -2029,7 +2029,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_period_normal(false);
+					path.setPhyPeriodNormal(false);
 					jTextFieldPhyPeriodAbnormalText.requestFocus();
 				}
 			});
@@ -2044,13 +2044,13 @@ public class PatientHistoryEdit extends JDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhy_period_normal(false);
+					path.setPhyPeriodNormal(false);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhy_period_abnormal(jTextFieldPhyPeriodAbnormalText.getText());
+					path.setPhyPeriodAbnormal(jTextFieldPhyPeriodAbnormalText.getText());
 				}
 			});
 		}
@@ -2065,7 +2065,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_menopause(false);
+					path.setPhyMenopause(false);
 				}
 			});
 		}
@@ -2080,7 +2080,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_menopause(true);
+					path.setPhyMenopause(true);
 					jTextFieldPhyMenopauseYesYears.requestFocus();
 				}
 			});
@@ -2095,13 +2095,13 @@ public class PatientHistoryEdit extends JDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhy_menopause(true);
+					path.setPhyMenopause(true);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhy_menopause_years(Integer.parseInt(jTextFieldPhyMenopauseYesYears.getText()));
+					path.setPhyMenopauseYears(Integer.parseInt(jTextFieldPhyMenopauseYesYears.getText()));
 				}
 			});
 		}
@@ -2116,7 +2116,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_hrt_normal(true);
+					path.setPhyHrtNormal(true);
 				}
 			});
 		}
@@ -2131,7 +2131,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_hrt_normal(false);
+					path.setPhyHrtNormal(false);
 					jTextFieldPhyHRTYesText.requestFocus();
 				}
 			});
@@ -2146,13 +2146,13 @@ public class PatientHistoryEdit extends JDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhy_hrt_normal(false);
+					path.setPhyHrtNormal(false);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhy_hrt_abnormal(jTextFieldPhyHRTYesText.getText());
+					path.setPhyHrtAbnormal(jTextFieldPhyHRTYesText.getText());
 				}
 			});
 		}
@@ -2181,7 +2181,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_pregnancy(false);
+					path.setPhyPregnancy(false);
 				}
 			});
 		}
@@ -2196,7 +2196,7 @@ public class PatientHistoryEdit extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					path.setPhy_pregnancy(true);
+					path.setPhyPregnancy(true);
 					jTextFieldPhyPregnancyNumber.requestFocus();
 				}
 			});
@@ -2219,13 +2219,13 @@ public class PatientHistoryEdit extends JDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhy_pregnancy(true);
+					path.setPhyPregnancy(true);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhy_pregnancy_number(Integer.parseInt(jTextFieldPhyPregnancyNumber.getText()));
+					path.setPhyPregnancyNumber(Integer.parseInt(jTextFieldPhyPregnancyNumber.getText()));
 				}
 			});
 		}
@@ -2247,13 +2247,13 @@ public class PatientHistoryEdit extends JDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhy_pregnancy(true);
+					path.setPhyPregnancy(true);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhy_pregnancy_birth(Integer.parseInt(jTextFieldPhyPregnancyDeliveryNumber.getText()));
+					path.setPhyPregnancyBirth(Integer.parseInt(jTextFieldPhyPregnancyDeliveryNumber.getText()));
 				}
 			});
 		}
@@ -2275,13 +2275,13 @@ public class PatientHistoryEdit extends JDialog {
 				@Override
 				public void focusGained(FocusEvent e) {
 					super.focusGained(e);
-					path.setPhy_pregnancy(true);
+					path.setPhyPregnancy(true);
 					updateGUIHistory();
 				}
 
 				@Override
 				public void focusLost(FocusEvent e) {
-					path.setPhy_pregnancy_abort(Integer.parseInt(jTextFieldPhyPregnancyAbortNumber.getText()));
+					path.setPhyPregnancyAbort(Integer.parseInt(jTextFieldPhyPregnancyAbortNumber.getText()));
 				}
 			});
 		}
@@ -2301,7 +2301,7 @@ public class PatientHistoryEdit extends JDialog {
 
 		public void actionPerformed(ActionEvent e) {
 			//Update model
-			path.setFamily_nothing(false);
+			path.setFamilyNothing(false);
 			updateModelFromGUI();
 			//Update GUI
 			updateGUIHistory();
@@ -2328,7 +2328,7 @@ public class PatientHistoryEdit extends JDialog {
 
 		public void actionPerformed(ActionEvent e) {
 			//Update model
-			path.setPat_closed_nothing(false);
+			path.setPatClosedNothing(false);
 			updateModelFromGUI();
 			//Update GUI
 			updateGUIHistory();
@@ -2355,7 +2355,7 @@ public class PatientHistoryEdit extends JDialog {
 
 		public void actionPerformed(ActionEvent e) {
 			//Update model
-			path.setPat_open_nothing(false);
+			path.setPatOpenNothing(false);
 			updateModelFromGUI();
 			//Update GUI
 			updateGUIHistory();
@@ -2382,17 +2382,17 @@ public class PatientHistoryEdit extends JDialog {
 
 		public void actionPerformed(ActionEvent e) {
 			// Update model
-			path.setFamily_nothing(true);
-			path.setFamily_hypertension(false);
-			path.setFamily_drugAddiction(false);
-			path.setFamily_cardiovascular(false);
-			path.setFamily_infective(false);
-			path.setFamily_endocrinometabol(false);
-			path.setFamily_respiratory(false);
-			path.setFamily_cancer(false);
-			path.setFamily_orto(false);
-			path.setFamily_gyno(false);
-			path.setFamily_other(false);
+			path.setFamilyNothing(true);
+			path.setFamilyHypertension(false);
+			path.setFamilyDrugAddiction(false);
+			path.setFamilyCardiovascular(false);
+			path.setFamilyInfective(false);
+			path.setFamilyEndocrinometabol(false);
+			path.setFamilyRespiratory(false);
+			path.setFamilyCancer(false);
+			path.setFamilyOrto(false);
+			path.setFamilyGyno(false);
+			path.setFamilyOther(false);
 			// Update GUI
 			updateGUIHistory();
 		}
@@ -2418,17 +2418,17 @@ public class PatientHistoryEdit extends JDialog {
 
 		public void actionPerformed(ActionEvent e) {
 			// Update model
-			path.setPat_closed_nothing(true);
-			path.setPat_closed_hypertension(false);
-			path.setPat_closed_drugAddiction(false);
-			path.setPat_closed_cardiovascular(false);
-			path.setPat_closed_infective(false);
-			path.setPat_closed_endocrinometabol(false);
-			path.setPat_closed_respiratory(false);
-			path.setPat_closed_cancer(false);
-			path.setPat_closed_orto(false);
-			path.setPat_closed_gyno(false);
-			path.setPat_closed_other(false);
+			path.setPatClosedNothing(true);
+			path.setPatClosedHypertension(false);
+			path.setPatClosedDrugaddiction(false);
+			path.setPatClosedCardiovascular(false);
+			path.setPatClosedInfective(false);
+			path.setPatClosedEndocrinometabol(false);
+			path.setPatClosedRespiratory(false);
+			path.setPatClosedCancer(false);
+			path.setPatClosedOrto(false);
+			path.setPatClosedGyno(false);
+			path.setPatClosedOther(false);
 			// Update GUI
 			updateGUIHistory();
 		}
@@ -2455,17 +2455,17 @@ public class PatientHistoryEdit extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 
 			// Update model
-			path.setPat_open_nothing(true);
-			path.setPat_open_hypertension(false);
-			path.setPat_open_drugAddiction(false);
-			path.setPat_open_cardiovascular(false);
-			path.setPat_open_infective(false);
-			path.setPat_open_endocrinometabol(false);
-			path.setPat_open_respiratory(false);
-			path.setPat_open_cancer(false);
-			path.setPat_open_orto(false);
-			path.setPat_open_gyno(false);
-			path.setPat_open_other(false);
+			path.setPatOpenNothing(true);
+			path.setPatOpenHypertension(false);
+			path.setPatOpenDrugaddiction(false);
+			path.setPatOpenCardiovascular(false);
+			path.setPatOpenInfective(false);
+			path.setPatOpenEndocrinometabol(false);
+			path.setPatOpenRespiratory(false);
+			path.setPatOpenCancer(false);
+			path.setPatOpenOrto(false);
+			path.setPatOpenGyno(false);
+			path.setPatOpenOther(false);
 			// Update GUI
 			updateGUIHistory();
 		}
