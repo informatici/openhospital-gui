@@ -443,10 +443,13 @@ function start_database {
 	echo "MySQL server started! "
 
 	# show MySQL server running configuration
-	echo "****************************"
-	echo "* Database server IP address:" && cat ./$CONF_DIR/my.cnf | grep bind-address
-	echo "* TCP port: " && cat ./$CONF_DIR/my.cnf | grep port | head -1
-	echo "****************************"
+	echo "***************************************"
+	echo "* Database server listening on:"
+	echo ""
+	cat ./$CONF_DIR/my.cnf | grep bind-address
+	cat ./$CONF_DIR/my.cnf | grep port | head -1
+	echo ""
+	echo "***************************************"
 }
 
 function set_database_root_pw {

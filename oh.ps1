@@ -558,12 +558,13 @@ function start_database {
 	Write-Host "MySQL server started! "
 	
 	# show MySQL server running configuration
-	Write-Host "****************************"
-	Write-Host "* Database server IP address:"
+	Write-Host "*******************************"
+	Write-Host "* Database server listening on:"
+	Write-Host ""
 	Get-Content "$OH_PATH/$CONF_DIR/my.cnf" | Select-String -Pattern "bind-address" | Select-Object -First 1 -Unique
-	Write-Host "* TCP port: "
 	Get-Content "$OH_PATH/$CONF_DIR/my.cnf" | Select-String -Pattern "port" | Select-Object -First 1 -Unique
-	Write-Host "****************************"
+	Write-Host ""
+	Write-Host "*******************************"
 }
 
 function set_database_root_pw {
