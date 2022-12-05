@@ -35,17 +35,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
+import org.isf.anamnesis.manager.PatientHistoryManager;
 import org.isf.anamnesis.model.PatientHistory;
 import org.isf.anamnesis.model.PatientPatientHistory;
-import org.isf.examination.gui.PatientExaminationEdit;
-import org.isf.examination.model.GenderPatientExamination;
-import org.isf.examination.model.PatientExamination;
-import org.isf.examination.service.ExaminationOperations;
 import org.isf.generaldata.MessageBundle;
+import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
 import org.isf.utils.exception.OHException;
 import org.isf.utils.jobjects.VoIntegerTextField;
@@ -56,6 +53,9 @@ import org.isf.utils.jobjects.VoLimitedTextField;
 public class PatientHistoryEdit extends JDialog {
 
 	private static final long serialVersionUID = 1L;
+
+	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
+
 
 	private JPanel jPanelPatient;
 	private JPanel jPanelAnamnesis;
@@ -2541,8 +2541,7 @@ public class PatientHistoryEdit extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 
 			updateModelFromGUI();
-			AnamnesisOperations ioOperations = new AnamnesisOperations();
-			ioOperations.saveOrUpdate(path.getPatientHistory());
+			patientHistoryManager.saveOrUpdate(path);
 			dispose();
 		}
 	}
@@ -2567,22 +2566,22 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		public void actionPerformed(ActionEvent e) {
 
-			PatientExamination patex;
-			ExaminationOperations exaServ = new ExaminationOperations();
+//			PatientExamination patex;
+//			ExaminationOperations exaServ = new ExaminationOperations();
 
-			PatientExamination lastPatex = exaServ.getLastByPatID(pat.getCode());
-			if (lastPatex != null) {
-				patex = exaServ.getFromLastPatientExamination(lastPatex);
-			} else {
-				patex = exaServ.getDefaultPatientExamination(pat.getCode());
-			}
-
-			GenderPatientExamination gPatex = new GenderPatientExamination(patex, pat.getSex() == 'M');
-			PatientExaminationEdit dialog = new PatientExaminationEdit(PatientHistoryEdit.this, gPatex);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.pack();
-			dialog.setLocationRelativeTo(null);
-			dialog.setVisible(true);
+//			PatientExamination lastPatex = exaServ.getLastByPatID(pat.getCode());
+//			if (lastPatex != null) {
+//				patex = exaServ.getFromLastPatientExamination(lastPatex);
+//			} else {
+//				patex = exaServ.getDefaultPatientExamination(pat.getCode());
+//			}
+//
+//			GenderPatientExamination gPatex = new GenderPatientExamination(patex, pat.getSex() == 'M');
+//			PatientExaminationEdit dialog = new PatientExaminationEdit(PatientHistoryEdit.this, gPatex);
+//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//			dialog.pack();
+//			dialog.setLocationRelativeTo(null);
+//			dialog.setVisible(true);
 		}
 	}
 
@@ -2593,38 +2592,5 @@ public class PatientHistoryEdit extends JDialog {
 		return actionInsertExamination;
 	}
 
-	/**
-	 * Main entry of the class. Note: This class is only created so that you can
-	 * easily preview the result at runtime. It is not expected to be managed by
-	 * the designer. You can modify it as you like.
-	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
 
-				AnamnesisOperations ioOPerations = new AnamnesisOperations();
-				PatientHistory path = ioOPerations.getByID(120);
-
-				if (path == null) {
-					path = new PatientHistory(120);
-				}
-
-				Patient pat = new Patient();
-				pat.setCode(120);
-				pat.setFirstName("Alessandro"); //$NON-NLS-1$
-				pat.setSecondName("Domanico"); //$NON-NLS-1$
-				pat.setTaxCode("DMNLSN81M26A662A"); //$NON-NLS-1$
-				pat.setSex('F');
-
-				PatientPatientHistory patpath = new PatientPatientHistory(path, pat);
-
-				PatientHistoryEdit dialog = new PatientHistoryEdit(patpath);
-				dialog.setDefaultCloseOperation(PatientHistoryEdit.DISPOSE_ON_CLOSE);
-				dialog.setTitle(MessageBundle.getMessage("angal.anamnesis.title")); //$NON-NLS-1$
-				dialog.pack();
-				dialog.setLocationRelativeTo(null);
-				dialog.setVisible(true);
-			}
-		});
-	}
 }
