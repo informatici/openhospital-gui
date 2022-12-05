@@ -419,7 +419,42 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 					to = TimeTools.formatDateTime(thisMonthTo, DATE_FORMAT_DD_MM_YYYY);
 				}
 				if (patientParent == null && options.indexOf(option) == ++i) {
-					MessageDialog.error(BillBrowser.this, "angal.common.pleaseselectapatient.msg");
+					// find the patient that is highlighted (if any) and use it for the Patient's Summary report
+					Patient patient = null;
+					Bill bill = null;
+					int selectedRow;
+					int currentTab = jTabbedPaneBills.getSelectedIndex();
+					switch(currentTab) {
+						case 0:
+							selectedRow = jTableBills.getSelectedRow();
+							if (selectedRow >= 0) {
+								bill = (Bill)jTableBills.getValueAt(selectedRow, -1);
+							}
+							break;
+						case 1:
+							selectedRow = jTablePending.getSelectedRow();
+							if (selectedRow >= 0) {
+								bill = (Bill)jTablePending.getValueAt(selectedRow, -1);
+							}
+							break;
+						case 2:
+							selectedRow = jTableClosed.getSelectedRow();
+							if (selectedRow >= 0) {
+								bill = (Bill)jTableClosed.getValueAt(selectedRow, -1);
+							}
+							break;
+						default:
+							selectedRow = 0;
+							break;
+					}
+					if (bill != null) {
+						patient = bill.getBillPatient();
+					}
+					if (patient == null) {
+						MessageDialog.error(BillBrowser.this, "angal.common.pleaseselectapatient.msg");
+						return;
+					}
+					new GenericReportPatient(patient.getCode(), GeneralData.PATIENTBILLSTATEMENT);
 					return;
 				}
 
@@ -921,6 +956,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jTableClosed.setDefaultRenderer(String.class, new StringTableCellRenderer());
 			jTableClosed.setDefaultRenderer(Integer.class, new IntegerTableCellRenderer());
 			jTableClosed.setDefaultRenderer(Double.class, new DoubleTableCellRenderer());
+			jTableClosed.addMouseListener(new MouseDoubleClickApapter());
 		}
 		return jTableClosed;
 	}
@@ -942,6 +978,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jTablePending.setDefaultRenderer(String.class, new StringTableCellRenderer());
 			jTablePending.setDefaultRenderer(Integer.class, new IntegerTableCellRenderer());
 			jTablePending.setDefaultRenderer(Double.class, new DoubleTableCellRenderer());
+			jTablePending.addMouseListener(new MouseDoubleClickApapter());
 		}
 		return jTablePending;
 	}
@@ -963,6 +1000,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			jTableBills.setDefaultRenderer(String.class, new StringTableCellRenderer());
 			jTableBills.setDefaultRenderer(Integer.class, new IntegerTableCellRenderer());
 			jTableBills.setDefaultRenderer(Double.class, new DoubleTableCellRenderer());
+			jTableBills.addMouseListener(new MouseDoubleClickApapter());
 		}
 		return jTableBills;
 	}
@@ -1365,4 +1403,22 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		}
 	}
 
+	class MouseDoubleClickApapter extends MouseAdapter {
+
+		@Override
+		public void mouseClicked(MouseEvent mouseEvent) {
+			if (mouseEvent.getClickCount() == 2) {
+				JTable target = (JTable) mouseEvent.getSource();
+				int row = target.getSelectedRow();
+				if (row >= 0) {
+					Patient pat = ((Bill) target.getValueAt(row, -1)).getBillPatient();
+					try {
+						patientSelected(pat);
+					} catch (OHServiceException ohServiceException) {
+						MessageDialog.showExceptions(ohServiceException);
+					}
+				}
+			}
+		}
+	}
 }
