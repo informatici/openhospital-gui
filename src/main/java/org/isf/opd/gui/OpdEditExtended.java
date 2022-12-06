@@ -703,7 +703,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcLabelDiseaseType1.gridy = 2;
 			jPanelData.add(jLabelDiseaseType1, gbcLabelDiseaseType1);
 			GridBagConstraints gbcDiseaseTypeBox = new GridBagConstraints();
-			gbcDiseaseTypeBox.insets = new Insets(5, 5, 5, 0);
+			gbcDiseaseTypeBox.insets = new Insets(5, 5, 5, 5);
 			gbcDiseaseTypeBox.fill = GridBagConstraints.HORIZONTAL;
 			gbcDiseaseTypeBox.gridwidth = 4;
 			gbcDiseaseTypeBox.gridx = 1;
