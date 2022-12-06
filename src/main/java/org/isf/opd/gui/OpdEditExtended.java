@@ -686,7 +686,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			gbcLabelDiseaseType1.gridy = 2;
 			jPanelData.add(jLabelDiseaseType1, gbcLabelDiseaseType1);
 			GridBagConstraints gbcDiseaseTypeBox = new GridBagConstraints();
-			gbcDiseaseTypeBox.insets = new Insets(5, 5, 5, 0);
+			gbcDiseaseTypeBox.insets = new Insets(5, 5, 5, 5);
 			gbcDiseaseTypeBox.fill = GridBagConstraints.HORIZONTAL;
 			gbcDiseaseTypeBox.gridwidth = 4;
 			gbcDiseaseTypeBox.gridx = 1;
@@ -1793,25 +1793,19 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 						if (isNextVisit) {
 							nextVisit = visitManager.updateVisit(nextVisit);
 							opd.setNextVisit(nextVisit);
-							Opd updatedOpd = opdBrowserManager.updateOpd(opd);
-							if (updatedOpd == null) {
-								MessageDialog.error(OpdEditExtended.this, "angal.common.datacouldnotbesaved.msg");
-							} else {
-								fireSurgeryUpdated(updatedOpd);
-								dispose();
-							}
 						} else {
-							if (nextVisit != null) {
-								opd.setNextVisit(null);
-								Opd updatedOpd = opdBrowserManager.updateOpd(opd);
-								if (updatedOpd != null) {
-									visitManager.deleteVisit(nextVisit);
-									fireSurgeryUpdated(updatedOpd);
-									dispose();
-								} else {
-									MessageDialog.error(OpdEditExtended.this, "angal.common.datacouldnotbesaved.msg");
-								}
+							opd.setNextVisit(null);
+						}
+						Opd updatedOpd = opdBrowserManager.updateOpd(opd);
+						if (updatedOpd == null) {
+							MessageDialog.error(OpdEditExtended.this, "angal.common.datacouldnotbesaved.msg");
+						} else {
+							fireSurgeryUpdated(updatedOpd);
+							// can't delete the visit info until the OPD is updated
+							if (!isNextVisit && nextVisit != null) {
+								visitManager.deleteVisit(nextVisit);
 							}
+							dispose();
 						}
 					}
 				} catch (OHServiceException ex) {
