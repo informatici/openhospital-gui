@@ -216,8 +216,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JButton okButton = null;
 	private JButton cancelButton = null;
 	private JButton jButtonExamination = null;
-	private JCheckBox rePatientCheckBox = null;
-	private JCheckBox newPatientCheckBox = null;
+	private JRadioButton rePatientButton = null;
+	private JRadioButton newPatientButton = null;
 	private JCheckBox referralToCheckBox = null;
 	private JCheckBox referralFromCheckBox = null;
 
@@ -274,7 +274,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private List<Patient> pat = new ArrayList<>();
 
 	private Disease lastOPDDisease1;
-	private JLabel jLabelOpd;
 
 	/*
 	 * Adds: Textfields and buttons to enable search in diagnosis
@@ -407,8 +406,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		}
 		
 		if (lastOpd == null) {
-			newPatientCheckBox.setSelected(true);
-			rePatientCheckBox.setSelected(false);
+			newPatientButton.setSelected(true);
 			jLabelLastOpdVisit.setText("");
 			jFieldLastOpdVisit.setText("");
 			jLabelLastOpdNote.setText("");
@@ -465,11 +463,9 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		if (selectedObject instanceof Disease) {
 			Disease disease = (Disease) selectedObject;
 			if (lastOPDDisease1 != null && disease.getCode().equals(lastOPDDisease1.getCode())) {
-				rePatientCheckBox.setSelected(true);
-				newPatientCheckBox.setSelected(false);
+				rePatientButton.setSelected(true);
 			} else {
-				rePatientCheckBox.setSelected(false);
-				newPatientCheckBox.setSelected(true);
+				newPatientButton.setSelected(true);
 			}
 		}
 	}
@@ -482,33 +478,20 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			String referralTo;
 			String referralFrom;
 			jPanelNorth = new JPanel(new FlowLayout());
-			rePatientCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.reattendance.txt"));
-			newPatientCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.newattendance.txt"));
-			newPatientCheckBox.addActionListener(actionEvent -> {
-				if (newPatientCheckBox.isSelected()) {
-					newPatientCheckBox.setSelected(true);
-					rePatientCheckBox.setSelected(false);
-				} else {
-					newPatientCheckBox.setSelected(false);
-					rePatientCheckBox.setSelected(true);
-				}
-			});
-			rePatientCheckBox.addActionListener(actionEvent -> {
-				if (rePatientCheckBox.isSelected()) {
-					rePatientCheckBox.setSelected(true);
-					newPatientCheckBox.setSelected(false);
-				} else {
-					newPatientCheckBox.setSelected(true);
-					rePatientCheckBox.setSelected(false);
-				}
-			});
-			jPanelNorth.add(rePatientCheckBox);
-			jPanelNorth.add(newPatientCheckBox);
+
+			rePatientButton = new JRadioButton(MessageBundle.getMessage("angal.opd.reattendance.txt"));
+			newPatientButton = new JRadioButton(MessageBundle.getMessage("angal.opd.newattendance.txt"));
+			ButtonGroup attendanceGroup = new ButtonGroup();
+			attendanceGroup.add(rePatientButton);
+			attendanceGroup.add(newPatientButton);
+			jPanelNorth.add(rePatientButton);
+			jPanelNorth.add(newPatientButton);
+
 			if (!insert) {
 				if (opd.getNewPatient() == 'N') {
-					newPatientCheckBox.setSelected(true);
+					newPatientButton.setSelected(true);
 				} else {
-					rePatientCheckBox.setSelected(true);
+					rePatientButton.setSelected(true);
 				}
 			}
 			referralFromCheckBox = new JCheckBox(MessageBundle.getMessage("angal.opd.referral.txt"));
@@ -1719,7 +1702,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				Disease disease3 = null;
 				Ward opdWard = (Ward) opdWardBox.getSelectedItem();
 
-				if (newPatientCheckBox.isSelected()) {
+				if (newPatientButton.isSelected()) {
 					newPatient = 'N';
 				} else {
 					newPatient = 'R';
@@ -1805,7 +1788,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 							dispose();
 						} else {
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							return;
 						}
 					} else { // Update
 						if (isNextVisit) {
