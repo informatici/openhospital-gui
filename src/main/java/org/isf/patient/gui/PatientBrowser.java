@@ -34,6 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import org.isf.anamnesis.manager.PatientHistoryManager;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.gui.PatientInsert.PatientListener;
@@ -46,6 +47,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class PatientBrowser extends ModalJFrame implements PatientListener {
 
 	private static final long serialVersionUID = 1L;
+	
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
