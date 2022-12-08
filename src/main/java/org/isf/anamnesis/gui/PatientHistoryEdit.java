@@ -278,7 +278,7 @@ public class PatientHistoryEdit extends JDialog {
 		jLabelPatIDText.setText(String.valueOf(path.getId()));
 		jLabelFirstNameText.setText(pat.getFirstName());
 		jLabelSecondNameText.setText(pat.getSecondName());
-		jLabelSTPCodeText.setText(stp);
+//		jLabelSTPCodeText.setText(stp);
 	}
 
 	private void updateGUIHistory() {
@@ -309,18 +309,18 @@ public class PatientHistoryEdit extends JDialog {
 		jCheckBoxPathClosedOther.setSelected(path.isPatClosedOther());
 		jTextAreaPathClosedNote.setText(path.getPatClosedNote());
 		// Open
-		jCheckBoxPathOpenNothing.setSelected(path.isPatOpenNothing());
-		jCheckBoxPathOpenHypertension.setSelected(path.isPatOpenHypertension());
-		jCheckBoxPathOpenDrugsAddiction.setSelected(path.isPatOpenDrugaddiction());
-		jCheckBoxPathOpenCardio.setSelected(path.isPatOpenCardiovascular());
-		jCheckBoxPathOpenInfective.setSelected(path.isPatOpenInfective());
-		jCheckBoxPathOpenEndo.setSelected(path.isPatOpenEndocrinometabol());
-		jCheckBoxPathOpenRespiratory.setSelected(path.isPatOpenRespiratory());
-		jCheckBoxPathOpenCancer.setSelected(path.isPatOpenCancer());
-		jCheckBoxPathOpenOrto.setSelected(path.isPatOpenOrto());
-		jCheckBoxPathOpenGyno.setSelected(path.isPatOpenGyno());
-		jCheckBoxPathOpenOther.setSelected(path.isPatOpenOther());
-		jTextAreaPathOpenNote.setText(path.getPatOpenNote());
+//		jCheckBoxPathOpenNothing.setSelected(path.isPatOpenNothing());
+//		jCheckBoxPathOpenHypertension.setSelected(path.isPatOpenHypertension());
+//		jCheckBoxPathOpenDrugsAddiction.setSelected(path.isPatOpenDrugaddiction());
+//		jCheckBoxPathOpenCardio.setSelected(path.isPatOpenCardiovascular());
+//		jCheckBoxPathOpenInfective.setSelected(path.isPatOpenInfective());
+//		jCheckBoxPathOpenEndo.setSelected(path.isPatOpenEndocrinometabol());
+//		jCheckBoxPathOpenRespiratory.setSelected(path.isPatOpenRespiratory());
+//		jCheckBoxPathOpenCancer.setSelected(path.isPatOpenCancer());
+//		jCheckBoxPathOpenOrto.setSelected(path.isPatOpenOrto());
+//		jCheckBoxPathOpenGyno.setSelected(path.isPatOpenGyno());
+//		jCheckBoxPathOpenOther.setSelected(path.isPatOpenOther());
+//		jTextAreaPathOpenNote.setText(path.getPatOpenNote());
 		// Extra
 		jTextAreaPathExtraSurgery.setText(path.getPatSurgery());
 		jTextAreaPathExtraAllergy.setText(path.getPatAllergy());
@@ -386,17 +386,17 @@ public class PatientHistoryEdit extends JDialog {
 		path.setPatClosedOther(jCheckBoxPathClosedOther.isSelected());
 		path.setPatClosedNote(jTextAreaPathClosedNote.getText());
 		//Open
-		path.setPatOpenHypertension(jCheckBoxPathOpenHypertension.isSelected());
-		path.setPatOpenDrugaddiction(jCheckBoxPathOpenDrugsAddiction.isSelected());
-		path.setPatOpenCardiovascular(jCheckBoxPathOpenCardio.isSelected());
-		path.setPatOpenInfective(jCheckBoxPathOpenInfective.isSelected());
-		path.setPatOpenEndocrinometabol(jCheckBoxPathOpenEndo.isSelected());
-		path.setPatOpenRespiratory(jCheckBoxPathOpenRespiratory.isSelected());
-		path.setPatOpenCancer(jCheckBoxPathOpenCancer.isSelected());
-		path.setPatOpenOrto(jCheckBoxPathOpenOrto.isSelected());
-		path.setPatOpenGyno(jCheckBoxPathOpenGyno.isSelected());
-		path.setPatOpenOther(jCheckBoxPathOpenOther.isSelected());
-		path.setPatOpenNote(jTextAreaPathOpenNote.getText());
+//		path.setPatOpenHypertension(jCheckBoxPathOpenHypertension.isSelected());
+//		path.setPatOpenDrugaddiction(jCheckBoxPathOpenDrugsAddiction.isSelected());
+//		path.setPatOpenCardiovascular(jCheckBoxPathOpenCardio.isSelected());
+//		path.setPatOpenInfective(jCheckBoxPathOpenInfective.isSelected());
+//		path.setPatOpenEndocrinometabol(jCheckBoxPathOpenEndo.isSelected());
+//		path.setPatOpenRespiratory(jCheckBoxPathOpenRespiratory.isSelected());
+//		path.setPatOpenCancer(jCheckBoxPathOpenCancer.isSelected());
+//		path.setPatOpenOrto(jCheckBoxPathOpenOrto.isSelected());
+//		path.setPatOpenGyno(jCheckBoxPathOpenGyno.isSelected());
+//		path.setPatOpenOther(jCheckBoxPathOpenOther.isSelected());
+//		path.setPatOpenNote(jTextAreaPathOpenNote.getText());
 		// Extra
 		path.setPatSurgery(jTextAreaPathExtraSurgery.getText());
 		path.setPatAllergy(jTextAreaPathExtraAllergy.getText());
@@ -1543,19 +1543,19 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jLabelSecondNameText.gridx = 5;
 			gbc_jLabelSecondNameText.gridy = 0;
 			jPanelPatient.add(getJLabelSecondNameText(), gbc_jLabelSecondNameText);
-			GridBagConstraints gbc_jLabelSTPCode = new GridBagConstraints();
-			gbc_jLabelSTPCode.anchor = GridBagConstraints.EAST;
-			gbc_jLabelSTPCode.fill = GridBagConstraints.VERTICAL;
-			gbc_jLabelSTPCode.insets = new Insets(0, 0, 5, 5);
-			gbc_jLabelSTPCode.gridx = 6;
-			gbc_jLabelSTPCode.gridy = 0;
-			jPanelPatient.add(getJLabelSTPCode(), gbc_jLabelSTPCode);
-			GridBagConstraints gbc_jLabelSTPCodeText = new GridBagConstraints();
-			gbc_jLabelSTPCodeText.insets = new Insets(0, 0, 5, 5);
-			gbc_jLabelSTPCodeText.fill = GridBagConstraints.BOTH;
-			gbc_jLabelSTPCodeText.gridx = 7;
-			gbc_jLabelSTPCodeText.gridy = 0;
-			jPanelPatient.add(getJLabelSTPCodeText(), gbc_jLabelSTPCodeText);
+//			GridBagConstraints gbc_jLabelSTPCode = new GridBagConstraints();
+//			gbc_jLabelSTPCode.anchor = GridBagConstraints.EAST;
+//			gbc_jLabelSTPCode.fill = GridBagConstraints.VERTICAL;
+//			gbc_jLabelSTPCode.insets = new Insets(0, 0, 5, 5);
+//			gbc_jLabelSTPCode.gridx = 6;
+//			gbc_jLabelSTPCode.gridy = 0;
+//			jPanelPatient.add(getJLabelSTPCode(), gbc_jLabelSTPCode);
+//			GridBagConstraints gbc_jLabelSTPCodeText = new GridBagConstraints();
+//			gbc_jLabelSTPCodeText.insets = new Insets(0, 0, 5, 5);
+//			gbc_jLabelSTPCodeText.fill = GridBagConstraints.BOTH;
+//			gbc_jLabelSTPCodeText.gridx = 7;
+//			gbc_jLabelSTPCodeText.gridy = 0;
+//			jPanelPatient.add(getJLabelSTPCodeText(), gbc_jLabelSTPCodeText);
 		}
 		return jPanelPatient;
 	}
@@ -1567,7 +1567,7 @@ public class PatientHistoryEdit extends JDialog {
 			jPanelPathological.setLayout(new BoxLayout(jPanelPathological, BoxLayout.X_AXIS));
 			jPanelPathological.add(getJPanelFamily());
 			jPanelPathological.add(getJPanelPathologicalClosed());
-			jPanelPathological.add(getJPanelPathologicalOpen());
+//			jPanelPathological.add(getJPanelPathologicalOpen());
 			jPanelPathological.add(getJPanelPathologicalExtra());
 		}
 		return jPanelPathological;

@@ -400,9 +400,8 @@ public class PatientInsertExtended extends JDialog {
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.pack();
 				dialog.setLocationRelativeTo(null);
-				dialog.setLocationRelativeTo(null);
-				dialog.setVisible(true);
 				dialog.setModal(insert);
+				dialog.setVisible(true);
 				});
 		}
 		return jAnamnesisButton;
