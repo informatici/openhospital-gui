@@ -61,7 +61,7 @@ public class PatientHistoryEdit extends JDialog {
 	private JPanel jPanelAnamnesis;
 	private JPanel jPanelFamily;
 	private JPanel jPanelPathologicalClosed;
-	private JPanel jPanelPathologicalOpen;
+//	private JPanel jPanelPathologicalOpen;
 	private JPanel jPanelPathologicalExtra;
 	private JPanel jPanelPathological;
 	private JPanel jPanelPhyHistoryUnisex;
@@ -70,8 +70,8 @@ public class PatientHistoryEdit extends JDialog {
 	private JLabel jLabelFirstNameText;
 	private JLabel jLabelSecondName;
 	private JLabel jLabelSecondNameText;
-	private JLabel jLabelSTPCode;
-	private JLabel jLabelSTPCodeText;
+//	private JLabel jLabelSTPCode;
+//	private JLabel jLabelSTPCodeText;
 	private JLabel jLabelPatID;
 	private JLabel jLabelPatIDText;
 
@@ -108,20 +108,20 @@ public class PatientHistoryEdit extends JDialog {
 	private JScrollPane jScrollPanePathClosedNote;
 
 	// PATHOLOGICAL OPEN
-	private JCheckBox jCheckBoxPathOpenNothing;
-	private JCheckBox jCheckBoxPathOpenHypertension;
-	private JCheckBox jCheckBoxPathOpenDrugsAddiction;
-	private JCheckBox jCheckBoxPathOpenCardio;
-	private JCheckBox jCheckBoxPathOpenInfective;
-	private JCheckBox jCheckBoxPathOpenEndo;
-	private JCheckBox jCheckBoxPathOpenRespiratory;
-	private JCheckBox jCheckBoxPathOpenCancer;
-	private JCheckBox jCheckBoxPathOpenOrto;
-	private JCheckBox jCheckBoxPathOpenGyno;
-	private JCheckBox jCheckBoxPathOpenOther;
-	private JLabel jLabelPathOpenDiseases;
-	private VoLimitedTextArea jTextAreaPathOpenNote;
-	private JScrollPane jScrollPanePathOpenNote;
+//	private JCheckBox jCheckBoxPathOpenNothing;
+//	private JCheckBox jCheckBoxPathOpenHypertension;
+//	private JCheckBox jCheckBoxPathOpenDrugsAddiction;
+//	private JCheckBox jCheckBoxPathOpenCardio;
+//	private JCheckBox jCheckBoxPathOpenInfective;
+//	private JCheckBox jCheckBoxPathOpenEndo;
+//	private JCheckBox jCheckBoxPathOpenRespiratory;
+//	private JCheckBox jCheckBoxPathOpenCancer;
+//	private JCheckBox jCheckBoxPathOpenOrto;
+//	private JCheckBox jCheckBoxPathOpenGyno;
+//	private JCheckBox jCheckBoxPathOpenOther;
+//	private JLabel jLabelPathOpenDiseases;
+//	private VoLimitedTextArea jTextAreaPathOpenNote;
+//	private JScrollPane jScrollPanePathOpenNote;
 
 	// PATHOLOGICAL EXTRA
 	private VoLimitedTextArea jTextAreaPathExtraSurgery;
@@ -206,10 +206,10 @@ public class PatientHistoryEdit extends JDialog {
 	// Actions in this form
 	private Action actionExcludeFamilyNothing;
 	private Action actionExcludePathClosedNothing;
-	private Action actionExcludePathOpenNothing;
+//	private Action actionExcludePathOpenNothing;
 	private Action actionResetFamilyHistory;
 	private Action actionResetPathClosed;
-	private Action actionResetPathOpen;
+//	private Action actionResetPathOpen;
 	private Action actionSavePatientHistory;
 
 	// Fonts
@@ -219,7 +219,7 @@ public class PatientHistoryEdit extends JDialog {
 	// Attributes
 	private PatientHistory path;
 	private Patient pat;
-	private String stp;
+//	private String stp;
 	private Action actionInsertExamination;
 
 	public PatientHistoryEdit() {
@@ -561,140 +561,140 @@ public class PatientHistoryEdit extends JDialog {
 		return jTextAreaPathExtraSurgery;
 	}
 
-	private VoLimitedTextArea getJTextAreaPathOpenNote() {
-		if (jTextAreaPathOpenNote == null) {
-			jTextAreaPathOpenNote = new VoLimitedTextArea(100, 2, 20);
-			jTextAreaPathOpenNote.setLineWrap(true);
-			jTextAreaPathOpenNote.setWrapStyleWord(true);
-			jTextAreaPathOpenNote.setMargin(new Insets(0, 5, 0, 0));
-			jTextAreaPathOpenNote.addFocusListener(new FocusAdapter() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					path.setPatOpenNote(jTextAreaPathOpenNote.getText());
-				}
-			});
-		}
-		return jTextAreaPathOpenNote;
-	}
-
-	private JScrollPane getJScrollPanePathOpenNote() {
-		if (jScrollPanePathOpenNote == null) {
-			jScrollPanePathOpenNote = new JScrollPane();
-			jScrollPanePathOpenNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			jScrollPanePathOpenNote.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathOpenNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.open.remarks"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
-			jScrollPanePathOpenNote.setViewportView(getJTextAreaPathOpenNote());
-		}
-		return jScrollPanePathOpenNote;
-	}
-
-	private JLabel getJLabelPathOpenDiseases() {
-		if (jLabelPathOpenDiseases == null) {
-			jLabelPathOpenDiseases = new JLabel(MessageBundle.getMessage("angal.anamnesis.open.diseases")); //$NON-NLS-1$
-			jLabelPathOpenDiseases.setFont(fontDiseases);
-			jLabelPathOpenDiseases.setHorizontalAlignment(SwingConstants.LEFT);
-		}
-		return jLabelPathOpenDiseases;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenOther() {
-		if (jCheckBoxPathOpenOther == null) {
-			jCheckBoxPathOpenOther = new JCheckBox();
-			jCheckBoxPathOpenOther.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenOther.setText(MessageBundle.getMessage("angal.anamnesis.open.other")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenOther;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenGyno() {
-		if (jCheckBoxPathOpenGyno == null) {
-			jCheckBoxPathOpenGyno = new JCheckBox();
-			jCheckBoxPathOpenGyno.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenGyno.setText(MessageBundle.getMessage("angal.anamnesis.open.gyno")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenGyno;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenOrto() {
-		if (jCheckBoxPathOpenOrto == null) {
-			jCheckBoxPathOpenOrto = new JCheckBox();
-			jCheckBoxPathOpenOrto.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenOrto.setText(MessageBundle.getMessage("angal.anamnesis.open.orto")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenOrto;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenCancer() {
-		if (jCheckBoxPathOpenCancer == null) {
-			jCheckBoxPathOpenCancer = new JCheckBox();
-			jCheckBoxPathOpenCancer.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenCancer.setText(MessageBundle.getMessage("angal.anamnesis.open.neoplastic")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenCancer;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenRespiratory() {
-		if (jCheckBoxPathOpenRespiratory == null) {
-			jCheckBoxPathOpenRespiratory = new JCheckBox();
-			jCheckBoxPathOpenRespiratory.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenRespiratory.setText(MessageBundle.getMessage("angal.anamnesis.open.respiratory")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenRespiratory;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenEndo() {
-		if (jCheckBoxPathOpenEndo == null) {
-			jCheckBoxPathOpenEndo = new JCheckBox();
-			jCheckBoxPathOpenEndo.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenEndo.setText(MessageBundle.getMessage("angal.anamnesis.open.endocrinometabol")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenEndo;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenInfective() {
-		if (jCheckBoxPathOpenInfective == null) {
-			jCheckBoxPathOpenInfective = new JCheckBox();
-			jCheckBoxPathOpenInfective.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenInfective.setText(MessageBundle.getMessage("angal.anamnesis.open.infective")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenInfective;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenCardio() {
-		if (jCheckBoxPathOpenCardio == null) {
-			jCheckBoxPathOpenCardio = new JCheckBox();
-			jCheckBoxPathOpenCardio.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenCardio.setText(MessageBundle.getMessage("angal.anamnesis.open.cardiovascolaris")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenCardio;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenDrugsAddiction() {
-		if (jCheckBoxPathOpenDrugsAddiction == null) {
-			jCheckBoxPathOpenDrugsAddiction = new JCheckBox();
-			jCheckBoxPathOpenDrugsAddiction.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenDrugsAddiction.setText(MessageBundle.getMessage("angal.anamnesis.open.drugsaddiction")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenDrugsAddiction;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenHypertension() {
-		if (jCheckBoxPathOpenHypertension == null) {
-			jCheckBoxPathOpenHypertension = new JCheckBox();
-			jCheckBoxPathOpenHypertension.setAction(getActionExcludePathOpenNothing());
-			jCheckBoxPathOpenHypertension.setText(MessageBundle.getMessage("angal.anamnesis.open.hypertension")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenHypertension;
-	}
-
-	private JCheckBox getJCheckBoxPathOpenNothing() {
-		if (jCheckBoxPathOpenNothing == null) {
-			jCheckBoxPathOpenNothing = new JCheckBox();
-			jCheckBoxPathOpenNothing.setAction(getActionResetPathOpen());
-			jCheckBoxPathOpenNothing.setText(MessageBundle.getMessage("angal.anamnesis.open.nothingtodeclare")); //$NON-NLS-1$
-		}
-		return jCheckBoxPathOpenNothing;
-	}
+//	private VoLimitedTextArea getJTextAreaPathOpenNote() {
+//		if (jTextAreaPathOpenNote == null) {
+//			jTextAreaPathOpenNote = new VoLimitedTextArea(100, 2, 20);
+//			jTextAreaPathOpenNote.setLineWrap(true);
+//			jTextAreaPathOpenNote.setWrapStyleWord(true);
+//			jTextAreaPathOpenNote.setMargin(new Insets(0, 5, 0, 0));
+//			jTextAreaPathOpenNote.addFocusListener(new FocusAdapter() {
+//				@Override
+//				public void focusLost(FocusEvent e) {
+//					path.setPatOpenNote(jTextAreaPathOpenNote.getText());
+//				}
+//			});
+//		}
+//		return jTextAreaPathOpenNote;
+//	}
+//
+//	private JScrollPane getJScrollPanePathOpenNote() {
+//		if (jScrollPanePathOpenNote == null) {
+//			jScrollPanePathOpenNote = new JScrollPane();
+//			jScrollPanePathOpenNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//			jScrollPanePathOpenNote.setAlignmentX(Component.LEFT_ALIGNMENT);
+//			jScrollPanePathOpenNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.open.remarks"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
+//			jScrollPanePathOpenNote.setViewportView(getJTextAreaPathOpenNote());
+//		}
+//		return jScrollPanePathOpenNote;
+//	}
+//
+//	private JLabel getJLabelPathOpenDiseases() {
+//		if (jLabelPathOpenDiseases == null) {
+//			jLabelPathOpenDiseases = new JLabel(MessageBundle.getMessage("angal.anamnesis.open.diseases")); //$NON-NLS-1$
+//			jLabelPathOpenDiseases.setFont(fontDiseases);
+//			jLabelPathOpenDiseases.setHorizontalAlignment(SwingConstants.LEFT);
+//		}
+//		return jLabelPathOpenDiseases;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenOther() {
+//		if (jCheckBoxPathOpenOther == null) {
+//			jCheckBoxPathOpenOther = new JCheckBox();
+//			jCheckBoxPathOpenOther.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenOther.setText(MessageBundle.getMessage("angal.anamnesis.open.other")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenOther;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenGyno() {
+//		if (jCheckBoxPathOpenGyno == null) {
+//			jCheckBoxPathOpenGyno = new JCheckBox();
+//			jCheckBoxPathOpenGyno.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenGyno.setText(MessageBundle.getMessage("angal.anamnesis.open.gyno")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenGyno;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenOrto() {
+//		if (jCheckBoxPathOpenOrto == null) {
+//			jCheckBoxPathOpenOrto = new JCheckBox();
+//			jCheckBoxPathOpenOrto.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenOrto.setText(MessageBundle.getMessage("angal.anamnesis.open.orto")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenOrto;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenCancer() {
+//		if (jCheckBoxPathOpenCancer == null) {
+//			jCheckBoxPathOpenCancer = new JCheckBox();
+//			jCheckBoxPathOpenCancer.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenCancer.setText(MessageBundle.getMessage("angal.anamnesis.open.neoplastic")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenCancer;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenRespiratory() {
+//		if (jCheckBoxPathOpenRespiratory == null) {
+//			jCheckBoxPathOpenRespiratory = new JCheckBox();
+//			jCheckBoxPathOpenRespiratory.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenRespiratory.setText(MessageBundle.getMessage("angal.anamnesis.open.respiratory")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenRespiratory;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenEndo() {
+//		if (jCheckBoxPathOpenEndo == null) {
+//			jCheckBoxPathOpenEndo = new JCheckBox();
+//			jCheckBoxPathOpenEndo.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenEndo.setText(MessageBundle.getMessage("angal.anamnesis.open.endocrinometabol")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenEndo;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenInfective() {
+//		if (jCheckBoxPathOpenInfective == null) {
+//			jCheckBoxPathOpenInfective = new JCheckBox();
+//			jCheckBoxPathOpenInfective.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenInfective.setText(MessageBundle.getMessage("angal.anamnesis.open.infective")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenInfective;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenCardio() {
+//		if (jCheckBoxPathOpenCardio == null) {
+//			jCheckBoxPathOpenCardio = new JCheckBox();
+//			jCheckBoxPathOpenCardio.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenCardio.setText(MessageBundle.getMessage("angal.anamnesis.open.cardiovascolaris")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenCardio;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenDrugsAddiction() {
+//		if (jCheckBoxPathOpenDrugsAddiction == null) {
+//			jCheckBoxPathOpenDrugsAddiction = new JCheckBox();
+//			jCheckBoxPathOpenDrugsAddiction.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenDrugsAddiction.setText(MessageBundle.getMessage("angal.anamnesis.open.drugsaddiction")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenDrugsAddiction;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenHypertension() {
+//		if (jCheckBoxPathOpenHypertension == null) {
+//			jCheckBoxPathOpenHypertension = new JCheckBox();
+//			jCheckBoxPathOpenHypertension.setAction(getActionExcludePathOpenNothing());
+//			jCheckBoxPathOpenHypertension.setText(MessageBundle.getMessage("angal.anamnesis.open.hypertension")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenHypertension;
+//	}
+//
+//	private JCheckBox getJCheckBoxPathOpenNothing() {
+//		if (jCheckBoxPathOpenNothing == null) {
+//			jCheckBoxPathOpenNothing = new JCheckBox();
+//			jCheckBoxPathOpenNothing.setAction(getActionResetPathOpen());
+//			jCheckBoxPathOpenNothing.setText(MessageBundle.getMessage("angal.anamnesis.open.nothingtodeclare")); //$NON-NLS-1$
+//		}
+//		return jCheckBoxPathOpenNothing;
+//	}
 
 	private VoLimitedTextArea getJTextAreaPathClosedNote() {
 		if (jTextAreaPathClosedNote == null) {
@@ -983,26 +983,26 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		return jLabelPatID;
 	}
-
-	private JLabel getJLabelSTPCodeText() {
-		if (jLabelSTPCodeText == null) {
-			jLabelSTPCodeText = new JLabel();
-			jLabelSTPCodeText.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-			jLabelSTPCodeText.setText(""); //$NON-NLS-1$
-			jLabelSTPCodeText.setBackground(Color.WHITE);
-			jLabelSTPCodeText.setOpaque(true);
-		}
-		return jLabelSTPCodeText;
-	}
-
-	private JLabel getJLabelSTPCode() {
-		if (jLabelSTPCode == null) {
-			jLabelSTPCode = new JLabel();
-			jLabelSTPCode.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
-			jLabelSTPCode.setText(MessageBundle.getMessage("angal.anamnesis.stp")); //$NON-NLS-1$
-		}
-		return jLabelSTPCode;
-	}
+//
+//	private JLabel getJLabelSTPCodeText() {
+//		if (jLabelSTPCodeText == null) {
+//			jLabelSTPCodeText = new JLabel();
+//			jLabelSTPCodeText.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+//			jLabelSTPCodeText.setText(""); //$NON-NLS-1$
+//			jLabelSTPCodeText.setBackground(Color.WHITE);
+//			jLabelSTPCodeText.setOpaque(true);
+//		}
+//		return jLabelSTPCodeText;
+//	}
+//
+//	private JLabel getJLabelSTPCode() {
+//		if (jLabelSTPCode == null) {
+//			jLabelSTPCode = new JLabel();
+//			jLabelSTPCode.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
+//			jLabelSTPCode.setText(MessageBundle.getMessage("angal.anamnesis.stp")); //$NON-NLS-1$
+//		}
+//		return jLabelSTPCode;
+//	}
 
 	private JLabel getJLabelSecondNameText() {
 		if (jLabelSecondNameText == null) {
@@ -1211,98 +1211,98 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		return jPanelPathologicalExtra;
 	}
-
-	private JPanel getJPanelPathologicalOpen() {
-		if (jPanelPathologicalOpen == null) {
-			jPanelPathologicalOpen = new JPanel();
-			jPanelPathologicalOpen.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.open.recentproblems"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
-			GridBagLayout gbl_jPanelPathologicalOpen = new GridBagLayout();
-			gbl_jPanelPathologicalOpen.columnWidths = new int[] { 0 };
-			gbl_jPanelPathologicalOpen.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-			gbl_jPanelPathologicalOpen.columnWeights = new double[] { 1.0 };
-			gbl_jPanelPathologicalOpen.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
-			jPanelPathologicalOpen.setLayout(gbl_jPanelPathologicalOpen);
-			GridBagConstraints gbc_jCheckBoxPathOpenNothing = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenNothing.fill = GridBagConstraints.BOTH;
-			gbc_jCheckBoxPathOpenNothing.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPathOpenNothing.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenNothing.gridx = 0;
-			gbc_jCheckBoxPathOpenNothing.gridy = 0;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenNothing(), gbc_jCheckBoxPathOpenNothing);
-			GridBagConstraints gbc_jCheckBoxPathOpenHypertension = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenHypertension.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jCheckBoxPathOpenHypertension.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenHypertension.gridx = 0;
-			gbc_jCheckBoxPathOpenHypertension.gridy = 1;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenHypertension(), gbc_jCheckBoxPathOpenHypertension);
-			GridBagConstraints gbc_jCheckBoxPathOpenDrugsAddiction = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenDrugsAddiction.fill = GridBagConstraints.HORIZONTAL;
-			gbc_jCheckBoxPathOpenDrugsAddiction.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenDrugsAddiction.gridx = 0;
-			gbc_jCheckBoxPathOpenDrugsAddiction.gridy = 2;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenDrugsAddiction(), gbc_jCheckBoxPathOpenDrugsAddiction);
-			GridBagConstraints gbc_jLabelPathOpenDiseases = new GridBagConstraints();
-			gbc_jLabelPathOpenDiseases.insets = new Insets(5, 0, 0, 0);
-			gbc_jLabelPathOpenDiseases.gridx = 0;
-			gbc_jLabelPathOpenDiseases.gridy = 3;
-			jPanelPathologicalOpen.add(getJLabelPathOpenDiseases(), gbc_jLabelPathOpenDiseases);
-			GridBagConstraints gbc_jCheckBoxPathOpenCardio = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenCardio.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPathOpenCardio.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenCardio.gridx = 0;
-			gbc_jCheckBoxPathOpenCardio.gridy = 4;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenCardio(), gbc_jCheckBoxPathOpenCardio);
-			GridBagConstraints gbc_jCheckBoxPathOpenInfective = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenInfective.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPathOpenInfective.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenInfective.gridx = 0;
-			gbc_jCheckBoxPathOpenInfective.gridy = 5;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenInfective(), gbc_jCheckBoxPathOpenInfective);
-			GridBagConstraints gbc_jCheckBoxPathOpenEndo = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenEndo.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPathOpenEndo.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenEndo.gridx = 0;
-			gbc_jCheckBoxPathOpenEndo.gridy = 6;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenEndo(), gbc_jCheckBoxPathOpenEndo);
-			GridBagConstraints gbc_jCheckBoxPathOpenRespiratory = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenRespiratory.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPathOpenRespiratory.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenRespiratory.gridx = 0;
-			gbc_jCheckBoxPathOpenRespiratory.gridy = 7;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenRespiratory(), gbc_jCheckBoxPathOpenRespiratory);
-			GridBagConstraints gbc_jCheckBoxPathOpenCancer = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenCancer.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPathOpenCancer.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenCancer.gridx = 0;
-			gbc_jCheckBoxPathOpenCancer.gridy = 8;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenCancer(), gbc_jCheckBoxPathOpenCancer);
-			GridBagConstraints gbc_jCheckBoxPathOpenOrto = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenOrto.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPathOpenOrto.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenOrto.gridx = 0;
-			gbc_jCheckBoxPathOpenOrto.gridy = 9;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenOrto(), gbc_jCheckBoxPathOpenOrto);
-			GridBagConstraints gbc_jCheckBoxPathOpenGyno = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenGyno.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPathOpenGyno.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenGyno.gridx = 0;
-			gbc_jCheckBoxPathOpenGyno.gridy = 10;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenGyno(), gbc_jCheckBoxPathOpenGyno);
-			GridBagConstraints gbc_jCheckBoxPathOpenOther = new GridBagConstraints();
-			gbc_jCheckBoxPathOpenOther.anchor = GridBagConstraints.WEST;
-			gbc_jCheckBoxPathOpenOther.insets = new Insets(0, 0, 0, 0);
-			gbc_jCheckBoxPathOpenOther.gridx = 0;
-			gbc_jCheckBoxPathOpenOther.gridy = 11;
-			jPanelPathologicalOpen.add(getJCheckBoxPathOpenOther(), gbc_jCheckBoxPathOpenOther);
-			GridBagConstraints gbc_jScrollPanePathOpenNote = new GridBagConstraints();
-			gbc_jScrollPanePathOpenNote.insets = new Insets(10, 0, 0, 0);
-			gbc_jScrollPanePathOpenNote.fill = GridBagConstraints.BOTH;
-			gbc_jScrollPanePathOpenNote.gridx = 0;
-			gbc_jScrollPanePathOpenNote.gridy = 12;
-			jPanelPathologicalOpen.add(getJScrollPanePathOpenNote(), gbc_jScrollPanePathOpenNote);
-		}
-		return jPanelPathologicalOpen;
-	}
+//
+//	private JPanel getJPanelPathologicalOpen() {
+//		if (jPanelPathologicalOpen == null) {
+//			jPanelPathologicalOpen = new JPanel();
+//			jPanelPathologicalOpen.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.open.recentproblems"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+//			GridBagLayout gbl_jPanelPathologicalOpen = new GridBagLayout();
+//			gbl_jPanelPathologicalOpen.columnWidths = new int[] { 0 };
+//			gbl_jPanelPathologicalOpen.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+//			gbl_jPanelPathologicalOpen.columnWeights = new double[] { 1.0 };
+//			gbl_jPanelPathologicalOpen.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+//			jPanelPathologicalOpen.setLayout(gbl_jPanelPathologicalOpen);
+//			GridBagConstraints gbc_jCheckBoxPathOpenNothing = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenNothing.fill = GridBagConstraints.BOTH;
+//			gbc_jCheckBoxPathOpenNothing.anchor = GridBagConstraints.WEST;
+//			gbc_jCheckBoxPathOpenNothing.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenNothing.gridx = 0;
+//			gbc_jCheckBoxPathOpenNothing.gridy = 0;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenNothing(), gbc_jCheckBoxPathOpenNothing);
+//			GridBagConstraints gbc_jCheckBoxPathOpenHypertension = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenHypertension.fill = GridBagConstraints.HORIZONTAL;
+//			gbc_jCheckBoxPathOpenHypertension.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenHypertension.gridx = 0;
+//			gbc_jCheckBoxPathOpenHypertension.gridy = 1;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenHypertension(), gbc_jCheckBoxPathOpenHypertension);
+//			GridBagConstraints gbc_jCheckBoxPathOpenDrugsAddiction = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenDrugsAddiction.fill = GridBagConstraints.HORIZONTAL;
+//			gbc_jCheckBoxPathOpenDrugsAddiction.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenDrugsAddiction.gridx = 0;
+//			gbc_jCheckBoxPathOpenDrugsAddiction.gridy = 2;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenDrugsAddiction(), gbc_jCheckBoxPathOpenDrugsAddiction);
+//			GridBagConstraints gbc_jLabelPathOpenDiseases = new GridBagConstraints();
+//			gbc_jLabelPathOpenDiseases.insets = new Insets(5, 0, 0, 0);
+//			gbc_jLabelPathOpenDiseases.gridx = 0;
+//			gbc_jLabelPathOpenDiseases.gridy = 3;
+//			jPanelPathologicalOpen.add(getJLabelPathOpenDiseases(), gbc_jLabelPathOpenDiseases);
+//			GridBagConstraints gbc_jCheckBoxPathOpenCardio = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenCardio.anchor = GridBagConstraints.WEST;
+//			gbc_jCheckBoxPathOpenCardio.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenCardio.gridx = 0;
+//			gbc_jCheckBoxPathOpenCardio.gridy = 4;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenCardio(), gbc_jCheckBoxPathOpenCardio);
+//			GridBagConstraints gbc_jCheckBoxPathOpenInfective = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenInfective.anchor = GridBagConstraints.WEST;
+//			gbc_jCheckBoxPathOpenInfective.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenInfective.gridx = 0;
+//			gbc_jCheckBoxPathOpenInfective.gridy = 5;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenInfective(), gbc_jCheckBoxPathOpenInfective);
+//			GridBagConstraints gbc_jCheckBoxPathOpenEndo = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenEndo.anchor = GridBagConstraints.WEST;
+//			gbc_jCheckBoxPathOpenEndo.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenEndo.gridx = 0;
+//			gbc_jCheckBoxPathOpenEndo.gridy = 6;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenEndo(), gbc_jCheckBoxPathOpenEndo);
+//			GridBagConstraints gbc_jCheckBoxPathOpenRespiratory = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenRespiratory.anchor = GridBagConstraints.WEST;
+//			gbc_jCheckBoxPathOpenRespiratory.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenRespiratory.gridx = 0;
+//			gbc_jCheckBoxPathOpenRespiratory.gridy = 7;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenRespiratory(), gbc_jCheckBoxPathOpenRespiratory);
+//			GridBagConstraints gbc_jCheckBoxPathOpenCancer = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenCancer.anchor = GridBagConstraints.WEST;
+//			gbc_jCheckBoxPathOpenCancer.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenCancer.gridx = 0;
+//			gbc_jCheckBoxPathOpenCancer.gridy = 8;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenCancer(), gbc_jCheckBoxPathOpenCancer);
+//			GridBagConstraints gbc_jCheckBoxPathOpenOrto = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenOrto.anchor = GridBagConstraints.WEST;
+//			gbc_jCheckBoxPathOpenOrto.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenOrto.gridx = 0;
+//			gbc_jCheckBoxPathOpenOrto.gridy = 9;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenOrto(), gbc_jCheckBoxPathOpenOrto);
+//			GridBagConstraints gbc_jCheckBoxPathOpenGyno = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenGyno.anchor = GridBagConstraints.WEST;
+//			gbc_jCheckBoxPathOpenGyno.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenGyno.gridx = 0;
+//			gbc_jCheckBoxPathOpenGyno.gridy = 10;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenGyno(), gbc_jCheckBoxPathOpenGyno);
+//			GridBagConstraints gbc_jCheckBoxPathOpenOther = new GridBagConstraints();
+//			gbc_jCheckBoxPathOpenOther.anchor = GridBagConstraints.WEST;
+//			gbc_jCheckBoxPathOpenOther.insets = new Insets(0, 0, 0, 0);
+//			gbc_jCheckBoxPathOpenOther.gridx = 0;
+//			gbc_jCheckBoxPathOpenOther.gridy = 11;
+//			jPanelPathologicalOpen.add(getJCheckBoxPathOpenOther(), gbc_jCheckBoxPathOpenOther);
+//			GridBagConstraints gbc_jScrollPanePathOpenNote = new GridBagConstraints();
+//			gbc_jScrollPanePathOpenNote.insets = new Insets(10, 0, 0, 0);
+//			gbc_jScrollPanePathOpenNote.fill = GridBagConstraints.BOTH;
+//			gbc_jScrollPanePathOpenNote.gridx = 0;
+//			gbc_jScrollPanePathOpenNote.gridy = 12;
+//			jPanelPathologicalOpen.add(getJScrollPanePathOpenNote(), gbc_jScrollPanePathOpenNote);
+//		}
+//		return jPanelPathologicalOpen;
+//	}
 
 	private JPanel getJPanelPathologicalClosed() {
 		if (jPanelPathologicalClosed == null) {
@@ -2341,33 +2341,33 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		return actionExcludePathClosedNothing;
 	}
-
-	private class SwingActionExcludePathOpenNothing extends AbstractAction {
-		/**
-		 *
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public SwingActionExcludePathOpenNothing() {
-			putValue(NAME, "ExcludePathOpenNothing"); //$NON-NLS-1$
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.excludenothingtodeclare")); //$NON-NLS-1$
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			//Update model
-			path.setPatOpenNothing(false);
-			updateModelFromGUI();
-			//Update GUI
-			updateGUIHistory();
-		}
-	}
-
-	private Action getActionExcludePathOpenNothing() {
-		if (actionExcludePathOpenNothing == null) {
-			actionExcludePathOpenNothing = new SwingActionExcludePathOpenNothing();
-		}
-		return actionExcludePathOpenNothing;
-	}
+//
+//	private class SwingActionExcludePathOpenNothing extends AbstractAction {
+//		/**
+//		 *
+//		 */
+//		private static final long serialVersionUID = 1L;
+//
+//		public SwingActionExcludePathOpenNothing() {
+//			putValue(NAME, "ExcludePathOpenNothing"); //$NON-NLS-1$
+//			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.excludenothingtodeclare")); //$NON-NLS-1$
+//		}
+//
+//		public void actionPerformed(ActionEvent e) {
+//			//Update model
+//			path.setPatOpenNothing(false);
+//			updateModelFromGUI();
+//			//Update GUI
+//			updateGUIHistory();
+//		}
+//	}
+//
+//	private Action getActionExcludePathOpenNothing() {
+//		if (actionExcludePathOpenNothing == null) {
+//			actionExcludePathOpenNothing = new SwingActionExcludePathOpenNothing();
+//		}
+//		return actionExcludePathOpenNothing;
+//	}
 
 	private class SwingActionResetFamilyHistory extends AbstractAction {
 		/**
@@ -2441,42 +2441,42 @@ public class PatientHistoryEdit extends JDialog {
 		return actionResetPathClosed;
 	}
 
-	private class SwingActionResetPathOpen extends AbstractAction {
-		/**
-		 *
-		 */
-		private static final long serialVersionUID = 1L;
+//	private class SwingActionResetPathOpen extends AbstractAction {
+//		/**
+//		 *
+//		 */
+//		private static final long serialVersionUID = 1L;
+//
+//		public SwingActionResetPathOpen() {
+//			putValue(NAME, "ResetPathOpen"); //$NON-NLS-1$
+//			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.resetrecentproblems")); //$NON-NLS-1$
+//		}
+//
+//		public void actionPerformed(ActionEvent e) {
+//
+//			// Update model
+//			path.setPatOpenNothing(true);
+//			path.setPatOpenHypertension(false);
+//			path.setPatOpenDrugaddiction(false);
+//			path.setPatOpenCardiovascular(false);
+//			path.setPatOpenInfective(false);
+//			path.setPatOpenEndocrinometabol(false);
+//			path.setPatOpenRespiratory(false);
+//			path.setPatOpenCancer(false);
+//			path.setPatOpenOrto(false);
+//			path.setPatOpenGyno(false);
+//			path.setPatOpenOther(false);
+//			// Update GUI
+//			updateGUIHistory();
+//		}
+//	}
 
-		public SwingActionResetPathOpen() {
-			putValue(NAME, "ResetPathOpen"); //$NON-NLS-1$
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.resetrecentproblems")); //$NON-NLS-1$
-		}
-
-		public void actionPerformed(ActionEvent e) {
-
-			// Update model
-			path.setPatOpenNothing(true);
-			path.setPatOpenHypertension(false);
-			path.setPatOpenDrugaddiction(false);
-			path.setPatOpenCardiovascular(false);
-			path.setPatOpenInfective(false);
-			path.setPatOpenEndocrinometabol(false);
-			path.setPatOpenRespiratory(false);
-			path.setPatOpenCancer(false);
-			path.setPatOpenOrto(false);
-			path.setPatOpenGyno(false);
-			path.setPatOpenOther(false);
-			// Update GUI
-			updateGUIHistory();
-		}
-	}
-
-	private Action getActionResetPathOpen() {
-		if (actionResetPathOpen == null) {
-			actionResetPathOpen = new SwingActionResetPathOpen();
-		}
-		return actionResetPathOpen;
-	}
+//	private Action getActionResetPathOpen() {
+//		if (actionResetPathOpen == null) {
+//			actionResetPathOpen = new SwingActionResetPathOpen();
+//		}
+//		return actionResetPathOpen;
+//	}
 
 	private JPanel getJPanelPhyMenopausePanel() {
 		if (jPanelPhyMenopausePanel == null) {
