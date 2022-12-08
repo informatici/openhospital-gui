@@ -38,6 +38,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import javax.swing.BorderFactory;
@@ -61,6 +62,7 @@ import javax.swing.event.EventListenerList;
 import org.isf.agetype.manager.AgeTypeBrowserManager;
 import org.isf.agetype.model.AgeType;
 import org.isf.anamnesis.gui.PatientHistoryEdit;
+import org.isf.anamnesis.manager.PatientHistoryManager;
 import org.isf.anamnesis.model.PatientHistory;
 import org.isf.anamnesis.model.PatientPatientHistory;
 import org.isf.generaldata.GeneralData;
@@ -94,6 +96,9 @@ public class PatientInsertExtended extends JDialog {
 	private static final long serialVersionUID = -827831581202765055L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientInsertExtended.class);
+	
+
+	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
 
@@ -395,7 +400,8 @@ public class PatientInsertExtended extends JDialog {
 			jAnamnesisButton.addActionListener(actionEvent -> {
 				PatientHistory ph = new PatientHistory();
 				ph.setPatientId(patient.getCode());
-				PatientPatientHistory pph = new PatientPatientHistory(ph, patient);
+				PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
+				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
 				PatientHistoryEdit dialog = new PatientHistoryEdit(PatientInsertExtended.this, pph);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.pack();
