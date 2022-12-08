@@ -967,7 +967,7 @@ if [ $DEMO_DATA = "on" ]; then
 		echo "Found SQL demo database, starting OH in demo mode..."
 		DB_CREATE_SQL=$DB_DEMO
 		# reset database if exists
-		# clean_database;  
+		clean_database;  
 		# set DATABASE_NAME
 		# DATABASE_NAME="ohdemo" # TBD
 		DATABASE_NAME="oh"	

@@ -1075,7 +1075,7 @@ if ( $DEMO_DATA -eq "on" ) {
 	}
 	
 	# reset database if exists
-	#clean_database;
+	clean_database;
 	# set DATABASE_NAME
 	# $script:DATABASE_NAME="ohdemo" # TBD
 	$script:DATABASE_NAME="oh"
