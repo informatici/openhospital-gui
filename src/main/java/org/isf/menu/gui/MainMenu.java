@@ -427,7 +427,11 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		public void addLogoutButton(JButton[] button, int k) {
 			button[k] = new JButton(MessageBundle.getMessage("angal.menu.logout.btn"));
 			button[k].setMnemonic(MessageBundle.getMnemonic("angal.menu.logout.btn.key"));
-			button[k].addActionListener(actionEvent -> UserSession.restartSession());
+			if (!singleUser) {
+				button[k].addActionListener(actionEvent -> UserSession.restartSession());
+			} else {
+				button[k].addActionListener(actionEvent -> actionExit(0));
+			}
 			button[k].setActionCommand("logout");
 		}
 
