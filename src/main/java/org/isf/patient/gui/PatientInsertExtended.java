@@ -394,7 +394,7 @@ public class PatientInsertExtended extends JDialog {
 			PatientInsertExtended self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
 				PatientHistory ph = new PatientHistory();
-				ph.setId(0);
+				ph.setPatientId(patient.getCode());
 				PatientPatientHistory pph = new PatientPatientHistory(ph, patient);
 				PatientHistoryEdit dialog = new PatientHistoryEdit(PatientInsertExtended.this, pph);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
