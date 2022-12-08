@@ -55,10 +55,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.agetype.manager.AgeTypeBrowserManager;
 import org.isf.agetype.model.AgeType;
+import org.isf.anamnesis.gui.PatientHistoryEdit;
+import org.isf.anamnesis.model.PatientHistory;
+import org.isf.anamnesis.model.PatientPatientHistory;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
@@ -79,19 +83,11 @@ import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 /**
- * ------------------------------------------
- * PatientInsertExtended - model for the patient entry
- * -----------------------------------------
- * modification history
- * 11/08/2008 - alessandro - added mother and father names textfield
- * 11/08/2008 - alessandro - changed economicStatut -> hasInsurance
- * 19/08/2008 - mex        - changed educational level with blood type
- * 26/08/2008 - cla		   - added calendar for calculating age
- * 						   - modified age field from int to varchar
- * 28/08/2008 - cla		   - added tooltip for age field and checking name and age for patient editing
- * 05/09/2008 - alex       - added patient code
- * 01/01/2009 - Fabrizio   - modified assignment to age field to set an int value
- * ------------------------------------------
+ * ------------------------------------------ PatientInsertExtended - model for the patient entry ----------------------------------------- modification history
+ * 11/08/2008 - alessandro - added mother and father names textfield 11/08/2008 - alessandro - changed economicStatut -> hasInsurance 19/08/2008 - mex - changed
+ * educational level with blood type 26/08/2008 - cla - added calendar for calculating age - modified age field from int to varchar 28/08/2008 - cla - added
+ * tooltip for age field and checking name and age for patient editing 05/09/2008 - alex - added patient code 01/01/2009 - Fabrizio - modified assignment to age
+ * field to set an int value ------------------------------------------
  */
 public class PatientInsertExtended extends JDialog {
 
@@ -300,6 +296,7 @@ public class PatientInsertExtended extends JDialog {
 	// COMPONENTS: Buttons
 	private JPanel jButtonPanel = null;
 	private JButton jOkButton = null;
+	private JButton jAnamnesisButton = null;
 	private JButton jCancelButton = null;
 
 	private JLabel labelRequiredFields;
@@ -384,9 +381,31 @@ public class PatientInsertExtended extends JDialog {
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJOkButton(), null);
+			jButtonPanel.add(getJAnamnesisButton(), null);
 			jButtonPanel.add(getJCancelButton(), null);
 		}
 		return jButtonPanel;
+	}
+
+	private JButton getJAnamnesisButton() {
+		if (jAnamnesisButton == null) {
+			jAnamnesisButton = new JButton("Anamnesis");
+			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
+			PatientInsertExtended self = this;
+			jAnamnesisButton.addActionListener(actionEvent -> {
+				PatientHistory ph = new PatientHistory();
+				ph.setId(0);
+				PatientPatientHistory pph = new PatientPatientHistory(ph, patient);
+				PatientHistoryEdit dialog = new PatientHistoryEdit(PatientInsertExtended.this, pph);
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				dialog.pack();
+				dialog.setLocationRelativeTo(null);
+				dialog.setLocationRelativeTo(null);
+				dialog.setVisible(true);
+				dialog.setModal(insert);
+				});
+		}
+		return jAnamnesisButton;
 	}
 
 	/**
@@ -420,12 +439,12 @@ public class PatientInsertExtended extends JDialog {
 					try {
 						if (patientBrowserManager.isNamePresent(name)) {
 							switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-								case JOptionPane.OK_OPTION:
-									ok = true;
-									break;
-								case JOptionPane.NO_OPTION:
-									ok = false;
-									break;
+							case JOptionPane.OK_OPTION:
+								ok = true;
+								break;
+							case JOptionPane.NO_OPTION:
+								ok = false;
+								break;
 							}
 						}
 					} catch (OHServiceException ex) {
@@ -1654,12 +1673,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jDataContainPanel == null) {
 			jDataContainPanel = new JPanel();
 			if (!insert) {
-				StringBuilder title = new StringBuilder(patient.getName())
-						.append(" (")
-						.append(MessageBundle.getMessage("angal.common.code.txt"))
-						.append(": ")
-						.append(patient.getCode())
-						.append(")");
+				StringBuilder title = new StringBuilder(patient.getName()).append(" (").append(MessageBundle.getMessage("angal.common.code.txt")).append(": ")
+								.append(patient.getCode()).append(")");
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel, title.toString());
 			} else {
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel, MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
@@ -1710,14 +1725,14 @@ public class PatientInsertExtended extends JDialog {
 			jFatherPanel.add(getJFatherOptions(), BorderLayout.CENTER);
 			if (!insert) {
 				switch (patient.getFather()) {
-					case 'D':
-						getJFatherDead().setSelected(true);
-						break;
-					case 'A':
-						getJFatherAlive().setSelected(true);
-						break;
-					default:
-						break;
+				case 'D':
+					getJFatherDead().setSelected(true);
+					break;
+				case 'A':
+					getJFatherAlive().setSelected(true);
+					break;
+				default:
+					break;
 				}
 			}
 
@@ -1793,14 +1808,14 @@ public class PatientInsertExtended extends JDialog {
 			motherGroup.add(getJMotherUnknown());
 			if (!insert) {
 				switch (patient.getMother()) {
-					case 'D':
-						getJMotherDead().setSelected(true);
-						break;
-					case 'A':
-						getJMotherAlive().setSelected(true);
-						break;
-					default:
-						break;
+				case 'D':
+					getJMotherDead().setSelected(true);
+					break;
+				case 'A':
+					getJMotherAlive().setSelected(true);
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -1875,14 +1890,14 @@ public class PatientInsertExtended extends JDialog {
 			insuranceGroup.add(getJInsuranceUnknown());
 			if (!insert) {
 				switch (patient.getHasInsurance()) {
-					case 'Y':
-						getJInsuranceYes().setSelected(true);
-						break;
-					case 'N':
-						getJInsuranceNo().setSelected(true);
-						break;
-					default:
-						break;
+				case 'Y':
+					getJInsuranceYes().setSelected(true);
+					break;
+				case 'N':
+					getJInsuranceNo().setSelected(true);
+					break;
+				default:
+					break;
 				}
 			}
 			jInsurancePanel.add(groupPanel, BorderLayout.CENTER);
@@ -1945,14 +1960,14 @@ public class PatientInsertExtended extends JDialog {
 			jParentPanel.add(getJParentUnknown());
 			if (!insert) {
 				switch (patient.getParentTogether()) {
-					case 'Y':
-						getJParentYes().setSelected(true);
-						break;
-					case 'N':
-						getJParentNo().setSelected(true);
-						break;
-					default:
-						break;
+				case 'Y':
+					getJParentYes().setSelected(true);
+					break;
+				case 'N':
+					getJParentNo().setSelected(true);
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -2139,9 +2154,9 @@ public class PatientInsertExtended extends JDialog {
 			jNoteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			jNoteScrollPane.setPreferredSize(new Dimension(200, 200));
 			jNoteScrollPane.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patient.note")),
-							BorderFactory.createEmptyBorder(5, 5, 5, 5)),
-					jNoteScrollPane.getBorder()));
+							BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patient.note")),
+											BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+							jNoteScrollPane.getBorder()));
 		}
 		return jNoteScrollPane;
 	}
