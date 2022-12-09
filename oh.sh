@@ -160,13 +160,13 @@ JAVA_DIR=$JAVA_DISTRO
 
 function script_menu {
         # show help / user options
-        echo " ---------------------------------------------------------"
-        echo "|                                                         |"
-        echo "|                   Open Hospital | OH                    |"
-        echo "|                                                         |"
-        echo " ---------------------------------------------------------"
-        echo " lang $OH_LANGUAGE | arch $ARCH | mode $OH_MODE | log level $LOG_LEVEL "
-        echo " ---------------------------------------------------------"
+        echo " -----------------------------------------------------------------"
+        echo "|                                                                 |"
+        echo "|                       Open Hospital | OH                        |"
+        echo "|                                                                 |"
+        echo " -----------------------------------------------------------------"
+        echo " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
+        echo " -----------------------------------------------------------------"
         echo ""
         echo " Usage: $SCRIPT_NAME [ -l en|fr|it|es|pt|ar ] "
         echo ""
@@ -174,7 +174,7 @@ function script_menu {
         echo "   -P    start OH in PORTABLE mode"
 	echo "   -S    start OH in SERVER (Portable) mode"
         echo "   -d    start OH in debug mode"
-        echo "   -D    start OH with Demo data"
+        echo "   -D    initialize OH with Demo data"
         echo "   -g    generate configuration files"
         echo "   -G    setup GSM"
         echo "   -h    show this help"
@@ -626,7 +626,7 @@ function parse_user_input {
 		OH_MODE="CLIENT"
 		echo ""
 		echo "OH_MODE set to CLIENT mode."
-		if (( $2==0 )); then opt="Z"; else read; fi
+		if (( $2==0 )); then opt="Z"; else echo "Press any key to contiune"; read; fi
 		;;
 	###################################################
 	P)	# start in PORTABLE mode
@@ -640,14 +640,14 @@ function parse_user_input {
 		OH_MODE="SERVER"
 		echo ""
 		echo "OH_MODE set to SERVER mode."
-		if (( $2==0 )); then opt="Z"; else read; fi
+		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	d)	# debug
 		LOG_LEVEL=DEBUG
 		echo ""
 		echo "Log level set to $LOG_LEVEL"
-		if (( $2==0 )); then opt="Z"; else read; fi
+		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	D)	# demo mode
@@ -659,8 +659,8 @@ function parse_user_input {
 		else OH_MODE="PORTABLE"
 		fi
 		DEMO_DATA="on"
-		echo "Demo data set to on. Using demo data."
-		if (( $2==0 )); then opt="Z"; else read; fi
+		echo "Demo data set to on. Using Demo data."
+		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	g)	# generate config files
@@ -668,7 +668,7 @@ function parse_user_input {
 		GENERATE_CONFIG_FILES="on"
 		generate_config_files;
 		echo "Done!"
-		if (( $2==0 )); then exit 0; else read;	fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	G)	# set up GSM
@@ -678,12 +678,12 @@ function parse_user_input {
 		java_lib_setup;
 		$JAVA_BIN -Djava.library.path=${NATIVE_LIB_PATH} -classpath "$OH_CLASSPATH" org.isf.utils.sms.SetupGSM "$@"
 		echo "Done!"
-		if (( $2==0 )); then exit 0; else read;	fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	h)	# help
 		script_menu;
-		if (( $2==0 )); then exit 0; else read;	fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	i)	# initialize/install OH database
@@ -711,7 +711,7 @@ function parse_user_input {
 		import_database;
 		test_database_connection;
 		echo "Done!"
-		if (( $2==0 )); then exit 0; else read;	fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	l)	# set language
@@ -719,13 +719,16 @@ function parse_user_input {
 		GENERATE_CONFIG_FILES="on"
 		if (( $2==0 )); then
 			OH_LANGUAGE="$OPTARG"
+			echo "Language set to $OH_LANGUAGE."
 			opt="Z";
 		else
-		read -n 2 -p "Please select language [en|fr|it|es|pt|ar]:" OH_LANGUAGE
+		read -n 2 -p "Please select language [en|fr|it|es|pt|ar]: " OH_LANGUAGE
+			echo ""
+			echo "Language set to $OH_LANGUAGE."
+			echo "Press any key to continue";
 			read;
 		fi
 		set_language;
-		echo "Language set to $OH_LANGUAGE."
 		;;
 	###################################################
 	s)	# save database
@@ -751,7 +754,7 @@ function parse_user_input {
 			shutdown_database;
 		fi
 		echo "Done!"
-		if (( $2==0 )); then exit 0; else read;	fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	r)	# restore database
@@ -780,7 +783,7 @@ function parse_user_input {
 			fi
 	        	echo "Done!"
 		fi
-		if (( $2==0 )); then exit 0; else read;	fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	t)	# test database connection
@@ -791,7 +794,7 @@ function parse_user_input {
 			mysql_check;
 			test_database_connection;
 		fi
-		if (( $2==0 )); then exit 0; else read;	fi
+		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	v)	# show version
@@ -840,7 +843,7 @@ function parse_user_input {
 		echo "OH_LOG_FILE=$OH_LOG_FILE"
 		echo ""
 		
-		if (( $2==0 )); then exit 0; else read;	fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	X)	# clean
@@ -849,7 +852,7 @@ function parse_user_input {
 		clean_files;
 		clean_database;
         	echo "Done!"
-		if (( $2==0 )); then exit 0; else read;	fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	q)	# quit
@@ -884,6 +887,7 @@ function parse_user_input {
 			exit 0;
 		else
 			echo "Invalid option: ${opt}. See $SCRIPT_NAME -h for help"
+			echo "Press any key to continue";
 			read;
 		fi
 		opt="h";
@@ -964,12 +968,12 @@ if [ $DEMO_DATA = "on" ]; then
 	fi
 
 	if [ -f ./$SQL_DIR/$DB_DEMO ]; then
-		echo "Found SQL demo database, starting OH in demo mode..."
+		echo "Found SQL demo database, starting OH with Demo data..."
 		DB_CREATE_SQL=$DB_DEMO
 		# reset database if exists
 		clean_database;  
 		# set DATABASE_NAME
-		# DATABASE_NAME="ohdemo" # TBD
+		#DATABASE_NAME="ohdemo" # TBD
 		DATABASE_NAME="oh"	
 	else
 		echo "Error: no $DB_DEMO found! Exiting."
@@ -1018,7 +1022,6 @@ if [ $OH_MODE = "PORTABLE" ] || [ $OH_MODE = "SERVER" ] ; then
 		start_database;
 	fi
 fi
-
 
 # if SERVER mode is selected, wait for CTRL-C input to exit
 if [ $OH_MODE = "SERVER" ]; then

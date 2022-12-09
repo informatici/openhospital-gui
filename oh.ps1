@@ -236,21 +236,19 @@ $script:JAVA_DIR=$JAVA_DISTRO
 function script_menu {
 	# show menu
 	# Clear-Host # clear console
-	Write-Host " ---------------------------------------------------------"
-	Write-Host "|                                                         |"
-	Write-Host "|                   Open Hospital | OH                    |"
-	Write-Host "|                                                         |"
-	Write-Host " ---------------------------------------------------------"
-	Write-Host ""
-	Write-Host " ---------------------------------------------------------"
-	Write-Host " lang $script:OH_LANGUAGE | arch $ARCH | mode $OH_MODE | log level $LOG_LEVEL "
-	Write-Host " ---------------------------------------------------------"
+        Write-Host " -----------------------------------------------------------------"
+        Write-Host "|                                                                 |"
+        write-Host "|                       Open Hospital | OH                        |"
+        Write-Host "|                                                                 |"
+        write-Host " -----------------------------------------------------------------"
+        Write-Host " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
+        Write-Host " -----------------------------------------------------------------"
 	Write-Host ""
 	Write-Host "   C    start OH in CLIENT mode (client / server configuration)"
 	Write-Host "   P    start OH in PORTABLE mode"
 	Write-Host "   S    start OH in SERVER (Portable) mode"
 	Write-Host "   d    start OH in debug mode"
-	Write-Host "   D    start OH with demo data"
+	Write-Host "   D    initialize OH with Demo data"
 	Write-Host "   g    generate configuration files"
 	Write-Host "   G    setup GSM"
 	Write-Host "   h    show help"
@@ -803,25 +801,25 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		"C"	{ # start in CLIENT mode
 			$script:OH_MODE="CLIENT"
 			Write-Host "OH_MODE set to CLIENT mode." -ForeGroundcolor Green
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"P"	{ # start in PORTABLE mode
 			$script:OH_MODE="PORTABLE"
 			Write-Host "OH_MODE set to PORTABLE mode." -ForeGroundcolor Green
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"S"	{ # start in SERVER (Portable) mode
 			$script:OH_MODE="SERVER"
 			Write-Host "OH_MODE set to SERVER mode." -ForeGroundcolor Green
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"d"	{ # debug 
 			$script:LOG_LEVEL="DEBUG"
 			Write-Host "Log level set to $LOG_LEVEL"
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"D"	{ # demo mode 
@@ -832,15 +830,15 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			}
 			else { $script:OH_MODE="PORTABLE" }
 			$DEMO_DATA="on"
-			Write-Host "Demo data set to on. Using demo data."
-			Read-Host;
+			Write-Host "Demo data set to on. Using Demo data."
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"g"	{ # generate config files and exit
 			$script:GENERATE_CONFIG_FILES="on"
 			generate_config_files;
 			Write-Host "Done!"
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"G"	{ # set up GSM 
@@ -849,7 +847,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			java_lib_setup;
 			Start-Process -FilePath "$JAVA_BIN" -ArgumentList ("-Djava.library.path=${NATIVE_LIB_PATH} -classpath $OH_CLASSPATH org.isf.utils.sms.SetupGSM $@ ") -Wait -NoNewWindow
 			Write-Host "Done!"
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"i"	{ # initialize/install OH database
@@ -875,6 +873,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			import_database;
 			test_database_connection;
 			Write-Host "Done!"
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"h"	{ # show help
@@ -893,7 +892,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host "Select any available option from the menu"
 			Write-Host "Choose CLIENT, PORTABLE or SERVER mode"
 			Write-Host ""
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"l"	{ # set language 
@@ -901,6 +900,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			set_language;
 			Write-Host "Language set to $OH_LANGUAGE."
 			$script:GENERATE_CONFIG_FILES="on"
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"s"	{ # save database
@@ -926,7 +926,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 				shutdown_database;
 			}
 			Write-Host "Done!"
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"r"	{ # restore database
@@ -935,7 +935,6 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			$DB_CREATE_SQL = Read-Host -Prompt "Enter SQL dump/backup file that you want to restore - (in $script:SQL_DIR subdirectory) -> "
 			if ( !(Test-Path "$OH_PATH\$SQL_DIR\$DB_CREATE_SQL" -PathType leaf)) {
 				Write-Host "Error: No SQL file found!" -ForegroundColor Red
-				Read-Host;
 			}
 			else {
 				Write-Host "Found $SQL_DIR/$DB_CREATE_SQL, restoring it..."
@@ -952,9 +951,9 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 					import_database; # TBD for CLIENT mode
 					shutdown_database;
 					Write-Host "Done!"
-			        	Read-Host;
 				}
 			}
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"t"	{ # test database connection 
@@ -964,7 +963,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			}
 			mysql_check;
 			test_database_connection;
-			Read-Host; 
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"v"	{ # show version
@@ -1017,7 +1016,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host "OH_LOG_FILE=$OH_LOG_FILE"
 			Write-Host ""
 
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"X"	{ # clean
@@ -1025,7 +1024,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			clean_files;
 			clean_database;
 			Write-Host "Done!"
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 		}
 		###################################################
 		"q" 	{ # quit
@@ -1044,7 +1043,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		}
 		###################################################
 		default { Write-Host "Invalid option: $opt."; 
-			Read-Host;
+			Write-Host "Press any key to continue"; Read-Host; 
 			break;
 		}
 		}
@@ -1077,7 +1076,7 @@ if ( $DEMO_DATA -eq "on" ) {
 	# reset database if exists
 	clean_database;
 	# set DATABASE_NAME
-	# $script:DATABASE_NAME="ohdemo" # TBD
+	#$script:DATABASE_NAME="ohdemo" # TBD
 	$script:DATABASE_NAME="oh"
 
 	if (Test-Path -Path "$OH_PATH\$SQL_DIR\$DB_DEMO" -PathType leaf) {
