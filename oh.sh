@@ -626,7 +626,7 @@ function parse_user_input {
 		OH_MODE="CLIENT"
 		echo ""
 		echo "OH_MODE set to CLIENT mode."
-		if (( $2==0 )); then opt="Z"; else echo "Press any key to contiune"; read; fi
+		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
 	P)	# start in PORTABLE mode
