@@ -394,7 +394,7 @@ public class PatientInsertExtended extends JDialog {
 
 	private JButton getJAnamnesisButton() {
 		if (jAnamnesisButton == null) {
-			jAnamnesisButton = new JButton("Anamnesis");
+			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			PatientInsertExtended self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
@@ -408,7 +408,8 @@ public class PatientInsertExtended extends JDialog {
 				dialog.setLocationRelativeTo(null);
 				dialog.setModal(insert);
 				dialog.setVisible(true);
-				});
+			});
+		  
 		}
 		return jAnamnesisButton;
 	}

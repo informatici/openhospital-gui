@@ -1685,7 +1685,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	
 	private JButton getJAnamnesisButton() {
 		if (jAnamnesisButton == null) {
-			jAnamnesisButton = new JButton("Anamnesis");
+			JButton jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			OpdEditExtended self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
