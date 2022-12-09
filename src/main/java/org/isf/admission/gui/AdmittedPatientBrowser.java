@@ -748,7 +748,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	}
 	
 	private  JButton getJAnamnesisButton() {
-		JButton jAnamnesisButton = new JButton("Anamnesis");
+		JButton jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
 		jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 		jAnamnesisButton.addActionListener(actionEvent -> {
 			if (table.getSelectedRow() < 0) {

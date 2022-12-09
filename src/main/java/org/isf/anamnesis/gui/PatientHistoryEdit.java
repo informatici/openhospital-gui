@@ -242,7 +242,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private void initComponents() {
-//		loadStp();
+		this.setTitle(MessageBundle.getMessage("angal.anamnesis.title.txt"));
 		setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 		getContentPane().add(getJPanelPatient(), BorderLayout.NORTH);
 		getContentPane().add(getJPanelAnamnesis(), BorderLayout.CENTER);
