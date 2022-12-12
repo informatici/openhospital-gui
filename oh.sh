@@ -79,7 +79,7 @@ DICOM_MAX_SIZE="4M"
 DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 DICOM_DIR="data/dicom_storage"
 
-OH_DIR="oh"
+OH_DIR="."
 OH_DOC_DIR="../doc"
 OH_SINGLE_USER="no" # set "yes" for singleuser
 CONF_DIR="data/conf"
