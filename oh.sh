@@ -79,7 +79,7 @@ DICOM_MAX_SIZE="4M"
 DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 DICOM_DIR="data/dicom_storage"
 
-OH_DIR="."
+OH_DIR="oh"
 OH_DOC_DIR="../doc"
 OH_SINGLE_USER="no" # set "yes" for singleuser
 CONF_DIR="data/conf"
@@ -838,7 +838,7 @@ function parse_user_input {
 		echo ""
 		echo "--------- Software version ---------"
 		source "./$OH_DIR/rsc/version.properties"
-		echo "Open Hospital version" $VER_MAJOR.$VER_MINOR.$VER_RELEASE
+		echo "Open Hospital version:" $VER_MAJOR.$VER_MINOR.$VER_RELEASE
 		echo "$MYSQL_NAME version: $MYSQL_DIR"
 		echo "JAVA version: $JAVA_DISTRO"
 		# show configuration
@@ -893,6 +893,12 @@ function parse_user_input {
 		;;
 	###################################################
 	q)	# quit
+		echo "";
+		echo "Quit pressed. Exiting.";
+		exit 0
+		;;
+	###################################################
+	Q)	# quit
 		echo "";
 		echo "Quit pressed. Exiting.";
 		exit 0
@@ -956,7 +962,7 @@ cd "$OH_PATH"
 # reset in case getopts has been used previously in the shell
 OPTIND=1 
 # list of arguments expected in user input (- option)
-OPTSTRING=":CPSdDgGhil:msrtvXq?" 
+OPTSTRING=":CPSdDgGhil:msrtvXqQ?" 
 
 PASSED_ARGS=$@
 # Parse arguments passed via command line

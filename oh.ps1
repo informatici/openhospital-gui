@@ -996,7 +996,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			$var = $_.Split('=',2).Trim()
 			New-Variable -Force -Scope Private -Name $var[0] -Value $var[1] 
 			}
-			Write-Host "Open Hospital version" $VER_MAJOR $VER_MINOR $VER_RELEASE
+			Write-Host "Open Hospital version:" $VER_MAJOR $VER_MINOR $VER_RELEASE
 			Write-Host "$MYSQL_NAME version: $MYSQL_DIR"
 			Write-Host "JAVA version: $JAVA_DISTRO"
 			Write-Host ""
@@ -1074,7 +1074,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 	Clear-Host;
 	}
 	# execute until quit is pressed or CLIENT/PORTABLE/SERVER mode is select (Z option)
-	until ( ($opt -ceq 'q') -Or ($opt -ceq 'Z') )
+	until ( ($opt -ieq 'q') -Or ($opt -ceq 'Z') )
 }
 
 ######################### OH start ############################
