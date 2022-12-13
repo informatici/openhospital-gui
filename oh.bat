@@ -314,7 +314,6 @@ set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rpt
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\icons
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\images
-set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\rsc\SmsGateway
 set CLASSPATH=%CLASSPATH%;%OH_PATH%\%OH_DIR%\bin\OH-gui.jar
 
 REM # Setup native_lib_path for current architecture
