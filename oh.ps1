@@ -159,6 +159,7 @@ $script:DB_DEMO="create_all_demo.sql"
 # downloaded file extension
 $script:EXT="zip"
 
+################ Other settings ################
 # date format
 $script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
