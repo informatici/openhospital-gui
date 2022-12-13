@@ -21,6 +21,8 @@
  */
 package org.isf.opd.gui;
 
+import static org.isf.hospital.model.Hospital.VISIT_END_TIME;
+import static org.isf.hospital.model.Hospital.VISIT_START_TIME;
 import static org.isf.utils.Constants.DATE_FORMAT_DD_MM_YYYY_HH_MM;
 
 import java.awt.AWTEvent;
@@ -37,7 +39,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -78,6 +82,8 @@ import org.isf.examination.model.GenderPatientExamination;
 import org.isf.examination.model.PatientExamination;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
+import org.isf.hospital.manager.HospitalBrowsingManager;
+import org.isf.hospital.model.Hospital;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
@@ -254,6 +260,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JTextField jOpdNumField = null;
 	private JComboBox<Ward> opdWardBox = null;
 	private JComboBox<Ward> nextVisitWardBox = null;
+	private JButton nextVisitClearButton = null;
 
 	/*
 	 * Managers and Arrays
@@ -265,7 +272,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private VisitManager visitManager = Context.getApplicationContext().getBean(VisitManager.class);
 	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
-	
+	private HospitalBrowsingManager hospitalBrowsingManager = Context.getApplicationContext().getBean(HospitalBrowsingManager.class);
+
 	private List<DiseaseType> types;
 	private List<Disease> diseasesOPD;
 	private List<Disease> diseasesAll;
@@ -274,6 +282,9 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private List<Patient> pat = new ArrayList<>();
 
 	private Disease lastOPDDisease1;
+	private LocalTime visitStartTime;
+	private LocalTime visitEndTime;
+	private int visitDuration;
 
 	/*
 	 * Adds: Textfields and buttons to enable search in diagnosis
@@ -314,6 +325,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
+		getHospitalHours();
 		try {
 			if (!insert) {
 				opdPatient = opd.getPatient();
@@ -344,6 +356,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
 		}
+		getHospitalHours();
 		try {
 			if (!insert) {
 				opdPatient = opd.getPatient();
@@ -359,26 +372,39 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		}
 		initialize();
 	}
-	
+
+	private void getHospitalHours() {
+		Hospital hospital;
+		try {
+			hospital = hospitalBrowsingManager.getHospital();
+			visitStartTime = hospital.getVisitStartTime().toLocalTime();
+			visitEndTime = hospital.getVisitEndTime().toLocalTime();
+		} catch (OHServiceException e) {
+			OHServiceExceptionUtil.showMessages(e);
+			visitStartTime = Time.valueOf(VISIT_START_TIME).toLocalTime();
+			visitEndTime = Time.valueOf(VISIT_END_TIME).toLocalTime();
+		}
+	}
+
 	private void setPatient(Patient p) {
-			jFieldAge.setText(TimeTools.getFormattedAge(p.getBirthDate()));
-			jFieldFirstName.setText(p.getFirstName());
-			jFieldAddress.setText(p.getAddress());
-			jFieldCity.setText(p.getCity());
-			jFieldSecondName.setText(p.getSecondName());
-			jFieldNextKin.setText(p.getNextKin());
-			jPatientNote.setText(opdPatient.getNote());
-			setMyMatteBorder(jPanelPatient, MessageBundle.formatMessage("angal.opd.patientcode.fmt.msg", opdPatient.getCode()));
-			if (p.getSex() == 'M') {
-				radiom.setSelected(true);				
-			} else if (p.getSex() == 'F') {
-				radiof.setSelected(true);			
-			}
-			if (insert) {
-				getLastOpd(p.getCode());
-			}
-			opdNextVisitDate.setEnabled(true);
-			nextVisitWardBox.setEnabled(true);
+		jFieldAge.setText(TimeTools.getFormattedAge(p.getBirthDate()));
+		jFieldFirstName.setText(p.getFirstName());
+		jFieldAddress.setText(p.getAddress());
+		jFieldCity.setText(p.getCity());
+		jFieldSecondName.setText(p.getSecondName());
+		jFieldNextKin.setText(p.getNextKin());
+		jPatientNote.setText(opdPatient.getNote());
+		setMyMatteBorder(jPanelPatient, MessageBundle.formatMessage("angal.opd.patientcode.fmt.msg", opdPatient.getCode()));
+		if (p.getSex() == 'M') {
+			radiom.setSelected(true);
+		} else if (p.getSex() == 'F') {
+			radiof.setSelected(true);
+		}
+		if (insert) {
+			getLastOpd(p.getCode());
+		}
+		opdNextVisitDate.setEnabled(true);
+		nextVisitWardBox.setEnabled(true);
 	}
 	
 	private void resetPatient() {
@@ -530,7 +556,6 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			jPanelCentral.add(getDataPanel());
 			jPanelCentral.add(Box.createVerticalStrut(10));
 			jPanelCentral.add(getJTabbedPaneOpd());
-			
 		}
 		return jPanelCentral;
 	}
@@ -941,6 +966,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		JPanel jNextVisitWardPanel = new JPanel();
 		jNextVisitWardPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.ward.txt")));
 		jNextVisitWardPanel.add(getNextVisitWardBox());
+		jNextVisitWardPanel.add(getNextVisitClearButton());
 		return jNextVisitWardPanel;
 	}
 	
@@ -967,9 +993,20 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JComboBox getNextVisitWardBox() {
 		if (nextVisitWardBox == null) {
 			nextVisitWardBox = new JComboBox();
-			
-			for (Ward elem : wardsList) {
-				nextVisitWardBox.addItem(elem);
+			Patient patient = opd.getPatient();
+			nextVisitWardBox.addItem(null);
+			if (patient != null) {
+				boolean isFemalePatient = patient.getSex() == 'F';
+				boolean isMalePatient = !isFemalePatient;
+				wardsList.stream()
+						.filter(ward -> !(isFemalePatient && !ward.isFemale()))
+						.filter(ward -> !(isMalePatient && !ward.isMale()))
+						.forEach(nextVisitWardBox::addItem);
+			} else {
+				// this is new patient
+				for (Ward elem : wardsList) {
+					nextVisitWardBox.addItem(elem);
+				}
 			}
 			Visit nextVisit = opd.getNextVisit();
 			if (!insert && nextVisit != null) {
@@ -977,15 +1014,22 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			} else {
 				nextVisitWardBox.setSelectedItem(RememberData.getLastOpdWard());
 			}
-			
-			nextVisitWardBox.addItemListener(itemEvent -> {
-				LocalDateTime date = opdNextVisitDate.getLocalDateTime();
-				Ward wardSelected = (Ward) itemEvent.getItem();
-				int duration = wardSelected.getVisitDuration();
 
+			nextVisitWardBox.addItemListener(itemEvent -> {
+				LocalDateTime visitDate = opdNextVisitDate.getLocalDateTimePermissive();
+				Ward wardSelected = (Ward) itemEvent.getItem();
+				int newDuration = wardSelected.getVisitDuration();
 				nextVisitWardBox.setSelectedItem(wardSelected);
 				jPanelData.remove(opdNextVisitDate);
-				opdNextVisitDate = new GoodDateTimeVisitChooser(date, duration);
+				opdNextVisitDate = new GoodDateTimeVisitChooser(null, newDuration, false);
+				if (visitDate != null) {
+					if (newDuration != visitDuration) {
+						opdNextVisitDate.setDate(visitDate.toLocalDate());
+					} else {
+						opdNextVisitDate.setDateTime(visitDate);
+					}
+				}
+				visitDuration = newDuration;
 				jPanelData.add(opdNextVisitDate, gbcOpdNextVisitDate);
 				jPanelData.validate();
 				jPanelData.repaint();
@@ -997,7 +1041,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		}
 		return nextVisitWardBox;
 	}
-	
+
 	private JComboBox getWardBox() {
 		if (opdWardBox == null) {
 			opdWardBox = new JComboBox();
@@ -1217,7 +1261,24 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		}
 		return jTextPatientSrc;
 	}
-	
+	private JButton getNextVisitClearButton() {
+		if (nextVisitClearButton == null) {
+			nextVisitClearButton = new JButton();
+			nextVisitClearButton.setIcon(new ImageIcon("rsc/icons/trash_button.png"));
+			nextVisitClearButton.setBorderPainted(false);
+			nextVisitClearButton.setPreferredSize(new Dimension(20, 20));
+			nextVisitClearButton.addActionListener(actionEvent -> {
+				nextVisitWardBox.setSelectedIndex(0);
+				jPanelData.remove(opdNextVisitDate);
+				opdNextVisitDate = new GoodDateTimeVisitChooser(null, visitDuration, false);
+				jPanelData.add(getOpdNextVisitDate(), gbcOpdNextVisitDate);
+				jPanelData.validate();
+				jPanelData.repaint();
+			});
+		}
+		return nextVisitClearButton;
+	}
+
 	private JButton getJSearchButton() {
 		if (jSearchButton == null) {
 			jSearchButton = new JButton();
@@ -1733,9 +1794,13 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				// nextVisit - the presence of opdNextVisitDate drives the management of the visit linked to the OPD
 				Visit nextVisit = opd.getNextVisit();
 				boolean isNextVisit = false;
-				LocalDateTime nextVisitDateTime = opdNextVisitDate.getLocalDateTime();
+				LocalDateTime nextVisitDateTime = opdNextVisitDate.getLocalDateTimePermissive();
 				if (nextVisitDateTime != null) {
-					if (nextVisitDateTime.compareTo(visitDateOpd) < 0) {
+					if (nextVisitDateTime.getMinute() == 0) {
+						MessageDialog.error(OpdEditExtended.this, "angal.opd.pleasechooseavalidtimeforthenextvisit.msg");
+						return;
+					}
+					if (nextVisitDateTime.isBefore(visitDateOpd)) {
 						MessageDialog.error(OpdEditExtended.this, "angal.opd.cannotsetadateinthepastfornextvisit.msg");
 						return;
 					}
@@ -1748,13 +1813,12 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 					if (nextVisit == null) {
 						nextVisit = new Visit();
 					}
-					nextVisit.setPatient(opd.getPatient());
+					nextVisit.setPatient(opdPatient);
 					nextVisit.setDate(nextVisitDateTime);
 					nextVisit.setWard(ward);
 					nextVisit.setDuration(ward.getVisitDuration());
 					nextVisit.setService(""); // future developments
 					//nextVisit.setNote(); // future developments
-					
 				}
 
 				opd.setNote(jNoteTextArea.getText());
@@ -1788,6 +1852,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 							dispose();
 						} else {
 							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+							return;
 						}
 					} else { // Update
 						if (isNextVisit) {
@@ -1943,20 +2008,20 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 
 			LocalDateTime nextDate = null;
 			Visit nextVisit = opd.getNextVisit();
-			int duration = DEFAULT_VISIT_DURATION;
+			visitDuration = DEFAULT_VISIT_DURATION;
 			if (!insert) {
 				if (nextVisit != null) {
 					nextDate = nextVisit.getDate();
-					duration = nextVisit.getWard().getVisitDuration();
+					visitDuration = nextVisit.getWard().getVisitDuration();
 				} else {
 					Ward selectedWard = RememberData.getLastOpdWard();
 					if (selectedWard != null) {
-						duration = selectedWard.getVisitDuration();
+						visitDuration = selectedWard.getVisitDuration();
 					}
 				}
 			}
 
-			opdNextVisitDate = new GoodDateTimeVisitChooser(nextDate, duration);
+			opdNextVisitDate = new GoodDateTimeVisitChooser(nextDate, visitDuration, false);
 
 			if (opdPatient == null) {
 				opdNextVisitDate.setEnabled(false);
