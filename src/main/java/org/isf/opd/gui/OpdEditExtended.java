@@ -1003,7 +1003,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 						.filter(ward -> !(isMalePatient && !ward.isMale()))
 						.forEach(nextVisitWardBox::addItem);
 			} else {
-				// this is new patient
+				// this is new patient or paitent not selected
 				for (Ward elem : wardsList) {
 					nextVisitWardBox.addItem(elem);
 				}
