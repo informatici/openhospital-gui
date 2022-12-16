@@ -1,23 +1,5 @@
-/*
- * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2021 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+/**
  *
- * Open Hospital is a free and open source software for healthcare data management.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * https://www.gnu.org/licenses/gpl-3.0-standalone.html
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package org.isf.anamnesis.gui;
 
@@ -62,6 +44,7 @@ import org.isf.anamnesis.model.PatientPatientHistory;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
+import org.isf.utils.exception.OHException;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
 import org.isf.utils.jobjects.VoLimitedTextField;
@@ -78,6 +61,7 @@ public class PatientHistoryEdit extends JDialog {
 	private JPanel jPanelAnamnesis;
 	private JPanel jPanelFamily;
 	private JPanel jPanelPathologicalClosed;
+	private JPanel jPanelPathologicalOpen;
 	private JPanel jPanelPathologicalExtra;
 	private JPanel jPanelPathological;
 	private JPanel jPanelPhyHistoryUnisex;
@@ -86,6 +70,8 @@ public class PatientHistoryEdit extends JDialog {
 	private JLabel jLabelFirstNameText;
 	private JLabel jLabelSecondName;
 	private JLabel jLabelSecondNameText;
+	private JLabel jLabelSTPCode;
+	private JLabel jLabelSTPCodeText;
 	private JLabel jLabelPatID;
 	private JLabel jLabelPatIDText;
 
@@ -120,6 +106,22 @@ public class PatientHistoryEdit extends JDialog {
 	private JLabel jLabelPathClosedDiseases;
 	private VoLimitedTextArea jTextAreaPathClosedNote;
 	private JScrollPane jScrollPanePathClosedNote;
+
+//	 PATHOLOGICAL OPEN
+	private JCheckBox jCheckBoxPathOpenNothing;
+	private JCheckBox jCheckBoxPathOpenHypertension;
+	private JCheckBox jCheckBoxPathOpenDrugsAddiction;
+	private JCheckBox jCheckBoxPathOpenCardio;
+	private JCheckBox jCheckBoxPathOpenInfective;
+	private JCheckBox jCheckBoxPathOpenEndo;
+	private JCheckBox jCheckBoxPathOpenRespiratory;
+	private JCheckBox jCheckBoxPathOpenCancer;
+	private JCheckBox jCheckBoxPathOpenOrto;
+	private JCheckBox jCheckBoxPathOpenGyno;
+	private JCheckBox jCheckBoxPathOpenOther;
+	private JLabel jLabelPathOpenDiseases;
+	private VoLimitedTextArea jTextAreaPathOpenNote;
+	private JScrollPane jScrollPanePathOpenNote;
 
 	// PATHOLOGICAL EXTRA
 	private VoLimitedTextArea jTextAreaPathExtraSurgery;
@@ -198,13 +200,16 @@ public class PatientHistoryEdit extends JDialog {
 
 	// Buttons
 	private JButton jButtonSave;
+	private JButton jButtonExamination;
 	private JButton jButtonCancel;
 
 	// Actions in this form
 	private Action actionExcludeFamilyNothing;
 	private Action actionExcludePathClosedNothing;
+	private Action actionExcludePathOpenNothing;
 	private Action actionResetFamilyHistory;
 	private Action actionResetPathClosed;
+	private Action actionResetPathOpen;
 	private Action actionSavePatientHistory;
 
 	// Fonts
@@ -214,6 +219,8 @@ public class PatientHistoryEdit extends JDialog {
 	// Attributes
 	private PatientHistory path;
 	private Patient pat;
+//	private String stp;
+	private Action actionInsertExamination;
 
 	public PatientHistoryEdit() {
 		super();
@@ -242,7 +249,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private void initComponents() {
-		this.setTitle(MessageBundle.getMessage("angal.anamnesis.title.txt"));
+//		loadStp();
 		setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 		getContentPane().add(getJPanelPatient(), BorderLayout.NORTH);
 		getContentPane().add(getJPanelAnamnesis(), BorderLayout.CENTER);
@@ -251,6 +258,21 @@ public class PatientHistoryEdit extends JDialog {
 		updateGUIPatient();
 		updateGUIHistory();
 	}
+
+	/**
+	 * @throws OHException
+	 */
+//	private void loadStp() {
+//		StpOperations stpOp = new StpOperations();
+//		try {
+//			PatientStp stp = stpOp.getByID(pat.getCode());
+//			if (stp != null) {
+//				this.stp = stp.getStp();
+//			}
+//		} catch (OHException e) {
+//			JOptionPane.showMessageDialog(PatientHistoryEdit.this, e.getCause().getMessage());
+//		}
+//	}
 
 	private void updateGUIPatient() {
 		jLabelPatIDText.setText(String.valueOf(path.getId()));
@@ -286,6 +308,19 @@ public class PatientHistoryEdit extends JDialog {
 		jCheckBoxPathClosedGyno.setSelected(path.isPatClosedGyno());
 		jCheckBoxPathClosedOther.setSelected(path.isPatClosedOther());
 		jTextAreaPathClosedNote.setText(path.getPatClosedNote());
+		// Open
+		jCheckBoxPathOpenNothing.setSelected(path.isPatOpenNothing());
+		jCheckBoxPathOpenHypertension.setSelected(path.isPatOpenHypertension());
+		jCheckBoxPathOpenDrugsAddiction.setSelected(path.isPatOpenDrugaddiction());
+		jCheckBoxPathOpenCardio.setSelected(path.isPatOpenCardiovascular());
+		jCheckBoxPathOpenInfective.setSelected(path.isPatOpenInfective());
+		jCheckBoxPathOpenEndo.setSelected(path.isPatOpenEndocrinometabol());
+		jCheckBoxPathOpenRespiratory.setSelected(path.isPatOpenRespiratory());
+		jCheckBoxPathOpenCancer.setSelected(path.isPatOpenCancer());
+		jCheckBoxPathOpenOrto.setSelected(path.isPatOpenOrto());
+		jCheckBoxPathOpenGyno.setSelected(path.isPatOpenGyno());
+		jCheckBoxPathOpenOther.setSelected(path.isPatOpenOther());
+		jTextAreaPathOpenNote.setText(path.getPatOpenNote());
 		// Extra
 		jTextAreaPathExtraSurgery.setText(path.getPatSurgery());
 		jTextAreaPathExtraAllergy.setText(path.getPatAllergy());
@@ -350,6 +385,18 @@ public class PatientHistoryEdit extends JDialog {
 		path.setPatClosedGyno(jCheckBoxPathClosedGyno.isSelected());
 		path.setPatClosedOther(jCheckBoxPathClosedOther.isSelected());
 		path.setPatClosedNote(jTextAreaPathClosedNote.getText());
+		//Open
+		path.setPatOpenHypertension(jCheckBoxPathOpenHypertension.isSelected());
+		path.setPatOpenDrugaddiction(jCheckBoxPathOpenDrugsAddiction.isSelected());
+		path.setPatOpenCardiovascular(jCheckBoxPathOpenCardio.isSelected());
+		path.setPatOpenInfective(jCheckBoxPathOpenInfective.isSelected());
+		path.setPatOpenEndocrinometabol(jCheckBoxPathOpenEndo.isSelected());
+		path.setPatOpenRespiratory(jCheckBoxPathOpenRespiratory.isSelected());
+		path.setPatOpenCancer(jCheckBoxPathOpenCancer.isSelected());
+		path.setPatOpenOrto(jCheckBoxPathOpenOrto.isSelected());
+		path.setPatOpenGyno(jCheckBoxPathOpenGyno.isSelected());
+		path.setPatOpenOther(jCheckBoxPathOpenOther.isSelected());
+		path.setPatOpenNote(jTextAreaPathOpenNote.getText());
 		// Extra
 		path.setPatSurgery(jTextAreaPathExtraSurgery.getText());
 		path.setPatAllergy(jTextAreaPathExtraAllergy.getText());
@@ -399,7 +446,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraNote == null) {
 			jScrollPanePathExtraNote = new JScrollPane();
 			jScrollPanePathExtraNote.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraNote.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.remarks.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jScrollPanePathExtraNote.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.remarks"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			jScrollPanePathExtraNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraNote.setViewportView(getJTextAreaPathExtraNote());
 		}
@@ -410,7 +457,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraSurgery == null) {
 			jScrollPanePathExtraSurgery = new JScrollPane();
 			jScrollPanePathExtraSurgery.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraSurgery.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.surgery.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jScrollPanePathExtraSurgery.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.surgery"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			jScrollPanePathExtraSurgery.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraSurgery.setViewportView(getJTextAreaPathExtraSurgery());
 		}
@@ -421,7 +468,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraAllergy == null) {
 			jScrollPanePathExtraAllergy = new JScrollPane();
 			jScrollPanePathExtraAllergy.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraAllergy.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border.txt"), MessageBundle.getMessage("angal.anamnesis.extra.allergy.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
+			jScrollPanePathExtraAllergy.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.extra.allergy"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
 			jScrollPanePathExtraAllergy.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraAllergy.setViewportView(getJTextAreaPathExtraAllergy());
 		}
@@ -432,7 +479,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraTherapy == null) {
 			jScrollPanePathExtraTherapy = new JScrollPane();
 			jScrollPanePathExtraTherapy.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraTherapy.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.therapy.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jScrollPanePathExtraTherapy.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.therapy"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			jScrollPanePathExtraTherapy.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraTherapy.setViewportView(getJTextAreaPathExtraTherapy());
 		}
@@ -459,7 +506,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathExtraUsualMedicines == null) {
 			jScrollPanePathExtraUsualMedicines = new JScrollPane();
 			jScrollPanePathExtraUsualMedicines.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathExtraUsualMedicines.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.medicine.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jScrollPanePathExtraUsualMedicines.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.extra.medicine"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			jScrollPanePathExtraUsualMedicines.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathExtraUsualMedicines.setViewportView(getJTextAreaPathExtraUsualMedicines());
 		}
@@ -514,6 +561,141 @@ public class PatientHistoryEdit extends JDialog {
 		return jTextAreaPathExtraSurgery;
 	}
 
+	private VoLimitedTextArea getJTextAreaPathOpenNote() {
+		if (jTextAreaPathOpenNote == null) {
+			jTextAreaPathOpenNote = new VoLimitedTextArea(100, 2, 20);
+			jTextAreaPathOpenNote.setLineWrap(true);
+			jTextAreaPathOpenNote.setWrapStyleWord(true);
+			jTextAreaPathOpenNote.setMargin(new Insets(0, 5, 0, 0));
+			jTextAreaPathOpenNote.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					path.setPatOpenNote(jTextAreaPathOpenNote.getText());
+				}
+			});
+		}
+		return jTextAreaPathOpenNote;
+	}
+
+	private JScrollPane getJScrollPanePathOpenNote() {
+		if (jScrollPanePathOpenNote == null) {
+			jScrollPanePathOpenNote = new JScrollPane();
+			jScrollPanePathOpenNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			jScrollPanePathOpenNote.setAlignmentX(Component.LEFT_ALIGNMENT);
+			jScrollPanePathOpenNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.open.remarks"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
+			jScrollPanePathOpenNote.setViewportView(getJTextAreaPathOpenNote());
+		}
+		return jScrollPanePathOpenNote;
+	}
+
+	private JLabel getJLabelPathOpenDiseases() {
+		if (jLabelPathOpenDiseases == null) {
+			jLabelPathOpenDiseases = new JLabel(MessageBundle.getMessage("angal.anamnesis.open.diseases")); //$NON-NLS-1$
+			jLabelPathOpenDiseases.setFont(fontDiseases);
+			jLabelPathOpenDiseases.setHorizontalAlignment(SwingConstants.LEFT);
+		}
+		return jLabelPathOpenDiseases;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenOther() {
+		if (jCheckBoxPathOpenOther == null) {
+			jCheckBoxPathOpenOther = new JCheckBox();
+			jCheckBoxPathOpenOther.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenOther.setText(MessageBundle.getMessage("angal.anamnesis.open.other")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenOther;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenGyno() {
+		if (jCheckBoxPathOpenGyno == null) {
+			jCheckBoxPathOpenGyno = new JCheckBox();
+			jCheckBoxPathOpenGyno.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenGyno.setText(MessageBundle.getMessage("angal.anamnesis.open.gyno")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenGyno;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenOrto() {
+		if (jCheckBoxPathOpenOrto == null) {
+			jCheckBoxPathOpenOrto = new JCheckBox();
+			jCheckBoxPathOpenOrto.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenOrto.setText(MessageBundle.getMessage("angal.anamnesis.open.orto")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenOrto;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenCancer() {
+		if (jCheckBoxPathOpenCancer == null) {
+			jCheckBoxPathOpenCancer = new JCheckBox();
+			jCheckBoxPathOpenCancer.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenCancer.setText(MessageBundle.getMessage("angal.anamnesis.open.neoplastic")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenCancer;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenRespiratory() {
+		if (jCheckBoxPathOpenRespiratory == null) {
+			jCheckBoxPathOpenRespiratory = new JCheckBox();
+			jCheckBoxPathOpenRespiratory.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenRespiratory.setText(MessageBundle.getMessage("angal.anamnesis.open.respiratory")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenRespiratory;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenEndo() {
+		if (jCheckBoxPathOpenEndo == null) {
+			jCheckBoxPathOpenEndo = new JCheckBox();
+			jCheckBoxPathOpenEndo.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenEndo.setText(MessageBundle.getMessage("angal.anamnesis.open.endocrinometabol")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenEndo;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenInfective() {
+		if (jCheckBoxPathOpenInfective == null) {
+			jCheckBoxPathOpenInfective = new JCheckBox();
+			jCheckBoxPathOpenInfective.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenInfective.setText(MessageBundle.getMessage("angal.anamnesis.open.infective")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenInfective;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenCardio() {
+		if (jCheckBoxPathOpenCardio == null) {
+			jCheckBoxPathOpenCardio = new JCheckBox();
+			jCheckBoxPathOpenCardio.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenCardio.setText(MessageBundle.getMessage("angal.anamnesis.open.cardiovascolaris")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenCardio;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenDrugsAddiction() {
+		if (jCheckBoxPathOpenDrugsAddiction == null) {
+			jCheckBoxPathOpenDrugsAddiction = new JCheckBox();
+			jCheckBoxPathOpenDrugsAddiction.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenDrugsAddiction.setText(MessageBundle.getMessage("angal.anamnesis.open.drugsaddiction")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenDrugsAddiction;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenHypertension() {
+		if (jCheckBoxPathOpenHypertension == null) {
+			jCheckBoxPathOpenHypertension = new JCheckBox();
+			jCheckBoxPathOpenHypertension.setAction(getActionExcludePathOpenNothing());
+			jCheckBoxPathOpenHypertension.setText(MessageBundle.getMessage("angal.anamnesis.open.hypertension")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenHypertension;
+	}
+
+	private JCheckBox getJCheckBoxPathOpenNothing() {
+		if (jCheckBoxPathOpenNothing == null) {
+			jCheckBoxPathOpenNothing = new JCheckBox();
+			jCheckBoxPathOpenNothing.setAction(getActionResetPathOpen());
+			jCheckBoxPathOpenNothing.setText(MessageBundle.getMessage("angal.anamnesis.open.nothingtodeclare")); //$NON-NLS-1$
+		}
+		return jCheckBoxPathOpenNothing;
+	}
+
 	private VoLimitedTextArea getJTextAreaPathClosedNote() {
 		if (jTextAreaPathClosedNote == null) {
 			jTextAreaPathClosedNote = new VoLimitedTextArea(100, 2, 20);
@@ -533,7 +715,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPanePathClosedNote == null) {
 			jScrollPanePathClosedNote = new JScrollPane();
 			jScrollPanePathClosedNote.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPanePathClosedNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border.txt"), MessageBundle.getMessage("angal.anamnesis.closed.remarks.border"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
+			jScrollPanePathClosedNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.closed.remarks"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
 			jScrollPanePathClosedNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPanePathClosedNote.setViewportView(getJTextAreaPathClosedNote());
 		}
@@ -542,7 +724,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JLabel getJLabelPathClosedDiseases() {
 		if (jLabelPathClosedDiseases == null) {
-			jLabelPathClosedDiseases = new JLabel(MessageBundle.getMessage("angal.anamnesis.closed.diseases.txt")); //$NON-NLS-1$
+			jLabelPathClosedDiseases = new JLabel(MessageBundle.getMessage("angal.anamnesis.closed.diseases")); //$NON-NLS-1$
 			jLabelPathClosedDiseases.setFont(fontDiseases);
 			jLabelPathClosedDiseases.setHorizontalAlignment(SwingConstants.CENTER);
 		}
@@ -553,7 +735,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedOther == null) {
 			jCheckBoxPathClosedOther = new JCheckBox();
 			jCheckBoxPathClosedOther.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedOther.setText(MessageBundle.getMessage("angal.anamnesis.closed.other.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedOther.setText(MessageBundle.getMessage("angal.anamnesis.closed.other")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedOther;
 	}
@@ -562,7 +744,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedGyno == null) {
 			jCheckBoxPathClosedGyno = new JCheckBox();
 			jCheckBoxPathClosedGyno.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedGyno.setText(MessageBundle.getMessage("angal.anamnesis.closed.gyno.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedGyno.setText(MessageBundle.getMessage("angal.anamnesis.closed.gyno")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedGyno;
 	}
@@ -571,7 +753,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedOrto == null) {
 			jCheckBoxPathClosedOrto = new JCheckBox();
 			jCheckBoxPathClosedOrto.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedOrto.setText(MessageBundle.getMessage("angal.anamnesis.closed.orto.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedOrto.setText(MessageBundle.getMessage("angal.anamnesis.closed.orto")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedOrto;
 	}
@@ -580,7 +762,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedCancer == null) {
 			jCheckBoxPathClosedCancer = new JCheckBox();
 			jCheckBoxPathClosedCancer.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedCancer.setText(MessageBundle.getMessage("angal.anamnesis.closed.neoplastic.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedCancer.setText(MessageBundle.getMessage("angal.anamnesis.closed.neoplastic")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedCancer;
 	}
@@ -589,7 +771,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedRespiratory == null) {
 			jCheckBoxPathClosedRespiratory = new JCheckBox();
 			jCheckBoxPathClosedRespiratory.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedRespiratory.setText(MessageBundle.getMessage("angal.anamnesis.closed.respiratory.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedRespiratory.setText(MessageBundle.getMessage("angal.anamnesis.closed.respiratory")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedRespiratory;
 	}
@@ -598,7 +780,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedEndo == null) {
 			jCheckBoxPathClosedEndo = new JCheckBox();
 			jCheckBoxPathClosedEndo.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedEndo.setText(MessageBundle.getMessage("angal.anamnesis.closed.endocrinometabol.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedEndo.setText(MessageBundle.getMessage("angal.anamnesis.closed.endocrinometabol")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedEndo;
 	}
@@ -607,7 +789,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedInfective == null) {
 			jCheckBoxPathClosedInfective = new JCheckBox();
 			jCheckBoxPathClosedInfective.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedInfective.setText(MessageBundle.getMessage("angal.anamnesis.closed.infective.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedInfective.setText(MessageBundle.getMessage("angal.anamnesis.closed.infective")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedInfective;
 	}
@@ -616,7 +798,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedCardio == null) {
 			jCheckBoxPathClosedCardio = new JCheckBox();
 			jCheckBoxPathClosedCardio.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedCardio.setText(MessageBundle.getMessage("angal.anamnesis.closed.cardiovascolaris.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedCardio.setText(MessageBundle.getMessage("angal.anamnesis.closed.cardiovascolaris")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedCardio;
 	}
@@ -625,7 +807,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedDrugsAddiction == null) {
 			jCheckBoxPathClosedDrugsAddiction = new JCheckBox();
 			jCheckBoxPathClosedDrugsAddiction.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedDrugsAddiction.setText(MessageBundle.getMessage("angal.anamnesis.closed.drugsaddiction.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedDrugsAddiction.setText(MessageBundle.getMessage("angal.anamnesis.closed.drugsaddiction")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedDrugsAddiction;
 	}
@@ -634,7 +816,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedHypertension == null) {
 			jCheckBoxPathClosedHypertension = new JCheckBox();
 			jCheckBoxPathClosedHypertension.setAction(getActionExcludePathClosedNothing());
-			jCheckBoxPathClosedHypertension.setText(MessageBundle.getMessage("angal.anamnesis.closed.hypertension.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedHypertension.setText(MessageBundle.getMessage("angal.anamnesis.closed.hypertension")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedHypertension;
 	}
@@ -643,7 +825,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxPathClosedNothing == null) {
 			jCheckBoxPathClosedNothing = new JCheckBox();
 			jCheckBoxPathClosedNothing.setAction(getActionResetPathClosed());
-			jCheckBoxPathClosedNothing.setText(MessageBundle.getMessage("angal.anamnesis.closed.nothingtodeclare.txt")); //$NON-NLS-1$
+			jCheckBoxPathClosedNothing.setText(MessageBundle.getMessage("angal.anamnesis.closed.nothingtodeclare")); //$NON-NLS-1$
 		}
 		return jCheckBoxPathClosedNothing;
 	}
@@ -668,7 +850,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jScrollPaneFamilyNote == null) {
 			jScrollPaneFamilyNote = new JScrollPane();
 			jScrollPaneFamilyNote.setAlignmentX(Component.LEFT_ALIGNMENT);
-			jScrollPaneFamilyNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border.txt"), MessageBundle.getMessage("angal.anamnesis.family.remarks.txt"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
+			jScrollPaneFamilyNote.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), MessageBundle.getMessage("angal.anamnesis.family.remarks"), TitledBorder.LEADING, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$ //$NON-NLS-2$
 			jScrollPaneFamilyNote.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 			jScrollPaneFamilyNote.setViewportView(getJTextAreaFamilyNote());
 		}
@@ -679,7 +861,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyOther == null) {
 			jCheckBoxFamilyOther = new JCheckBox();
 			jCheckBoxFamilyOther.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyOther.setText(MessageBundle.getMessage("angal.anamnesis.family.other.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyOther.setText(MessageBundle.getMessage("angal.anamnesis.family.other")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyOther;
 	}
@@ -688,7 +870,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyGyno == null) {
 			jCheckBoxFamilyGyno = new JCheckBox();
 			jCheckBoxFamilyGyno.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyGyno.setText(MessageBundle.getMessage("angal.anamnesis.family.gyno.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyGyno.setText(MessageBundle.getMessage("angal.anamnesis.family.gyno")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyGyno;
 	}
@@ -697,7 +879,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyOrto == null) {
 			jCheckBoxFamilyOrto = new JCheckBox();
 			jCheckBoxFamilyOrto.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyOrto.setText(MessageBundle.getMessage("angal.anamnesis.family.orto.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyOrto.setText(MessageBundle.getMessage("angal.anamnesis.family.orto")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyOrto;
 	}
@@ -706,7 +888,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyCancer == null) {
 			jCheckBoxFamilyCancer = new JCheckBox();
 			jCheckBoxFamilyCancer.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyCancer.setText(MessageBundle.getMessage("angal.anamnesis.family.neoplastic.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyCancer.setText(MessageBundle.getMessage("angal.anamnesis.family.neoplastic")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyCancer;
 	}
@@ -715,7 +897,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyRespiratory == null) {
 			jCheckBoxFamilyRespiratory = new JCheckBox();
 			jCheckBoxFamilyRespiratory.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyRespiratory.setText(MessageBundle.getMessage("angal.anamnesis.family.respiratory.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyRespiratory.setText(MessageBundle.getMessage("angal.anamnesis.family.respiratory")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyRespiratory;
 	}
@@ -724,7 +906,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyEndo == null) {
 			jCheckBoxFamilyEndo = new JCheckBox();
 			jCheckBoxFamilyEndo.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyEndo.setText(MessageBundle.getMessage("angal.anamnesis.family.endocrinometabol.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyEndo.setText(MessageBundle.getMessage("angal.anamnesis.family.endocrinometabol")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyEndo;
 	}
@@ -733,7 +915,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyInfective == null) {
 			jCheckBoxFamilyInfective = new JCheckBox();
 			jCheckBoxFamilyInfective.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyInfective.setText(MessageBundle.getMessage("angal.anamnesis.family.infective.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyInfective.setText(MessageBundle.getMessage("angal.anamnesis.family.infective")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyInfective;
 	}
@@ -742,14 +924,14 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyCardio == null) {
 			jCheckBoxFamilyCardio = new JCheckBox();
 			jCheckBoxFamilyCardio.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyCardio.setText(MessageBundle.getMessage("angal.anamnesis.family.cardiovascolaris.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyCardio.setText(MessageBundle.getMessage("angal.anamnesis.family.cardiovascolaris")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyCardio;
 	}
 
 	private JLabel getJLabelFamilyDiseases() {
 		if (jLabelFamilyDiseases == null) {
-			jLabelFamilyDiseases = new JLabel(MessageBundle.getMessage("angal.anamnesis.family.diseases.txt")); //$NON-NLS-1$
+			jLabelFamilyDiseases = new JLabel(MessageBundle.getMessage("angal.anamnesis.family.diseases")); //$NON-NLS-1$
 			jLabelFamilyDiseases.setFont(fontDiseases);
 		}
 		return jLabelFamilyDiseases;
@@ -759,7 +941,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyDrugsAddiction == null) {
 			jCheckBoxFamilyDrugsAddiction = new JCheckBox();
 			jCheckBoxFamilyDrugsAddiction.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyDrugsAddiction.setText(MessageBundle.getMessage("angal.anamnesis.family.drugsaddiction.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyDrugsAddiction.setText(MessageBundle.getMessage("angal.anamnesis.family.drugsaddiction")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyDrugsAddiction;
 	}
@@ -768,7 +950,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyHypertension == null) {
 			jCheckBoxFamilyHypertension = new JCheckBox();
 			jCheckBoxFamilyHypertension.setAction(getActionExludeFamilyNothing());
-			jCheckBoxFamilyHypertension.setText(MessageBundle.getMessage("angal.anamnesis.family.hypertension.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyHypertension.setText(MessageBundle.getMessage("angal.anamnesis.family.hypertension")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyHypertension;
 	}
@@ -777,7 +959,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jCheckBoxFamilyNothing == null) {
 			jCheckBoxFamilyNothing = new JCheckBox();
 			jCheckBoxFamilyNothing.setAction(getActionResetFamilyHistory());
-			jCheckBoxFamilyNothing.setText(MessageBundle.getMessage("angal.anamnesis.family.nothingtodeclare.txt")); //$NON-NLS-1$
+			jCheckBoxFamilyNothing.setText(MessageBundle.getMessage("angal.anamnesis.family.nothingtodeclare")); //$NON-NLS-1$
 		}
 		return jCheckBoxFamilyNothing;
 	}
@@ -797,9 +979,29 @@ public class PatientHistoryEdit extends JDialog {
 		if (jLabelPatID == null) {
 			jLabelPatID = new JLabel();
 			jLabelPatID.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
-			jLabelPatID.setText(MessageBundle.getMessage("angal.anamnesis.patid.txt")); //$NON-NLS-1$
+			jLabelPatID.setText(MessageBundle.getMessage("angal.anamnesis.patid")); //$NON-NLS-1$
 		}
 		return jLabelPatID;
+	}
+
+	private JLabel getJLabelSTPCodeText() {
+		if (jLabelSTPCodeText == null) {
+			jLabelSTPCodeText = new JLabel();
+			jLabelSTPCodeText.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+			jLabelSTPCodeText.setText(""); //$NON-NLS-1$
+			jLabelSTPCodeText.setBackground(Color.WHITE);
+			jLabelSTPCodeText.setOpaque(true);
+		}
+		return jLabelSTPCodeText;
+	}
+
+	private JLabel getJLabelSTPCode() {
+		if (jLabelSTPCode == null) {
+			jLabelSTPCode = new JLabel();
+			jLabelSTPCode.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
+			jLabelSTPCode.setText(MessageBundle.getMessage("angal.anamnesis.stp")); //$NON-NLS-1$
+		}
+		return jLabelSTPCode;
 	}
 
 	private JLabel getJLabelSecondNameText() {
@@ -817,7 +1019,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jLabelSecondName == null) {
 			jLabelSecondName = new JLabel();
 			jLabelSecondName.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
-			jLabelSecondName.setText(MessageBundle.getMessage("angal.anamnesis.secondname.label")); //$NON-NLS-1$
+			jLabelSecondName.setText(MessageBundle.getMessage("angal.anamnesis.secondname")); //$NON-NLS-1$
 		}
 		return jLabelSecondName;
 	}
@@ -838,7 +1040,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jLabelFirstName == null) {
 			jLabelFirstName = new JLabel();
 			jLabelFirstName.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
-			jLabelFirstName.setText(MessageBundle.getMessage("angal.anamnesis.firstname.txlabelt")); //$NON-NLS-1$
+			jLabelFirstName.setText(MessageBundle.getMessage("angal.anamnesis.firstname")); //$NON-NLS-1$
 		}
 		return jLabelFirstName;
 	}
@@ -848,7 +1050,7 @@ public class PatientHistoryEdit extends JDialog {
 			jPanelButtons = new JPanel();
 			jPanelButtons.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 			jPanelButtons.add(getJButtonSave());
-//			jPanelButtons.add(getJButtonExamination());
+			jPanelButtons.add(getJButtonExamination());
 			jPanelButtons.add(getJButtonCancel());
 		}
 		return jPanelButtons;
@@ -1010,10 +1212,102 @@ public class PatientHistoryEdit extends JDialog {
 		return jPanelPathologicalExtra;
 	}
 
+	private JPanel getJPanelPathologicalOpen() {
+		if (jPanelPathologicalOpen == null) {
+			jPanelPathologicalOpen = new JPanel();
+			jPanelPathologicalOpen.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.open.recentproblems"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			GridBagLayout gbl_jPanelPathologicalOpen = new GridBagLayout();
+			gbl_jPanelPathologicalOpen.columnWidths = new int[] { 0 };
+			gbl_jPanelPathologicalOpen.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+			gbl_jPanelPathologicalOpen.columnWeights = new double[] { 1.0 };
+			gbl_jPanelPathologicalOpen.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+			jPanelPathologicalOpen.setLayout(gbl_jPanelPathologicalOpen);
+			GridBagConstraints gbc_jCheckBoxPathOpenNothing = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenNothing.fill = GridBagConstraints.BOTH;
+			gbc_jCheckBoxPathOpenNothing.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPathOpenNothing.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenNothing.gridx = 0;
+			gbc_jCheckBoxPathOpenNothing.gridy = 0;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenNothing(), gbc_jCheckBoxPathOpenNothing);
+			GridBagConstraints gbc_jCheckBoxPathOpenHypertension = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenHypertension.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jCheckBoxPathOpenHypertension.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenHypertension.gridx = 0;
+			gbc_jCheckBoxPathOpenHypertension.gridy = 1;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenHypertension(), gbc_jCheckBoxPathOpenHypertension);
+			GridBagConstraints gbc_jCheckBoxPathOpenDrugsAddiction = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenDrugsAddiction.fill = GridBagConstraints.HORIZONTAL;
+			gbc_jCheckBoxPathOpenDrugsAddiction.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenDrugsAddiction.gridx = 0;
+			gbc_jCheckBoxPathOpenDrugsAddiction.gridy = 2;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenDrugsAddiction(), gbc_jCheckBoxPathOpenDrugsAddiction);
+			GridBagConstraints gbc_jLabelPathOpenDiseases = new GridBagConstraints();
+			gbc_jLabelPathOpenDiseases.insets = new Insets(5, 0, 0, 0);
+			gbc_jLabelPathOpenDiseases.gridx = 0;
+			gbc_jLabelPathOpenDiseases.gridy = 3;
+			jPanelPathologicalOpen.add(getJLabelPathOpenDiseases(), gbc_jLabelPathOpenDiseases);
+			GridBagConstraints gbc_jCheckBoxPathOpenCardio = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenCardio.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPathOpenCardio.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenCardio.gridx = 0;
+			gbc_jCheckBoxPathOpenCardio.gridy = 4;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenCardio(), gbc_jCheckBoxPathOpenCardio);
+			GridBagConstraints gbc_jCheckBoxPathOpenInfective = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenInfective.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPathOpenInfective.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenInfective.gridx = 0;
+			gbc_jCheckBoxPathOpenInfective.gridy = 5;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenInfective(), gbc_jCheckBoxPathOpenInfective);
+			GridBagConstraints gbc_jCheckBoxPathOpenEndo = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenEndo.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPathOpenEndo.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenEndo.gridx = 0;
+			gbc_jCheckBoxPathOpenEndo.gridy = 6;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenEndo(), gbc_jCheckBoxPathOpenEndo);
+			GridBagConstraints gbc_jCheckBoxPathOpenRespiratory = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenRespiratory.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPathOpenRespiratory.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenRespiratory.gridx = 0;
+			gbc_jCheckBoxPathOpenRespiratory.gridy = 7;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenRespiratory(), gbc_jCheckBoxPathOpenRespiratory);
+			GridBagConstraints gbc_jCheckBoxPathOpenCancer = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenCancer.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPathOpenCancer.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenCancer.gridx = 0;
+			gbc_jCheckBoxPathOpenCancer.gridy = 8;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenCancer(), gbc_jCheckBoxPathOpenCancer);
+			GridBagConstraints gbc_jCheckBoxPathOpenOrto = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenOrto.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPathOpenOrto.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenOrto.gridx = 0;
+			gbc_jCheckBoxPathOpenOrto.gridy = 9;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenOrto(), gbc_jCheckBoxPathOpenOrto);
+			GridBagConstraints gbc_jCheckBoxPathOpenGyno = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenGyno.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPathOpenGyno.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenGyno.gridx = 0;
+			gbc_jCheckBoxPathOpenGyno.gridy = 10;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenGyno(), gbc_jCheckBoxPathOpenGyno);
+			GridBagConstraints gbc_jCheckBoxPathOpenOther = new GridBagConstraints();
+			gbc_jCheckBoxPathOpenOther.anchor = GridBagConstraints.WEST;
+			gbc_jCheckBoxPathOpenOther.insets = new Insets(0, 0, 0, 0);
+			gbc_jCheckBoxPathOpenOther.gridx = 0;
+			gbc_jCheckBoxPathOpenOther.gridy = 11;
+			jPanelPathologicalOpen.add(getJCheckBoxPathOpenOther(), gbc_jCheckBoxPathOpenOther);
+			GridBagConstraints gbc_jScrollPanePathOpenNote = new GridBagConstraints();
+			gbc_jScrollPanePathOpenNote.insets = new Insets(10, 0, 0, 0);
+			gbc_jScrollPanePathOpenNote.fill = GridBagConstraints.BOTH;
+			gbc_jScrollPanePathOpenNote.gridx = 0;
+			gbc_jScrollPanePathOpenNote.gridy = 12;
+			jPanelPathologicalOpen.add(getJScrollPanePathOpenNote(), gbc_jScrollPanePathOpenNote);
+		}
+		return jPanelPathologicalOpen;
+	}
+
 	private JPanel getJPanelPathologicalClosed() {
 		if (jPanelPathologicalClosed == null) {
 			jPanelPathologicalClosed = new JPanel();
-			jPanelPathologicalClosed.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.closed.pastproblems.border"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jPanelPathologicalClosed.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.closed.pastproblems"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			GridBagLayout gbl_jPanelPathologicalClosed = new GridBagLayout();
 			gbl_jPanelPathologicalClosed.columnWidths = new int[] { 0 };
 			gbl_jPanelPathologicalClosed.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -1104,7 +1398,7 @@ public class PatientHistoryEdit extends JDialog {
 	private JPanel getJPanelFamily() {
 		if (jPanelFamily == null) {
 			jPanelFamily = new JPanel();
-			jPanelFamily.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.family.familyhistory.border"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jPanelFamily.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.family.familyhistory"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			GridBagLayout gbl_jPanelFamily = new GridBagLayout();
 			gbl_jPanelFamily.columnWidths = new int[] { 0 };
 			gbl_jPanelFamily.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -1206,7 +1500,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jPanelPatient == null) {
 			jPanelPatient = new JPanel();
 			jPanelPatient.setBackground(Color.WHITE);
-			jPanelPatient.setBorder(BorderFactory.createTitledBorder(null, MessageBundle.getMessage("angal.anamnesis.patient.txt"), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, null, null)); //$NON-NLS-1$
+			jPanelPatient.setBorder(BorderFactory.createTitledBorder(null, MessageBundle.getMessage("angal.anamnesis.patient"), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, null, null)); //$NON-NLS-1$
 			GridBagLayout gbl_jPanelPatient = new GridBagLayout();
 			gbl_jPanelPatient.columnWidths = new int[] { 0, 100, 0, 150, 0, 150, 0, 150 };
 			gbl_jPanelPatient.rowHeights = new int[] { 20 };
@@ -1249,6 +1543,19 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jLabelSecondNameText.gridx = 5;
 			gbc_jLabelSecondNameText.gridy = 0;
 			jPanelPatient.add(getJLabelSecondNameText(), gbc_jLabelSecondNameText);
+			GridBagConstraints gbc_jLabelSTPCode = new GridBagConstraints();
+			gbc_jLabelSTPCode.anchor = GridBagConstraints.EAST;
+			gbc_jLabelSTPCode.fill = GridBagConstraints.VERTICAL;
+			gbc_jLabelSTPCode.insets = new Insets(0, 0, 5, 5);
+			gbc_jLabelSTPCode.gridx = 6;
+			gbc_jLabelSTPCode.gridy = 0;
+			jPanelPatient.add(getJLabelSTPCode(), gbc_jLabelSTPCode);
+			GridBagConstraints gbc_jLabelSTPCodeText = new GridBagConstraints();
+			gbc_jLabelSTPCodeText.insets = new Insets(0, 0, 5, 5);
+			gbc_jLabelSTPCodeText.fill = GridBagConstraints.BOTH;
+			gbc_jLabelSTPCodeText.gridx = 7;
+			gbc_jLabelSTPCodeText.gridy = 0;
+			jPanelPatient.add(getJLabelSTPCodeText(), gbc_jLabelSTPCodeText);
 		}
 		return jPanelPatient;
 	}
@@ -1268,49 +1575,49 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JLabel getJLabelPhyDiet() {
 		if (jLabelPhyDiet == null) {
-			jLabelPhyDiet = new JLabel(MessageBundle.getMessage("angal.anamnesis.diet.txt")); //$NON-NLS-1$
+			jLabelPhyDiet = new JLabel(MessageBundle.getMessage("angal.anamnesis.diet")); //$NON-NLS-1$
 		}
 		return jLabelPhyDiet;
 	}
 
 	private JLabel getJLabelPhyAlvo() {
 		if (jLabelPhyAlvo == null) {
-			jLabelPhyAlvo = new JLabel(MessageBundle.getMessage("angal.anamnesis.alvo.txt")); //$NON-NLS-1$
+			jLabelPhyAlvo = new JLabel(MessageBundle.getMessage("angal.anamnesis.alvo")); //$NON-NLS-1$
 		}
 		return jLabelPhyAlvo;
 	}
 
 	private JLabel getJLabelPhyDiuresis() {
 		if (jLabelPhyDiuresis == null) {
-			jLabelPhyDiuresis = new JLabel(MessageBundle.getMessage("angal.anamnesis.diuresis.txt")); //$NON-NLS-1$
+			jLabelPhyDiuresis = new JLabel(MessageBundle.getMessage("angal.anamnesis.diuresis")); //$NON-NLS-1$
 		}
 		return jLabelPhyDiuresis;
 	}
 
 	private JLabel getJLabelPhyAlcool() {
 		if (jLabelPhyAlcool == null) {
-			jLabelPhyAlcool = new JLabel(MessageBundle.getMessage("angal.anamnesis.alcool.txt")); //$NON-NLS-1$
+			jLabelPhyAlcool = new JLabel(MessageBundle.getMessage("angal.anamnesis.alcool")); //$NON-NLS-1$
 		}
 		return jLabelPhyAlcool;
 	}
 
 	private JLabel getJLabelPhySmoke() {
 		if (jLabelPhySmoke == null) {
-			jLabelPhySmoke = new JLabel(MessageBundle.getMessage("angal.anamnesis.smoke.txt")); //$NON-NLS-1$
+			jLabelPhySmoke = new JLabel(MessageBundle.getMessage("angal.anamnesis.smoke")); //$NON-NLS-1$
 		}
 		return jLabelPhySmoke;
 	}
 
 	private JLabel getJLabelPhyDrugs() {
 		if (jLabelPhyDrugs == null) {
-			jLabelPhyDrugs = new JLabel(MessageBundle.getMessage("angal.anamnesis.drugs.txt")); //$NON-NLS-1$
+			jLabelPhyDrugs = new JLabel(MessageBundle.getMessage("angal.anamnesis.drugs")); //$NON-NLS-1$
 		}
 		return jLabelPhyDrugs;
 	}
 
 	private JCheckBox getJCheckBoxPhyDietNormal() {
 		if (jCheckBoxPhyDietNormal == null) {
-			jCheckBoxPhyDietNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diet.normal.txt")); //$NON-NLS-1$
+			jCheckBoxPhyDietNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diet.normal")); //$NON-NLS-1$
 			buttonGroupDiet.add(jCheckBoxPhyDietNormal);
 			jCheckBoxPhyDietNormal.addActionListener(new ActionListener() {
 
@@ -1325,7 +1632,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyDietAbnormal() {
 		if (jCheckBoxPhyDietAbnormal == null) {
-			jCheckBoxPhyDietAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diet.other.txt")); //$NON-NLS-1$
+			jCheckBoxPhyDietAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diet.other")); //$NON-NLS-1$
 			buttonGroupDiet.add(jCheckBoxPhyDietAbnormal);
 			jCheckBoxPhyDietAbnormal.addActionListener(new ActionListener() {
 
@@ -1341,7 +1648,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyAlvoNormal() {
 		if (jCheckBoxPhyAlvoNormal == null) {
-			jCheckBoxPhyAlvoNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alvo.normal.txt")); //$NON-NLS-1$
+			jCheckBoxPhyAlvoNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alvo.normal")); //$NON-NLS-1$
 			buttonGroupAlvo.add(jCheckBoxPhyAlvoNormal);
 			jCheckBoxPhyAlvoNormal.addActionListener(new ActionListener() {
 
@@ -1356,7 +1663,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyAlvoAbnormal() {
 		if (jCheckBoxPhyAlvoAbnormal == null) {
-			jCheckBoxPhyAlvoAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alvo.other.txt")); //$NON-NLS-1$
+			jCheckBoxPhyAlvoAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alvo.other")); //$NON-NLS-1$
 			buttonGroupAlvo.add(jCheckBoxPhyAlvoAbnormal);
 			jCheckBoxPhyAlvoAbnormal.addActionListener(new ActionListener() {
 
@@ -1372,7 +1679,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyDiuresisNormal() {
 		if (jCheckBoxPhyDiuresisNormal == null) {
-			jCheckBoxPhyDiuresisNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diuresis.normal.txt")); //$NON-NLS-1$
+			jCheckBoxPhyDiuresisNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diuresis.normal")); //$NON-NLS-1$
 			buttonGroupDiuresis.add(jCheckBoxPhyDiuresisNormal);
 			jCheckBoxPhyDiuresisNormal.addActionListener(new ActionListener() {
 
@@ -1387,7 +1694,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyDiuresisAbnormal() {
 		if (jCheckBoxPhyDiuresisAbnormal == null) {
-			jCheckBoxPhyDiuresisAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diuresis.other.txt")); //$NON-NLS-1$
+			jCheckBoxPhyDiuresisAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.diuresis.other")); //$NON-NLS-1$
 			buttonGroupDiuresis.add(jCheckBoxPhyDiuresisAbnormal);
 			jCheckBoxPhyDiuresisAbnormal.addActionListener(new ActionListener() {
 
@@ -1404,7 +1711,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyAlcoolNo() {
 		if (jCheckBoxPhyAlcoolNo == null) {
-			jCheckBoxPhyAlcoolNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.no.txt")); //$NON-NLS-1$
+			jCheckBoxPhyAlcoolNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.no")); //$NON-NLS-1$
 			buttonGroupAlcool.add(jCheckBoxPhyAlcoolNo);
 			jCheckBoxPhyAlcoolNo.addActionListener(new ActionListener() {
 
@@ -1419,7 +1726,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhySmokeNo() {
 		if (jCheckBoxPhySmokeNo == null) {
-			jCheckBoxPhySmokeNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.smoke.no.txt")); //$NON-NLS-1$
+			jCheckBoxPhySmokeNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.smoke.no")); //$NON-NLS-1$
 			buttonGroupSmoke.add(jCheckBoxPhySmokeNo);
 			jCheckBoxPhySmokeNo.addActionListener(new ActionListener() {
 
@@ -1434,7 +1741,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyDrugsNo() {
 		if (jCheckBoxPhyDrugsNo == null) {
-			jCheckBoxPhyDrugsNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.drugs.no.txt")); //$NON-NLS-1$
+			jCheckBoxPhyDrugsNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.drugs.no")); //$NON-NLS-1$
 			buttonGroupDrugs.add(jCheckBoxPhyDrugsNo);
 			jCheckBoxPhyDrugsNo.addActionListener(new ActionListener() {
 
@@ -1451,7 +1758,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyAlcoolYes() {
 		if (jCheckBoxPhyAlcoolYes == null) {
-			jCheckBoxPhyAlcoolYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes.txt")); //$NON-NLS-1$
+			jCheckBoxPhyAlcoolYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes")); //$NON-NLS-1$
 			buttonGroupAlcool.add(jCheckBoxPhyAlcoolYes);
 			jCheckBoxPhyAlcoolYes.addActionListener(new ActionListener() {
 
@@ -1466,7 +1773,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhySmokeYes() {
 		if (jCheckBoxPhySmokeYes == null) {
-			jCheckBoxPhySmokeYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes.txt")); //$NON-NLS-1$
+			jCheckBoxPhySmokeYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes")); //$NON-NLS-1$
 			buttonGroupSmoke.add(jCheckBoxPhySmokeYes);
 			jCheckBoxPhySmokeYes.addActionListener(new ActionListener() {
 
@@ -1481,7 +1788,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyDrugsYes() {
 		if (jCheckBoxPhyDrugsYes == null) {
-			jCheckBoxPhyDrugsYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes.txt")); //$NON-NLS-1$
+			jCheckBoxPhyDrugsYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.alcool.yes")); //$NON-NLS-1$
 			buttonGroupDrugs.add(jCheckBoxPhyDrugsYes);
 			jCheckBoxPhyDrugsYes.addActionListener(new ActionListener() {
 
@@ -1556,21 +1863,21 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JLabel getJLabelPhyPeriod() {
 		if (jLabelPhyPeriod == null) {
-			jLabelPhyPeriod = new JLabel(MessageBundle.getMessage("angal.anamnesis.period.txt")); //$NON-NLS-1$
+			jLabelPhyPeriod = new JLabel(MessageBundle.getMessage("angal.anamnesis.period")); //$NON-NLS-1$
 		}
 		return jLabelPhyPeriod;
 	}
 
 	private JLabel getJLabelPhyMenopause() {
 		if (jLabelPhyMenopause == null) {
-			jLabelPhyMenopause = new JLabel(MessageBundle.getMessage("angal.anamnesis.menopause.txt")); //$NON-NLS-1$
+			jLabelPhyMenopause = new JLabel(MessageBundle.getMessage("angal.anamnesis.menopause")); //$NON-NLS-1$
 		}
 		return jLabelPhyMenopause;
 	}
 
 	private JLabel getJLabelPhyPregnancies() {
 		if (jLabelPhyPregnancies == null) {
-			jLabelPhyPregnancies = new JLabel(MessageBundle.getMessage("angal.anamnesis.pregnancies.txt")); //$NON-NLS-1$
+			jLabelPhyPregnancies = new JLabel(MessageBundle.getMessage("angal.anamnesis.pregnancies")); //$NON-NLS-1$
 		}
 		return jLabelPhyPregnancies;
 	}
@@ -1578,7 +1885,7 @@ public class PatientHistoryEdit extends JDialog {
 	private JPanel getJPanelPhysiologicalHistory() {
 		if (jPanelPhysiologicalHistory == null) {
 			jPanelPhysiologicalHistory = new JPanel();
-			jPanelPhysiologicalHistory.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.physiologicalhistory.txt"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
+			jPanelPhysiologicalHistory.setBorder(new TitledBorder(null, MessageBundle.getMessage("angal.anamnesis.physiologicalhistory"), TitledBorder.CENTER, TitledBorder.TOP, fontBoldTitleBorder, null)); //$NON-NLS-1$
 			jPanelPhysiologicalHistory.setLayout(new BoxLayout(jPanelPhysiologicalHistory, BoxLayout.X_AXIS));
 			jPanelPhysiologicalHistory.add(getJPanelPhyHistoryUnisex());
 			jPanelPhysiologicalHistory.add(getJPanelPhyHistoryFemale());
@@ -1694,14 +2001,14 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JLabel getJLabelPhyHRT() {
 		if (jLabelPhyHRT == null) {
-			jLabelPhyHRT = new JLabel(MessageBundle.getMessage("angal.anamnesis.hrt.txt")); //$NON-NLS-1$
+			jLabelPhyHRT = new JLabel(MessageBundle.getMessage("angal.anamnesis.hrt")); //$NON-NLS-1$
 		}
 		return jLabelPhyHRT;
 	}
 
 	private JCheckBox getJCheckBoxPeriodNormal() {
 		if (jCheckBoxPhyPeriodNormal == null) {
-			jCheckBoxPhyPeriodNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.period.normal.txt")); //$NON-NLS-1$
+			jCheckBoxPhyPeriodNormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.period.normal")); //$NON-NLS-1$
 			buttonGroupPeriod.add(jCheckBoxPhyPeriodNormal);
 			jCheckBoxPhyPeriodNormal.addActionListener(new ActionListener() {
 
@@ -1716,7 +2023,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPeriodAbnormal() {
 		if (jCheckBoxPhyPeriodAbnormal == null) {
-			jCheckBoxPhyPeriodAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.period.other.txt")); //$NON-NLS-1$
+			jCheckBoxPhyPeriodAbnormal = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.period.other")); //$NON-NLS-1$
 			buttonGroupPeriod.add(jCheckBoxPhyPeriodAbnormal);
 			jCheckBoxPhyPeriodAbnormal.addActionListener(new ActionListener() {
 
@@ -1752,7 +2059,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyMenopauseNo() {
 		if (jCheckBoxPhyMenopauseNo == null) {
-			jCheckBoxPhyMenopauseNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.menopause.no.txt")); //$NON-NLS-1$
+			jCheckBoxPhyMenopauseNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.menopause.no")); //$NON-NLS-1$
 			buttonGroupMenopause.add(jCheckBoxPhyMenopauseNo);
 			jCheckBoxPhyMenopauseNo.addActionListener(new ActionListener() {
 
@@ -1767,7 +2074,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyMenopauseYes() {
 		if (jCheckBoxPhyMenopauseYes == null) {
-			jCheckBoxPhyMenopauseYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.menopause.yes.txt")); //$NON-NLS-1$
+			jCheckBoxPhyMenopauseYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.menopause.yes")); //$NON-NLS-1$
 			buttonGroupMenopause.add(jCheckBoxPhyMenopauseYes);
 			jCheckBoxPhyMenopauseYes.addActionListener(new ActionListener() {
 
@@ -1803,7 +2110,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyHRTNo() {
 		if (jCheckBoxPhyHRTNo == null) {
-			jCheckBoxPhyHRTNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.hrt.no.txt")); //$NON-NLS-1$
+			jCheckBoxPhyHRTNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.hrt.no")); //$NON-NLS-1$
 			buttonGroupHRT.add(jCheckBoxPhyHRTNo);
 			jCheckBoxPhyHRTNo.addActionListener(new ActionListener() {
 
@@ -1818,7 +2125,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyHRTYes() {
 		if (jCheckBoxPhyHRTYes == null) {
-			jCheckBoxPhyHRTYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.hrt.yes.txt")); //$NON-NLS-1$
+			jCheckBoxPhyHRTYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.hrt.yes")); //$NON-NLS-1$
 			buttonGroupHRT.add(jCheckBoxPhyHRTYes);
 			jCheckBoxPhyHRTYes.addActionListener(new ActionListener() {
 
@@ -1868,7 +2175,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyPregnancyNo() {
 		if (jCheckBoxPhyPregnancyNo == null) {
-			jCheckBoxPhyPregnancyNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.pregnancies.no.txt")); //$NON-NLS-1$
+			jCheckBoxPhyPregnancyNo = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.pregnancies.no")); //$NON-NLS-1$
 			buttonGroupPregnancy.add(jCheckBoxPhyPregnancyNo);
 			jCheckBoxPhyPregnancyNo.addActionListener(new ActionListener() {
 
@@ -1883,7 +2190,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JCheckBox getJCheckBoxPhyPregnancyYes() {
 		if (jCheckBoxPhyPregnancyYes == null) {
-			jCheckBoxPhyPregnancyYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.pregnancies.yes.txt")); //$NON-NLS-1$
+			jCheckBoxPhyPregnancyYes = new JCheckBox(MessageBundle.getMessage("angal.anamnesis.pregnancies.yes")); //$NON-NLS-1$
 			buttonGroupPregnancy.add(jCheckBoxPhyPregnancyYes);
 			jCheckBoxPhyPregnancyYes.addActionListener(new ActionListener() {
 
@@ -1899,7 +2206,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JLabel getJLabelPhyPregnancyNumber() {
 		if (jLabelPhyPregnancyNumber == null) {
-			jLabelPhyPregnancyNumber = new JLabel(MessageBundle.getMessage("angal.anamnesis.pregnancies.nr.txt")); //$NON-NLS-1$
+			jLabelPhyPregnancyNumber = new JLabel(MessageBundle.getMessage("angal.anamnesis.pregnancies.nr")); //$NON-NLS-1$
 			jLabelPhyPregnancyNumber.setHorizontalAlignment(SwingConstants.RIGHT);
 		}
 		return jLabelPhyPregnancyNumber;
@@ -1927,7 +2234,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JLabel getJLabelPhyPregnancyDeliveryNumber() {
 		if (jLabelPhyPregnancyDeliveryNumber == null) {
-			jLabelPhyPregnancyDeliveryNumber = new JLabel(MessageBundle.getMessage("angal.anamnesis.pregnancies.delivery.txt")); //$NON-NLS-1$
+			jLabelPhyPregnancyDeliveryNumber = new JLabel(MessageBundle.getMessage("angal.anamnesis.pregnancies.delivery")); //$NON-NLS-1$
 			jLabelPhyPregnancyDeliveryNumber.setHorizontalAlignment(SwingConstants.RIGHT);
 		}
 		return jLabelPhyPregnancyDeliveryNumber;
@@ -1955,7 +2262,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JLabel getJLabelPhyPregnancyAbortNumber() {
 		if (jLabelPhyPregnancyAbortNumber == null) {
-			jLabelPhyPregnancyAbortNumber = new JLabel(MessageBundle.getMessage("angal.anamnesis.pregnancies.abort.txt")); //$NON-NLS-1$
+			jLabelPhyPregnancyAbortNumber = new JLabel(MessageBundle.getMessage("angal.anamnesis.pregnancies.abort")); //$NON-NLS-1$
 			jLabelPhyPregnancyAbortNumber.setHorizontalAlignment(SwingConstants.RIGHT);
 		}
 		return jLabelPhyPregnancyAbortNumber;
@@ -1989,7 +2296,7 @@ public class PatientHistoryEdit extends JDialog {
 
 		public SwingActionExcludeFamilyNothing() {
 			putValue(NAME, "ExcludeFamilyNothing"); //$NON-NLS-1$
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.family.excludenothingtodeclare.tooltip")); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.family.tooltip.excludenothingtodeclare")); //$NON-NLS-1$
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -2016,7 +2323,7 @@ public class PatientHistoryEdit extends JDialog {
 
 		public SwingActionExcludePathClosedNothing() {
 			putValue(NAME, "ExcludePathClosedNothing"); //$NON-NLS-1$
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.closed.excludenothingtodeclare.tooltip")); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.closed.tooltip.excludenothingtodeclare")); //$NON-NLS-1$
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -2035,6 +2342,33 @@ public class PatientHistoryEdit extends JDialog {
 		return actionExcludePathClosedNothing;
 	}
 
+	private class SwingActionExcludePathOpenNothing extends AbstractAction {
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public SwingActionExcludePathOpenNothing() {
+			putValue(NAME, "ExcludePathOpenNothing"); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.excludenothingtodeclare")); //$NON-NLS-1$
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			//Update model
+			path.setPatOpenNothing(false);
+			updateModelFromGUI();
+			//Update GUI
+			updateGUIHistory();
+		}
+	}
+
+	private Action getActionExcludePathOpenNothing() {
+		if (actionExcludePathOpenNothing == null) {
+			actionExcludePathOpenNothing = new SwingActionExcludePathOpenNothing();
+		}
+		return actionExcludePathOpenNothing;
+	}
+
 	private class SwingActionResetFamilyHistory extends AbstractAction {
 		/**
 		 *
@@ -2043,7 +2377,7 @@ public class PatientHistoryEdit extends JDialog {
 
 		public SwingActionResetFamilyHistory() {
 			putValue(NAME, "ResetFamilyHistory"); //$NON-NLS-1$
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.family.resetfamilyhistory.tooltip")); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.family.tooltip.resetfamilyhistory")); //$NON-NLS-1$
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -2079,7 +2413,7 @@ public class PatientHistoryEdit extends JDialog {
 
 		public SwingActionResetPathClosed() {
 			putValue(NAME, "ResetPathClosed"); //$NON-NLS-1$
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.closed.resetpastproblems.tooltip")); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.closed.tooltip.resetpastproblems")); //$NON-NLS-1$
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -2107,6 +2441,42 @@ public class PatientHistoryEdit extends JDialog {
 		return actionResetPathClosed;
 	}
 
+	private class SwingActionResetPathOpen extends AbstractAction {
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public SwingActionResetPathOpen() {
+			putValue(NAME, "ResetPathOpen"); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.resetrecentproblems")); //$NON-NLS-1$
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			// Update model
+			path.setPatOpenNothing(true);
+			path.setPatOpenHypertension(false);
+			path.setPatOpenDrugaddiction(false);
+			path.setPatOpenCardiovascular(false);
+			path.setPatOpenInfective(false);
+			path.setPatOpenEndocrinometabol(false);
+			path.setPatOpenRespiratory(false);
+			path.setPatOpenCancer(false);
+			path.setPatOpenOrto(false);
+			path.setPatOpenGyno(false);
+			path.setPatOpenOther(false);
+			// Update GUI
+			updateGUIHistory();
+		}
+	}
+
+	private Action getActionResetPathOpen() {
+		if (actionResetPathOpen == null) {
+			actionResetPathOpen = new SwingActionResetPathOpen();
+		}
+		return actionResetPathOpen;
+	}
 
 	private JPanel getJPanelPhyMenopausePanel() {
 		if (jPanelPhyMenopausePanel == null) {
@@ -2120,7 +2490,7 @@ public class PatientHistoryEdit extends JDialog {
 
 	private JLabel getJLabelPhyMenopauseYears() {
 		if (jLabelPhyMenopauseYears == null) {
-			jLabelPhyMenopauseYears = new JLabel(MessageBundle.getMessage("angal.anamnesis.menopause.years.txt")); //$NON-NLS-1$
+			jLabelPhyMenopauseYears = new JLabel(MessageBundle.getMessage("angal.anamnesis.menopause.years")); //$NON-NLS-1$
 			jLabelPhyMenopauseYears.setHorizontalAlignment(SwingConstants.RIGHT);
 		}
 		return jLabelPhyMenopauseYears;
@@ -2134,9 +2504,17 @@ public class PatientHistoryEdit extends JDialog {
 		return jButtonSave;
 	}
 
+	private JButton getJButtonExamination() {
+		if (jButtonExamination == null) {
+			jButtonExamination = new JButton();
+			jButtonExamination.setAction(getActionInsertExamination());
+		}
+		return jButtonExamination;
+	}
+
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
-			jButtonCancel = new JButton(MessageBundle.getMessage("angal.anamnesis.cancel.txt")); //$NON-NLS-1$
+			jButtonCancel = new JButton(MessageBundle.getMessage("angal.anamnesis.cancel")); //$NON-NLS-1$
 			jButtonCancel.setMnemonic(KeyEvent.VK_C);
 			jButtonCancel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -2155,9 +2533,9 @@ public class PatientHistoryEdit extends JDialog {
 
 		public ActionSavePatientHistory() {
 
-			putValue(NAME, MessageBundle.getMessage("angal.anamnesis.save.txt")); //$NON-NLS-1$
+			putValue(NAME, MessageBundle.getMessage("angal.anamnesis.save")); //$NON-NLS-1$
 			putValue(MNEMONIC_KEY, KeyEvent.VK_S);
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.savethepatienthistory.tooltip")); //$NON-NLS-1$
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.tooltip.savethepatienthistory")); //$NON-NLS-1$
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -2174,5 +2552,45 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		return actionSavePatientHistory;
 	}
+
+	private class SwingActionInsertExamination extends AbstractAction {
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public SwingActionInsertExamination() {
+			putValue(NAME, MessageBundle.getMessage("angal.anamnesis.examination")); //$NON-NLS-1$
+			putValue(MNEMONIC_KEY, KeyEvent.VK_E);
+			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.tooltip.insertpatientexamination")); //$NON-NLS-1$
+		}
+		public void actionPerformed(ActionEvent e) {
+
+//			PatientExamination patex;
+//			ExaminationOperations exaServ = new ExaminationOperations();
+
+//			PatientExamination lastPatex = exaServ.getLastByPatID(pat.getCode());
+//			if (lastPatex != null) {
+//				patex = exaServ.getFromLastPatientExamination(lastPatex);
+//			} else {
+//				patex = exaServ.getDefaultPatientExamination(pat.getCode());
+//			}
+//
+//			GenderPatientExamination gPatex = new GenderPatientExamination(patex, pat.getSex() == 'M');
+//			PatientExaminationEdit dialog = new PatientExaminationEdit(PatientHistoryEdit.this, gPatex);
+//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//			dialog.pack();
+//			dialog.setLocationRelativeTo(null);
+//			dialog.setVisible(true);
+		}
+	}
+
+	private Action getActionInsertExamination() {
+		if (actionInsertExamination == null) {
+			actionInsertExamination = new SwingActionInsertExamination();
+		}
+		return actionInsertExamination;
+	}
+
 
 }
