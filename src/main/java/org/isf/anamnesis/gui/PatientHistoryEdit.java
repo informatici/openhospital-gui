@@ -1212,6 +1212,7 @@ public class PatientHistoryEdit extends JDialog {
 		return jPanelPathologicalExtra;
 	}
 
+
 	private JPanel getJPanelPathologicalOpen() {
 		if (jPanelPathologicalOpen == null) {
 			jPanelPathologicalOpen = new JPanel();
@@ -1567,7 +1568,7 @@ public class PatientHistoryEdit extends JDialog {
 			jPanelPathological.setLayout(new BoxLayout(jPanelPathological, BoxLayout.X_AXIS));
 			jPanelPathological.add(getJPanelFamily());
 			jPanelPathological.add(getJPanelPathologicalClosed());
-//			jPanelPathological.add(getJPanelPathologicalOpen());
+			jPanelPathological.add(getJPanelPathologicalOpen());
 			jPanelPathological.add(getJPanelPathologicalExtra());
 		}
 		return jPanelPathological;
@@ -2341,6 +2342,33 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		return actionExcludePathClosedNothing;
 	}
+//
+//	private class SwingActionExcludePathOpenNothing extends AbstractAction {
+//		/**
+//		 *
+//		 */
+//		private static final long serialVersionUID = 1L;
+//
+//		public SwingActionExcludePathOpenNothing() {
+//			putValue(NAME, "ExcludePathOpenNothing"); //$NON-NLS-1$
+//			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.excludenothingtodeclare")); //$NON-NLS-1$
+//		}
+//
+//		public void actionPerformed(ActionEvent e) {
+//			//Update model
+//			path.setPatOpenNothing(false);
+//			updateModelFromGUI();
+//			//Update GUI
+//			updateGUIHistory();
+//		}
+//	}
+//
+//	private Action getActionExcludePathOpenNothing() {
+//		if (actionExcludePathOpenNothing == null) {
+//			actionExcludePathOpenNothing = new SwingActionExcludePathOpenNothing();
+//		}
+//		return actionExcludePathOpenNothing;
+//	}
 
 	private class SwingActionExcludePathOpenNothing extends AbstractAction {
 		/**
