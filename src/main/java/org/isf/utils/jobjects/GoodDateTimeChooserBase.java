@@ -93,6 +93,11 @@ public abstract class GoodDateTimeChooserBase extends Panel {
 		return TimeTools.truncateToSeconds(dateTimePicker.getDateTimeStrict());
 	}
 
+	// time can be blank/empty
+	public LocalDateTime getLocalDateTimePermissive() {
+		return TimeTools.truncateToSeconds(dateTimePicker.getDateTimePermissive());
+	}
+
 	public void setDateTime(LocalDateTime dateTime) {
 		if (dateTime != null) {
 			dateTimePicker.datePicker.setDate(dateTime.toLocalDate());
