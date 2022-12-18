@@ -70,8 +70,8 @@ public class PatientHistoryEdit extends JDialog {
 	private JLabel jLabelFirstNameText;
 	private JLabel jLabelSecondName;
 	private JLabel jLabelSecondNameText;
-	private JLabel jLabelSTPCode;
-	private JLabel jLabelSTPCodeText;
+//	private JLabel jLabelSTPCode;
+//	private JLabel jLabelSTPCodeText;
 	private JLabel jLabelPatID;
 	private JLabel jLabelPatIDText;
 
@@ -984,25 +984,25 @@ public class PatientHistoryEdit extends JDialog {
 		return jLabelPatID;
 	}
 
-	private JLabel getJLabelSTPCodeText() {
-		if (jLabelSTPCodeText == null) {
-			jLabelSTPCodeText = new JLabel();
-			jLabelSTPCodeText.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-			jLabelSTPCodeText.setText(""); //$NON-NLS-1$
-			jLabelSTPCodeText.setBackground(Color.WHITE);
-			jLabelSTPCodeText.setOpaque(true);
-		}
-		return jLabelSTPCodeText;
-	}
-
-	private JLabel getJLabelSTPCode() {
-		if (jLabelSTPCode == null) {
-			jLabelSTPCode = new JLabel();
-			jLabelSTPCode.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
-			jLabelSTPCode.setText(MessageBundle.getMessage("angal.anamnesis.stp.txt")); //$NON-NLS-1$
-		}
-		return jLabelSTPCode;
-	}
+//	private JLabel getJLabelSTPCodeText() {
+//		if (jLabelSTPCodeText == null) {
+//			jLabelSTPCodeText = new JLabel();
+//			jLabelSTPCodeText.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
+//			jLabelSTPCodeText.setText(""); //$NON-NLS-1$
+//			jLabelSTPCodeText.setBackground(Color.WHITE);
+//			jLabelSTPCodeText.setOpaque(true);
+//		}
+//		return jLabelSTPCodeText;
+//	}
+//
+//	private JLabel getJLabelSTPCode() {
+//		if (jLabelSTPCode == null) {
+//			jLabelSTPCode = new JLabel();
+//			jLabelSTPCode.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
+//			jLabelSTPCode.setText(MessageBundle.getMessage("angal.anamnesis.stp.txt")); //$NON-NLS-1$
+//		}
+//		return jLabelSTPCode;
+//	}
 
 	private JLabel getJLabelSecondNameText() {
 		if (jLabelSecondNameText == null) {
@@ -1545,18 +1545,18 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jLabelSecondNameText.gridy = 0;
 			jPanelPatient.add(getJLabelSecondNameText(), gbc_jLabelSecondNameText);
 			GridBagConstraints gbc_jLabelSTPCode = new GridBagConstraints();
-			gbc_jLabelSTPCode.anchor = GridBagConstraints.EAST;
-			gbc_jLabelSTPCode.fill = GridBagConstraints.VERTICAL;
-			gbc_jLabelSTPCode.insets = new Insets(0, 0, 5, 5);
-			gbc_jLabelSTPCode.gridx = 6;
-			gbc_jLabelSTPCode.gridy = 0;
-			jPanelPatient.add(getJLabelSTPCode(), gbc_jLabelSTPCode);
-			GridBagConstraints gbc_jLabelSTPCodeText = new GridBagConstraints();
-			gbc_jLabelSTPCodeText.insets = new Insets(0, 0, 5, 5);
-			gbc_jLabelSTPCodeText.fill = GridBagConstraints.BOTH;
-			gbc_jLabelSTPCodeText.gridx = 7;
-			gbc_jLabelSTPCodeText.gridy = 0;
-			jPanelPatient.add(getJLabelSTPCodeText(), gbc_jLabelSTPCodeText);
+//			gbc_jLabelSTPCode.anchor = GridBagConstraints.EAST;
+//			gbc_jLabelSTPCode.fill = GridBagConstraints.VERTICAL;
+//			gbc_jLabelSTPCode.insets = new Insets(0, 0, 5, 5);
+//			gbc_jLabelSTPCode.gridx = 6;
+//			gbc_jLabelSTPCode.gridy = 0;
+//			jPanelPatient.add(getJLabelSTPCode(), gbc_jLabelSTPCode);
+//			GridBagConstraints gbc_jLabelSTPCodeText = new GridBagConstraints();
+//			gbc_jLabelSTPCodeText.insets = new Insets(0, 0, 5, 5);
+//			gbc_jLabelSTPCodeText.fill = GridBagConstraints.BOTH;
+//			gbc_jLabelSTPCodeText.gridx = 7;
+//			gbc_jLabelSTPCodeText.gridy = 0;
+//			jPanelPatient.add(getJLabelSTPCodeText(), gbc_jLabelSTPCodeText);
 		}
 		return jPanelPatient;
 	}
