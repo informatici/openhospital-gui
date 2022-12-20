@@ -35,12 +35,11 @@ Open Hospital CLIENT | PORTABLE | SERVER
 Usage: oh.ps1 [ -lang en|fr|it|es|pt|ar ] [default set to en]
               [ -mode PORTABLE|CLIENT|SERVER ]
               [ -loglevel INFO|DEBUG ] [default set to INFO]
-              [ -dicom on|off ]
               [ -generate_config on|off ]
               [ -interactive on|off ]
 
 .EXAMPLE
-./oh.ps1 -lang it -mode PORTABLE -loglevel DEBUG -dicom off -interactive off -generate_config on
+./oh.ps1 -lang it -mode PORTABLE -loglevel DEBUG -interactive off -generate_config on
 
 .NOTES
 Developed by Informatici Senza Frontiere - 2022
@@ -62,12 +61,11 @@ https://www.open-hospital.org
 #Requires -Version 5.1
 
 ######## command line parameters
-param ($lang, $mode, $loglevel, $dicom, $generate_config, $interactive)
+param ($lang, $mode, $loglevel, $generate_config, $interactive)
 $script:OH_LANGUAGE=$lang
 $script:OH_MODE=$mode
 $script:LOG_LEVEL=$loglevel
-$script:DICOM_ENABLE=$dicom
-$script:GENERATE_CONFIG_FILES=$generate_config
+$script:WRITE_CONFIG_FILES=$generate_config
 $script:INTERACTIVE_MODE=$interactive
 
 ######## get script info
@@ -81,20 +79,20 @@ $global:ProgressPreference= 'SilentlyContinue'
 
 ############## Script startup configuration - change at your own risk :-) ##############
 #
-# set GENERATE_CONFIG_FILES=on "on" to force generation / overwriting of configuration files:
+# set WRITE_CONFIG_FILES=on "on" to force generation / overwriting of configuration files:
 # data/conf/my.cnf and oh/rsc/*.properties files will be regenerated from the original .dist files
 # with the settings defined in this script.
 #
 # Default is set to "off": configuration files will not be regenerated or overwritten if already present.
 #
-#$script:GENERATE_CONFIG_FILES="off"
+#$script:WRITE_CONFIG_FILES="off"
 
 # Interactive mode
 # set INTERACTIVE_MODE to "off" to launch oh.ps1 without calling the user
 # interaction menu (script_menu). Useful if automatic startup of OH is needed.
 # In order to use this mode, setup all the OH configuration variables in the script
 # or pass arguments via command line.
-#$script:INTERACTIVE_MODE="off"
+$script:INTERACTIVE_MODE="on"
 
 ############## OH general configuration - change at your own risk :-) ##############
 
@@ -108,17 +106,14 @@ $global:ProgressPreference= 'SilentlyContinue'
 #
 # -> Warning -> __requires deletion of all portable data__
 #
-#$script:DEMO_DATA="off"
+$script:DEMO_DATA="off"
 
 # language setting - default set to en
 $script:OH_LANGUAGE_LIST="en|fr|es|it|pt|ar"
-#$script:OH_LANGUAGE="en" # default
-
-# enable DICOM (default set to on)
-$script:DICOM_ENABLE="on"
+$script:OH_LANGUAGE="en" # default
 
 # set log level to INFO | DEBUG - default set to INFO
-#$script:LOG_LEVEL="INFO"
+$script:LOG_LEVEL="INFO"
 
 # set JAVA_BIN 
 # Uncomment this if you want to use system wide JAVA
@@ -166,6 +161,9 @@ $script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 # available languages - do not modify
 $script:languagearray= @("en","fr","it","es","pt","ar") 
 
+# mysql configuration file
+$script:MYSQL_CONF_FILE="my.cnf"
+
 ############## Architecture and external software ##############
 
 ######## MariaDB/MySQL Software
@@ -195,17 +193,6 @@ else {
 	Read-Host; exit 1
 }
 
-# workaround to force 32bit JAVA in order to have DICOM working on 64bit arch
-#
-# NOT NEEDED ANYMORE FROM OH 1.12-dev !
-#
-
-#if ( $DICOM_ENABLE -eq "on" ) {
-#	Write-Host "DICOM_ENABLE=on, forcing JAVA architecture to 32bit" 
-#	$script:JAVA_ARCH=32;
-#	$script:JAVA_PACKAGE_ARCH="i686";
-#	#$script:MYSQL_ARCH=32;
-#}
 
 # set MariaDB download URL / package
 $script:MYSQL_URL="https://archive.mariadb.org/mariadb-$script:MYSQL_VERSION/win$script:MYSQL_ARCH-packages/"
@@ -241,34 +228,39 @@ function script_menu {
 	# Clear-Host # clear console
         Write-Host " -----------------------------------------------------------------"
         Write-Host "|                                                                 |"
-        write-Host "|                       Open Hospital | OH                        |"
+        Write-Host "|                       Open Hospital | OH                        |"
         Write-Host "|                                                                 |"
-        write-Host " -----------------------------------------------------------------"
+        Write-Host " -----------------------------------------------------------------"
         Write-Host " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
         Write-Host " -----------------------------------------------------------------"
 	Write-Host ""
-        Write-Host "   C    start OH in CLIENT mode (client / server configuration)"
-	Write-Host "   P    start OH in PORTABLE mode"
-	Write-Host "   S    start OH in SERVER (Portable) mode"
-	Write-Host "   d    start OH in debug mode"
-	Write-Host "   D    initialize OH with Demo data"
-	Write-Host "   g    regenerate configuration files"
-	Write-Host "   G    setup GSM"
-	Write-Host "   h    show help"
-	Write-Host "   i    initialize/install OH database"
+        Write-Host "   C    configure OH manually to start in CLIENT mode"
+	Write-Host "   P    set OH in PORTABLE mode"
+	Write-Host "   S    set OH in SERVER (Portable) mode"
 	Write-Host "   l    set language: $OH_LANGUAGE_LIST"
-	Write-Host "   m    configure OH manually"
-	Write-Host "   s    save OH database"
-	Write-Host "   r    restore OH database"
-	Write-Host "   t    test database connection (CLIENT mode only)"
-	Write-Host "   v    show OH software version and configuration"
+	Write-Host "   v    show configuration"
+	Write-Host "   w    save OH configuration"
 	Write-Host "   X    clean/reset OH installation"
 	Write-Host "   q    quit"
+        Write-Host ""
+        Write-Host "   --------------------- "
+        Write-Host "    advanced options"
+        Write-Host ""
+	Write-Host "   d    toggle log level INFO/DEBUG"
+	Write-Host "   D    initialize OH with Demo data"
+	Write-Host "   G    setup GSM"
+	Write-Host "   i    initialize/install OH database"
+	Write-Host "   s    save OH database"
+	Write-Host "   r    restore OH database"
+	Write-Host "   m    configure OH manually"
+	Write-Host "   t    test database connection (CLIENT mode only)"
+	Write-Host ""
+	Write-Host "   h    show help"
 	Write-Host ""
 }
 
 function get_confirmation {
-	$choice = Read-Host -Prompt "(y/n)? "
+	$choice = Read-Host -Prompt "(y/n) ? "
 	switch ("$choice") {
 		"y"  { "yes"; break }
 		"n"  { "Exiting."; Read-Host; exit 0 }
@@ -284,14 +276,14 @@ function set_defaults {
 	}
 
 	# config files generation - set default to off
-	if ( [string]::IsNullOrEmpty($GENERATE_CONFIG_FILES) ) {
-		$script:GENERATE_CONFIG_FILES="off"
+	if ( [string]::IsNullOrEmpty($WRITE_CONFIG_FILES) ) {
+		$script:WRITE_CONFIG_FILES="off"
 	}
 
-	# OH mode - set default to PORTABLE
-	if ( [string]::IsNullOrEmpty($OH_MODE) ) {
-		$script:OH_MODE="PORTABLE"
-	}
+#	# OH mode - set default to PORTABLE
+#	if ( [string]::IsNullOrEmpty($OH_MODE) ) {
+#		$script:OH_MODE="PORTABLE"
+#	}
 
 	# log level - set default to INFO
 	if ( [string]::IsNullOrEmpty($LOG_LEVEL) ) {
@@ -322,21 +314,19 @@ function set_path {
 
 function set_language {
 	# set OH interface language - default to en if not defined
-	if ( [string]::IsNullOrEmpty($OH_LANGUAGE) ) {
-		$script:OH_LANGUAGE="en"
-	}
-	# set OH database language - default to en if not defined
-	if ( [string]::IsNullOrEmpty($DATABASE_LANGUAGE) ) {
-		$script:DATABASE_LANGUAGE="en"
-	}
+#	if ( [string]::IsNullOrEmpty($OH_LANGUAGE) ) {
+#		$script:OH_LANGUAGE="en"
+#	}
+
+#	# set OH database language - default to en if not defined
+#	if ( [string]::IsNullOrEmpty($DATABASE_LANGUAGE) ) {
+#		$script:DATABASE_LANGUAGE="en"
+#	}
+
 	# check for valid language selection
 	if ($script:languagearray -contains "$OH_LANGUAGE") {
 		# set database creation script in chosen language
 		$script:DATABASE_LANGUAGE=$OH_LANGUAGE
-	}
-	if ($script:languagearray -contains "ar") { 
-		# set database in english - en
-		$script:DATABASE_LANGUAGE="en"
 	}
 	else {
 		Write-Host "Invalid language option: $OH_LANGUAGE. Exiting." -ForegroundColor Red
@@ -344,6 +334,13 @@ function set_language {
 	}
 	# set database creation script in chosen language
 	$script:DB_CREATE_SQL="create_all_$DATABASE_LANGUAGE.sql"
+	
+	Write-Host "Configuring OH language..."
+        ######## settings.properties language configuration
+
+	Write-Host "Setting language to $OH_LANGUAGE in OH configuration files-> settings.properties..."
+
+	(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties") -replace('^(LANGUAGE.+)',"LANGUAGE=$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 }
 
 function initialize_dir_structure {
@@ -408,7 +405,7 @@ function java_check {
 	# if JAVA_BIN is not found download JRE
 	if ( !(Test-Path $JAVA_BIN  -PathType leaf ) ) {
         	if ( !(Test-Path "$OH_PATH\$JAVA_DISTRO.$EXT" -PathType leaf ) ) {
-			Write-Host "Warning - JAVA not found. Do you want to download it?" -ForegroundColor Yellow
+			Write-Host "Warning - JAVA not found. Do you want to download it ?" -ForegroundColor Yellow
 			get_confirmation;
 			# Download java binaries
 			download_file "$JAVA_URL" "$JAVA_DISTRO.$EXT"
@@ -422,7 +419,8 @@ function java_check {
 			Read-Host; exit 1
 		}
 		Write-Host "Java unpacked successfully!"
-        	Write-Host "Removing downloaded file..."
+		Write-Host "Removing downloaded file..."
+		Remove-Item "$OH_PATH\$JAVA_DISTRO.$EXT"
         	Write-Host "Done!"
 	}
 	Write-Host "JAVA found!"
@@ -432,7 +430,7 @@ function java_check {
 function mysql_check {
 	if (  !(Test-Path "$OH_PATH\$MYSQL_DIR") ) {
 		if ( !(Test-Path "$OH_PATH\$MYSQL_DIR.$EXT" -PathType leaf) ) {
-			Write-Host "Warning - $MYSQL_NAME not found. Do you want to download it?" -ForegroundColor Yellow
+			Write-Host "Warning - $MYSQL_NAME not found. Do you want to download it ?" -ForegroundColor Yellow
 			get_confirmation;
 			# Downloading mysql binary
 			download_file "$MYSQL_URL" "$MYSQL_DIR.$EXT" 
@@ -446,6 +444,9 @@ function mysql_check {
 			Read-Host; exit 1
 		}
 	        Write-Host "$MYSQL_NAME unpacked successfully!"
+		Write-Host "Removing downloaded file..."
+		Remove-Item "$OH_PATH\$MYSQL_DIR.$EXT"
+        	Write-Host "Done!"
 	}
 	# check for mysqld binary
 	if (Test-Path "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -PathType leaf) {
@@ -461,8 +462,8 @@ function mysql_check {
 function config_database {
 	Write-Host "Checking for $MYSQL_NAME config file..."
 
-	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$CONF_DIR/my.cnf" -PathType leaf) ) {
-	if (Test-Path "$OH_PATH/$CONF_DIR/my.cnf" -PathType leaf) { mv -Force "$OH_PATH/$CONF_DIR/my.cnf" "$OH_PATH/$CONF_DIR/my.cnf.old" }
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE" -PathType leaf) ) {
+	if (Test-Path "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE" -PathType leaf) { mv -Force "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE" "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE.old" }
 
 		# find a free TCP port to run MariaDB/MySQL starting from the default port
 		Write-Host "Looking for a free TCP port for $MYSQL_NAME database..."
@@ -488,15 +489,15 @@ function config_database {
 
 		Write-Host "Found TCP port $DATABASE_PORT!"
 
-		Write-Host "Generating $MYSQL_NAME config files..."
-		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("DATABASE_SERVER","$DATABASE_SERVER") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("DATABASE_PORT","$DATABASE_PORT") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("MYSQL_DISTRO","$MYSQL_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("DATA_DIR","$DATA_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("TMP_DIR","$TMP_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
-		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf").replace("LOG_DIR","$LOG_DIR") | Set-Content "$OH_PATH/$CONF_DIR/my.cnf"
+		Write-Host "Writing $MYSQL_NAME config files..."
+		(Get-Content "$OH_PATH/$CONF_DIR/my.cnf.dist").replace("DICOM_SIZE","$DICOM_MAX_SIZE") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
+		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
+		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("DATABASE_SERVER","$DATABASE_SERVER") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
+		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("DATABASE_PORT","$DATABASE_PORT") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
+		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("MYSQL_DISTRO","$MYSQL_DIR") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
+		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("DATA_DIR","$DATA_DIR") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
+		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("TMP_DIR","$TMP_DIR") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
+		(Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE").replace("LOG_DIR","$LOG_DIR") | Set-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE"
 	}
 }
 
@@ -536,7 +537,7 @@ function start_database {
 
 	Write-Host "Starting $MYSQL_NAME server... "
 	try {
-		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--defaults-file=`"$OH_PATH\$CONF_DIR\my.cnf`" --tmpdir=`"$OH_PATH\$TMP_DIR`" --standalone") -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
+		Start-Process -FilePath "$OH_PATH\$MYSQL_DIR\bin\mysqld.exe" -ArgumentList ("--defaults-file=`"$OH_PATH\$CONF_DIR\$MYSQL_CONF_FILE`" --tmpdir=`"$OH_PATH\$TMP_DIR`" --standalone") -NoNewWindow -RedirectStandardOutput "$LOG_DIR/$LOG_FILE" -RedirectStandardError "$LOG_DIR/$LOG_FILE_ERR"
 		Start-Sleep -Seconds 2
 	}
 	catch {
@@ -687,14 +688,14 @@ function test_database_connection {
 	}
 }
 
-function generate_config_files {
+function write_config_files {
 	# set up configuration files
 	Write-Host "Checking for OH configuration files..."
 
 	######## DICOM setup
-	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties" -PathType leaf) ) {
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties" -PathType leaf) ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/dicom.properties" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/dicom.properties $OH_PATH/$OH_DIR/rsc/dicom.properties.old }
-		Write-Host "Generating OH configuration file -> dicom.properties..."
+		Write-Host "Writing OH configuration file -> dicom.properties..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties.dist").replace("OH_PATH_SUBSTITUTE","$OH_PATH_SUBSTITUTE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_DIR","$DICOM_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties").replace("DICOM_STORAGE","$DICOM_STORAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/dicom.properties"
@@ -702,9 +703,9 @@ function generate_config_files {
 	}
 
 	######## log4j.properties setup
-	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties" -PathType leaf) ) {
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties" -PathType leaf) ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/log4j.properties" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/log4j.properties $OH_PATH/$OH_DIR/rsc/log4j.properties.old }
-		Write-Host "Generating OH configuration file -> log4j.properties..."
+		Write-Host "Writing OH configuration file -> log4j.properties..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties.dist").replace("DBSERVER","$DATABASE_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBPORT","$DATABASE_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
@@ -715,9 +716,9 @@ function generate_config_files {
 	}
 
 	######## database.properties setup 
-	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/database.properties" -PathType leaf) ) {
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/database.properties" -PathType leaf) ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/database.properties" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/database.properties $OH_PATH/$OH_DIR/rsc/database.properties.old }
-		Write-Host "Generating OH configuration file -> database.properties..."
+		Write-Host "Writing OH database configuration file -> database.properties..."
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties.dist").replace("DBSERVER","$DATABASE_SERVER") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBPORT","$DATABASE_PORT") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/database.properties").replace("DBUSER","$DATABASE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/database.properties"
@@ -732,18 +733,38 @@ function generate_config_files {
 
 	######## settings.properties setup
 	# set language in OH config file
-	if ( ($script:GENERATE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties" -PathType leaf) ) {
+	if ( ($script:WRITE_CONFIG_FILES -eq "on") -or !(Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties" -PathType leaf) ) {
 		if (Test-Path "$OH_PATH/$OH_DIR/rsc/settings.properties" -PathType leaf) { mv -Force $OH_PATH/$OH_DIR/rsc/settings.properties $OH_PATH/$OH_DIR/rsc/settings.properties.old }
-		Write-Host "Generating OH configuration file -> settings.properties..."
+		Write-Host "Writing OH configuration file -> settings.properties..."
+		# set LANGUAGE
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties.dist").replace("OH_LANGUAGE","$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
-		# set DOC_DIR in OH config file
+		# set DOC_DIR
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("OH_DOC_DIR","$OH_DOC_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
-		# set PHOTO_DIR in OH config file
+		# set PHOTO_DIR
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("PHOTO_DIR","$PHOTO_DIR") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 		# set singleuser = yes / no
 		(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties").replace("YES_OR_NO","$OH_SINGLE_USER") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 	}
 }
+
+function set_log_level {
+	######## settings.properties log_level configuration
+	Write-Host "Setting log level in OH configuration file -> log4j.properties..."
+		switch -CaseSensitive( $script:LOG_LEVEL ) {
+		###################################################
+		"INFO"	{ # 
+			(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("DEBUG","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+			break;
+			}
+		"DEBUG"	{ # 
+			(Get-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties").replace("INFO","$LOG_LEVEL") | Set-Content "$OH_PATH/$OH_DIR/rsc/log4j.properties"
+			}
+		default { Write-Host "Invalid log level option: $LOG_LEVEL." -ForegroundColor Red
+			exit 2;
+			}
+		}
+}
+
 
 function clean_files {
 	# remove all log files
@@ -756,8 +777,8 @@ function clean_files {
 	Write-Host "Warning: do you want to remove all existing configuration files ?" -ForegroundColor Red
 	get_confirmation;
 	Write-Host "Removing configuration files..."
-	$filetodel="$OH_PATH\$CONF_DIR\my.cnf"; if (Test-Path $filetodel -PathType leaf){ Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
-	$filetodel="$OH_PATH\$CONF_DIR\my.cnf.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH\$CONF_DIR\$MYSQL_CONF_FILE"; if (Test-Path $filetodel -PathType leaf){ Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
+	$filetodel="$OH_PATH\$CONF_DIR\$MYSQL_CONF_FILE"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$OH_DIR\rsc\settings.properties"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$OH_DIR\rsc\settings.properties.old"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
 	$filetodel="$OH_PATH\$OH_DIR\rsc\database.properties"; if (Test-Path $filetodel -PathType leaf) { Remove-Item $filetodel -Recurse -Confirm:$false -ErrorAction Ignore }
@@ -785,10 +806,9 @@ function clean_files {
 
 ######## Environment setup
 
-set_defaults;
+#set_defaults;
 set_path;
-set_language;
-
+	
 # set working dir to OH base dir
 cd "$OH_PATH" # workaround for hard coded paths
 
@@ -799,7 +819,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 	do {
 		script_menu;
 		$opt = Read-Host "Please select an option or press enter to start OH"
-		switch -casesensitive( "$opt" ) {
+		switch -CaseSensitive ( "$opt" ) {
 		###################################################
 		"C"	{ # start in CLIENT mode
 			$script:OH_MODE="CLIENT"
@@ -819,9 +839,21 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Read-Host "Press any key to continue";
 		}
 		###################################################
-		"d"	{ # debug 
-			$script:LOG_LEVEL="DEBUG"
-			Write-Host "Log level set to $LOG_LEVEL"
+		"d"	{ # toggle debug mode
+			switch -CaseSensitive( $script:LOG_LEVEL ) {
+			"INFO"	{ # 
+				$script:LOG_LEVEL="DEBUG"
+				}
+			"DEBUG"	{ # 
+				$script:LOG_LEVEL="INFO"
+				}
+			}
+			# create config files if not present
+			write_config_files;
+			# set configuration
+			set_log_level;
+			Write-Host "Log level set to $script:LOG_LEVEL" -ForeGroundcolor Green
+
 			Read-Host "Press any key to continue";
 		}
 		###################################################
@@ -834,15 +866,6 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			else { $script:OH_MODE="PORTABLE" }
 			$DEMO_DATA="on"
 			Write-Host "Demo data set to on."
-			Read-Host "Press any key to continue";
-		}
-		###################################################
-		"g"	{ # regenerate config files and exit
-			Write-Host "Do yoy want to regenerate OH configuration files with script values ?"
-			get_confirmation;
-			$script:GENERATE_CONFIG_FILES="on"
-			generate_config_files;
-			Write-Host "Done!"
 			Read-Host "Press any key to continue";
 		}
 		###################################################
@@ -889,7 +912,6 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host " Usage: $SCRIPT_NAME [ -lang $OH_LANGUAGE_LIST ] "
 			Write-Host "               [ -mode PORTABLE|CLIENT|SERVER ]"
 			Write-Host "               [ -loglevel INFO|DEBUG ] "
-			Write-Host "               [ -dicom on|off ] "
 			Write-Host "               [ -generate_config on|off ] "
 			Write-Host "               [ -interactive on|off ] "
 			Write-Host ""
@@ -902,29 +924,36 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		###################################################
 		"l"	{ # set language 
 			$script:OH_LANGUAGE = Read-Host "Select language: $OH_LANGUAGE_LIST (default is en)"
+			# create config files if not present
+			write_config_files;
 			set_language;
 			Write-Host "Language set to $OH_LANGUAGE."
-			$script:GENERATE_CONFIG_FILES="on"
+			#$script:WRITE_CONFIG_FILES="on"
 			Read-Host "Press any key to continue";
 		}
 		###################################################
 		"m"	{ # configure OH manually
-			echo ""
-#			$script:OH_MODE=Read-Host "Please select OH_MODE [CLIENT|PORTABLE|SERVER]"
-			$script:OH_LANGUAGE=Read-Host "Please select language [$OH_LANGUAGE_LIST]"
-			Write-Host ""
-			Write-Host "***** Database configuration *****"
-			Write-Host ""
-
-			$script:DATABASE_SERVER=Read-Host "Enter database server IP address [DATABASE_SERVER]"
-			$script:DATABASE_PORT=Read-Host "Enter database server TCP port [DATABASE_PORT]"
-			$script:DATABASE_NAME=Read-Host "Enter database database name [DATABASE_NAME]"
-			$script:DATABASE_USER=Read-Host "Enter database user name [DATABASE_USER]"
-			$script:DATABASE_PASSWORD=Read-Host "Enter database password [DATABASE_PASSWORD][DATABASE_PASSWORD]"
-			
-			$script:GENERATE_CONFIG_FILES="on"
-			generate_config_files;
-			#DATABASE_LANGUAGE=en # default to en
+			$script:OH_LANGUAGE=Read-Host		"Please select language [$OH_LANGUAGE_LIST]"
+			Write-Host 				""
+			$script:OH_SINGLE_USER=Read-Host	"Please select Single user configuration (yes/no)" 
+	                # script:OH_SINGLE_USER=${OH_SINGLE_USER:-Off} # set default # TBD
+			Write-Host 				""
+                	$script:LOG_LEVEL=Read-Host		"Please select log level (INFO|DEBUG)"
+			Write-Host 				""
+			Write-Host 				"***** Database configuration *****"
+			Write-Host 				""
+			$script:DATABASE_SERVER=Read-Host	"Enter database server IP address [DATABASE_SERVER]"
+			$script:DATABASE_PORT=Read-Host		"Enter database server TCP port [DATABASE_PORT]"
+			$script:DATABASE_NAME=Read-Host		"Enter database database name [DATABASE_NAME]"
+			$script:DATABASE_USER=Read-Host		"Enter database user name [DATABASE_USER]"
+			$script:DATABASE_PASSWORD=Read-Host	"Enter database password [DATABASE_PASSWORD][DATABASE_PASSWORD]"
+			Write-Host				"Do yoy want to save OH configuration files with entered values ?"
+			get_confirmation;
+			$script:WRITE_CONFIG_FILES="on"
+			write_config_files;
+			set_log_level;
+			set_language;
+			Write-Host "Done!"
 			Read-Host "Press any key to continue";
 		}
 		###################################################
@@ -992,6 +1021,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		}
 		###################################################
 		"v"	{ # show version
+			set_defaults;
 	        	Write-Host "--------- Software version ---------"
 			Get-Content $OH_PATH\$OH_DIR\rsc\version.properties | Where-Object {$_.length -gt 0} | Where-Object {!$_.StartsWith("#")} | ForEach-Object {
 			$var = $_.Split('=',2).Trim()
@@ -1004,13 +1034,11 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			# show configuration
 	 		Write-Host "--------- Script Configuration ---------"
 	 		Write-Host "Architecture is $ARCH"
-	 		Write-Host "Config file generation is set to $GENERATE_CONFIG_FILES"
+	 		Write-Host "Config file generation is set to $WRITE_CONFIG_FILES"
 			Write-Host ""
-	 		Write-Host "--------- OH Configuration ---------"
-	 		Write-Host "Open Hospital is configured in $OH_MODE mode"
+	 		Write-Host "--------- OH default configuration ---------"
 			Write-Host "Language is set to $OH_LANGUAGE"
 			Write-Host "Demo data is set to $DEMO_DATA"
-			Write-Host "Log level is set to $LOG_LEVEL"
 			Write-Host ""
 			Write-Host "--- Database ---"
 			Write-Host "DATABASE_SERVER=$DATABASE_SERVER"
@@ -1036,11 +1064,23 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Write-Host "TMP_DIR=$TMP_DIR"
 			Write-Host ""
 			Write-Host "--- Logging ---"
+			Write-Host "Log level is set to $LOG_LEVEL"
 			Write-Host "LOG_FILE=$LOG_FILE"
 			Write-Host "LOG_FILE_ERR=$LOG_FILE_ERR"
 			Write-Host "OH_LOG_FILE=$OH_LOG_FILE"
 			Write-Host ""
 
+			Read-Host "Press any key to continue";
+		}
+		###################################################
+		"w"	{ # write config files and exit
+			Write-Host "Do yoy want to save OH configuration files with script values ?"
+			get_confirmation;
+			$script:WRITE_CONFIG_FILES="on"
+			write_config_files;
+			set_log_level;
+			set_language;
+			Write-Host "Done!"
 			Read-Host "Press any key to continue";
 		}
 		###################################################
@@ -1116,11 +1156,16 @@ if ( $DEMO_DATA -eq "on" ) {
 }
 
 # display running configuration
-Write-Host "Generate config files is set to $GENERATE_CONFIG_FILES"
+Write-Host "Write config files is set to $WRITE_CONFIG_FILES"
 Write-Host "Starting Open Hospital in $OH_MODE mode..."
 Write-Host "OH_PATH is set to $OH_PATH"
-Write-Host "OH language is set to $OH_LANGUAGE"
-Write-Host "OH log level is set to $LOG_LEVEL"
+# display OH settings only if defined
+if (Get-Variable $OH_LANGUAGE -Scope 'Global' -ErrorAction 'Ignore') {
+	Write-Host "OH language is set to $OH_LANGUAGE"
+}
+if (Get-Variable $LOG_LEVEL -Scope 'Global' -ErrorAction 'Ignore') {
+	Write-Host "OH log level is set to $LOG_LEVEL"
+}
 
 # check for java
 java_check;
@@ -1167,8 +1212,8 @@ if ( $OH_MODE -eq "SERVER" ) {
 	Write-Host "*******************************"
 	Write-Host "* Database server listening on:"
 	Write-Host ""
-	Get-Content "$OH_PATH/$CONF_DIR/my.cnf" | Select-String -Pattern "bind-address" | Select-Object -First 1 -Unique
-	Get-Content "$OH_PATH/$CONF_DIR/my.cnf" | Select-String -Pattern "port" | Select-Object -First 1 -Unique
+	Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE" | Select-String -Pattern "bind-address" | Select-Object -First 1 -Unique
+	Get-Content "$OH_PATH/$CONF_DIR/$MYSQL_CONF_FILE" | Select-String -Pattern "port" | Select-Object -First 1 -Unique
 	Write-Host ""
 	Write-Host "*******************************"
 	Write-Host "Database server ready for connections..."
@@ -1205,7 +1250,13 @@ else {
 	test_database_connection;
 
 	# generate config files
-	generate_config_files;
+	write_config_files;
+
+	# configure language settings
+	set_language;
+
+	# configure log level
+        set_log_level;
 
 	Write-Host "Starting Open Hospital GUI..."
 
