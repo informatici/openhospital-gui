@@ -70,23 +70,23 @@ public class ReportLauncher extends ModalJFrame{
 	private static final String MONTHYEAR = "monthyear";
 	private static final String TWODATESFROMMONTHYEAR = "twodatesfrommonthyear";
 
-	private JPanel jPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jCloseButton = null;
-	private JPanel jContentPanel = null;
-	private JButton jLaunchReport = null;
-	private JButton jCSVButton = null;
-	private JPanel jMonthPanel = null;
-	private JLabel jMonthLabel = null;
-	private JComboBox<String> jMonthComboBox = null;
-	private JLabel jYearLabel = null;
-	private JComboBox<String> jYearComboBox = null;
-	private JLabel jFromDateLabel = null;
-	private JLabel jToDateLabel = null;
-	private GoodDateChooser jToDateField = null;
-	private GoodDateChooser jFromDateField = null;
+	private JPanel jPanel;
+	private JPanel jButtonPanel;
+	private JButton jCloseButton;
+	private JPanel jContentPanel;
+	private JButton jLaunchReport;
+	private JButton jCSVButton;
+	private JPanel jMonthPanel;
+	private JLabel jMonthLabel;
+	private JComboBox<String> jMonthComboBox;
+	private JLabel jYearLabel;
+	private JComboBox<String> jYearComboBox;
+	private JLabel jFromDateLabel;
+	private JLabel jToDateLabel;
+	private GoodDateChooser jToDateField;
+	private GoodDateChooser jFromDateField;
 
-	private JComboBox<String> jRptComboBox = null;
+	private JComboBox<String> jRptComboBox;
 
 	private String[][] reportMatrix = {
 		{"angal.stat.registeredpatient", 				"OH001_RegisteredPatients", TWODATES },
@@ -122,8 +122,8 @@ public class ReportLauncher extends ModalJFrame{
 		{"angal.stat.dailyopdmorbiditysummaryover5", 	"MOH705B_Over_5_Years_Daily_Outpatient_Morbidity_Summary_Sheet", MONTHYEAR },
 	};
 
-	private JComboBox<String> shareWith = null;
-	Interaction userOh = null;
+	private JComboBox<String> shareWith;
+	Interaction userOh;
 
 	/**
 	 * This is the default constructor
@@ -213,7 +213,7 @@ public class ReportLauncher extends ModalJFrame{
 			jContentPanel = new JPanel(new BorderLayout());
 			
 			JPanel rep1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			rep1 = setMyBorder(rep1, MessageBundle.getMessage("angal.stat.parametersselectionframe") + " ");
+			rep1 = setMyBorder(rep1, MessageBundle.getMessage("angal.stat.parametersselectionframe") + ' ');
 			rep1.add(getJParameterSelectionPanel());
 
 			jContentPanel.add(rep1, BorderLayout.NORTH);
@@ -266,14 +266,14 @@ public class ReportLauncher extends ModalJFrame{
 			jYearComboBox = new JComboBox<>();
 
 			for (int i = 0; i < 20; i++) {
-				jYearComboBox.addItem((year - i) + "");
+				jYearComboBox.addItem(String.valueOf(year - i));
 			}
 			
-			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.fromdate"));
-			LocalDate defaultDate = LocalDate.now().minusMonths(8);
+			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.common.datefrom.label"));
+			LocalDate defaultDate = LocalDate.now().minusMonths(8L);
 			jFromDateField = new GoodDateChooser(defaultDate);
-			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.todate"));
-			defaultDate = defaultDate.plusMonths(7);
+			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.common.dateto.label"));
+			defaultDate = defaultDate.plusMonths(7L);
 			jToDateField = new GoodDateChooser(defaultDate);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
@@ -365,7 +365,7 @@ public class ReportLauncher extends ModalJFrame{
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + " " + toDate + " " + reportMatrix[rptIndex][FILENAME],
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + ' ' + toDate + ' ' + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
@@ -383,7 +383,7 @@ public class ReportLauncher extends ModalJFrame{
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + " " + toDate + " " + reportMatrix[rptIndex][FILENAME],
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + ' ' + toDate + ' ' + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
@@ -392,7 +392,7 @@ public class ReportLauncher extends ModalJFrame{
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + " " + year + " " + reportMatrix[rptIndex][FILENAME],
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + ' ' + year + ' ' + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
