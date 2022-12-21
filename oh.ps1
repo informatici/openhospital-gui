@@ -77,50 +77,50 @@ $script:SCRIPT_NAME = $MyInvocation.MyCommand.Name
 # disable progress bar
 $global:ProgressPreference= 'SilentlyContinue'
 
-############## Script startup configuration - change at your own risk :-) ##############
+######################## Script configuration #######################
 #
-# set WRITE_CONFIG_FILES=on "on" to force generation / overwriting of configuration files:
-# data/conf/my.cnf and oh/rsc/*.properties files will be regenerated from the original .dist files
-# with the settings defined in this script.
-#
-# Default is set to "off": configuration files will not be regenerated or overwritten if already present.
-#
-#$script:WRITE_CONFIG_FILES="off"
-
 # Interactive mode
 # set INTERACTIVE_MODE to "off" to launch oh.ps1 without calling the user
 # interaction menu (script_menu). Useful if automatic startup of OH is needed.
 # In order to use this mode, setup all the OH configuration variables in the script
 # or pass arguments via command line.
 $script:INTERACTIVE_MODE="on"
+#
+# set WRITE_CONFIG_FILES=on "on" to force generation / overwriting of OH configuration files:
+# data/conf/my.cnf and oh/rsc/*.properties files will be regenerated from the original .dist files
+# with the settings defined in this script.
+#
+# Default is set to "off": configuration files will not be regenerated or overwritten if already present.
+#
+$script:WRITE_CONFIG_FILES="off"
 
-############## OH general configuration - change at your own risk :-) ##############
+##################### OH general configuration ####################
 
 # -> OH_PATH is the directory where Open Hospital files are located
-# OH_PATH="c:\Users\OH\OpenHospital\oh-1.11"
+# OH_PATH="c:\Users\OH\OpenHospital\oh-1.12"
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
 #$script:OH_MODE="PORTABLE"
-
-# set DEMO_DATA to on to enable demo database loading - default set to off
-#
-# -> Warning -> __requires deletion of all portable data__
-#
-$script:DEMO_DATA="off"
 
 # language setting - default set to en
 $script:OH_LANGUAGE_LIST="en|fr|es|it|pt|ar"
 $script:OH_LANGUAGE="en" # default
 
+# single / multiuser - set "yes" for single user configuration
+$script:OH_SINGLE_USER="no"
+
 # set log level to INFO | DEBUG - default set to INFO
 $script:LOG_LEVEL="INFO"
+
+# set DEMO_DATA to on to enable demo database loading - default set to off
+# ---> Warning <--- __requires deletion of all portable data__
+$script:DEMO_DATA="off"
 
 # set JAVA_BIN 
 # Uncomment this if you want to use system wide JAVA
 #$script:JAVA_BIN="C:\Program Files\JAVA\bin\java.exe"
 
-############## OH local configuration - change at your own risk :-) ##############
-# Database
+##################### Database configuration #######################
 $script:DATABASE_SERVER="127.0.0.1"
 $script:DATABASE_PORT=3306
 $script:DATABASE_ROOT_PW="tmp2021oh111"
@@ -129,13 +129,14 @@ $script:DATABASE_USER="isf"
 $script:DATABASE_PASSWORD="isf123"
 #$script:DATABASE_LANGUAGE="en" # default to en
 
+#######################  OH configuration  #########################
 $script:DICOM_MAX_SIZE="4M"
 $script:DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 $script:DICOM_DIR="data/dicom_storage"
 
+# path and directories
 $script:OH_DIR="."
 $script:OH_DOC_DIR="../doc"
-$script:OH_SINGLE_USER="no" # set "yes" for singleuser
 $script:CONF_DIR="data/conf"
 $script:DATA_DIR="data/db"
 $script:PHOTO_DIR="data/photo"
@@ -145,16 +146,19 @@ $script:SQL_DIR="sql"
 $script:SQL_EXTRA_DIR="sql/extra"
 $script:TMP_DIR="tmp"
 
+# logging
 $script:LOG_FILE="startup.log"
 $script:LOG_FILE_ERR="startup.err"
 $script:OH_LOG_FILE="openhospital.log"
 
+# SQL creation files
+$script:DB_CREATE_SQL="create_all_en.sql" # default to en
 $script:DB_DEMO="create_all_demo.sql"
 
 # downloaded file extension
 $script:EXT="zip"
 
-################ Other settings ################
+######################## Other settings ########################
 # date format
 $script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
@@ -268,17 +272,17 @@ function get_confirmation {
 	}
 }
 
-function set_defaults {
+#function set_defaults {
         # set default values for script variables
 	# interactive mode - set default to on
-	if ( [string]::IsNullOrEmpty($INTERACTIVE_MODE) ) {
-		$script:INTERACTIVE_MODE="on"
-	}
+#	if ( [string]::IsNullOrEmpty($INTERACTIVE_MODE) ) {
+#		$script:INTERACTIVE_MODE="on"
+#	}
 
 	# config files generation - set default to off
-	if ( [string]::IsNullOrEmpty($WRITE_CONFIG_FILES) ) {
-		$script:WRITE_CONFIG_FILES="off"
-	}
+#	if ( [string]::IsNullOrEmpty($WRITE_CONFIG_FILES) ) {
+#		$script:WRITE_CONFIG_FILES="off"
+#	}
 
 #	# OH mode - set default to PORTABLE
 #	if ( [string]::IsNullOrEmpty($OH_MODE) ) {
@@ -286,15 +290,15 @@ function set_defaults {
 #	}
 
 	# log level - set default to INFO
-	if ( [string]::IsNullOrEmpty($LOG_LEVEL) ) {
-		$script:LOG_LEVEL="INFO"
-	}
+#	if ( [string]::IsNullOrEmpty($LOG_LEVEL) ) {
+#		$script:LOG_LEVEL="INFO"
+#	}
 	
 	# demo data - set default to off
-	if ( [string]::IsNullOrEmpty($DEMO_DATA) ) {
-		$script:DEMO_DATA="off"
-	}
-}
+#	if ( [string]::IsNullOrEmpty($DEMO_DATA) ) {
+#		$script:DEMO_DATA="off"
+#	}
+#}
 
 function set_path {
 	# get current directory
@@ -337,9 +341,7 @@ function set_language {
 	
 	Write-Host "Configuring OH language..."
         ######## settings.properties language configuration
-
 	Write-Host "Setting language to $OH_LANGUAGE in OH configuration files-> settings.properties..."
-
 	(Get-Content "$OH_PATH/$OH_DIR/rsc/settings.properties") -replace('^(LANGUAGE.+)',"LANGUAGE=$OH_LANGUAGE") | Set-Content "$OH_PATH/$OH_DIR/rsc/settings.properties"
 }
 
@@ -674,7 +676,7 @@ function test_database_connection {
 		# test connection to the OH MariaDB/MySQL database
 		Write-Host "Testing database connection..."
 		try {
-			Start-Process -FilePath ("$OH_PATH\$MYSQL_DIR\bin\mysql.exe") -ArgumentList ("--user=$DATABASE_USER --password=$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e $([char]34)USE $DATABASE_NAME$([char]34) " ) -Wait -NoNewWindow
+		Start-Process -FilePath ("$OH_PATH\$MYSQL_DIR\bin\mysql.exe") -ArgumentList ("--user=$DATABASE_USER --password=$DATABASE_PASSWORD --host=$DATABASE_SERVER --port=$DATABASE_PORT --protocol=tcp -e $([char]34)USE $DATABASE_NAME$([char]34) " ) -Wait -NoNewWindow
 		}
 		catch {
 			Write-Host "Error: can't connect to database! Exiting." -ForegroundColor Red
@@ -883,7 +885,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			$OH_MODE="CLIENT"
 			Write-Host "Do you want to initialize/install the OH database on:"
 			Write-Host ""
-			Write-Host " Server -> $DATABASE_SERVER"
+			Write-Host " Database Server -> $DATABASE_SERVER"
 			Write-Host " TCP port -> $DATABASE_PORT"
 			Write-Host ""
 			get_confirmation;
@@ -1020,18 +1022,17 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Read-Host "Press any key to continue";
 		}
 		###################################################
-		"v"	{ # show version
-			set_defaults;
+		"v"	{ # display software version and configuration
 	        	Write-Host "--------- Software version ---------"
 			Get-Content $OH_PATH\$OH_DIR\rsc\version.properties | Where-Object {$_.length -gt 0} | Where-Object {!$_.StartsWith("#")} | ForEach-Object {
 			$var = $_.Split('=',2).Trim()
 			New-Variable -Force -Scope Private -Name $var[0] -Value $var[1] 
 			}
+			# show configuration
 			Write-Host "Open Hospital version:" $VER_MAJOR $VER_MINOR $VER_RELEASE
 			Write-Host "$MYSQL_NAME version: $MYSQL_DIR"
 			Write-Host "JAVA version: $JAVA_DISTRO"
 			Write-Host ""
-			# show configuration
 	 		Write-Host "--------- Script Configuration ---------"
 	 		Write-Host "Architecture is $ARCH"
 	 		Write-Host "Config file generation is set to $WRITE_CONFIG_FILES"
@@ -1159,6 +1160,7 @@ if ( $DEMO_DATA -eq "on" ) {
 Write-Host "Write config files is set to $WRITE_CONFIG_FILES"
 Write-Host "Starting Open Hospital in $OH_MODE mode..."
 Write-Host "OH_PATH is set to $OH_PATH"
+
 # display OH settings only if defined
 if (Get-Variable $OH_LANGUAGE -Scope 'Global' -ErrorAction 'Ignore') {
 	Write-Host "OH language is set to $OH_LANGUAGE"

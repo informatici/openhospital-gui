@@ -30,7 +30,7 @@
 ######## get name of this shell script
 SCRIPT_NAME=$(basename "$0")
 
-############## Script startup configuration - change at your own risk :-) ##############
+######################## Script configuration #######################
 #
 # set WRITE_CONFIG_FILES=on "on" to force generation / overwriting of configuration files:
 # data/conf/my.cnf and oh/rsc/*.properties files will be regenerated from the original .dist files
@@ -38,50 +38,51 @@ SCRIPT_NAME=$(basename "$0")
 #
 # Default is set to "off": configuration files will not be regenerated or overwritten if already present.
 #
-#WRITE_CONFIG_FILES="off"
+WRITE_CONFIG_FILES="off"
 
 ############## OH general configuration - change at your own risk :-) ##############
 
 # OH_PATH is the directory where Open Hospital files are located
-# OH_PATH=/usr/local/OpenHospital/oh-1.11
+# OH_PATH=/usr/local/OpenHospital/oh-1.12
 
 # set OH mode to PORTABLE | CLIENT | SERVER - default set to PORTABLE
-OH_MODE=PORTABLE 
-
-# set DEMO_DATA to on to enable demo database loading - default set to off
-#
-# -> Warning -> __requires deletion of all portable data__
-#
-DEMO_DATA="off"
+#OH_MODE="PORTABLE" 
 
 # language setting - default set to en
 OH_LANGUAGE_LIST="en|fr|es|it|pt|ar"
 OH_LANGUAGE=en # default
 
+# single / multiuser - set "yes" for single user configuration
+OH_SINGLE_USER="no"
+
 # set log level to INFO | DEBUG - default set to INFO
 LOG_LEVEL="INFO"
+
+# set DEMO_DATA to on to enable demo database loading - default set to off
+# ---> Warning <--- __requires deletion of all portable data__
+DEMO_DATA="off"
 
 # set JAVA_BIN
 # Uncomment this if you want to use system wide JAVA
 #JAVA_BIN=`which java`
 
-############## OH local configuration - change at your own risk :-) ##############
-# Database
+##################### Database configuration #######################
 DATABASE_SERVER=localhost
 DATABASE_PORT="3306"
 DATABASE_ROOT_PW="tmp2021oh111"
-DATABASE_NAME=oh
-DATABASE_USER=isf
+DATABASE_NAME="oh"
+DATABASE_USER="isf"
 DATABASE_PASSWORD="isf123"
 #DATABASE_LANGUAGE=en # default to en
 
+#######################  OH configuration  #########################
 DICOM_MAX_SIZE="4M"
 DICOM_STORAGE="FileSystemDicomManager" # SqlDicomManager
 DICOM_DIR="data/dicom_storage"
 
+# path and directories
 OH_DIR="."
 OH_DOC_DIR="../doc"
-OH_SINGLE_USER="no" # set "yes" for singleuser
 CONF_DIR="data/conf"
 DATA_DIR="data/db"
 PHOTO_DIR="data/photo"
@@ -91,13 +92,15 @@ SQL_DIR="sql"
 SQL_EXTRA_DIR="sql/extra"
 TMP_DIR="tmp"
 
-LOG_FILE=startup.log
-OH_LOG_FILE=openhospital.log
+# logging
+LOG_FILE="startup.log"
+OH_LOG_FILE="openhospital.log"
 
-#DB_CREATE_SQL="create_all_en.sql" # default to create_all_en.sql
+# SQL creation files
+DB_CREATE_SQL="create_all_en.sql" # default to en
 DB_DEMO="create_all_demo.sql"
 
-################ Other settings ################
+######################## Other settings ########################
 # downloaded file extension
 EXT="tar.gz"
 
@@ -210,13 +213,13 @@ function get_confirmation {
 	esac
 }
 
-function set_defaults {
+#function set_defaults {
 	# set default values for script variables
 	# config file generation - set default to off
 #####	if [ -n ${WRITE_CONFIG_FILES+x} ]; then
-	if [ -z "$WRITE_CONFIG_FILES" ]; then
-		WRITE_CONFIG_FILES="off"
-	fi
+#	if [ -z "$WRITE_CONFIG_FILES" ]; then
+#		WRITE_CONFIG_FILES="off"
+#	fi
 
 #	# OH mode - set default to PORTABLE
 #	if [ -z "$OH_MODE" ]; then
@@ -229,10 +232,10 @@ function set_defaults {
 #	fi
 
 	# demo data - set default to off
-	if [ -z "$DEMO_DATA" ]; then
-		DEMO_DATA="off"
-	fi
-}
+#	if [ -z "$DEMO_DATA" ]; then
+#		DEMO_DATA="off"
+#	fi
+#}
 
 function set_path {
 	# get current directory
@@ -279,8 +282,6 @@ function set_language {
 	echo "Configuring OH language..."
 	######## settings.properties language configuration
 	# if language is not set to default write change
-#	if [ "$OH_LANGUAGE" != "$OH_LANGUAGE_DEFAULT" ]; then
-
 	echo "Setting language to $OH_LANGUAGE in OH configuration file -> settings.properties..."
 	sed -e "/^"LANGUAGE="/c"LANGUAGE=$OH_LANGUAGE"" -i ./$OH_DIR/rsc/settings.properties
 
@@ -731,7 +732,7 @@ function parse_user_input {
 		echo ""
 		echo "Do you want to initialize/install the OH database on:"
 		echo ""
-		echo " Server -> $DATABASE_SERVER"
+		echo " Database Server -> $DATABASE_SERVER"
 		echo " TCP port -> $DATABASE_PORT" 
 		echo ""
 		get_confirmation;
@@ -796,8 +797,6 @@ function parse_user_input {
 		set_log_level;
 		echo "Done!"
 		echo ""
-		# set_defaults;
-
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -867,15 +866,14 @@ function parse_user_input {
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
-	v)	# show version
-		set_defaults;
+	v)	# display software version and configuration
 		echo ""
 		echo "--------- Software version ---------"
 		source "./$OH_DIR/rsc/version.properties"
 		echo "Open Hospital version:" $VER_MAJOR.$VER_MINOR.$VER_RELEASE
 		echo "$MYSQL_NAME version: $MYSQL_DIR"
 		echo "JAVA version: $JAVA_DISTRO"
-		# show configuration
+		echo ""
 		echo "--------- Script Configuration ---------"
 		echo "Architecture is $ARCH"
 		echo "Config file generation is set to $WRITE_CONFIG_FILES"
@@ -1072,7 +1070,7 @@ fi
 echo "Write config files is set to $WRITE_CONFIG_FILES"
 echo "Starting Open Hospital in $OH_MODE mode..."
 echo "OH_PATH is set to $OH_PATH"
-#if [ -n ${OH_LANGUAGE+x} ]; then echo "OH language is st to $OH_LANGUAGE ---------"; fi
+
 # display OH settings only if defined
 if [ -n "$OH_LANGUAGE" ]; then echo "OH language is set to $OH_LANGUAGE"; fi
 if [ -n "$LOG_LEVEL" ]; then echo "OH log level is set to $LOG_LEVEL"; fi
