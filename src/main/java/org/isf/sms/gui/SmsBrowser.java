@@ -144,14 +144,14 @@ public class SmsBrowser extends ModalJFrame {
 	
 	private JLabel getJDateFromLabel() {
 		if (jDateFromLabel == null) {
-			jDateFromLabel = new JLabel(MessageBundle.getMessage("angal.common.from.txt"));
+			jDateFromLabel = new JLabel(MessageBundle.getMessage("angal.common.datefrom.label"));
 		}
 		return jDateFromLabel;
 	}
 	
 	private JLabel getJDateToLabel() {
 		if (jDateToLabel == null) {
-			jDateToLabel = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
+			jDateToLabel = new JLabel(MessageBundle.getMessage("angal.common.dateto.label"));
 		}
 		return jDateToLabel;
 	}

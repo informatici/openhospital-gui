@@ -120,10 +120,10 @@ public class GoodFromDateToDateChooser extends JDialog {
 	private JPanel getDatesChoosers(LocalDate dateFrom, LocalDate dateTo) {
 		if (datesChooserPanel == null) {
 			datesChooserPanel = new JPanel();
-			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ":"));
+			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
 			fromDateChooser = new GoodDateChooser(dateFrom);
 			datesChooserPanel.add(fromDateChooser);
-			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ":"));
+			datesChooserPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
 			toDateChooser = new GoodDateChooser(dateTo);
 			datesChooserPanel.add(toDateChooser);
 		}

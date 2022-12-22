@@ -1073,16 +1073,14 @@ public class WardPharmacy extends ModalJFrame implements
 
 	private JLabel getJLabelTo() {
 		if (jLabelTo == null) {
-			jLabelTo = new JLabel(MessageBundle.getMessage("angal.common.to.txt"));
-			jLabelTo.setBounds(509, 15, 45, 15);
+			jLabelTo = new JLabel(MessageBundle.getMessage("angal.common.dateto.label"));
 		}
 		return jLabelTo;
 	}
 
 	private JLabel getJLabelFrom() {
 		if (jLabelFrom == null) {
-			jLabelFrom = new JLabel(MessageBundle.getMessage("angal.common.from.txt")); //$NON-NLS-1$
-			jLabelFrom.setBounds(365, 14, 45, 15);
+			jLabelFrom = new JLabel(MessageBundle.getMessage("angal.common.datefrom.label"));
 		}
 		return jLabelFrom;
 	}
