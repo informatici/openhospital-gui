@@ -417,7 +417,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 			public void focusLost(FocusEvent e) {
 				try {				
 					age = Integer.parseInt(ageField.getText());
-					if ((age < 0)||(age > 200)) {
+					if ((age < 0)||(age > 120)) {
 						ageField.setText("0");
 						MessageDialog.error(null, "angal.patient.insertvalidage.msg");
 					}
