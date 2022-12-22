@@ -276,20 +276,6 @@ public class PatientHistoryEdit extends JDialog {
 		updateGUIHistory();
 	}
 
-	/**
-	 * @throws OHException
-	 */
-//	private void loadStp() {
-//		StpOperations stpOp = new StpOperations();
-//		try {
-//			PatientStp stp = stpOp.getByID(pat.getCode());
-//			if (stp != null) {
-//				this.stp = stp.getStp();
-//			}
-//		} catch (OHException e) {
-//			JOptionPane.showMessageDialog(PatientHistoryEdit.this, e.getCause().getMessage());
-//		}
-//	}
 
 	private void updateGUIPatient() {
 		jLabelPatIDText.setText(String.valueOf(path.getId()));
