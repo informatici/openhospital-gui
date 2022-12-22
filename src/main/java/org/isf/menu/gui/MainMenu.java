@@ -25,7 +25,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,8 +46,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -119,8 +117,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	private static User myUser;
 	private static List<UserMenuItem> myMenu;
 
-	final int menuXPosition = 10;
-	final int menuYDisplacement = 75;
+	final static int menuXPosition = 10;
+	final static int menuYDisplacement = 75;
 
 	// singleUser=true : one user
 	private boolean singleUser;
@@ -284,7 +282,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			myMenu.remove(umi);
 		}
 
-		setTitle(MessageBundle.formatMessage("angal.mainmenu.fmt.title", myUser.getUserName()));
 		ImageIcon img = new ImageIcon("./rsc/icons/oh.png");
 		setIconImage(img.getImage());
 		// add panel with buttons to frame
@@ -300,7 +297,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		int frameHeight = getSize().height;
 		setLocation(menuXPosition, screenHeight - frameHeight - menuYDisplacement);
 
-		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		myFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		myFrame.setAlwaysOnTop(GeneralData.MAINMENUALWAYSONTOP);
 		myFrame.addWindowListener(new WindowAdapter() {
 
@@ -412,22 +409,30 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			SpringUtilities.makeCompactGrid(buttonsPanel, button.length, 1, 0, 0, 0, 10);
 
 			JPanel centerPanel = new JPanel();
+			centerPanel.setLayout(new BorderLayout());
+
+			JLabel userName = new JLabel(MessageBundle.formatMessage("angal.mainmenu.username.fmt", myUser.getUserName()));
+			userName.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+			userName.setToolTipText(myUser.getUserName());
+			int nameWidth = buttonsPanel.getLayout().minimumLayoutSize(buttonsPanel).getSize().width;
+			userName.setMaximumSize(new Dimension(nameWidth, 20));
+			userName.setPreferredSize(new Dimension(nameWidth, 20));
+
+			centerPanel.add(userName, BorderLayout.NORTH);
 			centerPanel.add(buttonsPanel, BorderLayout.CENTER); // to center anyway, regardless the window's size
 
 			add(centerPanel, BorderLayout.CENTER);
 		}
-		
-		
+
 		public void addLogoutButton(JButton[] button, int k) {
-				button[k] = new JButton(MessageBundle.getMessage("angal.menu.logout.btn"));
-				button[k].setMnemonic(MessageBundle.getMnemonic("angal.menu.logout.btn.key"));
-				button[k].addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						UserSession.restartSession();
-					}
-				});
-				button[k].setActionCommand("logout");
+			button[k] = new JButton(MessageBundle.getMessage("angal.menu.logout.btn"));
+			button[k].setMnemonic(MessageBundle.getMnemonic("angal.menu.logout.btn.key"));
+			if (!singleUser) {
+				button[k].addActionListener(actionEvent -> UserSession.restartSession());
+			} else {
+				button[k].addActionListener(actionEvent -> actionExit(0));
+			}
+			button[k].setActionCommand("logout");
 		}
 
 
@@ -449,40 +454,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			logoPanel.add(logo_appl);
 			return logoPanel;
 		}
-	}
-
-	@Override
-	public Dimension getPreferredSize() {
-		Dimension dimension = super.getPreferredSize();
-		String title = truncate(this.getTitle(), 25);
-		if (title != null) {
-			Font defaultFont = UIManager.getDefaults().getFont("Label.font");
-			int titleStringWidth = SwingUtilities.computeStringWidth(new JLabel().getFontMetrics(defaultFont), title);
-
-			// accounts for the three dots that are appended when the title is too long
-			int threeDotsWidth = 10;
-
-			// account for titlebar button widths. (estimated)
-			String os = System.getProperty("os.name").toLowerCase();
-			if (os.indexOf("win") >= 0) {
-				titleStringWidth += 180;
-
-			} else if (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0) {
-				titleStringWidth += 120;
-
-			} else { // others, assuming unix-like
-				titleStringWidth += 120;
-			}
-
-			if (dimension.getWidth() + threeDotsWidth <= titleStringWidth) {
-				dimension = new Dimension(titleStringWidth, (int) dimension.getHeight());
-			}
-		}
-		return dimension;
-	}
-
-	private String truncate(String string, int size) {
-		return string.substring(0, Integer.min(size - 1, string.length()));
 	}
 
 	public static User getUser() {

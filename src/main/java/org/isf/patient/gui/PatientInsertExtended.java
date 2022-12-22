@@ -621,7 +621,7 @@ public class PatientInsertExtended extends JDialog {
 		if (jAgeTypeAge.isSelected()) {
 			try {
 				years = Integer.parseInt(jAgeYears.getText());
-				if (years < 0 || years > 200) {
+				if (years < 0 || years > 120) {
 					return false;
 				}
 				if (years > 100) {
