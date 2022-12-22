@@ -760,7 +760,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			ph.setPatientId(patient.getPatient().getCode());
 			PatientHistory patientHistory = Optional.ofNullable(patientHistoryManager.getByPatientId(patient.getPatient().getCode())).orElse(ph);
 			PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient.getPatient());
-			PatientHistoryEdit dialog = new PatientHistoryEdit(this, pph);
+			PatientHistoryEdit dialog = new PatientHistoryEdit(this, pph, true);
 			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			dialog.pack();
 			dialog.setLocationRelativeTo(null);

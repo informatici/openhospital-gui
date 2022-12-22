@@ -578,7 +578,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		this.setContentPane(getMainPanel());
 		pack();
 		setMinimumSize(this.getSize());
-		setLocationRelativeTo(null);
+		this.setTitle(LAST_NOTE_LABEL);
 
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.opd.newopdregistration.title"));
@@ -1736,10 +1736,10 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 				try {
 				PatientHistory ph = new PatientHistory();
 				ph.setPatientId(opdPatient.getCode());
-					Patient patient = 				this.patientBrowserManager.getPatientById(opdPatient.getCode());
+				Patient patient = this.patientBrowserManager.getPatientById(opdPatient.getCode());
 				PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(opdPatient.getCode())).orElse(ph);
 				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
-				PatientHistoryEdit dialog = new PatientHistoryEdit(OpdEditExtended.this, pph);
+				PatientHistoryEdit dialog = new PatientHistoryEdit(OpdEditExtended.this, pph, true);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.pack();
 				dialog.setLocationRelativeTo(null);

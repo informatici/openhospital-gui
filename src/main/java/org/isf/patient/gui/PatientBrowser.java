@@ -34,7 +34,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.isf.anamnesis.manager.PatientHistoryManager;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.gui.PatientInsert.PatientListener;

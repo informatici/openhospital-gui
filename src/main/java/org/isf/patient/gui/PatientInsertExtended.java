@@ -101,6 +101,8 @@ public class PatientInsertExtended extends JDialog {
 	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
+	
+	private PatientHistory patientHistory;
 
 	public interface PatientListener extends EventListener {
 
@@ -398,11 +400,12 @@ public class PatientInsertExtended extends JDialog {
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.common.ok.btn.key"));
 			PatientInsertExtended self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
-				PatientHistory ph = new PatientHistory();
-				ph.setPatientId(patient.getCode());
-				PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
+				patientHistory = new PatientHistory();
+				if (patient.getCode() != null) {
+					patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(patientHistory);
+				}
 				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
-				PatientHistoryEdit dialog = new PatientHistoryEdit(PatientInsertExtended.this, pph);
+				PatientHistoryEdit dialog = new PatientHistoryEdit(PatientInsertExtended.this, pph, false);
 				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				dialog.pack();
 				dialog.setLocationRelativeTo(null);
@@ -520,6 +523,10 @@ public class PatientInsertExtended extends JDialog {
 
 						try {
 							patient = patientBrowserManager.savePatient(patient);
+							if (patientHistory != null) {
+								patientHistory.setPatientId(patient.getCode());
+								patientHistoryManager.saveOrUpdate(patientHistory);
+							}
 							firePatientInserted(patient);
 							if (justSave) {
 								insert = false;
@@ -599,6 +606,10 @@ public class PatientInsertExtended extends JDialog {
 
 					try {
 						patient = patientBrowserManager.savePatient(patient);
+						if (patientHistory != null) {
+							patientHistory.setPatientId(patient.getCode());
+							patientHistoryManager.saveOrUpdate(patientHistory);
+						}
 						firePatientUpdated(patient);
 						dispose();
 					} catch (final OHServiceException ex) {

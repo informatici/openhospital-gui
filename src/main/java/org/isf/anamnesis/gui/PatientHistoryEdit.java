@@ -216,6 +216,7 @@ public class PatientHistoryEdit extends JDialog {
 	private Font fontBoldTitleBorder = new Font("Tahoma", Font.BOLD, 11); //$NON-NLS-1$
 	private Font fontDiseases = new Font("Tahoma", Font.BOLD, 12); //$NON-NLS-1$
 
+	private boolean storeData;
 	// Attributes
 	private PatientHistory path;
 	private Patient pat;
@@ -240,6 +241,22 @@ public class PatientHistoryEdit extends JDialog {
 		this.pat = path.getPatient();
 		initComponents();
 	}
+	
+	public PatientHistoryEdit(Frame parent, PatientPatientHistory path, boolean storeData) {
+		super(parent, true);
+		this.path = path.getPatientHistory();
+		this.pat = path.getPatient();
+		this.storeData = storeData;
+		initComponents();
+	}
+	
+	public PatientHistoryEdit(Dialog parent, PatientPatientHistory path, boolean storeData) {
+		super(parent, true);
+		this.path = path.getPatientHistory();
+		this.pat = path.getPatient();
+		this.storeData = storeData;
+		initComponents();
+	}
 
 	public PatientHistoryEdit(Dialog parent, PatientPatientHistory path) {
 		super(parent, true);
@@ -249,7 +266,7 @@ public class PatientHistoryEdit extends JDialog {
 	}
 
 	private void initComponents() {
-//		loadStp();
+		this.setTitle(MessageBundle.getMessage("angal.anamnesis.title.txt"));
 		setFont(new Font("Dialog", Font.PLAIN, 12)); //$NON-NLS-1$
 		getContentPane().add(getJPanelPatient(), BorderLayout.NORTH);
 		getContentPane().add(getJPanelAnamnesis(), BorderLayout.CENTER);
@@ -2569,7 +2586,9 @@ public class PatientHistoryEdit extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 
 			updateModelFromGUI();
-			patientHistoryManager.saveOrUpdate(path);
+			if (storeData) {
+				patientHistoryManager.saveOrUpdate(path);
+			}
 			dispose();
 		}
 	}
