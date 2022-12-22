@@ -34,7 +34,7 @@ Before running the application, you should generate the config files with the `g
 | database.properties.dist | database.properties | DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS                      |
 | dicom.properties.dist    | dicom.properties    | OH_PATH_SUBSTITUTE/DICOM_DIR, DICOM_SIZE                      |
 | log4j.properties.dist    | log4j.properties    | LOG_DEST, DBSERVER, DBPORT, DBNAME, DBUSER, DBPASS, LOG_LEVEL |
-| settings.properties.dist | settings.properties | OH_SET_LANGUAGE                                               |
+| settings.properties.dist | settings.properties | OH_LANGUAGE,(SINGLEUSER=)YES_OR_NO, PHOTO_DIR, OH_DOC_DIR     |
 
 *For further information, please refer to the Admin and User manuals in the [Doc project][openhospital-doc].*
 
