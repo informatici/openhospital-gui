@@ -932,6 +932,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			if (patient  != null) {
 				Opd opd = new Opd(0,' ', -1, new Disease());
 				OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
+				newrecord.setLocationRelativeTo(null);
 				newrecord.showAsModal(myFrame);
 			}
 		});

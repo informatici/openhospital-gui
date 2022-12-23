@@ -278,7 +278,7 @@ public class PatientHistoryEdit extends JDialog {
 
 
 	private void updateGUIPatient() {
-		jLabelPatIDText.setText(String.valueOf(path.getId()));
+		jLabelPatIDText.setText(String.valueOf(path.getPatientId()));
 		jLabelFirstNameText.setText(pat.getFirstName());
 		jLabelSecondNameText.setText(pat.getSecondName());
 //		jLabelSTPCodeText.setText(stp);
@@ -1504,7 +1504,7 @@ public class PatientHistoryEdit extends JDialog {
 		if (jPanelPatient == null) {
 			jPanelPatient = new JPanel();
 			jPanelPatient.setBackground(Color.WHITE);
-			jPanelPatient.setBorder(BorderFactory.createTitledBorder(null, MessageBundle.getMessage("angal.anamnesis.patient"), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, null, null)); //$NON-NLS-1$
+			jPanelPatient.setBorder(BorderFactory.createTitledBorder(null, MessageBundle.getMessage("angal.anamnesis.patient.txt"), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION, null, null)); //$NON-NLS-1$
 			GridBagLayout gbl_jPanelPatient = new GridBagLayout();
 			gbl_jPanelPatient.columnWidths = new int[] { 0, 100, 0, 150, 0, 150, 0, 150 };
 			gbl_jPanelPatient.rowHeights = new int[] { 20 };
