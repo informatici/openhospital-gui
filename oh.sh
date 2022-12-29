@@ -101,14 +101,17 @@ DB_CREATE_SQL="create_all_en.sql" # default to en
 DB_DEMO="create_all_demo.sql"
 
 ######################## Other settings ########################
+# date format
+DATE=`date +%Y-%m-%d_%H-%M-%S`
+
 # downloaded file extension
 EXT="tar.gz"
 
 # mysql configuration file
 MYSQL_CONF_FILE="my.cnf"
 
-# date format
-DATE=`date +%Y-%m-%d_%H-%M-%S`
+# help file
+HELP_FILE="OH-readme.txt"
 
 ################ Architecture and external software ################
 
@@ -721,9 +724,12 @@ function parse_user_input {
 		;;
 	###################################################
 	h)	# help
-		script_menu;
-		#cat README.md | less;
-		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+		if (( $2==0 )); then
+			script_menu;
+			exit 0;
+		fi
+		cat $HELP_FILE | less;
+		echo "Press any key to continue"; read;
 		;;
 	###################################################
 	i)	# initialize/install OH database

@@ -155,18 +155,21 @@ $script:OH_LOG_FILE="openhospital.log"
 $script:DB_CREATE_SQL="create_all_en.sql" # default to en
 $script:DB_DEMO="create_all_demo.sql"
 
-# downloaded file extension
-$script:EXT="zip"
-
 ######################## Other settings ########################
+# available languages - do not modify
+$script:languagearray= @("en","fr","es","it","pt","ar")
+
 # date format
 $script:DATE= Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
-# available languages - do not modify
-$script:languagearray= @("en","fr","it","es","pt","ar") 
+# downloaded file extension
+$script:EXT="zip"
 
 # mysql configuration file
 $script:MYSQL_CONF_FILE="my.cnf"
+
+# help file
+$script:HELP_FILE="OH-readme.txt"
 
 ############## Architecture and external software ##############
 
@@ -907,20 +910,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 		}
 		###################################################
 		"h"	{ # show help
-			Write-Host " ---------------------------------------------------------"
-			Write-Host "|                   Open Hospital | OH                    |"
-			Write-Host " ---------------------------------------------------------"
-			Write-Host ""
-			Write-Host " Usage: $SCRIPT_NAME [ -lang $OH_LANGUAGE_LIST ] "
-			Write-Host "               [ -mode PORTABLE|CLIENT|SERVER ]"
-			Write-Host "               [ -loglevel INFO|DEBUG ] "
-			Write-Host "               [ -generate_config on|off ] "
-			Write-Host "               [ -interactive on|off ] "
-			Write-Host ""
-			Write-Host "Launch oh.bat to run the oh.ps1 interactive startup script"
-			Write-Host "Select any available option from the menu"
-			Write-Host "Choose CLIENT, PORTABLE or SERVER mode"
-			Write-Host ""
+			Get-content $HELP_FILE | more
 			Read-Host "Press any key to continue";
 		}
 		###################################################
