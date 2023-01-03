@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WardVisits" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" resourceBundle="WardVisits" whenResourceMissingType="Key" uuid="39cdb462-cf88-457c-a218-33ebe2ca104c">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="oh"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="Hospital" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Telephone" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Email" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="Address" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="City" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="wardID" class="java.lang.String"/>
+	<parameter name="date" class="java.util.Date"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./rpt_base/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT V.*, P.PAT_ID, PAT_NAME, W.* FROM OH_VISITS V
+LEFT JOIN OH_PATIENT P on PAT_ID=VST_PAT_ID
+LEFT JOIN OH_WARD W on VST_WRD_ID_A = WRD_ID_A
+WHERE VST_WRD_ID_A = $P{wardID} 
+AND DATE(VST_DATE)=$P{date}
+ORDER BY VST_DATE ASC]]>
+	</queryString>
+	<field name="VST_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="VST_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_PAT_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="VST_PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="VST_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_NOTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="VST_NOTE"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_NOTE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_SMS" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="VST_SMS"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_SMS"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_CREATED_BY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="VST_CREATED_BY"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_CREATED_BY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_CREATED_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="VST_CREATED_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_CREATED_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_LAST_MODIFIED_BY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="VST_LAST_MODIFIED_BY"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_LAST_MODIFIED_BY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_LAST_MODIFIED_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="VST_LAST_MODIFIED_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_LAST_MODIFIED_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_ACTIVE" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="VST_ACTIVE"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_ACTIVE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_WRD_ID_A" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="VST_WRD_ID_A"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_WRD_ID_A"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_DURATION" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="VST_DURATION"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_DURATION"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="VST_SERVICE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="VST_SERVICE"/>
+		<property name="com.jaspersoft.studio.field.label" value="VST_SERVICE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visits"/>
+	</field>
+	<field name="PAT_ID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patient"/>
+	</field>
+	<field name="PAT_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="PAT_NAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="PAT_NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patient"/>
+	</field>
+	<field name="WRD_ID_A" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_ID_A"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_ID_A"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_NAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_NAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_TELE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_TELE"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_TELE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_FAX" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_FAX"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_FAX"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_EMAIL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_EMAIL"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_EMAIL"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_NBEDS" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_NBEDS"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_NBEDS"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_NQUA_NURS" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_NQUA_NURS"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_NQUA_NURS"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_NDOC" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_NDOC"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_NDOC"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_IS_PHARMACY" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_IS_PHARMACY"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_IS_PHARMACY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_IS_MALE" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_IS_MALE"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_IS_MALE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_IS_FEMALE" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_IS_FEMALE"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_IS_FEMALE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_LOCK" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_LOCK"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_LOCK"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_CREATED_BY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_CREATED_BY"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_CREATED_BY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_CREATED_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_CREATED_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_CREATED_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_LAST_MODIFIED_BY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_LAST_MODIFIED_BY"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_LAST_MODIFIED_BY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_LAST_MODIFIED_DATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_LAST_MODIFIED_DATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_LAST_MODIFIED_DATE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<field name="WRD_ACTIVE" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="WRD_ACTIVE"/>
+		<property name="com.jaspersoft.studio.field.label" value="WRD_ACTIVE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ward"/>
+	</field>
+	<variable name="Count" class="java.lang.Integer" calculation="Count"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="111" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-16" x="0" y="0" width="535" height="15" uuid="9e8a87c3-6cf4-4504-8e91-d137bd533333"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Hospital}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-18" x="0" y="15" width="535" height="15" uuid="50fbd6cf-3fb5-4b08-a6f9-0fa01ad35627"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{City} + ", " + $P{Address}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-19" x="0" y="30" width="535" height="15" uuid="fe96f5ec-0093-4965-94e2-a950ea714ec0"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Telephone}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-21" x="0" y="45" width="535" height="15" uuid="1f594781-2495-4c6e-ba84-fd1c5a6c7092"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Email}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-22" x="0" y="60" width="535" height="18" uuid="145fae70-5e1a-4e23-a4f1-2004bed0f808"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{WRD_NAME}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-7" x="103" y="91" width="213" height="20" uuid="e691b626-f883-46f4-b987-7b4c12768c3d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-1" x="0" y="91" width="103" height="20" uuid="40079b4c-4cee-402d-bd3f-ced058957732"/>
+				<textElement textAlignment="Left">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{VisitsInDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<rectangle>
+				<reportElement key="rectangle-1" mode="Opaque" x="0" y="0" width="524" height="17" forecolor="#000000" backcolor="#808080" uuid="3c9c79cd-6db7-4360-9ab0-4426cd863b25"/>
+			</rectangle>
+			<textField>
+				<reportElement key="staticText-2" x="262" y="0" width="79" height="17" forecolor="#FFFFFF" uuid="89327bfd-e99d-4c36-8d1d-dca1e4066570"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{PatientName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-3" x="0" y="0" width="94" height="17" forecolor="#FFFFFF" uuid="d1658dfd-073d-41b8-9592-37e460e05269"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-4" x="341" y="0" width="79" height="17" forecolor="#FFFFFF" uuid="36720014-6e55-4028-9ba0-a19f3a2530f8"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{PatientCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-5" x="183" y="0" width="79" height="17" forecolor="#FFFFFF" uuid="932cb746-913a-4871-b64e-719b66560061"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{DurationMin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-6" x="94" y="0" width="90" height="17" forecolor="#FFFFFF" uuid="eb28a3d8-22a2-4b80-b990-071c9b64d8a4"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Service}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-7" x="420" y="0" width="98" height="17" forecolor="#FFFFFF" uuid="6b22c9da-5793-4e61-81ea-ba83fbd0ce5c"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{Note}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<line>
+				<reportElement key="line-1" x="0" y="17" width="525" height="2" forecolor="#808080" backcolor="#FFFFFF" uuid="2856a619-de8f-4bdf-98f8-e4af46806829"/>
+			</line>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-23" x="263" y="0" width="79" height="17" forecolor="#000000" uuid="6c93e6b2-292b-4f68-941f-38f327d33997"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-24" x="0" y="0" width="94" height="17" forecolor="#000000" uuid="da24aa03-518c-4020-8ae4-4d8ff91fbd7e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VST_DATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-25" x="342" y="0" width="79" height="17" forecolor="#000000" uuid="b96b0d7d-c08a-4013-8b91-0b91d357497a"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAT_ID}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-26" x="184" y="0" width="79" height="17" forecolor="#000000" uuid="ac639f2e-da56-4b9c-af24-d5a22b734244"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VST_DURATION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-27" x="94" y="0" width="90" height="17" forecolor="#000000" uuid="98b6ed84-b64f-43f5-b170-7edc74774a1f"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VST_SERVICE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-28" x="421" y="0" width="98" height="17" forecolor="#000000" uuid="70acd467-4391-4fd8-916c-e70e48906c10"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{VST_NOTE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="25" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="1" splitType="Stretch"/>
+	</summary>
+</jasperReport>

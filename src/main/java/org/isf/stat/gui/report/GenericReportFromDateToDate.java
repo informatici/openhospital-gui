@@ -22,6 +22,7 @@
 package org.isf.stat.gui.report;
 
 import java.io.File;
+import java.time.LocalDate;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -51,7 +52,8 @@ public class GenericReportFromDateToDate extends DisplayReport {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportFromDateToDate.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-	public GenericReportFromDateToDate(String fromDate, String toDate, String jasperFileName, String defaultName, boolean toExcel) {
+	
+	public GenericReportFromDateToDate(String fromDate, String toDate, String jasperFileFolder, String jasperFileName, String defaultName, boolean toExcel) {
 		try {
 			File defaultFilename = new File(jasperReportsManager.compileDefaultFilename(defaultName));
 
@@ -66,10 +68,11 @@ public class GenericReportFromDateToDate extends DisplayReport {
 					if (!exportFile.getName().endsWith(extension)) {
 						exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
 					}
-					jasperReportsManager.getGenericReportFromDateToDateExcel(fromDate, toDate, jasperFileName, exportFile.getAbsolutePath());
+					jasperReportsManager.getGenericReportFromDateToDateExcel(fromDate, toDate, jasperFileFolder, jasperFileName, exportFile.getAbsolutePath());
 				}
             } else {
-                JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportFromDateToDatePdf(fromDate, toDate, jasperFileName);
+                JasperReportResultDto jasperReportResultDto = 
+                				jasperReportsManager.getGenericReportFromDateToDatePdf(fromDate, toDate, jasperFileFolder, jasperFileName);
 				showReport(jasperReportResultDto);
             }
 		} catch (OHReportException e) {
@@ -79,5 +82,35 @@ public class GenericReportFromDateToDate extends DisplayReport {
 			MessageDialog.error(null, "angal.stat.reporterror.msg");
 		}
 	}
+	
+	public GenericReportFromDateToDate(LocalDate fromDate, LocalDate toDate, String jasperFileFolder, String jasperFileName, String defaultName, boolean toExcel) {
+		try {
+			File defaultFilename = new File(jasperReportsManager.compileDefaultFilename(defaultName));
 
+			if (toExcel) {
+				JFileChooser fcExcel = ExcelExporter.getJFileChooserExcel(defaultFilename);
+
+				int iRetVal = fcExcel.showSaveDialog(null);
+				if (iRetVal == JFileChooser.APPROVE_OPTION) {
+					File exportFile = fcExcel.getSelectedFile();
+					FileNameExtensionFilter selectedFilter = (FileNameExtensionFilter) fcExcel.getFileFilter();
+					String extension = selectedFilter.getExtensions()[0];
+					if (!exportFile.getName().endsWith(extension)) {
+						exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
+					}
+					jasperReportsManager.getGenericReportFromDateToDateExcel(fromDate, toDate, jasperFileFolder, jasperFileName, exportFile.getAbsolutePath());
+				}
+            } else {
+                JasperReportResultDto jasperReportResultDto = 
+                				jasperReportsManager.getGenericReportFromDateToDatePdf(fromDate, toDate, jasperFileFolder, jasperFileName);
+				showReport(jasperReportResultDto);
+            }
+		} catch (OHReportException e) {
+			OHServiceExceptionUtil.showMessages(e);
+		} catch (Exception e) {
+			LOGGER.error("", e);
+			MessageDialog.error(null, "angal.stat.reporterror.msg");
+		}
+	}
+	
 }

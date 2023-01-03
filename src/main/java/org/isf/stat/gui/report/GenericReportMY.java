@@ -47,7 +47,7 @@ public class GenericReportMY extends DisplayReport {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GenericReportMY.class);
 	private JasperReportsManager jasperReportsManager = Context.getApplicationContext().getBean(JasperReportsManager.class);
 
-	public GenericReportMY(Integer month, Integer year, String jasperFileName, String defaultName, boolean toExcel) {
+	public GenericReportMY(Integer month, Integer year, String jasperFileFolder, String jasperFileName, String defaultName, boolean toExcel) {
 		try {
 			File defaultFilename = new File(jasperReportsManager.compileDefaultFilename(defaultName));
 
@@ -61,10 +61,11 @@ public class GenericReportMY extends DisplayReport {
 					if (!exportFile.getName().endsWith(extension)) {
 						exportFile = new File(exportFile.getAbsoluteFile() + "." + extension);
 					}
-					jasperReportsManager.getGenericReportMYExcel(month, year, jasperFileName, exportFile.getAbsolutePath());
+					jasperReportsManager.getGenericReportMYExcel(month, year, jasperFileFolder, jasperFileName, exportFile.getAbsolutePath());
 				}
 			} else {
-				JasperReportResultDto jasperReportResultDto = jasperReportsManager.getGenericReportMYPdf(month, year, jasperFileName);
+				JasperReportResultDto jasperReportResultDto = 
+								jasperReportsManager.getGenericReportMYPdf(month, year, jasperFileFolder, jasperFileName);
 				showReport(jasperReportResultDto);
 			}
 		} catch (Exception e) {

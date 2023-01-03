@@ -128,10 +128,10 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.basedir}/target/OpenHospital20/rpt</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/rpt_base</outputDirectory>
 							<resources>
 								<resource>
-									<directory>rpt</directory>
+									<directory>rpt_base</directory>
 								</resource>
 							</resources>
 						</configuration>
@@ -215,7 +215,7 @@
 								<exclude>**/README</exclude>
 								<exclude>doc/**/*.txt</exclude>
 								<exclude>lib/**</exclude>
-								<exclude>rpt/**</exclude>
+								<exclude>rpt_base/**</exclude>
 								<exclude>rsc/**</exclude>
 								<exclude>src/test/resources/**</exclude>
 								<exclude>src/main/resources/**</exclude>
