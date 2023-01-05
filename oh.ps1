@@ -2,7 +2,7 @@
 #
 #!/snap/bin/pwsh
 # Open Hospital (www.open-hospital.org)
-# Copyright © 2006-2022 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+# Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
 #
 # Open Hospital is a free and open source software for healthcare data management.
 #
@@ -42,7 +42,7 @@ Usage: oh.ps1 [ -lang en|fr|it|es|pt|ar ] [default set to en]
 ./oh.ps1 -lang it -mode PORTABLE -loglevel DEBUG -interactive off -generate_config on
 
 .NOTES
-Developed by Informatici Senza Frontiere - 2022
+Developed by Informatici Senza Frontiere - 2023
 
 .LINK
 https://www.open-hospital.org
