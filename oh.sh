@@ -158,7 +158,7 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 #JAVA_DIR="jdk-11.0.11+9-jre"
 
 ### JRE 11 - zulu distribution
-JAVA_DISTRO="zulu11.60.19-ca-fx-jre11.0.17-linux_$JAVA_PACKAGE_ARCH"
+JAVA_DISTRO="zulu11.62.17-ca-jre11.0.18-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
 
 ### JRE 8 - zulu distribution
@@ -396,13 +396,13 @@ fi
 # check for libaio
 ldconfig -p | grep libaio > /dev/null;
 if [ $? -eq 1 ]; then
-	echo "libaio not found! Please install the library. Exiting."
+	echo "Error: libaio not found! Please install the library. Exiting."
 	exit 1
 fi
-# check for libncurses
-ldconfig -p | grep libncurses > /dev/null;
+# check for libncurses - version 5
+ldconfig -p | grep libncurses.so.5 > /dev/null;
 if [ $? -eq 1 ]; then
-	echo "libncurses not found! Please install the library. Exiting."
+	echo "Error: libncurses version 5 not found! Please install the library. Exiting."
 	exit 1
 fi
 }

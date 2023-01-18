@@ -42,7 +42,7 @@ Usage: oh.ps1 [ -lang en|fr|it|es|pt|ar ] [default set to en]
 ./oh.ps1 -lang it -mode PORTABLE -loglevel DEBUG -interactive off -generate_config on
 
 .NOTES
-Developed by Informatici Senza Frontiere - 2023
+Developed by Informatici Senza Frontiere - 2022
 
 .LINK
 https://www.open-hospital.org
@@ -215,7 +215,7 @@ $script:MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 
 ### JRE 11 - zulu
 $script:JAVA_URL="https://cdn.azul.com/zulu/bin"
-$script:JAVA_DISTRO="zulu11.60.19-ca-fx-jre11.0.17-win_$JAVA_PACKAGE_ARCH"
+$script:JAVA_DISTRO="zulu11.62.17-ca-jre11.0.18-win_$JAVA_PACKAGE_ARCH"
 
 # workaround for JRE 11 - 32bit
 #	if ( $JAVA_ARCH -eq "32" ) {

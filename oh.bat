@@ -166,7 +166,7 @@ REM set JAVA_DIR=zulu8.60.0.21-ca-jre8.0.322-win_i686
 REM set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 REM # JRE 11 32bit - i686 - zulu - default
-set JAVA_DIR=zulu11.60.19-ca-fx-jre11.0.17-win_i686
+set JAVA_DIR=zulu11.62.17-ca-jre11.0.18-win_i686
 set JAVA_BIN=%OH_PATH%\%JAVA_DIR%\bin\java.exe
 
 set REPLACE_PATH=%OH_PATH%\%MYSQL_DIR%\bin
