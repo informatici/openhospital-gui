@@ -69,9 +69,9 @@ public class StockLedgerDialog extends JDialog {
 			FlowLayout layout = new FlowLayout(FlowLayout.CENTER);
 			layout.setHgap(5);
 			dateFromToPanel.setLayout(layout);
-			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt") + ':'));
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
 			dateFromToPanel.add(dateFrom);
-			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt") + ':'));
+			dateFromToPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
 			dateFromToPanel.add(dateTo);
 		}
 		return dateFromToPanel;

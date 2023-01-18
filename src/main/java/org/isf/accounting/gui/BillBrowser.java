@@ -775,9 +775,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				panelSupRange.add(getJComboUsers());
 			}
 			panelSupRange.add(getJButtonToday());
-			panelSupRange.add(new JLabel(MessageBundle.getMessage("angal.common.from.txt")));
+			panelSupRange.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
 			panelSupRange.add(getJCalendarFrom());
-			panelSupRange.add(new JLabel(MessageBundle.getMessage("angal.common.to.txt")));
+			panelSupRange.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
 			panelSupRange.add(getJCalendarTo());
 			panelSupRange.add(getJComboMonths());
 			panelSupRange.add(getJComboYears());
