@@ -1561,7 +1561,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
 			AdmissionBrowser self = this;
 			jAnamnesisButton.addActionListener(actionEvent -> {
-			if (patient !=null) {
+			if (patient != null) {
 				PatientHistory ph = new PatientHistory();
 				ph.setPatientId(patient.getCode());
 				PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
