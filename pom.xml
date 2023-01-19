@@ -19,8 +19,8 @@
 		<oh.version>1.12.0-SNAPSHOT</oh.version>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.framework.version>5.3.24</spring.framework.version>
-		<spring.boot.version>2.7.7</spring.boot.version>
+		<spring.framework.version>5.3.25</spring.framework.version>
+		<spring.boot.version>2.7.8</spring.boot.version>
 		<license.maven.plugin.version>4.1</license.maven.plugin.version>
 	</properties>
 
@@ -163,7 +163,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.4.0</version>
+				<version>3.5.0</version>
 				<executions>
 					<execution>
 						<id>copy-dependencies</id>
@@ -335,13 +335,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.9.1</version>
+			<version>5.9.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>3.23.1</version>
+			<version>3.24.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
