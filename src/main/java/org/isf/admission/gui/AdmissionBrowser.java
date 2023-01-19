@@ -72,6 +72,10 @@ import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.admission.model.AdmittedPatient;
 import org.isf.admtype.model.AdmissionType;
+import org.isf.anamnesis.gui.PatientHistoryEdit;
+import org.isf.anamnesis.manager.PatientHistoryManager;
+import org.isf.anamnesis.model.PatientHistory;
+import org.isf.anamnesis.model.PatientPatientHistory;
 import org.isf.disctype.model.DischargeType;
 import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
@@ -90,6 +94,7 @@ import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.operation.gui.OperationRowAdm;
 import org.isf.patient.gui.PatientSummary;
+import org.isf.patient.manager.PatientBrowserManager;
 import org.isf.patient.model.Patient;
 import org.isf.pregtreattype.manager.PregnantTreatmentTypeBrowserManager;
 import org.isf.pregtreattype.model.PregnantTreatmentType;
@@ -192,7 +197,9 @@ public class AdmissionBrowser extends ModalJFrame {
 	private WardBrowserManager wardBrowserManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 	private AdmissionBrowserManager admissionBrowserManager = Context.getApplicationContext().getBean(AdmissionBrowserManager.class);
 	private ExaminationBrowserManager examinationBrowserManager = Context.getApplicationContext().getBean(ExaminationBrowserManager.class);
-
+	private PatientBrowserManager patientBrowserManager = Context.getApplicationContext().getBean(PatientBrowserManager.class);
+	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
+	
 	private final OperationRowValidator operationRowValidator = new OperationRowValidator();
 	private final DiseaseFinder diseaseFinder = new DiseaseFinder();
 
@@ -338,6 +345,8 @@ public class AdmissionBrowser extends ModalJFrame {
 	private JButton saveButton = null;
 
 	private JButton jButtonExamination = null;
+	
+	private JButton jAnamnesisButton = null;
 
 	private JPanel visitDatePanel;
 
@@ -1528,6 +1537,7 @@ public class AdmissionBrowser extends ModalJFrame {
 			buttonPanel.add(getSaveButton());
 			if (MainMenu.checkUserGrants("btnadmadmexamination")) {
 				buttonPanel.add(getJButtonExamination());
+				buttonPanel.add(getJAnamnesisButton());
 			}
 			buttonPanel.add(getCloseButton());
 
@@ -1542,6 +1552,30 @@ public class AdmissionBrowser extends ModalJFrame {
 			}
 		}
 		return buttonPanel;
+	}
+	
+	
+	private JButton getJAnamnesisButton() {
+		if (jAnamnesisButton == null) {
+			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
+			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
+			AdmissionBrowser self = this;
+			jAnamnesisButton.addActionListener(actionEvent -> {
+			if (patient !=null) {
+				PatientHistory ph = new PatientHistory();
+				ph.setPatientId(patient.getCode());
+				PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(ph);
+				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
+				PatientHistoryEdit dialog = new PatientHistoryEdit(AdmissionBrowser.this, pph, true);
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				dialog.pack();
+				dialog.setLocationRelativeTo(null);
+				dialog.setModal(true);
+				dialog.setVisible(true);
+			}
+				});
+		}
+		return jAnamnesisButton;
 	}
 
 	private JButton getJButtonExamination() {
