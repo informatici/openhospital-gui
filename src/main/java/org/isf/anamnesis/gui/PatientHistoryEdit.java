@@ -105,7 +105,7 @@ public class PatientHistoryEdit extends JDialog {
 	private VoLimitedTextArea jTextAreaPathClosedNote;
 	private JScrollPane jScrollPanePathClosedNote;
 
-//	 PATHOLOGICAL OPEN
+	//	 PATHOLOGICAL OPEN
 	private JCheckBox jCheckBoxPathOpenNothing;
 	private JCheckBox jCheckBoxPathOpenHypertension;
 	private JCheckBox jCheckBoxPathOpenDrugsAddiction;
