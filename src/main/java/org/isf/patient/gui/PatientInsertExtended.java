@@ -85,11 +85,19 @@ import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 /**
- * ------------------------------------------ PatientInsertExtended - model for the patient entry ----------------------------------------- modification history
- * 11/08/2008 - alessandro - added mother and father names textfield 11/08/2008 - alessandro - changed economicStatut -> hasInsurance 19/08/2008 - mex - changed
- * educational level with blood type 26/08/2008 - cla - added calendar for calculating age - modified age field from int to varchar 28/08/2008 - cla - added
- * tooltip for age field and checking name and age for patient editing 05/09/2008 - alex - added patient code 01/01/2009 - Fabrizio - modified assignment to age
- * field to set an int value ------------------------------------------
+ * ------------------------------------------
+ * PatientInsertExtended - model for the patient entry
+ * -----------------------------------------
+ * modification history
+ * 11/08/2008 - alessandro - added mother and father names textfield
+ * 11/08/2008 - alessandro - changed economicStatut -> hasInsurance
+ * 19/08/2008 - mex        - changed educational level with blood type
+ * 26/08/2008 - cla		   - added calendar for calculating age
+ * 						   - modified age field from int to varchar
+ * 28/08/2008 - cla		   - added tooltip for age field and checking name and age for patient editing
+ * 05/09/2008 - alex       - added patient code
+ * 01/01/2009 - Fabrizio   - modified assignment to age field to set an int value
+ * ------------------------------------------
  */
 public class PatientInsertExtended extends JDialog {
 

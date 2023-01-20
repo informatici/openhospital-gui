@@ -70,8 +70,6 @@ public class PatientHistoryEdit extends JDialog {
 	private JLabel jLabelFirstNameText;
 	private JLabel jLabelSecondName;
 	private JLabel jLabelSecondNameText;
-//	private JLabel jLabelSTPCode;
-//	private JLabel jLabelSTPCodeText;
 	private JLabel jLabelPatID;
 	private JLabel jLabelPatIDText;
 
@@ -987,26 +985,6 @@ public class PatientHistoryEdit extends JDialog {
 		return jLabelPatID;
 	}
 
-//	private JLabel getJLabelSTPCodeText() {
-//		if (jLabelSTPCodeText == null) {
-//			jLabelSTPCodeText = new JLabel();
-//			jLabelSTPCodeText.setFont(new Font("Tahoma", Font.BOLD, 14)); //$NON-NLS-1$
-//			jLabelSTPCodeText.setText(""); //$NON-NLS-1$
-//			jLabelSTPCodeText.setBackground(Color.WHITE);
-//			jLabelSTPCodeText.setOpaque(true);
-//		}
-//		return jLabelSTPCodeText;
-//	}
-//
-//	private JLabel getJLabelSTPCode() {
-//		if (jLabelSTPCode == null) {
-//			jLabelSTPCode = new JLabel();
-//			jLabelSTPCode.setFont(new Font("Tahoma", Font.PLAIN, 14)); //$NON-NLS-1$
-//			jLabelSTPCode.setText(MessageBundle.getMessage("angal.anamnesis.stp.txt")); //$NON-NLS-1$
-//		}
-//		return jLabelSTPCode;
-//	}
-
 	private JLabel getJLabelSecondNameText() {
 		if (jLabelSecondNameText == null) {
 			jLabelSecondNameText = new JLabel();
@@ -1548,18 +1526,6 @@ public class PatientHistoryEdit extends JDialog {
 			gbc_jLabelSecondNameText.gridy = 0;
 			jPanelPatient.add(getJLabelSecondNameText(), gbc_jLabelSecondNameText);
 			GridBagConstraints gbc_jLabelSTPCode = new GridBagConstraints();
-//			gbc_jLabelSTPCode.anchor = GridBagConstraints.EAST;
-//			gbc_jLabelSTPCode.fill = GridBagConstraints.VERTICAL;
-//			gbc_jLabelSTPCode.insets = new Insets(0, 0, 5, 5);
-//			gbc_jLabelSTPCode.gridx = 6;
-//			gbc_jLabelSTPCode.gridy = 0;
-//			jPanelPatient.add(getJLabelSTPCode(), gbc_jLabelSTPCode);
-//			GridBagConstraints gbc_jLabelSTPCodeText = new GridBagConstraints();
-//			gbc_jLabelSTPCodeText.insets = new Insets(0, 0, 5, 5);
-//			gbc_jLabelSTPCodeText.fill = GridBagConstraints.BOTH;
-//			gbc_jLabelSTPCodeText.gridx = 7;
-//			gbc_jLabelSTPCodeText.gridy = 0;
-//			jPanelPatient.add(getJLabelSTPCodeText(), gbc_jLabelSTPCodeText);
 		}
 		return jPanelPatient;
 	}
@@ -2345,33 +2311,6 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		return actionExcludePathClosedNothing;
 	}
-//
-//	private class SwingActionExcludePathOpenNothing extends AbstractAction {
-//		/**
-//		 *
-//		 */
-//		private static final long serialVersionUID = 1L;
-//
-//		public SwingActionExcludePathOpenNothing() {
-//			putValue(NAME, "ExcludePathOpenNothing"); //$NON-NLS-1$
-//			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.excludenothingtodeclare.txt")); //$NON-NLS-1$
-//		}
-//
-//		public void actionPerformed(ActionEvent e) {
-//			//Update model
-//			path.setPatOpenNothing(false);
-//			updateModelFromGUI();
-//			//Update GUI
-//			updateGUIHistory();
-//		}
-//	}
-//
-//	private Action getActionExcludePathOpenNothing() {
-//		if (actionExcludePathOpenNothing == null) {
-//			actionExcludePathOpenNothing = new SwingActionExcludePathOpenNothing();
-//		}
-//		return actionExcludePathOpenNothing;
-//	}
 
 	private class SwingActionExcludePathOpenNothing extends AbstractAction {
 		/**
@@ -2535,14 +2474,6 @@ public class PatientHistoryEdit extends JDialog {
 		return jButtonSave;
 	}
 
-//	private JButton getJButtonExamination() {
-//		if (jButtonExamination == null) {
-//			jButtonExamination = new JButton();
-//			jButtonExamination.setAction(getActionInsertExamination());
-//		}
-//		return jButtonExamination;
-//	}
-
 	private JButton getJButtonCancel() {
 		if (jButtonCancel == null) {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.anamnesis.cancel.txt")); //$NON-NLS-1$
@@ -2585,45 +2516,5 @@ public class PatientHistoryEdit extends JDialog {
 		}
 		return actionSavePatientHistory;
 	}
-
-	private class SwingActionInsertExamination extends AbstractAction {
-		/**
-		 *
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public SwingActionInsertExamination() {
-			putValue(NAME, MessageBundle.getMessage("angal.anamnesis.examination.txt")); //$NON-NLS-1$
-			putValue(MNEMONIC_KEY, KeyEvent.VK_E);
-			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.tooltip.insertpatientexamination.txt")); //$NON-NLS-1$
-		}
-		public void actionPerformed(ActionEvent e) {
-
-//			PatientExamination patex;
-//			ExaminationOperations exaServ = new ExaminationOperations();
-
-//			PatientExamination lastPatex = exaServ.getLastByPatID(pat.getCode());
-//			if (lastPatex != null) {
-//				patex = exaServ.getFromLastPatientExamination(lastPatex);
-//			} else {
-//				patex = exaServ.getDefaultPatientExamination(pat.getCode());
-//			}
-//
-//			GenderPatientExamination gPatex = new GenderPatientExamination(patex, pat.getSex() == 'M');
-//			PatientExaminationEdit dialog = new PatientExaminationEdit(PatientHistoryEdit.this, gPatex);
-//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//			dialog.pack();
-//			dialog.setLocationRelativeTo(null);
-//			dialog.setVisible(true);
-		}
-	}
-
-	private Action getActionInsertExamination() {
-		if (actionInsertExamination == null) {
-			actionInsertExamination = new SwingActionInsertExamination();
-		}
-		return actionInsertExamination;
-	}
-
 
 }

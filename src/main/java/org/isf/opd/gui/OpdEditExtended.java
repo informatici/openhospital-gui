@@ -579,6 +579,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		pack();
 		setMinimumSize(this.getSize());
 		this.setTitle(LAST_NOTE_LABEL);
+		setLocationRelativeTo(null);
 
 		if (insert) {
 			this.setTitle(MessageBundle.getMessage("angal.opd.newopdregistration.title"));

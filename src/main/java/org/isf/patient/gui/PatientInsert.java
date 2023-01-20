@@ -238,7 +238,7 @@ public class PatientInsert extends JDialog implements ActionListener {
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJOkButton(), null);
-					jButtonPanel.add(getJCancelButton(), null);
+			jButtonPanel.add(getJCancelButton(), null);
 		}
 		return jButtonPanel;
 	}
