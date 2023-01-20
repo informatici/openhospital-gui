@@ -243,6 +243,8 @@ public class PatientInsert extends JDialog implements ActionListener {
 		return jButtonPanel;
 	}
 	
+
+	
 	/**
 	 * This method initializes jOkButton	
 	 * 	

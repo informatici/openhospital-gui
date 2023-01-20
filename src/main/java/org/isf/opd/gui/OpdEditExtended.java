@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -72,6 +73,10 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.EventListenerList;
 
+import org.isf.anamnesis.gui.PatientHistoryEdit;
+import org.isf.anamnesis.manager.PatientHistoryManager;
+import org.isf.anamnesis.model.PatientHistory;
+import org.isf.anamnesis.model.PatientPatientHistory;
 import org.isf.disease.manager.DiseaseBrowserManager;
 import org.isf.disease.model.Disease;
 import org.isf.distype.manager.DiseaseTypeBrowserManager;
@@ -149,6 +154,11 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private static final long serialVersionUID = 1L;
 
 	public static final int DEFAULT_VISIT_DURATION = 30;
+	
+
+	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
+
+	
 
 	@Override
 	public void patientInserted(AWTEvent e) {
@@ -222,6 +232,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 	private JButton okButton = null;
 	private JButton cancelButton = null;
 	private JButton jButtonExamination = null;
+	private JButton jAnamnesisButton = null;
 	private JRadioButton rePatientButton = null;
 	private JRadioButton newPatientButton = null;
 	private JCheckBox referralToCheckBox = null;
@@ -567,6 +578,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		this.setContentPane(getMainPanel());
 		pack();
 		setMinimumSize(this.getSize());
+		this.setTitle(LAST_NOTE_LABEL);
 		setLocationRelativeTo(null);
 
 		if (insert) {
@@ -1671,6 +1683,7 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 			jPanelButtons.add(getOkButton(), null);
 			if (insert && MainMenu.checkUserGrants("btnopdnewexamination") || 
 					!insert && MainMenu.checkUserGrants("btnopdeditexamination")) {
+				jPanelButtons.add(getJAnamnesisButton(), null);
 				jPanelButtons.add(getJButtonExamination(), null);
 			}
 			jPanelButtons.add(getCancelButton(), null);
@@ -1713,6 +1726,35 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 		}
 		return jButtonExamination;
 	}
+	
+	
+	private JButton getJAnamnesisButton() {
+		if (jAnamnesisButton == null) {
+			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
+			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
+			OpdEditExtended self = this;
+			jAnamnesisButton.addActionListener(actionEvent -> {
+				try {
+				PatientHistory ph = new PatientHistory();
+				ph.setPatientId(opdPatient.getCode());
+				Patient patient = this.patientBrowserManager.getPatientById(opdPatient.getCode());
+				PatientHistory patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(opdPatient.getCode())).orElse(ph);
+				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
+				PatientHistoryEdit dialog = new PatientHistoryEdit(OpdEditExtended.this, pph, true);
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				dialog.pack();
+				dialog.setLocationRelativeTo(null);
+				dialog.setModal(insert);
+				dialog.setVisible(true);
+			} catch (OHServiceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				});
+		}
+		return jAnamnesisButton;
+	}
+
 	
 	/**
 	 * This method initializes okButton	

@@ -46,6 +46,7 @@ import org.isf.utils.jobjects.ModalJFrame;
 public class PatientBrowser extends ModalJFrame implements PatientListener {
 
 	private static final long serialVersionUID = 1L;
+	
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.name.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
