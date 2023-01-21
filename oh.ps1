@@ -938,7 +938,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			$script:DATABASE_PORT=Read-Host		"Enter database server TCP port [DATABASE_PORT]"
 			$script:DATABASE_NAME=Read-Host		"Enter database database name [DATABASE_NAME]"
 			$script:DATABASE_USER=Read-Host		"Enter database user name [DATABASE_USER]"
-			$script:DATABASE_PASSWORD=Read-Host	"Enter database password [DATABASE_PASSWORD][DATABASE_PASSWORD]"
+			$script:DATABASE_PASSWORD=Read-Host	"Enter database password [DATABASE_PASSWORD]"
 			Write-Host				"Do yoy want to save OH configuration files with entered values ?"
 			get_confirmation;
 			$script:WRITE_CONFIG_FILES="on"
