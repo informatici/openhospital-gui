@@ -36,6 +36,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -50,6 +51,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import org.apache.commons.lang3.StringUtils;
 import org.isf.generaldata.ConfigurationProperties;
 import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
@@ -84,31 +86,31 @@ public class ReportLauncher extends ModalJFrame{
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReportLauncher.class);
 
-	private JPanel jPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jCloseButton = null;
-	private JPanel jContentPanel = null;
-	private JButton jLaunchReport = null;
-	private JButton jCSVButton = null;
-	private JPanel jMonthPanel = null;
-	private JLabel jMonthLabel = null;
-	private JComboBox<String> jMonthComboBox = null;
-	private JLabel jYearLabel = null;
-	private JComboBox<String> jYearComboBox = null;
-	private JLabel jFromDateLabel = null;
-	private JLabel jToDateLabel = null;
-	private GoodDateChooser jToDateField = null;
-	private GoodDateChooser jFromDateField = null;
+	private JPanel jPanel;
+	private JPanel jButtonPanel;
+	private JButton jCloseButton;
+	private JPanel jContentPanel;
+	private JButton jLaunchReport;
+	private JButton jCSVButton;
+	private JPanel jMonthPanel;
+	private JLabel jMonthLabel;
+	private JComboBox<String> jMonthComboBox;
+	private JLabel jYearLabel;
+	private JComboBox<String> jYearComboBox;
+	private JLabel jFromDateLabel;
+	private JLabel jToDateLabel;
+	private GoodDateChooser jToDateField;
+	private GoodDateChooser jFromDateField;
 
-	private JComboBox<String> jRptComboBox = null;
+	private JComboBox<String> jRptComboBox;
 
-	private List<File> jasperFilesInFolder = null;
-	private HashMap<String, File> reportNameFileMap = null;
-	private HashMap<String, List<String>> folderNameFileNameMap = null;
-	private List<String> userInputParamNames = null;
+	private List<File> jasperFilesInFolder;
+	private HashMap<String, File> reportNameFileMap;
+	private HashMap<String, List<String>> folderNameFileNameMap;
+	private List<String> userInputParamNames;
 
-	private JComboBox<String> shareWith = null;
-	Interaction userOh = null;
+	private JComboBox<String> shareWith;
+	Interaction userOh;
 
 	/**
 	 * This is the default constructor
@@ -198,7 +200,7 @@ public class ReportLauncher extends ModalJFrame{
 			jContentPanel = new JPanel(new BorderLayout());
 			
 			JPanel rep1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			rep1 = setMyBorder(rep1, MessageBundle.getMessage("angal.stat.parametersselectionframe") + " ");
+			rep1 = setMyBorder(rep1, MessageBundle.getMessage("angal.stat.parametersselectionframe") + ' ');
 			rep1.add(getJParameterSelectionPanel());
 
 			jContentPanel.add(rep1, BorderLayout.NORTH);
@@ -239,6 +241,7 @@ public class ReportLauncher extends ModalJFrame{
 				folderNameFileNameMap.put("rpt_extra", loadedFiles.stream().map(t -> t.getName().replace(".jasper", "")).collect(Collectors.toList()));
 			
 				reportNameFileMap = new HashMap<>();
+				List<String> jRptComboBoxList = new LinkedList<String>();
 				for(File f: jasperFilesInFolder) {
 					try {
 						Properties props = ConfigurationProperties.loadPropertiesFile(
@@ -246,7 +249,7 @@ public class ReportLauncher extends ModalJFrame{
 						
 						if(props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
 							reportNameFileMap.put(props.getProperty("jTitle"), f);
-							jRptComboBox.addItem(props.getProperty("jTitle"));
+							jRptComboBoxList.add(props.getProperty("jTitle"));
 						}
 						else {
 							props = ConfigurationProperties.loadPropertiesFile(
@@ -254,14 +257,22 @@ public class ReportLauncher extends ModalJFrame{
 							
 							if(props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
 								reportNameFileMap.put(props.getProperty("jTitle"), f);
-								jRptComboBox.addItem(props.getProperty("jTitle"));
+								jRptComboBoxList.add(props.getProperty("jTitle"));
 							}
+							else
+								jRptComboBoxList.add(StringUtils.capitalize(f.getName().replace(".jasper", "").replace("_", " ")));
 						}
 					} catch (Exception e) {
 						e.getStackTrace();
 		                LOGGER.error("", e);
 					}
-				}					
+				}		
+				
+				Collections.sort(jRptComboBoxList);
+				jRptComboBoxList.forEach(t -> 
+					jRptComboBox.addItem(t)
+				);
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			} 
@@ -288,20 +299,20 @@ public class ReportLauncher extends ModalJFrame{
 			jMonthComboBox.addItem(MessageBundle.getMessage("angal.stat.november"));
 			jMonthComboBox.addItem(MessageBundle.getMessage("angal.stat.december"));
 
-			jMonthComboBox.setSelectedIndex(month-1);
+			jMonthComboBox.setSelectedIndex(month - 1);
 
 			jYearLabel = new JLabel("        " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox<>();
 
 			for (int i = 0; i < 20; i++) {
-				jYearComboBox.addItem((year - i) + "");
+				jYearComboBox.addItem(String.valueOf(year - i));
 			}
 			
-			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.fromdate"));
-			LocalDate defaultDate = LocalDate.now().minusMonths(8);
+			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.common.datefrom.label"));
+			LocalDate defaultDate = LocalDate.now().minusMonths(8L);
 			jFromDateField = new GoodDateChooser(defaultDate);
-			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.todate"));
-			defaultDate = defaultDate.plusMonths(7);
+			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.common.dateto.label"));
+			defaultDate = defaultDate.plusMonths(7L);
 			jToDateField = new GoodDateChooser(defaultDate);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
@@ -395,9 +406,9 @@ public class ReportLauncher extends ModalJFrame{
 							String user = (String) shareWith.getSelectedItem();
 							CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
 							frame.sendMessage("011100100110010101110000011011110111001001110100 " + 
-											TimeTools.formatDateTime(jFromDateField.getDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY) + " " + 
-											TimeTools.formatDateTime(jToDateField.getDate().atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY) +
-											" " + jRptComboBox.getSelectedItem().toString(), user, false);
+											TimeTools.formatDateTime(jFromDateField.getDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY) + ' ' + 
+											TimeTools.formatDateTime(jToDateField.getDate().atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY) + ' ' + 
+											jRptComboBox.getSelectedItem().toString(), user, false);
 						}
 			}
 			else {
@@ -411,8 +422,8 @@ public class ReportLauncher extends ModalJFrame{
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + " " + year + 
-									" " + jRptComboBox.getSelectedItem().toString(), user, false);
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + ' ' + year + ' ' + 
+									jRptComboBox.getSelectedItem().toString(), user, false);
 				}
 			}
 		}
