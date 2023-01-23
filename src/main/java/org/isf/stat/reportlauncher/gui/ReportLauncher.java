@@ -266,7 +266,6 @@ public class ReportLauncher extends ModalJFrame{
 				e.printStackTrace();
 			} 
 			
-			
 			jRptComboBox.addActionListener(actionEvent -> {
 				if (actionEvent.getActionCommand() != null && actionEvent.getActionCommand().equalsIgnoreCase("comboBoxChanged")) {
 						selectAction();
