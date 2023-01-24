@@ -31,6 +31,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.isf.generaldata.GeneralData;
+import org.isf.generaldata.Version;
 import org.isf.utils.jobjects.MessageDialog;
 
 /**
@@ -43,7 +44,8 @@ public class HelpViewer extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	private static final String MANUAL_PDF_FILE = "UserManual.pdf";
-	private static final String USER_MANUAL_URI = "https://www.open-hospital.org/user-manual";
+	private static final String USER_MANUAL_PREFIX = "https://github.com/informatici/openhospital-doc/blob/";
+	private static final String USER_MANUAL_SUFFIX = "/doc_user/UserManual.adoc";
 
 	public HelpViewer() {
 		GeneralData.getGeneralData();
@@ -59,7 +61,8 @@ public class HelpViewer extends JDialog {
 					return;
 				}
 				try {
-					Desktop.getDesktop().browse(new URI(USER_MANUAL_URI));
+					Version.getVersion();
+					Desktop.getDesktop().browse(new URI(USER_MANUAL_PREFIX + Version.VER_MAJOR + '.' + Version.VER_MINOR + '.' + Version.VER_RELEASE + USER_MANUAL_SUFFIX));
 				} catch (IOException | URISyntaxException ex) {
 					MessageDialog.error(this, "angal.help.userguidenotfound.msg");
 				}
