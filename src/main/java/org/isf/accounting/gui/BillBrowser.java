@@ -195,6 +195,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			Double.class, ImageIcon.class };
 	private boolean[] alignStringCenter = { false, true, true, true, false, false, true, true, false, false };
 	private boolean[] alingStringBoldCenter = { false, true, false, false, false, false, false, false, false, false };
+	private boolean[] showColumn = { !isSingleUser, true, true, true, true, true, true, true, true, true, true };
 
 	//Totals
 	private BigDecimal totalToday;
@@ -1010,6 +1011,11 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			table.getColumnModel().getColumn(idx).setMinWidth(columnsWidth[idx]);
 			if (!columnsResizable[idx]) {
 				table.getColumnModel().getColumn(idx).setMaxWidth(maxWidth[idx]);
+				if (!showColumn[idx]) {
+					table.getColumnModel().getColumn(idx).setWidth(0);
+					table.getColumnModel().getColumn(idx).setMinWidth(0);
+					table.getColumnModel().getColumn(idx).setMaxWidth(0);
+				}
 			}
 			if (alignStringCenter[idx]) {
 				table.getColumnModel().getColumn(idx).setCellRenderer(new StringCenterTableCellRenderer());
