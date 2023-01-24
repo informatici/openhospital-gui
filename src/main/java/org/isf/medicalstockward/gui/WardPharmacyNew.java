@@ -702,7 +702,7 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 				patientSelected = null;
 				jTextFieldPatient.setText(""); //$NON-NLS-1$
 				jTextFieldPatient.setEditable(true);
-				jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.pickpatient"));
+				jButtonPickPatient.setText(MessageBundle.getMessage("angal.medicalstockwardedit.selectpatient"));
 				jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
 				jButtonTrashPatient.setEnabled(false);
 			});
@@ -713,8 +713,8 @@ public class WardPharmacyNew extends JDialog implements SelectionListener {
 
 	private JButton getJButtonPickPatient() {
 		if (jButtonPickPatient == null) {
-			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.pickpatient.btn"));
-			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.pickpatient.btn.key"));
+			jButtonPickPatient = new JButton(MessageBundle.getMessage("angal.medicalstockwardedit.selectpatient.btn"));
+			jButtonPickPatient.setMnemonic(MessageBundle.getMnemonic("angal.medicalstockwardedit.selectpatient.btn.key"));
 			jButtonPickPatient.setIcon(new ImageIcon("rsc/icons/pick_patient_button.png")); //$NON-NLS-1$
 			jButtonPickPatient.setToolTipText(MessageBundle.getMessage("angal.medicalstockwardedit.tooltip.associateapatientwiththismovement"));
 			jButtonPickPatient.addActionListener(actionEvent -> {

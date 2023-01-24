@@ -324,7 +324,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				options.add(MessageBundle.getMessage("angal.billbrowser.today.txt"));
 				options.add(MessageBundle.getMessage("angal.billbrowser.period.txt"));
 				options.add(MessageBundle.getMessage("angal.billbrowser.thismonth.txt"));
-				options.add(MessageBundle.getMessage("angal.billbrowser.pickmonth.txt"));
+				options.add(MessageBundle.getMessage("angal.billbrowser.selectmonth.txt"));
 				if (patientParent == null) {
 					options.add(MessageBundle.getMessage("angal.billbrowser.patientstatement.txt"));
 				}
