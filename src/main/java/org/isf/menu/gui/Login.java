@@ -36,6 +36,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -48,6 +49,7 @@ import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.menu.manager.UserBrowsingManager;
 import org.isf.menu.model.User;
+import org.isf.session.UserSession;
 import org.isf.utils.db.BCrypt;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -122,6 +124,28 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 	private User returnUser;
 	private boolean usersListLogin;
 
+	
+	public Login(JFrame parent) {
+		super(parent, MessageBundle.getMessage("angal.login.title"), true);
+
+		usersListLogin = GeneralData.getGeneralData().getUSERSLISTLOGIN();
+		
+		// add panel to frame
+		LoginPanel panel = new LoginPanel(this);
+		add(panel);
+		pack();
+
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Dimension screensize = kit.getScreenSize();
+
+		Dimension mySize = getSize();
+
+		pack();
+		setLocationRelativeTo(null);
+		setResizable(false);
+		setVisible(true);
+	}
+	
 	public Login(MainMenu parent) {
 		super(parent, MessageBundle.getMessage("angal.login.title"), true);
 
@@ -170,6 +194,7 @@ public class Login extends JDialog implements ActionListener, KeyListener {
 		} else {
 			fireLoginInserted(returnUser);
 			removeLoginListener(parent);
+			UserSession.setUser(returnUser);
 			dispose();
 		}
 	}

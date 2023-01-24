@@ -33,57 +33,71 @@ import javax.swing.JLabel;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 
+import org.isf.generaldata.GeneralData;
+import org.isf.session.LogoutEventListener;
+import org.isf.session.SessionRefresheTimerRunnable;
+import org.isf.session.UserSession;
+import org.isf.utils.jobjects.DelayTimer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class SplashWindow3 extends JWindow {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SplashWindow3.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SplashWindow3.class);
 
-    public SplashWindow3(String filename, Frame f, int waitTime) {
-        super(f);
+	public SplashWindow3(String filename, Frame f, int waitTime) {
+		super(f);
 
-        JLabel l = new JLabel(new ImageIcon(filename));
+		JLabel l = new JLabel(new ImageIcon(filename));
 
-        getContentPane().add(l, BorderLayout.CENTER);
-        pack();
+		getContentPane().add(l, BorderLayout.CENTER);
+		pack();
 
-        Toolkit kit = java.awt.Toolkit.getDefaultToolkit();
-        Dimension screenSize = kit.getScreenSize();
+		Toolkit kit = java.awt.Toolkit.getDefaultToolkit();
+		Dimension screenSize = kit.getScreenSize();
 
-        Dimension labelSize = l.getPreferredSize();
-        setLocation(screenSize.width / 2 - (labelSize.width / 2),
-                screenSize.height / 2 - (labelSize.height / 2));
+		Dimension labelSize = l.getPreferredSize();
+		setLocation(screenSize.width / 2 - (labelSize.width / 2), screenSize.height / 2 - (labelSize.height / 2));
 
-        addMouseListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                setVisible(false);
-                dispose();
-            }
-        });
-        final int pause = waitTime;
-        final Runnable closerRunner = () -> {
-            setVisible(false);
-            dispose();
-            new MainMenu();
-        };
-        Runnable waitRunner = () -> {
-            try {
-                Thread.sleep(pause);
-                SwingUtilities.invokeAndWait(closerRunner);
-            } catch (Exception exception) {
-                LOGGER.error(exception.getMessage(), exception);
-                // can catch InvocationTargetException
-                // can catch InterruptedException
-            }
-        };
-        setVisible(true);
-        Thread splashThread = new Thread(waitRunner, "SplashThread");
-        splashThread.start();
-    }
+			@Override
+			public void mousePressed(MouseEvent e) {
+				setVisible(false);
+				dispose();
+			}
+		});
+		final int pause = waitTime;
+		final Runnable closerRunner = () -> {
+			setVisible(false);
+			dispose();
+			MainMenu mainMenu = new MainMenu(null);
+			startLogoutTimer(mainMenu);
+		};
+		Runnable waitRunner = () -> {
+			try {
+				Thread.sleep(pause);
+				SwingUtilities.invokeAndWait(closerRunner);
+			} catch (Exception exception) {
+				LOGGER.error(exception.getMessage(), exception);
+				// can catch InvocationTargetException
+				// can catch InterruptedException
+			}
+		};
+		setVisible(true);
+		Thread splashThread = new Thread(waitRunner, "SplashThread");
+		splashThread.start();
+	}
+
+	private void startLogoutTimer(MainMenu mainMenu) {
+		new Thread(new SessionRefresheTimerRunnable()).start();
+		if (UserSession.getTimer() != null) {
+			UserSession.getTimer().quit();
+		}
+		UserSession.setTimer(new DelayTimer(new LogoutEventListener(), GeneralData.SESSIONTIMEOUT * 1000 * 60));
+		UserSession.getTimer().startTimer();
+	}
 
 }

@@ -39,6 +39,7 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -66,6 +67,10 @@ import org.isf.accounting.model.Bill;
 import org.isf.admission.manager.AdmissionBrowserManager;
 import org.isf.admission.model.Admission;
 import org.isf.admission.model.AdmittedPatient;
+import org.isf.anamnesis.gui.PatientHistoryEdit;
+import org.isf.anamnesis.manager.PatientHistoryManager;
+import org.isf.anamnesis.model.PatientHistory;
+import org.isf.anamnesis.model.PatientPatientHistory;
 import org.isf.dicom.gui.DicomGui;
 import org.isf.disease.model.Disease;
 import org.isf.exa.model.Exam;
@@ -141,6 +146,10 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 	private static final long serialVersionUID = 1L;
 
 	private static final int PANEL_WIDTH = 240;
+	
+	
+	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
+
 
 	private String[] patientClassItems = {
 			MessageBundle.getMessage("angal.common.all.txt"),
@@ -703,9 +712,13 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		if (MainMenu.checkUserGrants("btnadmadm")) {
 			buttonPanel.add(getButtonAdmission());
 		}
+		if (MainMenu.checkUserGrants("btnadmedit")) {
+			buttonPanel.add(this.getJAnamnesisButton());
+		}
 		if (MainMenu.checkUserGrants("btnadmexamination")) {
 			buttonPanel.add(getButtonExamination());
 		}
+		
 		if (GeneralData.OPDEXTENDED && MainMenu.checkUserGrants("btnadmopd")) {
 			buttonPanel.add(getButtonOpd());
 		}
@@ -733,6 +746,30 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 		buttonPanel.add(getButtonClose());
 		return buttonPanel;
 	}
+	
+	private  JButton getJAnamnesisButton() {
+		JButton jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
+		jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
+		jAnamnesisButton.addActionListener(actionEvent -> {
+			if (table.getSelectedRow() < 0) {
+				MessageDialog.error(null, "angal.common.pleaseselectapatient.msg");
+				return;
+			}
+			patient = (AdmittedPatient) table.getValueAt(table.getSelectedRow(), -1);
+			PatientHistory ph = new PatientHistory();
+			ph.setPatientId(patient.getPatient().getCode());
+			PatientHistory patientHistory = Optional.ofNullable(patientHistoryManager.getByPatientId(patient.getPatient().getCode())).orElse(ph);
+			PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient.getPatient());
+			PatientHistoryEdit dialog = new PatientHistoryEdit(this, pph, true);
+			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			dialog.pack();
+			dialog.setLocationRelativeTo(null);
+			dialog.setModal(false);
+			dialog.setVisible(true);
+		});
+		return jAnamnesisButton;
+	}
+
 
 	private JButton getButtonExamination() {
 		if (jButtonExamination == null) {
@@ -895,6 +932,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			if (patient  != null) {
 				Opd opd = new Opd(0,' ', -1, new Disease());
 				OpdEditExtended newrecord = new OpdEditExtended(myFrame, opd, patient.getPatient(), true);
+				newrecord.setLocationRelativeTo(null);
 				newrecord.showAsModal(myFrame);
 			}
 		});
@@ -1172,11 +1210,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			jSearchButton.setPreferredSize(new Dimension(20, 20));
 			jSearchButton.addActionListener(actionEvent -> {
-				((JButton) actionEvent.getSource()).setEnabled(false);
-				SwingUtilities.invokeLater(() -> {
-					searchPatient();
-					EventQueue.invokeLater(() -> ((JButton) actionEvent.getSource()).setEnabled(true));
-				});
+				searchPatient();
 			});
 		}
 		return jSearchButton;

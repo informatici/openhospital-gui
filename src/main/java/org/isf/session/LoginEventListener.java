@@ -19,10 +19,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.isf.patient.gui;
+package org.isf.session;
 
-public interface PatientGuiConst {
+import java.awt.AWTEvent;
 
-	public static final Integer IMAGE_THUMBNAIL_MAX_WIDTH = 140;
-	
+import org.isf.menu.gui.Login;
+import org.isf.menu.model.User;
+
+public class LoginEventListener implements Login.LoginListener {
+
+	@Override
+	public void loginInserted(AWTEvent e) {
+		if (e.getSource() instanceof User) {
+			User myUser = (User) e.getSource();
+			UserSession.setUser(myUser);
+			UserSession.getTimer().startTimer();
+		}
+
+	}
+
 }

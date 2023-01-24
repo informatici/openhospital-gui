@@ -66,63 +66,64 @@ public class ReportLauncher extends ModalJFrame{
 	private static final int BUNDLE = 0;
 	private static final int FILENAME = 1;
 	private static final int TYPE = 2;
+	private static final String TWODATES = "twodates";
+	private static final String MONTHYEAR = "monthyear";
+	private static final String TWODATESFROMMONTHYEAR = "twodatesfrommonthyear";
 
-	private int pfrmExactWidth = 500;
-	private int pfrmExactHeight = 165;
-	private JPanel jPanel = null;
-	private JPanel jButtonPanel = null;
-	private JButton jCloseButton = null;
-	private JPanel jContentPanel = null;
-	private JButton jLaunchReport = null;
-	private JButton jCSVButton = null;
-	private JPanel jMonthPanel = null;
-	private JLabel jMonthLabel = null;
-	private JComboBox<String> jMonthComboBox = null;
-	private JLabel jYearLabel = null;
-	private JComboBox<String> jYearComboBox = null;
-	private JLabel jFromDateLabel = null;
-	private JLabel jToDateLabel = null;
-	private GoodDateChooser jToDateField = null;
-	private GoodDateChooser jFromDateField = null;
+	private JPanel jPanel;
+	private JPanel jButtonPanel;
+	private JButton jCloseButton;
+	private JPanel jContentPanel;
+	private JButton jLaunchReport;
+	private JButton jCSVButton;
+	private JPanel jMonthPanel;
+	private JLabel jMonthLabel;
+	private JComboBox<String> jMonthComboBox;
+	private JLabel jYearLabel;
+	private JComboBox<String> jYearComboBox;
+	private JLabel jFromDateLabel;
+	private JLabel jToDateLabel;
+	private GoodDateChooser jToDateField;
+	private GoodDateChooser jFromDateField;
 
-	private JComboBox<String> jRptComboBox = null;
+	private JComboBox<String> jRptComboBox;
 
 	private String[][] reportMatrix = {
-		{"angal.stat.registeredpatient", 				"OH001_RegisteredPatients", 										"twodates"},
-		{"angal.stat.registeredpatientbyprovenance", 	"OH002_RegisteredPatientsByProvenance", 							"twodates"},
-		{"angal.stat.registeredpatientbyageandsex", 	"OH003_RegisteredPatientsByAgeAndSex", 								"twodates"},
-		{"angal.stat.incomesallbypricecodes", 			"OH004_IncomesAllByPriceCodes", 									"twodates"},
-		{"angal.stat.outpatientcount", 					"OH005_opd_count_monthly_report", 									"monthyear"},
-		{"angal.stat.outpatientdiagnoses", 				"OH006_opd_dis_monthly_report", 									"monthyear"},
-		{"angal.stat.labmonthlybasic", 					"OH007_lab_monthly_report", 										"monthyear"},
-		{"angal.stat.labmonthlyresult", 				"OH007_lab_result_report", 											"twodates"},
-		{"angal.stat.labsummaryforopd", 				"OH008_lab_summary_for_opd", 										"monthyear"},
-		{"angal.stat.inpatientreport", 					"OH009_InPatientReport", 											"twodates"},
-		{"angal.stat.outpatientreport", 				"OH010_OutPatientReport", 											"twodates"},
-		{"angal.stat.allIncomes",						"BillsReport",														"twodates"},
-		{"angal.stat.allIncomespending",				"BillsReportPending",												"twodates"},
-		{"angal.stat.allIncomesmonth",					"BillsReportMonthly",												"twodates"},
-		{"angal.stat.allIncomesmonthward",				"BillsReportMonthlyWard",												"twodates"},
-		{"angal.stat.pageonecensusinfo", 				"hmis108_cover", 													"twodatesfrommonthyear"},
-		{"angal.stat.pageonereferrals", 				"hmis108_referrals", 												"monthyear"},
-		{"angal.stat.pageoneoperations", 				"hmis108_operations", 												"monthyear"},
-		{"angal.stat.inpatientdiagnosisin", 			"hmis108_adm_by_diagnosisIn", 										"monthyear"},
-		{"angal.stat.inpatientdiagnosisout", 			"hmis108_adm_by_diagnosisOut", 										"monthyear"},
-		{"angal.stat.opdattendance", 					"hmis105_opd_attendance", 											"monthyear"},
-		{"angal.stat.opdreferrals", 					"hmis105_opd_referrals", 											"monthyear"},
-		{"angal.stat.opdbydiagnosis", 					"hmis105_opd_by_diagnosis", 										"monthyear"},
-		{"angal.stat.labmonthlyformatted", 				"hmis055b_lab_monthly_formatted", 									"monthyear"},
-		{"angal.stat.weeklyepidemsurveil", 				"hmis033_weekly_epid_surv", 										"twodates"},
-		{"angal.stat.weeklyepidemsurveilunder5", 		"hmis033_weekly_epid_surv_under_5", 								"twodates"},
-		{"angal.stat.weeklyepidemsurveilover5", 		"hmis033_weekly_epid_surv_over_5", 									"twodates"},
-		{"angal.stat.monthlyworkloadreportpage1", 		"MOH717_Monthly_Workload_Report_for_Hospitals_page1", 				"monthyear"},
-		{"angal.stat.monthlyworkloadreportpage2", 		"MOH717_Monthly_Workload_Report_for_Hospitals_page2", 				"monthyear"},
-		{"angal.stat.dailyopdmorbiditysummaryunder5", 	"MOH705A_Under_5_Years_Daily_Outpatient_Morbidity_Summary_Sheet", 	"monthyear"},
-		{"angal.stat.dailyopdmorbiditysummaryover5", 	"MOH705B_Over_5_Years_Daily_Outpatient_Morbidity_Summary_Sheet", 	"monthyear"},
+		{"angal.stat.registeredpatient", 				"OH001_RegisteredPatients", TWODATES },
+		{"angal.stat.registeredpatientbyprovenance", 	"OH002_RegisteredPatientsByProvenance", TWODATES },
+		{"angal.stat.registeredpatientbyageandsex", 	"OH003_RegisteredPatientsByAgeAndSex", TWODATES },
+		{"angal.stat.incomesallbypricecodes", 			"OH004_IncomesAllByPriceCodes", TWODATES },
+		{"angal.stat.outpatientcount", 					"OH005_opd_count_monthly_report", MONTHYEAR },
+		{"angal.stat.outpatientdiagnoses", 				"OH006_opd_dis_monthly_report", MONTHYEAR },
+		{"angal.stat.labmonthlybasic", 					"OH007_lab_monthly_report", MONTHYEAR },
+		{"angal.stat.labmonthlyresult", 				"OH007_lab_result_report", TWODATES },
+		{"angal.stat.labsummaryforopd", 				"OH008_lab_summary_for_opd", MONTHYEAR },
+		{"angal.stat.inpatientreport", 					"OH009_InPatientReport", TWODATES },
+		{"angal.stat.outpatientreport", 				"OH010_OutPatientReport", TWODATES },
+		{"angal.stat.allIncomes",						"BillsReport", TWODATES },
+		{"angal.stat.allIncomespending",				"BillsReportPending", TWODATES },
+		{"angal.stat.allIncomesmonth",					"BillsReportMonthly", TWODATES },
+		{"angal.stat.allIncomesmonthward",				"BillsReportMonthlyWard", TWODATES },
+		{"angal.stat.pageonecensusinfo", 				"hmis108_cover", TWODATESFROMMONTHYEAR },
+		{"angal.stat.pageonereferrals", 				"hmis108_referrals", MONTHYEAR },
+		{"angal.stat.pageoneoperations", 				"hmis108_operations", MONTHYEAR },
+		{"angal.stat.inpatientdiagnosisin", 			"hmis108_adm_by_diagnosisIn", MONTHYEAR },
+		{"angal.stat.inpatientdiagnosisout", 			"hmis108_adm_by_diagnosisOut", MONTHYEAR },
+		{"angal.stat.opdattendance", 					"hmis105_opd_attendance", MONTHYEAR },
+		{"angal.stat.opdreferrals", 					"hmis105_opd_referrals", MONTHYEAR },
+		{"angal.stat.opdbydiagnosis", 					"hmis105_opd_by_diagnosis", MONTHYEAR },
+		{"angal.stat.labmonthlyformatted", 				"hmis055b_lab_monthly_formatted", MONTHYEAR },
+		{"angal.stat.weeklyepidemsurveil", 				"hmis033_weekly_epid_surv", TWODATES },
+		{"angal.stat.weeklyepidemsurveilunder5", 		"hmis033_weekly_epid_surv_under_5", TWODATES },
+		{"angal.stat.weeklyepidemsurveilover5", 		"hmis033_weekly_epid_surv_over_5", TWODATES },
+		{"angal.stat.monthlyworkloadreportpage1", 		"MOH717_Monthly_Workload_Report_for_Hospitals_page1", MONTHYEAR },
+		{"angal.stat.monthlyworkloadreportpage2", 		"MOH717_Monthly_Workload_Report_for_Hospitals_page2", MONTHYEAR },
+		{"angal.stat.dailyopdmorbiditysummaryunder5", 	"MOH705A_Under_5_Years_Daily_Outpatient_Morbidity_Summary_Sheet", MONTHYEAR },
+		{"angal.stat.dailyopdmorbiditysummaryover5", 	"MOH705B_Over_5_Years_Daily_Outpatient_Morbidity_Summary_Sheet", MONTHYEAR },
 	};
 
-	private JComboBox<String> shareWith = null;
-	Interaction userOh = null;
+	private JComboBox<String> shareWith;
+	Interaction userOh;
 
 	/**
 	 * This is the default constructor
@@ -212,7 +213,7 @@ public class ReportLauncher extends ModalJFrame{
 			jContentPanel = new JPanel(new BorderLayout());
 			
 			JPanel rep1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			rep1 = setMyBorder(rep1, MessageBundle.getMessage("angal.stat.parametersselectionframe") + " ");
+			rep1 = setMyBorder(rep1, MessageBundle.getMessage("angal.stat.parametersselectionframe") + ' ');
 			rep1.add(getJParameterSelectionPanel());
 
 			jContentPanel.add(rep1, BorderLayout.NORTH);
@@ -259,20 +260,20 @@ public class ReportLauncher extends ModalJFrame{
 			jMonthComboBox.addItem(MessageBundle.getMessage("angal.stat.november"));
 			jMonthComboBox.addItem(MessageBundle.getMessage("angal.stat.december"));
 
-			jMonthComboBox.setSelectedIndex(month);
+			jMonthComboBox.setSelectedIndex(month - 1);
 
 			jYearLabel = new JLabel("        " + MessageBundle.getMessage("angal.stat.year"));
 			jYearComboBox = new JComboBox<>();
 
 			for (int i = 0; i < 20; i++) {
-				jYearComboBox.addItem((year - i) + "");
+				jYearComboBox.addItem(String.valueOf(year - i));
 			}
 			
-			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.fromdate"));
-			LocalDate defaultDate = LocalDate.now().minusMonths(8);
+			jFromDateLabel = new JLabel(MessageBundle.getMessage("angal.common.datefrom.label"));
+			LocalDate defaultDate = LocalDate.now().minusMonths(8L);
 			jFromDateField = new GoodDateChooser(defaultDate);
-			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.stat.todate"));
-			defaultDate = defaultDate.plusMonths(7);
+			jToDateLabel = new JLabel(MessageBundle.getMessage("angal.common.dateto.label"));
+			defaultDate = defaultDate.plusMonths(7L);
 			jToDateField = new GoodDateChooser(defaultDate);
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
@@ -296,7 +297,7 @@ public class ReportLauncher extends ModalJFrame{
 	protected void selectAction() {
 		int rptIndex = jRptComboBox.getSelectedIndex();
 		String sParType = reportMatrix[rptIndex][TYPE];
-		if (sParType.equalsIgnoreCase("twodates")) {
+		if (sParType.equalsIgnoreCase(TWODATES)) {
 			jMonthComboBox.setVisible(false);
 			jMonthLabel.setVisible(false);
 			jYearComboBox.setVisible(false);
@@ -306,7 +307,7 @@ public class ReportLauncher extends ModalJFrame{
 			jToDateLabel.setVisible(true);
 			jToDateField.setVisible(true);
 		}
-		if (sParType.equalsIgnoreCase("twodatesfrommonthyear")) {
+		if (sParType.equalsIgnoreCase(TWODATESFROMMONTHYEAR)) {
 			jMonthComboBox.setVisible(true);
 			jMonthLabel.setVisible(true);
 			jYearComboBox.setVisible(true);
@@ -316,7 +317,7 @@ public class ReportLauncher extends ModalJFrame{
 			jToDateLabel.setVisible(false);
 			jToDateField.setVisible(false);
 		}
-		if (sParType.equalsIgnoreCase("monthyear")) {
+		if (sParType.equalsIgnoreCase(MONTHYEAR)) {
 			jMonthComboBox.setVisible(true);
 			jMonthLabel.setVisible(true);
 			jYearComboBox.setVisible(true);
@@ -351,24 +352,24 @@ public class ReportLauncher extends ModalJFrame{
 	protected void generateReport(boolean toExcel) {
 		   
 		int rptIndex = jRptComboBox.getSelectedIndex();
-		int month = jMonthComboBox.getSelectedIndex()+1;
+		int month = jMonthComboBox.getSelectedIndex() + 1;
 		int year = (Integer.parseInt((String)jYearComboBox.getSelectedItem()));
 		String fromDate = TimeTools.formatDateTime(jFromDateField.getDate().atStartOfDay(), DATE_FORMAT_DD_MM_YYYY);
 		String toDate = TimeTools.formatDateTime(jToDateField.getDate().atTime(LocalTime.MAX), DATE_FORMAT_DD_MM_YYYY);
 
 		if (rptIndex >= 0) {
 			String sParType = reportMatrix[rptIndex][TYPE];
-			if (sParType.equalsIgnoreCase("twodates")) {
+			if (sParType.equalsIgnoreCase(TWODATES)) {
 				new GenericReportFromDateToDate(fromDate, toDate, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]),
 						toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + " " + toDate + " " + reportMatrix[rptIndex][FILENAME],
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + ' ' + toDate + ' ' + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
-			if (sParType.equalsIgnoreCase("twodatesfrommonthyear")) {
+			if (sParType.equalsIgnoreCase(TWODATESFROMMONTHYEAR)) {
 				LocalDate now = LocalDate.now();
 				now = now.withDayOfMonth(1);
 				now = now.withMonth(month);
@@ -382,16 +383,16 @@ public class ReportLauncher extends ModalJFrame{
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + " " + toDate + " " + reportMatrix[rptIndex][FILENAME],
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + fromDate + ' ' + toDate + ' ' + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}
-			if (sParType.equalsIgnoreCase("monthyear")) {
+			if (sParType.equalsIgnoreCase(MONTHYEAR)) {
 				new GenericReportMY(month, year, reportMatrix[rptIndex][FILENAME], MessageBundle.getMessage(reportMatrix[rptIndex][BUNDLE]), toExcel);
 				if (GeneralData.XMPPMODULEENABLED) {
 					String user = (String) shareWith.getSelectedItem();
 					CommunicationFrame frame = (CommunicationFrame) CommunicationFrame.getFrame();
-					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + " " + year + " " + reportMatrix[rptIndex][FILENAME],
+					frame.sendMessage("011100100110010101110000011011110111001001110100 " + month + ' ' + year + ' ' + reportMatrix[rptIndex][FILENAME],
 							user, false);
 				}
 			}

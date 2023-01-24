@@ -38,6 +38,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import javax.swing.BorderFactory;
@@ -55,10 +56,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 import javax.swing.event.EventListenerList;
 
 import org.isf.agetype.manager.AgeTypeBrowserManager;
 import org.isf.agetype.model.AgeType;
+import org.isf.anamnesis.gui.PatientHistoryEdit;
+import org.isf.anamnesis.manager.PatientHistoryManager;
+import org.isf.anamnesis.model.PatientHistory;
+import org.isf.anamnesis.model.PatientPatientHistory;
+import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.generaldata.SmsParameters;
 import org.isf.menu.manager.Context;
@@ -97,8 +104,13 @@ public class PatientInsertExtended extends JDialog {
 	private static final long serialVersionUID = -827831581202765055L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PatientInsertExtended.class);
+	
+
+	private PatientHistoryManager patientHistoryManager = Context.getApplicationContext().getBean(PatientHistoryManager.class);
 
 	private EventListenerList patientListeners = new EventListenerList();
+	
+	private PatientHistory patientHistory;
 
 	public interface PatientListener extends EventListener {
 
@@ -299,6 +311,7 @@ public class PatientInsertExtended extends JDialog {
 	// COMPONENTS: Buttons
 	private JPanel jButtonPanel = null;
 	private JButton jOkButton = null;
+	private JButton jAnamnesisButton = null;
 	private JButton jCancelButton = null;
 
 	private JLabel labelRequiredFields;
@@ -383,9 +396,33 @@ public class PatientInsertExtended extends JDialog {
 		if (jButtonPanel == null) {
 			jButtonPanel = new JPanel();
 			jButtonPanel.add(getJOkButton(), null);
+			jButtonPanel.add(getJAnamnesisButton(), null);
 			jButtonPanel.add(getJCancelButton(), null);
 		}
 		return jButtonPanel;
+	}
+
+	private JButton getJAnamnesisButton() {
+		if (jAnamnesisButton == null) {
+			jAnamnesisButton = new JButton(MessageBundle.getMessage("angal.anamnesis.open.anamnesis.btn"));
+			jAnamnesisButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.anamnesis.btn.key"));
+			PatientInsertExtended self = this;
+			jAnamnesisButton.addActionListener(actionEvent -> {
+				patientHistory = new PatientHistory();
+				if (patient.getCode() != null) {
+					patientHistory = Optional.ofNullable(this.patientHistoryManager.getByPatientId(patient.getCode())).orElse(patientHistory);
+				}
+				PatientPatientHistory pph = new PatientPatientHistory(patientHistory, patient);
+				PatientHistoryEdit dialog = new PatientHistoryEdit(PatientInsertExtended.this, pph, false);
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				dialog.pack();
+				dialog.setLocationRelativeTo(null);
+				dialog.setModal(insert);
+				dialog.setVisible(true);
+			});
+		  
+		}
+		return jAnamnesisButton;
 	}
 
 	/**
@@ -419,12 +456,12 @@ public class PatientInsertExtended extends JDialog {
 					try {
 						if (patientBrowserManager.isNamePresent(name)) {
 							switch (MessageDialog.yesNo(null, "angal.patient.thepatientisalreadypresent.msg")) {
-								case JOptionPane.OK_OPTION:
-									ok = true;
-									break;
-								case JOptionPane.NO_OPTION:
-									ok = false;
-									break;
+							case JOptionPane.OK_OPTION:
+								ok = true;
+								break;
+							case JOptionPane.NO_OPTION:
+								ok = false;
+								break;
 							}
 						}
 					} catch (OHServiceException ex) {
@@ -494,6 +531,10 @@ public class PatientInsertExtended extends JDialog {
 
 						try {
 							patient = patientBrowserManager.savePatient(patient);
+							if (patientHistory != null) {
+								patientHistory.setPatientId(patient.getCode());
+								patientHistoryManager.saveOrUpdate(patientHistory);
+							}
 							firePatientInserted(patient);
 							if (justSave) {
 								insert = false;
@@ -573,6 +614,10 @@ public class PatientInsertExtended extends JDialog {
 
 					try {
 						patient = patientBrowserManager.savePatient(patient);
+						if (patientHistory != null) {
+							patientHistory.setPatientId(patient.getCode());
+							patientHistoryManager.saveOrUpdate(patientHistory);
+						}
 						firePatientUpdated(patient);
 						dispose();
 					} catch (final OHServiceException ex) {
@@ -595,7 +640,7 @@ public class PatientInsertExtended extends JDialog {
 		if (jAgeTypeAge.isSelected()) {
 			try {
 				years = Integer.parseInt(jAgeYears.getText());
-				if (years < 0 || years > 200) {
+				if (years < 0 || years > 120) {
 					return false;
 				}
 				if (years > 100) {
@@ -1653,12 +1698,8 @@ public class PatientInsertExtended extends JDialog {
 		if (jDataContainPanel == null) {
 			jDataContainPanel = new JPanel();
 			if (!insert) {
-				StringBuilder title = new StringBuilder(patient.getName())
-						.append(" (")
-						.append(MessageBundle.getMessage("angal.common.code.txt"))
-						.append(": ")
-						.append(patient.getCode())
-						.append(")");
+				StringBuilder title = new StringBuilder(patient.getName()).append(" (").append(MessageBundle.getMessage("angal.common.code.txt")).append(": ")
+								.append(patient.getCode()).append(")");
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel, title.toString());
 			} else {
 				jDataContainPanel = setMyBorderCenter(jDataContainPanel, MessageBundle.getMessage("angal.patient.insertdataofnewpatient"));
@@ -1709,14 +1750,14 @@ public class PatientInsertExtended extends JDialog {
 			jFatherPanel.add(getJFatherOptions(), BorderLayout.CENTER);
 			if (!insert) {
 				switch (patient.getFather()) {
-					case 'D':
-						getJFatherDead().setSelected(true);
-						break;
-					case 'A':
-						getJFatherAlive().setSelected(true);
-						break;
-					default:
-						break;
+				case 'D':
+					getJFatherDead().setSelected(true);
+					break;
+				case 'A':
+					getJFatherAlive().setSelected(true);
+					break;
+				default:
+					break;
 				}
 			}
 
@@ -1792,14 +1833,14 @@ public class PatientInsertExtended extends JDialog {
 			motherGroup.add(getJMotherUnknown());
 			if (!insert) {
 				switch (patient.getMother()) {
-					case 'D':
-						getJMotherDead().setSelected(true);
-						break;
-					case 'A':
-						getJMotherAlive().setSelected(true);
-						break;
-					default:
-						break;
+				case 'D':
+					getJMotherDead().setSelected(true);
+					break;
+				case 'A':
+					getJMotherAlive().setSelected(true);
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -1874,14 +1915,14 @@ public class PatientInsertExtended extends JDialog {
 			insuranceGroup.add(getJInsuranceUnknown());
 			if (!insert) {
 				switch (patient.getHasInsurance()) {
-					case 'Y':
-						getJInsuranceYes().setSelected(true);
-						break;
-					case 'N':
-						getJInsuranceNo().setSelected(true);
-						break;
-					default:
-						break;
+				case 'Y':
+					getJInsuranceYes().setSelected(true);
+					break;
+				case 'N':
+					getJInsuranceNo().setSelected(true);
+					break;
+				default:
+					break;
 				}
 			}
 			jInsurancePanel.add(groupPanel, BorderLayout.CENTER);
@@ -1944,14 +1985,14 @@ public class PatientInsertExtended extends JDialog {
 			jParentPanel.add(getJParentUnknown());
 			if (!insert) {
 				switch (patient.getParentTogether()) {
-					case 'Y':
-						getJParentYes().setSelected(true);
-						break;
-					case 'N':
-						getJParentNo().setSelected(true);
-						break;
-					default:
-						break;
+				case 'Y':
+					getJParentYes().setSelected(true);
+					break;
+				case 'N':
+					getJParentNo().setSelected(true);
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -2114,7 +2155,7 @@ public class PatientInsertExtended extends JDialog {
 			try {
 				PatientProfilePhoto photo = this.patientBrowserManager.retrievePatientProfilePhoto(patient);
 				final Image image = photo != null ? photo.getPhotoAsImage() : null;
-				Image scaledImage = image != null ? ImageUtil.scaleImage(image, PatientGuiConst.IMAGE_THUMBNAIL_MAX_WIDTH) : null;
+				Image scaledImage = image != null ? ImageUtil.scaleImage(image, GeneralData.IMAGE_THUMBNAIL_MAX_WIDTH) : null;
 				photoPanel = new PatientPhotoPanel(this, patient.getCode(), scaledImage);
 
 			} catch (IOException ioException) {
@@ -2138,9 +2179,9 @@ public class PatientInsertExtended extends JDialog {
 			jNoteScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			jNoteScrollPane.setPreferredSize(new Dimension(200, 200));
 			jNoteScrollPane.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patient.note")),
-							BorderFactory.createEmptyBorder(5, 5, 5, 5)),
-					jNoteScrollPane.getBorder()));
+							BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.patient.note")),
+											BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+							jNoteScrollPane.getBorder()));
 		}
 		return jNoteScrollPane;
 	}
