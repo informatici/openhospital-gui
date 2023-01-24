@@ -486,7 +486,7 @@ public class DicomViewGui extends JPanel {
 						MessageBundle.formatMessage("angal.dicom.thefileisnotindicomformat.fmt.msg", dett.getFileName()),
 						OHSeverityLevel.ERROR));
 			}
-			imageInputStream.close();
+			//imageInputStream.close();
 			this.attributes = null;
 		} catch (Exception exception) {
 			LOGGER.error(exception.getMessage(), exception);
