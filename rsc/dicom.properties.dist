@@ -1,5 +1,6 @@
 #dicom.manager.impl=org.isf.dicom.manager.FileSystemDicomManager 	# filesystem storage
-#dicom.manager.impl=org.isf.dicom.manager.SqlDicomManager			# database storage
+#dicom.manager.impl=org.isf.dicom.manager.SqlDicomManager		# database storage
+
 #dicom.max.size=1024B, 2048B, 1M, 16M, 256M, 512M, 1024M, 1G		# image size examples
 dicom.manager.impl=org.isf.dicom.manager.DICOM_STORAGE
 dicom.storage.filesystem=OH_PATH_SUBSTITUTE/DICOM_DIR
