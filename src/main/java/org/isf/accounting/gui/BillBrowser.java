@@ -131,6 +131,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 			}
 			if (!isSingleUser && MainMenu.checkUserGrants("cashiersfilter")) {
 				if (!users.contains(user)) {
+					users.add(user);
 					jComboUsers.addItem(user);
 				}
 				jComboUsers.setSelectedItem(user);
@@ -189,7 +190,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	};
 	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
 	private int[] columnsWidth = { 50, 50, 150, 50, 50, 100, 150, 50, 100, 50 };
-	private int[] maxWidth = { 50, 150, 150, 150, 200, 100, 150, 50, 100, 50 };
+	private int[] maxWidth = { 70, 150, 150, 150, 200, 100, 150, 50, 100, 50 };
 	private boolean[] columnsResizable = { false, false, false, false, true, false, false, false, false, false };
 	private Class<?>[] columnsClasses = { String.class, Integer.class, String.class, String.class, String.class, Double.class, String.class, String.class,
 			Double.class, ImageIcon.class };
@@ -866,6 +867,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 
 			if (users.contains(user)) {
 				jComboUsers.setSelectedItem(user);
+			} else {
+				jComboUsers.setSelectedItem("admin");
 			}
 
 			jComboUsers.addActionListener(actionEvent -> {
