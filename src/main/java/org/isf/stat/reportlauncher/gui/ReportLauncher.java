@@ -245,22 +245,21 @@ public class ReportLauncher extends ModalJFrame{
 				for(File f: jasperFilesInFolder) {
 					try {
 						Properties props = ConfigurationProperties.loadPropertiesFile(
-										f.getName().replace(".jasper", "_"+(new Locale(GeneralData.LANGUAGE)).getLanguage()+".properties"), LOGGER);
+										f.getName().replace(".jasper", '_' + (new Locale(GeneralData.LANGUAGE)).getLanguage() + ".properties"), LOGGER);
 						
-						if(props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
+						if (props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
 							reportNameFileMap.put(props.getProperty("jTitle"), f);
 							jRptComboBoxList.add(props.getProperty("jTitle"));
-						}
-						else {
+						} else {
 							props = ConfigurationProperties.loadPropertiesFile(
 											f.getName().replace(".jasper", ".properties"), LOGGER);
 							
-							if(props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
+							if (props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
 								reportNameFileMap.put(props.getProperty("jTitle"), f);
 								jRptComboBoxList.add(props.getProperty("jTitle"));
+							} else {
+								jRptComboBoxList.add(StringUtils.capitalize(f.getName()));
 							}
-							else
-								jRptComboBoxList.add(StringUtils.capitalize(f.getName().replace(".jasper", "").replace("_", " ")));
 						}
 					} catch (Exception e) {
 						e.getStackTrace();
@@ -335,14 +334,14 @@ public class ReportLauncher extends ModalJFrame{
 
 	protected void selectAction() {
 		File jasperFile = reportNameFileMap.get(jRptComboBox.getSelectedItem().toString());
-		if(jasperFile != null) {
+		if (jasperFile != null) {
 			try {
 				JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperFile);
 				JRParameter[] params = jasperReport.getParameters();
 				
 				List<JRParameter> userInputParams = Arrays.asList(params).stream().filter(t -> !t.isSystemDefined() && t.isForPrompting()).collect(Collectors.toList());
 				userInputParamNames = userInputParams.stream().map(t -> t.getName()).collect(Collectors.toList());
-				if(userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
+				if (userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
 					jMonthComboBox.setVisible(false);
 					jMonthLabel.setVisible(false);
 					jYearComboBox.setVisible(false);
@@ -351,8 +350,7 @@ public class ReportLauncher extends ModalJFrame{
 					jFromDateField.setVisible(true);
 					jToDateLabel.setVisible(true);
 					jToDateField.setVisible(true);
-				}
-				else if(userInputParamNames.contains("month") || userInputParamNames.contains("year")) {
+				} else if (userInputParamNames.contains("month") || userInputParamNames.contains("year")) {
 					jMonthComboBox.setVisible(true);
 					jMonthLabel.setVisible(true);
 					jYearComboBox.setVisible(true);
@@ -396,8 +394,8 @@ public class ReportLauncher extends ModalJFrame{
 	
 	
 	protected void generateReport(boolean toExcel) {
-		if(jRptComboBox.getSelectedItem() != null) {
-			if(userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
+		if (jRptComboBox.getSelectedItem() != null) {
+			if (userInputParamNames.contains("fromdate") || userInputParamNames.contains("todate")) {
 				new GenericReportFromDateToDate(jFromDateField.getDate(), jToDateField.getDate(), 
 								folderNameFileNameMap.get("rpt_stat").contains(reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", "")) ? "rpt_stat" : "rpt_extra",
 								reportNameFileMap.get(jRptComboBox.getSelectedItem().toString()).getName().replace(".jasper", ""), 
