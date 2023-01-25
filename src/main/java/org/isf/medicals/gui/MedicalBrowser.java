@@ -634,6 +634,7 @@ public class MedicalBrowser extends ModalJFrame implements MedicalListener {
 		new GenericReportFromDateToDate(
 				from,
 				to,
+				"rpt_base", 
 				"PharmaceuticalExpiration",
 				MessageBundle.getMessage("angal.medicals.expiringreport"),
 				false);

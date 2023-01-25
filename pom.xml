@@ -128,10 +128,40 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.basedir}/target/OpenHospital20/rpt</outputDirectory>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/rpt_base</outputDirectory>
 							<resources>
 								<resource>
-									<directory>rpt</directory>
+									<directory>rpt_base</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-report_extra</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/rpt_extra</outputDirectory>
+							<resources>
+								<resource>
+									<directory>rpt_extra</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-report-stat</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/target/OpenHospital20/rpt_stat</outputDirectory>
+							<resources>
+								<resource>
+									<directory>rpt_stat</directory>
 								</resource>
 							</resources>
 						</configuration>
@@ -215,7 +245,9 @@
 								<exclude>**/README</exclude>
 								<exclude>doc/**/*.txt</exclude>
 								<exclude>lib/**</exclude>
-								<exclude>rpt/**</exclude>
+								<exclude>rpt_base/**</exclude>
+								<exclude>rpt_extra/**</exclude>
+								<exclude>rpt_stat/**</exclude>
 								<exclude>rsc/**</exclude>
 								<exclude>src/test/resources/**</exclude>
 								<exclude>src/main/resources/**</exclude>
