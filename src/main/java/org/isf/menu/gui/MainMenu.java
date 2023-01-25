@@ -32,9 +32,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -56,6 +58,8 @@ import org.isf.menu.model.User;
 import org.isf.menu.model.UserGroup;
 import org.isf.menu.model.UserMenuItem;
 import org.isf.session.UserSession;
+import org.isf.sessionaudit.manager.SessionAuditManager;
+import org.isf.sessionaudit.model.SessionAudit;
 import org.isf.sms.service.SmsSender;
 import org.isf.utils.exception.OHServiceException;
 import org.isf.utils.exception.gui.OHServiceExceptionUtil;
@@ -74,8 +78,9 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 	public static final String ADMIN_STR = "admin";
 	private boolean flag_Xmpp;
 	private boolean flag_Sms;
-
+	private SessionAuditManager sessionAuditManager = Context.getApplicationContext().getBean(SessionAuditManager.class);
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
+	private Integer sessionAuditId;
 
 	@Override
 	public void loginInserted(AWTEvent e) {
@@ -174,7 +179,11 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				actionExit(2);
 			}
 		}
-
+		try {
+			this.sessionAuditId = sessionAuditManager.newSessionAudit(new SessionAudit(myUser.getUserName(), LocalDateTime.now(), null));
+		} catch (OHServiceException e1) {
+			LOGGER.error("Unable to log user login in the session_audit table");
+		}
 		// get menu items
 		try {
 			myMenu = userBrowsingManager.getMenu(myUser);
@@ -193,9 +202,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				}
 				new CommunicationFrame();
 				/*
-				 * Interaction communication= new Interaction(); 
-				 * communication.incomingChat(); 
-				 * communication.receiveFile();
+				 * Interaction communication= new Interaction(); communication.incomingChat(); communication.receiveFile();
 				 */
 			} catch (XMPPException e) {
 				String message = e.getMessage();
@@ -314,6 +321,7 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		if (2 == status) {
 			LOGGER.info("Login failed.");
 		}
+		updateSessionAudit();
 		String newLine = System.lineSeparator();
 		LOGGER.info("{}{}====================={} Open Hospital closed {}====================={}", newLine, newLine, newLine, newLine, newLine);
 		System.exit(status);
@@ -390,14 +398,14 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				if (u.getMySubmenu().equals("main")) {
 					button[k] = new JButton(u.getButtonLabel());
 					button[k].setMnemonic(KeyEvent.VK_A + (u.getShortcut() - 'A'));
-				    button[k].addActionListener(parentFrame);
+					button[k].addActionListener(parentFrame);
 					button[k].setActionCommand(u.getCode());
 					k++;
 				}
 			}
-			
+
 			addLogoutButton(button, k);
-			
+
 			add(getLogoPanel(), BorderLayout.WEST);
 
 			JPanel buttonsPanel = new JPanel();
@@ -428,13 +436,15 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 			button[k] = new JButton(MessageBundle.getMessage("angal.menu.logout.btn"));
 			button[k].setMnemonic(MessageBundle.getMnemonic("angal.menu.logout.btn.key"));
 			if (!singleUser) {
-				button[k].addActionListener(actionEvent -> UserSession.restartSession());
+				button[k].addActionListener(actionEvent -> {
+					updateSessionAudit();
+					UserSession.restartSession();
+				});
 			} else {
 				button[k].addActionListener(actionEvent -> actionExit(0));
 			}
 			button[k].setActionCommand("logout");
 		}
-
 
 		private JPanel getLogoPanel() {
 			JLabel logo_appl = new JLabel(new ImageIcon("rsc" + File.separator + "images" + File.separator + "logo_menu_vert.png"));
@@ -462,6 +472,19 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 
 	public static void clearUser() {
 		myUser = null;
+	}
+
+	private void updateSessionAudit() {
+		try {
+			Optional<SessionAudit> sa = sessionAuditManager.getSessionAudit(this.sessionAuditId);
+			if (sa.isPresent()) {
+				SessionAudit sessionAudit = sa.get();
+				sessionAudit.setLogoutDate(LocalDateTime.now());
+				sessionAuditManager.updateSessionAudit(sessionAudit);
+			}
+		} catch (OHServiceException e) {
+			LOGGER.error("Unable to log user login in the session_audit table");
+		}
 	}
 
 }
