@@ -1210,11 +1210,7 @@ public class AdmittedPatientBrowser extends ModalJFrame implements
 			jSearchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
 			jSearchButton.setPreferredSize(new Dimension(20, 20));
 			jSearchButton.addActionListener(actionEvent -> {
-				((JButton) actionEvent.getSource()).setEnabled(false);
-				SwingUtilities.invokeLater(() -> {
-					searchPatient();
-					EventQueue.invokeLater(() -> ((JButton) actionEvent.getSource()).setEnabled(true));
-				});
+				searchPatient();
 			});
 		}
 		return jSearchButton;
