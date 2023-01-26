@@ -50,10 +50,10 @@ WRITE_CONFIG_FILES="off"
 
 # language setting - default set to en
 OH_LANGUAGE_LIST="en|fr|es|it|pt|ar"
-OH_LANGUAGE=en # default
+#OH_LANGUAGE="en" # default
 
 # single / multiuser - set "yes" for single user configuration
-OH_SINGLE_USER="no"
+#OH_SINGLE_USER="no"
 
 # set log level to INFO | DEBUG - default set to INFO
 LOG_LEVEL="INFO"
@@ -67,13 +67,12 @@ DEMO_DATA="off"
 #JAVA_BIN=`which java`
 
 ##################### Database configuration #######################
-DATABASE_SERVER=localhost
+DATABASE_SERVER="localhost"
 DATABASE_PORT="3306"
 DATABASE_ROOT_PW="tmp2021oh111"
 DATABASE_NAME="oh"
 DATABASE_USER="isf"
 DATABASE_PASSWORD="isf123"
-#DATABASE_LANGUAGE=en # default to en
 
 #######################  OH configuration  #########################
 DICOM_MAX_SIZE="4M"
@@ -97,7 +96,7 @@ LOG_FILE="startup.log"
 OH_LOG_FILE="openhospital.log"
 
 # SQL creation files
-DB_CREATE_SQL="create_all_en.sql" # default to en
+#DB_CREATE_SQL="create_all_en.sql" # default to en
 DB_DEMO="create_all_demo.sql"
 
 ######################## Other settings ########################
@@ -160,10 +159,6 @@ MYSQL_NAME="MariaDB" # For console output - MariaDB/MYSQL_NAME
 ### JRE 11 - zulu distribution
 JAVA_DISTRO="zulu11.62.17-ca-jre11.0.18-linux_$JAVA_PACKAGE_ARCH"
 JAVA_URL="https://cdn.azul.com/zulu/bin"
-
-### JRE 8 - zulu distribution
-#JAVA_DISTRO="zulu8.60.0.21-ca-jre8.0.322-linux_$JAVA_PACKAGE_ARCH"
-#JAVA_URL="https://cdn.azul.com/zulu/bin/"
 JAVA_DIR=$JAVA_DISTRO
 
 ######################## DO NOT EDIT BELOW THIS LINE ########################
@@ -171,42 +166,44 @@ JAVA_DIR=$JAVA_DISTRO
 ######################## Functions ########################
 
 function script_menu {
-        # show help / user options
-        echo " -----------------------------------------------------------------"
-        echo "|                                                                 |"
-        echo "|                       Open Hospital | OH                        |"
-        echo "|                                                                 |"
-        echo " -----------------------------------------------------------------"
-        echo " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
-        echo " -----------------------------------------------------------------"
-        echo ""
-        echo " Usage: $SCRIPT_NAME [ -l $OH_LANGUAGE_LIST ] "
-        echo ""
-        echo "   -C    set OH in CLIENT mode"
-        echo "   -P    set OH in PORTABLE mode"
-	echo "   -S    set OH in SERVER (Portable)"
-        echo "   -l    set language: $OH_LANGUAGE_LIST"
-        echo "   -w    save OH configuration"
-        echo "   -v    show configuration"
-        echo "   -X    clean/reset OH installation"
-        echo "   -q    quit"
-        echo ""
-        echo "   --------------------- "
-        echo "    advanced options"
-        echo ""
-        echo "   -d    toggle log level INFO/DEBUG"
-        echo "   -G    setup GSM"
-        echo "   -D    initialize OH with Demo data"
-        echo "   -i    initialize/install OH database"
-        echo "   -s    save OH database"
-        echo "   -r    restore OH database"
-        echo "   -m    configure OH manually"
-        echo "   -t    test database connection (CLIENT mode only)"
-        echo ""
-        echo "   -h    show help"
-        echo ""
+	# show help / user options
+	echo " -----------------------------------------------------------------"
+	echo "|                                                                 |"
+	echo "|                       Open Hospital | OH                        |"
+	echo "|                                                                 |"
+	echo " -----------------------------------------------------------------"
+	echo " arch $ARCH | lang $OH_LANGUAGE | mode $OH_MODE | log level $LOG_LEVEL | Demo $DEMO_DATA"
+	echo " -----------------------------------------------------------------"
+	echo ""
+	echo " Usage: $SCRIPT_NAME [ -l $OH_LANGUAGE_LIST ] "
+	echo ""
+	echo "   -C    set OH in CLIENT mode"
+	echo "   -P    set OH in PORTABLE mode"
+	echo "   -S    set OH in SERVER (Portable) mode"
+	echo "   -l    set language: $OH_LANGUAGE_LIST"
+	echo "   -s    save OH configuration"
+	echo "   -X    clean/reset OH installation"
+	echo "   -v    show configuration"
+	echo "   -q    quit"
+	echo ""
+	echo "   --------------------- "
+	echo "    advanced options"
+	echo ""
+	echo "   -e    export/save OH database"
+	echo "   -r    restore OH database"
+ 	echo "   -d    toggle log level INFO/DEBUG"
+	echo "   -G    setup GSM"
+	echo "   -D    initialize OH with Demo data"
+	echo "   -k    create Desktop shortcut"
+	echo "   -i    initialize/install OH database"
+	echo "   -m    configure database connection manually"
+	echo "   -t    test database connection (CLIENT mode only)"
+	echo ""
+	echo "   -h    show help"
+	echo ""
 }
 
+###################################################################
 function get_confirmation {
 	read -p "(y/n) ? " choice
 	case "$choice" in 
@@ -216,30 +213,61 @@ function get_confirmation {
 	esac
 }
 
-#function set_defaults {
+###################################################################
+function read_settings {
+	# read values for script variables from existing settings file
+	if [ -f ./$OH_DIR/rsc/settings.properties ]; then
+		echo "Reading OH settings file..."
+		. ./$OH_DIR/rsc/settings.properties
+		###  read saved settings  ###
+		OH_LANGUAGE=$LANGUAGE
+		OH_MODE=$MODE
+		OH_SINGLE_USER=$SINGLE_USER
+		#############################
+	fi
+}
+
+###################################################################
+function set_defaults {
 	# set default values for script variables
 	# config file generation - set default to off
 #####	if [ -n ${WRITE_CONFIG_FILES+x} ]; then
-#	if [ -z "$WRITE_CONFIG_FILES" ]; then
-#		WRITE_CONFIG_FILES="off"
-#	fi
+	if [ -z "$WRITE_CONFIG_FILES" ]; then
+		WRITE_CONFIG_FILES="off"
+	fi
 
-#	# OH mode - set default to PORTABLE
-#	if [ -z "$OH_MODE" ]; then
-#		OH_MODE="PORTABLE"
-#	fi
+	# OH mode - set default to PORTABLE
+	if [ -z "$OH_MODE" ]; then
+		OH_MODE="PORTABLE"
+	fi
+
+	# OH language - set default to en
+	if [ -z "$OH_LANGUAGE" ]; then
+		OH_LANGUAGE="en"
+	fi
+
+	# set database creation script in chosen language
+	if [ -z "$DB_CREATE_SQL" ]; then
+		DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
+	fi
 
 	# log level - set default to INFO
-#	if [ -z "$LOG_LEVEL" ]; then
-#		LOG_LEVEL="INFO"
-#	fi
+	if [ -z "$LOG_LEVEL" ]; then
+		LOG_LEVEL="INFO"
+	fi
+	
+	# single / multiuser - set "yes" for single user configuration
+	if [ -z "$OH_SINGLE_USER" ]; then
+		OH_SINGLE_USER="no"
+	fi
 
 	# demo data - set default to off
-#	if [ -z "$DEMO_DATA" ]; then
-#		DEMO_DATA="off"
-#	fi
-#}
+	if [ -z "$DEMO_DATA" ]; then
+		DEMO_DATA="off"
+	fi
+}
 
+###################################################################
 function set_path {
 	# get current directory
 	CURRENT_DIR=$PWD
@@ -262,36 +290,79 @@ function set_path {
 	DICOM_DIR_ESCAPED=$(echo $DICOM_DIR | sed -e 's/\//\\\//g')
 }
 
-function set_language {
-#	# set OH database language - default to en if not defined
-#	if [ -z "$DATABASE_LANGUAGE" ]; then
-#		DATABASE_LANGUAGE=en
-#	fi
+###################################################################
+function set_oh_mode {
+	#if [ -z ${OH_MODE+x} ]; then
+	#	echo "Error - OH_MODE not defined [CLIENT - PORTABLE - SERVER]! Exiting."
+	#	# if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+	#	exit 1
+	#fi
+	# if settings.properties is present set OH mode
+	if [ -f ./$OH_DIR/rsc/settings.properties ]; then
+		echo "Configuring OH mode..."
+		######## settings.properties language configuration
+		echo "Setting OH mode to $OH_MODE in OH configuration file -> settings.properties..."
+		sed -e "/^"MODE="/c"MODE=$OH_MODE"" -i ./$OH_DIR/rsc/settings.properties
+		echo "OH mode set to $OH_MODE"
+	else 
+		echo ""
+		echo "Warning: settings.properties file not found."
+	fi
+}
 
+###################################################################
+function set_language {
 	# check for valid language selection
 	case "$OH_LANGUAGE" in 
-		en|fr|it|es|pt|ar) # TBD - language array direct check
-			DATABASE_LANGUAGE=$OH_LANGUAGE
+		en|fr|it|es|pt|ar) # TBD: language array direct check
+			# set localized database creation script
+			DB_CREATE_SQL="create_all_$OH_LANGUAGE.sql"
 			;;
 		*)
 			echo "Invalid language option: $OH_LANGUAGE. Exiting."
 			exit 1
 		;;
 	esac
-	
-	# set database creation script in chosen language
-	DB_CREATE_SQL="create_all_$DATABASE_LANGUAGE.sql"
 
-	echo "Configuring OH language..."
-	######## settings.properties language configuration
-	# if language is not set to default write change
-	echo "Setting language to $OH_LANGUAGE in OH configuration file -> settings.properties..."
-	sed -e "/^"LANGUAGE="/c"LANGUAGE=$OH_LANGUAGE"" -i ./$OH_DIR/rsc/settings.properties
-
-#	fi
-
+	# if settings.properties is present set language
+	if [ -f ./$OH_DIR/rsc/settings.properties ]; then
+		echo "Configuring OH language..."
+		######## settings.properties language configuration
+		echo "Setting language to $OH_LANGUAGE in OH configuration file -> settings.properties..."
+		sed -e "/^"LANGUAGE="/c"LANGUAGE=$OH_LANGUAGE"" -i ./$OH_DIR/rsc/settings.properties
+		echo "Language set to $OH_LANGUAGE."
+	else 
+		echo ""
+		echo "Warning: settings.properties file not found."
+	fi
 }
 
+
+###################################################################
+function set_log_level {
+	if [ -f ./$OH_DIR/rsc/log4j.properties ]; then
+		echo ""
+		######## log4j.properties log_level configuration
+		echo "Setting log level to $LOG_LEVEL in OH configuration file -> log4j.properties..."
+		case "$LOG_LEVEL" in
+			*INFO*)
+				sed -e "s/DEBUG/$LOG_LEVEL/g" -i ./$OH_DIR/rsc/log4j.properties 
+			;;
+			*DEBUG*)
+				sed -e "s/INFO/$LOG_LEVEL/g" -i ./$OH_DIR/rsc/log4j.properties 
+			;;
+			*)
+				echo "Invalid log level: $LOG_LEVEL. Exiting."
+				exit 1
+			;;
+		esac
+		echo "Log level set to $LOG_LEVEL"
+	else 
+		echo ""
+		echo "Warning: log4j.properties file not found."
+	fi
+}
+###################################################################
 function initialize_dir_structure {
 	# create directory structure
 	mkdir -p "./$TMP_DIR"
@@ -301,6 +372,32 @@ function initialize_dir_structure {
 	mkdir -p "./$BACKUP_DIR"
 }
 
+###################################################################
+function create_desktop_shortcut {
+# Create Desktop application entry
+desktop_path=$(xdg-user-dir DESKTOP)
+echo "[Desktop Entry]
+	Type=Application
+	# The version of the Desktop Entry Specification
+	Version=1.12.0
+	# The name of the application
+	Name=OpenHospital
+	# A comment which will be used as a tooltip
+	Comment=Open Hospital 1.12 shortcut
+	# The path to the folder in which the executable is run
+	Path=$OH_PATH
+	# The executable of the application, possibly with arguments
+	Exec=$OH_PATH/$SCRIPT_NAME -Z
+	# The icon to display
+	Icon=$OH_PATH/$OH_DIR/rsc/icons/oh.ico
+	# Describes whether this application needs to be run in a terminal or not
+	Terminal=true
+	# Describes the categories in which this entry should be shown
+	Categories=Utility;Application;
+	" > $desktop_path/OpenHospital.desktop
+}
+
+###################################################################
 function java_lib_setup {
 	# NATIVE LIB setup
 	case $JAVA_ARCH in
@@ -334,6 +431,7 @@ function java_lib_setup {
 	done
 }
 
+###################################################################
 function java_check {
 # check if JAVA_BIN is already set and it exists
 if ( [ -z ${JAVA_BIN+x} ] || [ ! -x "$JAVA_BIN" ] ); then
@@ -367,6 +465,7 @@ echo "JAVA found!"
 echo "Using $JAVA_BIN"
 }
 
+###################################################################
 function mysql_check {
 if [ ! -d "./$MYSQL_DIR" ]; then
 	if [ ! -f "./$MYSQL_DIR.$EXT" ]; then
@@ -409,6 +508,7 @@ if [ $? -eq 1 ]; then
 fi
 }
 
+###################################################################
 function config_database {
 	echo "Checking for $MYSQL_NAME config file..."
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$CONF_DIR/$MYSQL_CONF_FILE ]; then
@@ -428,6 +528,7 @@ function config_database {
 	fi
 }
 
+###################################################################
 function initialize_database {
 	# create data directory
 	mkdir -p "./$DATA_DIR"
@@ -449,6 +550,7 @@ function initialize_database {
 	fi
 }
 
+###################################################################
 function start_database {
 	echo "Checking if $MYSQL_NAME is running..."
 	if [ -f "$OH_PATH/$TMP_DIR/mysql.sock" ] || [ -f "$OH_PATH/$TMP_DIR/mysql.pid" ] ; then
@@ -467,6 +569,7 @@ function start_database {
 	echo "$MYSQL_NAME server started! "
 }
 
+###################################################################
 function set_database_root_pw {
 	# if using MySQL/MariaDB root password need to be set
 	echo "Setting $MYSQL_NAME root password..."
@@ -479,6 +582,7 @@ function set_database_root_pw {
 	fi
 }
 
+###################################################################
 function import_database {
 	echo "Creating OH Database..."
 	# create OH database and user
@@ -516,6 +620,7 @@ function import_database {
 	cd "$OH_PATH"
 }
 
+###################################################################
 function dump_database {
 	# save OH database if existing
 	if [ -x ./$MYSQL_DIR/bin/mysqldump ]; then
@@ -537,6 +642,7 @@ function dump_database {
 	echo "$MYSQL_NAME dump file $BACKUP_DIR/mysqldump_$DATE.sql completed!"
 }
 
+###################################################################
 function shutdown_database {
 	if [ "$OH_MODE" != "CLIENT" ]; then
 		echo "Shutting down $MYSQL_NAME..."
@@ -550,6 +656,7 @@ function shutdown_database {
 	fi
 }
 
+###################################################################
 function clean_database {
 	echo "Warning: do you want to remove all existing data and databases ?"
 	get_confirmation;
@@ -563,6 +670,7 @@ function clean_database {
 	rm -rf ./$TMP_DIR/*
 }
 
+###################################################################
 function test_database_connection {
         # test if mysql client is available
 	if [ -x ./$MYSQL_DIR/bin/mysql ]; then
@@ -580,6 +688,7 @@ function test_database_connection {
 	fi
 }
 
+###################################################################
 function clean_files {
 	# remove all log files
 	echo "Warning: do you want to remove all existing log files ?"
@@ -603,6 +712,7 @@ function clean_files {
 	rm -f ./$OH_DIR/rsc/dicom.properties.old
 }
 
+###################################################################
 function write_config_files {
 	# set up configuration files
 	echo "Checking for OH configuration files..."
@@ -631,39 +741,22 @@ function write_config_files {
 		./$OH_DIR/rsc/database.properties.dist > ./$OH_DIR/rsc/database.properties
 	fi
 	######## settings.properties setup
-	# set language and DOC_DIR in OH config file
 	if [ "$WRITE_CONFIG_FILES" = "on" ] || [ ! -f ./$OH_DIR/rsc/settings.properties ]; then
 		[ -f ./$OH_DIR/rsc/settings.properties ] && mv -f ./$OH_DIR/rsc/settings.properties ./$OH_DIR/rsc/settings.properties.old
 		echo "Writing OH configuration file -> settings.properties..."
-		sed -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
+		sed -e "s/OH_MODE/$OH_MODE/g" -e "s/OH_LANGUAGE/$OH_LANGUAGE/g" -e "s&OH_DOC_DIR&$OH_DOC_DIR&g" -e "s/YES_OR_NO/$OH_SINGLE_USER/g" \
 		-e "s&PHOTO_DIR&$PHOTO_DIR&g" ./$OH_DIR/rsc/settings.properties.dist > ./$OH_DIR/rsc/settings.properties
 	fi
 }
 
-function set_log_level {
-	echo ""
-	######## settings.properties log_level configuration
-	echo "Setting log level to $LOG_LEVEL in OH configuration file -> log4j.properties..."
-	case "$LOG_LEVEL" in
-		*INFO*)
-			sed -e "s/DEBUG/$LOG_LEVEL/g" -i ./$OH_DIR/rsc/log4j.properties 
-		;;
-		*DEBUG*)
-			sed -e "s/INFO/$LOG_LEVEL/g" -i ./$OH_DIR/rsc/log4j.properties 
-		;;
-		*)
-			echo "Invalid log level: $LOG_LEVEL. Exiting."
-			exit 1
-		;;
-	esac
-}
-
+###################################################################
 function parse_user_input {
 	case $1 in
 	###################################################
 	C)	# start in CLIENT mode
 		OH_MODE="CLIENT"
 		DEMO_DATA="off"
+		set_oh_mode;
 		echo ""
 		echo "OH_MODE set to CLIENT mode."
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
@@ -671,6 +764,7 @@ function parse_user_input {
 	###################################################
 	P)	# start in PORTABLE mode
 		OH_MODE="PORTABLE"
+		set_oh_mode;
 		echo ""
 		echo "OH_MODE set to PORTABLE mode."
 		if (( $2==0 )); then opt="Z"; else read; fi
@@ -678,6 +772,7 @@ function parse_user_input {
 	###################################################
 	S)	# start in SERVER mode
 		OH_MODE="SERVER"
+		set_oh_mode;
 		echo ""
 		echo "OH_MODE set to SERVER mode."
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
@@ -693,10 +788,9 @@ function parse_user_input {
 			;;
 		esac
 		# create config files if not present
-		write_config_files;
+		#write_config_files;
 		# set log level
 		set_log_level;
-		echo "Log level set to $LOG_LEVEL"
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -734,6 +828,13 @@ function parse_user_input {
 		echo "Press any key to continue"; read;
 		;;
 	###################################################
+	k)	# create Desktop shortcut
+		echo "Creating/updating OH shortcut on Desktop..."
+		create_desktop_shortcut;
+		echo "Done!"
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+		;;
+	###################################################
 	i)	# initialize/install OH database
 		# set mode to CLIENT
 		OH_MODE="CLIENT"
@@ -744,8 +845,8 @@ function parse_user_input {
 		echo " TCP port -> $DATABASE_PORT" 
 		echo ""
 		get_confirmation;
-		set_language;
 		initialize_dir_structure;
+		set_language;
 		mysql_check;
 		# ask user for database root password
 		read -p "Please insert the MariaDB / MySQL database root password (root@$DATABASE_SERVER) -> " DATABASE_ROOT_PW
@@ -767,27 +868,20 @@ function parse_user_input {
 		#WRITE_CONFIG_FILES="on"
 		if (( $2==0 )); then
 			OH_LANGUAGE="$OPTARG"
-			echo "Language set to $OH_LANGUAGE."
 			opt="Z";
 		else
-		read -n 2 -p "Please select language [$OH_LANGUAGE_LIST]: " OH_LANGUAGE
-			echo ""
-			echo "Language set to $OH_LANGUAGE."
+			read -n 2 -p "Please select language [$OH_LANGUAGE_LIST]: " OH_LANGUAGE
 		fi
 		# create config files if not present
-		write_config_files;
+		#write_config_files;
 		set_language;
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
-	m)	# configure OH manually
+	m)	# configure OH database connection manually
 		echo ""
-		read -p "Please select language [$OH_LANGUAGE_LIST]: " OH_LANGUAGE
-		echo ""
-		read -p "Please select Single user configuration (yes/no): " OH_SINGLE_USER
-		#OH_SINGLE_USER=${OH_SINGLE_USER:-Off} # set default # TBD
-		echo ""
-		read -p "Please select log level (INFO|DEBUG): " LOG_LEVEL
+		#read -p "Please select Single user configuration (yes/no): " OH_SINGLE_USER
+		###### OH_SINGLE_USER=${OH_SINGLE_USER:-Off} # set default # TBD
 		echo ""
 		echo "***** Database configuration *****"
 		echo ""
@@ -797,18 +891,18 @@ function parse_user_input {
 		read -p "Enter database user name [DATABASE_USER]: " DATABASE_USER
 		read -p "Enter database password [DATABASE_PASSWORD]: " DATABASE_PASSWORD
 
-		echo "Do yoy want to save OH configuration files with entered values ?"
+		echo "Do you want to save entered settings to OH configuration files?"
 		get_confirmation;
 		WRITE_CONFIG_FILES="on"
 		write_config_files;
-		set_language;
-		set_log_level;
+		#set_language;
+		#set_log_level;
 		echo "Done!"
 		echo ""
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
-	s)	# save database
+	e)	# export/save database
 		echo ""
 		# check if mysql utilities exist
 		mysql_check;
@@ -860,6 +954,18 @@ function parse_user_input {
 			fi
 	        	echo "Done!"
 		fi
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+		;;
+	###################################################
+	s)	# save / write config files
+		echo ""
+		echo "Do you want to save current settings to OH configuration files?"
+		get_confirmation;
+		write_config_files;
+		set_oh_mode;
+		set_language;
+		set_log_level;
+		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -919,18 +1025,6 @@ function parse_user_input {
 		echo "OH_LOG_FILE=$OH_LOG_FILE"
 		echo ""
 		
-		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
-		;;
-	###################################################
-	w)	# write config files
-		echo ""
-		echo "Do yoy want to save OH configuration files with script values ?"
-		get_confirmation;
-		WRITE_CONFIG_FILES="on"
-		write_config_files;
-		set_log_level;
-		set_language;
-		echo "Done!"
 		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
@@ -1001,8 +1095,9 @@ fi
 
 ######## Environment setup
 
-#set_defaults;
 set_path;
+read_settings;
+set_defaults;
 
 # set working dir to OH base dir
 cd "$OH_PATH"
@@ -1012,7 +1107,7 @@ cd "$OH_PATH"
 # reset in case getopts has been used previously in the shell
 OPTIND=1 
 # list of arguments expected in user input (- option)
-OPTSTRING=":CPSdDGhil:msrtvwXqQ?" 
+OPTSTRING=":CPSdDGhikl:msrtveXqQZ?" 
 
 PASSED_ARGS=$@
 # Parse arguments passed via command line
@@ -1046,12 +1141,6 @@ fi
 
 echo ""
 
-# check OH mode
-if [ -z ${OH_MODE+x} ]; then
-	echo "Error - OH_MODE not defined [CLIENT - PORTABLE - SERVER]! Exiting."
-	exit 1
-fi
-
 # check for demo mode
 if [ "$DEMO_DATA" = "on" ]; then
 	# exit if OH is configured in CLIENT mode
@@ -1067,7 +1156,6 @@ if [ "$DEMO_DATA" = "on" ]; then
 		clean_database;  
 		# set DATABASE_NAME
 		#DATABASE_NAME="ohdemo" # TBD
-		DATABASE_NAME="oh"	
 	else
 		echo "Error: no $DB_DEMO found! Exiting."
 		exit 1
@@ -1079,9 +1167,8 @@ echo "Write config files is set to $WRITE_CONFIG_FILES"
 echo "Starting Open Hospital in $OH_MODE mode..."
 echo "OH_PATH is set to $OH_PATH"
 
-# display OH settings only if defined
-if [ -n "$OH_LANGUAGE" ]; then echo "OH language is set to $OH_LANGUAGE"; fi
-if [ -n "$LOG_LEVEL" ]; then echo "OH log level is set to $LOG_LEVEL"; fi
+# display OH settings
+echo "OH language is set to $OH_LANGUAGE";
 
 # check for java
 java_check;
@@ -1146,14 +1233,8 @@ else
 	# test if database connection is working
 	test_database_connection;
 
-	# generate config files
+	# generate config files if not existent
 	write_config_files;
-
-	# configure language settings
-	set_language;
-	
-	# configure log level
-	set_log_level;
 
 	echo "Starting Open Hospital GUI..."
 	# OH GUI launch
