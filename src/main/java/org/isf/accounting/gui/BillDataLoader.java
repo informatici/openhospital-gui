@@ -51,13 +51,13 @@ public class BillDataLoader {
 
 		switch (status) {
 			case "O":
-				tableArray = getPendingBills(status);
+				tableArray = getPendingBills(status, username);
 				break;
 			case "ALL":
 				tableArray = getAllBills(username);
 				break;
 			case "C":
-				tableArray = getClosedBills(status);
+				tableArray = getClosedBills(status, username);
 				break;
 		}
 
@@ -84,17 +84,26 @@ public class BillDataLoader {
 		return billAll;
 	}
 
-	private List<Bill> getClosedBills(String status) {
-		return billPeriod.stream()
+	private List<Bill> getClosedBills(String status, String username) {
+		List<Bill> 	list = billPeriod.stream()
 				.filter(bill -> bill.getStatus().equals(status))
 				.collect(Collectors.toList());
+		if (username != null) {
+			list = list.stream().filter(bill-> bill.getUser().equals(username)).collect(Collectors.toList());
+		}
+		return list;
 	}
 
-	private List<Bill> getPendingBills(String status) throws OHServiceException {
-		return patientParent != null ? billManager.getPendingBillsAffiliate(patientParent.getCode()) :
-				billPeriod.stream()
+	private List<Bill> getPendingBills(String status, String username) throws OHServiceException {
+		if (patientParent != null) return  billManager.getPendingBillsAffiliate(patientParent.getCode()) ; 
+			List<Bill> list = billPeriod.stream()
 						.filter(bill -> bill.getStatus().equals(status))
 						.collect(Collectors.toList());
+			if (username != null) {
+				list = list.stream().filter(bill-> bill.getUser().equals(username)).collect(Collectors.toList());
+			}
+			return list;
+		
 	}
 
 }

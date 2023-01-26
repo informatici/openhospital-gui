@@ -879,6 +879,8 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				jTableUser.setValueAt("<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>", 0, 2);
 				updateTotals();
 				jTableBills.setModel(new BillTableModel("ALL", user)); //$NON-NLS-1$
+				jTablePending.setModel(new BillTableModel("O", user)); //$NON-NLS-1$
+				jTableClosed.setModel(new BillTableModel("C", user)); //$NON-NLS-1$
 			});
 		}
 		return jComboUsers;
