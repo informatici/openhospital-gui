@@ -36,8 +36,10 @@ import java.awt.event.KeyListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -55,6 +57,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -70,6 +73,7 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
+import org.isf.menu.model.User;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.patient.model.Patient;
@@ -128,12 +132,11 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JComboBox jDiseaseBox;
 	private JComboBox jWardBox;
 	private JPanel sexPanel = null;
-	private JPanel newPatientPanel = null;
 	private Integer ageTo = 0;
 	private Integer ageFrom = 0;
-	private DiseaseType allType= new DiseaseType(
-			MessageBundle.getMessage("angal.common.alltypes.txt"),
-			MessageBundle.getMessage("angal.common.alltypes.txt"));
+	private DiseaseType allType = new DiseaseType(
+			MessageBundle.getMessage("angal.common.alldiseasetypes.txt"),
+			MessageBundle.getMessage("angal.common.alldiseasetypes.txt"));
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.opd.opdnumber.col").toUpperCase(),
@@ -164,15 +167,24 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JButton filterButton = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.common.count.label") + ' ';
 	private JLabel rowCounter = null;
-	private JRadioButton radioNew;
-	private JRadioButton radioAll;
+	private JRadioButton radioNewAttendance;
+	private JRadioButton radioReAttendance;
+	private JRadioButton radioAllPatiens;
 	private final JFrame myFrame;
-	private JRadioButton radiom;
-	private JRadioButton radioa;
+	private JRadioButton radioMale;
+	private JRadioButton radioFemale;
+	private JRadioButton radioAllGender;
 	private List<Disease> diseases = null;
-	protected AbstractButton searchButton;
+	protected AbstractButton searchDiseaseButton;
 	private GoodDateChooser dateFrom;
 	private GoodDateChooser dateTo;
+	private JButton resetButton;
+	private JTextField opdCodeFilter;
+	private JTextField progYearFilter;
+	private JTextField patientCodeFilter;
+	private ButtonGroup groupUserFilter=null;
+	private JRadioButton radioMyPatients;
+	private JRadioButton radioAllPatients;
 
 	private JTable getJTable() {
 		if (jTable == null) {
@@ -422,42 +434,108 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	private JPanel getJSelectionPanel() {
 		if (jSelectionPanel == null) {
-			JPanel sexLabelPanel = new JPanel();
-			sexLabelPanel.add(new JLabel(MessageBundle.getMessage("angal.common.selectsex.txt")));
-			sexLabelPanel.setPreferredSize(new Dimension(300, 25));
-			JPanel newPatientLabelPanel = new JPanel();
-			newPatientLabelPanel.add(new JLabel(MessageBundle.getMessage("angal.common.type.txt")));
-			newPatientLabelPanel.setPreferredSize(new Dimension(300, 25));
-			JPanel diseaseLabelPanel = new JPanel();
-			diseaseLabelPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.selectadisease.txt")));
-			diseaseLabelPanel.setPreferredSize(new Dimension(300, 25));
-			JPanel wardLabelPanel = new JPanel();
-			wardLabelPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.selectaward.txt")));
-			wardLabelPanel.setPreferredSize(new Dimension(300, 25));
-			JPanel filterButtonPanel = new JPanel();
-			filterButtonPanel.add(getFilterButton());
-			filterButtonPanel.setPreferredSize(new Dimension(300, 30));
 			jSelectionPanel = new JPanel();
-			jSelectionPanel.setPreferredSize(new Dimension(300, 25));
-			jSelectionPanel.add(wardLabelPanel);
-			jSelectionPanel.add(getJSelectionWardPanel());
-			jSelectionPanel.add(diseaseLabelPanel);
-			jSelectionPanel.add(getJSelectionDiseasePanel());
-			jSelectionPanel.add(Box.createVerticalGlue());
-			jSelectionPanel.add(getDateFilterPanel());
-			jSelectionPanel.add(Box.createVerticalGlue());
-			jSelectionPanel.add(getJAgePanel());
-			jSelectionPanel.add(Box.createVerticalGlue());
-			jSelectionPanel.add(sexLabelPanel);
-			jSelectionPanel.add(getSexPanel());
-			jSelectionPanel.add(newPatientLabelPanel);
-			jSelectionPanel.add(getNewPatientPanel());
-			jSelectionPanel.add(filterButtonPanel);
-			jSelectionPanel.add(getRowCounter());
+			jSelectionPanel.setLayout(new BorderLayout());
+			//jSelectionPanel.setLayout(new BoxLayout(jSelectionPanel, BoxLayout.Y_AXIS));
+			jSelectionPanel.add(getSearchCodesPanel(), BorderLayout.NORTH);
+			jSelectionPanel.add(getOtherFiltersPanel(), BorderLayout.CENTER);
+			jSelectionPanel.add(getButtonsPanel(), BorderLayout.SOUTH);
 		}
 		return jSelectionPanel;
 	}
+	
+	private JPanel getButtonsPanel() {
+		JPanel buttonsPanel = new JPanel();
+		JPanel filterButtonPanel = new JPanel();
+		filterButtonPanel.add(getFilterButton());
+		filterButtonPanel.add(getResetButton());
+		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
+		buttonsPanel.add(filterButtonPanel);
+		buttonsPanel.add(getRowCounter());
+		return buttonsPanel;
+	}
 
+	private JPanel getOtherFiltersPanel() {
+		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.opd.otherfilters.border")));
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(getWardBox());
+		panel.add(getJSelectionDiseasePanel());
+		panel.add(getSexPanel());
+		panel.add(getDateFilterPanel());
+		panel.add(getJAgePanel());
+		panel.add(getPatientTypePanel());
+		panel.add(getUserPanel());
+		panel.add(Box.createVerticalGlue());
+		return panel;
+	}
+	
+	public JPanel getUserPanel() {
+		JPanel userPanel = new JPanel();
+		groupUserFilter = new ButtonGroup();
+		radioMyPatients = new JRadioButton(MessageBundle.getMessage("angal.opd.mypatient.btn"));
+		radioAllPatients = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
+		radioAllPatients.setSelected(true);
+		groupUserFilter.add(radioMyPatients);
+		groupUserFilter.add(radioAllPatients);
+		userPanel.add(radioMyPatients);
+		userPanel.add(radioAllPatients);
+		return userPanel;
+	}
+	
+	private Component getSearchCodesPanel() {
+		JPanel searchCodesPanel = new JPanel(new SpringLayout());
+		searchCodesPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.opd.searchbycodes.border")));
+		opdCodeFilter = new JTextField(6);
+		opdCodeFilter.addKeyListener(new SearchByOPDCodeListener());
+		progYearFilter = new JTextField(6);
+		progYearFilter.addKeyListener(new SearchByProgYearListener());
+		patientCodeFilter = new JTextField(6);
+		patientCodeFilter.addKeyListener(new SearchByPatientIdListener());
+		searchCodesPanel.add(new JLabel(MessageBundle.getMessage("angal.common.code.txt")));
+		searchCodesPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.opdnumber.txt")));
+		searchCodesPanel.add(new JLabel(MessageBundle.getMessage("angal.common.patientID")));
+		searchCodesPanel.add(opdCodeFilter);
+		searchCodesPanel.add(progYearFilter);
+		searchCodesPanel.add(patientCodeFilter);
+		SpringUtilities.makeCompactGrid(searchCodesPanel, 2, 3, 5, 5, 5, 5);
+		return searchCodesPanel;
+	}
+
+	private JButton getResetButton() {
+		if(resetButton == null) {
+			resetButton = new JButton("Reset");
+			resetButton.setMnemonic(KeyEvent.VK_R);
+			resetButton.addActionListener(actionEvent -> {
+				resetAllFilters();
+			});
+		}
+		return resetButton;
+	}
+	
+	private void resetAllFilters() {
+		jDiseaseTypeBox.setSelectedIndex(0);
+		jDiseaseBox.setSelectedIndex(0);
+		jWardBox.setSelectedIndex(0);
+		if (opdCodeFilter != null) {
+			opdCodeFilter.setText("");
+		}
+		if (progYearFilter != null) {
+			progYearFilter.setText("");
+		}
+		if (patientCodeFilter != null) {
+			patientCodeFilter.setText("");
+		}
+		resetDates();
+		jAgeFromTextField.setText("0");
+		ageFrom = 0;
+		jAgeToTextField.setText("0");
+		ageTo = 0;
+		radioAllGender.setSelected(true);
+		radioAllPatiens.setSelected(true);
+		radioAllPatients.setSelected(true);
+	}
+	
 	private JLabel getRowCounter() {
 		if (rowCounter == null) {
 			rowCounter = new JLabel();
@@ -469,19 +547,25 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private Component getDateFilterPanel() {
 		if (dateFilterPanel == null) {
 			dateFilterPanel = new JPanel(new SpringLayout());
+			dateFrom = new GoodDateChooser(LocalDate.now());
+			dateTo = new GoodDateChooser(LocalDate.now());
+			resetDates();
 			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
-			if (!GeneralData.ENHANCEDSEARCH) {
-				dateFrom = new GoodDateChooser(LocalDate.now().minusWeeks(1));
-			} else {
-				dateFrom = new GoodDateChooser(LocalDate.now());
-			}
 			dateFilterPanel.add(dateFrom);
 			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.dateto.label")));
-			dateTo = new GoodDateChooser(LocalDate.now());
 			dateFilterPanel.add(dateTo);
 			SpringUtilities.makeCompactGrid(dateFilterPanel, 2, 2, 5, 5, 5, 5);
 		}
 		return dateFilterPanel;
+	}
+
+	private void resetDates() {
+		if (!GeneralData.ENHANCEDSEARCH) {
+			dateFrom.setDate(LocalDate.now().minusWeeks(1));
+		} else {
+			dateFrom.setDate(LocalDate.now());
+		}
+		dateTo.setDate(LocalDate.now());
 	}
 
 
@@ -605,50 +689,38 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (sexPanel == null) {
 			sexPanel = new JPanel();
 			ButtonGroup group = new ButtonGroup();
-			radiom = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
-			JRadioButton radiof = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
-			radioa = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
-			radioa.setSelected(true);
-			group.add(radiom);
-			group.add(radiof);
-			group.add(radioa);
-			sexPanel.add(radioa);
-			sexPanel.add(radiom);
-			sexPanel.add(radiof);
+			radioMale = new JRadioButton(MessageBundle.getMessage("angal.common.male.btn"));
+			radioFemale = new JRadioButton(MessageBundle.getMessage("angal.common.female.btn"));
+			radioAllGender = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
+			radioAllGender.setSelected(true);
+			group.add(radioMale);
+			group.add(radioFemale);
+			group.add(radioAllGender);
+			sexPanel.add(radioAllGender);
+			sexPanel.add(radioMale);
+			sexPanel.add(radioFemale);
 		}
 		return sexPanel;
 	}
 
-	public JPanel getNewPatientPanel() {
-		if (newPatientPanel == null) {
-			newPatientPanel = new JPanel();
-			ButtonGroup groupNewPatient = new ButtonGroup();
-			radioNew= new JRadioButton(MessageBundle.getMessage("angal.opd.new.btn"));
-			JRadioButton radioRea= new JRadioButton(MessageBundle.getMessage("angal.opd.reattendance.btn"));
-			radioAll= new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
-			radioAll.setSelected(true);
-			groupNewPatient.add(radioAll);
-			groupNewPatient.add(radioNew);
-			groupNewPatient.add(radioRea);
-			newPatientPanel.add(radioAll);
-			newPatientPanel.add(radioNew);
-			newPatientPanel.add(radioRea);
-		}
-		return newPatientPanel;
-	}
-
-	/**
-	 * This method initializes jSelectionWardPanel
-	 *
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getJSelectionWardPanel() {
-		if (jSelectionWardPanel == null) {
-			jSelectionWardPanel = new JPanel();
-			jSelectionWardPanel.setLayout(new BoxLayout(jSelectionWardPanel, BoxLayout.Y_AXIS));
-			jSelectionWardPanel.add(getWardBox(), null);
-		}
-		return jSelectionWardPanel;
+	public JPanel getPatientTypePanel() {
+		JPanel patientTypePanel = new JPanel();
+		JLabel patientTypeLabel = new JLabel(MessageBundle.getMessage("angal.opd.patienttype.label"));
+		
+		ButtonGroup groupNewPatient = new ButtonGroup();
+		radioNewAttendance = new JRadioButton(MessageBundle.getMessage("angal.opd.new.btn"));
+		radioReAttendance = new JRadioButton(MessageBundle.getMessage("angal.opd.reattendance.btn"));
+		radioAllPatiens = new JRadioButton(MessageBundle.getMessage("angal.common.all.btn"));
+		radioAllPatiens.setSelected(true);
+		groupNewPatient.add(radioAllPatiens);
+		groupNewPatient.add(radioNewAttendance);
+		groupNewPatient.add(radioReAttendance);
+		
+		patientTypePanel.add(patientTypeLabel);
+		patientTypePanel.add(radioAllPatiens);
+		patientTypePanel.add(radioNewAttendance);
+		patientTypePanel.add(radioReAttendance);
+		return patientTypePanel;
 	}
 
 	/**
@@ -658,11 +730,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	private JPanel getJSelectionDiseasePanel() {
 		if (jSelectionDiseasePanel == null) {
-			JLabel jLabel2 = new JLabel("    ");
 			jSelectionDiseasePanel = new JPanel();
 			jSelectionDiseasePanel.setLayout(new BoxLayout(jSelectionDiseasePanel, BoxLayout.Y_AXIS));
 			jSelectionDiseasePanel.add(getDiseaseTypeBox(), null);
-			jSelectionDiseasePanel.add(jLabel2, null);
 			jSelectionDiseasePanel.add(getJSearchDiseaseTextFieldPanel(), null);
 			jSelectionDiseasePanel.add(getDiseaseBox(), null);
 		}
@@ -670,6 +740,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	}
 	
 	private JPanel getJSearchDiseaseTextFieldPanel() {
+		
 		JPanel searchFieldPanel = new JPanel();
 		JTextField searchDiseasetextField = new JTextField(10);
 		searchFieldPanel.add(searchDiseasetextField);
@@ -679,7 +750,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			public void keyPressed(KeyEvent e) {
 				int key = e.getKeyCode();
 				if (key == KeyEvent.VK_ENTER) {
-					searchButton.doClick();
+					searchDiseaseButton.doClick();
 				}
 			}
 
@@ -692,9 +763,11 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			}
 		});
 
-		searchButton = new JButton("");
-		searchFieldPanel.add(searchButton);
-		searchButton.addActionListener(actionEvent -> {
+		searchDiseaseButton = new JButton("");
+		searchDiseaseButton.setPreferredSize(new Dimension(20, 20));
+		searchDiseaseButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+		searchFieldPanel.add(searchDiseaseButton);
+		searchDiseaseButton.addActionListener(actionEvent -> {
 			jDiseaseBox.removeAllItems();
 			jDiseaseBox.addItem("");
 			for (Disease disease : getSearchDiagnosisResults(searchDiseasetextField.getText(), diseases)) {
@@ -709,8 +782,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				jDiseaseBox.showPopup();
 			}
 		});
-		searchButton.setPreferredSize(new Dimension(20, 20));
-		searchButton.setIcon(new ImageIcon("rsc/icons/zoom_r_button.png"));
+		
 		return searchFieldPanel;
 	}
 
@@ -857,9 +929,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		private static final long serialVersionUID = -9129145534999353730L;
 
 		public OpdBrowsingModel(Ward ward, String diseaseTypeCode, String diseaseCode, LocalDate dateFrom, LocalDate dateTo, int ageFrom, int ageTo,
-				char sex, char newPatient) {
+				char sex, char newPatient, String user) {
 			try {
-				pSur = opdBrowserManager.getOpd(ward, diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient);
+				pSur = opdBrowserManager.getOpd(ward, diseaseTypeCode, diseaseCode, dateFrom, dateTo, ageFrom, ageTo, sex, newPatient, user);
 			} catch (OHServiceException ohServiceException) {
 				MessageDialog.showExceptions(ohServiceException);
 			}
@@ -961,7 +1033,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		}
 		rowCounter.setText(rowCounterText + pSur.size());
 	}
-
+	
 	private JButton getFilterButton() {
 		if (filterButton == null) {
 			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
@@ -981,27 +1053,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					// AllWards selected
 				}
 
-				char sex;
-				if (radioa.isSelected()) {
-					sex='A';
-				} else {
-					if (radiom.isSelected()) {
-						sex='M';
-					} else {
-						sex='F';
-					}
-				}
-
-				char newPatient;
-				if (radioAll.isSelected()) {
-					newPatient='A';
-				} else {
-					if (radioNew.isSelected()) {
-						newPatient='N';
-					} else {
-						newPatient='R';
-					}
-				}
+				char sex = getGender();
+				char newPatient = getPatientAttendance();
+				String user = getUser();
 
 				LocalDate dateFromDate = dateFrom.getDate();
 				LocalDate dateToDate = dateTo.getDate();
@@ -1028,14 +1082,145 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 						return;
 					}
 				}
-
-				model = new OpdBrowsingModel(ward, diseasetype, disease, dateFrom.getDate(), dateTo.getDate(), ageFrom, ageTo, sex, newPatient);
+				
+				opdCodeFilter.setText("");
+				progYearFilter.setText("");
+				patientCodeFilter.setText("");
+				model = new OpdBrowsingModel(ward, diseasetype, disease, dateFrom.getDate(), dateTo.getDate(), ageFrom, ageTo, sex, newPatient, user);
 				model.fireTableDataChanged();
 				jTable.updateUI();
 				rowCounter.setText(rowCounterText + pSur.size());
 			});
 		}
 		return filterButton;
+	}
+
+	private char getGender() {
+		char sex;
+		if (radioAllGender.isSelected()) {
+			sex='A';
+		} else {
+			if (radioMale.isSelected()) {
+				sex='M';
+			} else {
+				sex='F';
+			}
+		}
+		return sex;
+	}
+	
+	private String getUser() {
+		if (radioMyPatients.isSelected())
+			return MainMenu.getUser().getUserName();
+		else
+			return null;
+	}
+
+	private char getPatientAttendance() {
+		if(radioAllPatiens.isSelected())
+			return 'A';
+		else if(radioNewAttendance.isSelected())
+			return 'N';
+		else
+			return 'R';
+	}
+	
+	class SearchByOPDCodeListener implements KeyListener {
+		@Override
+		public void keyTyped(KeyEvent e) {}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				String codeHint = ((JTextField) e.getSource()).getText();
+				Integer code = 0;
+				try {
+					code = Integer.valueOf(codeHint);
+				} catch (NumberFormatException e1) {
+					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("Please insert a valid number"));
+					return;
+				}
+				progYearFilter.setText("");
+				patientCodeFilter.setText("");
+				List<Opd> opdList = new ArrayList<Opd>();
+				Optional<Opd> opd = opdBrowserManager.getOpdById(code);
+				if (opd.isPresent()) {
+					opdList.add(opd.get());
+					pSur = opdList;
+					((AbstractTableModel) jTable.getModel()).fireTableDataChanged();
+					rowCounter.setText(rowCounterText + pSur.size());
+				} else {
+					MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("no data found"));
+				}
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {}
+	}
+	
+	class SearchByProgYearListener implements KeyListener {
+		@Override
+		public void keyTyped(KeyEvent e) {}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				String codeHint = ((JTextField) e.getSource()).getText();
+				Integer code = 0;
+				try {
+					code = Integer.valueOf(codeHint);
+				} catch (NumberFormatException e1) {
+					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("Please insert a valid number"));
+					return;
+				}
+				opdCodeFilter.setText("");
+				patientCodeFilter.setText("");
+				pSur = opdBrowserManager.getOpdByProgYear(code);
+				((AbstractTableModel) jTable.getModel()).fireTableDataChanged();
+				rowCounter.setText(rowCounterText + pSur.size());
+				if (pSur.isEmpty()) {
+					MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("no data found"));
+				}
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {}
+	}
+	
+	class SearchByPatientIdListener implements KeyListener {
+		@Override
+		public void keyTyped(KeyEvent e) {}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				String codeHint = ((JTextField) e.getSource()).getText();
+				Integer code = 0;
+				try {
+					code = Integer.valueOf(codeHint);
+				} catch (NumberFormatException e1) {
+					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("Please insert a valid number"));
+					return;
+				}
+				opdCodeFilter.setText("");
+				progYearFilter.setText("");
+				try {
+					pSur = opdBrowserManager.getOpdList(code);
+					((AbstractTableModel) jTable.getModel()).fireTableDataChanged();
+					rowCounter.setText(rowCounterText + pSur.size());
+					if (pSur.isEmpty()) {
+						MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("no data found"));
+					}
+				} catch (OHServiceException ohServiceException) {
+					MessageDialog.showExceptions(ohServiceException);
+				}
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {}
 	}
 
 } 
