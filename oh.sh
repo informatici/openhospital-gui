@@ -194,10 +194,10 @@ function script_menu {
  	echo "   -d    toggle log level INFO/DEBUG"
 	echo "   -G    setup GSM"
 	echo "   -D    initialize OH with Demo data"
-	echo "   -k    create Desktop shortcut"
 	echo "   -i    initialize/install OH database"
 	echo "   -m    configure database connection manually"
 	echo "   -t    test database connection (CLIENT mode only)"
+	echo "   -u    create Desktop shortcut"
 	echo ""
 	echo "   -h    show help"
 	echo ""
@@ -828,13 +828,6 @@ function parse_user_input {
 		echo "Press any key to continue"; read;
 		;;
 	###################################################
-	k)	# create Desktop shortcut
-		echo "Creating/updating OH shortcut on Desktop..."
-		create_desktop_shortcut;
-		echo "Done!"
-		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
-		;;
-	###################################################
 	i)	# initialize/install OH database
 		# set mode to CLIENT
 		OH_MODE="CLIENT"
@@ -980,6 +973,14 @@ function parse_user_input {
 		if (( $2==0 )); then opt="Z"; else echo "Press any key to continue"; read; fi
 		;;
 	###################################################
+	u)	# create Desktop shortcut
+		echo ""
+		echo "Creating/updating OH shortcut on Desktop..."
+		create_desktop_shortcut;
+		echo "Done!"
+		if (( $2==0 )); then exit 0; else echo "Press any key to continue"; read; fi
+		;;
+	###################################################
 	v)	# display software version and configuration
 		echo ""
 		echo "--------- Software version ---------"
@@ -1107,7 +1108,7 @@ cd "$OH_PATH"
 # reset in case getopts has been used previously in the shell
 OPTIND=1 
 # list of arguments expected in user input (- option)
-OPTSTRING=":CPSdDGhikl:msrtveXqQZ?" 
+OPTSTRING=":CPSdDGhil:msrtvequQXZ?" 
 
 PASSED_ARGS=$@
 # Parse arguments passed via command line

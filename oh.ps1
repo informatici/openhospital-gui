@@ -259,9 +259,9 @@ function script_menu {
 	Write-Host "   D    initialize OH with Demo data"
 	Write-Host "   G    setup GSM"
 	Write-Host "   i    initialize/install OH database"
-	Write-Host "   k    create Desktop shortcut with current params"
 	Write-Host "   m    configure database connection manually"
 	Write-Host "   t    test database connection (CLIENT mode only)"
+	Write-Host "   u    create Desktop shortcut with current params"
 	Write-Host ""
 	Write-Host "   h    show help"
 	Write-Host ""
@@ -1009,11 +1009,6 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Read-Host "Press any key to continue";
 		}
 		###################################################
-		"k"	{ # create Desktop shortcut
-			create_desktop_shortcut;
-			Read-Host "Press any key to continue";
-		}
-		###################################################
 		"l"	{ # set language 
 			$script:OH_LANGUAGE = Read-Host "Select language: $OH_LANGUAGE_LIST (default is en)"
 			# create config files if not present
@@ -1119,6 +1114,11 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			}
 			mysql_check;
 			test_database_connection;
+			Read-Host "Press any key to continue";
+		}
+		###################################################
+		"u"	{ # create Desktop shortcut
+			create_desktop_shortcut;
 			Read-Host "Press any key to continue";
 		}
 		###################################################
