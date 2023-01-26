@@ -46,7 +46,7 @@ public class BillDataLoader {
 		this.billManager = billManager;
 	}
 
-	public List<Bill> loadBills(String status) throws OHServiceException {
+	public List<Bill> loadBills(String status, String username) throws OHServiceException {
 		List<Bill> tableArray = new ArrayList<>();
 
 		switch (status) {
@@ -54,7 +54,7 @@ public class BillDataLoader {
 				tableArray = getPendingBills(status);
 				break;
 			case "ALL":
-				tableArray = getAllBills();
+				tableArray = getAllBills(username);
 				break;
 			case "C":
 				tableArray = getClosedBills(status);
@@ -65,8 +65,11 @@ public class BillDataLoader {
 		return tableArray;
 	}
 
-	private List<Bill> getAllBills() {
+	private List<Bill> getAllBills(String username) {
 		List<Bill> billAll = mergeBillsFromPeriodAndFromPayments();
+		if (username != null) {
+			billAll = billAll.stream().filter(bill-> bill.getUser().equals(username)).collect(Collectors.toList());
+		}
 		Collections.sort(billAll);
 		return billAll;
 	}

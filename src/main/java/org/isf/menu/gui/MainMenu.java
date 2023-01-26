@@ -164,8 +164,6 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 		if (singleUser) {
 			LOGGER.info("Logging: Single User mode.");
 			myUser = new User(ADMIN_STR, new UserGroup(ADMIN_STR, ""), ADMIN_STR, "");
-			MDC.put("OHUser", myUser.getUserName());
-			MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
 		} else {
 			// get an user
 			LOGGER.info("Logging: Multi User mode.");
@@ -179,6 +177,8 @@ public class MainMenu extends JFrame implements ActionListener, Login.LoginListe
 				actionExit(2);
 			}
 		}
+		MDC.put("OHUser", myUser.getUserName());
+		MDC.put("OHUserGroup", myUser.getUserGroupName().getCode());
 		try {
 			this.sessionAuditId = sessionAuditManager.newSessionAudit(new SessionAudit(myUser.getUserName(), LocalDateTime.now(), null));
 		} catch (OHServiceException e1) {

@@ -876,6 +876,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 				jTableUser.setValueAt("<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.todaycolon.txt") + "</b></html>", 0, 0);
 				jTableUser.setValueAt("<html><b>" + user + " " + MessageBundle.getMessage("angal.billbrowser.periodcolon.txt") + "</b></html>", 0, 2);
 				updateTotals();
+				jTableBills.setModel(new BillTableModel("ALL", user)); //$NON-NLS-1$
 			});
 		}
 		return jComboUsers;
@@ -954,7 +955,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTable getJTableClosed() {
 		if (jTableClosed == null) {
 			jTableClosed = new JTable();
-			jTableClosed.setModel(new BillTableModel("C")); //$NON-NLS-1$
+			jTableClosed.setModel(new BillTableModel("C", null)); //$NON-NLS-1$
 			decorateTable(jTableClosed);
 			jTableClosed.setAutoCreateColumnsFromModel(false);
 			jTableClosed.setDefaultRenderer(String.class, new StringTableCellRenderer());
@@ -976,7 +977,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTable getJTablePending() {
 		if (jTablePending == null) {
 			jTablePending = new JTable();
-			jTablePending.setModel(new BillTableModel("O")); //$NON-NLS-1$
+			jTablePending.setModel(new BillTableModel("O", null)); //$NON-NLS-1$
 			decorateTable(jTablePending);
 			jTablePending.setAutoCreateColumnsFromModel(false);
 			jTablePending.setDefaultRenderer(String.class, new StringTableCellRenderer());
@@ -998,7 +999,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTable getJTableBills() {
 		if (jTableBills == null) {
 			jTableBills = new JTable();
-			jTableBills.setModel(new BillTableModel("ALL")); //$NON-NLS-1$
+			jTableBills.setModel(new BillTableModel("ALL", null)); //$NON-NLS-1$
 			decorateTable(jTableBills);
 			jTableBills.setAutoCreateColumnsFromModel(false);
 			jTableBills.setDefaultRenderer(String.class, new StringTableCellRenderer());
@@ -1146,9 +1147,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 
 	private void updateTables() {
-		jTableBills.setModel(new BillTableModel("ALL")); //$NON-NLS-1$
-		jTablePending.setModel(new BillTableModel("O")); //$NON-NLS-1$
-		jTableClosed.setModel(new BillTableModel("C")); //$NON-NLS-1$
+		jTableBills.setModel(new BillTableModel("ALL", null)); //$NON-NLS-1$
+		jTablePending.setModel(new BillTableModel("O", null)); //$NON-NLS-1$
+		jTableClosed.setModel(new BillTableModel("C", null)); //$NON-NLS-1$
 	}
 
 	private void updateDataSet() {
@@ -1243,13 +1244,13 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 		/*
 		 * All Bills
 		 */
-		public BillTableModel(String status) {
-			loadData(status);
+		public BillTableModel(String status, String username) {
+			loadData(status, username);
 		}
 
-		private void loadData(String status) {
+		private void loadData(String status, String username) {
 			try {
-				tableArray = new BillDataLoader(billPeriod, billFromPayments, patientParent, billBrowserManager).loadBills(status);
+				tableArray = new BillDataLoader(billPeriod, billFromPayments, patientParent, billBrowserManager).loadBills(status, username);
 			} catch (OHServiceException ohServiceException) {
 				LOGGER.error("BillDataLoader error: ", ohServiceException);
 			}
