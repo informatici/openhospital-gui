@@ -101,6 +101,8 @@ import com.github.lgooddatepicker.zinternaltools.WrapLayout;
  * @author Mwithi
  */
 public class BillBrowser extends ModalJFrame implements PatientBillListener {
+	
+	protected final static String NO_USERNAME = null;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillBrowser.class);
 	private static final ImageIcon ADMISSION_ICON = new ImageIcon("rsc/icons/bed_icon.png");
@@ -955,7 +957,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTable getJTableClosed() {
 		if (jTableClosed == null) {
 			jTableClosed = new JTable();
-			jTableClosed.setModel(new BillTableModel("C", null)); //$NON-NLS-1$
+			jTableClosed.setModel(new BillTableModel("C", NO_USERNAME)); //$NON-NLS-1$
 			decorateTable(jTableClosed);
 			jTableClosed.setAutoCreateColumnsFromModel(false);
 			jTableClosed.setDefaultRenderer(String.class, new StringTableCellRenderer());
@@ -977,7 +979,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTable getJTablePending() {
 		if (jTablePending == null) {
 			jTablePending = new JTable();
-			jTablePending.setModel(new BillTableModel("O", null)); //$NON-NLS-1$
+			jTablePending.setModel(new BillTableModel("O", NO_USERNAME)); //$NON-NLS-1$
 			decorateTable(jTablePending);
 			jTablePending.setAutoCreateColumnsFromModel(false);
 			jTablePending.setDefaultRenderer(String.class, new StringTableCellRenderer());
@@ -999,7 +1001,7 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	private JTable getJTableBills() {
 		if (jTableBills == null) {
 			jTableBills = new JTable();
-			jTableBills.setModel(new BillTableModel("ALL", null)); //$NON-NLS-1$
+			jTableBills.setModel(new BillTableModel("ALL", NO_USERNAME)); //$NON-NLS-1$
 			decorateTable(jTableBills);
 			jTableBills.setAutoCreateColumnsFromModel(false);
 			jTableBills.setDefaultRenderer(String.class, new StringTableCellRenderer());
@@ -1147,9 +1149,9 @@ public class BillBrowser extends ModalJFrame implements PatientBillListener {
 	}
 
 	private void updateTables() {
-		jTableBills.setModel(new BillTableModel("ALL", null)); //$NON-NLS-1$
-		jTablePending.setModel(new BillTableModel("O", null)); //$NON-NLS-1$
-		jTableClosed.setModel(new BillTableModel("C", null)); //$NON-NLS-1$
+		jTableBills.setModel(new BillTableModel("ALL", NO_USERNAME)); //$NON-NLS-1$
+		jTablePending.setModel(new BillTableModel("O", NO_USERNAME)); //$NON-NLS-1$
+		jTableClosed.setModel(new BillTableModel("C", NO_USERNAME)); //$NON-NLS-1$
 	}
 
 	private void updateDataSet() {
