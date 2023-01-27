@@ -138,7 +138,7 @@ public class OperationRowAdm extends OperationRowBase implements AdmissionBrowse
 	}
 
 	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager rowManager, AWTEvent e) throws OHServiceException {
-		for (org.isf.operation.model.OperationRow opRow : listOpe) {
+		for (OperationRow opRow : listOpe) {
 			if ((opRow.getId() > 0) && (opRow.getAdmission() != null && opRow.getAdmission().getId() > 0)) {
 				try {
 					rowManager.updateOperationRow(opRow);

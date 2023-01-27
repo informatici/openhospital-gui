@@ -132,7 +132,7 @@ public class OperationRowOpd extends OperationRowBase implements OpdEditExtended
 	}
 
 	public void saveAllOpeRow(List<OperationRow> listOpe, OperationRowBrowserManager rowManager, Opd opd) throws OHServiceException {
-		for (org.isf.operation.model.OperationRow opRow : listOpe) {
+		for (OperationRow opRow : listOpe) {
 			if ((opRow.getId() > 0) && (opRow.getOpd().getCode() > 0)) {
 				rowManager.updateOperationRow(opRow);
 			}
