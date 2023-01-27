@@ -1137,7 +1137,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				try {
 					code = Integer.valueOf(codeHint);
 				} catch (NumberFormatException e1) {
-					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("Please insert a valid number"));
+					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
 				}
 				progYearFilter.setText("");
@@ -1150,7 +1150,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					((AbstractTableModel) jTable.getModel()).fireTableDataChanged();
 					rowCounter.setText(rowCounterText + pSur.size());
 				} else {
-					MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("no data found"));
+					MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("angal.common.nodatatoshow.msg"));
 				}
 			}
 		}
@@ -1171,7 +1171,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				try {
 					code = Integer.valueOf(codeHint);
 				} catch (NumberFormatException e1) {
-					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("Please insert a valid number"));
+					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
 				}
 				opdCodeFilter.setText("");
@@ -1180,7 +1180,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				((AbstractTableModel) jTable.getModel()).fireTableDataChanged();
 				rowCounter.setText(rowCounterText + pSur.size());
 				if (pSur.isEmpty()) {
-					MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("no data found"));
+					MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("angal.common.nodatatoshow.msg"));
 				}
 			}
 		}
@@ -1201,7 +1201,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				try {
 					code = Integer.valueOf(codeHint);
 				} catch (NumberFormatException e1) {
-					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("Please insert a valid number"));
+					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
 				}
 				opdCodeFilter.setText("");
@@ -1211,7 +1211,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					((AbstractTableModel) jTable.getModel()).fireTableDataChanged();
 					rowCounter.setText(rowCounterText + pSur.size());
 					if (pSur.isEmpty()) {
-						MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("no data found"));
+						MessageDialog.info(OpdBrowser.this, MessageBundle.getMessage("angal.common.nodatatoshow.msg"));
 					}
 				} catch (OHServiceException ohServiceException) {
 					MessageDialog.showExceptions(ohServiceException);
