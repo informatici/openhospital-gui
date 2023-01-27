@@ -147,21 +147,23 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			MessageBundle.getMessage("angal.common.age.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.opd.disease.col").toUpperCase(),
 			MessageBundle.getMessage("angal.opd.diseasetype.col").toUpperCase(),
-			MessageBundle.getMessage("angal.opd.patientstatus.col").toUpperCase()
+			MessageBundle.getMessage("angal.opd.patientstatus.col").toUpperCase(),
+			MessageBundle.getMessage("angal.common.user.col").toUpperCase()
 	};
 
 	private DiseaseTypeBrowserManager diseaseTypeBrowserManager = Context.getApplicationContext().getBean(DiseaseTypeBrowserManager.class);
 	private OpdBrowserManager opdBrowserManager = Context.getApplicationContext().getBean(OpdBrowserManager.class);
 	private DiseaseBrowserManager diseaseBrowserManager = Context.getApplicationContext().getBean(DiseaseBrowserManager.class);
 
+	private boolean isSingleUser = GeneralData.getGeneralData().getSINGLEUSER();
 	private List<Opd> pSur;
 	private JTable jTable = null;
 	private OpdBrowsingModel model;
-	private int[] pColumnWidth = {50, 80, 100, 130, 70, 150, 30, 30, 195, 195, 50};
-	private boolean[] columnResizable = { false, false, false, false, false, true, false, false, true, true, false };
-	private boolean[] columnsVisible = { true, true, GeneralData.OPDEXTENDED, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true };
-	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
-	private boolean[] columnsBold = { true, true, false, false, true, false, false, false, false, false, false };
+	private int[] pColumnWidth = {50, 80, 100, 130, 70, 150, 30, 30, 195, 195, 50, 50};
+	private boolean[] columnResizable = { false, false, false, false, false, true, false, false, true, true, false, false };
+	private boolean[] columnsVisible = { true, true, GeneralData.OPDEXTENDED, true, GeneralData.OPDEXTENDED, GeneralData.OPDEXTENDED, true, true, true, true, true, !isSingleUser };
+	private int[] columnsAlignment = { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT };
+	private boolean[] columnsBold = { true, true, false, false, true, false, false, false, false, false, false, false };
 	private int selectedrow;
 	private JButton filterButton = null;
 	private String rowCounterText = MessageBundle.getMessage("angal.common.count.label") + ' ';
@@ -181,7 +183,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JTextField opdCodeFilter;
 	private JTextField progYearFilter;
 	private JTextField patientCodeFilter;
-	private ButtonGroup groupUserFilter=null;
+	private ButtonGroup groupUserFilter = null;
 	private JRadioButton radioMyPatients;
 	private JRadioButton radioAllPatients;
 
@@ -470,9 +472,14 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		panel.add(getDateFilterPanel());
 		panel.add(getJAgePanel());
 		panel.add(getPatientTypePanel());
-		panel.add(getUserPanel());
-		panel.add(Box.createVerticalGlue());
-		SpringUtilities.makeCompactGrid(panel, 8, 1, 5, 5, 5, 5);
+		if (isSingleUser) {
+			panel.add(Box.createVerticalGlue());
+			SpringUtilities.makeCompactGrid(panel, 7, 1, 5, 5, 5, 5);
+		} else {
+			panel.add(getUserPanel());
+			panel.add(Box.createVerticalGlue());
+			SpringUtilities.makeCompactGrid(panel, 8, 1, 5, 5, 5, 5);
+		}
 		return panel;
 	}
 	
@@ -1017,6 +1024,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 					patientStatus = MessageBundle.getMessage("angal.opd.reattendance.btn");
 				}
 				return patientStatus;
+			} else if (c == ++i) {
+				return opd.getUserID();
 			}
 			return null;
 		}
@@ -1124,7 +1133,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	}
 	
 	private String getUser() {
-		if (radioMyPatients.isSelected())
+		if (!isSingleUser && radioMyPatients.isSelected())
 			return MainMenu.getUser().getUserName();
 		else
 			return null;
