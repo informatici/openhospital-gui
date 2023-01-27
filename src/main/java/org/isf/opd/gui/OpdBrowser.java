@@ -28,6 +28,7 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -35,6 +36,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +75,6 @@ import org.isf.generaldata.GeneralData;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.gui.MainMenu;
 import org.isf.menu.manager.Context;
-import org.isf.menu.model.User;
 import org.isf.opd.manager.OpdBrowserManager;
 import org.isf.opd.model.Opd;
 import org.isf.patient.model.Patient;
@@ -119,10 +120,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private JButton jEditButton = null;
 	private JButton jCloseButton = null;
 	private JButton jDeleteButton = null;
-	private JPanel jSelectionPanel = null;
 	private JPanel dateFilterPanel = null;
 	private JPanel jSelectionDiseasePanel = null;
-	private JPanel jSelectionWardPanel = null;
 	private JPanel jAgeFromPanel = null;
 	private VoLimitedTextField jAgeFromTextField = null;
 	private JPanel jAgeToPanel = null;
@@ -209,6 +208,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		}
 		return jTable;
 	}
+	
+	private int getJTableWidth() {
+	    return Arrays.stream(pColumnWidth).sum();
+	}
 
 	class AlignmentCellRenderer extends DefaultTableCellRenderer {
 
@@ -233,7 +236,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		super();
 		myFrame = this;
 		initialize();
-		setMinimumSize(new Dimension(1410, 550));
 		setLocationRelativeTo(null);
 	}
 
@@ -276,9 +278,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private void initialize() {
 		this.setTitle(MessageBundle.getMessage("angal.opd.opdoutpatientdepartment.title"));
 		this.setContentPane(getJContainPanel());
+		this.setMinimumSize(new Dimension(400 + getJTableWidth(), 700));
 		rowCounter.setText(rowCounterText + pSur.size());
 		validate();
-		pack();
 	}
 
 	/**
@@ -433,16 +435,20 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJSelectionPanel() {
-		if (jSelectionPanel == null) {
-			jSelectionPanel = new JPanel();
-			jSelectionPanel.setLayout(new BorderLayout());
-			//jSelectionPanel.setLayout(new BoxLayout(jSelectionPanel, BoxLayout.Y_AXIS));
-			jSelectionPanel.add(getSearchCodesPanel(), BorderLayout.NORTH);
-			jSelectionPanel.add(getOtherFiltersPanel(), BorderLayout.CENTER);
-			jSelectionPanel.add(getButtonsPanel(), BorderLayout.SOUTH);
-		}
+		JPanel jSelectionPanel = new JPanel(); //the outer panel get maximum height (as per WEST from outer container)
+		jSelectionPanel.add(getJSelectionContentPanel()); //the inner panel can use any layout
 		return jSelectionPanel;
 	}
+	
+	private JPanel getJSelectionContentPanel() {
+		JPanel jSelectionContentPanel = new JPanel(new SpringLayout());
+		jSelectionContentPanel.add(getSearchCodesPanel());
+		jSelectionContentPanel.add(getOtherFiltersPanel());
+		jSelectionContentPanel.add(getButtonsPanel());
+		SpringUtilities.makeCompactGrid(jSelectionContentPanel, 3, 1, 5, 5, 5, 5);
+		return jSelectionContentPanel;
+	}
+	
 	
 	private JPanel getButtonsPanel() {
 		JPanel buttonsPanel = new JPanel();
@@ -456,10 +462,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	}
 
 	private JPanel getOtherFiltersPanel() {
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel(new SpringLayout());
 		panel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.opd.otherfilters.border")));
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.add(getWardBox());
+		panel.add(getWardBoxPanel());
 		panel.add(getJSelectionDiseasePanel());
 		panel.add(getSexPanel());
 		panel.add(getDateFilterPanel());
@@ -467,9 +472,17 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		panel.add(getPatientTypePanel());
 		panel.add(getUserPanel());
 		panel.add(Box.createVerticalGlue());
+		SpringUtilities.makeCompactGrid(panel, 8, 1, 5, 5, 5, 5);
 		return panel;
 	}
 	
+	private JPanel getWardBoxPanel() {
+		JPanel wardBoxPanel = new JPanel();
+		wardBoxPanel.setLayout(new BoxLayout(wardBoxPanel, BoxLayout.Y_AXIS));
+		wardBoxPanel.add(getWardBox());
+		return wardBoxPanel;
+	}
+
 	public JPanel getUserPanel() {
 		JPanel userPanel = new JPanel();
 		groupUserFilter = new ButtonGroup();
@@ -485,12 +498,12 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	
 	private Component getSearchCodesPanel() {
 		JPanel searchCodesPanel = new JPanel(new SpringLayout());
-		searchCodesPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.opd.searchbycodes.border")));
-		opdCodeFilter = new JTextField(6);
+		searchCodesPanel.setBorder(BorderFactory.createTitledBorder(MessageBundle.getMessage("angal.opd.searchbycodespressenter.border")));
+		opdCodeFilter = new JTextField(3);
 		opdCodeFilter.addKeyListener(new SearchByOPDCodeListener());
-		progYearFilter = new JTextField(6);
+		progYearFilter = new JTextField(3);
 		progYearFilter.addKeyListener(new SearchByProgYearListener());
-		patientCodeFilter = new JTextField(6);
+		patientCodeFilter = new JTextField(3);
 		patientCodeFilter.addKeyListener(new SearchByPatientIdListener());
 		searchCodesPanel.add(new JLabel(MessageBundle.getMessage("angal.common.code.txt")));
 		searchCodesPanel.add(new JLabel(MessageBundle.getMessage("angal.opd.opdnumber.txt")));
@@ -547,8 +560,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private Component getDateFilterPanel() {
 		if (dateFilterPanel == null) {
 			dateFilterPanel = new JPanel(new SpringLayout());
+			
 			dateFrom = new GoodDateChooser(LocalDate.now());
 			dateTo = new GoodDateChooser(LocalDate.now());
+			
 			resetDates();
 			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
 			dateFilterPanel.add(dateFrom);
@@ -603,7 +618,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	public JComboBox getWardBox() {
 		if (jWardBox == null) {
 			jWardBox = new JComboBox<>();
-			jWardBox.setMaximumSize(new Dimension(300, 50));
 
 			WardBrowserManager wardManager = Context.getApplicationContext().getBean(WardBrowserManager.class);
 			List<Ward> wards = wardManager.getOpdWards();
@@ -626,7 +640,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	public JComboBox<DiseaseType> getDiseaseTypeBox() {
 		if (jDiseaseTypeBox == null) {
 			jDiseaseTypeBox = new JComboBox<>();
-			jDiseaseTypeBox.setMaximumSize(new Dimension(300, 50));
 
 			List<DiseaseType> types = null;
 			try {
@@ -658,11 +671,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	public JComboBox getDiseaseBox() {
 		if (jDiseaseBox == null) {
 			jDiseaseBox = new JComboBox();
-			jDiseaseBox.setMaximumSize(new Dimension(300, 50));
 
 		}
 		try {
-			if (((DiseaseType) jDiseaseTypeBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.common.alltypes.txt"))) {
+			if (((DiseaseType) jDiseaseTypeBox.getSelectedItem()).getDescription().equals(MessageBundle.getMessage("angal.common.alldiseasetypes.txt"))) {
 				diseases = diseaseBrowserManager.getDiseaseOpd();
 			} else {
 				diseases = diseaseBrowserManager.getDiseaseOpd(((DiseaseType) jDiseaseTypeBox.getSelectedItem()).getCode());
@@ -677,6 +689,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				jDiseaseBox.addItem(elem);
 			}
 		}
+		jDiseaseBox.setPreferredSize(new Dimension(300, 25));
+		jDiseaseBox.setMaximumSize(new Dimension(300, 25));
 		return jDiseaseBox;
 	}
 	
@@ -741,8 +755,10 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	
 	private JPanel getJSearchDiseaseTextFieldPanel() {
 		
-		JPanel searchFieldPanel = new JPanel();
+		JPanel searchFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JTextField searchDiseasetextField = new JTextField(10);
+		JLabel searchDiseaseLabel = new JLabel(MessageBundle.getMessage("angal.opd.searchdisease.label"));
+		searchFieldPanel.add(searchDiseaseLabel);
 		searchFieldPanel.add(searchDiseasetextField);
 		searchDiseasetextField.addKeyListener(new KeyListener() {
 
@@ -833,9 +849,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	private VoLimitedTextField getJAgeFromTextField() {
 		if (jAgeFromTextField == null) {
-			jAgeFromTextField = new VoLimitedTextField(3, 2);
+			jAgeFromTextField = new VoLimitedTextField(3, 3);
 			jAgeFromTextField.setText("0");
-			jAgeFromTextField.setMinimumSize(new Dimension(100, 50));
 			ageFrom = 0;
 			jAgeFromTextField.addFocusListener(new FocusListener() {
 
@@ -882,9 +897,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 */
 	private VoLimitedTextField getJAgeToTextField() {
 		if (jAgeToTextField == null) {
-			jAgeToTextField = new VoLimitedTextField(3, 2);
+			jAgeToTextField = new VoLimitedTextField(3, 3);
 			jAgeToTextField.setText("0");
-			jAgeToTextField.setMaximumSize(new Dimension(100, 50));
 			ageTo = 0;
 			jAgeToTextField.addFocusListener(new FocusListener() {
 
