@@ -36,6 +36,8 @@ import org.isf.utils.exception.OHServiceException;
 import org.junit.jupiter.api.Test;
 
 public class BillDataLoaderTest {
+	
+	private final static String NO_USERNAME = null;
     @Test
     public void shouldLoadPendingBillsFromManagerForParentPatient() throws OHServiceException {
         // given:
@@ -58,7 +60,7 @@ public class BillDataLoaderTest {
         );
 
         // when:
-        List<Bill> result = billDataLoader.loadBills("O");
+        List<Bill> result = billDataLoader.loadBills("O", NO_USERNAME);
 
         // then:
         assertThat(result.size()).isEqualTo(3);
@@ -81,7 +83,7 @@ public class BillDataLoaderTest {
         );
 
         // when:
-        List<Bill> result = billDataLoader.loadBills("O");
+        List<Bill> result = billDataLoader.loadBills("O", NO_USERNAME);
 
         // then:
         assertThat(result.size()).isEqualTo(1);
@@ -104,7 +106,7 @@ public class BillDataLoaderTest {
         );
 
         // when:
-        List<Bill> result = billDataLoader.loadBills("ALL");
+        List<Bill> result = billDataLoader.loadBills("ALL", NO_USERNAME);
 
         // then:
         assertThat(result.size()).isEqualTo(3);
@@ -127,7 +129,7 @@ public class BillDataLoaderTest {
         );
 
         // when:
-        List<Bill> result = billDataLoader.loadBills("C");
+        List<Bill> result = billDataLoader.loadBills("C", NO_USERNAME);
 
         // then:
         assertThat(result.size()).isEqualTo(1);
