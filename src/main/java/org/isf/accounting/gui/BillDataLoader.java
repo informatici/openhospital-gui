@@ -95,14 +95,16 @@ public class BillDataLoader {
 	}
 
 	private List<Bill> getPendingBills(String status, String username) throws OHServiceException {
-		if (patientParent != null) return  billManager.getPendingBillsAffiliate(patientParent.getCode()) ; 
-			List<Bill> list = billPeriod.stream()
-						.filter(bill -> bill.getStatus().equals(status))
-						.collect(Collectors.toList());
-			if (username != null) {
-				list = list.stream().filter(bill-> bill.getUser().equals(username)).collect(Collectors.toList());
-			}
-			return list;
+		if (patientParent != null) {
+			return  billManager.getPendingBillsAffiliate(patientParent.getCode()) ; 
+		}
+		List<Bill> list = billPeriod.stream()
+					.filter(bill -> bill.getStatus().equals(status))
+					.collect(Collectors.toList());
+		if (username != null) {
+			list = list.stream().filter(bill-> bill.getUser().equals(username)).collect(Collectors.toList());
+		}
+		return list;
 		
 	}
 
