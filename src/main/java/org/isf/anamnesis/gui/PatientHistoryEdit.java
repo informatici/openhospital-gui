@@ -62,7 +62,6 @@ import org.isf.anamnesis.model.PatientPatientHistory;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
 import org.isf.utils.jobjects.VoLimitedTextField;
@@ -2287,6 +2286,7 @@ public class PatientHistoryEdit extends JDialog {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.family.tooltip.excludenothingtodeclare.txt")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			//Update model
 			path.setFamilyNothing(false);
@@ -2314,6 +2314,7 @@ public class PatientHistoryEdit extends JDialog {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.closed.tooltip.excludenothingtodeclare.txt")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			//Update model
 			path.setPatClosedNothing(false);
@@ -2341,6 +2342,7 @@ public class PatientHistoryEdit extends JDialog {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.excludenothingtodeclare.txt")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			//Update model
 			path.setPatOpenNothing(false);
@@ -2368,6 +2370,7 @@ public class PatientHistoryEdit extends JDialog {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.family.tooltip.resetfamilyhistory.txt")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Update model
 			path.setFamilyNothing(true);
@@ -2404,6 +2407,7 @@ public class PatientHistoryEdit extends JDialog {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.closed.tooltip.resetpastproblems.txt")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Update model
 			path.setPatClosedNothing(true);
@@ -2440,6 +2444,7 @@ public class PatientHistoryEdit extends JDialog {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.open.tooltip.resetrecentproblems.txt")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			// Update model
@@ -2497,6 +2502,7 @@ public class PatientHistoryEdit extends JDialog {
 			jButtonCancel = new JButton(MessageBundle.getMessage("angal.anamnesis.cancel.txt")); //$NON-NLS-1$
 			jButtonCancel.setMnemonic(KeyEvent.VK_C);
 			jButtonCancel.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					dispose();
 				}
@@ -2518,6 +2524,7 @@ public class PatientHistoryEdit extends JDialog {
 			putValue(SHORT_DESCRIPTION, MessageBundle.getMessage("angal.anamnesis.tooltip.savethepatienthistory.txt")); //$NON-NLS-1$
 		}
 
+		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			updateModelFromGUI();
