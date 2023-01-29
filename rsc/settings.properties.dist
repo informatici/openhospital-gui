@@ -1,4 +1,5 @@
 # This file contains Open Hospital settings
+MODE=OH_MODE
 LANGUAGE=OH_LANGUAGE
 SINGLEUSER=YES_OR_NO
 AUTOMATICLOT_IN=no
