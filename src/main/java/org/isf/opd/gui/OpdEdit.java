@@ -527,8 +527,8 @@ public class OpdEdit extends JDialog {
 								// remember for later use
 								RememberDates.setLastOpdVisitDate(visitDate);
 
-								result = opdBrowserManager.newOpd(opd);
-								if (result) {
+								Opd insertedOpd = opdBrowserManager.newOpd(opd);
+								if (insertedOpd != null) {
 									fireSurgeryInserted(opd);
 									dispose();
 								} else {

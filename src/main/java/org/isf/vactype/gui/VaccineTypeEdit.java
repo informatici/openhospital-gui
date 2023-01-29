@@ -210,11 +210,10 @@ public class VaccineTypeEdit extends JDialog {
 				vaccineType.setDescription(descriptionTextField.getText());
 				vaccineType.setCode(codeTextField.getText());
 
-				boolean result;
-				if (insert) {// inserting
+				if (insert) {	// inserting
 					try {
-						result = vaccineTypeBrowserManager.newVaccineType(vaccineType);
-						if (result) {
+						VaccineType insertedVaccineType = vaccineTypeBrowserManager.newVaccineType(vaccineType);
+						if (insertedVaccineType != null) {
 							fireVaccineInserted();
 							dispose();
 						} else {
@@ -223,13 +222,13 @@ public class VaccineTypeEdit extends JDialog {
 					} catch (OHServiceException e1) {
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-				} else { // updating
+				} else {	// updating
 					if (descriptionTextField.getText().equals(lastdescription)) {
 						dispose();
 					} else {
 						try {
-							result = vaccineTypeBrowserManager.updateVaccineType(vaccineType);
-							if (result) {
+							VaccineType updatedVaccineType = vaccineTypeBrowserManager.updateVaccineType(vaccineType);
+							if (updatedVaccineType != null) {
 								fireVaccineUpdated();
 								dispose();
 							} else {

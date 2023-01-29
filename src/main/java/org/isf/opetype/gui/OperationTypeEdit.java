@@ -201,41 +201,37 @@ public class OperationTypeEdit extends JDialog {
 				}
 				operationType.setDescription(descriptionTextField.getText());
 				operationType.setCode(codeTextField.getText());
-				boolean result;
-				if (insert) {      // inserting
+				boolean result = false;
+				if (insert) {	// inserting
 					try {
-						result = operationTypeBrowserManager.newOperationType(operationType);
+						OperationType insertedOperatoinType = operationTypeBrowserManager.newOperationType(operationType);
+						if (insertedOperatoinType != null) {
+							fireOperationInserted();
+							result = true;
+						}
 					} catch (OHServiceException e1) {
-						result = false;
 						OHServiceExceptionUtil.showMessages(e1);
 					}
-					if (result) {
-						fireOperationInserted();
-					}
-					if (!result) {
-						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-					} else {
-						dispose();
-					}
-				} else {                          // updating
+				} else {	// updating
 					if (descriptionTextField.getText().equals(lastdescription)) {
 						dispose();
 					} else {
 						try {
-							result = operationTypeBrowserManager.updateOperationType(operationType);
+							OperationType updatedOperationType = operationTypeBrowserManager.updateOperationType(operationType);
+							if (updatedOperationType != null) {
+								fireOperationUpdated();
+								result = true;
+							}
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1);
 							result = false;
 						}
-						if (result) {
-							fireOperationUpdated();
-						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
 					}
+				}
+				if (!result) {
+					MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+				} else {
+					dispose();
 				}
 			});
 		}

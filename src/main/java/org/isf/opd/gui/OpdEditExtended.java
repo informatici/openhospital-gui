@@ -1886,8 +1886,8 @@ public class OpdEditExtended extends ModalJFrame implements PatientInsertExtende
 							}
 							opd.setNextVisit(nextVisit);
 						}
-						boolean result = opdBrowserManager.newOpd(opd);
-						if (result) {
+						Opd insertedOpd = opdBrowserManager.newOpd(opd);
+						if (insertedOpd != null) {
 							RememberDates.setLastOpdVisitDate(visitDateOpd);
 							RememberData.setLastOpdWard(opdWard);
 							fireSurgeryInserted(opd);

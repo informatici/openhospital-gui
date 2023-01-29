@@ -268,7 +268,10 @@ public class ExamEdit extends JDialog {
 						}
 					} else {
 						try {
-							result = examBrowsingManager.updateExam(exam);
+							Exam updatedExam = examBrowsingManager.updateExam(exam);
+							if (updatedExam != null) {
+								result = true;
+							}
 							if (result) {
 								fireExamUpdated();
 							}

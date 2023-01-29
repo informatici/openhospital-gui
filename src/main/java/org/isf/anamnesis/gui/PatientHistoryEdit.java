@@ -62,7 +62,6 @@ import org.isf.anamnesis.model.PatientPatientHistory;
 import org.isf.generaldata.MessageBundle;
 import org.isf.menu.manager.Context;
 import org.isf.patient.model.Patient;
-import org.isf.utils.exception.OHException;
 import org.isf.utils.jobjects.VoIntegerTextField;
 import org.isf.utils.jobjects.VoLimitedTextArea;
 import org.isf.utils.jobjects.VoLimitedTextField;

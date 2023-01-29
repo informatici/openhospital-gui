@@ -254,7 +254,10 @@ public class MedicalEdit extends JDialog {
 							LOGGER.error(cloneNotSupportedException.getMessage(), cloneNotSupportedException);
 						}
 						try {
-							result = medicalBrowsingManager.newMedical(newMedical);
+							Medical insertedMedical = medicalBrowsingManager.newMedical(newMedical);
+							if (insertedMedical != null) {
+								result = true;
+							}
 						} catch (OHServiceException e1) {
 							OHServiceExceptionUtil.showMessages(e1, MedicalEdit.this);
 							List<OHExceptionMessage> errors = e1.getMessages();
@@ -266,7 +269,10 @@ public class MedicalEdit extends JDialog {
 
 										if (ok == JOptionPane.OK_OPTION) {
 											try {
-												result = medicalBrowsingManager.newMedical(newMedical, true);
+												Medical insertedMedical = medicalBrowsingManager.newMedical(newMedical, true);
+												if (insertedMedical != null) {
+													result = true;
+												}
 											} catch (OHServiceException e2) {
 												OHServiceExceptionUtil.showMessages(e2);
 											}
@@ -286,7 +292,10 @@ public class MedicalEdit extends JDialog {
 						oldMedical.setPcsperpck(pcsperpckField.getValue());
 						oldMedical.setMinqty(minQtiField.getValue());
 						try {
-							result = medicalBrowsingManager.updateMedical(oldMedical);
+							Medical updatedMedical = medicalBrowsingManager.updateMedical(oldMedical);
+							if (updatedMedical != null) {
+								result = true;
+							}
 						} catch (OHServiceException e1) {
 							List<OHExceptionMessage> errors = e1.getMessages();
 
@@ -298,7 +307,10 @@ public class MedicalEdit extends JDialog {
 
 										if (ok == JOptionPane.OK_OPTION) {
 											try {
-												result = medicalBrowsingManager.updateMedical(oldMedical, true);
+												Medical updatedMedical = medicalBrowsingManager.updateMedical(oldMedical, true);
+												if (updatedMedical != null) {
+													result = true;
+												}
 											} catch (OHServiceException e2) {
 												OHServiceExceptionUtil.showMessages(e2);
 											}

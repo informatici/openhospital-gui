@@ -204,31 +204,29 @@ public class PregnantTreatmentTypeEdit extends JDialog {
 					}
 					pregnantTreatmentType.setDescription(descriptionTextField.getText());
 					pregnantTreatmentType.setCode(codeTextField.getText());
-					boolean result;
-					if (insert) {      // inserting
-						result = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
-						if (result) {
+					boolean result = false;
+					if (insert) {	// inserting
+						
+						PregnantTreatmentType insertedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.newPregnantTreatmentType(pregnantTreatmentType);
+						if (insertedPregnantTreatmentType != null) {
 							firePregnantTreatmentInserted();
+							result = true;
 						}
-						if (!result) {
-							MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-						} else {
-							dispose();
-						}
-					} else {                          // updating
+					} else {	// updating
 						if (descriptionTextField.getText().equals(lastdescription)) {
 							dispose();
 						} else {
-							result = pregnantTreatmentTypeBrowserManager.updatePregnantTreatmentType(pregnantTreatmentType);
-							if (result) {
+							PregnantTreatmentType updatedPregnantTreatmentType = pregnantTreatmentTypeBrowserManager.updatePregnantTreatmentType(pregnantTreatmentType);
+							if (updatedPregnantTreatmentType != null) {
 								firePregnantTreatmentUpdated();
-							}
-							if (!result) {
-								MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
-							} else {
-								dispose();
+								result = true;
 							}
 						}
+					}
+					if (!result) {
+						MessageDialog.error(null, "angal.common.datacouldnotbesaved.msg");
+					} else {
+						dispose();
 					}
 				} catch (OHServiceException ex) {
 					OHServiceExceptionUtil.showMessages(ex);
