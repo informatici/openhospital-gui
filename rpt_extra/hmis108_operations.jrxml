@@ -15,9 +15,9 @@
 		<![CDATA[select opType, opDesc, sum(resultOk) totOk, sum(resultKo) totKo, sum(resultNull) totNull, sum(opCount) totOp
 from (
     SELECT  ot.OCL_DESC opType, o.OPE_DESC opDesc, 1 as opCount,
-        case when ifnull(ADM_RESOP,'unknown')='P' then 1 else null end resultOk,
-        case when ifnull(ADM_RESOP,'unknown')='N' then 1 else null end resultKo,
-        case when ADM_RESOP is null then 1 else null end resultNull
+        case when ifnull(OPER_RESULT,'unknown')='success' then 1 else null end resultOk,
+        case when ifnull(OPER_RESULT,'unknown')='failure' then 1 else null end resultKo,
+        case when OPER_RESULT is null then 1 else null end resultNull
     FROM OH_OPERATIONROW opr, OH_ADMISSION a, OH_OPERATION o, OH_OPERATIONTYPE ot
     where a.ADM_ID = opr.OPER_ADMISSION_ID
     and opr.OPER_ID = o.OPE_ID_A
