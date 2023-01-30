@@ -524,8 +524,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private JButton getResetButton() {
 		if (resetButton == null) {
-			resetButton = new JButton("Reset");
-			resetButton.setMnemonic(KeyEvent.VK_R);
+			resetButton = new JButton(MessageBundle.getMessage("angal.opd.reset.btn"));
+			resetButton.setMnemonic(MessageBundle.getMnemonic("angal.opd.reset.btn.key"));
 			resetButton.addActionListener(actionEvent -> {
 				resetAllFilters();
 			});
@@ -568,8 +568,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (dateFilterPanel == null) {
 			dateFilterPanel = new JPanel(new SpringLayout());
 			
-			dateFrom = new GoodDateChooser(TimeTools.getnow());
-			dateTo = new GoodDateChooser(TimeTools.getnow());
+			dateFrom = new GoodDateChooser(LocalDate.now());
+			dateTo = new GoodDateChooser(LocalDate.now());
 			
 			resetDates();
 			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
@@ -583,9 +583,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private void resetDates() {
 		if (!GeneralData.ENHANCEDSEARCH) {
-			dateFrom.setDate(TimeTools.getnow().minusWeeks(1));
+			dateFrom.setDate(LocalDate.now().minusWeeks(1));
 		} else {
-			dateFrom.setDate(TimeTools.getNow()));
+			dateFrom.setDate(LocalDate.now());
 		}
 		dateTo.setDate(LocalDate.now());
 	}
