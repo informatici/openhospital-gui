@@ -1144,7 +1144,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			return 'A';
 		} else if (radioNewAttendance.isSelected()) {
 			return 'N';
-	}
+		}
 		return 'R';
 	}
 	
