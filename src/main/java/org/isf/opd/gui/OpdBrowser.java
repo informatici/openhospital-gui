@@ -523,7 +523,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	}
 
 	private JButton getResetButton() {
-		if(resetButton == null) {
+		if (resetButton == null) {
 			resetButton = new JButton("Reset");
 			resetButton.setMnemonic(KeyEvent.VK_R);
 			resetButton.addActionListener(actionEvent -> {
@@ -1121,31 +1121,31 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private char getGender() {
 		char sex;
 		if (radioAllGender.isSelected()) {
-			sex='A';
+			sex = 'A';
 		} else {
 			if (radioMale.isSelected()) {
-				sex='M';
+				sex = 'M';
 			} else {
-				sex='F';
+				sex = 'F';
 			}
 		}
 		return sex;
 	}
 	
 	private String getUser() {
-		if (!isSingleUser && radioMyPatients.isSelected())
+		if (!isSingleUser && radioMyPatients.isSelected()) {
 			return MainMenu.getUser().getUserName();
-		else
-			return null;
+		}
+		return null;
 	}
 
 	private char getPatientAttendance() {
-		if(radioAllPatiens.isSelected())
+		if (radioAllPatiens.isSelected()) {
 			return 'A';
-		else if(radioNewAttendance.isSelected())
+		} else if (radioNewAttendance.isSelected()) {
 			return 'N';
-		else
-			return 'R';
+	}
+		return 'R';
 	}
 	
 	class SearchByOPDCodeListener implements KeyListener {
