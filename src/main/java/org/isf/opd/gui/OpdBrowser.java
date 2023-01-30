@@ -568,8 +568,8 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (dateFilterPanel == null) {
 			dateFilterPanel = new JPanel(new SpringLayout());
 			
-			dateFrom = new GoodDateChooser(LocalDate.now());
-			dateTo = new GoodDateChooser(LocalDate.now());
+			dateFrom = new GoodDateChooser(TimeTools.getnow());
+			dateTo = new GoodDateChooser(TimeTools.getnow());
 			
 			resetDates();
 			dateFilterPanel.add(new JLabel(MessageBundle.getMessage("angal.common.datefrom.label")));
@@ -583,7 +583,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 
 	private void resetDates() {
 		if (!GeneralData.ENHANCEDSEARCH) {
-			dateFrom.setDate(LocalDate.now().minusWeeks(1));
+			dateFrom.setDate(TimeTools.getnow().minusWeeks(1));
 		} else {
 			dateFrom.setDate(TimeTools.getNow()));
 		}
