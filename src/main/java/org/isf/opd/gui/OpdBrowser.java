@@ -585,7 +585,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		if (!GeneralData.ENHANCEDSEARCH) {
 			dateFrom.setDate(LocalDate.now().minusWeeks(1));
 		} else {
-			dateFrom.setDate(LocalDate.now());
+			dateFrom.setDate(TimeTools.getNow()));
 		}
 		dateTo.setDate(LocalDate.now());
 	}
