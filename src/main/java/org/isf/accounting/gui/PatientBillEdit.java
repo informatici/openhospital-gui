@@ -1,6 +1,6 @@
 /*
  * Open Hospital (www.open-hospital.org)
- * Copyright © 2006-2022 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
+ * Copyright © 2006-2023 Informatici Senza Frontiere (info@informaticisenzafrontiere.org)
  *
  * Open Hospital is a free and open source software for healthcare data management.
  *
@@ -457,11 +457,35 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				thisBill.setPriceList(list);
 				thisBill.setListName(list.getName());
 				modified = true;
+			} else { // PriceList is found
+
+				// PriceList changes (rarely changed):
+				//  * could be changed the PriceList name (rare, showed in the Bill and persisted in BLL_LST_NAME) → no prompt
+				//  * PriceList description (rare, not persisted in BILL) → no prompt
+				//  * PriceList currency (very rare, showed aside the amounts) → only prompt
+
+				PriceList thisBillPriceList = thisBill.getPriceList();
+				PriceList matchingPriceList = priceList.get();
+				if (!thisBillPriceList.getName().equals(matchingPriceList.getName())) {
+					thisBillPriceList.setName(matchingPriceList.getName());
+					modified = true;
+				}
+				if (!thisBillPriceList.getDescription().equals(matchingPriceList.getDescription())) {
+					thisBillPriceList.setDescription(matchingPriceList.getDescription());
+					modified = true;
+				}
+				if (!thisBillPriceList.getCurrency().equals(matchingPriceList.getCurrency())) {
+					int ok = MessageDialog.yesNo(null, "angal.newbill.thecurrencyinthepricelisthaschangeditwasbutisnowdoyouwantthenewvalue.fmt.msg",
+							thisBillPriceList.getCurrency(), matchingPriceList.getCurrency());
+					if (ok == JOptionPane.YES_OPTION) {
+						thisBillPriceList.setCurrency(matchingPriceList.getCurrency());
+						modified = true;
+					}
+				}
 			}
 		}
 
 		if (thisBill.isPatient()) {
-
 			Patient patient = null;
 			try {
 				patient = patientBrowserManager.getPatientById(thisBill.getBillPatient().getCode());
@@ -470,10 +494,29 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 			}
 			if (patient != null) {
 				setPatientSelected(patient);
+
+				// Patient changes (rarely changed):
+				//   * could be changed the Patient name (very rare, showed in the Bill and persisted in BLL_PAT_NAME) → no prompt
+
+				if (!thisBill.getBillPatient().getFirstName().equals(patient.getFirstName())) {
+					thisBill.getBillPatient().setFirstName(patient.getFirstName());
+					modified = true;
+				}
+				if (!thisBill.getBillPatient().getSecondName().equals(patient.getSecondName())) {
+					thisBill.getBillPatient().setSecondName(patient.getSecondName());
+					modified = true;
+				}
+
+				// Admission changes (frequently changed):
+				//   * could be changed the Ward (rare, showed in the Bill) → only prompt
+				//   * the status of the admission (very possible, discharged, showed in the Bill) → prompt and ask
+				//   * the Admission ID (rare, the patient is discharged and readmitted while editing the Bill) → prompt and ask
+
 				Admission currentAdmission = admissionBrowserManager.getCurrentAdmission(patient);
 				
 				Icon icon = UIManager.getIcon("OptionPane.warningIcon");
-				if (thisBill.getAdmission() == null && currentAdmission != null) {
+				Admission thisBillAdmission = thisBill.getAdmission();
+				if (thisBillAdmission  == null && currentAdmission != null) {
 					int ok = MessageDialog.yesNo(PatientBillEdit.this, icon, "angal.newbill.thispatientisadmittednowdoyouwanttolinkthisbilltothecurrentadmission.msg");
 					if (ok == JOptionPane.OK_OPTION) {
 						thisBill.setAdmission(currentAdmission);
@@ -1060,6 +1103,8 @@ public class PatientBillEdit extends JDialog implements SelectionListener {
 				if (listSelected == null) {
 					listSelected = lstArray.get(0);
 				}
+
+				checkBill();
 
 				if (this.insert) {
 					RememberDates.setLastBillDate(billDate);             //to remember for next INSERT
