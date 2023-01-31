@@ -1156,9 +1156,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				String codeHint = ((JTextField) e.getSource()).getText();
-				Integer code = 0;
+				int code = 0;
 				try {
-					code = Integer.valueOf(codeHint);
+					code = Integer.valueOf(codeHint).intValue();
 				} catch (NumberFormatException e1) {
 					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
@@ -1190,9 +1190,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				String codeHint = ((JTextField) e.getSource()).getText();
-				Integer code = 0;
+				int code = 0;
 				try {
-					code = Integer.valueOf(codeHint);
+					code = Integer.valueOf(codeHint).intValue();
 				} catch (NumberFormatException e1) {
 					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
@@ -1220,9 +1220,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				String codeHint = ((JTextField) e.getSource()).getText();
-				Integer code = 0;
+				int code = 0;
 				try {
-					code = Integer.valueOf(codeHint);
+					code = Integer.valueOf(codeHint).intValue();
 				} catch (NumberFormatException e1) {
 					MessageDialog.error(OpdBrowser.this, MessageBundle.getMessage("angal.common.pleaseinsertavalidnumber.msg"));
 					return;
