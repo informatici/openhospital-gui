@@ -258,8 +258,6 @@ public class ReportLauncher extends ModalJFrame{
 							if (props != null && props.getProperty("jTitle") != null && !props.getProperty("jTitle").isEmpty()) {
 								reportNameFileMap.put(props.getProperty("jTitle"), f);
 								jRptComboBoxList.add(props.getProperty("jTitle"));
-							} else {
-								jRptComboBoxList.add(StringUtils.capitalize(f.getName()));
 							}
 						}
 					} catch (Exception e) {
