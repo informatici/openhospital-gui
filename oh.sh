@@ -1154,9 +1154,9 @@ if [ "$DEMO_DATA" = "on" ]; then
 		echo "Found SQL demo database, starting OH with Demo data..."
 		DB_CREATE_SQL=$DB_DEMO
 		# reset database if exists
-		clean_database;  
+		# clean_database;  
 		# set DATABASE_NAME
-		#DATABASE_NAME="ohdemo" # TBD
+		DATABASE_NAME="ohdemo" # TBD
 	else
 		echo "Error: no $DB_DEMO found! Exiting."
 		exit 1
