@@ -128,14 +128,18 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	private VoLimitedTextField jAgeToTextField = null;
 	private JPanel jAgePanel = null;
 	private JComboBox<DiseaseType> jDiseaseTypeBox;
-	private JComboBox jDiseaseBox;
+	private JComboBox<Disease> jDiseaseBox;
 	private JComboBox jWardBox;
 	private JPanel sexPanel = null;
 	private Integer ageTo = 0;
 	private Integer ageFrom = 0;
-	private DiseaseType allType = new DiseaseType(
+	private DiseaseType allDiseaseType = new DiseaseType(
 			MessageBundle.getMessage("angal.common.alldiseasetypes.txt"),
 			MessageBundle.getMessage("angal.common.alldiseasetypes.txt"));
+	private Disease allDisease = new Disease(
+			MessageBundle.getMessage("angal.opd.alldiseases.txt"), 
+			MessageBundle.getMessage("angal.opd.alldiseases.txt"), 
+			allDiseaseType);
 	private String[] pColumns = {
 			MessageBundle.getMessage("angal.common.code.txt").toUpperCase(),
 			MessageBundle.getMessage("angal.opd.opdnumber.col").toUpperCase(),
@@ -655,7 +659,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 				MessageDialog.showExceptions(ohServiceException);
 			}
 
-			jDiseaseTypeBox.addItem(allType);
+			jDiseaseTypeBox.addItem(allDiseaseType);
 			if (types != null) {
 				for (DiseaseType elem : types) {
 					jDiseaseTypeBox.addItem(elem);
@@ -675,9 +679,9 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 	 *
 	 * @return javax.swing.JComboBox
 	 */
-	public JComboBox getDiseaseBox() {
+	public JComboBox<Disease> getDiseaseBox() {
 		if (jDiseaseBox == null) {
-			jDiseaseBox = new JComboBox();
+			jDiseaseBox = new JComboBox<Disease>();
 
 		}
 		try {
@@ -689,7 +693,7 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		} catch (OHServiceException ohServiceException) {
 			MessageDialog.showExceptions(ohServiceException);
 		}
-		Disease allDisease = new Disease(MessageBundle.getMessage("angal.opd.alldiseases.txt"), MessageBundle.getMessage("angal.opd.alldiseases.txt"), allType);
+		
 		jDiseaseBox.addItem(allDisease);
 		if (diseases != null) {
 			for (Disease elem : diseases) {
@@ -792,7 +796,6 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 		searchFieldPanel.add(searchDiseaseButton);
 		searchDiseaseButton.addActionListener(actionEvent -> {
 			jDiseaseBox.removeAllItems();
-			jDiseaseBox.addItem("");
 			for (Disease disease : getSearchDiagnosisResults(searchDiseasetextField.getText(), diseases)) {
 				jDiseaseBox.addItem(disease);
 			}
@@ -1062,13 +1065,14 @@ public class OpdBrowser extends ModalJFrame implements OpdEdit.SurgeryListener, 
 			filterButton = new JButton(MessageBundle.getMessage("angal.common.search.btn"));
             filterButton.setMnemonic(MessageBundle.getMnemonic("angal.common.search.btn.key"));
 			filterButton.addActionListener(actionEvent -> {
-				Object selectedItem = jDiseaseBox.getSelectedItem();
-				if (!(selectedItem instanceof Disease)) {
-					MessageDialog.error(OpdBrowser.this, "angal.opd.pleaseselectadisease.msg");
-					return;
-				}
-				String disease = ((Disease)selectedItem).getCode();
 				String diseasetype = ((DiseaseType)jDiseaseTypeBox.getSelectedItem()).getCode();
+				if (diseasetype.equals(allDiseaseType.getCode())) {
+					diseasetype = null;
+				}
+				String disease = ((Disease)jDiseaseBox.getSelectedItem()).getCode();
+				if (disease.equals(allDisease.getCode())) {
+					disease = null;
+				}
 				Ward ward = null;
 				try {
 					ward = (Ward) jWardBox.getSelectedItem();
