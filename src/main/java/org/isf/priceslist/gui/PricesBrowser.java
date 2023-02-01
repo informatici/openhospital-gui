@@ -111,16 +111,7 @@ public class PricesBrowser extends ModalJFrame {
 	private List<PricesOthers> othArray;
 
 	public PricesBrowser() {
-		try {
-			mediArray = medicalBrowsingManager.getMedicals();
-			examArray = examBrowsingManager.getExams();
-			operArray = operationBrowserManager.getOperation();
-			listArray = priceListManager.getLists();
-			priceArray = priceListManager.getPrices();
-			othArray = pricesOthersManager.getOthers();
-		} catch (OHServiceException e) {
-			OHServiceExceptionUtil.showMessages(e);
-		}
+		updateFromDB();
 		initComponents();
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -328,7 +319,7 @@ public class PricesBrowser extends ModalJFrame {
 			priceArray = priceListManager.getPrices();
 			examArray = examBrowsingManager.getExams();
 			operArray = operationBrowserManager.getOperation();
-			mediArray = medicalBrowsingManager.getMedicals();
+			mediArray = medicalBrowsingManager.getMedicalsSortedByName();
 			othArray = pricesOthersManager.getOthers();
 		} catch (OHServiceException e) {
 			OHServiceExceptionUtil.showMessages(e);
