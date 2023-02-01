@@ -803,6 +803,8 @@ function parse_user_input {
 		else
 			OH_MODE="PORTABLE"
 			DEMO_DATA="on"
+			# set database name
+			DATABASE_NAME="ohdemo"
 			echo "Demo data set to on."
 		fi
 
@@ -1155,8 +1157,6 @@ if [ "$DEMO_DATA" = "on" ]; then
 		DB_CREATE_SQL=$DB_DEMO
 		# reset database if exists
 		# clean_database;  
-		# set DATABASE_NAME
-		DATABASE_NAME="ohdemo"
 	else
 		echo "Error: no $DB_DEMO found! Exiting."
 		exit 1

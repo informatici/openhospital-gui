@@ -965,6 +965,8 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			}
 			else { $script:OH_MODE="PORTABLE" }
 			$DEMO_DATA="on"
+			# set database name
+			$script:DATABASE_NAME="ohdemo"
 			Write-Host "Demo data set to on."
 			Read-Host "Press any key to continue";
 		}
@@ -1225,8 +1227,6 @@ if ( $DEMO_DATA -eq "on" ) {
 	
 	# reset database if exists
 	#clean_database;
-	# set DATABASE_NAME
-	$script:DATABASE_NAME="ohdemo"
 
 	if (Test-Path -Path "$OH_PATH/$SQL_DIR/$DB_DEMO" -PathType leaf) {
 	        Write-Host "Found SQL demo database, starting OH with Demo data..."
