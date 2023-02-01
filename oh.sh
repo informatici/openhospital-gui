@@ -179,7 +179,7 @@ function script_menu {
 	echo ""
 	echo "   -C    set OH in CLIENT mode"
 	echo "   -P    set OH in PORTABLE mode"
-	echo "   -S    set OH in SERVER (Portable) mode"
+	echo "   -S    set OH in SERVER (portable) mode"
 	echo "   -l    set language: $OH_LANGUAGE_LIST"
 	echo "   -s    save OH configuration"
 	echo "   -X    clean/reset OH installation"

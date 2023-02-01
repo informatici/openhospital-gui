@@ -243,7 +243,7 @@ function script_menu {
 	Write-Host ""
 	Write-Host "   C    set OH in CLIENT mode"
 	Write-Host "   P    set OH in PORTABLE mode"
-	Write-Host "   S    set OH in SERVER (Portable) mode"
+	Write-Host "   S    set OH in SERVER (portable) mode"
 	Write-Host "   l    set language: $OH_LANGUAGE_LIST"
 	Write-Host "   s    save OH configuration"
 	Write-Host "   X    clean/reset OH installation"
@@ -933,7 +933,7 @@ if ( $INTERACTIVE_MODE -eq "on" ) {
 			Read-Host "Press any key to continue";
 		}
 		###################################################
-		"S"	{ # start in SERVER (Portable) mode
+		"S"	{ # start in SERVER (portable) mode
 			$script:OH_MODE="SERVER"
 			set_oh_mode;
 			Write-Host "OH_MODE set to SERVER mode." -ForeGroundcolor Green
