@@ -390,7 +390,7 @@ echo "[Desktop Entry]
 	# The executable of the application, possibly with arguments
 	Exec=$OH_PATH/$SCRIPT_NAME -Z
 	# The icon to display
-	Icon=$OH_PATH/$OH_DIR/rsc/icons/oh.ico
+	Icon=$OH_PATH/oh.ico
 	# Describes whether this application needs to be run in a terminal or not
 	Terminal=true
 	# Describes the categories in which this entry should be shown
